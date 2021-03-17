@@ -11,7 +11,8 @@ import android.view.View;
 import android.view.animation.LinearInterpolator;
 import com.android.systemui.C0012R$dimen;
 
-class MiuiGxzwQuickTeachView extends View {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwQuickTeachView extends View {
     private float mCicleRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_circle_radius);
     private float mItemRadius;
     private Paint mPaint;
@@ -45,7 +46,7 @@ class MiuiGxzwQuickTeachView extends View {
                 RectF rectF = new RectF(0.0f, floatValue + f2, 2.0f * f2, this.mCicleRadius + f2);
                 this.mPaint.setShader(new LinearGradient(rectF.centerX(), rectF.top, rectF.centerX(), rectF.bottom + this.mItemRadius, -13264897, 3512319, Shader.TileMode.CLAMP));
                 canvas.drawLine(rectF.centerX(), rectF.top, rectF.centerX(), rectF.bottom, this.mPaint);
-                this.mPaint.setShader((Shader) null);
+                this.mPaint.setShader(null);
                 this.mPaint.setStyle(Paint.Style.FILL);
                 this.mPaint.setColor(-13264897);
                 float f3 = this.mItemRadius;
@@ -60,13 +61,15 @@ class MiuiGxzwQuickTeachView extends View {
             valueAnimator.cancel();
         }
         float f = this.mCicleRadius;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{3.0f * f, -f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(3.0f * f, -f);
         this.mValueAnimator = ofFloat;
-        ofFloat.setDuration(2000);
+        ofFloat.setDuration(2000L);
         this.mValueAnimator.setInterpolator(new LinearInterpolator());
         this.mValueAnimator.setRepeatMode(1);
         this.mValueAnimator.setRepeatCount(-1);
         this.mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.fod.MiuiGxzwQuickTeachView.AnonymousClass1 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiGxzwQuickTeachView.this.invalidate();
             }

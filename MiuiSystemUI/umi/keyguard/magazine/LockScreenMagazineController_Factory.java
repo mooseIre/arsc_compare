@@ -11,6 +11,7 @@ public final class LockScreenMagazineController_Factory implements Factory<LockS
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public LockScreenMagazineController get() {
         return provideInstance(this.contextProvider);
     }

@@ -2,7 +2,6 @@ package com.android.keyguard.AwesomeLockScreenImp;
 
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.content.Context;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
@@ -16,24 +15,27 @@ import miui.maml.component.MamlView;
 
 public class AwesomeLockScreenView extends MamlView {
     private final AccessibilityManager.AccessibilityServicesStateChangeListener mAccessibilityListener = new AccessibilityManager.AccessibilityServicesStateChangeListener() {
+        /* class com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView.AnonymousClass2 */
+
         public void onAccessibilityServicesStateChanged(AccessibilityManager accessibilityManager) {
             AwesomeLockScreenView.this.updateAccessibilityServicesState(accessibilityManager);
         }
     };
-    private AccessibilityManager mAccessibilityManager = ((AccessibilityManager) this.mContext.getSystemService("accessibility"));
+    private AccessibilityManager mAccessibilityManager = ((AccessibilityManager) ((MamlView) this).mContext.getSystemService("accessibility"));
     private boolean mAccessibilityServiceEnabled = false;
-    /* access modifiers changed from: private */
-    public boolean mAccessibleNodeAdded = false;
+    private boolean mAccessibleNodeAdded = false;
     private Runnable mAddAccessibleNodeRunnable = new Runnable() {
+        /* class com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView.AnonymousClass1 */
+
         public void run() {
             if (AccessibleElementRoot.isFileExists()) {
                 LockScreenRoot root = AwesomeLockScreenView.this.getRoot();
-                AccessibleElementRoot unused = AwesomeLockScreenView.this.mVirtualRoot = new AccessibleElementRoot(AwesomeLockScreenView.this.mContext, root);
+                AwesomeLockScreenView.this.mVirtualRoot = new AccessibleElementRoot(((MamlView) AwesomeLockScreenView.this).mContext, root);
                 if (AwesomeLockScreenView.this.mVirtualRoot.isInited()) {
                     Log.d("AwesomeLockScreenView", "try to use virtual accessible nodes for 3rd lockscreen");
                     root.removeAllAccessibleElements();
                     root.addAccessibleList(AwesomeLockScreenView.this.mVirtualRoot.getAccessibleElements());
-                    boolean unused2 = AwesomeLockScreenView.this.mAccessibleNodeAdded = true;
+                    AwesomeLockScreenView.this.mAccessibleNodeAdded = true;
                 }
             }
         }
@@ -41,8 +43,7 @@ public class AwesomeLockScreenView extends MamlView {
     private boolean mHasNavigationBar;
     private NotificationPanelViewController mPanelViewController;
     private boolean mPaused = false;
-    /* access modifiers changed from: private */
-    public AccessibleElementRoot mVirtualRoot;
+    private AccessibleElementRoot mVirtualRoot;
 
     public AwesomeLockScreenView(Context context, LockScreenRoot lockScreenRoot) {
         super(context, lockScreenRoot);
@@ -74,7 +75,8 @@ public class AwesomeLockScreenView extends MamlView {
     }
 
     /* access modifiers changed from: private */
-    public void updateAccessibilityServicesState(AccessibilityManager accessibilityManager) {
+    /* access modifiers changed from: public */
+    private void updateAccessibilityServicesState(AccessibilityManager accessibilityManager) {
         List<AccessibilityServiceInfo> enabledAccessibilityServiceList = accessibilityManager.getEnabledAccessibilityServiceList(-1);
         boolean z = enabledAccessibilityServiceList != null && enabledAccessibilityServiceList.size() > 0;
         if (this.mAccessibilityServiceEnabled != z) {
@@ -108,7 +110,7 @@ public class AwesomeLockScreenView extends MamlView {
         if (this.mPaused) {
             onPause();
         }
-        this.mAccessibilityManager.addAccessibilityServicesStateChangeListener(this.mAccessibilityListener, (Handler) null);
+        this.mAccessibilityManager.addAccessibilityServicesStateChangeListener(this.mAccessibilityListener, null);
     }
 
     /* access modifiers changed from: protected */

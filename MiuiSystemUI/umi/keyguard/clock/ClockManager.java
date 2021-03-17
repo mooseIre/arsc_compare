@@ -35,22 +35,18 @@ public final class ClockManager {
     private final List<Supplier<ClockPlugin>> mBuiltinClocks;
     private final ContentObserver mContentObserver;
     private final ContentResolver mContentResolver;
-    /* access modifiers changed from: private */
-    public final CurrentUserObservable mCurrentUserObservable;
+    private final CurrentUserObservable mCurrentUserObservable;
     private final Observer<Integer> mCurrentUserObserver;
     private final DockManager.DockEventListener mDockEventListener;
     private final DockManager mDockManager;
-    /* access modifiers changed from: private */
-    public final int mHeight;
+    private final int mHeight;
     private boolean mIsDocked;
     private final Map<ClockChangedListener, AvailableClocks> mListeners;
     private final Handler mMainHandler;
     private final PluginManager mPluginManager;
     private final AvailableClocks mPreviewClocks;
-    /* access modifiers changed from: private */
-    public final SettingsWrapper mSettingsWrapper;
-    /* access modifiers changed from: private */
-    public final int mWidth;
+    private final SettingsWrapper mSettingsWrapper;
+    private final int mWidth;
 
     public interface ClockChangedListener {
         void onClockChanged(ClockPlugin clockPlugin);
@@ -70,6 +66,8 @@ public final class ClockManager {
         this.mBuiltinClocks = new ArrayList();
         this.mMainHandler = new Handler(Looper.getMainLooper());
         this.mContentObserver = new ContentObserver(this.mMainHandler) {
+            /* class com.android.keyguard.clock.ClockManager.AnonymousClass1 */
+
             public void onChange(boolean z, Collection<Uri> collection, int i, int i2) {
                 if (Objects.equals(Integer.valueOf(i2), ClockManager.this.mCurrentUserObservable.getCurrentUser().getValue())) {
                     ClockManager.this.reload();
@@ -77,11 +75,15 @@ public final class ClockManager {
             }
         };
         this.mCurrentUserObserver = new Observer() {
+            /* class com.android.keyguard.clock.$$Lambda$ClockManager$hg7TNpAa_jeQQKjwxI39ao59w9U */
+
+            @Override // androidx.lifecycle.Observer
             public final void onChanged(Object obj) {
                 ClockManager.this.lambda$new$0$ClockManager((Integer) obj);
             }
         };
         this.mDockEventListener = new DockManager.DockEventListener(this) {
+            /* class com.android.keyguard.clock.ClockManager.AnonymousClass2 */
         };
         this.mListeners = new ArrayMap();
         this.mPluginManager = pluginManager;
@@ -92,6 +94,7 @@ public final class ClockManager {
         this.mPreviewClocks = new AvailableClocks();
         Resources resources = context.getResources();
         addBuiltinClock(new Supplier(resources, injectionInflationController.injectable(LayoutInflater.from(context)), sysuiColorExtractor) {
+            /* class com.android.keyguard.clock.$$Lambda$ClockManager$qcpjSm9nfcenHjNSU7lKVTGsX4 */
             public final /* synthetic */ Resources f$0;
             public final /* synthetic */ LayoutInflater f$1;
             public final /* synthetic */ SysuiColorExtractor f$2;
@@ -102,6 +105,7 @@ public final class ClockManager {
                 this.f$2 = r3;
             }
 
+            @Override // java.util.function.Supplier
             public final Object get() {
                 return ClockManager.lambda$new$1(this.f$0, this.f$1, this.f$2);
             }
@@ -121,10 +125,10 @@ public final class ClockManager {
         }
         AvailableClocks availableClocks = new AvailableClocks();
         for (int i = 0; i < this.mBuiltinClocks.size(); i++) {
-            availableClocks.addClockPlugin((ClockPlugin) this.mBuiltinClocks.get(i).get());
+            availableClocks.addClockPlugin(this.mBuiltinClocks.get(i).get());
         }
         this.mListeners.put(clockChangedListener, availableClocks);
-        this.mPluginManager.addPluginListener(availableClocks, (Class<?>) ClockPlugin.class, true);
+        this.mPluginManager.addPluginListener((PluginListener) availableClocks, ClockPlugin.class, true);
         reload();
     }
 
@@ -157,7 +161,7 @@ public final class ClockManager {
     }
 
     private void register() {
-        this.mPluginManager.addPluginListener(this.mPreviewClocks, (Class<?>) ClockPlugin.class, true);
+        this.mPluginManager.addPluginListener((PluginListener) this.mPreviewClocks, ClockPlugin.class, true);
         this.mContentResolver.registerContentObserver(Settings.Secure.getUriFor("lock_screen_custom_clock_face"), false, this.mContentObserver, -1);
         this.mContentResolver.registerContentObserver(Settings.Secure.getUriFor("docked_clock_face"), false, this.mContentObserver, -1);
         this.mCurrentUserObservable.getCurrentUser().observeForever(this.mCurrentUserObserver);
@@ -178,9 +182,13 @@ public final class ClockManager {
     }
 
     /* access modifiers changed from: private */
-    public void reload() {
+    /* access modifiers changed from: public */
+    private void reload() {
         this.mPreviewClocks.reloadCurrentClock();
         this.mListeners.forEach(new BiConsumer() {
+            /* class com.android.keyguard.clock.$$Lambda$ClockManager$qgNVVndKBDwD0H6bkgmOPGFf8 */
+
+            @Override // java.util.function.BiConsumer
             public final void accept(Object obj, Object obj2) {
                 ClockManager.this.lambda$reload$3$ClockManager((ClockManager.ClockChangedListener) obj, (ClockManager.AvailableClocks) obj2);
             }
@@ -200,6 +208,7 @@ public final class ClockManager {
             return;
         }
         this.mMainHandler.post(new Runnable(currentClock) {
+            /* class com.android.keyguard.clock.$$Lambda$ClockManager$mUjYY_SkgClnkNIhp881jS2o8E */
             public final /* synthetic */ ClockPlugin f$1;
 
             {
@@ -219,7 +228,8 @@ public final class ClockManager {
         clockChangedListener.onClockChanged(clockPlugin);
     }
 
-    private final class AvailableClocks implements PluginListener<ClockPlugin> {
+    /* access modifiers changed from: private */
+    public final class AvailableClocks implements PluginListener<ClockPlugin> {
         private final List<ClockInfo> mClockInfo;
         private final Map<String, ClockPlugin> mClocks;
         private ClockPlugin mCurrentClock;
@@ -258,6 +268,9 @@ public final class ClockManager {
             builder.setName(clockPlugin.getName());
             Objects.requireNonNull(clockPlugin);
             builder.setTitle(new Supplier() {
+                /* class com.android.keyguard.clock.$$Lambda$NtEGOukxaFxn97YVYx86DAEBmms */
+
+                @Override // java.util.function.Supplier
                 public final Object get() {
                     return ClockPlugin.this.getTitle();
                 }
@@ -265,17 +278,22 @@ public final class ClockManager {
             builder.setId(name);
             Objects.requireNonNull(clockPlugin);
             builder.setThumbnail(new Supplier() {
+                /* class com.android.keyguard.clock.$$Lambda$d3U4wCuqsezzeLGogc1fLHnUj0 */
+
+                @Override // java.util.function.Supplier
                 public final Object get() {
                     return ClockPlugin.this.getThumbnail();
                 }
             });
             builder.setPreview(new Supplier(clockPlugin) {
+                /* class com.android.keyguard.clock.$$Lambda$ClockManager$AvailableClocks$3xFQeynnnUMh38fqZ7v9xTaqzmA */
                 public final /* synthetic */ ClockPlugin f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
+                @Override // java.util.function.Supplier
                 public final Object get() {
                     return ClockManager.AvailableClocks.this.lambda$addClockPlugin$0$ClockManager$AvailableClocks(this.f$1);
                 }

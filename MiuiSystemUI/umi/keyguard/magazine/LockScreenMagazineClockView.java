@@ -34,15 +34,13 @@ public class LockScreenMagazineClockView extends LinearLayout {
     private boolean mDarkStyle;
     private boolean mHasTitleClick;
     private boolean mIsLeftTopClock;
-    /* access modifiers changed from: private */
-    public LockScreenMagazineWallpaperInfo mMagazineWallpaperInfo;
+    private LockScreenMagazineWallpaperInfo mMagazineWallpaperInfo;
     private TextView mProvider;
     private TextView mSource;
-    /* access modifiers changed from: private */
-    public TextView mTitle;
+    private TextView mTitle;
 
     public LockScreenMagazineClockView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public LockScreenMagazineClockView(Context context, AttributeSet attributeSet) {
@@ -63,6 +61,8 @@ public class LockScreenMagazineClockView extends LinearLayout {
         if (!Build.IS_INTERNATIONAL_BUILD) {
             this.mHasTitleClick = true;
             this.mTitle.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineClockView$YmimdYIU4lBR3j3h5JaKPHLDoeo */
+
                 public final void onClick(View view) {
                     LockScreenMagazineClockView.this.lambda$initTitle$0$LockScreenMagazineClockView(view);
                 }
@@ -76,18 +76,17 @@ public class LockScreenMagazineClockView extends LinearLayout {
     /* renamed from: lambda$initTitle$0 */
     public /* synthetic */ void lambda$initTitle$0$LockScreenMagazineClockView(View view) {
         if (CommonExtensionsKt.checkFastDoubleClick(view, 500)) {
-            LockScreenMagazineUtils.gotoMagazine(this.mContext, "lockScreenInfo");
-            AnalyticsHelper.getInstance(this.mContext).recordLockScreenMagazineEntryClickAction();
+            LockScreenMagazineUtils.gotoMagazine(((LinearLayout) this).mContext, "lockScreenInfo");
+            AnalyticsHelper.getInstance(((LinearLayout) this).mContext).recordLockScreenMagazineEntryClickAction();
         }
     }
 
     public void updateInfo() {
         String str;
         String str2;
-        Class cls = LockScreenMagazineController.class;
-        this.mMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(cls)).getLockScreenMagazineWallpaperInfo();
+        this.mMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getLockScreenMagazineWallpaperInfo();
         String str3 = null;
-        if (!LockScreenMagazineUtils.isLockScreenMagazineAvailable() || (((!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() || !MiuiKeyguardUtils.isGxzwSensor()) && (Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineWallpaper())) || !((LockScreenMagazineController) Dependency.get(cls)).isLockScreenMagazinePkgExist() || this.mMagazineWallpaperInfo == null)) {
+        if (!LockScreenMagazineUtils.isLockScreenMagazineAvailable() || (((!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper() || !MiuiKeyguardUtils.isGxzwSensor()) && (Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isLockScreenMagazineWallpaper())) || !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenMagazinePkgExist() || this.mMagazineWallpaperInfo == null)) {
             str2 = null;
             str = null;
         } else {
@@ -128,12 +127,14 @@ public class LockScreenMagazineClockView extends LinearLayout {
         if (Build.IS_INTERNATIONAL_BUILD) {
             if (!TextUtils.isEmpty(this.mMagazineWallpaperInfo.titleClickUri)) {
                 new AsyncTask<Void, Void, Intent>() {
+                    /* class com.android.keyguard.magazine.LockScreenMagazineClockView.AnonymousClass1 */
+
                     /* access modifiers changed from: protected */
                     public Intent doInBackground(Void... voidArr) {
                         Intent intent = new Intent();
                         Uri parse = Uri.parse(LockScreenMagazineClockView.this.mMagazineWallpaperInfo.carouselDeeplink);
                         LockScreenMagazineClockView lockScreenMagazineClockView = LockScreenMagazineClockView.this;
-                        if (lockScreenMagazineClockView.needJump92(lockScreenMagazineClockView.mContext, parse)) {
+                        if (lockScreenMagazineClockView.needJump92(((LinearLayout) lockScreenMagazineClockView).mContext, parse)) {
                             intent.putExtra("deeplink92Uri", parse);
                         } else {
                             intent.setAction("android.intent.action.VIEW");
@@ -141,7 +142,7 @@ public class LockScreenMagazineClockView extends LinearLayout {
                             intent.addFlags(67108864);
                         }
                         intent.setData(Uri.parse(LockScreenMagazineClockView.this.mMagazineWallpaperInfo.titleClickUri));
-                        if (PackageUtils.resolveIntent(LockScreenMagazineClockView.this.mContext, intent) != null) {
+                        if (PackageUtils.resolveIntent(((LinearLayout) LockScreenMagazineClockView.this).mContext, intent) != null) {
                             return intent;
                         }
                         return null;
@@ -151,21 +152,23 @@ public class LockScreenMagazineClockView extends LinearLayout {
                     public void onPostExecute(final Intent intent) {
                         boolean z;
                         if (intent == null) {
-                            LockScreenMagazineClockView.this.mTitle.setOnClickListener((View.OnClickListener) null);
+                            LockScreenMagazineClockView.this.mTitle.setOnClickListener(null);
                             z = false;
                         } else {
                             LockScreenMagazineClockView.this.mTitle.setOnClickListener(new View.OnClickListener() {
+                                /* class com.android.keyguard.magazine.LockScreenMagazineClockView.AnonymousClass1.AnonymousClass1 */
+
                                 public void onClick(View view) {
                                     if (CommonExtensionsKt.checkFastDoubleClick(view, 500)) {
                                         Uri uri = (Uri) intent.getParcelableExtra("deeplink92Uri");
-                                        if (uri == null || !PackageUtils.isAppInstalledForUser(LockScreenMagazineClockView.this.mContext, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser())) {
-                                            LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
+                                        if (uri == null || !PackageUtils.isAppInstalledForUser(((LinearLayout) LockScreenMagazineClockView.this).mContext, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser())) {
+                                            ((LinearLayout) LockScreenMagazineClockView.this).mContext.startActivityAsUser(intent, UserHandle.CURRENT);
                                             return;
                                         }
                                         Intent intent = new Intent();
                                         intent.setData(uri);
-                                        LockScreenMagazineClockView.this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
-                                        LockScreenMagazineClockView.this.mContext.sendBroadcast(new Intent("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"));
+                                        ((LinearLayout) LockScreenMagazineClockView.this).mContext.startActivityAsUser(intent, UserHandle.CURRENT);
+                                        ((LinearLayout) LockScreenMagazineClockView.this).mContext.sendBroadcast(new Intent("xiaomi.intent.action.SHOW_SECURE_KEYGUARD"));
                                         Log.e("LockScreenMagazineClockView", "title onClick  start activity ! ");
                                     }
                                 }
@@ -177,7 +180,7 @@ public class LockScreenMagazineClockView extends LinearLayout {
                 }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
                 return;
             }
-            this.mTitle.setOnClickListener((View.OnClickListener) null);
+            this.mTitle.setOnClickListener(null);
             updateTitleClickLayout(false);
         }
     }
@@ -187,7 +190,8 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateTitleClickLayout(boolean z) {
+    /* access modifiers changed from: public */
+    private void updateTitleClickLayout(boolean z) {
         if (z != this.mHasTitleClick) {
             this.mHasTitleClick = z;
             updateTitlePadding();
@@ -260,7 +264,7 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     public void updateTitlePadding() {
-        this.mTitle.setPaddingRelative(!this.mIsLeftTopClock && this.mHasTitleClick ? this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_clock_title_padding_start) : 0, 0, 0, 0);
+        this.mTitle.setPaddingRelative(!this.mIsLeftTopClock && this.mHasTitleClick ? ((LinearLayout) this).mContext.getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_clock_title_padding_start) : 0, 0, 0, 0);
     }
 
     private void updateContentsLayoutGravity() {

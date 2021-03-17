@@ -11,6 +11,7 @@ public final class PhoneSignalControllerImpl_Factory implements Factory<PhoneSig
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PhoneSignalControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

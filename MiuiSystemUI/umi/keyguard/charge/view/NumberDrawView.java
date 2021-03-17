@@ -40,7 +40,7 @@ public class NumberDrawView extends TextView {
     private int mStrHeight;
 
     public NumberDrawView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public NumberDrawView(Context context, AttributeSet attributeSet) {
@@ -159,7 +159,7 @@ public class NumberDrawView extends TextView {
                 str = "100";
             }
             this.mLevel = str;
-            String string = this.mResources.getString(C0021R$string.keyguard_charging_battery_level, new Object[]{str});
+            String string = this.mResources.getString(C0021R$string.keyguard_charging_battery_level, str);
             this.mShowLevel = string;
             this.mShowLevel = string.replace(" ", "");
             invalidate();
@@ -184,7 +184,7 @@ public class NumberDrawView extends TextView {
     }
 
     private void handleDot() {
-        String substring = String.format(Locale.getDefault(), "%1.2f", new Object[]{Float.valueOf(8.88f)}).substring(1, 2);
+        String substring = String.format(Locale.getDefault(), "%1.2f", Float.valueOf(8.88f)).substring(1, 2);
         this.mDot = substring;
         this.mDotWidth = (int) this.mPercentTextPaint.measureText(substring);
     }
@@ -196,9 +196,9 @@ public class NumberDrawView extends TextView {
 
     private void measureLargeNumWidth() {
         if (this.mLargeMaxNumWidth <= 0) {
-            int measureText = (int) this.mLargeTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{4}));
+            int measureText = (int) this.mLargeTextPaint.measureText(String.format(Locale.getDefault(), "%d", 4));
             for (int i = 0; i <= 9; i++) {
-                int measureText2 = (int) this.mLargeTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(i)}));
+                int measureText2 = (int) this.mLargeTextPaint.measureText(String.format(Locale.getDefault(), "%d", Integer.valueOf(i)));
                 if (measureText2 > measureText) {
                     measureText = measureText2;
                 }
@@ -209,9 +209,9 @@ public class NumberDrawView extends TextView {
 
     private void measureSmallNumWidth() {
         if (this.mSmallMaxNumWidth <= 0) {
-            int measureText = (int) this.mSmallTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{4}));
+            int measureText = (int) this.mSmallTextPaint.measureText(String.format(Locale.getDefault(), "%d", 4));
             for (int i = 0; i <= 9; i++) {
-                int measureText2 = (int) this.mSmallTextPaint.measureText(String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(i)}));
+                int measureText2 = (int) this.mSmallTextPaint.measureText(String.format(Locale.getDefault(), "%d", Integer.valueOf(i)));
                 if (measureText2 > measureText) {
                     measureText = measureText2;
                 }

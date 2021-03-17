@@ -25,15 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 import miui.os.Build;
 
-class MiuiGxzwQuickOpenUtil {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwQuickOpenUtil {
     private static final int[] DEFAULT_ITEM_ID_LIST;
     private static final boolean SUPPORT_QUICK_OPEN = (MiuiKeyguardUtils.isGxzwSensor() && !MiuiGxzwUtils.isLargeFod());
-    /* access modifiers changed from: private */
-    public static int sShowQuickOpenPressCount = -1;
-    /* access modifiers changed from: private */
-    public static long sShowQuickOpenSlideTime = -1;
-    /* access modifiers changed from: private */
-    public static int sShowQuickOpenTeachValue = -1;
+    private static int sShowQuickOpenPressCount = -1;
+    private static long sShowQuickOpenSlideTime = -1;
+    private static int sShowQuickOpenTeachValue = -1;
 
     private static float getAngleDetal(int i) {
         return i == 5 ? 45.0f : 60.0f;
@@ -63,12 +61,16 @@ class MiuiGxzwQuickOpenUtil {
         if (SUPPORT_QUICK_OPEN) {
             final Handler handler = new Handler(Looper.getMainLooper());
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenUtil.AnonymousClass1 */
+
                 public void run() {
                     SharedPreferences sharedPreferences = context.getSharedPreferences("quick_open", 0);
                     final int i = sharedPreferences.getInt("sp_fod_show_quick_open_press_count", 0);
                     final long j = sharedPreferences.getLong("sp_fod_show_quick_open_slide_time", 0);
                     final int i2 = sharedPreferences.getInt("sp_fod_show_quick_open_teach", 1);
                     handler.post(new Runnable(this) {
+                        /* class com.android.keyguard.fod.MiuiGxzwQuickOpenUtil.AnonymousClass1.AnonymousClass1 */
+
                         public void run() {
                             int unused = MiuiGxzwQuickOpenUtil.sShowQuickOpenPressCount = i;
                             long unused2 = MiuiGxzwQuickOpenUtil.sShowQuickOpenSlideTime = j;
@@ -105,6 +107,8 @@ class MiuiGxzwQuickOpenUtil {
             }
             final int i2 = sShowQuickOpenPressCount;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenUtil.AnonymousClass2 */
+
                 public void run() {
                     SharedPreferences.Editor edit = context.getSharedPreferences("quick_open", 0).edit();
                     edit.putInt("sp_fod_show_quick_open_press_count", i2);
@@ -136,6 +140,8 @@ class MiuiGxzwQuickOpenUtil {
                 final long currentTimeMillis = System.currentTimeMillis();
                 sShowQuickOpenSlideTime = currentTimeMillis;
                 AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                    /* class com.android.keyguard.fod.MiuiGxzwQuickOpenUtil.AnonymousClass3 */
+
                     public void run() {
                         SharedPreferences.Editor edit = context.getSharedPreferences("quick_open", 0).edit();
                         edit.putLong("sp_fod_show_quick_open_slide_time", currentTimeMillis);
@@ -163,6 +169,8 @@ class MiuiGxzwQuickOpenUtil {
         if (SUPPORT_QUICK_OPEN && sShowQuickOpenTeachValue != 0) {
             sShowQuickOpenTeachValue = 0;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenUtil.AnonymousClass4 */
+
                 public void run() {
                     SharedPreferences.Editor edit = context.getSharedPreferences("quick_open", 0).edit();
                     edit.putInt("sp_fod_show_quick_open_teach", 0);
@@ -205,14 +213,10 @@ class MiuiGxzwQuickOpenUtil {
         int i3 = 0;
         while (i3 < size) {
             float f9 = ((float) i3) * angleDetal;
-            ArrayList arrayList2 = arrayList;
             float f10 = f7 + f9;
             float f11 = f9 + f8;
             float circleCoordinateX = getCircleCoordinateX(i, f3, f10);
             float circleCoordinateY = getCircleCoordinateY(i2, f3, f10);
-            int i4 = i;
-            int i5 = i2;
-            float f12 = f7;
             RectF rectF3 = new RectF(circleCoordinateX - f, circleCoordinateY - f, circleCoordinateX + f, circleCoordinateY + f);
             Path path = new Path();
             Path path2 = new Path();
@@ -225,20 +229,21 @@ class MiuiGxzwQuickOpenUtil {
             path.op(path2, Path.Op.DIFFERENCE);
             Region region2 = new Region();
             region2.setPath(path, region);
-            arrayList = arrayList2;
+            arrayList = arrayList;
             arrayList.add(generateQuickOpenItem(rectF3, region2, context, validItemIdList.get(z ? (size - i3) - 1 : i3).intValue()));
             i3++;
             f3 = f2;
-            i = i4;
-            i2 = i5;
-            f7 = f12;
+            i = i;
+            i2 = i2;
+            f7 = f7;
         }
         return arrayList;
     }
 
     private static List<Integer> getValidItemIdList(Context context) {
         ArrayList arrayList = new ArrayList();
-        for (int i : DEFAULT_ITEM_ID_LIST) {
+        int[] iArr = DEFAULT_ITEM_ID_LIST;
+        for (int i : iArr) {
             Intent intent = generateQuickOpenItem(new RectF(), new Region(), context, i).getIntent();
             String str = intent.getPackage();
             if (str == null && intent.getComponent() != null) {

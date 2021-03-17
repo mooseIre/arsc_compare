@@ -9,15 +9,17 @@ import com.miui.miwallpaper.IMiuiKeyguardWallpaperService;
 public final class MiuiWallpaperClient$mWakefulnessLifecycle$1 implements WakefulnessLifecycle.Observer {
     final /* synthetic */ MiuiWallpaperClient this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiWallpaperClient$mWakefulnessLifecycle$1(MiuiWallpaperClient miuiWallpaperClient) {
         this.this$0 = miuiWallpaperClient;
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedWakingUp() {
         try {
-            IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
-            if (access$getMWallpaperService$p != null) {
-                access$getMWallpaperService$p.onStartedWakingUp();
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.this$0.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onStartedWakingUp();
             } else {
                 this.this$0.bindService();
             }
@@ -27,11 +29,12 @@ public final class MiuiWallpaperClient$mWakefulnessLifecycle$1 implements Wakefu
         }
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedGoingToSleep() {
         try {
-            IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
-            if (access$getMWallpaperService$p != null) {
-                access$getMWallpaperService$p.onStartedGoingToSleep();
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.this$0.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.onStartedGoingToSleep();
             } else {
                 this.this$0.bindService();
             }

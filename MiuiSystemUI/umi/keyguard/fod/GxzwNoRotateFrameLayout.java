@@ -8,7 +8,8 @@ import android.hardware.display.DisplayManager;
 import android.view.Display;
 import android.view.WindowManager;
 
-abstract class GxzwNoRotateFrameLayout extends GxzwWindowFrameLayout {
+/* access modifiers changed from: package-private */
+public abstract class GxzwNoRotateFrameLayout extends GxzwWindowFrameLayout {
     protected boolean mKeyguardAuthen = false;
     private boolean mPortraitOrientation = true;
     protected Rect mRegion = caculateRegion();

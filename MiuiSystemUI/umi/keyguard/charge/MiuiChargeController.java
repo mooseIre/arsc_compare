@@ -38,34 +38,31 @@ import org.jetbrains.annotations.Nullable;
 public class MiuiChargeController implements IChargeAnimationListener, WakefulnessLifecycle.Observer, SettingsObserver.Callback {
     private final boolean SUPPORT_NEW_ANIMATION = ChargeUtils.supportNewChargeAnimation();
     private Sensor mAngleSensor;
-    /* access modifiers changed from: private */
-    public MiuiBatteryStatus mBatteryStatus;
-    /* access modifiers changed from: private */
-    public boolean mChargeAnimationShowing = false;
-    /* access modifiers changed from: private */
-    public MiuiChargeAnimationView mChargeAnimationView;
+    private MiuiBatteryStatus mBatteryStatus;
+    private boolean mChargeAnimationShowing = false;
+    private MiuiChargeAnimationView mChargeAnimationView;
     private int mChargeDeviceForAnalytic;
-    /* access modifiers changed from: private */
-    public int mChargeDeviceType;
+    private int mChargeDeviceType;
     private int mChargeSpeed = -1;
     private boolean mClickShowChargeUI;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public Boolean mFoldStatus;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler();
+    private Context mContext;
+    private Boolean mFoldStatus;
+    private Handler mHandler = new Handler();
     private boolean mIsFoldChargeVideo;
     private KeyguardIndicationController mKeyguardIndicationController;
     MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
             super.onRefreshBatteryInfo(miuiBatteryStatus);
-            MiuiBatteryStatus unused = MiuiChargeController.this.mBatteryStatus = miuiBatteryStatus;
-            int unused2 = MiuiChargeController.this.mChargeDeviceType = miuiBatteryStatus.chargeDeviceType;
+            MiuiChargeController.this.mBatteryStatus = miuiBatteryStatus;
+            MiuiChargeController.this.mChargeDeviceType = miuiBatteryStatus.chargeDeviceType;
             MiuiChargeController miuiChargeController = MiuiChargeController.this;
             miuiChargeController.checkBatteryStatus(miuiChargeController.mBatteryStatus, false);
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onKeyguardOccludedChanged(boolean z) {
             super.onKeyguardOccludedChanged(z);
             if (z) {
@@ -74,13 +71,12 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         }
     };
     private MiuiWirelessChargeSlowlyView mMiuiWirelessChargeSlowlyView;
-    /* access modifiers changed from: private */
-    public boolean mNeedRepositionDevice = false;
+    private boolean mNeedRepositionDevice = false;
     private boolean mPendingChargeAnimation;
-    /* access modifiers changed from: private */
-    public PowerManager mPowerManager;
-    /* access modifiers changed from: private */
-    public final Runnable mScreenOffRunnable = new Runnable() {
+    private PowerManager mPowerManager;
+    private final Runnable mScreenOffRunnable = new Runnable() {
+        /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass4 */
+
         public void run() {
             if (!MiuiChargeController.this.mNeedRepositionDevice && MiuiChargeController.this.mUpdateMonitorInjector.isKeyguardShowing() && !MiuiChargeController.this.mUpdateMonitorInjector.isKeyguardOccluded()) {
                 Slog.i("MiuiChargeController", "keyguard_screen_off_reason: charge animation");
@@ -91,6 +87,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private boolean mScreenOn = false;
     private PowerManager.WakeLock mScreenOnWakeLock;
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass8 */
+
         public void onAccuracyChanged(Sensor sensor, int i) {
         }
 
@@ -103,7 +101,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 if (MiuiChargeController.this.mFoldStatus != null) {
                     MiuiChargeController.this.dismissChargeAnimation("fold_state_changed");
                 }
-                Boolean unused = MiuiChargeController.this.mFoldStatus = Boolean.valueOf(z);
+                MiuiChargeController.this.mFoldStatus = Boolean.valueOf(z);
             }
         }
     };
@@ -111,19 +109,19 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private boolean mShowChargingFromSetting;
     private boolean mShowChargingInNonLockscreen;
     private final Runnable mShowSlowlyRunnable = new Runnable() {
+        /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass7 */
+
         public void run() {
             MiuiChargeController.this.showMissedTip(true);
         }
     };
     private boolean mStateInitialized;
     private KeyguardUpdateMonitor mUpdateMonitor;
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
+    private KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
     private int mWireState;
     private int mWirelessChargeStartLevel;
     private long mWirelessChargeStartTime;
-    /* access modifiers changed from: private */
-    public int mWirelessChargeState;
+    private int mWirelessChargeState;
     private boolean mWirelessCharging = false;
     private boolean mWirelessOnline = false;
 
@@ -143,6 +141,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         intentFilter.addAction("miui.intent.action.ACTION_WIRELESS_POSITION");
         intentFilter.setPriority(1001);
         this.mContext.registerReceiver(new BroadcastReceiver() {
+            /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass2 */
+
             public void onReceive(Context context, Intent intent) {
                 int intExtra;
                 if ("miui.intent.action.ACTION_SOC_DECIMAL".equals(intent.getAction())) {
@@ -160,7 +160,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                     MiuiChargeController.this.mHandler.removeCallbacks(MiuiChargeController.this.mScreenOffRunnable);
                     MiuiChargeController.this.dismissChargeAnimation("USER_PRESENT");
                 } else if ("miui.intent.action.ACTION_WIRELESS_POSITION".equals(intent.getAction()) && (intExtra = intent.getIntExtra("miui.intent.extra.wireless_position", -1)) != MiuiChargeController.this.mWirelessChargeState) {
-                    int unused = MiuiChargeController.this.mWirelessChargeState = intExtra;
+                    MiuiChargeController.this.mWirelessChargeState = intExtra;
                     if (intExtra == 0) {
                         MiuiChargeController.this.setNeedRepositionDevice(true);
                         MiuiChargeController.this.showMissedTip(true);
@@ -191,7 +191,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     /* access modifiers changed from: private */
-    public void checkBatteryStatus(MiuiBatteryStatus miuiBatteryStatus, boolean z) {
+    /* access modifiers changed from: public */
+    private void checkBatteryStatus(MiuiBatteryStatus miuiBatteryStatus, boolean z) {
         boolean z2;
         boolean z3;
         boolean z4;
@@ -277,7 +278,6 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     private void dealWithAnimationShow(int i) {
-        Class cls = HapticFeedBackImpl.class;
         if (shouldShowChargeAnim()) {
             Log.i("MiuiChargeController", "dealWithAnimationShow mWireState=" + this.mWireState + ",wireState=" + i);
             if (this.mClickShowChargeUI) {
@@ -300,10 +300,10 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 if (isShowChargingInNonLockscreen) {
                     showChargeAnimation(i);
                 }
-                ((HapticFeedBackImpl) Dependency.get(cls)).getHapticFeedbackUtil().performHapticFeedback(0, false);
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).getHapticFeedbackUtil().performHapticFeedback(0, false);
             } else if (!isKeyguardOccluded) {
                 showChargeAnimation(i);
-                ((HapticFeedBackImpl) Dependency.get(cls)).extHapticFeedback(74, true, 0);
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(74, true, 0);
             }
         }
     }
@@ -317,6 +317,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         return true;
     }
 
+    @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if ("show_charging_in_non_lockscreen".equals(str)) {
             this.mShowChargingFromSetting = MiuiTextUtils.parseBoolean(str2, true);
@@ -377,6 +378,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
                 this.mChargeAnimationView = miuiChargeAnimationView;
                 miuiChargeAnimationView.setChargeAnimationListener(this);
                 this.mChargeAnimationView.setOnTouchListener(new View.OnTouchListener() {
+                    /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass3 */
+
                     public boolean onTouch(View view, MotionEvent motionEvent) {
                         if (!MiuiChargeController.this.mChargeAnimationShowing) {
                             return false;
@@ -435,22 +438,26 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     /* access modifiers changed from: private */
-    public void setNeedRepositionDevice(boolean z) {
+    /* access modifiers changed from: public */
+    private void setNeedRepositionDevice(boolean z) {
         this.mNeedRepositionDevice = z;
         ChargeUtils.setNeedRepositionDevice(z);
     }
 
+    @Override // com.android.keyguard.charge.view.IChargeAnimationListener
     public void onChargeAnimationStart(int i) {
         Log.i("MiuiChargeController", "onChargeAnimationStart: " + i);
         this.mKeyguardIndicationController.updatePowerIndication(true);
     }
 
+    @Override // com.android.keyguard.charge.view.IChargeAnimationListener
     public void onChargeAnimationEnd(int i, String str) {
         this.mPowerManager.userActivity(SystemClock.uptimeMillis(), false);
         this.mScreenOnWakeLock.release();
         this.mHandler.removeCallbacks(this.mScreenOffRunnable);
     }
 
+    @Override // com.android.keyguard.charge.view.IChargeAnimationListener
     public void onChargeAnimationDismiss(int i, String str) {
         Log.i("MiuiChargeController", " onChargeAnimationDismiss: wireState " + i + " reason :" + str);
         this.mChargeAnimationShowing = false;
@@ -470,6 +477,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
 
     private void checkWirelessChargeEfficiency() {
         new AsyncTask<Void, Void, Integer>() {
+            /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass5 */
+
             /* access modifiers changed from: protected */
             /* JADX WARNING: Removed duplicated region for block: B:17:0x0025 A[SYNTHETIC, Splitter:B:17:0x0025] */
             /* JADX WARNING: Removed duplicated region for block: B:26:0x0036 A[SYNTHETIC, Splitter:B:26:0x0036] */
@@ -546,8 +555,11 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     /* access modifiers changed from: private */
-    public void checkIfShowWirelessChargeSlowly() {
+    /* access modifiers changed from: public */
+    private void checkIfShowWirelessChargeSlowly() {
         new AsyncTask<Void, Void, Boolean>() {
+            /* class com.android.keyguard.charge.MiuiChargeController.AnonymousClass6 */
+
             /* access modifiers changed from: protected */
             public Boolean doInBackground(Void... voidArr) {
                 boolean z = false;
@@ -572,10 +584,12 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     /* access modifiers changed from: private */
-    public void showWirelessChargeSlowly() {
+    /* access modifiers changed from: public */
+    private void showWirelessChargeSlowly() {
         this.mHandler.postDelayed(this.mShowSlowlyRunnable, 2000);
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedGoingToSleep() {
         this.mScreenOn = false;
         if (shouldShowChargeAnim()) {
@@ -588,9 +602,12 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         this.mHandler.removeCallbacks(this.mScreenOffRunnable);
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedWakingUp() {
         this.mScreenOn = true;
         this.mHandler.post(new Runnable() {
+            /* class com.android.keyguard.charge.$$Lambda$MiuiChargeController$YIliaQZAut_8QrEEj6IFrgg_Pys */
+
             public final void run() {
                 MiuiChargeController.this.lambda$onStartedWakingUp$0$MiuiChargeController();
             }
@@ -607,7 +624,8 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     /* access modifiers changed from: private */
-    public void showMissedTip(boolean z) {
+    /* access modifiers changed from: public */
+    private void showMissedTip(boolean z) {
         if (z) {
             if (this.mMiuiWirelessChargeSlowlyView == null) {
                 this.mMiuiWirelessChargeSlowlyView = new MiuiWirelessChargeSlowlyView(this.mContext, !shouldShowChargeAnim());

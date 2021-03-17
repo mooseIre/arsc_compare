@@ -6,7 +6,8 @@ import android.graphics.Paint;
 import android.view.View;
 import com.android.systemui.C0012R$dimen;
 
-class MiuiGxzwQuickLoadingView extends View {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwQuickLoadingView extends View {
     private float mCurrentLoadingRadius = this.mLoadingOriginalRadius;
     private boolean mLoading = false;
     private float mLoadingMaxRadius;

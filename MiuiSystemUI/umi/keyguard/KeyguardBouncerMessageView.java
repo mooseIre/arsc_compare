@@ -20,12 +20,11 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
     private Resources mResources;
     private int mShakeDistance;
     private int mShakeDuration;
-    /* access modifiers changed from: private */
-    public int mShakeTimes;
+    private int mShakeTimes;
     private TextView mTitle;
 
     public KeyguardBouncerMessageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardBouncerMessageView(Context context, AttributeSet attributeSet) {
@@ -81,20 +80,22 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
             int i = this.mShakeDistance;
             this.mShakeDistance = i - (i / 2);
             float x = this.mContent.getX();
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mContent, "X", new float[]{x, ((float) this.mShakeDistance) + x});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mContent, "X", x, ((float) this.mShakeDistance) + x);
             ofFloat.setInterpolator(new SineEaseOutInterpolator());
             ofFloat.setDuration((long) this.mShakeDuration);
             TextView textView = this.mContent;
             int i2 = this.mShakeDistance;
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(textView, "X", new float[]{((float) i2) + x, x - ((float) i2)});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(textView, "X", ((float) i2) + x, x - ((float) i2));
             ofFloat2.setInterpolator(new SineEaseInOutInterpolator());
             ofFloat2.setDuration((long) (this.mShakeDuration * 2));
-            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(this.mContent, "X", new float[]{x - ((float) this.mShakeDistance), x});
+            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(this.mContent, "X", x - ((float) this.mShakeDistance), x);
             ofFloat3.setInterpolator(this.mShakeTimes == 2 ? new SineEaseOutInterpolator() : new SineEaseInInterpolator());
             ofFloat3.setDuration((long) this.mShakeDuration);
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playSequentially(new Animator[]{ofFloat, ofFloat2, ofFloat3});
+            animatorSet.playSequentially(ofFloat, ofFloat2, ofFloat3);
             animatorSet.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.KeyguardBouncerMessageView.AnonymousClass1 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -119,6 +120,6 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
 
     public void resetAnimValue() {
         this.mShakeTimes = 0;
-        this.mShakeDistance = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.miui_common_unlock_screen_tip_shake_distance);
+        this.mShakeDistance = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.miui_common_unlock_screen_tip_shake_distance);
     }
 }

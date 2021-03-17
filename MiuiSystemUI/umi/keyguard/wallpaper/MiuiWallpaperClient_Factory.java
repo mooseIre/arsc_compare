@@ -14,6 +14,7 @@ public final class MiuiWallpaperClient_Factory implements Factory<MiuiWallpaperC
         this.wakefulnessLifecycleProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiWallpaperClient get() {
         return provideInstance(this.mContextProvider, this.wakefulnessLifecycleProvider);
     }

@@ -10,7 +10,8 @@ import android.view.ViewGroup;
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;
 
-final class ViewPreviewer {
+/* access modifiers changed from: package-private */
+public final class ViewPreviewer {
     private final Handler mMainHandler = new Handler(Looper.getMainLooper());
 
     ViewPreviewer() {
@@ -22,6 +23,9 @@ final class ViewPreviewer {
             return null;
         }
         FutureTask futureTask = new FutureTask(new Callable<Bitmap>() {
+            /* class com.android.keyguard.clock.ViewPreviewer.AnonymousClass1 */
+
+            @Override // java.util.concurrent.Callable
             public Bitmap call() {
                 Bitmap createBitmap = Bitmap.createBitmap(i, i2, Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(createBitmap);
@@ -47,7 +51,8 @@ final class ViewPreviewer {
     }
 
     /* access modifiers changed from: private */
-    public void dispatchVisibilityAggregated(View view, boolean z) {
+    /* access modifiers changed from: public */
+    private void dispatchVisibilityAggregated(View view, boolean z) {
         boolean z2 = true;
         boolean z3 = view.getVisibility() == 0;
         if (z3 || !z) {

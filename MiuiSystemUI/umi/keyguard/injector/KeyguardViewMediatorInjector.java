@@ -20,7 +20,6 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import java.util.ArrayList;
-import java.util.concurrent.Executor;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -64,7 +63,7 @@ public final class KeyguardViewMediatorInjector {
         BroadcastReceiver broadcastReceiver = this.mShowPasswordScreenReceiver;
         UserHandle userHandle = UserHandle.ALL;
         Intrinsics.checkExpressionValueIsNotNull(userHandle, "UserHandle.ALL");
-        BroadcastDispatcher.registerReceiver$default(broadcastDispatcher, broadcastReceiver, intentFilter, (Executor) null, userHandle, 4, (Object) null);
+        BroadcastDispatcher.registerReceiver$default(broadcastDispatcher, broadcastReceiver, intentFilter, null, userHandle, 4, null);
     }
 
     public final void unblockScreenOn(@NotNull ArrayList<IKeyguardStateCallback> arrayList) {

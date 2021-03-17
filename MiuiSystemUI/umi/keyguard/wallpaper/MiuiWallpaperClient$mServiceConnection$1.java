@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MiuiWallpaperClient$mServiceConnection$1 implements ServiceConnection {
     final /* synthetic */ MiuiWallpaperClient this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiWallpaperClient$mServiceConnection$1(MiuiWallpaperClient miuiWallpaperClient) {
         this.this$0 = miuiWallpaperClient;
     }
@@ -23,9 +24,9 @@ public final class MiuiWallpaperClient$mServiceConnection$1 implements ServiceCo
         Log.d(this.this$0.getTAG(), "on MiuiKeyguardWallpaperRemoteStateService connected");
         try {
             this.this$0.mWallpaperService = IMiuiKeyguardWallpaperService.Stub.asInterface(iBinder);
-            IMiuiKeyguardWallpaperService access$getMWallpaperService$p = this.this$0.mWallpaperService;
-            if (access$getMWallpaperService$p != null) {
-                access$getMWallpaperService$p.bindSystemUIProxy(new MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1(this));
+            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.this$0.mWallpaperService;
+            if (iMiuiKeyguardWallpaperService != null) {
+                iMiuiKeyguardWallpaperService.bindSystemUIProxy(new MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1(this));
             } else {
                 Log.d(this.this$0.getTAG(), "mWallpaperService == null");
             }

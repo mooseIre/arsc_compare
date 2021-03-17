@@ -17,8 +17,11 @@ final class KeyguardUpdateMonitorInjector$onSuperSaveModeChange$1 extends Lambda
         this.$on = z;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke((MiuiKeyguardUpdateMonitorCallback) obj);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(MiuiKeyguardUpdateMonitorCallback miuiKeyguardUpdateMonitorCallback) {
+        invoke(miuiKeyguardUpdateMonitorCallback);
         return Unit.INSTANCE;
     }
 

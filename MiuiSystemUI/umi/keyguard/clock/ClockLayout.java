@@ -17,7 +17,7 @@ public class ClockLayout extends FrameLayout {
     private float mDarkAmount;
 
     public ClockLayout(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ClockLayout(Context context, AttributeSet attributeSet) {

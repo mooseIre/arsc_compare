@@ -17,6 +17,7 @@ public final class KeyguardPanelViewInjector_Factory implements Factory<Keyguard
         this.wakefulnessLifecycleProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardPanelViewInjector get() {
         return provideInstance(this.mContextProvider, this.mStatusBarProvider, this.wakefulnessLifecycleProvider);
     }

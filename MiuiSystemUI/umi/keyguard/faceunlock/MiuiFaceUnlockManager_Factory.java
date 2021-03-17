@@ -11,6 +11,7 @@ public final class MiuiFaceUnlockManager_Factory implements Factory<MiuiFaceUnlo
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiFaceUnlockManager get() {
         return provideInstance(this.contextProvider);
     }

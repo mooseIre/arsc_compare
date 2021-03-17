@@ -4,22 +4,15 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.Rect;
-import android.hardware.biometrics.BiometricSourceType;
 import android.media.AudioManager;
 import android.provider.Settings;
-import android.security.MiuiLockPatternUtils;
 import android.util.Log;
-import android.util.Slog;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView;
 import com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot;
-import com.android.keyguard.HeiHeiGestureView;
-import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.charge.ChargeUtils;
-import com.android.keyguard.charge.MiuiBatteryStatus;
 import com.android.keyguard.faceunlock.FaceUnlockCallback;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockUtils;
@@ -32,26 +25,22 @@ import com.android.systemui.statusbar.phone.NotificationPanelViewController;
 import com.android.systemui.statusbar.phone.PanelBar;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import miui.maml.data.Variables;
 import miui.maml.util.Utils;
 import org.jetbrains.annotations.Nullable;
 
 public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.LockscreenCallback {
-    /* access modifiers changed from: private */
-    public static RootHolder mRootHolder = new RootHolder();
+    private static RootHolder mRootHolder = new RootHolder();
     private static int mThemeChanged;
     private static long sStartTime;
     static boolean sSuppressNextLockSound;
     private static long sTotalWakenTime;
     private AudioManager mAudioManager;
     private FaceUnlockCallback mFaceUnlockCallback;
-    /* access modifiers changed from: private */
-    public boolean mInitSuccessful;
+    private boolean mInitSuccessful;
     private boolean mIsFocus;
     private boolean mIsInteractive;
     private boolean mIsPaused;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardBouncerShowing;
+    private boolean mKeyguardBouncerShowing;
     private LockPatternUtils mLockPatternUtils;
     private AwesomeLockScreenView mLockscreenView;
     private MiuiGxzwCallback mMiuiGxzwCallback;
@@ -66,6 +55,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
     private void updateStatusBarColormode() {
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public boolean isSecure() {
         return false;
     }
@@ -82,143 +72,16 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
     }
 
-    /* JADX WARNING: type inference failed for: r3v10, types: [com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView, android.view.View] */
-    AwesomeLockScreen(Context context) {
-        super(context);
-        int i = 0;
-        this.mIsPaused = false;
-        this.mIsFocus = true;
-        this.mKeyguardBouncerShowing = false;
-        this.mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
-            public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
-                super.onRefreshBatteryInfo(miuiBatteryStatus);
-                Log.d("AwesomeLockScreen", "onRefreshBatteryInfo: isBatteryLow = " + miuiBatteryStatus.isBatteryLow() + " isPluggedIn = " + miuiBatteryStatus.isPluggedIn() + " level = " + miuiBatteryStatus.getLevel());
-                if (AwesomeLockScreen.this.mInitSuccessful) {
-                    AwesomeLockScreen.mRootHolder.getRoot().onRefreshBatteryInfo(miuiBatteryStatus);
-                }
-            }
-
-            public void onKeyguardBouncerChanged(boolean z) {
-                boolean unused = AwesomeLockScreen.this.mKeyguardBouncerShowing = z;
-                AwesomeLockScreen.this.updatePauseResumeStatus();
-            }
-
-            public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
-                if (biometricSourceType != BiometricSourceType.FACE) {
-                    return;
-                }
-                if (i == 3) {
-                    Log.i("AwesomeLockScreen", "onFaceAuthTimeOut");
-                    Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 3.0d);
-                    return;
-                }
-                Log.i("AwesomeLockScreen", "onFaceAuthHelp");
-                Utils.putVariableNumber("face_detect_help_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, (double) i);
-            }
-
-            public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
-                if (biometricSourceType == BiometricSourceType.FACE) {
-                    Log.i("AwesomeLockScreen", "onFaceAuthenticated");
-                    Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 2.0d);
-                }
-            }
-
-            public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
-                if (biometricSourceType == BiometricSourceType.FACE) {
-                    Log.i("AwesomeLockScreen", "onFaceAuthFailed");
-                    Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 4.0d);
-                }
-            }
-        };
-        this.mFaceUnlockCallback = new FaceUnlockCallback(this) {
-            public void onFaceAuthLocked() {
-                Log.i("AwesomeLockScreen", "onFaceAuthLocked");
-                Utils.putVariableNumber("face_detect_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 5.0d);
-            }
-
-            public void onFaceEnableChange(boolean z, boolean z2) {
-                Log.i("AwesomeLockScreen", "onFaceEnableChange enable=" + z + ";stay=" + z2);
-                double d = 1.0d;
-                Utils.putVariableNumber("face_enable", AwesomeLockScreen.mRootHolder.getContext().mVariables, z ? 1.0d : 0.0d);
-                Variables variables = AwesomeLockScreen.mRootHolder.getContext().mVariables;
-                if (!z2) {
-                    d = 0.0d;
-                }
-                Utils.putVariableNumber("face_unlock_success_stay_screen_enable", variables, d);
-            }
-        };
-        this.mMiuiGxzwCallback = new MiuiGxzwCallback() {
-            public void onGxzwEnableChange(boolean z) {
-                Log.i("AwesomeLockScreen", "onGxzwEnableChange: enable = " + z);
-                Utils.putVariableNumber("fod_enable", AwesomeLockScreen.mRootHolder.getContext().mVariables, z ? 1.0d : 0.0d);
-                if (z) {
-                    Rect fodPosition = MiuiGxzwManager.getFodPosition(AwesomeLockScreen.this.getContext());
-                    Utils.putVariableNumber("fod_x", AwesomeLockScreen.mRootHolder.getContext().mVariables, (double) fodPosition.left);
-                    Utils.putVariableNumber("fod_y", AwesomeLockScreen.mRootHolder.getContext().mVariables, (double) fodPosition.top);
-                    Utils.putVariableNumber("fod_width", AwesomeLockScreen.mRootHolder.getContext().mVariables, (double) fodPosition.width());
-                    Utils.putVariableNumber("fod_height", AwesomeLockScreen.mRootHolder.getContext().mVariables, (double) fodPosition.height());
-                }
-            }
-
-            public void onGxzwTouchDown() {
-                Log.i("AwesomeLockScreen", "onGxzwTouchDown");
-                Utils.putVariableNumber("fod_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 1.0d);
-            }
-
-            public void onGxzwTouchUp() {
-                Log.i("AwesomeLockScreen", "onGxzwTouchUp");
-                Utils.putVariableNumber("fod_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 2.0d);
-            }
-
-            public void onGxzwAuthFailed() {
-                Log.i("AwesomeLockScreen", "onGxzwAuthFailed");
-                Utils.putVariableNumber("fod_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 3.0d);
-            }
-
-            public void onGxzwAuthSucceeded() {
-                Log.i("AwesomeLockScreen", "onGxzwAuthSucceeded");
-                Utils.putVariableNumber("fod_state_msg", AwesomeLockScreen.mRootHolder.getContext().mVariables, 4.0d);
-            }
-        };
-        this.mLockPatternUtils = new LockPatternUtils(context);
-        setFocusable(true);
-        setFocusableInTouchMode(true);
-        this.mAudioManager = (AudioManager) context.getSystemService("audio");
-        int i2 = context.getResources().getConfiguration().extraConfig.themeChanged;
-        if (i2 > mThemeChanged) {
-            clearCache();
-            mThemeChanged = i2;
-        }
-        if (!mRootHolder.init(this.mContext, this)) {
-            AnalyticsHelper.getInstance(this.mContext).record("awesome_lockscreen_init_failed");
-            Slog.e("AwesomeLockScreen", "fail to init RootHolder");
-            return;
-        }
-        Utils.putVariableString("owner_info", mRootHolder.getContext().mVariables, this.mLockPatternUtils.isOwnerInfoEnabled(KeyguardUpdateMonitor.getCurrentUser()) ? new MiuiLockPatternUtils(context).getOwnerInfo() : null);
-        HeiHeiGestureView heiHeiGestureView = new HeiHeiGestureView(this.mContext);
-        heiHeiGestureView.setLayoutParams(new FrameLayout.LayoutParams(-1, -1));
-        heiHeiGestureView.setOnTriggerListener(new HeiHeiGestureView.OnTriggerListener() {
-            public void onTrigger() {
-                AwesomeLockScreen.sSuppressNextLockSound = true;
-                AwesomeLockScreen.this.collapsePanel();
-            }
-        });
-        addView(heiHeiGestureView);
-        this.mPasswordMode = getPasswordMode();
-        mRootHolder.getContext().mVariables.put("__password_mode", (double) this.mPasswordMode);
-        mRootHolder.getRoot().setLockscreenCallback(this);
-        AwesomeLockScreenView createView = mRootHolder.createView(this.mContext);
-        this.mLockscreenView = createView;
-        if (createView != null) {
-            heiHeiGestureView.addView(this.mLockscreenView, new FrameLayout.LayoutParams(-1, -1));
-            this.mInitSuccessful = true;
-        }
-        if (sStartTime == 0) {
-            sStartTime = System.currentTimeMillis() / 1000;
-        }
-        this.mWakeStartTime = System.currentTimeMillis() / 1000;
-        updatePauseResumeStatus();
-        mRootHolder.getRoot().setBgColor(this.mPasswordMode != 0 ? -16777216 : i);
+    /* JADX DEBUG: Multi-variable search result rejected for r8v4, resolved type: com.android.keyguard.HeiHeiGestureView */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r3v10, types: [com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView, android.view.View] */
+    /* JADX WARNING: Unknown variable types count: 1 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    AwesomeLockScreen(android.content.Context r8) {
+        /*
+        // Method dump skipped, instructions count: 266
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.AwesomeLockScreen.<init>(android.content.Context):void");
     }
 
     public void setIsInteractive(boolean z) {
@@ -302,9 +165,12 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         mRootHolder.cleanUp(this);
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void unlocked(Intent intent, int i) {
         sendLockscreenIntentTypeAnalytics(intent);
         postDelayed(new Runnable() {
+            /* class com.android.keyguard.AwesomeLockScreen.AnonymousClass5 */
+
             public void run() {
                 try {
                     AwesomeLockScreen.this.collapsePanel();
@@ -314,12 +180,13 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
                 }
             }
         }, (long) i);
-        if (MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext)) {
+        if (MiuiFaceUnlockUtils.isSupportLiftingCamera(((FrameLayout) this).mContext)) {
             this.mUpdateMonitor.requestFaceAuth(1);
         }
-        Log.d("AwesomeLockScreen", String.format("lockscreen awake time: [%d sec] in time range: [%d sec]", new Object[]{Long.valueOf(sTotalWakenTime), Long.valueOf((System.currentTimeMillis() / 1000) - sStartTime)}));
+        Log.d("AwesomeLockScreen", String.format("lockscreen awake time: [%d sec] in time range: [%d sec]", Long.valueOf(sTotalWakenTime), Long.valueOf((System.currentTimeMillis() / 1000) - sStartTime)));
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public boolean unlockVerify(String str, int i) {
         this.mPasswordMode = getPasswordMode();
         mRootHolder.getRoot().getVariables().put("__password_mode", (double) this.mPasswordMode);
@@ -332,7 +199,8 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
     }
 
     /* access modifiers changed from: private */
-    public void collapsePanel() {
+    /* access modifiers changed from: public */
+    private void collapsePanel() {
         this.mPanelViewController.collapse(false, 1.0f);
     }
 
@@ -348,6 +216,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         intent2.putExtra("eventObj", str);
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public int getPasswordMode() {
         int keyguardStoredPasswordQuality = this.mLockPatternUtils.getKeyguardStoredPasswordQuality(KeyguardUpdateMonitor.getCurrentUser());
         if (keyguardStoredPasswordQuality == 0) {
@@ -356,42 +225,51 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         return (keyguardStoredPasswordQuality == 131072 || keyguardStoredPasswordQuality == 196608) ? 1 : 10;
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void pokeWakelock() {
         this.mStatusBar.userActivity();
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void haptic(int i) {
         performHapticFeedback(1);
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public boolean isSoundEnable() {
-        boolean z = Settings.System.getIntForUser(this.mContext.getContentResolver(), "lockscreen_sounds_enabled", 1, KeyguardUpdateMonitor.getCurrentUser()) != 0;
+        boolean z = Settings.System.getIntForUser(((FrameLayout) this).mContext.getContentResolver(), "lockscreen_sounds_enabled", 1, KeyguardUpdateMonitor.getCurrentUser()) != 0;
         if (this.mAudioManager.getRingerMode() != 2 || !z) {
             return false;
         }
         return true;
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void disableLockScreenFod(boolean z) {
         MiuiGxzwManager.getInstance().disableLockScreenFod(z);
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void disableLockScreenFodAnim(boolean z) {
         MiuiGxzwManager.getInstance().disableLockScreenFodAnim(z);
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void disableChargeAnimation(boolean z) {
         ChargeUtils.disableChargeAnimation(z);
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void startLockScreenFaceUnlock() {
         this.mUpdateMonitor.requestFaceAuth();
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void stopLockScreenFaceUnlock() {
         ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).cancelFaceAuth();
     }
 
+    @Override // com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot.LockscreenCallback
     public void disableLockScreenFaceUnlockAnim(boolean z) {
         ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).disableLockScreenFaceUnlockAnim(z);
     }

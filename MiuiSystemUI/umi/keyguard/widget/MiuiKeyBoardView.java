@@ -53,8 +53,7 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
     private int mPopupViewWidth;
     private int mPopupViewX;
     private int mPopupViewY;
-    /* access modifiers changed from: private */
-    public TextView mPreviewText;
+    private TextView mPreviewText;
     private final Runnable mSendDeleteActionRunnable;
     private ValueAnimator mShowPreviewAnimator;
     private long mShowPreviewLastTime;
@@ -69,7 +68,7 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
     }
 
     public MiuiKeyBoardView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiKeyBoardView(Context context, AttributeSet attributeSet) {
@@ -85,12 +84,16 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
         this.mShowPreviewLastTime = 0;
         this.mShowPreviewAnimator = new ValueAnimator();
         this.mSendDeleteActionRunnable = new Runnable() {
+            /* class com.android.keyguard.widget.MiuiKeyBoardView.AnonymousClass1 */
+
             public void run() {
                 MiuiKeyBoardView.this.onKeyBoardDelete();
                 MiuiKeyBoardView.this.postDelayed(this, 50);
             }
         };
         this.mConfirmHide = new Runnable() {
+            /* class com.android.keyguard.widget.MiuiKeyBoardView.AnonymousClass2 */
+
             public void run() {
                 MiuiKeyBoardView.this.showPreviewAnim(false);
             }
@@ -242,7 +245,8 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
     }
 
     /* access modifiers changed from: private */
-    public void onKeyBoardDelete() {
+    /* access modifiers changed from: public */
+    private void onKeyBoardDelete() {
         Iterator<OnKeyboardActionListener> it = this.mKeyboardListeners.iterator();
         while (it.hasNext()) {
             it.next().onKeyBoardDelete();
@@ -324,56 +328,50 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
         int i6 = i4 - i2;
         float[][] fArr = LETTER_SIZE_GROUP;
         int length = (int) (((float) (((i5 - (this.mPaddingLeft * 2)) / fArr[0].length) * 1)) / 1.14f);
+        int i7 = (int) (((float) length) * 0.14f);
         int length2 = (int) (((float) (((i6 - (this.mPaddingTop * 2)) / fArr.length) * 1)) / 1.13f);
+        int i8 = (int) (((float) length2) * 0.14f);
         this.mLetterBoard.layout(0, 0, i5, i6);
         this.mSymbolBoard.layout(0, 0, i5, i6);
         this.mNumberBoard.layout(0, 0, i5, i6);
-        int i7 = i5;
-        int i8 = length;
-        int i9 = (int) (((float) length) * 0.14f);
-        int i10 = length2;
-        int i11 = (int) (((float) length2) * 0.14f);
-        keyboardOnLayout(this.mLetterBoard, i7, i8, i9, i10, i11, LETTER_SIZE_GROUP);
-        keyboardOnLayout(this.mSymbolBoard, i7, i8, i9, i10, i11, SYMBOL_SIZE_GROUP);
+        keyboardOnLayout(this.mLetterBoard, i5, length, i7, length2, i8, LETTER_SIZE_GROUP);
+        keyboardOnLayout(this.mSymbolBoard, i5, length, i7, length2, i8, SYMBOL_SIZE_GROUP);
         float[][] fArr2 = NUMBER_SIZE_GROUP;
-        keyboardOnLayout(this.mNumberBoard, i7, i8, i9, (int) (((float) (((i6 - (this.mPaddingTop * 2)) / fArr2.length) * 1)) / 1.13f), i11, fArr2);
+        keyboardOnLayout(this.mNumberBoard, i5, length, i7, (int) (((float) (((i6 - (this.mPaddingTop * 2)) / fArr2.length) * 1)) / 1.13f), i8, fArr2);
         TextView textView = this.mPreviewText;
-        int i12 = this.mPopupViewX;
-        int i13 = this.mPopupViewY;
-        textView.layout(i12, i13, this.mPopupViewWidth + i12, this.mPopupViewHeight + i13);
+        int i9 = this.mPopupViewX;
+        int i10 = this.mPopupViewY;
+        textView.layout(i9, i10, this.mPopupViewWidth + i9, this.mPopupViewHeight + i10);
     }
 
     /* access modifiers changed from: package-private */
     public void keyboardOnLayout(ViewGroup viewGroup, int i, int i2, int i3, int i4, int i5, float[][] fArr) {
         int i6 = i2;
-        int i7 = i3;
-        float[][] fArr2 = fArr;
-        int length = fArr2.length;
-        int i8 = this.mPaddingTop;
+        int length = fArr.length;
+        int i7 = this.mPaddingTop;
+        int i8 = 0;
         int i9 = 0;
-        int i10 = 0;
-        while (i9 < length) {
-            float[] fArr3 = fArr2[i9];
+        while (i8 < length) {
+            float[] fArr2 = fArr[i8];
             float f = 0.0f;
-            for (float f2 : fArr3) {
+            for (float f2 : fArr2) {
                 f += f2 * ((float) i6);
             }
-            int length2 = (int) ((((float) i) - (f + ((float) ((fArr3.length - 1) * i7)))) / 2.0f);
-            int i11 = 0;
-            while (i11 < fArr3.length) {
-                KeyButton keyButton = (KeyButton) viewGroup.getChildAt(i10);
-                int i12 = "!".equals(keyButton.getText()) ? (int) (((float) length2) + (((float) i6) * (fArr3[i11] - 1.0f))) : length2;
+            int length2 = (int) ((((float) i) - (f + ((float) ((fArr2.length - 1) * i3)))) / 2.0f);
+            int i10 = 0;
+            while (i10 < fArr2.length) {
+                KeyButton keyButton = (KeyButton) viewGroup.getChildAt(i9);
+                int i11 = "!".equals(keyButton.getText()) ? (int) (((float) length2) + (((float) i6) * (fArr2[i10] - 1.0f))) : length2;
                 float f3 = (float) length2;
                 float f4 = (float) i6;
-                keyButton.layout(i12, i8, (int) (f3 + (fArr3[i11] * f4)), i8 + i4);
-                length2 = (int) (f3 + (f4 * fArr3[i11]) + ((float) i7));
+                keyButton.layout(i11, i7, (int) (f3 + (fArr2[i10] * f4)), i7 + i4);
+                length2 = (int) (f3 + (f4 * fArr2[i10]) + ((float) i3));
+                i9++;
                 i10++;
-                i11++;
                 i6 = i2;
             }
-            ViewGroup viewGroup2 = viewGroup;
-            i8 += i5 + i4;
-            i9++;
+            i7 += i5 + i4;
+            i8++;
             i6 = i2;
         }
     }
@@ -405,21 +403,24 @@ public class MiuiKeyBoardView extends FrameLayout implements View.OnClickListene
     }
 
     /* access modifiers changed from: private */
-    public void showPreviewAnim(boolean z) {
+    /* access modifiers changed from: public */
+    private void showPreviewAnim(boolean z) {
         this.mShowPreviewAnimator.cancel();
         removeCallbacks(this.mConfirmHide);
         this.mShowPreviewAnimator.removeAllListeners();
         this.mShowPreviewAnimator.removeAllUpdateListeners();
         if (z) {
-            this.mShowPreviewAnimator.setFloatValues(new float[]{0.0f, 1.0f});
+            this.mShowPreviewAnimator.setFloatValues(0.0f, 1.0f);
         } else {
-            this.mShowPreviewAnimator.setFloatValues(new float[]{1.0f, 0.0f});
+            this.mShowPreviewAnimator.setFloatValues(1.0f, 0.0f);
         }
-        this.mShowPreviewAnimator.setDuration(100);
+        this.mShowPreviewAnimator.setDuration(100L);
         this.mPreviewText.setVisibility(0);
         this.mPreviewText.setPivotX(((float) this.mPopupViewWidth) * 0.5f);
         this.mPreviewText.setPivotY((float) this.mPopupViewHeight);
         this.mShowPreviewAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.widget.MiuiKeyBoardView.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyBoardView.this.mPreviewText.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }

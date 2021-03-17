@@ -15,6 +15,7 @@ public class AddEventItem extends IQuickOpenItem {
     private String mPackageName = getMiCalendarPackageName(this.mContext);
     private final ImageView mView;
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTag() {
         return "Calendar/Add event";
     }
@@ -27,10 +28,12 @@ public class AddEventItem extends IQuickOpenItem {
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public View getView() {
         return this.mView;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public Intent getIntent() {
         Intent intent = new Intent();
         intent.setComponent(new ComponentName(this.mPackageName, "com.android.calendar.event.EditEventActivity"));
@@ -39,10 +42,12 @@ public class AddEventItem extends IQuickOpenItem {
         return intent;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_add_event);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_add_event_sub);
     }

@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$ClockOptionsProvider$VCFr6VBqrtOSuPK
     private /* synthetic */ $$Lambda$ClockOptionsProvider$VCFr6VBqrtOSuPKYuOzo6kUuyg() {
     }
 
+    @Override // java.util.function.Supplier
     public final Object get() {
         return ((ClockManager) Dependency.get(ClockManager.class)).getClockInfos();
     }

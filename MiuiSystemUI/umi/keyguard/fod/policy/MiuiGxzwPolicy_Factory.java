@@ -18,6 +18,7 @@ public final class MiuiGxzwPolicy_Factory implements Factory<MiuiGxzwPolicy> {
         this.statusBarLazyProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public MiuiGxzwPolicy get() {
         return provideInstance(this.panelExpansionObserverProvider, this.statusBarStateControllerProvider, this.statusBarLazyProvider);
     }

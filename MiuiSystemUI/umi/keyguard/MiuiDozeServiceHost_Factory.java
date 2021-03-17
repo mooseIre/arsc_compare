@@ -65,6 +65,7 @@ public final class MiuiDozeServiceHost_Factory implements Factory<MiuiDozeServic
         this.settingsManagerProvider = provider19;
     }
 
+    @Override // javax.inject.Provider
     public MiuiDozeServiceHost get() {
         return provideInstance(this.dozeLogProvider, this.powerManagerProvider, this.wakefulnessLifecycleProvider, this.statusBarStateControllerProvider, this.deviceProvisionedControllerProvider, this.headsUpManagerPhoneProvider, this.batteryControllerProvider, this.scrimControllerProvider, this.biometricUnlockControllerLazyProvider, this.keyguardViewMediatorProvider, this.assistManagerLazyProvider, this.dozeScrimControllerProvider, this.keyguardUpdateMonitorProvider, this.visualStabilityManagerProvider, this.pulseExpansionHandlerProvider, this.notificationShadeWindowControllerProvider, this.notificationWakeUpCoordinatorProvider, this.lockscreenLockIconControllerProvider, this.settingsManagerProvider);
     }

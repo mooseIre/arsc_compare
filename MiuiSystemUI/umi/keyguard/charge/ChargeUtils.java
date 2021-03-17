@@ -81,7 +81,7 @@ public class ChargeUtils {
     }
 
     public static boolean supportNewChargeAnimation() {
-        return !FeatureParser.getBoolean("is_pad", SUPPORT_WIRELESS_CHARGE);
+        return !FeatureParser.getBoolean("is_pad", (boolean) SUPPORT_WIRELESS_CHARGE);
     }
 
     public static void disableChargeAnimation(boolean z) {
@@ -134,11 +134,11 @@ public class ChargeUtils {
             long mins = getMins(j);
             int i2 = (hours > 0 ? 1 : (hours == 0 ? 0 : -1));
             if (i2 > 0 && mins > 0) {
-                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_time_text, (int) hours, new Object[]{Long.valueOf(hours), Long.valueOf(mins)});
+                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_time_text, (int) hours, Long.valueOf(hours), Long.valueOf(mins));
             } else if (i2 > 0) {
-                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_hour_time_text, (int) hours, new Object[]{Long.valueOf(hours)});
+                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_hour_time_text, (int) hours, Long.valueOf(hours));
             } else if (mins > 0) {
-                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_min_time_text, (int) mins, new Object[]{Long.valueOf(mins)});
+                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_min_time_text, (int) mins, Long.valueOf(mins));
             }
         }
         if (!TextUtils.isEmpty(str)) {
@@ -148,13 +148,13 @@ public class ChargeUtils {
             return resources.getString(C0021R$string.keyguard_charged);
         }
         if (isStrongSuperQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, new Object[]{Integer.valueOf(i)});
+            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isSuperQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, new Object[]{Integer.valueOf(i)});
+            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_quick_and_level_tip, new Object[]{Integer.valueOf(i)});
+            return resources.getString(C0021R$string.keyguard_charging_quick_and_level_tip, Integer.valueOf(i));
         } else {
-            return resources.getString(C0021R$string.keyguard_charging_normal_and_level_tip, new Object[]{Integer.valueOf(i)});
+            return resources.getString(C0021R$string.keyguard_charging_normal_and_level_tip, Integer.valueOf(i));
         }
     }
 
@@ -251,7 +251,7 @@ public class ChargeUtils {
     }
 
     public static void showSystemOverlayToast(Context context, int i, int i2) {
-        showSystemOverlayToast(context, (CharSequence) context.getString(i), i2);
+        showSystemOverlayToast(context, context.getString(i), i2);
     }
 
     public static void showSystemOverlayToast(Context context, CharSequence charSequence, int i) {

@@ -8,7 +8,7 @@ import miui.system.R;
 
 public class MiuiKeyguardLeftTopClock extends MiuiKeyguardSingleClock {
     public MiuiKeyguardLeftTopClock(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiKeyguardLeftTopClock(Context context, AttributeSet attributeSet) {
@@ -23,6 +23,7 @@ public class MiuiKeyguardLeftTopClock extends MiuiKeyguardSingleClock {
         this.mMagazineClockView.updateViewsForClockPosition(true);
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock, com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void setDarkStyle(boolean z) {
         if (z != this.mDarkStyle) {
             super.setDarkStyle(z);
@@ -31,27 +32,32 @@ public class MiuiKeyguardLeftTopClock extends MiuiKeyguardSingleClock {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public boolean shouldShowSwitchAnim() {
         return this.mShowLunarCalendar || this.mShowOwnerInfo;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNotificationStateAnimOutEnd() {
         this.mMiuiBaseClock.getLunarCalendarView().setVisibility(8);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNotificationStateAnimOutUpdate(float f) {
         this.mMiuiBaseClock.getLunarCalendarView().setAlpha(f);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNormalStateAnimOutEnd() {
         this.mMiuiBaseClock.getLunarCalendarView().setAlpha(0.0f);
         updateLunarCalendarInfo();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNormalStateAnimInUpdate(float f) {
         this.mMiuiBaseClock.getLunarCalendarView().setAlpha(f);
     }

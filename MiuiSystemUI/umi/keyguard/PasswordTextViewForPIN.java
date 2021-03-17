@@ -12,6 +12,7 @@ import android.provider.Settings;
 import android.security.MiuiLockPatternUtils;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -29,20 +30,14 @@ import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.FloatProperty;
 
 public class PasswordTextViewForPIN extends PasswordTextView {
-    /* access modifiers changed from: private */
-    public int mCharPadding;
-    /* access modifiers changed from: private */
-    public int mDotSize;
-    /* access modifiers changed from: private */
-    public final Paint mDrawPaint;
-    /* access modifiers changed from: private */
-    public final Paint mFillPaint;
+    private int mCharPadding;
+    private int mDotSize;
+    private final Paint mDrawPaint;
+    private final Paint mFillPaint;
     private final int mGravity;
-    /* access modifiers changed from: private */
-    public boolean mIsResetAnimating;
+    private boolean mIsResetAnimating;
     private int mPasswordLength;
-    /* access modifiers changed from: private */
-    public float mStrokeWidth;
+    private float mStrokeWidth;
     private String mText;
     private ArrayList<CharState> mTextChars;
     private final int mTextHeightRaw;
@@ -50,7 +45,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     private int mWidth;
 
     public PasswordTextViewForPIN(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public PasswordTextViewForPIN(Context context, AttributeSet attributeSet) {
@@ -79,17 +74,17 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_charPadding, getContext().getResources().getDimensionPixelSize(C0012R$dimen.password_char_padding));
             this.mStrokeWidth = (float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.keyboard_password_dot_stroke_width);
             obtainStyledAttributes.recycle();
-            int i3 = Settings.System.getInt(this.mContext.getContentResolver(), "show_password", 1);
-            AnimationUtils.loadInterpolator(this.mContext, 17563662);
-            AnimationUtils.loadInterpolator(this.mContext, 17563663);
-            AnimationUtils.loadInterpolator(this.mContext, 17563661);
+            Settings.System.getInt(((View) this).mContext.getContentResolver(), "show_password", 1);
+            AnimationUtils.loadInterpolator(((View) this).mContext, 17563662);
+            AnimationUtils.loadInterpolator(((View) this).mContext, 17563663);
+            AnimationUtils.loadInterpolator(((View) this).mContext, 17563661);
             int lockPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
             this.mPasswordLength = lockPasswordLength;
             if (lockPasswordLength < 4) {
                 this.mPasswordLength = 4;
                 Log.e("PasswordTextViewForPIN", "get password length = " + this.mPasswordLength);
             }
-            for (int i4 = 0; i4 < this.mPasswordLength; i4++) {
+            for (int i3 = 0; i3 < this.mPasswordLength; i3++) {
                 this.mTextChars.add(new CharState());
             }
             this.mWidth = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_security_pin_entry_width);
@@ -131,91 +126,18 @@ public class PasswordTextViewForPIN extends PasswordTextView {
 
     /* access modifiers changed from: protected */
     /* JADX WARNING: Removed duplicated region for block: B:13:0x0077 A[LOOP:0: B:11:0x0073->B:13:0x0077, LOOP_END] */
+    @Override // com.android.keyguard.PasswordTextView
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onDraw(android.graphics.Canvas r12) {
         /*
-            r11 = this;
-            float r0 = r11.getDrawingWidth()
-            int r1 = r11.mGravity
-            r2 = r1 & 7
-            r3 = 1073741824(0x40000000, float:2.0)
-            r4 = 3
-            if (r2 != r4) goto L_0x0028
-            r2 = 8388608(0x800000, float:1.17549435E-38)
-            r1 = r1 & r2
-            if (r1 == 0) goto L_0x0022
-            int r1 = r11.getLayoutDirection()
-            r2 = 1
-            if (r1 != r2) goto L_0x0022
-            int r1 = r11.mWidth
-            int r2 = r11.getPaddingRight()
-            int r1 = r1 - r2
-            float r1 = (float) r1
-            goto L_0x002e
-        L_0x0022:
-            int r0 = r11.getPaddingLeft()
-            float r1 = (float) r0
-            goto L_0x002f
-        L_0x0028:
-            int r1 = r11.mWidth
-            int r1 = r1 / 2
-            float r1 = (float) r1
-            float r0 = r0 / r3
-        L_0x002e:
-            float r1 = r1 - r0
-        L_0x002f:
-            android.graphics.Rect r0 = r11.getCharBounds()
-            int r2 = r0.bottom
-            int r4 = r0.top
-            int r2 = r2 - r4
-            int r4 = r11.getHeight()
-            int r5 = r11.getPaddingBottom()
-            int r4 = r4 - r5
-            int r5 = r11.getPaddingTop()
-            int r4 = r4 - r5
-            int r4 = r4 / 2
-            int r5 = r11.getPaddingTop()
-            int r4 = r4 + r5
-            float r4 = (float) r4
-            int r5 = r11.getPaddingLeft()
-            int r6 = r11.getPaddingTop()
-            int r7 = r11.mWidth
-            int r8 = r11.getPaddingRight()
-            int r7 = r7 - r8
-            int r8 = r11.getHeight()
-            int r9 = r11.getPaddingBottom()
-            int r8 = r8 - r9
-            r12.clipRect(r5, r6, r7, r8)
-            int r5 = r0.right
-            int r0 = r0.left
-            int r5 = r5 - r0
-            float r0 = (float) r5
-            float r3 = r0 / r3
-            float r1 = r1 + r3
-            r3 = 0
-        L_0x0073:
-            int r5 = r11.mPasswordLength
-            if (r3 >= r5) goto L_0x008c
-            java.util.ArrayList<com.android.keyguard.PasswordTextViewForPIN$CharState> r5 = r11.mTextChars
-            java.lang.Object r5 = r5.get(r3)
-            com.android.keyguard.PasswordTextViewForPIN$CharState r5 = (com.android.keyguard.PasswordTextViewForPIN.CharState) r5
-            r6 = r12
-            r7 = r1
-            r8 = r2
-            r9 = r4
-            r10 = r0
-            float r5 = r5.draw(r6, r7, r8, r9, r10)
-            float r1 = r1 + r5
-            int r3 = r3 + 1
-            goto L_0x0073
-        L_0x008c:
-            return
+        // Method dump skipped, instructions count: 141
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.PasswordTextViewForPIN.onDraw(android.graphics.Canvas):void");
     }
 
     /* access modifiers changed from: private */
-    public int getVisibleTextCharSize() {
+    /* access modifiers changed from: public */
+    private int getVisibleTextCharSize() {
         Iterator<CharState> it = this.mTextChars.iterator();
         int i = 0;
         while (it.hasNext()) {
@@ -246,6 +168,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         return (float) i2;
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public void append(char c) {
         String str = this.mText;
         String str2 = this.mText + c;
@@ -269,6 +192,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public void setUserActivityListener(PasswordTextView.UserActivityListener userActivityListener) {
         this.mUserActivityListener = userActivityListener;
     }
@@ -280,6 +204,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public void deleteLastChar() {
         int length = this.mText.length();
         String str = this.mText;
@@ -296,10 +221,12 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public String getText() {
         return this.mText;
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public void reset(boolean z, boolean z2) {
         String str = this.mText;
         this.mText = "";
@@ -327,7 +254,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
 
     /* access modifiers changed from: package-private */
     public void sendAccessibilityEventTypeViewTextChanged(String str, int i, int i2, int i3) {
-        if (!AccessibilityManager.getInstance(this.mContext).isEnabled()) {
+        if (!AccessibilityManager.getInstance(((View) this).mContext).isEnabled()) {
             return;
         }
         if (isFocused() || (isSelected() && isShown())) {
@@ -341,12 +268,14 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         accessibilityEvent.setClassName(EditText.class.getName());
         accessibilityEvent.setPassword(true);
     }
 
+    @Override // com.android.keyguard.PasswordTextView
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         accessibilityNodeInfo.setClassName(PasswordTextView.class.getName());
@@ -355,7 +284,8 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         accessibilityNodeInfo.setInputType(16);
     }
 
-    private class CharState {
+    /* access modifiers changed from: private */
+    public class CharState {
         private final AnimConfig CONFIG;
         private final AnimConfig Y_CONFIG;
         float alpha;
@@ -365,8 +295,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         private final float mMaxYOffset;
         private final String mScaleTarget = ("char_scale_" + hashCode());
         private final String mYTarget = ("char_y_" + hashCode());
-        /* access modifiers changed from: private */
-        public int tag = 0;
+        private int tag = 0;
         float yOffset;
 
         CharState() {
@@ -382,6 +311,9 @@ public class PasswordTextViewForPIN extends PasswordTextView {
 
         private void setupFolmeAnimations() {
             Folme.useValue(this.mScaleTarget).addListener(new TransitionListener() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass1 */
+
+                @Override // miuix.animation.listener.TransitionListener
                 public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     CharState charState = CharState.this;
                     charState.currentDotSizeFactor = f;
@@ -389,6 +321,9 @@ public class PasswordTextViewForPIN extends PasswordTextView {
                 }
             });
             Folme.useValue(this.mAlphaTarget).addListener(new TransitionListener() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass2 */
+
+                @Override // miuix.animation.listener.TransitionListener
                 public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     if (((Integer) obj).intValue() == CharState.this.tag) {
                         CharState charState = CharState.this;
@@ -397,13 +332,17 @@ public class PasswordTextViewForPIN extends PasswordTextView {
                     }
                 }
 
+                @Override // miuix.animation.listener.TransitionListener
                 public void onComplete(Object obj) {
                     if (((Integer) obj).intValue() == CharState.this.tag && PasswordTextViewForPIN.this.mIsResetAnimating && PasswordTextViewForPIN.this.getVisibleTextCharSize() == 0) {
-                        boolean unused = PasswordTextViewForPIN.this.mIsResetAnimating = false;
+                        PasswordTextViewForPIN.this.mIsResetAnimating = false;
                     }
                 }
             });
             Folme.useValue(this.mYTarget).addListener(new TransitionListener() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass3 */
+
+                @Override // miuix.animation.listener.TransitionListener
                 public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     CharState charState = CharState.this;
                     charState.yOffset = f;
@@ -431,7 +370,8 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
 
         /* access modifiers changed from: private */
-        public void startResetAnimation(boolean z, long j) {
+        /* access modifiers changed from: public */
+        private void startResetAnimation(boolean z, long j) {
             startRemoveAnimation(j);
             if (z) {
                 startDotAnnounceAnimation(j);
@@ -439,14 +379,16 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
 
         /* access modifiers changed from: private */
-        public void startRemoveAnimation(long j) {
+        /* access modifiers changed from: public */
+        private void startRemoveAnimation(long j) {
             if (this.isVisible) {
                 startDotAlphaAnimation(0.0f, j);
             }
         }
 
         /* access modifiers changed from: private */
-        public void startAppearAnimation() {
+        /* access modifiers changed from: public */
+        private void startAppearAnimation() {
             this.isVisible = true;
             startDotAppearAnimation();
         }

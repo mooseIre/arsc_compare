@@ -1,6 +1,5 @@
 package com.android.keyguard.charge.view;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -50,7 +49,7 @@ public class MiuiChargeTurboView extends RelativeLayout {
     private int mWirelessStrongChargeIconWidth;
 
     public MiuiChargeTurboView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiChargeTurboView(Context context, AttributeSet attributeSet) {
@@ -151,21 +150,21 @@ public class MiuiChargeTurboView extends RelativeLayout {
             animatorSet2.cancel();
         }
         setViewInitState();
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, new float[]{0.0f, 1.0f});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property, new float[]{1.0f, 0.0f});
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(RelativeLayout.SCALE_X, new float[]{1.0f, 0.0f});
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mChargeIcon, new PropertyValuesHolder[]{ofFloat}).setDuration(300);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, 0.0f, 1.0f);
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property, 1.0f, 0.0f);
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(RelativeLayout.SCALE_X, 1.0f, 0.0f);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mChargeIcon, ofFloat).setDuration(300L);
         duration.setInterpolator(this.cubicEaseOutInterpolator);
-        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(RelativeLayout.TRANSLATION_X, new float[]{(float) (-this.mTranslation), 0.0f});
-        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mTurboIcon, new PropertyValuesHolder[]{ofFloat4}).setDuration(300);
+        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(RelativeLayout.TRANSLATION_X, (float) (-this.mTranslation), 0.0f);
+        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mTurboIcon, ofFloat4).setDuration(300L);
         duration2.setInterpolator(this.cubicEaseOutInterpolator);
-        ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mTailIcon, new PropertyValuesHolder[]{ofFloat4}).setDuration(300);
+        ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mTailIcon, ofFloat4).setDuration(300L);
         duration3.setInterpolator(this.cubicEaseOutInterpolator);
-        ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mTailIcon, new PropertyValuesHolder[]{ofFloat2, ofFloat3}).setDuration(100);
+        ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mTailIcon, ofFloat2, ofFloat3).setDuration(100L);
         duration4.setInterpolator(this.cubicEaseOutInterpolator);
         AnimatorSet animatorSet3 = new AnimatorSet();
         this.animatorSet = animatorSet3;
-        animatorSet3.playTogether(new Animator[]{duration, duration2, duration3});
+        animatorSet3.playTogether(duration, duration2, duration3);
         this.animatorSet.play(duration4).after(duration3);
         this.animatorSet.start();
     }
@@ -206,16 +205,16 @@ public class MiuiChargeTurboView extends RelativeLayout {
 
     public void animationWiredStrongToShow() {
         setStrongViewInitState();
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, new float[]{0.0f, 1.0f});
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mWiredStrongChargeIcon, new PropertyValuesHolder[]{ofFloat}).setDuration(300);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, 0.0f, 1.0f);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mWiredStrongChargeIcon, ofFloat).setDuration(300L);
         duration.setInterpolator(this.cubicEaseOutInterpolator);
         duration.start();
     }
 
     public void animationWirelessStrongToShow() {
         setStrongViewInitState();
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, new float[]{0.0f, 1.0f});
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mWirelessStrongChargeIcon, new PropertyValuesHolder[]{ofFloat}).setDuration(300);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(RelativeLayout.ALPHA, 0.0f, 1.0f);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mWirelessStrongChargeIcon, ofFloat).setDuration(300L);
         duration.setInterpolator(this.cubicEaseOutInterpolator);
         duration.start();
     }

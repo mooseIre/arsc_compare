@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityManager;
+import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiDozeServiceHost;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
@@ -27,19 +28,20 @@ import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.phone.StatusBar;
 
-class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchListener, DisplayManager.DisplayListener, MiuiGxzwQuickOpenView.QuickViewListener, MiuiGxzwSensor.MiuiGxzwSensorListener, MiuiGxzwTransparentTimer.TransparentTimerListener {
+public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchListener, DisplayManager.DisplayListener, MiuiGxzwQuickOpenView.QuickViewListener, MiuiGxzwSensor.MiuiGxzwSensorListener, MiuiGxzwTransparentTimer.TransparentTimerListener {
     private CollectGxzwListener mCollectGxzwListener;
     private int mCurrentNonUIMode;
     private boolean mDeviceMoving = false;
     private DisplayManager mDisplayManager;
     private int mDisplayState = 2;
     private boolean mDozeShowIconTimeout = false;
-    /* access modifiers changed from: private */
-    public boolean mDozing = false;
+    private boolean mDozing = false;
     private Runnable mGotoUnlockRunnable = new Runnable() {
+        /* class com.android.keyguard.fod.MiuiGxzwIconView.AnonymousClass1 */
+
         public void run() {
             if (MiuiGxzwIconView.this.mDozing) {
-                boolean unused = MiuiGxzwIconView.this.mPendingShowBouncer = true;
+                MiuiGxzwIconView.this.mPendingShowBouncer = true;
                 MiuiGxzwIconView.this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:GOTO_UNLOCK");
                 return;
             }
@@ -50,13 +52,16 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
     private MiuiGxzwHightlightContainer mHighlightView;
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.fod.MiuiGxzwIconView.AnonymousClass3 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
             super.onBiometricAuthFailed(biometricSourceType);
             if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
                 Log.i("MiuiGxzwViewIcon", "onFingerprintAuthFailed");
                 MiuiGxzwIconView miuiGxzwIconView = MiuiGxzwIconView.this;
                 if (miuiGxzwIconView.mKeyguardAuthen) {
-                    miuiGxzwIconView.mMiuiGxzwAnimView.cancelAnimFeedback(MiuiGxzwIconView.this.mContext);
+                    miuiGxzwIconView.mMiuiGxzwAnimView.cancelAnimFeedback(((FrameLayout) MiuiGxzwIconView.this).mContext);
                 }
                 MiuiGxzwIconView miuiGxzwIconView2 = MiuiGxzwIconView.this;
                 if (miuiGxzwIconView2.mKeyguardAuthen && miuiGxzwIconView2.mTouchDown && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).shouldListenForFingerprintWhenUnlocked()) {
@@ -66,6 +71,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
             super.onBiometricAuthenticated(i, biometricSourceType, z);
             if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
@@ -74,39 +80,40 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     };
     private WindowManager.LayoutParams mLayoutParams;
-    /* access modifiers changed from: private */
-    public MiuiGxzwAnimView mMiuiGxzwAnimView;
+    private MiuiGxzwAnimView mMiuiGxzwAnimView;
     private MiuiGxzwQuickOpenView mMiuiGxzwQuickOpenView;
     private MiuiGxzwSensor mMiuiGxzwSensor;
     private MiuiGxzwTouchHelper mMiuiGxzwTouchHelper;
     private MiuiGxzwTransparentTimer mMiuiGxzwTransparentTimer;
     private boolean mPendingShow;
-    /* access modifiers changed from: private */
-    public boolean mPendingShowBouncer;
+    private boolean mPendingShowBouncer;
     private boolean mPendingShowLightIcon;
-    /* access modifiers changed from: private */
-    public PowerManager mPowerManager;
-    /* access modifiers changed from: private */
-    public boolean mTouchDown = false;
+    private PowerManager mPowerManager;
+    private boolean mTouchDown = false;
     protected final WakefulnessLifecycle.Observer mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
+        /* class com.android.keyguard.fod.MiuiGxzwIconView.AnonymousClass2 */
+
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedWakingUp() {
             if (MiuiGxzwIconView.this.mPendingShowBouncer) {
                 MiuiGxzwIconView.this.showBouncer();
-                boolean unused = MiuiGxzwIconView.this.mPendingShowBouncer = false;
+                MiuiGxzwIconView.this.mPendingShowBouncer = false;
             }
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedGoingToSleep() {
-            boolean unused = MiuiGxzwIconView.this.mPendingShowBouncer = false;
+            MiuiGxzwIconView.this.mPendingShowBouncer = false;
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedGoingToSleep() {
             Log.i("MiuiGxzwViewIcon", "onFinishedGoingToSleep");
             MiuiGxzwIconView.this.updateDozeScreenState();
         }
     };
 
-    interface CollectGxzwListener {
+    public interface CollectGxzwListener {
         void onCollectStateChange(boolean z);
 
         void onIconStateChange(boolean z);
@@ -124,7 +131,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         initView();
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public WindowManager.LayoutParams generateLayoutParams() {
         return this.mLayoutParams;
     }
@@ -148,7 +155,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         layoutParams.setTitle("gxzw_touch");
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mMiuiGxzwQuickOpenView.setQuickViewListener(this);
@@ -157,11 +164,11 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(this.mWakefulnessObserver);
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mMiuiGxzwQuickOpenView.setQuickViewListener((MiuiGxzwQuickOpenView.QuickViewListener) null);
-        setOnTouchListener((View.OnTouchListener) null);
+        this.mMiuiGxzwQuickOpenView.setQuickViewListener(null);
+        setOnTouchListener(null);
         this.mKeyguardUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).removeObserver(this.mWakefulnessObserver);
     }
@@ -210,6 +217,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void dismiss() {
         this.mPendingShow = false;
         this.mPendingShowLightIcon = false;
@@ -285,27 +293,27 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         this.mMiuiGxzwQuickOpenView.resetFingerID();
     }
 
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void onKeyguardAuthen(boolean z) {
         super.onKeyguardAuthen(z);
         this.mHighlightView.onKeyguardAuthen(z);
         this.mMiuiGxzwAnimView.onKeyguardAuthen(z);
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public Rect caculateRegion() {
         int i;
         int i2 = 0;
         if (AccessibilityManager.getInstance(getContext()).isTouchExplorationEnabled() || MiuiGxzwUtils.isLargeFod()) {
             i = 0;
         } else {
-            int i3 = (int) (((float) MiuiGxzwUtils.GXZW_ICON_HEIGHT) * 0.2f);
             i2 = (int) (((float) MiuiGxzwUtils.GXZW_ICON_WIDTH) * 0.2f);
-            i = i3;
+            i = (int) (((float) MiuiGxzwUtils.GXZW_ICON_HEIGHT) * 0.2f);
         }
         return new Rect(MiuiGxzwUtils.GXZW_ICON_X - i2, MiuiGxzwUtils.GXZW_ICON_Y - i, MiuiGxzwUtils.GXZW_ICON_X + MiuiGxzwUtils.GXZW_ICON_WIDTH + i2, MiuiGxzwUtils.GXZW_ICON_Y + MiuiGxzwUtils.GXZW_ICON_HEIGHT + i);
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         this.mHighlightView.onConfigurationChanged(configuration);
@@ -347,7 +355,6 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         return this.mMiuiGxzwTouchHelper.onTouch(motionEvent);
     }
 
-    /* access modifiers changed from: package-private */
     public void setCanvasInfo(float f, float f2, float f3, float f4, float f5) {
         if (MiuiGxzwUtils.isLargeFod()) {
             this.mHighlightView.setTouchCenter(f, f2);
@@ -378,7 +385,6 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         announceForAccessibility(str);
     }
 
-    /* access modifiers changed from: package-private */
     public void onTouchDown() {
         if (!this.mTouchDown) {
             Log.i("MiuiGxzwViewIcon", "onTouchDown");
@@ -414,7 +420,6 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
-    /* access modifiers changed from: package-private */
     public void onTouchUp(boolean z) {
         if (this.mTouchDown) {
             Log.i("MiuiGxzwViewIcon", "onTouchUp");
@@ -520,11 +525,11 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
-    /* access modifiers changed from: private */
-    public void showBouncer() {
+    private void showBouncer() {
         ((StatusBar) Dependency.get(StatusBar.class)).collapsePanels();
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwSensor.MiuiGxzwSensorListener
     public void onDeviceMove() {
         Slog.i("MiuiGxzwViewIcon", "detect device move");
         if (this.mCurrentNonUIMode == 0) {
@@ -533,6 +538,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         this.mDeviceMoving = true;
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwSensor.MiuiGxzwSensorListener
     public void onDeviceStable() {
         Slog.i("MiuiGxzwViewIcon", "detect device stable");
         this.mDeviceMoving = false;
@@ -545,6 +551,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwSensor.MiuiGxzwSensorListener
     public void onDevicePutUp() {
         Slog.i("MiuiGxzwViewIcon", "detect device put up");
         if (this.mCurrentNonUIMode == 0) {
@@ -552,6 +559,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwSensor.MiuiGxzwSensorListener
     public void onEnterNonUI(int i) {
         if (this.mCurrentNonUIMode != i) {
             Slog.i("MiuiGxzwViewIcon", "enter nonui mode");
@@ -560,6 +568,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwSensor.MiuiGxzwSensorListener
     public void onEixtNonUI(int i) {
         if (this.mCurrentNonUIMode != i) {
             Slog.i("MiuiGxzwViewIcon", "exit nonui mode");
@@ -581,6 +590,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwTransparentTimer.TransparentTimerListener
     public void onTransparentTimeout() {
         if (this.mDozing) {
             this.mDozeShowIconTimeout = true;
@@ -610,9 +620,8 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateDozeScreenState() {
-        if (!MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
+    private void updateDozeScreenState() {
+        if (!MiuiKeyguardUtils.isInvertColorsEnable(((FrameLayout) this).mContext)) {
             if (this.mGxzwIconTransparent) {
                 turnOffScreenIfInAod();
             } else {
@@ -621,6 +630,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         }
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwQuickOpenView.QuickViewListener
     public void onDismiss() {
         if (this.mPendingShow) {
             show(this.mPendingShowLightIcon);
@@ -631,6 +641,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         removeIconView();
     }
 
+    @Override // com.android.keyguard.fod.MiuiGxzwQuickOpenView.QuickViewListener
     public void onShow() {
         if (AccessibilityManager.getInstance(getContext()).isTouchExplorationEnabled()) {
             removeIconView();
@@ -647,6 +658,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
         if (this.mCurrentNonUIMode != i) {
             this.mCurrentNonUIMode = i;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(i) {
+                /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwIconView$NxZpQUHwHqav9lDJnltWfElEf64 */
                 public final /* synthetic */ int f$0;
 
                 {
@@ -654,7 +666,7 @@ class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.OnTouchLi
                 }
 
                 public final void run() {
-                    MiuiGxzwUtils.setTouchMode(17, this.f$0);
+                    MiuiGxzwIconView.lambda$setNonUIMode$0(this.f$0);
                 }
             });
         }

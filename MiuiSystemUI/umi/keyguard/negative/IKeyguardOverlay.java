@@ -34,7 +34,8 @@ public interface IKeyguardOverlay extends IInterface {
             return (IKeyguardOverlay) queryLocalInterface;
         }
 
-        private static class Proxy implements IKeyguardOverlay {
+        /* access modifiers changed from: private */
+        public static class Proxy implements IKeyguardOverlay {
             public static IKeyguardOverlay sDefaultImpl;
             private IBinder mRemote;
 
@@ -46,11 +47,12 @@ public interface IKeyguardOverlay extends IInterface {
                 return this.mRemote;
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void startScroll() throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.keyguard.negative.IKeyguardOverlay");
-                    if (this.mRemote.transact(1, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(1, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().startScroll();
@@ -60,12 +62,13 @@ public interface IKeyguardOverlay extends IInterface {
                 }
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void onScroll(float f) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.keyguard.negative.IKeyguardOverlay");
                     obtain.writeFloat(f);
-                    if (this.mRemote.transact(2, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(2, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onScroll(f);
@@ -75,11 +78,12 @@ public interface IKeyguardOverlay extends IInterface {
                 }
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void endScroll() throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.keyguard.negative.IKeyguardOverlay");
-                    if (this.mRemote.transact(3, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(3, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().endScroll();
@@ -89,6 +93,7 @@ public interface IKeyguardOverlay extends IInterface {
                 }
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void windowAttached(WindowManager.LayoutParams layoutParams, IKeyguardOverlayCallback iKeyguardOverlayCallback, int i) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -101,7 +106,7 @@ public interface IKeyguardOverlay extends IInterface {
                     }
                     obtain.writeStrongBinder(iKeyguardOverlayCallback != null ? iKeyguardOverlayCallback.asBinder() : null);
                     obtain.writeInt(i);
-                    if (this.mRemote.transact(4, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(4, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().windowAttached(layoutParams, iKeyguardOverlayCallback, i);
@@ -111,12 +116,13 @@ public interface IKeyguardOverlay extends IInterface {
                 }
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void closeOverlay(int i) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.keyguard.negative.IKeyguardOverlay");
                     obtain.writeInt(i);
-                    if (this.mRemote.transact(6, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(6, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().closeOverlay(i);
@@ -126,11 +132,12 @@ public interface IKeyguardOverlay extends IInterface {
                 }
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void onPause() throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.keyguard.negative.IKeyguardOverlay");
-                    if (this.mRemote.transact(7, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(7, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onPause();
@@ -140,11 +147,12 @@ public interface IKeyguardOverlay extends IInterface {
                 }
             }
 
+            @Override // com.android.keyguard.negative.IKeyguardOverlay
             public void onResume() throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.keyguard.negative.IKeyguardOverlay");
-                    if (this.mRemote.transact(8, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(8, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onResume();

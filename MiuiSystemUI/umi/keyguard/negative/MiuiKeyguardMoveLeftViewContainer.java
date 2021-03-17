@@ -15,7 +15,7 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
     MiuiKeyguardMoveLeftBaseView mKeyguardMoveLeftView;
 
     public MiuiKeyguardMoveLeftViewContainer(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiKeyguardMoveLeftViewContainer(Context context, AttributeSet attributeSet) {
@@ -82,7 +82,7 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
     public void setCustomBackground() {
         MiuiKeyguardMoveLeftBaseView miuiKeyguardMoveLeftBaseView = this.mKeyguardMoveLeftView;
         if (miuiKeyguardMoveLeftBaseView != null) {
-            miuiKeyguardMoveLeftBaseView.setCustomBackground((Drawable) null);
+            miuiKeyguardMoveLeftBaseView.setCustomBackground(null);
         }
     }
 

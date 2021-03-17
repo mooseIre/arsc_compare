@@ -21,9 +21,9 @@ import org.w3c.dom.Element;
 public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRoot.OnExternCommandListener {
     private String curCategory;
     private MiuiBatteryStatus mBatteryInfo;
-    private IndexedVariable mBatteryLevel = new IndexedVariable("battery_level", this.mContext.mVariables, true);
-    private IndexedVariable mBatteryState = new IndexedVariable("battery_state", this.mContext.mVariables, true);
-    private IndexedVariable mBatteryType = new IndexedVariable("battery_type", this.mContext.mVariables, true);
+    private IndexedVariable mBatteryLevel = new IndexedVariable("battery_level", ((ScreenElementRoot) this).mContext.mVariables, true);
+    private IndexedVariable mBatteryState = new IndexedVariable("battery_state", ((ScreenElementRoot) this).mContext.mVariables, true);
+    private IndexedVariable mBatteryType = new IndexedVariable("battery_type", ((ScreenElementRoot) this).mContext.mVariables, true);
     private float mFrameRateBatteryFull;
     private float mFrameRateBatteryLow;
     private float mFrameRateCharging;
@@ -71,11 +71,11 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
     }
 
     public boolean onTouch(MotionEvent motionEvent) {
-        ElementGroup elementGroup = this.mInnerGroup;
+        ElementGroup elementGroup = ((ScreenElementRoot) this).mInnerGroup;
         if (elementGroup != null && elementGroup.getElements().size() != 0) {
             return LockScreenRoot.super.onTouch(motionEvent);
         }
-        this.mLockscreenCallback.unlocked((Intent) null, 0);
+        this.mLockscreenCallback.unlocked(null, 0);
         return false;
     }
 
@@ -120,27 +120,27 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
         }
         this.mBatteryLevel.set((double) miuiBatteryStatus.getLevel());
         this.mBatteryType.set((double) miuiBatteryStatus.plugged);
-        Utils.putVariableNumber("ChargeWireState", this.mContext.mVariables, (double) miuiBatteryStatus.wireState);
-        Utils.putVariableNumber("ChargeSpeed", this.mContext.mVariables, (double) miuiBatteryStatus.chargeSpeed);
+        Utils.putVariableNumber("ChargeWireState", ((ScreenElementRoot) this).mContext.mVariables, (double) miuiBatteryStatus.wireState);
+        Utils.putVariableNumber("ChargeSpeed", ((ScreenElementRoot) this).mContext.mVariables, (double) miuiBatteryStatus.chargeSpeed);
         if (!miuiBatteryStatus.isPluggedIn() && !miuiBatteryStatus.isBatteryLow()) {
-            this.mFrameRate = this.mNormalFrameRate;
+            ((ScreenElementRoot) this).mFrameRate = this.mNormalFrameRate;
             str = "Normal";
             i = 0;
         } else if (!miuiBatteryStatus.isPluggedIn()) {
             i = 2;
-            this.mFrameRate = this.mFrameRateBatteryLow;
+            ((ScreenElementRoot) this).mFrameRate = this.mFrameRateBatteryLow;
             str = "BatteryLow";
         } else if (miuiBatteryStatus.getLevel() >= 100) {
             i = 3;
-            this.mFrameRate = this.mFrameRateBatteryFull;
+            ((ScreenElementRoot) this).mFrameRate = this.mFrameRateBatteryFull;
             str = "BatteryFull";
         } else {
-            this.mFrameRate = this.mFrameRateCharging;
+            ((ScreenElementRoot) this).mFrameRate = this.mFrameRateCharging;
             i = 1;
             str = "Charging";
         }
         if (str != this.curCategory) {
-            requestFramerate(this.mFrameRate);
+            requestFramerate(((ScreenElementRoot) this).mFrameRate);
             requestUpdate();
             this.mBatteryState.set((double) i);
             showCategory("BatteryFull", false);
@@ -153,12 +153,12 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
     }
 
     public void init() {
-        boolean z = Settings.System.getIntForUser(this.mContext.mContext.getContentResolver(), "pref_key_enable_notification_body", 1, KeyguardUpdateMonitor.getCurrentUser()) == 1 && !this.mLockscreenCallback.isSecure();
+        boolean z = Settings.System.getIntForUser(((ScreenElementRoot) this).mContext.mContext.getContentResolver(), "pref_key_enable_notification_body", 1, KeyguardUpdateMonitor.getCurrentUser()) == 1 && !this.mLockscreenCallback.isSecure();
         double d = 1.0d;
-        Utils.putVariableNumber("sms_body_preview", this.mContext.mVariables, z ? 1.0d : 0.0d);
+        Utils.putVariableNumber("sms_body_preview", ((ScreenElementRoot) this).mContext.mVariables, z ? 1.0d : 0.0d);
         this.mInit = true;
         if (!z) {
-            this.mVariableBinderManager.acceptVisitor(new BlockedColumnsSetter("content://sms/inbox", "body"));
+            ((ScreenElementRoot) this).mVariableBinderManager.acceptVisitor(new BlockedColumnsSetter("content://sms/inbox", "body"));
         }
         putRawAttr("__is_secure", String.valueOf(this.mLockscreenCallback.isSecure()));
         if (!Build.IS_CU_CUSTOMIZATION) {
@@ -168,7 +168,7 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
                 d = Build.IS_CT_CUSTOMIZATION ? 3.0d : 0.0d;
             }
         }
-        Utils.putVariableNumber("operator_customization", this.mContext.mVariables, d);
+        Utils.putVariableNumber("operator_customization", ((ScreenElementRoot) this).mContext.mVariables, d);
         LockScreenRoot.super.init();
         MiuiBatteryStatus miuiBatteryStatus = this.mBatteryInfo;
         if (miuiBatteryStatus != null) {
@@ -182,14 +182,14 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
         if (!LockScreenRoot.super.onLoad(element)) {
             return false;
         }
-        float attrAsFloat = Utils.getAttrAsFloat(element, "frameRate", this.DEFAULT_FRAME_RATE);
+        float attrAsFloat = Utils.getAttrAsFloat(element, "frameRate", ((ScreenElementRoot) this).DEFAULT_FRAME_RATE);
         this.mNormalFrameRate = attrAsFloat;
         this.mFrameRateCharging = Utils.getAttrAsFloat(element, "frameRateCharging", attrAsFloat);
         this.mFrameRateBatteryLow = Utils.getAttrAsFloat(element, "frameRateBatteryLow", this.mNormalFrameRate);
         this.mFrameRateBatteryFull = Utils.getAttrAsFloat(element, "frameRateBatteryFull", this.mNormalFrameRate);
         setClearCanvas(!"false".equalsIgnoreCase(element.getAttribute("clearCanvas")));
-        BuiltinVariableBinders.fill(this.mVariableBinderManager);
-        this.mFrameRate = this.mNormalFrameRate;
+        BuiltinVariableBinders.fill(((ScreenElementRoot) this).mVariableBinderManager);
+        ((ScreenElementRoot) this).mFrameRate = this.mNormalFrameRate;
         return true;
     }
 
@@ -201,11 +201,11 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
     }
 
     public void startUnlockMoving(UnlockerScreenElement unlockerScreenElement) {
-        startUnlockMoving(this.mInnerGroup, unlockerScreenElement);
+        startUnlockMoving(((ScreenElementRoot) this).mInnerGroup, unlockerScreenElement);
     }
 
     public void endUnlockMoving(UnlockerScreenElement unlockerScreenElement) {
-        endUnlockMoving(this.mInnerGroup, unlockerScreenElement);
+        endUnlockMoving(((ScreenElementRoot) this).mInnerGroup, unlockerScreenElement);
     }
 
     private void startUnlockMoving(ElementGroup elementGroup, UnlockerScreenElement unlockerScreenElement) {
@@ -243,7 +243,7 @@ public class LockScreenRoot extends ScreenElementRoot implements ScreenElementRo
     public void onCommand(String str, Double d, String str2) {
         boolean z = false;
         if ("unlock".equals(str)) {
-            unlocked((Intent) null, 0);
+            unlocked(null, 0);
         } else if ("pokewakelock".equals(str)) {
             pokeWakelock();
         } else if ("disableFod".equals(str)) {

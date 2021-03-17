@@ -10,7 +10,7 @@ public class MiuiClockView extends FrameLayout {
     private KeyguardClockController mMiuiClockController;
 
     public MiuiClockView(Context context) {
-        this(context, (AttributeSet) null, 0, 0);
+        this(context, null, 0, 0);
     }
 
     public MiuiClockView(Context context, AttributeSet attributeSet) {

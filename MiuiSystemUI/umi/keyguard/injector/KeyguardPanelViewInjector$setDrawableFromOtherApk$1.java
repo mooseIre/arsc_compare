@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 public final class KeyguardPanelViewInjector$setDrawableFromOtherApk$1 extends AsyncTask<Void, Void, Drawable> {
     final /* synthetic */ KeyguardPanelViewInjector this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     KeyguardPanelViewInjector$setDrawableFromOtherApk$1(KeyguardPanelViewInjector keyguardPanelViewInjector) {
         this.this$0 = keyguardPanelViewInjector;
     }
@@ -33,15 +34,15 @@ public final class KeyguardPanelViewInjector$setDrawableFromOtherApk$1 extends A
 
     /* access modifiers changed from: protected */
     public void onPostExecute(@Nullable Drawable drawable) {
-        MiuiKeyguardMoveLeftViewContainer access$getMLeftView$p = this.this$0.mLeftView;
-        if (access$getMLeftView$p != null) {
-            access$getMLeftView$p.setCustomBackground(drawable);
+        MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.this$0.mLeftView;
+        if (miuiKeyguardMoveLeftViewContainer != null) {
+            miuiKeyguardMoveLeftViewContainer.setCustomBackground(drawable);
         }
         if (this.this$0.mLeftViewBackgroundImageDrawable != null) {
             ImageView access$getMLeftViewBackgroundView$p = KeyguardPanelViewInjector.access$getMLeftViewBackgroundView$p(this.this$0);
-            Drawable access$getMLeftViewBackgroundImageDrawable$p = this.this$0.mLeftViewBackgroundImageDrawable;
-            if (access$getMLeftViewBackgroundImageDrawable$p != null) {
-                access$getMLeftViewBackgroundView$p.setBackgroundDrawable(access$getMLeftViewBackgroundImageDrawable$p);
+            Drawable drawable2 = this.this$0.mLeftViewBackgroundImageDrawable;
+            if (drawable2 != null) {
+                access$getMLeftViewBackgroundView$p.setBackgroundDrawable(drawable2);
             } else {
                 Intrinsics.throwNpe();
                 throw null;

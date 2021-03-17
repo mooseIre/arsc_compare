@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import com.android.systemui.statusbar.phone.KeyguardIndicationTextView;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ public final class MiuiKeyguardIndicationTextView extends KeyguardIndicationText
     private boolean mShouldVisible;
 
     public MiuiKeyguardIndicationTextView(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 4, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 4, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -48,6 +49,7 @@ public final class MiuiKeyguardIndicationTextView extends KeyguardIndicationText
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.KeyguardIndicationTextView
     public void switchIndication(@Nullable CharSequence charSequence) {
         String str = this.TAG;
         Log.d(str, " switchIndication:" + charSequence);

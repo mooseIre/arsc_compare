@@ -11,25 +11,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-class MiuiGxzwAnimManager {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwAnimManager {
     private final Map<Integer, MiuiGxzwAnimItem> mAnimItemMap;
     private boolean mBouncer;
     private ContentObserver mContentObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.fod.MiuiGxzwAnimManager.AnonymousClass1 */
+
         public void onChange(boolean z) {
             int defaultAnimType = MiuiGxzwAnimManager.getDefaultAnimType();
-            Set access$000 = MiuiGxzwAnimManager.this.getLegalAnimTypeSet();
+            Set legalAnimTypeSet = MiuiGxzwAnimManager.this.getLegalAnimTypeSet();
             int intForUser = Settings.System.getIntForUser(MiuiGxzwAnimManager.this.mContext.getContentResolver(), "fod_animation_type", defaultAnimType, 0);
-            if (access$000.contains(Integer.valueOf(intForUser))) {
+            if (legalAnimTypeSet.contains(Integer.valueOf(intForUser))) {
                 defaultAnimType = intForUser;
             }
-            int unused = MiuiGxzwAnimManager.this.mGxzwAnimType = defaultAnimType;
+            MiuiGxzwAnimManager.this.mGxzwAnimType = defaultAnimType;
         }
     };
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private boolean mEnrolling;
-    /* access modifiers changed from: private */
-    public int mGxzwAnimType = 6;
+    private int mGxzwAnimType = 6;
     private boolean mKeyguardAuthen;
     private boolean mLightIcon = false;
     private boolean mLightWallpaperGxzw;
@@ -53,31 +54,31 @@ class MiuiGxzwAnimManager {
     public MiuiGxzwAnimArgs getIconAnimArgs(boolean z) {
         MiuiGxzwAnimItem miuiGxzwAnimItem = this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType));
         if (miuiGxzwAnimItem == null) {
-            return new MiuiGxzwAnimArgs.Builder((int[]) null).build();
+            return new MiuiGxzwAnimArgs.Builder(null).build();
         }
         MiuiGxzwAnimRes iconAnimRes = miuiGxzwAnimItem.getIconAnimRes(z, isLightResource() && this.mKeyguardAuthen);
         MiuiGxzwAnimArgs.Builder builder = new MiuiGxzwAnimArgs.Builder(iconAnimRes.getAnimRes(this.mContext));
-        MiuiGxzwAnimArgs.Builder unused = builder.setRepeat(iconAnimRes.mRepeat);
-        MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(iconAnimRes.mFrameInterval);
-        MiuiGxzwAnimArgs.Builder unused3 = builder.setAod(z);
+        builder.setRepeat(iconAnimRes.mRepeat);
+        builder.setFrameInterval(iconAnimRes.mFrameInterval);
+        builder.setAod(z);
         return builder.build();
     }
 
     public MiuiGxzwAnimArgs getRecognizingAnimArgs(boolean z) {
         MiuiGxzwAnimItem miuiGxzwAnimItem = this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType));
         if (miuiGxzwAnimItem == null) {
-            return new MiuiGxzwAnimArgs.Builder((int[]) null).build();
+            return new MiuiGxzwAnimArgs.Builder(null).build();
         }
         MiuiGxzwAnimRes recognizingAnimRes = miuiGxzwAnimItem.getRecognizingAnimRes(z, isLightResource() && this.mKeyguardAuthen);
         MiuiGxzwAnimArgs.Builder builder = new MiuiGxzwAnimArgs.Builder(recognizingAnimRes.getAnimRes(this.mContext));
-        MiuiGxzwAnimArgs.Builder unused = builder.setRepeat(recognizingAnimRes.mRepeat);
-        MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(recognizingAnimRes.mFrameInterval);
-        MiuiGxzwAnimArgs.Builder unused3 = builder.setFeetback(true);
-        MiuiGxzwAnimArgs.Builder unused4 = builder.setAod(z);
-        MiuiGxzwAnimArgs.Builder unused5 = builder.setTranslate(this.mTranslateX, this.mTranslateY);
+        builder.setRepeat(recognizingAnimRes.mRepeat);
+        builder.setFrameInterval(recognizingAnimRes.mFrameInterval);
+        builder.setFeetback(true);
+        builder.setAod(z);
+        builder.setTranslate(this.mTranslateX, this.mTranslateY);
         if (miuiGxzwAnimItem.isShowIconWhenRecognizingStart()) {
-            MiuiGxzwAnimArgs.Builder unused6 = builder.setBackgroundRes(getFingerIconResource(z));
-            MiuiGxzwAnimArgs.Builder unused7 = builder.setBackgroundFrame(6);
+            builder.setBackgroundRes(getFingerIconResource(z));
+            builder.setBackgroundFrame(6);
         }
         return builder.build();
     }
@@ -85,7 +86,7 @@ class MiuiGxzwAnimManager {
     public MiuiGxzwAnimArgs getFalseAnimArgs(boolean z) {
         MiuiGxzwAnimItem miuiGxzwAnimItem = this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType));
         if (miuiGxzwAnimItem == null) {
-            return new MiuiGxzwAnimArgs.Builder((int[]) null).build();
+            return new MiuiGxzwAnimArgs.Builder(null).build();
         }
         boolean z2 = false;
         MiuiGxzwAnimRes falseAnimRes = miuiGxzwAnimItem.getFalseAnimRes(z, isLightResource() && this.mKeyguardAuthen);
@@ -104,23 +105,23 @@ class MiuiGxzwAnimManager {
             z2 = z3;
         }
         MiuiGxzwAnimArgs.Builder builder = new MiuiGxzwAnimArgs.Builder(animRes);
-        MiuiGxzwAnimArgs.Builder unused = builder.setRepeat(z2);
-        MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(falseAnimRes.mFrameInterval);
-        MiuiGxzwAnimArgs.Builder unused3 = builder.setAod(z);
-        MiuiGxzwAnimArgs.Builder unused4 = builder.setTranslate(this.mTranslateX, this.mTranslateY);
+        builder.setRepeat(z2);
+        builder.setFrameInterval(falseAnimRes.mFrameInterval);
+        builder.setAod(z);
+        builder.setTranslate(this.mTranslateX, this.mTranslateY);
         return builder.build();
     }
 
     public MiuiGxzwAnimArgs getBackAnimArgs(boolean z) {
         MiuiGxzwAnimItem miuiGxzwAnimItem = this.mAnimItemMap.get(Integer.valueOf(this.mGxzwAnimType));
         if (miuiGxzwAnimItem == null) {
-            return new MiuiGxzwAnimArgs.Builder((int[]) null).build();
+            return new MiuiGxzwAnimArgs.Builder(null).build();
         }
         MiuiGxzwAnimRes backAnimRes = miuiGxzwAnimItem.getBackAnimRes(z, isLightResource() && this.mKeyguardAuthen);
         MiuiGxzwAnimArgs.Builder builder = new MiuiGxzwAnimArgs.Builder(backAnimRes.getAnimRes(this.mContext));
-        MiuiGxzwAnimArgs.Builder unused = builder.setRepeat(backAnimRes.mRepeat);
-        MiuiGxzwAnimArgs.Builder unused2 = builder.setFrameInterval(backAnimRes.mFrameInterval);
-        MiuiGxzwAnimArgs.Builder unused3 = builder.setAod(z);
+        builder.setRepeat(backAnimRes.mRepeat);
+        builder.setFrameInterval(backAnimRes.mFrameInterval);
+        builder.setAod(z);
         return builder.build();
     }
 
@@ -205,7 +206,8 @@ class MiuiGxzwAnimManager {
             this.translateY = i6;
         }
 
-        private static class Builder {
+        /* access modifiers changed from: private */
+        public static class Builder {
             private boolean aod;
             private int backgroundFrame;
             private int backgroundRes;
@@ -231,57 +233,66 @@ class MiuiGxzwAnimManager {
             }
 
             /* access modifiers changed from: private */
-            public Builder setRepeat(boolean z) {
+            /* access modifiers changed from: public */
+            private Builder setRepeat(boolean z) {
                 this.repeat = z;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public Builder setFrameInterval(int i) {
+            /* access modifiers changed from: public */
+            private Builder setFrameInterval(int i) {
                 this.frameInterval = i;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public Builder setBackgroundRes(int i) {
+            /* access modifiers changed from: public */
+            private Builder setBackgroundRes(int i) {
                 this.backgroundRes = i;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public Builder setBackgroundFrame(int i) {
+            /* access modifiers changed from: public */
+            private Builder setBackgroundFrame(int i) {
                 this.backgroundFrame = i;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public Builder setFeetback(boolean z) {
+            /* access modifiers changed from: public */
+            private Builder setFeetback(boolean z) {
                 this.feedback = z;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public Builder setAod(boolean z) {
+            /* access modifiers changed from: public */
+            private Builder setAod(boolean z) {
                 this.aod = z;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public Builder setTranslate(int i, int i2) {
+            /* access modifiers changed from: public */
+            private Builder setTranslate(int i, int i2) {
                 this.translateX = i;
                 this.translateY = i2;
                 return this;
             }
 
             /* access modifiers changed from: private */
-            public MiuiGxzwAnimArgs build() {
+            /* access modifiers changed from: public */
+            private MiuiGxzwAnimArgs build() {
                 return new MiuiGxzwAnimArgs(this.res, this.startPosition, this.repeat, this.frameInterval, this.backgroundRes, this.backgroundFrame, this.customerDrawBitmap, this.feedback, this.aod, this.translateX, this.translateY);
             }
         }
     }
 
     /* access modifiers changed from: private */
-    public Set<Integer> getLegalAnimTypeSet() {
+    /* access modifiers changed from: public */
+    private Set<Integer> getLegalAnimTypeSet() {
         return this.mAnimItemMap.keySet();
     }
 

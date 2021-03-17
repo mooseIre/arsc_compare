@@ -19,7 +19,7 @@ public abstract class MiuiKeyguardMoveLeftBaseView extends RelativeLayout {
     public abstract void uploadData();
 
     public MiuiKeyguardMoveLeftBaseView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiKeyguardMoveLeftBaseView(Context context, AttributeSet attributeSet) {

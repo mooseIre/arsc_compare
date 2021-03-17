@@ -26,18 +26,25 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     protected ArrayList<CarrierTextListener> listeners = new ArrayList<>();
     protected boolean mAirplane;
     protected final KeyguardUpdateMonitorCallback mCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass3 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onRefreshCarrierInfo() {
             MiuiCarrierTextController miuiCarrierTextController = MiuiCarrierTextController.this;
             miuiCarrierTextController.mMainHandler.post(miuiCarrierTextController.updateCarrierTextRunnable);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onTelephonyCapable(boolean z) {
             MiuiCarrierTextController miuiCarrierTextController = MiuiCarrierTextController.this;
             miuiCarrierTextController.mMainHandler.post(miuiCarrierTextController.updateCarrierTextRunnable);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onSimStateChanged(int i, final int i2, final int i3) {
             MiuiCarrierTextController.this.mMainHandler.post(new Runnable() {
+                /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass3.AnonymousClass1 */
+
                 public void run() {
                     int i = i2;
                     if (i >= 0) {
@@ -67,16 +74,24 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     protected SubscriptionManager mSubscriptionManager;
     protected boolean[] mVowifi;
     protected final WakefulnessLifecycle.Observer mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
+        /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass1 */
+
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedWakingUp() {
             MiuiCarrierTextController.this.mMainHandler.post(new Runnable() {
+                /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass1.AnonymousClass1 */
+
                 public void run() {
                     MiuiCarrierTextController.this.fireStartedWakingUp();
                 }
             });
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedGoingToSleep() {
             MiuiCarrierTextController.this.mMainHandler.post(new Runnable() {
+                /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass1.AnonymousClass2 */
+
                 public void run() {
                     MiuiCarrierTextController.this.fireFinishedGoingToSleep();
                 }
@@ -84,6 +99,8 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         }
     };
     protected Runnable updateCarrierTextRunnable = new Runnable() {
+        /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass2 */
+
         public void run() {
             MiuiCarrierTextController.this.updateCarrierText();
         }
@@ -92,10 +109,10 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     public interface CarrierTextListener {
         void onCarrierTextChanged(String str);
 
-        void onFinishedGoingToSleep() {
+        default void onFinishedGoingToSleep() {
         }
 
-        void onStartedWakingUp() {
+        default void onStartedWakingUp() {
         }
     }
 
@@ -115,7 +132,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mCarrierObserver = (CarrierObserver) Dependency.get(CarrierObserver.class);
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         NetworkController networkController = (NetworkController) Dependency.get(NetworkController.class);
-        networkController.addCallback(this);
+        networkController.addCallback((NetworkController.SignalCallback) this);
         networkController.addEmergencyListener(this);
         this.mKeyguardUpdateMonitor.registerCallback(this.mCallback);
         this.mCustomCarrierObserver.addCallback(this);
@@ -123,16 +140,19 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(this.mWakefulnessObserver);
     }
 
+    @Override // com.android.systemui.statusbar.policy.CustomCarrierObserver.Callback
     public void onCustomCarrierChanged(String[] strArr) {
         this.mCustomCarrier = (String[]) Arrays.copyOf(strArr, strArr.length);
         this.updateCarrierTextRunnable.run();
     }
 
+    @Override // com.android.systemui.statusbar.policy.CarrierObserver.Callback
     public void onCarrierChanged(String[] strArr) {
         this.mCarrier = (String[]) Arrays.copyOf(strArr, strArr.length);
         this.updateCarrierTextRunnable.run();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
         if (isCustomizationTest()) {
             int i5 = miuiMobileState.slotId;
@@ -289,7 +309,8 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     }
 
     /* access modifiers changed from: private */
-    public boolean isSimErrorByIccState(IccCardConstants.State state) {
+    /* access modifiers changed from: public */
+    private boolean isSimErrorByIccState(IccCardConstants.State state) {
         if (state == null) {
             return false;
         }
@@ -306,9 +327,12 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         return Build.IS_CM_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CT_CUSTOMIZATION_TEST;
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setIsAirplaneMode(NetworkController.IconState iconState) {
         final boolean z = iconState.visible;
         this.mMainHandler.post(new Runnable() {
+            /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass4 */
+
             public void run() {
                 MiuiCarrierTextController miuiCarrierTextController = MiuiCarrierTextController.this;
                 miuiCarrierTextController.mAirplane = z;
@@ -317,9 +341,12 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         });
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.EmergencyListener
     public void setEmergencyCallsOnly(final boolean z) {
         Log.d("MiuiCarrierTextController", "setEmergencyCallsOnly: " + z);
         this.mMainHandler.post(new Runnable() {
+            /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass5 */
+
             public void run() {
                 MiuiCarrierTextController miuiCarrierTextController = MiuiCarrierTextController.this;
                 miuiCarrierTextController.mEmergencyOnly = z;

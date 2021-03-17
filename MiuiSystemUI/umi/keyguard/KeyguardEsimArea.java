@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.UserHandle;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
@@ -23,7 +22,7 @@ class KeyguardEsimArea extends Button implements View.OnClickListener {
     private BroadcastReceiver mReceiver;
 
     public KeyguardEsimArea(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardEsimArea(Context context, AttributeSet attributeSet) {
@@ -37,11 +36,13 @@ class KeyguardEsimArea extends Button implements View.OnClickListener {
     public KeyguardEsimArea(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mReceiver = new BroadcastReceiver() {
+            /* class com.android.keyguard.KeyguardEsimArea.AnonymousClass1 */
+
             public void onReceive(Context context, Intent intent) {
                 int resultCode;
                 if ("com.android.keyguard.disable_esim".equals(intent.getAction()) && (resultCode = getResultCode()) != 0) {
                     Log.e("KeyguardEsimArea", "Error disabling esim, result code = " + resultCode);
-                    AlertDialog create = new AlertDialog.Builder(KeyguardEsimArea.this.mContext).setMessage(C0021R$string.error_disable_esim_msg).setTitle(C0021R$string.error_disable_esim_title).setCancelable(false).setPositiveButton(C0021R$string.ok, (DialogInterface.OnClickListener) null).create();
+                    AlertDialog create = new AlertDialog.Builder(((Button) KeyguardEsimArea.this).mContext).setMessage(C0021R$string.error_disable_esim_msg).setTitle(C0021R$string.error_disable_esim_title).setCancelable(false).setPositiveButton(C0021R$string.ok, (DialogInterface.OnClickListener) null).create();
                     create.getWindow().setType(2009);
                     create.show();
                 }
@@ -54,7 +55,7 @@ class KeyguardEsimArea extends Button implements View.OnClickListener {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mContext.registerReceiver(this.mReceiver, new IntentFilter("com.android.keyguard.disable_esim"), "com.android.systemui.permission.SELF", (Handler) null);
+        ((Button) this).mContext.registerReceiver(this.mReceiver, new IntentFilter("com.android.keyguard.disable_esim"), "com.android.systemui.permission.SELF", null);
     }
 
     public static boolean isEsimLocked(Context context, int i) {
@@ -67,13 +68,13 @@ class KeyguardEsimArea extends Button implements View.OnClickListener {
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
-        this.mContext.unregisterReceiver(this.mReceiver);
+        ((Button) this).mContext.unregisterReceiver(this.mReceiver);
         super.onDetachedFromWindow();
     }
 
     public void onClick(View view) {
         Intent intent = new Intent("com.android.keyguard.disable_esim");
-        intent.setPackage(this.mContext.getPackageName());
-        this.mEuiccManager.switchToSubscription(-1, PendingIntent.getBroadcastAsUser(this.mContext, 0, intent, 134217728, UserHandle.SYSTEM));
+        intent.setPackage(((Button) this).mContext.getPackageName());
+        this.mEuiccManager.switchToSubscription(-1, PendingIntent.getBroadcastAsUser(((Button) this).mContext, 0, intent, 134217728, UserHandle.SYSTEM));
     }
 }

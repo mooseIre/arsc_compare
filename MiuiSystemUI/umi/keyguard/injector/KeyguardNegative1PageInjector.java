@@ -15,8 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: KeyguardNegative1PageInjector.kt */
 public final class KeyguardNegative1PageInjector implements RegionController.Callback {
-    /* access modifiers changed from: private */
-    public MiuiKeyguardMoveLeftViewContainer mKeyguardLeftView;
+    private MiuiKeyguardMoveLeftViewContainer mKeyguardLeftView;
     private ImageView mLeftViewBg;
     private MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback;
 
@@ -58,6 +57,7 @@ public final class KeyguardNegative1PageInjector implements RegionController.Cal
         ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this.mUpdateMonitorCallback);
     }
 
+    @Override // com.android.systemui.statusbar.policy.RegionController.Callback
     public void onRegionChanged(@Nullable String str) {
         MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mKeyguardLeftView;
         if (miuiKeyguardMoveLeftViewContainer != null) {

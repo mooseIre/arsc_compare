@@ -1,6 +1,5 @@
 package com.android.keyguard.charge.video;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -21,7 +20,7 @@ public class VideoChargeView extends IChargeView {
     private VideoView mVideoView;
 
     public VideoChargeView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public VideoChargeView(Context context, AttributeSet attributeSet) {
@@ -34,12 +33,14 @@ public class VideoChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void init(Context context) {
         super.init(context);
         this.mContentContainer.setBackgroundColor(-16777216);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void addChildView() {
         this.mVideoView = new VideoView(this.mContext);
         if (this.mContentContainer != null) {
@@ -59,12 +60,14 @@ public class VideoChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public float getVideoTranslationY() {
         Point point = this.mScreenSize;
         return (float) ((Math.max(point.x, point.y) - this.mVideoView.getVideoHeight()) / 2);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void setViewState() {
         super.setViewState();
         this.mVideoView.removeChargeView();
@@ -73,6 +76,7 @@ public class VideoChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void updateLayoutParamForScreenSizeChange() {
         if (!this.mIsFoldChargeVideo) {
             Point point = this.mScreenSize;
@@ -90,6 +94,7 @@ public class VideoChargeView extends IChargeView {
         this.mVideoView.setDefaultImage(getDefaultImageResId());
     }
 
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void startAnimationOnChildView() {
         Log.d("VideoRapidChargeView", "startAnimationOnChildView: mChargeSpeed=" + this.mChargeSpeed + " mWireState=" + this.mWireState);
         int i = this.mWireState;
@@ -190,17 +195,19 @@ public class VideoChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void initAnimator() {
         super.initAnimator();
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
+        ValueAnimator ofInt = ValueAnimator.ofInt(0, 1);
         ofInt.setInterpolator(this.mQuartOutInterpolator);
-        ofInt.setDuration(800);
+        ofInt.setDuration(800L);
         ofInt.addUpdateListener(this);
         AnimatorSet animatorSet = new AnimatorSet();
         this.mEnterAnimatorSet = animatorSet;
         animatorSet.play(ofInt);
     }
 
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
         super.onAnimationUpdate(valueAnimator);
         float animatedFraction = valueAnimator.getAnimatedFraction();
@@ -212,6 +219,7 @@ public class VideoChargeView extends IChargeView {
         this.mVideoView.setAlpha(animatedFraction);
     }
 
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void switchContainerViewAnimation(int i) {
         super.switchContainerViewAnimation(i);
         Log.d("VideoRapidChargeView", "switchVideoViewAnimation: chargeSpeed=" + i + " mWireState=" + this.mWireState);
@@ -231,23 +239,24 @@ public class VideoChargeView extends IChargeView {
         }
     }
 
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void startDismiss(String str) {
         Property property = FrameLayout.SCALE_Y;
         Property property2 = FrameLayout.SCALE_X;
         Property property3 = FrameLayout.ALPHA;
         super.startDismiss(str);
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property3, new float[]{getAlpha(), 0.0f})}).setDuration(600);
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mContentContainer.getAlpha(), 0.0f});
-        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, new PropertyValuesHolder[]{ofFloat}).setDuration(600);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat(property3, getAlpha(), 0.0f)).setDuration(600L);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, this.mContentContainer.getAlpha(), 0.0f);
+        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, ofFloat).setDuration(600L);
         if (this.mWireState == 10) {
-            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mContentContainer.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mContentContainer.getScaleY(), 0.0f});
-            duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(600);
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mVideoView.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mVideoView.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, new float[]{this.mVideoView.getScaleY(), 0.0f});
-            ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mVideoView, new PropertyValuesHolder[]{ofFloat4, ofFloat5, ofFloat6}).setDuration(600);
-            this.mDismissAnimatorSet.playTogether(new Animator[]{duration2, duration3});
+            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, this.mContentContainer.getScaleX(), 0.0f);
+            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, this.mContentContainer.getScaleY(), 0.0f);
+            duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, ofFloat, ofFloat2, ofFloat3).setDuration(600L);
+            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, this.mVideoView.getAlpha(), 0.0f);
+            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, this.mVideoView.getScaleX(), 0.0f);
+            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, this.mVideoView.getScaleY(), 0.0f);
+            ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mVideoView, ofFloat4, ofFloat5, ofFloat6).setDuration(600L);
+            this.mDismissAnimatorSet.playTogether(duration2, duration3);
         } else {
             this.mDismissAnimatorSet.play(duration2);
         }
@@ -259,6 +268,7 @@ public class VideoChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void stopChildAnimation() {
         this.mVideoView.stopAnimation();
         this.mVideoView.removeChargeView();
@@ -267,6 +277,7 @@ public class VideoChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void setComponentTransparent(boolean z) {
         super.setComponentTransparent(z);
         if (z) {

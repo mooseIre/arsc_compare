@@ -13,49 +13,45 @@ import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.Log;
-import android.view.WindowManager;
 import com.android.keyguard.negative.IKeyguardOverlay;
 import com.android.keyguard.negative.IKeyguardOverlayCallback;
 
 public class LockScreenMagazineClient {
     private Context mContext;
-    /* access modifiers changed from: private */
-    public boolean mDestroyed = false;
-    /* access modifiers changed from: private */
-    public KeyguardClientCallback mKeyguardClientCallback;
+    private boolean mDestroyed = false;
+    private KeyguardClientCallback mKeyguardClientCallback;
     private KeyguardOverlayCallback mKeyguardOverlayCallback;
-    /* access modifiers changed from: private */
-    public IKeyguardOverlay mOverlay;
+    private IKeyguardOverlay mOverlay;
     private boolean mResumed = false;
     private OverlayServiceConnection mServiceConnection;
     private final Intent mServiceIntent;
-    /* access modifiers changed from: private */
-    public ServiceState mServiceState;
-    /* access modifiers changed from: private */
-    public int mServiceStatus = -1;
+    private ServiceState mServiceState;
+    private int mServiceStatus = -1;
 
-    private enum ServiceState {
+    /* access modifiers changed from: private */
+    public enum ServiceState {
         BINDING,
         CONNECTED,
         DISCONNECTED
     }
 
-    private class OverlayServiceConnection implements ServiceConnection {
+    /* access modifiers changed from: private */
+    public class OverlayServiceConnection implements ServiceConnection {
         private OverlayServiceConnection() {
         }
 
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            ServiceState unused = LockScreenMagazineClient.this.mServiceState = ServiceState.CONNECTED;
-            boolean unused2 = LockScreenMagazineClient.this.mDestroyed = false;
-            IKeyguardOverlay unused3 = LockScreenMagazineClient.this.mOverlay = IKeyguardOverlay.Stub.asInterface(iBinder);
+            LockScreenMagazineClient.this.mServiceState = ServiceState.CONNECTED;
+            LockScreenMagazineClient.this.mDestroyed = false;
+            LockScreenMagazineClient.this.mOverlay = IKeyguardOverlay.Stub.asInterface(iBinder);
             Log.d("LockScreenMagazineClient", "onServiceConnected" + LockScreenMagazineClient.this.mOverlay);
             LockScreenMagazineClient.this.applyWindowToken();
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
             Log.d("LockScreenMagazineClient", "onServiceDisconnected=" + componentName);
-            ServiceState unused = LockScreenMagazineClient.this.mServiceState = ServiceState.DISCONNECTED;
-            IKeyguardOverlay unused2 = LockScreenMagazineClient.this.mOverlay = null;
+            LockScreenMagazineClient.this.mServiceState = ServiceState.DISCONNECTED;
+            LockScreenMagazineClient.this.mOverlay = null;
             LockScreenMagazineClient.this.notifyStatusChanged(0);
         }
     }
@@ -163,7 +159,8 @@ public class LockScreenMagazineClient {
     }
 
     /* access modifiers changed from: private */
-    public void notifyStatusChanged(int i) {
+    /* access modifiers changed from: public */
+    private void notifyStatusChanged(int i) {
         if (this.mServiceStatus != i) {
             this.mServiceStatus = i;
             KeyguardClientCallback keyguardClientCallback = this.mKeyguardClientCallback;
@@ -187,7 +184,8 @@ public class LockScreenMagazineClient {
     }
 
     /* access modifiers changed from: private */
-    public void applyWindowToken() {
+    /* access modifiers changed from: public */
+    private void applyWindowToken() {
         Log.d("LockScreenMagazineClient", "applyWindowToken");
         if (!isConnected()) {
             Log.e("LockScreenMagazineClient", "not connected");
@@ -198,7 +196,7 @@ public class LockScreenMagazineClient {
                 this.mKeyguardOverlayCallback = new KeyguardOverlayCallback();
             }
             this.mKeyguardOverlayCallback.setClient(this);
-            this.mOverlay.windowAttached((WindowManager.LayoutParams) null, this.mKeyguardOverlayCallback, 3);
+            this.mOverlay.windowAttached(null, this.mKeyguardOverlayCallback, 3);
             if (this.mResumed) {
                 this.mOverlay.onResume();
             } else {
@@ -209,7 +207,8 @@ public class LockScreenMagazineClient {
         }
     }
 
-    private static class KeyguardOverlayCallback extends IKeyguardOverlayCallback.Stub implements Handler.Callback {
+    /* access modifiers changed from: private */
+    public static class KeyguardOverlayCallback extends IKeyguardOverlayCallback.Stub implements Handler.Callback {
         private LockScreenMagazineClient mClient;
         private final Handler mUIHandler = new Handler(Looper.getMainLooper(), this);
 
@@ -243,11 +242,13 @@ public class LockScreenMagazineClient {
             }
         }
 
+        @Override // com.android.keyguard.negative.IKeyguardOverlayCallback
         public void overlayScrollChanged(float f) throws RemoteException {
             this.mUIHandler.removeMessages(0);
             Message.obtain(this.mUIHandler, 0, Float.valueOf(f)).sendToTarget();
         }
 
+        @Override // com.android.keyguard.negative.IKeyguardOverlayCallback
         public void overlayStatusChanged(int i) {
             Message.obtain(this.mUIHandler, 1, i, 0).sendToTarget();
         }

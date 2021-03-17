@@ -1,6 +1,5 @@
 package com.android.keyguard.charge.container;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -57,7 +56,7 @@ public class MiuiChargeIconView extends RelativeLayout {
     private int mYellowDoubleScaleXY;
 
     public MiuiChargeIconView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiChargeIconView(Context context, AttributeSet attributeSet) {
@@ -178,32 +177,32 @@ public class MiuiChargeIconView extends RelativeLayout {
             this.mSingleScaleXY = 1;
             this.mSingleAlpha = 1;
         }
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSingleLightningIcon.getScaleX(), (float) this.mSingleScaleXY});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSingleLightningIcon.getScaleY(), (float) this.mSingleScaleXY});
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mSingleLightningIcon.getAlpha(), (float) this.mSingleAlpha});
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mSingleLightningIcon, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(500);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, this.mSingleLightningIcon.getScaleX(), (float) this.mSingleScaleXY);
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, this.mSingleLightningIcon.getScaleY(), (float) this.mSingleScaleXY);
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, this.mSingleLightningIcon.getAlpha(), (float) this.mSingleAlpha);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mSingleLightningIcon, ofFloat, ofFloat2, ofFloat3).setDuration(500L);
         duration.setInterpolator(this.mCubicInterpolator);
-        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mDoubleLightningIcon.getScaleX(), (float) this.mDoubleScaleXY});
-        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mDoubleLightningIcon.getScaleY(), (float) this.mDoubleScaleXY});
-        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, new float[]{this.mDoubleLightningIcon.getAlpha(), (float) this.mDoubleAlpha});
-        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mDoubleLightningIcon, new PropertyValuesHolder[]{ofFloat4, ofFloat5, ofFloat6}).setDuration(500);
+        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, this.mDoubleLightningIcon.getScaleX(), (float) this.mDoubleScaleXY);
+        PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property2, this.mDoubleLightningIcon.getScaleY(), (float) this.mDoubleScaleXY);
+        PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property, this.mDoubleLightningIcon.getAlpha(), (float) this.mDoubleAlpha);
+        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mDoubleLightningIcon, ofFloat4, ofFloat5, ofFloat6).setDuration(500L);
         duration2.setInterpolator(this.mCubicInterpolator);
         duration2.setInterpolator(new OvershootInterpolator(3.0f));
-        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mSpecialDoubleLightningIcon.getScaleX(), (float) this.mYellowDoubleScaleXY});
-        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mSpecialDoubleLightningIcon.getScaleY(), (float) this.mYellowDoubleScaleXY});
-        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property, new float[]{this.mSpecialDoubleLightningIcon.getAlpha(), (float) this.mYellowDoubleAlpha});
-        ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mSpecialDoubleLightningIcon, new PropertyValuesHolder[]{ofFloat7, ofFloat8, ofFloat9}).setDuration(500);
+        PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property3, this.mSpecialDoubleLightningIcon.getScaleX(), (float) this.mYellowDoubleScaleXY);
+        PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property2, this.mSpecialDoubleLightningIcon.getScaleY(), (float) this.mYellowDoubleScaleXY);
+        PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property, this.mSpecialDoubleLightningIcon.getAlpha(), (float) this.mYellowDoubleAlpha);
+        ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mSpecialDoubleLightningIcon, ofFloat7, ofFloat8, ofFloat9).setDuration(500L);
         duration3.setInterpolator(this.mCubicInterpolator);
         duration3.setInterpolator(new OvershootInterpolator(3.0f));
-        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mCarModeIcon.getScaleX(), (float) this.mCarIconScaleXY});
-        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mCarModeIcon.getScaleY(), (float) this.mCarIconScaleXY});
-        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property, new float[]{this.mCarModeIcon.getAlpha(), (float) this.mCarIconAlpha});
-        ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mCarModeIcon, new PropertyValuesHolder[]{ofFloat10, ofFloat11, ofFloat12}).setDuration(500);
+        PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property3, this.mCarModeIcon.getScaleX(), (float) this.mCarIconScaleXY);
+        PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property2, this.mCarModeIcon.getScaleY(), (float) this.mCarIconScaleXY);
+        PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property, this.mCarModeIcon.getAlpha(), (float) this.mCarIconAlpha);
+        ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mCarModeIcon, ofFloat10, ofFloat11, ofFloat12).setDuration(500L);
         duration4.setInterpolator(this.mCubicInterpolator);
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mSwitchAnimator = animatorSet2;
         animatorSet2.setStartDelay((long) ChargeUtils.getWaveItemDelayTime());
-        this.mSwitchAnimator.playTogether(new Animator[]{duration, duration2, duration3, duration4});
+        this.mSwitchAnimator.playTogether(duration, duration2, duration3, duration4);
         this.mSwitchAnimator.start();
     }
 

@@ -13,10 +13,12 @@ import com.android.systemui.C0021R$string;
 public class WechatPayItem extends IQuickOpenItem {
     private final ImageView mView;
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTag() {
         return "WeChat/Payment code";
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public boolean needStartProcess() {
         return true;
     }
@@ -29,10 +31,12 @@ public class WechatPayItem extends IQuickOpenItem {
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public View getView() {
         return this.mView;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public Intent getIntent() {
         Intent intent = new Intent("android.intent.action.VIEW");
         intent.setFlags(343932928);
@@ -41,10 +45,12 @@ public class WechatPayItem extends IQuickOpenItem {
         return intent;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_pay);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_pay_sub);
     }

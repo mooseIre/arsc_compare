@@ -18,18 +18,19 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ MiuiKeyguardWallpaperControllerImpl this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1(MiuiKeyguardWallpaperControllerImpl miuiKeyguardWallpaperControllerImpl) {
         this.this$0 = miuiKeyguardWallpaperControllerImpl;
     }
 
     public void onReceive(@Nullable Context context, @Nullable Intent intent) {
-        if (intent != null && Intrinsics.areEqual((Object) intent.getAction(), (Object) "miui.intent.action.LOCK_WALLPAPER_CHANGED") && Intrinsics.areEqual((Object) "com.miui.miwallpaper", (Object) intent.getSender())) {
+        if (intent != null && Intrinsics.areEqual(intent.getAction(), "miui.intent.action.LOCK_WALLPAPER_CHANGED") && Intrinsics.areEqual("com.miui.miwallpaper", intent.getSender())) {
             checkForSuperWallpaper();
             this.this$0.mWallpaperJsonString = intent.getStringExtra(MiuiKeyguardWallpaperControllerImpl.KEY_WALLPAPER_INFO);
             this.this$0.mIsWallpaperColorLight = intent.getBooleanExtra(MiuiKeyguardWallpaperControllerImpl.KEY_IS_WALLPAPER_COLOR_LIGHT, false);
             this.this$0.mWallpaperBlurColor = intent.getIntExtra(MiuiKeyguardWallpaperControllerImpl.KEY_WALLPAPER_BLUR_COLOR, -1);
-            String access$getTAG$p = this.this$0.TAG;
-            Log.d(access$getTAG$p, "onWallpaperChange ColorLight(!darkStyle):" + this.this$0.mIsWallpaperColorLight + " mWallpaperBlurColor:" + this.this$0.mWallpaperBlurColor + " mWallpaperInfo:" + this.this$0.mWallpaperJsonString);
+            String str = this.this$0.TAG;
+            Log.d(str, "onWallpaperChange ColorLight(!darkStyle):" + this.this$0.mIsWallpaperColorLight + " mWallpaperBlurColor:" + this.this$0.mWallpaperBlurColor + " mWallpaperInfo:" + this.this$0.mWallpaperJsonString);
             Iterator it = this.this$0.mWallpaperChangeCallbacks.iterator();
             while (it.hasNext()) {
                 ((IMiuiKeyguardWallpaperController.IWallpaperChangeCallback) it.next()).onWallpaperChange(this.this$0.mIsWallpaperColorLight);
@@ -47,8 +48,8 @@ public final class MiuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1 exte
                 try {
                     this.this$0.mIsSuperWallpaper = wallpaperInfo.getServiceInfo().metaData.getBoolean("is_super_wallpaper");
                 } catch (Exception e) {
-                    String access$getTAG$p = this.this$0.TAG;
-                    Log.e(access$getTAG$p, "isSuperWallpaper wallpaperInfo.getServiceInfo() fail:" + e.getCause());
+                    String str = this.this$0.TAG;
+                    Log.e(str, "isSuperWallpaper wallpaperInfo.getServiceInfo() fail:" + e.getCause());
                 }
             }
         } else {

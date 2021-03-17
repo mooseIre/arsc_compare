@@ -11,7 +11,8 @@ public class SettingsWrapper {
     private final ContentResolver mContentResolver;
     private final Migration mMigration;
 
-    interface Migration {
+    /* access modifiers changed from: package-private */
+    public interface Migration {
         void migrate(String str, int i);
     }
 
@@ -62,6 +63,7 @@ public class SettingsWrapper {
             this.mContentResolver = contentResolver;
         }
 
+        @Override // com.android.keyguard.clock.SettingsWrapper.Migration
         public void migrate(String str, int i) {
             try {
                 JSONObject jSONObject = new JSONObject();

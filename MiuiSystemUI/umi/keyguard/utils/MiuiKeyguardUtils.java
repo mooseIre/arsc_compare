@@ -144,6 +144,8 @@ public class MiuiKeyguardUtils {
         if (view != null) {
             final View view2 = (View) view.getParent();
             view2.post(new Runnable() {
+                /* class com.android.keyguard.utils.MiuiKeyguardUtils.AnonymousClass1 */
+
                 public void run() {
                     TouchDelegate touchDelegate;
                     if (i != 0) {

@@ -6,7 +6,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Random;
 
-class FireworksManager {
+/* access modifiers changed from: package-private */
+public class FireworksManager {
     private int mDistance;
     private List<PointF> mFireList = new LinkedList();
     private int mLastIndex;

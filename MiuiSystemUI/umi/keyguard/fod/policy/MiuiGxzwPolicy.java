@@ -8,6 +8,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.statusbar.NotificationPanelExpansionListener;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
@@ -61,14 +62,17 @@ public final class MiuiGxzwPolicy implements NotificationPanelExpansionListener,
         notificationShadeWindowView.getViewTreeObserver().addOnWindowFocusChangeListener(MiuiGxzwPolicy$start$1.INSTANCE);
     }
 
+    @Override // com.miui.systemui.statusbar.NotificationPanelExpansionListener
     public void onQsExpanded(boolean z) {
         MiuiGxzwManager.getInstance().updateQsExpandedStatus(z);
     }
 
+    @Override // com.miui.systemui.statusbar.NotificationPanelExpansionListener
     public void onPanelExpanded(boolean z) {
         MiuiGxzwManager.getInstance().updatePanelExpandedStatus(z);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
         int i2 = this.mStatusBarState;
         boolean goingToFullShade = this.mStatusBarStateController.goingToFullShade();

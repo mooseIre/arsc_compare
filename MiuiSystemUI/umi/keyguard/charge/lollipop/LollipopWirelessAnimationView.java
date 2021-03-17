@@ -11,8 +11,7 @@ import android.view.TextureView;
 import android.view.WindowManager;
 
 public class LollipopWirelessAnimationView extends TextureView implements TextureView.SurfaceTextureListener {
-    /* access modifiers changed from: private */
-    public volatile boolean mAnimationRunning;
+    private volatile boolean mAnimationRunning;
     private LollipopWirelessChargeCircleDrawer mCircleDrawer;
     private Context mContext;
     private int mDrawableHeight;
@@ -30,7 +29,7 @@ public class LollipopWirelessAnimationView extends TextureView implements Textur
         public interface AnimationStateListener {
         }
 
-        void setAnimationListener(AnimationStateListener animationStateListener) {
+        default void setAnimationListener(AnimationStateListener animationStateListener) {
         }
     }
 
@@ -45,7 +44,7 @@ public class LollipopWirelessAnimationView extends TextureView implements Textur
     }
 
     public LollipopWirelessAnimationView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public LollipopWirelessAnimationView(Context context, AttributeSet attributeSet) {
@@ -55,6 +54,8 @@ public class LollipopWirelessAnimationView extends TextureView implements Textur
     public LollipopWirelessAnimationView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mFrameCallback = new Choreographer.FrameCallback() {
+            /* class com.android.keyguard.charge.lollipop.LollipopWirelessAnimationView.AnonymousClass1 */
+
             public void doFrame(long j) {
                 if (LollipopWirelessAnimationView.this.mAnimationRunning) {
                     LollipopWirelessAnimationView.this.dispatchDraw(j);
@@ -148,7 +149,8 @@ public class LollipopWirelessAnimationView extends TextureView implements Textur
     }
 
     /* access modifiers changed from: private */
-    public void dispatchDraw(long j) {
+    /* access modifiers changed from: public */
+    private void dispatchDraw(long j) {
         LollipopWirelessChargeCircleDrawer lollipopWirelessChargeCircleDrawer;
         if (this.mSurfaceAvailable && (lollipopWirelessChargeCircleDrawer = this.mCircleDrawer) != null) {
             lollipopWirelessChargeCircleDrawer.onAnimationDraw(this, j);

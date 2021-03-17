@@ -51,30 +51,30 @@ import com.miui.systemui.util.MiuiTextUtils;
 import dagger.Lazy;
 
 public class MiuiDozeServiceHost extends DozeServiceHost {
-    /* access modifiers changed from: private */
-    public final AodCallback mAodCallback = new AodCallback();
+    private final AodCallback mAodCallback = new AodCallback();
     private boolean mAodEnable;
-    /* access modifiers changed from: private */
-    public IMiuiAodService mAodService;
+    private IMiuiAodService mAodService;
     private boolean mAodServiceBinded = false;
     private boolean mAodUsingSuperWallpaperStyle;
-    /* access modifiers changed from: private */
-    public final Context mContext = SystemUIApplication.getContext();
+    private final Context mContext = SystemUIApplication.getContext();
     private DeviceProvisionedController mDeviceProvisionedController;
     Runnable mDozingChanged = new Runnable() {
+        /* class com.android.keyguard.$$Lambda$pTlDRfd3UGChuOoJMce0_IvYrU */
+
         public final void run() {
             MiuiDozeServiceHost.this.updateDozing();
         }
     };
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     Runnable mNotifyKeycodeGoto = $$Lambda$MiuiDozeServiceHost$dJI1FLLD1uCJOZIbgk7HpTtrZxI.INSTANCE;
     private final PowerManager mPowerManager;
     private final boolean mSupportAod;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
+        /* class com.android.keyguard.MiuiDozeServiceHost.AnonymousClass4 */
+
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            IMiuiAodService unused = MiuiDozeServiceHost.this.mAodService = IMiuiAodService.Stub.asInterface(iBinder);
+            MiuiDozeServiceHost.this.mAodService = IMiuiAodService.Stub.asInterface(iBinder);
             if (MiuiDozeServiceHost.this.mAodService != null) {
                 try {
                     MiuiDozeServiceHost.this.mAodService.registerCallback(MiuiDozeServiceHost.this.mAodCallback);
@@ -92,24 +92,27 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         }
     };
 
+    @Override // com.android.systemui.doze.DozeHost, com.android.systemui.statusbar.phone.DozeServiceHost
     public void startDozing() {
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public MiuiDozeServiceHost(DozeLog dozeLog, PowerManager powerManager, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, DeviceProvisionedController deviceProvisionedController, HeadsUpManagerPhone headsUpManagerPhone, BatteryController batteryController, ScrimController scrimController, Lazy<BiometricUnlockController> lazy, KeyguardViewMediator keyguardViewMediator, Lazy<AssistManager> lazy2, DozeScrimController dozeScrimController, KeyguardUpdateMonitor keyguardUpdateMonitor, VisualStabilityManager visualStabilityManager, PulseExpansionHandler pulseExpansionHandler, NotificationShadeWindowController notificationShadeWindowController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, LockscreenLockIconController lockscreenLockIconController, SettingsManager settingsManager) {
+    public MiuiDozeServiceHost(DozeLog dozeLog, PowerManager powerManager, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, DeviceProvisionedController deviceProvisionedController, HeadsUpManagerPhone headsUpManagerPhone, BatteryController batteryController, ScrimController scrimController, Lazy<BiometricUnlockController> lazy, KeyguardViewMediator keyguardViewMediator, Lazy<AssistManager> lazy2, DozeScrimController dozeScrimController, final KeyguardUpdateMonitor keyguardUpdateMonitor, VisualStabilityManager visualStabilityManager, PulseExpansionHandler pulseExpansionHandler, NotificationShadeWindowController notificationShadeWindowController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, LockscreenLockIconController lockscreenLockIconController, final SettingsManager settingsManager) {
         super(dozeLog, powerManager, wakefulnessLifecycle, sysuiStatusBarStateController, deviceProvisionedController, headsUpManagerPhone, batteryController, scrimController, lazy, keyguardViewMediator, lazy2, dozeScrimController, keyguardUpdateMonitor, visualStabilityManager, pulseExpansionHandler, notificationShadeWindowController, notificationWakeUpCoordinator, lockscreenLockIconController);
-        final KeyguardUpdateMonitor keyguardUpdateMonitor2 = keyguardUpdateMonitor;
         boolean supportAod = supportAod(this.mContext);
         this.mSupportAod = supportAod;
         this.mPowerManager = powerManager;
         this.mDeviceProvisionedController = deviceProvisionedController;
         if (supportAod) {
             AnonymousClass1 r3 = new KeyguardUpdateMonitorCallback() {
+                /* class com.android.keyguard.MiuiDozeServiceHost.AnonymousClass1 */
+
+                @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
                 public void onSimStateChanged(int i, int i2, int i3) {
                     super.onSimStateChanged(i, i2, i3);
-                    MiuiDozeServiceHost.this.onSimPinSecureChanged(keyguardUpdateMonitor2.isSimPinSecure());
+                    MiuiDozeServiceHost.this.onSimPinSecureChanged(keyguardUpdateMonitor.isSimPinSecure());
                 }
 
+                @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
                 public void onUserSwitchComplete(int i) {
                     super.onUserSwitchComplete(i);
                     MiuiDozeServiceHost.this.disconnectAodService();
@@ -117,14 +120,19 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
                 }
             };
             this.mKeyguardUpdateMonitorCallback = r3;
-            keyguardUpdateMonitor2.registerCallback(r3);
+            keyguardUpdateMonitor.registerCallback(r3);
             ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallback(new SettingsObserver.Callback() {
+                /* class com.android.keyguard.$$Lambda$MiuiDozeServiceHost$_QlERT10AMyGNFXe8IGYFygq5o */
+
+                @Override // com.miui.systemui.SettingsObserver.Callback
                 public final void onContentChanged(String str, String str2) {
                     MiuiDozeServiceHost.this.lambda$new$0$MiuiDozeServiceHost(str, str2);
                 }
             }, 1, MiuiKeyguardUtils.AOD_MODE, "aod_using_super_wallpaper");
-            final SettingsManager settingsManager2 = settingsManager;
             this.mDeviceProvisionedController.addCallback(new DeviceProvisionedController.DeviceProvisionedListener() {
+                /* class com.android.keyguard.MiuiDozeServiceHost.AnonymousClass2 */
+
+                @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
                 public void onDeviceProvisionedChanged() {
                     ContentResolver contentResolver = MiuiDozeServiceHost.this.mContext.getContentResolver();
                     boolean z = false;
@@ -133,7 +141,7 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
                     }
                     if (z) {
                         Settings.Global.putInt(contentResolver, "new_device_after_support_notification_animation", 1);
-                        settingsManager2.refreshWakeupForNotificationValue();
+                        settingsManager.refreshWakeupForNotificationValue();
                     }
                 }
             });
@@ -151,16 +159,21 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         updateDozeAfterScreenOff();
     }
 
+    @Override // com.android.systemui.statusbar.phone.DozeServiceHost
     public void initialize(StatusBar statusBar, NotificationIconAreaController notificationIconAreaController, StatusBarKeyguardViewManager statusBarKeyguardViewManager, NotificationShadeWindowViewController notificationShadeWindowViewController, NotificationPanelViewController notificationPanelViewController, View view) {
         super.initialize(statusBar, notificationIconAreaController, statusBarKeyguardViewManager, notificationShadeWindowViewController, notificationPanelViewController, view);
         checkAodService();
         addCallback(new DozeHost.Callback() {
+            /* class com.android.keyguard.MiuiDozeServiceHost.AnonymousClass3 */
+
+            @Override // com.android.systemui.doze.DozeHost.Callback
             public void onDozeSuppressedChanged(boolean z) {
-                MiuiDozeServiceHost.this.sendCommand("suppressAmbientDisplay", z ? 1 : 0, (Bundle) null);
+                MiuiDozeServiceHost.this.sendCommand("suppressAmbientDisplay", z ? 1 : 0, null);
             }
         });
     }
 
+    @Override // com.android.systemui.doze.DozeHost, com.android.systemui.statusbar.phone.DozeServiceHost
     public void stopDozing() {
         super.stopDozing();
         checkAodService();
@@ -263,9 +276,12 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     }
 
     /* access modifiers changed from: private */
-    public void startAndBindAodService() {
+    /* access modifiers changed from: public */
+    private void startAndBindAodService() {
         if (this.mSupportAod) {
             this.mHandler.post(new Runnable() {
+                /* class com.android.keyguard.$$Lambda$MiuiDozeServiceHost$A9RXwPWz12fOmNfsF5EE0_JYVk */
+
                 public final void run() {
                     MiuiDozeServiceHost.this.lambda$startAndBindAodService$2$MiuiDozeServiceHost();
                 }
@@ -282,6 +298,7 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         Log.d("MiuiDozeServiceHost", "is service connected: " + this.mAodServiceBinded);
         if (!this.mAodServiceBinded) {
             this.mHandler.postDelayed(new Runnable(intent) {
+                /* class com.android.keyguard.$$Lambda$MiuiDozeServiceHost$nxh3_4ZcNn5fNtNVuf41CaSJCy0 */
                 public final /* synthetic */ Intent f$1;
 
                 {
@@ -303,7 +320,8 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     }
 
     /* access modifiers changed from: private */
-    public void disconnectAodService() {
+    /* access modifiers changed from: public */
+    private void disconnectAodService() {
         IMiuiAodService iMiuiAodService = this.mAodService;
         if (iMiuiAodService != null) {
             try {
@@ -323,26 +341,32 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
         this.mPowerManager.setDozeAfterScreenOff(z);
     }
 
-    private class AodCallback extends IMiuiAodCallback.Stub {
+    /* access modifiers changed from: private */
+    public class AodCallback extends IMiuiAodCallback.Stub {
+        @Override // com.miui.aod.IMiuiAodCallback
         public void onDozeStateChanged(int i) {
         }
 
+        @Override // com.miui.aod.IMiuiAodCallback
         public void onExtendPulse() {
         }
 
+        @Override // com.miui.aod.IMiuiAodCallback
         public void setAnimateWakeup(boolean z) {
         }
 
         private AodCallback() {
         }
 
+        @Override // com.miui.aod.IMiuiAodCallback
         public void onDozingRequested(boolean z) {
             Log.i("MiuiDozeServiceHost", "onDozingRequested: " + z);
-            boolean unused = MiuiDozeServiceHost.this.mDozingRequested = z;
+            ((DozeServiceHost) MiuiDozeServiceHost.this).mDozingRequested = z;
             MiuiDozeServiceHost.this.mHandler.removeCallbacks(MiuiDozeServiceHost.this.mDozingChanged);
             MiuiDozeServiceHost.this.mHandler.postAtFrontOfQueue(MiuiDozeServiceHost.this.mDozingChanged);
         }
 
+        @Override // com.miui.aod.IMiuiAodCallback
         public void notifyKeycodeGoto() {
             MiuiDozeServiceHost.this.mHandler.postAtFrontOfQueue(MiuiDozeServiceHost.this.mNotifyKeycodeGoto);
         }

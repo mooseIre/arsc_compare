@@ -11,6 +11,7 @@ public final class KeyguardClockInjector_Factory implements Factory<KeyguardCloc
         this.mContextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardClockInjector get() {
         return provideInstance(this.mContextProvider);
     }

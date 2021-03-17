@@ -51,7 +51,7 @@ public class LockScreenMagazineUtils {
 
     public static void sendLockScreenMagazineEventBroadcast(Context context, String str) {
         if (isGlobalNeedFeature(context)) {
-            sendLockScreenMagazineEventBroadcast(context, str, (Bundle) null);
+            sendLockScreenMagazineEventBroadcast(context, str, null);
         }
     }
 
@@ -164,19 +164,19 @@ public class LockScreenMagazineUtils {
                 com.android.keyguard.KeyguardSecurityModel$SecurityMode[] r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode = r0
+                com.android.keyguard.magazine.utils.LockScreenMagazineUtils.AnonymousClass2.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode = r0
                 com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.PIN     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = com.android.keyguard.magazine.utils.LockScreenMagazineUtils.AnonymousClass2.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Password     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = com.android.keyguard.magazine.utils.LockScreenMagazineUtils.AnonymousClass2.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Pattern     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
@@ -190,6 +190,8 @@ public class LockScreenMagazineUtils {
 
     private static void notifyRecordEvent(final Context context, final String str, final Bundle bundle) {
         new AsyncTask<Void, Void, Void>() {
+            /* class com.android.keyguard.magazine.utils.LockScreenMagazineUtils.AnonymousClass1 */
+
             /* access modifiers changed from: protected */
             public Void doInBackground(Void... voidArr) {
                 ContentProviderUtils.getResultFromProvider(context, LockScreenMagazineUtils.CONTENT_URI_LOCK_MAGAZINE_DEFAULT, str, (String) null, bundle);

@@ -15,6 +15,7 @@ final class MiuiGxzwPolicy$mStatusBar$2 extends Lambda implements Function0<Stat
         this.$statusBarLazy = lazy;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final StatusBar invoke() {
         return (StatusBar) this.$statusBarLazy.get();
     }

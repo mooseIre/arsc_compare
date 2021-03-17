@@ -20,10 +20,10 @@ import miui.util.Log;
 
 public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
     private Context mContext;
-    /* access modifiers changed from: private */
-    public MiuiFaceUnlockManager mFaceUnlockManager;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler(Looper.getMainLooper()) {
+    private MiuiFaceUnlockManager mFaceUnlockManager;
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        /* class com.android.keyguard.KeyguardMoveLeftController.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             if (message.what == 0) {
                 KeyguardMoveLeftController.this.mLockScreenMagazineClient.unBind();
@@ -32,11 +32,14 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
     };
     private float mInitialTouchX;
     private KeyguardClientCallback mKeyguardClientCallback = new KeyguardClientCallback() {
+        /* class com.android.keyguard.KeyguardMoveLeftController.AnonymousClass2 */
+
+        @Override // com.android.keyguard.negative.KeyguardClientCallback
         public void onOverlayScrollChanged(float f) {
             KeyguardMoveLeftController.this.mCallBack.updateCanShowGxzw(f == 0.0f);
             KeyguardMoveLeftController.this.mFaceUnlockManager.updateHorizontalMoveLeftProgress(f);
             if (KeyguardMoveLeftController.this.mScrollProgress != f) {
-                float unused = KeyguardMoveLeftController.this.mScrollProgress = f;
+                KeyguardMoveLeftController.this.mScrollProgress = f;
                 if (KeyguardMoveLeftController.this.mScrollProgress == 0.0f || KeyguardMoveLeftController.this.mScrollProgress == 1.0f) {
                     Slog.i("KeyguardHorizontalMoveLeftViewContainer", "onOverlayScrollChanged mScrollProgress = " + KeyguardMoveLeftController.this.mScrollProgress);
                 }
@@ -50,25 +53,30 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
             }
         }
 
+        @Override // com.android.keyguard.negative.KeyguardClientCallback
         public void onServiceStateChanged(boolean z) {
             ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).setLockScreenLeftOverlayAvailable(z);
         }
     };
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.KeyguardMoveLeftController.AnonymousClass3 */
+
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onKeyguardOccludedChanged(boolean z) {
             if (z) {
                 KeyguardMoveLeftController.this.mLockScreenMagazineClient.hideOverlay(true);
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardBouncerChanged(boolean z) {
             if (z) {
                 KeyguardMoveLeftController.this.mLockScreenMagazineClient.hideOverlay(true);
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onKeyguardShowingChanged(boolean z) {
             if (!z) {
                 KeyguardMoveLeftController.this.mLockScreenMagazineClient.hideOverlay(true);
@@ -77,12 +85,9 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public LockScreenMagazineClient mLockScreenMagazineClient;
-    /* access modifiers changed from: private */
-    public float mScreenWidth;
-    /* access modifiers changed from: private */
-    public volatile float mScrollProgress;
+    private LockScreenMagazineClient mLockScreenMagazineClient;
+    private float mScreenWidth;
+    private volatile float mScrollProgress;
     private boolean mTouchDownInitial;
 
     public KeyguardMoveLeftController(Context context, BaseKeyguardMoveController.CallBack callBack) {
@@ -144,12 +149,10 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
     }
 
     public void onStartedWakingUp() {
-        Class cls = LockScreenMagazineController.class;
-        Class cls2 = KeyguardUpdateMonitorInjector.class;
         this.mHandler.removeMessages(0);
-        Log.d("KeyguardHorizontalMoveLeftViewContainer", "onStartedWakingUp " + ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeftOverlay() + " " + MiuiGxzwManager.getInstance().isUnlockByGxzw() + " " + ((KeyguardUpdateMonitorInjector) Dependency.get(cls2)).isFingerprintUnlock() + " " + ((KeyguardUpdateMonitorInjector) Dependency.get(cls2)).isFaceUnlock() + " " + this.mFaceUnlockManager.isStayScreenWhenFaceUnlockSuccess() + " " + this.mCallBack.getMoveIconState(false).isVisible);
-        if (((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeftOverlay() && !MiuiGxzwManager.getInstance().isUnlockByGxzw() && !((KeyguardUpdateMonitorInjector) Dependency.get(cls2)).isFingerprintUnlock()) {
-            if ((!((KeyguardUpdateMonitorInjector) Dependency.get(cls2)).isFaceUnlock() || !this.mFaceUnlockManager.isStayScreenWhenFaceUnlockSuccess()) && this.mCallBack.getMoveIconState(false).isVisible) {
+        Log.d("KeyguardHorizontalMoveLeftViewContainer", "onStartedWakingUp " + ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeftOverlay() + " " + MiuiGxzwManager.getInstance().isUnlockByGxzw() + " " + ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock() + " " + ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock() + " " + this.mFaceUnlockManager.isStayScreenWhenFaceUnlockSuccess() + " " + this.mCallBack.getMoveIconState(false).isVisible);
+        if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeftOverlay() && !MiuiGxzwManager.getInstance().isUnlockByGxzw() && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock()) {
+            if ((!((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock() || !this.mFaceUnlockManager.isStayScreenWhenFaceUnlockSuccess()) && this.mCallBack.getMoveIconState(false).isVisible) {
                 this.mLockScreenMagazineClient.bind();
             }
         }

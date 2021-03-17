@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Matrix;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -19,23 +18,18 @@ import android.view.View;
 import java.util.Queue;
 import java.util.concurrent.ArrayBlockingQueue;
 
-class MiuiGxzwFrameAnimation {
-    /* access modifiers changed from: private */
-    public volatile float alpha = 1.0f;
+/* access modifiers changed from: package-private */
+public class MiuiGxzwFrameAnimation {
+    private volatile float alpha = 1.0f;
     private final Context mContext;
     private final Handler mDrawHandler;
     private DrawRunnable mDrawRunnable;
-    /* access modifiers changed from: private */
-    public final HandlerThread mDrawThread;
-    /* access modifiers changed from: private */
-    public volatile int mFrameInterval = 32;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
+    private final HandlerThread mDrawThread;
+    private volatile int mFrameInterval = 32;
+    private final Handler mHandler = new Handler();
     private boolean mLastDrawAnim = false;
-    /* access modifiers changed from: private */
-    public volatile int mMode = 1;
-    /* access modifiers changed from: private */
-    public final Queue<Bitmap> mRecycleBitmapQueue = new ArrayBlockingQueue(2, true);
+    private volatile int mMode = 1;
+    private final Queue<Bitmap> mRecycleBitmapQueue = new ArrayBlockingQueue(2, true);
     private volatile boolean mSupportInBitmap = true;
     private final View mView;
 
@@ -118,12 +112,14 @@ class MiuiGxzwFrameAnimation {
             this.mRecycleBitmapQueue.clear();
         }
         this.mDrawHandler.post(new Runnable() {
+            /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.AnonymousClass1 */
+
             public void run() {
-                Bitmap access$100 = MiuiGxzwFrameAnimation.this.decodeBitmap(i);
-                if (access$100 != null) {
-                    MiuiGxzwFrameAnimation.this.drawBitmap(access$100, f);
+                Bitmap decodeBitmap = MiuiGxzwFrameAnimation.this.decodeBitmap(i);
+                if (decodeBitmap != null) {
+                    MiuiGxzwFrameAnimation.this.drawBitmap(decodeBitmap, f);
                     if (z) {
-                        MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.offer(access$100);
+                        MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.offer(decodeBitmap);
                     }
                 }
             }
@@ -134,6 +130,8 @@ class MiuiGxzwFrameAnimation {
         Log.i("MiuiGxzwFrameAnimation", "clean");
         stopAnimation();
         this.mDrawHandler.post(new Runnable() {
+            /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.AnonymousClass2 */
+
             public void run() {
                 MiuiGxzwFrameAnimation.this.clearSurface();
             }
@@ -152,12 +150,14 @@ class MiuiGxzwFrameAnimation {
     }
 
     /* access modifiers changed from: private */
-    public void drawBitmap(Bitmap bitmap, float f) {
-        drawBitmap(bitmap, (Bitmap) null, f, (CustomerDrawBitmap) null, 0, 0);
+    /* access modifiers changed from: public */
+    private void drawBitmap(Bitmap bitmap, float f) {
+        drawBitmap(bitmap, null, f, null, 0, 0);
     }
 
     /* access modifiers changed from: private */
-    public void drawBitmap(Bitmap bitmap, Bitmap bitmap2, float f, CustomerDrawBitmap customerDrawBitmap, int i, int i2) {
+    /* access modifiers changed from: public */
+    private void drawBitmap(Bitmap bitmap, Bitmap bitmap2, float f, CustomerDrawBitmap customerDrawBitmap, int i, int i2) {
         Canvas lockCanvas = lockCanvas();
         if (lockCanvas == null || bitmap == null) {
             Log.i("MiuiGxzwFrameAnimation", "drawBitmap: bitmap or canvas is null");
@@ -172,10 +172,10 @@ class MiuiGxzwFrameAnimation {
             if (bitmap2 != null) {
                 Matrix configureDrawMatrix2 = configureDrawMatrix(bitmap2, f);
                 configureDrawMatrix2.postTranslate(f2, f3);
-                lockCanvas.drawBitmap(bitmap2, configureDrawMatrix2, (Paint) null);
+                lockCanvas.drawBitmap(bitmap2, configureDrawMatrix2, null);
             }
             if (customerDrawBitmap == null) {
-                lockCanvas.drawBitmap(bitmap, configureDrawMatrix, (Paint) null);
+                lockCanvas.drawBitmap(bitmap, configureDrawMatrix, null);
             } else {
                 customerDrawBitmap.drawBitmap(lockCanvas, bitmap, configureDrawMatrix);
             }
@@ -201,7 +201,8 @@ class MiuiGxzwFrameAnimation {
     }
 
     /* access modifiers changed from: private */
-    public void clearSurface() {
+    /* access modifiers changed from: public */
+    private void clearSurface() {
         Canvas lockCanvas = lockCanvas();
         if (lockCanvas != null) {
             try {
@@ -234,7 +235,8 @@ class MiuiGxzwFrameAnimation {
     }
 
     /* access modifiers changed from: private */
-    public Bitmap decodeBitmap(int i) {
+    /* access modifiers changed from: public */
+    private Bitmap decodeBitmap(int i) {
         Bitmap poll = (!this.mSupportInBitmap || this.mRecycleBitmapQueue.size() < 2) ? null : this.mRecycleBitmapQueue.poll();
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inMutable = true;
@@ -248,15 +250,15 @@ class MiuiGxzwFrameAnimation {
         }
     }
 
-    private class DrawRunnable implements Runnable {
+    /* access modifiers changed from: private */
+    public class DrawRunnable implements Runnable {
         private final int[] mAnimRes;
         private final int mBackgroundFrame;
         private final int mBackgroundRes;
         private volatile int mCurrentPosition;
         private final CustomerDrawBitmap mCustomerDrawBitmap;
         private boolean mDrawing;
-        /* access modifiers changed from: private */
-        public final FrameAnimationListener mFrameAnimationListener;
+        private final FrameAnimationListener mFrameAnimationListener;
         private final int mTranslateX;
         private final int mTranslateY;
 
@@ -304,7 +306,7 @@ class MiuiGxzwFrameAnimation {
             }
             MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.clear();
             int i = this.mBackgroundRes;
-            Bitmap access$100 = i == 0 ? null : MiuiGxzwFrameAnimation.this.decodeBitmap(i);
+            Bitmap decodeBitmap = i == 0 ? null : MiuiGxzwFrameAnimation.this.decodeBitmap(i);
             long currentTimeMillis = System.currentTimeMillis();
             int i2 = 0;
             while (true) {
@@ -324,15 +326,15 @@ class MiuiGxzwFrameAnimation {
                 if (i4 == 0 || MiuiGxzwFrameAnimation.this.alpha < 0.01f) {
                     MiuiGxzwFrameAnimation.this.clearSurface();
                 } else {
-                    Bitmap access$1002 = MiuiGxzwFrameAnimation.this.decodeBitmap(i4);
-                    if (access$1002 == null) {
+                    Bitmap decodeBitmap2 = MiuiGxzwFrameAnimation.this.decodeBitmap(i4);
+                    if (decodeBitmap2 == null) {
                         stopDraw();
                         break;
                     }
                     MiuiGxzwFrameAnimation miuiGxzwFrameAnimation = MiuiGxzwFrameAnimation.this;
                     int i5 = this.mBackgroundFrame;
-                    miuiGxzwFrameAnimation.drawBitmap(access$1002, (i2 < i5 || i5 <= 0) ? access$100 : null, 1.0f, this.mCustomerDrawBitmap, this.mTranslateX, this.mTranslateY);
-                    MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.offer(access$1002);
+                    miuiGxzwFrameAnimation.drawBitmap(decodeBitmap2, (i2 < i5 || i5 <= 0) ? decodeBitmap : null, 1.0f, this.mCustomerDrawBitmap, this.mTranslateX, this.mTranslateY);
+                    MiuiGxzwFrameAnimation.this.mRecycleBitmapQueue.offer(decodeBitmap2);
                 }
                 i2++;
                 if (this.mCurrentPosition == this.mAnimRes.length - 1) {
@@ -366,6 +368,8 @@ class MiuiGxzwFrameAnimation {
         private void notifyStart() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass1 */
+
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onStart();
                     }
@@ -376,6 +380,8 @@ class MiuiGxzwFrameAnimation {
         private void notifyInterrupt() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass2 */
+
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onInterrupt();
                     }
@@ -386,6 +392,8 @@ class MiuiGxzwFrameAnimation {
         private void notifyFinish() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass3 */
+
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onFinish();
                     }
@@ -396,6 +404,8 @@ class MiuiGxzwFrameAnimation {
         private void nitifyRepeat() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass4 */
+
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onRepeat();
                     }

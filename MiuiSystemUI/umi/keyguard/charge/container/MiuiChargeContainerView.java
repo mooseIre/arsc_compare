@@ -14,7 +14,7 @@ public class MiuiChargeContainerView extends FrameLayout {
     private IChargeView mChargeView;
 
     public MiuiChargeContainerView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiChargeContainerView(Context context, AttributeSet attributeSet) {

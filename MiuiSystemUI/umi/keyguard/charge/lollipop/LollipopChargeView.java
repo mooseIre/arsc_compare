@@ -1,6 +1,5 @@
 package com.android.keyguard.charge.lollipop;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
@@ -36,7 +35,7 @@ public class LollipopChargeView extends IChargeView {
     private ImageView mParticleCircleView;
 
     public LollipopChargeView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public LollipopChargeView(Context context, AttributeSet attributeSet) {
@@ -49,6 +48,7 @@ public class LollipopChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void init(Context context) {
         Property property = View.ROTATION;
         super.init(context);
@@ -74,11 +74,11 @@ public class LollipopChargeView extends IChargeView {
         layoutParams3.gravity = 17;
         this.mInnerCircleView.setLayoutParams(layoutParams3);
         addView(this.mInnerCircleView);
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mInnerCircleView, property, new float[]{0.0f, 360.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mInnerCircleView, property, 0.0f, 360.0f);
         this.mInnerCircleAnimator = ofFloat;
         ofFloat.setInterpolator(new LinearInterpolator());
         this.mInnerCircleAnimator.setRepeatCount(-1);
-        this.mInnerCircleAnimator.setDuration(6000);
+        this.mInnerCircleAnimator.setDuration(6000L);
         ImageView imageView2 = new ImageView(context);
         this.mParticleCircleView = imageView2;
         imageView2.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -88,11 +88,11 @@ public class LollipopChargeView extends IChargeView {
         layoutParams4.gravity = 17;
         this.mParticleCircleView.setLayoutParams(layoutParams4);
         addView(this.mParticleCircleView);
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.mParticleCircleView, property, new float[]{0.0f, 360.0f});
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.mParticleCircleView, property, 0.0f, 360.0f);
         this.mParticleCircleAnimator = ofFloat2;
         ofFloat2.setInterpolator(new LinearInterpolator());
         this.mParticleCircleAnimator.setRepeatCount(-1);
-        this.mParticleCircleAnimator.setDuration(1000);
+        this.mParticleCircleAnimator.setDuration(1000L);
         FrameLayout.LayoutParams layoutParams5 = new FrameLayout.LayoutParams(this.mBottomLightWidth, this.mBottomLightHeight);
         layoutParams5.gravity = 81;
         ImageView imageView3 = new ImageView(context);
@@ -108,6 +108,7 @@ public class LollipopChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void startAnimationOnChildView() {
         Log.d("LollipopChargeView", "startAnimationOnChildView: " + this.mWireState);
         int i = this.mWireState;
@@ -129,24 +130,26 @@ public class LollipopChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void initAnimator() {
         super.initAnimator();
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
+        ValueAnimator ofInt = ValueAnimator.ofInt(0, 1);
         ofInt.setInterpolator(this.mQuartOutInterpolator);
-        ofInt.setDuration(800);
+        ofInt.setDuration(800L);
         ofInt.addUpdateListener(this);
         this.mEnterAnimatorSet = new AnimatorSet();
         Log.i("LollipopChargeView", "initAnimator mWireState=" + this.mWireState);
         int i = this.mWireState;
         if (i == 11) {
-            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, new float[]{1.0f, 0.0f});
-            this.mEnterAnimatorSet.play(ObjectAnimator.ofPropertyValuesHolder(this.mBottomLightImage, new PropertyValuesHolder[]{ofFloat}).setDuration(1000)).after(ofInt);
+            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(FrameLayout.ALPHA, 1.0f, 0.0f);
+            this.mEnterAnimatorSet.play(ObjectAnimator.ofPropertyValuesHolder(this.mBottomLightImage, ofFloat).setDuration(1000L)).after(ofInt);
         } else if (i == 10) {
             this.mEnterAnimatorSet.play(ofInt);
         }
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void setViewState() {
         super.setViewState();
         Log.i("LollipopChargeView", "setViewState mWireState=" + this.mWireState);
@@ -164,6 +167,7 @@ public class LollipopChargeView extends IChargeView {
         this.mCircleRapidView.setAlpha(0.0f);
     }
 
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void onAnimationUpdate(ValueAnimator valueAnimator) {
         super.onAnimationUpdate(valueAnimator);
         float animatedFraction = valueAnimator.getAnimatedFraction();
@@ -188,50 +192,51 @@ public class LollipopChargeView extends IChargeView {
         }
     }
 
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void startDismiss(String str) {
-        String str2 = str;
         Property property = FrameLayout.SCALE_Y;
         Property property2 = FrameLayout.SCALE_X;
         Property property3 = FrameLayout.ALPHA;
         super.startDismiss(str);
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(property3, new float[]{getAlpha(), 0.0f})}).setDuration(600);
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, new float[]{this.mContentContainer.getAlpha(), 0.0f});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mContentContainer.getScaleX(), 0.0f});
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, new float[]{this.mContentContainer.getScaleY(), 0.0f});
-        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, new PropertyValuesHolder[]{ofFloat, ofFloat2, ofFloat3}).setDuration(600);
-        Log.i("LollipopChargeView", ",startDismiss=" + str2 + " ,mWireState=" + this.mWireState);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat(property3, getAlpha(), 0.0f)).setDuration(600L);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property3, this.mContentContainer.getAlpha(), 0.0f);
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property2, this.mContentContainer.getScaleX(), 0.0f);
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property, this.mContentContainer.getScaleY(), 0.0f);
+        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mContentContainer, ofFloat, ofFloat2, ofFloat3).setDuration(600L);
+        Log.i("LollipopChargeView", ",startDismiss=" + str + " ,mWireState=" + this.mWireState);
         int i = this.mWireState;
         if (i == 11) {
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mOutlineView.getAlpha(), 0.0f});
-            ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mOutlineView, new PropertyValuesHolder[]{ofFloat4}).setDuration(600);
-            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mInnerCircleView.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mInnerCircleView.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property, new float[]{this.mInnerCircleView.getScaleY(), 0.0f});
-            ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mInnerCircleView, new PropertyValuesHolder[]{ofFloat5, ofFloat6, ofFloat7}).setDuration(600);
-            PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mParticleCircleView.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mParticleCircleView.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property, new float[]{this.mParticleCircleView.getScaleY(), 0.0f});
-            ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mParticleCircleView, new PropertyValuesHolder[]{ofFloat8, ofFloat9, ofFloat10}).setDuration(600);
-            PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mFireworksView.getAlpha(), 0.0f});
-            ObjectAnimator duration6 = ObjectAnimator.ofPropertyValuesHolder(this.mFireworksView, new PropertyValuesHolder[]{ofFloat11}).setDuration(600);
-            PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mBottomLightImage.getAlpha(), 0.0f});
-            ObjectAnimator duration7 = ObjectAnimator.ofPropertyValuesHolder(this.mBottomLightImage, new PropertyValuesHolder[]{ofFloat12}).setDuration(600);
-            this.mDismissAnimatorSet.playTogether(new Animator[]{duration2, duration3, duration4, duration5, duration6, duration7});
+            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property3, this.mOutlineView.getAlpha(), 0.0f);
+            ObjectAnimator duration3 = ObjectAnimator.ofPropertyValuesHolder(this.mOutlineView, ofFloat4).setDuration(600L);
+            PropertyValuesHolder ofFloat5 = PropertyValuesHolder.ofFloat(property3, this.mInnerCircleView.getAlpha(), 0.0f);
+            PropertyValuesHolder ofFloat6 = PropertyValuesHolder.ofFloat(property2, this.mInnerCircleView.getScaleX(), 0.0f);
+            PropertyValuesHolder ofFloat7 = PropertyValuesHolder.ofFloat(property, this.mInnerCircleView.getScaleY(), 0.0f);
+            ObjectAnimator duration4 = ObjectAnimator.ofPropertyValuesHolder(this.mInnerCircleView, ofFloat5, ofFloat6, ofFloat7).setDuration(600L);
+            PropertyValuesHolder ofFloat8 = PropertyValuesHolder.ofFloat(property3, this.mParticleCircleView.getAlpha(), 0.0f);
+            PropertyValuesHolder ofFloat9 = PropertyValuesHolder.ofFloat(property2, this.mParticleCircleView.getScaleX(), 0.0f);
+            PropertyValuesHolder ofFloat10 = PropertyValuesHolder.ofFloat(property, this.mParticleCircleView.getScaleY(), 0.0f);
+            ObjectAnimator duration5 = ObjectAnimator.ofPropertyValuesHolder(this.mParticleCircleView, ofFloat8, ofFloat9, ofFloat10).setDuration(600L);
+            PropertyValuesHolder ofFloat11 = PropertyValuesHolder.ofFloat(property3, this.mFireworksView.getAlpha(), 0.0f);
+            ObjectAnimator duration6 = ObjectAnimator.ofPropertyValuesHolder(this.mFireworksView, ofFloat11).setDuration(600L);
+            PropertyValuesHolder ofFloat12 = PropertyValuesHolder.ofFloat(property3, this.mBottomLightImage.getAlpha(), 0.0f);
+            ObjectAnimator duration7 = ObjectAnimator.ofPropertyValuesHolder(this.mBottomLightImage, ofFloat12).setDuration(600L);
+            this.mDismissAnimatorSet.playTogether(duration2, duration3, duration4, duration5, duration6, duration7);
         } else if (i == 10) {
-            PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property3, new float[]{this.mCircleRapidView.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat14 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mCircleRapidView.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat15 = PropertyValuesHolder.ofFloat(property, new float[]{this.mCircleRapidView.getScaleY(), 0.0f});
-            ObjectAnimator duration8 = ObjectAnimator.ofPropertyValuesHolder(this.mCircleRapidView, new PropertyValuesHolder[]{ofFloat13, ofFloat14, ofFloat15}).setDuration(600);
-            this.mDismissAnimatorSet.playTogether(new Animator[]{duration2, duration8});
+            PropertyValuesHolder ofFloat13 = PropertyValuesHolder.ofFloat(property3, this.mCircleRapidView.getAlpha(), 0.0f);
+            PropertyValuesHolder ofFloat14 = PropertyValuesHolder.ofFloat(property2, this.mCircleRapidView.getScaleX(), 0.0f);
+            PropertyValuesHolder ofFloat15 = PropertyValuesHolder.ofFloat(property, this.mCircleRapidView.getScaleY(), 0.0f);
+            ObjectAnimator duration8 = ObjectAnimator.ofPropertyValuesHolder(this.mCircleRapidView, ofFloat13, ofFloat14, ofFloat15).setDuration(600L);
+            this.mDismissAnimatorSet.playTogether(duration2, duration8);
         }
         this.mDismissAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
-        if (!"dismiss_for_timeout".equals(str2)) {
+        if (!"dismiss_for_timeout".equals(str)) {
             this.mDismissAnimatorSet.play(duration).with(duration2);
         }
         this.mDismissAnimatorSet.start();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void stopChildAnimation() {
         Log.d("LollipopChargeView", "stopChildAnimation: " + this.mWireState);
         int i = this.mWireState;
@@ -245,6 +250,7 @@ public class LollipopChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void setComponentTransparent(boolean z) {
         super.setComponentTransparent(z);
         Log.d("LollipopChargeView", "setComponentTransparent: " + z + " mWireState=" + this.mWireState);
@@ -281,6 +287,7 @@ public class LollipopChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void updateSizeForScreenSizeChange() {
         super.updateSizeForScreenSizeChange();
         Point point = this.mScreenSize;
@@ -295,6 +302,7 @@ public class LollipopChargeView extends IChargeView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.charge.container.IChargeView
     public void updateLayoutParamForScreenSizeChange() {
         super.updateLayoutParamForScreenSizeChange();
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mInnerCircleView.getLayoutParams();

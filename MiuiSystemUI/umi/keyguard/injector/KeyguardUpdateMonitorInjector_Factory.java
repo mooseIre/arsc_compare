@@ -14,6 +14,7 @@ public final class KeyguardUpdateMonitorInjector_Factory implements Factory<Keyg
         this.mSuperSaveModeControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardUpdateMonitorInjector get() {
         return provideInstance(this.mContextProvider, this.mSuperSaveModeControllerProvider);
     }

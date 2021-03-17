@@ -161,7 +161,8 @@ public class AnalyticsHelper {
         }
     }
 
-    private class TrackPageEvent {
+    /* access modifiers changed from: private */
+    public class TrackPageEvent {
         private long mEndLevel;
         private long mMaxValue;
         private String mPageName;

@@ -14,6 +14,7 @@ public final class MiuiGxzwManager_Factory implements Factory<MiuiGxzwManager> {
         this.wakefulnessObserverProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiGxzwManager get() {
         return provideInstance(this.contextProvider, this.wakefulnessObserverProvider);
     }

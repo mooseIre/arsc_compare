@@ -10,7 +10,8 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 
-class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     private boolean mHealthFingerAuthen;
     private WindowManager.LayoutParams mLayoutParams;
     private MiuiGxzwHighlightView mMiuiGxzwHighlightView;
@@ -46,6 +47,7 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void show() {
         if (!this.mShowing) {
             super.show();
@@ -54,6 +56,7 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void dismiss() {
         if (this.mShowing) {
             super.dismiss();
@@ -62,17 +65,20 @@ class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public WindowManager.LayoutParams generateLayoutParams() {
         return this.mLayoutParams;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mMiuiGxzwHighlightView.setInvertColorStatus(MiuiKeyguardUtils.isInvertColorsEnable(getContext()));
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public Rect caculateRegion() {
         int i;
         int i2 = 0;

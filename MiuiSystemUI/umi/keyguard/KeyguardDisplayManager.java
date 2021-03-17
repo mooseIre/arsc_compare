@@ -7,7 +7,6 @@ import android.graphics.Point;
 import android.hardware.display.DisplayManager;
 import android.media.MediaRouter;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Display;
@@ -30,16 +29,17 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class KeyguardDisplayManager {
-    /* access modifiers changed from: private */
-    public static boolean DEBUG = true;
+    private static boolean DEBUG = true;
     private final Context mContext;
     List<Integer> mDeviceHidePresentationIds;
     private final DisplayManager.DisplayListener mDisplayListener = new DisplayManager.DisplayListener() {
+        /* class com.android.keyguard.KeyguardDisplayManager.AnonymousClass1 */
+
         public void onDisplayAdded(int i) {
             Display display = KeyguardDisplayManager.this.mDisplayService.getDisplay(i);
             if (KeyguardDisplayManager.this.mShowing) {
                 KeyguardDisplayManager.this.updateNavigationBarVisibility(i, false);
-                boolean unused = KeyguardDisplayManager.this.showPresentation(display);
+                KeyguardDisplayManager.this.showPresentation(display);
             }
         }
 
@@ -48,7 +48,7 @@ public class KeyguardDisplayManager {
                 KeyguardDisplayManager.this.hidePresentation(i);
                 Display display = KeyguardDisplayManager.this.mDisplayService.getDisplay(i);
                 if (display != null) {
-                    boolean unused = KeyguardDisplayManager.this.showPresentation(display);
+                    KeyguardDisplayManager.this.showPresentation(display);
                 }
             }
         }
@@ -57,11 +57,12 @@ public class KeyguardDisplayManager {
             KeyguardDisplayManager.this.hidePresentation(i);
         }
     };
-    /* access modifiers changed from: private */
-    public final DisplayManager mDisplayService;
+    private final DisplayManager mDisplayService;
     private final InjectionInflationController mInjectableInflater;
     private final MediaRouter mMediaRouter;
     private final MediaRouter.SimpleCallback mMediaRouterCallback = new MediaRouter.SimpleCallback() {
+        /* class com.android.keyguard.KeyguardDisplayManager.AnonymousClass2 */
+
         public void onRouteSelected(MediaRouter mediaRouter, int i, MediaRouter.RouteInfo routeInfo) {
             if (KeyguardDisplayManager.DEBUG) {
                 Log.d("KeyguardDisplayManager", "onRouteSelected: type=" + i + ", info=" + routeInfo);
@@ -87,10 +88,8 @@ public class KeyguardDisplayManager {
         }
     };
     private final NavigationBarController mNavBarController = ((NavigationBarController) Dependency.get(NavigationBarController.class));
-    /* access modifiers changed from: private */
-    public final SparseArray<Presentation> mPresentations = new SparseArray<>();
-    /* access modifiers changed from: private */
-    public boolean mShowing;
+    private final SparseArray<Presentation> mPresentations = new SparseArray<>();
+    private boolean mShowing;
     private final DisplayInfo mTmpDisplayInfo = new DisplayInfo();
 
     public KeyguardDisplayManager(Context context, InjectionInflationController injectionInflationController) {
@@ -99,7 +98,7 @@ public class KeyguardDisplayManager {
         this.mMediaRouter = (MediaRouter) context.getSystemService(MediaRouter.class);
         DisplayManager displayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
         this.mDisplayService = displayManager;
-        displayManager.registerDisplayListener(this.mDisplayListener, (Handler) null);
+        displayManager.registerDisplayListener(this.mDisplayListener, null);
         this.mDeviceHidePresentationIds = (List) Arrays.stream(this.mContext.getResources().getIntArray(C0008R$array.miui_config_hideKeyguardPresentationDisplayIds)).boxed().collect(Collectors.toList());
     }
 
@@ -133,7 +132,8 @@ public class KeyguardDisplayManager {
     }
 
     /* access modifiers changed from: private */
-    public boolean showPresentation(Display display) {
+    /* access modifiers changed from: public */
+    private boolean showPresentation(Display display) {
         if (!isKeyguardShowable(display)) {
             return false;
         }
@@ -145,6 +145,7 @@ public class KeyguardDisplayManager {
             Context context = this.mContext;
             KeyguardPresentation keyguardPresentation = new KeyguardPresentation(context, display, this.mInjectableInflater.injectable(LayoutInflater.from(context)));
             keyguardPresentation.setOnDismissListener(new DialogInterface.OnDismissListener(keyguardPresentation, displayId) {
+                /* class com.android.keyguard.$$Lambda$KeyguardDisplayManager$WcC7zwdycYHh9dpCnEiRCOObKEQ */
                 public final /* synthetic */ Presentation f$1;
                 public final /* synthetic */ int f$2;
 
@@ -180,7 +181,8 @@ public class KeyguardDisplayManager {
     }
 
     /* access modifiers changed from: private */
-    public void hidePresentation(int i) {
+    /* access modifiers changed from: public */
+    private void hidePresentation(int i) {
         Presentation presentation = this.mPresentations.get(i);
         if (presentation != null) {
             presentation.dismiss();
@@ -214,8 +216,9 @@ public class KeyguardDisplayManager {
     public boolean updateDisplays(boolean z) {
         boolean z2 = false;
         if (z) {
+            Display[] displays = this.mDisplayService.getDisplays();
             boolean z3 = false;
-            for (Display display : this.mDisplayService.getDisplays()) {
+            for (Display display : displays) {
                 updateNavigationBarVisibility(display.getDisplayId(), false);
                 z3 |= showPresentation(display);
             }
@@ -233,7 +236,8 @@ public class KeyguardDisplayManager {
     }
 
     /* access modifiers changed from: private */
-    public void updateNavigationBarVisibility(int i, boolean z) {
+    /* access modifiers changed from: public */
+    private void updateNavigationBarVisibility(int i, boolean z) {
         NavigationBarView navigationBarView;
         if (i != 0 && (navigationBarView = this.mNavBarController.getNavigationBarView(i)) != null) {
             if (z) {
@@ -244,28 +248,26 @@ public class KeyguardDisplayManager {
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    static final class KeyguardPresentation extends Presentation {
-        /* access modifiers changed from: private */
-        public View mClock;
+    public static final class KeyguardPresentation extends Presentation {
+        private View mClock;
         private final LayoutInflater mInjectableLayoutInflater;
-        /* access modifiers changed from: private */
-        public int mMarginLeft;
-        /* access modifiers changed from: private */
-        public int mMarginTop;
+        private int mMarginLeft;
+        private int mMarginTop;
         Runnable mMoveTextRunnable = new Runnable() {
+            /* class com.android.keyguard.KeyguardDisplayManager.KeyguardPresentation.AnonymousClass1 */
+
             public void run() {
-                int access$700 = KeyguardPresentation.this.mMarginLeft + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableWidth - KeyguardPresentation.this.mClock.getWidth()))));
-                int access$1000 = KeyguardPresentation.this.mMarginTop + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableHeight - KeyguardPresentation.this.mClock.getHeight()))));
-                KeyguardPresentation.this.mClock.setTranslationX((float) access$700);
-                KeyguardPresentation.this.mClock.setTranslationY((float) access$1000);
+                int random = KeyguardPresentation.this.mMarginLeft + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableWidth - KeyguardPresentation.this.mClock.getWidth()))));
+                int random2 = KeyguardPresentation.this.mMarginTop + ((int) (Math.random() * ((double) (KeyguardPresentation.this.mUsableHeight - KeyguardPresentation.this.mClock.getHeight()))));
+                KeyguardPresentation.this.mClock.setTranslationX((float) random);
+                KeyguardPresentation.this.mClock.setTranslationY((float) random2);
                 KeyguardPresentation.this.mClock.postDelayed(KeyguardPresentation.this.mMoveTextRunnable, 30000);
             }
         };
-        /* access modifiers changed from: private */
-        public int mUsableHeight;
-        /* access modifiers changed from: private */
-        public int mUsableWidth;
+        private int mUsableHeight;
+        private int mUsableWidth;
 
         public void cancel() {
         }

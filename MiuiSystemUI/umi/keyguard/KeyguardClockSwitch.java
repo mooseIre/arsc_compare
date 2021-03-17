@@ -1,6 +1,7 @@
 package com.android.keyguard;
 
 import android.animation.Animator;
+import android.animation.TimeInterpolator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Paint;
@@ -39,18 +40,22 @@ public class KeyguardClockSwitch extends RelativeLayout {
     private ViewGroup mBigClockContainer;
     private final ClockVisibilityTransition mBoldClockTransition;
     private ClockManager.ClockChangedListener mClockChangedListener = new ClockManager.ClockChangedListener() {
+        /* class com.android.keyguard.$$Lambda$KeyguardClockSwitch$H31kNGqlEfEtZQZgrBtirdKZKc */
+
+        @Override // com.android.keyguard.clock.ClockManager.ClockChangedListener
         public final void onClockChanged(ClockPlugin clockPlugin) {
-            KeyguardClockSwitch.this.setClockPlugin(clockPlugin);
+            KeyguardClockSwitch.m2lambda$H31kNGqlEfEtZQZgrBtirdKZKc(KeyguardClockSwitch.this, clockPlugin);
         }
     };
     private final ClockManager mClockManager;
     private ClockPlugin mClockPlugin;
     private final ClockVisibilityTransition mClockTransition;
-    /* access modifiers changed from: private */
-    public TextClock mClockView;
+    private TextClock mClockView;
     private TextClock mClockViewBold;
     private int[] mColorPalette;
     private final ColorExtractor.OnColorsChangedListener mColorsListener = new ColorExtractor.OnColorsChangedListener() {
+        /* class com.android.keyguard.$$Lambda$KeyguardClockSwitch$1K4q2TFTethGttjK4WWfYwlPoo */
+
         public final void onColorsChanged(ColorExtractor colorExtractor, int i) {
             KeyguardClockSwitch.this.lambda$new$0$KeyguardClockSwitch(colorExtractor, i);
         }
@@ -58,17 +63,18 @@ public class KeyguardClockSwitch extends RelativeLayout {
     private float mDarkAmount;
     private boolean mHasVisibleNotifications;
     private View mKeyguardStatusArea;
-    /* access modifiers changed from: private */
-    public boolean mShowingHeader;
+    private boolean mShowingHeader;
     private FrameLayout mSmallClockFrame;
     private final StatusBarStateController.StateListener mStateListener = new StatusBarStateController.StateListener() {
+        /* class com.android.keyguard.KeyguardClockSwitch.AnonymousClass1 */
+
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onStateChanged(int i) {
-            int unused = KeyguardClockSwitch.this.mStatusBarState = i;
+            KeyguardClockSwitch.this.mStatusBarState = i;
             KeyguardClockSwitch.this.updateBigClockVisibility();
         }
     };
-    /* access modifiers changed from: private */
-    public int mStatusBarState;
+    private int mStatusBarState;
     private final StatusBarStateController mStatusBarStateController;
     private boolean mSupportsDarkText;
     private final SysuiColorExtractor mSysuiColorExtractor;
@@ -96,7 +102,7 @@ public class KeyguardClockSwitch extends RelativeLayout {
         clockVisibilityTransition2.setCutoff(0.7f);
         this.mBoldClockTransition = clockVisibilityTransition2;
         clockVisibilityTransition2.addTarget(C0015R$id.default_clock_view_bold);
-        this.mTransition = new TransitionSet().setOrdering(0).addTransition(this.mClockTransition).addTransition(this.mBoldClockTransition).setDuration(275).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
+        this.mTransition = new TransitionSet().setOrdering(0).addTransition(this.mClockTransition).addTransition(this.mBoldClockTransition).setDuration(275L).setInterpolator((TimeInterpolator) Interpolators.LINEAR_OUT_SLOW_IN);
     }
 
     public boolean hasCustomClock() {
@@ -127,7 +133,7 @@ public class KeyguardClockSwitch extends RelativeLayout {
         this.mClockManager.removeOnClockChangedListener(this.mClockChangedListener);
         this.mStatusBarStateController.removeCallback(this.mStateListener);
         this.mSysuiColorExtractor.removeOnColorsChangedListener(this.mColorsListener);
-        setClockPlugin((ClockPlugin) null);
+        setClockPlugin(null);
     }
 
     /* access modifiers changed from: private */
@@ -271,7 +277,7 @@ public class KeyguardClockSwitch extends RelativeLayout {
             clockPlugin.onTimeTick();
         }
         if (Build.IS_DEBUGGABLE) {
-            Log.d("KeyguardClockSwitch", "Updating clock: " + this.mClockView.getText());
+            Log.d("KeyguardClockSwitch", "Updating clock: " + ((Object) this.mClockView.getText()));
         }
     }
 
@@ -294,7 +300,8 @@ public class KeyguardClockSwitch extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateBigClockVisibility() {
+    /* access modifiers changed from: public */
+    private void updateBigClockVisibility() {
         if (this.mBigClockContainer != null) {
             int i = this.mStatusBarState;
             int i2 = 0;
@@ -328,13 +335,15 @@ public class KeyguardClockSwitch extends RelativeLayout {
         if (this.mShowingHeader != z) {
             this.mShowingHeader = z;
             if (!hasCustomClock()) {
-                float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_small_font_size);
-                float dimensionPixelSize2 = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_big_font_size);
+                float dimensionPixelSize = (float) ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_small_font_size);
+                float dimensionPixelSize2 = (float) ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_big_font_size);
                 this.mClockTransition.setScale(dimensionPixelSize / dimensionPixelSize2);
                 this.mBoldClockTransition.setScale(dimensionPixelSize2 / dimensionPixelSize);
                 TransitionManager.endTransitions((ViewGroup) this.mClockView.getParent());
                 if (z) {
                     this.mTransition.addListener(new TransitionListenerAdapter() {
+                        /* class com.android.keyguard.KeyguardClockSwitch.AnonymousClass2 */
+
                         public void onTransitionEnd(Transition transition) {
                             super.onTransitionEnd(transition);
                             if (KeyguardClockSwitch.this.mShowingHeader) {
@@ -352,7 +361,7 @@ public class KeyguardClockSwitch extends RelativeLayout {
                     i = 0;
                 }
                 textClock.setVisibility(i);
-                int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(z ? C0012R$dimen.widget_vertical_padding_clock : C0012R$dimen.title_clock_padding);
+                int dimensionPixelSize3 = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(z ? C0012R$dimen.widget_vertical_padding_clock : C0012R$dimen.title_clock_padding);
                 TextClock textClock2 = this.mClockView;
                 textClock2.setPadding(textClock2.getPaddingLeft(), this.mClockView.getPaddingTop(), this.mClockView.getPaddingRight(), dimensionPixelSize3);
                 TextClock textClock3 = this.mClockViewBold;
@@ -385,7 +394,8 @@ public class KeyguardClockSwitch extends RelativeLayout {
         printWriter.println("  mColorPalette: " + Arrays.toString(this.mColorPalette));
     }
 
-    private class ClockVisibilityTransition extends Visibility {
+    /* access modifiers changed from: private */
+    public class ClockVisibilityTransition extends Visibility {
         private float mCutoff;
         private float mScale;
 
@@ -434,8 +444,9 @@ public class KeyguardClockSwitch extends RelativeLayout {
 
         private Animator createAnimator(final View view, float f, final int i, final int i2, float f2, float f3) {
             view.setPivotY((float) (view.getHeight() - view.getPaddingBottom()));
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(f, view, i2, f2, f3) {
+                /* class com.android.keyguard.$$Lambda$KeyguardClockSwitch$ClockVisibilityTransition$0YYk1dKss121y1dzD6OuOcSJduA */
                 public final /* synthetic */ float f$0;
                 public final /* synthetic */ View f$1;
                 public final /* synthetic */ int f$2;
@@ -455,17 +466,23 @@ public class KeyguardClockSwitch extends RelativeLayout {
                 }
             });
             ofFloat.addListener(new KeepAwakeAnimationListener(this, KeyguardClockSwitch.this.getContext()) {
+                /* class com.android.keyguard.KeyguardClockSwitch.ClockVisibilityTransition.AnonymousClass1 */
+
+                @Override // com.android.systemui.util.wakelock.KeepAwakeAnimationListener
                 public void onAnimationStart(Animator animator) {
                     super.onAnimationStart(animator);
                     view.setVisibility(i);
                 }
 
+                @Override // com.android.systemui.util.wakelock.KeepAwakeAnimationListener
                 public void onAnimationEnd(Animator animator) {
                     super.onAnimationEnd(animator);
                     animator.removeListener(this);
                 }
             });
             addListener(new TransitionListenerAdapter(this) {
+                /* class com.android.keyguard.KeyguardClockSwitch.ClockVisibilityTransition.AnonymousClass2 */
+
                 public void onTransitionEnd(Transition transition) {
                     view.setVisibility(i2);
                     view.setScaleX(1.0f);

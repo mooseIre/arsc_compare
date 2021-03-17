@@ -18,6 +18,7 @@ public final class KeyguardSensorInjector$mLargeAreaTouchSensorListener$1 implem
         Intrinsics.checkParameterIsNotNull(sensor, "sensor");
     }
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     KeyguardSensorInjector$mLargeAreaTouchSensorListener$1(KeyguardSensorInjector keyguardSensorInjector) {
         this.this$0 = keyguardSensorInjector;
     }

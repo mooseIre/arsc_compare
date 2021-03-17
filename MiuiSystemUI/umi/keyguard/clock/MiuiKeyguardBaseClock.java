@@ -23,6 +23,9 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
     protected LayoutInflater mLayoutInflater;
     protected Resources mResources = null;
     private MiuiKeyguardUpdateMonitorCallback mUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.clock.MiuiKeyguardBaseClock.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             if (z) {
                 MiuiKeyguardBaseClock.this.updateHourFormat();
@@ -30,20 +33,24 @@ public class MiuiKeyguardBaseClock extends FrameLayout {
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitchComplete(int i) {
             MiuiKeyguardBaseClock.this.mUserId = KeyguardUpdateMonitor.getCurrentUser();
             MiuiKeyguardBaseClock.this.updateHourFormat();
             MiuiKeyguardBaseClock.this.onUserSwitch();
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onMagazineResourceInited() {
             MiuiKeyguardBaseClock.this.updateClockMagazineInfo();
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onRegionChanged() {
             MiuiKeyguardBaseClock.this.updateClockMagazineInfo();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserUnlocked() {
             MiuiKeyguardBaseClock.this.updateClockMagazineInfo();
         }

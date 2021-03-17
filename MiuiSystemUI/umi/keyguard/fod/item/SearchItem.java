@@ -13,6 +13,7 @@ import com.android.systemui.C0021R$string;
 public class SearchItem extends IQuickOpenItem {
     private final ImageView mView;
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTag() {
         return "Browser/Search";
     }
@@ -25,10 +26,12 @@ public class SearchItem extends IQuickOpenItem {
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public View getView() {
         return this.mView;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public Intent getIntent() {
         Intent intent;
         if (MiuiKeyguardUtils.isBrowserSearchExist(this.mContext)) {
@@ -44,10 +47,12 @@ public class SearchItem extends IQuickOpenItem {
         return intent;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_search);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_search_sub);
     }

@@ -114,14 +114,16 @@ public class KeyguardVerticalMoveHelper {
     }
 
     private void showOrHideKeyguard(boolean z) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mTranslationPer, z ? 0.0f : 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mTranslationPer, z ? 0.0f : 1.0f);
         this.mAnimator = ofFloat;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$KeyguardVerticalMoveHelper$5v4VkKBCU8GOUWyenO__QuyEhVI */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 KeyguardVerticalMoveHelper.this.lambda$showOrHideKeyguard$0$KeyguardVerticalMoveHelper(valueAnimator);
             }
         });
-        this.mAnimator.setDuration(300);
+        this.mAnimator.setDuration(300L);
         this.mAnimator.setInterpolator(new DecelerateInterpolator());
         this.mAnimator.start();
     }

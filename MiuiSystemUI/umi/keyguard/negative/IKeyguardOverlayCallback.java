@@ -20,6 +20,7 @@ public interface IKeyguardOverlayCallback extends IInterface {
             attachInterface(this, "com.android.keyguard.negative.IKeyguardOverlayCallback");
         }
 
+        @Override // android.os.Binder
         public boolean onTransact(int i, Parcel parcel, Parcel parcel2, int i2) throws RemoteException {
             if (i == 1) {
                 parcel.enforceInterface("com.android.keyguard.negative.IKeyguardOverlayCallback");

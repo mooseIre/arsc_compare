@@ -26,6 +26,7 @@ public final class ClockManager_Factory implements Factory<ClockManager> {
         this.broadcastDispatcherProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public ClockManager get() {
         return provideInstance(this.contextProvider, this.injectionInflaterProvider, this.pluginManagerProvider, this.colorExtractorProvider, this.dockManagerProvider, this.broadcastDispatcherProvider);
     }

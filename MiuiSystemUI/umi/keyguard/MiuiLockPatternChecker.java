@@ -10,18 +10,11 @@ import com.android.keyguard.analytics.AnalyticsHelper;
 import java.util.Objects;
 
 public final class MiuiLockPatternChecker {
-    /* access modifiers changed from: private */
-    public static String TAG = "miui_keyguard_password";
+    private static String TAG = "miui_keyguard_password";
 
-    public static AsyncTask<?, ?, ?> checkCredentialForUsers(LockPatternUtils lockPatternUtils, LockscreenCredential lockscreenCredential, int i, int i2, Context context, OnCheckForUsersCallback onCheckForUsersCallback, OnCheckForUsersCallback onCheckForUsersCallback2) {
-        final Context context2 = context;
-        final int i3 = i;
-        final OnCheckForUsersCallback onCheckForUsersCallback3 = onCheckForUsersCallback;
-        final int i4 = i2;
-        final LockPatternUtils lockPatternUtils2 = lockPatternUtils;
-        final OnCheckForUsersCallback onCheckForUsersCallback4 = onCheckForUsersCallback2;
-        final LockscreenCredential lockscreenCredential2 = lockscreenCredential;
-        AnonymousClass1 r0 = new AsyncTask<Void, Void, Boolean>() {
+    public static AsyncTask<?, ?, ?> checkCredentialForUsers(final LockPatternUtils lockPatternUtils, final LockscreenCredential lockscreenCredential, final int i, final int i2, final Context context, final OnCheckForUsersCallback onCheckForUsersCallback, final OnCheckForUsersCallback onCheckForUsersCallback2) {
+        AnonymousClass1 r8 = new AsyncTask<Void, Void, Boolean>() {
+            /* class com.android.keyguard.MiuiLockPatternChecker.AnonymousClass1 */
             private int mThrottleTimeout;
             private int mUserIdMatched = -10000;
 
@@ -29,45 +22,47 @@ public final class MiuiLockPatternChecker {
             public Boolean doInBackground(Void... voidArr) {
                 Boolean bool = Boolean.TRUE;
                 Boolean bool2 = Boolean.FALSE;
-                AnalyticsHelper.getInstance(context2).trackPageStart("pw_verify_time");
-                int i = i3;
+                AnalyticsHelper.getInstance(context).trackPageStart("pw_verify_time");
+                int i = i;
                 this.mUserIdMatched = i;
                 try {
-                    if (checkCredential(i, onCheckForUsersCallback3)) {
+                    if (checkCredential(i, onCheckForUsersCallback)) {
                         return bool;
                     }
                 } catch (LockPatternUtils.RequestThrottledException e) {
                     this.mThrottleTimeout = e.getTimeoutMs();
                 } catch (Exception e2) {
                     Slog.e(MiuiLockPatternChecker.TAG, "checkPasswordForUsers failed", e2);
-                    AnalyticsHelper.getInstance(context2).record("keyguard_check_password_failed");
+                    AnalyticsHelper.getInstance(context).record("keyguard_check_password_failed");
                 }
-                int i2 = i4;
-                if (i2 == i3) {
+                int i2 = i2;
+                if (i2 == i) {
                     return bool2;
                 }
                 try {
-                    if (!MiuiLockPatternChecker.isCredentialEnable(lockPatternUtils2, i2) || !checkCredential(i4, onCheckForUsersCallback4)) {
+                    if (!MiuiLockPatternChecker.isCredentialEnable(lockPatternUtils, i2) || !checkCredential(i2, onCheckForUsersCallback2)) {
                         return bool2;
                     }
                     return bool;
                 } catch (LockPatternUtils.RequestThrottledException unused) {
                 } catch (Exception e3) {
                     Slog.e(MiuiLockPatternChecker.TAG, "checkPasswordForUsers other users failed", e3);
-                    AnalyticsHelper.getInstance(context2).record("keyguard_check_password_failed");
+                    AnalyticsHelper.getInstance(context).record("keyguard_check_password_failed");
                 }
             }
 
             /* access modifiers changed from: protected */
             public void onPostExecute(Boolean bool) {
-                onCheckForUsersCallback3.onChecked(bool.booleanValue(), this.mUserIdMatched, this.mThrottleTimeout);
+                onCheckForUsersCallback.onChecked(bool.booleanValue(), this.mUserIdMatched, this.mThrottleTimeout);
             }
 
             private boolean checkCredential(int i, OnCheckForUsersCallback onCheckForUsersCallback) throws LockPatternUtils.RequestThrottledException {
-                LockPatternUtils lockPatternUtils = lockPatternUtils2;
-                LockscreenCredential lockscreenCredential = lockscreenCredential2;
+                LockPatternUtils lockPatternUtils = lockPatternUtils;
+                LockscreenCredential lockscreenCredential = lockscreenCredential;
                 Objects.requireNonNull(onCheckForUsersCallback);
                 if (!lockPatternUtils.checkCredential(lockscreenCredential, i, new LockPatternUtils.CheckCredentialProgressCallback() {
+                    /* class com.android.keyguard.$$Lambda$wZIIIDk2gN019CXZ9W64R7NWx4 */
+
                     public final void onEarlyMatched() {
                         OnCheckForUsersCallback.this.onEarlyMatched();
                     }
@@ -78,8 +73,8 @@ public final class MiuiLockPatternChecker {
                 return true;
             }
         };
-        r0.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
-        return r0;
+        r8.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
+        return r8;
     }
 
     /* access modifiers changed from: private */

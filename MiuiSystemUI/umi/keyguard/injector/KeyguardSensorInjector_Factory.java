@@ -23,6 +23,7 @@ public final class KeyguardSensorInjector_Factory implements Factory<KeyguardSen
         this.wakefulnessLifecycleProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardSensorInjector get() {
         return provideInstance(this.mContextProvider, this.mKeyguardViewMediatorProvider, this.mPowerManagerProvider, this.mKeyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider);
     }

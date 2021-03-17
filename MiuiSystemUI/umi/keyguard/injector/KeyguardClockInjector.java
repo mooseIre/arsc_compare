@@ -38,6 +38,7 @@ public final class KeyguardClockInjector implements IMiuiKeyguardWallpaperContro
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this);
     }
 
+    @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
     public void onWallpaperChange(boolean z) {
         KeyguardClockContainer keyguardClockContainer = this.mKeyguardClockView;
         if (keyguardClockContainer != null) {

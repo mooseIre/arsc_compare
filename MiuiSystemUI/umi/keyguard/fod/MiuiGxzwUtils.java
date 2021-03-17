@@ -22,7 +22,8 @@ import com.android.systemui.C0013R$drawable;
 import com.miui.systemui.util.ReflectUtil;
 import java.math.BigDecimal;
 
-class MiuiGxzwUtils {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwUtils {
     private static int DENSITY_DPI = -1;
     public static int GXZW_ANIM_HEIGHT = 1028;
     public static int GXZW_ANIM_WIDTH = 1028;
@@ -56,7 +57,7 @@ class MiuiGxzwUtils {
         GXZW_LOWLIGHT_SENSOR = z;
         PRIVATE_FLAG_IS_HBM_OVERLAY = Integer.MIN_VALUE;
         try {
-            PRIVATE_FLAG_IS_HBM_OVERLAY = Class.forName("android.view.WindowManager$LayoutParams").getDeclaredField("PRIVATE_FLAG_IS_HBM_OVERLAY").getInt((Object) null);
+            PRIVATE_FLAG_IS_HBM_OVERLAY = Class.forName("android.view.WindowManager$LayoutParams").getDeclaredField("PRIVATE_FLAG_IS_HBM_OVERLAY").getInt(null);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e2) {
@@ -164,10 +165,7 @@ class MiuiGxzwUtils {
     }
 
     public static boolean isFodAodShowEnable(Context context) {
-        if (Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_show_enable", 1, 0) != 1 || MiuiKeyguardUtils.isInvertColorsEnable(context)) {
-            return false;
-        }
-        return true;
+        return Settings.Secure.getIntForUser(context.getContentResolver(), "gxzw_icon_aod_show_enable", 1, 0) == 1 && !MiuiKeyguardUtils.isInvertColorsEnable(context);
     }
 
     public static boolean isFodAodLowlightShowEnable(Context context) {
@@ -195,7 +193,7 @@ class MiuiGxzwUtils {
             obtain.writeInterfaceToken("android.ui.ISurfaceComposer");
             obtain.writeInt(i2);
             try {
-                service.transact(i, obtain, (Parcel) null, 0);
+                service.transact(i, obtain, null, 0);
             } catch (RemoteException e) {
                 Log.e("MiuiGxzwUtils", "Failed to notifySurfaceFlinger", e);
             } catch (Throwable th) {
@@ -208,9 +206,9 @@ class MiuiGxzwUtils {
 
     private static int getSupportTouchFeatureVersion() {
         try {
-            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", (Class<?>[]) null, new Object[0]);
+            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", null, new Object[0]);
             if (callStaticObjectMethod != null) {
-                return ((Integer) ReflectUtil.callObjectMethod(callStaticObjectMethod, "getSupportTouchFeatureVersion", (Class<?>[]) null, new Object[0])).intValue();
+                return ((Integer) ReflectUtil.callObjectMethod(callStaticObjectMethod, "getSupportTouchFeatureVersion", null, new Object[0])).intValue();
             }
             return 1;
         } catch (Exception e) {
@@ -229,7 +227,7 @@ class MiuiGxzwUtils {
     private static boolean setTouchModelV2(int i, int i2) {
         try {
             Log.i("MiuiGxzwUtils", "setTouchmode v2 mode:" + i + " value" + i2);
-            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", (Class<?>[]) null, new Object[0]);
+            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", null, new Object[0]);
             if (callStaticObjectMethod != null) {
                 return ((Boolean) ReflectUtil.callObjectMethod(callStaticObjectMethod, "setTouchMode", new Class[]{Integer.TYPE, Integer.TYPE, Integer.TYPE}, 0, Integer.valueOf(i), Integer.valueOf(i2))).booleanValue();
             }
@@ -242,7 +240,7 @@ class MiuiGxzwUtils {
     private static boolean setTouchModelV1(int i, int i2) {
         try {
             Log.i("MiuiGxzwUtils", "setTouchMode v1 mode:" + i + " value" + i2);
-            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", (Class<?>[]) null, new Object[0]);
+            Object callStaticObjectMethod = ReflectUtil.callStaticObjectMethod(Class.forName("miui.util.ITouchFeature"), "getInstance", null, new Object[0]);
             if (callStaticObjectMethod != null) {
                 return ((Boolean) ReflectUtil.callObjectMethod(callStaticObjectMethod, "setTouchMode", new Class[]{Integer.TYPE, Integer.TYPE}, Integer.valueOf(i), Integer.valueOf(i2))).booleanValue();
             }

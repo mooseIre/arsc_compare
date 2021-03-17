@@ -26,6 +26,7 @@ public final class ExecutorHelper {
 
     private static ThreadFactory createThreadFactory(String str) {
         return new ThreadFactory(str) {
+            /* class com.android.keyguard.utils.$$Lambda$ExecutorHelper$r1rnX20T1j11sm4Swc0A1mzww0M */
             public final /* synthetic */ String f$0;
 
             {
@@ -42,7 +43,8 @@ public final class ExecutorHelper {
         return new InnerThread(str, runnable);
     }
 
-    private static class InnerThread extends Thread {
+    /* access modifiers changed from: private */
+    public static class InnerThread extends Thread {
         InnerThread(String str, Runnable runnable) {
             super(runnable);
             setName(str + "-" + getId());

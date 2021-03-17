@@ -18,7 +18,7 @@ public class ImageClock extends FrameLayout {
     private TimeZone mTimeZone;
 
     public ImageClock(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ImageClock(Context context, AttributeSet attributeSet) {

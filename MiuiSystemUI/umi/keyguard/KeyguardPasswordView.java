@@ -38,34 +38,31 @@ import miui.os.Build;
 import miui.view.animation.SineEaseInOutInterpolator;
 
 public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements KeyguardSecurityView {
-    /* access modifiers changed from: private */
-    public boolean mAppearAnimating;
-    /* access modifiers changed from: private */
-    public boolean mDisappearAnimatePending;
-    /* access modifiers changed from: private */
-    public Runnable mDisappearFinishRunnable;
+    private boolean mAppearAnimating;
+    private boolean mDisappearAnimatePending;
+    private Runnable mDisappearFinishRunnable;
     private final int mDisappearYTranslation;
     private Space mEmptySpace;
     private MiuiKeyBoardView mKeyboardView;
     private ViewGroup mKeyboardViewLayout;
     private Interpolator mLinearOutSlowInInterpolator;
-    /* access modifiers changed from: private */
-    public EditText mPasswordEntry;
+    private EditText mPasswordEntry;
     private TextViewInputDisabler mPasswordEntryDisabler;
     private final int mScreenHeight;
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public boolean needsInput() {
         return true;
     }
 
     public KeyguardPasswordView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         new AppearAnimationUtils(context);
-        new DisappearAnimationUtils(context, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
+        new DisappearAnimationUtils(context, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
         this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0012R$dimen.miui_disappear_y_translation);
         this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
         AnimationUtils.loadInterpolator(context, 17563663);
@@ -73,6 +70,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void resetState() {
         this.mPasswordEntry.setTextOperationUser(UserHandle.of(KeyguardUpdateMonitor.getCurrentUser()));
         setPasswordEntryEnabled(true);
@@ -82,13 +80,17 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public int getPasswordTextViewId() {
         return C0015R$id.passwordEntry;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public void onResume(int i) {
         super.onResume(i);
         post(new Runnable() {
+            /* class com.android.keyguard.KeyguardPasswordView.AnonymousClass1 */
+
             public void run() {
                 if (KeyguardPasswordView.this.isShown() && KeyguardPasswordView.this.mPasswordEntry.isEnabled()) {
                     KeyguardPasswordView.this.mPasswordEntry.requestFocus();
@@ -98,16 +100,19 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         this.mPasswordEntry.setHint(C0021R$string.input_password_hint_text);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public void onPause() {
         super.onPause();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public void reset() {
         super.reset();
         this.mPasswordEntry.requestFocus();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView, com.android.keyguard.MiuiKeyguardPasswordView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mPasswordEntry = (EditText) findViewById(getPasswordTextViewId());
@@ -115,6 +120,8 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         this.mPasswordEntry.setKeyListener(TextKeyListener.getInstance());
         this.mPasswordEntry.setInputType(0);
         this.mPasswordEntry.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.KeyguardPasswordView.AnonymousClass2 */
+
             public void onClick(View view) {
                 KeyguardPasswordView.this.mCallback.userActivity();
             }
@@ -124,6 +131,9 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         MiuiKeyBoardView miuiKeyBoardView = (MiuiKeyBoardView) findViewById(C0015R$id.mixed_password_keyboard_view);
         this.mKeyboardView = miuiKeyBoardView;
         miuiKeyBoardView.addKeyboardListener(new MiuiKeyBoardView.OnKeyboardActionListener() {
+            /* class com.android.keyguard.KeyguardPasswordView.AnonymousClass3 */
+
+            @Override // com.android.keyguard.widget.MiuiKeyBoardView.OnKeyboardActionListener
             public void onText(CharSequence charSequence) {
                 if (TextUtils.isEmpty(KeyguardPasswordView.this.mPasswordEntry.getText().toString())) {
                     KeyguardPasswordView.this.mPasswordEntry.setHint(C0021R$string.input_password_hint_text);
@@ -132,6 +142,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
                 KeyguardPasswordView.this.mPasswordEntry.append(charSequence);
             }
 
+            @Override // com.android.keyguard.widget.MiuiKeyBoardView.OnKeyboardActionListener
             public void onKeyBoardDelete() {
                 KeyguardPasswordView.this.mCallback.userActivity();
                 Editable text = KeyguardPasswordView.this.mPasswordEntry.getText();
@@ -140,6 +151,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
                 }
             }
 
+            @Override // com.android.keyguard.widget.MiuiKeyBoardView.OnKeyboardActionListener
             public void onKeyBoardOK() {
                 KeyguardPasswordView.this.mCallback.userActivity();
                 KeyguardPasswordView.this.verifyPasswordAndUnlock();
@@ -158,6 +170,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void resetPasswordText(boolean z, boolean z2) {
         this.mPasswordEntry.setText("");
         if (z2) {
@@ -166,20 +179,24 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public LockscreenCredential getEnteredCredential() {
         return LockscreenCredential.createPasswordOrNone(this.mPasswordEntry.getText());
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void setPasswordEntryEnabled(boolean z) {
         this.mPasswordEntry.setEnabled(z);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void setPasswordEntryInputEnabled(boolean z) {
         this.mPasswordEntryDisabler.setInputEnabled(z);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void startAppearAnimation() {
         RenderNodeAnimator renderNodeAnimator;
         RenderNodeAnimator renderNodeAnimator2;
@@ -199,18 +216,20 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             renderNodeAnimator.setTarget(this.mKeyboardViewLayout);
         } else {
             ViewGroup viewGroup2 = this.mKeyboardViewLayout;
-            renderNodeAnimator2 = ObjectAnimator.ofFloat(viewGroup2, View.TRANSLATION_Y, new float[]{(float) viewGroup2.getHeight(), 0.0f});
-            renderNodeAnimator = ObjectAnimator.ofFloat(this.mKeyboardViewLayout, View.SCALE_Y, new float[]{2.0f, 1.0f});
+            renderNodeAnimator2 = ObjectAnimator.ofFloat(viewGroup2, View.TRANSLATION_Y, (float) viewGroup2.getHeight(), 0.0f);
+            renderNodeAnimator = ObjectAnimator.ofFloat(this.mKeyboardViewLayout, View.SCALE_Y, 2.0f, 1.0f);
         }
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{renderNodeAnimator2, renderNodeAnimator});
-        animatorSet.setDuration(500);
+        animatorSet.playTogether(renderNodeAnimator2, renderNodeAnimator);
+        animatorSet.setDuration(500L);
         animatorSet.setInterpolator(this.mLinearOutSlowInInterpolator);
         animatorSet.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.KeyguardPasswordView.AnonymousClass4 */
+
             public void onAnimationEnd(Animator animator) {
-                boolean unused = KeyguardPasswordView.this.mAppearAnimating = false;
+                KeyguardPasswordView.this.mAppearAnimating = false;
                 if (KeyguardPasswordView.this.mDisappearAnimatePending) {
-                    boolean unused2 = KeyguardPasswordView.this.mDisappearAnimatePending = false;
+                    KeyguardPasswordView.this.mDisappearAnimatePending = false;
                     KeyguardPasswordView keyguardPasswordView = KeyguardPasswordView.this;
                     keyguardPasswordView.startDisappearAnimation(keyguardPasswordView.mDisappearFinishRunnable);
                 }
@@ -219,6 +238,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         animatorSet.start();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public boolean startDisappearAnimation(final Runnable runnable) {
         RenderNodeAnimator renderNodeAnimator;
         RenderNodeAnimator renderNodeAnimator2;
@@ -236,14 +256,16 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             renderNodeAnimator.setTarget(this);
         } else {
             ViewGroup viewGroup = this.mKeyboardViewLayout;
-            renderNodeAnimator2 = ObjectAnimator.ofFloat(viewGroup, View.TRANSLATION_Y, new float[]{viewGroup.getTranslationY(), (float) (this.mDisappearYTranslation / 6)});
-            renderNodeAnimator = ObjectAnimator.ofFloat(this, View.ALPHA, new float[]{1.0f, 0.0f});
+            renderNodeAnimator2 = ObjectAnimator.ofFloat(viewGroup, View.TRANSLATION_Y, viewGroup.getTranslationY(), (float) (this.mDisappearYTranslation / 6));
+            renderNodeAnimator = ObjectAnimator.ofFloat(this, View.ALPHA, 1.0f, 0.0f);
         }
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{renderNodeAnimator2, renderNodeAnimator});
-        animatorSet.setDuration(350);
+        animatorSet.playTogether(renderNodeAnimator2, renderNodeAnimator);
+        animatorSet.setDuration(350L);
         animatorSet.setInterpolator(new SineEaseInOutInterpolator());
         animatorSet.addListener(new AnimatorListenerAdapter(this) {
+            /* class com.android.keyguard.KeyguardPasswordView.AnonymousClass5 */
+
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
                 Log.d("KeyguardPasswordView", "startDisappearAnimation finish");
@@ -259,6 +281,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationFontScaleChanged() {
         float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.miui_keyguard_view_eca_text_size);
         this.mEmergencyButton.setTextSize(0, dimensionPixelSize);
@@ -266,6 +289,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationOrientationChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mPasswordEntry.getLayoutParams();
         layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_margin_bottom);
@@ -283,6 +307,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationSmallWidthChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mPasswordEntry.getLayoutParams();
         layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_margin_bottom);

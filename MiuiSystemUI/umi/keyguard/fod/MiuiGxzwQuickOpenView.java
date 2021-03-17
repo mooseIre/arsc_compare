@@ -40,55 +40,48 @@ import java.util.ArrayList;
 import java.util.List;
 import miui.security.SecurityManager;
 
-class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     private float mCicleRadius;
-    /* access modifiers changed from: private */
-    public View mCloseView;
-    /* access modifiers changed from: private */
-    public IQuickOpenItem mCurrentSelectItem;
+    private View mCloseView;
+    private IQuickOpenItem mCurrentSelectItem;
     private RectF mFastRect;
     private int mFingerID = 0;
     private RectF mFingerRect;
     private Handler mHandler = new Handler();
-    /* access modifiers changed from: private */
-    public Animator mItemExpandAnimator;
+    private Animator mItemExpandAnimator;
     private float mItemRadius;
     private float mItemScaleRadius;
-    /* access modifiers changed from: private */
-    public boolean mItemsExpanded = false;
+    private boolean mItemsExpanded = false;
     private WindowManager.LayoutParams mLayoutParams;
-    /* access modifiers changed from: private */
-    public boolean mLoading = false;
-    /* access modifiers changed from: private */
-    public ObjectAnimator mLoadingAnimator;
+    private boolean mLoading = false;
+    private ObjectAnimator mLoadingAnimator;
     private MiuiGxzwQuickTeachView mMiuiGxzwQuickTeachView;
     private Paint mPaint;
     private boolean mPendingUpdateLp;
-    /* access modifiers changed from: private */
-    public MiuiGxzwQuickLoadingView mQuickLoadingView;
+    private MiuiGxzwQuickLoadingView mQuickLoadingView;
     private List<IQuickOpenItem> mQuickOpenItemList = new ArrayList();
-    /* access modifiers changed from: private */
-    public QuickViewListener mQuickViewListener;
+    private QuickViewListener mQuickViewListener;
     private int mScreenHeight;
     private SecurityManager mSecurityManager;
     private float mSelectBackgroundRadius;
     private Runnable mShowRunnable = new Runnable() {
+        /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass1 */
+
         public void run() {
             Log.d("MiuiGxzwQuickOpenView", "mShowRunnable");
             MiuiGxzwQuickOpenView.this.addViewToWindow();
             MiuiGxzwQuickOpenView.this.setVisibility(0);
-            IQuickOpenItem unused = MiuiGxzwQuickOpenView.this.mCurrentSelectItem = null;
+            MiuiGxzwQuickOpenView.this.mCurrentSelectItem = null;
             MiuiGxzwQuickOpenView.this.updateTextSize();
             MiuiGxzwQuickOpenView.this.updatePixelSize();
             MiuiGxzwQuickOpenView.this.startLoadingAnimation();
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mShowed = false;
+    private boolean mShowed = false;
     private TextView mSkipTeach;
     private TextView mSubTitleView;
-    /* access modifiers changed from: private */
-    public boolean mTeachMode;
+    private boolean mTeachMode;
     private FrameLayout.LayoutParams mTipLayoutParams;
     private int mTipPressMargin;
     private int mTipSlideMargin;
@@ -194,6 +187,8 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         if (this.mFingerID != 0 && MiuiGxzwQuickOpenUtil.isQuickOpenEnable(getContext())) {
             this.mFingerID = 0;
             this.mUiOffloadThread.submit(new Runnable() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass2 */
+
                 public void run() {
                     MiuiGxzwQuickOpenUtil.setFodAuthFingerprint(MiuiGxzwQuickOpenView.this.getContext(), 0, KeyguardUpdateMonitor.getCurrentUser());
                 }
@@ -202,6 +197,7 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (this.mPendingUpdateLp && isAttachedToWindow()) {
@@ -211,6 +207,7 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mPendingUpdateLp = false;
@@ -256,6 +253,8 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         display.getRealSize(point);
         this.mScreenHeight = point.y;
         setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass3 */
+
             public void onClick(View view) {
                 if (!MiuiGxzwQuickOpenView.this.mTeachMode && !AccessibilityManager.getInstance(MiuiGxzwQuickOpenView.this.getContext()).isTouchExplorationEnabled()) {
                     MiuiGxzwQuickOpenView.this.dismiss();
@@ -296,14 +295,16 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateTextSize() {
+    /* access modifiers changed from: public */
+    private void updateTextSize() {
         this.mTitleView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_title_size));
         this.mSubTitleView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_subtitle_size));
         this.mTipView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_tip_size));
     }
 
     /* access modifiers changed from: private */
-    public void updatePixelSize() {
+    /* access modifiers changed from: public */
+    private void updatePixelSize() {
         float dimension = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_item_radius);
         this.mItemRadius = dimension;
         this.mItemRadius = dimension + MiuiGxzwQuickOpenUtil.getLargeItemDetal(getContext());
@@ -324,9 +325,9 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     private void initQuickOpenItemList() {
         cleanQuickOpenItemList();
         this.mQuickOpenItemList.addAll(MiuiGxzwQuickOpenUtil.generateQuickOpenItemList(getContext(), this.mItemRadius, this.mCicleRadius, isRTL()));
-        for (IQuickOpenItem next : this.mQuickOpenItemList) {
-            RectF rect = next.getRect();
-            View view = next.getView();
+        for (IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
+            RectF rect = iQuickOpenItem.getRect();
+            View view = iQuickOpenItem.getView();
             view.setVisibility(4);
             int width = (int) (rect.width() * 0.1f);
             if (AccessibilityManager.getInstance(getContext()).isTouchExplorationEnabled()) {
@@ -344,22 +345,24 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     private void cleanQuickOpenItemList() {
-        for (IQuickOpenItem next : this.mQuickOpenItemList) {
-            next.getView().setVisibility(4);
-            if (next.getView().isAttachedToWindow()) {
-                removeView(next.getView());
+        for (IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
+            iQuickOpenItem.getView().setVisibility(4);
+            if (iQuickOpenItem.getView().isAttachedToWindow()) {
+                removeView(iQuickOpenItem.getView());
             }
         }
         this.mQuickOpenItemList.clear();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.fod.GxzwWindowFrameLayout
     public WindowManager.LayoutParams generateLayoutParams() {
         return this.mLayoutParams;
     }
 
     /* access modifiers changed from: private */
-    public void removeQuickView() {
+    /* access modifiers changed from: public */
+    private void removeQuickView() {
         WindowManager.LayoutParams layoutParams = this.mLayoutParams;
         layoutParams.blurRatio = 0.0f;
         layoutParams.flags &= -5;
@@ -399,26 +402,25 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     private IQuickOpenItem caculateSelectQucikOpenItem(float f, float f2) {
-        for (IQuickOpenItem next : this.mQuickOpenItemList) {
-            if (isInItemArea(next, f, f2)) {
-                return next;
+        for (IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
+            if (isInItemArea(iQuickOpenItem, f, f2)) {
+                return iQuickOpenItem;
             }
         }
         return null;
     }
 
     private void handleQucikOpenItemEnter(IQuickOpenItem iQuickOpenItem) {
-        Class cls = HapticFeedBackImpl.class;
         new ObjectAnimator();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_X, new float[]{iQuickOpenItem.getView().getScaleX(), this.mItemScaleRadius / this.mItemRadius});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_X, iQuickOpenItem.getView().getScaleX(), this.mItemScaleRadius / this.mItemRadius);
         new ObjectAnimator();
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_Y, new float[]{iQuickOpenItem.getView().getScaleY(), this.mItemScaleRadius / this.mItemRadius});
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_Y, iQuickOpenItem.getView().getScaleY(), this.mItemScaleRadius / this.mItemRadius);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
-        animatorSet.setDuration(100);
+        animatorSet.playTogether(ofFloat, ofFloat2);
+        animatorSet.setDuration(100L);
         animatorSet.start();
-        if (((HapticFeedBackImpl) Dependency.get(cls)).isSupportExtHapticFeedback(165)) {
-            ((HapticFeedBackImpl) Dependency.get(cls)).meshNormal();
+        if (((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).isSupportExtHapticFeedback(165)) {
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).meshNormal();
         } else {
             MiuiGxzwUtils.vibrateLight(getContext());
         }
@@ -428,18 +430,19 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
 
     private void handleQucikOpenItemExit(IQuickOpenItem iQuickOpenItem) {
         new ObjectAnimator();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_X, new float[]{iQuickOpenItem.getView().getScaleX(), 1.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_X, iQuickOpenItem.getView().getScaleX(), 1.0f);
         new ObjectAnimator();
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_Y, new float[]{iQuickOpenItem.getView().getScaleY(), 1.0f});
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_Y, iQuickOpenItem.getView().getScaleY(), 1.0f);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
-        animatorSet.setDuration(100);
+        animatorSet.playTogether(ofFloat, ofFloat2);
+        animatorSet.setDuration(100L);
         animatorSet.start();
         showTitle("", "");
     }
 
     /* access modifiers changed from: private */
-    public void handleQucikOpenItemTouchUp(IQuickOpenItem iQuickOpenItem) {
+    /* access modifiers changed from: public */
+    private void handleQucikOpenItemTouchUp(IQuickOpenItem iQuickOpenItem) {
         List list;
         Intent intent = iQuickOpenItem.getIntent();
         if (intent != null) {
@@ -501,19 +504,20 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void startLoadingAnimation() {
-        MiuiGxzwQuickLoadingView miuiGxzwQuickLoadingView = this.mQuickLoadingView;
-        if (miuiGxzwQuickLoadingView != null) {
-            removeView(miuiGxzwQuickLoadingView);
+    /* access modifiers changed from: public */
+    private void startLoadingAnimation() {
+        View view = this.mQuickLoadingView;
+        if (view != null) {
+            removeView(view);
             this.mQuickLoadingView = null;
         }
         ObjectAnimator objectAnimator = this.mLoadingAnimator;
         if (objectAnimator != null) {
             objectAnimator.cancel();
         }
-        MiuiGxzwQuickLoadingView miuiGxzwQuickLoadingView2 = new MiuiGxzwQuickLoadingView(getContext(), this.mItemRadius);
-        this.mQuickLoadingView = miuiGxzwQuickLoadingView2;
-        float loadingMaxRadius = miuiGxzwQuickLoadingView2.getLoadingMaxRadius();
+        MiuiGxzwQuickLoadingView miuiGxzwQuickLoadingView = new MiuiGxzwQuickLoadingView(getContext(), this.mItemRadius);
+        this.mQuickLoadingView = miuiGxzwQuickLoadingView;
+        float loadingMaxRadius = miuiGxzwQuickLoadingView.getLoadingMaxRadius();
         MiuiGxzwUtils.caculateGxzwIconSize(getContext());
         int i = MiuiGxzwUtils.GXZW_ICON_X + (MiuiGxzwUtils.GXZW_ICON_WIDTH / 2);
         int i2 = MiuiGxzwUtils.GXZW_ICON_Y + (MiuiGxzwUtils.GXZW_ICON_HEIGHT / 2);
@@ -526,15 +530,18 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         addView(this.mQuickLoadingView, layoutParams);
         this.mQuickLoadingView.setLoading(true);
         new ObjectAnimator();
-        MiuiGxzwQuickLoadingView miuiGxzwQuickLoadingView3 = this.mQuickLoadingView;
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(miuiGxzwQuickLoadingView3, "currentLoadingRadius", new float[]{miuiGxzwQuickLoadingView3.getLoadingOriginalRadius(), this.mQuickLoadingView.getLoadingMaxRadius()});
+        MiuiGxzwQuickLoadingView miuiGxzwQuickLoadingView2 = this.mQuickLoadingView;
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(miuiGxzwQuickLoadingView2, "currentLoadingRadius", miuiGxzwQuickLoadingView2.getLoadingOriginalRadius(), this.mQuickLoadingView.getLoadingMaxRadius());
         this.mLoadingAnimator = ofFloat;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass4 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiGxzwQuickOpenView.this.mQuickLoadingView.setCurrentLoadingRadius(((Float) valueAnimator.getAnimatedValue()).floatValue());
             }
         });
         this.mLoadingAnimator.addListener(new Animator.AnimatorListener() {
+            /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass5 */
             private boolean canceled = false;
 
             public void onAnimationRepeat(Animator animator) {
@@ -545,8 +552,8 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             }
 
             public void onAnimationEnd(Animator animator) {
-                ObjectAnimator unused = MiuiGxzwQuickOpenView.this.mLoadingAnimator = null;
-                boolean unused2 = MiuiGxzwQuickOpenView.this.mLoading = false;
+                MiuiGxzwQuickOpenView.this.mLoadingAnimator = null;
+                MiuiGxzwQuickOpenView.this.mLoading = false;
                 MiuiGxzwQuickOpenView.this.mQuickLoadingView.setLoading(false);
                 if (!this.canceled && MiuiGxzwQuickOpenView.this.mShowed) {
                     MiuiGxzwQuickOpenView.this.startShowQuickOpenItemAnimation();
@@ -557,14 +564,14 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
                 this.canceled = true;
             }
         });
-        this.mLoadingAnimator.setDuration(600);
+        this.mLoadingAnimator.setDuration(600L);
         this.mLoadingAnimator.start();
         this.mLoading = true;
     }
 
     /* access modifiers changed from: private */
-    public void startShowQuickOpenItemAnimation() {
-        Class cls = HapticFeedBackImpl.class;
+    /* access modifiers changed from: public */
+    private void startShowQuickOpenItemAnimation() {
         WindowManager.LayoutParams layoutParams = this.mLayoutParams;
         layoutParams.blurRatio = 1.0f;
         layoutParams.flags |= 4;
@@ -582,16 +589,17 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             animator.cancel();
         }
         boolean z = false;
-        for (IQuickOpenItem next : this.mQuickOpenItemList) {
-            next.getView().setVisibility(0);
+        for (IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
+            iQuickOpenItem.getView().setVisibility(0);
             new ObjectAnimator();
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(next.getView(), View.TRANSLATION_X, new float[]{((float) i) - next.getRect().centerX(), 0.0f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.TRANSLATION_X, ((float) i) - iQuickOpenItem.getRect().centerX(), 0.0f);
             new ObjectAnimator();
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(next.getView(), View.TRANSLATION_Y, new float[]{((float) i2) - next.getRect().centerY(), 0.0f});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.TRANSLATION_Y, ((float) i2) - iQuickOpenItem.getRect().centerY(), 0.0f);
             AnimatorSet animatorSet = new AnimatorSet();
             if (!z) {
                 this.mItemExpandAnimator = animatorSet;
                 animatorSet.addListener(new Animator.AnimatorListener() {
+                    /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass6 */
                     private boolean canceled = false;
 
                     public void onAnimationRepeat(Animator animator) {
@@ -602,12 +610,12 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
 
                     public void onAnimationEnd(Animator animator) {
                         AnalyticsHelper.getInstance(MiuiGxzwQuickOpenView.this.getContext()).recordFodQuickOpenExpandResultAction(!this.canceled);
-                        Animator unused = MiuiGxzwQuickOpenView.this.mItemExpandAnimator = null;
+                        MiuiGxzwQuickOpenView.this.mItemExpandAnimator = null;
                         if (MiuiGxzwQuickOpenView.this.mQuickViewListener != null && !this.canceled) {
                             MiuiGxzwQuickOpenView.this.mQuickViewListener.onShow();
                         }
                         if (!this.canceled) {
-                            boolean unused2 = MiuiGxzwQuickOpenView.this.mItemsExpanded = true;
+                            MiuiGxzwQuickOpenView.this.mItemsExpanded = true;
                         }
                         if (!this.canceled && AccessibilityManager.getInstance(MiuiGxzwQuickOpenView.this.getContext()).isTouchExplorationEnabled()) {
                             MiuiGxzwQuickOpenView.this.initTalkbackInfo();
@@ -620,12 +628,12 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
                 });
                 z = true;
             }
-            animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
-            animatorSet.setDuration(150);
+            animatorSet.playTogether(ofFloat, ofFloat2);
+            animatorSet.setDuration(150L);
             animatorSet.start();
         }
-        if (((HapticFeedBackImpl) Dependency.get(cls)).isSupportExtHapticFeedback(165)) {
-            ((HapticFeedBackImpl) Dependency.get(cls)).longPress();
+        if (((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).isSupportExtHapticFeedback(165)) {
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).longPress();
         } else {
             MiuiGxzwUtils.vibrateNormal(getContext());
         }
@@ -633,16 +641,19 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void initTalkbackInfo() {
+    /* access modifiers changed from: public */
+    private void initTalkbackInfo() {
         announceForAccessibility(getResources().getString(C0021R$string.gxzw_quick_open_title));
-        for (final IQuickOpenItem next : this.mQuickOpenItemList) {
-            String title = next.getTitle();
-            String subTitle = next.getSubTitle();
-            View view = next.getView();
+        for (final IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
+            String title = iQuickOpenItem.getTitle();
+            String subTitle = iQuickOpenItem.getSubTitle();
+            View view = iQuickOpenItem.getView();
             view.setContentDescription(subTitle + " " + title);
-            next.getView().setOnClickListener(new View.OnClickListener() {
+            iQuickOpenItem.getView().setOnClickListener(new View.OnClickListener() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass7 */
+
                 public void onClick(View view) {
-                    MiuiGxzwQuickOpenView.this.handleQucikOpenItemTouchUp(next);
+                    MiuiGxzwQuickOpenView.this.handleQucikOpenItemTouchUp(iQuickOpenItem);
                     MiuiGxzwQuickOpenView.this.dismiss();
                 }
             });
@@ -657,10 +668,14 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         layoutParams.topMargin = (int) rectF2.top;
         addView(this.mCloseView, layoutParams);
         this.mHandler.postDelayed(new Runnable() {
+            /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass8 */
+
             public void run() {
                 if (MiuiGxzwQuickOpenView.this.mCloseView != null) {
                     MiuiGxzwQuickOpenView.this.mCloseView.setContentDescription(MiuiGxzwQuickOpenView.this.getResources().getString(C0021R$string.gxzw_quick_close));
                     MiuiGxzwQuickOpenView.this.mCloseView.setOnClickListener(new View.OnClickListener() {
+                        /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass8.AnonymousClass1 */
+
                         public void onClick(View view) {
                             MiuiGxzwQuickOpenView.this.dismiss();
                         }
@@ -675,27 +690,29 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         MiuiGxzwUtils.caculateGxzwIconSize(getContext());
         int i = MiuiGxzwUtils.GXZW_ICON_X + (MiuiGxzwUtils.GXZW_ICON_WIDTH / 2);
         int i2 = MiuiGxzwUtils.GXZW_ICON_Y + (MiuiGxzwUtils.GXZW_ICON_HEIGHT / 2);
-        for (IQuickOpenItem next : this.mQuickOpenItemList) {
+        for (IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
             new ObjectAnimator();
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(next.getView(), View.TRANSLATION_X, new float[]{next.getView().getTranslationX(), ((float) i) - next.getRect().centerX()});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.TRANSLATION_X, iQuickOpenItem.getView().getTranslationX(), ((float) i) - iQuickOpenItem.getRect().centerX());
             new ObjectAnimator();
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(next.getView(), View.TRANSLATION_Y, new float[]{next.getView().getTranslationY(), ((float) i2) - next.getRect().centerY()});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.TRANSLATION_Y, iQuickOpenItem.getView().getTranslationY(), ((float) i2) - iQuickOpenItem.getRect().centerY());
             new ObjectAnimator();
-            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(next.getView(), property, new float[]{1.0f, 0.0f});
+            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), property, 1.0f, 0.0f);
             new ObjectAnimator();
-            ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(next.getView(), View.SCALE_X, new float[]{next.getView().getScaleX(), 0.0f});
+            ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_X, iQuickOpenItem.getView().getScaleX(), 0.0f);
             new ObjectAnimator();
-            ObjectAnimator ofFloat5 = ObjectAnimator.ofFloat(next.getView(), View.SCALE_Y, new float[]{next.getView().getScaleY(), 0.0f});
+            ObjectAnimator ofFloat5 = ObjectAnimator.ofFloat(iQuickOpenItem.getView(), View.SCALE_Y, iQuickOpenItem.getView().getScaleY(), 0.0f);
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3, ofFloat4, ofFloat5});
-            animatorSet.setDuration(150);
+            animatorSet.playTogether(ofFloat, ofFloat2, ofFloat3, ofFloat4, ofFloat5);
+            animatorSet.setDuration(150L);
             animatorSet.start();
         }
         if (this.mQuickLoadingView != null) {
             new ObjectAnimator();
-            ObjectAnimator ofFloat6 = ObjectAnimator.ofFloat(this.mQuickLoadingView, property, new float[]{1.0f, 0.0f});
-            ofFloat6.setDuration(150);
+            ObjectAnimator ofFloat6 = ObjectAnimator.ofFloat(this.mQuickLoadingView, property, 1.0f, 0.0f);
+            ofFloat6.setDuration(150L);
             ofFloat6.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass9 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -736,7 +753,8 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void showPressTipIfNeed() {
+    /* access modifiers changed from: public */
+    private void showPressTipIfNeed() {
         if (MiuiGxzwQuickOpenUtil.isShowQuickOpenPress(getContext())) {
             int i = MiuiGxzwUtils.GXZW_ICON_Y + (MiuiGxzwUtils.GXZW_ICON_HEIGHT / 2);
             FrameLayout.LayoutParams layoutParams = this.mTipLayoutParams;
@@ -758,8 +776,8 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             this.mTipView.setTranslationY(0.0f);
             new ObjectAnimator();
             TextView textView = this.mTipView;
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, new float[]{textView.getTranslationY(), (float) (this.mTipPressMargin - this.mTipSlideMargin)});
-            ofFloat.setDuration(100);
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, View.TRANSLATION_Y, textView.getTranslationY(), (float) (this.mTipPressMargin - this.mTipSlideMargin));
+            ofFloat.setDuration(100L);
             ofFloat.start();
             this.mTipView.setVisibility(0);
             this.mTipView.setText(C0021R$string.gxzw_quick_tip_slide);
@@ -781,6 +799,8 @@ class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             this.mSkipTeach.setPadding(dimension, dimension2, dimension, dimension2);
             this.mSkipTeach.setGravity(17);
             this.mSkipTeach.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass10 */
+
                 public void onClick(View view) {
                     MiuiGxzwQuickOpenView.this.dismiss();
                 }

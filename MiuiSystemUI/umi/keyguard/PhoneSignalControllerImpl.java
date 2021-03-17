@@ -27,6 +27,8 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
 
     private PhoneStateListener getPhoneStateListener(final int i) {
         AnonymousClass1 r0 = new PhoneStateListener() {
+            /* class com.android.keyguard.PhoneSignalControllerImpl.AnonymousClass1 */
+
             public void onSignalStrengthsChanged(SignalStrength signalStrength) {
                 PhoneSignalControllerImpl.this.handleSignalStrengthsChanged(signalStrength, i);
             }
@@ -41,7 +43,8 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
     }
 
     /* access modifiers changed from: private */
-    public void handleSignalStrengthsChanged(SignalStrength signalStrength, int i) {
+    /* access modifiers changed from: public */
+    private void handleSignalStrengthsChanged(SignalStrength signalStrength, int i) {
         int miuiLevel = getMiuiLevel(signalStrength);
         if (miuiLevel < 1 || miuiLevel > 5) {
             this.mPhoneSignalAvailable[i] = false;
@@ -64,7 +67,8 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
     }
 
     /* access modifiers changed from: private */
-    public void handleServiceStateChanged(ServiceState serviceState, int i) {
+    /* access modifiers changed from: public */
+    private void handleServiceStateChanged(ServiceState serviceState, int i) {
         if (serviceState == null) {
             this.mPhoneSignalAvailable[i] = false;
             return;
@@ -102,6 +106,7 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
         }
     }
 
+    @Override // com.android.keyguard.IPhoneSignalController
     public void registerPhoneSignalChangeCallback(IPhoneSignalController.PhoneSignalChangeCallback phoneSignalChangeCallback) {
         Log.d("PhoneSignalController", "registerPhoneSignalChangeCallback");
         if (this.mSignalChangeCallbacks.isEmpty()) {
@@ -129,6 +134,7 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
         }
     }
 
+    @Override // com.android.keyguard.IPhoneSignalController
     public void removePhoneSignalChangeCallback(IPhoneSignalController.PhoneSignalChangeCallback phoneSignalChangeCallback) {
         Log.d("PhoneSignalController", "removePhoneSignalChangeCallback");
         this.mSignalChangeCallbacks.remove(phoneSignalChangeCallback);
@@ -137,6 +143,7 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
         }
     }
 
+    @Override // com.android.keyguard.IPhoneSignalController
     public boolean isSignalAvailable() {
         return this.mSignalAvailable;
     }

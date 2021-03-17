@@ -3,7 +3,8 @@ package com.android.keyguard.fod;
 import android.content.Context;
 import android.content.res.Resources;
 
-class MiuiGxzwAnimRes {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwAnimRes {
     final int mFrameInterval;
     private final IGeneralRes mGeneralRes;
     final boolean mRepeat;
@@ -43,6 +44,7 @@ class MiuiGxzwAnimRes {
             this.clean = z;
         }
 
+        @Override // com.android.keyguard.fod.MiuiGxzwAnimRes.IGeneralRes
         public int[] generalRes(Context context) {
             int i;
             String packageName = context.getPackageName();
@@ -75,6 +77,7 @@ class MiuiGxzwAnimRes {
             this.res = iArr;
         }
 
+        @Override // com.android.keyguard.fod.MiuiGxzwAnimRes.IGeneralRes
         public int[] generalRes(Context context) {
             return this.res;
         }

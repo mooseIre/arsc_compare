@@ -28,8 +28,7 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
     protected boolean mIsFoldChargeVideo;
     protected Interpolator mQuartOutInterpolator;
     protected Point mScreenSize;
-    /* access modifiers changed from: private */
-    public boolean mStartingDismissAnim;
+    private boolean mStartingDismissAnim;
     protected WindowManager mWindowManager;
     protected int mWireState;
 
@@ -151,6 +150,8 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
             AnimatorSet animatorSet2 = new AnimatorSet();
             this.mDismissAnimatorSet = animatorSet2;
             animatorSet2.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.charge.container.IChargeView.AnonymousClass1 */
+
                 public void onAnimationRepeat(Animator animator) {
                 }
 
@@ -161,11 +162,11 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
                     if (IChargeView.this.mStartingDismissAnim) {
                         IChargeView.this.dismiss();
                     }
-                    boolean unused = IChargeView.this.mStartingDismissAnim = false;
+                    IChargeView.this.mStartingDismissAnim = false;
                 }
 
                 public void onAnimationCancel(Animator animator) {
-                    boolean unused = IChargeView.this.mStartingDismissAnim = false;
+                    IChargeView.this.mStartingDismissAnim = false;
                 }
             });
             this.mStartingDismissAnim = true;
@@ -173,7 +174,8 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
     }
 
     /* access modifiers changed from: private */
-    public void dismiss() {
+    /* access modifiers changed from: public */
+    private void dismiss() {
         stopChildAnimation();
         setComponentTransparent(true);
     }

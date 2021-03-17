@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,6 +40,8 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     protected FrameLayout mClockContainer;
     protected LinearLayout mClockExtraInfo;
     protected final Handler mHandler = new Handler() {
+        /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             if (message.what == 0) {
                 MiuiKeyguardSingleClock.this.updateClockView();
@@ -50,6 +53,8 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     protected boolean mLeftHoleDevice;
     protected MiuiLockPatternUtils mLockPatternUtils;
     ContentObserver mLunarCalendarObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass3 */
+
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiKeyguardSingleClock miuiKeyguardSingleClock = MiuiKeyguardSingleClock.this;
@@ -67,9 +72,10 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     protected TextView mOwnerInfo;
     protected String mOwnerInfoString = null;
     protected int mSelectedClockPosition;
-    /* access modifiers changed from: private */
-    public boolean mShowCarrier;
+    private boolean mShowCarrier;
     private ContentObserver mShowCarrierObserver = new ContentObserver((Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
+        /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass2 */
+
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiKeyguardSingleClock miuiKeyguardSingleClock = MiuiKeyguardSingleClock.this;
@@ -77,7 +83,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             if (Settings.System.getIntForUser(miuiKeyguardSingleClock.mContext.getContentResolver(), "status_bar_show_carrier_under_keyguard", 1, -2) != 1) {
                 z2 = false;
             }
-            boolean unused = miuiKeyguardSingleClock.mShowCarrier = z2;
+            miuiKeyguardSingleClock.mShowCarrier = z2;
             MiuiKeyguardSingleClock.this.updateSimCardInfoVisibility();
         }
     };
@@ -124,7 +130,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         this.mUserId = KeyguardUpdateMonitor.getCurrentUser();
         this.mLockPatternUtils = new MiuiLockPatternUtils(this.mContext);
         this.mSelectedClockPosition = Settings.System.getIntForUser(this.mContext.getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this.mContext), this.mUserId);
-        View inflate = this.mLayoutInflater.inflate(C0017R$layout.keyguard_base_clock_layout, this, false);
+        View inflate = this.mLayoutInflater.inflate(C0017R$layout.keyguard_base_clock_layout, (ViewGroup) this, false);
         this.mClockContainer = (FrameLayout) inflate.findViewById(C0015R$id.clock_container1);
         this.mClockExtraInfo = (LinearLayout) inflate.findViewById(C0015R$id.miui_keyguard_clock_extra_info);
         this.mSimCardInfo = (CarrierText) inflate.findViewById(C0015R$id.unlock_screen_sim_info);
@@ -139,6 +145,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateLunarCalendarInfo() {
         if (this.mMiuiBaseClock != null) {
             this.mMiuiBaseClock.setShowLunarCalendar(this.mShowLunarCalendar && Locale.CHINESE.getLanguage().equals(this.mLanguage));
@@ -169,27 +176,32 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void onClockShowing() {
         updateTime();
         updateOwnerInfo();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void onUserSwitch() {
         updateOwnerInfo();
         this.mLunarCalendarObserver.onChange(false);
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateClockMagazineInfo() {
         this.mMagazineClockView.updateInfo();
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void setSelectedClockPosition(int i) {
         this.mSelectedClockPosition = i;
         updateClockView();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("show_lunar_calendar"), false, this.mLunarCalendarObserver, -1);
@@ -199,6 +211,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         this.mShowCarrierObserver.onChange(false);
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void setDarkStyle(boolean z) {
         if (z != this.mDarkStyle) {
             super.setDarkStyle(z);
@@ -220,6 +233,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mContext.getContentResolver().unregisterContentObserver(this.mShowCarrierObserver);
@@ -227,6 +241,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         this.mContext.getContentResolver().unregisterContentObserver(this.mLunarCalendarObserver);
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateTimeZone(String str) {
         if (!TextUtils.isEmpty(str)) {
             this.mCalendar = new Calendar(TimeZone.getTimeZone(str));
@@ -238,6 +253,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateHourFormat() {
         super.updateHourFormat();
         MiuiBaseClock miuiBaseClock = this.mMiuiBaseClock;
@@ -246,6 +262,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateTime() {
         this.mCalendar.setTimeInMillis(System.currentTimeMillis());
         MiuiBaseClock miuiBaseClock = this.mMiuiBaseClock;
@@ -255,11 +272,13 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateDrawableResources() {
         this.mMagazineClockView.updateDrawableResources(this.mDarkStyle);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateViewsTextSize() {
         float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.miui_clock_date_text_size);
         this.mOwnerInfo.setTextSize(0, dimensionPixelSize);
@@ -268,6 +287,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateViewsLayoutParams() {
         int i;
         int i2;
@@ -334,6 +354,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateClockView(boolean z) {
         if (!this.mHasNotification || z) {
             this.mHasNotification = z;
@@ -362,9 +383,11 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         if (shouldShowSwitchAnim()) {
             this.mAnimToNormalState.cancel();
             this.mAnimToNotificationState.cancel();
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
-            ofFloat.setDuration(250);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
+            ofFloat.setDuration(250L);
             ofFloat.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass4 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -380,6 +403,8 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
                 }
             });
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass5 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
@@ -388,9 +413,11 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
                     MiuiKeyguardSingleClock.this.toNotificationStateAnimOutUpdate(floatValue);
                 }
             });
-            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-            ofFloat2.setDuration(250);
+            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ofFloat2.setDuration(250L);
             ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass6 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
@@ -408,9 +435,11 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         if (shouldShowSwitchAnim()) {
             this.mAnimToNormalState.cancel();
             this.mAnimToNotificationState.cancel();
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
-            ofFloat.setDuration(250);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
+            ofFloat.setDuration(250L);
             ofFloat.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass7 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -427,6 +456,8 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
                 }
             });
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass8 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
@@ -434,9 +465,11 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
                     MiuiKeyguardSingleClock.this.toNormalStateAnimOutUpdate(floatValue);
                 }
             });
-            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-            ofFloat2.setDuration(250);
+            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ofFloat2.setDuration(250L);
             ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass9 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
@@ -450,6 +483,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.RegionController.Callback
     public void onRegionChanged(String str) {
         this.mTWRegion = "TW".equals(str);
         updateSimCardInfoVisibility();

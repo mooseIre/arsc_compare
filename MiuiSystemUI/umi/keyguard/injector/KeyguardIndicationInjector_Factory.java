@@ -11,6 +11,7 @@ public final class KeyguardIndicationInjector_Factory implements Factory<Keyguar
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardIndicationInjector get() {
         return provideInstance(this.contextProvider);
     }

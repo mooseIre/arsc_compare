@@ -3,7 +3,8 @@ package com.android.keyguard.clock;
 import android.graphics.Bitmap;
 import java.util.function.Supplier;
 
-final class ClockInfo {
+/* access modifiers changed from: package-private */
+public final class ClockInfo {
     private final String mId;
     private final String mName;
     private final Supplier<Bitmap> mPreview;
@@ -47,7 +48,8 @@ final class ClockInfo {
         return new Builder();
     }
 
-    static class Builder {
+    /* access modifiers changed from: package-private */
+    public static class Builder {
         private String mId;
         private String mName;
         private Supplier<Bitmap> mPreview;

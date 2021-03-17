@@ -41,12 +41,14 @@ public class KeyguardSecurityModel {
             return SecurityMode.SimPin;
         }
         int intValue = ((Integer) DejankUtils.whitelistIpcs(new Supplier(i) {
+            /* class com.android.keyguard.$$Lambda$KeyguardSecurityModel$wVA2_YbUv0Q_IYsNKsPxtYAIjp0 */
             public final /* synthetic */ int f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Supplier
             public final Object get() {
                 return KeyguardSecurityModel.this.lambda$getSecurityMode$0$KeyguardSecurityModel(this.f$1);
             }

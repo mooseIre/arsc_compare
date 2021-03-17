@@ -14,6 +14,7 @@ public final class MiuiChargeController_Factory implements Factory<MiuiChargeCon
         this.wakefulnessLifecycleProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiChargeController get() {
         return provideInstance(this.contextProvider, this.wakefulnessLifecycleProvider);
     }

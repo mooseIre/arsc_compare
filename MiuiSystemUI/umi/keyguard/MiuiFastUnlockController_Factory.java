@@ -14,6 +14,7 @@ public final class MiuiFastUnlockController_Factory implements Factory<MiuiFastU
         this.keyguardViewMediatorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiFastUnlockController get() {
         return provideInstance(this.contextProvider, this.keyguardViewMediatorProvider);
     }

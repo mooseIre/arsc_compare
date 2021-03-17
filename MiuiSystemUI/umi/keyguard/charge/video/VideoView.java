@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -29,34 +28,24 @@ public class VideoView extends RelativeLayout {
     private ObjectAnimator alphaStrongOut;
     private ImageView mBackImage;
     private TextureView.SurfaceTextureListener mChargeSurfaceTextureListener;
-    /* access modifiers changed from: private */
-    public String mChargeUri;
-    /* access modifiers changed from: private */
-    public TextureView mChargeView;
+    private String mChargeUri;
+    private TextureView mChargeView;
     private Configuration mConfiguration;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private boolean mIsFoldChargeVideo;
-    /* access modifiers changed from: private */
-    public MediaPlayer mMediaPlayer;
+    private MediaPlayer mMediaPlayer;
     MediaPlayer.OnCompletionListener mOnCompletionListener;
     MediaPlayer.OnPreparedListener mOnPreparedListener;
     private Point mPoint;
     private TextureView.SurfaceTextureListener mRapidChargeSurfaceTextureListener;
-    /* access modifiers changed from: private */
-    public String mRapidChargeUri;
-    /* access modifiers changed from: private */
-    public TextureView mRapidChargeView;
-    /* access modifiers changed from: private */
-    public MediaPlayer mRapidMediaPlayer;
+    private String mRapidChargeUri;
+    private TextureView mRapidChargeView;
+    private MediaPlayer mRapidMediaPlayer;
     private Point mScreenSize;
     private TextureView.SurfaceTextureListener mStrongRapidChargeSurfaceTextureListener;
-    /* access modifiers changed from: private */
-    public String mStrongRapidChargeUri;
-    /* access modifiers changed from: private */
-    public TextureView mStrongRapidChargeView;
-    /* access modifiers changed from: private */
-    public MediaPlayer mStrongRapidMediaPlayer;
+    private String mStrongRapidChargeUri;
+    private TextureView mStrongRapidChargeView;
+    private MediaPlayer mStrongRapidMediaPlayer;
     private AnimatorSet mToNormalAnimatorSet;
     private AnimatorSet mToRapidAnimatorSet;
     private AnimatorSet mToStrongRapidAnimatorSet;
@@ -66,7 +55,7 @@ public class VideoView extends RelativeLayout {
     MediaPlayer.OnErrorListener onErrorListener;
 
     public VideoView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public VideoView(Context context, AttributeSet attributeSet) {
@@ -84,6 +73,8 @@ public class VideoView extends RelativeLayout {
         this.mConfiguration = new Configuration();
         this.mIsFoldChargeVideo = false;
         this.mOnPreparedListener = new MediaPlayer.OnPreparedListener(this) {
+            /* class com.android.keyguard.charge.video.VideoView.AnonymousClass1 */
+
             public void onPrepared(MediaPlayer mediaPlayer) {
                 if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
@@ -91,12 +82,16 @@ public class VideoView extends RelativeLayout {
             }
         };
         this.onErrorListener = new MediaPlayer.OnErrorListener(this) {
+            /* class com.android.keyguard.charge.video.VideoView.AnonymousClass2 */
+
             public boolean onError(MediaPlayer mediaPlayer, int i, int i2) {
                 Log.e("ChargeVideoView", "error in playing charge video " + i + " " + i2);
                 return true;
             }
         };
         this.mOnCompletionListener = new MediaPlayer.OnCompletionListener(this) {
+            /* class com.android.keyguard.charge.video.VideoView.AnonymousClass3 */
+
             public void onCompletion(MediaPlayer mediaPlayer) {
                 if (mediaPlayer != null && !mediaPlayer.isPlaying()) {
                     mediaPlayer.start();
@@ -104,6 +99,8 @@ public class VideoView extends RelativeLayout {
             }
         };
         this.mChargeSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+            /* class com.android.keyguard.charge.video.VideoView.AnonymousClass7 */
+
             public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
             }
 
@@ -112,6 +109,7 @@ public class VideoView extends RelativeLayout {
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
                 ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                    /* class com.android.keyguard.charge.video.$$Lambda$VideoView$7$l2PbGj1KM7VmQ1nVGU89HOvlFg0 */
                     public final /* synthetic */ SurfaceTexture f$1;
 
                     {
@@ -146,11 +144,13 @@ public class VideoView extends RelativeLayout {
                 VideoView.this.mMediaPlayer.pause();
                 VideoView.this.mMediaPlayer.stop();
                 VideoView.this.mMediaPlayer.release();
-                MediaPlayer unused = VideoView.this.mMediaPlayer = null;
+                VideoView.this.mMediaPlayer = null;
                 return false;
             }
         };
         this.mRapidChargeSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+            /* class com.android.keyguard.charge.video.VideoView.AnonymousClass8 */
+
             public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
             }
 
@@ -159,6 +159,7 @@ public class VideoView extends RelativeLayout {
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
                 ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                    /* class com.android.keyguard.charge.video.$$Lambda$VideoView$8$9pY3gBtoCxpLmIi1wm8A1sltnV8 */
                     public final /* synthetic */ SurfaceTexture f$1;
 
                     {
@@ -193,11 +194,13 @@ public class VideoView extends RelativeLayout {
                 VideoView.this.mRapidMediaPlayer.pause();
                 VideoView.this.mRapidMediaPlayer.stop();
                 VideoView.this.mRapidMediaPlayer.release();
-                MediaPlayer unused = VideoView.this.mRapidMediaPlayer = null;
+                VideoView.this.mRapidMediaPlayer = null;
                 return false;
             }
         };
         this.mStrongRapidChargeSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
+            /* class com.android.keyguard.charge.video.VideoView.AnonymousClass9 */
+
             public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
             }
 
@@ -206,6 +209,7 @@ public class VideoView extends RelativeLayout {
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
                 ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                    /* class com.android.keyguard.charge.video.$$Lambda$VideoView$9$ZaEYdY378gzCCA2rHctcTDjBAg */
                     public final /* synthetic */ SurfaceTexture f$1;
 
                     {
@@ -240,7 +244,7 @@ public class VideoView extends RelativeLayout {
                 VideoView.this.mStrongRapidMediaPlayer.pause();
                 VideoView.this.mStrongRapidMediaPlayer.stop();
                 VideoView.this.mStrongRapidMediaPlayer.release();
-                MediaPlayer unused = VideoView.this.mStrongRapidMediaPlayer = null;
+                VideoView.this.mStrongRapidMediaPlayer = null;
                 return false;
             }
         };
@@ -378,6 +382,8 @@ public class VideoView extends RelativeLayout {
 
     private void updateDataSourceForScreenSizeChange() {
         ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+            /* class com.android.keyguard.charge.video.$$Lambda$VideoView$zBd1P0dVfIAf_HjLtFDAEbcaEJs */
+
             public final void run() {
                 VideoView.this.lambda$updateDataSourceForScreenSizeChange$0$VideoView();
             }
@@ -419,14 +425,16 @@ public class VideoView extends RelativeLayout {
             }
             TextureView textureView = this.mChargeView;
             if (textureView != null) {
-                this.alphaStrongOut = ObjectAnimator.ofFloat(textureView, property, new float[]{1.0f, 0.0f});
+                this.alphaStrongOut = ObjectAnimator.ofFloat(textureView, property, 1.0f, 0.0f);
             }
             TextureView textureView2 = this.mRapidChargeView;
             if (textureView2 != null) {
-                this.alphaStrongOut = ObjectAnimator.ofFloat(textureView2, property, new float[]{1.0f, 0.0f});
+                this.alphaStrongOut = ObjectAnimator.ofFloat(textureView2, property, 1.0f, 0.0f);
             }
-            this.mToStrongRapidAnimatorSet.play(ObjectAnimator.ofFloat(this.mStrongRapidChargeView, property, new float[]{0.0f, 1.0f})).with(this.alphaStrongOut);
+            this.mToStrongRapidAnimatorSet.play(ObjectAnimator.ofFloat(this.mStrongRapidChargeView, property, 0.0f, 1.0f)).with(this.alphaStrongOut);
             this.mToStrongRapidAnimatorSet.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.charge.video.VideoView.AnonymousClass4 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -459,7 +467,7 @@ public class VideoView extends RelativeLayout {
                     }
                 }
             });
-            this.mToStrongRapidAnimatorSet.setDuration(600);
+            this.mToStrongRapidAnimatorSet.setDuration(600L);
             this.mToStrongRapidAnimatorSet.start();
         }
     }
@@ -472,14 +480,16 @@ public class VideoView extends RelativeLayout {
             }
             TextureView textureView = this.mChargeView;
             if (textureView != null) {
-                this.alphaRapidOut = ObjectAnimator.ofFloat(textureView, property, new float[]{1.0f, 0.0f});
+                this.alphaRapidOut = ObjectAnimator.ofFloat(textureView, property, 1.0f, 0.0f);
             }
             TextureView textureView2 = this.mStrongRapidChargeView;
             if (textureView2 != null) {
-                this.alphaRapidOut = ObjectAnimator.ofFloat(textureView2, property, new float[]{1.0f, 0.0f});
+                this.alphaRapidOut = ObjectAnimator.ofFloat(textureView2, property, 1.0f, 0.0f);
             }
-            this.mToRapidAnimatorSet.play(this.alphaRapidOut).with(ObjectAnimator.ofFloat(this.mRapidChargeView, property, new float[]{0.0f, 1.0f}));
+            this.mToRapidAnimatorSet.play(this.alphaRapidOut).with(ObjectAnimator.ofFloat(this.mRapidChargeView, property, 0.0f, 1.0f));
             this.mToRapidAnimatorSet.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.charge.video.VideoView.AnonymousClass5 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -512,7 +522,7 @@ public class VideoView extends RelativeLayout {
                     }
                 }
             });
-            this.mToRapidAnimatorSet.setDuration(600);
+            this.mToRapidAnimatorSet.setDuration(600L);
             this.mToRapidAnimatorSet.start();
         }
     }
@@ -525,14 +535,16 @@ public class VideoView extends RelativeLayout {
             }
             TextureView textureView = this.mRapidChargeView;
             if (textureView != null) {
-                this.alphaOut = ObjectAnimator.ofFloat(textureView, property, new float[]{1.0f, 0.0f});
+                this.alphaOut = ObjectAnimator.ofFloat(textureView, property, 1.0f, 0.0f);
             }
             TextureView textureView2 = this.mStrongRapidChargeView;
             if (textureView2 != null) {
-                this.alphaOut = ObjectAnimator.ofFloat(textureView2, property, new float[]{1.0f, 0.0f});
+                this.alphaOut = ObjectAnimator.ofFloat(textureView2, property, 1.0f, 0.0f);
             }
-            this.mToNormalAnimatorSet.play(this.alphaOut).with(ObjectAnimator.ofFloat(this.mChargeView, property, new float[]{0.0f, 1.0f}));
+            this.mToNormalAnimatorSet.play(this.alphaOut).with(ObjectAnimator.ofFloat(this.mChargeView, property, 0.0f, 1.0f));
             this.mToNormalAnimatorSet.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.charge.video.VideoView.AnonymousClass6 */
+
                 public void onAnimationCancel(Animator animator) {
                 }
 
@@ -565,7 +577,7 @@ public class VideoView extends RelativeLayout {
                     }
                 }
             });
-            this.mToNormalAnimatorSet.setDuration(600);
+            this.mToNormalAnimatorSet.setDuration(600L);
             this.mToNormalAnimatorSet.start();
         }
     }
@@ -666,6 +678,6 @@ public class VideoView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mBackImage.setBackground((Drawable) null);
+        this.mBackImage.setBackground(null);
     }
 }

@@ -54,7 +54,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     private int mTextColor;
 
     public KeyguardStatusView(Context context) {
-        this(context, (AttributeSet) null, 0);
+        this(context, null, 0);
     }
 
     public KeyguardStatusView(Context context, AttributeSet attributeSet) {
@@ -65,14 +65,19 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         super(context, attributeSet, i);
         this.mDarkAmount = 0.0f;
         this.mInfoCallback = new KeyguardUpdateMonitorCallback() {
+            /* class com.android.keyguard.KeyguardStatusView.AnonymousClass1 */
+
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onTimeChanged() {
                 KeyguardStatusView.this.refreshTime();
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onTimeZoneChanged(TimeZone timeZone) {
                 KeyguardStatusView.this.updateTimeZone(timeZone);
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onKeyguardVisibilityChanged(boolean z) {
                 if (z) {
                     Slog.v("KeyguardStatusView", "refresh statusview showing:" + z);
@@ -82,20 +87,24 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
                 }
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onStartedWakingUp() {
                 KeyguardStatusView.this.setEnableMarquee(true);
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onFinishedGoingToSleep(int i) {
                 KeyguardStatusView.this.setEnableMarquee(false);
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onUserSwitchComplete(int i) {
                 KeyguardStatusView.this.refreshFormat();
                 KeyguardStatusView.this.updateOwnerInfo();
                 KeyguardStatusView.this.updateLogoutView();
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onLogoutEnabledChanged() {
                 KeyguardStatusView.this.updateLogoutView();
             }
@@ -116,7 +125,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     }
 
     /* access modifiers changed from: private */
-    public void setEnableMarquee(boolean z) {
+    /* access modifiers changed from: public */
+    private void setEnableMarquee(boolean z) {
         StringBuilder sb = new StringBuilder();
         sb.append("Schedule setEnableMarquee: ");
         sb.append(z ? "Enable" : "Disable");
@@ -130,6 +140,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
             setEnableMarqueeImpl(false);
         } else if (this.mPendingMarqueeStart == null) {
             $$Lambda$KeyguardStatusView$ps9yj97ShIVR2u2hJB8SKuKkkQ r3 = new Runnable() {
+                /* class com.android.keyguard.$$Lambda$KeyguardStatusView$ps9yj97ShIVR2u2hJB8SKuKkkQ */
+
                 public final void run() {
                     KeyguardStatusView.this.lambda$setEnableMarquee$0$KeyguardStatusView();
                 }
@@ -166,24 +178,28 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         TextView textView = this.mLogoutView;
         if (textView != null) {
             textView.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.keyguard.$$Lambda$KeyguardStatusView$Pryio69yVoRI9F153p5QiMZebw */
+
                 public final void onClick(View view) {
-                    KeyguardStatusView.this.onLogoutClicked(view);
+                    KeyguardStatusView.m3lambda$Pryio69yVoRI9F153p5QiMZebw(KeyguardStatusView.this, view);
                 }
             });
         }
         KeyguardClockSwitch keyguardClockSwitch = (KeyguardClockSwitch) findViewById(C0015R$id.keyguard_clock_container);
         this.mClockView = keyguardClockSwitch;
         keyguardClockSwitch.setShowCurrentUserTime(true);
-        if (KeyguardClockAccessibilityDelegate.isNeeded(this.mContext)) {
-            this.mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(this.mContext));
+        if (KeyguardClockAccessibilityDelegate.isNeeded(((GridLayout) this).mContext)) {
+            this.mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(((GridLayout) this).mContext));
         }
         this.mOwnerInfo = (TextView) findViewById(C0015R$id.owner_info);
         this.mKeyguardSlice = (KeyguardSliceView) findViewById(C0015R$id.keyguard_status_area);
         this.mTextColor = this.mClockView.getCurrentTextColor();
         this.mDateView = (DateView) findViewById(C0015R$id.date_view);
         this.mKeyguardSlice.setContentChangeListener(new Runnable() {
+            /* class com.android.keyguard.$$Lambda$KeyguardStatusView$Xo7rGDTjuOiD9nJpe80IUZ1ddFw */
+
             public final void run() {
-                KeyguardStatusView.this.onSliceContentChanged();
+                KeyguardStatusView.lambda$Xo7rGDTjuOiD9nJpe80IUZ1ddFw(KeyguardStatusView.this);
             }
         });
         onSliceContentChanged();
@@ -215,6 +231,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         layoutOwnerInfo();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         KeyguardClockSwitch keyguardClockSwitch = this.mClockView;
         if (keyguardClockSwitch != null) {
@@ -238,22 +255,25 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     }
 
     /* access modifiers changed from: private */
-    public void refreshTime() {
+    /* access modifiers changed from: public */
+    private void refreshTime() {
         if (getVisibility() == 0) {
             this.mClockView.refresh();
         }
     }
 
     /* access modifiers changed from: private */
-    public void updateTimeZone(TimeZone timeZone) {
+    /* access modifiers changed from: public */
+    private void updateTimeZone(TimeZone timeZone) {
         if (getVisibility() == 0) {
             this.mClockView.onTimeZoneChanged(timeZone);
         }
     }
 
     /* access modifiers changed from: private */
-    public void refreshFormat() {
-        Patterns.update(this.mContext, this.mAlarmManager.getNextAlarmClock(-2) != null);
+    /* access modifiers changed from: public */
+    private void refreshFormat() {
+        Patterns.update(((GridLayout) this).mContext, this.mAlarmManager.getNextAlarmClock(-2) != null);
         this.mDateView.setDatePattern(Patterns.dateViewSkel);
         this.mClockView.setFormat12Hour(Patterns.clockView12);
         this.mClockView.setFormat24Hour(Patterns.clockView24);
@@ -276,16 +296,18 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     }
 
     /* access modifiers changed from: private */
-    public void updateLogoutView() {
+    /* access modifiers changed from: public */
+    private void updateLogoutView() {
         TextView textView = this.mLogoutView;
         if (textView != null) {
             textView.setVisibility(shouldShowLogout() ? 0 : 8);
-            this.mLogoutView.setText(this.mContext.getResources().getString(17040300));
+            this.mLogoutView.setText(((GridLayout) this).mContext.getResources().getString(17040300));
         }
     }
 
     /* access modifiers changed from: private */
-    public void updateOwnerInfo() {
+    /* access modifiers changed from: public */
+    private void updateOwnerInfo() {
         if (this.mOwnerInfo != null) {
             String deviceOwnerInfo = this.mLockPatternUtils.getDeviceOwnerInfo();
             if (deviceOwnerInfo == null && this.mLockPatternUtils.isOwnerInfoEnabled(KeyguardUpdateMonitor.getCurrentUser())) {
@@ -310,6 +332,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onLocaleListChanged() {
         refreshFormat();
     }
@@ -355,7 +378,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
         this.mIconTopMarginWithHeader = getResources().getDimensionPixelSize(C0012R$dimen.widget_vertical_padding_with_header);
     }
 
-    private static final class Patterns {
+    /* access modifiers changed from: private */
+    public static final class Patterns {
         static String cacheKey;
         static String clockView12;
         static String clockView24;
@@ -381,8 +405,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
                 }
                 String bestDateTimePattern = DateFormat.getBestDateTimePattern(locale, string2);
                 clockView24 = bestDateTimePattern;
-                clockView24 = bestDateTimePattern.replace(':', 60929);
-                clockView12 = clockView12.replace(':', 60929);
+                clockView24 = bestDateTimePattern.replace(':', (char) 60929);
+                clockView12 = clockView12.replace(':', (char) 60929);
                 cacheKey = str;
             }
         }

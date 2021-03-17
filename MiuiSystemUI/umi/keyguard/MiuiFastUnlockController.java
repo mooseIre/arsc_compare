@@ -26,10 +26,10 @@ public class MiuiFastUnlockController {
     private IWindowManager mWindowManager;
 
     public interface FastUnlockCallback {
-        void onFinishFastUnlock() {
+        default void onFinishFastUnlock() {
         }
 
-        void onStartFastUnlock() {
+        default void onStartFastUnlock() {
         }
     }
 
@@ -66,16 +66,13 @@ public class MiuiFastUnlockController {
     }
 
     public void registerCallback(FastUnlockCallback fastUnlockCallback) {
-        int i = 0;
-        while (i < this.mCallbacks.size()) {
-            if (this.mCallbacks.get(i).get() != fastUnlockCallback) {
-                i++;
-            } else {
+        for (int i = 0; i < this.mCallbacks.size(); i++) {
+            if (this.mCallbacks.get(i).get() == fastUnlockCallback) {
                 return;
             }
         }
-        this.mCallbacks.add(new WeakReference(fastUnlockCallback));
-        removeCallback((FastUnlockCallback) null);
+        this.mCallbacks.add(new WeakReference<>(fastUnlockCallback));
+        removeCallback(null);
     }
 
     public void removeCallback(FastUnlockCallback fastUnlockCallback) {
@@ -88,7 +85,7 @@ public class MiuiFastUnlockController {
 
     private void onStartFastUnlock() {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
-            FastUnlockCallback fastUnlockCallback = (FastUnlockCallback) this.mCallbacks.get(i).get();
+            FastUnlockCallback fastUnlockCallback = this.mCallbacks.get(i).get();
             if (fastUnlockCallback != null) {
                 fastUnlockCallback.onStartFastUnlock();
             }
@@ -97,7 +94,7 @@ public class MiuiFastUnlockController {
 
     private void onFinishFashUnlock() {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
-            FastUnlockCallback fastUnlockCallback = (FastUnlockCallback) this.mCallbacks.get(i).get();
+            FastUnlockCallback fastUnlockCallback = this.mCallbacks.get(i).get();
             if (fastUnlockCallback != null) {
                 fastUnlockCallback.onFinishFastUnlock();
             }
@@ -124,11 +121,11 @@ public class MiuiFastUnlockController {
             if (this.mWindowManager == null) {
                 IWindowManager asInterface = IWindowManager.Stub.asInterface(ServiceManager.getService("window"));
                 this.mWindowManager = asInterface;
-                Method declaredMethod = asInterface.getClass().getDeclaredMethod("setWallpaperAsTarget", new Class[]{Boolean.TYPE});
+                Method declaredMethod = asInterface.getClass().getDeclaredMethod("setWallpaperAsTarget", Boolean.TYPE);
                 this.mDeclaredMethod = declaredMethod;
                 declaredMethod.setAccessible(true);
             }
-            this.mDeclaredMethod.invoke(this.mWindowManager, new Object[]{Boolean.valueOf(z)});
+            this.mDeclaredMethod.invoke(this.mWindowManager, Boolean.valueOf(z));
         } catch (Exception unused) {
             Log.e("MiuiFastUnlockController", "no window manager to set wallpaper target");
         }

@@ -14,6 +14,7 @@ public final class MiuiKeyguardWallpaperControllerImpl_Factory implements Factor
         this.mBroadcastDispatcherProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiKeyguardWallpaperControllerImpl get() {
         return provideInstance(this.mContextProvider, this.mBroadcastDispatcherProvider);
     }

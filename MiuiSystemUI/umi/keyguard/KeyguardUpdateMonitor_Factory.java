@@ -32,6 +32,7 @@ public final class KeyguardUpdateMonitor_Factory implements Factory<KeyguardUpda
         this.lockPatternUtilsProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardUpdateMonitor get() {
         return provideInstance(this.contextProvider, this.mainLooperProvider, this.broadcastDispatcherProvider, this.dumpManagerProvider, this.ringerModeTrackerProvider, this.backgroundExecutorProvider, this.statusBarStateControllerProvider, this.lockPatternUtilsProvider);
     }

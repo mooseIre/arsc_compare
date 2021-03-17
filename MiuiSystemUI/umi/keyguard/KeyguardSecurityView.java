@@ -6,7 +6,7 @@ import com.android.internal.widget.LockPatternUtils;
 public interface KeyguardSecurityView {
     void applyHintAnimation(long j);
 
-    boolean disallowInterceptTouch(MotionEvent motionEvent) {
+    default boolean disallowInterceptTouch(MotionEvent motionEvent) {
         return false;
     }
 
