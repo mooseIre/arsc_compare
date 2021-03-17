@@ -14,8 +14,11 @@ final class RenderInfoKt$deviceColorMap$1 extends Lambda implements Function1<In
         super(1);
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        return invoke(((Number) obj).intValue());
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Pair<? extends Integer, ? extends Integer> invoke(Integer num) {
+        return invoke(num.intValue());
     }
 
     @NotNull

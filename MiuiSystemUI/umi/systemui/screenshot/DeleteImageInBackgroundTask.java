@@ -16,7 +16,7 @@ class DeleteImageInBackgroundTask extends AsyncTask<Uri, Void, Void> {
         if (uriArr.length != 1) {
             return null;
         }
-        this.mContext.getContentResolver().delete(uriArr[0], (String) null, (String[]) null);
+        this.mContext.getContentResolver().delete(uriArr[0], null, null);
         return null;
     }
 }

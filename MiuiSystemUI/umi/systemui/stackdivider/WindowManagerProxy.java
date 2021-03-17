@@ -23,11 +23,12 @@ import java.util.function.Predicate;
 
 public class WindowManagerProxy {
     private static final int[] HOME_AND_RECENTS = {2, 3};
-    /* access modifiers changed from: private */
     @GuardedBy({"mDockedRect"})
-    public final Rect mDockedRect = new Rect();
+    private final Rect mDockedRect = new Rect();
     private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private final Runnable mSetTouchableRegionRunnable = new Runnable() {
+        /* class com.android.systemui.stackdivider.WindowManagerProxy.AnonymousClass1 */
+
         public void run() {
             try {
                 synchronized (WindowManagerProxy.this.mDockedRect) {
@@ -40,11 +41,9 @@ public class WindowManagerProxy {
         }
     };
     private final SyncTransactionQueue mSyncTransactionQueue;
-    /* access modifiers changed from: private */
-    public final Rect mTmpRect1 = new Rect();
-    /* access modifiers changed from: private */
+    private final Rect mTmpRect1 = new Rect();
     @GuardedBy({"mDockedRect"})
-    public final Rect mTouchableRegion = new Rect();
+    private final Rect mTouchableRegion = new Rect();
 
     WindowManagerProxy(TransactionPool transactionPool, Handler handler) {
         this.mSyncTransactionQueue = new SyncTransactionQueue(transactionPool, handler);
@@ -53,6 +52,7 @@ public class WindowManagerProxy {
     /* access modifiers changed from: package-private */
     public void dismissOrMaximizeDocked(SplitScreenTaskOrganizer splitScreenTaskOrganizer, SplitDisplayLayout splitDisplayLayout, boolean z) {
         this.mExecutor.execute(new Runnable(splitScreenTaskOrganizer, splitDisplayLayout, z) {
+            /* class com.android.systemui.stackdivider.$$Lambda$WindowManagerProxy$rVfdVu_tfFj6B198IbDRYIqAmkk */
             public final /* synthetic */ SplitScreenTaskOrganizer f$1;
             public final /* synthetic */ SplitDisplayLayout f$2;
             public final /* synthetic */ boolean f$3;
@@ -71,6 +71,8 @@ public class WindowManagerProxy {
 
     public void setResizing(final boolean z) {
         this.mExecutor.execute(new Runnable(this) {
+            /* class com.android.systemui.stackdivider.WindowManagerProxy.AnonymousClass2 */
+
             public void run() {
                 try {
                     ActivityTaskManager.getService().setSplitScreenResizing(z);
@@ -142,8 +144,7 @@ public class WindowManagerProxy {
         }
         for (int size2 = arrayList.size() - 1; size2 >= 0; size2--) {
             if (!homeAndRecentsTasks) {
-                if (((ActivityManager.RunningTaskInfo) arrayList.get(size2)).topActivityType == 3) {
-                } else {
+                if (((ActivityManager.RunningTaskInfo) arrayList.get(size2)).topActivityType != 3) {
                     windowContainerTransaction.setWindowingMode(((ActivityManager.RunningTaskInfo) arrayList.get(size2)).token, 1);
                 }
             }
@@ -170,7 +171,7 @@ public class WindowManagerProxy {
             }
         }
         windowContainerTransaction.reorder(splitScreenTaskOrganizer.mSecondary.token, true);
-        boolean applyHomeTasksMinimized = applyHomeTasksMinimized(splitDisplayLayout, (WindowContainerToken) null, windowContainerTransaction);
+        boolean applyHomeTasksMinimized = applyHomeTasksMinimized(splitDisplayLayout, null, windowContainerTransaction);
         if (runningTaskInfo != null) {
             windowContainerTransaction.setBoundsChangeTransaction(runningTaskInfo.token, splitScreenTaskOrganizer.mHomeBounds);
         }
@@ -193,6 +194,9 @@ public class WindowManagerProxy {
         List childTasks2 = TaskOrganizer.getChildTasks(splitScreenTaskOrganizer.mSecondary.token, (int[]) null);
         List rootTasks = TaskOrganizer.getRootTasks(0, HOME_AND_RECENTS);
         rootTasks.removeIf(new Predicate() {
+            /* class com.android.systemui.stackdivider.$$Lambda$WindowManagerProxy$a7UL3QZ0yLpefq_HcLMSf4F6Xoo */
+
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return WindowManagerProxy.lambda$applyDismissSplit$1(SplitScreenTaskOrganizer.this, (ActivityManager.RunningTaskInfo) obj);
             }

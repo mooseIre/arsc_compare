@@ -31,6 +31,7 @@ public final class NotificationStat_Factory implements Factory<NotificationStat>
         this.panelStatProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public NotificationStat get() {
         return provideInstance(this.contextProvider, this.entryManagerProvider, this.groupManagerProvider, this.headsUpManagerProvider, this.barStateControllerProvider, this.keyguardStateControllerProvider, this.eventTrackerProvider, this.panelStatProvider);
     }

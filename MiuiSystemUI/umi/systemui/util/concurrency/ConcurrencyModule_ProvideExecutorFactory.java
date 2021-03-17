@@ -13,6 +13,7 @@ public final class ConcurrencyModule_ProvideExecutorFactory implements Factory<E
         this.looperProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Executor get() {
         return provideInstance(this.looperProvider);
     }

@@ -6,9 +6,11 @@ import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificatio
 import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationChildrenContainer.kt */
-final class MiuiNotificationChildrenContainer$startBackgroundAnimation$4 implements ValueAnimator.AnimatorUpdateListener {
+public final class MiuiNotificationChildrenContainer$startBackgroundAnimation$4 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ float $begin;
     final /* synthetic */ float $end;
     final /* synthetic */ NotificationBackgroundView $summaryBackground;
@@ -34,12 +36,10 @@ final class MiuiNotificationChildrenContainer$startBackgroundAnimation$4 impleme
             float f2 = ((float) 1) - floatValue;
             this.$summaryBackground.setTranslationY(this.$yTranslation * f2);
             this.$summaryBackground.setAlpha(1.0f);
-            int coerceAtMost = RangesKt___RangesKt.coerceAtMost((this.this$0.getMaxAllowedVisibleChildren() - 1) + 1, this.this$0.mAttachedChildren.size() - 1);
-            while (coerceAtMost >= 1) {
-                ExpandableNotificationRow expandableNotificationRow = this.this$0.mAttachedChildren.get(coerceAtMost);
+            for (int i = RangesKt___RangesKt.coerceAtMost((this.this$0.getMaxAllowedVisibleChildren() - 1) + 1, this.this$0.mAttachedChildren.size() - 1); i >= 1; i--) {
+                ExpandableNotificationRow expandableNotificationRow = this.this$0.mAttachedChildren.get(i);
                 if (expandableNotificationRow != null) {
                     ((MiuiExpandableNotificationRow) expandableNotificationRow).getAnimatedBackground().setAlpha(f2);
-                    coerceAtMost--;
                 } else {
                     throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow");
                 }

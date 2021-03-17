@@ -42,7 +42,8 @@ public interface IOverviewProxy extends IInterface {
             return (IOverviewProxy) queryLocalInterface;
         }
 
-        private static class Proxy implements IOverviewProxy {
+        /* access modifiers changed from: private */
+        public static class Proxy implements IOverviewProxy {
             public static IOverviewProxy sDefaultImpl;
             private IBinder mRemote;
 
@@ -54,6 +55,7 @@ public interface IOverviewProxy extends IInterface {
                 return this.mRemote;
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onActiveNavBarRegionChanges(Region region) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -64,7 +66,7 @@ public interface IOverviewProxy extends IInterface {
                     } else {
                         obtain.writeInt(0);
                     }
-                    if (this.mRemote.transact(12, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(12, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onActiveNavBarRegionChanges(region);
@@ -74,6 +76,7 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onInitialize(Bundle bundle) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -84,7 +87,7 @@ public interface IOverviewProxy extends IInterface {
                     } else {
                         obtain.writeInt(0);
                     }
-                    if (this.mRemote.transact(13, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(13, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onInitialize(bundle);
@@ -94,11 +97,12 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onOverviewToggle() throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
-                    if (this.mRemote.transact(7, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(7, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onOverviewToggle();
@@ -108,12 +112,13 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onOverviewShown(boolean z) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
                     obtain.writeInt(z ? 1 : 0);
-                    if (this.mRemote.transact(8, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(8, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onOverviewShown(z);
@@ -123,6 +128,7 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onOverviewHidden(boolean z, boolean z2) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -133,7 +139,7 @@ public interface IOverviewProxy extends IInterface {
                         i = 1;
                     }
                     obtain.writeInt(i);
-                    if (this.mRemote.transact(9, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(9, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onOverviewHidden(z, z2);
@@ -143,13 +149,14 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onTip(int i, int i2) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
                     obtain.writeInt(i);
                     obtain.writeInt(i2);
-                    if (this.mRemote.transact(11, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(11, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onTip(i, i2);
@@ -159,12 +166,13 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onAssistantAvailable(boolean z) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
                     obtain.writeInt(z ? 1 : 0);
-                    if (this.mRemote.transact(14, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(14, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onAssistantAvailable(z);
@@ -174,6 +182,7 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onBackAction(boolean z, int i, int i2, boolean z2, boolean z3) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -187,7 +196,7 @@ public interface IOverviewProxy extends IInterface {
                         i3 = 1;
                     }
                     obtain.writeInt(i3);
-                    if (this.mRemote.transact(16, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(16, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onBackAction(z, i, i2, z2, z3);
@@ -197,12 +206,13 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onSystemUiStateChanged(int i) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.systemui.shared.recents.IOverviewProxy");
                     obtain.writeInt(i);
-                    if (this.mRemote.transact(17, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(17, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onSystemUiStateChanged(i);
@@ -212,6 +222,7 @@ public interface IOverviewProxy extends IInterface {
                 }
             }
 
+            @Override // com.android.systemui.shared.recents.IOverviewProxy
             public void onSplitScreenSecondaryBoundsChanged(Rect rect, Rect rect2) throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
@@ -228,7 +239,7 @@ public interface IOverviewProxy extends IInterface {
                     } else {
                         obtain.writeInt(0);
                     }
-                    if (this.mRemote.transact(18, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(18, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onSplitScreenSecondaryBoundsChanged(rect, rect2);

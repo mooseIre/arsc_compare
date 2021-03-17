@@ -73,6 +73,7 @@ public final class BubbleModule_NewBubbleControllerFactory implements Factory<Bu
         this.launcherAppsProvider = provider21;
     }
 
+    @Override // javax.inject.Provider
     public BubbleController get() {
         return provideInstance(this.contextProvider, this.notificationShadeWindowControllerProvider, this.statusBarStateControllerProvider, this.shadeControllerProvider, this.dataProvider, this.configurationControllerProvider, this.interruptionStateProvider, this.zenModeControllerProvider, this.notifUserManagerProvider, this.groupManagerProvider, this.entryManagerProvider, this.notifPipelineProvider, this.featureFlagsProvider, this.dumpManagerProvider, this.floatingContentCoordinatorProvider, this.bubbleDataRepositoryProvider, this.sysUiStateProvider, this.notifManagerProvider, this.statusBarServiceProvider, this.windowManagerProvider, this.launcherAppsProvider);
     }

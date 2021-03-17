@@ -26,6 +26,8 @@ public class DessertCase extends Activity {
     public void onResume() {
         super.onResume();
         this.mView.postDelayed(new Runnable() {
+            /* class com.android.systemui.DessertCase.AnonymousClass1 */
+
             public void run() {
                 DessertCase.this.mView.start();
             }

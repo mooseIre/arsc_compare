@@ -8,9 +8,9 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 public abstract class SystemUI implements Dumpable {
-    /* access modifiers changed from: protected */
-    public final Context mContext;
+    protected final Context mContext;
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
     }
 

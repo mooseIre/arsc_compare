@@ -11,6 +11,7 @@ public final class ConcurrencyModule_ProvideBackgroundRepeatableExecutorFactory 
         this.execProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public RepeatableExecutor get() {
         return provideInstance(this.execProvider);
     }

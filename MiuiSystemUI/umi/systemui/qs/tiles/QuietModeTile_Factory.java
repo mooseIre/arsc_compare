@@ -14,6 +14,7 @@ public final class QuietModeTile_Factory implements Factory<QuietModeTile> {
         this.zenModeControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public QuietModeTile get() {
         return provideInstance(this.hostProvider, this.zenModeControllerProvider);
     }

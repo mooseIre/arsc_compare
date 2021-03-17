@@ -17,6 +17,7 @@ public final class AirplaneModeTile_Factory implements Factory<AirplaneModeTile>
         this.broadcastDispatcherProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public AirplaneModeTile get() {
         return provideInstance(this.hostProvider, this.activityStarterProvider, this.broadcastDispatcherProvider);
     }

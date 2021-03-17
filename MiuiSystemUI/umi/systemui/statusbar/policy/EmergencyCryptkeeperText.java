@@ -17,16 +17,22 @@ import java.util.List;
 
 public class EmergencyCryptkeeperText extends TextView {
     private final KeyguardUpdateMonitorCallback mCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.policy.EmergencyCryptkeeperText.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onPhoneStateChanged(int i) {
             EmergencyCryptkeeperText.this.update();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onRefreshCarrierInfo() {
             EmergencyCryptkeeperText.this.update();
         }
     };
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.EmergencyCryptkeeperText.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 EmergencyCryptkeeperText.this.update();
@@ -65,9 +71,9 @@ public class EmergencyCryptkeeperText extends TextView {
 
     public void update() {
         int i = 0;
-        boolean isNetworkSupported = ConnectivityManager.from(this.mContext).isNetworkSupported(0);
+        boolean isNetworkSupported = ConnectivityManager.from(((TextView) this).mContext).isNetworkSupported(0);
         boolean z = true;
-        boolean z2 = Settings.Global.getInt(this.mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
+        boolean z2 = Settings.Global.getInt(((TextView) this).mContext.getContentResolver(), "airplane_mode_on", 0) == 1;
         if (!isNetworkSupported || z2) {
             setText((CharSequence) null);
             setVisibility(8);
@@ -89,7 +95,7 @@ public class EmergencyCryptkeeperText extends TextView {
                 charSequence = filteredSubscriptionInfo.get(0).getCarrierName();
             } else {
                 charSequence = getContext().getText(17040138);
-                Intent registerReceiver = getContext().registerReceiver((BroadcastReceiver) null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));
+                Intent registerReceiver = getContext().registerReceiver(null, new IntentFilter("android.telephony.action.SERVICE_PROVIDERS_UPDATED"));
                 if (registerReceiver != null) {
                     charSequence = registerReceiver.getStringExtra("android.telephony.extra.PLMN");
                 }

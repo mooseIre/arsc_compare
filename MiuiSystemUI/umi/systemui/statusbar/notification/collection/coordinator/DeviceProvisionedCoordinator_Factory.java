@@ -14,6 +14,7 @@ public final class DeviceProvisionedCoordinator_Factory implements Factory<Devic
         this.packageManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DeviceProvisionedCoordinator get() {
         return provideInstance(this.deviceProvisionedControllerProvider, this.packageManagerProvider);
     }

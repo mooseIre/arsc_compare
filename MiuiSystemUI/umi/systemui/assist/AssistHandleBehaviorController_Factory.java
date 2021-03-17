@@ -35,6 +35,7 @@ public final class AssistHandleBehaviorController_Factory implements Factory<Ass
         this.dumpManagerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public AssistHandleBehaviorController get() {
         return provideInstance(this.contextProvider, this.assistUtilsProvider, this.handlerProvider, this.assistHandleViewControllerProvider, this.deviceConfigHelperProvider, this.behaviorMapProvider, this.navigationModeControllerProvider, this.a11yManagerProvider, this.dumpManagerProvider);
     }

@@ -26,6 +26,9 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
     protected boolean mIsExtremePowerSave;
     protected boolean mIsPowerSave;
     private KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.phone.BatteryIndicator.AnonymousClass2 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
             super.onRefreshBatteryInfo(miuiBatteryStatus);
             BatteryIndicator.this.mPowerLevel = miuiBatteryStatus.getLevel();
@@ -51,6 +54,7 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
         this.mDisplayWidth = getMeasuredWidth();
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         if (this.mIsPowerSave != z) {
             this.mIsPowerSave = z;
@@ -59,7 +63,8 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
     }
 
     /* access modifiers changed from: private */
-    public void update() {
+    /* access modifiers changed from: public */
+    private void update() {
         updateVisiblity();
         if (getVisibility() == 0) {
             updateDrawable();
@@ -98,11 +103,13 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
         setVisibility(0);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onBatteryStyleChanged(int i) {
         this.mShowBatteryIndicator = i == 2;
         update();
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onExtremePowerSaveChanged(boolean z) {
         if (this.mIsExtremePowerSave != z) {
             this.mIsExtremePowerSave = z;
@@ -110,6 +117,7 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback, com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;
@@ -151,6 +159,8 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
 
     private void postUpdate() {
         post(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.BatteryIndicator.AnonymousClass1 */
+
             public void run() {
                 BatteryIndicator.this.update();
             }

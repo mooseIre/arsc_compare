@@ -14,25 +14,25 @@ import com.android.systemui.statusbar.phone.NotificationGroupManager;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import kotlin.collections.ArraysKt___ArraysKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.collections.MapsKt__MapsKt;
+import kotlin.collections.MapsKt___MapsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt__SequencesKt;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: ConversationNotifications.kt */
 public final class ConversationNotificationManager {
-    /* access modifiers changed from: private */
-    public final Context context;
-    /* access modifiers changed from: private */
-    public final Handler mainHandler;
-    /* access modifiers changed from: private */
-    public boolean notifPanelCollapsed = true;
-    /* access modifiers changed from: private */
-    public final NotificationEntryManager notificationEntryManager;
-    /* access modifiers changed from: private */
-    public final NotificationGroupManager notificationGroupManager;
-    /* access modifiers changed from: private */
-    public final ConcurrentHashMap<String, ConversationState> states = new ConcurrentHashMap<>();
+    private final Context context;
+    private final Handler mainHandler;
+    private boolean notifPanelCollapsed = true;
+    private final NotificationEntryManager notificationEntryManager;
+    private final NotificationGroupManager notificationGroupManager;
+    private final ConcurrentHashMap<String, ConversationState> states = new ConcurrentHashMap<>();
 
     public ConversationNotificationManager(@NotNull NotificationEntryManager notificationEntryManager2, @NotNull NotificationGroupManager notificationGroupManager2, @NotNull Context context2, @NotNull Handler handler) {
         Intrinsics.checkParameterIsNotNull(notificationEntryManager2, "notificationEntryManager");
@@ -44,17 +44,20 @@ public final class ConversationNotificationManager {
         this.context = context2;
         this.mainHandler = handler;
         this.notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener(this) {
+            /* class com.android.systemui.statusbar.notification.ConversationNotificationManager.AnonymousClass1 */
             final /* synthetic */ ConversationNotificationManager this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onNotificationRankingUpdated(@NotNull NotificationListenerService.RankingMap rankingMap) {
                 Sequence<ConversationLayout> sequence;
                 NotificationContentView[] layouts;
-                Sequence asSequence;
-                Sequence flatMap;
+                Sequence sequence2;
+                Sequence sequence3;
                 Intrinsics.checkParameterIsNotNull(rankingMap, "rankingMap");
                 ConversationNotificationManager$1$onNotificationRankingUpdated$1 conversationNotificationManager$1$onNotificationRankingUpdated$1 = ConversationNotificationManager$1$onNotificationRankingUpdated$1.INSTANCE;
                 NotificationListenerService.Ranking ranking = new NotificationListenerService.Ranking();
@@ -68,7 +71,7 @@ public final class ConversationNotificationManager {
                         Intrinsics.checkExpressionValueIsNotNull(channel, "ranking.channel");
                         boolean isImportantConversation = channel.isImportantConversation();
                         ExpandableNotificationRow row = notificationEntry.getRow();
-                        if (row == null || (layouts = row.getLayouts()) == null || (asSequence = ArraysKt___ArraysKt.asSequence(layouts)) == null || (flatMap = SequencesKt___SequencesKt.flatMap(asSequence, ConversationNotificationManager$1$onNotificationRankingUpdated$layouts$1.INSTANCE)) == null || (sequence = SequencesKt___SequencesKt.mapNotNull(flatMap, ConversationNotificationManager$1$onNotificationRankingUpdated$layouts$2.INSTANCE)) == null) {
+                        if (row == null || (layouts = row.getLayouts()) == null || (sequence2 = ArraysKt___ArraysKt.asSequence(layouts)) == null || (sequence3 = SequencesKt___SequencesKt.flatMap(sequence2, ConversationNotificationManager$1$onNotificationRankingUpdated$layouts$1.INSTANCE)) == null || (sequence = SequencesKt___SequencesKt.mapNotNull(sequence3, ConversationNotificationManager$1$onNotificationRankingUpdated$layouts$2.INSTANCE)) == null) {
                             sequence = SequencesKt__SequencesKt.emptySequence();
                         }
                         boolean z = false;
@@ -89,6 +92,7 @@ public final class ConversationNotificationManager {
                 }
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onEntryInflated(@NotNull NotificationEntry notificationEntry) {
                 Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
                 NotificationListenerService.Ranking ranking = notificationEntry.getRanking();
@@ -108,11 +112,13 @@ public final class ConversationNotificationManager {
                 }
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onEntryReinflated(@NotNull NotificationEntry notificationEntry) {
                 Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
                 onEntryInflated(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onEntryRemoved(@NotNull NotificationEntry notificationEntry, @Nullable NotificationVisibility notificationVisibility, boolean z, int i) {
                 Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
                 this.this$0.removeTrackedEntry(notificationEntry);
@@ -134,10 +140,10 @@ public final class ConversationNotificationManager {
     public final void onNotificationPanelExpandStateChanged(boolean z) {
         this.notifPanelCollapsed = z;
         if (!z) {
-            Map<K, V> map = MapsKt__MapsKt.toMap(SequencesKt___SequencesKt.mapNotNull(MapsKt___MapsKt.asSequence(this.states), new ConversationNotificationManager$onNotificationPanelExpandStateChanged$expanded$1(this)));
+            Map map = MapsKt__MapsKt.toMap(SequencesKt___SequencesKt.mapNotNull(MapsKt___MapsKt.asSequence(this.states), new ConversationNotificationManager$onNotificationPanelExpandStateChanged$expanded$1(this)));
             this.states.replaceAll(new ConversationNotificationManager$onNotificationPanelExpandStateChanged$1(map));
-            for (R resetBadgeUi : SequencesKt___SequencesKt.mapNotNull(CollectionsKt___CollectionsKt.asSequence(map.values()), ConversationNotificationManager$onNotificationPanelExpandStateChanged$2.INSTANCE)) {
-                resetBadgeUi(resetBadgeUi);
+            for (ExpandableNotificationRow expandableNotificationRow : SequencesKt___SequencesKt.mapNotNull(CollectionsKt___CollectionsKt.asSequence(map.values()), ConversationNotificationManager$onNotificationPanelExpandStateChanged$2.INSTANCE)) {
+                resetBadgeUi(expandableNotificationRow);
             }
         }
     }
@@ -148,7 +154,8 @@ public final class ConversationNotificationManager {
     }
 
     /* access modifiers changed from: private */
-    public final void removeTrackedEntry(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private final void removeTrackedEntry(NotificationEntry notificationEntry) {
         this.states.remove(notificationEntry.getKey());
     }
 
@@ -159,13 +166,14 @@ public final class ConversationNotificationManager {
         if (layouts == null || (sequence = ArraysKt___ArraysKt.asSequence(layouts)) == null) {
             sequence = SequencesKt__SequencesKt.emptySequence();
         }
-        for (ConversationLayout unreadCount : SequencesKt___SequencesKt.mapNotNull(SequencesKt___SequencesKt.flatMap(sequence, ConversationNotificationManager$resetBadgeUi$1.INSTANCE), ConversationNotificationManager$resetBadgeUi$2.INSTANCE)) {
-            unreadCount.setUnreadCount(0);
+        for (ConversationLayout conversationLayout : SequencesKt___SequencesKt.mapNotNull(SequencesKt___SequencesKt.flatMap(sequence, ConversationNotificationManager$resetBadgeUi$1.INSTANCE), ConversationNotificationManager$resetBadgeUi$2.INSTANCE)) {
+            conversationLayout.setUnreadCount(0);
         }
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: ConversationNotifications.kt */
-    private static final class ConversationState {
+    public static final class ConversationState {
         @NotNull
         private final Notification notification;
         private final int unreadCount;
@@ -194,7 +202,7 @@ public final class ConversationNotificationManager {
                 return false;
             }
             ConversationState conversationState = (ConversationState) obj;
-            return this.unreadCount == conversationState.unreadCount && Intrinsics.areEqual((Object) this.notification, (Object) conversationState.notification);
+            return this.unreadCount == conversationState.unreadCount && Intrinsics.areEqual(this.notification, conversationState.notification);
         }
 
         public int hashCode() {

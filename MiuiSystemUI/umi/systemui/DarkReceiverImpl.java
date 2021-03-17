@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.systemui.plugins.DarkIconDispatcher;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ public final class DarkReceiverImpl extends View implements DarkIconDispatcher.D
     private final DualToneHandler dualToneHandler;
 
     public DarkReceiverImpl(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 0, 12, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 0, 12, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -33,6 +34,7 @@ public final class DarkReceiverImpl extends View implements DarkIconDispatcher.D
         onDarkChanged(rect, 1.0f, darkIconDispatcher.getDarkModeIconColorSingleTone(), darkIconDispatcher.getLightModeIconColorSingleTone(), darkIconDispatcher.getDarkModeIconColorSingleTone(), true);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(@Nullable Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (!DarkIconDispatcher.isInArea(rect, this)) {
             f = 0.0f;

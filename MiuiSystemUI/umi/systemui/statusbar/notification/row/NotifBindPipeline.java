@@ -18,15 +18,12 @@ import java.util.Map;
 import java.util.Set;
 
 public final class NotifBindPipeline {
-    /* access modifiers changed from: private */
-    public final Map<NotificationEntry, BindEntry> mBindEntries = new ArrayMap();
+    private final Map<NotificationEntry, BindEntry> mBindEntries = new ArrayMap();
     private final NotifCollectionListener mCollectionListener;
     private final NotifBindPipelineLogger mLogger;
-    /* access modifiers changed from: private */
-    public final Handler mMainHandler;
+    private final Handler mMainHandler;
     private final List<BindCallback> mScratchCallbacksList = new ArrayList();
-    /* access modifiers changed from: private */
-    public BindStage mStage;
+    private BindStage mStage;
 
     public interface BindCallback {
         void onBindFinished(NotificationEntry notificationEntry);
@@ -34,11 +31,15 @@ public final class NotifBindPipeline {
 
     NotifBindPipeline(CommonNotifCollection commonNotifCollection, NotifBindPipelineLogger notifBindPipelineLogger, Looper looper) {
         AnonymousClass1 r0 = new NotifCollectionListener() {
+            /* class com.android.systemui.statusbar.notification.row.NotifBindPipeline.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryInit(NotificationEntry notificationEntry) {
                 NotifBindPipeline.this.mBindEntries.put(notificationEntry, new BindEntry());
                 NotifBindPipeline.this.mStage.createStageParams(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryCleanUp(NotificationEntry notificationEntry) {
                 ExpandableNotificationRow expandableNotificationRow = ((BindEntry) NotifBindPipeline.this.mBindEntries.remove(notificationEntry)).row;
                 if (expandableNotificationRow != null) {
@@ -58,6 +59,9 @@ public final class NotifBindPipeline {
         this.mLogger.logStageSet(bindStage.getClass().getName());
         this.mStage = bindStage;
         bindStage.setBindRequestListener(new BindRequester.BindRequestListener() {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotifBindPipeline$Ub0DE4cDhgUUqolBUMUBBCvUjYs */
+
+            @Override // com.android.systemui.statusbar.notification.row.BindRequester.BindRequestListener
             public final void onBindRequest(NotificationEntry notificationEntry, CancellationSignal cancellationSignal, NotifBindPipeline.BindCallback bindCallback) {
                 NotifBindPipeline.this.onBindRequested(notificationEntry, cancellationSignal, bindCallback);
             }
@@ -84,6 +88,7 @@ public final class NotifBindPipeline {
                 Set<BindCallback> set = bindEntry.callbacks;
                 set.add(bindCallback);
                 cancellationSignal.setOnCancelListener(new CancellationSignal.OnCancelListener(set, bindCallback) {
+                    /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotifBindPipeline$AMh7TPDBgF4c0_yw5tceqMMco8 */
                     public final /* synthetic */ Set f$0;
                     public final /* synthetic */ NotifBindPipeline.BindCallback f$1;
 
@@ -92,6 +97,7 @@ public final class NotifBindPipeline {
                         this.f$1 = r2;
                     }
 
+                    @Override // androidx.core.os.CancellationSignal.OnCancelListener
                     public final void onCancel() {
                         this.f$0.remove(this.f$1);
                     }
@@ -115,10 +121,14 @@ public final class NotifBindPipeline {
     }
 
     /* access modifiers changed from: private */
-    public void startPipeline(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void startPipeline(NotificationEntry notificationEntry) {
         this.mLogger.logStartPipeline(notificationEntry.getKey());
         if (this.mStage != null) {
             this.mStage.executeStage(notificationEntry, this.mBindEntries.get(notificationEntry).row, new BindStage.StageCallback() {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotifBindPipeline$3PgyvwQAf2ulPzCouWU3DaPqlCo */
+
+                @Override // com.android.systemui.statusbar.notification.row.BindStage.StageCallback
                 public final void onStageFinished(NotificationEntry notificationEntry) {
                     NotifBindPipeline.this.lambda$startPipeline$1$NotifBindPipeline(notificationEntry);
                 }
@@ -147,7 +157,8 @@ public final class NotifBindPipeline {
         return this.mBindEntries.get(notificationEntry);
     }
 
-    private class BindEntry {
+    /* access modifiers changed from: private */
+    public class BindEntry {
         public final Set<BindCallback> callbacks;
         public boolean invalidated;
         public ExpandableNotificationRow row;

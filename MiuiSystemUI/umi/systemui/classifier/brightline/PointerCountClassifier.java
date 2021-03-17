@@ -1,15 +1,16 @@
 package com.android.systemui.classifier.brightline;
 
 import android.view.MotionEvent;
-import java.util.Locale;
 
-class PointerCountClassifier extends FalsingClassifier {
+/* access modifiers changed from: package-private */
+public class PointerCountClassifier extends FalsingClassifier {
     private int mMaxPointerCount;
 
     PointerCountClassifier(FalsingDataProvider falsingDataProvider) {
         super(falsingDataProvider);
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public void onTouchEvent(MotionEvent motionEvent) {
         int i = this.mMaxPointerCount;
         if (motionEvent.getActionMasked() == 0) {
@@ -22,22 +23,15 @@ class PointerCountClassifier extends FalsingClassifier {
         }
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public boolean isFalseTouch() {
         int interactionType = getInteractionType();
-        if (interactionType == 0 || interactionType == 2) {
-            if (this.mMaxPointerCount > 2) {
-                return true;
-            }
-            return false;
-        } else if (this.mMaxPointerCount > 1) {
-            return true;
-        } else {
-            return false;
-        }
+        return (interactionType == 0 || interactionType == 2) ? this.mMaxPointerCount > 2 : this.mMaxPointerCount > 1;
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public String getReason() {
-        return String.format((Locale) null, "{pointersObserved=%d, threshold=%d}", new Object[]{Integer.valueOf(this.mMaxPointerCount), 1});
+        return String.format(null, "{pointersObserved=%d, threshold=%d}", Integer.valueOf(this.mMaxPointerCount), 1);
     }
 }

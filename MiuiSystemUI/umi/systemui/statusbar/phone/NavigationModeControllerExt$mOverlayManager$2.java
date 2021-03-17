@@ -13,6 +13,7 @@ final class NavigationModeControllerExt$mOverlayManager$2 extends Lambda impleme
         super(0);
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final IOverlayManager invoke() {
         return IOverlayManager.Stub.asInterface(ServiceManager.getService("overlay"));
     }

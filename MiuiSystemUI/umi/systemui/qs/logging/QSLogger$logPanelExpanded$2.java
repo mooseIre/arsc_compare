@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: QSLogger.kt */
-final class QSLogger$logPanelExpanded$2 extends Lambda implements Function1<LogMessage, String> {
+public final class QSLogger$logPanelExpanded$2 extends Lambda implements Function1<LogMessage, String> {
     public static final QSLogger$logPanelExpanded$2 INSTANCE = new QSLogger$logPanelExpanded$2();
 
     QSLogger$logPanelExpanded$2() {

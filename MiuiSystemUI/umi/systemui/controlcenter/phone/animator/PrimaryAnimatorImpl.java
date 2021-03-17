@@ -5,6 +5,7 @@ import com.android.systemui.controlcenter.phone.ControlCenterPanelViewController
 import com.android.systemui.controlcenter.utils.FolmeAnimState;
 import com.miui.systemui.util.MiuiAnimationUtils;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: PrimaryAnimatorImpl.kt */
@@ -19,10 +20,12 @@ public final class PrimaryAnimatorImpl extends ControlCenterPanelAnimator {
         this.controller = controlCenterPanelViewController;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void animateShowPanel(boolean z) {
         animateShowPanelWithoutScale(z);
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void updateOverExpandHeight(float f) {
         super.updateOverExpandHeight(f);
         getPanelView().getCcContainer().setClipChildren(true);

@@ -24,6 +24,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         ((DemoModeController) Dependency.get(DemoModeController.class)).addCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy
     public void initMiuiSlot() {
         this.mIconController.setIcon("demo_mobile", C0013R$drawable.stat_sys_signal_5, this.mContext.getString(C0021R$string.accessibility_data_signal_full));
         this.mIconController.setIcon("demo_wifi", C0013R$drawable.stat_sys_wifi_signal_4, this.mContext.getString(C0021R$string.accessibility_wifi_signal_full));
@@ -36,6 +37,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         ((SlaveWifiSignalController) Dependency.get(SlaveWifiSignalController.class)).start();
     }
 
+    @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy, com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setNoSims(boolean z, boolean z2) {
         super.setNoSims(z, z2);
         this.mLastShowNoSim = z;
@@ -43,11 +45,13 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         this.mIconController.setIconVisibility(this.mSlotNoSim, z && !this.mInDemoMode && !this.mIsAirplaneMode);
     }
 
+    @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy, com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setIsAirplaneMode(NetworkController.IconState iconState) {
         super.setIsAirplaneMode(iconState);
         setNoSims(this.mLastShowNoSim, this.mLastSimDetected);
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setWifiIndicators(boolean z, NetworkController.IconState iconState, NetworkController.IconState iconState2, boolean z2, boolean z3, int i, String str, boolean z4, String str2, boolean z5) {
         boolean z6 = iconState.visible && !this.mBlockWifi;
         boolean z7 = z2 && this.mActivityEnabled && z6;
@@ -85,6 +89,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy
     public void updateWifiIconWithState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
         this.mIconController.setSignalIcon(this.mSlotWifi, wifiIconState);
         if (!wifiIconState.visible || wifiIconState.resId <= 0) {
@@ -112,6 +117,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
         StatusBarSignalPolicy.MobileIconState state = getState(i4);
         if (state != null) {
@@ -146,6 +152,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
         }
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mInDemoMode && str.equals("enter")) {
             this.mInDemoMode = true;

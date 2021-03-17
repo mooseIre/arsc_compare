@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$SmHdjDaQkSsbiXXCyerAyvUNnY implement
     private /* synthetic */ $$Lambda$SmHdjDaQkSsbiXXCyerAyvUNnY() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((Divider) obj).onRecentsDrawn();
     }

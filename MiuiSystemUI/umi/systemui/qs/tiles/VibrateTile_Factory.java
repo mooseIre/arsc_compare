@@ -14,6 +14,7 @@ public final class VibrateTile_Factory implements Factory<VibrateTile> {
         this.zenModeControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public VibrateTile get() {
         return provideInstance(this.hostProvider, this.zenModeControllerProvider);
     }

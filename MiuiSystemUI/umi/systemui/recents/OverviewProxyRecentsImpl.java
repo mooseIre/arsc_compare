@@ -28,10 +28,11 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
     private TrustManager mTrustManager;
 
     public OverviewProxyRecentsImpl(Optional<Lazy<StatusBar>> optional, Optional<Divider> optional2) {
-        this.mStatusBarLazy = optional.orElse((Object) null);
+        this.mStatusBarLazy = optional.orElse(null);
         this.mDividerOptional = optional2;
     }
 
+    @Override // com.android.systemui.recents.RecentsImplementation
     public void onStart(Context context) {
         this.mContext = context;
         this.mHandler = new Handler();
@@ -39,6 +40,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         this.mOverviewProxyService = (OverviewProxyService) Dependency.get(OverviewProxyService.class);
     }
 
+    @Override // com.android.systemui.recents.RecentsImplementation
     public void showRecentApps(boolean z) {
         IOverviewProxy proxy = this.mOverviewProxyService.getProxy();
         if (proxy != null) {
@@ -50,6 +52,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         }
     }
 
+    @Override // com.android.systemui.recents.RecentsImplementation
     public void hideRecentApps(boolean z, boolean z2) {
         IOverviewProxy proxy = this.mOverviewProxyService.getProxy();
         if (proxy != null) {
@@ -61,9 +64,12 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         }
     }
 
+    @Override // com.android.systemui.recents.RecentsImplementation
     public void toggleRecentApps() {
         if (this.mOverviewProxyService.getProxy() != null) {
             $$Lambda$OverviewProxyRecentsImpl$ZzsBj6p_GVl3rLvpPgWKT0NW9E r0 = new Runnable() {
+                /* class com.android.systemui.recents.$$Lambda$OverviewProxyRecentsImpl$ZzsBj6p_GVl3rLvpPgWKT0NW9E */
+
                 public final void run() {
                     OverviewProxyRecentsImpl.this.lambda$toggleRecentApps$0$OverviewProxyRecentsImpl();
                 }
@@ -73,6 +79,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
                 r0.run();
             } else {
                 this.mStatusBarLazy.get().executeRunnableDismissingKeyguard(new Runnable(r0) {
+                    /* class com.android.systemui.recents.$$Lambda$OverviewProxyRecentsImpl$PUSBynP3ZsSZrPqXO1jJqSKnayU */
                     public final /* synthetic */ Runnable f$1;
 
                     {
@@ -82,7 +89,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
                     public final void run() {
                         OverviewProxyRecentsImpl.this.lambda$toggleRecentApps$1$OverviewProxyRecentsImpl(this.f$1);
                     }
-                }, (Runnable) null, true, false, true);
+                }, null, true, false, true);
             }
         }
     }
@@ -107,6 +114,7 @@ public class OverviewProxyRecentsImpl implements RecentsImplementation {
         this.mHandler.post(runnable);
     }
 
+    @Override // com.android.systemui.recents.RecentsImplementation
     public boolean splitPrimaryTask(int i, Rect rect, int i2) {
         Point point = new Point();
         if (rect == null) {

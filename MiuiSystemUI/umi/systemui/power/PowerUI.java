@@ -42,48 +42,37 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
     int mBatteryLevel = 100;
     @VisibleForTesting
     int mBatteryStatus = 1;
-    /* access modifiers changed from: private */
-    public final BroadcastDispatcher mBroadcastDispatcher;
+    private final BroadcastDispatcher mBroadcastDispatcher;
     private final CommandQueue mCommandQueue;
     @VisibleForTesting
     BatteryStateSnapshot mCurrentBatteryStateSnapshot;
     private boolean mEnableSkinTemperatureWarning;
     private boolean mEnableUsbTemperatureAlarm;
     private EnhancedEstimates mEnhancedEstimates;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
-    /* access modifiers changed from: private */
-    public int mInvalidCharger = 0;
+    private final Handler mHandler = new Handler();
+    private int mInvalidCharger = 0;
     @VisibleForTesting
     BatteryStateSnapshot mLastBatteryStateSnapshot;
     private final Configuration mLastConfiguration = new Configuration();
-    /* access modifiers changed from: private */
-    public Future mLastShowWarningTask;
-    /* access modifiers changed from: private */
-    public int mLowBatteryAlertCloseLevel;
-    /* access modifiers changed from: private */
-    public final int[] mLowBatteryReminderLevels = new int[2];
+    private Future mLastShowWarningTask;
+    private int mLowBatteryAlertCloseLevel;
+    private final int[] mLowBatteryReminderLevels = new int[2];
     @VisibleForTesting
     boolean mLowWarningShownThisChargeCycle;
     private InattentiveSleepWarningView mOverlayView;
-    /* access modifiers changed from: private */
-    public int mPlugType = 0;
-    /* access modifiers changed from: private */
-    public PowerManager mPowerManager;
+    private int mPlugType = 0;
+    private PowerManager mPowerManager;
     @VisibleForTesting
     final Receiver mReceiver = new Receiver();
-    /* access modifiers changed from: private */
-    public long mScreenOffTime = -1;
+    private long mScreenOffTime = -1;
     @VisibleForTesting
     boolean mSevereWarningShownThisChargeCycle;
     private IThermalEventListener mSkinThermalEventListener;
-    /* access modifiers changed from: private */
-    public final Lazy<StatusBar> mStatusBarLazy;
+    private final Lazy<StatusBar> mStatusBarLazy;
     @VisibleForTesting
     IThermalService mThermalService;
     private IThermalEventListener mUsbThermalEventListener;
-    /* access modifiers changed from: private */
-    public WarningsUI mWarnings;
+    private WarningsUI mWarnings;
 
     public interface WarningsUI {
         void dismissHighTemperatureWarning();
@@ -122,6 +111,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mStatusBarLazy = lazy;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         PowerManager powerManager = (PowerManager) this.mContext.getSystemService("power");
         this.mPowerManager = powerManager;
@@ -130,6 +120,8 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mEnhancedEstimates = (EnhancedEstimates) Dependency.get(EnhancedEstimates.class);
         this.mLastConfiguration.setTo(this.mContext.getResources().getConfiguration());
         AnonymousClass1 r0 = new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.power.PowerUI.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 PowerUI.this.updateBatteryWarningLevels();
             }
@@ -140,11 +132,15 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mReceiver.init();
         showWarnOnThermalShutdown();
         contentResolver.registerContentObserver(Settings.Global.getUriFor("show_temperature_warning"), false, new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.power.PowerUI.AnonymousClass2 */
+
             public void onChange(boolean z) {
                 PowerUI.this.doSkinThermalEventListenerRegistration();
             }
         });
         contentResolver.registerContentObserver(Settings.Global.getUriFor("show_usb_temperature_alarm"), false, new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.power.PowerUI.AnonymousClass3 */
+
             public void onChange(boolean z) {
                 PowerUI.this.doUsbThermalEventListenerRegistration();
             }
@@ -154,9 +150,12 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         if ((this.mLastConfiguration.updateFrom(configuration) & 3) != 0) {
             this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.power.$$Lambda$PowerUI$QV7l9YjJI0jIQa7PQUr5PFep9Kg */
+
                 public final void run() {
                     PowerUI.this.initThermalEventListeners();
                 }
@@ -178,7 +177,8 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
     }
 
     /* access modifiers changed from: private */
-    public int findBatteryLevelBucket(int i) {
+    /* access modifiers changed from: public */
+    private int findBatteryLevelBucket(int i) {
         if (i >= this.mLowBatteryAlertCloseLevel) {
             return 1;
         }
@@ -210,8 +210,8 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             intentFilter.addAction("android.intent.action.SCREEN_ON");
             intentFilter.addAction("android.intent.action.USER_SWITCHED");
             PowerUI.this.mBroadcastDispatcher.registerReceiverWithHandler(this, intentFilter, PowerUI.this.mHandler);
-            if (!this.mHasReceivedBattery && (registerReceiver = PowerUI.this.mContext.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) != null) {
-                onReceive(PowerUI.this.mContext, registerReceiver);
+            if (!this.mHasReceivedBattery && (registerReceiver = ((SystemUI) PowerUI.this).mContext.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) != null) {
+                onReceive(((SystemUI) PowerUI.this).mContext, registerReceiver);
             }
         }
 
@@ -219,6 +219,8 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             String action = intent.getAction();
             if ("android.os.action.POWER_SAVE_MODE_CHANGED".equals(action)) {
                 ThreadUtils.postOnBackgroundThread(new Runnable() {
+                    /* class com.android.systemui.power.$$Lambda$PowerUI$Receiver$r1RcZjs8DVXWaC4Afqm8W0WAvm8 */
+
                     public final void run() {
                         PowerUI.Receiver.this.lambda$onReceive$0$PowerUI$Receiver();
                     }
@@ -231,17 +233,17 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                 PowerUI powerUI2 = PowerUI.this;
                 int i2 = powerUI2.mBatteryStatus;
                 powerUI2.mBatteryStatus = intent.getIntExtra("status", 1);
-                int access$400 = PowerUI.this.mPlugType;
-                int unused = PowerUI.this.mPlugType = intent.getIntExtra("plugged", 1);
-                int access$500 = PowerUI.this.mInvalidCharger;
-                int unused2 = PowerUI.this.mInvalidCharger = intent.getIntExtra("invalid_charger", 0);
+                int i3 = PowerUI.this.mPlugType;
+                PowerUI.this.mPlugType = intent.getIntExtra("plugged", 1);
+                int i4 = PowerUI.this.mInvalidCharger;
+                PowerUI.this.mInvalidCharger = intent.getIntExtra("invalid_charger", 0);
                 PowerUI powerUI3 = PowerUI.this;
                 powerUI3.mLastBatteryStateSnapshot = powerUI3.mCurrentBatteryStateSnapshot;
                 boolean z = powerUI3.mPlugType != 0;
-                boolean z2 = access$400 != 0;
-                int access$600 = PowerUI.this.findBatteryLevelBucket(i);
+                boolean z2 = i3 != 0;
+                int findBatteryLevelBucket = PowerUI.this.findBatteryLevelBucket(i);
                 PowerUI powerUI4 = PowerUI.this;
-                int access$6002 = powerUI4.findBatteryLevelBucket(powerUI4.mBatteryLevel);
+                int findBatteryLevelBucket2 = powerUI4.findBatteryLevelBucket(powerUI4.mBatteryLevel);
                 if (PowerUI.DEBUG) {
                     Slog.d("PowerUI", "buckets   ....." + PowerUI.this.mLowBatteryAlertCloseLevel + " .. " + PowerUI.this.mLowBatteryReminderLevels[0] + " .. " + PowerUI.this.mLowBatteryReminderLevels[1]);
                     StringBuilder sb = new StringBuilder();
@@ -251,16 +253,16 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                     sb.append(PowerUI.this.mBatteryLevel);
                     Slog.d("PowerUI", sb.toString());
                     Slog.d("PowerUI", "status         " + i2 + " --> " + PowerUI.this.mBatteryStatus);
-                    Slog.d("PowerUI", "plugType       " + access$400 + " --> " + PowerUI.this.mPlugType);
-                    Slog.d("PowerUI", "invalidCharger " + access$500 + " --> " + PowerUI.this.mInvalidCharger);
-                    Slog.d("PowerUI", "bucket         " + access$600 + " --> " + access$6002);
+                    Slog.d("PowerUI", "plugType       " + i3 + " --> " + PowerUI.this.mPlugType);
+                    Slog.d("PowerUI", "invalidCharger " + i4 + " --> " + PowerUI.this.mInvalidCharger);
+                    Slog.d("PowerUI", "bucket         " + findBatteryLevelBucket + " --> " + findBatteryLevelBucket2);
                     Slog.d("PowerUI", "plugged        " + z2 + " --> " + z);
                 }
-                WarningsUI access$1000 = PowerUI.this.mWarnings;
+                WarningsUI warningsUI = PowerUI.this.mWarnings;
                 PowerUI powerUI5 = PowerUI.this;
-                access$1000.update(powerUI5.mBatteryLevel, access$6002, powerUI5.mScreenOffTime);
-                if (access$500 != 0 || PowerUI.this.mInvalidCharger == 0) {
-                    if (access$500 != 0 && PowerUI.this.mInvalidCharger == 0) {
+                warningsUI.update(powerUI5.mBatteryLevel, findBatteryLevelBucket2, powerUI5.mScreenOffTime);
+                if (i4 != 0 || PowerUI.this.mInvalidCharger == 0) {
+                    if (i4 != 0 && PowerUI.this.mInvalidCharger == 0) {
                         PowerUI.this.mWarnings.dismissInvalidChargerWarning();
                     } else if (PowerUI.this.mWarnings.isInvalidChargerWarningShowing()) {
                         if (PowerUI.DEBUG) {
@@ -275,7 +277,8 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                             Slog.d("PowerUI", "cancelled task");
                         }
                     }
-                    Future unused3 = PowerUI.this.mLastShowWarningTask = ThreadUtils.postOnBackgroundThread(new Runnable(z, access$6002) {
+                    PowerUI.this.mLastShowWarningTask = ThreadUtils.postOnBackgroundThread(new Runnable(z, findBatteryLevelBucket2) {
+                        /* class com.android.systemui.power.$$Lambda$PowerUI$Receiver$YHQ7eAdH8G2eZkWaBryOzqzv1I */
                         public final /* synthetic */ boolean f$1;
                         public final /* synthetic */ int f$2;
 
@@ -293,9 +296,9 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
                 Slog.d("PowerUI", "showing invalid charger warning");
                 PowerUI.this.mWarnings.showInvalidChargerWarning();
             } else if ("android.intent.action.SCREEN_OFF".equals(action)) {
-                long unused4 = PowerUI.this.mScreenOffTime = SystemClock.elapsedRealtime();
+                PowerUI.this.mScreenOffTime = SystemClock.elapsedRealtime();
             } else if ("android.intent.action.SCREEN_ON".equals(action)) {
-                long unused5 = PowerUI.this.mScreenOffTime = -1;
+                PowerUI.this.mScreenOffTime = -1;
             } else if ("android.intent.action.USER_SWITCHED".equals(action)) {
                 PowerUI.this.mWarnings.userSwitched();
             } else {
@@ -333,9 +336,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
             int i2 = this.mBatteryLevel;
             int i3 = this.mBatteryStatus;
             int[] iArr = this.mLowBatteryReminderLevels;
-            BatteryStateSnapshot batteryStateSnapshot = r3;
-            BatteryStateSnapshot batteryStateSnapshot2 = new BatteryStateSnapshot(i2, isPowerSaveMode, z, i, i3, iArr[1], iArr[0], refreshEstimateIfNeeded.getEstimateMillis(), refreshEstimateIfNeeded.getAverageDischargeTime(), this.mEnhancedEstimates.getSevereWarningThreshold(), this.mEnhancedEstimates.getLowWarningThreshold(), refreshEstimateIfNeeded.isBasedOnUsage(), this.mEnhancedEstimates.getLowWarningEnabled());
-            this.mCurrentBatteryStateSnapshot = batteryStateSnapshot;
+            this.mCurrentBatteryStateSnapshot = new BatteryStateSnapshot(i2, isPowerSaveMode, z, i, i3, iArr[1], iArr[0], refreshEstimateIfNeeded.getEstimateMillis(), refreshEstimateIfNeeded.getAverageDischargeTime(), this.mEnhancedEstimates.getSevereWarningThreshold(), this.mEnhancedEstimates.getLowWarningThreshold(), refreshEstimateIfNeeded.isBasedOnUsage(), this.mEnhancedEstimates.getLowWarningEnabled());
         } else {
             if (DEBUG) {
                 Slog.d("PowerUI", "using standard");
@@ -561,6 +562,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showInattentiveSleepWarning() {
         if (this.mOverlayView == null) {
             this.mOverlayView = new InattentiveSleepWarningView(this.mContext);
@@ -568,6 +570,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mOverlayView.show();
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void dismissInattentiveSleepWarning(boolean z) {
         InattentiveSleepWarningView inattentiveSleepWarningView = this.mOverlayView;
         if (inattentiveSleepWarningView != null) {
@@ -575,6 +578,7 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.print("mLowBatteryAlertCloseLevel=");
         printWriter.println(this.mLowBatteryAlertCloseLevel);
@@ -607,8 +611,9 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         this.mWarnings.dump(printWriter);
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    final class SkinThermalEventListener extends IThermalEventListener.Stub {
+    public final class SkinThermalEventListener extends IThermalEventListener.Stub {
         SkinThermalEventListener() {
         }
 
@@ -623,8 +628,9 @@ public class PowerUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    final class UsbThermalEventListener extends IThermalEventListener.Stub {
+    public final class UsbThermalEventListener extends IThermalEventListener.Stub {
         UsbThermalEventListener() {
         }
 

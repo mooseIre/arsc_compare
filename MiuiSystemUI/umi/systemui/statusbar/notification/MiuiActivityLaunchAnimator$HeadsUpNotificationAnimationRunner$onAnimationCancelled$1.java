@@ -12,6 +12,6 @@ final class MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnim
 
     public final void run() {
         this.this$0.this$0.setAnimationPending(false);
-        this.this$0.this$0.mCallback.onLaunchAnimationCancelled();
+        MiuiActivityLaunchAnimator.access$getMCallback$p(this.this$0.this$0).onLaunchAnimationCancelled();
     }
 }

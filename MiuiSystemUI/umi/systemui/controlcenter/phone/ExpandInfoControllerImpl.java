@@ -62,6 +62,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void onUserSwitched() {
         this.mUserHandler = new UserHandle(KeyguardUpdateMonitor.getCurrentUser());
         requestData();
@@ -71,22 +72,27 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public UserHandle getUserHandle() {
         return this.mUserHandler;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void setContentView(ControlPanelContentView controlPanelContentView) {
         this.mContentView = controlPanelContentView;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public ControlPanelContentView getContentView() {
         return this.mContentView;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public HashMap<Integer, ExpandInfoController.Info> getInfosMap() {
         return this.mInfosMap;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void updateInfo(int i, ExpandInfoController.Info info) {
         if (this.mSuperPowerMode && i != 16) {
             return;
@@ -122,6 +128,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void setSelectedType(int i) {
         if (this.mSelectedType != i) {
             this.mUnAvailableCnt = 0;
@@ -137,6 +144,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public int getSelectedType() {
         if (this.mSuperPowerMode) {
             return 16;
@@ -144,25 +152,29 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         return this.mSelectedType;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public ExpandInfoController.Info getSuperPowerInfo() {
         return this.mSuperPowerInfo.getInfo();
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void addCallback(ExpandInfoController.Callback callback) {
         if (!Constants.IS_INTERNATIONAL) {
             this.mCallbacks.add(callback);
-            for (Map.Entry next : this.mInfosMap.entrySet()) {
-                callback.updateInfo(((Integer) next.getKey()).intValue(), (ExpandInfoController.Info) next.getValue());
+            for (Map.Entry<Integer, ExpandInfoController.Info> entry : this.mInfosMap.entrySet()) {
+                callback.updateInfo(entry.getKey().intValue(), entry.getValue());
                 callback.updateInfosMap();
                 callback.updateSelectedType(this.mSelectedType);
             }
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void removeCallback(ExpandInfoController.Callback callback) {
         this.mCallbacks.remove(callback);
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void requestData() {
         if (!Constants.IS_INTERNATIONAL) {
             if (this.mSuperPowerMode) {
@@ -182,6 +194,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void setSuperPowerMode(boolean z) {
         this.mSuperPowerMode = z;
         if (z) {
@@ -197,6 +210,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void startActivity(String str) {
         if (!TextUtils.isEmpty(str)) {
             Intent intent = new Intent();
@@ -207,6 +221,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void startActivityByUri(String str) {
         if (str != null) {
             try {
@@ -220,6 +235,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void unregister() {
         DataUsageInfo dataUsageInfo = this.mDataUsageInfo;
         if (dataUsageInfo != null) {
@@ -231,6 +247,7 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void register() {
         DataUsageInfo dataUsageInfo = this.mDataUsageInfo;
         if (dataUsageInfo != null) {

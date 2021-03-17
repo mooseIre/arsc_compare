@@ -1,10 +1,7 @@
 package com.android.systemui.util.animation;
 
 import android.view.View;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: MeasurementInput.kt */
 public final class MeasurementInput {
     private int heightMeasureSpec;
     private int widthMeasureSpec;
@@ -19,12 +16,11 @@ public final class MeasurementInput {
         return measurementInput.copy(i, i2);
     }
 
-    @NotNull
     public final MeasurementInput copy(int i, int i2) {
         return new MeasurementInput(i, i2);
     }
 
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -39,7 +35,6 @@ public final class MeasurementInput {
         return (Integer.hashCode(this.widthMeasureSpec) * 31) + Integer.hashCode(this.heightMeasureSpec);
     }
 
-    @NotNull
     public String toString() {
         return "MeasurementInput(widthMeasureSpec=" + this.widthMeasureSpec + ", heightMeasureSpec=" + this.heightMeasureSpec + ")";
     }

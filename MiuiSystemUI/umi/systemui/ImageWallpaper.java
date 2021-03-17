@@ -17,10 +17,8 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 public class ImageWallpaper extends WallpaperService {
-    /* access modifiers changed from: private */
-    public static final String TAG = ImageWallpaper.class.getSimpleName();
-    /* access modifiers changed from: private */
-    public HandlerThread mWorker;
+    private static final String TAG = ImageWallpaper.class.getSimpleName();
+    private HandlerThread mWorker;
 
     public void onCreate() {
         super.onCreate();
@@ -39,15 +37,18 @@ public class ImageWallpaper extends WallpaperService {
         this.mWorker = null;
     }
 
-    class GLEngine extends WallpaperService.Engine {
+    /* access modifiers changed from: package-private */
+    public class GLEngine extends WallpaperService.Engine {
         @VisibleForTesting
         static final int MIN_SURFACE_HEIGHT = 64;
         @VisibleForTesting
         static final int MIN_SURFACE_WIDTH = 64;
         private EglHelper mEglHelper;
         private final Runnable mFinishRenderingTask = new Runnable() {
+            /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$4IwqG_0jMNtMT6yCqqjKAFKSvE */
+
             public final void run() {
-                ImageWallpaper.GLEngine.this.finishRendering();
+                ImageWallpaper.GLEngine.m7lambda$4IwqG_0jMNtMT6yCqqjKAFKSvE(ImageWallpaper.GLEngine.this);
             }
         };
         private GLWallpaperRenderer mRenderer;
@@ -91,6 +92,8 @@ public class ImageWallpaper extends WallpaperService {
 
         public void onDestroy() {
             ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() {
+                /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$BobZgI4REJvgDbbrYxKQK2v8vCg */
+
                 public final void run() {
                     ImageWallpaper.GLEngine.this.lambda$onDestroy$0$ImageWallpaper$GLEngine();
                 }
@@ -109,6 +112,7 @@ public class ImageWallpaper extends WallpaperService {
         public void onSurfaceCreated(SurfaceHolder surfaceHolder) {
             if (ImageWallpaper.this.mWorker != null) {
                 ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable(surfaceHolder) {
+                    /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$iLRwANP3nahTog6rPMk87G_B1tQ */
                     public final /* synthetic */ SurfaceHolder f$1;
 
                     {
@@ -132,6 +136,7 @@ public class ImageWallpaper extends WallpaperService {
         public void onSurfaceChanged(SurfaceHolder surfaceHolder, int i, int i2, int i3) {
             if (ImageWallpaper.this.mWorker != null) {
                 ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable(i2, i3) {
+                    /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$NZAB5XGFpHaOG6R1lDvpakCYM */
                     public final /* synthetic */ int f$1;
                     public final /* synthetic */ int f$2;
 
@@ -156,8 +161,10 @@ public class ImageWallpaper extends WallpaperService {
         public void onSurfaceRedrawNeeded(SurfaceHolder surfaceHolder) {
             if (ImageWallpaper.this.mWorker != null) {
                 ImageWallpaper.this.mWorker.getThreadHandler().post(new Runnable() {
+                    /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$dwIVxRzjo8QTPBtgktS9kM6mj4o */
+
                     public final void run() {
-                        ImageWallpaper.GLEngine.this.drawFrame();
+                        ImageWallpaper.GLEngine.lambda$dwIVxRzjo8QTPBtgktS9kM6mj4o(ImageWallpaper.GLEngine.this);
                     }
                 });
             }
@@ -189,16 +196,17 @@ public class ImageWallpaper extends WallpaperService {
                     if (this.mEglHelper.hasEglContext() && !this.mEglHelper.hasEglSurface() && !this.mEglHelper.createEglSurface(getSurfaceHolder(), needSupportWideColorGamut())) {
                         Log.w(ImageWallpaper.TAG, "recreate egl surface failed!");
                     }
-                    if (!this.mEglHelper.hasEglContext() && !this.mEglHelper.hasEglSurface() && z) {
+                    if (this.mEglHelper.hasEglContext() && this.mEglHelper.hasEglSurface() && z) {
                         this.mRenderer.onSurfaceCreated();
                         this.mRenderer.onSurfaceChanged(surfaceFrame.width(), surfaceFrame.height());
                         return;
                     }
+                    return;
                 }
             }
             z = false;
             Log.w(ImageWallpaper.TAG, "recreate egl surface failed!");
-            if (!this.mEglHelper.hasEglContext() && !this.mEglHelper.hasEglSurface()) {
+            if (this.mEglHelper.hasEglContext()) {
             }
         }
 
@@ -218,8 +226,8 @@ public class ImageWallpaper extends WallpaperService {
                 }
                 return;
             }
-            String access$100 = ImageWallpaper.TAG;
-            Log.e(access$100, "requestRender: not ready, has context=" + this.mEglHelper.hasEglContext() + ", has surface=" + this.mEglHelper.hasEglSurface() + ", frame=" + surfaceFrame);
+            String str = ImageWallpaper.TAG;
+            Log.e(str, "requestRender: not ready, has context=" + this.mEglHelper.hasEglContext() + ", has surface=" + this.mEglHelper.hasEglSurface() + ", frame=" + surfaceFrame);
         }
 
         public void postRender() {

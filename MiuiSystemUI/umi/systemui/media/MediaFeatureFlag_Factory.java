@@ -11,6 +11,7 @@ public final class MediaFeatureFlag_Factory implements Factory<MediaFeatureFlag>
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MediaFeatureFlag get() {
         return provideInstance(this.contextProvider);
     }

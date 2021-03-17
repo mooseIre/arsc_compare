@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$MiuiQSTileHostInjector$UhAUapaTjkLUf
     private /* synthetic */ $$Lambda$MiuiQSTileHostInjector$UhAUapaTjkLUfXWQs8oTPEKf3iE() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((QSTile) obj).refreshState();
     }

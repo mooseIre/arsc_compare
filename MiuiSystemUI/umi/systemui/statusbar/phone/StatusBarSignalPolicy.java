@@ -40,9 +40,11 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
 
     public abstract void initMiuiSlot();
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataEnabled(boolean z) {
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setNoSims(boolean z, boolean z2) {
     }
 
@@ -62,7 +64,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mNetworkController = (NetworkController) Dependency.get(NetworkController.class);
         this.mSecurityController = (SecurityController) Dependency.get(SecurityController.class);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
-        this.mNetworkController.addCallback(this);
+        this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
         this.mSecurityController.addCallback(this);
     }
 
@@ -77,14 +79,18 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         return C0013R$drawable.stat_sys_vpn;
     }
 
+    @Override // com.android.systemui.statusbar.policy.SecurityController.SecurityControllerCallback
     public void onStateChanged() {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBarSignalPolicy$UsBELiDs0GJjQ8hYeagcWJmxhFc */
+
             public final void run() {
                 StatusBarSignalPolicy.this.updateVpn();
             }
         });
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("icon_blacklist".equals(str)) {
             ArraySet<String> iconBlacklist = StatusBarIconController.getIconBlacklist(this.mContext, str2);
@@ -97,12 +103,13 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
                 this.mBlockMobile = contains2;
                 this.mBlockEthernet = contains4;
                 this.mBlockWifi = contains3 || this.mForceBlockWifi;
-                this.mNetworkController.removeCallback(this);
-                this.mNetworkController.addCallback(this);
+                this.mNetworkController.removeCallback((NetworkController.SignalCallback) this);
+                this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
             }
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setWifiIndicators(boolean z, NetworkController.IconState iconState, NetworkController.IconState iconState2, boolean z2, boolean z3, String str, boolean z4, String str2) {
         boolean z5 = true;
         boolean z6 = iconState.visible && !this.mBlockWifi;
@@ -130,6 +137,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         wifiIconState.signalSpacerVisible = (firstMobileState == null || firstMobileState.typeId == 0) ? false : true;
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4) {
         MobileIconState state = getState(i4);
         if (state != null) {
@@ -181,6 +189,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         return null;
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setSubs(List<SubscriptionInfo> list) {
         if (!hasCorrectSubs(list)) {
             this.mIconController.removeAllIconsForSlot(this.mSlotMobile);
@@ -205,6 +214,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setEthernetIndicators(NetworkController.IconState iconState) {
         boolean z = iconState.visible && !this.mBlockEthernet;
         int i = iconState.icon;
@@ -217,6 +227,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mIconController.setIconVisibility(this.mSlotEthernet, true);
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setIsAirplaneMode(NetworkController.IconState iconState) {
         boolean z = iconState.visible && !this.mBlockAirplane;
         this.mIsAirplaneMode = z;
@@ -230,7 +241,8 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mIconController.setIconVisibility(this.mSlotAirplane, true);
     }
 
-    private static abstract class SignalIconState {
+    /* access modifiers changed from: private */
+    public static abstract class SignalIconState {
         public boolean activityIn;
         public boolean activityOut;
         public String contentDescription;
@@ -252,7 +264,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         }
 
         public int hashCode() {
-            return Objects.hash(new Object[]{Boolean.valueOf(this.visible), Boolean.valueOf(this.activityOut), this.slot});
+            return Objects.hash(Boolean.valueOf(this.visible), Boolean.valueOf(this.activityOut), this.slot);
         }
 
         /* access modifiers changed from: protected */
@@ -279,6 +291,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
             super();
         }
 
+        @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy.SignalIconState
         public boolean equals(Object obj) {
             if (obj == null || WifiIconState.class != obj.getClass() || !super.equals(obj)) {
                 return false;
@@ -291,7 +304,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         }
 
         public void copyTo(WifiIconState wifiIconState) {
-            super.copyTo(wifiIconState);
+            super.copyTo((SignalIconState) wifiIconState);
             wifiIconState.resId = this.resId;
             wifiIconState.airplaneSpacerVisible = this.airplaneSpacerVisible;
             wifiIconState.signalSpacerVisible = this.signalSpacerVisible;
@@ -308,8 +321,9 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
             return wifiIconState;
         }
 
+        @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy.SignalIconState
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(super.hashCode()), Integer.valueOf(this.resId), Boolean.valueOf(this.airplaneSpacerVisible), Boolean.valueOf(this.signalSpacerVisible), Boolean.valueOf(this.activityVisible), Integer.valueOf(this.activityResId), Integer.valueOf(this.wifiStandard), Boolean.valueOf(this.showWifiStandard), Boolean.valueOf(this.wifiNoNetwork)});
+            return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.resId), Boolean.valueOf(this.airplaneSpacerVisible), Boolean.valueOf(this.signalSpacerVisible), Boolean.valueOf(this.activityVisible), Integer.valueOf(this.activityResId), Integer.valueOf(this.wifiStandard), Boolean.valueOf(this.showWifiStandard), Boolean.valueOf(this.wifiNoNetwork));
         }
 
         public String toString() {
@@ -345,6 +359,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
             this.subId = i;
         }
 
+        @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy.SignalIconState
         public boolean equals(Object obj) {
             if (obj == null || MobileIconState.class != obj.getClass() || !super.equals(obj)) {
                 return false;
@@ -356,8 +371,9 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
             return false;
         }
 
+        @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy.SignalIconState
         public int hashCode() {
-            return Objects.hash(new Object[]{Integer.valueOf(super.hashCode()), Integer.valueOf(this.subId), Integer.valueOf(this.strengthId), Integer.valueOf(this.typeId), Boolean.valueOf(this.roaming), this.typeContentDescription, Integer.valueOf(this.volteId), Boolean.valueOf(this.airplane), Boolean.valueOf(this.dataConnected), Boolean.valueOf(this.wifiAvailable), this.networkName, Boolean.valueOf(this.volte), Boolean.valueOf(this.hideVolte), Integer.valueOf(this.vowifiId), Boolean.valueOf(this.vowifi), Boolean.valueOf(this.hideVowifi), Boolean.valueOf(this.speechHd), Boolean.valueOf(this.volteNoSerivce), Integer.valueOf(this.fiveGDrawableId), Boolean.valueOf(this.showDataTypeWhenWifiOn), Boolean.valueOf(this.showDataTypeDataDisconnected), Boolean.valueOf(this.showMobileDataTypeInMMS)});
+            return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.subId), Integer.valueOf(this.strengthId), Integer.valueOf(this.typeId), Boolean.valueOf(this.roaming), this.typeContentDescription, Integer.valueOf(this.volteId), Boolean.valueOf(this.airplane), Boolean.valueOf(this.dataConnected), Boolean.valueOf(this.wifiAvailable), this.networkName, Boolean.valueOf(this.volte), Boolean.valueOf(this.hideVolte), Integer.valueOf(this.vowifiId), Boolean.valueOf(this.vowifi), Boolean.valueOf(this.hideVowifi), Boolean.valueOf(this.speechHd), Boolean.valueOf(this.volteNoSerivce), Integer.valueOf(this.fiveGDrawableId), Boolean.valueOf(this.showDataTypeWhenWifiOn), Boolean.valueOf(this.showDataTypeDataDisconnected), Boolean.valueOf(this.showMobileDataTypeInMMS));
         }
 
         public MobileIconState copy() {
@@ -367,7 +383,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         }
 
         public void copyTo(MobileIconState mobileIconState) {
-            super.copyTo(mobileIconState);
+            super.copyTo((SignalIconState) mobileIconState);
             mobileIconState.subId = this.subId;
             mobileIconState.strengthId = this.strengthId;
             mobileIconState.typeId = this.typeId;
@@ -393,10 +409,10 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
 
         public static List<MobileIconState> copyStates(List<MobileIconState> list) {
             ArrayList arrayList = new ArrayList();
-            for (MobileIconState next : list) {
-                MobileIconState mobileIconState = new MobileIconState(next.subId);
-                next.copyTo(mobileIconState);
-                arrayList.add(mobileIconState);
+            for (MobileIconState mobileIconState : list) {
+                MobileIconState mobileIconState2 = new MobileIconState(mobileIconState.subId);
+                mobileIconState.copyTo(mobileIconState2);
+                arrayList.add(mobileIconState2);
             }
             return arrayList;
         }

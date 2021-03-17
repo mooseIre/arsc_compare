@@ -13,6 +13,7 @@ public class AlphaControlledSignalTileView$AlphaControlledSlashImageView extends
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.SlashImageView
     public void ensureSlashDrawable() {
         if (getSlash() == null) {
             AlphaControlledSignalTileView$AlphaControlledSlashDrawable alphaControlledSignalTileView$AlphaControlledSlashDrawable = new AlphaControlledSignalTileView$AlphaControlledSlashDrawable(getDrawable());

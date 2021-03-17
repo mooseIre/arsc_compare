@@ -12,20 +12,24 @@ import androidx.dynamicanimation.animation.SpringAnimation;
 public class SeekBarGradientDrawable extends GradientDrawable {
     private int mHeight = 0;
     private DynamicAnimation.OnAnimationUpdateListener mInvalidateUpdateListener = new DynamicAnimation.OnAnimationUpdateListener() {
+        /* class com.android.systemui.statusbar.notification.mediacontrol.SeekBarGradientDrawable.AnonymousClass2 */
+
+        @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationUpdateListener
         public void onAnimationUpdate(DynamicAnimation dynamicAnimation, float f, float f2) {
             SeekBarGradientDrawable.this.invalidateSelf();
         }
     };
     private SpringAnimation mPressedScaleAnim;
-    /* access modifiers changed from: private */
-    public float mScale = 1.0f;
+    private float mScale = 1.0f;
     private FloatPropertyCompat<SeekBarGradientDrawable> mScaleFloatProperty = new FloatPropertyCompat<SeekBarGradientDrawable>("Scale") {
+        /* class com.android.systemui.statusbar.notification.mediacontrol.SeekBarGradientDrawable.AnonymousClass1 */
+
         public float getValue(SeekBarGradientDrawable seekBarGradientDrawable) {
             return SeekBarGradientDrawable.this.mScale;
         }
 
         public void setValue(SeekBarGradientDrawable seekBarGradientDrawable, float f) {
-            float unused = SeekBarGradientDrawable.this.mScale = f;
+            SeekBarGradientDrawable.this.mScale = f;
         }
     };
     private SeekBarGradientState mSeekBarGradientState;
@@ -145,7 +149,8 @@ public class SeekBarGradientDrawable extends GradientDrawable {
         canvas.restore();
     }
 
-    private static class SeekBarGradientState extends Drawable.ConstantState {
+    /* access modifiers changed from: private */
+    public static class SeekBarGradientState extends Drawable.ConstantState {
         Drawable.ConstantState mParent;
 
         private SeekBarGradientState() {
@@ -159,14 +164,14 @@ public class SeekBarGradientDrawable extends GradientDrawable {
             if (this.mParent == null) {
                 return null;
             }
-            return newSeekBarGradientDrawable((Resources) null, (Resources.Theme) null, this);
+            return newSeekBarGradientDrawable(null, null, this);
         }
 
         public Drawable newDrawable(Resources resources) {
             if (this.mParent == null) {
                 return null;
             }
-            return newSeekBarGradientDrawable(resources, (Resources.Theme) null, this);
+            return newSeekBarGradientDrawable(resources, null, this);
         }
 
         public Drawable newDrawable(Resources resources, Resources.Theme theme) {

@@ -14,7 +14,7 @@ import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import java.util.ArrayList;
 
 @Dependencies({@DependsOn(target = OnMenuEventListener.class), @DependsOn(target = MenuItem.class), @DependsOn(target = NotificationSwipeActionHelper.class), @DependsOn(target = NotificationSwipeActionHelper.SnoozeOption.class)})
-@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW", version = 5)
+@ProvidesInterface(action = NotificationMenuRowPlugin.ACTION, version = 5)
 public interface NotificationMenuRowPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_NOTIFICATION_MENU_ROW";
     public static final int VERSION = 5;
@@ -67,16 +67,16 @@ public interface NotificationMenuRowPlugin extends Plugin {
 
     boolean isWithinSnapMenuThreshold();
 
-    MenuItem menuItemToExposeOnSnap() {
+    default MenuItem menuItemToExposeOnSnap() {
         return null;
     }
 
-    void onConfigurationChanged() {
+    default void onConfigurationChanged() {
     }
 
     void onDismiss();
 
-    boolean onInterceptTouchEvent(View view, MotionEvent motionEvent) {
+    default boolean onInterceptTouchEvent(View view, MotionEvent motionEvent) {
         return false;
     }
 
@@ -100,14 +100,14 @@ public interface NotificationMenuRowPlugin extends Plugin {
 
     void setAppName(String str);
 
-    void setDismissRtl(boolean z) {
+    default void setDismissRtl(boolean z) {
     }
 
     void setMenuClickListener(OnMenuEventListener onMenuEventListener);
 
     void setMenuItems(ArrayList<MenuItem> arrayList);
 
-    boolean shouldShowGutsOnSnapOpen() {
+    default boolean shouldShowGutsOnSnapOpen() {
         return false;
     }
 
@@ -115,11 +115,11 @@ public interface NotificationMenuRowPlugin extends Plugin {
 
     boolean shouldSnapBack();
 
-    boolean shouldUseDefaultMenuItems() {
+    default boolean shouldUseDefaultMenuItems() {
         return false;
     }
 
-    Point getRevealAnimationOrigin() {
+    default Point getRevealAnimationOrigin() {
         return new Point(0, 0);
     }
 }

@@ -13,6 +13,7 @@ public final class NotificationInteractionTracker_Factory implements Factory<Not
         this.entryManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationInteractionTracker get() {
         return provideInstance(this.clickerProvider, this.entryManagerProvider);
     }

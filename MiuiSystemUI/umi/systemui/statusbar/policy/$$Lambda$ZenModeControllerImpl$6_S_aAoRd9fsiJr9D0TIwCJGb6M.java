@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$ZenModeControllerImpl$6_S_aAoRd9fsiJ
     private /* synthetic */ $$Lambda$ZenModeControllerImpl$6_S_aAoRd9fsiJr9D0TIwCJGb6M() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((ZenModeController.Callback) obj).onNextAlarmChanged();
     }

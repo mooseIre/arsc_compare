@@ -19,6 +19,7 @@ public final class AppAdapter$callback$1 implements ControlsListingController.Co
         this.$uiExecutor = executor2;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsListingController.ControlsListingCallback
     public void onServicesUpdated(@NotNull List<ControlsServiceInfo> list) {
         Intrinsics.checkParameterIsNotNull(list, "serviceInfos");
         this.$backgroundExecutor.execute(new AppAdapter$callback$1$onServicesUpdated$1(this, list));

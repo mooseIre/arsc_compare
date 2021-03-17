@@ -18,6 +18,7 @@ public final class MediaHost$init$2 implements UniqueObjectHostView.MeasurementM
         this.$location = i;
     }
 
+    @Override // com.android.systemui.util.animation.UniqueObjectHostView.MeasurementManager
     @NotNull
     public MeasurementOutput onMeasure(@NotNull MeasurementInput measurementInput) {
         Intrinsics.checkParameterIsNotNull(measurementInput, "input");

@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class WakefulnessLifecycle_Factory implements Factory<WakefulnessLifecycle> {
     private static final WakefulnessLifecycle_Factory INSTANCE = new WakefulnessLifecycle_Factory();
 
+    @Override // javax.inject.Provider
     public WakefulnessLifecycle get() {
         return provideInstance();
     }

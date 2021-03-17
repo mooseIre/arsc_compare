@@ -18,23 +18,16 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 
 public class SlaveWifiSignalController extends BroadcastReceiver {
-    /* access modifiers changed from: private */
-    public static final int[] SLAVE_WIFI_ACCESSIBILITY = {C0021R$string.accessibility_no_wifi, C0021R$string.accessibility_wifi_one_bar, C0021R$string.accessibility_wifi_two_bars, C0021R$string.accessibility_wifi_three_bars, C0021R$string.accessibility_wifi_signal_full};
-    /* access modifiers changed from: private */
-    public static final int[] SLAVE_WIFI_ICONS = {C0013R$drawable.stat_sys_slave_wifi_signal_0, C0013R$drawable.stat_sys_slave_wifi_signal_1, C0013R$drawable.stat_sys_slave_wifi_signal_2, C0013R$drawable.stat_sys_slave_wifi_signal_3, C0013R$drawable.stat_sys_slave_wifi_signal_4};
+    private static final int[] SLAVE_WIFI_ACCESSIBILITY = {C0021R$string.accessibility_no_wifi, C0021R$string.accessibility_wifi_one_bar, C0021R$string.accessibility_wifi_two_bars, C0021R$string.accessibility_wifi_three_bars, C0021R$string.accessibility_wifi_signal_full};
+    private static final int[] SLAVE_WIFI_ICONS = {C0013R$drawable.stat_sys_slave_wifi_signal_0, C0013R$drawable.stat_sys_slave_wifi_signal_1, C0013R$drawable.stat_sys_slave_wifi_signal_2, C0013R$drawable.stat_sys_slave_wifi_signal_3, C0013R$drawable.stat_sys_slave_wifi_signal_4};
     private BroadcastDispatcher mBroadcastDispatcher;
-    /* access modifiers changed from: private */
-    public boolean mConnected;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public boolean mEnabled;
-    /* access modifiers changed from: private */
-    public int mLevel;
+    private boolean mConnected;
+    private Context mContext;
+    private boolean mEnabled;
+    private int mLevel;
     private Handler mMainHandle;
     private int mRssi;
-    /* access modifiers changed from: private */
-    public StatusBarIconController mStatusBarIconController;
+    private StatusBarIconController mStatusBarIconController;
     private boolean mSupportSlaveWifi;
 
     public SlaveWifiSignalController(Context context, Handler handler, StatusBarIconController statusBarIconController, Handler handler2, BroadcastDispatcher broadcastDispatcher) {
@@ -117,15 +110,17 @@ public class SlaveWifiSignalController extends BroadcastReceiver {
     /* access modifiers changed from: protected */
     public void updateIconState() {
         this.mMainHandle.post(new Runnable() {
+            /* class com.android.systemui.statusbar.policy.SlaveWifiSignalController.AnonymousClass1 */
+
             public void run() {
                 boolean z = false;
                 int max = Math.max(Math.min(4, SlaveWifiSignalController.this.mLevel), 0);
                 SlaveWifiSignalController.this.mStatusBarIconController.setIcon("slave_wifi", SlaveWifiSignalController.SLAVE_WIFI_ICONS[max], SlaveWifiSignalController.this.mContext.getString(SlaveWifiSignalController.SLAVE_WIFI_ACCESSIBILITY[max]));
-                StatusBarIconController access$400 = SlaveWifiSignalController.this.mStatusBarIconController;
+                StatusBarIconController statusBarIconController = SlaveWifiSignalController.this.mStatusBarIconController;
                 if (SlaveWifiSignalController.this.mEnabled && SlaveWifiSignalController.this.mConnected) {
                     z = true;
                 }
-                access$400.setIconVisibility("slave_wifi", z);
+                statusBarIconController.setIconVisibility("slave_wifi", z);
             }
         });
     }

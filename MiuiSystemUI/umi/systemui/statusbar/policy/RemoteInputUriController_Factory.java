@@ -11,6 +11,7 @@ public final class RemoteInputUriController_Factory implements Factory<RemoteInp
         this.statusBarServiceProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public RemoteInputUriController get() {
         return provideInstance(this.statusBarServiceProvider);
     }

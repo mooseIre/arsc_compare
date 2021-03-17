@@ -11,6 +11,7 @@ public final class BrightnessDialog_Factory implements Factory<BrightnessDialog>
         this.broadcastDispatcherProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BrightnessDialog get() {
         return provideInstance(this.broadcastDispatcherProvider);
     }

@@ -11,6 +11,7 @@ public final class TunablePadding_TunablePaddingService_Factory implements Facto
         this.tunerServiceProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public TunablePadding.TunablePaddingService get() {
         return provideInstance(this.tunerServiceProvider);
     }

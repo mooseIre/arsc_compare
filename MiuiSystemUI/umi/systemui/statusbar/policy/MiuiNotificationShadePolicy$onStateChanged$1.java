@@ -12,18 +12,22 @@ final /* synthetic */ class MiuiNotificationShadePolicy$onStateChanged$1 extends
         super(0, miuiNotificationShadePolicy);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getName() {
         return "handleUpdateFsgState";
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final KDeclarationContainer getOwner() {
         return Reflection.getOrCreateKotlinClass(MiuiNotificationShadePolicy.class);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getSignature() {
         return "handleUpdateFsgState()V";
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         ((MiuiNotificationShadePolicy) this.receiver).handleUpdateFsgState();
     }

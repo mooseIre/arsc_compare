@@ -14,6 +14,7 @@ public final class FragmentService_Factory implements Factory<FragmentService> {
         this.configurationControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public FragmentService get() {
         return provideInstance(this.rootComponentProvider, this.configurationControllerProvider);
     }

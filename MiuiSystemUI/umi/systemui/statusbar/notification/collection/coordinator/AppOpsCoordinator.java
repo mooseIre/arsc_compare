@@ -18,19 +18,22 @@ import java.util.Map;
 
 public class AppOpsCoordinator implements Coordinator {
     private final AppOpsController mAppOpsController;
-    /* access modifiers changed from: private */
-    public final NotifLifetimeExtender mForegroundLifetimeExtender = new NotifLifetimeExtender() {
+    private final NotifLifetimeExtender mForegroundLifetimeExtender = new NotifLifetimeExtender() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.AppOpsCoordinator.AnonymousClass2 */
         private NotifLifetimeExtender.OnEndLifetimeExtensionCallback mEndCallback;
         private Map<NotificationEntry, Runnable> mEndRunnables = new HashMap();
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifLifetimeExtender
         public String getName() {
             return "AppOpsCoordinator";
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifLifetimeExtender
         public void setCallback(NotifLifetimeExtender.OnEndLifetimeExtensionCallback onEndLifetimeExtensionCallback) {
             this.mEndCallback = onEndLifetimeExtensionCallback;
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifLifetimeExtender
         public boolean shouldExtendLifetime(NotificationEntry notificationEntry, int i) {
             boolean z = false;
             if ((notificationEntry.getSbn().getNotification().flags & 64) == 0) {
@@ -42,6 +45,7 @@ public class AppOpsCoordinator implements Coordinator {
             }
             if (z && !this.mEndRunnables.containsKey(notificationEntry)) {
                 this.mEndRunnables.put(notificationEntry, AppOpsCoordinator.this.mMainExecutor.executeDelayed(new Runnable(notificationEntry) {
+                    /* class com.android.systemui.statusbar.notification.collection.coordinator.$$Lambda$AppOpsCoordinator$2$QL7e9QZrONYPm8OKjbOLeImENQ4 */
                     public final /* synthetic */ NotificationEntry f$1;
 
                     {
@@ -63,6 +67,7 @@ public class AppOpsCoordinator implements Coordinator {
             this.mEndCallback.onEndLifetimeExtension(AppOpsCoordinator.this.mForegroundLifetimeExtender, notificationEntry);
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifLifetimeExtender
         public void cancelLifetimeExtension(NotificationEntry notificationEntry) {
             Runnable remove = this.mEndRunnables.remove(notificationEntry);
             if (remove != null) {
@@ -70,15 +75,17 @@ public class AppOpsCoordinator implements Coordinator {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final ForegroundServiceController mForegroundServiceController;
-    /* access modifiers changed from: private */
-    public final DelayableExecutor mMainExecutor;
+    private final ForegroundServiceController mForegroundServiceController;
+    private final DelayableExecutor mMainExecutor;
     private NotifCollectionListener mNotifCollectionListener = new NotifCollectionListener() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.AppOpsCoordinator.AnonymousClass3 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
         public void onEntryAdded(NotificationEntry notificationEntry) {
             tagAppOps(notificationEntry);
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
         public void onEntryUpdated(NotificationEntry notificationEntry) {
             tagAppOps(notificationEntry);
         }
@@ -88,11 +95,14 @@ public class AppOpsCoordinator implements Coordinator {
             ArraySet<Integer> appOps = AppOpsCoordinator.this.mForegroundServiceController.getAppOps(sbn.getUser().getIdentifier(), sbn.getPackageName());
             notificationEntry.mActiveAppOps.clear();
             if (appOps != null) {
-                notificationEntry.mActiveAppOps.addAll(appOps);
+                notificationEntry.mActiveAppOps.addAll((ArraySet<? extends Integer>) appOps);
             }
         }
     };
     private final NotifFilter mNotifFilter = new NotifFilter("AppOpsCoordinator") {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.AppOpsCoordinator.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             String[] stringArray;
             ExpandedNotification sbn = notificationEntry.getSbn();
@@ -113,12 +123,16 @@ public class AppOpsCoordinator implements Coordinator {
         this.mMainExecutor = delayableExecutor;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mNotifPipeline = notifPipeline;
         notifPipeline.addNotificationLifetimeExtender(this.mForegroundLifetimeExtender);
         this.mNotifPipeline.addCollectionListener(this.mNotifCollectionListener);
         this.mNotifPipeline.addPreGroupFilter(this.mNotifFilter);
         this.mAppOpsController.addCallback(ForegroundServiceController.APP_OPS, new AppOpsController.Callback() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.$$Lambda$AppOpsCoordinator$g1CviyimAy6Lv0tcSLFbIg1yos */
+
+            @Override // com.android.systemui.appops.AppOpsController.Callback
             public final void onActiveStateChanged(int i, int i2, String str, boolean z) {
                 AppOpsCoordinator.this.onAppOpsChanged(i, i2, str, z);
             }
@@ -128,6 +142,7 @@ public class AppOpsCoordinator implements Coordinator {
     /* access modifiers changed from: private */
     public void onAppOpsChanged(int i, int i2, String str, boolean z) {
         this.mMainExecutor.execute(new Runnable(i, i2, str, z) {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.$$Lambda$AppOpsCoordinator$CPW_3xjRRxO_V4fyqQUDt5CLJDM */
             public final /* synthetic */ int f$1;
             public final /* synthetic */ int f$2;
             public final /* synthetic */ String f$3;
@@ -172,9 +187,9 @@ public class AppOpsCoordinator implements Coordinator {
     }
 
     private NotificationEntry findNotificationEntryWithKey(String str) {
-        for (NotificationEntry next : this.mNotifPipeline.getAllNotifs()) {
-            if (next.getKey().equals(str)) {
-                return next;
+        for (NotificationEntry notificationEntry : this.mNotifPipeline.getAllNotifs()) {
+            if (notificationEntry.getKey().equals(str)) {
+                return notificationEntry;
             }
         }
         return null;

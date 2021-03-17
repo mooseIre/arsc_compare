@@ -11,6 +11,7 @@ public final class ControlsProviderSelectorActivity$onStart$$inlined$apply$lambd
         this.this$0 = controlsProviderSelectorActivity;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
     public void onChanged() {
         if (!this.hasAnimated) {
             this.hasAnimated = true;

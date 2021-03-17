@@ -24,6 +24,7 @@ public final class ForegroundServiceNotificationListener_Factory implements Fact
         this.systemClockProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public ForegroundServiceNotificationListener get() {
         return provideInstance(this.contextProvider, this.foregroundServiceControllerProvider, this.notificationEntryManagerProvider, this.notifPipelineProvider, this.fgsLifetimeExtenderProvider, this.systemClockProvider);
     }

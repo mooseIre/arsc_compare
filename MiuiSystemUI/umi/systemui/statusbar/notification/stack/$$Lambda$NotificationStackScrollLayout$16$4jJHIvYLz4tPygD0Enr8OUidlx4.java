@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationStackScrollLayout$16$4jJ
     private /* synthetic */ $$Lambda$NotificationStackScrollLayout$16$4jJHIvYLz4tPygD0Enr8OUidlx4() {
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
     public final boolean onDismiss() {
         return NotificationStackScrollLayout.AnonymousClass16.lambda$onDraggedDown$0();
     }

@@ -4,8 +4,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: DumpManager.kt */
-final class RegisteredDumpable<T> {
+public final class RegisteredDumpable<T> {
     private final T dumpable;
     @NotNull
     private final String name;
@@ -18,7 +19,7 @@ final class RegisteredDumpable<T> {
             return false;
         }
         RegisteredDumpable registeredDumpable = (RegisteredDumpable) obj;
-        return Intrinsics.areEqual((Object) this.name, (Object) registeredDumpable.name) && Intrinsics.areEqual((Object) this.dumpable, (Object) registeredDumpable.dumpable);
+        return Intrinsics.areEqual(this.name, registeredDumpable.name) && Intrinsics.areEqual(this.dumpable, registeredDumpable.dumpable);
     }
 
     public int hashCode() {
@@ -34,7 +35,7 @@ final class RegisteredDumpable<T> {
 
     @NotNull
     public String toString() {
-        return "RegisteredDumpable(name=" + this.name + ", dumpable=" + this.dumpable + ")";
+        return "RegisteredDumpable(name=" + this.name + ", dumpable=" + ((Object) this.dumpable) + ")";
     }
 
     public RegisteredDumpable(@NotNull String str, T t) {

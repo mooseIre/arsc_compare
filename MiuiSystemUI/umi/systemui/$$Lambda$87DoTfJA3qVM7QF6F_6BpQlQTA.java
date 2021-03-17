@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$87DoTfJA3qVM7QF6F_6BpQlQTA implement
     private /* synthetic */ $$Lambda$87DoTfJA3qVM7QF6F_6BpQlQTA() {
     }
 
+    @Override // java.util.function.Supplier
     public final Object get() {
         return Long.valueOf(SystemClock.elapsedRealtime());
     }

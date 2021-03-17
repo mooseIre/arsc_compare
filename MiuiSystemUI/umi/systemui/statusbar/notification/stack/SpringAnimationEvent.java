@@ -1,27 +1,29 @@
 package com.android.systemui.statusbar.notification.stack;
 
-import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.miui.systemui.animation.PhysicBasedInterpolator;
 import java.util.List;
+import kotlin.collections.CollectionsKt;
+import kotlin.collections.CollectionsKt__CollectionsKt;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationAnimationExtensions.kt */
 public final class SpringAnimationEvent extends NotificationStackScrollLayout.AnimationEvent {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    /* access modifiers changed from: private */
-    public static final List<Companion.DummyFolmeData> NOTIFICATION_SPRING_TABLE = CollectionsKt__CollectionsKt.listOf(new Companion.DummyFolmeData(0.7f, 0.625f, 800), new Companion.DummyFolmeData(0.74f, 0.743f, 700), new Companion.DummyFolmeData(0.78f, 0.72f, 750), new Companion.DummyFolmeData(0.82f, 0.7467f, 750), new Companion.DummyFolmeData(0.86f, 0.725f, 800), new Companion.DummyFolmeData(0.9f, 0.8f, 750), new Companion.DummyFolmeData(0.94f, 0.8857f, 700), new Companion.DummyFolmeData(0.98f, 0.7529f, 850), new Companion.DummyFolmeData(0.99f, 0.7529f, 900));
+    public static final Companion Companion = new Companion(null);
+    private static final List<Companion.DummyFolmeData> NOTIFICATION_SPRING_TABLE = CollectionsKt__CollectionsKt.listOf((Object[]) new Companion.DummyFolmeData[]{new Companion.DummyFolmeData(0.7f, 0.625f, 800), new Companion.DummyFolmeData(0.74f, 0.743f, 700), new Companion.DummyFolmeData(0.78f, 0.72f, 750), new Companion.DummyFolmeData(0.82f, 0.7467f, 750), new Companion.DummyFolmeData(0.86f, 0.725f, 800), new Companion.DummyFolmeData(0.9f, 0.8f, 750), new Companion.DummyFolmeData(0.94f, 0.8857f, 700), new Companion.DummyFolmeData(0.98f, 0.7529f, 850), new Companion.DummyFolmeData(0.99f, 0.7529f, 900)});
 
     public SpringAnimationEvent(int i) {
-        super((ExpandableView) null, 16, 450, MiuiNotificationAnimations.INSTANCE.getRELEASE_SPRING_FILTER());
+        super(null, 16, 450, MiuiNotificationAnimations.INSTANCE.getRELEASE_SPRING_FILTER());
     }
 
     /* compiled from: MiuiNotificationAnimationExtensions.kt */
     public static final class Companion {
 
+        /* access modifiers changed from: private */
         /* compiled from: MiuiNotificationAnimationExtensions.kt */
-        private static final class DummyFolmeData {
+        public static final class DummyFolmeData {
             private final float damping;
             private final long duration;
             private final float response;
@@ -73,8 +75,8 @@ public final class SpringAnimationEvent extends NotificationStackScrollLayout.An
         }
 
         private final DummyFolmeData getFolmeDataForIndex(int i) {
-            List access$getNOTIFICATION_SPRING_TABLE$cp = SpringAnimationEvent.NOTIFICATION_SPRING_TABLE;
-            return (DummyFolmeData) ((i < 0 || i > CollectionsKt__CollectionsKt.getLastIndex(access$getNOTIFICATION_SPRING_TABLE$cp)) ? (DummyFolmeData) CollectionsKt___CollectionsKt.last(SpringAnimationEvent.NOTIFICATION_SPRING_TABLE) : access$getNOTIFICATION_SPRING_TABLE$cp.get(i));
+            List list = SpringAnimationEvent.NOTIFICATION_SPRING_TABLE;
+            return (DummyFolmeData) ((i < 0 || i > CollectionsKt__CollectionsKt.getLastIndex(list)) ? (DummyFolmeData) CollectionsKt.last(SpringAnimationEvent.NOTIFICATION_SPRING_TABLE) : list.get(i));
         }
 
         public final long getDurationForIndex$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(int i) {

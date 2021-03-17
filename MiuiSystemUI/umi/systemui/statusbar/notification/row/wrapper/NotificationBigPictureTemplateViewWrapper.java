@@ -12,6 +12,7 @@ public class NotificationBigPictureTemplateViewWrapper extends NotificationTempl
         super(context, view, expandableNotificationRow);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         updateImageTag(expandableNotificationRow.getEntry().getSbn());

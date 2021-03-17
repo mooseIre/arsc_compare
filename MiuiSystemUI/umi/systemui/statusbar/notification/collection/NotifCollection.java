@@ -55,22 +55,29 @@ public class NotifCollection implements Dumpable {
     private final NotifCollectionLogger mLogger;
     private final List<NotifCollectionListener> mNotifCollectionListeners = new ArrayList();
     private final GroupCoalescer.BatchableNotificationHandler mNotifHandler = new GroupCoalescer.BatchableNotificationHandler() {
+        /* class com.android.systemui.statusbar.notification.collection.NotifCollection.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
         public void onNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
             NotifCollection.this.onNotificationPosted(statusBarNotification, rankingMap);
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.coalescer.GroupCoalescer.BatchableNotificationHandler
         public void onNotificationBatchPosted(List<CoalescedEvent> list) {
             NotifCollection.this.onNotificationGroupPosted(list);
         }
 
+        @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
         public void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
             NotifCollection.this.onNotificationRemoved(statusBarNotification, rankingMap, i);
         }
 
+        @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
         public void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
             NotifCollection.this.onNotificationRankingUpdate(rankingMap);
         }
 
+        @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
         public void onNotificationsInitialized() {
             NotifCollection.this.onNotificationsInitialized();
         }
@@ -127,6 +134,9 @@ public class NotifCollection implements Dumpable {
         if (!this.mLifetimeExtenders.contains(notifLifetimeExtender)) {
             this.mLifetimeExtenders.add(notifLifetimeExtender);
             notifLifetimeExtender.setCallback(new NotifLifetimeExtender.OnEndLifetimeExtensionCallback() {
+                /* class com.android.systemui.statusbar.notification.collection.$$Lambda$NotifCollection$PST32cqW5H2Es1H0TkJN19WLA8 */
+
+                @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifLifetimeExtender.OnEndLifetimeExtensionCallback
                 public final void onEndLifetimeExtension(NotifLifetimeExtender notifLifetimeExtender, NotificationEntry notificationEntry) {
                     NotifCollection.this.onEndLifetimeExtension(notifLifetimeExtender, notificationEntry);
                 }
@@ -143,6 +153,9 @@ public class NotifCollection implements Dumpable {
         if (!this.mDismissInterceptors.contains(notifDismissInterceptor)) {
             this.mDismissInterceptors.add(notifDismissInterceptor);
             notifDismissInterceptor.setCallback(new NotifDismissInterceptor.OnEndDismissInterception() {
+                /* class com.android.systemui.statusbar.notification.collection.$$Lambda$NotifCollection$rJA7gnYxObrhTLCPUOVCEcGObt0 */
+
+                @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifDismissInterceptor.OnEndDismissInterception
                 public final void onEndDismissInterception(NotifDismissInterceptor notifDismissInterceptor, NotificationEntry notificationEntry, DismissedByUserStats dismissedByUserStats) {
                     NotifCollection.this.onEndDismissInterception(notifDismissInterceptor, notificationEntry, dismissedByUserStats);
                 }
@@ -156,8 +169,7 @@ public class NotifCollection implements Dumpable {
         Assert.isMainThread();
         checkForReentrantCall();
         ArrayList arrayList = new ArrayList();
-        int i = 0;
-        while (i < list.size()) {
+        for (int i = 0; i < list.size(); i++) {
             NotificationEntry notificationEntry = (NotificationEntry) list.get(i).first;
             DismissedByUserStats dismissedByUserStats = (DismissedByUserStats) list.get(i).second;
             Objects.requireNonNull(dismissedByUserStats);
@@ -181,7 +193,6 @@ public class NotifCollection implements Dumpable {
                         }
                     }
                 }
-                i++;
             } else {
                 LogBufferEulogizer logBufferEulogizer = this.mEulogizer;
                 IllegalStateException illegalStateException = new IllegalStateException("Invalid entry: " + notificationEntry.getKey());
@@ -208,7 +219,7 @@ public class NotifCollection implements Dumpable {
         }
         ArrayList arrayList = new ArrayList(getAllNotifs());
         for (int size = arrayList.size() - 1; size >= 0; size--) {
-            NotificationEntry notificationEntry = (NotificationEntry) arrayList.get(size);
+            NotificationEntry notificationEntry = arrayList.get(size);
             if (!shouldDismissOnClearAll(notificationEntry, i)) {
                 updateDismissInterceptors(notificationEntry);
                 if (isDismissIntercepted(notificationEntry)) {
@@ -222,7 +233,7 @@ public class NotifCollection implements Dumpable {
     }
 
     private void locallyDismissNotifications(List<NotificationEntry> list) {
-        ArrayList<NotificationEntry> arrayList = new ArrayList<>();
+        ArrayList<NotificationEntry> arrayList = new ArrayList();
         for (int i = 0; i < list.size(); i++) {
             NotificationEntry notificationEntry = list.get(i);
             notificationEntry.setDismissState(NotificationEntry.DismissState.DISMISSED);
@@ -230,25 +241,26 @@ public class NotifCollection implements Dumpable {
             if (isCanceled(notificationEntry)) {
                 arrayList.add(notificationEntry);
             } else if (notificationEntry.getSbn().getNotification().isGroupSummary()) {
-                for (NotificationEntry next : this.mNotificationSet.values()) {
-                    if (shouldAutoDismissChildren(next, notificationEntry.getSbn().getGroupKey())) {
-                        next.setDismissState(NotificationEntry.DismissState.PARENT_DISMISSED);
-                        this.mLogger.logChildDismissed(next);
-                        if (isCanceled(next)) {
-                            arrayList.add(next);
+                for (NotificationEntry notificationEntry2 : this.mNotificationSet.values()) {
+                    if (shouldAutoDismissChildren(notificationEntry2, notificationEntry.getSbn().getGroupKey())) {
+                        notificationEntry2.setDismissState(NotificationEntry.DismissState.PARENT_DISMISSED);
+                        this.mLogger.logChildDismissed(notificationEntry2);
+                        if (isCanceled(notificationEntry2)) {
+                            arrayList.add(notificationEntry2);
                         }
                     }
                 }
             }
         }
-        for (NotificationEntry notificationEntry2 : arrayList) {
-            this.mLogger.logDismissOnAlreadyCanceledEntry(notificationEntry2);
-            tryRemoveNotification(notificationEntry2);
+        for (NotificationEntry notificationEntry3 : arrayList) {
+            this.mLogger.logDismissOnAlreadyCanceledEntry(notificationEntry3);
+            tryRemoveNotification(notificationEntry3);
         }
     }
 
     /* access modifiers changed from: private */
-    public void onNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
+    /* access modifiers changed from: public */
+    private void onNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         Assert.isMainThread();
         postNotification(statusBarNotification, requireRanking(rankingMap, statusBarNotification.getKey()));
         applyRanking(rankingMap);
@@ -256,17 +268,19 @@ public class NotifCollection implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void onNotificationGroupPosted(List<CoalescedEvent> list) {
+    /* access modifiers changed from: public */
+    private void onNotificationGroupPosted(List<CoalescedEvent> list) {
         Assert.isMainThread();
         this.mLogger.logNotifGroupPosted(list.get(0).getSbn().getGroupKey(), list.size());
-        for (CoalescedEvent next : list) {
-            postNotification(next.getSbn(), next.getRanking());
+        for (CoalescedEvent coalescedEvent : list) {
+            postNotification(coalescedEvent.getSbn(), coalescedEvent.getRanking());
         }
         dispatchEventsAndRebuildList();
     }
 
     /* access modifiers changed from: private */
-    public void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
+    /* access modifiers changed from: public */
+    private void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
         Assert.isMainThread();
         this.mLogger.logNotifRemoved(statusBarNotification.getKey(), i);
         NotificationEntry notificationEntry = this.mNotificationSet.get(statusBarNotification.getKey());
@@ -281,7 +295,8 @@ public class NotifCollection implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
+    /* access modifiers changed from: public */
+    private void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
         Assert.isMainThread();
         this.mEventQueue.add(new RankingUpdatedEvent(rankingMap));
         applyRanking(rankingMap);
@@ -289,7 +304,8 @@ public class NotifCollection implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void onNotificationsInitialized() {
+    /* access modifiers changed from: public */
+    private void onNotificationsInitialized() {
         this.mClock.uptimeMillis();
     }
 
@@ -344,19 +360,19 @@ public class NotifCollection implements Dumpable {
     }
 
     private void applyRanking(NotificationListenerService.RankingMap rankingMap) {
-        for (NotificationEntry next : this.mNotificationSet.values()) {
-            if (!isCanceled(next)) {
+        for (NotificationEntry notificationEntry : this.mNotificationSet.values()) {
+            if (!isCanceled(notificationEntry)) {
                 NotificationListenerService.Ranking ranking = new NotificationListenerService.Ranking();
-                if (rankingMap.getRanking(next.getKey(), ranking)) {
-                    next.setRanking(ranking);
+                if (rankingMap.getRanking(notificationEntry.getKey(), ranking)) {
+                    notificationEntry.setRanking(ranking);
                     if (this.mFeatureFlags.isNewNotifPipelineRenderingEnabled()) {
                         String overrideGroupKey = ranking.getOverrideGroupKey();
-                        if (!Objects.equals(next.getSbn().getOverrideGroupKey(), overrideGroupKey)) {
-                            next.getSbn().setOverrideGroupKey(overrideGroupKey);
+                        if (!Objects.equals(notificationEntry.getSbn().getOverrideGroupKey(), overrideGroupKey)) {
+                            notificationEntry.getSbn().setOverrideGroupKey(overrideGroupKey);
                         }
                     }
                 } else {
-                    this.mLogger.logRankingMissing(next.getKey(), rankingMap);
+                    this.mLogger.logRankingMissing(notificationEntry.getKey(), rankingMap);
                 }
             }
         }
@@ -389,7 +405,7 @@ public class NotifCollection implements Dumpable {
                 return;
             }
             LogBufferEulogizer logBufferEulogizer = this.mEulogizer;
-            IllegalStateException illegalStateException = new IllegalStateException(String.format("Cannot end lifetime extension for extender \"%s\" (%s)", new Object[]{notifLifetimeExtender.getName(), notifLifetimeExtender}));
+            IllegalStateException illegalStateException = new IllegalStateException(String.format("Cannot end lifetime extension for extender \"%s\" (%s)", notifLifetimeExtender.getName(), notifLifetimeExtender));
             logBufferEulogizer.record(illegalStateException);
             throw illegalStateException;
         }
@@ -397,8 +413,8 @@ public class NotifCollection implements Dumpable {
 
     private void cancelLifetimeExtension(NotificationEntry notificationEntry) {
         this.mAmDispatchingToOtherCode = true;
-        for (NotifLifetimeExtender cancelLifetimeExtension : notificationEntry.mLifetimeExtenders) {
-            cancelLifetimeExtension.cancelLifetimeExtension(notificationEntry);
+        for (NotifLifetimeExtender notifLifetimeExtender : notificationEntry.mLifetimeExtenders) {
+            notifLifetimeExtender.cancelLifetimeExtension(notificationEntry);
         }
         this.mAmDispatchingToOtherCode = false;
         notificationEntry.mLifetimeExtenders.clear();
@@ -411,10 +427,10 @@ public class NotifCollection implements Dumpable {
     private void updateLifetimeExtension(NotificationEntry notificationEntry) {
         notificationEntry.mLifetimeExtenders.clear();
         this.mAmDispatchingToOtherCode = true;
-        for (NotifLifetimeExtender next : this.mLifetimeExtenders) {
-            if (next.shouldExtendLifetime(notificationEntry, notificationEntry.mCancellationReason)) {
-                this.mLogger.logLifetimeExtended(notificationEntry.getKey(), next);
-                notificationEntry.mLifetimeExtenders.add(next);
+        for (NotifLifetimeExtender notifLifetimeExtender : this.mLifetimeExtenders) {
+            if (notifLifetimeExtender.shouldExtendLifetime(notificationEntry, notificationEntry.mCancellationReason)) {
+                this.mLogger.logLifetimeExtended(notificationEntry.getKey(), notifLifetimeExtender);
+                notificationEntry.mLifetimeExtenders.add(notifLifetimeExtender);
             }
         }
         this.mAmDispatchingToOtherCode = false;
@@ -423,9 +439,9 @@ public class NotifCollection implements Dumpable {
     private void updateDismissInterceptors(NotificationEntry notificationEntry) {
         notificationEntry.mDismissInterceptors.clear();
         this.mAmDispatchingToOtherCode = true;
-        for (NotifDismissInterceptor next : this.mDismissInterceptors) {
-            if (next.shouldInterceptDismissal(notificationEntry)) {
-                notificationEntry.mDismissInterceptors.add(next);
+        for (NotifDismissInterceptor notifDismissInterceptor : this.mDismissInterceptors) {
+            if (notifDismissInterceptor.shouldInterceptDismissal(notificationEntry)) {
+                notificationEntry.mDismissInterceptors.add(notifDismissInterceptor);
             }
         }
         this.mAmDispatchingToOtherCode = false;
@@ -435,9 +451,9 @@ public class NotifCollection implements Dumpable {
         if (isDismissedByUser(notificationEntry)) {
             notificationEntry.setDismissState(NotificationEntry.DismissState.NOT_DISMISSED);
             if (notificationEntry.getSbn().getNotification().isGroupSummary()) {
-                for (NotificationEntry next : this.mNotificationSet.values()) {
-                    if (next.getSbn().getGroupKey().equals(notificationEntry.getSbn().getGroupKey()) && next.getDismissState() == NotificationEntry.DismissState.PARENT_DISMISSED) {
-                        next.setDismissState(NotificationEntry.DismissState.NOT_DISMISSED);
+                for (NotificationEntry notificationEntry2 : this.mNotificationSet.values()) {
+                    if (notificationEntry2.getSbn().getGroupKey().equals(notificationEntry.getSbn().getGroupKey()) && notificationEntry2.getDismissState() == NotificationEntry.DismissState.PARENT_DISMISSED) {
+                        notificationEntry2.setDismissState(NotificationEntry.DismissState.NOT_DISMISSED);
                     }
                 }
             }
@@ -451,7 +467,7 @@ public class NotifCollection implements Dumpable {
             checkForReentrantCall();
             if (!notificationEntry.mDismissInterceptors.remove(notifDismissInterceptor)) {
                 LogBufferEulogizer logBufferEulogizer = this.mEulogizer;
-                IllegalStateException illegalStateException = new IllegalStateException(String.format("Cannot end dismiss interceptor for interceptor \"%s\" (%s)", new Object[]{notifDismissInterceptor.getName(), notifDismissInterceptor}));
+                IllegalStateException illegalStateException = new IllegalStateException(String.format("Cannot end dismiss interceptor for interceptor \"%s\" (%s)", notifDismissInterceptor.getName(), notifDismissInterceptor));
                 logBufferEulogizer.record(illegalStateException);
                 throw illegalStateException;
             } else if (!isDismissIntercepted(notificationEntry)) {
@@ -462,8 +478,8 @@ public class NotifCollection implements Dumpable {
 
     private void cancelDismissInterception(NotificationEntry notificationEntry) {
         this.mAmDispatchingToOtherCode = true;
-        for (NotifDismissInterceptor cancelDismissInterception : notificationEntry.mDismissInterceptors) {
-            cancelDismissInterception.cancelDismissInterception(notificationEntry);
+        for (NotifDismissInterceptor notifDismissInterceptor : notificationEntry.mDismissInterceptors) {
+            notifDismissInterceptor.cancelDismissInterception(notificationEntry);
         }
         this.mAmDispatchingToOtherCode = false;
         notificationEntry.mDismissInterceptors.clear();
@@ -514,6 +530,7 @@ public class NotifCollection implements Dumpable {
         return i == -1 || notificationEntry.getSbn().getUser().getIdentifier() == -1 || notificationEntry.getSbn().getUser().getIdentifier() == i;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         ArrayList arrayList = new ArrayList(getAllNotifs());
         printWriter.println("\tNotifCollection unsorted/unfiltered notifications:");

@@ -11,6 +11,7 @@ public final class ColorInversionTile_Factory implements Factory<ColorInversionT
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ColorInversionTile get() {
         return provideInstance(this.hostProvider);
     }

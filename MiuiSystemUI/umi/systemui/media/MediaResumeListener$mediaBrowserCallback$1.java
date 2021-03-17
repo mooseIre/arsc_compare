@@ -14,10 +14,12 @@ import org.jetbrains.annotations.NotNull;
 public final class MediaResumeListener$mediaBrowserCallback$1 extends ResumeMediaBrowser.Callback {
     final /* synthetic */ MediaResumeListener this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaResumeListener$mediaBrowserCallback$1(MediaResumeListener mediaResumeListener) {
         this.this$0 = mediaResumeListener;
     }
 
+    @Override // com.android.systemui.media.ResumeMediaBrowser.Callback
     public void addTrack(@NotNull MediaDescription mediaDescription, @NotNull ComponentName componentName, @NotNull ResumeMediaBrowser resumeMediaBrowser) {
         Intrinsics.checkParameterIsNotNull(mediaDescription, "desc");
         Intrinsics.checkParameterIsNotNull(componentName, "component");
@@ -25,9 +27,9 @@ public final class MediaResumeListener$mediaBrowserCallback$1 extends ResumeMedi
         MediaSession.Token token = resumeMediaBrowser.getToken();
         PendingIntent appIntent = resumeMediaBrowser.getAppIntent();
         PackageManager packageManager = this.this$0.context.getPackageManager();
-        CharSequence packageName = componentName.getPackageName();
+        String packageName = componentName.getPackageName();
         Intrinsics.checkExpressionValueIsNotNull(packageName, "component.packageName");
-        Runnable access$getResumeAction = this.this$0.getResumeAction(componentName);
+        Runnable runnable = this.this$0.getResumeAction(componentName);
         try {
             CharSequence applicationLabel = packageManager.getApplicationLabel(packageManager.getApplicationInfo(componentName.getPackageName(), 0));
             Intrinsics.checkExpressionValueIsNotNull(applicationLabel, "pm.getApplicationLabel(\n…omponent.packageName, 0))");
@@ -37,12 +39,12 @@ public final class MediaResumeListener$mediaBrowserCallback$1 extends ResumeMedi
         }
         Log.d("MediaResumeListener", "Adding resume controls " + mediaDescription);
         MediaDataManager access$getMediaDataManager$p = MediaResumeListener.access$getMediaDataManager$p(this.this$0);
-        int access$getCurrentUserId$p = this.this$0.currentUserId;
+        int i = this.this$0.currentUserId;
         Intrinsics.checkExpressionValueIsNotNull(token, "token");
         String obj = packageName.toString();
         Intrinsics.checkExpressionValueIsNotNull(appIntent, "appIntent");
         String packageName2 = componentName.getPackageName();
         Intrinsics.checkExpressionValueIsNotNull(packageName2, "component.packageName");
-        access$getMediaDataManager$p.addResumptionControls(access$getCurrentUserId$p, mediaDescription, access$getResumeAction, token, obj, appIntent, packageName2);
+        access$getMediaDataManager$p.addResumptionControls(i, mediaDescription, runnable, token, obj, appIntent, packageName2);
     }
 }

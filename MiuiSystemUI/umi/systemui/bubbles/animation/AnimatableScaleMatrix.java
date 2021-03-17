@@ -5,6 +5,8 @@ import androidx.dynamicanimation.animation.FloatPropertyCompat;
 
 public class AnimatableScaleMatrix extends Matrix {
     public static final FloatPropertyCompat<AnimatableScaleMatrix> SCALE_X = new FloatPropertyCompat<AnimatableScaleMatrix>("matrixScaleX") {
+        /* class com.android.systemui.bubbles.animation.AnimatableScaleMatrix.AnonymousClass1 */
+
         public float getValue(AnimatableScaleMatrix animatableScaleMatrix) {
             return AnimatableScaleMatrix.getAnimatableValueForScaleFactor(animatableScaleMatrix.mScaleX);
         }
@@ -14,6 +16,8 @@ public class AnimatableScaleMatrix extends Matrix {
         }
     };
     public static final FloatPropertyCompat<AnimatableScaleMatrix> SCALE_Y = new FloatPropertyCompat<AnimatableScaleMatrix>("matrixScaleY") {
+        /* class com.android.systemui.bubbles.animation.AnimatableScaleMatrix.AnonymousClass2 */
+
         public float getValue(AnimatableScaleMatrix animatableScaleMatrix) {
             return AnimatableScaleMatrix.getAnimatableValueForScaleFactor(animatableScaleMatrix.mScaleY);
         }
@@ -24,10 +28,8 @@ public class AnimatableScaleMatrix extends Matrix {
     };
     private float mPivotX = 0.0f;
     private float mPivotY = 0.0f;
-    /* access modifiers changed from: private */
-    public float mScaleX = 1.0f;
-    /* access modifiers changed from: private */
-    public float mScaleY = 1.0f;
+    private float mScaleX = 1.0f;
+    private float mScaleY = 1.0f;
 
     public static float getAnimatableValueForScaleFactor(float f) {
         return f * 499.99997f;

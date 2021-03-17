@@ -5,11 +5,9 @@ import android.view.ViewGroup;
 import androidx.constraintlayout.solver.widgets.ConstraintWidget;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import kotlin.TypeCastException;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: TransitionLayout.kt */
 public final class WidgetState {
     private float alpha;
     private boolean gone;
@@ -22,21 +20,18 @@ public final class WidgetState {
     private float y;
 
     public WidgetState() {
-        this(0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 511, (DefaultConstructorMarker) null);
+        this(0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 511, null);
     }
 
     public static /* synthetic */ WidgetState copy$default(WidgetState widgetState, float f, float f2, int i, int i2, int i3, int i4, float f3, float f4, boolean z, int i5, Object obj) {
-        WidgetState widgetState2 = widgetState;
-        int i6 = i5;
-        return widgetState.copy((i6 & 1) != 0 ? widgetState2.x : f, (i6 & 2) != 0 ? widgetState2.y : f2, (i6 & 4) != 0 ? widgetState2.width : i, (i6 & 8) != 0 ? widgetState2.height : i2, (i6 & 16) != 0 ? widgetState2.measureWidth : i3, (i6 & 32) != 0 ? widgetState2.measureHeight : i4, (i6 & 64) != 0 ? widgetState2.alpha : f3, (i6 & 128) != 0 ? widgetState2.scale : f4, (i6 & 256) != 0 ? widgetState2.gone : z);
+        return widgetState.copy((i5 & 1) != 0 ? widgetState.x : f, (i5 & 2) != 0 ? widgetState.y : f2, (i5 & 4) != 0 ? widgetState.width : i, (i5 & 8) != 0 ? widgetState.height : i2, (i5 & 16) != 0 ? widgetState.measureWidth : i3, (i5 & 32) != 0 ? widgetState.measureHeight : i4, (i5 & 64) != 0 ? widgetState.alpha : f3, (i5 & 128) != 0 ? widgetState.scale : f4, (i5 & 256) != 0 ? widgetState.gone : z);
     }
 
-    @NotNull
     public final WidgetState copy(float f, float f2, int i, int i2, int i3, int i4, float f3, float f4, boolean z) {
         return new WidgetState(f, f2, i, i2, i3, i4, f3, f4, z);
     }
 
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -53,10 +48,12 @@ public final class WidgetState {
         if (z) {
             z = true;
         }
-        return hashCode + (z ? 1 : 0);
+        int i = z ? 1 : 0;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        return hashCode + i;
     }
 
-    @NotNull
     public String toString() {
         return "WidgetState(x=" + this.x + ", y=" + this.y + ", width=" + this.width + ", height=" + this.height + ", measureWidth=" + this.measureWidth + ", measureHeight=" + this.measureHeight + ", alpha=" + this.alpha + ", scale=" + this.scale + ", gone=" + this.gone + ")";
     }
@@ -150,7 +147,7 @@ public final class WidgetState {
         this.gone = z;
     }
 
-    public final void initFromLayout(@NotNull View view) {
+    public final void initFromLayout(View view) {
         Intrinsics.checkParameterIsNotNull(view, "view");
         boolean z = true;
         boolean z2 = view.getVisibility() == 8;

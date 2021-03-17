@@ -18,29 +18,29 @@ public interface AppMiniWindowRowTouchCallback {
     @NotNull
     Context getContext();
 
-    void onExpandedParamsUpdated(@NotNull MiniWindowExpandParameters miniWindowExpandParameters) {
+    default void onExpandedParamsUpdated(@NotNull MiniWindowExpandParameters miniWindowExpandParameters) {
         Intrinsics.checkParameterIsNotNull(miniWindowExpandParameters, "params");
     }
 
-    void onMiniWindowAppLaunched() {
+    default void onMiniWindowAppLaunched() {
     }
 
-    void onMiniWindowChildPicked(@NotNull MiuiExpandableNotificationRow miuiExpandableNotificationRow) {
+    default void onMiniWindowChildPicked(@NotNull MiuiExpandableNotificationRow miuiExpandableNotificationRow) {
         Intrinsics.checkParameterIsNotNull(miuiExpandableNotificationRow, "child");
     }
 
-    void onMiniWindowReset() {
+    default void onMiniWindowReset() {
     }
 
-    void onMiniWindowTrackingEnd() {
+    default void onMiniWindowTrackingEnd() {
     }
 
-    void onMiniWindowTrackingStart() {
+    default void onMiniWindowTrackingStart() {
     }
 
-    void onMiniWindowTrackingUpdate(float f) {
+    default void onMiniWindowTrackingUpdate(float f) {
     }
 
-    void onStartMiniWindowExpandAnimation() {
+    default void onStartMiniWindowExpandAnimation() {
     }
 }

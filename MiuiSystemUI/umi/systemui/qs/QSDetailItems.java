@@ -26,16 +26,13 @@ public class QSDetailItems extends FrameLayout {
     private static final boolean DEBUG = Log.isLoggable("QSDetailItems", 3);
     protected Adapter mAdapter = new Adapter();
     protected Callback mCallback;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private View mEmpty;
     private TextView mEmptyText;
     private AutoSizingList mItemList;
     protected Item[] mItems;
-    /* access modifiers changed from: private */
-    public boolean mItemsVisible = true;
-    /* access modifiers changed from: private */
-    public final int mQsDetailIconOverlaySize;
+    private boolean mItemsVisible = true;
+    private final int mQsDetailIconOverlaySize;
     private String mTag;
 
     public interface Callback {
@@ -106,12 +103,14 @@ public class QSDetailItems extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleSetCallback(Callback callback) {
+    /* access modifiers changed from: public */
+    private void handleSetCallback(Callback callback) {
         this.mCallback = callback;
     }
 
     /* access modifiers changed from: private */
-    public void handleSetItems(Item[] itemArr) {
+    /* access modifiers changed from: public */
+    private void handleSetItems(Item[] itemArr) {
         int i = 0;
         int length = itemArr != null ? itemArr.length : 0;
         this.mEmpty.setVisibility(length == 0 ? 0 : 8);
@@ -125,7 +124,8 @@ public class QSDetailItems extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleSetItemsVisible(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleSetItemsVisible(boolean z) {
         if (this.mItemsVisible != z) {
             this.mItemsVisible = z;
             for (int i = 0; i < this.mItemList.getChildCount(); i++) {
@@ -134,7 +134,8 @@ public class QSDetailItems extends FrameLayout {
         }
     }
 
-    protected class Adapter extends BaseAdapter {
+    /* access modifiers changed from: protected */
+    public class Adapter extends BaseAdapter {
         public long getItemId(int i) {
             return 0;
         }
@@ -182,6 +183,8 @@ public class QSDetailItems extends FrameLayout {
             textView2.setVisibility(z ? 0 : 8);
             textView2.setText(z ? item.line2 : null);
             view.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.systemui.qs.QSDetailItems.Adapter.AnonymousClass1 */
+
                 public void onClick(View view) {
                     Callback callback = QSDetailItems.this.mCallback;
                     if (callback != null) {
@@ -195,6 +198,8 @@ public class QSDetailItems extends FrameLayout {
                 imageView2.setVisibility(0);
                 imageView2.setClickable(true);
                 imageView2.setOnClickListener(new View.OnClickListener() {
+                    /* class com.android.systemui.qs.QSDetailItems.Adapter.AnonymousClass2 */
+
                     public void onClick(View view) {
                         Callback callback = QSDetailItems.this.mCallback;
                         if (callback != null) {

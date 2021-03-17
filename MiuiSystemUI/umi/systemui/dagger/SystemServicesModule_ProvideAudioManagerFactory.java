@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideAudioManagerFactory implements Fa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AudioManager get() {
         return provideInstance(this.contextProvider);
     }

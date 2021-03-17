@@ -26,6 +26,7 @@ public final class NotificationDynamicFpsController_Factory implements Factory<N
         this.screenLifecycleProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public NotificationDynamicFpsController get() {
         return provideInstance(this.contextProvider, this.notificationEntryManagerProvider, this.headsUpManagerProvider, this.statusBarProvider, this.statusBarStateControllerProvider, this.screenLifecycleProvider);
     }

@@ -17,6 +17,7 @@ public final class NotificationPanelNavigationBarCoordinator_Factory implements 
         this.lightBarControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public NotificationPanelNavigationBarCoordinator get() {
         return provideInstance(this.commandQueueProvider, this.configurationControllerProvider, this.lightBarControllerProvider);
     }

@@ -14,10 +14,10 @@ final class QSFooterDataUsage$onFinishInflate$1 implements View.OnClickListener 
     }
 
     public final void onClick(View view) {
-        Intent access$getIntent1$p = this.this$0.intent1;
-        if (access$getIntent1$p != null) {
+        Intent intent = this.this$0.intent1;
+        if (intent != null) {
             ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("data_usage_footer");
-            this.this$0.activityStarter.startActivity(access$getIntent1$p, true);
+            this.this$0.activityStarter.startActivity(intent, true);
         }
     }
 }

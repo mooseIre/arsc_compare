@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideAccessibilityManagerFactory imple
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AccessibilityManager get() {
         return provideInstance(this.contextProvider);
     }

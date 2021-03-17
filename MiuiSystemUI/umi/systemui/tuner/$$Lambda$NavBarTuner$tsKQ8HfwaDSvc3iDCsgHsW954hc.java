@@ -12,6 +12,7 @@ public final /* synthetic */ class $$Lambda$NavBarTuner$tsKQ8HfwaDSvc3iDCsgHsW95
     private /* synthetic */ $$Lambda$NavBarTuner$tsKQ8HfwaDSvc3iDCsgHsW954hc() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable((TunerService.Tunable) obj);
     }

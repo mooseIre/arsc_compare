@@ -12,6 +12,7 @@ public class DelayedWakeLock implements WakeLock {
         this.mInner = wakeLock;
     }
 
+    @Override // com.android.systemui.util.wakelock.WakeLock
     public void acquire(String str) {
         this.mInner.acquire(str);
     }
@@ -22,8 +23,10 @@ public class DelayedWakeLock implements WakeLock {
         this.mInner.release(str);
     }
 
+    @Override // com.android.systemui.util.wakelock.WakeLock
     public void release(String str) {
         this.mHandler.postDelayed(new Runnable(str) {
+            /* class com.android.systemui.util.wakelock.$$Lambda$DelayedWakeLock$aTG9u0wfrNahXJF_VixBxfvFqfg */
             public final /* synthetic */ String f$1;
 
             {
@@ -36,6 +39,7 @@ public class DelayedWakeLock implements WakeLock {
         }, 100);
     }
 
+    @Override // com.android.systemui.util.wakelock.WakeLock
     public Runnable wrap(Runnable runnable) {
         return WakeLock.wrapImpl(this, runnable);
     }

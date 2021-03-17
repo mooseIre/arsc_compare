@@ -12,19 +12,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DemoModeController {
-    /* access modifiers changed from: private */
-    public final List<DemoMode> mCallbacks = new ArrayList();
+    private final List<DemoMode> mCallbacks = new ArrayList();
     private final BroadcastReceiver mDemoReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.DemoModeController.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             Bundle extras;
             if ("com.android.systemui.demo".equals(intent.getAction()) && (extras = intent.getExtras()) != null) {
                 String lowerCase = extras.getString("command", "").trim().toLowerCase();
                 if (lowerCase.length() > 0) {
-                    Bundle unused = DemoModeController.this.mLastArgs = extras;
-                    String unused2 = DemoModeController.this.mLastCommand = lowerCase;
+                    DemoModeController.this.mLastArgs = extras;
+                    DemoModeController.this.mLastCommand = lowerCase;
                     try {
-                        for (DemoMode dispatchDemoCommand : DemoModeController.this.mCallbacks) {
-                            dispatchDemoCommand.dispatchDemoCommand(lowerCase, extras);
+                        for (DemoMode demoMode : DemoModeController.this.mCallbacks) {
+                            demoMode.dispatchDemoCommand(lowerCase, extras);
                         }
                     } catch (Throwable th) {
                         th.printStackTrace();
@@ -33,10 +34,8 @@ public class DemoModeController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public Bundle mLastArgs;
-    /* access modifiers changed from: private */
-    public String mLastCommand;
+    private Bundle mLastArgs;
+    private String mLastCommand;
 
     public DemoModeController(BroadcastDispatcher broadcastDispatcher) {
         IntentFilter intentFilter = new IntentFilter();

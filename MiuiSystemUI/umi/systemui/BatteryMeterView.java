@@ -47,15 +47,13 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     private int mNonAdaptedForegroundColor;
     private int mNonAdaptedSingleToneColor;
     private final int mPercentageStyleId;
-    /* access modifiers changed from: private */
-    public SettingObserver mSettingObserver;
+    private SettingObserver mSettingObserver;
     private boolean mShowPercentAvailable;
     private int mShowPercentMode;
     private final String mSlotBattery;
     private int mTextColor;
     private boolean mUseWallpaperTextColors;
-    /* access modifiers changed from: private */
-    public int mUser;
+    private int mUser;
     private final CurrentUserTracker mUserTracker;
 
     public boolean hasOverlappingRendering() {
@@ -92,8 +90,11 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         onDarkChanged(new Rect(), 0.0f, darkIconDispatcher.getLightModeIconColorSingleTone(), darkIconDispatcher.getLightModeIconColorSingleTone(), darkIconDispatcher.getDarkModeIconColorSingleTone(), darkIconDispatcher.useTint());
         this.mUserTracker = new CurrentUserTracker((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)) {
+            /* class com.android.systemui.BatteryMeterView.AnonymousClass1 */
+
+            @Override // com.android.systemui.settings.CurrentUserTracker
             public void onUserSwitched(int i) {
-                int unused = BatteryMeterView.this.mUser = i;
+                BatteryMeterView.this.mUser = i;
                 BatteryMeterView.this.getContext().getContentResolver().unregisterContentObserver(BatteryMeterView.this.mSettingObserver);
                 BatteryMeterView.this.getContext().getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_battery_percent"), false, BatteryMeterView.this.mSettingObserver, i);
                 BatteryMeterView.this.updateShowPercent();
@@ -107,9 +108,9 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     private void setupLayoutTransition() {
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.setDuration(200);
-        layoutTransition.setAnimator(2, ObjectAnimator.ofFloat((Object) null, "alpha", new float[]{0.0f, 1.0f}));
+        layoutTransition.setAnimator(2, ObjectAnimator.ofFloat((Object) null, "alpha", 0.0f, 1.0f));
         layoutTransition.setInterpolator(2, Interpolators.ALPHA_IN);
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, "alpha", new float[]{1.0f, 0.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, "alpha", 1.0f, 0.0f);
         layoutTransition.setInterpolator(3, Interpolators.ALPHA_OUT);
         layoutTransition.setAnimator(3, ofFloat);
         setLayoutTransition(layoutTransition);
@@ -129,6 +130,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         }
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("icon_blacklist".equals(str)) {
             setVisibility(StatusBarIconController.getIconBlacklist(getContext(), str2).contains(this.mSlotBattery) ? 8 : 0);
@@ -156,6 +158,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         unsubscribeFromTunerUpdates();
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
         this.mDrawable.setCharging(z);
         this.mDrawable.setBatteryLevel(i);
@@ -164,6 +167,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         updatePercentText();
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         this.mDrawable.setPowerSaveEnabled(z);
     }
@@ -173,7 +177,8 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     }
 
     /* access modifiers changed from: private */
-    public void updatePercentText() {
+    /* access modifiers changed from: public */
+    private void updatePercentText() {
         int i;
         BatteryController batteryController = this.mBatteryController;
         if (batteryController != null) {
@@ -184,11 +189,14 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
                 } else {
                     i = C0021R$string.accessibility_battery_level;
                 }
-                setContentDescription(context.getString(i, new Object[]{Integer.valueOf(this.mLevel)}));
+                setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
             } else if (this.mShowPercentMode != 3 || this.mCharging) {
                 setPercentTextAtCurrentLevel();
             } else {
                 batteryController.getEstimatedTimeRemainingString(new BatteryController.EstimateFetchCompletion() {
+                    /* class com.android.systemui.$$Lambda$BatteryMeterView$yZDQalqWJG2q_49RDLUqR8bhWwM */
+
+                    @Override // com.android.systemui.statusbar.policy.BatteryController.EstimateFetchCompletion
                     public final void onBatteryRemainingEstimateRetrieved(String str) {
                         BatteryMeterView.this.lambda$updatePercentText$0$BatteryMeterView(str);
                     }
@@ -202,7 +210,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     public /* synthetic */ void lambda$updatePercentText$0$BatteryMeterView(String str) {
         if (str != null) {
             this.mBatteryPercentView.setText(str);
-            setContentDescription(getContext().getString(C0021R$string.accessibility_battery_level_with_estimate, new Object[]{Integer.valueOf(this.mLevel), str}));
+            setContentDescription(getContext().getString(C0021R$string.accessibility_battery_level_with_estimate, Integer.valueOf(this.mLevel), str));
             return;
         }
         setPercentTextAtCurrentLevel();
@@ -217,15 +225,19 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         } else {
             i = C0021R$string.accessibility_battery_level;
         }
-        setContentDescription(context.getString(i, new Object[]{Integer.valueOf(this.mLevel)}));
+        setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
     }
 
     /* access modifiers changed from: private */
-    public void updateShowPercent() {
+    /* access modifiers changed from: public */
+    private void updateShowPercent() {
         int i;
         boolean z = false;
         boolean z2 = this.mBatteryPercentView != null;
         if (((Integer) DejankUtils.whitelistIpcs(new Supplier() {
+            /* class com.android.systemui.$$Lambda$BatteryMeterView$65vHpQiubDRpix2SSD9dASDdHfc */
+
+            @Override // java.util.function.Supplier
             public final Object get() {
                 return BatteryMeterView.this.lambda$updateShowPercent$1$BatteryMeterView();
             }
@@ -259,6 +271,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         return Integer.valueOf(Settings.System.getIntForUser(getContext().getContentResolver(), "status_bar_show_battery_percent", 0, this.mUser));
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         scaleBatteryMeterViews();
     }
@@ -276,6 +289,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         this.mBatteryIconView.setLayoutParams(layoutParams);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (!DarkIconDispatcher.isInArea(rect, this)) {
             f = 0.0f;
@@ -298,7 +312,8 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         }
     }
 
-    private final class SettingObserver extends ContentObserver {
+    /* access modifiers changed from: private */
+    public final class SettingObserver extends ContentObserver {
         public SettingObserver(Handler handler) {
             super(handler);
         }

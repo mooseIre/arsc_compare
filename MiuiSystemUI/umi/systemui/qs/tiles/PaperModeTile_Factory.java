@@ -14,6 +14,7 @@ public final class PaperModeTile_Factory implements Factory<PaperModeTile> {
         this.paperModeControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PaperModeTile get() {
         return provideInstance(this.hostProvider, this.paperModeControllerProvider);
     }

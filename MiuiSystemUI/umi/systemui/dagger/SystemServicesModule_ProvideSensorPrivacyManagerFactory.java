@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideSensorPrivacyManagerFactory imple
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SensorPrivacyManager get() {
         return provideInstance(this.contextProvider);
     }

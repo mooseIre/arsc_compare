@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import kotlin.Triple;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -12,11 +13,11 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: NeverExactlyLinearLayout.kt */
 public final class NeverExactlyLinearLayout extends LinearLayout {
     public NeverExactlyLinearLayout(@NotNull Context context) {
-        this(context, (AttributeSet) null, 0, 6, (DefaultConstructorMarker) null);
+        this(context, null, 0, 6, null);
     }
 
     public NeverExactlyLinearLayout(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 4, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 4, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */

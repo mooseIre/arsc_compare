@@ -14,6 +14,7 @@ public final class ModalRowInflater_Factory implements Factory<ModalRowInflater>
         this.remoteInputManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ModalRowInflater get() {
         return provideInstance(this.contentInflaterProvider, this.remoteInputManagerProvider);
     }

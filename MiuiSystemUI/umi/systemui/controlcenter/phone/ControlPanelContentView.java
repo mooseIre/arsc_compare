@@ -31,7 +31,7 @@ public class ControlPanelContentView extends FrameLayout {
     private ImageView mTilesEdit;
 
     public ControlPanelContentView(Context context) {
-        super(context, (AttributeSet) null);
+        super(context, null);
     }
 
     public ControlPanelContentView(Context context, AttributeSet attributeSet) {
@@ -55,6 +55,8 @@ public class ControlPanelContentView extends FrameLayout {
         ImageView imageView = (ImageView) findViewById(C0015R$id.tiles_edit);
         this.mTilesEdit = imageView;
         imageView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.controlcenter.phone.ControlPanelContentView.AnonymousClass1 */
+
             public void onClick(View view) {
                 ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new QuickTilesEditEvent());
                 ControlPanelContentView.this.showEdit();

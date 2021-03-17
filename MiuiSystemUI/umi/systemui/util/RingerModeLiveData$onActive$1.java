@@ -10,6 +10,6 @@ final class RingerModeLiveData$onActive$1 implements Runnable {
 
     public final void run() {
         RingerModeLiveData ringerModeLiveData = this.this$0;
-        ringerModeLiveData.postValue(ringerModeLiveData.getter.invoke());
+        ringerModeLiveData.postValue(RingerModeLiveData.access$getGetter$p(ringerModeLiveData).invoke());
     }
 }

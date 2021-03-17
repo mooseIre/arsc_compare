@@ -7,8 +7,9 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationPanelViewController.kt */
-final class MiuiNotificationPanelViewController$updateDismissView$listener$1 extends Lambda implements Function1<Animator, Unit> {
+public final class MiuiNotificationPanelViewController$updateDismissView$listener$1 extends Lambda implements Function1<Animator, Unit> {
     final /* synthetic */ boolean $showDismissView;
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
@@ -19,27 +20,30 @@ final class MiuiNotificationPanelViewController$updateDismissView$listener$1 ext
         this.$showDismissView = z;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke((Animator) obj);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(Animator animator) {
+        invoke(animator);
         return Unit.INSTANCE;
     }
 
     public final void invoke(@Nullable Animator animator) {
-        DismissView access$getMDismissView$p = this.this$0.mDismissView;
-        if (access$getMDismissView$p != null) {
-            access$getMDismissView$p.stopAnimator();
+        DismissView dismissView = this.this$0.mDismissView;
+        if (dismissView != null) {
+            dismissView.stopAnimator();
         }
         if (this.$showDismissView) {
-            DismissView access$getMDismissView$p2 = this.this$0.mDismissView;
-            if (access$getMDismissView$p2 != null) {
-                access$getMDismissView$p2.setVisibility(0);
+            DismissView dismissView2 = this.this$0.mDismissView;
+            if (dismissView2 != null) {
+                dismissView2.setVisibility(0);
                 return;
             }
             return;
         }
-        DismissView access$getMDismissView$p3 = this.this$0.mDismissView;
-        if (access$getMDismissView$p3 != null) {
-            access$getMDismissView$p3.setVisibility(8);
+        DismissView dismissView3 = this.this$0.mDismissView;
+        if (dismissView3 != null) {
+            dismissView3.setVisibility(8);
         }
     }
 }

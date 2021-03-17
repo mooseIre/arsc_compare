@@ -1,5 +1,6 @@
 package com.android.systemui.accessibility;
 
+import android.app.PendingIntent;
 import android.app.RemoteAction;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -40,13 +41,15 @@ public class SystemActions extends SystemUI {
         super(context);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         Context context = this.mContext;
         SystemActionsBroadcastReceiver systemActionsBroadcastReceiver = this.mReceiver;
-        context.registerReceiverForAllUsers(systemActionsBroadcastReceiver, systemActionsBroadcastReceiver.createIntentFilter(), "com.android.systemui.permission.SELF", (Handler) null);
+        context.registerReceiverForAllUsers(systemActionsBroadcastReceiver, systemActionsBroadcastReceiver.createIntentFilter(), "com.android.systemui.permission.SELF", null);
         registerActions();
     }
 
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         Locale locale = this.mContext.getResources().getConfiguration().getLocales().get(0);
@@ -105,6 +108,10 @@ public class SystemActions extends SystemUI {
                 i2 = 17039596;
                 str = "SYSTEM_ACTION_POWER_DIALOG";
                 break;
+            case 7:
+            case 10:
+            default:
+                return;
             case 8:
                 i2 = 17039592;
                 str = "SYSTEM_ACTION_LOCK_SCREEN";
@@ -125,8 +132,6 @@ public class SystemActions extends SystemUI {
                 i2 = 17039590;
                 str = "SYSTEM_ACTION_ACCESSIBILITY_SHORTCUT";
                 break;
-            default:
-                return;
         }
         this.mA11yManager.registerSystemAction(createRemoteAction(i2, str), i);
     }
@@ -140,46 +145,50 @@ public class SystemActions extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void handleBack() {
+    /* access modifiers changed from: public */
+    private void handleBack() {
         sendDownAndUpKeyEvents(4);
     }
 
     /* access modifiers changed from: private */
-    public void handleHome() {
+    /* access modifiers changed from: public */
+    private void handleHome() {
         sendDownAndUpKeyEvents(3);
     }
 
     private void sendDownAndUpKeyEvents(int i) {
         long uptimeMillis = SystemClock.uptimeMillis();
-        int i2 = i;
-        long j = uptimeMillis;
-        sendKeyEventIdentityCleared(i2, 0, j, uptimeMillis);
-        sendKeyEventIdentityCleared(i2, 1, j, SystemClock.uptimeMillis());
+        sendKeyEventIdentityCleared(i, 0, uptimeMillis, uptimeMillis);
+        sendKeyEventIdentityCleared(i, 1, uptimeMillis, SystemClock.uptimeMillis());
     }
 
     private void sendKeyEventIdentityCleared(int i, int i2, long j, long j2) {
-        KeyEvent obtain = KeyEvent.obtain(j, j2, i2, i, 0, 0, -1, 0, 8, 257, (String) null);
+        KeyEvent obtain = KeyEvent.obtain(j, j2, i2, i, 0, 0, -1, 0, 8, 257, null);
         InputManager.getInstance().injectInputEvent(obtain, 0);
         obtain.recycle();
     }
 
     /* access modifiers changed from: private */
-    public void handleRecents() {
+    /* access modifiers changed from: public */
+    private void handleRecents() {
         this.mRecents.toggleRecentApps();
     }
 
     /* access modifiers changed from: private */
-    public void handleNotifications() {
+    /* access modifiers changed from: public */
+    private void handleNotifications() {
         this.mStatusBar.animateExpandNotificationsPanel();
     }
 
     /* access modifiers changed from: private */
-    public void handleQuickSettings() {
-        this.mStatusBar.animateExpandSettingsPanel((String) null);
+    /* access modifiers changed from: public */
+    private void handleQuickSettings() {
+        this.mStatusBar.animateExpandSettingsPanel(null);
     }
 
     /* access modifiers changed from: private */
-    public void handlePowerDialog() {
+    /* access modifiers changed from: public */
+    private void handlePowerDialog() {
         try {
             WindowManagerGlobal.getWindowManagerService().showGlobalActions();
         } catch (RemoteException unused) {
@@ -188,7 +197,8 @@ public class SystemActions extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void handleLockScreen() {
+    /* access modifiers changed from: public */
+    private void handleLockScreen() {
         IWindowManager windowManagerService = WindowManagerGlobal.getWindowManagerService();
         ((PowerManager) this.mContext.getSystemService(PowerManager.class)).goToSleep(SystemClock.uptimeMillis(), 7, 0);
         try {
@@ -199,17 +209,20 @@ public class SystemActions extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void handleTakeScreenshot() {
+    /* access modifiers changed from: public */
+    private void handleTakeScreenshot() {
         new ScreenshotHelper(this.mContext).takeScreenshot(1, true, true, 0, new Handler(Looper.getMainLooper()), (Consumer) null);
     }
 
     /* access modifiers changed from: private */
-    public void handleAccessibilityButton() {
+    /* access modifiers changed from: public */
+    private void handleAccessibilityButton() {
         AccessibilityManager.getInstance(this.mContext).notifyAccessibilityButtonClicked(0);
     }
 
     /* access modifiers changed from: private */
-    public void handleAccessibilityButtonChooser() {
+    /* access modifiers changed from: public */
+    private void handleAccessibilityButtonChooser() {
         Intent intent = new Intent("com.android.internal.intent.action.CHOOSE_ACCESSIBILITY_BUTTON");
         intent.addFlags(268468224);
         intent.setClassName("android", AccessibilityButtonChooserActivity.class.getName());
@@ -217,137 +230,126 @@ public class SystemActions extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void handleAccessibilityShortcut() {
+    /* access modifiers changed from: public */
+    private void handleAccessibilityShortcut() {
         this.mA11yManager.performAccessibilityShortcut();
     }
 
-    private class SystemActionsBroadcastReceiver extends BroadcastReceiver {
+    /* access modifiers changed from: private */
+    public class SystemActionsBroadcastReceiver extends BroadcastReceiver {
         private SystemActionsBroadcastReceiver() {
         }
 
         /* access modifiers changed from: private */
-        /* JADX WARNING: Can't fix incorrect switch cases order */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public android.app.PendingIntent createPendingIntent(android.content.Context r2, java.lang.String r3) {
-            /*
-                r1 = this;
-                int r1 = r3.hashCode()
-                r0 = 0
-                switch(r1) {
-                    case -1103811776: goto L_0x0072;
-                    case -1103619272: goto L_0x0068;
-                    case -720484549: goto L_0x005e;
-                    case -535129457: goto L_0x0054;
-                    case -181386672: goto L_0x0049;
-                    case -153384569: goto L_0x003f;
-                    case 42571871: goto L_0x0035;
-                    case 526987266: goto L_0x002a;
-                    case 1245940668: goto L_0x001f;
-                    case 1579999269: goto L_0x0015;
-                    case 1668921710: goto L_0x000a;
-                    default: goto L_0x0008;
-                }
-            L_0x0008:
-                goto L_0x007c
-            L_0x000a:
-                java.lang.String r1 = "SYSTEM_ACTION_QUICK_SETTINGS"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 4
-                goto L_0x007d
-            L_0x0015:
-                java.lang.String r1 = "SYSTEM_ACTION_TAKE_SCREENSHOT"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 7
-                goto L_0x007d
-            L_0x001f:
-                java.lang.String r1 = "SYSTEM_ACTION_ACCESSIBILITY_BUTTON"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 8
-                goto L_0x007d
-            L_0x002a:
-                java.lang.String r1 = "SYSTEM_ACTION_ACCESSIBILITY_BUTTON_MENU"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 9
-                goto L_0x007d
-            L_0x0035:
-                java.lang.String r1 = "SYSTEM_ACTION_RECENTS"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 2
-                goto L_0x007d
-            L_0x003f:
-                java.lang.String r1 = "SYSTEM_ACTION_LOCK_SCREEN"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 6
-                goto L_0x007d
-            L_0x0049:
-                java.lang.String r1 = "SYSTEM_ACTION_ACCESSIBILITY_SHORTCUT"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 10
-                goto L_0x007d
-            L_0x0054:
-                java.lang.String r1 = "SYSTEM_ACTION_NOTIFICATIONS"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 3
-                goto L_0x007d
-            L_0x005e:
-                java.lang.String r1 = "SYSTEM_ACTION_POWER_DIALOG"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 5
-                goto L_0x007d
-            L_0x0068:
-                java.lang.String r1 = "SYSTEM_ACTION_HOME"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = 1
-                goto L_0x007d
-            L_0x0072:
-                java.lang.String r1 = "SYSTEM_ACTION_BACK"
-                boolean r1 = r3.equals(r1)
-                if (r1 == 0) goto L_0x007c
-                r1 = r0
-                goto L_0x007d
-            L_0x007c:
-                r1 = -1
-            L_0x007d:
-                switch(r1) {
-                    case 0: goto L_0x0082;
-                    case 1: goto L_0x0082;
-                    case 2: goto L_0x0082;
-                    case 3: goto L_0x0082;
-                    case 4: goto L_0x0082;
-                    case 5: goto L_0x0082;
-                    case 6: goto L_0x0082;
-                    case 7: goto L_0x0082;
-                    case 8: goto L_0x0082;
-                    case 9: goto L_0x0082;
-                    case 10: goto L_0x0082;
-                    default: goto L_0x0080;
-                }
-            L_0x0080:
-                r1 = 0
-                return r1
-            L_0x0082:
-                android.content.Intent r1 = new android.content.Intent
-                r1.<init>(r3)
-                java.lang.String r3 = r2.getPackageName()
-                r1.setPackage(r3)
-                android.app.PendingIntent r1 = android.app.PendingIntent.getBroadcast(r2, r0, r1, r0)
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.accessibility.SystemActions.SystemActionsBroadcastReceiver.createPendingIntent(android.content.Context, java.lang.String):android.app.PendingIntent");
+        /* JADX INFO: Can't fix incorrect switch cases order, some code will duplicate */
+        /* access modifiers changed from: public */
+        private PendingIntent createPendingIntent(Context context, String str) {
+            char c;
+            switch (str.hashCode()) {
+                case -1103811776:
+                    if (str.equals("SYSTEM_ACTION_BACK")) {
+                        c = 0;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -1103619272:
+                    if (str.equals("SYSTEM_ACTION_HOME")) {
+                        c = 1;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -720484549:
+                    if (str.equals("SYSTEM_ACTION_POWER_DIALOG")) {
+                        c = 5;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -535129457:
+                    if (str.equals("SYSTEM_ACTION_NOTIFICATIONS")) {
+                        c = 3;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -181386672:
+                    if (str.equals("SYSTEM_ACTION_ACCESSIBILITY_SHORTCUT")) {
+                        c = '\n';
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -153384569:
+                    if (str.equals("SYSTEM_ACTION_LOCK_SCREEN")) {
+                        c = 6;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 42571871:
+                    if (str.equals("SYSTEM_ACTION_RECENTS")) {
+                        c = 2;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 526987266:
+                    if (str.equals("SYSTEM_ACTION_ACCESSIBILITY_BUTTON_MENU")) {
+                        c = '\t';
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 1245940668:
+                    if (str.equals("SYSTEM_ACTION_ACCESSIBILITY_BUTTON")) {
+                        c = '\b';
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 1579999269:
+                    if (str.equals("SYSTEM_ACTION_TAKE_SCREENSHOT")) {
+                        c = 7;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 1668921710:
+                    if (str.equals("SYSTEM_ACTION_QUICK_SETTINGS")) {
+                        c = 4;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                default:
+                    c = 65535;
+                    break;
+            }
+            switch (c) {
+                case 0:
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case '\b':
+                case '\t':
+                case '\n':
+                    Intent intent = new Intent(str);
+                    intent.setPackage(context.getPackageName());
+                    return PendingIntent.getBroadcast(context, 0, intent, 0);
+                default:
+                    return null;
+            }
         }
 
         /* access modifiers changed from: private */
-        public IntentFilter createIntentFilter() {
+        /* access modifiers changed from: public */
+        private IntentFilter createIntentFilter() {
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("SYSTEM_ACTION_BACK");
             intentFilter.addAction("SYSTEM_ACTION_HOME");
@@ -363,161 +365,129 @@ public class SystemActions extends SystemUI {
             return intentFilter;
         }
 
-        /* JADX WARNING: Can't fix incorrect switch cases order */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void onReceive(android.content.Context r1, android.content.Intent r2) {
-            /*
-                r0 = this;
-                java.lang.String r1 = r2.getAction()
-                int r2 = r1.hashCode()
-                switch(r2) {
-                    case -1103811776: goto L_0x0075;
-                    case -1103619272: goto L_0x006b;
-                    case -720484549: goto L_0x0061;
-                    case -535129457: goto L_0x0057;
-                    case -181386672: goto L_0x004c;
-                    case -153384569: goto L_0x0042;
-                    case 42571871: goto L_0x0038;
-                    case 526987266: goto L_0x002d;
-                    case 1245940668: goto L_0x0022;
-                    case 1579999269: goto L_0x0018;
-                    case 1668921710: goto L_0x000d;
-                    default: goto L_0x000b;
-                }
-            L_0x000b:
-                goto L_0x007f
-            L_0x000d:
-                java.lang.String r2 = "SYSTEM_ACTION_QUICK_SETTINGS"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 4
-                goto L_0x0080
-            L_0x0018:
-                java.lang.String r2 = "SYSTEM_ACTION_TAKE_SCREENSHOT"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 7
-                goto L_0x0080
-            L_0x0022:
-                java.lang.String r2 = "SYSTEM_ACTION_ACCESSIBILITY_BUTTON"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 8
-                goto L_0x0080
-            L_0x002d:
-                java.lang.String r2 = "SYSTEM_ACTION_ACCESSIBILITY_BUTTON_MENU"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 9
-                goto L_0x0080
-            L_0x0038:
-                java.lang.String r2 = "SYSTEM_ACTION_RECENTS"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 2
-                goto L_0x0080
-            L_0x0042:
-                java.lang.String r2 = "SYSTEM_ACTION_LOCK_SCREEN"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 6
-                goto L_0x0080
-            L_0x004c:
-                java.lang.String r2 = "SYSTEM_ACTION_ACCESSIBILITY_SHORTCUT"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 10
-                goto L_0x0080
-            L_0x0057:
-                java.lang.String r2 = "SYSTEM_ACTION_NOTIFICATIONS"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 3
-                goto L_0x0080
-            L_0x0061:
-                java.lang.String r2 = "SYSTEM_ACTION_POWER_DIALOG"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 5
-                goto L_0x0080
-            L_0x006b:
-                java.lang.String r2 = "SYSTEM_ACTION_HOME"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 1
-                goto L_0x0080
-            L_0x0075:
-                java.lang.String r2 = "SYSTEM_ACTION_BACK"
-                boolean r1 = r1.equals(r2)
-                if (r1 == 0) goto L_0x007f
-                r1 = 0
-                goto L_0x0080
-            L_0x007f:
-                r1 = -1
-            L_0x0080:
-                switch(r1) {
-                    case 0: goto L_0x00c0;
-                    case 1: goto L_0x00ba;
-                    case 2: goto L_0x00b4;
-                    case 3: goto L_0x00ae;
-                    case 4: goto L_0x00a8;
-                    case 5: goto L_0x00a2;
-                    case 6: goto L_0x009c;
-                    case 7: goto L_0x0096;
-                    case 8: goto L_0x0090;
-                    case 9: goto L_0x008a;
-                    case 10: goto L_0x0084;
-                    default: goto L_0x0083;
-                }
-            L_0x0083:
-                goto L_0x00c5
-            L_0x0084:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleAccessibilityShortcut()
-                goto L_0x00c5
-            L_0x008a:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleAccessibilityButtonChooser()
-                goto L_0x00c5
-            L_0x0090:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleAccessibilityButton()
-                goto L_0x00c5
-            L_0x0096:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleTakeScreenshot()
-                goto L_0x00c5
-            L_0x009c:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleLockScreen()
-                goto L_0x00c5
-            L_0x00a2:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handlePowerDialog()
-                goto L_0x00c5
-            L_0x00a8:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleQuickSettings()
-                goto L_0x00c5
-            L_0x00ae:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleNotifications()
-                goto L_0x00c5
-            L_0x00b4:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleRecents()
-                goto L_0x00c5
-            L_0x00ba:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleHome()
-                goto L_0x00c5
-            L_0x00c0:
-                com.android.systemui.accessibility.SystemActions r0 = com.android.systemui.accessibility.SystemActions.this
-                r0.handleBack()
-            L_0x00c5:
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.accessibility.SystemActions.SystemActionsBroadcastReceiver.onReceive(android.content.Context, android.content.Intent):void");
+        /* JADX INFO: Can't fix incorrect switch cases order, some code will duplicate */
+        public void onReceive(Context context, Intent intent) {
+            char c;
+            String action = intent.getAction();
+            switch (action.hashCode()) {
+                case -1103811776:
+                    if (action.equals("SYSTEM_ACTION_BACK")) {
+                        c = 0;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -1103619272:
+                    if (action.equals("SYSTEM_ACTION_HOME")) {
+                        c = 1;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -720484549:
+                    if (action.equals("SYSTEM_ACTION_POWER_DIALOG")) {
+                        c = 5;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -535129457:
+                    if (action.equals("SYSTEM_ACTION_NOTIFICATIONS")) {
+                        c = 3;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -181386672:
+                    if (action.equals("SYSTEM_ACTION_ACCESSIBILITY_SHORTCUT")) {
+                        c = '\n';
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case -153384569:
+                    if (action.equals("SYSTEM_ACTION_LOCK_SCREEN")) {
+                        c = 6;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 42571871:
+                    if (action.equals("SYSTEM_ACTION_RECENTS")) {
+                        c = 2;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 526987266:
+                    if (action.equals("SYSTEM_ACTION_ACCESSIBILITY_BUTTON_MENU")) {
+                        c = '\t';
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 1245940668:
+                    if (action.equals("SYSTEM_ACTION_ACCESSIBILITY_BUTTON")) {
+                        c = '\b';
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 1579999269:
+                    if (action.equals("SYSTEM_ACTION_TAKE_SCREENSHOT")) {
+                        c = 7;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                case 1668921710:
+                    if (action.equals("SYSTEM_ACTION_QUICK_SETTINGS")) {
+                        c = 4;
+                        break;
+                    }
+                    c = 65535;
+                    break;
+                default:
+                    c = 65535;
+                    break;
+            }
+            switch (c) {
+                case 0:
+                    SystemActions.this.handleBack();
+                    return;
+                case 1:
+                    SystemActions.this.handleHome();
+                    return;
+                case 2:
+                    SystemActions.this.handleRecents();
+                    return;
+                case 3:
+                    SystemActions.this.handleNotifications();
+                    return;
+                case 4:
+                    SystemActions.this.handleQuickSettings();
+                    return;
+                case 5:
+                    SystemActions.this.handlePowerDialog();
+                    return;
+                case 6:
+                    SystemActions.this.handleLockScreen();
+                    return;
+                case 7:
+                    SystemActions.this.handleTakeScreenshot();
+                    return;
+                case '\b':
+                    SystemActions.this.handleAccessibilityButton();
+                    return;
+                case '\t':
+                    SystemActions.this.handleAccessibilityButtonChooser();
+                    return;
+                case '\n':
+                    SystemActions.this.handleAccessibilityShortcut();
+                    return;
+                default:
+                    return;
+            }
         }
     }
 }

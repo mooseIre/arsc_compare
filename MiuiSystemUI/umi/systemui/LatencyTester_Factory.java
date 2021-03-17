@@ -20,6 +20,7 @@ public final class LatencyTester_Factory implements Factory<LatencyTester> {
         this.broadcastDispatcherProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public LatencyTester get() {
         return provideInstance(this.contextProvider, this.biometricUnlockControllerProvider, this.powerManagerProvider, this.broadcastDispatcherProvider);
     }

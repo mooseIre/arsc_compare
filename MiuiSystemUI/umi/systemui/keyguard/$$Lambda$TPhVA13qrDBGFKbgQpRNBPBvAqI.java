@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$TPhVA13qrDBGFKbgQpRNBPBvAqI implemen
     private /* synthetic */ $$Lambda$TPhVA13qrDBGFKbgQpRNBPBvAqI() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((WakefulnessLifecycle.Observer) obj).onStartedWakingUp();
     }

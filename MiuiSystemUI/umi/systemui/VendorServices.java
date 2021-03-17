@@ -3,6 +3,7 @@ package com.android.systemui;
 import android.content.Context;
 
 public class VendorServices extends SystemUI {
+    @Override // com.android.systemui.SystemUI
     public void start() {
     }
 

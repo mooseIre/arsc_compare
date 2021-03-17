@@ -16,6 +16,7 @@ public final class PipUI_Factory implements Factory<PipUI> {
         this.pipManagerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public PipUI get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.pipManagerProvider);
     }

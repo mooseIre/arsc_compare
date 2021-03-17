@@ -2,8 +2,9 @@ package com.android.systemui.controls.ui;
 
 import android.view.View;
 
+/* access modifiers changed from: package-private */
 /* compiled from: DetailDialog.kt */
-final class DetailDialog$$special$$inlined$apply$lambda$4 implements View.OnClickListener {
+public final class DetailDialog$$special$$inlined$apply$lambda$4 implements View.OnClickListener {
     final /* synthetic */ DetailDialog this$0;
 
     DetailDialog$$special$$inlined$apply$lambda$4(DetailDialog detailDialog) {

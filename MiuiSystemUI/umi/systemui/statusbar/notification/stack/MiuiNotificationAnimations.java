@@ -22,9 +22,9 @@ public final class MiuiNotificationAnimations {
 
     static {
         AnimationFilter animationFilter = new AnimationFilter();
-        AnimatableProperty access$getPROPERTY_SPRING_Y_OFFSET$p = MiuiNotificationAnimationExtensionsKt.PROPERTY_SPRING_Y_OFFSET;
-        Intrinsics.checkExpressionValueIsNotNull(access$getPROPERTY_SPRING_Y_OFFSET$p, "PROPERTY_SPRING_Y_OFFSET");
-        animationFilter.animate(access$getPROPERTY_SPRING_Y_OFFSET$p.getProperty());
+        AnimatableProperty animatableProperty = MiuiNotificationAnimationExtensionsKt.PROPERTY_SPRING_Y_OFFSET;
+        Intrinsics.checkExpressionValueIsNotNull(animatableProperty, "PROPERTY_SPRING_Y_OFFSET");
+        animationFilter.animate(animatableProperty.getProperty());
         Intrinsics.checkExpressionValueIsNotNull(animationFilter, "AnimationFilter()\n      …SPRING_Y_OFFSET.property)");
         RELEASE_SPRING_FILTER = animationFilter;
         AnimationFilter animationFilter2 = new AnimationFilter();

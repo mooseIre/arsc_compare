@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideNotificationManagerFactory implem
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationManager get() {
         return provideInstance(this.contextProvider);
     }

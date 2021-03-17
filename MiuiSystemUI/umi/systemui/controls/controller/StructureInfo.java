@@ -15,7 +15,9 @@ public final class StructureInfo {
     @NotNull
     private final CharSequence structure;
 
-    public static /* synthetic */ StructureInfo copy$default(StructureInfo structureInfo, ComponentName componentName2, CharSequence charSequence, List<ControlInfo> list, int i, Object obj) {
+    /* JADX DEBUG: Multi-variable search result rejected for r0v0, resolved type: com.android.systemui.controls.controller.StructureInfo */
+    /* JADX WARN: Multi-variable type inference failed */
+    public static /* synthetic */ StructureInfo copy$default(StructureInfo structureInfo, ComponentName componentName2, CharSequence charSequence, List list, int i, Object obj) {
         if ((i & 1) != 0) {
             componentName2 = structureInfo.componentName;
         }
@@ -44,7 +46,7 @@ public final class StructureInfo {
             return false;
         }
         StructureInfo structureInfo = (StructureInfo) obj;
-        return Intrinsics.areEqual((Object) this.componentName, (Object) structureInfo.componentName) && Intrinsics.areEqual((Object) this.structure, (Object) structureInfo.structure) && Intrinsics.areEqual((Object) this.controls, (Object) structureInfo.controls);
+        return Intrinsics.areEqual(this.componentName, structureInfo.componentName) && Intrinsics.areEqual(this.structure, structureInfo.structure) && Intrinsics.areEqual(this.controls, structureInfo.controls);
     }
 
     public int hashCode() {

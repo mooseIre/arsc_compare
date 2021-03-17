@@ -9,12 +9,12 @@ import java.util.Collection;
 public interface BluetoothController extends CallbackController<Callback>, Dumpable {
 
     public interface Callback {
-        void onBluetoothBatteryChange(Intent intent) {
+        default void onBluetoothBatteryChange(Intent intent) {
         }
 
         void onBluetoothDevicesChanged();
 
-        void onBluetoothInoutStateChange(String str) {
+        default void onBluetoothInoutStateChange(String str) {
         }
 
         void onBluetoothStateChange(boolean z);

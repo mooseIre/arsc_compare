@@ -26,13 +26,14 @@ public class BadgedImageView extends ImageView {
     private boolean mOnLeft;
     private Rect mTempBounds;
 
-    enum SuppressionFlag {
+    /* access modifiers changed from: package-private */
+    public enum SuppressionFlag {
         FLYOUT_VISIBLE,
         BEHIND_STACK
     }
 
     public BadgedImageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public BadgedImageView(Context context, AttributeSet attributeSet) {
@@ -95,7 +96,7 @@ public class BadgedImageView extends ImageView {
     public void updateDotVisibility(boolean z) {
         float f = shouldDrawDot() ? 1.0f : 0.0f;
         if (z) {
-            animateDotScale(f, (Runnable) null);
+            animateDotScale(f, null);
             return;
         }
         this.mDotScale = f;
@@ -157,6 +158,7 @@ public class BadgedImageView extends ImageView {
             setDotOnLeft(z);
         } else {
             animateDotScale(0.0f, new Runnable(z) {
+                /* class com.android.systemui.bubbles.$$Lambda$BadgedImageView$Z7e3tGxE0eQYPk5Be9lp1Zt58bs */
                 public final /* synthetic */ boolean f$1;
 
                 {
@@ -174,7 +176,7 @@ public class BadgedImageView extends ImageView {
     /* renamed from: lambda$setDotPositionOnLeft$0 */
     public /* synthetic */ void lambda$setDotPositionOnLeft$0$BadgedImageView(boolean z) {
         setDotOnLeft(z);
-        animateDotScale(1.0f, (Runnable) null);
+        animateDotScale(1.0f, null);
     }
 
     /* access modifiers changed from: package-private */
@@ -199,6 +201,7 @@ public class BadgedImageView extends ImageView {
         }
         clearAnimation();
         animate().setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setUpdateListener(new ValueAnimator.AnimatorUpdateListener(z) {
+            /* class com.android.systemui.bubbles.$$Lambda$BadgedImageView$5JtatqU5fJ_DVxOW3Qg2hefSWas */
             public final /* synthetic */ boolean f$1;
 
             {
@@ -209,6 +212,7 @@ public class BadgedImageView extends ImageView {
                 BadgedImageView.this.lambda$animateDotScale$1$BadgedImageView(this.f$1, valueAnimator);
             }
         }).withEndAction(new Runnable(z, runnable) {
+            /* class com.android.systemui.bubbles.$$Lambda$BadgedImageView$v47cozs89EavNMNnxmtPzE3ZmYs */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ Runnable f$2;
 

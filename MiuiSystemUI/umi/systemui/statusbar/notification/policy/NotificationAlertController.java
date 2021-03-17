@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.PowerManager;
 import android.os.SystemClock;
-import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.faceunlock.MiuiFaceUnlockManager;
@@ -29,10 +28,8 @@ import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
 
 public class NotificationAlertController {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = DebugConfig.DEBUG_NOTIFICATION;
-    /* access modifiers changed from: private */
-    public int mBarState;
+    private static final boolean DEBUG = DebugConfig.DEBUG_NOTIFICATION;
+    private int mBarState;
     private Handler mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
     private Context mContext;
     private NotificationEntryManager mEntryManager;
@@ -58,6 +55,9 @@ public class NotificationAlertController {
 
     public void start() {
         this.mEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+            /* class com.android.systemui.statusbar.notification.policy.NotificationAlertController.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onNotificationAdded(NotificationEntry notificationEntry) {
                 if (NotificationAlertController.DEBUG) {
                     Log.d("NotificationAlertController", "onNotificationAdded " + notificationEntry.getKey());
@@ -67,6 +67,7 @@ public class NotificationAlertController {
                 NotificationAlertController.this.markGroupSummaryChildrenUnShown(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPostEntryUpdated(NotificationEntry notificationEntry) {
                 if (NotificationAlertController.DEBUG) {
                     Log.d("NotificationAlertController", "onPostEntryUpdated " + notificationEntry.getKey());
@@ -76,19 +77,24 @@ public class NotificationAlertController {
             }
         });
         this.mStatusBarStateController.addCallback(new StatusBarStateController.StateListener() {
+            /* class com.android.systemui.statusbar.notification.policy.NotificationAlertController.AnonymousClass2 */
+
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 if (NotificationAlertController.this.mBarState == 1 && i == 0 && !NotificationAlertController.this.isShowingKeyguard()) {
                     NotificationAlertController.this.markVisibleNotificationsShown();
                 }
-                int unused = NotificationAlertController.this.mBarState = i;
+                NotificationAlertController.this.mBarState = i;
             }
         });
     }
 
     /* access modifiers changed from: private */
-    public void buzzBeepBlink(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void buzzBeepBlink(NotificationEntry notificationEntry) {
         if (!this.mSettingsManager.getMiuiMirrorDndModeEnabled()) {
             this.mBgHandler.post(new Runnable(notificationEntry) {
+                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationAlertController$eZsKb5VsMRsWmtBG8H0C88n8bs */
                 public final /* synthetic */ NotificationEntry f$1;
 
                 {
@@ -114,26 +120,33 @@ public class NotificationAlertController {
             canVibrate = sbn.canShowOnKeyguard() && canVibrate;
             canSound = sbn.canShowOnKeyguard() && canSound;
         }
+        int i = canSound ? (char) 2 : 0;
+        int i2 = canVibrate ? 1 : 0;
+        char c = canVibrate ? 1 : 0;
+        char c2 = canVibrate ? 1 : 0;
         try {
-            this.mNm.getClass().getMethod("buzzBeepBlinkForNotification", new Class[]{String.class, Integer.TYPE}).invoke(this.mNm, new Object[]{key, Integer.valueOf((canVibrate | (canSound ? true : false)) | (canLights ? (char) 4 : 0) ? 1 : 0)});
+            this.mNm.getClass().getMethod("buzzBeepBlinkForNotification", String.class, Integer.TYPE).invoke(this.mNm, key, Integer.valueOf(i2 | i | (canLights ? 4 : 0)));
         } catch (Exception e) {
             Log.e("NotificationAlertController", "beep " + key, e);
         }
     }
 
     /* access modifiers changed from: private */
-    public boolean isShowingKeyguard() {
+    /* access modifiers changed from: public */
+    private boolean isShowingKeyguard() {
         return this.mStatusBarKeyguardManager.isShowing();
     }
 
     /* access modifiers changed from: private */
-    public void markVisibleNotificationsShown() {
+    /* access modifiers changed from: public */
+    private void markVisibleNotificationsShown() {
         this.mEntryManager.getVisibleNotifications().forEach($$Lambda$NotificationAlertController$cnPeo2J1MJMxlulxtwNq2qNkNE.INSTANCE);
     }
 
     /* access modifiers changed from: private */
-    public void markGroupSummaryChildrenUnShown(NotificationEntry notificationEntry) {
-        NotificationEntry groupSummary = this.mGroupManager.getGroupSummary((StatusBarNotification) notificationEntry.getSbn());
+    /* access modifiers changed from: public */
+    private void markGroupSummaryChildrenUnShown(NotificationEntry notificationEntry) {
+        NotificationEntry groupSummary = this.mGroupManager.getGroupSummary(notificationEntry.getSbn());
         if (groupSummary != null) {
             groupSummary.getSbn().setHasShownAfterUnlock(false);
             ArrayList<NotificationEntry> children = this.mGroupManager.getChildren(groupSummary.getSbn());
@@ -144,7 +157,8 @@ public class NotificationAlertController {
     }
 
     /* access modifiers changed from: private */
-    public void wakeUpIfNeeded(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void wakeUpIfNeeded(NotificationEntry notificationEntry) {
         if (this.mSettingsManager.getWakeupForNotification() && this.mNotificationLockscreenUserManager.shouldShowLockscreenNotifications() && this.mNotificationLockscreenUserManager.shouldShowOnKeyguard(notificationEntry) && !this.mZenModeController.isZenModeOn() && !NotificationUtil.isMediaNotification(notificationEntry.getSbn()) && !notificationEntry.getSbn().getNotification().hasMediaSession() && notificationEntry.getSbn().isClearable() && !NotificationUtil.hasProgressbar(notificationEntry.getSbn()) && !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
             Log.d("NotificationAlertController", "wakeUpForNotification " + notificationEntry.getKey());
             wakeUpForNotification(notificationEntry);
@@ -155,6 +169,9 @@ public class NotificationAlertController {
         KeyguardSensorInjector keyguardSensorInjector = (KeyguardSensorInjector) Dependency.get(KeyguardSensorInjector.class);
         if (!keyguardSensorInjector.isProximitySensorDisabled()) {
             keyguardSensorInjector.registerProximitySensor(new KeyguardSensorInjector.ProximitySensorChangeCallback() {
+                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationAlertController$nfD0uxZpBB1m5umR5NfAwtVIWBg */
+
+                @Override // com.android.keyguard.injector.KeyguardSensorInjector.ProximitySensorChangeCallback
                 public final void onChange(boolean z) {
                     NotificationAlertController.this.lambda$wakeUpForNotification$3$NotificationAlertController(z);
                 }

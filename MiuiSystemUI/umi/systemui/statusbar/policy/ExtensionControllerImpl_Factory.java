@@ -22,6 +22,7 @@ public final class ExtensionControllerImpl_Factory implements Factory<ExtensionC
         this.configurationControllerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public ExtensionControllerImpl get() {
         return provideInstance(this.contextProvider, this.leakDetectorProvider, this.pluginManagerProvider, this.tunerServiceProvider, this.configurationControllerProvider);
     }

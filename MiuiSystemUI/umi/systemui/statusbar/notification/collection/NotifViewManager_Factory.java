@@ -16,6 +16,7 @@ public final class NotifViewManager_Factory implements Factory<NotifViewManager>
         this.featureFlagsProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public NotifViewManager get() {
         return provideInstance(this.rowRegistryProvider, this.stabilityManagerProvider, this.featureFlagsProvider);
     }

@@ -14,6 +14,7 @@ public final class NotificationClickNotifier_Factory implements Factory<Notifica
         this.mainExecutorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationClickNotifier get() {
         return provideInstance(this.barServiceProvider, this.mainExecutorProvider);
     }

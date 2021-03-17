@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Switch;
-import androidx.lifecycle.LifecycleOwner;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.ActivityStarter;
@@ -18,13 +17,14 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
     private Callback mCallback;
     private RecordingController mController;
     private KeyguardDismissUtil mKeyguardDismissUtil;
-    /* access modifiers changed from: private */
-    public long mMillisUntilFinished = 0;
+    private long mMillisUntilFinished = 0;
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return null;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 0;
     }
@@ -34,10 +34,11 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
         Callback callback = new Callback();
         this.mCallback = callback;
         this.mController = recordingController;
-        recordingController.observe((LifecycleOwner) this, callback);
+        recordingController.observe(this, callback);
         this.mKeyguardDismissUtil = keyguardDismissUtil;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         QSTile.BooleanState booleanState = new QSTile.BooleanState();
         booleanState.label = this.mContext.getString(C0021R$string.quick_settings_screen_record_label);
@@ -46,6 +47,7 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (this.mController.isStarting()) {
             cancelCountdown();
@@ -53,6 +55,8 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
             stopRecording();
         } else {
             this.mUiHandler.post(new Runnable() {
+                /* class com.android.systemui.qs.tiles.$$Lambda$ScreenRecordTile$mAnfMZKBPW0VK4FrRQ7ZNGHi_A */
+
                 public final void run() {
                     ScreenRecordTile.this.lambda$handleClick$0$ScreenRecordTile();
                 }
@@ -73,19 +77,20 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
         if (isRecording) {
             booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_screen_record_stop);
         } else if (isStarting) {
-            booleanState.secondaryLabel = String.format("%d...", new Object[]{Integer.valueOf((int) Math.floorDiv(this.mMillisUntilFinished + 500, 1000))});
+            booleanState.secondaryLabel = String.format("%d...", Integer.valueOf((int) Math.floorDiv(this.mMillisUntilFinished + 500, 1000)));
         } else {
             booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_screen_record_start);
         }
         if (TextUtils.isEmpty(booleanState.secondaryLabel)) {
             charSequence = booleanState.label;
         } else {
-            charSequence = TextUtils.concat(new CharSequence[]{booleanState.label, ", ", booleanState.secondaryLabel});
+            charSequence = TextUtils.concat(booleanState.label, ", ", booleanState.secondaryLabel);
         }
         booleanState.contentDescription = charSequence;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_screen_record_label);
     }
@@ -95,12 +100,14 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
     public void lambda$handleClick$0() {
         getHost().collapsePanels();
         this.mKeyguardDismissUtil.executeWhenUnlocked(new ActivityStarter.OnDismissAction(this.mController.getPromptIntent()) {
+            /* class com.android.systemui.qs.tiles.$$Lambda$ScreenRecordTile$qbmpsZNn23bn5rqlkcpltHLJl4w */
             public final /* synthetic */ Intent f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
             public final boolean onDismiss() {
                 return ScreenRecordTile.this.lambda$showPrompt$1$ScreenRecordTile(this.f$1);
             }
@@ -127,19 +134,23 @@ public class ScreenRecordTile extends QSTileImpl<QSTile.BooleanState> implements
         private Callback() {
         }
 
+        @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
         public void onCountdown(long j) {
-            long unused = ScreenRecordTile.this.mMillisUntilFinished = j;
+            ScreenRecordTile.this.mMillisUntilFinished = j;
             ScreenRecordTile.this.refreshState();
         }
 
+        @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
         public void onCountdownEnd() {
             ScreenRecordTile.this.refreshState();
         }
 
+        @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
         public void onRecordingStart() {
             ScreenRecordTile.this.refreshState();
         }
 
+        @Override // com.android.systemui.screenrecord.RecordingController.RecordingStateChangeCallback
         public void onRecordingEnd() {
             ScreenRecordTile.this.refreshState();
         }

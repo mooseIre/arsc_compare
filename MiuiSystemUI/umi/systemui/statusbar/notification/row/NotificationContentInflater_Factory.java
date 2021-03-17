@@ -26,6 +26,7 @@ public final class NotificationContentInflater_Factory implements Factory<Notifi
         this.bgExecutorProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public NotificationContentInflater get() {
         return provideInstance(this.remoteViewCacheProvider, this.remoteInputManagerProvider, this.smartReplyConstantsProvider, this.smartReplyControllerProvider, this.conversationProcessorProvider, this.bgExecutorProvider);
     }

@@ -16,12 +16,13 @@ import com.android.systemui.statusbar.notification.mediacontrol.DrawableFadeDisp
 import com.android.systemui.statusbar.notification.mediacontrol.RoundedSideImageView;
 import com.android.systemui.util.animation.TransitionLayout;
 import kotlin.TypeCastException;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: PlayerViewHolder.kt */
 public final class PlayerViewHolder {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
     private final ImageButton action0;
     private final ImageButton action1;
     private final ImageButton action2;
@@ -206,7 +207,7 @@ public final class PlayerViewHolder {
             View inflate = layoutInflater.inflate(C0017R$layout.media_view, viewGroup, false);
             Intrinsics.checkExpressionValueIsNotNull(inflate, "mediaView");
             inflate.setLayoutDirection(3);
-            PlayerViewHolder playerViewHolder = new PlayerViewHolder(inflate, (DefaultConstructorMarker) null);
+            PlayerViewHolder playerViewHolder = new PlayerViewHolder(inflate, null);
             SeekBar seekBar = playerViewHolder.getSeekBar();
             Intrinsics.checkExpressionValueIsNotNull(seekBar, "seekBar");
             seekBar.setLayoutDirection(0);

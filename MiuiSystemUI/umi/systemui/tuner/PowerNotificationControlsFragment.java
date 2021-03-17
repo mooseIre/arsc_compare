@@ -26,22 +26,24 @@ public class PowerNotificationControlsFragment extends Fragment {
         String str;
         super.onViewCreated(view, bundle);
         View findViewById = view.findViewById(C0015R$id.switch_bar);
-        final Switch switchR = (Switch) findViewById.findViewById(16908352);
+        final Switch r3 = (Switch) findViewById.findViewById(16908352);
         final TextView textView = (TextView) findViewById.findViewById(C0015R$id.switch_text);
-        switchR.setChecked(isEnabled());
+        r3.setChecked(isEnabled());
         if (isEnabled()) {
             str = getString(C0021R$string.switch_bar_on);
         } else {
             str = getString(C0021R$string.switch_bar_off);
         }
         textView.setText(str);
-        switchR.setOnClickListener(new View.OnClickListener() {
+        r3.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.tuner.PowerNotificationControlsFragment.AnonymousClass1 */
+
             public void onClick(View view) {
                 String str;
-                boolean z = !PowerNotificationControlsFragment.this.isEnabled();
+                boolean z = !PowerNotificationControlsFragment.this.isEnabled() ? 1 : 0;
                 MetricsLogger.action(PowerNotificationControlsFragment.this.getContext(), 393, z);
                 Settings.Secure.putInt(PowerNotificationControlsFragment.this.getContext().getContentResolver(), "show_importance_slider", z ? 1 : 0);
-                switchR.setChecked(z);
+                r3.setChecked(z);
                 TextView textView = textView;
                 if (z) {
                     str = PowerNotificationControlsFragment.this.getString(C0021R$string.switch_bar_on);
@@ -64,7 +66,8 @@ public class PowerNotificationControlsFragment extends Fragment {
     }
 
     /* access modifiers changed from: private */
-    public boolean isEnabled() {
+    /* access modifiers changed from: public */
+    private boolean isEnabled() {
         return Settings.Secure.getInt(getContext().getContentResolver(), "show_importance_slider", 0) == 1;
     }
 }

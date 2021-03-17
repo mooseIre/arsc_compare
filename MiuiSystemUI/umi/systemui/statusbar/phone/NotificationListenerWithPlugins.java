@@ -48,6 +48,9 @@ public class NotificationListenerWithPlugins extends NotificationListenerService
     public void onPluginConnected() {
         this.mConnected = true;
         this.mPlugins.forEach(new Consumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationListenerWithPlugins$AOWJwBGrUF4vFOVxLxlu4eVQD0 */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 NotificationListenerWithPlugins.this.lambda$onPluginConnected$0$NotificationListenerWithPlugins((NotificationListenerController) obj);
             }
@@ -97,22 +100,29 @@ public class NotificationListenerWithPlugins extends NotificationListenerService
 
     private NotificationListenerController.NotificationProvider getProvider() {
         return new NotificationListenerController.NotificationProvider() {
+            /* class com.android.systemui.statusbar.phone.NotificationListenerWithPlugins.AnonymousClass1 */
+
+            @Override // com.android.systemui.plugins.NotificationListenerController.NotificationProvider
             public StatusBarNotification[] getActiveNotifications() {
                 return NotificationListenerWithPlugins.super.getActiveNotifications();
             }
 
+            @Override // com.android.systemui.plugins.NotificationListenerController.NotificationProvider
             public NotificationListenerService.RankingMap getRankingMap() {
                 return NotificationListenerWithPlugins.super.getCurrentRanking();
             }
 
+            @Override // com.android.systemui.plugins.NotificationListenerController.NotificationProvider
             public void addNotification(StatusBarNotification statusBarNotification) {
                 NotificationListenerWithPlugins.this.onNotificationPosted(statusBarNotification, getRankingMap());
             }
 
+            @Override // com.android.systemui.plugins.NotificationListenerController.NotificationProvider
             public void removeNotification(StatusBarNotification statusBarNotification) {
                 NotificationListenerWithPlugins.this.onNotificationRemoved(statusBarNotification, getRankingMap());
             }
 
+            @Override // com.android.systemui.plugins.NotificationListenerController.NotificationProvider
             public void updateRanking() {
                 NotificationListenerWithPlugins.this.onNotificationRankingUpdate(getRankingMap());
             }

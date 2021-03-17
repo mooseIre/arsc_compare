@@ -5,8 +5,9 @@ import android.graphics.drawable.ClipDrawable;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ToggleRangeBehavior.kt */
-final class ToggleRangeBehavior$updateRange$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class ToggleRangeBehavior$updateRange$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ ToggleRangeBehavior this$0;
 
     ToggleRangeBehavior$updateRange$$inlined$apply$lambda$1(ToggleRangeBehavior toggleRangeBehavior) {

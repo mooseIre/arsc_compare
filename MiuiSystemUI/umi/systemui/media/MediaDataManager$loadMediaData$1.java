@@ -2,8 +2,9 @@ package com.android.systemui.media;
 
 import android.service.notification.StatusBarNotification;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaDataManager.kt */
-final class MediaDataManager$loadMediaData$1 implements Runnable {
+public final class MediaDataManager$loadMediaData$1 implements Runnable {
     final /* synthetic */ String $key;
     final /* synthetic */ String $oldKey;
     final /* synthetic */ StatusBarNotification $sbn;

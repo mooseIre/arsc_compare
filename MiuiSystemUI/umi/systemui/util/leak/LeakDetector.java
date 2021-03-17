@@ -47,8 +47,9 @@ public class LeakDetector implements Dumpable {
         return this.mTrackedGarbage;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        IndentingPrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter, "  ");
+        PrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter, "  ");
         indentingPrintWriter.println("SYSUI LEAK DETECTOR");
         indentingPrintWriter.increaseIndent();
         if (this.mTrackedCollections == null || this.mTrackedGarbage == null) {
@@ -79,7 +80,7 @@ public class LeakDetector implements Dumpable {
 
     public static LeakDetector create() {
         if (!ENABLED) {
-            return new LeakDetector((TrackedCollections) null, (TrackedGarbage) null, (TrackedObjects) null);
+            return new LeakDetector(null, null, null);
         }
         TrackedCollections trackedCollections = new TrackedCollections();
         return new LeakDetector(trackedCollections, new TrackedGarbage(trackedCollections), new TrackedObjects(trackedCollections));

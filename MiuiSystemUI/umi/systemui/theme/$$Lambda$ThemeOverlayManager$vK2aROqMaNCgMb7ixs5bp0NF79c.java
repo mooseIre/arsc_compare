@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$ThemeOverlayManager$vK2aROqMaNCgMb7i
     private /* synthetic */ $$Lambda$ThemeOverlayManager$vK2aROqMaNCgMb7ixs5bp0NF79c() {
     }
 
+    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
         return ((OverlayInfo) obj).isEnabled();
     }

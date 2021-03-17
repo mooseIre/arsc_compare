@@ -4,8 +4,9 @@ import android.app.PendingIntent;
 import android.media.MediaDescription;
 import android.media.session.MediaSession;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaDataManager.kt */
-final class MediaDataManager$addResumptionControls$1 implements Runnable {
+public final class MediaDataManager$addResumptionControls$1 implements Runnable {
     final /* synthetic */ Runnable $action;
     final /* synthetic */ PendingIntent $appIntent;
     final /* synthetic */ String $appName;

@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -44,15 +45,18 @@ public class BubbleData {
     private BubbleController.NotificationSuppressionChangedListener mSuppressionListener;
     private TimeSource mTimeSource = $$Lambda$0E0fwzH9SS6aB9lL5npMzupI4Q.INSTANCE;
 
-    interface Listener {
+    /* access modifiers changed from: package-private */
+    public interface Listener {
         void applyUpdate(Update update);
     }
 
-    interface TimeSource {
+    /* access modifiers changed from: package-private */
+    public interface TimeSource {
         long currentTimeMillis();
     }
 
-    static final class Update {
+    /* access modifiers changed from: package-private */
+    public static final class Update {
         Bubble addedBubble;
         final List<Bubble> bubbles;
         boolean expanded;
@@ -76,7 +80,7 @@ public class BubbleData {
 
         /* access modifiers changed from: package-private */
         public void bubbleRemoved(Bubble bubble, int i) {
-            this.removedBubbles.add(new Pair(bubble, Integer.valueOf(i)));
+            this.removedBubbles.add(new Pair<>(bubble, Integer.valueOf(i)));
         }
     }
 
@@ -245,10 +249,10 @@ public class BubbleData {
         if (str == null) {
             return arrayList;
         }
-        for (Bubble next : this.mBubbles) {
-            NotificationEntry pendingOrActiveNotif = notificationEntryManager.getPendingOrActiveNotif(next.getKey());
+        for (Bubble bubble : this.mBubbles) {
+            NotificationEntry pendingOrActiveNotif = notificationEntryManager.getPendingOrActiveNotif(bubble.getKey());
             if (pendingOrActiveNotif != null && str.equals(pendingOrActiveNotif.getSbn().getGroupKey())) {
-                arrayList.add(next);
+                arrayList.add(bubble);
             }
         }
         return arrayList;
@@ -256,10 +260,11 @@ public class BubbleData {
 
     public void removeBubblesWithInvalidShortcuts(String str, List<ShortcutInfo> list, int i) {
         HashSet hashSet = new HashSet();
-        for (ShortcutInfo id : list) {
-            hashSet.add(id.getId());
+        for (ShortcutInfo shortcutInfo : list) {
+            hashSet.add(shortcutInfo.getId());
         }
         $$Lambda$BubbleData$OJROTAbwBF0fCA1oF1e2LMcjfg r4 = new Predicate(str, hashSet) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleData$OJROTAbwBF0fCA1oF1e2LMcjfg */
             public final /* synthetic */ String f$0;
             public final /* synthetic */ Set f$1;
 
@@ -268,17 +273,20 @@ public class BubbleData {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return BubbleData.lambda$removeBubblesWithInvalidShortcuts$0(this.f$0, this.f$1, (Bubble) obj);
             }
         };
         $$Lambda$BubbleData$3x9c7VXMa5ZgtScfM_PLfdJBhCY r3 = new Consumer(i) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleData$3x9c7VXMa5ZgtScfM_PLfdJBhCY */
             public final /* synthetic */ int f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 BubbleData.this.lambda$removeBubblesWithInvalidShortcuts$1$BubbleData(this.f$1, (Bubble) obj);
             }
@@ -308,23 +316,27 @@ public class BubbleData {
 
     public void removeBubblesWithPackageName(String str, int i) {
         $$Lambda$BubbleData$yNv2b3CKuwvR21gLk1U8HP86Gac r0 = new Predicate(str) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleData$yNv2b3CKuwvR21gLk1U8HP86Gac */
             public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return ((Bubble) obj).getPackageName().equals(this.f$0);
             }
         };
         $$Lambda$BubbleData$xKiHMLOJXi3HkPeIm_knLGFnA8A r2 = new Consumer(i) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleData$xKiHMLOJXi3HkPeIm_knLGFnA8A */
             public final /* synthetic */ int f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 BubbleData.this.lambda$removeBubblesWithPackageName$3$BubbleData(this.f$1, (Bubble) obj);
             }
@@ -356,10 +368,16 @@ public class BubbleData {
     private void trim() {
         if (this.mBubbles.size() > this.mMaxBubbles) {
             this.mBubbles.stream().sorted(Comparator.comparingLong($$Lambda$x9O8XLDgnXklCbpbq_xgakOvcgY.INSTANCE)).filter(new Predicate() {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleData$fdQdGUozu7xCn6j8BuMSn_4JPo */
+
+                @Override // java.util.function.Predicate
                 public final boolean test(Object obj) {
                     return BubbleData.this.lambda$trim$4$BubbleData((Bubble) obj);
                 }
             }).findFirst().ifPresent(new Consumer() {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleData$8l9nPNZ1SFL5Nh0WWQItDAiTp7Y */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     BubbleData.this.lambda$trim$5$BubbleData((Bubble) obj);
                 }
@@ -391,14 +409,14 @@ public class BubbleData {
     }
 
     private void performActionOnBubblesMatching(List<Bubble> list, Predicate<Bubble> predicate, Consumer<Bubble> consumer) {
-        ArrayList<Bubble> arrayList = new ArrayList<>();
-        for (Bubble next : list) {
-            if (predicate.test(next)) {
-                arrayList.add(next);
+        ArrayList<Bubble> arrayList = new ArrayList();
+        for (Bubble bubble : list) {
+            if (predicate.test(bubble)) {
+                arrayList.add(bubble);
             }
         }
-        for (Bubble accept : arrayList) {
-            consumer.accept(accept);
+        for (Bubble bubble2 : arrayList) {
+            consumer.accept(bubble2);
         }
     }
 
@@ -463,7 +481,7 @@ public class BubbleData {
     public void dismissAll(int i) {
         if (!this.mBubbles.isEmpty()) {
             setExpandedInternal(false);
-            setSelectedBubbleInternal((Bubble) null);
+            setSelectedBubbleInternal(null);
             while (!this.mBubbles.isEmpty()) {
                 doRemove(this.mBubbles.get(0).getKey(), i);
             }
@@ -473,10 +491,10 @@ public class BubbleData {
 
     /* access modifiers changed from: package-private */
     public void notifyDisplayEmpty(int i) {
-        for (Bubble next : this.mBubbles) {
-            if (next.getDisplayId() == i) {
-                if (next.getExpandedView() != null) {
-                    next.getExpandedView().notifyDisplayEmpty();
+        for (Bubble bubble : this.mBubbles) {
+            if (bubble.getDisplayId() == i) {
+                if (bubble.getExpandedView() != null) {
+                    bubble.getExpandedView().notifyDisplayEmpty();
                     return;
                 }
                 return;
@@ -551,12 +569,14 @@ public class BubbleData {
         }
         ArrayList arrayList = new ArrayList(this.mBubbles.size());
         this.mBubbles.stream().sorted(BUBBLES_BY_SORT_KEY_DESCENDING).forEachOrdered(new Consumer(arrayList) {
+            /* class com.android.systemui.bubbles.$$Lambda$0tU2wih_2wwdAnw6hE7FT9YuCis */
             public final /* synthetic */ List f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 this.f$0.add((Bubble) obj);
             }
@@ -666,13 +686,14 @@ public class BubbleData {
         printWriter.println(this.mExpanded);
         printWriter.print("count:    ");
         printWriter.println(this.mBubbles.size());
-        for (Bubble dump : this.mBubbles) {
-            dump.dump(fileDescriptor, printWriter, strArr);
+        for (Bubble bubble2 : this.mBubbles) {
+            bubble2.dump(fileDescriptor, printWriter, strArr);
         }
         printWriter.print("summaryKeys: ");
         printWriter.println(this.mSuppressedGroupKeys.size());
-        for (String str : this.mSuppressedGroupKeys.keySet()) {
-            printWriter.println("   suppressing: " + str);
+        Iterator<String> it = this.mSuppressedGroupKeys.keySet().iterator();
+        while (it.hasNext()) {
+            printWriter.println("   suppressing: " + it.next());
         }
     }
 }

@@ -5,8 +5,9 @@ import dagger.Lazy;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiWallpaperZoomOutService.kt */
-final class MiuiWallpaperZoomOutService$mStatusBar$2 extends Lambda implements Function0<StatusBar> {
+public final class MiuiWallpaperZoomOutService$mStatusBar$2 extends Lambda implements Function0<StatusBar> {
     final /* synthetic */ Lazy $statusBarLazy;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -15,6 +16,7 @@ final class MiuiWallpaperZoomOutService$mStatusBar$2 extends Lambda implements F
         this.$statusBarLazy = lazy;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final StatusBar invoke() {
         return (StatusBar) this.$statusBarLazy.get();
     }

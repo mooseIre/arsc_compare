@@ -16,13 +16,14 @@ import java.util.ArrayList;
 
 public class DisplayController {
     private final DisplayChangeController mChangeController;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public final ArrayList<OnDisplaysChangedListener> mDisplayChangedListeners = new ArrayList<>();
+    private final Context mContext;
+    private final ArrayList<OnDisplaysChangedListener> mDisplayChangedListeners = new ArrayList<>();
     private final IDisplayWindowListener mDisplayContainerListener = new IDisplayWindowListener.Stub() {
+        /* class com.android.systemui.wm.DisplayController.AnonymousClass1 */
+
         public void onDisplayAdded(int i) {
             DisplayController.this.mHandler.post(new Runnable(i) {
+                /* class com.android.systemui.wm.$$Lambda$DisplayController$1$zJ2mVywyLG45RsLGtw9ST7xxypY */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -62,6 +63,7 @@ public class DisplayController {
 
         public void onDisplayConfigurationChanged(int i, Configuration configuration) {
             DisplayController.this.mHandler.post(new Runnable(i, configuration) {
+                /* class com.android.systemui.wm.$$Lambda$DisplayController$1$mO2SyOpDmJKrsjv09X0fk_FOg */
                 public final /* synthetic */ int f$1;
                 public final /* synthetic */ Configuration f$2;
 
@@ -90,11 +92,11 @@ public class DisplayController {
                     Slog.w("DisplayController", "Skipping Display Configuration change on invalid display. It may have been removed.");
                     return;
                 }
-                Context access$300 = DisplayController.this.mContext;
+                Context context = DisplayController.this.mContext;
                 if (i != 0) {
-                    access$300 = DisplayController.this.mContext.createDisplayContext(display);
+                    context = DisplayController.this.mContext.createDisplayContext(display);
                 }
-                Context createConfigurationContext = access$300.createConfigurationContext(configuration);
+                Context createConfigurationContext = context.createConfigurationContext(configuration);
                 displayRecord.mContext = createConfigurationContext;
                 displayRecord.mDisplayLayout = new DisplayLayout(createConfigurationContext, display);
                 for (int i2 = 0; i2 < DisplayController.this.mDisplayChangedListeners.size(); i2++) {
@@ -105,6 +107,7 @@ public class DisplayController {
 
         public void onDisplayRemoved(int i) {
             DisplayController.this.mHandler.post(new Runnable(i) {
+                /* class com.android.systemui.wm.$$Lambda$DisplayController$1$sHTeIz3WbujoajhpVNRgzuLoi74 */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -132,6 +135,7 @@ public class DisplayController {
 
         public void onFixedRotationStarted(int i, int i2) {
             DisplayController.this.mHandler.post(new Runnable(i, i2) {
+                /* class com.android.systemui.wm.$$Lambda$DisplayController$1$l7FiEOWmAq5RJbL_Wn1mlPPItcA */
                 public final /* synthetic */ int f$1;
                 public final /* synthetic */ int f$2;
 
@@ -164,6 +168,7 @@ public class DisplayController {
 
         public void onFixedRotationFinished(int i) {
             DisplayController.this.mHandler.post(new Runnable(i) {
+                /* class com.android.systemui.wm.$$Lambda$DisplayController$1$ZPKsrnPJwHyuDSJzU6cSEJs0 */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -192,26 +197,24 @@ public class DisplayController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final SparseArray<DisplayRecord> mDisplays = new SparseArray<>();
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private final SparseArray<DisplayRecord> mDisplays = new SparseArray<>();
+    private final Handler mHandler;
     private final IWindowManager mWmService;
 
     public interface OnDisplaysChangedListener {
-        void onDisplayAdded(int i) {
+        default void onDisplayAdded(int i) {
         }
 
-        void onDisplayConfigurationChanged(int i, Configuration configuration) {
+        default void onDisplayConfigurationChanged(int i, Configuration configuration) {
         }
 
-        void onDisplayRemoved(int i) {
+        default void onDisplayRemoved(int i) {
         }
 
-        void onFixedRotationFinished(int i) {
+        default void onFixedRotationFinished(int i) {
         }
 
-        void onFixedRotationStarted(int i, int i2) {
+        default void onFixedRotationStarted(int i, int i2) {
         }
     }
 
@@ -262,7 +265,8 @@ public class DisplayController {
         this.mChangeController.addRotationListener(onDisplayChangingListener);
     }
 
-    private static class DisplayRecord {
+    /* access modifiers changed from: private */
+    public static class DisplayRecord {
         Context mContext;
         DisplayLayout mDisplayLayout;
 

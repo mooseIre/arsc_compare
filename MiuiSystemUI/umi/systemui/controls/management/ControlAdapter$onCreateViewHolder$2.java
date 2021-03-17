@@ -16,14 +16,17 @@ final class ControlAdapter$onCreateViewHolder$2 extends Lambda implements Functi
         this.this$0 = controlAdapter;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2) {
-        invoke((String) obj, ((Boolean) obj2).booleanValue());
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function2
+    public /* bridge */ /* synthetic */ Unit invoke(String str, Boolean bool) {
+        invoke(str, bool.booleanValue());
         return Unit.INSTANCE;
     }
 
     public final void invoke(@NotNull String str, boolean z) {
         Intrinsics.checkParameterIsNotNull(str, "id");
-        ControlsModel access$getModel$p = this.this$0.model;
+        ControlsModel access$getModel$p = ControlAdapter.access$getModel$p(this.this$0);
         if (access$getModel$p != null) {
             access$getModel$p.changeFavoriteStatus(str, z);
         }

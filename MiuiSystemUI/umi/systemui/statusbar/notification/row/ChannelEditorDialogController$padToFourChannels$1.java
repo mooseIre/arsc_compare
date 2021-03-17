@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChannelEditorDialogController.kt */
-final class ChannelEditorDialogController$padToFourChannels$1 extends Lambda implements Function1<NotificationChannel, Boolean> {
+public final class ChannelEditorDialogController$padToFourChannels$1 extends Lambda implements Function1<NotificationChannel, Boolean> {
     final /* synthetic */ ChannelEditorDialogController this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -16,8 +17,11 @@ final class ChannelEditorDialogController$padToFourChannels$1 extends Lambda imp
         this.this$0 = channelEditorDialogController;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        return Boolean.valueOf(invoke((NotificationChannel) obj));
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Boolean invoke(NotificationChannel notificationChannel) {
+        return Boolean.valueOf(invoke(notificationChannel));
     }
 
     public final boolean invoke(@NotNull NotificationChannel notificationChannel) {

@@ -13,16 +13,14 @@ import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.HeadsUpManagerInjector;
 
 public class HeadsUpTouchHelper implements Gefingerpoken {
-    /* access modifiers changed from: private */
-    public Callback mCallback;
+    private Callback mCallback;
     private boolean mCollapseSnoozes;
     private HeadsUpManagerPhone mHeadsUpManager;
     private float mInitialTouchX;
     private float mInitialTouchY;
     private NotificationPanelViewController mPanel;
     private ExpandableNotificationRow mPickedChild;
-    /* access modifiers changed from: private */
-    public float mTouchSlop;
+    private float mTouchSlop;
     private boolean mTouchingHeadsUpView;
     private boolean mTrackingHeadsUp;
     private int mTrackingPointer;
@@ -41,10 +39,13 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
         this.mPanel = notificationPanelViewController;
         this.mTouchSlop = (float) ViewConfiguration.get(callback.getContext()).getScaledTouchSlop();
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(new ConfigurationController.ConfigurationListener() {
+            /* class com.android.systemui.statusbar.phone.HeadsUpTouchHelper.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
             public void onDensityOrFontScaleChanged() {
                 Context context = HeadsUpTouchHelper.this.mCallback.getContext();
                 if (context != null) {
-                    float unused = HeadsUpTouchHelper.this.mTouchSlop = (float) ViewConfiguration.get(context).getScaledTouchSlop();
+                    HeadsUpTouchHelper.this.mTouchSlop = (float) ViewConfiguration.get(context).getScaledTouchSlop();
                 }
             }
         });
@@ -54,6 +55,7 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
         return this.mTrackingHeadsUp;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         NotificationEntry topEntry;
         int pointerId;
@@ -70,6 +72,7 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
         float y = motionEvent.getY(findPointerIndex);
         int actionMasked = motionEvent.getActionMasked();
         boolean z2 = true;
+        int i = 1;
         if (actionMasked != 0) {
             if (actionMasked != 1) {
                 if (actionMasked == 2) {
@@ -100,11 +103,11 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
                 } else if (actionMasked != 3) {
                     if (actionMasked == 6 && this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
                         if (motionEvent.getPointerId(0) != pointerId) {
-                            z2 = false;
+                            i = 0;
                         }
-                        this.mTrackingPointer = motionEvent.getPointerId(z2 ? 1 : 0);
-                        this.mInitialTouchX = motionEvent.getX(z2);
-                        this.mInitialTouchY = motionEvent.getY(z2);
+                        this.mTrackingPointer = motionEvent.getPointerId(i);
+                        this.mInitialTouchX = motionEvent.getX(i);
+                        this.mInitialTouchY = motionEvent.getY(i);
                     }
                 }
             }
@@ -154,6 +157,7 @@ public class HeadsUpTouchHelper implements Gefingerpoken {
         this.mCollapseSnoozes = false;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onTouchEvent(MotionEvent motionEvent) {
         if (!this.mTrackingHeadsUp) {
             return false;

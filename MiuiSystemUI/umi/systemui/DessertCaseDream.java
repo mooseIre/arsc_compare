@@ -5,8 +5,7 @@ import com.android.systemui.DessertCaseView;
 
 public class DessertCaseDream extends DreamService {
     private DessertCaseView.RescalingContainer mContainer;
-    /* access modifiers changed from: private */
-    public DessertCaseView mView;
+    private DessertCaseView mView;
 
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
@@ -21,6 +20,8 @@ public class DessertCaseDream extends DreamService {
     public void onDreamingStarted() {
         super.onDreamingStarted();
         this.mView.postDelayed(new Runnable() {
+            /* class com.android.systemui.DessertCaseDream.AnonymousClass1 */
+
             public void run() {
                 DessertCaseDream.this.mView.start();
             }

@@ -4,11 +4,12 @@ import android.content.Context;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.Button;
 import com.android.systemui.statusbar.AlphaOptimizedButton;
 
 public class FooterViewButton extends AlphaOptimizedButton {
     public FooterViewButton(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public FooterViewButton(Context context, AttributeSet attributeSet) {
@@ -25,8 +26,8 @@ public class FooterViewButton extends AlphaOptimizedButton {
 
     public void getDrawingRect(Rect rect) {
         super.getDrawingRect(rect);
-        float translationX = ((ViewGroup) this.mParent).getTranslationX();
-        float translationY = ((ViewGroup) this.mParent).getTranslationY();
+        float translationX = ((ViewGroup) ((Button) this).mParent).getTranslationX();
+        float translationY = ((ViewGroup) ((Button) this).mParent).getTranslationY();
         rect.left = (int) (((float) rect.left) + translationX);
         rect.right = (int) (((float) rect.right) + translationX);
         rect.top = (int) (((float) rect.top) + translationY);

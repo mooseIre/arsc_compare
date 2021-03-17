@@ -11,6 +11,7 @@ public final class HeadsetPolicy_Factory implements Factory<HeadsetPolicy> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public HeadsetPolicy get() {
         return provideInstance(this.contextProvider);
     }

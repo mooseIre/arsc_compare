@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
+import kotlin.collections.CollectionsKt__CollectionsKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$IntRef;
 import libcore.io.IoUtils;
@@ -23,11 +26,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 /* compiled from: ControlsFavoritePersistenceWrapper.kt */
 public final class ControlsFavoritePersistenceWrapper {
-    /* access modifiers changed from: private */
-    public BackupManager backupManager;
+    private BackupManager backupManager;
     private final Executor executor;
-    /* access modifiers changed from: private */
-    public File file;
+    private File file;
 
     public ControlsFavoritePersistenceWrapper(@NotNull File file2, @NotNull Executor executor2, @Nullable BackupManager backupManager2) {
         Intrinsics.checkParameterIsNotNull(file2, "file");
@@ -74,7 +75,7 @@ public final class ControlsFavoritePersistenceWrapper {
                 Log.d("ControlsFavoritePersistenceWrapper", "Reading data from file: " + this.file);
                 synchronized (BackupHelper.Companion.getControlsDataLock()) {
                     XmlPullParser newPullParser = Xml.newPullParser();
-                    newPullParser.setInput(bufferedInputStream, (String) null);
+                    newPullParser.setInput(bufferedInputStream, null);
                     Intrinsics.checkExpressionValueIsNotNull(newPullParser, "parser");
                     parseXml = parseXml(newPullParser);
                 }
@@ -83,12 +84,10 @@ public final class ControlsFavoritePersistenceWrapper {
             } catch (XmlPullParserException e) {
                 throw new IllegalStateException("Failed parsing favorites file: " + this.file, e);
             } catch (IOException e2) {
-                try {
-                    throw new IllegalStateException("Failed parsing favorites file: " + this.file, e2);
-                } catch (Throwable th) {
-                    IoUtils.closeQuietly(bufferedInputStream);
-                    throw th;
-                }
+                throw new IllegalStateException("Failed parsing favorites file: " + this.file, e2);
+            } catch (Throwable th) {
+                IoUtils.closeQuietly(bufferedInputStream);
+                throw th;
             }
         } catch (FileNotFoundException unused) {
             Log.i("ControlsFavoritePersistenceWrapper", "No file found");
@@ -113,25 +112,25 @@ public final class ControlsFavoritePersistenceWrapper {
             if (name == null) {
                 name = str2;
             }
-            if (ref$IntRef.element == 2 && Intrinsics.areEqual((Object) name, (Object) "structure")) {
-                componentName = ComponentName.unflattenFromString(xmlPullParser.getAttributeValue((String) null, "component"));
-                str = xmlPullParser.getAttributeValue((String) null, "structure");
+            if (ref$IntRef.element == 2 && Intrinsics.areEqual(name, "structure")) {
+                componentName = ComponentName.unflattenFromString(xmlPullParser.getAttributeValue(null, "component"));
+                str = xmlPullParser.getAttributeValue(null, "structure");
                 if (str == null) {
                     str = str2;
                 }
-            } else if (ref$IntRef.element == 2 && Intrinsics.areEqual((Object) name, (Object) "control")) {
-                String attributeValue = xmlPullParser.getAttributeValue((String) null, "id");
-                String attributeValue2 = xmlPullParser.getAttributeValue((String) null, "title");
-                String attributeValue3 = xmlPullParser.getAttributeValue((String) null, "subtitle");
+            } else if (ref$IntRef.element == 2 && Intrinsics.areEqual(name, "control")) {
+                String attributeValue = xmlPullParser.getAttributeValue(null, "id");
+                String attributeValue2 = xmlPullParser.getAttributeValue(null, "title");
+                String attributeValue3 = xmlPullParser.getAttributeValue(null, "subtitle");
                 if (attributeValue3 != null) {
                     str2 = attributeValue3;
                 }
-                String attributeValue4 = xmlPullParser.getAttributeValue((String) null, "type");
+                String attributeValue4 = xmlPullParser.getAttributeValue(null, "type");
                 Integer valueOf = attributeValue4 != null ? Integer.valueOf(Integer.parseInt(attributeValue4)) : null;
                 if (!(attributeValue == null || attributeValue2 == null || valueOf == null)) {
                     arrayList2.add(new ControlInfo(attributeValue, attributeValue2, str2, valueOf.intValue()));
                 }
-            } else if (ref$IntRef.element == 3 && Intrinsics.areEqual((Object) name, (Object) "structure")) {
+            } else if (ref$IntRef.element == 3 && Intrinsics.areEqual(name, "structure")) {
                 if (componentName == null) {
                     Intrinsics.throwNpe();
                     throw null;

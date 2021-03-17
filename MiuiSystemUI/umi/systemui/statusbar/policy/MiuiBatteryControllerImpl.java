@@ -13,6 +13,8 @@ import com.android.systemui.power.EnhancedEstimates;
 
 public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
     ContentObserver mBatteryExtremeSaveModeChangeObserver = new ContentObserver(new Handler()) {
+        /* class com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl.AnonymousClass3 */
+
         public void onChange(boolean z) {
             MiuiBatteryControllerImpl miuiBatteryControllerImpl = MiuiBatteryControllerImpl.this;
             boolean z2 = false;
@@ -24,6 +26,8 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
         }
     };
     ContentObserver mBatterySaveModeChangeObserver = new ContentObserver(new Handler()) {
+        /* class com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl.AnonymousClass2 */
+
         public void onChange(boolean z) {
             MiuiBatteryControllerImpl miuiBatteryControllerImpl = MiuiBatteryControllerImpl.this;
             boolean z2 = false;
@@ -35,6 +39,8 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
         }
     };
     ContentObserver mBatteryStyleChangeObserver = new ContentObserver(new Handler()) {
+        /* class com.android.systemui.statusbar.policy.MiuiBatteryControllerImpl.AnonymousClass1 */
+
         public void onChange(boolean z) {
             MiuiBatteryControllerImpl miuiBatteryControllerImpl = MiuiBatteryControllerImpl.this;
             miuiBatteryControllerImpl.mBatteryStyle = Settings.System.getIntForUser(miuiBatteryControllerImpl.mContext.getContentResolver(), "battery_indicator_style", 1, -2);
@@ -53,6 +59,7 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
         ((DemoModeController) Dependency.get(DemoModeController.class)).addCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController, com.android.systemui.statusbar.policy.BatteryControllerImpl
     public void init() {
         registerReceiver();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("battery_indicator_style"), false, this.mBatteryStyleChangeObserver, -1);
@@ -64,7 +71,8 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
     }
 
     /* access modifiers changed from: private */
-    public void firePowerSaverChanged() {
+    /* access modifiers changed from: public */
+    private void firePowerSaverChanged() {
         synchronized (this.mChangeCallbacks) {
             int size = this.mChangeCallbacks.size();
             for (int i = 0; i < size; i++) {
@@ -74,7 +82,8 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
     }
 
     /* access modifiers changed from: private */
-    public void fireExtremePowerSaveChanged() {
+    /* access modifiers changed from: public */
+    private void fireExtremePowerSaveChanged() {
         synchronized (this.mChangeCallbacks) {
             int size = this.mChangeCallbacks.size();
             for (int i = 0; i < size; i++) {
@@ -84,12 +93,14 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.policy.BatteryControllerImpl
     public void updateSecondSpace() {
         this.mBatteryStyleChangeObserver.onChange(false);
         this.mBatterySaveModeChangeObserver.onChange(false);
         this.mBatteryExtremeSaveModeChangeObserver.onChange(false);
     }
 
+    @Override // com.android.systemui.DemoMode, com.android.systemui.statusbar.policy.BatteryControllerImpl
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;

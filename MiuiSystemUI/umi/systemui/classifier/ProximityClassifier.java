@@ -10,6 +10,7 @@ public class ProximityClassifier extends GestureClassifier {
     private long mNearDuration;
     private long mNearStartTimeNano;
 
+    @Override // com.android.systemui.classifier.Classifier
     public String getTag() {
         return "PROX";
     }
@@ -17,6 +18,7 @@ public class ProximityClassifier extends GestureClassifier {
     public ProximityClassifier(ClassifierData classifierData) {
     }
 
+    @Override // com.android.systemui.classifier.Classifier
     public void onSensorChanged(SensorEvent sensorEvent) {
         if (sensorEvent.sensor.getType() == 8) {
             boolean z = false;
@@ -27,6 +29,7 @@ public class ProximityClassifier extends GestureClassifier {
         }
     }
 
+    @Override // com.android.systemui.classifier.Classifier
     public void onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
@@ -58,6 +61,7 @@ public class ProximityClassifier extends GestureClassifier {
         this.mNear = z;
     }
 
+    @Override // com.android.systemui.classifier.GestureClassifier
     public float getFalseTouchEvaluation(int i) {
         return ProximityEvaluator.evaluate(this.mAverageNear, i);
     }

@@ -28,9 +28,9 @@ public final class MiuiNotificationPanelViewController$endNssCoveringQsMotion$2 
     public void onAnimationEnd(@NotNull Animator animator) {
         float f;
         Intrinsics.checkParameterIsNotNull(animator, "animator");
-        ValueAnimator access$getMQsTopPaddingAnimator$p = this.this$0.mQsTopPaddingAnimator;
-        if (access$getMQsTopPaddingAnimator$p != null) {
-            access$getMQsTopPaddingAnimator$p.removeListener(this);
+        ValueAnimator valueAnimator = this.this$0.mQsTopPaddingAnimator;
+        if (valueAnimator != null) {
+            valueAnimator.removeListener(this);
         }
         this.this$0.mQsTopPaddingAnimator = null;
         this.this$0.mNssCoveringQs = false;
@@ -49,9 +49,9 @@ public final class MiuiNotificationPanelViewController$endNssCoveringQsMotion$2 
 
     public void onAnimationCancel(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animator");
-        ValueAnimator access$getMQsTopPaddingAnimator$p = this.this$0.mQsTopPaddingAnimator;
-        if (access$getMQsTopPaddingAnimator$p != null) {
-            access$getMQsTopPaddingAnimator$p.removeListener(this);
+        ValueAnimator valueAnimator = this.this$0.mQsTopPaddingAnimator;
+        if (valueAnimator != null) {
+            valueAnimator.removeListener(this);
         }
         this.this$0.mQsTopPaddingAnimator = null;
     }

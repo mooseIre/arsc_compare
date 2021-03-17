@@ -116,7 +116,7 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
 
     /* access modifiers changed from: protected */
     public I getIcons() {
-        return this.mCurrentState.iconGroup;
+        return (I) this.mCurrentState.iconGroup;
     }
 
     /* access modifiers changed from: protected */
@@ -154,7 +154,8 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
         notifyListeners(this.mCallbackHandler);
     }
 
-    static class IconGroup {
+    /* access modifiers changed from: package-private */
+    public static class IconGroup {
         final int[] mContentDesc;
         final int mDiscContentDesc;
         final String mName;
@@ -182,7 +183,8 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
         }
     }
 
-    static class State {
+    /* access modifiers changed from: package-private */
+    public static class State {
         private static SimpleDateFormat sSDF = new SimpleDateFormat("MM-dd HH:mm:ss.SSS");
         boolean activityIn;
         boolean activityOut;

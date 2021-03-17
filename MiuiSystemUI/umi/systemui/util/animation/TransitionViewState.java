@@ -5,22 +5,15 @@ import android.view.View;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: TransitionLayout.kt */
 public final class TransitionViewState {
     private float alpha = 1.0f;
-    @NotNull
     private final PointF contentTranslation = new PointF();
     private int height;
-    @NotNull
     private final PointF translation = new PointF();
-    @NotNull
     private Map<Integer, WidgetState> widgetStates = new LinkedHashMap();
     private int width;
 
-    @NotNull
     public final Map<Integer, WidgetState> getWidgetStates() {
         return this.widgetStates;
     }
@@ -49,12 +42,10 @@ public final class TransitionViewState {
         this.alpha = f;
     }
 
-    @NotNull
     public final PointF getTranslation() {
         return this.translation;
     }
 
-    @NotNull
     public final PointF getContentTranslation() {
         return this.contentTranslation;
     }
@@ -66,8 +57,7 @@ public final class TransitionViewState {
         return transitionViewState.copy(transitionViewState2);
     }
 
-    @NotNull
-    public final TransitionViewState copy(@Nullable TransitionViewState transitionViewState) {
+    public final TransitionViewState copy(TransitionViewState transitionViewState) {
         TransitionViewState transitionViewState2 = transitionViewState != null ? transitionViewState : new TransitionViewState();
         transitionViewState2.width = this.width;
         transitionViewState2.height = this.height;
@@ -78,24 +68,23 @@ public final class TransitionViewState {
         PointF pointF3 = transitionViewState2.contentTranslation;
         PointF pointF4 = this.contentTranslation;
         pointF3.set(pointF4.x, pointF4.y);
-        for (Map.Entry next : this.widgetStates.entrySet()) {
-            transitionViewState2.widgetStates.put(next.getKey(), WidgetState.copy$default((WidgetState) next.getValue(), 0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 511, (Object) null));
+        for (Map.Entry<Integer, WidgetState> entry : this.widgetStates.entrySet()) {
+            transitionViewState2.widgetStates.put(entry.getKey(), WidgetState.copy$default(entry.getValue(), 0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 511, null));
         }
         return transitionViewState2;
     }
 
-    public final void initFromLayout(@NotNull TransitionLayout transitionLayout) {
-        TransitionLayout transitionLayout2 = transitionLayout;
-        Intrinsics.checkParameterIsNotNull(transitionLayout2, "transitionLayout");
+    public final void initFromLayout(TransitionLayout transitionLayout) {
+        Intrinsics.checkParameterIsNotNull(transitionLayout, "transitionLayout");
         int childCount = transitionLayout.getChildCount();
         for (int i = 0; i < childCount; i++) {
-            View childAt = transitionLayout2.getChildAt(i);
+            View childAt = transitionLayout.getChildAt(i);
             Map<Integer, WidgetState> map = this.widgetStates;
             Intrinsics.checkExpressionValueIsNotNull(childAt, "child");
             Integer valueOf = Integer.valueOf(childAt.getId());
             WidgetState widgetState = map.get(valueOf);
             if (widgetState == null) {
-                widgetState = new WidgetState(0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 384, (DefaultConstructorMarker) null);
+                widgetState = new WidgetState(0.0f, 0.0f, 0, 0, 0, 0, 0.0f, 0.0f, false, 384, null);
                 map.put(valueOf, widgetState);
             }
             widgetState.initFromLayout(childAt);

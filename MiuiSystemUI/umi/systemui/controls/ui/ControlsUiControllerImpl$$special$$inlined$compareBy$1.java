@@ -10,7 +10,10 @@ public final class ControlsUiControllerImpl$$special$$inlined$compareBy$1<T> imp
         this.$comparator = comparator;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r0v1, resolved type: java.util.Comparator */
+    /* JADX WARN: Multi-variable type inference failed */
+    @Override // java.util.Comparator
     public final int compare(T t, T t2) {
-        return this.$comparator.compare(((SelectionItem) t).getTitle(), ((SelectionItem) t2).getTitle());
+        return this.$comparator.compare(t.getTitle(), t2.getTitle());
     }
 }

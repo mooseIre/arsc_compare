@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0015R$id;
@@ -17,14 +18,16 @@ public class BigQSIconViewImpl extends QSIconView {
     protected int mIconColor;
     protected int mIconColorOff;
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setAnimationEnabled(boolean z) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIsCustomTile(boolean z) {
     }
 
     public BigQSIconViewImpl(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public BigQSIconViewImpl(Context context, AttributeSet attributeSet) {
@@ -41,14 +44,16 @@ public class BigQSIconViewImpl extends QSIconView {
         this.mIcon.layout(0, 0, i3 - i, i4 - i2);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void updateResources() {
         this.mIconColor = getResources().getColor(C0011R$color.cc_qs_tile_icon_color);
         this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIcon(QSTile.State state, boolean z) {
         QSTile.Icon icon = state.icon;
-        Drawable drawable = icon != null ? icon.getDrawable(this.mContext) : null;
+        Drawable drawable = icon != null ? icon.getDrawable(((ViewGroup) this).mContext) : null;
         if (drawable != null) {
             Integer num = (Integer) this.mIcon.getTag(C0015R$id.qs_icon_state_tag);
             if (num == null || num.intValue() != state.state || !Objects.equals(state.icon, this.mIcon.getTag(C0015R$id.qs_icon_tag))) {
@@ -72,13 +77,14 @@ public class BigQSIconViewImpl extends QSIconView {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public View getIconView() {
         return this.mIcon;
     }
 
     /* access modifiers changed from: protected */
     public ImageView createIcon() {
-        ImageView imageView = new ImageView(this.mContext);
+        ImageView imageView = new ImageView(((ViewGroup) this).mContext);
         imageView.setId(16908294);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         return imageView;

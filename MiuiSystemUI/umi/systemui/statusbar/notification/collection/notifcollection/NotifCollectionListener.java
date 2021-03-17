@@ -5,27 +5,27 @@ import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 
 public interface NotifCollectionListener {
-    void onEntryAdded(NotificationEntry notificationEntry) {
+    default void onEntryAdded(NotificationEntry notificationEntry) {
     }
 
-    void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
+    default void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
     }
 
-    void onEntryCleanUp(NotificationEntry notificationEntry) {
+    default void onEntryCleanUp(NotificationEntry notificationEntry) {
     }
 
-    void onEntryInit(NotificationEntry notificationEntry) {
+    default void onEntryInit(NotificationEntry notificationEntry) {
     }
 
-    void onEntryRemoved(NotificationEntry notificationEntry, int i) {
+    default void onEntryRemoved(NotificationEntry notificationEntry, int i) {
     }
 
-    void onEntryUpdated(NotificationEntry notificationEntry) {
+    default void onEntryUpdated(NotificationEntry notificationEntry) {
     }
 
-    void onRankingApplied() {
+    default void onRankingApplied() {
     }
 
-    void onRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
+    default void onRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
     }
 }

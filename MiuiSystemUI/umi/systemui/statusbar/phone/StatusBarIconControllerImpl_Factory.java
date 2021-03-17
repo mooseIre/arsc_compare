@@ -14,6 +14,7 @@ public final class StatusBarIconControllerImpl_Factory implements Factory<Status
         this.commandQueueProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarIconControllerImpl get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider);
     }

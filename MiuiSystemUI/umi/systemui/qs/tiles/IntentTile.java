@@ -30,20 +30,25 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
     private String mOnLongClickUri;
     private final BroadcastReceiver mReceiver;
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return null;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowFixedHeightMinor;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
     }
 
     private IntentTile(QSHost qSHost, String str) {
         super(qSHost);
         AnonymousClass1 r2 = new BroadcastReceiver() {
+            /* class com.android.systemui.qs.tiles.IntentTile.AnonymousClass1 */
+
             public void onReceive(Context context, Intent intent) {
                 IntentTile.this.refreshState(intent);
             }
@@ -53,6 +58,7 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
         this.mContext.unregisterReceiver(this.mReceiver);
@@ -69,22 +75,26 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
         throw new IllegalArgumentException("Empty intent tile spec action");
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.State newTileState() {
         return new QSTile.State();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
         super.handleUserSwitch(i);
         this.mCurrentUserId = i;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         sendIntent("click", this.mOnClick, this.mOnClickUri);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleLongClick() {
         sendIntent("long-click", this.mOnLongClick, this.mOnLongClickUri);
     }
@@ -106,11 +116,13 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return getState().label;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUpdateState(QSTile.State state, Object obj) {
         Intent intent = (Intent) obj;
         if (intent != null || (intent = this.mLastIntent) != null) {
@@ -157,6 +169,7 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
             this.mBytes = bArr;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public Drawable getDrawable(Context context) {
             byte[] bArr = this.mBytes;
             return new BitmapDrawable(context.getResources(), BitmapFactory.decodeByteArray(bArr, 0, bArr.length));
@@ -166,8 +179,9 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
             return (obj instanceof BytesIcon) && Arrays.equals(((BytesIcon) obj).mBytes, this.mBytes);
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public String toString() {
-            return String.format("BytesIcon[len=%s]", new Object[]{Integer.valueOf(this.mBytes.length)});
+            return String.format("BytesIcon[len=%s]", Integer.valueOf(this.mBytes.length));
         }
     }
 
@@ -191,18 +205,20 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
             return true;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public Drawable getDrawable(Context context) {
             try {
                 return context.createPackageContext(this.mPackage, 0).getDrawable(this.mResId);
             } catch (Throwable th) {
-                String access$100 = IntentTile.this.TAG;
-                Log.w(access$100, "Error loading package drawable pkg=" + this.mPackage + " id=" + this.mResId, th);
+                String str = ((QSTileImpl) IntentTile.this).TAG;
+                Log.w(str, "Error loading package drawable pkg=" + this.mPackage + " id=" + this.mResId, th);
                 return null;
             }
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public String toString() {
-            return String.format("PackageDrawableIcon[pkg=%s,id=0x%08x]", new Object[]{this.mPackage, Integer.valueOf(this.mResId)});
+            return String.format("PackageDrawableIcon[pkg=%s,id=0x%08x]", this.mPackage, Integer.valueOf(this.mResId));
         }
     }
 }

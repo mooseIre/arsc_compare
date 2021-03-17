@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$QSTileHost$w0YHlhMwIm7qnoeEO7kRZCq47
     private /* synthetic */ $$Lambda$QSTileHost$w0YHlhMwIm7qnoeEO7kRZCq47o8() {
     }
 
+    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
         return QSTileHost.lambda$dump$6((QSTile) obj);
     }

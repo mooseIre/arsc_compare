@@ -12,6 +12,7 @@ public final class ControlsEditingActivity$setUpList$$inlined$apply$lambda$2 ext
         super(context, i);
     }
 
+    @Override // androidx.recyclerview.widget.GridLayoutManager, androidx.recyclerview.widget.RecyclerView.LayoutManager
     public int getRowCountForAccessibility(@NotNull RecyclerView.Recycler recycler, @NotNull RecyclerView.State state) {
         Intrinsics.checkParameterIsNotNull(recycler, "recycler");
         Intrinsics.checkParameterIsNotNull(state, "state");

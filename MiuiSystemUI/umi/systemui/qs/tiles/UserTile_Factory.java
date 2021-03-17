@@ -17,6 +17,7 @@ public final class UserTile_Factory implements Factory<UserTile> {
         this.userInfoControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public UserTile get() {
         return provideInstance(this.hostProvider, this.userSwitcherControllerProvider, this.userInfoControllerProvider);
     }

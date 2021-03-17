@@ -10,7 +10,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.ResolveInfo;
 import android.os.Bundle;
-import android.os.UserHandle;
 import android.util.Log;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.shared.system.WallpaperManagerCompat;
@@ -21,8 +20,8 @@ import com.android.systemui.util.ExtensionsKt;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.PackageEventController;
 import com.miui.systemui.util.PackageEventReceiver;
-import java.util.concurrent.Executor;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
@@ -40,8 +39,7 @@ public final class MiuiWallpaperZoomOutService extends BroadcastReceiver impleme
     private boolean mLauncherSupportWallpaperZoom;
     private final PackageEventController mPackageEventController;
     private final Lazy mStatusBar$delegate;
-    /* access modifiers changed from: private */
-    public final WallpaperManagerCompat mWallpaperManager;
+    private final WallpaperManagerCompat mWallpaperManager;
 
     static {
         PropertyReference1Impl propertyReference1Impl = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(MiuiWallpaperZoomOutService.class), "mStatusBar", "getMStatusBar()Lcom/android/systemui/statusbar/phone/StatusBar;");
@@ -76,7 +74,7 @@ public final class MiuiWallpaperZoomOutService extends BroadcastReceiver impleme
         BroadcastDispatcher broadcastDispatcher = this.mBroadcastDispatcher;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED");
-        BroadcastDispatcher.registerReceiver$default(broadcastDispatcher, this, intentFilter, (Executor) null, (UserHandle) null, 12, (Object) null);
+        BroadcastDispatcher.registerReceiver$default(broadcastDispatcher, this, intentFilter, null, null, 12, null);
         this.mPackageEventController.addCallback(this);
     }
 
@@ -87,13 +85,15 @@ public final class MiuiWallpaperZoomOutService extends BroadcastReceiver impleme
         }
     }
 
+    @Override // com.miui.systemui.util.PackageEventReceiver
     public void onPackageAdded(int i, @Nullable String str, boolean z) {
         ComponentName componentName = this.mLauncherComponent;
-        if (Intrinsics.areEqual((Object) str, (Object) componentName != null ? componentName.getPackageName() : null)) {
+        if (Intrinsics.areEqual(str, componentName != null ? componentName.getPackageName() : null)) {
             evaluateLauncherSupportsZoom();
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
     public void onDeviceProvisionedChanged() {
         checkLauncherInfo();
     }
@@ -110,7 +110,7 @@ public final class MiuiWallpaperZoomOutService extends BroadcastReceiver impleme
         if (DebugConfig.DEBUG) {
             Log.i("MiuiWallpaperZoomOutService", "Launcher is: " + this.mLauncherComponent);
         }
-        if (!Intrinsics.areEqual((Object) componentName, (Object) componentName2)) {
+        if (!Intrinsics.areEqual(componentName, componentName2)) {
             evaluateLauncherSupportsZoom();
         }
     }

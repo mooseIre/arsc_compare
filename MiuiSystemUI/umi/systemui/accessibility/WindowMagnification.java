@@ -18,6 +18,7 @@ public class WindowMagnification extends SystemUI {
         this.mLastConfiguration = new Configuration(context.getResources().getConfiguration());
     }
 
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         int diff = configuration.diff(this.mLastConfiguration);
         if ((diff & 4096) != 0) {
@@ -29,8 +30,11 @@ public class WindowMagnification extends SystemUI {
         }
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("window_magnification"), true, new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.accessibility.WindowMagnification.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 WindowMagnification.this.updateWindowMagnification();
             }
@@ -38,7 +42,8 @@ public class WindowMagnification extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void updateWindowMagnification() {
+    /* access modifiers changed from: public */
+    private void updateWindowMagnification() {
         try {
             if (Settings.Secure.getInt(this.mContext.getContentResolver(), "window_magnification") != 0) {
                 enableMagnification();
@@ -52,7 +57,7 @@ public class WindowMagnification extends SystemUI {
 
     private void enableMagnification() {
         if (this.mWindowMagnificationController == null) {
-            this.mWindowMagnificationController = new WindowMagnificationController(this.mContext, (MirrorWindowControl) null);
+            this.mWindowMagnificationController = new WindowMagnificationController(this.mContext, null);
         }
         this.mWindowMagnificationController.createWindowMagnification();
     }

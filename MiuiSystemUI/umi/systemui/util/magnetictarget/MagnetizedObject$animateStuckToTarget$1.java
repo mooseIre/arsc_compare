@@ -11,26 +11,33 @@ import kotlin.reflect.KDeclarationContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MagnetizedObject.kt */
-final /* synthetic */ class MagnetizedObject$animateStuckToTarget$1 extends FunctionReference implements Function5<MagnetizedObject.MagneticTarget, Float, Float, Boolean, Function0<? extends Unit>, Unit> {
+public final /* synthetic */ class MagnetizedObject$animateStuckToTarget$1 extends FunctionReference implements Function5<MagnetizedObject.MagneticTarget, Float, Float, Boolean, Function0<? extends Unit>, Unit> {
     MagnetizedObject$animateStuckToTarget$1(MagnetizedObject magnetizedObject) {
         super(5, magnetizedObject);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getName() {
         return "animateStuckToTargetInternal";
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final KDeclarationContainer getOwner() {
         return Reflection.getOrCreateKotlinClass(MagnetizedObject.class);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getSignature() {
         return "animateStuckToTargetInternal(Lcom/android/systemui/util/magnetictarget/MagnetizedObject$MagneticTarget;FFZLkotlin/jvm/functions/Function0;)V";
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2, Object obj3, Object obj4, Object obj5) {
-        invoke((MagnetizedObject.MagneticTarget) obj, ((Number) obj2).floatValue(), ((Number) obj3).floatValue(), ((Boolean) obj4).booleanValue(), (Function0<Unit>) (Function0) obj5);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object, java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function5
+    public /* bridge */ /* synthetic */ Unit invoke(MagnetizedObject.MagneticTarget magneticTarget, Float f, Float f2, Boolean bool, Function0<? extends Unit> function0) {
+        invoke(magneticTarget, f.floatValue(), f2.floatValue(), bool.booleanValue(), (Function0<Unit>) function0);
         return Unit.INSTANCE;
     }
 

@@ -20,6 +20,6 @@ public final class LogcatEchoTrackerDebug$attach$2 extends ContentObserver {
     public void onChange(boolean z, @NotNull Uri uri) {
         Intrinsics.checkParameterIsNotNull(uri, "uri");
         super.onChange(z, uri);
-        this.this$0.cachedTagLevels.clear();
+        LogcatEchoTrackerDebug.access$getCachedTagLevels$p(this.this$0).clear();
     }
 }

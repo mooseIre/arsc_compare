@@ -37,28 +37,34 @@ public class ShadeControllerImpl implements ShadeController {
         this.mBubbleControllerLazy = lazy3;
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void instantExpandNotificationsPanel() {
         getStatusBar().makeExpandedVisible(true);
         getNotificationPanelViewController().expand(false);
         this.mCommandQueue.recomputeDisableFlags(this.mDisplayId, false);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void animateCollapsePanels() {
         animateCollapsePanels(0);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void animateCollapsePanels(int i) {
         animateCollapsePanels(i, false, false, 1.0f);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void animateCollapsePanels(int i, boolean z) {
         animateCollapsePanels(i, z, false, 1.0f);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void animateCollapsePanels(int i, boolean z, boolean z2) {
         animateCollapsePanels(i, z, z2, 1.0f);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void animateCollapsePanels(int i, boolean z, boolean z2, float f) {
         if (z || this.mStatusBarStateController.getState() == 0) {
             if ((i & 2) == 0) {
@@ -77,6 +83,7 @@ public class ShadeControllerImpl implements ShadeController {
         runPostCollapseRunnables();
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public boolean closeShadeIfOpen() {
         if (!getNotificationPanelViewController().isFullyCollapsed()) {
             this.mCommandQueue.animateCollapsePanels(2, true);
@@ -87,8 +94,11 @@ public class ShadeControllerImpl implements ShadeController {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void postOnShadeExpanded(final Runnable runnable) {
         getNotificationPanelViewController().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            /* class com.android.systemui.statusbar.phone.ShadeControllerImpl.AnonymousClass1 */
+
             public void onGlobalLayout() {
                 if (ShadeControllerImpl.this.getStatusBar().getNotificationShadeWindowView().isVisibleToUser()) {
                     ShadeControllerImpl.this.getNotificationPanelViewController().removeOnGlobalLayoutListener(this);
@@ -98,10 +108,12 @@ public class ShadeControllerImpl implements ShadeController {
         });
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void addPostCollapseAction(Runnable runnable) {
         this.mPostCollapseRunnables.add(runnable);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void runPostCollapseRunnables() {
         ArrayList arrayList = new ArrayList(this.mPostCollapseRunnables);
         this.mPostCollapseRunnables.clear();
@@ -112,10 +124,12 @@ public class ShadeControllerImpl implements ShadeController {
         this.mStatusBarKeyguardViewManager.readyForKeyguardDone();
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void goToLockedShade(View view) {
         getStatusBar().goToLockedShade(view);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public boolean collapsePanel() {
         if (getNotificationPanelViewController().isFullyCollapsed()) {
             return false;
@@ -125,6 +139,7 @@ public class ShadeControllerImpl implements ShadeController {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.ShadeController
     public void collapsePanel(boolean z) {
         if (z) {
             if (!collapsePanel()) {
@@ -139,7 +154,8 @@ public class ShadeControllerImpl implements ShadeController {
     }
 
     /* access modifiers changed from: private */
-    public StatusBar getStatusBar() {
+    /* access modifiers changed from: public */
+    private StatusBar getStatusBar() {
         return this.mStatusBarLazy.get();
     }
 
@@ -158,7 +174,8 @@ public class ShadeControllerImpl implements ShadeController {
     }
 
     /* access modifiers changed from: private */
-    public NotificationPanelViewController getNotificationPanelViewController() {
+    /* access modifiers changed from: public */
+    private NotificationPanelViewController getNotificationPanelViewController() {
         return getStatusBar().getPanelController();
     }
 }

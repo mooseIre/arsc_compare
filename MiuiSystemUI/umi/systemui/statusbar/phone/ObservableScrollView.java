@@ -26,7 +26,7 @@ public class ObservableScrollView extends ScrollView {
 
     private int getMaxScrollY() {
         if (getChildCount() > 0) {
-            return Math.max(0, getChildAt(0).getHeight() - ((getHeight() - this.mPaddingBottom) - this.mPaddingTop));
+            return Math.max(0, getChildAt(0).getHeight() - ((getHeight() - ((ScrollView) this).mPaddingBottom) - ((ScrollView) this).mPaddingTop));
         }
         return 0;
     }

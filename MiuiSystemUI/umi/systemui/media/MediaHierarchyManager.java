@@ -22,17 +22,13 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: MediaHierarchyManager.kt */
 public final class MediaHierarchyManager {
-    /* access modifiers changed from: private */
-    public boolean animationPending;
-    /* access modifiers changed from: private */
-    public Rect animationStartBounds = new Rect();
-    /* access modifiers changed from: private */
-    public ValueAnimator animator;
+    private boolean animationPending;
+    private Rect animationStartBounds = new Rect();
+    private ValueAnimator animator;
     private boolean collapsingShadeFromQS;
     private final Context context;
     private int currentAttachmentLocation;
-    /* access modifiers changed from: private */
-    public Rect currentBounds = new Rect();
+    private Rect currentBounds = new Rect();
     private int desiredLocation;
     private boolean dozeAnimationRunning;
     private boolean fullyAwake;
@@ -42,17 +38,12 @@ public final class MediaHierarchyManager {
     private final MediaHost[] mediaHosts;
     private int previousLocation;
     private float qsExpansion;
-    /* access modifiers changed from: private */
-    public ViewGroupOverlay rootOverlay;
-    /* access modifiers changed from: private */
-    public View rootView;
-    /* access modifiers changed from: private */
-    public final Runnable startAnimation;
+    private ViewGroupOverlay rootOverlay;
+    private View rootView;
+    private final Runnable startAnimation;
     private final SysuiStatusBarStateController statusBarStateController;
-    /* access modifiers changed from: private */
-    public int statusbarState = this.statusBarStateController.getState();
-    /* access modifiers changed from: private */
-    public Rect targetBounds = new Rect();
+    private int statusbarState = this.statusBarStateController.getState();
+    private Rect targetBounds = new Rect();
 
     public MediaHierarchyManager(@NotNull Context context2, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull KeyguardStateController keyguardStateController2, @NotNull KeyguardBypassController keyguardBypassController, @NotNull MediaCarouselController mediaCarouselController2, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull WakefulnessLifecycle wakefulnessLifecycle) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
@@ -66,7 +57,7 @@ public final class MediaHierarchyManager {
         this.statusBarStateController = sysuiStatusBarStateController;
         this.keyguardStateController = keyguardStateController2;
         this.mediaCarouselController = mediaCarouselController2;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         ofFloat.addUpdateListener(new MediaHierarchyManager$$special$$inlined$apply$lambda$1(ofFloat, this));
         ofFloat.addListener(new MediaHierarchyManager$$special$$inlined$apply$lambda$2(this));
@@ -77,54 +68,66 @@ public final class MediaHierarchyManager {
         this.currentAttachmentLocation = -1;
         this.startAnimation = new MediaHierarchyManager$startAnimation$1(this);
         this.statusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
+            /* class com.android.systemui.media.MediaHierarchyManager.AnonymousClass1 */
             final /* synthetic */ MediaHierarchyManager this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStatePreChange(int i, int i2) {
                 this.this$0.statusbarState = i2;
-                MediaHierarchyManager.updateDesiredLocation$default(this.this$0, false, 1, (Object) null);
+                MediaHierarchyManager.updateDesiredLocation$default(this.this$0, false, 1, null);
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 this.this$0.updateTargetState();
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onDozeAmountChanged(float f, float f2) {
                 this.this$0.setDozeAnimationRunning((f == 0.0f || f == 1.0f) ? false : true);
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onDozingChanged(boolean z) {
                 if (!z) {
                     this.this$0.setDozeAnimationRunning(false);
                 } else {
-                    MediaHierarchyManager.updateDesiredLocation$default(this.this$0, false, 1, (Object) null);
+                    MediaHierarchyManager.updateDesiredLocation$default(this.this$0, false, 1, null);
                 }
             }
         });
         wakefulnessLifecycle.addObserver(new WakefulnessLifecycle.Observer(this) {
+            /* class com.android.systemui.media.MediaHierarchyManager.AnonymousClass2 */
             final /* synthetic */ MediaHierarchyManager this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onFinishedGoingToSleep() {
                 this.this$0.setGoingToSleep(false);
             }
 
+            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onStartedGoingToSleep() {
                 this.this$0.setGoingToSleep(true);
                 this.this$0.setFullyAwake(false);
             }
 
+            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onFinishedWakingUp() {
                 this.this$0.setGoingToSleep(false);
                 this.this$0.setFullyAwake(true);
             }
 
+            @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
             public void onStartedWakingUp() {
                 this.this$0.setGoingToSleep(false);
             }
@@ -138,7 +141,7 @@ public final class MediaHierarchyManager {
     public final void setQsExpansion(float f) {
         if (this.qsExpansion != f) {
             this.qsExpansion = f;
-            updateDesiredLocation$default(this, false, 1, (Object) null);
+            updateDesiredLocation$default(this, false, 1, null);
             if (getQSTransformationProgress() >= ((float) 0)) {
                 updateTargetState();
                 applyTargetStateIfNotAnimating();
@@ -154,17 +157,19 @@ public final class MediaHierarchyManager {
     }
 
     /* access modifiers changed from: private */
-    public final void setGoingToSleep(boolean z) {
+    /* access modifiers changed from: public */
+    private final void setGoingToSleep(boolean z) {
         if (this.goingToSleep != z) {
             this.goingToSleep = z;
             if (!z) {
-                updateDesiredLocation$default(this, false, 1, (Object) null);
+                updateDesiredLocation$default(this, false, 1, null);
             }
         }
     }
 
     /* access modifiers changed from: private */
-    public final void setFullyAwake(boolean z) {
+    /* access modifiers changed from: public */
+    private final void setFullyAwake(boolean z) {
         if (this.fullyAwake != z) {
             this.fullyAwake = z;
             if (z) {
@@ -174,11 +179,12 @@ public final class MediaHierarchyManager {
     }
 
     /* access modifiers changed from: private */
-    public final void setDozeAnimationRunning(boolean z) {
+    /* access modifiers changed from: public */
+    private final void setDozeAnimationRunning(boolean z) {
         if (this.dozeAnimationRunning != z) {
             this.dozeAnimationRunning = z;
             if (!z) {
-                updateDesiredLocation$default(this, false, 1, (Object) null);
+                updateDesiredLocation$default(this, false, 1, null);
             }
         }
     }
@@ -196,7 +202,7 @@ public final class MediaHierarchyManager {
         if (mediaHost.getLocation() == this.currentAttachmentLocation) {
             this.currentAttachmentLocation = -1;
         }
-        updateDesiredLocation$default(this, false, 1, (Object) null);
+        updateDesiredLocation$default(this, false, 1, null);
         return createUniqueObjectHost;
     }
 
@@ -314,12 +320,13 @@ public final class MediaHierarchyManager {
         ValueAnimator valueAnimator = this.animator;
         Intrinsics.checkExpressionValueIsNotNull(valueAnimator, "animator");
         if (!valueAnimator.isRunning()) {
-            applyState$default(this, this.targetBounds, false, 2, (Object) null);
+            applyState$default(this, this.targetBounds, false, 2, null);
         }
     }
 
     /* access modifiers changed from: private */
-    public final void updateTargetState() {
+    /* access modifiers changed from: public */
+    private final void updateTargetState() {
         Rect currentBounds2;
         if (isCurrentlyInGuidedTransformation()) {
             float transformationProgress = getTransformationProgress();
@@ -332,7 +339,7 @@ public final class MediaHierarchyManager {
                     } else if (!host2.getVisible()) {
                         host2 = host;
                     }
-                    this.targetBounds = interpolateBounds$default(this, host2.getCurrentBounds(), host.getCurrentBounds(), transformationProgress, (Rect) null, 8, (Object) null);
+                    this.targetBounds = interpolateBounds$default(this, host2.getCurrentBounds(), host.getCurrentBounds(), transformationProgress, null, 8, null);
                     return;
                 }
                 Intrinsics.throwNpe();

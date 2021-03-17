@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NearestTouchFrame$KtkvB6kuUFBlaLB_ch
     private /* synthetic */ $$Lambda$NearestTouchFrame$KtkvB6kuUFBlaLB_chuEtrCrZqA() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return NearestTouchFrame.lambda$findNearestChild$2((Pair) obj);
     }

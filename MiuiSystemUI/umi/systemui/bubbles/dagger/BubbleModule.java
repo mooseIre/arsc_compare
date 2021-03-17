@@ -8,7 +8,6 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.bubbles.BubbleData;
 import com.android.systemui.bubbles.BubbleDataRepository;
-import com.android.systemui.bubbles.BubbleStackView;
 import com.android.systemui.dump.DumpManager;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -25,7 +24,7 @@ import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.util.FloatingContentCoordinator;
 
 public interface BubbleModule {
-    static BubbleController newBubbleController(Context context, NotificationShadeWindowController notificationShadeWindowController, StatusBarStateController statusBarStateController, ShadeController shadeController, BubbleData bubbleData, ConfigurationController configurationController, NotificationInterruptStateProvider notificationInterruptStateProvider, ZenModeController zenModeController, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationGroupManager notificationGroupManager, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, FeatureFlags featureFlags, DumpManager dumpManager, FloatingContentCoordinator floatingContentCoordinator, BubbleDataRepository bubbleDataRepository, SysUiState sysUiState, INotificationManager iNotificationManager, IStatusBarService iStatusBarService, WindowManager windowManager, LauncherApps launcherApps) {
-        return new BubbleController(context, notificationShadeWindowController, statusBarStateController, shadeController, bubbleData, (BubbleStackView.SurfaceSynchronizer) null, configurationController, notificationInterruptStateProvider, zenModeController, notificationLockscreenUserManager, notificationGroupManager, notificationEntryManager, notifPipeline, featureFlags, dumpManager, floatingContentCoordinator, bubbleDataRepository, sysUiState, iNotificationManager, iStatusBarService, windowManager, launcherApps);
+    static default BubbleController newBubbleController(Context context, NotificationShadeWindowController notificationShadeWindowController, StatusBarStateController statusBarStateController, ShadeController shadeController, BubbleData bubbleData, ConfigurationController configurationController, NotificationInterruptStateProvider notificationInterruptStateProvider, ZenModeController zenModeController, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationGroupManager notificationGroupManager, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, FeatureFlags featureFlags, DumpManager dumpManager, FloatingContentCoordinator floatingContentCoordinator, BubbleDataRepository bubbleDataRepository, SysUiState sysUiState, INotificationManager iNotificationManager, IStatusBarService iStatusBarService, WindowManager windowManager, LauncherApps launcherApps) {
+        return new BubbleController(context, notificationShadeWindowController, statusBarStateController, shadeController, bubbleData, null, configurationController, notificationInterruptStateProvider, zenModeController, notificationLockscreenUserManager, notificationGroupManager, notificationEntryManager, notifPipeline, featureFlags, dumpManager, floatingContentCoordinator, bubbleDataRepository, sysUiState, iNotificationManager, iStatusBarService, windowManager, launcherApps);
     }
 }

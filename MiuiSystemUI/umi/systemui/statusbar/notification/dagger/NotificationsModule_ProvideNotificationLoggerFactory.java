@@ -27,6 +27,7 @@ public final class NotificationsModule_ProvideNotificationLoggerFactory implemen
         this.notificationPanelLoggerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public NotificationLogger get() {
         return provideInstance(this.notificationListenerProvider, this.uiBgExecutorProvider, this.entryManagerProvider, this.statusBarStateControllerProvider, this.expansionStateLoggerProvider, this.notificationPanelLoggerProvider);
     }

@@ -12,6 +12,7 @@ public class QuickTileLayout extends LinearLayout {
         setGravity(17);
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View view, int i, ViewGroup.LayoutParams layoutParams) {
         int i2 = layoutParams.height;
         LinearLayout.LayoutParams layoutParams2 = new LinearLayout.LayoutParams(i2, i2);

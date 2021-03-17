@@ -11,6 +11,7 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.RemoteException;
 import android.os.UserHandle;
 import android.service.quicksettings.IQSService;
 import android.service.quicksettings.Tile;
@@ -25,10 +26,11 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.concurrent.Executor;
 
 public class TileServices extends IQSService.Stub {
     private static final Comparator<TileServiceManager> SERVICE_SORT = new Comparator<TileServiceManager>() {
+        /* class com.android.systemui.qs.external.TileServices.AnonymousClass3 */
+
         public int compare(TileServiceManager tileServiceManager, TileServiceManager tileServiceManager2) {
             return -Integer.compare(tileServiceManager.getBindPriority(), tileServiceManager2.getBindPriority());
         }
@@ -36,11 +38,12 @@ public class TileServices extends IQSService.Stub {
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final Context mContext;
     private final Handler mHandler;
-    /* access modifiers changed from: private */
-    public final QSTileHost mHost;
+    private final QSTileHost mHost;
     private final Handler mMainHandler;
     private int mMaxBound = 5;
     private final BroadcastReceiver mRequestListeningReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.qs.external.TileServices.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.service.quicksettings.action.REQUEST_LISTENING".equals(intent.getAction())) {
                 TileServices.this.requestListening((ComponentName) intent.getParcelableExtra("android.intent.extra.COMPONENT_NAME"));
@@ -57,7 +60,7 @@ public class TileServices extends IQSService.Stub {
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mHandler = new Handler(looper);
         this.mMainHandler = new Handler(Looper.getMainLooper());
-        this.mBroadcastDispatcher.registerReceiver(this.mRequestListeningReceiver, new IntentFilter("android.service.quicksettings.action.REQUEST_LISTENING"), (Executor) null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mRequestListeningReceiver, new IntentFilter("android.service.quicksettings.action.REQUEST_LISTENING"), null, UserHandle.ALL);
     }
 
     public Context getContext() {
@@ -93,6 +96,7 @@ public class TileServices extends IQSService.Stub {
             this.mTokenMap.remove(tileServiceManager.getToken());
             this.mTiles.remove(customTile.getComponent());
             this.mMainHandler.post(new Runnable(customTile.getComponent().getClassName()) {
+                /* class com.android.systemui.qs.external.$$Lambda$TileServices$m2qCzd8BVbBUzSnClFn7o_chF7k */
                 public final /* synthetic */ String f$1;
 
                 {
@@ -147,48 +151,23 @@ public class TileServices extends IQSService.Stub {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Can't wrap try/catch for region: R(6:12|13|14|15|16|17) */
-    /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x003c */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void requestListening(android.content.ComponentName r4) {
-        /*
-            r3 = this;
-            android.util.ArrayMap<com.android.systemui.qs.external.CustomTile, com.android.systemui.qs.external.TileServiceManager> r0 = r3.mServices
-            monitor-enter(r0)
-            com.android.systemui.qs.external.CustomTile r1 = r3.getTileForComponent(r4)     // Catch:{ all -> 0x003e }
-            if (r1 != 0) goto L_0x0021
-            java.lang.String r3 = "TileServices"
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x003e }
-            r1.<init>()     // Catch:{ all -> 0x003e }
-            java.lang.String r2 = "Couldn't find tile for "
-            r1.append(r2)     // Catch:{ all -> 0x003e }
-            r1.append(r4)     // Catch:{ all -> 0x003e }
-            java.lang.String r4 = r1.toString()     // Catch:{ all -> 0x003e }
-            android.util.Log.d(r3, r4)     // Catch:{ all -> 0x003e }
-            monitor-exit(r0)     // Catch:{ all -> 0x003e }
-            return
-        L_0x0021:
-            android.util.ArrayMap<com.android.systemui.qs.external.CustomTile, com.android.systemui.qs.external.TileServiceManager> r3 = r3.mServices     // Catch:{ all -> 0x003e }
-            java.lang.Object r3 = r3.get(r1)     // Catch:{ all -> 0x003e }
-            com.android.systemui.qs.external.TileServiceManager r3 = (com.android.systemui.qs.external.TileServiceManager) r3     // Catch:{ all -> 0x003e }
-            boolean r4 = r3.isActiveTile()     // Catch:{ all -> 0x003e }
-            if (r4 != 0) goto L_0x0031
-            monitor-exit(r0)     // Catch:{ all -> 0x003e }
-            return
-        L_0x0031:
-            r4 = 1
-            r3.setBindRequested(r4)     // Catch:{ all -> 0x003e }
-            android.service.quicksettings.IQSTileService r3 = r3.getTileService()     // Catch:{ RemoteException -> 0x003c }
-            r3.onStartListening()     // Catch:{ RemoteException -> 0x003c }
-        L_0x003c:
-            monitor-exit(r0)     // Catch:{ all -> 0x003e }
-            return
-        L_0x003e:
-            r3 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x003e }
-            throw r3
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.TileServices.requestListening(android.content.ComponentName):void");
+    /* access modifiers changed from: public */
+    private void requestListening(ComponentName componentName) {
+        synchronized (this.mServices) {
+            CustomTile tileForComponent = getTileForComponent(componentName);
+            if (tileForComponent == null) {
+                Log.d("TileServices", "Couldn't find tile for " + componentName);
+                return;
+            }
+            TileServiceManager tileServiceManager = this.mServices.get(tileForComponent);
+            if (tileServiceManager.isActiveTile()) {
+                tileServiceManager.setBindRequested(true);
+                try {
+                    tileServiceManager.getTileService().onStartListening();
+                } catch (RemoteException unused) {
+                }
+            }
+        }
     }
 
     public void updateQsTile(Tile tile, IBinder iBinder) {
@@ -267,6 +246,8 @@ public class TileServices extends IQSService.Stub {
                 if (this.mContext.getPackageManager().getPackageInfoAsUser(packageName, 0, callingUserHandle.getIdentifier()).applicationInfo.isSystemApp()) {
                     final StatusBarIcon statusBarIcon = icon != null ? new StatusBarIcon(callingUserHandle, packageName, icon, 0, 0, str) : null;
                     this.mMainHandler.post(new Runnable() {
+                        /* class com.android.systemui.qs.external.TileServices.AnonymousClass1 */
+
                         public void run() {
                             StatusBarIconController iconController = TileServices.this.mHost.getIconController();
                             iconController.setIcon(component.getClassName(), statusBarIcon);

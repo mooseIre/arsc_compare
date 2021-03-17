@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideActivityManagerFactory implements
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ActivityManager get() {
         return provideInstance(this.contextProvider);
     }

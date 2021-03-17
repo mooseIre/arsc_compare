@@ -17,6 +17,7 @@ final class MiuiAnimatedNotificationRowBase$mFolme$2 extends Lambda implements F
         this.this$0 = miuiAnimatedNotificationRowBase;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final IStateStyle invoke() {
         IAnimTarget target = Folme.getTarget(this.this$0, ViewTarget.sCreator);
         target.setDefaultMinVisibleChange(0.002f);

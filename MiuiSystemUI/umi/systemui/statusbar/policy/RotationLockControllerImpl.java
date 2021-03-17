@@ -12,11 +12,14 @@ public final class RotationLockControllerImpl implements RotationLockController 
     private final CopyOnWriteArrayList<RotationLockController.RotationLockControllerCallback> mCallbacks = new CopyOnWriteArrayList<>();
     private final Context mContext;
     private final RotationPolicy.RotationPolicyListener mRotationPolicyListener = new RotationPolicy.RotationPolicyListener() {
+        /* class com.android.systemui.statusbar.policy.RotationLockControllerImpl.AnonymousClass1 */
+
         public void onChange() {
             RotationLockControllerImpl.this.notifyChanged();
         }
     };
 
+    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public int getRotationLockOrientation() {
         return 0;
     }
@@ -35,10 +38,12 @@ public final class RotationLockControllerImpl implements RotationLockController 
         this.mCallbacks.remove(rotationLockControllerCallback);
     }
 
+    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public boolean isRotationLocked() {
         return RotationPolicy.isRotationLocked(this.mContext);
     }
 
+    @Override // com.android.systemui.statusbar.policy.RotationLockController
     public void setRotationLockedAtAngle(boolean z, int i) {
         Settings.System.putIntForUser(this.mContext.getContentResolver(), "hide_rotation_lock_toggle_for_accessibility", 0, KeyguardUpdateMonitor.getCurrentUser());
         RotationPolicy.setRotationLockAtAngle(this.mContext, z, i);
@@ -53,7 +58,8 @@ public final class RotationLockControllerImpl implements RotationLockController 
     }
 
     /* access modifiers changed from: private */
-    public void notifyChanged() {
+    /* access modifiers changed from: public */
+    private void notifyChanged() {
         Iterator<RotationLockController.RotationLockControllerCallback> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
             notifyChanged(it.next());

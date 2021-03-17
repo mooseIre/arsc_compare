@@ -4,7 +4,6 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import com.android.systemui.util.DeviceConfigProxy;
 import java.util.List;
-import java.util.Locale;
 
 class DistanceClassifier extends FalsingClassifier {
     private DistanceVectors mCachedDistance;
@@ -44,8 +43,8 @@ class DistanceClassifier extends FalsingClassifier {
             FalsingClassifier.logDebug("Only " + recentMotionEvents.size() + " motion events recorded.");
             return new DistanceVectors(this, 0.0f, 0.0f, 0.0f, 0.0f);
         }
-        for (MotionEvent addMovement : recentMotionEvents) {
-            obtain.addMovement(addMovement);
+        for (MotionEvent motionEvent : recentMotionEvents) {
+            obtain.addMovement(motionEvent);
         }
         obtain.computeCurrentVelocity(1);
         float xVelocity = obtain.getXVelocity();
@@ -57,17 +56,20 @@ class DistanceClassifier extends FalsingClassifier {
         return new DistanceVectors(this, x, y, xVelocity, yVelocity);
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public void onTouchEvent(MotionEvent motionEvent) {
         this.mDistanceDirty = true;
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public boolean isFalseTouch() {
         return !getPassedFlingThreshold();
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public String getReason() {
-        return String.format((Locale) null, "{distanceVectors=%s, isHorizontal=%s, velocityToDistanceMultiplier=%f, horizontalFlingThreshold=%f, verticalFlingThreshold=%f, horizontalSwipeThreshold=%f, verticalSwipeThreshold=%s}", new Object[]{getDistances(), Boolean.valueOf(isHorizontal()), Float.valueOf(this.mVelocityToDistanceMultiplier), Float.valueOf(this.mHorizontalFlingThresholdPx), Float.valueOf(this.mVerticalFlingThresholdPx), Float.valueOf(this.mHorizontalSwipeThresholdPx), Float.valueOf(this.mVerticalSwipeThresholdPx)});
+        return String.format(null, "{distanceVectors=%s, isHorizontal=%s, velocityToDistanceMultiplier=%f, horizontalFlingThreshold=%f, verticalFlingThreshold=%f, horizontalSwipeThreshold=%f, verticalSwipeThreshold=%s}", getDistances(), Boolean.valueOf(isHorizontal()), Float.valueOf(this.mVelocityToDistanceMultiplier), Float.valueOf(this.mHorizontalFlingThresholdPx), Float.valueOf(this.mVerticalFlingThresholdPx), Float.valueOf(this.mHorizontalSwipeThresholdPx), Float.valueOf(this.mVerticalSwipeThresholdPx));
     }
 
     /* access modifiers changed from: package-private */
@@ -82,52 +84,39 @@ class DistanceClassifier extends FalsingClassifier {
         if (isHorizontal()) {
             FalsingClassifier.logDebug("Horizontal swipe distance: " + Math.abs(distances.mDx));
             FalsingClassifier.logDebug("Threshold: " + this.mHorizontalSwipeThresholdPx);
-            if (Math.abs(distances.mDx) >= this.mHorizontalSwipeThresholdPx) {
-                return true;
-            }
-            return false;
+            return Math.abs(distances.mDx) >= this.mHorizontalSwipeThresholdPx;
         }
         FalsingClassifier.logDebug("Vertical swipe distance: " + Math.abs(distances.mDy));
         FalsingClassifier.logDebug("Threshold: " + this.mVerticalSwipeThresholdPx);
-        if (Math.abs(distances.mDy) >= this.mVerticalSwipeThresholdPx) {
-            return true;
-        }
-        return false;
+        return Math.abs(distances.mDy) >= this.mVerticalSwipeThresholdPx;
     }
 
     private boolean getPassedFlingThreshold() {
         DistanceVectors distances = getDistances();
-        float access$000 = distances.mDx + (distances.mVx * this.mVelocityToDistanceMultiplier);
-        float access$100 = distances.mDy + (distances.mVy * this.mVelocityToDistanceMultiplier);
+        float f = distances.mDx + (distances.mVx * this.mVelocityToDistanceMultiplier);
+        float f2 = distances.mDy + (distances.mVy * this.mVelocityToDistanceMultiplier);
         if (isHorizontal()) {
             FalsingClassifier.logDebug("Horizontal swipe and fling distance: " + distances.mDx + ", " + (distances.mVx * this.mVelocityToDistanceMultiplier));
             StringBuilder sb = new StringBuilder();
             sb.append("Threshold: ");
             sb.append(this.mHorizontalFlingThresholdPx);
             FalsingClassifier.logDebug(sb.toString());
-            if (Math.abs(access$000) >= this.mHorizontalFlingThresholdPx) {
-                return true;
-            }
-            return false;
+            return Math.abs(f) >= this.mHorizontalFlingThresholdPx;
         }
         FalsingClassifier.logDebug("Vertical swipe and fling distance: " + distances.mDy + ", " + (distances.mVy * this.mVelocityToDistanceMultiplier));
         StringBuilder sb2 = new StringBuilder();
         sb2.append("Threshold: ");
         sb2.append(this.mVerticalFlingThresholdPx);
         FalsingClassifier.logDebug(sb2.toString());
-        if (Math.abs(access$100) >= this.mVerticalFlingThresholdPx) {
-            return true;
-        }
-        return false;
+        return Math.abs(f2) >= this.mVerticalFlingThresholdPx;
     }
 
-    private class DistanceVectors {
+    /* access modifiers changed from: private */
+    public class DistanceVectors {
         final float mDx;
         final float mDy;
-        /* access modifiers changed from: private */
-        public final float mVx;
-        /* access modifiers changed from: private */
-        public final float mVy;
+        private final float mVx;
+        private final float mVy;
 
         DistanceVectors(DistanceClassifier distanceClassifier, float f, float f2, float f3, float f4) {
             this.mDx = f;
@@ -137,7 +126,7 @@ class DistanceClassifier extends FalsingClassifier {
         }
 
         public String toString() {
-            return String.format((Locale) null, "{dx=%f, vx=%f, dy=%f, vy=%f}", new Object[]{Float.valueOf(this.mDx), Float.valueOf(this.mVx), Float.valueOf(this.mDy), Float.valueOf(this.mVy)});
+            return String.format(null, "{dx=%f, vx=%f, dy=%f, vy=%f}", Float.valueOf(this.mDx), Float.valueOf(this.mVx), Float.valueOf(this.mDy), Float.valueOf(this.mVy));
         }
     }
 }

@@ -5,19 +5,19 @@ import android.service.notification.StatusBarNotification;
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
+@ProvidesInterface(action = NotificationPersonExtractorPlugin.ACTION, version = 1)
 @DependsOn(target = PersonData.class)
-@ProvidesInterface(action = "com.android.systemui.action.PEOPLE_HUB_PERSON_EXTRACTOR", version = 1)
 public interface NotificationPersonExtractorPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PEOPLE_HUB_PERSON_EXTRACTOR";
     public static final int VERSION = 1;
 
     PersonData extractPerson(StatusBarNotification statusBarNotification);
 
-    String extractPersonKey(StatusBarNotification statusBarNotification) {
+    default String extractPersonKey(StatusBarNotification statusBarNotification) {
         return extractPerson(statusBarNotification).key;
     }
 
-    boolean isPersonNotification(StatusBarNotification statusBarNotification) {
+    default boolean isPersonNotification(StatusBarNotification statusBarNotification) {
         return extractPersonKey(statusBarNotification) != null;
     }
 

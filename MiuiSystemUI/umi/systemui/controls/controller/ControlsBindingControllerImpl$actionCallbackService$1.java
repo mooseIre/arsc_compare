@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ControlsBindingControllerImpl$actionCallbackService$1 extends IControlsActionCallback.Stub {
     final /* synthetic */ ControlsBindingControllerImpl this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     ControlsBindingControllerImpl$actionCallbackService$1(ControlsBindingControllerImpl controlsBindingControllerImpl) {
         this.this$0 = controlsBindingControllerImpl;
     }
@@ -17,6 +18,6 @@ public final class ControlsBindingControllerImpl$actionCallbackService$1 extends
     public void accept(@NotNull IBinder iBinder, @NotNull String str, int i) {
         Intrinsics.checkParameterIsNotNull(iBinder, "token");
         Intrinsics.checkParameterIsNotNull(str, "controlId");
-        this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl.OnActionResponseRunnable(this.this$0, iBinder, str, i));
+        ControlsBindingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new ControlsBindingControllerImpl.OnActionResponseRunnable(this.this$0, iBinder, str, i));
     }
 }

@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvideLeakDetectorFactory implements Fact
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public LeakDetector get() {
         return provideInstance(this.module);
     }

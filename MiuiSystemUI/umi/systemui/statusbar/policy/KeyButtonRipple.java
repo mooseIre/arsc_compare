@@ -49,7 +49,8 @@ public class KeyButtonRipple extends Drawable {
     private Type mType;
     private boolean mVisible;
 
-    private static final class TraceAnimatorListener extends AnimatorListenerAdapter {
+    /* access modifiers changed from: private */
+    public static final class TraceAnimatorListener extends AnimatorListenerAdapter {
     }
 
     public enum Type {
@@ -133,9 +134,9 @@ public class KeyButtonRipple extends Drawable {
         }
         if (this.mType == Type.ROUNDED_RECT) {
             recordingCanvas.drawRoundRect(this.mLeftProp, this.mTopProp, this.mRightProp, this.mBottomProp, this.mRxProp, this.mRyProp, this.mPaintProp);
-            return;
+        } else {
+            recordingCanvas.drawCircle(CanvasProperty.createFloat((float) (getBounds().width() / 2)), CanvasProperty.createFloat((float) (getBounds().height() / 2)), CanvasProperty.createFloat((((float) Math.min(getBounds().width(), getBounds().height())) * 1.0f) / 2.0f), this.mPaintProp);
         }
-        recordingCanvas.drawCircle(CanvasProperty.createFloat((float) (getBounds().width() / 2)), CanvasProperty.createFloat((float) (getBounds().height() / 2)), CanvasProperty.createFloat((((float) Math.min(getBounds().width(), getBounds().height())) * 1.0f) / 2.0f), this.mPaintProp);
     }
 
     public float getGlowAlpha() {
@@ -216,7 +217,7 @@ public class KeyButtonRipple extends Drawable {
         }
         this.mTmpArray.clear();
         this.mRunningAnimations.clear();
-        this.mHandler.removeCallbacksAndMessages((Object) null);
+        this.mHandler.removeCallbacksAndMessages(null);
     }
 
     private void setPressedSoftware(boolean z) {
@@ -225,10 +226,12 @@ public class KeyButtonRipple extends Drawable {
         } else if (!this.mDelayTouchFeedback) {
             enterSoftware();
         } else if (this.mRunningAnimations.isEmpty()) {
-            this.mHandler.removeCallbacksAndMessages((Object) null);
+            this.mHandler.removeCallbacksAndMessages(null);
             this.mHandler.postDelayed(new Runnable() {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$KeyButtonRipple$_NjSlP8uc8G3rFUDxQkVsRHA4H4 */
+
                 public final void run() {
-                    KeyButtonRipple.this.enterSoftware();
+                    KeyButtonRipple.lambda$_NjSlP8uc8G3rFUDxQkVsRHA4H4(KeyButtonRipple.this);
                 }
             }, (long) ViewConfiguration.getTapTimeout());
         } else if (this.mVisible) {
@@ -241,9 +244,9 @@ public class KeyButtonRipple extends Drawable {
         endAnimations("enterSoftware", true);
         this.mVisible = true;
         this.mGlowAlpha = getMaxGlowAlpha();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowScale", new float[]{0.0f, 1.35f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowScale", 0.0f, 1.35f);
         ofFloat.setInterpolator(this.mInterpolator);
-        ofFloat.setDuration(350);
+        ofFloat.setDuration(350L);
         ofFloat.addListener(this.mAnimatorListener);
         ofFloat.start();
         this.mRunningAnimations.add(ofFloat);
@@ -253,9 +256,9 @@ public class KeyButtonRipple extends Drawable {
     }
 
     private void exitSoftware() {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowAlpha", new float[]{this.mGlowAlpha, 0.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowAlpha", this.mGlowAlpha, 0.0f);
         ofFloat.setInterpolator(Interpolators.ALPHA_OUT);
-        ofFloat.setDuration(450);
+        ofFloat.setDuration(450L);
         ofFloat.addListener(this.mAnimatorListener);
         ofFloat.start();
         this.mRunningAnimations.add(ofFloat);
@@ -267,10 +270,12 @@ public class KeyButtonRipple extends Drawable {
         } else if (!this.mDelayTouchFeedback) {
             enterHardware();
         } else if (this.mRunningAnimations.isEmpty()) {
-            this.mHandler.removeCallbacksAndMessages((Object) null);
+            this.mHandler.removeCallbacksAndMessages(null);
             this.mHandler.postDelayed(new Runnable() {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$KeyButtonRipple$Xl4rWJU_4TFxkXeTg6i8PM566MQ */
+
                 public final void run() {
-                    KeyButtonRipple.this.enterHardware();
+                    KeyButtonRipple.lambda$Xl4rWJU_4TFxkXeTg6i8PM566MQ(KeyButtonRipple.this);
                 }
             }, (long) ViewConfiguration.getTapTimeout());
         } else if (this.mVisible) {
@@ -318,13 +323,13 @@ public class KeyButtonRipple extends Drawable {
         this.mVisible = true;
         this.mDrawingHardwareGlow = true;
         setExtendStart(CanvasProperty.createFloat((float) (getExtendSize() / 2)));
-        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), ((float) (getExtendSize() / 2)) - ((((float) getRippleSize()) * 1.35f) / 2.0f));
+        Animator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), ((float) (getExtendSize() / 2)) - ((((float) getRippleSize()) * 1.35f) / 2.0f));
         renderNodeAnimator.setDuration(350);
         renderNodeAnimator.setInterpolator(this.mInterpolator);
         renderNodeAnimator.addListener(this.mAnimatorListener);
         renderNodeAnimator.setTarget(this.mTargetView);
         setExtendEnd(CanvasProperty.createFloat((float) (getExtendSize() / 2)));
-        RenderNodeAnimator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), ((float) (getExtendSize() / 2)) + ((((float) getRippleSize()) * 1.35f) / 2.0f));
+        Animator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), ((float) (getExtendSize() / 2)) + ((((float) getRippleSize()) * 1.35f) / 2.0f));
         renderNodeAnimator2.setDuration(350);
         renderNodeAnimator2.setInterpolator(this.mInterpolator);
         renderNodeAnimator2.addListener(this.mAnimatorListener);
@@ -359,7 +364,7 @@ public class KeyButtonRipple extends Drawable {
 
     private void exitHardware() {
         this.mPaintProp = CanvasProperty.createPaint(getRipplePaint());
-        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(this.mPaintProp, 1, 0.0f);
+        Animator renderNodeAnimator = new RenderNodeAnimator(this.mPaintProp, 1, 0.0f);
         renderNodeAnimator.setDuration(450);
         renderNodeAnimator.setInterpolator(Interpolators.ALPHA_OUT);
         renderNodeAnimator.addListener(this.mAnimatorListener);

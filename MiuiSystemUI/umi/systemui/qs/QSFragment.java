@@ -36,10 +36,11 @@ import com.android.systemui.util.LifecycleFragment;
 import java.util.concurrent.Executor;
 
 public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Callbacks, StatusBarStateController.StateListener, ControlPanelController.UseControlPanelChangeListener {
-    /* access modifiers changed from: private */
-    public final Animator.AnimatorListener mAnimateHeaderSlidingInListener = new AnimatorListenerAdapter() {
+    private final Animator.AnimatorListener mAnimateHeaderSlidingInListener = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.qs.QSFragment.AnonymousClass4 */
+
         public void onAnimationEnd(Animator animator) {
-            boolean unused = QSFragment.this.mHeaderAnimating = false;
+            QSFragment.this.mHeaderAnimating = false;
             QSFragment.this.updateQsState();
         }
     };
@@ -47,12 +48,10 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     private final Handler mBgHandler;
     private QSContainerImpl mContainer;
     private ControlPanelController mControlPanelController;
-    /* access modifiers changed from: private */
-    public long mDelay;
+    private long mDelay;
     private QSFooter mFooter;
     protected MiuiNotificationShadeHeader mHeader;
-    /* access modifiers changed from: private */
-    public boolean mHeaderAnimating;
+    private boolean mHeaderAnimating;
     private final QSTileHost mHost;
     private final InjectionInflationController mInjectionInflater;
     private boolean mLastKeyguardAndExpanded;
@@ -74,6 +73,8 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     private ContentObserver mShowDataUsageObserver;
     private boolean mStackScrollerOverscrolling;
     private final ViewTreeObserver.OnPreDrawListener mStartHeaderSlidingIn = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.qs.QSFragment.AnonymousClass3 */
+
         public boolean onPreDraw() {
             QSFragment.this.getView().getViewTreeObserver().removeOnPreDrawListener(this);
             QSFragment.this.getView().animate().translationY(0.0f).setStartDelay(QSFragment.this.mDelay).setDuration(448).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setListener(QSFragment.this.mAnimateHeaderSlidingInListener).start();
@@ -87,12 +88,15 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     private void setEditLocation(View view) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setHasNotifications(boolean z) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setHeaderClickable(boolean z) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setPanelView(QS.HeightListener heightListener) {
     }
 
@@ -118,11 +122,15 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C0015R$id.expanded_qs_scroll_view);
         this.mQSPanelScrollView = nonInterceptingScrollView;
         nonInterceptingScrollView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            /* class com.android.systemui.qs.$$Lambda$QSFragment$2XSLuGneMm7PezTcR5XlC3hGadQ */
+
             public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 QSFragment.this.lambda$onViewCreated$0$QSFragment(view, i, i2, i3, i4, i5, i6, i7, i8);
             }
         });
         this.mQSPanelScrollView.setOnScrollChangeListener(new View.OnScrollChangeListener() {
+            /* class com.android.systemui.qs.$$Lambda$QSFragment$D2SSstlg0NEgLdXPc7QqvH01NE */
+
             public final void onScrollChange(View view, int i, int i2, int i3, int i4) {
                 QSFragment.this.lambda$onViewCreated$1$QSFragment(view, i, i2, i3, i4);
             }
@@ -152,11 +160,15 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         this.mControlPanelController.addCallback((ControlPanelController.UseControlPanelChangeListener) this);
         onStateChanged(this.mStatusBarStateController.getState());
         view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            /* class com.android.systemui.qs.$$Lambda$QSFragment$O2Q4y8liaaT1BCWBXINGcury9NY */
+
             public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 QSFragment.this.lambda$onViewCreated$2$QSFragment(view, i, i2, i3, i4, i5, i6, i7, i8);
             }
         });
         this.mShowDataUsageObserver = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.qs.QSFragment.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 QSFragment.this.updateQSDataUsage();
             }
@@ -187,6 +199,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         }
     }
 
+    @Override // com.android.systemui.util.LifecycleFragment
     public void onDestroy() {
         super.onDestroy();
         this.mStatusBarStateController.removeCallback(this);
@@ -194,7 +207,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         if (this.mListening) {
             setListening(false);
         }
-        this.mQSCustomizer.setQs((QS) null);
+        this.mQSCustomizer.setQs(null);
     }
 
     public void onSaveInstanceState(Bundle bundle) {
@@ -217,6 +230,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         return this.mQsExpanded;
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public View getHeader() {
         return this.mHeader;
     }
@@ -237,6 +251,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setContainer(ViewGroup viewGroup) {
         if (viewGroup instanceof NotificationsQuickSettingsContainer) {
             NotificationsQuickSettingsContainer notificationsQuickSettingsContainer = (NotificationsQuickSettingsContainer) viewGroup;
@@ -245,6 +260,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public boolean isCustomizing() {
         return this.mQSCustomizer.isCustomizing();
     }
@@ -254,13 +270,14 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         this.mFooter.setQSPanel(this.mQSPanel);
         this.mQSDetail.setHost(qSTileHost);
         this.mContainer.getQuickQSPanel().setQSPanel(this.mQSPanel);
-        this.mContainer.getQuickQSPanel().setHost(qSTileHost, (MiuiQSCustomizer) null);
+        this.mContainer.getQuickQSPanel().setHost(qSTileHost, null);
         QSAnimator qSAnimator = this.mQSAnimator;
         if (qSAnimator != null) {
             qSAnimator.setHost(qSTileHost);
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         if (i == getContext().getDisplayId()) {
             int adjustDisableFlags = this.mRemoteInputQuickSettingsDisabler.adjustDisableFlags(i3);
@@ -276,7 +293,8 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     }
 
     /* access modifiers changed from: private */
-    public void updateQsState() {
+    /* access modifiers changed from: public */
+    private void updateQsState() {
         boolean z = true;
         int i = 0;
         boolean z2 = this.mQsExpanded || this.mStackScrollerOverscrolling || this.mHeaderAnimating;
@@ -303,6 +321,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         return this.mStatusBarStateController.getState() == 1;
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setShowCollapsedOnKeyguard(boolean z) {
         if (z != this.mShowCollapsedOnKeyguard) {
             this.mShowCollapsedOnKeyguard = z;
@@ -321,10 +340,12 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         return this.mQSPanel;
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public boolean isShowingDetail() {
         return this.mQSPanel.isShowingCustomize() || this.mQSDetail.isShowingDetail();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setExpanded(boolean z) {
         this.mQsExpanded = z;
         this.mQSPanel.setListening(this.mListening, z);
@@ -342,11 +363,13 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         updateQsState();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setOverscrolling(boolean z) {
         this.mStackScrollerOverscrolling = z;
         updateQsState();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setListening(boolean z) {
         Log.d(QS.TAG, "setListening " + z);
         this.mListening = !this.mControlPanelController.isUseControlCenter() && z;
@@ -357,6 +380,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         this.mContainer.getQuickQSPanel().switchTileLayout();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setHeaderListening(boolean z) {
         if (!this.mControlPanelController.isUseControlCenter()) {
             this.mFooter.setListening(z);
@@ -365,6 +389,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setQsExpansion(float f, float f2) {
         this.mContainer.setExpansion(f);
         float f3 = 1.0f;
@@ -429,6 +454,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         return true;
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void animateHeaderSlidingIn(long j) {
         if (!this.mQsExpanded && getView().getTranslationY() != 0.0f) {
             this.mHeaderAnimating = true;
@@ -437,29 +463,35 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void animateHeaderSlidingOut() {
         if (getView().getY() != ((float) (-this.mContainer.getMinHeight()))) {
             this.mHeaderAnimating = true;
             getView().animate().y((float) (-this.mContainer.getMinHeight())).setStartDelay(0).setDuration(300).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).setListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.qs.QSFragment.AnonymousClass2 */
+
                 public void onAnimationEnd(Animator animator) {
                     if (QSFragment.this.getView() != null) {
-                        QSFragment.this.getView().animate().setListener((Animator.AnimatorListener) null);
+                        QSFragment.this.getView().animate().setListener(null);
                     }
-                    boolean unused = QSFragment.this.mHeaderAnimating = false;
+                    QSFragment.this.mHeaderAnimating = false;
                     QSFragment.this.updateQsState();
                 }
             }).start();
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setExpandClickListener(View.OnClickListener onClickListener) {
         this.mFooter.setExpandClickListener(onClickListener);
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void closeDetail() {
         this.mQSPanel.closeDetail();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void notifyCustomizeChanged() {
         int i = 0;
         this.mQSPanelScrollView.setVisibility(!this.mQSCustomizer.isCustomizing() ? 0 : 4);
@@ -470,6 +502,7 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         qSFooter.setVisibility(i);
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public int getDesiredHeight() {
         if (this.mQSCustomizer.isCustomizing()) {
             return this.mQSCustomizer.getHeight();
@@ -480,20 +513,24 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         return getView().getMeasuredHeight();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setHeightOverride(int i) {
         this.mContainer.setHeightOverride(i);
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public int getQsMinExpansionHeight() {
         return this.mContainer.getMinHeight();
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void hideImmediately() {
         getView().animate().cancel();
         finishAppearAnimation();
         getView().setY((float) (-this.mContainer.getMinHeight()));
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
         this.mState = i;
         boolean z = true;
@@ -504,8 +541,11 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     }
 
     /* access modifiers changed from: private */
-    public void updateQSDataUsage() {
+    /* access modifiers changed from: public */
+    private void updateQSDataUsage() {
         this.mUIExecutor.execute(new Runnable() {
+            /* class com.android.systemui.qs.$$Lambda$QSFragment$qXyO0cBd93lSFDfKmvWOD2WZrs */
+
             public final void run() {
                 QSFragment.this.lambda$updateQSDataUsage$3$QSFragment();
             }
@@ -530,14 +570,17 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
         return this.mContainer;
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void setDetailAnimatedViews(View... viewArr) {
         this.mContainer.setDetailAnimatedViews(viewArr);
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ControlPanelController.UseControlPanelChangeListener
     public void onUseControlPanelChange(boolean z) {
         this.mContainer.setShowQSPanel(!z);
     }
 
+    @Override // com.android.systemui.plugins.qs.QS
     public void animateAppearDisappear(final boolean z) {
         this.mAppeared = z;
         if (z) {
@@ -549,11 +592,13 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
             f = 0.8f;
         }
         scaleX.scaleY(f).setListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.qs.QSFragment.AnonymousClass5 */
+
             public void onAnimationEnd(Animator animator) {
                 if (!z) {
                     QSFragment.this.setListening(false);
                 }
-                boolean unused = QSFragment.this.mHeaderAnimating = false;
+                QSFragment.this.mHeaderAnimating = false;
             }
         }).start();
     }

@@ -8,8 +8,8 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Debug;
+import android.os.Parcelable;
 import android.os.SystemProperties;
 import android.os.UserHandle;
 import android.util.Log;
@@ -33,36 +33,35 @@ public class LeakReporter {
     }
 
     public void dumpLeak(int i) {
-        FileOutputStream fileOutputStream;
-        Throwable th;
         try {
             File file = new File(this.mContext.getCacheDir(), "leak");
             file.mkdir();
             File file2 = new File(file, "leak.hprof");
             Debug.dumpHprofData(file2.getAbsolutePath());
             File file3 = new File(file, "leak.dump");
-            fileOutputStream = new FileOutputStream(file3);
-            PrintWriter printWriter = new PrintWriter(fileOutputStream);
-            printWriter.print("Build: ");
-            printWriter.println(SystemProperties.get("ro.build.description"));
-            printWriter.println();
-            printWriter.flush();
-            this.mLeakDetector.dump(fileOutputStream.getFD(), printWriter, new String[0]);
-            printWriter.close();
-            fileOutputStream.close();
-            NotificationManager notificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
-            NotificationChannel notificationChannel = new NotificationChannel("leak", "Leak Alerts", 4);
-            notificationChannel.enableVibration(true);
-            notificationManager.createNotificationChannel(notificationChannel);
-            notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", new Object[]{Integer.valueOf(i)})).setSmallIcon(17303652).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, (Bundle) null, UserHandle.CURRENT)).build());
-            return;
+            FileOutputStream fileOutputStream = new FileOutputStream(file3);
+            try {
+                PrintWriter printWriter = new PrintWriter(fileOutputStream);
+                printWriter.print("Build: ");
+                printWriter.println(SystemProperties.get("ro.build.description"));
+                printWriter.println();
+                printWriter.flush();
+                this.mLeakDetector.dump(fileOutputStream.getFD(), printWriter, new String[0]);
+                printWriter.close();
+                fileOutputStream.close();
+                NotificationManager notificationManager = (NotificationManager) this.mContext.getSystemService(NotificationManager.class);
+                NotificationChannel notificationChannel = new NotificationChannel("leak", "Leak Alerts", 4);
+                notificationChannel.enableVibration(true);
+                notificationManager.createNotificationChannel(notificationChannel);
+                notificationManager.notify("LeakReporter", 0, new Notification.Builder(this.mContext, notificationChannel.getId()).setAutoCancel(true).setShowWhen(true).setContentTitle("Memory Leak Detected").setContentText(String.format("SystemUI has detected %d leaked objects. Tap to send", Integer.valueOf(i))).setSmallIcon(17303652).setContentIntent(PendingIntent.getActivityAsUser(this.mContext, 0, getIntent(file2, file3), 134217728, null, UserHandle.CURRENT)).build());
+                return;
+            } catch (Throwable th) {
+                th.addSuppressed(th);
+            }
+            throw th;
         } catch (IOException e) {
             Log.e("LeakReporter", "Couldn't dump heap for leak", e);
-            return;
-        } catch (Throwable th2) {
-            th.addSuppressed(th2);
         }
-        throw th;
     }
 
     private Intent getIntent(File file, File file2) {
@@ -74,9 +73,9 @@ public class LeakReporter {
         intent.setType("application/vnd.android.leakreport");
         intent.putExtra("android.intent.extra.SUBJECT", "SystemUI leak report");
         intent.putExtra("android.intent.extra.TEXT", "Build info: " + SystemProperties.get("ro.build.description"));
-        ClipData clipData = new ClipData((CharSequence) null, new String[]{"application/vnd.android.leakreport"}, new ClipData.Item((CharSequence) null, (String) null, (Intent) null, uriForFile));
-        ArrayList newArrayList = Lists.newArrayList(new Uri[]{uriForFile});
-        clipData.addItem(new ClipData.Item((CharSequence) null, (String) null, (Intent) null, uriForFile2));
+        ClipData clipData = new ClipData(null, new String[]{"application/vnd.android.leakreport"}, new ClipData.Item(null, null, null, uriForFile));
+        ArrayList<? extends Parcelable> newArrayList = Lists.newArrayList(new Uri[]{uriForFile});
+        clipData.addItem(new ClipData.Item(null, null, null, uriForFile2));
         newArrayList.add(uriForFile2);
         intent.setClipData(clipData);
         intent.putParcelableArrayListExtra("android.intent.extra.STREAM", newArrayList);

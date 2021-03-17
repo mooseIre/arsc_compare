@@ -18,6 +18,7 @@ public final class StatusBarTouchableRegionManager_Factory implements Factory<St
         this.headsUpManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarTouchableRegionManager get() {
         return provideInstance(this.contextProvider, this.notificationShadeWindowControllerProvider, this.configurationControllerProvider, this.headsUpManagerProvider);
     }

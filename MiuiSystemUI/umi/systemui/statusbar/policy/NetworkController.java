@@ -61,35 +61,35 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
     void setWifiEnabled(boolean z);
 
     public interface SignalCallback {
-        void setEthernetIndicators(IconState iconState) {
+        default void setEthernetIndicators(IconState iconState) {
         }
 
-        void setIsAirplaneMode(IconState iconState) {
+        default void setIsAirplaneMode(IconState iconState) {
         }
 
-        void setIsDefaultDataSim(int i, boolean z) {
+        default void setIsDefaultDataSim(int i, boolean z) {
         }
 
-        void setMobileDataEnabled(boolean z) {
+        default void setMobileDataEnabled(boolean z) {
         }
 
-        void setMobileDataIndicators(IconState iconState, IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4) {
+        default void setMobileDataIndicators(IconState iconState, IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4) {
         }
 
-        void setNoSims(boolean z, boolean z2) {
+        default void setNoSims(boolean z, boolean z2) {
         }
 
-        void setSubs(List<SubscriptionInfo> list) {
+        default void setSubs(List<SubscriptionInfo> list) {
         }
 
-        void setWifiIndicators(boolean z, IconState iconState, IconState iconState2, boolean z2, boolean z3, String str, boolean z4, String str2) {
+        default void setWifiIndicators(boolean z, IconState iconState, IconState iconState2, boolean z2, boolean z3, String str, boolean z4, String str2) {
         }
 
-        void setWifiIndicators(boolean z, IconState iconState, IconState iconState2, boolean z2, boolean z3, int i, String str, boolean z4, String str2, boolean z5) {
+        default void setWifiIndicators(boolean z, IconState iconState, IconState iconState2, boolean z2, boolean z3, int i, String str, boolean z4, String str2, boolean z5) {
             setWifiIndicators(z, iconState, iconState2, z2, z3, str, z4, str2);
         }
 
-        void setMobileDataIndicators(IconState iconState, IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
+        default void setMobileDataIndicators(IconState iconState, IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
             setMobileDataIndicators(iconState, iconState2, i, i2, z, z2, i3, charSequence, charSequence2, charSequence3, z3, i4, z4);
         }
     }

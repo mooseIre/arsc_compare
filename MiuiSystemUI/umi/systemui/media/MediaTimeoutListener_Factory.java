@@ -13,6 +13,7 @@ public final class MediaTimeoutListener_Factory implements Factory<MediaTimeoutL
         this.mainExecutorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MediaTimeoutListener get() {
         return provideInstance(this.mediaControllerFactoryProvider, this.mainExecutorProvider);
     }

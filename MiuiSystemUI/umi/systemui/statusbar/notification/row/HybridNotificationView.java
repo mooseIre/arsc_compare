@@ -18,7 +18,7 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
     protected final ViewTransformationHelper mTransformationHelper;
 
     public HybridNotificationView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public HybridNotificationView(Context context, AttributeSet attributeSet) {
@@ -48,9 +48,12 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
         this.mTitleView = (TextView) findViewById(C0015R$id.notification_title);
         this.mTextView = (TextView) findViewById(C0015R$id.notification_text);
         this.mTransformationHelper.setCustomTransformation(new ViewTransformationHelper.CustomTransformation() {
+            /* class com.android.systemui.statusbar.notification.row.HybridNotificationView.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
                 TransformState currentState = transformableView.getCurrentState(1);
-                CrossFadeHelper.fadeOut((View) HybridNotificationView.this.mTextView, f);
+                CrossFadeHelper.fadeOut(HybridNotificationView.this.mTextView, f);
                 if (currentState != null) {
                     transformState.transformViewVerticalTo(currentState, f);
                     currentState.recycle();
@@ -58,6 +61,7 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
                 return true;
             }
 
+            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public boolean transformFrom(TransformState transformState, TransformableView transformableView, float f) {
                 TransformState currentState = transformableView.getCurrentState(1);
                 CrossFadeHelper.fadeIn((View) HybridNotificationView.this.mTextView, f, true);
@@ -85,26 +89,32 @@ public class HybridNotificationView extends AlphaOptimizedLinearLayout implement
         requestLayout();
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public TransformState getCurrentState(int i) {
         return this.mTransformationHelper.getCurrentState(i);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, Runnable runnable) {
         this.mTransformationHelper.transformTo(transformableView, runnable);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, float f) {
         this.mTransformationHelper.transformTo(transformableView, f);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView) {
         this.mTransformationHelper.transformFrom(transformableView);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView, float f) {
         this.mTransformationHelper.transformFrom(transformableView, f);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         setVisibility(z ? 0 : 4);
         this.mTransformationHelper.setVisible(z);

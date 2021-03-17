@@ -18,21 +18,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HotspotControllerImpl implements HotspotController, WifiManager.SoftApCallback {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable("HotspotController", 3);
+    private static final boolean DEBUG = Log.isLoggable("HotspotController", 3);
     private final ArrayList<HotspotController.Callback> mCallbacks = new ArrayList<>();
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public volatile boolean mHasTetherableWifiRegexs = true;
+    private volatile boolean mHasTetherableWifiRegexs = true;
     private int mHotspotState;
-    /* access modifiers changed from: private */
-    public volatile boolean mIsTetheringSupported = true;
+    private volatile boolean mIsTetheringSupported = true;
     private final Handler mMainHandler;
     private volatile int mNumConnectedDevices;
     private TetheringManager.TetheringEventCallback mTetheringCallback = new TetheringManager.TetheringEventCallback() {
+        /* class com.android.systemui.statusbar.policy.HotspotControllerImpl.AnonymousClass1 */
+
         public void onTetheringSupported(boolean z) {
             if (HotspotControllerImpl.this.mIsTetheringSupported != z) {
-                boolean unused = HotspotControllerImpl.this.mIsTetheringSupported = z;
+                HotspotControllerImpl.this.mIsTetheringSupported = z;
                 HotspotControllerImpl.this.fireHotspotAvailabilityChanged();
             }
         }
@@ -40,7 +39,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         public void onTetherableInterfaceRegexpsChanged(TetheringManager.TetheringInterfaceRegexps tetheringInterfaceRegexps) {
             boolean z = tetheringInterfaceRegexps.getTetherableWifiRegexs().size() != 0;
             if (HotspotControllerImpl.this.mHasTetherableWifiRegexs != z) {
-                boolean unused = HotspotControllerImpl.this.mHasTetherableWifiRegexs = z;
+                HotspotControllerImpl.this.mHasTetherableWifiRegexs = z;
                 HotspotControllerImpl.this.fireHotspotAvailabilityChanged();
             }
         }
@@ -74,10 +73,12 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         this.mTetheringManager.registerTetheringEventCallback(new HandlerExecutor(handler2), this.mTetheringCallback);
     }
 
+    @Override // com.android.systemui.statusbar.policy.HotspotController
     public boolean isHotspotSupported() {
         return this.mIsTetheringSupported && this.mHasTetherableWifiRegexs && UserManager.get(this.mContext).isUserAdmin(ActivityManager.getCurrentUser());
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("HotspotController state:");
         printWriter.print("  available=");
@@ -90,66 +91,35 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         printWriter.println(this.mWaitingForTerminalState);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x0052, code lost:
-        return;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:19:0x0054, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void addCallback(com.android.systemui.statusbar.policy.HotspotController.Callback r5) {
-        /*
-            r4 = this;
-            java.util.ArrayList<com.android.systemui.statusbar.policy.HotspotController$Callback> r0 = r4.mCallbacks
-            monitor-enter(r0)
-            if (r5 == 0) goto L_0x0053
-            java.util.ArrayList<com.android.systemui.statusbar.policy.HotspotController$Callback> r1 = r4.mCallbacks     // Catch:{ all -> 0x0055 }
-            boolean r1 = r1.contains(r5)     // Catch:{ all -> 0x0055 }
-            if (r1 == 0) goto L_0x000e
-            goto L_0x0053
-        L_0x000e:
-            boolean r1 = DEBUG     // Catch:{ all -> 0x0055 }
-            if (r1 == 0) goto L_0x0028
-            java.lang.String r1 = "HotspotController"
-            java.lang.StringBuilder r2 = new java.lang.StringBuilder     // Catch:{ all -> 0x0055 }
-            r2.<init>()     // Catch:{ all -> 0x0055 }
-            java.lang.String r3 = "addCallback "
-            r2.append(r3)     // Catch:{ all -> 0x0055 }
-            r2.append(r5)     // Catch:{ all -> 0x0055 }
-            java.lang.String r2 = r2.toString()     // Catch:{ all -> 0x0055 }
-            android.util.Log.d(r1, r2)     // Catch:{ all -> 0x0055 }
-        L_0x0028:
-            java.util.ArrayList<com.android.systemui.statusbar.policy.HotspotController$Callback> r1 = r4.mCallbacks     // Catch:{ all -> 0x0055 }
-            r1.add(r5)     // Catch:{ all -> 0x0055 }
-            android.net.wifi.WifiManager r1 = r4.mWifiManager     // Catch:{ all -> 0x0055 }
-            if (r1 == 0) goto L_0x0051
-            java.util.ArrayList<com.android.systemui.statusbar.policy.HotspotController$Callback> r1 = r4.mCallbacks     // Catch:{ all -> 0x0055 }
-            int r1 = r1.size()     // Catch:{ all -> 0x0055 }
-            r2 = 1
-            if (r1 != r2) goto L_0x0047
-            android.net.wifi.WifiManager r5 = r4.mWifiManager     // Catch:{ all -> 0x0055 }
-            android.os.HandlerExecutor r1 = new android.os.HandlerExecutor     // Catch:{ all -> 0x0055 }
-            android.os.Handler r2 = r4.mMainHandler     // Catch:{ all -> 0x0055 }
-            r1.<init>(r2)     // Catch:{ all -> 0x0055 }
-            r5.registerSoftApCallback(r1, r4)     // Catch:{ all -> 0x0055 }
-            goto L_0x0051
-        L_0x0047:
-            android.os.Handler r1 = r4.mMainHandler     // Catch:{ all -> 0x0055 }
-            com.android.systemui.statusbar.policy.-$$Lambda$HotspotControllerImpl$C17PPPxxCR-pTmr2izVaDhyC9AQ r2 = new com.android.systemui.statusbar.policy.-$$Lambda$HotspotControllerImpl$C17PPPxxCR-pTmr2izVaDhyC9AQ     // Catch:{ all -> 0x0055 }
-            r2.<init>(r5)     // Catch:{ all -> 0x0055 }
-            r1.post(r2)     // Catch:{ all -> 0x0055 }
-        L_0x0051:
-            monitor-exit(r0)     // Catch:{ all -> 0x0055 }
-            return
-        L_0x0053:
-            monitor-exit(r0)     // Catch:{ all -> 0x0055 }
-            return
-        L_0x0055:
-            r4 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x0055 }
-            throw r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.HotspotControllerImpl.addCallback(com.android.systemui.statusbar.policy.HotspotController$Callback):void");
+    public void addCallback(HotspotController.Callback callback) {
+        synchronized (this.mCallbacks) {
+            if (callback != null) {
+                if (!this.mCallbacks.contains(callback)) {
+                    if (DEBUG) {
+                        Log.d("HotspotController", "addCallback " + callback);
+                    }
+                    this.mCallbacks.add(callback);
+                    if (this.mWifiManager != null) {
+                        if (this.mCallbacks.size() == 1) {
+                            this.mWifiManager.registerSoftApCallback(new HandlerExecutor(this.mMainHandler), this);
+                        } else {
+                            this.mMainHandler.post(new Runnable(callback) {
+                                /* class com.android.systemui.statusbar.policy.$$Lambda$HotspotControllerImpl$C17PPPxxCRpTmr2izVaDhyC9AQ */
+                                public final /* synthetic */ HotspotController.Callback f$1;
+
+                                {
+                                    this.f$1 = r2;
+                                }
+
+                                public final void run() {
+                                    HotspotControllerImpl.this.lambda$addCallback$0$HotspotControllerImpl(this.f$1);
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /* access modifiers changed from: private */
@@ -172,6 +142,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.HotspotController
     public boolean isHotspotEnabled() {
         return this.mHotspotState == 13;
     }
@@ -184,10 +155,12 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         return 1;
     }
 
+    @Override // com.android.systemui.statusbar.policy.HotspotController
     public boolean isHotspotTransient() {
         return this.mWaitingForTerminalState || this.mHotspotState == 12;
     }
 
+    @Override // com.android.systemui.statusbar.policy.HotspotController
     public void setHotspotEnabled(boolean z) {
         if (this.mWaitingForTerminalState) {
             if (DEBUG) {
@@ -199,6 +172,8 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
                 Log.d("HotspotController", "Starting tethering");
             }
             this.mTetheringManager.startTethering(new TetheringManager.TetheringRequest.Builder(0).build(), ConcurrentUtils.DIRECT_EXECUTOR, new TetheringManager.StartTetheringCallback() {
+                /* class com.android.systemui.statusbar.policy.HotspotControllerImpl.AnonymousClass2 */
+
                 public void onTetheringFailed(int i) {
                     if (HotspotControllerImpl.DEBUG) {
                         Log.d("HotspotController", "onTetheringFailed");
@@ -212,29 +187,32 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.HotspotController
     public int getNumConnectedDevices() {
         return this.mNumConnectedDevices;
     }
 
     /* access modifiers changed from: private */
-    public void fireHotspotChangedCallback() {
+    /* access modifiers changed from: public */
+    private void fireHotspotChangedCallback() {
         ArrayList<HotspotController.Callback> arrayList;
         synchronized (this.mCallbacks) {
-            arrayList = new ArrayList<>(this.mCallbacks);
+            arrayList = new ArrayList(this.mCallbacks);
         }
-        for (HotspotController.Callback onHotspotChanged : arrayList) {
-            onHotspotChanged.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, getHotspotWifiStandard());
+        for (HotspotController.Callback callback : arrayList) {
+            callback.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, getHotspotWifiStandard());
         }
     }
 
     /* access modifiers changed from: private */
-    public void fireHotspotAvailabilityChanged() {
+    /* access modifiers changed from: public */
+    private void fireHotspotAvailabilityChanged() {
         ArrayList<HotspotController.Callback> arrayList;
         synchronized (this.mCallbacks) {
-            arrayList = new ArrayList<>(this.mCallbacks);
+            arrayList = new ArrayList(this.mCallbacks);
         }
-        for (HotspotController.Callback onHotspotAvailabilityChanged : arrayList) {
-            onHotspotAvailabilityChanged.onHotspotAvailabilityChanged(isHotspotSupported());
+        for (HotspotController.Callback callback : arrayList) {
+            callback.onHotspotAvailabilityChanged(isHotspotSupported());
         }
     }
 
@@ -248,7 +226,8 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
     }
 
     /* access modifiers changed from: private */
-    public void maybeResetSoftApState() {
+    /* access modifiers changed from: public */
+    private void maybeResetSoftApState() {
         if (this.mWaitingForTerminalState) {
             int i = this.mHotspotState;
             if (!(i == 11 || i == 13)) {
@@ -267,6 +246,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
         fireHotspotChangedCallback();
     }
 
+    @Override // com.android.systemui.statusbar.policy.HotspotController
     public boolean isHotspotReady() {
         int i = this.mHotspotState;
         return i == 13 || i == 11 || i == 14;

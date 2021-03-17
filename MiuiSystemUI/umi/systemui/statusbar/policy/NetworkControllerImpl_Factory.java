@@ -31,6 +31,7 @@ public final class NetworkControllerImpl_Factory implements Factory<NetworkContr
         this.networkScoreManagerProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public NetworkControllerImpl get() {
         return provideInstance(this.contextProvider, this.bgLooperProvider, this.deviceProvisionedControllerProvider, this.broadcastDispatcherProvider, this.connectivityManagerProvider, this.telephonyManagerProvider, this.wifiManagerProvider, this.networkScoreManagerProvider);
     }

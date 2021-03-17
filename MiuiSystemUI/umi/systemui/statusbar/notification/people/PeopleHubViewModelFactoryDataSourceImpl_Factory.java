@@ -13,6 +13,7 @@ public final class PeopleHubViewModelFactoryDataSourceImpl_Factory implements Fa
         this.dataSourceProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PeopleHubViewModelFactoryDataSourceImpl get() {
         return provideInstance(this.activityStarterProvider, this.dataSourceProvider);
     }

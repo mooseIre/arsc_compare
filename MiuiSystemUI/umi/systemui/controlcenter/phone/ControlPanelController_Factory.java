@@ -20,6 +20,7 @@ public final class ControlPanelController_Factory implements Factory<ControlPane
         this.observerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ControlPanelController get() {
         return provideInstance(this.contextProvider, this.keyguardViewMediatorProvider, this.broadcastDispatcherProvider, this.observerProvider);
     }

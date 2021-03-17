@@ -62,12 +62,14 @@ public class SysUiState implements Dumpable {
     private void notifyAndSetSystemUiStateChanged(int i, int i2) {
         if (i != i2) {
             this.mCallbacks.forEach(new Consumer(i) {
+                /* class com.android.systemui.model.$$Lambda$SysUiState$t3XYZGveGuajejWRdEzQbzm_n4M */
                 public final /* synthetic */ int f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((SysUiState.SysUiStateCallback) obj).onSystemUiStateChanged(this.f$0);
                 }
@@ -76,6 +78,7 @@ public class SysUiState implements Dumpable {
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("SysUiState state:");
         printWriter.print("  mSysUiStateFlags=");

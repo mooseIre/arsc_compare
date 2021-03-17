@@ -22,6 +22,7 @@ public final class PreparationCoordinator_Factory implements Factory<Preparation
         this.serviceProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public PreparationCoordinator get() {
         return provideInstance(this.loggerProvider, this.notifInflaterProvider, this.errorManagerProvider, this.viewBarnProvider, this.serviceProvider);
     }

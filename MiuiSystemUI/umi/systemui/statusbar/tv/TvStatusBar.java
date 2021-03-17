@@ -24,6 +24,7 @@ public class TvStatusBar extends SystemUI implements CommandQueue.Callbacks {
         this.mAssistManagerLazy = lazy;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         IStatusBarService asInterface = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
@@ -33,6 +34,7 @@ public class TvStatusBar extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateExpandNotificationsPanel() {
         startSystemActivity(new Intent("com.android.tv.action.OPEN_NOTIFICATIONS_PANEL"));
     }
@@ -46,6 +48,7 @@ public class TvStatusBar extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void startAssist(Bundle bundle) {
         this.mAssistManagerLazy.get().startAssist(bundle);
     }

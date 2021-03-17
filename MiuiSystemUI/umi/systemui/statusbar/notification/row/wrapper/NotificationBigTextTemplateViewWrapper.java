@@ -17,17 +17,19 @@ public class NotificationBigTextTemplateViewWrapper extends NotificationTemplate
         this.mBigtext = this.mView.findViewById(16908794);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         resolveViews(expandableNotificationRow.getEntry().getSbn());
         super.onContentUpdated(expandableNotificationRow);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
     public void updateTransformedTypes() {
         super.updateTransformedTypes();
-        ImageFloatingTextView imageFloatingTextView = this.mBigtext;
-        if (imageFloatingTextView != null) {
-            this.mTransformationHelper.addTransformedView(2, imageFloatingTextView);
+        View view = this.mBigtext;
+        if (view != null) {
+            this.mTransformationHelper.addTransformedView(2, view);
         }
     }
 }

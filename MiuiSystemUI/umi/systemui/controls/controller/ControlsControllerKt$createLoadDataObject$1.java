@@ -19,16 +19,19 @@ public final class ControlsControllerKt$createLoadDataObject$1 implements Contro
         this.errorOnLoad = z;
     }
 
+    @Override // com.android.systemui.controls.controller.ControlsController.LoadData
     @NotNull
     public List<ControlStatus> getAllControls() {
         return this.allControls;
     }
 
+    @Override // com.android.systemui.controls.controller.ControlsController.LoadData
     @NotNull
     public List<String> getFavoritesIds() {
         return this.favoritesIds;
     }
 
+    @Override // com.android.systemui.controls.controller.ControlsController.LoadData
     public boolean getErrorOnLoad() {
         return this.errorOnLoad;
     }

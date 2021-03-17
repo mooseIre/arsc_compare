@@ -8,10 +8,12 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaResumeListener$setManager$1 implements TunerService.Tunable {
     final /* synthetic */ MediaResumeListener this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaResumeListener$setManager$1(MediaResumeListener mediaResumeListener) {
         this.this$0 = mediaResumeListener;
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(@Nullable String str, @Nullable String str2) {
         MediaResumeListener mediaResumeListener = this.this$0;
         mediaResumeListener.useMediaResumption = Utils.useMediaResumption(mediaResumeListener.context);

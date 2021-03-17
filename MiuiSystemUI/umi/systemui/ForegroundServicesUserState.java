@@ -18,13 +18,13 @@ public class ForegroundServicesUserState {
 
     public void addOp(String str, int i) {
         if (this.mAppOps.get(str) == null) {
-            this.mAppOps.put(str, new ArraySet(3));
+            this.mAppOps.put(str, new ArraySet<>(3));
         }
         this.mAppOps.get(str).add(Integer.valueOf(i));
     }
 
     public boolean removeOp(String str, int i) {
-        ArraySet arraySet = this.mAppOps.get(str);
+        ArraySet<Integer> arraySet = this.mAppOps.get(str);
         if (arraySet == null) {
             return false;
         }
@@ -57,13 +57,13 @@ public class ForegroundServicesUserState {
 
     public void addNotification(ArrayMap<String, ArraySet<String>> arrayMap, String str, String str2) {
         if (arrayMap.get(str) == null) {
-            arrayMap.put(str, new ArraySet());
+            arrayMap.put(str, new ArraySet<>());
         }
         arrayMap.get(str).add(str2);
     }
 
     public boolean removeNotification(ArrayMap<String, ArraySet<String>> arrayMap, String str, String str2) {
-        ArraySet arraySet = arrayMap.get(str);
+        ArraySet<String> arraySet = arrayMap.get(str);
         if (arraySet == null) {
             return false;
         }
@@ -77,7 +77,7 @@ public class ForegroundServicesUserState {
     public boolean isDisclosureNeeded() {
         if (this.mRunning != null && System.currentTimeMillis() - this.mServiceStartTime >= 5000) {
             for (String str : this.mRunning) {
-                ArraySet arraySet = this.mImportantNotifications.get(str);
+                ArraySet<String> arraySet = this.mImportantNotifications.get(str);
                 if (arraySet == null || arraySet.size() == 0) {
                     return true;
                 }

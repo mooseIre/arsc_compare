@@ -9,8 +9,10 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
+import kotlin.collections.ArraysKt___ArraysKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.text.StringsKt__StringsJVMKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: DumpHandler.kt */
@@ -135,8 +137,8 @@ public final class DumpHandler {
 
     private final void dumpTargets(List<String> list, FileDescriptor fileDescriptor, PrintWriter printWriter, ParsedArgs parsedArgs) {
         if (!list.isEmpty()) {
-            for (String dumpTarget : list) {
-                this.dumpManager.dumpTarget(dumpTarget, fileDescriptor, printWriter, parsedArgs.getRawArgs(), parsedArgs.getTailLength());
+            for (String str : list) {
+                this.dumpManager.dumpTarget(str, fileDescriptor, printWriter, parsedArgs.getRawArgs(), parsedArgs.getTailLength());
             }
         } else if (parsedArgs.getListOnly()) {
             printWriter.println("Dumpables:");
@@ -201,138 +203,76 @@ public final class DumpHandler {
         printWriter.println("$ <invocation> NotifLog --tail 30");
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:18:0x0067, code lost:
-        r1.setTailLength(((java.lang.Number) readArgument(r9, r2, com.android.systemui.dump.DumpHandler$parseArgs$2.INSTANCE)).intValue());
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:21:0x007f, code lost:
-        r1.setListOnly(true);
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:24:0x008b, code lost:
-        r1.setCommand("help");
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:26:0x00a8, code lost:
-        throw new com.android.systemui.dump.ArgParseException("Unknown flag: " + r2);
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private final com.android.systemui.dump.ParsedArgs parseArgs(java.lang.String[] r9) {
-        /*
-            r8 = this;
-            java.util.List r0 = kotlin.collections.ArraysKt___ArraysKt.toMutableList((T[]) r9)
-            com.android.systemui.dump.ParsedArgs r1 = new com.android.systemui.dump.ParsedArgs
-            r1.<init>(r9, r0)
-            java.util.Iterator r9 = r0.iterator()
-        L_0x000d:
-            boolean r2 = r9.hasNext()
-            r3 = 1
-            r4 = 0
-            if (r2 == 0) goto L_0x00a9
-            java.lang.Object r2 = r9.next()
-            java.lang.String r2 = (java.lang.String) r2
-            r5 = 2
-            r6 = 0
-            java.lang.String r7 = "-"
-            boolean r4 = kotlin.text.StringsKt__StringsJVMKt.startsWith$default(r2, r7, r4, r5, r6)
-            if (r4 == 0) goto L_0x000d
-            r9.remove()
-            int r4 = r2.hashCode()
-            switch(r4) {
-                case 1499: goto L_0x0083;
-                case 1503: goto L_0x0077;
-                case 1511: goto L_0x005f;
-                case 1056887741: goto L_0x004b;
-                case 1333069025: goto L_0x0042;
-                case 1333192254: goto L_0x0039;
-                case 1333422576: goto L_0x0030;
-                default: goto L_0x002f;
+    private final ParsedArgs parseArgs(String[] strArr) {
+        List list = ArraysKt___ArraysKt.toMutableList(strArr);
+        ParsedArgs parsedArgs = new ParsedArgs(strArr, list);
+        Iterator<String> it = list.iterator();
+        while (it.hasNext()) {
+            String next = it.next();
+            if (StringsKt__StringsJVMKt.startsWith$default(next, "-", false, 2, null)) {
+                it.remove();
+                switch (next.hashCode()) {
+                    case 1499:
+                        if (!next.equals("-h")) {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                        parsedArgs.setCommand("help");
+                        break;
+                    case 1503:
+                        if (!next.equals("-l")) {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                        parsedArgs.setListOnly(true);
+                        break;
+                    case 1511:
+                        if (!next.equals("-t")) {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                        parsedArgs.setTailLength(((Number) readArgument(it, next, DumpHandler$parseArgs$2.INSTANCE)).intValue());
+                        break;
+                    case 1056887741:
+                        if (next.equals("--dump-priority")) {
+                            parsedArgs.setDumpPriority((String) readArgument(it, "--dump-priority", DumpHandler$parseArgs$1.INSTANCE));
+                            break;
+                        } else {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                    case 1333069025:
+                        if (!next.equals("--help")) {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                        parsedArgs.setCommand("help");
+                        break;
+                    case 1333192254:
+                        if (!next.equals("--list")) {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                        parsedArgs.setListOnly(true);
+                        break;
+                    case 1333422576:
+                        if (!next.equals("--tail")) {
+                            throw new ArgParseException("Unknown flag: " + next);
+                        }
+                        parsedArgs.setTailLength(((Number) readArgument(it, next, DumpHandler$parseArgs$2.INSTANCE)).intValue());
+                        break;
+                    default:
+                        throw new ArgParseException("Unknown flag: " + next);
+                }
             }
-        L_0x002f:
-            goto L_0x0092
-        L_0x0030:
-            java.lang.String r3 = "--tail"
-            boolean r3 = r2.equals(r3)
-            if (r3 == 0) goto L_0x0092
-            goto L_0x0067
-        L_0x0039:
-            java.lang.String r4 = "--list"
-            boolean r4 = r2.equals(r4)
-            if (r4 == 0) goto L_0x0092
-            goto L_0x007f
-        L_0x0042:
-            java.lang.String r3 = "--help"
-            boolean r3 = r2.equals(r3)
-            if (r3 == 0) goto L_0x0092
-            goto L_0x008b
-        L_0x004b:
-            java.lang.String r3 = "--dump-priority"
-            boolean r4 = r2.equals(r3)
-            if (r4 == 0) goto L_0x0092
-            com.android.systemui.dump.DumpHandler$parseArgs$1 r2 = com.android.systemui.dump.DumpHandler$parseArgs$1.INSTANCE
-            java.lang.Object r2 = r8.readArgument(r9, r3, r2)
-            java.lang.String r2 = (java.lang.String) r2
-            r1.setDumpPriority(r2)
-            goto L_0x000d
-        L_0x005f:
-            java.lang.String r3 = "-t"
-            boolean r3 = r2.equals(r3)
-            if (r3 == 0) goto L_0x0092
-        L_0x0067:
-            com.android.systemui.dump.DumpHandler$parseArgs$2 r3 = com.android.systemui.dump.DumpHandler$parseArgs$2.INSTANCE
-            java.lang.Object r2 = r8.readArgument(r9, r2, r3)
-            java.lang.Number r2 = (java.lang.Number) r2
-            int r2 = r2.intValue()
-            r1.setTailLength(r2)
-            goto L_0x000d
-        L_0x0077:
-            java.lang.String r4 = "-l"
-            boolean r4 = r2.equals(r4)
-            if (r4 == 0) goto L_0x0092
-        L_0x007f:
-            r1.setListOnly(r3)
-            goto L_0x000d
-        L_0x0083:
-            java.lang.String r3 = "-h"
-            boolean r3 = r2.equals(r3)
-            if (r3 == 0) goto L_0x0092
-        L_0x008b:
-            java.lang.String r2 = "help"
-            r1.setCommand(r2)
-            goto L_0x000d
-        L_0x0092:
-            com.android.systemui.dump.ArgParseException r8 = new com.android.systemui.dump.ArgParseException
-            java.lang.StringBuilder r9 = new java.lang.StringBuilder
-            r9.<init>()
-            java.lang.String r0 = "Unknown flag: "
-            r9.append(r0)
-            r9.append(r2)
-            java.lang.String r9 = r9.toString()
-            r8.<init>(r9)
-            throw r8
-        L_0x00a9:
-            java.lang.String r8 = r1.getCommand()
-            if (r8 != 0) goto L_0x00cd
-            boolean r8 = r0.isEmpty()
-            r8 = r8 ^ r3
-            if (r8 == 0) goto L_0x00cd
-            java.lang.String[] r8 = com.android.systemui.dump.DumpHandlerKt.COMMANDS
-            java.lang.Object r9 = r0.get(r4)
-            boolean r8 = kotlin.collections.ArraysKt___ArraysKt.contains(r8, r9)
-            if (r8 == 0) goto L_0x00cd
-            java.lang.Object r8 = r0.remove(r4)
-            java.lang.String r8 = (java.lang.String) r8
-            r1.setCommand(r8)
-        L_0x00cd:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.dump.DumpHandler.parseArgs(java.lang.String[]):com.android.systemui.dump.ParsedArgs");
+        }
+        if (parsedArgs.getCommand() == null && (!list.isEmpty()) && (ArraysKt___ArraysKt.contains(DumpHandlerKt.access$getCOMMANDS$p(), list.get(0)))) {
+            parsedArgs.setCommand((String) list.remove(0));
+        }
+        return parsedArgs;
     }
 
     private final <T> T readArgument(Iterator<String> it, String str, Function1<? super String, ? extends T> function1) {
         if (it.hasNext()) {
             String next = it.next();
             try {
-                T invoke = function1.invoke(next);
+                T t = (T) function1.invoke(next);
                 it.remove();
-                return invoke;
+                return t;
             } catch (Exception unused) {
                 throw new ArgParseException("Invalid argument '" + next + "' for flag " + str);
             }

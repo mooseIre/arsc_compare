@@ -42,6 +42,7 @@ public final class StatusBarDependenciesModule_ProvideNotificationRemoteInputMan
         this.actionClickLoggerProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public NotificationRemoteInputManager get() {
         return provideInstance(this.contextProvider, this.lockscreenUserManagerProvider, this.smartReplyControllerProvider, this.notificationEntryManagerProvider, this.statusBarLazyProvider, this.statusBarStateControllerProvider, this.mainHandlerProvider, this.remoteInputUriControllerProvider, this.clickNotifierProvider, this.actionClickLoggerProvider);
     }

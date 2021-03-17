@@ -13,7 +13,9 @@ public final class NotifViewManager$getListItems$$inlined$filterIsInstance$1 ext
         super(1);
     }
 
-    public final boolean invoke(@Nullable Object obj) {
+    /* Return type fixed from 'boolean' to match base method */
+    @Override // kotlin.jvm.functions.Function1
+    public final Boolean invoke(@Nullable Object obj) {
         return obj instanceof NotificationListItem;
     }
 }

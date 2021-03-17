@@ -2,6 +2,7 @@ package com.android.systemui.usb;
 
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.hardware.usb.IUsbManager;
@@ -33,7 +34,8 @@ public class UsbResolverActivity extends ResolverActivity {
         return false;
     }
 
-    /* JADX WARNING: type inference failed for: r11v0, types: [android.content.Context, com.android.internal.app.ResolverActivity, com.android.systemui.usb.UsbResolverActivity, android.app.Activity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r11v0, resolved type: com.android.systemui.usb.UsbResolverActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         boolean z;
@@ -46,7 +48,7 @@ public class UsbResolverActivity extends ResolverActivity {
         }
         Intent intent2 = (Intent) parcelableExtra;
         ArrayList arrayList = new ArrayList(intent.getParcelableArrayListExtra("rlist"));
-        ArrayList arrayList2 = new ArrayList();
+        ArrayList<? extends Parcelable> arrayList2 = new ArrayList<>();
         this.mForwardResolveInfo = null;
         Iterator it = arrayList.iterator();
         while (it.hasNext()) {
@@ -80,7 +82,7 @@ public class UsbResolverActivity extends ResolverActivity {
                 this.mOtherProfileIntent = intent3;
                 intent3.putParcelableArrayListExtra("rlist", arrayList2);
             } else {
-                Intent intent4 = new Intent(this, UsbConfirmActivity.class);
+                Intent intent4 = new Intent((Context) this, (Class<?>) UsbConfirmActivity.class);
                 this.mOtherProfileIntent = intent4;
                 intent4.putExtra("rinfo", (Parcelable) arrayList2.get(0));
                 UsbDevice usbDevice2 = this.mDevice;
@@ -115,7 +117,8 @@ public class UsbResolverActivity extends ResolverActivity {
         UsbResolverActivity.super.onDestroy();
     }
 
-    /* JADX WARNING: type inference failed for: r8v0, types: [com.android.internal.app.ResolverActivity, com.android.systemui.usb.UsbResolverActivity, android.app.Activity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r8v0, resolved type: com.android.systemui.usb.UsbResolverActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     /* access modifiers changed from: protected */
     public boolean onTargetSelected(TargetInfo targetInfo, boolean z) {
         ResolveInfo resolveInfo = targetInfo.getResolveInfo();

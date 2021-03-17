@@ -25,8 +25,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import java.util.Stack;
 
 public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
-    /* access modifiers changed from: private */
-    public static final Interpolator LOW_PRIORITY_HEADER_CLOSE = new PathInterpolator(0.4f, 0.0f, 0.7f, 1.0f);
+    private static final Interpolator LOW_PRIORITY_HEADER_CLOSE = new PathInterpolator(0.4f, 0.0f, 0.7f, 1.0f);
     private TextView mAppNameText;
     private View mAppOps;
     private View mAudiblyAlertedIcon;
@@ -35,14 +34,12 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
     private TextView mHeaderText;
     private CachingIconView mIcon;
     private FrameLayout mIconContainer;
-    /* access modifiers changed from: private */
-    public boolean mIsLowPriority;
+    private boolean mIsLowPriority;
     private View mMicIcon;
     protected NotificationHeaderView mNotificationHeader;
     private View mOverlayIcon;
     private boolean mShowExpandButtonAtEnd;
-    /* access modifiers changed from: private */
-    public boolean mTransformLowPriorityTitle;
+    private boolean mTransformLowPriorityTitle;
     protected final ViewTransformationHelper mTransformationHelper;
     private ImageView mWorkProfileImage;
 
@@ -52,6 +49,9 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         ViewTransformationHelper viewTransformationHelper = new ViewTransformationHelper();
         this.mTransformationHelper = viewTransformationHelper;
         viewTransformationHelper.setCustomTransformation(new CustomInterpolatorTransformation(1) {
+            /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
             public Interpolator getCustomInterpolator(int i, boolean z) {
                 boolean z2 = NotificationHeaderViewWrapper.this.mView instanceof NotificationHeaderView;
                 if (i != 16) {
@@ -64,6 +64,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
             }
 
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.statusbar.notification.CustomInterpolatorTransformation
             public boolean hasCustomTransformation() {
                 return NotificationHeaderViewWrapper.this.mIsLowPriority && NotificationHeaderViewWrapper.this.mTransformLowPriorityTitle;
             }
@@ -107,6 +108,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void showAppOpsIcons(ArraySet<Integer> arraySet) {
         if (arraySet != null) {
             View view = this.mOverlayIcon;
@@ -128,6 +130,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         this.mIsLowPriority = expandableNotificationRow.getEntry().isAmbient();
@@ -230,6 +233,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void updateExpandability(boolean z, View.OnClickListener onClickListener) {
         this.mExpandButton.setVisibility(z ? 0 : 8);
         NotificationHeaderView notificationHeaderView = this.mNotificationHeader;
@@ -241,6 +245,7 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setRecentlyAudiblyAlerted(boolean z) {
         View view = this.mAudiblyAlertedIcon;
         if (view != null) {
@@ -248,51 +253,63 @@ public class NotificationHeaderViewWrapper extends NotificationViewWrapper {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public NotificationHeaderView getNotificationHeader() {
         return this.mNotificationHeader;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public View getExpandButton() {
         return this.mExpandButton;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public int getOriginalIconColor() {
         return this.mIcon.getOriginalIconColor();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public View getShelfTransformationTarget() {
         return this.mIcon;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setShelfIconVisible(boolean z) {
         super.setShelfIconVisible(z);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public TransformState getCurrentState(int i) {
         return this.mTransformationHelper.getCurrentState(i);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, Runnable runnable) {
         this.mTransformationHelper.transformTo(transformableView, runnable);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, float f) {
         this.mTransformationHelper.transformTo(transformableView, f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView) {
         this.mTransformationHelper.transformFrom(transformableView);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView, float f) {
         this.mTransformationHelper.transformFrom(transformableView, f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setIsChildInGroup(boolean z) {
         super.setIsChildInGroup(z);
         this.mTransformLowPriorityTitle = !z;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         super.setVisible(z);
         this.mTransformationHelper.setVisible(z);

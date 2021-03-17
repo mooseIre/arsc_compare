@@ -16,6 +16,7 @@ public final class VolumeDialogComponent_Factory implements Factory<VolumeDialog
         this.volumeDialogControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public VolumeDialogComponent get() {
         return provideInstance(this.contextProvider, this.keyguardViewMediatorProvider, this.volumeDialogControllerProvider);
     }

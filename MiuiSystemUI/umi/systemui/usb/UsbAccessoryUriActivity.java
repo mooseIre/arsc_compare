@@ -35,7 +35,7 @@ public class UsbAccessoryUriActivity extends AlertActivity implements DialogInte
         }
         String scheme = uri.getScheme();
         if ("http".equals(scheme) || "https".equals(scheme)) {
-            AlertController.AlertParams alertParams = this.mAlertParams;
+            AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
             String description = this.mAccessory.getDescription();
             alertParams.mTitle = description;
             if (description == null || description.length() == 0) {

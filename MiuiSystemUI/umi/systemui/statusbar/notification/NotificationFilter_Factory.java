@@ -14,6 +14,7 @@ public final class NotificationFilter_Factory implements Factory<NotificationFil
         this.mediaFeatureFlagProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationFilter get() {
         return provideInstance(this.statusBarStateControllerProvider, this.mediaFeatureFlagProvider);
     }

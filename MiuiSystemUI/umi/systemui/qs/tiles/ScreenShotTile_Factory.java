@@ -11,6 +11,7 @@ public final class ScreenShotTile_Factory implements Factory<ScreenShotTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ScreenShotTile get() {
         return provideInstance(this.hostProvider);
     }

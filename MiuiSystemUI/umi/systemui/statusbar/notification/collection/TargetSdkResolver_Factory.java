@@ -11,6 +11,7 @@ public final class TargetSdkResolver_Factory implements Factory<TargetSdkResolve
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public TargetSdkResolver get() {
         return provideInstance(this.contextProvider);
     }

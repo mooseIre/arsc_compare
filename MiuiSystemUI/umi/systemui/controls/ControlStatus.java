@@ -3,6 +3,7 @@ package com.android.systemui.controls;
 import android.content.ComponentName;
 import android.graphics.drawable.Icon;
 import android.service.controls.Control;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -24,7 +25,7 @@ public final class ControlStatus implements ControlInterface {
             return false;
         }
         ControlStatus controlStatus = (ControlStatus) obj;
-        return Intrinsics.areEqual((Object) this.control, (Object) controlStatus.control) && Intrinsics.areEqual((Object) getComponent(), (Object) controlStatus.getComponent()) && getFavorite() == controlStatus.getFavorite() && getRemoved() == controlStatus.getRemoved();
+        return Intrinsics.areEqual(this.control, controlStatus.control) && Intrinsics.areEqual(getComponent(), controlStatus.getComponent()) && getFavorite() == controlStatus.getFavorite() && getRemoved() == controlStatus.getRemoved();
     }
 
     public int hashCode() {
@@ -37,16 +38,19 @@ public final class ControlStatus implements ControlInterface {
         }
         int i2 = (hashCode + i) * 31;
         boolean favorite2 = getFavorite();
-        boolean z = true;
+        int i3 = 1;
         if (favorite2) {
             favorite2 = true;
         }
-        int i3 = (i2 + (favorite2 ? 1 : 0)) * 31;
+        int i4 = favorite2 ? 1 : 0;
+        int i5 = favorite2 ? 1 : 0;
+        int i6 = favorite2 ? 1 : 0;
+        int i7 = (i2 + i4) * 31;
         boolean removed2 = getRemoved();
         if (!removed2) {
-            z = removed2;
+            i3 = removed2;
         }
-        return i3 + (z ? 1 : 0);
+        return i7 + i3;
     }
 
     @NotNull
@@ -68,11 +72,13 @@ public final class ControlStatus implements ControlInterface {
         return this.control;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public ComponentName getComponent() {
         return this.component;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public boolean getFavorite() {
         return this.favorite;
     }
@@ -86,10 +92,12 @@ public final class ControlStatus implements ControlInterface {
         this(control2, componentName, z, (i & 8) != 0 ? false : z2);
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public boolean getRemoved() {
         return this.removed;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public String getControlId() {
         String controlId = this.control.getControlId();
@@ -97,6 +105,7 @@ public final class ControlStatus implements ControlInterface {
         return controlId;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public CharSequence getTitle() {
         CharSequence title = this.control.getTitle();
@@ -104,6 +113,7 @@ public final class ControlStatus implements ControlInterface {
         return title;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public CharSequence getSubtitle() {
         CharSequence subtitle = this.control.getSubtitle();
@@ -111,11 +121,13 @@ public final class ControlStatus implements ControlInterface {
         return subtitle;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @Nullable
     public Icon getCustomIcon() {
         return this.control.getCustomIcon();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public int getDeviceType() {
         return this.control.getDeviceType();
     }

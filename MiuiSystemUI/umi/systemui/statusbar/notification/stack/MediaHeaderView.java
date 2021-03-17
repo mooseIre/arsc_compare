@@ -7,9 +7,11 @@ import android.view.ViewGroup;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 
 public class MediaHeaderView extends ExpandableView {
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void performAddAnimation(long j, long j2, boolean z) {
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter) {
         return 0;
     }

@@ -105,14 +105,13 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        Class cls = DarkIconDispatcher.class;
         super.onFinishInflate();
         this.mSystemIconsView = findViewById(C0015R$id.quick_status_bar_system_icons);
         findViewById(C0015R$id.quick_qs_status_icons);
         MiuiStatusIconContainer miuiStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0015R$id.statusIcons);
         miuiStatusIconContainer.addIgnoredSlots(getIgnoredIconSlots());
         miuiStatusIconContainer.setShouldRestrictIcons(false);
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(miuiStatusIconContainer, this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(cls)).getLightModeIconColorSingleTone());
+        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(miuiStatusIconContainer, this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
         this.mHeaderTextContainerView = findViewById(C0015R$id.header_text_container);
         this.mStatusSeparator = findViewById(C0015R$id.status_separator);
         this.mNextAlarmIcon = (ImageView) findViewById(C0015R$id.next_alarm_icon);
@@ -120,6 +119,8 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         View findViewById = findViewById(C0015R$id.alarm_container);
         this.mNextAlarmContainer = findViewById;
         findViewById.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.qs.$$Lambda$p8TkVReSUo0LsQ3y9iKja9mJXE */
+
             public final void onClick(View view) {
                 QuickStatusBarHeader.this.onClick(view);
             }
@@ -129,6 +130,8 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         View findViewById2 = findViewById(C0015R$id.ringer_container);
         this.mRingerContainer = findViewById2;
         findViewById2.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.qs.$$Lambda$p8TkVReSUo0LsQ3y9iKja9mJXE */
+
             public final void onClick(View view) {
                 QuickStatusBarHeader.this.onClick(view);
             }
@@ -136,7 +139,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         QSCarrierGroup qSCarrierGroup = (QSCarrierGroup) findViewById(C0015R$id.carrier_group);
         updateResources();
         Rect rect = new Rect(0, 0, 0, 0);
-        DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(cls);
+        DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         int lightModeIconColorSingleTone = darkIconDispatcher.getLightModeIconColorSingleTone();
         applyDarkness(C0015R$id.clock, rect, 0.0f, lightModeIconColorSingleTone, lightModeIconColorSingleTone, darkIconDispatcher.getDarkModeIconColorSingleTone());
         this.mIconManager.setLight(true, lightModeIconColorSingleTone);
@@ -156,8 +159,8 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
 
     private List<String> getIgnoredIconSlots() {
         ArrayList arrayList = new ArrayList();
-        arrayList.add(this.mContext.getResources().getString(17041386));
-        arrayList.add(this.mContext.getResources().getString(17041398));
+        arrayList.add(((RelativeLayout) this).mContext.getResources().getString(17041386));
+        arrayList.add(((RelativeLayout) this).mContext.getResources().getString(17041398));
         return arrayList;
     }
 
@@ -182,85 +185,10 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     /* JADX WARNING: Removed duplicated region for block: B:19:0x005b  */
     /* JADX WARNING: Removed duplicated region for block: B:20:0x005d  */
     /* JADX WARNING: Removed duplicated region for block: B:23:0x0065  */
-    /* JADX WARNING: Removed duplicated region for block: B:28:0x0078  */
-    /* JADX WARNING: Removed duplicated region for block: B:31:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private boolean updateRingerStatus() {
         /*
-            r8 = this;
-            android.widget.TextView r0 = r8.mRingerModeTextView
-            int r0 = r0.getVisibility()
-            r1 = 1
-            r2 = 0
-            if (r0 != 0) goto L_0x000c
-            r0 = r1
-            goto L_0x000d
-        L_0x000c:
-            r0 = r2
-        L_0x000d:
-            android.widget.TextView r3 = r8.mRingerModeTextView
-            java.lang.CharSequence r3 = r3.getText()
-            com.android.systemui.statusbar.policy.ZenModeController r4 = r8.mZenController
-            int r4 = r4.getZen()
-            com.android.systemui.statusbar.policy.ZenModeController r5 = r8.mZenController
-            android.app.NotificationManager$Policy r5 = r5.getConsolidatedPolicy()
-            boolean r4 = android.service.notification.ZenModeConfig.isZenOverridingRinger(r4, r5)
-            if (r4 != 0) goto L_0x004a
-            int r4 = r8.mRingerMode
-            if (r4 != r1) goto L_0x0039
-            android.widget.ImageView r4 = r8.mRingerModeIcon
-            int r5 = com.android.systemui.C0013R$drawable.ic_volume_ringer_vibrate
-            r4.setImageResource(r5)
-            android.widget.TextView r4 = r8.mRingerModeTextView
-            int r5 = com.android.systemui.C0021R$string.qs_status_phone_vibrate
-            r4.setText(r5)
-        L_0x0037:
-            r4 = r1
-            goto L_0x004b
-        L_0x0039:
-            if (r4 != 0) goto L_0x004a
-            android.widget.ImageView r4 = r8.mRingerModeIcon
-            int r5 = com.android.systemui.C0013R$drawable.ic_volume_ringer_mute
-            r4.setImageResource(r5)
-            android.widget.TextView r4 = r8.mRingerModeTextView
-            int r5 = com.android.systemui.C0021R$string.qs_status_phone_muted
-            r4.setText(r5)
-            goto L_0x0037
-        L_0x004a:
-            r4 = r2
-        L_0x004b:
-            android.widget.ImageView r5 = r8.mRingerModeIcon
-            r6 = 8
-            if (r4 == 0) goto L_0x0053
-            r7 = r2
-            goto L_0x0054
-        L_0x0053:
-            r7 = r6
-        L_0x0054:
-            r5.setVisibility(r7)
-            android.widget.TextView r5 = r8.mRingerModeTextView
-            if (r4 == 0) goto L_0x005d
-            r7 = r2
-            goto L_0x005e
-        L_0x005d:
-            r7 = r6
-        L_0x005e:
-            r5.setVisibility(r7)
-            android.view.View r5 = r8.mRingerContainer
-            if (r4 == 0) goto L_0x0066
-            r6 = r2
-        L_0x0066:
-            r5.setVisibility(r6)
-            if (r0 != r4) goto L_0x0079
-            android.widget.TextView r8 = r8.mRingerModeTextView
-            java.lang.CharSequence r8 = r8.getText()
-            boolean r8 = java.util.Objects.equals(r3, r8)
-            if (r8 != 0) goto L_0x0078
-            goto L_0x0079
-        L_0x0078:
-            r1 = r2
-        L_0x0079:
-            return r1
+        // Method dump skipped, instructions count: 122
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.QuickStatusBarHeader.updateRingerStatus():boolean");
     }
@@ -284,10 +212,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
             i = 0;
         }
         view.setVisibility(i);
-        if (z2 != z || !Objects.equals(text, this.mNextAlarmTextView.getText())) {
-            return true;
-        }
-        return false;
+        return z2 != z || !Objects.equals(text, this.mNextAlarmTextView.getText());
     }
 
     private void applyDarkness(int i, Rect rect, float f, int i2, int i3, int i4) {
@@ -310,11 +235,11 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     }
 
     private void updateMinimumHeight() {
-        setMinimumHeight(this.mContext.getResources().getDimensionPixelSize(17105489) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_header_panel_height));
+        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105489) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_header_panel_height));
     }
 
     private void updateResources() {
-        Resources resources = this.mContext.getResources();
+        Resources resources = ((RelativeLayout) this).mContext.getResources();
         updateMinimumHeight();
         this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding);
         this.mStatusBarPaddingTop = resources.getDimensionPixelSize(C0012R$dimen.status_bar_padding_top);
@@ -344,6 +269,9 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mRingerModeTracker.getRingerModeInternal().observe(this, new Observer() {
+            /* class com.android.systemui.qs.$$Lambda$QuickStatusBarHeader$ocPGzZroHlWVjf71npt1p2ugzmo */
+
+            @Override // androidx.lifecycle.Observer
             public final void onChanged(Object obj) {
                 QuickStatusBarHeader.this.lambda$onAttachedToWindow$0$QuickStatusBarHeader((Integer) obj);
             }
@@ -437,11 +365,13 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NextAlarmController.NextAlarmChangeCallback
     public void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo) {
         this.mNextAlarm = alarmClockInfo;
         updateStatusText();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onConfigChanged(ZenModeConfig zenModeConfig) {
         updateStatusText();
     }
@@ -450,9 +380,10 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         if (alarmClockInfo == null) {
             return "";
         }
-        return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(this.mContext, ActivityManager.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
+        return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(((RelativeLayout) this).mContext, ActivityManager.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
     }
 
+    @Override // androidx.lifecycle.LifecycleOwner
     public Lifecycle getLifecycle() {
         return this.mLifecycle;
     }

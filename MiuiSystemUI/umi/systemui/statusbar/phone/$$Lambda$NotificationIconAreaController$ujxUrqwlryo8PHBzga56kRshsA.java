@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationIconAreaController$ujxUr
     private /* synthetic */ $$Lambda$NotificationIconAreaController$ujxUrqwlryo8PHBzga56kRshsA() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((NotificationEntry) obj).getIcons().getStatusBarIcon();
     }

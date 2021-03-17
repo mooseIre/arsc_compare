@@ -11,6 +11,7 @@ public final class MediaCoordinator_Factory implements Factory<MediaCoordinator>
         this.featureFlagProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MediaCoordinator get() {
         return provideInstance(this.featureFlagProvider);
     }

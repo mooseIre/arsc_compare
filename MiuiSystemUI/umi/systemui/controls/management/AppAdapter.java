@@ -15,6 +15,7 @@ import com.android.systemui.controls.ControlsServiceInfo;
 import java.util.List;
 import java.util.concurrent.Executor;
 import kotlin.Unit;
+import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -24,13 +25,12 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
     private final AppAdapter$callback$1 callback;
     private final FavoritesRenderer favoritesRenderer;
     private final LayoutInflater layoutInflater;
-    /* access modifiers changed from: private */
-    public List<ControlsServiceInfo> listOfServices = CollectionsKt__CollectionsKt.emptyList();
-    /* access modifiers changed from: private */
-    public final Function1<ComponentName, Unit> onAppSelected;
-    /* access modifiers changed from: private */
-    public final Resources resources;
+    private List<ControlsServiceInfo> listOfServices = CollectionsKt__CollectionsKt.emptyList();
+    private final Function1<ComponentName, Unit> onAppSelected;
+    private final Resources resources;
 
+    /* JADX DEBUG: Multi-variable search result rejected for r7v0, resolved type: kotlin.jvm.functions.Function1<? super android.content.ComponentName, kotlin.Unit> */
+    /* JADX WARN: Multi-variable type inference failed */
     public AppAdapter(@NotNull Executor executor, @NotNull Executor executor2, @NotNull Lifecycle lifecycle, @NotNull ControlsListingController controlsListingController, @NotNull LayoutInflater layoutInflater2, @NotNull Function1<? super ComponentName, Unit> function1, @NotNull FavoritesRenderer favoritesRenderer2, @NotNull Resources resources2) {
         Intrinsics.checkParameterIsNotNull(executor, "backgroundExecutor");
         Intrinsics.checkParameterIsNotNull(executor2, "uiExecutor");
@@ -49,6 +49,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
         controlsListingController.observe(lifecycle, appAdapter$callback$1);
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     @NotNull
     public Holder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
@@ -57,6 +58,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
         return new Holder(inflate, this.favoritesRenderer);
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.listOfServices.size();
     }

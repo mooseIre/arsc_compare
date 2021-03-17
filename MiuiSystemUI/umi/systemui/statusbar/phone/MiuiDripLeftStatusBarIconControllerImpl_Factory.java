@@ -11,6 +11,7 @@ public final class MiuiDripLeftStatusBarIconControllerImpl_Factory implements Fa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiDripLeftStatusBarIconControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

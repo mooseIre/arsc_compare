@@ -17,6 +17,7 @@ public final class BubbleDataRepository_Factory implements Factory<BubbleDataRep
         this.launcherAppsProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public BubbleDataRepository get() {
         return provideInstance(this.volatileRepositoryProvider, this.persistentRepositoryProvider, this.launcherAppsProvider);
     }

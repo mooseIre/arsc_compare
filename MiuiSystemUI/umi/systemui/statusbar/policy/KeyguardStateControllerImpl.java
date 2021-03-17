@@ -25,8 +25,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
     private long mKeyguardFadingAwayDelay;
     private long mKeyguardFadingAwayDuration;
     private boolean mKeyguardGoingAway;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     private boolean mLaunchTransitionFadingAway;
     private final LockPatternUtils mLockPatternUtils;
@@ -41,7 +40,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
     }
 
     public KeyguardStateControllerImpl(Context context, KeyguardUpdateMonitor keyguardUpdateMonitor, LockPatternUtils lockPatternUtils) {
-        UpdateMonitorCallback updateMonitorCallback = new UpdateMonitorCallback(this, (AnonymousClass1) null);
+        UpdateMonitorCallback updateMonitorCallback = new UpdateMonitorCallback(this, null);
         this.mKeyguardUpdateMonitorCallback = updateMonitorCallback;
         this.mDebugUnlocked = false;
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
@@ -63,18 +62,22 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
         this.mCallbacks.remove(callback);
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isShowing() {
         return this.mShowing;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isMethodSecure() {
         return this.mSecure;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isOccluded() {
         return this.mOccluded;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public void notifyKeyguardState(boolean z, boolean z2) {
         if (this.mShowing != z || this.mOccluded != z2) {
             this.mShowing = z;
@@ -84,7 +87,8 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
     }
 
     /* access modifiers changed from: private */
-    public void notifyKeyguardChanged() {
+    /* access modifiers changed from: public */
+    private void notifyKeyguardChanged() {
         Trace.beginSection("KeyguardStateController#notifyKeyguardChanged");
         new ArrayList(this.mCallbacks).forEach($$Lambda$AiBS48IhN8ohBVmcN3CRVHIBtQ8.INSTANCE);
         Trace.endSection();
@@ -96,6 +100,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
         Trace.endSection();
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public void notifyKeyguardFadingAway(long j, long j2, boolean z) {
         this.mKeyguardFadingAwayDelay = j;
         this.mKeyguardFadingAwayDuration = j2;
@@ -113,6 +118,7 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public void notifyKeyguardDoneFading() {
         this.mKeyguardGoingAway = false;
         setKeyguardFadingAway(false);
@@ -148,50 +154,62 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
         Trace.endSection();
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean canDismissLockScreen() {
         return this.mCanDismissLockScreen;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isFaceAuthEnabled() {
         return this.mFaceAuthEnabled;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isKeyguardFadingAway() {
         return this.mKeyguardFadingAway;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isKeyguardGoingAway() {
         return this.mKeyguardGoingAway;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isBypassFadingAnimation() {
         return this.mBypassFadingAnimation;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public long getKeyguardFadingAwayDelay() {
         return this.mKeyguardFadingAwayDelay;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public long getKeyguardFadingAwayDuration() {
         return this.mKeyguardFadingAwayDuration;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public long calculateGoingToFullShadeDelay() {
         return this.mKeyguardFadingAwayDelay + this.mKeyguardFadingAwayDuration;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public void notifyKeyguardGoingAway(boolean z) {
         this.mKeyguardGoingAway = z;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public void setLaunchTransitionFadingAway(boolean z) {
         this.mLaunchTransitionFadingAway = z;
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController
     public boolean isLaunchTransitionFadingAway() {
         return this.mLaunchTransitionFadingAway;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("KeyguardStateController:");
         printWriter.println("  mSecure: " + this.mSecure);
@@ -210,23 +228,28 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
             this();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitchComplete(int i) {
             KeyguardStateControllerImpl.this.update(false);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onTrustChanged(int i) {
             KeyguardStateControllerImpl.this.update(false);
             KeyguardStateControllerImpl.this.notifyKeyguardChanged();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onTrustManagedChanged(int i) {
             KeyguardStateControllerImpl.this.update(false);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStartedWakingUp() {
             KeyguardStateControllerImpl.this.update(false);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
             Trace.beginSection("KeyguardUpdateMonitorCallback#onBiometricAuthenticated");
             if (KeyguardStateControllerImpl.this.mKeyguardUpdateMonitor.isUnlockingWithBiometricAllowed(z)) {
@@ -235,18 +258,22 @@ public class KeyguardStateControllerImpl implements KeyguardStateController, Dum
             Trace.endSection();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onFaceUnlockStateChanged(boolean z, int i) {
             KeyguardStateControllerImpl.this.update(false);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStrongAuthStateChanged(int i) {
             KeyguardStateControllerImpl.this.update(false);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             KeyguardStateControllerImpl.this.update(false);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricsCleared() {
             KeyguardStateControllerImpl.this.update(false);
         }

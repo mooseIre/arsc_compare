@@ -2,6 +2,7 @@ package com.android.systemui.volume;
 
 import android.util.Log;
 
-class D {
+/* access modifiers changed from: package-private */
+public class D {
     public static boolean BUG = Log.isLoggable("volume", 3);
 }

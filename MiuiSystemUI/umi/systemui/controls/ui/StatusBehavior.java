@@ -23,11 +23,13 @@ public final class StatusBehavior implements Behavior {
         throw null;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void initialize(@NotNull ControlViewHolder controlViewHolder) {
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         this.cvh = controlViewHolder;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void bind(@NotNull ControlWithState controlWithState, int i) {
         int i2;
         Intrinsics.checkParameterIsNotNull(controlWithState, "cws");
@@ -70,10 +72,10 @@ public final class StatusBehavior implements Behavior {
         } else if (controlViewHolder4 != null) {
             String string = controlViewHolder4.getContext().getString(i2);
             Intrinsics.checkExpressionValueIsNotNull(string, "cvh.context.getString(msg)");
-            ControlViewHolder.setStatusText$default(controlViewHolder4, string, false, 2, (Object) null);
+            ControlViewHolder.setStatusText$default(controlViewHolder4, string, false, 2, null);
             ControlViewHolder controlViewHolder5 = this.cvh;
             if (controlViewHolder5 != null) {
-                ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder5, false, i, false, 4, (Object) null);
+                ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder5, false, i, false, 4, null);
             } else {
                 Intrinsics.throwUninitializedPropertyAccessException("cvh");
                 throw null;
@@ -91,7 +93,7 @@ public final class StatusBehavior implements Behavior {
         AlertDialog.Builder builder = new AlertDialog.Builder(controlViewHolder.getContext(), 16974545);
         Resources resources = controlViewHolder.getContext().getResources();
         builder.setTitle(resources.getString(C0021R$string.controls_error_removed_title));
-        builder.setMessage(resources.getString(C0021R$string.controls_error_removed_message, new Object[]{controlViewHolder.getTitle().getText(), applicationLabel}));
+        builder.setMessage(resources.getString(C0021R$string.controls_error_removed_message, controlViewHolder.getTitle().getText(), applicationLabel));
         builder.setPositiveButton(C0021R$string.controls_open_app, new StatusBehavior$showNotFoundDialog$$inlined$apply$lambda$1(builder, controlViewHolder, applicationLabel, controlWithState));
         builder.setNegativeButton(17039360, StatusBehavior$showNotFoundDialog$builder$1$2.INSTANCE);
         AlertDialog create = builder.create();

@@ -45,48 +45,43 @@ import java.util.Set;
 @TargetApi(28)
 public class RecentsOnboarding {
     private final View mArrowView;
-    /* access modifiers changed from: private */
-    public Set<String> mBlacklistedPackages;
+    private Set<String> mBlacklistedPackages;
     private final Context mContext;
     private final ImageView mDismissView;
-    /* access modifiers changed from: private */
-    public boolean mHasDismissedQuickScrubTip;
-    /* access modifiers changed from: private */
-    public boolean mHasDismissedSwipeUpTip;
-    /* access modifiers changed from: private */
-    public final View mLayout;
-    /* access modifiers changed from: private */
-    public boolean mLayoutAttachedToWindow;
+    private boolean mHasDismissedQuickScrubTip;
+    private boolean mHasDismissedSwipeUpTip;
+    private final View mLayout;
+    private boolean mLayoutAttachedToWindow;
     private int mNavBarHeight;
     private int mNavBarMode = 0;
-    /* access modifiers changed from: private */
-    public int mNumAppsLaunchedSinceSwipeUpTipDismiss;
+    private int mNumAppsLaunchedSinceSwipeUpTipDismiss;
     private final View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener() {
+        /* class com.android.systemui.recents.RecentsOnboarding.AnonymousClass3 */
         private final BroadcastDispatcher mBroadcastDispatcher = ((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class));
 
         public void onViewAttachedToWindow(View view) {
             if (view == RecentsOnboarding.this.mLayout) {
                 this.mBroadcastDispatcher.registerReceiver(RecentsOnboarding.this.mReceiver, new IntentFilter("android.intent.action.SCREEN_OFF"));
-                boolean unused = RecentsOnboarding.this.mLayoutAttachedToWindow = true;
+                RecentsOnboarding.this.mLayoutAttachedToWindow = true;
                 if (view.getTag().equals(Integer.valueOf(C0021R$string.recents_swipe_up_onboarding))) {
-                    boolean unused2 = RecentsOnboarding.this.mHasDismissedSwipeUpTip = false;
+                    RecentsOnboarding.this.mHasDismissedSwipeUpTip = false;
                 } else {
-                    boolean unused3 = RecentsOnboarding.this.mHasDismissedQuickScrubTip = false;
+                    RecentsOnboarding.this.mHasDismissedQuickScrubTip = false;
                 }
             }
         }
 
         public void onViewDetachedFromWindow(View view) {
             if (view == RecentsOnboarding.this.mLayout) {
-                boolean unused = RecentsOnboarding.this.mLayoutAttachedToWindow = false;
+                RecentsOnboarding.this.mLayoutAttachedToWindow = false;
                 if (view.getTag().equals(Integer.valueOf(C0021R$string.recents_quick_scrub_onboarding))) {
-                    boolean unused2 = RecentsOnboarding.this.mHasDismissedQuickScrubTip = true;
+                    RecentsOnboarding.this.mHasDismissedQuickScrubTip = true;
                     if (RecentsOnboarding.this.hasDismissedQuickScrubOnboardingOnce()) {
                         RecentsOnboarding.this.setHasSeenQuickScrubOnboarding(true);
                     } else {
                         RecentsOnboarding.this.setHasDismissedQuickScrubOnboardingOnce(true);
                     }
-                    int unused3 = RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss = 0;
+                    RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss = 0;
                 }
                 this.mBroadcastDispatcher.unregisterReceiver(RecentsOnboarding.this.mReceiver);
             }
@@ -94,9 +89,11 @@ public class RecentsOnboarding {
     };
     private final int mOnboardingToastArrowRadius;
     private final int mOnboardingToastColor;
-    /* access modifiers changed from: private */
-    public int mOverviewOpenedCountSinceQuickScrubTipDismiss;
+    private int mOverviewOpenedCountSinceQuickScrubTipDismiss;
     private OverviewProxyService.OverviewProxyListener mOverviewProxyListener = new OverviewProxyService.OverviewProxyListener() {
+        /* class com.android.systemui.recents.RecentsOnboarding.AnonymousClass2 */
+
+        @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
         public void onOverviewShown(boolean z) {
             if (!RecentsOnboarding.this.hasSeenSwipeUpOnboarding() && !z) {
                 RecentsOnboarding.this.setHasSeenSwipeUpOnboarding(true);
@@ -112,8 +109,9 @@ public class RecentsOnboarding {
     };
     private boolean mOverviewProxyListenerRegistered;
     private final OverviewProxyService mOverviewProxyService;
-    /* access modifiers changed from: private */
-    public final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.recents.RecentsOnboarding.AnonymousClass4 */
+
         public void onReceive(Context context, Intent intent) {
             if (intent.getAction().equals("android.intent.action.SCREEN_OFF")) {
                 RecentsOnboarding.this.hide(false);
@@ -121,12 +119,15 @@ public class RecentsOnboarding {
         }
     };
     private final TaskStackChangeListener mTaskListener = new TaskStackChangeListener() {
+        /* class com.android.systemui.recents.RecentsOnboarding.AnonymousClass1 */
         private String mLastPackageName;
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskCreated(int i, ComponentName componentName) {
             onAppLaunch();
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskMovedToFront(int i) {
             onAppLaunch();
         }
@@ -141,19 +142,19 @@ public class RecentsOnboarding {
                 } else if (!runningTask.baseActivity.getPackageName().equals(this.mLastPackageName)) {
                     this.mLastPackageName = runningTask.baseActivity.getPackageName();
                     if (runningTask.configuration.windowConfiguration.getActivityType() == 1) {
-                        boolean access$100 = RecentsOnboarding.this.hasSeenSwipeUpOnboarding();
-                        boolean access$200 = RecentsOnboarding.this.hasSeenQuickScrubOnboarding();
-                        if (access$100 && access$200) {
+                        boolean hasSeenSwipeUpOnboarding = RecentsOnboarding.this.hasSeenSwipeUpOnboarding();
+                        boolean hasSeenQuickScrubOnboarding = RecentsOnboarding.this.hasSeenQuickScrubOnboarding();
+                        if (hasSeenSwipeUpOnboarding && hasSeenQuickScrubOnboarding) {
                             RecentsOnboarding.this.onDisconnectedFromLauncher();
-                        } else if (!access$100) {
+                        } else if (!hasSeenSwipeUpOnboarding) {
                             if (RecentsOnboarding.this.getOpenedOverviewFromHomeCount() >= 3) {
                                 if (RecentsOnboarding.this.mHasDismissedSwipeUpTip) {
-                                    int access$500 = RecentsOnboarding.this.getDismissedSwipeUpOnboardingCount();
-                                    if (access$500 <= 2) {
-                                        int i = access$500 <= 1 ? 5 : 40;
+                                    int dismissedSwipeUpOnboardingCount = RecentsOnboarding.this.getDismissedSwipeUpOnboardingCount();
+                                    if (dismissedSwipeUpOnboardingCount <= 2) {
+                                        int i = dismissedSwipeUpOnboardingCount <= 1 ? 5 : 40;
                                         RecentsOnboarding.access$608(RecentsOnboarding.this);
                                         if (RecentsOnboarding.this.mNumAppsLaunchedSinceSwipeUpTipDismiss >= i) {
-                                            int unused = RecentsOnboarding.this.mNumAppsLaunchedSinceSwipeUpTipDismiss = 0;
+                                            RecentsOnboarding.this.mNumAppsLaunchedSinceSwipeUpTipDismiss = 0;
                                             z2 = RecentsOnboarding.this.show(C0021R$string.recents_swipe_up_onboarding);
                                         } else {
                                             z2 = false;
@@ -172,7 +173,7 @@ public class RecentsOnboarding {
                             if (!RecentsOnboarding.this.mHasDismissedQuickScrubTip) {
                                 z = RecentsOnboarding.this.show(C0021R$string.recents_quick_scrub_onboarding);
                             } else if (RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss >= 10) {
-                                int unused2 = RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss = 0;
+                                RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss = 0;
                                 z = RecentsOnboarding.this.show(C0021R$string.recents_quick_scrub_onboarding);
                             } else {
                                 z = false;
@@ -223,6 +224,8 @@ public class RecentsOnboarding {
         this.mOnboardingToastArrowRadius = resources.getDimensionPixelSize(C0012R$dimen.recents_onboarding_toast_arrow_corner_radius);
         this.mLayout.addOnAttachStateChangeListener(this.mOnAttachStateChangeListener);
         this.mDismissView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.recents.$$Lambda$RecentsOnboarding$VU_OZtWyvAx7bVWSUdhKQFeocZE */
+
             public final void onClick(View view) {
                 RecentsOnboarding.this.lambda$new$0$RecentsOnboarding(view);
             }
@@ -253,7 +256,8 @@ public class RecentsOnboarding {
     }
 
     /* access modifiers changed from: private */
-    public void notifyOnTip(int i, int i2) {
+    /* access modifiers changed from: public */
+    private void notifyOnTip(int i, int i2) {
         try {
             IOverviewProxy proxy = this.mOverviewProxyService.getProxy();
             if (proxy != null) {
@@ -340,6 +344,8 @@ public class RecentsOnboarding {
         }
         if (z) {
             this.mLayout.animate().alpha(0.0f).withLayer().setStartDelay(0).setDuration(100).setInterpolator(new AccelerateInterpolator()).withEndAction(new Runnable() {
+                /* class com.android.systemui.recents.$$Lambda$RecentsOnboarding$qki5o8zqrWEPaWaslagffDePdhg */
+
                 public final void run() {
                     RecentsOnboarding.this.lambda$hide$1$RecentsOnboarding();
                 }
@@ -386,12 +392,14 @@ public class RecentsOnboarding {
     }
 
     /* access modifiers changed from: private */
-    public boolean hasSeenSwipeUpOnboarding() {
+    /* access modifiers changed from: public */
+    private boolean hasSeenSwipeUpOnboarding() {
         return Prefs.getBoolean(this.mContext, "HasSeenRecentsSwipeUpOnboarding", false);
     }
 
     /* access modifiers changed from: private */
-    public void setHasSeenSwipeUpOnboarding(boolean z) {
+    /* access modifiers changed from: public */
+    private void setHasSeenSwipeUpOnboarding(boolean z) {
         Prefs.putBoolean(this.mContext, "HasSeenRecentsSwipeUpOnboarding", z);
         if (z && hasSeenQuickScrubOnboarding()) {
             onDisconnectedFromLauncher();
@@ -399,12 +407,14 @@ public class RecentsOnboarding {
     }
 
     /* access modifiers changed from: private */
-    public boolean hasSeenQuickScrubOnboarding() {
+    /* access modifiers changed from: public */
+    private boolean hasSeenQuickScrubOnboarding() {
         return Prefs.getBoolean(this.mContext, "HasSeenRecentsQuickScrubOnboarding", false);
     }
 
     /* access modifiers changed from: private */
-    public void setHasSeenQuickScrubOnboarding(boolean z) {
+    /* access modifiers changed from: public */
+    private void setHasSeenQuickScrubOnboarding(boolean z) {
         Prefs.putBoolean(this.mContext, "HasSeenRecentsQuickScrubOnboarding", z);
         if (z && hasSeenSwipeUpOnboarding()) {
             onDisconnectedFromLauncher();
@@ -412,7 +422,8 @@ public class RecentsOnboarding {
     }
 
     /* access modifiers changed from: private */
-    public int getDismissedSwipeUpOnboardingCount() {
+    /* access modifiers changed from: public */
+    private int getDismissedSwipeUpOnboardingCount() {
         return Prefs.getInt(this.mContext, "DismissedRecentsSwipeUpOnboardingCount", 0);
     }
 
@@ -421,22 +432,26 @@ public class RecentsOnboarding {
     }
 
     /* access modifiers changed from: private */
-    public boolean hasDismissedQuickScrubOnboardingOnce() {
+    /* access modifiers changed from: public */
+    private boolean hasDismissedQuickScrubOnboardingOnce() {
         return Prefs.getBoolean(this.mContext, "HasDismissedRecentsQuickScrubOnboardingOnce", false);
     }
 
     /* access modifiers changed from: private */
-    public void setHasDismissedQuickScrubOnboardingOnce(boolean z) {
+    /* access modifiers changed from: public */
+    private void setHasDismissedQuickScrubOnboardingOnce(boolean z) {
         Prefs.putBoolean(this.mContext, "HasDismissedRecentsQuickScrubOnboardingOnce", z);
     }
 
     /* access modifiers changed from: private */
-    public int getOpenedOverviewFromHomeCount() {
+    /* access modifiers changed from: public */
+    private int getOpenedOverviewFromHomeCount() {
         return Prefs.getInt(this.mContext, "OverviewOpenedFromHomeCount", 0);
     }
 
     /* access modifiers changed from: private */
-    public void incrementOpenedOverviewFromHomeCount() {
+    /* access modifiers changed from: public */
+    private void incrementOpenedOverviewFromHomeCount() {
         int openedOverviewFromHomeCount = getOpenedOverviewFromHomeCount();
         if (openedOverviewFromHomeCount < 3) {
             setOpenedOverviewFromHomeCount(openedOverviewFromHomeCount + 1);
@@ -448,12 +463,14 @@ public class RecentsOnboarding {
     }
 
     /* access modifiers changed from: private */
-    public int getOpenedOverviewCount() {
+    /* access modifiers changed from: public */
+    private int getOpenedOverviewCount() {
         return Prefs.getInt(this.mContext, "OverviewOpenedCount", 0);
     }
 
     /* access modifiers changed from: private */
-    public void incrementOpenedOverviewCount() {
+    /* access modifiers changed from: public */
+    private void incrementOpenedOverviewCount() {
         int openedOverviewCount = getOpenedOverviewCount();
         if (openedOverviewCount < 10) {
             setOpenedOverviewCount(openedOverviewCount + 1);

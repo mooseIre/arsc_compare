@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideTelephonyManagerFactory implement
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public TelephonyManager get() {
         return provideInstance(this.contextProvider);
     }

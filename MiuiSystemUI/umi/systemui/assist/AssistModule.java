@@ -19,9 +19,9 @@ public abstract class AssistModule {
 
     static Map<AssistHandleBehavior, AssistHandleBehaviorController.BehaviorController> provideAssistHandleBehaviorControllerMap(AssistHandleOffBehavior assistHandleOffBehavior, AssistHandleLikeHomeBehavior assistHandleLikeHomeBehavior, AssistHandleReminderExpBehavior assistHandleReminderExpBehavior) {
         EnumMap enumMap = new EnumMap(AssistHandleBehavior.class);
-        enumMap.put(AssistHandleBehavior.OFF, assistHandleOffBehavior);
-        enumMap.put(AssistHandleBehavior.LIKE_HOME, assistHandleLikeHomeBehavior);
-        enumMap.put(AssistHandleBehavior.REMINDER_EXP, assistHandleReminderExpBehavior);
+        enumMap.put((Object) AssistHandleBehavior.OFF, (Object) assistHandleOffBehavior);
+        enumMap.put((Object) AssistHandleBehavior.LIKE_HOME, (Object) assistHandleLikeHomeBehavior);
+        enumMap.put((Object) AssistHandleBehavior.REMINDER_EXP, (Object) assistHandleReminderExpBehavior);
         return enumMap;
     }
 

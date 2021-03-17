@@ -16,6 +16,7 @@ public final class HotspotControllerImpl_Factory implements Factory<HotspotContr
         this.backgroundHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public HotspotControllerImpl get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.backgroundHandlerProvider);
     }

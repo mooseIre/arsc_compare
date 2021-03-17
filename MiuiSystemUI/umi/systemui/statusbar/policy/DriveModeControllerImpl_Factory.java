@@ -19,6 +19,7 @@ public final class DriveModeControllerImpl_Factory implements Factory<DriveModeC
         this.uiExecutorProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public DriveModeControllerImpl get() {
         return provideInstance(this.mContextProvider, this.bgLooperProvider, this.bgExecutorProvider, this.uiExecutorProvider);
     }

@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationLogger$JO0enstrXhdro9FeK
     private /* synthetic */ $$Lambda$NotificationLogger$JO0enstrXhdro9FeK3TlyP_3L6E() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((NotificationVisibility) obj).key;
     }

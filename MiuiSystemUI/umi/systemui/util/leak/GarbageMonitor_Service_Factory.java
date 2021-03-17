@@ -14,6 +14,7 @@ public final class GarbageMonitor_Service_Factory implements Factory<GarbageMoni
         this.garbageMonitorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public GarbageMonitor.Service get() {
         return provideInstance(this.contextProvider, this.garbageMonitorProvider);
     }

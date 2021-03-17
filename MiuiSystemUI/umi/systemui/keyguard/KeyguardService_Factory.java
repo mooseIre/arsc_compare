@@ -12,6 +12,7 @@ public final class KeyguardService_Factory implements Factory<KeyguardService> {
         this.keyguardLifecyclesDispatcherProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardService get() {
         return provideInstance(this.keyguardViewMediatorProvider, this.keyguardLifecyclesDispatcherProvider);
     }

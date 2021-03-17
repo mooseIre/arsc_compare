@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class AssistModule_ProvideBackgroundHandlerFactory implements Factory<Handler> {
     private static final AssistModule_ProvideBackgroundHandlerFactory INSTANCE = new AssistModule_ProvideBackgroundHandlerFactory();
 
+    @Override // javax.inject.Provider
     public Handler get() {
         return provideInstance();
     }

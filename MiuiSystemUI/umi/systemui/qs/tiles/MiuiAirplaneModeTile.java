@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     private boolean mListening;
     private final GlobalSetting mSetting;
-    /* access modifiers changed from: private */
-    public int mTargetValue;
+    private int mTargetValue;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 112;
     }
@@ -29,6 +29,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
     public MiuiAirplaneModeTile(@Nullable QSHost qSHost) {
         super(qSHost);
         AnonymousClass1 r4 = new GlobalSetting(this, this.mContext, this.mHandler, "airplane_mode_on") {
+            /* class com.android.systemui.qs.tiles.MiuiAirplaneModeTile.AnonymousClass1 */
             final /* synthetic */ MiuiAirplaneModeTile this$0;
 
             {
@@ -36,6 +37,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
             }
 
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.qs.GlobalSetting
             public void handleValueChanged(int i) {
                 this.this$0.mTargetValue = i;
                 this.this$0.handleRefreshState(Integer.valueOf(i));
@@ -45,11 +47,13 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
         this.mTargetValue = r4.getValue();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     @NotNull
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         int value = this.mSetting.getValue();
         if (value != this.mTargetValue) {
@@ -74,11 +78,13 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
         throw new TypeCastException("null cannot be cast to non-null type android.net.ConnectivityManager");
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     @NotNull
     public Intent getLongClickIntent() {
         return new Intent("android.settings.AIRPLANE_MODE_SETTINGS");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     @NotNull
     public CharSequence getTileLabel() {
         String string = this.mContext.getString(C0021R$string.airplane_mode);
@@ -115,6 +121,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     @NotNull
     public String composeChangeAnnouncement() {
         TState tstate = this.mState;
@@ -132,6 +139,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         if (this.mListening != z) {

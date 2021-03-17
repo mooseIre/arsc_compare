@@ -14,15 +14,18 @@ import com.android.systemui.statusbar.policy.FlashlightController;
 public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements FlashlightController.FlashlightListener {
     private final FlashlightController mFlashlightController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowActionModeOverlay;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleLongClick() {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
     }
 
@@ -33,25 +36,30 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         QSTile.BooleanState booleanState = new QSTile.BooleanState();
         booleanState.handlesLongClick = false;
         return booleanState;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.media.action.STILL_IMAGE_CAMERA");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mFlashlightController.hasFlashlight();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (!ActivityManager.isUserAMonkey()) {
             boolean z = !((QSTile.BooleanState) this.mState).value;
@@ -60,6 +68,7 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_flashlight_label);
     }
@@ -91,7 +100,7 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
         }
         booleanState.icon = QSTileImpl.ResourceIcon.get(i);
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
@@ -101,6 +110,7 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_flashlight_changed_on);
@@ -108,14 +118,17 @@ public class FlashlightTile extends QSTileImpl<QSTile.BooleanState> implements F
         return this.mContext.getString(C0021R$string.accessibility_quick_settings_flashlight_changed_off);
     }
 
+    @Override // com.android.systemui.statusbar.policy.FlashlightController.FlashlightListener
     public void onFlashlightChanged(boolean z) {
         refreshState(Boolean.valueOf(z));
     }
 
+    @Override // com.android.systemui.statusbar.policy.FlashlightController.FlashlightListener
     public void onFlashlightError() {
         refreshState(Boolean.FALSE);
     }
 
+    @Override // com.android.systemui.statusbar.policy.FlashlightController.FlashlightListener
     public void onFlashlightAvailabilityChanged(boolean z) {
         refreshState();
     }

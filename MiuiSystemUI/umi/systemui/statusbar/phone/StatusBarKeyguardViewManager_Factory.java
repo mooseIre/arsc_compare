@@ -39,6 +39,7 @@ public final class StatusBarKeyguardViewManager_Factory implements Factory<Statu
         this.notificationMediaManagerProvider = provider11;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarKeyguardViewManager get() {
         return provideInstance(this.contextProvider, this.callbackProvider, this.lockPatternUtilsProvider, this.sysuiStatusBarStateControllerProvider, this.configurationControllerProvider, this.keyguardUpdateMonitorProvider, this.navigationModeControllerProvider, this.dockManagerProvider, this.notificationShadeWindowControllerProvider, this.keyguardStateControllerProvider, this.notificationMediaManagerProvider);
     }

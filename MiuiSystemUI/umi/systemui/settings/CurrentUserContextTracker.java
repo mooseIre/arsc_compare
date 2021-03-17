@@ -19,12 +19,14 @@ public final class CurrentUserContextTracker {
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher, "broadcastDispatcher");
         this.sysuiContext = context;
         this.userTracker = new CurrentUserTracker(this, broadcastDispatcher, broadcastDispatcher) {
+            /* class com.android.systemui.settings.CurrentUserContextTracker.AnonymousClass1 */
             final /* synthetic */ CurrentUserContextTracker this$0;
 
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.settings.CurrentUserTracker
             public void onUserSwitched(int i) {
                 this.this$0.handleUserSwitched(i);
             }

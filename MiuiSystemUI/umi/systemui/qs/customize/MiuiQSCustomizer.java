@@ -41,8 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MiuiQSCustomizer extends LinearLayout {
-    /* access modifiers changed from: private */
-    public boolean isShown;
+    private boolean isShown;
     private Animator.AnimatorListener mAnimInListener;
     private Animator.AnimatorListener mAnimOutListener;
     private final QSDetailClipper mClipper;
@@ -50,44 +49,44 @@ public class MiuiQSCustomizer extends LinearLayout {
     private boolean mCustomizing;
     protected TextView mDoneButton;
     private final Animator.AnimatorListener mExpandAnimationListener = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass3 */
+
         public void onAnimationEnd(Animator animator) {
             if (MiuiQSCustomizer.this.isShown) {
                 MiuiQSCustomizer.this.setCustomizing(true);
             }
-            boolean unused = MiuiQSCustomizer.this.mOpening = false;
+            MiuiQSCustomizer.this.mOpening = false;
             MiuiQSCustomizer.this.mNotifQsContainer.setCustomizerAnimating(false);
         }
 
         public void onAnimationCancel(Animator animator) {
-            boolean unused = MiuiQSCustomizer.this.mOpening = false;
+            MiuiQSCustomizer.this.mOpening = false;
             MiuiQSCustomizer.this.mNotifQsContainer.setCustomizerAnimating(false);
         }
     };
     protected RelativeLayout mHeader;
     private QSTileHost mHost;
     private final KeyguardStateController.Callback mKeyguardCallback = new KeyguardStateController.Callback() {
+        /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onKeyguardShowingChanged() {
             if (MiuiQSCustomizer.this.isAttachedToWindow() && MiuiQSCustomizer.this.mKeyguardStateController.isShowing() && !MiuiQSCustomizer.this.mOpening) {
                 MiuiQSCustomizer.this.hide();
             }
         }
     };
-    /* access modifiers changed from: private */
-    public KeyguardStateController mKeyguardStateController;
+    private KeyguardStateController mKeyguardStateController;
     private final LightBarController mLightBarController;
-    /* access modifiers changed from: private */
-    public NotificationsQuickSettingsContainer mNotifQsContainer;
-    /* access modifiers changed from: private */
-    public boolean mOpening;
+    private NotificationsQuickSettingsContainer mNotifQsContainer;
+    private boolean mOpening;
     protected QSPanelCallback mQsPanelCallback;
-    /* access modifiers changed from: private */
-    public RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     protected TextView mResetButton;
     private final ScreenLifecycle mScreenLifecycle;
     private int mSpanCount;
     protected TextView mSubTitle;
-    /* access modifiers changed from: private */
-    public MiuiTileAdapter mTileAdapter;
+    private MiuiTileAdapter mTileAdapter;
     private final TileQueryHelper mTileQueryHelper;
     protected TextView mTitle;
     private UiEventLogger mUiEventLogger = new UiEventLoggerImpl();
@@ -104,6 +103,8 @@ public class MiuiQSCustomizer extends LinearLayout {
     public MiuiQSCustomizer(Context context, AttributeSet attributeSet, LightBarController lightBarController, KeyguardStateController keyguardStateController, ScreenLifecycle screenLifecycle, TileQueryHelper tileQueryHelper, UiEventLogger uiEventLogger) {
         super(new ContextThemeWrapper(context, C0022R$style.edit_theme), attributeSet);
         AnonymousClass4 r3 = new AnimatorListenerAdapter() {
+            /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass4 */
+
             public void onAnimationEnd(Animator animator) {
                 if (!MiuiQSCustomizer.this.isShown) {
                     MiuiQSCustomizer.this.setVisibility(8);
@@ -123,11 +124,14 @@ public class MiuiQSCustomizer extends LinearLayout {
         this.mAnimInListener = this.mExpandAnimationListener;
         this.mAnimOutListener = r3;
         this.mQsPanelCallback = new QSPanelCallback() {
+            /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass5 */
+
+            @Override // com.android.systemui.qs.customize.MiuiQSCustomizer.QSPanelCallback
             public void hide(int i, int i2, boolean z) {
                 MiuiQSCustomizer.this.hide(z);
             }
         };
-        this.mSpanCount = Math.max(1, this.mContext.getResources().getInteger(C0016R$integer.quick_settings_num_columns));
+        this.mSpanCount = Math.max(1, ((LinearLayout) this).mContext.getResources().getInteger(C0016R$integer.quick_settings_num_columns));
         LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_customize_panel_content, this);
         this.mClipper = new QSDetailClipper(findViewById(C0015R$id.customize_container));
         this.mRecyclerView = (RecyclerView) findViewById(16908298);
@@ -155,7 +159,7 @@ public class MiuiQSCustomizer extends LinearLayout {
         this.mSubTitle.setText(C0021R$string.drag_to_add_tiles);
         this.mResetButton.setText(17041224);
         this.mDoneButton.setText(C0021R$string.quick_settings_done);
-        Resources resources = this.mContext.getResources();
+        Resources resources = ((LinearLayout) this).mContext.getResources();
         int max = Math.max(1, resources.getInteger(C0016R$integer.quick_settings_num_columns));
         if (this.mSpanCount != max) {
             if (resources.getConfiguration().orientation == 1) {
@@ -182,7 +186,7 @@ public class MiuiQSCustomizer extends LinearLayout {
         if (!this.isShown) {
             this.mX = i;
             this.mY = i2;
-            announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_desc_quick_settings_edit));
+            announceForAccessibility(((LinearLayout) this).mContext.getString(C0021R$string.accessibility_desc_quick_settings_edit));
             this.mUiEventLogger.log(QSEditEvent.QS_EDIT_OPEN);
             this.isShown = true;
             this.mOpening = true;
@@ -230,7 +234,8 @@ public class MiuiQSCustomizer extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void setCustomizing(boolean z) {
+    /* access modifiers changed from: public */
+    private void setCustomizing(boolean z) {
         this.mCustomizing = z;
     }
 
@@ -241,14 +246,14 @@ public class MiuiQSCustomizer extends LinearLayout {
     private void reset() {
         MiuiTileAdapter miuiTileAdapter = this.mTileAdapter;
         QSTileHost qSTileHost = this.mHost;
-        miuiTileAdapter.resetTileSpecs(qSTileHost, qSTileHost.getHostInjector().getMiuiDefaultTiles(this.mContext));
+        miuiTileAdapter.resetTileSpecs(qSTileHost, qSTileHost.getHostInjector().getMiuiDefaultTiles(((LinearLayout) this).mContext));
     }
 
     private void setTileSpecs() {
         ArrayList arrayList = new ArrayList();
-        for (QSTile next : this.mHost.getTiles()) {
-            if (!"edit".equals(next.getTileSpec())) {
-                arrayList.add(next.getTileSpec());
+        for (QSTile qSTile : this.mHost.getTiles()) {
+            if (!"edit".equals(qSTile.getTileSpec())) {
+                arrayList.add(qSTile.getTileSpec());
             }
         }
         this.mTileAdapter.setTileSpecs(arrayList);
@@ -273,6 +278,8 @@ public class MiuiQSCustomizer extends LinearLayout {
         if (bundle.getBoolean("qs_customizing")) {
             setVisibility(0);
             addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass1 */
+
                 public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                     MiuiQSCustomizer.this.removeOnLayoutChangeListener(this);
                     MiuiQSCustomizer.this.showImmediately();
@@ -286,6 +293,8 @@ public class MiuiQSCustomizer extends LinearLayout {
         this.mResetButton = textView;
         textView.setText(C0021R$string.reset);
         this.mResetButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.qs.customize.$$Lambda$MiuiQSCustomizer$eQKhGYeggWS8XRQpmH9qHZQpl7M */
+
             public final void onClick(View view) {
                 MiuiQSCustomizer.this.lambda$initMiuiAddedView$0$MiuiQSCustomizer(view);
             }
@@ -294,6 +303,8 @@ public class MiuiQSCustomizer extends LinearLayout {
         this.mDoneButton = textView2;
         textView2.setText(C0021R$string.quick_settings_done);
         this.mDoneButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.qs.customize.$$Lambda$MiuiQSCustomizer$3kV5KpVJpOJfqoQ1ScSLLoaadek */
+
             public final void onClick(View view) {
                 MiuiQSCustomizer.this.lambda$initMiuiAddedView$1$MiuiQSCustomizer(view);
             }
@@ -319,6 +330,9 @@ public class MiuiQSCustomizer extends LinearLayout {
 
     private void updateLayout() {
         AnonymousClass6 r0 = new GridLayoutManager(this, getContext(), this.mSpanCount) {
+            /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass6 */
+
+            @Override // androidx.recyclerview.widget.GridLayoutManager, androidx.recyclerview.widget.RecyclerView.LayoutManager
             public void onInitializeAccessibilityNodeInfoForItem(RecyclerView.Recycler recycler, RecyclerView.State state, View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
             }
         };
@@ -339,7 +353,7 @@ public class MiuiQSCustomizer extends LinearLayout {
                 this.mClipper.animateCircularClip(this.mX, this.mY, false, this.mAnimOutListener);
             } else {
                 setVisibility(8);
-                this.mAnimOutListener.onAnimationEnd((Animator) null);
+                this.mAnimOutListener.onAnimationEnd(null);
             }
             this.mNotifQsContainer.setCustomizerAnimating(z);
             this.mNotifQsContainer.setCustomizerShowing(false);

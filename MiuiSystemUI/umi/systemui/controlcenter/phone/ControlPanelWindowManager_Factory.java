@@ -25,6 +25,7 @@ public final class ControlPanelWindowManager_Factory implements Factory<ControlP
         this.miuiNotificationShadePolicyProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public ControlPanelWindowManager get() {
         return provideInstance(this.contextProvider, this.statusBarProvider, this.controlPanelControllerProvider, this.headsUpManagerPhoneProvider, this.statusBarStateControllerProvider, this.miuiNotificationShadePolicyProvider);
     }

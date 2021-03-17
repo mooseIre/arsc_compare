@@ -5,7 +5,7 @@ import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 
 public interface NotificationActivityStarter {
-    boolean isCollapsingToShowActivityOverLockscreen() {
+    default boolean isCollapsingToShowActivityOverLockscreen() {
         return false;
     }
 

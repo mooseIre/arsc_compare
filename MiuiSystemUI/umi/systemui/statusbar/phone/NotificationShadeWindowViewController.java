@@ -38,67 +38,45 @@ import java.io.PrintWriter;
 
 public class NotificationShadeWindowViewController {
     private PhoneStatusBarTransitions mBarTransitions;
-    /* access modifiers changed from: private */
-    public View mBrightnessMirror;
-    /* access modifiers changed from: private */
-    public ControlPanelWindowManager mControlPanelWindowManager;
+    private View mBrightnessMirror;
+    private ControlPanelWindowManager mControlPanelWindowManager;
     private final NotificationShadeDepthController mDepthController;
-    /* access modifiers changed from: private */
-    public final DockManager mDockManager;
-    /* access modifiers changed from: private */
-    public boolean mDoubleTapEnabled;
-    /* access modifiers changed from: private */
-    public DragDownHelper mDragDownHelper;
-    /* access modifiers changed from: private */
-    public boolean mExpandAnimationPending;
-    /* access modifiers changed from: private */
-    public boolean mExpandAnimationRunning;
-    /* access modifiers changed from: private */
-    public boolean mExpandingBelowNotch;
-    /* access modifiers changed from: private */
-    public final FalsingManager mFalsingManager;
-    /* access modifiers changed from: private */
-    public GestureDetector mGestureDetector;
-    /* access modifiers changed from: private */
-    public boolean mIsTrackingBarGesture = false;
-    /* access modifiers changed from: private */
-    public MiuiKeyguardMediaController mKeyguardMediaController;
-    /* access modifiers changed from: private */
-    public NCSwitchController mNCSwitchController;
-    /* access modifiers changed from: private */
-    public final NotificationPanelViewController mNotificationPanelViewController;
+    private final DockManager mDockManager;
+    private boolean mDoubleTapEnabled;
+    private DragDownHelper mDragDownHelper;
+    private boolean mExpandAnimationPending;
+    private boolean mExpandAnimationRunning;
+    private boolean mExpandingBelowNotch;
+    private final FalsingManager mFalsingManager;
+    private GestureDetector mGestureDetector;
+    private boolean mIsTrackingBarGesture = false;
+    private MiuiKeyguardMediaController mKeyguardMediaController;
+    private NCSwitchController mNCSwitchController;
+    private final NotificationPanelViewController mNotificationPanelViewController;
     private NotificationShadeWindowController mNotificationShadeWindowController;
-    /* access modifiers changed from: private */
-    public StatusBar mService;
-    /* access modifiers changed from: private */
-    public boolean mSingleTapEnabled;
-    /* access modifiers changed from: private */
-    public NotificationStackScrollLayout mStackScrollLayout;
-    /* access modifiers changed from: private */
-    public final SysuiStatusBarStateController mStatusBarStateController;
-    /* access modifiers changed from: private */
-    public PhoneStatusBarView mStatusBarView;
+    private StatusBar mService;
+    private boolean mSingleTapEnabled;
+    private NotificationStackScrollLayout mStackScrollLayout;
+    private final SysuiStatusBarStateController mStatusBarStateController;
+    private PhoneStatusBarView mStatusBarView;
     private final SuperStatusBarViewFactory mStatusBarViewFactory;
     private int[] mTempLocation = new int[2];
     private RectF mTempRect = new RectF();
     private boolean mTouchActive;
-    /* access modifiers changed from: private */
-    public boolean mTouchCancelled;
+    private boolean mTouchCancelled;
     private final TunerService mTunerService;
-    /* access modifiers changed from: private */
-    public final NotificationShadeWindowView mView;
+    private final NotificationShadeWindowView mView;
 
     public NotificationShadeWindowViewController(InjectionInflationController injectionInflationController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, PulseExpansionHandler pulseExpansionHandler, DynamicPrivacyController dynamicPrivacyController, KeyguardBypassController keyguardBypassController, FalsingManager falsingManager, PluginManager pluginManager, TunerService tunerService, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationEntryManager notificationEntryManager, KeyguardStateController keyguardStateController, SysuiStatusBarStateController sysuiStatusBarStateController, DozeLog dozeLog, DozeParameters dozeParameters, CommandQueue commandQueue, ShadeController shadeController, DockManager dockManager, NotificationShadeDepthController notificationShadeDepthController, NotificationShadeWindowView notificationShadeWindowView, MiuiNotificationPanelViewController miuiNotificationPanelViewController, SuperStatusBarViewFactory superStatusBarViewFactory, ControlPanelWindowManager controlPanelWindowManager, NCSwitchController nCSwitchController, MiuiKeyguardMediaController miuiKeyguardMediaController) {
-        NotificationShadeWindowView notificationShadeWindowView2 = notificationShadeWindowView;
         this.mFalsingManager = falsingManager;
         this.mTunerService = tunerService;
         this.mStatusBarStateController = sysuiStatusBarStateController;
-        this.mView = notificationShadeWindowView2;
+        this.mView = notificationShadeWindowView;
         this.mDockManager = dockManager;
         this.mNotificationPanelViewController = miuiNotificationPanelViewController;
         this.mDepthController = notificationShadeDepthController;
         this.mStatusBarViewFactory = superStatusBarViewFactory;
-        this.mBrightnessMirror = notificationShadeWindowView2.findViewById(C0015R$id.brightness_mirror);
+        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C0015R$id.brightness_mirror);
         this.mControlPanelWindowManager = controlPanelWindowManager;
         this.mNCSwitchController = nCSwitchController;
         this.mKeyguardMediaController = miuiKeyguardMediaController;
@@ -107,11 +85,16 @@ public class NotificationShadeWindowViewController {
     public void setupExpandedStatusBar() {
         this.mStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C0015R$id.notification_stack_scroller);
         this.mTunerService.addTunable(new TunerService.Tunable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationShadeWindowViewController$Glv885_kOTqMlucxR_8golqdvI */
+
+            @Override // com.android.systemui.tuner.TunerService.Tunable
             public final void onTuningChanged(String str, String str2) {
                 NotificationShadeWindowViewController.this.lambda$setupExpandedStatusBar$0$NotificationShadeWindowViewController(str, str2);
             }
         }, "doze_pulse_on_double_tap", "doze_tap_gesture");
         this.mGestureDetector = new GestureDetector(this.mView.getContext(), new GestureDetector.SimpleOnGestureListener() {
+            /* class com.android.systemui.statusbar.phone.NotificationShadeWindowViewController.AnonymousClass1 */
+
             public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
                 if (!NotificationShadeWindowViewController.this.mSingleTapEnabled || NotificationShadeWindowViewController.this.mDockManager.isDocked()) {
                     return false;
@@ -129,14 +112,17 @@ public class NotificationShadeWindowViewController {
             }
         });
         this.mView.setInteractionEventHandler(new NotificationShadeWindowView.InteractionEventHandler() {
+            /* class com.android.systemui.statusbar.phone.NotificationShadeWindowViewController.AnonymousClass2 */
+
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public Boolean handleDispatchTouchEvent(MotionEvent motionEvent) {
                 Boolean bool = Boolean.FALSE;
                 boolean z = motionEvent.getActionMasked() == 0;
                 boolean z2 = motionEvent.getActionMasked() == 1;
                 boolean z3 = motionEvent.getActionMasked() == 3;
-                boolean access$500 = NotificationShadeWindowViewController.this.mExpandingBelowNotch;
+                boolean z4 = NotificationShadeWindowViewController.this.mExpandingBelowNotch;
                 if (z2 || z3) {
-                    boolean unused = NotificationShadeWindowViewController.this.mExpandingBelowNotch = false;
+                    NotificationShadeWindowViewController.this.mExpandingBelowNotch = false;
                 }
                 if (NotificationShadeWindowViewController.this.mControlPanelWindowManager.getTransToControlPanel()) {
                     ((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent);
@@ -152,7 +138,7 @@ public class NotificationShadeWindowViewController {
                     }
                     if (z) {
                         NotificationShadeWindowViewController.this.setTouchActive(true);
-                        boolean unused2 = NotificationShadeWindowViewController.this.mTouchCancelled = false;
+                        NotificationShadeWindowViewController.this.mTouchCancelled = false;
                     } else if (motionEvent.getActionMasked() == 1 || motionEvent.getActionMasked() == 3) {
                         NotificationShadeWindowViewController.this.setTouchActive(false);
                     }
@@ -171,10 +157,10 @@ public class NotificationShadeWindowViewController {
                         NotificationShadeWindowViewController.this.mService.mDozeScrimController.extendPulse();
                     }
                     if (z && motionEvent.getY() >= ((float) NotificationShadeWindowViewController.this.mView.getBottom())) {
-                        boolean unused3 = NotificationShadeWindowViewController.this.mExpandingBelowNotch = true;
-                        access$500 = true;
+                        NotificationShadeWindowViewController.this.mExpandingBelowNotch = true;
+                        z4 = true;
                     }
-                    if (access$500) {
+                    if (z4) {
                         return Boolean.valueOf(NotificationShadeWindowViewController.this.mStatusBarView.dispatchTouchEvent(motionEvent));
                     }
                     if (!NotificationShadeWindowViewController.this.mIsTrackingBarGesture && z && NotificationShadeWindowViewController.this.mNotificationPanelViewController.isFullyCollapsed()) {
@@ -187,20 +173,21 @@ public class NotificationShadeWindowViewController {
                         if (!NotificationShadeWindowViewController.this.mService.isSameStatusBarState(0)) {
                             return Boolean.TRUE;
                         }
-                        boolean unused4 = NotificationShadeWindowViewController.this.mIsTrackingBarGesture = true;
+                        NotificationShadeWindowViewController.this.mIsTrackingBarGesture = true;
                         return Boolean.valueOf(NotificationShadeWindowViewController.this.mStatusBarView.dispatchTouchEvent(motionEvent));
                     } else if (!NotificationShadeWindowViewController.this.mIsTrackingBarGesture) {
                         return null;
                     } else {
                         boolean dispatchTouchEvent = NotificationShadeWindowViewController.this.mStatusBarView.dispatchTouchEvent(motionEvent);
                         if (z2 || z3) {
-                            boolean unused5 = NotificationShadeWindowViewController.this.mIsTrackingBarGesture = false;
+                            NotificationShadeWindowViewController.this.mIsTrackingBarGesture = false;
                         }
                         return Boolean.valueOf(dispatchTouchEvent);
                     }
                 }
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public boolean shouldInterceptTouchEvent(MotionEvent motionEvent) {
                 if (NotificationShadeWindowViewController.this.mStatusBarStateController.isDozing() && !NotificationShadeWindowViewController.this.mService.isPulsing() && !NotificationShadeWindowViewController.this.mDockManager.isDocked()) {
                     return true;
@@ -214,6 +201,7 @@ public class NotificationShadeWindowViewController {
                 return NotificationShadeWindowViewController.this.mDragDownHelper.onInterceptTouchEvent(motionEvent);
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public void didIntercept(MotionEvent motionEvent) {
                 MotionEvent obtain = MotionEvent.obtain(motionEvent);
                 obtain.setAction(3);
@@ -222,6 +210,7 @@ public class NotificationShadeWindowViewController {
                 obtain.recycle();
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public boolean handleTouchEvent(MotionEvent motionEvent) {
                 if (NotificationShadeWindowViewController.this.mNCSwitchController.handleNCSwitchTouch(motionEvent)) {
                     return true;
@@ -233,6 +222,7 @@ public class NotificationShadeWindowViewController {
                 return ((!NotificationShadeWindowViewController.this.mDragDownHelper.isDragDownEnabled() || z) && !NotificationShadeWindowViewController.this.mDragDownHelper.isDraggingDown()) ? z : NotificationShadeWindowViewController.this.mDragDownHelper.onTouchEvent(motionEvent);
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public void didNotHandleTouchEvent(MotionEvent motionEvent) {
                 int actionMasked = motionEvent.getActionMasked();
                 if (actionMasked == 1 || actionMasked == 3) {
@@ -240,10 +230,12 @@ public class NotificationShadeWindowViewController {
                 }
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public boolean interceptMediaKey(KeyEvent keyEvent) {
                 return NotificationShadeWindowViewController.this.mService.interceptMediaKey(keyEvent);
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowView.InteractionEventHandler
             public boolean dispatchKeyEvent(KeyEvent keyEvent) {
                 boolean z = keyEvent.getAction() == 0;
                 int keyCode = keyEvent.getKeyCode();
@@ -269,12 +261,14 @@ public class NotificationShadeWindowViewController {
             }
         });
         this.mView.setOnHierarchyChangeListener(new ViewGroup.OnHierarchyChangeListener() {
+            /* class com.android.systemui.statusbar.phone.NotificationShadeWindowViewController.AnonymousClass3 */
+
             public void onChildViewRemoved(View view, View view2) {
             }
 
             public void onChildViewAdded(View view, View view2) {
                 if (view2.getId() == C0015R$id.brightness_mirror) {
-                    View unused = NotificationShadeWindowViewController.this.mBrightnessMirror = view2;
+                    NotificationShadeWindowViewController.this.mBrightnessMirror = view2;
                 }
             }
         });
@@ -408,7 +402,8 @@ public class NotificationShadeWindowViewController {
     }
 
     /* access modifiers changed from: private */
-    public boolean isIntersecting(View view, float f, float f2) {
+    /* access modifiers changed from: public */
+    private boolean isIntersecting(View view, float f, float f2) {
         int[] locationOnScreen = view.getLocationOnScreen();
         this.mTempLocation = locationOnScreen;
         this.mTempRect.set((float) locationOnScreen[0], (float) locationOnScreen[1], (float) (locationOnScreen[0] + view.getWidth()), (float) (this.mTempLocation[1] + view.getHeight()));

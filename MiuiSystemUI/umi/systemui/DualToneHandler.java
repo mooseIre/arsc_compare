@@ -80,8 +80,9 @@ public final class DualToneHandler {
         throw null;
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: DualToneHandler.kt */
-    private static final class Color {
+    public static final class Color {
         private final int background;
         private final int fill;
         private final int single;

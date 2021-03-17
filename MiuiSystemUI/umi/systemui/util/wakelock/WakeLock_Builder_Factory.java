@@ -12,6 +12,7 @@ public final class WakeLock_Builder_Factory implements Factory<WakeLock.Builder>
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public WakeLock.Builder get() {
         return provideInstance(this.contextProvider);
     }

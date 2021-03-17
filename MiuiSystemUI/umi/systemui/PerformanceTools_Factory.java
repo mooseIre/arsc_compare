@@ -14,6 +14,7 @@ public final class PerformanceTools_Factory implements Factory<PerformanceTools>
         this.memoryMonitorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PerformanceTools get() {
         return provideInstance(this.viewLeakMonitorProvider, this.memoryMonitorProvider);
     }

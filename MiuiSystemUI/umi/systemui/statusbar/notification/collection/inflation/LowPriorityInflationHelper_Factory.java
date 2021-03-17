@@ -17,6 +17,7 @@ public final class LowPriorityInflationHelper_Factory implements Factory<LowPrio
         this.rowContentBindStageProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public LowPriorityInflationHelper get() {
         return provideInstance(this.featureFlagsProvider, this.groupManagerProvider, this.rowContentBindStageProvider);
     }

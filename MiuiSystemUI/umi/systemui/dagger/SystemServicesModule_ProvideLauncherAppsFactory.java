@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideLauncherAppsFactory implements Fa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public LauncherApps get() {
         return provideInstance(this.contextProvider);
     }

@@ -9,8 +9,11 @@ import android.widget.TextView;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,21 +23,25 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
     private ViewGroup contents;
     private TextView label;
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     @Nullable
     public NotificationMenuRowPlugin createMenu() {
         return null;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     @Nullable
     public View findSecondaryView() {
         return null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     public boolean hasFinishedInitialization() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView, com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean needsClippingToShelf() {
         return true;
     }
@@ -56,6 +63,7 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public void onFinishInflate() {
         View requireViewById = requireViewById(C0015R$id.people_list);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.people_list)");
@@ -85,6 +93,7 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     @NotNull
     public View findContentView() {
         ViewGroup viewGroup = this.contents;
@@ -95,10 +104,12 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     public void resetTranslation() {
         setTranslationX(0.0f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView, com.android.systemui.statusbar.notification.row.ExpandableView
     public void setTranslation(float f) {
         if (this.canSwipe) {
             super.setTranslation(f);
@@ -120,20 +131,19 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void applyContentTransformation(float f, float f2) {
         super.applyContentTransformation(f, f2);
         ViewGroup viewGroup = this.contents;
         if (viewGroup != null) {
             int childCount = viewGroup.getChildCount();
-            int i = 0;
-            while (i < childCount) {
+            for (int i = 0; i < childCount; i++) {
                 ViewGroup viewGroup2 = this.contents;
                 if (viewGroup2 != null) {
                     View childAt = viewGroup2.getChildAt(i);
                     Intrinsics.checkExpressionValueIsNotNull(childAt, "view");
                     childAt.setAlpha(f);
                     childAt.setTranslationY(f2);
-                    i++;
                 } else {
                     Intrinsics.throwUninitializedPropertyAccessException("contents");
                     throw null;
@@ -145,8 +155,9 @@ public final class PeopleHubView extends StackScrollerDecorView implements Swipe
         throw null;
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: PeopleHubView.kt */
-    private final class PersonDataListenerImpl {
+    public final class PersonDataListenerImpl {
         @NotNull
         private final ImageView avatarView;
 

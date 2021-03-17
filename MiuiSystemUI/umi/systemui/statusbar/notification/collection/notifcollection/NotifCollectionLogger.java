@@ -180,7 +180,8 @@ public final class NotifCollectionLogger {
         if (!logBuffer2.getFrozen()) {
             logBuffer2.push(logBuffer2.obtain("NotifCollection", logLevel2, notifCollectionLogger$logRankingMissing$4));
         }
-        for (String str2 : rankingMap.getOrderedKeys()) {
+        String[] orderedKeys = rankingMap.getOrderedKeys();
+        for (String str2 : orderedKeys) {
             LogBuffer logBuffer3 = this.buffer;
             LogLevel logLevel3 = LogLevel.DEBUG;
             NotifCollectionLogger$logRankingMissing$6 notifCollectionLogger$logRankingMissing$6 = NotifCollectionLogger$logRankingMissing$6.INSTANCE;

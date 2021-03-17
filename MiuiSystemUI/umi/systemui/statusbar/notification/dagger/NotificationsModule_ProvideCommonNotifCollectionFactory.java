@@ -21,6 +21,7 @@ public final class NotificationsModule_ProvideCommonNotifCollectionFactory imple
         this.entryManagerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public CommonNotifCollection get() {
         return provideInstance(this.featureFlagsProvider, this.pipelineProvider, this.entryManagerProvider);
     }

@@ -7,7 +7,7 @@ import com.android.systemui.qs.tiles.UserDetailItemView;
 
 public class KeyguardUserDetailItemView extends UserDetailItemView {
     public KeyguardUserDetailItemView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardUserDetailItemView(Context context, AttributeSet attributeSet) {
@@ -23,6 +23,7 @@ public class KeyguardUserDetailItemView extends UserDetailItemView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tiles.UserDetailItemView
     public int getFontSizeDimen() {
         return C0012R$dimen.kg_user_switcher_text_size;
     }

@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class EnhancedEstimatesImpl_Factory implements Factory<EnhancedEstimatesImpl> {
     private static final EnhancedEstimatesImpl_Factory INSTANCE = new EnhancedEstimatesImpl_Factory();
 
+    @Override // javax.inject.Provider
     public EnhancedEstimatesImpl get() {
         return provideInstance();
     }

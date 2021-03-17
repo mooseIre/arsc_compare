@@ -54,6 +54,7 @@ public class NotifPipelineInitializer implements Dumpable {
         Log.d("NotifPipeline", "Notif pipeline initialized");
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         this.mNotifViewManager.dump(fileDescriptor, printWriter, strArr);
         this.mNotifPluggableCoordinators.dump(fileDescriptor, printWriter, strArr);

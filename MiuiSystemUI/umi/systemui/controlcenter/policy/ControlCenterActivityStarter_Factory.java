@@ -11,6 +11,7 @@ public final class ControlCenterActivityStarter_Factory implements Factory<Contr
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ControlCenterActivityStarter get() {
         return provideInstance(this.contextProvider);
     }

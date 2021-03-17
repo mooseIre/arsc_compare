@@ -8,6 +8,7 @@ import com.google.protobuf.nano.MessageNano;
 import java.util.List;
 
 public class NotificationPanelLoggerImpl implements NotificationPanelLogger {
+    @Override // com.android.systemui.statusbar.notification.logging.NotificationPanelLogger
     public void logPanelShown(boolean z, List<NotificationEntry> list) {
         Notifications$NotificationList notificationProto = NotificationPanelLogger.toNotificationProto(list);
         SysUiStatsLog.write(245, NotificationPanelLogger.NotificationPanelEvent.fromLockscreen(z).getId(), notificationProto.notifications.length, MessageNano.toByteArray(notificationProto));

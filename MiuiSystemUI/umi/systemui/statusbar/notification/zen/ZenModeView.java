@@ -22,6 +22,7 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
     private ViewGroup mContent;
     public ZenModeViewController mController;
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     public NotificationMenuRowPlugin createMenu() {
         return null;
     }
@@ -30,13 +31,16 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     public boolean hasFinishedInitialization() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void performAddAnimation(long j, long j2, boolean z) {
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter) {
         return 0;
     }
@@ -51,6 +55,8 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
         ViewGroup viewGroup = (ViewGroup) findViewById(C0015R$id.content);
         this.mContent = viewGroup;
         viewGroup.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.zen.$$Lambda$ZenModeView$_6oqLxuLrd6dpOtYMGRgCl0UadQ */
+
             public final void onClick(View view) {
                 ZenModeView.this.lambda$onFinishInflate$0$ZenModeView(view);
             }
@@ -86,6 +92,8 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
 
     private void loadContentViews() {
         ((TextView) LayoutInflater.from(getContext()).inflate(C0017R$layout.item_zen_mode, this.mContent, true).findViewById(C0015R$id.zen_quit)).setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.zen.$$Lambda$ZenModeView$IX1IT9wvL5wir1_ziDkIeeeOlqA */
+
             public final void onClick(View view) {
                 ZenModeView.this.lambda$loadContentViews$1$ZenModeView(view);
             }
@@ -122,15 +130,18 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     public void resetTranslation() {
         setTranslation(0.0f);
         setTransitionAlpha(1.0f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, com.android.systemui.statusbar.notification.stack.SwipeableView
     public void setTranslation(float f) {
         setTranslationX(f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, com.android.systemui.statusbar.notification.stack.SwipeableView
     public float getTranslation() {
         return getTranslationX();
     }

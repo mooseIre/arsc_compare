@@ -23,17 +23,20 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
     private final boolean mAllowAutoDimWallpaperNotVisible;
     private boolean mAutoDim;
     private List<DarkIntensityListener> mDarkIntensityListeners;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = Handler.getMain();
+    private final Handler mHandler = Handler.getMain();
     private final LightBarTransitionsController mLightTransitionsController;
     private boolean mLightsOut;
     private int mNavBarMode = 0;
     private View mNavButtons;
     private final NavigationBarView mView;
     private final IWallpaperVisibilityListener mWallpaperVisibilityListener = new IWallpaperVisibilityListener.Stub() {
+        /* class com.android.systemui.statusbar.phone.NavigationBarTransitions.AnonymousClass1 */
+
         public void onWallpaperVisibilityChanged(boolean z, int i) throws RemoteException {
-            boolean unused = NavigationBarTransitions.this.mWallpaperVisible = z;
+            NavigationBarTransitions.this.mWallpaperVisible = z;
             NavigationBarTransitions.this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarTransitions$1$5foY_Yygo1gW25mVBRpPSQRb_g */
+
                 public final void run() {
                     NavigationBarTransitions.AnonymousClass1.this.lambda$onWallpaperVisibilityChanged$0$NavigationBarTransitions$1();
                 }
@@ -46,8 +49,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
             NavigationBarTransitions.this.applyLightsOut(true, false);
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mWallpaperVisible;
+    private boolean mWallpaperVisible;
 
     public interface DarkIntensityListener {
         void onDarkIntensity(float f);
@@ -64,6 +66,8 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
         } catch (RemoteException unused) {
         }
         this.mView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarTransitions$XJcD0ZRW4UO2juvu7uZcSTj_ILk */
+
             public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 NavigationBarTransitions.this.lambda$new$0$NavigationBarTransitions(view, i, i2, i3, i4, i5, i6, i7, i8);
             }
@@ -109,6 +113,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.BarTransitions
     public boolean isLightsOut(int i) {
         return super.isLightsOut(i) || (this.mAllowAutoDimWallpaperNotVisible && this.mAutoDim && !this.mWallpaperVisible && i != 5);
     }
@@ -118,6 +123,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.BarTransitions
     public void onTransition(int i, int i2, boolean z) {
         super.onTransition(i, i2, z);
         applyLightsOut(z, false);
@@ -125,7 +131,8 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
     }
 
     /* access modifiers changed from: private */
-    public void applyLightsOut(boolean z, boolean z2) {
+    /* access modifiers changed from: public */
+    private void applyLightsOut(boolean z, boolean z2) {
         applyLightsOut(isLightsOut(getMode()), z, z2);
     }
 
@@ -149,6 +156,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
         applyDarkIntensity(this.mLightTransitionsController.getCurrentDarkIntensity());
     }
 
+    @Override // com.android.systemui.statusbar.phone.LightBarTransitionsController.DarkIntensityApplier
     public void applyDarkIntensity(float f) {
         this.mView.applyDarkIntensity(f);
         SparseArray<ButtonDispatcher> buttonDispatchers = this.mView.getButtonDispatchers();
@@ -156,14 +164,15 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
             buttonDispatchers.valueAt(size).setDarkIntensity(f);
         }
         this.mView.getRotationButtonController().setDarkIntensity(f);
-        for (DarkIntensityListener onDarkIntensity : this.mDarkIntensityListeners) {
-            onDarkIntensity.onDarkIntensity(f);
+        for (DarkIntensityListener darkIntensityListener : this.mDarkIntensityListeners) {
+            darkIntensityListener.onDarkIntensity(f);
         }
         if (this.mAutoDim) {
             applyLightsOut(false, true);
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.LightBarTransitionsController.DarkIntensityApplier
     public int getTintAnimationDuration() {
         return Utils.isGesturalModeOnDefaultDisplay(this.mView.getContext(), this.mNavBarMode) ? Math.max(750, 400) : R$styleable.AppCompatTheme_windowFixedHeightMajor;
     }

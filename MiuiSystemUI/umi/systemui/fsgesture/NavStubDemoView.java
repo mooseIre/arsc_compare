@@ -35,30 +35,19 @@ import miui.util.CustomizeUtil;
 
 public class NavStubDemoView extends View {
     public static final String TAG = NavStubDemoView.class.getSimpleName();
-    /* access modifiers changed from: private */
-    public Activity curActivity;
-    /* access modifiers changed from: private */
-    public FsGestureDemoTitleView demoTitleView;
-    /* access modifiers changed from: private */
-    public String demoType;
+    private Activity curActivity;
+    private FsGestureDemoTitleView demoTitleView;
+    private String demoType;
     private int fullyShowStep;
-    /* access modifiers changed from: private */
-    public boolean isFromPro;
-    /* access modifiers changed from: private */
-    public View mAppBgView;
+    private boolean isFromPro;
+    private View mAppBgView;
     private Bitmap mAppIcon;
-    /* access modifiers changed from: private */
-    public View mAppNoteImg;
-    /* access modifiers changed from: private */
-    public View mBgView;
-    /* access modifiers changed from: private */
-    public int mBottomDec;
-    /* access modifiers changed from: private */
-    public float mCurAlpha;
-    /* access modifiers changed from: private */
-    public float mCurScale;
-    /* access modifiers changed from: private */
-    public float mCurrentY;
+    private View mAppNoteImg;
+    private View mBgView;
+    private int mBottomDec;
+    private float mCurAlpha;
+    private float mCurScale;
+    private float mCurrentY;
     private float mDelta;
     private int mDestPivotX;
     private int mDestPivotY;
@@ -67,47 +56,31 @@ public class NavStubDemoView extends View {
     private Bitmap mDragBitmap;
     private Bitmap mDrawBmp;
     private Bitmap mFakeBitmap;
-    /* access modifiers changed from: private */
-    public float mFollowTailX;
-    /* access modifiers changed from: private */
-    public float mFollowTailY;
-    /* access modifiers changed from: private */
-    public Handler mFrameHandler;
-    /* access modifiers changed from: private */
-    public LinearLayout mHomeIconImg;
+    private float mFollowTailX;
+    private float mFollowTailY;
+    private Handler mFrameHandler;
+    private LinearLayout mHomeIconImg;
     private boolean mIsAppToHome;
     private boolean mIsAppToRecents;
     private boolean mIsInFsgAnim;
     private int mLastDownNo;
     private Xfermode mModeSrcIn;
     private Paint mPaint;
-    /* access modifiers changed from: private */
-    public int mPivotLocX;
-    /* access modifiers changed from: private */
-    public int mPivotLocY;
-    /* access modifiers changed from: private */
-    public ValueAnimator mRecentsAnimator;
-    /* access modifiers changed from: private */
-    public View mRecentsBgView;
-    /* access modifiers changed from: private */
-    public LinearLayout mRecentsCardContainer;
+    private int mPivotLocX;
+    private int mPivotLocY;
+    private ValueAnimator mRecentsAnimator;
+    private View mRecentsBgView;
+    private LinearLayout mRecentsCardContainer;
     private Rect mRecentsFirstCardBound;
-    /* access modifiers changed from: private */
-    public View mRecentsFirstCardIconView;
-    /* access modifiers changed from: private */
-    public int mShowHeight;
+    private View mRecentsFirstCardIconView;
+    private int mShowHeight;
     Rect mShowRect;
-    /* access modifiers changed from: private */
-    public int mShowWidth;
-    /* access modifiers changed from: private */
-    public int mStateMode;
+    private int mShowWidth;
+    private int mStateMode;
     private Runnable mTailCatcherTask;
-    /* access modifiers changed from: private */
-    public float mXScale;
-    /* access modifiers changed from: private */
-    public float mYScale;
-    /* access modifiers changed from: private */
-    public FsGestureDemoSwipeView swipeView;
+    private float mXScale;
+    private float mYScale;
+    private FsGestureDemoSwipeView swipeView;
 
     static /* synthetic */ float access$016(NavStubDemoView navStubDemoView, float f) {
         float f2 = navStubDemoView.mFollowTailX + f;
@@ -174,7 +147,7 @@ public class NavStubDemoView extends View {
     }
 
     public NavStubDemoView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public NavStubDemoView(Context context, AttributeSet attributeSet) {
@@ -190,6 +163,8 @@ public class NavStubDemoView extends View {
         this.mFrameHandler = new Handler();
         this.mRecentsFirstCardBound = new Rect();
         this.mTailCatcherTask = new Runnable() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass1 */
+
             public void run() {
                 NavStubDemoView navStubDemoView = NavStubDemoView.this;
                 NavStubDemoView.access$016(navStubDemoView, (((float) navStubDemoView.mPivotLocX) - NavStubDemoView.this.mFollowTailX) / 4.0f);
@@ -200,7 +175,7 @@ public class NavStubDemoView extends View {
                 double sqrt = Math.sqrt((double) ((abs * abs) + (abs2 * abs2)));
                 if (NavStubDemoView.this.mStateMode == 65538) {
                     if (NavStubDemoView.this.mCurrentY < ((float) (NavStubDemoView.this.mShowHeight - 320)) && sqrt < 20.0d) {
-                        int unused = NavStubDemoView.this.mStateMode = 65539;
+                        NavStubDemoView.this.mStateMode = 65539;
                         Log.d(NavStubDemoView.TAG, "current state mode: StateMode.STATE_TASK_HOLD");
                         NavStubDemoView.this.performHapticFeedback(1);
                         NavStubDemoView.this.mRecentsCardContainer.setVisibility(0);
@@ -210,7 +185,7 @@ public class NavStubDemoView extends View {
                         NavStubDemoView.this.mRecentsAnimator.start();
                     }
                 } else if (NavStubDemoView.this.mStateMode == 65539 && NavStubDemoView.this.mCurrentY > ((float) (NavStubDemoView.this.mShowHeight - 240))) {
-                    int unused2 = NavStubDemoView.this.mStateMode = 65538;
+                    NavStubDemoView.this.mStateMode = 65538;
                     if (NavStubDemoView.this.mRecentsAnimator.isRunning() || NavStubDemoView.this.mRecentsAnimator.isStarted()) {
                         NavStubDemoView.this.mRecentsAnimator.cancel();
                     }
@@ -233,10 +208,12 @@ public class NavStubDemoView extends View {
         Paint paint = new Paint();
         this.mPaint = paint;
         paint.setAntiAlias(true);
-        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scale", new float[]{1.1f, 1.05f}), PropertyValuesHolder.ofInt("alpha", new int[]{0, 255})});
+        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(PropertyValuesHolder.ofFloat("scale", 1.1f, 1.05f), PropertyValuesHolder.ofInt("alpha", 0, 255));
         this.mRecentsAnimator = ofPropertyValuesHolder;
         ofPropertyValuesHolder.setInterpolator(new DecelerateInterpolator(1.5f));
         this.mRecentsAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass2 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue("scale")).floatValue();
                 int intValue = ((Integer) valueAnimator.getAnimatedValue("alpha")).intValue();
@@ -245,7 +222,7 @@ public class NavStubDemoView extends View {
                 NavStubDemoView.this.mRecentsCardContainer.setAlpha((float) intValue);
             }
         });
-        this.mRecentsAnimator.setDuration(300);
+        this.mRecentsAnimator.setDuration(300L);
         Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0013R$drawable.app_note);
         this.mFakeBitmap = decodeResource;
         int min = Math.min(decodeResource.getHeight(), (int) (((float) this.mFakeBitmap.getWidth()) * ((((float) this.mShowHeight) * 1.0f) / ((float) this.mShowWidth))));
@@ -267,7 +244,7 @@ public class NavStubDemoView extends View {
         canvas.drawRoundRect(new RectF(0.0f, 0.0f, (float) bitmap.getWidth(), (float) bitmap.getHeight()), 50.0f, 50.0f, this.mPaint);
         this.mPaint.setXfermode(this.mModeSrcIn);
         canvas.drawBitmap(bitmap, 0.0f, 0.0f, this.mPaint);
-        this.mPaint.setXfermode((Xfermode) null);
+        this.mPaint.setXfermode(null);
         return createBitmap;
     }
 
@@ -299,19 +276,16 @@ public class NavStubDemoView extends View {
                 i7 = this.mBottomDec + i6;
             }
             this.mPaint.setAlpha(255);
-            this.mPaint.setXfermode((Xfermode) null);
+            this.mPaint.setXfermode(null);
             this.mPaint.setStyle(Paint.Style.FILL);
             Rect rect2 = this.mShowRect;
-            float f2 = (float) rect2.right;
-            float f3 = f2;
-            float f4 = (float) i7;
-            int saveLayer = canvas.saveLayer((float) rect2.left, (float) rect2.top, f3, f4, (Paint) null);
+            float f2 = (float) i7;
+            int saveLayer = canvas.saveLayer((float) rect2.left, (float) rect2.top, (float) rect2.right, f2, null);
             Rect rect3 = this.mShowRect;
-            float f5 = (float) rect3.right;
-            canvas.drawRoundRect((float) rect3.left, (float) rect3.top, f5, f4, 50.0f, 50.0f, this.mPaint);
+            canvas.drawRoundRect((float) rect3.left, (float) rect3.top, (float) rect3.right, f2, 50.0f, 50.0f, this.mPaint);
             this.mPaint.setXfermode(this.mModeSrcIn);
             canvas.drawBitmap(this.mDrawBmp, (Rect) null, this.mShowRect, this.mPaint);
-            this.mPaint.setXfermode((Xfermode) null);
+            this.mPaint.setXfermode(null);
             canvas.restoreToCount(saveLayer);
             canvas.restore();
             return;
@@ -372,7 +346,7 @@ public class NavStubDemoView extends View {
         } else if (action == 1) {
             this.mIsInFsgAnim = true;
             setClickable(false);
-            this.mFrameHandler.removeCallbacksAndMessages((Object) null);
+            this.mFrameHandler.removeCallbacksAndMessages(null);
             boolean z2 = this.mStateMode == 65538;
             if (this.mStateMode == 65539) {
                 z = true;
@@ -440,6 +414,8 @@ public class NavStubDemoView extends View {
         int i = this.mPivotLocX;
         AnimatorSet animatorSet = new AnimatorSet();
         animatorSet.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass3 */
+
             public void onAnimationStart(Animator animator) {
                 NavStubDemoView.this.mHomeIconImg.setVisibility(0);
                 NavStubDemoView.this.mRecentsCardContainer.setVisibility(8);
@@ -452,6 +428,8 @@ public class NavStubDemoView extends View {
                 NavStubDemoView.this.demoTitleView.notifyFinish();
                 if ("DEMO_FULLY_SHOW".equals(NavStubDemoView.this.demoType)) {
                     NavStubDemoView.this.getHandler().postDelayed(new Runnable() {
+                        /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass3.AnonymousClass1 */
+
                         public void run() {
                             Intent intent = new Intent();
                             intent.setClass(NavStubDemoView.this.getContext(), HomeDemoAct.class);
@@ -465,6 +443,8 @@ public class NavStubDemoView extends View {
                     }, 1000);
                 } else if ("DEMO_TO_HOME".equals(NavStubDemoView.this.demoType)) {
                     NavStubDemoView.this.getHandler().postDelayed(new Runnable() {
+                        /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass3.AnonymousClass2 */
+
                         public void run() {
                             NavStubDemoView.this.curActivity.finish();
                         }
@@ -472,64 +452,78 @@ public class NavStubDemoView extends View {
                 }
             }
         });
-        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("xScale", new float[]{this.mCurScale, width}), PropertyValuesHolder.ofInt("xPivot", new int[]{i, this.mDestPivotX})});
+        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(PropertyValuesHolder.ofFloat("xScale", this.mCurScale, width), PropertyValuesHolder.ofInt("xPivot", i, this.mDestPivotX));
         ofPropertyValuesHolder.setInterpolator(new DecelerateInterpolator(1.5f));
         ofPropertyValuesHolder.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass4 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = NavStubDemoView.this.mXScale = ((Float) valueAnimator.getAnimatedValue("xScale")).floatValue();
-                int unused2 = NavStubDemoView.this.mPivotLocX = ((Integer) valueAnimator.getAnimatedValue("xPivot")).intValue();
+                NavStubDemoView.this.mXScale = ((Float) valueAnimator.getAnimatedValue("xScale")).floatValue();
+                NavStubDemoView.this.mPivotLocX = ((Integer) valueAnimator.getAnimatedValue("xPivot")).intValue();
             }
         });
-        ofPropertyValuesHolder.setDuration(300);
-        ValueAnimator ofPropertyValuesHolder2 = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("yScale", new float[]{this.mCurScale, height}), PropertyValuesHolder.ofInt("yPivot", new int[]{(int) (((float) this.mPivotLocY) - ((((float) this.mShowHeight) * f) / 2.0f)), this.mDestPivotY})});
+        ofPropertyValuesHolder.setDuration(300L);
+        ValueAnimator ofPropertyValuesHolder2 = ValueAnimator.ofPropertyValuesHolder(PropertyValuesHolder.ofFloat("yScale", this.mCurScale, height), PropertyValuesHolder.ofInt("yPivot", (int) (((float) this.mPivotLocY) - ((((float) this.mShowHeight) * f) / 2.0f)), this.mDestPivotY));
         ofPropertyValuesHolder2.setInterpolator(new DecelerateInterpolator(2.0f));
         ofPropertyValuesHolder2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass5 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = NavStubDemoView.this.mYScale = ((Float) valueAnimator.getAnimatedValue("yScale")).floatValue();
-                int unused2 = NavStubDemoView.this.mPivotLocY = ((Integer) valueAnimator.getAnimatedValue("yPivot")).intValue();
+                NavStubDemoView.this.mYScale = ((Float) valueAnimator.getAnimatedValue("yScale")).floatValue();
+                NavStubDemoView.this.mPivotLocY = ((Integer) valueAnimator.getAnimatedValue("yPivot")).intValue();
             }
         });
-        ofPropertyValuesHolder2.setDuration(300);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+        ofPropertyValuesHolder2.setDuration(300L);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
         ofFloat.setInterpolator(new DecelerateInterpolator(1.0f));
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass6 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = NavStubDemoView.this.mCurAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                NavStubDemoView.this.mCurAlpha = ((Float) valueAnimator.getAnimatedValue()).floatValue();
             }
         });
-        ofFloat.setDuration(210);
+        ofFloat.setDuration(210L);
         ofFloat.setStartDelay(40);
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
         ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass7 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 NavStubDemoView.this.mBgView.setBackgroundColor(Color.argb((int) ((1.0f - valueAnimator.getAnimatedFraction()) * 187.0f), 0, 0, 0));
                 NavStubDemoView.this.invalidate();
             }
         });
-        ofFloat2.setDuration(300);
-        animatorSet.playTogether(new Animator[]{ofFloat2, ofPropertyValuesHolder2, ofPropertyValuesHolder, ofFloat});
+        ofFloat2.setDuration(300L);
+        animatorSet.playTogether(ofFloat2, ofPropertyValuesHolder2, ofPropertyValuesHolder, ofFloat);
         animatorSet.start();
     }
 
     private void startCancelAnim() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mCurScale, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mCurScale, 1.0f);
         ofFloat.setInterpolator(new DecelerateInterpolator());
         final int i = this.mPivotLocX;
         final int i2 = this.mPivotLocY;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass8 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = NavStubDemoView.this.mCurScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                NavStubDemoView.this.mCurScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 float animatedFraction = valueAnimator.getAnimatedFraction();
                 NavStubDemoView navStubDemoView = NavStubDemoView.this;
-                int unused2 = navStubDemoView.mPivotLocX = (int) (((float) i) + (((float) ((navStubDemoView.mShowWidth / 2) - i)) * animatedFraction));
+                navStubDemoView.mPivotLocX = (int) (((float) i) + (((float) ((navStubDemoView.mShowWidth / 2) - i)) * animatedFraction));
                 NavStubDemoView navStubDemoView2 = NavStubDemoView.this;
-                int unused3 = navStubDemoView2.mPivotLocY = (int) (((float) i2) + (((float) (navStubDemoView2.mShowHeight - i2)) * animatedFraction));
+                navStubDemoView2.mPivotLocY = (int) (((float) i2) + (((float) (navStubDemoView2.mShowHeight - i2)) * animatedFraction));
                 NavStubDemoView.this.invalidate();
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass9 */
+
             public void onAnimationEnd(Animator animator) {
                 NavStubDemoView.this.getHandler().postDelayed(new Runnable() {
+                    /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass9.AnonymousClass1 */
+
                     public void run() {
                         NavStubDemoView.this.swipeView.prepare(2);
                         NavStubDemoView.this.swipeView.startAnimation(2);
@@ -538,7 +532,7 @@ public class NavStubDemoView extends View {
                 NavStubDemoView.this.finalization();
             }
         });
-        ofFloat.setDuration(300).start();
+        ofFloat.setDuration(300L).start();
     }
 
     public void setRecentsFirstCardBound(Rect rect) {
@@ -549,13 +543,17 @@ public class NavStubDemoView extends View {
         this.mShowHeight -= CustomizeUtil.HAS_NOTCH ? getContext().getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height) : 0;
         this.mIsAppToRecents = true;
         float width = (((float) this.mRecentsFirstCardBound.width()) * 1.0f) / ((float) this.mShowWidth);
-        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scale", new float[]{this.mCurScale, width}), PropertyValuesHolder.ofInt("bottomDec", new int[]{(int) (this.mCurScale * ((float) this.mShowHeight)), (int) (((float) this.mRecentsFirstCardBound.height()) / width)})});
+        ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(PropertyValuesHolder.ofFloat("scale", this.mCurScale, width), PropertyValuesHolder.ofInt("bottomDec", (int) (this.mCurScale * ((float) this.mShowHeight)), (int) (((float) this.mRecentsFirstCardBound.height()) / width)));
         ofPropertyValuesHolder.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass10 */
+
             public void onAnimationEnd(Animator animator) {
                 NavStubDemoView.this.mRecentsFirstCardIconView.setVisibility(0);
                 NavStubDemoView.this.demoTitleView.notifyFinish();
                 if ("DEMO_FULLY_SHOW".equals(NavStubDemoView.this.demoType)) {
                     NavStubDemoView.this.getHandler().postDelayed(new Runnable() {
+                        /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass10.AnonymousClass1 */
+
                         public void run() {
                             Intent intent = new Intent();
                             intent.setClass(NavStubDemoView.this.getContext(), FsGestureBackDemoActivity.class);
@@ -568,6 +566,8 @@ public class NavStubDemoView extends View {
                     }, 1000);
                 } else if ("DEMO_TO_RECENTTASK".equals(NavStubDemoView.this.demoType)) {
                     NavStubDemoView.this.getHandler().postDelayed(new Runnable() {
+                        /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass10.AnonymousClass2 */
+
                         public void run() {
                             NavStubDemoView.this.curActivity.finish();
                         }
@@ -582,37 +582,42 @@ public class NavStubDemoView extends View {
         final float width2 = (float) ((this.mRecentsFirstCardBound.width() / 2) + rect.left);
         final float width3 = (float) (((rect.width() * this.mShowHeight) / this.mShowWidth) + this.mRecentsFirstCardBound.top);
         ofPropertyValuesHolder.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass11 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = NavStubDemoView.this.mCurScale = ((Float) valueAnimator.getAnimatedValue("scale")).floatValue();
-                int unused2 = NavStubDemoView.this.mBottomDec = ((Integer) valueAnimator.getAnimatedValue("bottomDec")).intValue();
+                NavStubDemoView.this.mCurScale = ((Float) valueAnimator.getAnimatedValue("scale")).floatValue();
+                NavStubDemoView.this.mBottomDec = ((Integer) valueAnimator.getAnimatedValue("bottomDec")).intValue();
                 float animatedFraction = valueAnimator.getAnimatedFraction();
                 NavStubDemoView navStubDemoView = NavStubDemoView.this;
                 int i = i;
-                int unused3 = navStubDemoView.mPivotLocX = (int) (((float) i) + ((width2 - ((float) i)) * animatedFraction));
+                navStubDemoView.mPivotLocX = (int) (((float) i) + ((width2 - ((float) i)) * animatedFraction));
                 NavStubDemoView navStubDemoView2 = NavStubDemoView.this;
                 int i2 = i2;
-                int unused4 = navStubDemoView2.mPivotLocY = (int) (((float) i2) + ((width3 - ((float) i2)) * animatedFraction));
+                navStubDemoView2.mPivotLocY = (int) (((float) i2) + ((width3 - ((float) i2)) * animatedFraction));
                 NavStubDemoView.this.invalidate();
             }
         });
-        ofPropertyValuesHolder.setDuration(300);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.05f, 1.0f});
+        ofPropertyValuesHolder.setDuration(300L);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(1.05f, 1.0f);
         ofFloat.setInterpolator(new DecelerateInterpolator());
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.NavStubDemoView.AnonymousClass12 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 NavStubDemoView.this.mRecentsCardContainer.setScaleX(floatValue);
                 NavStubDemoView.this.mRecentsCardContainer.setScaleY(floatValue);
             }
         });
-        ofFloat.setDuration(300);
+        ofFloat.setDuration(300L);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{ofPropertyValuesHolder, ofFloat});
+        animatorSet.playTogether(ofPropertyValuesHolder, ofFloat);
         animatorSet.start();
     }
 
     /* access modifiers changed from: private */
-    public void finalization() {
+    /* access modifiers changed from: public */
+    private void finalization() {
         this.mIsAppToRecents = false;
         this.mIsInFsgAnim = false;
         setClickable(true);
@@ -634,7 +639,7 @@ public class NavStubDemoView extends View {
         invalidate();
         Handler handler = this.mFrameHandler;
         if (handler != null) {
-            handler.removeCallbacksAndMessages((Object) null);
+            handler.removeCallbacksAndMessages(null);
         }
     }
 

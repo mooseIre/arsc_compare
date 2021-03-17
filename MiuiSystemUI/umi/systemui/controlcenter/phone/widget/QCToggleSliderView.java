@@ -16,25 +16,18 @@ import com.android.systemui.settings.ToggleSeekBar;
 import com.android.systemui.settings.ToggleSlider;
 
 public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
-    /* access modifiers changed from: private */
-    public boolean mIgnoreTrackingEvent;
-    /* access modifiers changed from: private */
-    public int mLastTouchAction;
-    /* access modifiers changed from: private */
-    public ToggleSlider.Listener mListener;
+    private boolean mIgnoreTrackingEvent;
+    private int mLastTouchAction;
+    private ToggleSlider.Listener mListener;
     private ImageView mLow;
-    /* access modifiers changed from: private */
-    public QCToggleSliderView mMirror;
-    /* access modifiers changed from: private */
-    public QCBrightnessMirrorController mMirrorController;
+    private QCToggleSliderView mMirror;
+    private QCBrightnessMirrorController mMirrorController;
     private final SeekBar.OnSeekBarChangeListener mSeekListener;
-    /* access modifiers changed from: private */
-    public ToggleSeekBar mSlider;
-    /* access modifiers changed from: private */
-    public boolean mTracking;
+    private ToggleSeekBar mSlider;
+    private boolean mTracking;
 
     public QCToggleSliderView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public QCToggleSliderView(Context context, AttributeSet attributeSet) {
@@ -44,26 +37,28 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
     public QCToggleSliderView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+            /* class com.android.systemui.controlcenter.phone.widget.QCToggleSliderView.AnonymousClass1 */
+
             public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
                 if (QCToggleSliderView.this.mListener != null) {
-                    ToggleSlider.Listener access$000 = QCToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = QCToggleSliderView.this.mListener;
                     QCToggleSliderView qCToggleSliderView = QCToggleSliderView.this;
-                    access$000.onChanged(qCToggleSliderView, qCToggleSliderView.mTracking, QCToggleSliderView.this.mMirror.isChecked(), i, false);
+                    listener.onChanged(qCToggleSliderView, qCToggleSliderView.mTracking, QCToggleSliderView.this.mMirror.isChecked(), i, false);
                 }
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
                 if (QCToggleSliderView.this.mLastTouchAction == 1) {
-                    boolean unused = QCToggleSliderView.this.mIgnoreTrackingEvent = true;
+                    QCToggleSliderView.this.mIgnoreTrackingEvent = true;
                     Log.w("QCToggleSliderView", "ignoring onStartTrackingTouch, maybe tap event");
                     return;
                 }
-                boolean unused2 = QCToggleSliderView.this.mTracking = true;
+                QCToggleSliderView.this.mTracking = true;
                 if (QCToggleSliderView.this.mListener != null) {
                     QCToggleSliderView.this.mListener.onStart(seekBar.getProgress());
-                    ToggleSlider.Listener access$000 = QCToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = QCToggleSliderView.this.mListener;
                     QCToggleSliderView qCToggleSliderView = QCToggleSliderView.this;
-                    access$000.onChanged(qCToggleSliderView, qCToggleSliderView.mTracking, QCToggleSliderView.this.mMirror.isChecked(), QCToggleSliderView.this.mSlider.getProgress(), false);
+                    listener.onChanged(qCToggleSliderView, qCToggleSliderView.mTracking, QCToggleSliderView.this.mMirror.isChecked(), QCToggleSliderView.this.mSlider.getProgress(), false);
                 }
                 if (QCToggleSliderView.this.mMirrorController != null) {
                     QCToggleSliderView.this.mMirrorController.showMirror();
@@ -72,15 +67,15 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (QCToggleSliderView.this.mIgnoreTrackingEvent) {
-                    boolean unused = QCToggleSliderView.this.mIgnoreTrackingEvent = false;
+                    QCToggleSliderView.this.mIgnoreTrackingEvent = false;
                     Log.w("QCToggleSliderView", "ignoring onStopTrackingTouch, maybe tap event");
                     return;
                 }
-                boolean unused2 = QCToggleSliderView.this.mTracking = false;
+                QCToggleSliderView.this.mTracking = false;
                 if (QCToggleSliderView.this.mListener != null) {
-                    ToggleSlider.Listener access$000 = QCToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = QCToggleSliderView.this.mListener;
                     QCToggleSliderView qCToggleSliderView = QCToggleSliderView.this;
-                    access$000.onChanged(qCToggleSliderView, qCToggleSliderView.mTracking, QCToggleSliderView.this.mMirror.isChecked(), QCToggleSliderView.this.mSlider.getProgress(), true);
+                    listener.onChanged(qCToggleSliderView, qCToggleSliderView.mTracking, QCToggleSliderView.this.mMirror.isChecked(), QCToggleSliderView.this.mSlider.getProgress(), true);
                     QCToggleSliderView.this.mListener.onStop(seekBar.getProgress());
                 }
                 if (QCToggleSliderView.this.mMirrorController != null) {
@@ -96,8 +91,8 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
     }
 
     public void updateResources() {
-        this.mSlider.setProgressDrawable(this.mContext.getDrawable(C0013R$drawable.qs_control_brightness_toggle_progress));
-        this.mLow.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.qs_control_low_brightness));
+        this.mSlider.setProgressDrawable(((RelativeLayout) this).mContext.getDrawable(C0013R$drawable.qs_control_brightness_toggle_progress));
+        this.mLow.setImageDrawable(((RelativeLayout) this).mContext.getDrawable(C0013R$drawable.qs_control_low_brightness));
         QCToggleSliderView qCToggleSliderView = this.mMirror;
         if (qCToggleSliderView != null) {
             qCToggleSliderView.updateResources();
@@ -127,10 +122,12 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
         }
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setOnChangedListener(ToggleSlider.Listener listener) {
         this.mListener = listener;
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setMax(int i) {
         if (i != this.mSlider.getMax()) {
             this.mSlider.setMax(i);
@@ -141,6 +138,7 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
         }
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setValue(int i) {
         this.mSlider.setProgress(i);
         QCToggleSliderView qCToggleSliderView = this.mMirror;
@@ -149,6 +147,7 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
         }
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public int getValue() {
         return this.mSlider.getProgress();
     }

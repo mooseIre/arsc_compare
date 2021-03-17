@@ -101,7 +101,7 @@ public final class PulseExpansionHandler implements Gefingerpoken {
                     this.roundnessManager.setTrackingHeadsUp(topEntry.getRow());
                 }
             } else {
-                this.roundnessManager.setTrackingHeadsUp((ExpandableNotificationRow) null);
+                this.roundnessManager.setTrackingHeadsUp(null);
                 if (!this.leavingLockscreen) {
                     this.bypassController.maybePerformPendingUnlock();
                     Runnable runnable = this.pulseExpandAbortListener;
@@ -138,6 +138,7 @@ public final class PulseExpansionHandler implements Gefingerpoken {
         this.bouncerShowing = z;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onInterceptTouchEvent(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         return canHandleMotionEvent() && startExpansion(motionEvent);
@@ -196,6 +197,7 @@ public final class PulseExpansionHandler implements Gefingerpoken {
         this.velocityTracker = null;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onTouchEvent(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         boolean z = false;
@@ -347,7 +349,7 @@ public final class PulseExpansionHandler implements Gefingerpoken {
             setUserLocked(expandableView, false);
             return;
         }
-        ObjectAnimator ofInt = ObjectAnimator.ofInt(expandableView, "actualHeight", new int[]{expandableView.getActualHeight(), expandableView.getCollapsedHeight()});
+        ObjectAnimator ofInt = ObjectAnimator.ofInt(expandableView, "actualHeight", expandableView.getActualHeight(), expandableView.getCollapsedHeight());
         Intrinsics.checkExpressionValueIsNotNull(ofInt, "anim");
         ofInt.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         ofInt.setDuration((long) SPRING_BACK_ANIMATION_LENGTH_MS);
@@ -363,7 +365,7 @@ public final class PulseExpansionHandler implements Gefingerpoken {
     }
 
     private final void resetClock() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mEmptyDragAmount, 0.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mEmptyDragAmount, 0.0f);
         Intrinsics.checkExpressionValueIsNotNull(ofFloat, "anim");
         ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         ofFloat.setDuration((long) SPRING_BACK_ANIMATION_LENGTH_MS);

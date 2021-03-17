@@ -13,18 +13,21 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class BubbleCoordinator implements Coordinator {
-    /* access modifiers changed from: private */
-    public final BubbleController mBubbleController;
-    /* access modifiers changed from: private */
-    public final NotifDismissInterceptor mDismissInterceptor = new NotifDismissInterceptor() {
+    private final BubbleController mBubbleController;
+    private final NotifDismissInterceptor mDismissInterceptor = new NotifDismissInterceptor() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.BubbleCoordinator.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifDismissInterceptor
         public String getName() {
             return "BubbleCoordinator";
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifDismissInterceptor
         public void setCallback(NotifDismissInterceptor.OnEndDismissInterception onEndDismissInterception) {
-            NotifDismissInterceptor.OnEndDismissInterception unused = BubbleCoordinator.this.mOnEndDismissInterception = onEndDismissInterception;
+            BubbleCoordinator.this.mOnEndDismissInterception = onEndDismissInterception;
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifDismissInterceptor
         public boolean shouldInterceptDismissal(NotificationEntry notificationEntry) {
             if (BubbleCoordinator.this.mBubbleController.handleDismissalInterception(notificationEntry)) {
                 BubbleCoordinator.this.mInterceptedDismissalEntries.add(notificationEntry.getKey());
@@ -34,16 +37,20 @@ public class BubbleCoordinator implements Coordinator {
             return false;
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifDismissInterceptor
         public void cancelDismissInterception(NotificationEntry notificationEntry) {
             BubbleCoordinator.this.mInterceptedDismissalEntries.remove(notificationEntry.getKey());
         }
     };
-    /* access modifiers changed from: private */
-    public final Set<String> mInterceptedDismissalEntries = new HashSet();
+    private final Set<String> mInterceptedDismissalEntries = new HashSet();
     private final BubbleController.NotifCallback mNotifCallback = new BubbleController.NotifCallback() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.BubbleCoordinator.AnonymousClass3 */
+
+        @Override // com.android.systemui.bubbles.BubbleController.NotifCallback
         public void maybeCancelSummary(NotificationEntry notificationEntry) {
         }
 
+        @Override // com.android.systemui.bubbles.BubbleController.NotifCallback
         public void removeNotification(NotificationEntry notificationEntry, int i) {
             if (BubbleCoordinator.this.isInterceptingDismissal(notificationEntry)) {
                 BubbleCoordinator.this.mInterceptedDismissalEntries.remove(notificationEntry.getKey());
@@ -53,28 +60,29 @@ public class BubbleCoordinator implements Coordinator {
             }
         }
 
+        @Override // com.android.systemui.bubbles.BubbleController.NotifCallback
         public void invalidateNotifications(String str) {
             BubbleCoordinator.this.mNotifFilter.invalidateList();
         }
     };
-    /* access modifiers changed from: private */
-    public final NotifCollection mNotifCollection;
-    /* access modifiers changed from: private */
-    public final NotifFilter mNotifFilter = new NotifFilter("BubbleCoordinator") {
+    private final NotifCollection mNotifCollection;
+    private final NotifFilter mNotifFilter = new NotifFilter("BubbleCoordinator") {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.BubbleCoordinator.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             return BubbleCoordinator.this.mBubbleController.isBubbleNotificationSuppressedFromShade(notificationEntry);
         }
     };
-    /* access modifiers changed from: private */
-    public NotifPipeline mNotifPipeline;
-    /* access modifiers changed from: private */
-    public NotifDismissInterceptor.OnEndDismissInterception mOnEndDismissInterception;
+    private NotifPipeline mNotifPipeline;
+    private NotifDismissInterceptor.OnEndDismissInterception mOnEndDismissInterception;
 
     public BubbleCoordinator(BubbleController bubbleController, NotifCollection notifCollection) {
         this.mBubbleController = bubbleController;
         this.mNotifCollection = notifCollection;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mNotifPipeline = notifPipeline;
         notifPipeline.addNotificationDismissInterceptor(this.mDismissInterceptor);
@@ -83,12 +91,14 @@ public class BubbleCoordinator implements Coordinator {
     }
 
     /* access modifiers changed from: private */
-    public boolean isInterceptingDismissal(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private boolean isInterceptingDismissal(NotificationEntry notificationEntry) {
         return this.mInterceptedDismissalEntries.contains(notificationEntry.getKey());
     }
 
     /* access modifiers changed from: private */
-    public DismissedByUserStats createDismissedByUserStats(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private DismissedByUserStats createDismissedByUserStats(NotificationEntry notificationEntry) {
         return new DismissedByUserStats(0, 1, NotificationVisibility.obtain(notificationEntry.getKey(), notificationEntry.getRanking().getRank(), this.mNotifPipeline.getShadeListCount(), true, NotificationLogger.getNotificationLocation(notificationEntry)));
     }
 }

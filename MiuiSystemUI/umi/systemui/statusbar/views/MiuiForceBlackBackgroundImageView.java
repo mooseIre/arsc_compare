@@ -13,7 +13,7 @@ public class MiuiForceBlackBackgroundImageView extends ImageView implements Forc
     public int mOrientation;
 
     public MiuiForceBlackBackgroundImageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiForceBlackBackgroundImageView(Context context, AttributeSet attributeSet) {
@@ -29,11 +29,10 @@ public class MiuiForceBlackBackgroundImageView extends ImageView implements Forc
 
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
-        Class cls = ForceBlackObserver.class;
         super.onAttachedToWindow();
         this.mOrientation = getResources().getConfiguration().orientation;
-        ((ForceBlackObserver) Dependency.get(cls)).addCallback(this);
-        this.mForceBlack = ((ForceBlackObserver) Dependency.get(cls)).isForceBlack();
+        ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).addCallback(this);
+        this.mForceBlack = ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).isForceBlack();
         updateVisibility();
     }
 
@@ -43,6 +42,7 @@ public class MiuiForceBlackBackgroundImageView extends ImageView implements Forc
         ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).removeCallback(this);
     }
 
+    @Override // com.miui.systemui.statusbar.phone.ForceBlackObserver.Callback
     public void onForceBlackChange(boolean z, boolean z2) {
         this.mForceBlack = z;
         updateVisibility();

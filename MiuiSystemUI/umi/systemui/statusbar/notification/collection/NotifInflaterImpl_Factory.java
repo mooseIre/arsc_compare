@@ -18,6 +18,7 @@ public final class NotifInflaterImpl_Factory implements Factory<NotifInflaterImp
         this.notifPipelineProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public NotifInflaterImpl get() {
         return provideInstance(this.statusBarServiceProvider, this.notifCollectionProvider, this.errorManagerProvider, this.notifPipelineProvider);
     }

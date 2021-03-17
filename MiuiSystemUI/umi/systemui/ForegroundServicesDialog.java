@@ -23,13 +23,14 @@ import com.android.internal.logging.MetricsLogger;
 import java.util.ArrayList;
 
 public final class ForegroundServicesDialog extends AlertActivity implements AdapterView.OnItemSelectedListener, DialogInterface.OnClickListener, AlertController.AlertParams.OnPrepareListViewListener {
-    /* access modifiers changed from: private */
-    public PackageItemAdapter mAdapter;
+    private PackageItemAdapter mAdapter;
     private DialogInterface.OnClickListener mAppClickListener = new DialogInterface.OnClickListener() {
+        /* class com.android.systemui.ForegroundServicesDialog.AnonymousClass1 */
+
         public void onClick(DialogInterface dialogInterface, int i) {
             String str = ((ApplicationInfo) ForegroundServicesDialog.this.mAdapter.getItem(i)).packageName;
             Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", str, (String) null));
+            intent.setData(Uri.fromParts("package", str, null));
             ForegroundServicesDialog.this.startActivity(intent);
             ForegroundServicesDialog.this.finish();
         }
@@ -38,9 +39,11 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
     private MetricsLogger mMetricsLogger;
     private String[] mPackages;
 
+    @Override // android.widget.AdapterView.OnItemSelectedListener
     public void onItemSelected(AdapterView adapterView, View view, int i, long j) {
     }
 
+    @Override // android.widget.AdapterView.OnItemSelectedListener
     public void onNothingSelected(AdapterView adapterView) {
     }
 
@@ -50,7 +53,8 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
     ForegroundServicesDialog() {
     }
 
-    /* JADX WARNING: type inference failed for: r3v0, types: [android.content.Context, android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.ForegroundServicesDialog, com.android.internal.app.AlertController$AlertParams$OnPrepareListViewListener, android.widget.AdapterView$OnItemSelectedListener] */
+    /* JADX DEBUG: Multi-variable search result rejected for r3v0, resolved type: com.android.systemui.ForegroundServicesDialog */
+    /* JADX WARN: Multi-variable type inference failed */
     /* access modifiers changed from: protected */
     public void onCreate(Bundle bundle) {
         ForegroundServicesDialog.super.onCreate(bundle);
@@ -58,7 +62,7 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         this.mInflater = LayoutInflater.from(this);
         PackageItemAdapter packageItemAdapter = new PackageItemAdapter(this);
         this.mAdapter = packageItemAdapter;
-        AlertController.AlertParams alertParams = this.mAlertParams;
+        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
         alertParams.mAdapter = packageItemAdapter;
         alertParams.mOnClickListener = this.mAppClickListener;
         alertParams.mCustomTitleView = this.mInflater.inflate(C0017R$layout.foreground_service_title, (ViewGroup) null);
@@ -115,7 +119,8 @@ public final class ForegroundServicesDialog extends AlertActivity implements Ada
         finish();
     }
 
-    private static class PackageItemAdapter extends ArrayAdapter<ApplicationInfo> {
+    /* access modifiers changed from: private */
+    public static class PackageItemAdapter extends ArrayAdapter<ApplicationInfo> {
         final IconDrawableFactory mIconDrawableFactory;
         final LayoutInflater mInflater;
         final PackageManager mPm;

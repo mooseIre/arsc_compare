@@ -18,17 +18,21 @@ import miui.os.Environment;
 public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     public static final Uri HTTPS_AUTHORITY_URI = Uri.parse("https://gallery.i.mi.com");
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return true;
     }
@@ -38,14 +42,17 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         Intent intent = new Intent("android.intent.action.VIEW", HTTPS_AUTHORITY_URI.buildUpon().appendPath("album").appendQueryParameter("local_path", "dcim/screenshots").build());
         boolean z = false;
@@ -62,19 +69,24 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (QSTileImpl.mInControlCenter || !(this.mHost.getBarState() == 2 || this.mHost.getBarState() == 1)) {
             this.mHost.collapsePanels();
             this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.qs.tiles.ScreenShotTile.AnonymousClass1 */
+
                 public void run() {
-                    if (ScreenShotTile.this.mHost.isQSFullyCollapsed()) {
-                        ScreenShotTile.this.mHandler.postDelayed(new Runnable() {
+                    if (((QSTileImpl) ScreenShotTile.this).mHost.isQSFullyCollapsed()) {
+                        ((QSTileImpl) ScreenShotTile.this).mHandler.postDelayed(new Runnable() {
+                            /* class com.android.systemui.qs.tiles.$$Lambda$ScreenShotTile$1$b6JRTqlIYtU55jJIIw6aPFB_o */
+
                             public final void run() {
                                 ScreenShotTile.AnonymousClass1.this.lambda$run$0$ScreenShotTile$1();
                             }
                         }, 300);
                     } else {
-                        ScreenShotTile.this.mHandler.postDelayed(this, 50);
+                        ((QSTileImpl) ScreenShotTile.this).mHandler.postDelayed(this, 50);
                     }
                 }
 
@@ -90,10 +102,12 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: private */
-    public void captureScreen() {
+    /* access modifiers changed from: public */
+    private void captureScreen() {
         this.mContext.sendBroadcastAsUser(new Intent("android.intent.action.CAPTURE_SCREENSHOT"), UserHandle.CURRENT);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_screenshot_label);
     }
@@ -115,6 +129,8 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
             str = null;
         } else {
             File[] listFiles = file.listFiles(new FilenameFilter(this) {
+                /* class com.android.systemui.qs.tiles.ScreenShotTile.AnonymousClass2 */
+
                 public boolean accept(File file, String str) {
                     String lowerCase = str.toLowerCase();
                     return lowerCase.endsWith("png") || lowerCase.endsWith("jpg") || lowerCase.endsWith("jpeg");

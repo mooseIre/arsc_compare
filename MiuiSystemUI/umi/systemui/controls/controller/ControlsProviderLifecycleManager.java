@@ -23,34 +23,25 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: ControlsProviderLifecycleManager.kt */
 public final class ControlsProviderLifecycleManager implements IBinder.DeathRecipient {
-    /* access modifiers changed from: private */
-    public static final int BIND_FLAGS = 67108865;
-    /* access modifiers changed from: private */
-    public final String TAG = ControlsProviderLifecycleManager.class.getSimpleName();
-    /* access modifiers changed from: private */
-    public final IControlsActionCallback.Stub actionCallbackService;
-    /* access modifiers changed from: private */
-    public int bindTryCount;
+    private static final int BIND_FLAGS = 67108865;
+    private final String TAG = ControlsProviderLifecycleManager.class.getSimpleName();
+    private final IControlsActionCallback.Stub actionCallbackService;
+    private int bindTryCount;
     @NotNull
     private final ComponentName componentName;
-    /* access modifiers changed from: private */
-    public final Context context;
+    private final Context context;
     private final DelayableExecutor executor;
-    /* access modifiers changed from: private */
-    public final Intent intent;
+    private final Intent intent;
     private Runnable onLoadCanceller;
     @GuardedBy({"queuedServiceMethods"})
     private final Set<ServiceMethod> queuedServiceMethods = new ArraySet();
-    /* access modifiers changed from: private */
-    public boolean requiresBound;
-    /* access modifiers changed from: private */
-    public final ControlsProviderLifecycleManager$serviceConnection$1 serviceConnection;
+    private boolean requiresBound;
+    private final ControlsProviderLifecycleManager$serviceConnection$1 serviceConnection;
     @NotNull
     private final IBinder token = new Binder();
     @NotNull
     private final UserHandle user;
-    /* access modifiers changed from: private */
-    public ServiceWrapper wrapper;
+    private ServiceWrapper wrapper;
 
     public ControlsProviderLifecycleManager(@NotNull Context context2, @NotNull DelayableExecutor delayableExecutor, @NotNull IControlsActionCallback.Stub stub, @NotNull UserHandle userHandle, @NotNull ComponentName componentName2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
@@ -96,11 +87,11 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
     public final void handlePendingServiceMethods() {
         ArraySet<ServiceMethod> arraySet;
         synchronized (this.queuedServiceMethods) {
-            arraySet = new ArraySet<>(this.queuedServiceMethods);
+            arraySet = new ArraySet(this.queuedServiceMethods);
             this.queuedServiceMethods.clear();
         }
-        for (ServiceMethod run : arraySet) {
-            run.run();
+        for (ServiceMethod serviceMethod : arraySet) {
+            serviceMethod.run();
         }
     }
 
@@ -114,7 +105,8 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
     }
 
     /* access modifiers changed from: private */
-    public final void queueServiceMethod(ServiceMethod serviceMethod) {
+    /* access modifiers changed from: public */
+    private final void queueServiceMethod(ServiceMethod serviceMethod) {
         synchronized (this.queuedServiceMethods) {
             this.queuedServiceMethods.add(serviceMethod);
         }
@@ -205,6 +197,7 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
     public abstract class ServiceMethod {
         public abstract boolean callWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
 
+        /* JADX WARN: Incorrect args count in method signature: ()V */
         public ServiceMethod() {
         }
 
@@ -230,12 +223,13 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
             this.subscriber = stub;
         }
 
+        @Override // com.android.systemui.controls.controller.ControlsProviderLifecycleManager.ServiceMethod
         public boolean callWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
-            String access$getTAG$p = this.this$0.TAG;
-            Log.d(access$getTAG$p, "load " + this.this$0.getComponentName());
-            ServiceWrapper access$getWrapper$p = this.this$0.wrapper;
-            if (access$getWrapper$p != null) {
-                return access$getWrapper$p.load(this.subscriber);
+            String str = this.this$0.TAG;
+            Log.d(str, "load " + this.this$0.getComponentName());
+            ServiceWrapper serviceWrapper = this.this$0.wrapper;
+            if (serviceWrapper != null) {
+                return serviceWrapper.load(this.subscriber);
             }
             return false;
         }
@@ -255,12 +249,13 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
             this.subscriber = stub;
         }
 
+        @Override // com.android.systemui.controls.controller.ControlsProviderLifecycleManager.ServiceMethod
         public boolean callWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
-            String access$getTAG$p = this.this$0.TAG;
-            Log.d(access$getTAG$p, "suggest " + this.this$0.getComponentName());
-            ServiceWrapper access$getWrapper$p = this.this$0.wrapper;
-            if (access$getWrapper$p != null) {
-                return access$getWrapper$p.loadSuggested(this.subscriber);
+            String str = this.this$0.TAG;
+            Log.d(str, "suggest " + this.this$0.getComponentName());
+            ServiceWrapper serviceWrapper = this.this$0.wrapper;
+            if (serviceWrapper != null) {
+                return serviceWrapper.loadSuggested(this.subscriber);
             }
             return false;
         }
@@ -284,12 +279,13 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
             this.subscriber = iControlsSubscriber;
         }
 
+        @Override // com.android.systemui.controls.controller.ControlsProviderLifecycleManager.ServiceMethod
         public boolean callWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
-            String access$getTAG$p = this.this$0.TAG;
-            Log.d(access$getTAG$p, "subscribe " + this.this$0.getComponentName() + " - " + this.list);
-            ServiceWrapper access$getWrapper$p = this.this$0.wrapper;
-            if (access$getWrapper$p != null) {
-                return access$getWrapper$p.subscribe(this.list, this.subscriber);
+            String str = this.this$0.TAG;
+            Log.d(str, "subscribe " + this.this$0.getComponentName() + " - " + this.list);
+            ServiceWrapper serviceWrapper = this.this$0.wrapper;
+            if (serviceWrapper != null) {
+                return serviceWrapper.subscribe(this.list, this.subscriber);
             }
             return false;
         }
@@ -313,12 +309,13 @@ public final class ControlsProviderLifecycleManager implements IBinder.DeathReci
             this.action = controlAction;
         }
 
+        @Override // com.android.systemui.controls.controller.ControlsProviderLifecycleManager.ServiceMethod
         public boolean callWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
-            String access$getTAG$p = this.this$0.TAG;
-            Log.d(access$getTAG$p, "onAction " + this.this$0.getComponentName() + " - " + this.id);
-            ServiceWrapper access$getWrapper$p = this.this$0.wrapper;
-            if (access$getWrapper$p != null) {
-                return access$getWrapper$p.action(this.id, this.action, this.this$0.actionCallbackService);
+            String str = this.this$0.TAG;
+            Log.d(str, "onAction " + this.this$0.getComponentName() + " - " + this.id);
+            ServiceWrapper serviceWrapper = this.this$0.wrapper;
+            if (serviceWrapper != null) {
+                return serviceWrapper.action(this.id, this.action, this.this$0.actionCallbackService);
             }
             return false;
         }

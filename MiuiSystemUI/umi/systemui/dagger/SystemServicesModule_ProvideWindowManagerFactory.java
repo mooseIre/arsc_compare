@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideWindowManagerFactory implements F
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public WindowManager get() {
         return provideInstance(this.contextProvider);
     }

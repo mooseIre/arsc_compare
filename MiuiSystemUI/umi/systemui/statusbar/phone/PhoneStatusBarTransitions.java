@@ -20,6 +20,7 @@ public final class PhoneStatusBarTransitions extends BarTransitions {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.BarTransitions
     public void onTransition(int i, int i2, boolean z) {
         super.onTransition(i, i2, z);
         applyMode(i2, z);

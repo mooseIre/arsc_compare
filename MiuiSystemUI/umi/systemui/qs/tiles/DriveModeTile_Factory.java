@@ -14,6 +14,7 @@ public final class DriveModeTile_Factory implements Factory<DriveModeTile> {
         this.driveModeControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DriveModeTile get() {
         return provideInstance(this.hostProvider, this.driveModeControllerProvider);
     }

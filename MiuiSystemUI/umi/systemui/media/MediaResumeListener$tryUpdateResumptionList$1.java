@@ -16,23 +16,25 @@ public final class MediaResumeListener$tryUpdateResumptionList$1 extends ResumeM
         this.$key = str;
     }
 
+    @Override // com.android.systemui.media.ResumeMediaBrowser.Callback
     public void onConnected() {
         Log.d("MediaResumeListener", "yes we can resume with " + this.$componentName);
         MediaResumeListener.access$getMediaDataManager$p(this.this$0).setResumeAction(this.$key, this.this$0.getResumeAction(this.$componentName));
         this.this$0.updateResumptionList(this.$componentName);
-        ResumeMediaBrowser access$getMediaBrowser$p = this.this$0.mediaBrowser;
-        if (access$getMediaBrowser$p != null) {
-            access$getMediaBrowser$p.disconnect();
+        ResumeMediaBrowser resumeMediaBrowser = this.this$0.mediaBrowser;
+        if (resumeMediaBrowser != null) {
+            resumeMediaBrowser.disconnect();
         }
         this.this$0.mediaBrowser = null;
     }
 
+    @Override // com.android.systemui.media.ResumeMediaBrowser.Callback
     public void onError() {
         Log.e("MediaResumeListener", "Cannot resume with " + this.$componentName);
-        MediaResumeListener.access$getMediaDataManager$p(this.this$0).setResumeAction(this.$key, (Runnable) null);
-        ResumeMediaBrowser access$getMediaBrowser$p = this.this$0.mediaBrowser;
-        if (access$getMediaBrowser$p != null) {
-            access$getMediaBrowser$p.disconnect();
+        MediaResumeListener.access$getMediaDataManager$p(this.this$0).setResumeAction(this.$key, null);
+        ResumeMediaBrowser resumeMediaBrowser = this.this$0.mediaBrowser;
+        if (resumeMediaBrowser != null) {
+            resumeMediaBrowser.disconnect();
         }
         this.this$0.mediaBrowser = null;
     }

@@ -33,6 +33,7 @@ import java.util.Map;
 import javax.inject.Provider;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.text.StringsKt__StringsJVMKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,55 +61,40 @@ public final class QSFactoryInjectorImpl implements QSFactoryImpl.QSFactoryInjec
     private final Provider<VibrateTile> vibrateTileProvider;
 
     public QSFactoryInjectorImpl(@NotNull Lazy<QSHost> lazy, @NotNull Provider<AutoBrightnessTile> provider, @NotNull Provider<DriveModeTile> provider2, @NotNull Provider<EditTile> provider3, @NotNull Provider<MiuiCellularTile> provider4, @NotNull Provider<MiuiHotspotTile> provider5, @NotNull Provider<MuteTile> provider6, @NotNull Provider<NightModeTile> provider7, @NotNull Provider<PaperModeTile> provider8, @NotNull Provider<PowerModeTile> provider9, @NotNull Provider<PowerSaverExtremeTile> provider10, @NotNull Provider<PowerSaverTile> provider11, @NotNull Provider<QuietModeTile> provider12, @NotNull Provider<ScreenButtonTile> provider13, @NotNull Provider<ScreenLockTile> provider14, @NotNull Provider<ScreenShotTile> provider15, @NotNull Provider<SyncTile> provider16, @NotNull Provider<VibrateTile> provider17, @NotNull Provider<MiuiAirplaneModeTile> provider18, @NotNull Provider<LocationTile> provider19) {
-        Lazy<QSHost> lazy2 = lazy;
-        Provider<AutoBrightnessTile> provider20 = provider;
-        Provider<DriveModeTile> provider21 = provider2;
-        Provider<EditTile> provider22 = provider3;
-        Provider<MiuiCellularTile> provider23 = provider4;
-        Provider<MiuiHotspotTile> provider24 = provider5;
-        Provider<MuteTile> provider25 = provider6;
-        Provider<NightModeTile> provider26 = provider7;
-        Provider<PaperModeTile> provider27 = provider8;
-        Provider<PowerModeTile> provider28 = provider9;
-        Provider<PowerSaverExtremeTile> provider29 = provider10;
-        Provider<PowerSaverTile> provider30 = provider11;
-        Provider<QuietModeTile> provider31 = provider12;
-        Provider<ScreenButtonTile> provider32 = provider13;
-        Provider<ScreenShotTile> provider33 = provider15;
-        Intrinsics.checkParameterIsNotNull(lazy2, "qsHostLazy");
-        Intrinsics.checkParameterIsNotNull(provider20, "autoBrightnessTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider21, "driveModeTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider22, "editTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider23, "miuiCellularTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider24, "miuiHotspotTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider25, "muteTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider26, "nightModeTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider27, "paperModeTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider28, "powerModeTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider29, "powerSaverExtremeTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider30, "powerSaverTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider31, "quietModeTileProvider");
-        Intrinsics.checkParameterIsNotNull(provider32, "screenButtonTileProvider");
+        Intrinsics.checkParameterIsNotNull(lazy, "qsHostLazy");
+        Intrinsics.checkParameterIsNotNull(provider, "autoBrightnessTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider2, "driveModeTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider3, "editTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider4, "miuiCellularTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider5, "miuiHotspotTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider6, "muteTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider7, "nightModeTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider8, "paperModeTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider9, "powerModeTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider10, "powerSaverExtremeTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider11, "powerSaverTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider12, "quietModeTileProvider");
+        Intrinsics.checkParameterIsNotNull(provider13, "screenButtonTileProvider");
         Intrinsics.checkParameterIsNotNull(provider14, "screenLockTileProvider");
         Intrinsics.checkParameterIsNotNull(provider15, "screenShotTileProvider");
         Intrinsics.checkParameterIsNotNull(provider16, "syncTileProvider");
         Intrinsics.checkParameterIsNotNull(provider17, "vibrateTileProvider");
         Intrinsics.checkParameterIsNotNull(provider18, "airplaneModeTileProvider");
         Intrinsics.checkParameterIsNotNull(provider19, "gpsTileProvider");
-        this.qsHostLazy = lazy2;
-        this.autoBrightnessTileProvider = provider20;
-        this.driveModeTileProvider = provider21;
-        this.editTileProvider = provider22;
-        this.miuiCellularTileProvider = provider23;
-        this.miuiHotspotTileProvider = provider24;
-        this.muteTileProvider = provider25;
-        this.nightModeTileProvider = provider26;
-        this.paperModeTileProvider = provider27;
-        this.powerModeTileProvider = provider28;
-        this.powerSaverExtremeTileProvider = provider29;
-        this.powerSaverTileProvider = provider30;
-        this.quietModeTileProvider = provider31;
-        this.screenButtonTileProvider = provider32;
+        this.qsHostLazy = lazy;
+        this.autoBrightnessTileProvider = provider;
+        this.driveModeTileProvider = provider2;
+        this.editTileProvider = provider3;
+        this.miuiCellularTileProvider = provider4;
+        this.miuiHotspotTileProvider = provider5;
+        this.muteTileProvider = provider6;
+        this.nightModeTileProvider = provider7;
+        this.paperModeTileProvider = provider8;
+        this.powerModeTileProvider = provider9;
+        this.powerSaverExtremeTileProvider = provider10;
+        this.powerSaverTileProvider = provider11;
+        this.quietModeTileProvider = provider12;
+        this.screenButtonTileProvider = provider13;
         this.screenLockTileProvider = provider14;
         this.screenShotTileProvider = provider15;
         this.syncTileProvider = provider16;
@@ -117,6 +103,7 @@ public final class QSFactoryInjectorImpl implements QSFactoryImpl.QSFactoryInjec
         this.gpsTileProvider = provider19;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSFactoryImpl.QSFactoryInjector
     @Nullable
     public QSTileImpl<?> interceptCreateTile(@NotNull String str) {
         HashMap hashMap;
@@ -236,7 +223,7 @@ public final class QSFactoryInjectorImpl implements QSFactoryImpl.QSFactoryInjec
                     }
                     break;
             }
-            if (StringsKt__StringsJVMKt.startsWith$default(str, "intent(", false, 2, (Object) null)) {
+            if (StringsKt__StringsJVMKt.startsWith$default(str, "intent(", false, 2, null)) {
                 return IntentTile.create(this.qsHostLazy.get(), str);
             }
             return null;

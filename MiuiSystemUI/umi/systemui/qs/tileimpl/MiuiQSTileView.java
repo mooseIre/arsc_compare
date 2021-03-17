@@ -50,13 +50,14 @@ public class MiuiQSTileView extends MiuiQSTileBaseView {
         FontSizeUtils.updateFontSize(this.mSecondLine, C0012R$dimen.qs_tile_app_label_text_size);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView, com.android.systemui.qs.tileimpl.MiuiQSTileBaseView
     public int getDetailY() {
         return (getTop() + this.mLabelContainer.getTop()) - (this.mIcon.getHeight() / 2);
     }
 
     /* access modifiers changed from: protected */
     public void createLabel() {
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_tile_label, this, false);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_tile_label, (ViewGroup) this, false);
         this.mLabelContainer = viewGroup;
         viewGroup.setClipChildren(false);
         this.mLabelContainer.setClipToPadding(false);
@@ -72,6 +73,7 @@ public class MiuiQSTileView extends MiuiQSTileBaseView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.MiuiQSTileBaseView
     public void handleStateChanged(QSTile.State state) {
         super.handleStateChanged(state);
         if (!Objects.equals(this.mLabel.getText(), state.label) || this.mState != state.state) {
@@ -103,6 +105,7 @@ public class MiuiQSTileView extends MiuiQSTileBaseView {
         imageView.setVisibility(i);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.MiuiQSTileBaseView
     public void init(View.OnClickListener onClickListener, View.OnClickListener onClickListener2, View.OnLongClickListener onLongClickListener) {
         super.init(onClickListener, onClickListener2, onLongClickListener);
         this.mLabelContainer.setOnClickListener(onClickListener2);

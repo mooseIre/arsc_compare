@@ -42,8 +42,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     private int mExpandHeightThres = 1;
     private boolean mExpanded;
     private boolean mExpanding;
-    /* access modifiers changed from: private */
-    public final H mHandler = new H();
+    private final H mHandler = new H();
     private QSTileHost mHost;
     private int mLastCellPaddingBottom;
     private float mLastHeight = -1.0f;
@@ -63,19 +62,22 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     private int mRowMarginStart;
     private int mShowLines;
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getNumVisibleTiles() {
         return 0;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getOffsetTop(QSPanel.TileRecord tileRecord) {
         return 0;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ControlPanelWindowManager.OnExpandChangeListener
     public void onExpandChange(boolean z) {
     }
 
     public QSControlCenterTileLayout(Context context) {
-        super(context, (AttributeSet) null);
+        super(context, null);
     }
 
     public QSControlCenterTileLayout(Context context, AttributeSet attributeSet) {
@@ -93,6 +95,8 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         ((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).addExpandChangeListener(this);
         if (this.mHost != null) {
             this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.controlcenter.phone.$$Lambda$QSControlCenterTileLayout$CxAivZjJmzWXIhy6v5hEnbQh9Y */
+
                 public final void run() {
                     QSControlCenterTileLayout.this.lambda$performAttachedToWindow$0$QSControlCenterTileLayout();
                 }
@@ -159,6 +163,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean updateResources() {
         this.mPanelPaddingHorizontal = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
         this.mPanelLandWidth = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
@@ -200,6 +205,8 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         return true;
     }
 
+    /* JADX DEBUG: Failed to insert an additional move for type inference into block B:18:0x000e */
+    /* JADX DEBUG: Failed to insert an additional move for type inference into block B:20:0x000e */
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         int size = View.MeasureSpec.getSize(i);
@@ -299,10 +306,12 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         return i * (this.mCellWidth + this.mRowMarginStart);
     }
 
+    @Override // com.android.systemui.qs.QSHost.Callback
     public void onTilesChanged() {
         setTiles(this.mHost.getTiles());
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void addTile(QSPanel.TileRecord tileRecord) {
         this.mRecords.add(tileRecord);
         tileRecord.tile.setListening(this, this.mListening);
@@ -310,6 +319,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         updateViewsLine();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void removeTile(QSPanel.TileRecord tileRecord) {
         this.mRecords.remove(tileRecord);
         tileRecord.tile.setListening(this, false);
@@ -475,6 +485,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         this.mBaseLineIdx = i;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void setListening(boolean z) {
         if (this.mListening != z) {
             this.mListening = z;
@@ -500,6 +511,8 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
     public void setTiles(Collection<QSTile> collection) {
         setTiles(collection, this.mExpanded);
         post(new Runnable() {
+            /* class com.android.systemui.controlcenter.phone.$$Lambda$QSControlCenterTileLayout$alKZfw2hiqUjeWLs5O4DK218ufc */
+
             public final void run() {
                 QSControlCenterTileLayout.this.lambda$setTiles$1$QSControlCenterTileLayout();
             }
@@ -548,23 +561,31 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         tileRecord.tile = qSTile;
         tileRecord.tileView = createTileView(qSTile, !this.mExpanded && this.mRecords.size() <= this.mMinShowRows * this.mColumns);
         AnonymousClass1 r4 = new QSTile.Callback() {
+            /* class com.android.systemui.controlcenter.phone.QSControlCenterTileLayout.AnonymousClass1 */
+
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public int getCallbackType() {
                 return 3;
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onScanStateChanged(boolean z) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onShowDetail(boolean z) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onToggleStateChanged(boolean z) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onStateChanged(QSTile.State state) {
                 QSControlCenterTileLayout.this.drawTile(tileRecord, state);
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onAnnouncementRequested(CharSequence charSequence) {
                 if (charSequence != null) {
                     QSControlCenterTileLayout.this.mHandler.obtainMessage(1, charSequence).sendToTarget();
@@ -590,7 +611,8 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         }
     }
 
-    private class H extends Handler {
+    /* access modifiers changed from: private */
+    public class H extends Handler {
         private H() {
         }
 

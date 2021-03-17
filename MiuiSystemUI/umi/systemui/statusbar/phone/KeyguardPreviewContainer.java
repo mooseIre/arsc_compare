@@ -14,6 +14,8 @@ public class KeyguardPreviewContainer extends FrameLayout {
     public KeyguardPreviewContainer(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         AnonymousClass1 r1 = new Drawable() {
+            /* class com.android.systemui.statusbar.phone.KeyguardPreviewContainer.AnonymousClass1 */
+
             public int getOpacity() {
                 return -1;
             }

@@ -40,26 +40,21 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
     private final int mAmPmStyle;
     private boolean mAttached;
     private final BroadcastDispatcher mBroadcastDispatcher;
-    /* access modifiers changed from: private */
-    public Calendar mCalendar;
+    private Calendar mCalendar;
     private int mClockMode;
     private boolean mClockVisibleByController;
     private boolean mClockVisibleByPolicy;
     private boolean mClockVisibleByUser;
     private final CommandQueue mCommandQueue;
-    /* access modifiers changed from: private */
-    public int mCurrentUserId;
+    private int mCurrentUserId;
     private final CurrentUserTracker mCurrentUserTracker;
     private boolean mDemoMode;
     private final BroadcastReceiver mIntentReceiver;
-    /* access modifiers changed from: private */
-    public Locale mLocale;
+    private Locale mLocale;
     private int mNonAdaptedColor;
     private final BroadcastReceiver mScreenReceiver;
-    /* access modifiers changed from: private */
-    public final Runnable mSecondTick;
-    /* access modifiers changed from: private */
-    public Handler mSecondsHandler;
+    private final Runnable mSecondTick;
+    private Handler mSecondsHandler;
     private final boolean mShowDark;
     private boolean mShowSeconds;
     private boolean mStatusBarClock;
@@ -82,12 +77,15 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         this.mClockVisibleByUser = true;
         this.mClockVisibleByController = true;
         this.mIntentReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.statusbar.policy.MiuiClock.AnonymousClass2 */
+
             public void onReceive(Context context, Intent intent) {
                 Handler handler = MiuiClock.this.getHandler();
                 if (handler != null) {
                     String action = intent.getAction();
                     if (action.equals("android.intent.action.TIMEZONE_CHANGED")) {
                         handler.post(new Runnable(intent.getStringExtra("time-zone")) {
+                            /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiClock$2$X4rQia0YnKWxYiwVzzeV6zSOIxA */
                             public final /* synthetic */ String f$1;
 
                             {
@@ -100,6 +98,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
                         });
                     } else if (action.equals("android.intent.action.CONFIGURATION_CHANGED")) {
                         handler.post(new Runnable(MiuiClock.this.getResources().getConfiguration().locale) {
+                            /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiClock$2$Qx5tJlO2m9HFOiePlayxBAhL13s */
                             public final /* synthetic */ Locale f$1;
 
                             {
@@ -112,6 +111,8 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
                         });
                     }
                     handler.post(new Runnable() {
+                        /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiClock$2$3REMYcIorKCY4tLnmwfA081UFdw */
+
                         public final void run() {
                             MiuiClock.AnonymousClass2.this.lambda$onReceive$2$MiuiClock$2();
                         }
@@ -122,7 +123,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             /* access modifiers changed from: private */
             /* renamed from: lambda$onReceive$0 */
             public /* synthetic */ void lambda$onReceive$0$MiuiClock$2(String str) {
-                Calendar unused = MiuiClock.this.mCalendar = new Calendar(TimeZone.getTimeZone(str));
+                MiuiClock.this.mCalendar = new Calendar(TimeZone.getTimeZone(str));
                 MiuiClock.this.mCalendar.setTimeZone(MiuiClock.this.mCalendar.getTimeZone());
             }
 
@@ -130,7 +131,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             /* renamed from: lambda$onReceive$1 */
             public /* synthetic */ void lambda$onReceive$1$MiuiClock$2(Locale locale) {
                 if (!locale.equals(MiuiClock.this.mLocale)) {
-                    Locale unused = MiuiClock.this.mLocale = locale;
+                    MiuiClock.this.mLocale = locale;
                 }
             }
 
@@ -141,6 +142,8 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             }
         };
         this.mScreenReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.statusbar.policy.MiuiClock.AnonymousClass3 */
+
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if ("android.intent.action.SCREEN_OFF".equals(action)) {
@@ -153,6 +156,8 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             }
         };
         this.mSecondTick = new Runnable() {
+            /* class com.android.systemui.statusbar.policy.MiuiClock.AnonymousClass4 */
+
             public void run() {
                 if (MiuiClock.this.mCalendar != null) {
                     MiuiClock.this.updateClock();
@@ -172,8 +177,11 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             BroadcastDispatcher broadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
             this.mBroadcastDispatcher = broadcastDispatcher;
             this.mCurrentUserTracker = new CurrentUserTracker(broadcastDispatcher) {
+                /* class com.android.systemui.statusbar.policy.MiuiClock.AnonymousClass1 */
+
+                @Override // com.android.systemui.settings.CurrentUserTracker
                 public void onUserSwitched(int i) {
-                    int unused = MiuiClock.this.mCurrentUserId = i;
+                    MiuiClock.this.mCurrentUserId = i;
                 }
             };
         } catch (Throwable th) {
@@ -228,7 +236,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
                 this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
             }
             if (this.mShowDark) {
-                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this);
             }
             this.mCurrentUserTracker.startTracking();
             this.mCurrentUserId = this.mCurrentUserTracker.getCurrentUserId();
@@ -252,7 +260,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
                 this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
             }
             if (this.mShowDark) {
-                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this);
             }
             this.mCurrentUserTracker.stopTracking();
         }
@@ -308,6 +316,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         }
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("clock_seconds".equals(str)) {
             this.mShowSeconds = TunerService.parseIntegerSwitch(str2, false);
@@ -318,6 +327,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         updateClockVisibility();
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         if (i == getDisplay().getDisplayId()) {
             boolean z2 = (8388608 & i2) == 0;
@@ -327,6 +337,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         }
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (z) {
             this.mNonAdaptedColor = DarkIconDispatcher.getTint(rect, this, i);
@@ -341,17 +352,18 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         FontSizeUtils.updateFontSize(this, C0012R$dimen.status_bar_clock_size);
-        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_end_padding), 0);
+        setPaddingRelative(((TextView) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_starting_padding), 0, ((TextView) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_end_padding), 0);
     }
 
     /* access modifiers changed from: protected */
     public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        Iterator it = this.mVisibilityListeners.iterator();
+        Iterator<ClockVisibilityListener> it = this.mVisibilityListeners.iterator();
         while (it.hasNext()) {
-            ((ClockVisibilityListener) it.next()).onClockVisibilityChanged(isShown());
+            it.next().onClockVisibilityChanged(isShown());
         }
     }
 
@@ -416,6 +428,7 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         }
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;

@@ -22,6 +22,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
         listView.setSwapRowsAndColumns(shouldSwapRowsAndColumns());
     }
 
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout, com.android.systemui.MultiListLayout
     public void onUpdateList() {
         setupListView();
         super.onUpdateList();
@@ -45,11 +46,13 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout, com.android.systemui.MultiListLayout
     public ListGridLayout getListView() {
         return (ListGridLayout) super.getListView();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.MultiListLayout
     public void removeAllListViews() {
         ListGridLayout listView = getListView();
         if (listView != null) {
@@ -58,6 +61,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     public void addToListView(View view, boolean z) {
         ListGridLayout listView = getListView();
         if (listView != null) {
@@ -65,6 +69,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
         }
     }
 
+    @Override // com.android.systemui.MultiListLayout
     public void removeAllItems() {
         ViewGroup separatedView = getSeparatedView();
         ListGridLayout listView = getListView();
@@ -89,6 +94,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     public boolean shouldReverseListItems() {
         int currentRotation = getCurrentRotation();
         boolean z = currentRotation == 0 || currentRotation == 2;
@@ -101,6 +107,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
         return (((float) getListView().getRowCount()) * getContext().getResources().getDimension(C0012R$dimen.global_actions_grid_item_height)) / 2.0f;
     }
 
+    @Override // com.android.systemui.MultiListLayout
     public float getAnimationOffsetX() {
         int currentRotation = getCurrentRotation();
         if (currentRotation == 1) {

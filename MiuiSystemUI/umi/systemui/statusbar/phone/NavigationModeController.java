@@ -7,7 +7,6 @@ import android.content.IntentFilter;
 import android.content.om.IOverlayManager;
 import android.content.pm.PackageManager;
 import android.content.res.ApkAssets;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.UserHandle;
@@ -23,14 +22,16 @@ import java.util.ArrayList;
 import java.util.concurrent.Executor;
 
 public class NavigationModeController implements Dumpable {
-    /* access modifiers changed from: private */
-    public static final String TAG = "NavigationModeController";
+    private static final String TAG = "NavigationModeController";
     private final Context mContext;
     private Context mCurrentUserContext;
     private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedCallback = new DeviceProvisionedController.DeviceProvisionedListener() {
+        /* class com.android.systemui.statusbar.phone.NavigationModeController.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
         public void onUserSwitched() {
-            String access$000 = NavigationModeController.TAG;
-            Log.d(access$000, "onUserSwitched: " + ActivityManagerWrapper.getInstance().getCurrentUserId());
+            String str = NavigationModeController.TAG;
+            Log.d(str, "onUserSwitched: " + ActivityManagerWrapper.getInstance().getCurrentUserId());
             NavigationModeController.this.updateCurrentInteractionMode(true);
             NavigationModeControllerExt.INSTANCE.onUserSwitched();
         }
@@ -38,6 +39,8 @@ public class NavigationModeController implements Dumpable {
     private ArrayList<ModeChangedListener> mListeners = new ArrayList<>();
     private final IOverlayManager mOverlayManager;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.phone.NavigationModeController.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             Log.d(NavigationModeController.TAG, "ACTION_OVERLAY_CHANGED");
             NavigationModeController.this.updateCurrentInteractionMode(true);
@@ -58,9 +61,12 @@ public class NavigationModeController implements Dumpable {
         IntentFilter intentFilter = new IntentFilter("android.intent.action.OVERLAY_CHANGED");
         intentFilter.addDataScheme("package");
         intentFilter.addDataSchemeSpecificPart("android", 0);
-        this.mContext.registerReceiverAsUser(this.mReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        this.mContext.registerReceiverAsUser(this.mReceiver, UserHandle.ALL, intentFilter, null, null);
         NavigationModeControllerExt.INSTANCE.registerSettingObserver(this.mContext);
         configurationController.addCallback(new ConfigurationController.ConfigurationListener() {
+            /* class com.android.systemui.statusbar.phone.NavigationModeController.AnonymousClass3 */
+
+            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
             public void onOverlayChanged() {
                 Log.d(NavigationModeController.TAG, "onOverlayChanged");
                 NavigationModeController.this.updateCurrentInteractionMode(true);
@@ -74,6 +80,7 @@ public class NavigationModeController implements Dumpable {
         this.mCurrentUserContext = currentUserContext;
         int currentInteractionMode = getCurrentInteractionMode(currentUserContext);
         this.mUiBgExecutor.execute(new Runnable(currentInteractionMode) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationModeController$Az4iHIVUWwUXS_IGosEIyzFux8w */
             public final /* synthetic */ int f$1;
 
             {
@@ -131,6 +138,7 @@ public class NavigationModeController implements Dumpable {
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         String str;
         printWriter.println("NavigationModeController:");
@@ -147,8 +155,9 @@ public class NavigationModeController implements Dumpable {
     private void dumpAssetPaths(Context context) {
         Log.d(TAG, "  contextUser=" + this.mCurrentUserContext.getUserId());
         Log.d(TAG, "  assetPaths=");
-        for (ApkAssets apkAssets : context.getResources().getAssets().getApkAssets()) {
-            Log.d(TAG, "    " + apkAssets.getAssetPath());
+        ApkAssets[] apkAssets = context.getResources().getAssets().getApkAssets();
+        for (ApkAssets apkAssets2 : apkAssets) {
+            Log.d(TAG, "    " + apkAssets2.getAssetPath());
         }
     }
 }

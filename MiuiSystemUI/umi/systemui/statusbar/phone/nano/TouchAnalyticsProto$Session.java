@@ -68,6 +68,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
                 return this;
             }
 
+            @Override // com.google.protobuf.nano.MessageNano
             public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
                 if (Float.floatToIntBits(this.x) != Float.floatToIntBits(0.0f)) {
                     codedOutputByteBufferNano.writeFloat(1, this.x);
@@ -96,6 +97,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
             }
 
             /* access modifiers changed from: protected */
+            @Override // com.google.protobuf.nano.MessageNano
             public int computeSerializedSize() {
                 int computeSerializedSize = super.computeSerializedSize();
                 if (Float.floatToIntBits(this.x) != Float.floatToIntBits(0.0f)) {
@@ -148,6 +150,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
             return this;
         }
 
+        @Override // com.google.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
             long j = this.timeOffsetNanos;
             if (j != 0) {
@@ -188,6 +191,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.google.protobuf.nano.MessageNano
         public int computeSerializedSize() {
             int computeSerializedSize = super.computeSerializedSize();
             long j = this.timeOffsetNanos;
@@ -257,6 +261,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
             return this;
         }
 
+        @Override // com.google.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
             int i = this.type;
             if (i != 1) {
@@ -286,6 +291,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.google.protobuf.nano.MessageNano
         public int computeSerializedSize() {
             int computeSerializedSize = super.computeSerializedSize();
             int i = this.type;
@@ -332,6 +338,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
             return this;
         }
 
+        @Override // com.google.protobuf.nano.MessageNano
         public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
             int i = this.type;
             if (i != 0) {
@@ -345,6 +352,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.google.protobuf.nano.MessageNano
         public int computeSerializedSize() {
             int computeSerializedSize = super.computeSerializedSize();
             int i = this.type;
@@ -376,6 +384,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         return this;
     }
 
+    @Override // com.google.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
         long j = this.startTimestampMillis;
         if (j != 0) {
@@ -456,6 +465,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.google.protobuf.nano.MessageNano
     public int computeSerializedSize() {
         int computeSerializedSize = super.computeSerializedSize();
         long j = this.startTimestampMillis;

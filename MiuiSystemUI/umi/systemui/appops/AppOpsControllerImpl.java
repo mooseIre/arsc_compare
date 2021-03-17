@@ -33,8 +33,8 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
         int[] iArr = OPS;
         this.mAppOps = (AppOpsManager) context.getSystemService("appops");
         this.mBGHandler = new H(looper);
-        for (int valueOf : iArr) {
-            this.mCallbacksByCode.put(Integer.valueOf(valueOf), new ArraySet());
+        for (int i : iArr) {
+            this.mCallbacksByCode.put(Integer.valueOf(i), new ArraySet());
         }
         dumpManager.registerDumpable("AppOpsControllerImpl", this);
     }
@@ -57,7 +57,7 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
         }
         this.mAppOps.stopWatchingActive(this);
         this.mAppOps.stopWatchingNoted(this);
-        this.mBGHandler.removeCallbacksAndMessages((Object) null);
+        this.mBGHandler.removeCallbacksAndMessages(null);
         synchronized (this.mActiveItems) {
             this.mActiveItems.clear();
         }
@@ -66,6 +66,7 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
         }
     }
 
+    @Override // com.android.systemui.appops.AppOpsController
     public void addCallback(int[] iArr, AppOpsController.Callback callback) {
         int length = iArr.length;
         boolean z = false;
@@ -110,6 +111,7 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:10:0x0015, code lost:
         monitor-enter(r1);
      */
@@ -131,17 +133,17 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
     /* JADX WARNING: Code restructure failed: missing block: B:18:0x0025, code lost:
         notifySuscribers(r4, r5, r6, false);
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:33:?, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:25:?, code lost:
         return;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:34:?, code lost:
+    /* JADX WARNING: Code restructure failed: missing block: B:26:?, code lost:
         return;
      */
     /* JADX WARNING: Code restructure failed: missing block: B:9:0x0013, code lost:
         r1 = r3.mActiveItems;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void removeNoted(int r4, int r5, java.lang.String r6) {
+    private void removeNoted(int r4, int r5, java.lang.String r6) {
         /*
             r3 = this;
             java.util.List<com.android.systemui.appops.AppOpItem> r0 = r3.mNotedItems
@@ -173,11 +175,11 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
             return
         L_0x0029:
             r3 = move-exception
-            monitor-exit(r1)     // Catch:{ all -> 0x0029 }
+            monitor-exit(r1)
             throw r3
         L_0x002c:
             r3 = move-exception
-            monitor-exit(r0)     // Catch:{ all -> 0x002c }
+            monitor-exit(r0)
             throw r3
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.appops.AppOpsControllerImpl.removeNoted(int, int, java.lang.String):void");
@@ -209,6 +211,7 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
             }
             if (!z2) {
                 this.mBGHandler.post(new Runnable(i, i2, str, z) {
+                    /* class com.android.systemui.appops.$$Lambda$AppOpsControllerImpl$ytWudla0eUXQNol33KSx7VyQvYM */
                     public final /* synthetic */ int f$1;
                     public final /* synthetic */ int f$2;
                     public final /* synthetic */ String f$3;
@@ -237,6 +240,7 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
             }
             if (!z) {
                 this.mBGHandler.post(new Runnable(i, i2, str) {
+                    /* class com.android.systemui.appops.$$Lambda$AppOpsControllerImpl$Ikchvj1nqb8W_dVPetwy70ZXqg */
                     public final /* synthetic */ int f$1;
                     public final /* synthetic */ int f$2;
                     public final /* synthetic */ String f$3;
@@ -265,12 +269,13 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
     /* renamed from: notifySuscribers */
     public void lambda$onOpActiveChanged$0(int i, int i2, String str, boolean z) {
         if (this.mCallbacksByCode.containsKey(Integer.valueOf(i))) {
-            for (AppOpsController.Callback onActiveStateChanged : this.mCallbacksByCode.get(Integer.valueOf(i))) {
-                onActiveStateChanged.onActiveStateChanged(i, i2, str, z);
+            for (AppOpsController.Callback callback : this.mCallbacksByCode.get(Integer.valueOf(i))) {
+                callback.onActiveStateChanged(i, i2, str, z);
             }
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("AppOpsController state:");
         printWriter.println("  Listening: " + this.mListening);
@@ -286,7 +291,8 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
         }
     }
 
-    protected class H extends Handler {
+    /* access modifiers changed from: protected */
+    public class H extends Handler {
         H(Looper looper) {
             super(looper);
         }
@@ -294,6 +300,8 @@ public class AppOpsControllerImpl implements AppOpsController, AppOpsManager.OnO
         public void scheduleRemoval(final AppOpItem appOpItem, long j) {
             removeCallbacksAndMessages(appOpItem);
             postDelayed(new Runnable() {
+                /* class com.android.systemui.appops.AppOpsControllerImpl.H.AnonymousClass1 */
+
                 public void run() {
                     AppOpsControllerImpl.this.removeNoted(appOpItem.getCode(), appOpItem.getUid(), appOpItem.getPackageName());
                 }

@@ -21,8 +21,7 @@ public class TaskStackChangeListeners extends TaskStackListener {
     private static final String TAG = TaskStackChangeListeners.class.getSimpleName();
     private final Handler mHandler;
     private boolean mRegistered;
-    /* access modifiers changed from: private */
-    public final List<TaskStackChangeListener> mTaskStackListeners = new ArrayList();
+    private final List<TaskStackChangeListener> mTaskStackListeners = new ArrayList();
     private final List<TaskStackChangeListener> mTmpListeners = new ArrayList();
 
     public TaskStackChangeListeners(Looper looper) {

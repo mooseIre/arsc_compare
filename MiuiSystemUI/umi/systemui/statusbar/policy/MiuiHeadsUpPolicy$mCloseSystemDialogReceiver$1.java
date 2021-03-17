@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiHeadsUpPolicy$mCloseSystemDialogReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ MiuiHeadsUpPolicy this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiHeadsUpPolicy$mCloseSystemDialogReceiver$1(MiuiHeadsUpPolicy miuiHeadsUpPolicy) {
         this.this$0 = miuiHeadsUpPolicy;
     }

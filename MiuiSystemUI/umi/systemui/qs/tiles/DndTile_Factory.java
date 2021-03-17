@@ -23,6 +23,7 @@ public final class DndTile_Factory implements Factory<DndTile> {
         this.sharedPreferencesProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public DndTile get() {
         return provideInstance(this.hostProvider, this.zenModeControllerProvider, this.activityStarterProvider, this.broadcastDispatcherProvider, this.sharedPreferencesProvider);
     }

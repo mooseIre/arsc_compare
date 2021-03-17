@@ -15,6 +15,7 @@ final class MiuiExpandableNotificationRow$mMiniWindowIcon$2 extends Lambda imple
         this.this$0 = miuiExpandableNotificationRow;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final ImageView invoke() {
         return (ImageView) this.this$0.findViewById(C0015R$id.mini_window_icon);
     }

@@ -43,11 +43,13 @@ public final class TemperatureControlBehavior implements Behavior {
         throw null;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void initialize(@NotNull ControlViewHolder controlViewHolder) {
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         this.cvh = controlViewHolder;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void bind(@NotNull ControlWithState controlWithState, int i) {
         Intrinsics.checkParameterIsNotNull(controlWithState, "cws");
         Control control2 = controlWithState.getControl();
@@ -61,7 +63,7 @@ public final class TemperatureControlBehavior implements Behavior {
                 CharSequence statusText = control2.getStatusText();
                 Intrinsics.checkExpressionValueIsNotNull(statusText, "control.getStatusText()");
                 int i2 = 0;
-                ControlViewHolder.setStatusText$default(controlViewHolder, statusText, false, 2, (Object) null);
+                ControlViewHolder.setStatusText$default(controlViewHolder, statusText, false, 2, null);
                 ControlViewHolder controlViewHolder2 = this.cvh;
                 if (controlViewHolder2 != null) {
                     Drawable background = controlViewHolder2.getLayout().getBackground();
@@ -76,7 +78,7 @@ public final class TemperatureControlBehavior implements Behavior {
                                 TemperatureControlTemplate temperatureControlTemplate = controlTemplate;
                                 int currentActiveMode = temperatureControlTemplate.getCurrentActiveMode();
                                 ControlTemplate template = temperatureControlTemplate.getTemplate();
-                                if (Intrinsics.areEqual((Object) template, (Object) ControlTemplate.getNoTemplateObject()) || Intrinsics.areEqual((Object) template, (Object) ControlTemplate.getErrorTemplate())) {
+                                if (Intrinsics.areEqual(template, ControlTemplate.getNoTemplateObject()) || Intrinsics.areEqual(template, ControlTemplate.getErrorTemplate())) {
                                     boolean z = (currentActiveMode == 0 || currentActiveMode == 1) ? false : true;
                                     Drawable drawable = this.clipLayer;
                                     if (drawable != null) {
@@ -86,7 +88,7 @@ public final class TemperatureControlBehavior implements Behavior {
                                         drawable.setLevel(i2);
                                         ControlViewHolder controlViewHolder3 = this.cvh;
                                         if (controlViewHolder3 != null) {
-                                            ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, z, currentActiveMode, false, 4, (Object) null);
+                                            ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, z, currentActiveMode, false, 4, null);
                                             ControlViewHolder controlViewHolder4 = this.cvh;
                                             if (controlViewHolder4 != null) {
                                                 controlViewHolder4.getLayout().setOnClickListener(new TemperatureControlBehavior$bind$1(this, temperatureControlTemplate));

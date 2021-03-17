@@ -20,14 +20,17 @@ public class SectionHeaderView extends StackScrollerDecorView {
     private View.OnClickListener mOnClearClickListener = null;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public View findSecondaryView() {
         return null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public boolean isTransparent() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView, com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public boolean needsClippingToShelf() {
         return true;
     }
@@ -37,6 +40,7 @@ public class SectionHeaderView extends StackScrollerDecorView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public void onFinishInflate() {
         this.mContents = (ViewGroup) requireViewById(C0015R$id.content);
         bindContents();
@@ -63,6 +67,7 @@ public class SectionHeaderView extends StackScrollerDecorView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public View findContentView() {
         return this.mContents;
     }
@@ -82,6 +87,7 @@ public class SectionHeaderView extends StackScrollerDecorView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void applyContentTransformation(float f, float f2) {
         super.applyContentTransformation(f, f2);
         this.mLabelView.setAlpha(f);

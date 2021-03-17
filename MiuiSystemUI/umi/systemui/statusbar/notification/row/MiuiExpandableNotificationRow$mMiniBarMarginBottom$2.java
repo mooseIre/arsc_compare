@@ -14,7 +14,9 @@ final class MiuiExpandableNotificationRow$mMiniBarMarginBottom$2 extends Lambda 
         this.this$0 = miuiExpandableNotificationRow;
     }
 
-    public final float invoke() {
+    /* Return type fixed from 'float' to match base method */
+    @Override // kotlin.jvm.functions.Function0
+    public final Float invoke() {
         return this.this$0.getResources().getDimension(C0012R$dimen.mini_window_bar_marginBottom);
     }
 }

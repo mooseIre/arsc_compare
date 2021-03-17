@@ -17,6 +17,7 @@ public final class ZenModeControllerImpl_Factory implements Factory<ZenModeContr
         this.broadcastDispatcherProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ZenModeControllerImpl get() {
         return provideInstance(this.contextProvider, this.handlerProvider, this.broadcastDispatcherProvider);
     }

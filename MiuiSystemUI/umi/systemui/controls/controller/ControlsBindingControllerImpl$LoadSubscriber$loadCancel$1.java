@@ -13,7 +13,7 @@ final class ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1 implements
     }
 
     public final void run() {
-        Function0 access$get_loadCancelInternal$p = this.this$0._loadCancelInternal;
+        Function0 access$get_loadCancelInternal$p = ControlsBindingControllerImpl.LoadSubscriber.access$get_loadCancelInternal$p(this.this$0);
         if (access$get_loadCancelInternal$p != null) {
             Log.d("ControlsBindingControllerImpl", "Canceling loadSubscribtion");
             access$get_loadCancelInternal$p.invoke();

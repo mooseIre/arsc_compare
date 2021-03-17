@@ -10,20 +10,24 @@ public final class NotificationSectionsManager$decorViewHeaderState$1 implements
     final /* synthetic */ StackScrollerDecorView $header;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $inner;
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     @Nullable
     public Integer getCurrentPosition() {
         return this.$$delegate_0.getCurrentPosition();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     @Nullable
     public Integer getTargetPosition() {
         return this.$$delegate_0.getTargetPosition();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     public void setCurrentPosition(@Nullable Integer num) {
         this.$$delegate_0.setCurrentPosition(num);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     public void setTargetPosition(@Nullable Integer num) {
         this.$$delegate_0.setTargetPosition(num);
     }
@@ -34,6 +38,7 @@ public final class NotificationSectionsManager$decorViewHeaderState$1 implements
         this.$$delegate_0 = sectionUpdateState;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     public void adjustViewPosition() {
         this.$inner.adjustViewPosition();
         if (getTargetPosition() != null && getCurrentPosition() == null) {

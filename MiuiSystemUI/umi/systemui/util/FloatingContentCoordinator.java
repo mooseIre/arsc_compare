@@ -10,7 +10,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.Pair;
+import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference0Impl;
 import kotlin.jvm.internal.Ref$ObjectRef;
@@ -20,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: FloatingContentCoordinator.kt */
 public final class FloatingContentCoordinator {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
     private final Map<FloatingContent, Rect> allContentBounds = new HashMap();
     private boolean currentlyResolvingConflicts;
 
@@ -35,7 +38,7 @@ public final class FloatingContentCoordinator {
         void moveToBounds(@NotNull Rect rect);
 
         @NotNull
-        Rect calculateNewBoundsOnOverlap(@NotNull Rect rect, @NotNull List<Rect> list) {
+        default Rect calculateNewBoundsOnOverlap(@NotNull Rect rect, @NotNull List<Rect> list) {
             Intrinsics.checkParameterIsNotNull(rect, "overlappingContentBounds");
             Intrinsics.checkParameterIsNotNull(list, "otherContentBounds");
             return FloatingContentCoordinator.Companion.findAreaForContentVertically(getFloatingBoundsOnScreen(), rect, list, getAllowedFloatingBoundsRegion());
@@ -79,9 +82,9 @@ public final class FloatingContentCoordinator {
                 if (!it.hasNext()) {
                     break;
                 }
-                Map.Entry next = it.next();
-                Rect rect3 = (Rect) next.getValue();
-                if ((!Intrinsics.areEqual((Object) (FloatingContent) next.getKey(), (Object) floatingContent)) && Rect.intersects(rect2, rect3)) {
+                Map.Entry<FloatingContent, Rect> next = it.next();
+                Rect value = next.getValue();
+                if ((!Intrinsics.areEqual(next.getKey(), floatingContent)) && Rect.intersects(rect2, value)) {
                     z = true;
                 }
                 if (z) {
@@ -104,8 +107,8 @@ public final class FloatingContentCoordinator {
     }
 
     private final void updateContentBounds() {
-        for (FloatingContent floatingContent : this.allContentBounds.keySet()) {
-            this.allContentBounds.put(floatingContent, floatingContent.getFloatingBoundsOnScreen());
+        for (T t : this.allContentBounds.keySet()) {
+            this.allContentBounds.put(t, t.getFloatingBoundsOnScreen());
         }
     }
 
@@ -114,14 +117,13 @@ public final class FloatingContentCoordinator {
         static final /* synthetic */ KProperty[] $$delegatedProperties;
 
         static {
-            Class<Companion> cls = Companion.class;
-            PropertyReference0Impl propertyReference0Impl = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(cls), "newContentBoundsAbove", "<v#0>");
+            PropertyReference0Impl propertyReference0Impl = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(Companion.class), "newContentBoundsAbove", "<v#0>");
             Reflection.property0(propertyReference0Impl);
-            PropertyReference0Impl propertyReference0Impl2 = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(cls), "newContentBoundsBelow", "<v#1>");
+            PropertyReference0Impl propertyReference0Impl2 = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(Companion.class), "newContentBoundsBelow", "<v#1>");
             Reflection.property0(propertyReference0Impl2);
-            PropertyReference0Impl propertyReference0Impl3 = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(cls), "positionAboveInBounds", "<v#2>");
+            PropertyReference0Impl propertyReference0Impl3 = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(Companion.class), "positionAboveInBounds", "<v#2>");
             Reflection.property0(propertyReference0Impl3);
-            PropertyReference0Impl propertyReference0Impl4 = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(cls), "positionBelowInBounds", "<v#3>");
+            PropertyReference0Impl propertyReference0Impl4 = new PropertyReference0Impl(Reflection.getOrCreateKotlinClass(Companion.class), "positionBelowInBounds", "<v#3>");
             Reflection.property0(propertyReference0Impl4);
             $$delegatedProperties = new KProperty[]{propertyReference0Impl, propertyReference0Impl2, propertyReference0Impl3, propertyReference0Impl4};
         }
@@ -144,23 +146,23 @@ public final class FloatingContentCoordinator {
             Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
             Ref$ObjectRef ref$ObjectRef2 = new Ref$ObjectRef();
             ArrayList arrayList = new ArrayList();
-            for (T next : collection) {
-                if (FloatingContentCoordinator.Companion.rectsIntersectVertically((Rect) next, rect)) {
-                    arrayList.add(next);
+            for (T t : collection) {
+                if (FloatingContentCoordinator.Companion.rectsIntersectVertically(t, rect)) {
+                    arrayList.add(t);
                 }
             }
             ArrayList arrayList2 = new ArrayList();
             ArrayList arrayList3 = new ArrayList();
-            for (Object next2 : arrayList) {
-                if (((Rect) next2).top < rect.top) {
-                    arrayList2.add(next2);
+            for (Object obj : arrayList) {
+                if (((Rect) obj).top < rect.top) {
+                    arrayList2.add(obj);
                 } else {
-                    arrayList3.add(next2);
+                    arrayList3.add(obj);
                 }
             }
             Pair pair = new Pair(arrayList2, arrayList3);
-            ref$ObjectRef.element = (List) pair.component1();
-            ref$ObjectRef2.element = (List) pair.component2();
+            ref$ObjectRef.element = (T) ((List) pair.component1());
+            ref$ObjectRef2.element = (T) ((List) pair.component2());
             Lazy lazy = LazyKt__LazyJVMKt.lazy(new FloatingContentCoordinator$Companion$findAreaForContentVertically$newContentBoundsAbove$2(rect, ref$ObjectRef, rect2));
             KProperty kProperty = $$delegatedProperties[0];
             Lazy lazy2 = LazyKt__LazyJVMKt.lazy(new FloatingContentCoordinator$Companion$findAreaForContentVertically$newContentBoundsBelow$2(rect, ref$ObjectRef2, rect2));
@@ -176,46 +178,23 @@ public final class FloatingContentCoordinator {
             return rect3.contains(rect4) ? rect4 : new Rect();
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:4:0x000a, code lost:
-            r1 = r2.right;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        private final boolean rectsIntersectVertically(android.graphics.Rect r2, android.graphics.Rect r3) {
-            /*
-                r1 = this;
-                int r1 = r2.left
-                int r0 = r3.left
-                if (r1 < r0) goto L_0x000a
-                int r0 = r3.right
-                if (r1 <= r0) goto L_0x0014
-            L_0x000a:
-                int r1 = r2.right
-                int r2 = r3.right
-                if (r1 > r2) goto L_0x0016
-                int r2 = r3.left
-                if (r1 < r2) goto L_0x0016
-            L_0x0014:
-                r1 = 1
-                goto L_0x0017
-            L_0x0016:
-                r1 = 0
-            L_0x0017:
-                return r1
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.util.FloatingContentCoordinator.Companion.rectsIntersectVertically(android.graphics.Rect, android.graphics.Rect):boolean");
+        private final boolean rectsIntersectVertically(Rect rect, Rect rect2) {
+            int i;
+            int i2 = rect.left;
+            return (i2 >= rect2.left && i2 <= rect2.right) || ((i = rect.right) <= rect2.right && i >= rect2.left);
         }
 
         @NotNull
         public final Rect findAreaForContentAboveOrBelow(@NotNull Rect rect, @NotNull Collection<Rect> collection, boolean z) {
             Intrinsics.checkParameterIsNotNull(rect, "contentRect");
             Intrinsics.checkParameterIsNotNull(collection, "exclusionRects");
-            List<T> sortedWith = CollectionsKt___CollectionsKt.sortedWith(collection, new FloatingContentCoordinator$Companion$findAreaForContentAboveOrBelow$$inlined$sortedBy$1(z));
+            List<Rect> list = CollectionsKt___CollectionsKt.sortedWith(collection, new FloatingContentCoordinator$Companion$findAreaForContentAboveOrBelow$$inlined$sortedBy$1(z));
             Rect rect2 = new Rect(rect);
-            for (T t : sortedWith) {
-                if (!Rect.intersects(rect2, t)) {
+            for (Rect rect3 : list) {
+                if (!Rect.intersects(rect2, rect3)) {
                     break;
                 }
-                rect2.offsetTo(rect2.left, t.top + (z ? -rect.height() : t.height()));
+                rect2.offsetTo(rect2.left, rect3.top + (z ? -rect.height() : rect3.height()));
             }
             return rect2;
         }

@@ -32,12 +32,15 @@ public class KeyguardMediaController {
         this.statusBarStateController = sysuiStatusBarStateController;
         this.notifLockscreenUserManager = notificationLockscreenUserManager;
         sysuiStatusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
+            /* class com.android.systemui.media.KeyguardMediaController.AnonymousClass1 */
             final /* synthetic */ KeyguardMediaController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 this.this$0.updateVisibility();
             }
@@ -66,7 +69,8 @@ public class KeyguardMediaController {
     }
 
     /* access modifiers changed from: private */
-    public final void updateVisibility() {
+    /* access modifiers changed from: public */
+    private final void updateVisibility() {
         Function1<? super Boolean, Unit> function1;
         int i = 0;
         boolean z = true;
@@ -84,7 +88,7 @@ public class KeyguardMediaController {
             mediaHeaderView2.setVisibility(i);
         }
         if (visibility != i && (function1 = this.visibilityChangedListener) != null) {
-            Unit invoke = function1.invoke(Boolean.valueOf(z));
+            function1.invoke(Boolean.valueOf(z));
         }
     }
 }

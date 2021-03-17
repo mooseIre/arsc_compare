@@ -16,15 +16,16 @@ import android.util.FloatProperty;
 
 public class SlashDrawable extends Drawable {
     private boolean mAnimationEnabled = true;
-    /* access modifiers changed from: private */
-    public float mCurrentSlashLength;
+    private float mCurrentSlashLength;
     private Drawable mDrawable;
     private final Paint mPaint = new Paint(1);
     private final Path mPath = new Path();
     private float mRotation;
     private final FloatProperty mSlashLengthProp = new FloatProperty<SlashDrawable>(this, "slashLength") {
+        /* class com.android.systemui.qs.SlashDrawable.AnonymousClass1 */
+
         public void setValue(SlashDrawable slashDrawable, float f) {
-            float unused = slashDrawable.mCurrentSlashLength = f;
+            slashDrawable.mCurrentSlashLength = f;
         }
 
         public Float get(SlashDrawable slashDrawable) {
@@ -105,13 +106,15 @@ public class SlashDrawable extends Drawable {
                 f = 0.0f;
             }
             if (this.mAnimationEnabled) {
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, this.mSlashLengthProp, new float[]{f, f2});
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, this.mSlashLengthProp, f, f2);
                 ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    /* class com.android.systemui.qs.$$Lambda$SlashDrawable$d6ImpYshN38WeANK1PRMKepeaRo */
+
                     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                         SlashDrawable.this.lambda$setSlashed$0$SlashDrawable(valueAnimator);
                     }
                 });
-                ofFloat.setDuration(350);
+                ofFloat.setDuration(350L);
                 ofFloat.start();
                 return;
             }

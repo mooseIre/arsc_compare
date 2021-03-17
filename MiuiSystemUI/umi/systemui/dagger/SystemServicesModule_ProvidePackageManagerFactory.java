@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvidePackageManagerFactory implements 
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PackageManager get() {
         return provideInstance(this.contextProvider);
     }

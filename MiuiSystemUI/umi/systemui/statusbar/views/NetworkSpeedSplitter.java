@@ -14,7 +14,7 @@ public class NetworkSpeedSplitter extends TextView implements MiuiClock.ClockVis
     private int mVisibilityByDisableInfo;
 
     public NetworkSpeedSplitter(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public NetworkSpeedSplitter(Context context, AttributeSet attributeSet) {
@@ -30,11 +30,13 @@ public class NetworkSpeedSplitter extends TextView implements MiuiClock.ClockVis
         setText(" | ");
     }
 
+    @Override // com.android.systemui.statusbar.policy.MiuiClock.ClockVisibilityListener
     public void onClockVisibilityChanged(boolean z) {
         this.mClockVisible = z;
         updateVisibility();
     }
 
+    @Override // com.android.systemui.statusbar.views.NetworkSpeedView.NetworkSpeedVisibilityListener
     public void onNetworkSpeedVisibilityChanged(boolean z) {
         this.mNetworkSpeedVisible = z;
         updateVisibility();
@@ -49,6 +51,7 @@ public class NetworkSpeedSplitter extends TextView implements MiuiClock.ClockVis
         updateVisibility();
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (z) {
             setTextColor(DarkIconDispatcher.getTint(rect, this, i));

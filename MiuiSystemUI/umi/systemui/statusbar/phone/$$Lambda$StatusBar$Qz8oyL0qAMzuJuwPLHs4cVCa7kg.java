@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$StatusBar$Qz8oyL0qAMzuJuwPLHs4cVCa7k
     private /* synthetic */ $$Lambda$StatusBar$Qz8oyL0qAMzuJuwPLHs4cVCa7kg() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         StatusBar.lambda$maybeEscalateHeadsUp$14((NotificationEntry) obj);
     }

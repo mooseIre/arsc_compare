@@ -41,6 +41,7 @@ public final class AssistHandleReminderExpBehavior_Factory implements Factory<As
         this.bootCompleteCacheProvider = provider11;
     }
 
+    @Override // javax.inject.Provider
     public AssistHandleReminderExpBehavior get() {
         return provideInstance(this.clockProvider, this.handlerProvider, this.deviceConfigHelperProvider, this.statusBarStateControllerProvider, this.activityManagerWrapperProvider, this.overviewProxyServiceProvider, this.sysUiFlagContainerProvider, this.wakefulnessLifecycleProvider, this.packageManagerWrapperProvider, this.broadcastDispatcherProvider, this.bootCompleteCacheProvider);
     }

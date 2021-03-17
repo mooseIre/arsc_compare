@@ -75,6 +75,7 @@ public final class QSFactoryImpl_Factory implements Factory<QSFactoryImpl> {
         this.qsFactoryInjectorProvider = provider22;
     }
 
+    @Override // javax.inject.Provider
     public QSFactoryImpl get() {
         return provideInstance(this.qsHostLazyProvider, this.wifiTileProvider, this.bluetoothTileProvider, this.cellularTileProvider, this.dndTileProvider, this.colorInversionTileProvider, this.airplaneModeTileProvider, this.workModeTileProvider, this.rotationLockTileProvider, this.flashlightTileProvider, this.locationTileProvider, this.castTileProvider, this.hotspotTileProvider, this.userTileProvider, this.batterySaverTileProvider, this.dataSaverTileProvider, this.nightDisplayTileProvider, this.nfcTileProvider, this.memoryTileProvider, this.uiModeNightTileProvider, this.screenRecordTileProvider, this.qsFactoryInjectorProvider);
     }

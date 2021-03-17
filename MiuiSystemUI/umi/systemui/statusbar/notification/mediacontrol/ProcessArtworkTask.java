@@ -37,12 +37,12 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
     /* access modifiers changed from: protected */
     public void onPostExecute(Result result) {
         if (this.mPanel.get() != null) {
-            ((MiuiMediaControlPanel) this.mPanel.get()).setForegroundColors(result);
-            if (((MiuiMediaControlPanel) this.mPanel.get()).getView() != null) {
-                ((MiuiMediaControlPanel) this.mPanel.get()).getView().setBackground(result.bitmap, result.backgroundColor);
+            this.mPanel.get().setForegroundColors(result);
+            if (this.mPanel.get().getView() != null) {
+                this.mPanel.get().getView().setBackground(result.bitmap, result.backgroundColor);
             }
             if (!isCancelled()) {
-                ((MiuiMediaControlPanel) this.mPanel.get()).removeTask(this);
+                this.mPanel.get().removeTask(this);
             }
         }
     }
@@ -54,7 +54,7 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
             bitmap.recycle();
         }
         if (this.mPanel.get() != null) {
-            ((MiuiMediaControlPanel) this.mPanel.get()).removeTask(this);
+            this.mPanel.get().removeTask(this);
         }
     }
 
@@ -85,6 +85,9 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
         generateArtworkPaletteBuilder.setRegion((int) (((float) createBitmap.getWidth()) * 0.4f), 0, createBitmap.getWidth(), createBitmap.getHeight());
         if (this.mFilteredBackgroundHsl != null) {
             generateArtworkPaletteBuilder.addFilter(new Palette.Filter() {
+                /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$ProcessArtworkTask$GicmRQnGsd1PdG1arj3Y8LFqu_4 */
+
+                @Override // androidx.palette.graphics.Palette.Filter
                 public final boolean isAllowed(int i, float[] fArr) {
                     return ProcessArtworkTask.this.lambda$processArtwork$1$ProcessArtworkTask(i, fArr);
                 }
@@ -122,10 +125,10 @@ public class ProcessArtworkTask extends AsyncTask<Drawable, Void, Result> {
         } else {
             float f = -1.0f;
             Palette.Swatch swatch = null;
-            for (Palette.Swatch next : palette.getSwatches()) {
-                if (next != dominantSwatch && ((float) next.getPopulation()) > f && !MediaNotificationProcessor.isWhiteOrBlack(next.getHsl())) {
-                    f = (float) next.getPopulation();
-                    swatch = next;
+            for (Palette.Swatch swatch2 : palette.getSwatches()) {
+                if (swatch2 != dominantSwatch && ((float) swatch2.getPopulation()) > f && !MediaNotificationProcessor.isWhiteOrBlack(swatch2.getHsl())) {
+                    f = (float) swatch2.getPopulation();
+                    swatch = swatch2;
                 }
             }
             if (swatch == null) {

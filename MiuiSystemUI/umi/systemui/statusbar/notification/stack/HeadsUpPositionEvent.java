@@ -2,14 +2,14 @@ package com.android.systemui.statusbar.notification.stack;
 
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.miui.systemui.animation.PhysicBasedInterpolator;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: MiuiNotificationAnimationExtensions.kt */
 public final class HeadsUpPositionEvent extends NotificationStackScrollLayout.AnimationEvent {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    /* access modifiers changed from: private */
+    public static final Companion Companion = new Companion(null);
     @NotNull
-    public static final PhysicBasedInterpolator INTERPOLATOR;
+    private static final PhysicBasedInterpolator INTERPOLATOR;
 
     /* compiled from: MiuiNotificationAnimationExtensions.kt */
     public static final class Companion {

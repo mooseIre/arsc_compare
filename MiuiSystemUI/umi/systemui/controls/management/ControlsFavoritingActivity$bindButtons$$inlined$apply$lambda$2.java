@@ -17,11 +17,11 @@ final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2 imple
     }
 
     public final void onClick(View view) {
-        if (this.this$0.component != null) {
-            for (StructureContainer structureContainer : this.this$0.listOfStructures) {
+        if (ControlsFavoritingActivity.access$getComponent$p(this.this$0) != null) {
+            for (StructureContainer structureContainer : ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0)) {
                 List<ControlInfo> favorites = structureContainer.getModel().getFavorites();
-                ControlsControllerImpl access$getController$p = this.this$0.controller;
-                ComponentName access$getComponent$p = this.this$0.component;
+                ControlsControllerImpl access$getController$p = ControlsFavoritingActivity.access$getController$p(this.this$0);
+                ComponentName access$getComponent$p = ControlsFavoritingActivity.access$getComponent$p(this.this$0);
                 if (access$getComponent$p != null) {
                     access$getController$p.replaceFavoritesForStructure(new StructureInfo(access$getComponent$p, structureContainer.getStructureName(), favorites));
                 } else {
@@ -29,8 +29,8 @@ final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2 imple
                     throw null;
                 }
             }
-            this.this$0.animateExitAndFinish();
-            this.this$0.globalActionsComponent.handleShowGlobalActionsMenu();
+            ControlsFavoritingActivity.access$animateExitAndFinish(this.this$0);
+            ControlsFavoritingActivity.access$getGlobalActionsComponent$p(this.this$0).handleShowGlobalActionsMenu();
         }
     }
 }

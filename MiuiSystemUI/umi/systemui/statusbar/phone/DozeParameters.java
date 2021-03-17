@@ -81,6 +81,7 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
         return FORCE_BLANKING;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.DozeParameters
     public boolean shouldControlScreenOff() {
         return this.mControlScreenOffAnimation;
     }
@@ -108,6 +109,7 @@ public class DozeParameters implements TunerService.Tunable, com.android.systemu
         return this.mResources.getBoolean(C0010R$bool.doze_double_tap_reports_touch_coordinates);
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         this.mDozeAlwaysOn = this.mAmbientDisplayConfiguration.alwaysOnEnabled(-2);
     }

@@ -3,7 +3,6 @@ package com.android.systemui.colorextraction;
 import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.content.Context;
-import android.os.Handler;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.colorextraction.types.ExtractionType;
@@ -25,7 +24,8 @@ public class SysuiColorExtractor extends ColorExtractor implements Dumpable, Con
         this(context, new Tonal(context), configurationController, (WallpaperManager) context.getSystemService(WallpaperManager.class), false);
     }
 
-    /* JADX WARNING: type inference failed for: r0v0, types: [android.app.WallpaperManager$OnColorsChangedListener, java.lang.Object, com.android.systemui.colorextraction.SysuiColorExtractor] */
+    /* JADX DEBUG: Multi-variable search result rejected for r0v0, resolved type: com.android.systemui.colorextraction.SysuiColorExtractor */
+    /* JADX WARN: Multi-variable type inference failed */
     @VisibleForTesting
     public SysuiColorExtractor(Context context, ExtractionType extractionType, ConfigurationController configurationController, WallpaperManager wallpaperManager, boolean z) {
         super(context, extractionType, z, wallpaperManager);
@@ -37,7 +37,7 @@ public class SysuiColorExtractor extends ColorExtractor implements Dumpable, Con
         gradientColors.setMainColor(-16777216);
         if (wallpaperManager.isWallpaperSupported()) {
             wallpaperManager.removeOnColorsChangedListener(this);
-            wallpaperManager.addOnColorsChangedListener(this, (Handler) null, -1);
+            wallpaperManager.addOnColorsChangedListener(this, null, -1);
         }
     }
 
@@ -46,9 +46,9 @@ public class SysuiColorExtractor extends ColorExtractor implements Dumpable, Con
         SysuiColorExtractor.super.extractWallpaperColors();
         Tonal tonal = this.mTonal;
         if (tonal != null && this.mNeutralColorsLock != null) {
-            WallpaperColors wallpaperColors = this.mLockColors;
+            WallpaperColors wallpaperColors = ((ColorExtractor) this).mLockColors;
             if (wallpaperColors == null) {
-                wallpaperColors = this.mSystemColors;
+                wallpaperColors = ((ColorExtractor) this).mSystemColors;
             }
             tonal.applyFallback(wallpaperColors, this.mNeutralColorsLock);
         }
@@ -63,6 +63,7 @@ public class SysuiColorExtractor extends ColorExtractor implements Dumpable, Con
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         extractWallpaperColors();
         triggerColorsChanged(3);
@@ -90,14 +91,15 @@ public class SysuiColorExtractor extends ColorExtractor implements Dumpable, Con
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("SysuiColorExtractor:");
         printWriter.println("  Current wallpaper colors:");
-        printWriter.println("    system: " + this.mSystemColors);
-        printWriter.println("    lock: " + this.mLockColors);
+        printWriter.println("    system: " + ((ColorExtractor) this).mSystemColors);
+        printWriter.println("    lock: " + ((ColorExtractor) this).mLockColors);
         printWriter.println("  Gradients:");
-        printWriter.println("    system: " + Arrays.toString((ColorExtractor.GradientColors[]) this.mGradientColors.get(1)));
-        printWriter.println("    lock: " + Arrays.toString((ColorExtractor.GradientColors[]) this.mGradientColors.get(2)));
+        printWriter.println("    system: " + Arrays.toString((ColorExtractor.GradientColors[]) ((ColorExtractor) this).mGradientColors.get(1)));
+        printWriter.println("    lock: " + Arrays.toString((ColorExtractor.GradientColors[]) ((ColorExtractor) this).mGradientColors.get(2)));
         printWriter.println("  Neutral colors: " + this.mNeutralColorsLock);
         printWriter.println("  Has media backdrop: " + this.mHasMediaArtwork);
     }

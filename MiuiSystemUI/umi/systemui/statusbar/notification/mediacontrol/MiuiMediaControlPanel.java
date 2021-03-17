@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.graphics.drawable.Drawable;
 import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.os.AsyncTask;
@@ -42,11 +41,13 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         this.direction = this.mContext.getResources().getConfiguration().getLayoutDirection();
     }
 
+    @Override // com.android.systemui.media.MediaControlPanel
     public void attach(PlayerViewHolder playerViewHolder) {
         super.attach(playerViewHolder);
         this.mMediaTransferManager.applyMediaTransferView(playerViewHolder.getSeamless());
     }
 
+    @Override // com.android.systemui.media.MediaControlPanel
     public void bind(MediaData mediaData) {
         PlayerViewHolder view = getView();
         if (view != null) {
@@ -64,8 +65,8 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
     }
 
     private void clearProcessArtworkTasks() {
-        for (AsyncTask<?, ?, ?> cancel : this.mProcessArtworkTasks) {
-            cancel.cancel(true);
+        for (AsyncTask<?, ?, ?> asyncTask : this.mProcessArtworkTasks) {
+            asyncTask.cancel(true);
         }
         this.mProcessArtworkTasks.clear();
     }
@@ -88,6 +89,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         PendingIntent clickIntent = mediaData.getClickIntent();
         if (clickIntent != null) {
             playerViewHolder.getPlayer().setOnClickListener(new View.OnClickListener(clickIntent) {
+                /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$OcZR49VGKdEWA7KEXttm40Y0OSs */
                 public final /* synthetic */ PendingIntent f$1;
 
                 {
@@ -109,7 +111,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
 
     private void setArtwork(MediaData mediaData) {
         if (mediaData.getArtwork() != null) {
-            this.mProcessArtworkTasks.add(new ProcessArtworkTask(this.direction, this).executeOnExecutor(this.mBackgroundExecutor, new Drawable[]{mediaData.getArtwork().loadDrawable(this.mContext)}));
+            this.mProcessArtworkTasks.add(new ProcessArtworkTask(this.direction, this).executeOnExecutor(this.mBackgroundExecutor, mediaData.getArtwork().loadDrawable(this.mContext)));
         }
     }
 
@@ -146,6 +148,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
             Runnable action2 = mediaAction.getAction();
             if (notificationAction != null) {
                 enableActionButton(action, new View.OnClickListener(notificationAction, action) {
+                    /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$37drBkuRL76GGV6bNhqhR5LC18 */
                     public final /* synthetic */ Notification.Action f$0;
                     public final /* synthetic */ ImageButton f$1;
 
@@ -155,11 +158,13 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
                     }
 
                     public final void onClick(View view) {
-                        ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(this.f$1, this.f$0.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(this.f$0.actionIntent));
+                        Notification.Action action;
+                        ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(this.f$1, action.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(this.f$0.actionIntent));
                     }
                 });
             } else if (action2 != null) {
                 enableActionButton(action, new View.OnClickListener(action2) {
+                    /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$SmuBjPadan0Q8RJ_PKy9AlL7YwQ */
                     public final /* synthetic */ Runnable f$0;
 
                     {
@@ -200,6 +205,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
 
     private void setSeekBar() {
         this.mBackgroundExecutor.execute(new Runnable(getController()) {
+            /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$Gmc0cHXP2xFB6psxtQX0_kRpEQ */
             public final /* synthetic */ MediaController f$1;
 
             {
@@ -245,6 +251,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         this.mProcessArtworkTasks.remove(asyncTask);
     }
 
+    @Override // com.android.systemui.media.MediaControlPanel
     public void onDestroy() {
         super.onDestroy();
         if (getView() != null) {

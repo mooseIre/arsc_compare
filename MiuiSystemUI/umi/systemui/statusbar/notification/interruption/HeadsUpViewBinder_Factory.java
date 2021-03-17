@@ -14,6 +14,7 @@ public final class HeadsUpViewBinder_Factory implements Factory<HeadsUpViewBinde
         this.bindStageProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public HeadsUpViewBinder get() {
         return provideInstance(this.notificationMessagingUtilProvider, this.bindStageProvider);
     }

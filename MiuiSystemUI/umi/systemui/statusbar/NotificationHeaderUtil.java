@@ -16,32 +16,39 @@ import java.util.List;
 public class NotificationHeaderUtil {
     private static final VisibilityApplicator sAppNameApplicator = new AppNameApplicator();
     private static final DataExtractor sIconExtractor = new DataExtractor() {
+        /* class com.android.systemui.statusbar.NotificationHeaderUtil.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.DataExtractor
         public Object extractData(ExpandableNotificationRow expandableNotificationRow) {
             return expandableNotificationRow.getEntry().getSbn().getNotification();
         }
     };
     private static final IconComparator sIconVisibilityComparator = new IconComparator() {
+        /* class com.android.systemui.statusbar.NotificationHeaderUtil.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ViewComparator
         public boolean compare(View view, View view2, Object obj, Object obj2) {
             return hasSameIcon(obj, obj2) && hasSameColor(obj, obj2);
         }
     };
-    /* access modifiers changed from: private */
-    public static final TextViewComparator sTextViewComparator = new TextViewComparator();
-    /* access modifiers changed from: private */
-    public static final VisibilityApplicator sVisibilityApplicator = new VisibilityApplicator();
+    private static final TextViewComparator sTextViewComparator = new TextViewComparator();
+    private static final VisibilityApplicator sVisibilityApplicator = new VisibilityApplicator();
     private final ArrayList<HeaderProcessor> mComparators = new ArrayList<>();
     private final HashSet<Integer> mDividers = new HashSet<>();
     private final ExpandableNotificationRow mRow;
 
-    private interface DataExtractor {
+    /* access modifiers changed from: private */
+    public interface DataExtractor {
         Object extractData(ExpandableNotificationRow expandableNotificationRow);
     }
 
-    private interface ResultApplicator {
+    /* access modifiers changed from: private */
+    public interface ResultApplicator {
         void apply(View view, View view2, boolean z, boolean z2);
     }
 
-    private interface ViewComparator {
+    /* access modifiers changed from: private */
+    public interface ViewComparator {
         boolean compare(View view, View view2, Object obj, Object obj2);
 
         boolean isEmpty(View view);
@@ -50,11 +57,15 @@ public class NotificationHeaderUtil {
     public NotificationHeaderUtil(ExpandableNotificationRow expandableNotificationRow) {
         this.mRow = expandableNotificationRow;
         this.mComparators.add(new HeaderProcessor(expandableNotificationRow, 16908294, sIconExtractor, sIconVisibilityComparator, sVisibilityApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16909339, (DataExtractor) null, new ViewComparator(this) {
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16909339, null, new ViewComparator(this) {
+            /* class com.android.systemui.statusbar.NotificationHeaderUtil.AnonymousClass5 */
+
+            @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ViewComparator
             public boolean compare(View view, View view2, Object obj, Object obj2) {
                 return view.getVisibility() != 8;
             }
 
+            @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ViewComparator
             public boolean isEmpty(View view) {
                 if (!(view instanceof ImageView) || ((ImageView) view).getDrawable() != null) {
                     return false;
@@ -62,7 +73,7 @@ public class NotificationHeaderUtil {
                 return true;
             }
         }, sVisibilityApplicator));
-        this.mComparators.add(new HeaderProcessor(this.mRow, 16908763, (DataExtractor) null, sTextViewComparator, sAppNameApplicator));
+        this.mComparators.add(new HeaderProcessor(this.mRow, 16908763, null, sTextViewComparator, sAppNameApplicator));
         this.mComparators.add(HeaderProcessor.forTextView(this.mRow, 16909041));
         this.mDividers.add(16909042);
         this.mDividers.add(16909044);
@@ -179,7 +190,7 @@ public class NotificationHeaderUtil {
         private View mParentView;
 
         public static HeaderProcessor forTextView(ExpandableNotificationRow expandableNotificationRow, int i) {
-            return new HeaderProcessor(expandableNotificationRow, i, (DataExtractor) null, NotificationHeaderUtil.sTextViewComparator, NotificationHeaderUtil.sVisibilityApplicator);
+            return new HeaderProcessor(expandableNotificationRow, i, null, NotificationHeaderUtil.sTextViewComparator, NotificationHeaderUtil.sVisibilityApplicator);
         }
 
         HeaderProcessor(ExpandableNotificationRow expandableNotificationRow, int i, DataExtractor dataExtractor, ViewComparator viewComparator, ResultApplicator resultApplicator) {
@@ -231,20 +242,24 @@ public class NotificationHeaderUtil {
         }
     }
 
-    private static class TextViewComparator implements ViewComparator {
+    /* access modifiers changed from: private */
+    public static class TextViewComparator implements ViewComparator {
         private TextViewComparator() {
         }
 
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ViewComparator
         public boolean compare(View view, View view2, Object obj, Object obj2) {
             return ((TextView) view).getText().equals(((TextView) view2).getText());
         }
 
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ViewComparator
         public boolean isEmpty(View view) {
             return TextUtils.isEmpty(((TextView) view).getText());
         }
     }
 
     private static abstract class IconComparator implements ViewComparator {
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ViewComparator
         public boolean isEmpty(View view) {
             return false;
         }
@@ -263,10 +278,12 @@ public class NotificationHeaderUtil {
         }
     }
 
-    private static class VisibilityApplicator implements ResultApplicator {
+    /* access modifiers changed from: private */
+    public static class VisibilityApplicator implements ResultApplicator {
         private VisibilityApplicator() {
         }
 
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.ResultApplicator
         public void apply(View view, View view2, boolean z, boolean z2) {
             view2.setVisibility(z ? 8 : 0);
         }
@@ -277,6 +294,7 @@ public class NotificationHeaderUtil {
             super();
         }
 
+        @Override // com.android.systemui.statusbar.NotificationHeaderUtil.VisibilityApplicator, com.android.systemui.statusbar.NotificationHeaderUtil.ResultApplicator
         public void apply(View view, View view2, boolean z, boolean z2) {
             if (z2 && (view instanceof ConversationLayout)) {
                 z = ((ConversationLayout) view).shouldHideAppName();

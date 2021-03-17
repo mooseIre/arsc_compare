@@ -3,9 +3,9 @@ package com.android.systemui.util.concurrency;
 import com.android.systemui.util.concurrency.RepeatableExecutorImpl;
 import java.util.concurrent.TimeUnit;
 
-class RepeatableExecutorImpl implements RepeatableExecutor {
-    /* access modifiers changed from: private */
-    public final DelayableExecutor mExecutor;
+/* access modifiers changed from: package-private */
+public class RepeatableExecutorImpl implements RepeatableExecutor {
+    private final DelayableExecutor mExecutor;
 
     RepeatableExecutorImpl(DelayableExecutor delayableExecutor) {
         this.mExecutor = delayableExecutor;
@@ -15,17 +15,21 @@ class RepeatableExecutorImpl implements RepeatableExecutor {
         this.mExecutor.execute(runnable);
     }
 
+    @Override // com.android.systemui.util.concurrency.RepeatableExecutor
     public Runnable executeRepeatedly(Runnable runnable, long j, long j2, TimeUnit timeUnit) {
         ExecutionToken executionToken = new ExecutionToken(runnable, j2, timeUnit);
         executionToken.start(j, timeUnit);
         return new Runnable() {
+            /* class com.android.systemui.util.concurrency.$$Lambda$ilFrHmNxnUJ5ovyV0TYCbwRC8uo */
+
             public final void run() {
                 RepeatableExecutorImpl.ExecutionToken.this.cancel();
             }
         };
     }
 
-    private class ExecutionToken implements Runnable {
+    /* access modifiers changed from: private */
+    public class ExecutionToken implements Runnable {
         private Runnable mCancel;
         private final Runnable mCommand;
         private final long mDelay;

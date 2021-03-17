@@ -6,8 +6,9 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 import kotlin.reflect.KProperty;
 
+/* access modifiers changed from: package-private */
 /* compiled from: FloatingContentCoordinator.kt */
-final class FloatingContentCoordinator$Companion$findAreaForContentVertically$positionBelowInBounds$2 extends Lambda implements Function0<Boolean> {
+public final class FloatingContentCoordinator$Companion$findAreaForContentVertically$positionBelowInBounds$2 extends Lambda implements Function0<Boolean> {
     final /* synthetic */ Rect $allowedBounds;
     final /* synthetic */ Lazy $newContentBoundsBelow;
     final /* synthetic */ KProperty $newContentBoundsBelow$metadata;
@@ -20,7 +21,9 @@ final class FloatingContentCoordinator$Companion$findAreaForContentVertically$po
         this.$newContentBoundsBelow$metadata = kProperty;
     }
 
-    public final boolean invoke() {
+    /* Return type fixed from 'boolean' to match base method */
+    @Override // kotlin.jvm.functions.Function0
+    public final Boolean invoke() {
         return this.$allowedBounds.contains((Rect) this.$newContentBoundsBelow.getValue());
     }
 }

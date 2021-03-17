@@ -11,6 +11,7 @@ public final class BroadcastDispatcherLogger_Factory implements Factory<Broadcas
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BroadcastDispatcherLogger get() {
         return provideInstance(this.bufferProvider);
     }

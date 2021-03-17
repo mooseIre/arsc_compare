@@ -16,13 +16,10 @@ import java.util.ArrayList;
 
 public class NotificationIconObserver {
     public final ArrayList<WeakReference<Callback>> mCallbacks = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public int mCurrentUserId;
+    private Context mContext;
+    private int mCurrentUserId;
     public Handler mMainHandler;
-    /* access modifiers changed from: private */
-    public volatile boolean mShowNotificationIcons;
+    private volatile boolean mShowNotificationIcons;
 
     public interface Callback {
         void onNotificationIconChanged(boolean z);
@@ -32,14 +29,19 @@ public class NotificationIconObserver {
         this.mContext = context;
         this.mMainHandler = handler;
         new CurrentUserTracker((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)) {
+            /* class com.android.systemui.statusbar.phone.NotificationIconObserver.AnonymousClass1 */
+
+            @Override // com.android.systemui.settings.CurrentUserTracker
             public void onUserSwitched(int i) {
                 NotificationIconObserver.this.updateUserIdAndSetting();
                 NotificationIconObserver.this.fireNotificationIconsChanged();
             }
         }.startTracking();
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_notification_icon"), false, new ContentObserver(this.mMainHandler) {
+            /* class com.android.systemui.statusbar.phone.NotificationIconObserver.AnonymousClass2 */
+
             public void onChange(boolean z) {
-                boolean unused = NotificationIconObserver.this.mShowNotificationIcons = !((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled() || MiuiStatusBarManager.isShowNotificationIconForUser(NotificationIconObserver.this.mContext, NotificationIconObserver.this.mCurrentUserId);
+                NotificationIconObserver.this.mShowNotificationIcons = !((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled() || MiuiStatusBarManager.isShowNotificationIconForUser(NotificationIconObserver.this.mContext, NotificationIconObserver.this.mCurrentUserId);
                 Log.d("NotificationIconObserver", "onChange: show = " + NotificationIconObserver.this.mShowNotificationIcons);
                 NotificationIconObserver.this.fireNotificationIconsChanged();
             }
@@ -52,7 +54,7 @@ public class NotificationIconObserver {
         boolean z = this.mShowNotificationIcons;
         Log.d("NotificationIconObserver", "fireNotificationIconsChanged: show = " + z);
         for (int size = this.mCallbacks.size() + -1; size >= 0; size--) {
-            Callback callback = (Callback) this.mCallbacks.get(size).get();
+            Callback callback = this.mCallbacks.get(size).get();
             if (callback != null) {
                 callback.onNotificationIconChanged(z);
             }
@@ -61,21 +63,19 @@ public class NotificationIconObserver {
 
     public void addCallback(Callback callback) {
         if (callback != null) {
-            int i = 0;
-            while (i < this.mCallbacks.size()) {
-                if (this.mCallbacks.get(i).get() != callback) {
-                    i++;
-                } else {
+            for (int i = 0; i < this.mCallbacks.size(); i++) {
+                if (this.mCallbacks.get(i).get() == callback) {
                     return;
                 }
             }
-            this.mCallbacks.add(new WeakReference(callback));
+            this.mCallbacks.add(new WeakReference<>(callback));
             callback.onNotificationIconChanged(this.mShowNotificationIcons);
         }
     }
 
     /* access modifiers changed from: private */
-    public void updateUserIdAndSetting() {
+    /* access modifiers changed from: public */
+    private void updateUserIdAndSetting() {
         boolean z;
         this.mCurrentUserId = KeyguardUpdateMonitor.getCurrentUser();
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {

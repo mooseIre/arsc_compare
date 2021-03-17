@@ -17,9 +17,10 @@ public class CastDrawable extends DrawableWrapper {
     private int mHorizontalPadding;
 
     public CastDrawable() {
-        super((Drawable) null);
+        super(null);
     }
 
+    @Override // android.graphics.drawable.Drawable, android.graphics.drawable.DrawableWrapper
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(resources, xmlPullParser, attributeSet, theme);
         setDrawable(resources.getDrawable(C0013R$drawable.ic_cast, theme).mutate());

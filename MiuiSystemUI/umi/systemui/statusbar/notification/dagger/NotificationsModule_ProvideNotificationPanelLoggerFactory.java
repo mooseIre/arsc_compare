@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class NotificationsModule_ProvideNotificationPanelLoggerFactory implements Factory<NotificationPanelLogger> {
     private static final NotificationsModule_ProvideNotificationPanelLoggerFactory INSTANCE = new NotificationsModule_ProvideNotificationPanelLoggerFactory();
 
+    @Override // javax.inject.Provider
     public NotificationPanelLogger get() {
         return provideInstance();
     }

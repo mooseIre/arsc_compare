@@ -21,9 +21,10 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
     private final ArrayList<Callback> mGroupChangesAllowedCallbacks = new ArrayList<>();
     private final Handler mHandler;
     private boolean mIsTemporaryReorderingAllowed;
-    /* access modifiers changed from: private */
-    public ArraySet<NotificationEntry> mLowPriorityReorderingViews = new ArraySet<>();
+    private ArraySet<NotificationEntry> mLowPriorityReorderingViews = new ArraySet<>();
     private final Runnable mOnTemporaryReorderingExpired = new Runnable() {
+        /* class com.android.systemui.statusbar.notification.$$Lambda$VisualStabilityManager$6rf_6W4K3PrMdhwP_O1LDBveJ6k */
+
         public final void run() {
             VisualStabilityManager.this.lambda$new$0$VisualStabilityManager();
         }
@@ -48,6 +49,9 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
     public VisualStabilityManager(NotificationEntryManager notificationEntryManager, Handler handler) {
         this.mHandler = handler;
         notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+            /* class com.android.systemui.statusbar.notification.VisualStabilityManager.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                 if (notificationEntry.isAmbient() != notificationEntry.getRow().isLowPriority()) {
                     VisualStabilityManager.this.mLowPriorityReorderingViews.add(notificationEntry);
@@ -151,6 +155,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         this.mLowPriorityReorderingViews.clear();
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
         if (z) {
             this.mAllowedReorderViews.add(notificationEntry.getRow());
@@ -178,6 +183,7 @@ public class VisualStabilityManager implements OnHeadsUpChangedListener, Dumpabl
         this.mAddedChildren.add(view);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("VisualStabilityManager state:");
         printWriter.print("  mIsTemporaryReorderingAllowed=");

@@ -18,7 +18,8 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-class ThemeOverlayManager {
+/* access modifiers changed from: package-private */
+public class ThemeOverlayManager {
     static final String ANDROID_PACKAGE = "android";
     static final String OVERLAY_CATEGORY_COLOR = "android.theme.customization.accent_color";
     static final String OVERLAY_CATEGORY_FONT = "android.theme.customization.font";
@@ -65,40 +66,50 @@ class ThemeOverlayManager {
         hashSet.removeAll(map.keySet());
         ArrayList arrayList = new ArrayList();
         ((Set) hashSet.stream().map(new Function() {
+            /* class com.android.systemui.theme.$$Lambda$ThemeOverlayManager$XHd3K8Vp7fhFb4ucZudIi42URZk */
+
+            @Override // java.util.function.Function
             public final Object apply(Object obj) {
                 return ThemeOverlayManager.this.lambda$applyCurrentUserOverlays$0$ThemeOverlayManager((String) obj);
             }
         }).collect(Collectors.toSet())).forEach(new Consumer(arrayList) {
+            /* class com.android.systemui.theme.$$Lambda$ThemeOverlayManager$Ce247HGCsGLtUA2wdEQCGlPUIx4 */
             public final /* synthetic */ List f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ThemeOverlayManager.this.lambda$applyCurrentUserOverlays$1$ThemeOverlayManager(this.f$1, (String) obj);
             }
         });
         Map map2 = (Map) arrayList.stream().filter(new Predicate() {
+            /* class com.android.systemui.theme.$$Lambda$ThemeOverlayManager$FzQkanwY8TEeM97QNlP4yjS7F4s */
+
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return ThemeOverlayManager.this.lambda$applyCurrentUserOverlays$2$ThemeOverlayManager((OverlayInfo) obj);
             }
         }).filter(new Predicate(hashSet) {
+            /* class com.android.systemui.theme.$$Lambda$ThemeOverlayManager$rD72NeWKvvYjih6pAWlvN555mFM */
             public final /* synthetic */ Set f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return this.f$0.contains(((OverlayInfo) obj).category);
             }
         }).filter($$Lambda$ThemeOverlayManager$vK2aROqMaNCgMb7ixs5bp0NF79c.INSTANCE).collect(Collectors.toMap($$Lambda$ThemeOverlayManager$tpreaivLMVK4R3Uf26BCg27Af8.INSTANCE, $$Lambda$ThemeOverlayManager$GlioDk646gj_04NkaTcsRN_awI4.INSTANCE));
-        for (String next : THEME_CATEGORIES) {
-            if (map.containsKey(next)) {
-                setEnabled(map.get(next), next, set, true);
-            } else if (map2.containsKey(next)) {
-                setEnabled((String) map2.get(next), next, set, false);
+        for (String str : THEME_CATEGORIES) {
+            if (map.containsKey(str)) {
+                setEnabled(map.get(str), str, set, true);
+            } else if (map2.containsKey(str)) {
+                setEnabled((String) map2.get(str), str, set, false);
             }
         }
     }
@@ -122,8 +133,8 @@ class ThemeOverlayManager {
     }
 
     private void setEnabled(String str, String str2, Set<UserHandle> set, boolean z) {
-        for (UserHandle enabledAsync : set) {
-            setEnabledAsync(str, enabledAsync, z);
+        for (UserHandle userHandle : set) {
+            setEnabledAsync(str, userHandle, z);
         }
         if (!set.contains(UserHandle.SYSTEM) && SYSTEM_USER_CATEGORIES.contains(str2)) {
             setEnabledAsync(str, UserHandle.SYSTEM, z);
@@ -132,6 +143,7 @@ class ThemeOverlayManager {
 
     private void setEnabledAsync(String str, UserHandle userHandle, boolean z) {
         this.mExecutor.execute(new Runnable(str, userHandle, z) {
+            /* class com.android.systemui.theme.$$Lambda$ThemeOverlayManager$Za49vHyQKYiveq0XqQrGRFGHg */
             public final /* synthetic */ String f$1;
             public final /* synthetic */ UserHandle f$2;
             public final /* synthetic */ boolean f$3;
@@ -155,7 +167,7 @@ class ThemeOverlayManager {
             try {
                 this.mOverlayManager.setEnabledExclusiveInCategory(str, userHandle);
             } catch (IllegalStateException | SecurityException e) {
-                Log.e("ThemeOverlayManager", String.format("setEnabled failed: %s %s %b", new Object[]{str, userHandle, Boolean.valueOf(z)}), e);
+                Log.e("ThemeOverlayManager", String.format("setEnabled failed: %s %s %b", str, userHandle, Boolean.valueOf(z)), e);
             }
         } else {
             this.mOverlayManager.setEnabled(str, false, userHandle);

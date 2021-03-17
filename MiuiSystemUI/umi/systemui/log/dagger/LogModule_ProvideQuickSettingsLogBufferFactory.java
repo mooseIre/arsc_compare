@@ -16,6 +16,7 @@ public final class LogModule_ProvideQuickSettingsLogBufferFactory implements Fac
         this.dumpManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public LogBuffer get() {
         return provideInstance(this.bufferFilterProvider, this.dumpManagerProvider);
     }

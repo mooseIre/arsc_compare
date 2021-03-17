@@ -12,7 +12,7 @@ final class DividerHolder extends Holder {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public DividerHolder(@NotNull View view) {
-        super(view, (DefaultConstructorMarker) null);
+        super(view, null);
         Intrinsics.checkParameterIsNotNull(view, "view");
         View requireViewById = this.itemView.requireViewById(C0015R$id.frame);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "itemView.requireViewById(R.id.frame)");
@@ -22,6 +22,7 @@ final class DividerHolder extends Holder {
         this.divider = requireViewById2;
     }
 
+    @Override // com.android.systemui.controls.management.Holder
     public void bindData(@NotNull ElementWrapper elementWrapper) {
         Intrinsics.checkParameterIsNotNull(elementWrapper, "wrapper");
         DividerWrapper dividerWrapper = (DividerWrapper) elementWrapper;

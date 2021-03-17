@@ -17,6 +17,7 @@ public final class MediaHost_Factory implements Factory<MediaHost> {
         this.mediaHostStatesManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public MediaHost get() {
         return provideInstance(this.stateProvider, this.mediaHierarchyManagerProvider, this.mediaDataFilterProvider, this.mediaHostStatesManagerProvider);
     }

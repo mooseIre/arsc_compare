@@ -11,6 +11,7 @@ public final class AssistModule_ProvideAssistHandleViewControllerFactory impleme
         this.navigationBarControllerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AssistHandleViewController get() {
         return provideInstance(this.navigationBarControllerProvider);
     }

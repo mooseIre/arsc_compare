@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class ConcurrencyModule_ProvideMainLooperFactory implements Factory<Looper> {
     private static final ConcurrencyModule_ProvideMainLooperFactory INSTANCE = new ConcurrencyModule_ProvideMainLooperFactory();
 
+    @Override // javax.inject.Provider
     public Looper get() {
         return provideInstance();
     }

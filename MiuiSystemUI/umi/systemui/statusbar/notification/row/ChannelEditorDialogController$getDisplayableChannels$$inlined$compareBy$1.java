@@ -1,26 +1,27 @@
 package com.android.systemui.statusbar.notification.row;
 
-import android.app.NotificationChannel;
 import java.util.Comparator;
+import kotlin.comparisons.ComparisonsKt;
 import kotlin.jvm.internal.Intrinsics;
 
 /* compiled from: Comparisons.kt */
 public final class ChannelEditorDialogController$getDisplayableChannels$$inlined$compareBy$1<T> implements Comparator<T> {
+    @Override // java.util.Comparator
     public final int compare(T t, T t2) {
         String str;
         String str2;
-        NotificationChannel notificationChannel = (NotificationChannel) t;
-        Intrinsics.checkExpressionValueIsNotNull(notificationChannel, "it");
-        CharSequence name = notificationChannel.getName();
+        T t3 = t;
+        Intrinsics.checkExpressionValueIsNotNull(t3, "it");
+        CharSequence name = t3.getName();
         if (name == null || (str = name.toString()) == null) {
-            str = notificationChannel.getId();
+            str = t3.getId();
         }
-        NotificationChannel notificationChannel2 = (NotificationChannel) t2;
-        Intrinsics.checkExpressionValueIsNotNull(notificationChannel2, "it");
-        CharSequence name2 = notificationChannel2.getName();
+        T t4 = t2;
+        Intrinsics.checkExpressionValueIsNotNull(t4, "it");
+        CharSequence name2 = t4.getName();
         if (name2 == null || (str2 = name2.toString()) == null) {
-            str2 = notificationChannel2.getId();
+            str2 = t4.getId();
         }
-        return ComparisonsKt__ComparisonsKt.compareValues(str, str2);
+        return ComparisonsKt.compareValues(str, str2);
     }
 }

@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$TunerActivity$RI23eCWQLUIRemsdYo0hJR
     private /* synthetic */ $$Lambda$TunerActivity$RI23eCWQLUIRemsdYo0hJRYd5ug() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((FragmentService) obj).destroyAll();
     }

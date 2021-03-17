@@ -20,6 +20,7 @@ public final class NotificationBadgeController_Factory implements Factory<Notifi
         this.broadcastDispatcherProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public NotificationBadgeController get() {
         return provideInstance(this.contextProvider, this.entryManagerProvider, this.groupManagerProvider, this.broadcastDispatcherProvider);
     }

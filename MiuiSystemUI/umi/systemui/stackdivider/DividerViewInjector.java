@@ -1,43 +1,22 @@
 package com.android.systemui.stackdivider;
 
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.view.View;
 
 public class DividerViewInjector {
-    /* JADX WARNING: Code restructure failed: missing block: B:12:0x0028, code lost:
-        r0 = r0.topActivity;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static boolean canBeDividerResized(android.view.View r0, com.android.systemui.stackdivider.SplitScreenTaskOrganizer r1) {
-        /*
-            if (r0 == 0) goto L_0x0038
-            if (r1 == 0) goto L_0x0038
-            android.content.res.Resources r0 = r0.getResources()
-            android.content.res.Configuration r0 = r0.getConfiguration()
-            boolean r0 = com.android.systemui.stackdivider.StackDividerUtils.isWideScreen(r0)
-            if (r0 == 0) goto L_0x0038
-            android.app.ActivityManager$RunningTaskInfo r0 = r1.mPrimary
-            if (r0 == 0) goto L_0x0024
-            android.content.ComponentName r0 = r0.topActivity
-            if (r0 == 0) goto L_0x0024
-            java.lang.String r0 = r0.getPackageName()
-            boolean r0 = com.android.systemui.stackdivider.StackDividerUtils.canBeDividerResized(r0)
-            if (r0 == 0) goto L_0x0036
-        L_0x0024:
-            android.app.ActivityManager$RunningTaskInfo r0 = r1.mSecondary
-            if (r0 == 0) goto L_0x0038
-            android.content.ComponentName r0 = r0.topActivity
-            if (r0 == 0) goto L_0x0038
-            java.lang.String r0 = r0.getPackageName()
-            boolean r0 = com.android.systemui.stackdivider.StackDividerUtils.canBeDividerResized(r0)
-            if (r0 != 0) goto L_0x0038
-        L_0x0036:
-            r0 = 0
-            return r0
-        L_0x0038:
-            r0 = 1
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.stackdivider.DividerViewInjector.canBeDividerResized(android.view.View, com.android.systemui.stackdivider.SplitScreenTaskOrganizer):boolean");
+    public static boolean canBeDividerResized(View view, SplitScreenTaskOrganizer splitScreenTaskOrganizer) {
+        ComponentName componentName;
+        ComponentName componentName2;
+        if (view == null || splitScreenTaskOrganizer == null || !StackDividerUtils.isWideScreen(view.getResources().getConfiguration())) {
+            return true;
+        }
+        ActivityManager.RunningTaskInfo runningTaskInfo = splitScreenTaskOrganizer.mPrimary;
+        if (runningTaskInfo != null && (componentName2 = runningTaskInfo.topActivity) != null && !StackDividerUtils.canBeDividerResized(componentName2.getPackageName())) {
+            return false;
+        }
+        ActivityManager.RunningTaskInfo runningTaskInfo2 = splitScreenTaskOrganizer.mSecondary;
+        return runningTaskInfo2 == null || (componentName = runningTaskInfo2.topActivity) == null || StackDividerUtils.canBeDividerResized(componentName.getPackageName());
     }
 
     public static boolean canUpdateDivisionPosition(View view) {

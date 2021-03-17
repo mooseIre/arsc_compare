@@ -14,6 +14,7 @@ public final class FlashlightControllerImpl_Factory implements Factory<Flashligh
         this.flashlightHelperProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public FlashlightControllerImpl get() {
         return provideInstance(this.contextProvider, this.flashlightHelperProvider);
     }

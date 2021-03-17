@@ -43,17 +43,23 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     private final AccessibilityManager mAccessibilityManager;
     private List<TileQueryHelper.TileInfo> mAllTiles;
     private final ItemTouchHelper.Callback mCallbacks = new ItemTouchHelper.Callback() {
+        /* class com.android.systemui.qs.customize.MiuiTileAdapter.AnonymousClass3 */
+
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public boolean isItemViewSwipeEnabled() {
             return false;
         }
 
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public boolean isLongPressDragEnabled() {
             return true;
         }
 
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public void onSwiped(RecyclerView.ViewHolder viewHolder, int i) {
         }
 
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public void onSelectedChanged(RecyclerView.ViewHolder viewHolder, int i) {
             super.onSelectedChanged(viewHolder, i);
             if (i != 2) {
@@ -65,16 +71,18 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                     if (adapterPosition != -1) {
                         MiuiTileAdapter.this.mCurrentDrag.mTileView.setShowAppLabel(adapterPosition > MiuiTileAdapter.this.mEditIndex && !((TileQueryHelper.TileInfo) MiuiTileAdapter.this.mTiles.get(adapterPosition)).isSystem);
                         MiuiTileAdapter.this.mCurrentDrag.stopDrag();
-                        Holder unused = MiuiTileAdapter.this.mCurrentDrag = null;
+                        MiuiTileAdapter.this.mCurrentDrag = null;
                     } else {
                         return;
                     }
                 }
                 if (viewHolder != null) {
-                    Holder unused2 = MiuiTileAdapter.this.mCurrentDrag = (Holder) viewHolder;
+                    MiuiTileAdapter.this.mCurrentDrag = (Holder) viewHolder;
                     MiuiTileAdapter.this.mCurrentDrag.startDrag();
                 }
                 MiuiTileAdapter.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.qs.customize.MiuiTileAdapter.AnonymousClass3.AnonymousClass1 */
+
                     public void run() {
                         MiuiTileAdapter miuiTileAdapter = MiuiTileAdapter.this;
                         miuiTileAdapter.notifyItemChanged(miuiTileAdapter.mEditIndex);
@@ -83,6 +91,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             }
         }
 
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public boolean canDropOver(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder2) {
             int adapterPosition = viewHolder2.getAdapterPosition();
             if (adapterPosition == -1) {
@@ -100,6 +109,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             }
         }
 
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
             int itemViewType = viewHolder.getItemViewType();
             if (itemViewType == 1 || itemViewType == 3) {
@@ -108,19 +118,17 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             return ItemTouchHelper.Callback.makeMovementFlags(15, 0);
         }
 
+        @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
         public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder viewHolder2) {
-            return MiuiTileAdapter.this.move(viewHolder.getAdapterPosition(), viewHolder2.getAdapterPosition(), viewHolder2.itemView);
+            return MiuiTileAdapter.this.move((MiuiTileAdapter) viewHolder.getAdapterPosition(), viewHolder2.getAdapterPosition(), (int) viewHolder2.itemView);
         }
     };
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public Holder mCurrentDrag;
+    private Holder mCurrentDrag;
     private List<String> mCurrentSpecs;
     private final RecyclerView.ItemDecoration mDecoration;
-    /* access modifiers changed from: private */
-    public int mEditIndex;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
+    private int mEditIndex;
+    private final Handler mHandler = new Handler();
     private QSTileHost mHost;
     private final ItemTouchHelper mItemTouchHelper;
     private Map<String, QSTile> mLiveTiles;
@@ -129,6 +137,9 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     private List<TileQueryHelper.TileInfo> mOtherTiles;
     private RecyclerView mParent;
     private final GridLayoutManager.SpanSizeLookup mSizeLookup = new GridLayoutManager.SpanSizeLookup() {
+        /* class com.android.systemui.qs.customize.MiuiTileAdapter.AnonymousClass2 */
+
+        @Override // androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
         public int getSpanSize(int i) {
             int itemViewType = MiuiTileAdapter.this.getItemViewType(i);
             if (itemViewType == 1 || itemViewType == 3) {
@@ -137,11 +148,9 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             return 1;
         }
     };
-    /* access modifiers changed from: private */
-    public int mSpanCount;
+    private int mSpanCount;
     private int mTileDividerIndex;
-    /* access modifiers changed from: private */
-    public final List<TileQueryHelper.TileInfo> mTiles = new ArrayList();
+    private final List<TileQueryHelper.TileInfo> mTiles = new ArrayList();
     private final UiEventLogger mUiEventLogger;
 
     public MiuiTileAdapter(Context context, UiEventLogger uiEventLogger, RecyclerView recyclerView) {
@@ -203,23 +212,23 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         }
     }
 
+    @Override // com.android.systemui.qs.customize.TileQueryHelper.TileStateListener
     public void onTilesChanged(List<TileQueryHelper.TileInfo> list) {
         this.mAllTiles = list;
         recalcSpecs();
     }
 
+    @Override // com.android.systemui.qs.customize.TileQueryHelper.TileStateListener
     public void onTilesChanged(List<TileQueryHelper.TileInfo> list, Map<String, QSTile> map) {
         this.mLiveTiles = map;
         onTilesChanged(list);
     }
 
+    @Override // com.android.systemui.qs.customize.TileQueryHelper.TileStateListener
     public void onTileChanged(TileQueryHelper.TileInfo tileInfo) {
-        int i = 0;
-        while (i < this.mTiles.size()) {
+        for (int i = 0; i < this.mTiles.size(); i++) {
             TileQueryHelper.TileInfo tileInfo2 = this.mTiles.get(i);
-            if (tileInfo2 == null || !TextUtils.equals(tileInfo.spec, tileInfo2.spec)) {
-                i++;
-            } else {
+            if (tileInfo2 != null && TextUtils.equals(tileInfo.spec, tileInfo2.spec)) {
                 handleUpdateStateForPosition(i, tileInfo.state);
                 return;
             }
@@ -237,7 +246,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     }
 
     private void recalcSpecs() {
-        if (this.mCurrentSpecs != null && this.mAllTiles != null) {
+        if (!(this.mCurrentSpecs == null || this.mAllTiles == null)) {
             this.mOtherTiles = new ArrayList(this.mAllTiles);
             this.mTiles.clear();
             int i = 0;
@@ -247,7 +256,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                     this.mTiles.add(andRemoveOther);
                 }
             }
-            this.mTiles.add((Object) null);
+            this.mTiles.add(null);
             while (i < this.mOtherTiles.size()) {
                 TileQueryHelper.TileInfo tileInfo = this.mOtherTiles.get(i);
                 if (tileInfo.isSystem) {
@@ -258,7 +267,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                 i++;
             }
             this.mTileDividerIndex = this.mTiles.size();
-            this.mTiles.add((Object) null);
+            this.mTiles.add(null);
             this.mTiles.addAll(this.mOtherTiles);
             updateDividerLocations();
             notifyDataSetChanged();
@@ -274,6 +283,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         return null;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemViewType(int i) {
         if (this.mAccessibilityAction == 1 && i == this.mEditIndex - 1) {
             return 2;
@@ -287,6 +297,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         return 0;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Context context = viewGroup.getContext();
         LayoutInflater from = LayoutInflater.from(context);
@@ -301,6 +312,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         return new Holder(this, frameLayout);
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mTiles.size();
     }
@@ -326,8 +338,9 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                 holder.mTileView.setFocusableInTouchMode(true);
                 holder.mTileView.setVisibility(0);
                 holder.mTileView.setImportantForAccessibility(1);
-                holder.mTileView.setContentDescription(this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_add, new Object[]{this.mAccessibilityFromLabel, Integer.valueOf(i)}));
+                holder.mTileView.setContentDescription(this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_add, this.mAccessibilityFromLabel, Integer.valueOf(i)));
                 holder.mTileView.setOnClickListener(new View.OnClickListener(holder) {
+                    /* class com.android.systemui.qs.customize.$$Lambda$MiuiTileAdapter$T8sU63Oe85g4tAMwUk91lvHL7P8 */
                     public final /* synthetic */ MiuiTileAdapter.Holder f$1;
 
                     {
@@ -346,15 +359,15 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                 holder.mTileView.getIcon().setIsCustomTile(!tileInfo.isSystem);
                 if (i > this.mEditIndex) {
                     QSTile.State state = tileInfo.state;
-                    state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_add_tile_label, new Object[]{state.label});
+                    state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_add_tile_label, state.label);
                 } else {
                     int i3 = this.mAccessibilityAction;
                     if (i3 == 1) {
-                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_add, new Object[]{this.mAccessibilityFromLabel, Integer.valueOf(i)});
+                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_add, this.mAccessibilityFromLabel, Integer.valueOf(i));
                     } else if (i3 == 2) {
-                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_move, new Object[]{this.mAccessibilityFromLabel, Integer.valueOf(i)});
+                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_move, this.mAccessibilityFromLabel, Integer.valueOf(i));
                     } else {
-                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_label, new Object[]{Integer.valueOf(i), tileInfo.state.label});
+                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_label, Integer.valueOf(i), tileInfo.state.label);
                     }
                 }
                 holder.mTileView.handleStateChanged(tileInfo.state);
@@ -366,14 +379,15 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                     }
                     holder.mTileView.setClickable(z);
                     holder.mTileView.setFocusable(z);
-                    MiuiCustomizeTileView access$100 = holder.mTileView;
+                    MiuiCustomizeTileView miuiCustomizeTileView = holder.mTileView;
                     if (z) {
                         i2 = 1;
                     }
-                    access$100.setImportantForAccessibility(i2);
+                    miuiCustomizeTileView.setImportantForAccessibility(i2);
                     holder.mTileView.setFocusableInTouchMode(z);
                     if (z) {
                         holder.mTileView.setOnClickListener(new View.OnClickListener(holder) {
+                            /* class com.android.systemui.qs.customize.$$Lambda$MiuiTileAdapter$6fiDXgXK0TlgMtGpjaf6Ox57E8U */
                             public final /* synthetic */ MiuiTileAdapter.Holder f$1;
 
                             {
@@ -418,6 +432,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
 
     private void bindOnClickListeners(TileQueryHelper.TileInfo tileInfo, Holder holder) {
         holder.mTileView.init(new View.OnClickListener(tileInfo) {
+            /* class com.android.systemui.qs.customize.$$Lambda$MiuiTileAdapter$XxOMA_09fP7gLjO1IQNti2SikCg */
             public final /* synthetic */ TileQueryHelper.TileInfo f$1;
 
             {
@@ -427,7 +442,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             public final void onClick(View view) {
                 MiuiTileAdapter.this.lambda$bindOnClickListeners$2$MiuiTileAdapter(this.f$1, view);
             }
-        }, (View.OnClickListener) null, (View.OnLongClickListener) null);
+        }, null, null);
     }
 
     /* access modifiers changed from: private */
@@ -451,6 +466,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         if (this.mNeedsFocus) {
             holder.mTileView.requestLayout();
             holder.mTileView.addOnLayoutChangeListener(new View.OnLayoutChangeListener(this) {
+                /* class com.android.systemui.qs.customize.MiuiTileAdapter.AnonymousClass1 */
+
                 public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                     holder.mTileView.removeOnLayoutChangeListener(this);
                     holder.mTileView.requestFocus();
@@ -461,7 +478,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     }
 
     /* access modifiers changed from: private */
-    public boolean canRemoveTiles() {
+    /* access modifiers changed from: public */
+    private boolean canRemoveTiles() {
         return this.mCurrentSpecs.size() > this.mMinNumTiles;
     }
 
@@ -480,7 +498,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
 
     private void showAccessibilityDialog(int i, View view) {
         TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
-        AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, new Object[]{tileInfo.state.label}), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, new Object[]{tileInfo.state.label})}, new DialogInterface.OnClickListener(i, tileInfo, view) {
+        AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setItems(new CharSequence[]{this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, tileInfo.state.label), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, tileInfo.state.label)}, new DialogInterface.OnClickListener(i, tileInfo, view) {
+            /* class com.android.systemui.qs.customize.$$Lambda$MiuiTileAdapter$uJrbW1k8KwvErcje5El9R0opaUs */
             public final /* synthetic */ int f$1;
             public final /* synthetic */ TileQueryHelper.TileInfo f$2;
             public final /* synthetic */ View f$3;
@@ -519,7 +538,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         List<TileQueryHelper.TileInfo> list = this.mTiles;
         int i2 = this.mEditIndex;
         this.mEditIndex = i2 + 1;
-        list.add(i2, (Object) null);
+        list.add(i2, null);
         this.mTileDividerIndex++;
         this.mNeedsFocus = true;
         notifyDataSetChanged();
@@ -538,7 +557,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     }
 
     /* access modifiers changed from: private */
-    public boolean move(int i, int i2, View view) {
+    /* access modifiers changed from: public */
+    private boolean move(int i, int i2, View view) {
         if (i2 == i) {
             return true;
         }
@@ -591,15 +611,14 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
     }
 
     public class Holder extends RecyclerView.ViewHolder {
-        /* access modifiers changed from: private */
-        public MiuiCustomizeTileView mTileView;
+        private MiuiCustomizeTileView mTileView;
 
         public Holder(MiuiTileAdapter miuiTileAdapter, View view) {
             super(view);
             if (view instanceof FrameLayout) {
                 MiuiCustomizeTileView miuiCustomizeTileView = (MiuiCustomizeTileView) ((FrameLayout) view).getChildAt(0);
                 this.mTileView = miuiCustomizeTileView;
-                miuiCustomizeTileView.setBackground((Drawable) null);
+                miuiCustomizeTileView.setBackground(null);
                 this.mTileView.getIcon().disableAnimation();
             }
         }
@@ -632,6 +651,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             this.mDrawable = context.getDrawable(C0013R$drawable.qs_customize_tile_decoration);
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
         public void onDraw(Canvas canvas, RecyclerView recyclerView, RecyclerView.State state) {
             super.onDraw(canvas, recyclerView, state);
             int findEditViewIndex = findEditViewIndex(recyclerView);
@@ -657,7 +677,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
             View childAt = recyclerView.getChildAt(i);
             int width = recyclerView.getWidth();
             int bottom = recyclerView.getBottom();
-            this.mDrawable.setBounds(0, childAt.getTop() + ((RecyclerView.LayoutParams) childAt.getLayoutParams()).topMargin + Math.round(ViewCompat.getTranslationY(childAt)), width, bottom);
+            this.mDrawable.setBounds(0, childAt.getTop() + ((ViewGroup.MarginLayoutParams) ((RecyclerView.LayoutParams) childAt.getLayoutParams())).topMargin + Math.round(ViewCompat.getTranslationY(childAt)), width, bottom);
             this.mDrawable.draw(canvas);
         }
     }

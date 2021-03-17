@@ -7,8 +7,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsAnimations.kt */
-final class ControlsAnimations$exitWindowTransition$1 extends Lambda implements Function1<View, Animator> {
+public final class ControlsAnimations$exitWindowTransition$1 extends Lambda implements Function1<View, Animator> {
     public static final ControlsAnimations$exitWindowTransition$1 INSTANCE = new ControlsAnimations$exitWindowTransition$1();
 
     ControlsAnimations$exitWindowTransition$1() {
@@ -18,6 +19,6 @@ final class ControlsAnimations$exitWindowTransition$1 extends Lambda implements 
     @NotNull
     public final Animator invoke(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "view");
-        return ControlsAnimations.exitAnimation$default(view, (Runnable) null, 2, (Object) null);
+        return ControlsAnimations.exitAnimation$default(view, null, 2, null);
     }
 }

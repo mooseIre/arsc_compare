@@ -7,13 +7,14 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImeAwareEditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.systemui.C0015R$id;
 
 public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener, View.OnClickListener {
-    private final InputMethodManager mImm = ((InputMethodManager) this.mContext.getSystemService(InputMethodManager.class));
+    private final InputMethodManager mImm = ((InputMethodManager) ((LinearLayout) this).mContext.getSystemService(InputMethodManager.class));
     private ImeAwareEditText mPasswordField;
 
     public AuthCredentialPasswordView(Context context, AttributeSet attributeSet) {
@@ -21,12 +22,15 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthCredentialView
     public void onFinishInflate() {
         super.onFinishInflate();
         ImeAwareEditText findViewById = findViewById(C0015R$id.lockPassword);
         this.mPasswordField = findViewById;
         findViewById.setOnEditorActionListener(this);
         this.mPasswordField.setOnKeyListener(new View.OnKeyListener() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthCredentialPasswordView$uBlA6RM9f63nDB7lqx6FDe1sZjk */
+
             public final boolean onKey(View view, int i, KeyEvent keyEvent) {
                 return AuthCredentialPasswordView.this.lambda$onFinishInflate$0$AuthCredentialPasswordView(view, i, keyEvent);
             }
@@ -49,6 +53,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthCredentialView
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mPasswordField.setTextOperationUser(UserHandle.of(this.mUserId));
@@ -79,6 +84,8 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
         try {
             if (!lockscreenCredential.isNone()) {
                 this.mPendingLockCheck = LockPatternChecker.verifyCredential(this.mLockPatternUtils, lockscreenCredential, this.mOperationId, this.mEffectiveUserId, new LockPatternChecker.OnVerifyCallback() {
+                    /* class com.android.systemui.biometrics.$$Lambda$bUxMWJPKQYxZ29Sl7YhLi_sbYZU */
+
                     public final void onVerified(byte[] bArr, int i) {
                         AuthCredentialPasswordView.this.onCredentialVerified(bArr, i);
                     }
@@ -101,6 +108,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthCredentialView
     public void onCredentialVerified(byte[] bArr, int i) {
         super.onCredentialVerified(bArr, i);
         if (bArr != null) {

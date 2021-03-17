@@ -6,6 +6,7 @@ import com.android.systemui.C0014R$fraction;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.phone.KeyguardClockPositionAlgorithm;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiKeyguardClockPositionAlgorithm.kt */
@@ -25,6 +26,7 @@ public final class MiuiKeyguardClockPositionAlgorithm extends KeyguardClockPosit
         this.mMaxKeyguardNotifications = i4;
     }
 
+    @Override // com.android.systemui.statusbar.phone.KeyguardClockPositionAlgorithm
     public void run(@Nullable KeyguardClockPositionAlgorithm.Result result) {
         super.run(result);
         int clockY = getClockY() - (this.mKeyguardClockHeight / 2);
@@ -37,6 +39,7 @@ public final class MiuiKeyguardClockPositionAlgorithm extends KeyguardClockPosit
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.phone.KeyguardClockPositionAlgorithm
     public void loadDimens(@Nullable Resources resources) {
         super.loadDimens(resources);
         if (resources != null) {
@@ -55,8 +58,8 @@ public final class MiuiKeyguardClockPositionAlgorithm extends KeyguardClockPosit
     }
 
     private final float getClockYFraction() {
-        float coerceAtMost = RangesKt___RangesKt.coerceAtMost(getNotificationAmountT(), 1.0f);
-        return ((((float) 1) - coerceAtMost) * this.mClockYFractionMax) + (coerceAtMost * this.mClockYFractionMin);
+        float f = RangesKt___RangesKt.coerceAtMost(getNotificationAmountT(), 1.0f);
+        return ((((float) 1) - f) * this.mClockYFractionMax) + (f * this.mClockYFractionMin);
     }
 
     private final float getNotificationAmountT() {

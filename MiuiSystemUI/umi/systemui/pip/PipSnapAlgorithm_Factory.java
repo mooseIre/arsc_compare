@@ -11,6 +11,7 @@ public final class PipSnapAlgorithm_Factory implements Factory<PipSnapAlgorithm>
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PipSnapAlgorithm get() {
         return provideInstance(this.contextProvider);
     }

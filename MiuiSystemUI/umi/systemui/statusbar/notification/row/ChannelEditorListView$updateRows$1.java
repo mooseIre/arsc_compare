@@ -19,6 +19,7 @@ public final class ChannelEditorListView$updateRows$1 implements Transition.Tran
     public void onTransitionStart(@Nullable Transition transition) {
     }
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     ChannelEditorListView$updateRows$1(ChannelEditorListView channelEditorListView) {
         this.this$0 = channelEditorListView;
     }

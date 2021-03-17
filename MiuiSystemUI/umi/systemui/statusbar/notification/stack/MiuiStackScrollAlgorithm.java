@@ -20,13 +20,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiStackScrollAlgorithm.kt */
 public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private int mGroupMinusBottom;
     private int mGroupMinusTop;
     private int mHeadsUpMarginTop;
@@ -41,12 +41,15 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         this.mContext = context;
         updateResources();
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(new ConfigurationController.ConfigurationListener(this) {
+            /* class com.android.systemui.statusbar.notification.stack.MiuiStackScrollAlgorithm.AnonymousClass1 */
             final /* synthetic */ MiuiStackScrollAlgorithm this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
             public void onDensityOrFontScaleChanged() {
                 MiuiStackScrollAlgorithm miuiStackScrollAlgorithm = this.this$0;
                 miuiStackScrollAlgorithm.initView(miuiStackScrollAlgorithm.mContext);
@@ -63,12 +66,14 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public void initAlgorithmState(@Nullable ViewGroup viewGroup, @Nullable StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @Nullable AmbientState ambientState) {
         updateSectionHeadersVisibility(viewGroup);
         super.initAlgorithmState(viewGroup, stackScrollAlgorithmState, ambientState);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public void updatePositionsForState(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState) {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
@@ -99,20 +104,20 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
         float f = 0.0f;
         int i = 0;
-        for (T next : arrayList) {
+        for (T t : arrayList) {
             int i2 = i + 1;
             if (i >= 0) {
-                ExpandableView expandableView = (ExpandableView) next;
-                Intrinsics.checkExpressionValueIsNotNull(expandableView, "child");
-                ExpandableViewState viewState = expandableView.getViewState();
+                T t2 = t;
+                Intrinsics.checkExpressionValueIsNotNull(t2, "child");
+                ExpandableViewState viewState = t2.getViewState();
                 if (panelStretching) {
-                    float coerceAtMost = ((float) 1) - ((((float) i) * 1.0f) / ((float) RangesKt___RangesKt.coerceAtMost(size, 10)));
-                    f += 0.15f * coerceAtMost * coerceAtMost * ambientState.getSpringLength();
+                    float f2 = ((float) 1) - ((((float) i) * 1.0f) / ((float) RangesKt___RangesKt.coerceAtMost(size, 10)));
+                    f += 0.15f * f2 * f2 * ambientState.getSpringLength();
                     if (viewState != null) {
                         viewState.setSpringYOffset((int) (ambientState.getSpringLength() + f));
                     }
                 }
-                expandableView.setTag(C0015R$id.miui_child_index_hint, Integer.valueOf(i));
+                t2.setTag(C0015R$id.miui_child_index_hint, Integer.valueOf(i));
                 i = i2;
             } else {
                 CollectionsKt.throwIndexOverflow();
@@ -126,84 +131,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateChildrenAppearDisappearState(com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm.StackScrollAlgorithmState r8, com.android.systemui.statusbar.notification.stack.AmbientState r9) {
         /*
-            r7 = this;
-            boolean r7 = r9.getPanelAppeared()
-            java.util.ArrayList<com.android.systemui.statusbar.notification.row.ExpandableView> r8 = r8.visibleChildren
-            java.lang.String r0 = "algorithmState.visibleChildren"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r8, r0)
-            java.util.Iterator r8 = r8.iterator()
-            r0 = 0
-            r1 = r0
-        L_0x0011:
-            boolean r2 = r8.hasNext()
-            if (r2 == 0) goto L_0x007f
-            java.lang.Object r2 = r8.next()
-            int r3 = r1 + 1
-            if (r1 < 0) goto L_0x007a
-            com.android.systemui.statusbar.notification.row.ExpandableView r2 = (com.android.systemui.statusbar.notification.row.ExpandableView) r2
-            boolean r1 = r9.getPanelStretchingFromHeadsUp()
-            boolean r4 = r2 instanceof com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
-            r5 = 1
-            if (r4 == 0) goto L_0x0047
-            r4 = r2
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r4 = (com.android.systemui.statusbar.notification.row.ExpandableNotificationRow) r4
-            boolean r6 = r4.isPinned()
-            if (r6 != 0) goto L_0x0045
-            boolean r4 = r4.isHeadsUpAnimatingAway()
-            if (r4 != 0) goto L_0x0045
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r4 = r9.getTrackedHeadsUpRow()
-            boolean r4 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r2, (java.lang.Object) r4)
-            if (r4 == 0) goto L_0x0047
-            if (r1 != 0) goto L_0x0047
-        L_0x0045:
-            r1 = r5
-            goto L_0x0048
-        L_0x0047:
-            r1 = r0
-        L_0x0048:
-            if (r7 != 0) goto L_0x004e
-            if (r1 == 0) goto L_0x004d
-            goto L_0x004e
-        L_0x004d:
-            r5 = r0
-        L_0x004e:
-            java.lang.String r1 = "child"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r2, r1)
-            com.android.systemui.statusbar.notification.stack.ExpandableViewState r1 = r2.getViewState()
-            if (r1 == 0) goto L_0x0078
-            r2 = 1065353216(0x3f800000, float:1.0)
-            if (r5 == 0) goto L_0x005f
-            r4 = r2
-            goto L_0x0060
-        L_0x005f:
-            r4 = 0
-        L_0x0060:
-            r1.alpha = r4
-            boolean r4 = r1.isAnimating()
-            if (r4 != 0) goto L_0x0078
-            r4 = 1061997773(0x3f4ccccd, float:0.8)
-            if (r5 == 0) goto L_0x006f
-            r6 = r2
-            goto L_0x0070
-        L_0x006f:
-            r6 = r4
-        L_0x0070:
-            r1.scaleX = r6
-            if (r5 == 0) goto L_0x0075
-            goto L_0x0076
-        L_0x0075:
-            r2 = r4
-        L_0x0076:
-            r1.scaleY = r2
-        L_0x0078:
-            r1 = r3
-            goto L_0x0011
-        L_0x007a:
-            kotlin.collections.CollectionsKt.throwIndexOverflow()
-            r7 = 0
-            throw r7
-        L_0x007f:
-            return
+        // Method dump skipped, instructions count: 128
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.MiuiStackScrollAlgorithm.updateChildrenAppearDisappearState(com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm$StackScrollAlgorithmState, com.android.systemui.statusbar.notification.stack.AmbientState):void");
     }
@@ -220,31 +148,31 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
                 break;
             }
             T next = it.next();
-            ExpandableView expandableView = (ExpandableView) next;
-            if ((expandableView instanceof ExpandableNotificationRow) && ((ExpandableNotificationRow) expandableView).isHeadsUpAnimatingAway()) {
+            T t = next;
+            if ((t instanceof ExpandableNotificationRow) && t.isHeadsUpAnimatingAway()) {
                 i = 1;
             }
             if (i != 0) {
                 arrayList2.add(next);
             }
         }
-        for (Object next2 : arrayList2) {
+        for (Object obj : arrayList2) {
             int i2 = i + 1;
             if (i >= 0) {
-                ExpandableView expandableView2 = (ExpandableView) next2;
+                ExpandableView expandableView = (ExpandableView) obj;
                 if (i == 0) {
-                    Intrinsics.checkExpressionValueIsNotNull(expandableView2, "view");
-                    ExpandableViewState viewState = expandableView2.getViewState();
+                    Intrinsics.checkExpressionValueIsNotNull(expandableView, "view");
+                    ExpandableViewState viewState = expandableView.getViewState();
                     if (viewState != null) {
-                        viewState.yTranslation = -((float) expandableView2.getActualHeight());
+                        viewState.yTranslation = -((float) expandableView.getActualHeight());
                     }
-                    ExpandableViewState viewState2 = expandableView2.getViewState();
+                    ExpandableViewState viewState2 = expandableView.getViewState();
                     if (viewState2 != null) {
                         viewState2.alpha = 1.0f;
                     }
                 } else {
-                    Intrinsics.checkExpressionValueIsNotNull(expandableView2, "view");
-                    ExpandableViewState viewState3 = expandableView2.getViewState();
+                    Intrinsics.checkExpressionValueIsNotNull(expandableView, "view");
+                    ExpandableViewState viewState3 = expandableView.getViewState();
                     if (viewState3 != null) {
                         viewState3.alpha = 0.0f;
                     }
@@ -258,6 +186,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public void updateZValuesForState(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState) {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
@@ -265,15 +194,15 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         boolean isTransparentMode = NotificationContentInflaterInjector.isTransparentMode();
         ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
-        for (ExpandableView expandableView : arrayList) {
-            if (!isTransparentMode && (expandableView instanceof ExpandableNotificationRow)) {
-                ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
-                if (expandableNotificationRow.isPinned()) {
-                    f = updateChildZValue(expandableNotificationRow, f, ambientState);
+        for (T t : arrayList) {
+            if (!isTransparentMode && (t instanceof ExpandableNotificationRow)) {
+                T t2 = t;
+                if (t2.isPinned()) {
+                    f = updateChildZValue(t2, f, ambientState);
                 }
             }
-            Intrinsics.checkExpressionValueIsNotNull(expandableView, "it");
-            ExpandableViewState viewState = expandableView.getViewState();
+            Intrinsics.checkExpressionValueIsNotNull(t, "it");
+            ExpandableViewState viewState = t.getViewState();
             if (viewState != null) {
                 viewState.zTranslation = 0.0f;
             }
@@ -295,6 +224,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public void updateClipping(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @Nullable AmbientState ambientState) {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         super.updateClipping(stackScrollAlgorithmState, ambientState);
@@ -305,13 +235,14 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         ExpandableViewState viewState;
         ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
-        ExpandableView expandableView = (ExpandableView) CollectionsKt___CollectionsKt.firstOrNull(arrayList);
+        ExpandableView expandableView = (ExpandableView) CollectionsKt.firstOrNull(arrayList);
         if (expandableView != null && (viewState = expandableView.getViewState()) != null && viewState.getSpringYOffset() < 0) {
             viewState.setSpringYOffset(0);
         }
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public float updateChild(int i, @NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState, float f, boolean z) {
         ExpandableViewState viewState;
         ExpandableViewState viewState2;
@@ -329,19 +260,19 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     private final void updateSectionHeadersVisibility(ViewGroup viewGroup) {
-        if (viewGroup != null && viewGroup.getChildCount() != 0) {
+        if (!(viewGroup == null || viewGroup.getChildCount() == 0)) {
             boolean z = false;
-            for (View next : ConvenienceExtensionsKt.getChildren(viewGroup)) {
-                if ((next instanceof SectionHeaderView) || (next instanceof PeopleHubView)) {
-                    ExpandableViewState viewState = ((ExpandableView) next).getViewState();
+            for (View view : ConvenienceExtensionsKt.getChildren(viewGroup)) {
+                if ((view instanceof SectionHeaderView) || (view instanceof PeopleHubView)) {
+                    ExpandableViewState viewState = ((ExpandableView) view).getViewState();
                     if (viewState != null) {
                         viewState.hidden = !z;
                     }
                     if (z) {
                     }
                 } else if (!z) {
-                    Intrinsics.checkExpressionValueIsNotNull(next, "child");
-                    if (next.getVisibility() != 0) {
+                    Intrinsics.checkExpressionValueIsNotNull(view, "child");
+                    if (view.getVisibility() != 0) {
                     }
                 }
                 z = true;
@@ -350,6 +281,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public int getPaddingAfterChild(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState, @NotNull ExpandableView expandableView, int i) {
         int i2;
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");

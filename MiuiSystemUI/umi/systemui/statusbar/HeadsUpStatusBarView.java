@@ -39,7 +39,7 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
     private int[] mTmpPosition;
 
     public HeadsUpStatusBarView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public HeadsUpStatusBarView(Context context, AttributeSet attributeSet) {
@@ -57,6 +57,9 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
         this.mFirstLayout = true;
         this.mIconDrawingRect = new Rect();
         this.mOnSensitivityChangedListener = new NotificationEntry.OnSensitivityChangedListener() {
+            /* class com.android.systemui.statusbar.$$Lambda$HeadsUpStatusBarView$3EjbzF6YolguGjurT443cwUG0Vs */
+
+            @Override // com.android.systemui.statusbar.notification.collection.NotificationEntry.OnSensitivityChangedListener
             public final void onSensitivityChanged(NotificationEntry notificationEntry) {
                 HeadsUpStatusBarView.this.lambda$new$0$HeadsUpStatusBarView(notificationEntry);
             }

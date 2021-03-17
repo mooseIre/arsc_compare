@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.notification.row;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
@@ -256,13 +255,12 @@ public final class PriorityOnboardingDialogController {
                                 Intrinsics.checkExpressionValueIsNotNull(context5, "context");
                                 int dimensionPixelSize4 = context5.getResources().getDimensionPixelSize(17105119);
                                 PriorityOnboardingDialogController$initDialog$1$animatorUpdateListener$1 priorityOnboardingDialogController$initDialog$1$animatorUpdateListener$1 = new PriorityOnboardingDialogController$initDialog$1$animatorUpdateListener$1(gradientDrawable, color, dimensionPixelSize3, imageView3);
-                                ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, dimensionPixelSize2});
+                                ValueAnimator ofInt = ValueAnimator.ofInt(0, dimensionPixelSize2);
                                 Intrinsics.checkExpressionValueIsNotNull(ofInt, "ValueAnimator.ofInt(0, largeThickness)");
                                 ofInt.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
-                                String str = "dialog";
                                 ofInt.setDuration(this.IMPORTANCE_ANIM_GROW_DURATION);
                                 ofInt.addUpdateListener(priorityOnboardingDialogController$initDialog$1$animatorUpdateListener$1);
-                                ValueAnimator ofInt2 = ValueAnimator.ofInt(new int[]{dimensionPixelSize2, dimensionPixelSize});
+                                ValueAnimator ofInt2 = ValueAnimator.ofInt(dimensionPixelSize2, dimensionPixelSize);
                                 Intrinsics.checkExpressionValueIsNotNull(ofInt2, "ValueAnimator.ofInt(larg…kness, standardThickness)");
                                 ofInt2.setDuration(this.IMPORTANCE_ANIM_SHRINK_DURATION);
                                 ofInt2.setStartDelay(this.IMPORTANCE_ANIM_SHRINK_DELAY);
@@ -271,20 +269,20 @@ public final class PriorityOnboardingDialogController {
                                 ofInt2.addListener(new PriorityOnboardingDialogController$initDialog$1$3(gradientDrawable2, dimensionPixelSize3, imageView4, dimensionPixelSize4));
                                 AnimatorSet animatorSet = new AnimatorSet();
                                 animatorSet.setStartDelay(this.IMPORTANCE_ANIM_DELAY);
-                                animatorSet.playSequentially(new Animator[]{ofInt, ofInt2});
+                                animatorSet.playSequentially(ofInt, ofInt2);
                                 Dialog dialog6 = this.dialog;
                                 if (dialog6 != null) {
                                     int dimensionPixelSize5 = dialog6.getContext().getResources().getDimensionPixelSize(C0012R$dimen.conversation_onboarding_bullet_gap_width);
                                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
                                     spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_show_at_top_text), new BulletSpan(dimensionPixelSize5), 0);
-                                    spannableStringBuilder.append(System.lineSeparator());
+                                    spannableStringBuilder.append((CharSequence) System.lineSeparator());
                                     spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_show_avatar_text), new BulletSpan(dimensionPixelSize5), 0);
                                     if (this.showsAsBubble) {
-                                        spannableStringBuilder.append(System.lineSeparator());
+                                        spannableStringBuilder.append((CharSequence) System.lineSeparator());
                                         spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_appear_as_bubble_text), new BulletSpan(dimensionPixelSize5), 0);
                                     }
                                     if (this.ignoresDnd) {
-                                        spannableStringBuilder.append(System.lineSeparator());
+                                        spannableStringBuilder.append((CharSequence) System.lineSeparator());
                                         spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_ignores_dnd_text), new BulletSpan(dimensionPixelSize5), 0);
                                     }
                                     ((TextView) dialog5.findViewById(C0015R$id.behaviors)).setText(spannableStringBuilder);
@@ -308,7 +306,7 @@ public final class PriorityOnboardingDialogController {
                                     animatorSet.start();
                                     return;
                                 }
-                                Intrinsics.throwUninitializedPropertyAccessException(str);
+                                Intrinsics.throwUninitializedPropertyAccessException("dialog");
                                 throw null;
                             }
                             throw new TypeCastException("null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");

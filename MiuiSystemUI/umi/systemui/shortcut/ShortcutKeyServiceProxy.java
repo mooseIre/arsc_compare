@@ -6,8 +6,7 @@ import android.os.RemoteException;
 import com.android.internal.policy.IShortcutService;
 
 public class ShortcutKeyServiceProxy extends IShortcutService.Stub {
-    /* access modifiers changed from: private */
-    public Callbacks mCallbacks;
+    private Callbacks mCallbacks;
     private final Handler mHandler = new H();
     private final Object mLock = new Object();
 

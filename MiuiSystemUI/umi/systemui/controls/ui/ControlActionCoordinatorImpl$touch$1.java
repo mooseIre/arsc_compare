@@ -24,6 +24,7 @@ final class ControlActionCoordinatorImpl$touch$1 extends Lambda implements Funct
         this.$templateId = str;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         this.$cvh.getLayout().performHapticFeedback(6);
         if (this.$cvh.usePanel()) {

@@ -11,6 +11,7 @@ public final class OrientationPolicy_Factory implements Factory<OrientationPolic
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public OrientationPolicy get() {
         return provideInstance(this.contextProvider);
     }

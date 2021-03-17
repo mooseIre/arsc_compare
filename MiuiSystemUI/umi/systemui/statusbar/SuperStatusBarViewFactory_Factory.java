@@ -20,6 +20,7 @@ public final class SuperStatusBarViewFactory_Factory implements Factory<SuperSta
         this.lockIconControllerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public SuperStatusBarViewFactory get() {
         return provideInstance(this.contextProvider, this.injectionInflationControllerProvider, this.notificationRowComponentBuilderProvider, this.lockIconControllerProvider);
     }

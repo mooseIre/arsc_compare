@@ -24,10 +24,8 @@ import java.util.Optional;
 public final class PhoneStateMonitor {
     private static final String[] DEFAULT_HOME_CHANGE_ACTIONS = {"android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED", "android.intent.action.PACKAGE_ADDED", "android.intent.action.PACKAGE_CHANGED", "android.intent.action.PACKAGE_REMOVED"};
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public ComponentName mDefaultHome;
-    /* access modifiers changed from: private */
-    public boolean mLauncherShowing;
+    private ComponentName mDefaultHome;
+    private boolean mLauncherShowing;
     private final Optional<Lazy<StatusBar>> mStatusBarOptionalLazy;
     private final StatusBarStateController mStatusBarStateController = ((StatusBarStateController) Dependency.get(StatusBarStateController.class));
 
@@ -45,24 +43,32 @@ public final class PhoneStateMonitor {
         ActivityManagerWrapper instance = ActivityManagerWrapper.getInstance();
         this.mDefaultHome = getCurrentDefaultHome();
         bootCompleteCache.addListener(new BootCompleteCache.BootCompleteListener() {
+            /* class com.android.systemui.assist.$$Lambda$PhoneStateMonitor$kU1yau2iyc4oGSlu9ejSJU0AW3w */
+
+            @Override // com.android.systemui.BootCompleteCache.BootCompleteListener
             public final void onBootComplete() {
                 PhoneStateMonitor.this.lambda$new$0$PhoneStateMonitor();
             }
         });
         IntentFilter intentFilter = new IntentFilter();
-        for (String addAction : DEFAULT_HOME_CHANGE_ACTIONS) {
-            intentFilter.addAction(addAction);
+        for (String str : DEFAULT_HOME_CHANGE_ACTIONS) {
+            intentFilter.addAction(str);
         }
         broadcastDispatcher.registerReceiver(new BroadcastReceiver() {
+            /* class com.android.systemui.assist.PhoneStateMonitor.AnonymousClass1 */
+
             public void onReceive(Context context, Intent intent) {
-                ComponentName unused = PhoneStateMonitor.this.mDefaultHome = PhoneStateMonitor.getCurrentDefaultHome();
+                PhoneStateMonitor.this.mDefaultHome = PhoneStateMonitor.getCurrentDefaultHome();
             }
         }, intentFilter);
         this.mLauncherShowing = isLauncherShowing(instance.getRunningTask());
         instance.registerTaskStackListener(new TaskStackChangeListener() {
+            /* class com.android.systemui.assist.PhoneStateMonitor.AnonymousClass2 */
+
+            @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
                 PhoneStateMonitor phoneStateMonitor = PhoneStateMonitor.this;
-                boolean unused = phoneStateMonitor.mLauncherShowing = phoneStateMonitor.isLauncherShowing(runningTaskInfo);
+                phoneStateMonitor.mLauncherShowing = phoneStateMonitor.isLauncherShowing(runningTaskInfo);
             }
         });
     }
@@ -143,7 +149,8 @@ public final class PhoneStateMonitor {
     }
 
     /* access modifiers changed from: private */
-    public boolean isLauncherShowing(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    /* access modifiers changed from: public */
+    private boolean isLauncherShowing(ActivityManager.RunningTaskInfo runningTaskInfo) {
         ComponentName componentName;
         if (runningTaskInfo == null || (componentName = runningTaskInfo.topActivity) == null) {
             return false;
@@ -152,15 +159,15 @@ public final class PhoneStateMonitor {
     }
 
     private boolean isAppImmersive() {
-        return ((StatusBar) this.mStatusBarOptionalLazy.get().get()).inImmersiveMode();
+        return this.mStatusBarOptionalLazy.get().get().inImmersiveMode();
     }
 
     private boolean isAppFullscreen() {
-        return ((StatusBar) this.mStatusBarOptionalLazy.get().get()).inFullscreenMode();
+        return this.mStatusBarOptionalLazy.get().get().inFullscreenMode();
     }
 
     private boolean isBouncerShowing() {
-        return ((Boolean) this.mStatusBarOptionalLazy.map($$Lambda$PhoneStateMonitor$m3mFsd47OeaWHKnwhEEoNbkyA.INSTANCE).orElse(Boolean.FALSE)).booleanValue();
+        return this.mStatusBarOptionalLazy.map($$Lambda$PhoneStateMonitor$m3mFsd47OeaWHKnwhEEoNbkyA.INSTANCE).orElse((U) Boolean.FALSE).booleanValue();
     }
 
     private boolean isKeyguardLocked() {

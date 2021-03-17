@@ -9,6 +9,7 @@ import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Switch;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
@@ -40,11 +41,15 @@ public class ScreenRecordDialog extends Activity {
         setTitle(C0021R$string.screenrecord_name);
         setContentView(C0017R$layout.screen_record_dialog);
         ((Button) findViewById(C0015R$id.button_cancel)).setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.screenrecord.$$Lambda$ScreenRecordDialog$UwuybAZfzEbqKArO9WeoPnEStk */
+
             public final void onClick(View view) {
                 ScreenRecordDialog.this.lambda$onCreate$0$ScreenRecordDialog(view);
             }
         });
         ((Button) findViewById(C0015R$id.button_start)).setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.screenrecord.$$Lambda$ScreenRecordDialog$PtlgQ6bdLH8Q6JnpPzk4xxbDTtg */
+
             public final void onClick(View view) {
                 ScreenRecordDialog.this.lambda$onCreate$1$ScreenRecordDialog(view);
             }
@@ -59,8 +64,11 @@ public class ScreenRecordDialog extends Activity {
         this.mOptions = (Spinner) findViewById(C0015R$id.screen_recording_options);
         ScreenRecordingAdapter screenRecordingAdapter = new ScreenRecordingAdapter(getApplicationContext(), 17367049, this.mModes);
         screenRecordingAdapter.setDropDownViewResource(17367049);
-        this.mOptions.setAdapter(screenRecordingAdapter);
+        this.mOptions.setAdapter((SpinnerAdapter) screenRecordingAdapter);
         this.mOptions.setOnItemClickListenerInt(new AdapterView.OnItemClickListener() {
+            /* class com.android.systemui.screenrecord.$$Lambda$ScreenRecordDialog$cUVjQAzT3j1yIYL9zw8455dx4I */
+
+            @Override // android.widget.AdapterView.OnItemClickListener
             public final void onItemClick(AdapterView adapterView, View view, int i, long j) {
                 ScreenRecordDialog.this.lambda$onCreate$2$ScreenRecordDialog(adapterView, view, i, j);
             }

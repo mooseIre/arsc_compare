@@ -7,8 +7,9 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationStackScrollLayoutExt.kt */
-final class NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2 extends Lambda implements Function1<View, ExpandableView> {
+public final class NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2 extends Lambda implements Function1<View, ExpandableView> {
     public static final NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2 INSTANCE = new NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2();
 
     NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2() {

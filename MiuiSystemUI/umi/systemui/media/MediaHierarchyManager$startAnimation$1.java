@@ -1,7 +1,8 @@
 package com.android.systemui.media;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaHierarchyManager.kt */
-final class MediaHierarchyManager$startAnimation$1 implements Runnable {
+public final class MediaHierarchyManager$startAnimation$1 implements Runnable {
     final /* synthetic */ MediaHierarchyManager this$0;
 
     MediaHierarchyManager$startAnimation$1(MediaHierarchyManager mediaHierarchyManager) {

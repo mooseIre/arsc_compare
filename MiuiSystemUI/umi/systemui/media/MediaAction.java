@@ -2,6 +2,7 @@ package com.android.systemui.media;
 
 import android.app.Notification;
 import android.graphics.drawable.Drawable;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +26,7 @@ public final class MediaAction {
             return false;
         }
         MediaAction mediaAction = (MediaAction) obj;
-        return Intrinsics.areEqual((Object) this.drawable, (Object) mediaAction.drawable) && Intrinsics.areEqual((Object) this.action, (Object) mediaAction.action) && Intrinsics.areEqual((Object) this.contentDescription, (Object) mediaAction.contentDescription) && Intrinsics.areEqual((Object) this.notificationAction, (Object) mediaAction.notificationAction);
+        return Intrinsics.areEqual(this.drawable, mediaAction.drawable) && Intrinsics.areEqual(this.action, mediaAction.action) && Intrinsics.areEqual(this.contentDescription, mediaAction.contentDescription) && Intrinsics.areEqual(this.notificationAction, mediaAction.notificationAction);
     }
 
     public int hashCode() {

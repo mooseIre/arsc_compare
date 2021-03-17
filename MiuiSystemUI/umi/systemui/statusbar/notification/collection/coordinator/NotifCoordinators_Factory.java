@@ -34,6 +34,7 @@ public final class NotifCoordinators_Factory implements Factory<NotifCoordinator
         this.mediaCoordinatorProvider = provider12;
     }
 
+    @Override // javax.inject.Provider
     public NotifCoordinators get() {
         return provideInstance(this.dumpManagerProvider, this.featureFlagsProvider, this.hideNotifsForOtherUsersCoordinatorProvider, this.keyguardCoordinatorProvider, this.rankingCoordinatorProvider, this.appOpsCoordinatorProvider, this.deviceProvisionedCoordinatorProvider, this.bubbleCoordinatorProvider, this.headsUpCoordinatorProvider, this.conversationCoordinatorProvider, this.preparationCoordinatorProvider, this.mediaCoordinatorProvider);
     }

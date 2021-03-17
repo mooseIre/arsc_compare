@@ -39,7 +39,6 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
     private final StatusBarStateController mStatusBarStateController;
     private final ZenModeController mZenModeController;
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiNotificationInterruptStateProviderImpl(Context context, ContentResolver contentResolver, PowerManager powerManager, IDreamManager iDreamManager, AmbientDisplayConfiguration ambientDisplayConfiguration, NotificationFilter notificationFilter, BatteryController batteryController, StatusBarStateController statusBarStateController, HeadsUpManager headsUpManager, Handler handler, ZenModeController zenModeController, SettingsManager settingsManager, CommandQueue commandQueue, StatusBarKeyguardViewManager statusBarKeyguardViewManager, DeviceProvisionedController deviceProvisionedController) {
         super(contentResolver, powerManager, iDreamManager, ambientDisplayConfiguration, notificationFilter, batteryController, statusBarStateController, headsUpManager, handler);
         this.mContext = context;
@@ -51,6 +50,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
         this.mDeviceProvisionedController = deviceProvisionedController;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         boolean z2 = true;
         this.mDisableFloatNotification = (i2 & 1024) != 0;
@@ -60,10 +60,12 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
         this.mIsStatusBarHidden = z2;
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProviderImpl, com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public boolean shouldBubbleUp(NotificationEntry notificationEntry) {
         return super.shouldBubbleUp(notificationEntry);
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProviderImpl, com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public boolean shouldHeadsUp(NotificationEntry notificationEntry) {
         if (super.shouldHeadsUp(notificationEntry)) {
             return shouldPeek(notificationEntry);
@@ -125,6 +127,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProviderImpl, com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public boolean shouldLaunchFullScreenIntentWhenAdded(NotificationEntry notificationEntry) {
         if (notificationEntry.getSbn().getNotification().fullScreenIntent == null) {
             return false;
@@ -150,6 +153,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setImeWindowStatus(int i, IBinder iBinder, int i2, int i3, boolean z) {
         this.mSoftInputVisible = (i2 & 2) != 0;
     }

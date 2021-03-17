@@ -13,6 +13,7 @@ public final class ExpandableNotificationRowComponent_ExpandableNotificationRowM
         this.statusBarNotificationProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public String get() {
         return provideInstance(this.statusBarNotificationProvider);
     }

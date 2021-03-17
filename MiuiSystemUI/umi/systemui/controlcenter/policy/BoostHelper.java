@@ -28,11 +28,11 @@ public class BoostHelper {
             int i = 0;
             try {
                 ThreadedRenderer threadedRenderer = view.getThreadedRenderer();
-                Method declaredMethod = HardwareRenderer.class.getDeclaredMethod("nGetRenderThreadTid", new Class[]{Long.TYPE});
+                Method declaredMethod = HardwareRenderer.class.getDeclaredMethod("nGetRenderThreadTid", Long.TYPE);
                 declaredMethod.setAccessible(true);
                 Field declaredField = HardwareRenderer.class.getDeclaredField("mNativeProxy");
                 declaredField.setAccessible(true);
-                i = ((Integer) declaredMethod.invoke(threadedRenderer, new Object[]{Long.valueOf(declaredField.getLong(threadedRenderer))})).intValue();
+                i = ((Integer) declaredMethod.invoke(threadedRenderer, Long.valueOf(declaredField.getLong(threadedRenderer)))).intValue();
                 Log.d("systemui_boost", "getRenderThreadId   tid=" + i);
             } catch (Exception e) {
                 e.printStackTrace();

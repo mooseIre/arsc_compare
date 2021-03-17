@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowManager.kt */
-final class WindowForegroundListener {
+public final class WindowForegroundListener {
     @NotNull
     private final Function0<Unit> callback;
     @NotNull
@@ -21,7 +22,7 @@ final class WindowForegroundListener {
             return false;
         }
         WindowForegroundListener windowForegroundListener = (WindowForegroundListener) obj;
-        return Intrinsics.areEqual((Object) this.packageName, (Object) windowForegroundListener.packageName) && Intrinsics.areEqual((Object) this.callback, (Object) windowForegroundListener.callback);
+        return Intrinsics.areEqual(this.packageName, windowForegroundListener.packageName) && Intrinsics.areEqual(this.callback, windowForegroundListener.callback);
     }
 
     public int hashCode() {

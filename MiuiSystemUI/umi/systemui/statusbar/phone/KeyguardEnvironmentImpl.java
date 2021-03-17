@@ -10,10 +10,12 @@ public class KeyguardEnvironmentImpl implements NotificationEntryManager.Keyguar
     private final DeviceProvisionedController mDeviceProvisionedController = ((DeviceProvisionedController) Dependency.get(DeviceProvisionedController.class));
     private final NotificationLockscreenUserManager mLockscreenUserManager = ((NotificationLockscreenUserManager) Dependency.get(NotificationLockscreenUserManager.class));
 
+    @Override // com.android.systemui.statusbar.notification.NotificationEntryManager.KeyguardEnvironment
     public boolean isDeviceProvisioned() {
         return this.mDeviceProvisionedController.isDeviceProvisioned();
     }
 
+    @Override // com.android.systemui.statusbar.notification.NotificationEntryManager.KeyguardEnvironment
     public boolean isNotificationForCurrentProfiles(StatusBarNotification statusBarNotification) {
         return this.mLockscreenUserManager.isCurrentProfile(statusBarNotification.getUserId());
     }

@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$mg7HvLF2bK625f51dPBSLbws implements 
     private /* synthetic */ $$Lambda$mg7HvLF2bK625f51dPBSLbws() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((StatusBar) obj).postAnimateForceCollapsePanels();
     }

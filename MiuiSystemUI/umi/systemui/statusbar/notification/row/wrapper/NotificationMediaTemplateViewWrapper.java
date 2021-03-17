@@ -25,22 +25,23 @@ import java.util.Timer;
 
 public class NotificationMediaTemplateViewWrapper extends NotificationTemplateViewWrapper {
     private View mActions;
-    /* access modifiers changed from: private */
-    public View.OnAttachStateChangeListener mAttachStateListener = new View.OnAttachStateChangeListener() {
+    private View.OnAttachStateChangeListener mAttachStateListener = new View.OnAttachStateChangeListener() {
+        /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationMediaTemplateViewWrapper.AnonymousClass3 */
+
         public void onViewAttachedToWindow(View view) {
         }
 
         public void onViewDetachedFromWindow(View view) {
-            boolean unused = NotificationMediaTemplateViewWrapper.this.mIsViewVisible = false;
+            NotificationMediaTemplateViewWrapper.this.mIsViewVisible = false;
         }
     };
     private Context mContext;
     private long mDuration = 0;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = ((Handler) Dependency.get(Dependency.MAIN_HANDLER));
-    /* access modifiers changed from: private */
-    public boolean mIsViewVisible;
+    private final Handler mHandler = ((Handler) Dependency.get(Dependency.MAIN_HANDLER));
+    private boolean mIsViewVisible;
     private MediaController.Callback mMediaCallback = new MediaController.Callback() {
+        /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationMediaTemplateViewWrapper.AnonymousClass4 */
+
         public void onSessionDestroyed() {
             NotificationMediaTemplateViewWrapper.this.clearTimer();
             NotificationMediaTemplateViewWrapper.this.mMediaController.unregisterCallback(this);
@@ -66,20 +67,19 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
 
         public void onMetadataChanged(MediaMetadata mediaMetadata) {
             if (NotificationMediaTemplateViewWrapper.this.mMediaMetadata == null || !NotificationMediaTemplateViewWrapper.this.mMediaMetadata.equals(mediaMetadata)) {
-                MediaMetadata unused = NotificationMediaTemplateViewWrapper.this.mMediaMetadata = mediaMetadata;
+                NotificationMediaTemplateViewWrapper.this.mMediaMetadata = mediaMetadata;
                 NotificationMediaTemplateViewWrapper.this.updateDuration();
             }
         }
     };
-    /* access modifiers changed from: private */
-    public MediaController mMediaController;
+    private MediaController mMediaController;
     private NotificationMediaManager mMediaManager;
-    /* access modifiers changed from: private */
-    public MediaMetadata mMediaMetadata;
-    /* access modifiers changed from: private */
-    public MetricsLogger mMetricsLogger;
+    private MediaMetadata mMediaMetadata;
+    private MetricsLogger mMetricsLogger;
     private boolean mOnPreDrawListenerRegistered = false;
     protected final Runnable mOnUpdateTimerTick = new Runnable() {
+        /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationMediaTemplateViewWrapper.AnonymousClass6 */
+
         public void run() {
             if (NotificationMediaTemplateViewWrapper.this.mMediaController == null || NotificationMediaTemplateViewWrapper.this.mSeekBar == null) {
                 NotificationMediaTemplateViewWrapper.this.clearTimer();
@@ -98,6 +98,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         }
     };
     private ViewTreeObserver.OnPreDrawListener mPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationMediaTemplateViewWrapper.AnonymousClass5 */
+
         public boolean onPreDraw() {
             NotificationMediaTemplateViewWrapper.this.removeOnPreDrawListener();
             NotificationMediaTemplateViewWrapper.this.mHandler.removeCallbacks(NotificationMediaTemplateViewWrapper.this.mOnUpdateTimerTick);
@@ -105,16 +107,15 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
             return true;
         }
     };
-    /* access modifiers changed from: private */
-    public SeekBar mSeekBar;
+    private SeekBar mSeekBar;
     private TextView mSeekBarElapsedTime;
-    /* access modifiers changed from: private */
-    public Timer mSeekBarTimer;
+    private Timer mSeekBarTimer;
     private TextView mSeekBarTotalTime;
-    /* access modifiers changed from: private */
-    public View mSeekBarView;
+    private View mSeekBarView;
     @VisibleForTesting
     protected SeekBar.OnSeekBarChangeListener mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+        /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationMediaTemplateViewWrapper.AnonymousClass1 */
+
         public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
         }
 
@@ -128,10 +129,11 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
             }
         }
     };
-    /* access modifiers changed from: private */
-    public MediaNotificationView.VisibilityChangeListener mVisibilityListener = new MediaNotificationView.VisibilityChangeListener() {
+    private MediaNotificationView.VisibilityChangeListener mVisibilityListener = new MediaNotificationView.VisibilityChangeListener() {
+        /* class com.android.systemui.statusbar.notification.row.wrapper.NotificationMediaTemplateViewWrapper.AnonymousClass2 */
+
         public void onAggregatedVisibilityChanged(boolean z) {
-            boolean unused = NotificationMediaTemplateViewWrapper.this.mIsViewVisible = z;
+            NotificationMediaTemplateViewWrapper.this.mIsViewVisible = z;
             if (!z || NotificationMediaTemplateViewWrapper.this.mMediaController == null) {
                 NotificationMediaTemplateViewWrapper.this.clearTimer();
                 return;
@@ -143,6 +145,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         }
     };
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public boolean shouldClipToRounding(boolean z, boolean z2) {
         return true;
     }
@@ -240,7 +243,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: private */
-    public void startTimer() {
+    /* access modifiers changed from: public */
+    private void startTimer() {
         clearTimer();
         if (this.mIsViewVisible) {
             addOnPreDrawListener();
@@ -248,7 +252,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: private */
-    public void addOnPreDrawListener() {
+    /* access modifiers changed from: public */
+    private void addOnPreDrawListener() {
         if (!this.mOnPreDrawListenerRegistered) {
             this.mOnPreDrawListenerRegistered = true;
             this.mSeekBarView.getViewTreeObserver().addOnPreDrawListener(this.mPreDrawListener);
@@ -256,7 +261,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: private */
-    public void removeOnPreDrawListener() {
+    /* access modifiers changed from: public */
+    private void removeOnPreDrawListener() {
         if (this.mOnPreDrawListenerRegistered) {
             this.mSeekBarView.getViewTreeObserver().removeOnPreDrawListener(this.mPreDrawListener);
             this.mHandler.postDelayed(this.mOnUpdateTimerTick, 1000);
@@ -265,7 +271,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: private */
-    public void clearTimer() {
+    /* access modifiers changed from: public */
+    private void clearTimer() {
         Timer timer = this.mSeekBarTimer;
         if (timer != null) {
             timer.cancel();
@@ -275,6 +282,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         removeOnPreDrawListener();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setRemoved() {
         clearTimer();
         MediaController mediaController = this.mMediaController;
@@ -302,7 +310,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: private */
-    public void updateDuration() {
+    /* access modifiers changed from: public */
+    private void updateDuration() {
         MediaMetadata mediaMetadata = this.mMediaMetadata;
         if (mediaMetadata != null && this.mSeekBar != null) {
             long j = mediaMetadata.getLong("android.media.metadata.DURATION");
@@ -315,7 +324,8 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: private */
-    public void updatePlaybackUi(PlaybackState playbackState) {
+    /* access modifiers changed from: public */
+    private void updatePlaybackUi(PlaybackState playbackState) {
         if (this.mSeekBar != null && this.mSeekBarElapsedTime != null) {
             long position = playbackState.getPosition();
             this.mSeekBar.setProgress((int) position);
@@ -328,6 +338,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         return DateUtils.formatElapsedTime(j / 1000);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         resolveViews();
         super.onContentUpdated(expandableNotificationRow);
@@ -348,6 +359,7 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
     public void updateTransformedTypes() {
         super.updateTransformedTypes();
         View view = this.mActions;
@@ -356,12 +368,14 @@ public class NotificationMediaTemplateViewWrapper extends NotificationTemplateVi
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public boolean isDimmable() {
         return getCustomBackgroundColor() == 0;
     }
 
     /* access modifiers changed from: private */
-    public LogMaker newLog(int i) {
+    /* access modifiers changed from: public */
+    private LogMaker newLog(int i) {
         return new LogMaker(1743).setType(i).setPackageName(this.mRow.getEntry().getSbn().getPackageName());
     }
 

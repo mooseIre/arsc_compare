@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$BrightLineFalsingManager$CaQ6cuS9SHk
     private /* synthetic */ $$Lambda$BrightLineFalsingManager$CaQ6cuS9SHkQ1By76SF5W8vub7I() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return BrightLineFalsingManager.lambda$isFalseTouch$1((MotionEvent) obj);
     }

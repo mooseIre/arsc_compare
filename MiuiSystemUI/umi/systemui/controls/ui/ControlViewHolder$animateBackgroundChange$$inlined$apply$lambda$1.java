@@ -8,8 +8,9 @@ import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$IntRef;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlViewHolder.kt */
-final class ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ int $newBaseColor$inlined;
     final /* synthetic */ Ref$IntRef $newClipColor$inlined;
     final /* synthetic */ float $oldAlpha$inlined;

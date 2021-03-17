@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public final class ControlsProviderLifecycleManager$serviceConnection$1 implements ServiceConnection {
     final /* synthetic */ ControlsProviderLifecycleManager this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     ControlsProviderLifecycleManager$serviceConnection$1(ControlsProviderLifecycleManager controlsProviderLifecycleManager) {
         this.this$0 = controlsProviderLifecycleManager;
     }
@@ -21,8 +22,8 @@ public final class ControlsProviderLifecycleManager$serviceConnection$1 implemen
     public void onServiceConnected(@NotNull ComponentName componentName, @NotNull IBinder iBinder) {
         Intrinsics.checkParameterIsNotNull(componentName, "name");
         Intrinsics.checkParameterIsNotNull(iBinder, "service");
-        String access$getTAG$p = this.this$0.TAG;
-        Log.d(access$getTAG$p, "onServiceConnected " + componentName);
+        String str = this.this$0.TAG;
+        Log.d(str, "onServiceConnected " + componentName);
         this.this$0.bindTryCount = 0;
         ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0;
         IControlsProvider asInterface = IControlsProvider.Stub.asInterface(iBinder);
@@ -36,8 +37,8 @@ public final class ControlsProviderLifecycleManager$serviceConnection$1 implemen
     }
 
     public void onServiceDisconnected(@Nullable ComponentName componentName) {
-        String access$getTAG$p = this.this$0.TAG;
-        Log.d(access$getTAG$p, "onServiceDisconnected " + componentName);
+        String str = this.this$0.TAG;
+        Log.d(str, "onServiceDisconnected " + componentName);
         this.this$0.wrapper = null;
         this.this$0.bindService(false);
     }

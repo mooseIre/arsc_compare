@@ -6,8 +6,9 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.DungeonRow;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ForegroundServiceSectionController.kt */
-final class ForegroundServiceSectionController$update$$inlined$apply$lambda$1 implements View.OnClickListener {
+public final class ForegroundServiceSectionController$update$$inlined$apply$lambda$1 implements View.OnClickListener {
     final /* synthetic */ DungeonRow $child;
     final /* synthetic */ NotificationEntry $entry;
     final /* synthetic */ ForegroundServiceSectionController this$0;

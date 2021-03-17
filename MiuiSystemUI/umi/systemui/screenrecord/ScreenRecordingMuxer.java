@@ -29,7 +29,8 @@ public class ScreenRecordingMuxer {
 
     public void mux() throws IOException {
         MediaMuxer mediaMuxer = new MediaMuxer(this.mOutFile, this.mFormat);
-        for (String str : this.mFiles) {
+        String[] strArr = this.mFiles;
+        for (String str : strArr) {
             MediaExtractor mediaExtractor = new MediaExtractor();
             try {
                 mediaExtractor.setDataSource(str);
@@ -46,11 +47,11 @@ public class ScreenRecordingMuxer {
             }
         }
         mediaMuxer.start();
-        for (Pair next : this.mExtractorIndexToMuxerIndex.keySet()) {
-            MediaExtractor mediaExtractor2 = (MediaExtractor) next.first;
-            mediaExtractor2.selectTrack(((Integer) next.second).intValue());
-            int intValue = this.mExtractorIndexToMuxerIndex.get(next).intValue();
-            Log.d(TAG, "track format: " + mediaExtractor2.getTrackFormat(((Integer) next.second).intValue()));
+        for (Pair<MediaExtractor, Integer> pair : this.mExtractorIndexToMuxerIndex.keySet()) {
+            MediaExtractor mediaExtractor2 = (MediaExtractor) pair.first;
+            mediaExtractor2.selectTrack(((Integer) pair.second).intValue());
+            int intValue = this.mExtractorIndexToMuxerIndex.get(pair).intValue();
+            Log.d(TAG, "track format: " + mediaExtractor2.getTrackFormat(((Integer) pair.second).intValue()));
             mediaExtractor2.seekTo(0, 2);
             ByteBuffer allocate = ByteBuffer.allocate(4194304);
             MediaCodec.BufferInfo bufferInfo = new MediaCodec.BufferInfo();

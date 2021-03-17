@@ -1,6 +1,5 @@
 package com.android.systemui.controls.ui;
 
-import com.android.systemui.controls.controller.StructureInfo;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
@@ -12,8 +11,10 @@ final class ControlsUiControllerImpl$onSeedingComplete$1<T> implements Consumer<
         this.this$0 = controlsUiControllerImpl;
     }
 
-    public /* bridge */ /* synthetic */ void accept(Object obj) {
-        accept(((Boolean) obj).booleanValue());
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // java.util.function.Consumer
+    public /* bridge */ /* synthetic */ void accept(Boolean bool) {
+        accept(bool.booleanValue());
     }
 
     public final void accept(boolean z) {
@@ -28,10 +29,10 @@ final class ControlsUiControllerImpl$onSeedingComplete$1<T> implements Consumer<
                 if (!it.hasNext()) {
                     t = next;
                 } else {
-                    int size = ((StructureInfo) next).getControls().size();
+                    int size = next.getControls().size();
                     do {
                         T next2 = it.next();
-                        int size2 = ((StructureInfo) next2).getControls().size();
+                        int size2 = next2.getControls().size();
                         if (size < size2) {
                             next = next2;
                             size = size2;
@@ -40,11 +41,11 @@ final class ControlsUiControllerImpl$onSeedingComplete$1<T> implements Consumer<
                 }
                 t = next;
             }
-            StructureInfo structureInfo = (StructureInfo) t;
-            if (structureInfo == null) {
-                structureInfo = ControlsUiControllerImpl.EMPTY_STRUCTURE;
+            T t2 = t;
+            if (t2 == null) {
+                t2 = ControlsUiControllerImpl.EMPTY_STRUCTURE;
             }
-            controlsUiControllerImpl.selectedStructure = structureInfo;
+            controlsUiControllerImpl.selectedStructure = t2;
             ControlsUiControllerImpl controlsUiControllerImpl2 = this.this$0;
             controlsUiControllerImpl2.updatePreferences(controlsUiControllerImpl2.selectedStructure);
         }

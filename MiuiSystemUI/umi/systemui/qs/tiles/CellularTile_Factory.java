@@ -17,6 +17,7 @@ public final class CellularTile_Factory implements Factory<CellularTile> {
         this.activityStarterProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public CellularTile get() {
         return provideInstance(this.hostProvider, this.networkControllerProvider, this.activityStarterProvider);
     }

@@ -14,12 +14,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import kotlin.collections.CollectionsKt__CollectionsJVMKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> implements Consumer<ControlsController.LoadData> {
+public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> implements Consumer<ControlsController.LoadData> {
     final /* synthetic */ CharSequence $emptyZoneString;
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
@@ -34,8 +37,8 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
         List<String> favoritesIds = loadData.getFavoritesIds();
         final boolean errorOnLoad = loadData.getErrorOnLoad();
         LinkedHashMap linkedHashMap = new LinkedHashMap();
-        for (T next : allControls) {
-            Object structure = ((ControlStatus) next).getControl().getStructure();
+        for (T t : allControls) {
+            Object structure = t.getControl().getStructure();
             if (structure == null) {
                 structure = "";
             }
@@ -44,7 +47,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                 obj = new ArrayList();
                 linkedHashMap.put(structure, obj);
             }
-            ((List) obj).add(next);
+            ((List) obj).add(t);
         }
         ControlsFavoritingActivity controlsFavoritingActivity = this.this$0;
         ArrayList arrayList = new ArrayList(linkedHashMap.size());
@@ -60,7 +63,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
             if (!it.hasNext()) {
                 i = -1;
                 break;
-            } else if (Intrinsics.areEqual((Object) ((StructureContainer) it.next()).getStructureName(), (Object) this.this$0.structureExtra)) {
+            } else if (Intrinsics.areEqual(((StructureContainer) it.next()).getStructureName(), this.this$0.structureExtra)) {
                 break;
             } else {
                 i++;
@@ -74,6 +77,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
             controlsFavoritingActivity2.listOfStructures = CollectionsKt__CollectionsJVMKt.listOf(controlsFavoritingActivity2.listOfStructures.get(i));
         }
         this.this$0.executor.execute(new Runnable(this) {
+            /* class com.android.systemui.controls.management.ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1.AnonymousClass1 */
             final /* synthetic */ ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1 this$0;
 
             {
@@ -89,11 +93,11 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                     Resources resources = this.this$0.this$0.getResources();
                     int i2 = C0021R$string.controls_favorite_load_error;
                     Object[] objArr = new Object[1];
-                    Object access$getAppName$p = this.this$0.this$0.appName;
-                    if (access$getAppName$p == null) {
-                        access$getAppName$p = "";
+                    Object obj = this.this$0.this$0.appName;
+                    if (obj == null) {
+                        obj = "";
                     }
-                    objArr[0] = access$getAppName$p;
+                    objArr[0] = obj;
                     access$getStatusText$p.setText(resources.getString(i2, objArr));
                     ControlsFavoritingActivity.access$getSubtitleView$p(this.this$0.this$0).setVisibility(8);
                 } else if (this.this$0.this$0.listOfStructures.isEmpty()) {
@@ -110,6 +114,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                     access$getPageIndicator$p.setVisibility(i);
                     Animator enterAnimation = ControlsAnimations.INSTANCE.enterAnimation(ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0));
                     enterAnimation.addListener(new AnimatorListenerAdapter(this) {
+                        /* class com.android.systemui.controls.management.ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1.AnonymousClass1.AnonymousClass1 */
                         final /* synthetic */ AnonymousClass1 this$0;
 
                         {
@@ -117,12 +122,12 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                         }
 
                         public void onAnimationEnd(@Nullable Animator animator) {
-                            if (ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getVisibility() == 0 && this.this$0.this$0.this$0.mTooltipManager != null) {
+                            if (ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getVisibility() == 0 && ControlsFavoritingActivity.access$getMTooltipManager$p(this.this$0.this$0.this$0) != null) {
                                 int[] iArr = new int[2];
                                 ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getLocationOnScreen(iArr);
                                 int width = iArr[0] + (ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getWidth() / 2);
                                 int height = iArr[1] + ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getHeight();
-                                TooltipManager access$getMTooltipManager$p = this.this$0.this$0.this$0.mTooltipManager;
+                                TooltipManager access$getMTooltipManager$p = ControlsFavoritingActivity.access$getMTooltipManager$p(this.this$0.this$0.this$0);
                                 if (access$getMTooltipManager$p != null) {
                                     access$getMTooltipManager$p.show(C0021R$string.controls_structure_tooltip, width, height);
                                 }

@@ -47,6 +47,8 @@ import java.util.function.Consumer;
 
 public class StatusBarIconView extends AnimatedImageView implements StatusIconDisplayable {
     private static final Property<StatusBarIconView, Float> DOT_APPEAR_AMOUNT = new FloatProperty<StatusBarIconView>("dot_appear_amount") {
+        /* class com.android.systemui.statusbar.StatusBarIconView.AnonymousClass2 */
+
         public void setValue(StatusBarIconView statusBarIconView, float f) {
             statusBarIconView.setDotAppearAmount(f);
         }
@@ -56,6 +58,8 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         }
     };
     private static final Property<StatusBarIconView, Float> ICON_APPEAR_AMOUNT = new FloatProperty<StatusBarIconView>("iconAppearAmount") {
+        /* class com.android.systemui.statusbar.StatusBarIconView.AnonymousClass1 */
+
         public void setValue(StatusBarIconView statusBarIconView, float f) {
             statusBarIconView.setIconAppearAmount(f);
         }
@@ -65,20 +69,17 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         }
     };
     private boolean mAlwaysScaleIcon;
-    /* access modifiers changed from: private */
-    public int mAnimationStartColor;
+    private int mAnimationStartColor;
     private final boolean mBlocked;
     private int mCachedContrastBackgroundColor;
-    /* access modifiers changed from: private */
-    public ValueAnimator mColorAnimator;
+    private ValueAnimator mColorAnimator;
     private final ValueAnimator.AnimatorUpdateListener mColorUpdater;
     private int mContrastedDrawableColor;
     private int mCurrentSetColor;
     private boolean mDark;
     private int mDecorColor;
     private int mDensity;
-    /* access modifiers changed from: private */
-    public ObjectAnimator mDotAnimator;
+    private ObjectAnimator mDotAnimator;
     private float mDotAppearAmount;
     private final Paint mDotPaint;
     private float mDotRadius;
@@ -87,8 +88,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
     private int mDrawableColor;
     private StatusBarIcon mIcon;
     private float mIconAppearAmount;
-    /* access modifiers changed from: private */
-    public ObjectAnimator mIconAppearAnimator;
+    private ObjectAnimator mIconAppearAnimator;
     private int mIconColor;
     private float mIconScale;
     private boolean mIncreasedSize;
@@ -123,6 +123,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
     private void updateIconScaleForSystemIcons() {
     }
 
+    @Override // com.android.systemui.statusbar.AnimatedImageView
     public boolean hasOverlappingRendering() {
         return false;
     }
@@ -155,6 +156,8 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         this.mCurrentSetColor = 0;
         this.mAnimationStartColor = 0;
         this.mColorUpdater = new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.statusbar.$$Lambda$StatusBarIconView$nRA4PFzSKIqshXSve3PBqKMX7Q */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 StatusBarIconView.this.lambda$new$0$StatusBarIconView(valueAnimator);
             }
@@ -191,6 +194,8 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         this.mCurrentSetColor = 0;
         this.mAnimationStartColor = 0;
         this.mColorUpdater = new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.statusbar.$$Lambda$StatusBarIconView$nRA4PFzSKIqshXSve3PBqKMX7Q */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 StatusBarIconView.this.lambda$new$0$StatusBarIconView(valueAnimator);
             }
@@ -272,16 +277,13 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
             return false;
         }
         int type = icon.getType();
-        if (type != 2) {
-            if (type == 4 || type == 6) {
-                return icon.getUriString().equals(icon2.getUriString());
-            }
-            return false;
-        } else if (!icon.getResPackage().equals(icon2.getResPackage()) || icon.getResId() != icon2.getResId()) {
-            return false;
-        } else {
-            return true;
+        if (type == 2) {
+            return icon.getResPackage().equals(icon2.getResPackage()) && icon.getResId() == icon2.getResId();
         }
+        if (type == 4 || type == 6) {
+            return icon.getUriString().equals(icon2.getUriString());
+        }
+        return false;
     }
 
     public boolean set(StatusBarIcon statusBarIcon) {
@@ -300,7 +302,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
             if (!updateDrawable(false)) {
                 return false;
             }
-            setTag(C0015R$id.icon_is_grayscale, (Object) null);
+            setTag(C0015R$id.icon_is_grayscale, null);
             maybeUpdateIconScaleDimens();
         }
         if (!z2) {
@@ -343,7 +345,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                 return false;
             }
             if (z) {
-                setImageDrawable((Drawable) null);
+                setImageDrawable(null);
             }
             setImageDrawable(icon);
             return true;
@@ -472,7 +474,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     private void setContentDescription(Notification notification) {
         if (notification != null) {
-            String contentDescForNotification = contentDescForNotification(this.mContext, notification);
+            String contentDescForNotification = contentDescForNotification(((ImageView) this).mContext, notification);
             if (!TextUtils.isEmpty(contentDescForNotification)) {
                 setContentDescription(contentDescForNotification);
             }
@@ -487,6 +489,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         return this.mNotification;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public String getSlot() {
         return this.mSlot;
     }
@@ -512,7 +515,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         } else if (!TextUtils.isEmpty(charSequence5)) {
             charSequence2 = charSequence5;
         }
-        return context.getString(C0021R$string.accessibility_desc_notification_icon, new Object[]{charSequence, charSequence2});
+        return context.getString(C0021R$string.accessibility_desc_notification_icon, charSequence, charSequence2);
     }
 
     public void setDecorColor(int i) {
@@ -590,15 +593,17 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                     return;
                 }
                 this.mAnimationStartColor = i2;
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
                 this.mColorAnimator = ofFloat;
                 ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-                this.mColorAnimator.setDuration(100);
+                this.mColorAnimator.setDuration(100L);
                 this.mColorAnimator.addUpdateListener(this.mColorUpdater);
                 this.mColorAnimator.addListener(new AnimatorListenerAdapter() {
+                    /* class com.android.systemui.statusbar.StatusBarIconView.AnonymousClass3 */
+
                     public void onAnimationEnd(Animator animator) {
-                        ValueAnimator unused = StatusBarIconView.this.mColorAnimator = null;
-                        int unused2 = StatusBarIconView.this.mAnimationStartColor = 0;
+                        StatusBarIconView.this.mColorAnimator = null;
+                        StatusBarIconView.this.mAnimationStartColor = 0;
                     }
                 });
                 this.mColorAnimator.start();
@@ -631,31 +636,31 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
             if (fArr[1] < 0.2f) {
                 i = 0;
             }
-            i = ContrastColorUtil.resolveContrastColor(this.mContext, i, this.mCachedContrastBackgroundColor, !ContrastColorUtil.isColorLight(this.mCachedContrastBackgroundColor));
+            i = ContrastColorUtil.resolveContrastColor(((ImageView) this).mContext, i, this.mCachedContrastBackgroundColor, !ContrastColorUtil.isColorLight(this.mCachedContrastBackgroundColor));
         }
         this.mContrastedDrawableColor = i;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setVisibleState(int i) {
-        setVisibleState(i, true, (Runnable) null);
+        setVisibleState(i, true, null);
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setVisibleState(int i, boolean z) {
-        setVisibleState(i, z, (Runnable) null);
+        setVisibleState(i, z, null);
     }
 
     public void setVisibleState(int i, boolean z, Runnable runnable) {
         setVisibleState(i, z, runnable, 0);
     }
 
-    public void setVisibleState(int i, boolean z, Runnable runnable, long j) {
+    public void setVisibleState(int i, boolean z, final Runnable runnable, long j) {
         float f;
         boolean z2;
-        int i2 = i;
-        final Runnable runnable2 = runnable;
         boolean z3 = false;
-        if (i2 != this.mVisibleState) {
-            this.mVisibleState = i2;
+        if (i != this.mVisibleState) {
+            this.mVisibleState = i;
             ObjectAnimator objectAnimator = this.mIconAppearAnimator;
             if (objectAnimator != null) {
                 objectAnimator.cancel();
@@ -666,7 +671,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
             }
             if (z) {
                 Interpolator interpolator = Interpolators.FAST_OUT_LINEAR_IN;
-                if (i2 == 0) {
+                if (i == 0) {
                     interpolator = Interpolators.LINEAR_OUT_SLOW_IN;
                     f = 1.0f;
                 } else {
@@ -675,14 +680,16 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                 float iconAppearAmount = getIconAppearAmount();
                 long j2 = 100;
                 if (f != iconAppearAmount) {
-                    ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, ICON_APPEAR_AMOUNT, new float[]{iconAppearAmount, f});
+                    ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, ICON_APPEAR_AMOUNT, iconAppearAmount, f);
                     this.mIconAppearAnimator = ofFloat;
                     ofFloat.setInterpolator(interpolator);
                     this.mIconAppearAnimator.setDuration(j == 0 ? 100 : j);
                     this.mIconAppearAnimator.addListener(new AnimatorListenerAdapter() {
+                        /* class com.android.systemui.statusbar.StatusBarIconView.AnonymousClass4 */
+
                         public void onAnimationEnd(Animator animator) {
-                            ObjectAnimator unused = StatusBarIconView.this.mIconAppearAnimator = null;
-                            StatusBarIconView.this.runRunnable(runnable2);
+                            StatusBarIconView.this.mIconAppearAnimator = null;
+                            StatusBarIconView.this.runRunnable(runnable);
                         }
                     });
                     this.mIconAppearAnimator.start();
@@ -690,15 +697,15 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                 } else {
                     z2 = false;
                 }
-                float f2 = i2 == 0 ? 2.0f : 0.0f;
+                float f2 = i == 0 ? 2.0f : 0.0f;
                 Interpolator interpolator2 = Interpolators.FAST_OUT_LINEAR_IN;
-                if (i2 == 1) {
+                if (i == 1) {
                     interpolator2 = Interpolators.LINEAR_OUT_SLOW_IN;
                     f2 = 1.0f;
                 }
                 float dotAppearAmount = getDotAppearAmount();
                 if (f2 != dotAppearAmount) {
-                    ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, DOT_APPEAR_AMOUNT, new float[]{dotAppearAmount, f2});
+                    ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, DOT_APPEAR_AMOUNT, dotAppearAmount, f2);
                     this.mDotAnimator = ofFloat2;
                     ofFloat2.setInterpolator(interpolator2);
                     ObjectAnimator objectAnimator3 = this.mDotAnimator;
@@ -708,10 +715,12 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                     objectAnimator3.setDuration(j2);
                     final boolean z4 = !z2;
                     this.mDotAnimator.addListener(new AnimatorListenerAdapter() {
+                        /* class com.android.systemui.statusbar.StatusBarIconView.AnonymousClass5 */
+
                         public void onAnimationEnd(Animator animator) {
-                            ObjectAnimator unused = StatusBarIconView.this.mDotAnimator = null;
+                            StatusBarIconView.this.mDotAnimator = null;
                             if (z4) {
-                                StatusBarIconView.this.runRunnable(runnable2);
+                                StatusBarIconView.this.runRunnable(runnable);
                             }
                         }
                     });
@@ -721,17 +730,18 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
                     z3 = z2;
                 }
             } else {
-                setIconAppearAmount(i2 == 0 ? 1.0f : 0.0f);
-                setDotAppearAmount(i2 == 1 ? 1.0f : i2 == 0 ? 2.0f : 0.0f);
+                setIconAppearAmount(i == 0 ? 1.0f : 0.0f);
+                setDotAppearAmount(i == 1 ? 1.0f : i == 0 ? 2.0f : 0.0f);
             }
         }
         if (!z3) {
-            runRunnable(runnable2);
+            runRunnable(runnable);
         }
     }
 
     /* access modifiers changed from: private */
-    public void runRunnable(Runnable runnable) {
+    /* access modifiers changed from: public */
+    private void runRunnable(Runnable runnable) {
         if (runnable != null) {
             runnable.run();
         }
@@ -748,6 +758,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         return this.mIconAppearAmount;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public int getVisibleState() {
         return this.mVisibleState;
     }
@@ -777,6 +788,9 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     public void setDozing(boolean z, boolean z2, long j) {
         this.mDozer.setDozing(new Consumer() {
+            /* class com.android.systemui.statusbar.$$Lambda$StatusBarIconView$x3AGEt5vRmEDqrCK9ien5Lp2M */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 StatusBarIconView.this.lambda$setDozing$1$StatusBarIconView((Float) obj);
             }
@@ -847,6 +861,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
     /* JADX WARNING: Removed duplicated region for block: B:22:0x0038  */
     /* JADX WARNING: Removed duplicated region for block: B:25:0x0045  */
     /* JADX WARNING: Removed duplicated region for block: B:27:? A[RETURN, SYNTHETIC] */
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onDarkChanged(android.graphics.Rect r2, float r3, int r4, int r5, int r6, boolean r7) {
         /*
@@ -907,11 +922,13 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.StatusBarIconView.onDarkChanged(android.graphics.Rect, float, int, int, int, boolean):void");
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconVisible() {
         StatusBarIcon statusBarIcon = this.mIcon;
         return statusBarIcon != null && statusBarIcon.visible;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconBlocked() {
         return this.mBlocked;
     }

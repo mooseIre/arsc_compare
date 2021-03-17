@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$aKsp0zdf_wKFZXD1TonJ2cFEsN4 implemen
     private /* synthetic */ $$Lambda$aKsp0zdf_wKFZXD1TonJ2cFEsN4() {
     }
 
+    @Override // java.util.function.BiConsumer
     public final void accept(Object obj, Object obj2) {
         ((NotificationPanelView) obj).setPanelAlphaInternal(((Float) obj2).floatValue());
     }

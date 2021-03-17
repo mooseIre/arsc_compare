@@ -16,11 +16,13 @@ public final class NotificationSectionsManager$updateFirstAndLastViewsForAllSect
         this.this$0 = notificationSectionsManager;
     }
 
+    @Override // kotlin.collections.Grouping
     @NotNull
     public Iterator<ExpandableView> sourceIterator() {
         return this.$this_groupingBy.iterator();
     }
 
+    @Override // kotlin.collections.Grouping
     public Integer keyOf(ExpandableView expandableView) {
         Integer bucket = this.this$0.getBucket(expandableView);
         if (bucket != null) {

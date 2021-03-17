@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemUIModule_ProvideSysUiStateFactory implements Factory<SysUiState> {
     private static final SystemUIModule_ProvideSysUiStateFactory INSTANCE = new SystemUIModule_ProvideSysUiStateFactory();
 
+    @Override // javax.inject.Provider
     public SysUiState get() {
         return provideInstance();
     }

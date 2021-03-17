@@ -24,6 +24,7 @@ public final class MiuiWallpaperZoomOutService_Factory implements Factory<MiuiWa
         this.packageEventControllerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public MiuiWallpaperZoomOutService get() {
         return provideInstance(this.contextProvider, this.statusBarLazyProvider, this.deviceProvisionedControllerProvider, this.broadcastDispatcherProvider, this.packageEventControllerProvider);
     }

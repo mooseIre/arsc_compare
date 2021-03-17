@@ -32,8 +32,7 @@ public interface SysuiStatusBarStateController extends StatusBarStateController 
 
     public static class RankedListener {
         final StatusBarStateController.StateListener mListener;
-        /* access modifiers changed from: package-private */
-        public final int mRank;
+        final int mRank;
 
         RankedListener(StatusBarStateController.StateListener stateListener, int i) {
             this.mListener = stateListener;

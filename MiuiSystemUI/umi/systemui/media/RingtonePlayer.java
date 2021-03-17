@@ -26,12 +26,13 @@ import java.io.PrintWriter;
 import java.util.HashMap;
 
 public class RingtonePlayer extends SystemUI {
-    /* access modifiers changed from: private */
-    public final NotificationPlayer mAsyncPlayer = new NotificationPlayer("RingtonePlayer");
+    private final NotificationPlayer mAsyncPlayer = new NotificationPlayer("RingtonePlayer");
     private IAudioService mAudioService;
     private IRingtonePlayer mCallback = new IRingtonePlayer.Stub() {
+        /* class com.android.systemui.media.RingtonePlayer.AnonymousClass1 */
+
         public void play(IBinder iBinder, Uri uri, AudioAttributes audioAttributes, float f, boolean z) throws RemoteException {
-            playWithVolumeShaping(iBinder, uri, audioAttributes, f, z, (VolumeShaper.Configuration) null);
+            playWithVolumeShaping(iBinder, uri, audioAttributes, f, z, null);
         }
 
         public void playWithVolumeShaping(IBinder iBinder, Uri uri, AudioAttributes audioAttributes, float f, boolean z, VolumeShaper.Configuration configuration) throws RemoteException {
@@ -112,40 +113,36 @@ public class RingtonePlayer extends SystemUI {
         public ParcelFileDescriptor openRingtone(Uri uri) {
             ContentResolver contentResolver = RingtonePlayer.this.getContextForUser(Binder.getCallingUserHandle()).getContentResolver();
             if (uri.toString().startsWith(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI.toString())) {
-                Cursor query = contentResolver.query(uri, new String[]{"is_ringtone", "is_alarm", "is_notification"}, (String) null, (String[]) null, (String) null);
+                Cursor query = contentResolver.query(uri, new String[]{"is_ringtone", "is_alarm", "is_notification"}, null, null, null);
                 try {
                     if (query.moveToFirst() && (query.getInt(0) != 0 || query.getInt(1) != 0 || query.getInt(2) != 0)) {
-                        ParcelFileDescriptor openFileDescriptor = contentResolver.openFileDescriptor(uri, "r");
-                        if (query != null) {
-                            query.close();
+                        try {
+                            ParcelFileDescriptor openFileDescriptor = contentResolver.openFileDescriptor(uri, "r");
+                            if (query != null) {
+                                query.close();
+                            }
+                            return openFileDescriptor;
+                        } catch (IOException e) {
+                            throw new SecurityException(e);
                         }
-                        return openFileDescriptor;
                     } else if (query != null) {
                         query.close();
                     }
-                } catch (IOException e) {
-                    throw new SecurityException(e);
                 } catch (Throwable th) {
-                    if (query != null) {
-                        try {
-                            query.close();
-                        } catch (Throwable th2) {
-                            th.addSuppressed(th2);
-                        }
-                    }
-                    throw th;
+                    th.addSuppressed(th);
                 }
             }
             throw new SecurityException("Uri is not ringtone, alarm, or notification: " + uri);
+            throw th;
         }
     };
-    /* access modifiers changed from: private */
-    public final HashMap<IBinder, Client> mClients = new HashMap<>();
+    private final HashMap<IBinder, Client> mClients = new HashMap<>();
 
     public RingtonePlayer(Context context) {
         super(context);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         RingtonePlayerInjector.init(this.mContext);
         this.mAsyncPlayer.setUsesWakeLock(this.mContext);
@@ -158,11 +155,10 @@ public class RingtonePlayer extends SystemUI {
         }
     }
 
-    private class Client implements IBinder.DeathRecipient {
-        /* access modifiers changed from: private */
-        public final Ringtone mRingtone;
-        /* access modifiers changed from: private */
-        public final IBinder mToken;
+    /* access modifiers changed from: private */
+    public class Client implements IBinder.DeathRecipient {
+        private final Ringtone mRingtone;
+        private final IBinder mToken;
 
         Client(IBinder iBinder, Uri uri, UserHandle userHandle, AudioAttributes audioAttributes, VolumeShaper.Configuration configuration) {
             this.mToken = iBinder;
@@ -181,7 +177,8 @@ public class RingtonePlayer extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public Context getContextForUser(UserHandle userHandle) {
+    /* access modifiers changed from: public */
+    private Context getContextForUser(UserHandle userHandle) {
         try {
             return this.mContext.createPackageContextAsUser(this.mContext.getPackageName(), 0, RingtonePlayerInjector.fallbackUserHandle(userHandle));
         } catch (PackageManager.NameNotFoundException e) {
@@ -189,14 +186,15 @@ public class RingtonePlayer extends SystemUI {
         }
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("Clients:");
         synchronized (this.mClients) {
-            for (Client next : this.mClients.values()) {
+            for (Client client : this.mClients.values()) {
                 printWriter.print("  mToken=");
-                printWriter.print(next.mToken);
+                printWriter.print(client.mToken);
                 printWriter.print(" mUri=");
-                printWriter.println(next.mRingtone.getUri());
+                printWriter.println(client.mRingtone.getUri());
             }
         }
     }

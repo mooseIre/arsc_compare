@@ -4,8 +4,9 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChannelEditorListView.kt */
-final class ChannelRow$playHighlight$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class ChannelRow$playHighlight$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ ChannelRow this$0;
 
     ChannelRow$playHighlight$1(ChannelRow channelRow) {

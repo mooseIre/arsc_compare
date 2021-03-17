@@ -4,7 +4,6 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.Switch;
-import androidx.lifecycle.LifecycleOwner;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
@@ -17,6 +16,7 @@ import miui.securityspace.CrossUserUtils;
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     private final DriveModeController mDriveModeController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -24,7 +24,10 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     public DriveModeTile(QSHost qSHost, DriveModeController driveModeController) {
         super(qSHost);
         this.mDriveModeController = driveModeController;
-        driveModeController.observe((LifecycleOwner) this, new DriveModeController.DriveModeListener() {
+        driveModeController.observe(this, new DriveModeController.DriveModeListener() {
+            /* class com.android.systemui.qs.tiles.$$Lambda$d51C4tMnNLo3Eer3I5Y2mzfmMk */
+
+            @Override // com.android.systemui.statusbar.policy.DriveModeController.DriveModeListener
             public final void onDriveModeChanged() {
                 DriveModeTile.this.refreshState();
             }
@@ -32,18 +35,22 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return !Build.IS_INTERNATIONAL_BUILD && !Build.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         if (!this.mDriveModeController.isDriveModeAvailable()) {
             return getMiuiLabSettingsIntent();
@@ -55,6 +62,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (!this.mDriveModeController.isDriveModeAvailable()) {
             transitionMiuiLabSettings();
@@ -72,6 +80,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_drivemode_label);
     }
@@ -89,7 +98,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_drive_disabled);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();

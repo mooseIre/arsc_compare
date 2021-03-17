@@ -11,6 +11,7 @@ public final class AccessibilityController_Factory implements Factory<Accessibil
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AccessibilityController get() {
         return provideInstance(this.contextProvider);
     }

@@ -239,7 +239,7 @@ public final class ControlCenterPanelView extends LinearLayout {
 
     private final void setDetailRecord(MiuiQSPanel$MiuiRecord miuiQSPanel$MiuiRecord) {
         boolean z = true;
-        if (!Intrinsics.areEqual((Object) this.detailRecord, (Object) miuiQSPanel$MiuiRecord)) {
+        if (!Intrinsics.areEqual(this.detailRecord, miuiQSPanel$MiuiRecord)) {
             this.detailRecord = miuiQSPanel$MiuiRecord;
             if (!(miuiQSPanel$MiuiRecord instanceof MiuiQSPanel$MiuiTileRecord) || !((MiuiQSPanel$MiuiTileRecord) miuiQSPanel$MiuiRecord).scanState) {
                 z = false;
@@ -586,7 +586,7 @@ public final class ControlCenterPanelView extends LinearLayout {
 
     @SuppressLint({"ClickableViewAccessibility"})
     public final void setOnTouchListener(@Nullable ControlCenterPanelViewController.TouchHandler touchHandler2) {
-        super.setOnTouchListener(touchHandler2);
+        super.setOnTouchListener((View.OnTouchListener) touchHandler2);
         this.touchHandler = touchHandler2;
     }
 

@@ -59,16 +59,23 @@ public class MiuiQSTileBaseView extends QSTileView {
         setFocusable(true);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public void init(QSTile qSTile) {
         init(new View.OnClickListener() {
+            /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$dC_s3RamS6twpy7OpNmEl3Qlro */
+
             public final void onClick(View view) {
                 QSTile.this.click();
             }
         }, new View.OnClickListener() {
+            /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$_D0fJEIb006C0fXZMLrANeTwuq8 */
+
             public final void onClick(View view) {
                 QSTile.this.secondaryClick();
             }
         }, new View.OnLongClickListener() {
+            /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$C1dZLf8m1_JnnZ1kzAtuKZZQBo0 */
+
             public final boolean onLongClick(View view) {
                 return QSTile.this.longClick();
             }
@@ -80,6 +87,8 @@ public class MiuiQSTileBaseView extends QSTileView {
         this.mIconFrame.setOnClickListener(onClickListener);
         this.mIconFrame.setOnLongClickListener(onLongClickListener);
         this.mIconFrame.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.qs.tileimpl.$$Lambda$MiuiQSTileBaseView$MJMAiwvnJnS6IdatEJ5btCTEEOw */
+
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 return MiuiQSTileBaseView.this.lambda$init$3$MiuiQSTileBaseView(view, motionEvent);
             }
@@ -89,7 +98,6 @@ public class MiuiQSTileBaseView extends QSTileView {
     /* access modifiers changed from: private */
     /* renamed from: lambda$init$3 */
     public /* synthetic */ boolean lambda$init$3$MiuiQSTileBaseView(View view, MotionEvent motionEvent) {
-        Class cls = HapticFeedBackImpl.class;
         boolean z = true;
         if (this.mIconMouseAnim == null) {
             ITouchStyle iTouchStyle = Folme.useAt(view).touch();
@@ -99,23 +107,25 @@ public class MiuiQSTileBaseView extends QSTileView {
         this.mIconMouseAnim.onMotionEventEx(view, motionEvent, new AnimConfig[0]);
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
-            ((HapticFeedBackImpl) Dependency.get(cls)).flick();
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).flick();
         } else if (actionMasked == 1) {
             if (motionEvent.getPointerId(0) != 0 || !pointInView(motionEvent.getX(), motionEvent.getY(), 0.0f) || !this.mIconFrame.isShown()) {
                 z = false;
             }
             if (z) {
-                ((HapticFeedBackImpl) Dependency.get(cls)).flick();
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).flick();
             }
         }
         return false;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public View updateAccessibilityOrder(View view) {
         setAccessibilityTraversalAfter(view.getId());
         return this;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public void onStateChanged(QSTile.State state) {
         this.mHandler.obtainMessage(1, state).sendToTarget();
     }
@@ -133,14 +143,17 @@ public class MiuiQSTileBaseView extends QSTileView {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public int getDetailY() {
         return getTop() + (getHeight() / 2);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public QSIconView getIcon() {
         return this.mIcon;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public View getIconWithBackground() {
         return this.mIconFrame;
     }

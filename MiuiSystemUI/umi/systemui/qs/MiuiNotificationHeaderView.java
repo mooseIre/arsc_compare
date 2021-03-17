@@ -27,14 +27,16 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     private NetworkSpeedView mFullscreenNetworkSpeedView;
     protected StatusBarIconController.MiuiLightDarkIconManager mIconManager;
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
     }
 
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void regionChanged() {
     }
 
     public MiuiNotificationHeaderView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiNotificationHeaderView(Context context, AttributeSet attributeSet) {
@@ -54,6 +56,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void onFinishInflate() {
         super.onFinishInflate();
         CarrierText carrierText = (CarrierText) findViewById(C0015R$id.carrier_text);
@@ -96,6 +99,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mIconManager);
     }
 
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void themeChanged() {
         boolean z = getResources().getBoolean(C0010R$bool.expanded_status_bar_darkmode);
         Rect rect = new Rect(0, 0, 0, 0);

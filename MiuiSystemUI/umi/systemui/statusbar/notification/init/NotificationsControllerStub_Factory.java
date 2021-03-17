@@ -11,6 +11,7 @@ public final class NotificationsControllerStub_Factory implements Factory<Notifi
         this.notificationListenerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationsControllerStub get() {
         return provideInstance(this.notificationListenerProvider);
     }

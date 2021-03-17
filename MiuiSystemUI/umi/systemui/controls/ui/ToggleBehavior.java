@@ -33,12 +33,14 @@ public final class ToggleBehavior implements Behavior {
         throw null;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void initialize(@NotNull ControlViewHolder controlViewHolder) {
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         this.cvh = controlViewHolder;
         controlViewHolder.getLayout().setOnClickListener(new ToggleBehavior$initialize$1(this, controlViewHolder));
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void bind(@NotNull ControlWithState controlWithState, int i) {
         ToggleTemplate toggleTemplate;
         Intrinsics.checkParameterIsNotNull(controlWithState, "cws");
@@ -52,7 +54,7 @@ public final class ToggleBehavior implements Behavior {
             } else if (control2 != null) {
                 CharSequence statusText = control2.getStatusText();
                 Intrinsics.checkExpressionValueIsNotNull(statusText, "control.getStatusText()");
-                ControlViewHolder.setStatusText$default(controlViewHolder, statusText, false, 2, (Object) null);
+                ControlViewHolder.setStatusText$default(controlViewHolder, statusText, false, 2, null);
                 Control control3 = this.control;
                 if (control3 != null) {
                     TemperatureControlTemplate controlTemplate = control3.getControlTemplate();
@@ -84,7 +86,7 @@ public final class ToggleBehavior implements Behavior {
                                     boolean isChecked = toggleTemplate2.isChecked();
                                     ControlViewHolder controlViewHolder3 = this.cvh;
                                     if (controlViewHolder3 != null) {
-                                        ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, isChecked, i, false, 4, (Object) null);
+                                        ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, isChecked, i, false, 4, null);
                                     } else {
                                         Intrinsics.throwUninitializedPropertyAccessException("cvh");
                                         throw null;

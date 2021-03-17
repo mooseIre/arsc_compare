@@ -23,7 +23,7 @@ public interface QSTile {
         public static final int TYPE_NONE = 0;
         public static final int VERSION = 1;
 
-        int getCallbackType() {
+        default int getCallbackType() {
             return 0;
         }
 
@@ -33,7 +33,7 @@ public interface QSTile {
 
         void onShowDetail(boolean z);
 
-        void onShowEdit(boolean z) {
+        default void onShowEdit(boolean z) {
         }
 
         void onStateChanged(State state);
@@ -44,7 +44,7 @@ public interface QSTile {
     void addCallback(Callback callback);
 
     @Deprecated
-    void clearState() {
+    default void clearState() {
     }
 
     void click(boolean z);
@@ -71,7 +71,7 @@ public interface QSTile {
 
     void longClick();
 
-    LogMaker populate(LogMaker logMaker) {
+    default LogMaker populate(LogMaker logMaker) {
         return logMaker;
     }
 
@@ -91,15 +91,15 @@ public interface QSTile {
 
     void userSwitch(int i);
 
-    void removeCallbacksByType(int i) {
+    default void removeCallbacksByType(int i) {
         removeCallbacks();
     }
 
-    void click() {
+    default void click() {
         click(false);
     }
 
-    String getMetricsSpec() {
+    default String getMetricsSpec() {
         return getClass().getSimpleName();
     }
 
@@ -231,6 +231,7 @@ public interface QSTile {
         public static final int VERSION = 1;
         public boolean value;
 
+        @Override // com.android.systemui.plugins.qs.QSTile.State
         public boolean copyTo(State state) {
             BooleanState booleanState = (BooleanState) state;
             boolean z = super.copyTo(state) || booleanState.value != this.value;
@@ -239,12 +240,14 @@ public interface QSTile {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.plugins.qs.QSTile.State
         public StringBuilder toStringBuilder() {
             StringBuilder stringBuilder = super.toStringBuilder();
             stringBuilder.insert(stringBuilder.length() - 1, ",value=" + this.value);
             return stringBuilder;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.State
         public State copy() {
             BooleanState booleanState = new BooleanState();
             copyTo(booleanState);
@@ -260,6 +263,7 @@ public interface QSTile {
         public boolean isOverlayIconWide;
         public int overlayIconId;
 
+        @Override // com.android.systemui.plugins.qs.QSTile.State, com.android.systemui.plugins.qs.QSTile.BooleanState
         public boolean copyTo(State state) {
             SignalState signalState = (SignalState) state;
             boolean z = (signalState.activityIn == this.activityIn && signalState.activityOut == this.activityOut && signalState.isOverlayIconWide == this.isOverlayIconWide && signalState.overlayIconId == this.overlayIconId) ? false : true;
@@ -267,13 +271,11 @@ public interface QSTile {
             signalState.activityOut = this.activityOut;
             signalState.isOverlayIconWide = this.isOverlayIconWide;
             signalState.overlayIconId = this.overlayIconId;
-            if (super.copyTo(state) || z) {
-                return true;
-            }
-            return false;
+            return super.copyTo(state) || z;
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.plugins.qs.QSTile.State, com.android.systemui.plugins.qs.QSTile.BooleanState
         public StringBuilder toStringBuilder() {
             StringBuilder stringBuilder = super.toStringBuilder();
             stringBuilder.insert(stringBuilder.length() - 1, ",activityIn=" + this.activityIn);
@@ -281,6 +283,7 @@ public interface QSTile {
             return stringBuilder;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.State, com.android.systemui.plugins.qs.QSTile.BooleanState
         public State copy() {
             SignalState signalState = new SignalState();
             copyTo(signalState);

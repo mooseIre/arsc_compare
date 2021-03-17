@@ -57,6 +57,7 @@ public final class NotificationsControllerImpl_Factory implements Factory<Notifi
         this.clickerBuilderProvider = provider16;
     }
 
+    @Override // javax.inject.Provider
     public NotificationsControllerImpl get() {
         return provideInstance(this.featureFlagsProvider, this.notificationListenerProvider, this.entryManagerProvider, this.notifPipelineProvider, this.targetSdkResolverProvider, this.newNotifPipelineProvider, this.notifBindPipelineInitializerProvider, this.deviceProvisionedControllerProvider, this.notificationRowBinderProvider, this.remoteInputUriControllerProvider, this.groupManagerProvider, this.groupAlertTransferHelperProvider, this.headsUpManagerProvider, this.headsUpControllerProvider, this.headsUpViewBinderProvider, this.clickerBuilderProvider);
     }

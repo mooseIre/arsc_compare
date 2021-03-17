@@ -29,6 +29,7 @@ public class SmoothRoundDrawable extends Drawable {
         return -3;
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws IOException, XmlPullParserException {
         super.inflate(resources, xmlPullParser, attributeSet, theme);
         TypedArray obtainAttributes = Drawable.obtainAttributes(resources, theme, attributeSet, R$styleable.SmoothRoundDrawable);

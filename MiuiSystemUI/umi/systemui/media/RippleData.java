@@ -3,8 +3,9 @@ package com.android.systemui.media;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: LightSourceDrawable.kt */
-final class RippleData {
+public final class RippleData {
     private float alpha;
     private float highlight;
     private float maxSize;

@@ -14,7 +14,7 @@ public final class IconPack {
     private final StatusBarIconView mStatusBarIcon;
 
     public static IconPack buildEmptyPack(IconPack iconPack) {
-        return new IconPack(false, (StatusBarIconView) null, (StatusBarIconView) null, (StatusBarIconView) null, (StatusBarIconView) null, iconPack);
+        return new IconPack(false, null, null, null, null, iconPack);
     }
 
     public static IconPack buildPack(StatusBarIconView statusBarIconView, StatusBarIconView statusBarIconView2, StatusBarIconView statusBarIconView3, StatusBarIconView statusBarIconView4, IconPack iconPack) {

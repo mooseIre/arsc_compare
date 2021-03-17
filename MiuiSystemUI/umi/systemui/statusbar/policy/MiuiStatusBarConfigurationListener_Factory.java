@@ -13,6 +13,7 @@ public final class MiuiStatusBarConfigurationListener_Factory implements Factory
         this.contextProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiStatusBarConfigurationListener get() {
         return provideInstance(this.configurationControllerProvider, this.contextProvider);
     }

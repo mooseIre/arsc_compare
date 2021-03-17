@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideConfigurationControllerFactory impl
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ConfigurationController get() {
         return provideInstance(this.module, this.contextProvider);
     }

@@ -56,10 +56,10 @@ public final class QSAnimation {
 
         public void onAnimationEnd(@Nullable Animator animator) {
             super.onAnimationEnd(animator);
-            for (View next : this.mViews) {
-                next.animate().cancel();
-                Intrinsics.checkExpressionValueIsNotNull(next, "v");
-                next.setAlpha(1.0f);
+            for (View view : this.mViews) {
+                view.animate().cancel();
+                Intrinsics.checkExpressionValueIsNotNull(view, "v");
+                view.setAlpha(1.0f);
             }
         }
     }

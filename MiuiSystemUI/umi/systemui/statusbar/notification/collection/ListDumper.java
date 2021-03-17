@@ -7,16 +7,15 @@ import java.util.List;
 
 public class ListDumper {
     public static String dumpTree(List<ListEntry> list, NotificationInteractionTracker notificationInteractionTracker, boolean z, String str) {
-        NotificationInteractionTracker notificationInteractionTracker2 = notificationInteractionTracker;
         StringBuilder sb = new StringBuilder();
         String str2 = str + "  ";
         for (int i = 0; i < list.size(); i++) {
             ListEntry listEntry = list.get(i);
-            dumpEntry(listEntry, Integer.toString(i), str, sb, true, z, notificationInteractionTracker2.hasUserInteractedWith(listEntry.getKey()));
+            dumpEntry(listEntry, Integer.toString(i), str, sb, true, z, notificationInteractionTracker.hasUserInteractedWith(listEntry.getKey()));
             if (listEntry instanceof GroupEntry) {
                 List<NotificationEntry> children = ((GroupEntry) listEntry).getChildren();
                 for (int i2 = 0; i2 < children.size(); i2++) {
-                    dumpEntry(children.get(i2), Integer.toString(i) + "." + Integer.toString(i2), str2, sb, true, z, notificationInteractionTracker2.hasUserInteractedWith(listEntry.getKey()));
+                    dumpEntry(children.get(i2), Integer.toString(i) + "." + Integer.toString(i2), str2, sb, true, z, notificationInteractionTracker.hasUserInteractedWith(listEntry.getKey()));
                 }
             }
         }

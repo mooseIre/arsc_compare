@@ -4,6 +4,7 @@ import android.content.res.Configuration;
 import java.text.Collator;
 import java.util.List;
 import kotlin.Unit;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Reflection;
@@ -24,20 +25,27 @@ final class AppAdapter$callback$1$onServicesUpdated$1 implements Runnable {
         Intrinsics.checkExpressionValueIsNotNull(configuration, "resources.configuration");
         Collator instance = Collator.getInstance(configuration.getLocales().get(0));
         Intrinsics.checkExpressionValueIsNotNull(instance, "collator");
-        this.this$0.this$0.listOfServices = CollectionsKt___CollectionsKt.sortedWith(this.$serviceInfos, new AppAdapter$callback$1$onServicesUpdated$1$$special$$inlined$compareBy$1(instance));
+        AppAdapter$callback$1$onServicesUpdated$1$$special$$inlined$compareBy$1 appAdapter$callback$1$onServicesUpdated$1$$special$$inlined$compareBy$1 = new AppAdapter$callback$1$onServicesUpdated$1$$special$$inlined$compareBy$1(instance);
+        this.this$0.this$0.listOfServices = CollectionsKt___CollectionsKt.sortedWith(this.$serviceInfos, appAdapter$callback$1$onServicesUpdated$1$$special$$inlined$compareBy$1);
         this.this$0.$uiExecutor.execute(new AppAdapter$sam$java_lang_Runnable$0(new Function0<Unit>(this.this$0.this$0) {
+            /* class com.android.systemui.controls.management.AppAdapter$callback$1$onServicesUpdated$1.AnonymousClass1 */
+
+            @Override // kotlin.jvm.internal.CallableReference
             public final String getName() {
                 return "notifyDataSetChanged";
             }
 
+            @Override // kotlin.jvm.internal.CallableReference
             public final KDeclarationContainer getOwner() {
                 return Reflection.getOrCreateKotlinClass(AppAdapter.class);
             }
 
+            @Override // kotlin.jvm.internal.CallableReference
             public final String getSignature() {
                 return "notifyDataSetChanged()V";
             }
 
+            @Override // kotlin.jvm.functions.Function0
             public final void invoke() {
                 ((AppAdapter) this.receiver).notifyDataSetChanged();
             }

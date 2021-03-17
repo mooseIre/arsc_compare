@@ -11,12 +11,17 @@ import androidx.dynamicanimation.animation.SpringForce;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import kotlin.TypeCastException;
 import kotlin.Unit;
+import kotlin.collections.ArraysKt___ArraysKt;
+import kotlin.collections.CollectionsKt__IterablesKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.FloatCompanionObject;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -24,22 +29,19 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: PhysicsAnimator.kt */
 public final class PhysicsAnimator<T> {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    /* access modifiers changed from: private */
+    public static final Companion Companion = new Companion(null);
     @NotNull
-    public static Function1<Object, ? extends PhysicsAnimator<?>> instanceConstructor = PhysicsAnimator$Companion$instanceConstructor$1.INSTANCE;
+    private static Function1<Object, ? extends PhysicsAnimator<?>> instanceConstructor = PhysicsAnimator$Companion$instanceConstructor$1.INSTANCE;
     @NotNull
     private Function1<? super Set<? extends FloatPropertyCompat<? super T>>, Unit> cancelAction;
     private SpringConfig defaultSpring;
     private final ArrayList<Function0<Unit>> endActions;
     private final ArrayList<EndListener<T>> endListeners;
-    /* access modifiers changed from: private */
-    public final ArrayMap<FloatPropertyCompat<? super T>, FlingAnimation> flingAnimations;
+    private final ArrayMap<FloatPropertyCompat<? super T>, FlingAnimation> flingAnimations;
     private final ArrayMap<FloatPropertyCompat<? super T>, FlingConfig> flingConfigs;
     @NotNull
     private ArrayList<PhysicsAnimator<T>.InternalListener> internalListeners;
-    /* access modifiers changed from: private */
-    public final ArrayMap<FloatPropertyCompat<? super T>, SpringAnimation> springAnimations;
+    private final ArrayMap<FloatPropertyCompat<? super T>, SpringAnimation> springAnimations;
     private final ArrayMap<FloatPropertyCompat<? super T>, SpringConfig> springConfigs;
     @NotNull
     private Function0<Unit> startAction;
@@ -68,7 +70,7 @@ public final class PhysicsAnimator<T> {
 
     @NotNull
     public final PhysicsAnimator<T> flingThenSpring(@NotNull FloatPropertyCompat<? super T> floatPropertyCompat, float f, @NotNull FlingConfig flingConfig, @NotNull SpringConfig springConfig) {
-        flingThenSpring$default(this, floatPropertyCompat, f, flingConfig, springConfig, false, 16, (Object) null);
+        flingThenSpring$default(this, floatPropertyCompat, f, flingConfig, springConfig, false, 16, null);
         return this;
     }
 
@@ -81,8 +83,8 @@ public final class PhysicsAnimator<T> {
         this.updateListeners = new ArrayList<>();
         this.endListeners = new ArrayList<>();
         this.endActions = new ArrayList<>();
-        this.defaultSpring = PhysicsAnimatorKt.globalDefaultSpring;
-        FlingConfig unused = PhysicsAnimatorKt.globalDefaultFling;
+        this.defaultSpring = PhysicsAnimatorKt.access$getGlobalDefaultSpring$p();
+        PhysicsAnimatorKt.access$getGlobalDefaultFling$p();
         this.internalListeners = new ArrayList<>();
         this.startAction = new PhysicsAnimator$startAction$1(this);
         this.cancelAction = new PhysicsAnimator$cancelAction$1(this);
@@ -131,7 +133,7 @@ public final class PhysicsAnimator<T> {
     @NotNull
     public final PhysicsAnimator<T> spring(@NotNull FloatPropertyCompat<? super T> floatPropertyCompat, float f, float f2, float f3, float f4) {
         Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "property");
-        if (PhysicsAnimatorKt.verboseLogging) {
+        if (PhysicsAnimatorKt.access$getVerboseLogging$p()) {
             Log.d("PhysicsAnimator", "Springing " + Companion.getReadablePropertyName(floatPropertyCompat) + " to " + f + '.');
         }
         this.springConfigs.put(floatPropertyCompat, new SpringConfig(f3, f4, f2, f));
@@ -165,7 +167,7 @@ public final class PhysicsAnimator<T> {
     @NotNull
     public final PhysicsAnimator<T> spring(@NotNull FloatPropertyCompat<? super T> floatPropertyCompat, float f) {
         Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "property");
-        spring$default(this, floatPropertyCompat, f, 0.0f, (SpringConfig) null, 8, (Object) null);
+        spring$default(this, floatPropertyCompat, f, 0.0f, null, 8, null);
         return this;
     }
 
@@ -182,20 +184,20 @@ public final class PhysicsAnimator<T> {
         Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "property");
         Intrinsics.checkParameterIsNotNull(flingConfig, "flingConfig");
         Intrinsics.checkParameterIsNotNull(springConfig, "springConfig");
-        Object obj = this.weakTarget.get();
-        if (obj == null) {
+        T t = this.weakTarget.get();
+        if (t == null) {
             Log.w("PhysicsAnimator", "Trying to animate a GC-ed target.");
             return this;
         }
-        FlingConfig copy$default = FlingConfig.copy$default(flingConfig, 0.0f, 0.0f, 0.0f, 0.0f, 15, (Object) null);
-        SpringConfig copy$default2 = SpringConfig.copy$default(springConfig, 0.0f, 0.0f, 0.0f, 0.0f, 15, (Object) null);
+        FlingConfig copy$default = FlingConfig.copy$default(flingConfig, 0.0f, 0.0f, 0.0f, 0.0f, 15, null);
+        SpringConfig copy$default2 = SpringConfig.copy$default(springConfig, 0.0f, 0.0f, 0.0f, 0.0f, 15, null);
         float f2 = (float) 0;
         int i = (f > f2 ? 1 : (f == f2 ? 0 : -1));
         float min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core = i < 0 ? flingConfig.getMin$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() : flingConfig.getMax$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
         if (!z || !isValidValue(min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core)) {
             copy$default.setStartVelocity$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(f);
         } else {
-            float value = floatPropertyCompat.getValue(obj) + (f / (flingConfig.getFriction$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() * 4.2f));
+            float value = floatPropertyCompat.getValue(t) + (f / (flingConfig.getFriction$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() * 4.2f));
             float min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core2 = (flingConfig.getMin$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() + flingConfig.getMax$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core()) / ((float) 2);
             if ((i < 0 && value > min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core2) || (f > f2 && value < min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core2)) {
                 float min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core3 = value < min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core2 ? flingConfig.getMin$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() : flingConfig.getMax$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
@@ -204,7 +206,7 @@ public final class PhysicsAnimator<T> {
                     return this;
                 }
             }
-            float value2 = min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core - floatPropertyCompat.getValue(obj);
+            float value2 = min$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core - floatPropertyCompat.getValue(t);
             float friction$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core = flingConfig.getFriction$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() * 4.2f * value2;
             if (value2 > 0.0f && f >= 0.0f) {
                 f = Math.max(friction$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core, f);
@@ -248,10 +250,10 @@ public final class PhysicsAnimator<T> {
     public final PhysicsAnimator<T> withEndActions(@NotNull Runnable... runnableArr) {
         Intrinsics.checkParameterIsNotNull(runnableArr, "endActions");
         ArrayList<Function0<Unit>> arrayList = this.endActions;
-        List<Runnable> filterNotNull = ArraysKt___ArraysKt.filterNotNull(runnableArr);
-        ArrayList arrayList2 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(filterNotNull, 10));
-        for (Runnable physicsAnimator$withEndActions$1$1 : filterNotNull) {
-            arrayList2.add(new PhysicsAnimator$withEndActions$1$1(physicsAnimator$withEndActions$1$1));
+        List<T> list = ArraysKt___ArraysKt.filterNotNull(runnableArr);
+        ArrayList arrayList2 = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
+        for (T t : list) {
+            arrayList2.add(new PhysicsAnimator$withEndActions$1$1(t));
         }
         arrayList.addAll(arrayList2);
         return this;
@@ -272,22 +274,22 @@ public final class PhysicsAnimator<T> {
         if (!mainLooper.isCurrentThread()) {
             Log.e("PhysicsAnimator", "Animations can only be started on the main thread. If you are seeing this message in a test, call PhysicsAnimatorTestUtils#prepareForTest in your test setup.");
         }
-        Object obj = this.weakTarget.get();
-        if (obj == null) {
+        T t = this.weakTarget.get();
+        if (t == null) {
             Log.w("PhysicsAnimator", "Trying to animate a GC-ed object.");
             return;
         }
-        ArrayList<Function0> arrayList = new ArrayList<>();
-        for (FloatPropertyCompat floatPropertyCompat : getAnimatedProperties$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core()) {
+        ArrayList<T> arrayList = new ArrayList();
+        for (FloatPropertyCompat<? super T> floatPropertyCompat : getAnimatedProperties$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core()) {
             FlingConfig flingConfig = this.flingConfigs.get(floatPropertyCompat);
             SpringConfig springConfig = this.springConfigs.get(floatPropertyCompat);
-            float value = floatPropertyCompat.getValue(obj);
+            float value = floatPropertyCompat.getValue(t);
             if (flingConfig != null) {
-                arrayList.add(new PhysicsAnimator$startInternal$1(this, flingConfig, value, floatPropertyCompat, obj));
+                arrayList.add(new PhysicsAnimator$startInternal$1(this, flingConfig, value, floatPropertyCompat, t));
             }
             if (springConfig != null) {
                 if (flingConfig == null) {
-                    SpringAnimation springAnimation = getSpringAnimation(floatPropertyCompat, obj);
+                    SpringAnimation springAnimation = getSpringAnimation(floatPropertyCompat, t);
                     springConfig.applyToAnimation$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(springAnimation);
                     arrayList.add(new PhysicsAnimator$startInternal$2(springAnimation));
                 } else {
@@ -295,9 +297,9 @@ public final class PhysicsAnimator<T> {
                 }
             }
         }
-        this.internalListeners.add(new InternalListener(this, obj, getAnimatedProperties$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(), new ArrayList(this.updateListeners), new ArrayList(this.endListeners), new ArrayList(this.endActions)));
-        for (Function0 invoke : arrayList) {
-            invoke.invoke();
+        this.internalListeners.add(new InternalListener(this, t, getAnimatedProperties$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(), new ArrayList(this.updateListeners), new ArrayList(this.endListeners), new ArrayList(this.endActions)));
+        for (T t2 : arrayList) {
+            t2.invoke();
         }
         clearAnimator();
     }
@@ -378,7 +380,6 @@ public final class PhysicsAnimator<T> {
         }
 
         public final boolean onInternalAnimationEnd$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull FloatPropertyCompat<? super T> floatPropertyCompat, boolean z, float f, float f2, boolean z2) {
-            FloatPropertyCompat<? super T> floatPropertyCompat2 = floatPropertyCompat;
             Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "property");
             if (!this.properties.contains(floatPropertyCompat)) {
                 return false;
@@ -386,24 +387,27 @@ public final class PhysicsAnimator<T> {
             this.numPropertiesAnimating--;
             maybeDispatchUpdates();
             if (this.undispatchedUpdates.containsKey(floatPropertyCompat)) {
-                for (UpdateListener onAnimationUpdateForProperty : this.updateListeners) {
+                Iterator<T> it = this.updateListeners.iterator();
+                while (it.hasNext()) {
                     T t = this.target;
-                    ArrayMap arrayMap = new ArrayMap();
+                    ArrayMap<FloatPropertyCompat<? super T>, AnimationUpdate> arrayMap = new ArrayMap<>();
                     arrayMap.put(floatPropertyCompat, this.undispatchedUpdates.get(floatPropertyCompat));
-                    onAnimationUpdateForProperty.onAnimationUpdateForProperty(t, arrayMap);
+                    it.next().onAnimationUpdateForProperty(t, arrayMap);
                 }
                 this.undispatchedUpdates.remove(floatPropertyCompat);
             }
             boolean z3 = !this.this$0.arePropertiesAnimating(this.properties);
-            for (EndListener onAnimationEnd : this.endListeners) {
-                onAnimationEnd.onAnimationEnd(this.target, floatPropertyCompat, z2, z, f, f2, z3);
+            Iterator<T> it2 = this.endListeners.iterator();
+            while (it2.hasNext()) {
+                it2.next().onAnimationEnd(this.target, floatPropertyCompat, z2, z, f, f2, z3);
                 if (this.this$0.isPropertyAnimating(floatPropertyCompat)) {
                     return false;
                 }
             }
             if (z3 && !z) {
-                for (Function0 invoke : this.endActions) {
-                    invoke.invoke();
+                Iterator<T> it3 = this.endActions.iterator();
+                while (it3.hasNext()) {
+                    it3.next().invoke();
                 }
             }
             return z3;
@@ -411,8 +415,9 @@ public final class PhysicsAnimator<T> {
 
         private final void maybeDispatchUpdates() {
             if (this.undispatchedUpdates.size() >= this.numPropertiesAnimating && this.undispatchedUpdates.size() > 0) {
-                for (UpdateListener onAnimationUpdateForProperty : this.updateListeners) {
-                    onAnimationUpdateForProperty.onAnimationUpdateForProperty(this.target, new ArrayMap(this.undispatchedUpdates));
+                Iterator<T> it = this.updateListeners.iterator();
+                while (it.hasNext()) {
+                    it.next().onAnimationUpdateForProperty(this.target, new ArrayMap<>(this.undispatchedUpdates));
                 }
                 this.undispatchedUpdates.clear();
             }
@@ -451,7 +456,9 @@ public final class PhysicsAnimator<T> {
 
     public final void cancelInternal$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull Set<? extends FloatPropertyCompat<? super T>> set) {
         Intrinsics.checkParameterIsNotNull(set, "properties");
-        for (FloatPropertyCompat floatPropertyCompat : set) {
+        Iterator<? extends FloatPropertyCompat<? super T>> it = set.iterator();
+        while (it.hasNext()) {
+            FloatPropertyCompat floatPropertyCompat = (FloatPropertyCompat) it.next();
             FlingAnimation flingAnimation = this.flingAnimations.get(floatPropertyCompat);
             if (flingAnimation != null) {
                 flingAnimation.cancel();
@@ -548,7 +555,7 @@ public final class PhysicsAnimator<T> {
 
         /* JADX INFO: this call moved to the top of the method (can break code semantics) */
         public /* synthetic */ SpringConfig(float f, float f2, float f3, float f4, int i, DefaultConstructorMarker defaultConstructorMarker) {
-            this(f, f2, (i & 4) != 0 ? 0.0f : f3, (i & 8) != 0 ? PhysicsAnimatorKt.UNSET : f4);
+            this(f, f2, (i & 4) != 0 ? 0.0f : f3, (i & 8) != 0 ? PhysicsAnimatorKt.access$getUNSET$p() : f4);
         }
 
         public final float getFinalPosition$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core() {
@@ -560,11 +567,11 @@ public final class PhysicsAnimator<T> {
         }
 
         public SpringConfig() {
-            this(PhysicsAnimatorKt.globalDefaultSpring.stiffness, PhysicsAnimatorKt.globalDefaultSpring.dampingRatio);
+            this(PhysicsAnimatorKt.access$getGlobalDefaultSpring$p().stiffness, PhysicsAnimatorKt.access$getGlobalDefaultSpring$p().dampingRatio);
         }
 
         public SpringConfig(float f, float f2) {
-            this(f, f2, 0.0f, 0.0f, 8, (DefaultConstructorMarker) null);
+            this(f, f2, 0.0f, 0.0f, 8, null);
         }
 
         public final void applyToAnimation$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull SpringAnimation springAnimation) {
@@ -664,11 +671,11 @@ public final class PhysicsAnimator<T> {
         }
 
         public FlingConfig() {
-            this(PhysicsAnimatorKt.globalDefaultFling.friction);
+            this(PhysicsAnimatorKt.access$getGlobalDefaultFling$p().friction);
         }
 
         public FlingConfig(float f) {
-            this(f, PhysicsAnimatorKt.globalDefaultFling.min, PhysicsAnimatorKt.globalDefaultFling.max);
+            this(f, PhysicsAnimatorKt.access$getGlobalDefaultFling$p().min, PhysicsAnimatorKt.access$getGlobalDefaultFling$p().max);
         }
 
         public FlingConfig(float f, float f2, float f3) {
@@ -706,7 +713,7 @@ public final class PhysicsAnimator<T> {
             }
             PhysicsAnimator<?> physicsAnimator = PhysicsAnimatorKt.getAnimators().get(t);
             if (physicsAnimator != null) {
-                return physicsAnimator;
+                return (PhysicsAnimator<T>) physicsAnimator;
             }
             throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.util.animation.PhysicsAnimator<T>");
         }
@@ -719,37 +726,37 @@ public final class PhysicsAnimator<T> {
         @NotNull
         public final String getReadablePropertyName(@NotNull FloatPropertyCompat<?> floatPropertyCompat) {
             Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "property");
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.TRANSLATION_X)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.TRANSLATION_X)) {
                 return "translationX";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.TRANSLATION_Y)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.TRANSLATION_Y)) {
                 return "translationY";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.TRANSLATION_Z)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.TRANSLATION_Z)) {
                 return "translationZ";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.SCALE_X)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.SCALE_X)) {
                 return "scaleX";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.SCALE_Y)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.SCALE_Y)) {
                 return "scaleY";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.ROTATION)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.ROTATION)) {
                 return "rotation";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.ROTATION_X)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.ROTATION_X)) {
                 return "rotationX";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.ROTATION_Y)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.ROTATION_Y)) {
                 return "rotationY";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.SCROLL_X)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.SCROLL_X)) {
                 return "scrollX";
             }
-            if (Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.SCROLL_Y)) {
+            if (Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.SCROLL_Y)) {
                 return "scrollY";
             }
-            return Intrinsics.areEqual((Object) floatPropertyCompat, (Object) DynamicAnimation.ALPHA) ? "alpha" : "Custom FloatPropertyCompat instance";
+            return Intrinsics.areEqual(floatPropertyCompat, DynamicAnimation.ALPHA) ? "alpha" : "Custom FloatPropertyCompat instance";
         }
     }
 
@@ -758,8 +765,9 @@ public final class PhysicsAnimator<T> {
         if ((set instanceof Collection) && set.isEmpty()) {
             return false;
         }
-        for (FloatPropertyCompat isPropertyAnimating : set) {
-            if (isPropertyAnimating(isPropertyAnimating)) {
+        Iterator<T> it = set.iterator();
+        while (it.hasNext()) {
+            if (isPropertyAnimating(it.next())) {
                 return true;
             }
         }

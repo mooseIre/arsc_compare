@@ -15,26 +15,29 @@ import com.android.systemui.statusbar.notification.row.ExpandableView;
 public interface NotificationListContainer extends ExpandableView.OnHeightChangedListener, VisibilityLocationProvider, SimpleNotificationListContainer {
     void addContainerView(View view);
 
-    void applyExpandAnimationParams(ActivityLaunchAnimator.ExpandAnimationParameters expandAnimationParameters) {
+    default void applyExpandAnimationParams(ActivityLaunchAnimator.ExpandAnimationParameters expandAnimationParameters) {
     }
 
-    void bindRow(ExpandableNotificationRow expandableNotificationRow) {
+    default void bindRow(ExpandableNotificationRow expandableNotificationRow) {
     }
 
     void changeViewPosition(ExpandableView expandableView, int i);
 
     void cleanUpViewStateForEntry(NotificationEntry notificationEntry);
 
-    boolean containsView(View view) {
+    default boolean containsView(View view) {
         return true;
     }
 
     void generateAddAnimation(ExpandableView expandableView, boolean z);
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     void generateChildOrderChangedEvent();
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     View getContainerChildAt(int i);
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     int getContainerChildCount();
 
     NotificationSwipeActionHelper getSwipeActionHelper();
@@ -47,7 +50,7 @@ public interface NotificationListContainer extends ExpandableView.OnHeightChange
 
     void notifyGroupChildRemoved(ExpandableView expandableView, ViewGroup viewGroup);
 
-    void onNotificationViewUpdateFinished() {
+    default void onNotificationViewUpdateFinished() {
     }
 
     void removeContainerView(View view);
@@ -56,15 +59,16 @@ public interface NotificationListContainer extends ExpandableView.OnHeightChange
 
     void setChildLocationsChangedListener(NotificationLogger.OnChildLocationsChangedListener onChildLocationsChangedListener);
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     void setChildTransferInProgress(boolean z);
 
-    void setExpandingNotification(ExpandableNotificationRow expandableNotificationRow) {
+    default void setExpandingNotification(ExpandableNotificationRow expandableNotificationRow) {
     }
 
     void setMaxDisplayedNotifications(int i);
 
     void setNotificationActivityStarter(NotificationActivityStarter notificationActivityStarter);
 
-    void setWillExpand(boolean z) {
+    default void setWillExpand(boolean z) {
     }
 }

@@ -17,6 +17,8 @@ import java.util.Iterator;
 public class SliceBroadcastRelayHandler extends SystemUI {
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.SliceBroadcastRelayHandler.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             SliceBroadcastRelayHandler.this.handleIntent(intent);
         }
@@ -28,6 +30,7 @@ public class SliceBroadcastRelayHandler extends SystemUI {
         this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         IntentFilter intentFilter = new IntentFilter("com.android.settingslib.action.REGISTER_SLICE_RECEIVER");
         intentFilter.addAction("com.android.settingslib.action.UNREGISTER_SLICE_RECEIVER");
@@ -59,7 +62,8 @@ public class SliceBroadcastRelayHandler extends SystemUI {
         return this.mRelays.remove(uri);
     }
 
-    private static class BroadcastRelay extends BroadcastReceiver {
+    /* access modifiers changed from: private */
+    public static class BroadcastRelay extends BroadcastReceiver {
         private final ArraySet<ComponentName> mReceivers = new ArraySet<>();
         private final Uri mUri;
         private final UserHandle mUserId;

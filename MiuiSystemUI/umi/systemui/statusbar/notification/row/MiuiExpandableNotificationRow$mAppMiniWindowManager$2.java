@@ -13,6 +13,7 @@ final class MiuiExpandableNotificationRow$mAppMiniWindowManager$2 extends Lambda
         super(0);
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final AppMiniWindowManager invoke() {
         return (AppMiniWindowManager) Dependency.get(AppMiniWindowManager.class);
     }

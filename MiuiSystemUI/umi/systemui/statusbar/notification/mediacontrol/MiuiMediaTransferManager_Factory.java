@@ -11,6 +11,7 @@ public final class MiuiMediaTransferManager_Factory implements Factory<MiuiMedia
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiMediaTransferManager get() {
         return provideInstance(this.contextProvider);
     }

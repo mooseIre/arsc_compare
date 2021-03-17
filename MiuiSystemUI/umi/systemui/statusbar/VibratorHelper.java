@@ -14,6 +14,8 @@ public class VibratorHelper {
     private final Context mContext;
     private boolean mHapticFeedbackEnabled;
     private final ContentObserver mVibrationObserver = new ContentObserver(Handler.getMain()) {
+        /* class com.android.systemui.statusbar.VibratorHelper.AnonymousClass1 */
+
         public void onChange(boolean z) {
             VibratorHelper.this.updateHapticFeedBackEnabled();
         }
@@ -30,6 +32,7 @@ public class VibratorHelper {
     public void vibrate(int i) {
         if (this.mHapticFeedbackEnabled) {
             AsyncTask.execute(new Runnable(i) {
+                /* class com.android.systemui.statusbar.$$Lambda$VibratorHelper$aLryVlYLKeF6vrqCqBn9qjn6bQ */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -50,7 +53,8 @@ public class VibratorHelper {
     }
 
     /* access modifiers changed from: private */
-    public void updateHapticFeedBackEnabled() {
+    /* access modifiers changed from: public */
+    private void updateHapticFeedBackEnabled() {
         boolean z = false;
         if (Settings.System.getIntForUser(this.mContext.getContentResolver(), "haptic_feedback_enabled", 0, -2) != 0) {
             z = true;

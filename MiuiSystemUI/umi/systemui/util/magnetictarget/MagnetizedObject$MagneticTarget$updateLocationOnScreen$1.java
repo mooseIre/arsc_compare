@@ -2,8 +2,9 @@ package com.android.systemui.util.magnetictarget;
 
 import com.android.systemui.util.magnetictarget.MagnetizedObject;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MagnetizedObject.kt */
-final class MagnetizedObject$MagneticTarget$updateLocationOnScreen$1 implements Runnable {
+public final class MagnetizedObject$MagneticTarget$updateLocationOnScreen$1 implements Runnable {
     final /* synthetic */ MagnetizedObject.MagneticTarget this$0;
 
     MagnetizedObject$MagneticTarget$updateLocationOnScreen$1(MagnetizedObject.MagneticTarget magneticTarget) {

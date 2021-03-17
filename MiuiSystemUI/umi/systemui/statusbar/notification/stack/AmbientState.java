@@ -299,27 +299,9 @@ public class AmbientState extends MiuiAmbientStateBase {
         this.mPanelTracking = z;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0004, code lost:
-        r1 = r1.mHeadUpManager;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean hasPulsingNotifications() {
-        /*
-            r1 = this;
-            boolean r0 = r1.mPulsing
-            if (r0 == 0) goto L_0x0010
-            com.android.systemui.statusbar.policy.HeadsUpManager r1 = r1.mHeadUpManager
-            if (r1 == 0) goto L_0x0010
-            boolean r1 = r1.hasNotifications()
-            if (r1 == 0) goto L_0x0010
-            r1 = 1
-            goto L_0x0011
-        L_0x0010:
-            r1 = 0
-        L_0x0011:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.AmbientState.hasPulsingNotifications():boolean");
+        HeadsUpManager headsUpManager;
+        return this.mPulsing && (headsUpManager = this.mHeadUpManager) != null && headsUpManager.hasNotifications();
     }
 
     public void setPulsing(boolean z) {

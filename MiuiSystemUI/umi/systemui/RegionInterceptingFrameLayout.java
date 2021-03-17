@@ -9,6 +9,8 @@ import android.widget.FrameLayout;
 
 public class RegionInterceptingFrameLayout extends FrameLayout {
     private final ViewTreeObserver.OnComputeInternalInsetsListener mInsetsListener = new ViewTreeObserver.OnComputeInternalInsetsListener() {
+        /* class com.android.systemui.$$Lambda$RegionInterceptingFrameLayout$JlFdsR9I_9ubvsna7k1PTnmr7OI */
+
         public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
             RegionInterceptingFrameLayout.this.lambda$new$0$RegionInterceptingFrameLayout(internalInsetsInfo);
         }
@@ -17,7 +19,7 @@ public class RegionInterceptingFrameLayout extends FrameLayout {
     public interface RegionInterceptableView {
         Region getInterceptRegion();
 
-        boolean shouldInterceptTouch() {
+        default boolean shouldInterceptTouch() {
             return false;
         }
     }

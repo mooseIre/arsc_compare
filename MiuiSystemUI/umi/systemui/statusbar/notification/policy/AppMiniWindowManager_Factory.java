@@ -26,6 +26,7 @@ public final class AppMiniWindowManager_Factory implements Factory<AppMiniWindow
         this.notificationSettingsManagerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public AppMiniWindowManager get() {
         return provideInstance(this.contextProvider, this.dividerProvider, this.headsUpManagerPhoneProvider, this.handlerProvider, this.modalControllerProvider, this.notificationSettingsManagerProvider);
     }

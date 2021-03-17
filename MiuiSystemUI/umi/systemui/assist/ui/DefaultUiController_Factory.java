@@ -14,6 +14,7 @@ public final class DefaultUiController_Factory implements Factory<DefaultUiContr
         this.assistLoggerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DefaultUiController get() {
         return provideInstance(this.contextProvider, this.assistLoggerProvider);
     }

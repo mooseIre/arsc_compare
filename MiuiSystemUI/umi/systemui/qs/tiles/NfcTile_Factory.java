@@ -14,6 +14,7 @@ public final class NfcTile_Factory implements Factory<NfcTile> {
         this.broadcastDispatcherProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NfcTile get() {
         return provideInstance(this.hostProvider, this.broadcastDispatcherProvider);
     }

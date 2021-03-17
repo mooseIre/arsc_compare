@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar.notification.zen;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.service.notification.ZenModeConfig;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
@@ -38,12 +37,15 @@ public final class ZenModeViewController implements ZenModeController.Callback {
         this.statusBarStateController = sysuiStatusBarStateController;
         this.notifLockscreenUserManager = notificationLockscreenUserManager;
         sysuiStatusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
+            /* class com.android.systemui.statusbar.notification.zen.ZenModeViewController.AnonymousClass1 */
             final /* synthetic */ ZenModeViewController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 this.this$0.updateVisibility();
             }
@@ -68,7 +70,8 @@ public final class ZenModeViewController implements ZenModeController.Callback {
     }
 
     /* access modifiers changed from: private */
-    public final void updateVisibility() {
+    /* access modifiers changed from: public */
+    private final void updateVisibility() {
         boolean shouldBeVisible = shouldBeVisible();
         ZenModeView zenModeView = this.view;
         int i = 8;
@@ -97,16 +100,13 @@ public final class ZenModeViewController implements ZenModeController.Callback {
             }
             Function2<? super Boolean, ? super Boolean, Unit> function2 = this.visibilityChangedListener;
             if (function2 != null) {
-                Unit invoke = function2.invoke(Boolean.valueOf(shouldBeVisible), Boolean.valueOf(this.manuallyDismissed));
+                function2.invoke(Boolean.valueOf(shouldBeVisible), Boolean.valueOf(this.manuallyDismissed));
             }
         }
     }
 
     private final boolean shouldBeVisible() {
-        if (!(this.statusBarStateController.getState() == 1 || this.statusBarStateController.getState() == 2 || this.statusBarStateController.getState() == 3) || !isDndOn() || this.manuallyDismissed || this.bypassController.getBypassEnabled() || !this.notifLockscreenUserManager.shouldShowLockscreenNotifications()) {
-            return false;
-        }
-        return true;
+        return (this.statusBarStateController.getState() == 1 || this.statusBarStateController.getState() == 2 || this.statusBarStateController.getState() == 3) && isDndOn() && !this.manuallyDismissed && !this.bypassController.getBypassEnabled() && this.notifLockscreenUserManager.shouldShowLockscreenNotifications();
     }
 
     public final void onSwipeToDismiss() {
@@ -114,6 +114,7 @@ public final class ZenModeViewController implements ZenModeController.Callback {
         updateVisibility();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onConfigChanged(@Nullable ZenModeConfig zenModeConfig) {
         this.manuallyDismissed = false;
         updateVisibility();
@@ -124,7 +125,7 @@ public final class ZenModeViewController implements ZenModeController.Callback {
     }
 
     public final void setZenOff() {
-        this.zenModeController.setZen(0, (Uri) null, "ZenModeViewController");
+        this.zenModeController.setZen(0, null, "ZenModeViewController");
     }
 
     public final void jump2Settings() {

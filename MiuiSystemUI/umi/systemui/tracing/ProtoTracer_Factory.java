@@ -14,6 +14,7 @@ public final class ProtoTracer_Factory implements Factory<ProtoTracer> {
         this.dumpManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ProtoTracer get() {
         return provideInstance(this.contextProvider, this.dumpManagerProvider);
     }

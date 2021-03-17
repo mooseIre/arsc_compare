@@ -100,6 +100,7 @@ public final class ControlCenterContentContainer extends SpringBackLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void addView(@NotNull View view, int i) {
         Intrinsics.checkParameterIsNotNull(view, "child");
         LinearLayout linearLayout = this.container;

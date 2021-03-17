@@ -35,13 +35,14 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     private int NORMAL_MIN_SIZE_ONE_SCREEN = 12;
     private int OLD_MODE_MIN_TILE_ONE_SCREEN = 7;
     private int SUPER_SAVE_MIN_TILE_ONE_SCREEN = 5;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     protected List<String> mControlIndependentTiles;
     private ControlPanelController mControlPanelController;
-    /* access modifiers changed from: private */
-    public final DeviceProvisionedController mDeviceProvisionedController;
+    private final DeviceProvisionedController mDeviceProvisionedController;
     private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() {
+        /* class com.android.systemui.controlcenter.qs.MiuiQSTileHostInjector.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
         public void onDeviceProvisionedChanged() {
             if (MiuiQSTileHostInjector.this.mDeviceProvisionedController.isDeviceProvisioned() && !MiuiQSTileHostInjector.this.mMiuiUpdateVersionSharedPreferences.getBoolean("deviceProvisionUpdateTiles", false)) {
                 if (MiuiQSTileHostInjector.this.checkHuanjiFinish()) {
@@ -59,11 +60,12 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     private boolean mEdited = false;
     private QSTileHost mHost;
     private SharedPreferences mMiuiQSTilesSharedPreferences;
-    /* access modifiers changed from: private */
-    public MiuiQSTilePlugin mMiuiQSTilsplugin;
+    private MiuiQSTilePlugin mMiuiQSTilsplugin;
     private PluginListener mMiuiTilePluginListener = new PluginListener<MiuiQSTilePlugin>() {
+        /* class com.android.systemui.controlcenter.qs.MiuiQSTileHostInjector.AnonymousClass1 */
+
         public void onPluginConnected(MiuiQSTilePlugin miuiQSTilePlugin, Context context) {
-            MiuiQSTilePlugin unused = MiuiQSTileHostInjector.this.mMiuiQSTilsplugin = miuiQSTilePlugin;
+            MiuiQSTileHostInjector.this.mMiuiQSTilsplugin = miuiQSTilePlugin;
             MiuiQSTileHostInjector.this.mPluginStockTiles = miuiQSTilePlugin.getStockTileWithOrder();
             MiuiQSTileHostInjector.this.mPluginDefaultTiles = miuiQSTilePlugin.getDefaultTileWithOrder();
             MiuiQSTileHostInjector miuiQSTileHostInjector = MiuiQSTileHostInjector.this;
@@ -75,14 +77,13 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         }
 
         public void onPluginDisconnected(MiuiQSTilePlugin miuiQSTilePlugin) {
-            MiuiQSTilePlugin unused = MiuiQSTileHostInjector.this.mMiuiQSTilsplugin = null;
+            MiuiQSTileHostInjector.this.mMiuiQSTilsplugin = null;
             MiuiQSTileHostInjector miuiQSTileHostInjector = MiuiQSTileHostInjector.this;
             miuiQSTileHostInjector.initQSTiles(miuiQSTileHostInjector.mContext);
             MiuiQSTileHostInjector.this.onTuningChanged();
         }
     };
-    /* access modifiers changed from: private */
-    public SharedPreferences mMiuiUpdateVersionSharedPreferences;
+    private SharedPreferences mMiuiUpdateVersionSharedPreferences;
     private OldModeController mOldModeController;
     private boolean mOldModeOn = false;
     protected String mPluginDefaultTiles = "";
@@ -115,7 +116,7 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         this.mTiles = linkedHashMap;
         this.mTileSpecs = arrayList2;
         this.mUseControlCenter = this.mControlPanelController.useControlPanel();
-        this.mPluginManager.addPluginListener(this.mMiuiTilePluginListener, (Class<?>) MiuiQSTilePlugin.class, true);
+        this.mPluginManager.addPluginListener(this.mMiuiTilePluginListener, MiuiQSTilePlugin.class, true);
         if (this.mUseControlCenter) {
             this.NORMAL_MIN_SIZE_ONE_SCREEN = 8;
             this.SUPER_SAVE_MIN_TILE_ONE_SCREEN = 4;
@@ -140,7 +141,8 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     }
 
     /* access modifiers changed from: private */
-    public void initQSTiles(Context context) {
+    /* access modifiers changed from: public */
+    private void initQSTiles(Context context) {
         this.mQsDefaultTiles = context.getString(C0021R$string.miui_quick_settings_tiles_default);
         this.mQsStockTiles = context.getString(C0021R$string.miui_quick_settings_tiles_stock);
         filterIndependentTiles();
@@ -148,23 +150,23 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
 
     public void filterIndependentTiles() {
         if (this.mUseControlCenter) {
-            for (String next : this.mControlIndependentTiles) {
-                String str = this.mQsStockTiles;
-                this.mQsStockTiles = str.replace(next + ",", "");
-                String str2 = this.mQsDefaultTiles;
-                this.mQsDefaultTiles = str2.replace(next + ",", "");
-                String str3 = this.mPluginStockTiles;
-                this.mPluginStockTiles = str3.replace(next + ",", "");
-                String str4 = this.mPluginDefaultTiles;
-                this.mPluginDefaultTiles = str4.replace(next + ",", "");
+            for (String str : this.mControlIndependentTiles) {
+                String str2 = this.mQsStockTiles;
+                this.mQsStockTiles = str2.replace(str + ",", "");
+                String str3 = this.mQsDefaultTiles;
+                this.mQsDefaultTiles = str3.replace(str + ",", "");
+                String str4 = this.mPluginStockTiles;
+                this.mPluginStockTiles = str4.replace(str + ",", "");
+                String str5 = this.mPluginDefaultTiles;
+                this.mPluginDefaultTiles = str5.replace(str + ",", "");
             }
         }
     }
 
     public void filterArrayIndependentTiles(ArrayList<String> arrayList) {
         if (arrayList != null && this.mUseControlCenter) {
-            for (String remove : this.mControlIndependentTiles) {
-                arrayList.remove(remove);
+            for (String str : this.mControlIndependentTiles) {
+                arrayList.remove(str);
             }
         }
     }
@@ -248,7 +250,10 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
             return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_super_save);
         } else if (this.mTileListKey.equals("sysui_qs_old_mode_tiles") && !this.mUseControlCenter) {
             String value = this.mTunerService.getValue("sysui_qs_old_mode_tiles");
-            return TextUtils.isEmpty(value) ? this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_old_mode) : value;
+            if (TextUtils.isEmpty(value)) {
+                return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_old_mode);
+            }
+            return value;
         } else if (!this.mTileListKey.equals("sysui_qs_tiles")) {
             return this.mQsDefaultTiles;
         } else {
@@ -267,7 +272,8 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     }
 
     /* access modifiers changed from: private */
-    public void onTuningChanged() {
+    /* access modifiers changed from: public */
+    private void onTuningChanged() {
         this.mHost.onTuningChanged("sysui_qs_tiles", "");
         this.mHost.onTuningChanged("sysui_qs_tiles", getTileListValue());
     }
@@ -318,6 +324,7 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         return this.mSuperSaveModeOn;
     }
 
+    @Override // com.android.systemui.controlcenter.policy.SuperSaveModeController.SuperSaveModeChangeListener
     public void onSuperSaveModeChange(boolean z) {
         if (this.mSuperSaveModeOn != z) {
             this.mSuperSaveModeOn = z;
@@ -325,6 +332,7 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         }
     }
 
+    @Override // com.android.systemui.controlcenter.policy.OldModeController.OldModeChangeListener
     public void onOldModeChange(boolean z) {
         if (this.mOldModeOn != z) {
             this.mOldModeOn = z;
@@ -351,7 +359,8 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     }
 
     /* access modifiers changed from: private */
-    public boolean checkHuanjiFinish() {
+    /* access modifiers changed from: public */
+    private boolean checkHuanjiFinish() {
         return Settings.Secure.getInt(this.mContext.getContentResolver(), "huanji_finished", 0) == 1;
     }
 }

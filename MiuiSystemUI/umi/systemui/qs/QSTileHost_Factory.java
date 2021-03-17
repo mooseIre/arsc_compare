@@ -57,6 +57,7 @@ public final class QSTileHost_Factory implements Factory<QSTileHost> {
         this.controlPanelControllerProvider = provider16;
     }
 
+    @Override // javax.inject.Provider
     public QSTileHost get() {
         return provideInstance(this.contextProvider, this.iconControllerProvider, this.defaultFactoryProvider, this.mainHandlerProvider, this.bgLooperProvider, this.pluginManagerProvider, this.tunerServiceProvider, this.autoTilesProvider, this.dumpManagerProvider, this.broadcastDispatcherProvider, this.statusBarOptionalProvider, this.qsLoggerProvider, this.uiEventLoggerProvider, this.statusBarStateControllerProvider, this.hostInjectorProvider, this.controlPanelControllerProvider);
     }

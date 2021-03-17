@@ -7,11 +7,12 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class ExecutorImpl implements DelayableExecutor {
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private final Handler mHandler;
 
     ExecutorImpl(Looper looper) {
         this.mHandler = new Handler(looper, new Handler.Callback() {
+            /* class com.android.systemui.util.concurrency.$$Lambda$ExecutorImpl$vXdc7rv1NdEmVmxIWaGxknUGa10 */
+
             public final boolean handleMessage(Message message) {
                 return ExecutorImpl.this.onHandleMessage(message);
             }
@@ -24,6 +25,7 @@ public class ExecutorImpl implements DelayableExecutor {
         }
     }
 
+    @Override // com.android.systemui.util.concurrency.DelayableExecutor
     public Runnable executeDelayed(Runnable runnable, long j, TimeUnit timeUnit) {
         ExecutionToken executionToken = new ExecutionToken(runnable);
         this.mHandler.sendMessageDelayed(this.mHandler.obtainMessage(0, executionToken), timeUnit.toMillis(j));
@@ -39,7 +41,8 @@ public class ExecutorImpl implements DelayableExecutor {
         throw new IllegalStateException("Unrecognized message: " + message.what);
     }
 
-    private class ExecutionToken implements Runnable {
+    /* access modifiers changed from: private */
+    public class ExecutionToken implements Runnable {
         public final Runnable runnable;
 
         private ExecutionToken(Runnable runnable2) {

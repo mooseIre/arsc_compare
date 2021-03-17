@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$ShadeListBuilder$c6onOLMSwF5woQjUCc8
     private /* synthetic */ $$Lambda$ShadeListBuilder$c6onOLMSwF5woQjUCc8sv1YwJM() {
     }
 
+    @Override // java.util.Comparator
     public final int compare(Object obj, Object obj2) {
         return ShadeListBuilder.lambda$static$3((NotificationEntry) obj, (NotificationEntry) obj2);
     }

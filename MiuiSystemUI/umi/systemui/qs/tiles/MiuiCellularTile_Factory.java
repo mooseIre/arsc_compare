@@ -14,6 +14,7 @@ public final class MiuiCellularTile_Factory implements Factory<MiuiCellularTile>
         this.networkControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiCellularTile get() {
         return provideInstance(this.hostProvider, this.networkControllerProvider);
     }

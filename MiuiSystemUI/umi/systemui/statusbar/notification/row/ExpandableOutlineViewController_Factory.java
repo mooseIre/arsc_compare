@@ -12,6 +12,7 @@ public final class ExpandableOutlineViewController_Factory implements Factory<Ex
         this.expandableViewControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ExpandableOutlineViewController get() {
         return provideInstance(this.viewProvider, this.expandableViewControllerProvider);
     }

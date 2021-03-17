@@ -34,17 +34,18 @@ import java.util.function.Predicate;
 public class ShadeListBuilder implements Dumpable {
     private static final Comparator<NotificationEntry> sChildComparator = $$Lambda$ShadeListBuilder$c6onOLMSwF5woQjUCc8sv1YwJM.INSTANCE;
     private static final NotifSection sDefaultSection = new NotifSection("DefaultSection") {
+        /* class com.android.systemui.statusbar.notification.collection.ShadeListBuilder.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifSection
         public boolean isInSection(ListEntry listEntry) {
             return true;
         }
     };
-    /* access modifiers changed from: private */
-    public Collection<NotificationEntry> mAllEntries = Collections.emptyList();
+    private Collection<NotificationEntry> mAllEntries = Collections.emptyList();
     private final Map<String, GroupEntry> mGroups = new ArrayMap();
     private final NotificationInteractionTracker mInteractionTracker;
     private int mIterationCount = 0;
-    /* access modifiers changed from: private */
-    public final ShadeListBuilderLogger mLogger;
+    private final ShadeListBuilderLogger mLogger;
     private List<ListEntry> mNewNotifList = new ArrayList();
     private final List<NotifComparator> mNotifComparators = new ArrayList();
     private final List<NotifFilter> mNotifFinalizeFilters = new ArrayList();
@@ -57,21 +58,26 @@ public class ShadeListBuilder implements Dumpable {
     private final List<OnBeforeSortListener> mOnBeforeSortListeners = new ArrayList();
     private final List<OnBeforeTransformGroupsListener> mOnBeforeTransformGroupsListeners = new ArrayList();
     private OnRenderListListener mOnRenderListListener;
-    /* access modifiers changed from: private */
-    public final PipelineState mPipelineState = new PipelineState();
+    private final PipelineState mPipelineState = new PipelineState();
     private List<ListEntry> mReadOnlyNewNotifList = Collections.unmodifiableList(this.mNewNotifList);
     private List<ListEntry> mReadOnlyNotifList = Collections.unmodifiableList(this.mNotifList);
     private final CollectionReadyForBuildListener mReadyForBuildListener = new CollectionReadyForBuildListener() {
+        /* class com.android.systemui.statusbar.notification.collection.ShadeListBuilder.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.CollectionReadyForBuildListener
         public void onBuildList(Collection<NotificationEntry> collection) {
             Assert.isMainThread();
             ShadeListBuilder.this.mPipelineState.requireIsBefore(1);
             ShadeListBuilder.this.mLogger.logOnBuildList();
-            Collection unused = ShadeListBuilder.this.mAllEntries = collection;
+            ShadeListBuilder.this.mAllEntries = collection;
             ShadeListBuilder.this.buildList();
         }
     };
     private final SystemClock mSystemClock;
     private final Comparator<ListEntry> mTopLevelComparator = new Comparator() {
+        /* class com.android.systemui.statusbar.notification.collection.$$Lambda$ShadeListBuilder$j4Y9Xdxb2bsigQJC_JntCQwmx4 */
+
+        @Override // java.util.Comparator
         public final int compare(Object obj, Object obj2) {
             return ShadeListBuilder.this.lambda$new$2$ShadeListBuilder((ListEntry) obj, (ListEntry) obj2);
         }
@@ -113,6 +119,9 @@ public class ShadeListBuilder implements Dumpable {
         this.mPipelineState.requireState(0);
         this.mNotifPreGroupFilters.add(notifFilter);
         notifFilter.setInvalidationListener(new Pluggable.PluggableListener() {
+            /* class com.android.systemui.statusbar.notification.collection.$$Lambda$ShadeListBuilder$nY0ibCyaSPniz4LEX1W2bWrRcs */
+
+            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.Pluggable.PluggableListener
             public final void onPluggableInvalidated(Object obj) {
                 ShadeListBuilder.this.onPreGroupFilterInvalidated((NotifFilter) obj);
             }
@@ -125,6 +134,9 @@ public class ShadeListBuilder implements Dumpable {
         this.mPipelineState.requireState(0);
         this.mNotifFinalizeFilters.add(notifFilter);
         notifFilter.setInvalidationListener(new Pluggable.PluggableListener() {
+            /* class com.android.systemui.statusbar.notification.collection.$$Lambda$ShadeListBuilder$xeAx9GATmY7ZgJZ0F6oEQlc0G_0 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.Pluggable.PluggableListener
             public final void onPluggableInvalidated(Object obj) {
                 ShadeListBuilder.this.onFinalizeFilterInvalidated((NotifFilter) obj);
             }
@@ -137,6 +149,9 @@ public class ShadeListBuilder implements Dumpable {
         this.mPipelineState.requireState(0);
         this.mNotifPromoters.add(notifPromoter);
         notifPromoter.setInvalidationListener(new Pluggable.PluggableListener() {
+            /* class com.android.systemui.statusbar.notification.collection.$$Lambda$ShadeListBuilder$WhP4dzR4yYnVTR1LdzWTnz4ov9k */
+
+            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.Pluggable.PluggableListener
             public final void onPluggableInvalidated(Object obj) {
                 ShadeListBuilder.this.onPromoterInvalidated((NotifPromoter) obj);
             }
@@ -148,9 +163,12 @@ public class ShadeListBuilder implements Dumpable {
         Assert.isMainThread();
         this.mPipelineState.requireState(0);
         this.mNotifSections.clear();
-        for (NotifSection next : list) {
-            this.mNotifSections.add(next);
-            next.setInvalidationListener(new Pluggable.PluggableListener() {
+        for (NotifSection notifSection : list) {
+            this.mNotifSections.add(notifSection);
+            notifSection.setInvalidationListener(new Pluggable.PluggableListener() {
+                /* class com.android.systemui.statusbar.notification.collection.$$Lambda$ShadeListBuilder$bhojRXQ6IzMsuyeOmu4rRbLGws */
+
+                @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.Pluggable.PluggableListener
                 public final void onPluggableInvalidated(Object obj) {
                     ShadeListBuilder.this.onNotifSectionInvalidated((NotifSection) obj);
                 }
@@ -193,7 +211,8 @@ public class ShadeListBuilder implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void buildList() {
+    /* access modifiers changed from: public */
+    private void buildList() {
         this.mPipelineState.requireIsBefore(1);
         this.mPipelineState.setState(1);
         this.mPipelineState.incrementTo(2);
@@ -243,15 +262,15 @@ public class ShadeListBuilder implements Dumpable {
     }
 
     private void resetNotifs() {
-        for (GroupEntry next : this.mGroups.values()) {
-            next.beginNewAttachState();
-            next.clearChildren();
-            next.setSummary((NotificationEntry) null);
+        for (GroupEntry groupEntry : this.mGroups.values()) {
+            groupEntry.beginNewAttachState();
+            groupEntry.clearChildren();
+            groupEntry.setSummary(null);
         }
-        for (NotificationEntry next2 : this.mAllEntries) {
-            next2.beginNewAttachState();
-            if (next2.mFirstAddedIteration == -1) {
-                next2.mFirstAddedIteration = this.mIterationCount;
+        for (NotificationEntry notificationEntry : this.mAllEntries) {
+            notificationEntry.beginNewAttachState();
+            if (notificationEntry.mFirstAddedIteration == -1) {
+                notificationEntry.mFirstAddedIteration = this.mIterationCount;
             }
         }
         this.mNotifList.clear();
@@ -264,7 +283,7 @@ public class ShadeListBuilder implements Dumpable {
                 GroupEntry groupEntry = (GroupEntry) listEntry;
                 NotificationEntry representativeEntry = groupEntry.getRepresentativeEntry();
                 if (applyFilters(representativeEntry, uptimeMillis, list2)) {
-                    groupEntry.setSummary((NotificationEntry) null);
+                    groupEntry.setSummary(null);
                     annulAddition(representativeEntry);
                 }
                 List<NotificationEntry> rawChildren = groupEntry.getRawChildren();
@@ -334,12 +353,14 @@ public class ShadeListBuilder implements Dumpable {
             ListEntry listEntry = list.get(i);
             if (listEntry instanceof GroupEntry) {
                 ((GroupEntry) listEntry).getRawChildren().removeIf(new Predicate(list) {
+                    /* class com.android.systemui.statusbar.notification.collection.$$Lambda$ShadeListBuilder$ePmhZ1cn_RHisgrq179QhMPgfM */
                     public final /* synthetic */ List f$1;
 
                     {
                         this.f$1 = r2;
                     }
 
+                    @Override // java.util.function.Predicate
                     public final boolean test(Object obj) {
                         return ShadeListBuilder.this.lambda$promoteNotifs$0$ShadeListBuilder(this.f$1, (NotificationEntry) obj);
                     }
@@ -372,14 +393,14 @@ public class ShadeListBuilder implements Dumpable {
                     NotificationEntry summary = groupEntry.getSummary();
                     summary.setParent(GroupEntry.ROOT_ENTRY);
                     list.add(summary);
-                    groupEntry.setSummary((NotificationEntry) null);
+                    groupEntry.setSummary(null);
                     annulAddition(groupEntry, list);
                 } else if (groupEntry.getSummary() == null || rawChildren.size() < 2) {
                     list.remove(i);
                     i--;
                     if (groupEntry.getSummary() != null) {
-                        NotificationEntry summary2 = groupEntry.getSummary();
-                        groupEntry.setSummary((NotificationEntry) null);
+                        ListEntry summary2 = groupEntry.getSummary();
+                        groupEntry.setSummary(null);
                         annulAddition(summary2, list);
                     }
                     for (int i2 = 0; i2 < rawChildren.size(); i2++) {
@@ -416,23 +437,23 @@ public class ShadeListBuilder implements Dumpable {
     }
 
     private void annulAddition(ListEntry listEntry) {
-        listEntry.setParent((GroupEntry) null);
+        listEntry.setParent(null);
         listEntry.getAttachState().setSectionIndex(-1);
-        listEntry.getAttachState().setSection((NotifSection) null);
-        listEntry.getAttachState().setPromoter((NotifPromoter) null);
+        listEntry.getAttachState().setSection(null);
+        listEntry.getAttachState().setPromoter(null);
         if (listEntry.mFirstAddedIteration == this.mIterationCount) {
             listEntry.mFirstAddedIteration = -1;
         }
     }
 
     private void sortList() {
-        for (ListEntry next : this.mNotifList) {
-            Pair<NotifSection, Integer> applySections = applySections(next);
-            if (next instanceof GroupEntry) {
-                GroupEntry groupEntry = (GroupEntry) next;
-                for (NotificationEntry next2 : groupEntry.getChildren()) {
-                    next2.getAttachState().setSection((NotifSection) applySections.first);
-                    next2.getAttachState().setSectionIndex(((Integer) applySections.second).intValue());
+        for (ListEntry listEntry : this.mNotifList) {
+            Pair<NotifSection, Integer> applySections = applySections(listEntry);
+            if (listEntry instanceof GroupEntry) {
+                GroupEntry groupEntry = (GroupEntry) listEntry;
+                for (NotificationEntry notificationEntry : groupEntry.getChildren()) {
+                    notificationEntry.getAttachState().setSection((NotifSection) applySections.first);
+                    notificationEntry.getAttachState().setSectionIndex(((Integer) applySections.second).intValue());
                 }
                 groupEntry.sortChildren(sChildComparator);
             }
@@ -449,11 +470,11 @@ public class ShadeListBuilder implements Dumpable {
     }
 
     private void logChanges() {
-        for (NotificationEntry logAttachStateChanges : this.mAllEntries) {
-            logAttachStateChanges(logAttachStateChanges);
+        for (NotificationEntry notificationEntry : this.mAllEntries) {
+            logAttachStateChanges(notificationEntry);
         }
-        for (GroupEntry logAttachStateChanges2 : this.mGroups.values()) {
-            logAttachStateChanges(logAttachStateChanges2);
+        for (GroupEntry groupEntry : this.mGroups.values()) {
+            logAttachStateChanges(groupEntry);
         }
     }
 
@@ -596,6 +617,7 @@ public class ShadeListBuilder implements Dumpable {
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("\tNotifListBuilderImpl shade notifications:");
         if (getShadeList().size() == 0) {

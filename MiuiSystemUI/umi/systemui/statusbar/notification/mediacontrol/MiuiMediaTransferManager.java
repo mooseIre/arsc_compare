@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.notification.mediacontrol;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRoute2Info;
@@ -26,28 +25,35 @@ import java.util.List;
 
 public class MiuiMediaTransferManager {
     private static final boolean MIUI_MEDIA_SEAMLESS_ENABLED = (Build.VERSION.SDK_INT > 28);
-    /* access modifiers changed from: private */
-    public final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
+    private final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
     private MediaDevice mCurDevice;
     private LocalMediaManager mLocalMediaManager;
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass3 */
+
         public void onRouteSelected(MediaRouter mediaRouter, int i, MediaRouter.RouteInfo routeInfo) {
             MiuiMediaTransferManager.this.updateCurrentDevice(routeInfo.getName().toString());
         }
     };
     private final LocalMediaManager.DeviceCallback mMediaDeviceCallback = new LocalMediaManager.DeviceCallback() {
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass2 */
+
+        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onDeviceListUpdate(List<MediaDevice> list) {
-            MiuiMediaTransferManager.this.updatePhoneDevice(list);
+            MiuiMediaTransferManager.this.updatePhoneDevice((MiuiMediaTransferManager) list);
             MiuiMediaTransferManager.this.updateCurrentDevice("");
         }
 
+        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onSelectedDeviceStateChanged(MediaDevice mediaDevice, int i) {
-            boolean unused = MiuiMediaTransferManager.this.updatePhoneDevice(mediaDevice);
+            MiuiMediaTransferManager.this.updatePhoneDevice((MiuiMediaTransferManager) mediaDevice);
             MiuiMediaTransferManager.this.updateAllChips(mediaDevice.getName());
         }
     };
     private MediaRouter mMediaRouter;
     private final View.OnClickListener mOnClickHandler = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass1 */
+
         public void onClick(View view) {
             handleMediaTransfer();
         }
@@ -61,12 +67,13 @@ public class MiuiMediaTransferManager {
 
     public MiuiMediaTransferManager(Context context) {
         LocalBluetoothManager localBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class);
-        this.mLocalMediaManager = new LocalMediaManager(context, localBluetoothManager, new InfoMediaManager(context, context.getPackageName(), (Notification) null, localBluetoothManager), (String) null);
+        this.mLocalMediaManager = new LocalMediaManager(context, localBluetoothManager, new InfoMediaManager(context, context.getPackageName(), null, localBluetoothManager), null);
         this.mMediaRouter = (MediaRouter) context.getSystemService("media_router");
     }
 
     /* access modifiers changed from: private */
-    public void updateCurrentDevice(String str) {
+    /* access modifiers changed from: public */
+    private void updateCurrentDevice(String str) {
         this.mCurDevice = getCurrentConnectedDevice();
         if (TextUtils.isEmpty(str)) {
             str = this.mCurDevice.getName();
@@ -75,9 +82,10 @@ public class MiuiMediaTransferManager {
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Removed duplicated region for block: B:4:0x000d A[LOOP:0: B:4:0x000d->B:7:0x001d, LOOP_START] */
+    /* access modifiers changed from: public */
+    /* JADX WARNING: Removed duplicated region for block: B:6:0x0013  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void updatePhoneDevice(java.util.List<com.android.settingslib.media.MediaDevice> r2) {
+    private void updatePhoneDevice(java.util.List<com.android.settingslib.media.MediaDevice> r2) {
         /*
             r1 = this;
             java.lang.String r0 = r1.mPhoneName
@@ -91,7 +99,7 @@ public class MiuiMediaTransferManager {
             if (r0 == 0) goto L_0x001f
             java.lang.Object r0 = r2.next()
             com.android.settingslib.media.MediaDevice r0 = (com.android.settingslib.media.MediaDevice) r0
-            boolean r0 = r1.updatePhoneDevice((com.android.settingslib.media.MediaDevice) r0)
+            boolean r0 = r1.updatePhoneDevice(r0)
             if (r0 == 0) goto L_0x000d
         L_0x001f:
             return
@@ -100,7 +108,8 @@ public class MiuiMediaTransferManager {
     }
 
     /* access modifiers changed from: private */
-    public boolean updatePhoneDevice(MediaDevice mediaDevice) {
+    /* access modifiers changed from: public */
+    private boolean updatePhoneDevice(MediaDevice mediaDevice) {
         if (!TextUtils.isEmpty(this.mPhoneName)) {
             return true;
         }
@@ -163,14 +172,15 @@ public class MiuiMediaTransferManager {
     }
 
     /* access modifiers changed from: private */
-    public void updateAllChips(String str) {
-        for (ImageView updateChip : this.mViews) {
-            updateChip(updateChip, str);
+    /* access modifiers changed from: public */
+    private void updateAllChips(String str) {
+        for (ImageView imageView : this.mViews) {
+            updateChip(imageView, str);
         }
     }
 
     private void updateChip(ImageView imageView) {
-        updateChip(imageView, (String) null);
+        updateChip(imageView, null);
     }
 
     private void updateChip(ImageView imageView, String str) {

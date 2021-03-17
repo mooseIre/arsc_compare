@@ -17,6 +17,9 @@ public class NotificationCountLimitPolicy {
 
     public void start() {
         this.mEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+            /* class com.android.systemui.statusbar.notification.policy.NotificationCountLimitPolicy.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onNotificationAdded(NotificationEntry notificationEntry) {
                 NotificationCountLimitPolicy.this.checkNotificationCountLimit(notificationEntry.getSbn().getPackageName());
             }
@@ -24,14 +27,17 @@ public class NotificationCountLimitPolicy {
     }
 
     /* access modifiers changed from: private */
-    public void checkNotificationCountLimit(String str) {
+    /* access modifiers changed from: public */
+    private void checkNotificationCountLimit(String str) {
         List list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate(str) {
+            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationCountLimitPolicy$Nuj6QARJ5Tk90SSd1vymdMl4IrY */
             public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return ((NotificationEntry) obj).getSbn().getPackageName().equals(this.f$0);
             }

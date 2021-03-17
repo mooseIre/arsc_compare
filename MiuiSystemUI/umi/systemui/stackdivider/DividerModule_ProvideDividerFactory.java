@@ -35,6 +35,7 @@ public final class DividerModule_ProvideDividerFactory implements Factory<Divide
         this.transactionPoolProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public Divider get() {
         return provideInstance(this.contextProvider, this.recentsOptionalLazyProvider, this.displayControllerProvider, this.systemWindowsProvider, this.imeControllerProvider, this.handlerProvider, this.keyguardStateControllerProvider, this.transactionPoolProvider);
     }

@@ -28,15 +28,12 @@ import java.util.function.IntSupplier;
 
 public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnimationController {
     private final PhysicsAnimator.SpringConfig mAnimateOutSpringConfig = new PhysicsAnimator.SpringConfig(1000.0f, 1.0f);
-    /* access modifiers changed from: private */
-    public Rect mAnimatingToBounds = new Rect();
+    private Rect mAnimatingToBounds = new Rect();
     private int mBubbleBitmapSize;
     private IntSupplier mBubbleCountSupplier;
     private int mBubbleOffscreen;
-    /* access modifiers changed from: private */
-    public int mBubblePaddingTop;
-    /* access modifiers changed from: private */
-    public int mBubbleSize;
+    private int mBubblePaddingTop;
+    private int mBubbleSize;
     private boolean mFirstBubbleSpringingToTouch = false;
     private FloatingContentCoordinator mFloatingContentCoordinator;
     private float mImeHeight = 0.0f;
@@ -47,12 +44,15 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     private PointF mRestingStackPosition;
     private boolean mSpringToTouchOnNextMotionEvent = false;
     private final FloatingContentCoordinator.FloatingContent mStackFloatingContent = new FloatingContentCoordinator.FloatingContent() {
+        /* class com.android.systemui.bubbles.animation.StackAnimationController.AnonymousClass1 */
         private final Rect mFloatingBoundsOnScreen = new Rect();
 
+        @Override // com.android.systemui.util.FloatingContentCoordinator.FloatingContent
         public void moveToBounds(Rect rect) {
             StackAnimationController.this.springStack((float) rect.left, (float) rect.top, 200.0f);
         }
 
+        @Override // com.android.systemui.util.FloatingContentCoordinator.FloatingContent
         public Rect getAllowedFloatingBoundsRegion() {
             Rect floatingBoundsOnScreen = getFloatingBoundsOnScreen();
             Rect rect = new Rect();
@@ -62,6 +62,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
             return rect;
         }
 
+        @Override // com.android.systemui.util.FloatingContentCoordinator.FloatingContent
         public Rect getFloatingBoundsOnScreen() {
             if (!StackAnimationController.this.mAnimatingToBounds.isEmpty()) {
                 return StackAnimationController.this.mAnimatingToBounds;
@@ -76,8 +77,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     };
     private boolean mStackMovedToStartPosition = false;
     private float mStackOffset;
-    /* access modifiers changed from: private */
-    public PointF mStackPosition = new PointF(-1.0f, -1.0f);
+    private PointF mStackPosition = new PointF(-1.0f, -1.0f);
     private HashMap<DynamicAnimation.ViewProperty, DynamicAnimation> mStackPositionAnimations = new HashMap<>();
     private int mStackStartingVerticalOffset;
     private float mStatusBarHeight;
@@ -108,16 +108,15 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     public void springStack(float f, float f2, float f3) {
-        float f4 = f3;
         notifyFloatingCoordinatorStackAnimatingTo(f, f2);
         DynamicAnimation.ViewProperty viewProperty = DynamicAnimation.TRANSLATION_X;
         SpringForce springForce = new SpringForce();
-        springForce.setStiffness(f4);
+        springForce.setStiffness(f3);
         springForce.setDampingRatio(0.85f);
         springFirstBubbleWithStackFollowing(viewProperty, springForce, 0.0f, f, new Runnable[0]);
         DynamicAnimation.ViewProperty viewProperty2 = DynamicAnimation.TRANSLATION_Y;
         SpringForce springForce2 = new SpringForce();
-        springForce2.setStiffness(f4);
+        springForce2.setStiffness(f3);
         springForce2.setDampingRatio(0.85f);
         springFirstBubbleWithStackFollowing(viewProperty2, springForce2, 0.0f, f2, new Runnable[0]);
     }
@@ -128,38 +127,36 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     public float flingStackThenSpringToEdge(float f, float f2, float f3) {
         float f4;
-        float f5 = f2;
-        boolean z = !(((f - ((float) (this.mBubbleBitmapSize / 2))) > ((float) (this.mLayout.getWidth() / 2)) ? 1 : ((f - ((float) (this.mBubbleBitmapSize / 2))) == ((float) (this.mLayout.getWidth() / 2)) ? 0 : -1)) < 0) ? f5 < -750.0f : f5 < 750.0f;
+        boolean z = !(((f - ((float) (this.mBubbleBitmapSize / 2))) > ((float) (this.mLayout.getWidth() / 2)) ? 1 : ((f - ((float) (this.mBubbleBitmapSize / 2))) == ((float) (this.mLayout.getWidth() / 2)) ? 0 : -1)) < 0) ? f2 < -750.0f : f2 < 750.0f;
         RectF allowableStackPositionRegion = getAllowableStackPositionRegion();
-        float f6 = z ? allowableStackPositionRegion.left : allowableStackPositionRegion.right;
+        float f5 = z ? allowableStackPositionRegion.left : allowableStackPositionRegion.right;
         PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
         if (!(physicsAnimationLayout == null || physicsAnimationLayout.getChildCount() == 0)) {
             ContentResolver contentResolver = this.mLayout.getContext().getContentResolver();
-            float f7 = Settings.Secure.getFloat(contentResolver, "bubble_stiffness", 750.0f);
-            float f8 = Settings.Secure.getFloat(contentResolver, "bubble_damping", 0.85f);
-            float f9 = Settings.Secure.getFloat(contentResolver, "bubble_friction", 2.2f);
-            float f10 = (f6 - f) * 4.2f * f9;
-            notifyFloatingCoordinatorStackAnimatingTo(f6, PhysicsAnimator.estimateFlingEndValue(this.mStackPosition.y, f3, new PhysicsAnimator.FlingConfig(f9, allowableStackPositionRegion.top, allowableStackPositionRegion.bottom)));
+            float f6 = Settings.Secure.getFloat(contentResolver, "bubble_stiffness", 750.0f);
+            float f7 = Settings.Secure.getFloat(contentResolver, "bubble_damping", 0.85f);
+            float f8 = Settings.Secure.getFloat(contentResolver, "bubble_friction", 2.2f);
+            float f9 = (f5 - f) * 4.2f * f8;
+            notifyFloatingCoordinatorStackAnimatingTo(f5, PhysicsAnimator.estimateFlingEndValue(this.mStackPosition.y, f3, new PhysicsAnimator.FlingConfig(f8, allowableStackPositionRegion.top, allowableStackPositionRegion.bottom)));
             if (z) {
-                f4 = Math.min(f10, f5);
+                f4 = Math.min(f9, f2);
             } else {
-                f4 = Math.max(f10, f5);
+                f4 = Math.max(f9, f2);
             }
             DynamicAnimation.ViewProperty viewProperty = DynamicAnimation.TRANSLATION_X;
             SpringForce springForce = new SpringForce();
-            springForce.setStiffness(f7);
-            springForce.setDampingRatio(f8);
-            float f11 = f9;
-            flingThenSpringFirstBubbleWithStackFollowing(viewProperty, f4, f11, springForce, Float.valueOf(f6));
+            springForce.setStiffness(f6);
+            springForce.setDampingRatio(f7);
+            flingThenSpringFirstBubbleWithStackFollowing(viewProperty, f4, f8, springForce, Float.valueOf(f5));
             DynamicAnimation.ViewProperty viewProperty2 = DynamicAnimation.TRANSLATION_Y;
             SpringForce springForce2 = new SpringForce();
-            springForce2.setStiffness(f7);
-            springForce2.setDampingRatio(f8);
-            flingThenSpringFirstBubbleWithStackFollowing(viewProperty2, f3, f11, springForce2, (Float) null);
+            springForce2.setStiffness(f6);
+            springForce2.setDampingRatio(f7);
+            flingThenSpringFirstBubbleWithStackFollowing(viewProperty2, f3, f8, springForce2, null);
             this.mFirstBubbleSpringingToTouch = false;
             this.mIsMovingFromFlinging = true;
         }
-        return f6;
+        return f5;
     }
 
     public PointF getStackPositionAlongNearestHorizontalEdge() {
@@ -196,9 +193,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     public void flingThenSpringFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, float f, float f2, SpringForce springForce, Float f3) {
         float f4;
         float f5;
-        DynamicAnimation.ViewProperty viewProperty2 = viewProperty;
         if (isActiveController()) {
-            Log.d("Bubbs.StackCtrl", String.format("Flinging %s.", new Object[]{PhysicsAnimationLayout.getReadablePropertyName(viewProperty)}));
+            Log.d("Bubbs.StackCtrl", String.format("Flinging %s.", PhysicsAnimationLayout.getReadablePropertyName(viewProperty)));
             StackPositionProperty stackPositionProperty = new StackPositionProperty(viewProperty);
             float value = stackPositionProperty.getValue(this);
             RectF allowableStackPositionRegion = getAllowableStackPositionRegion();
@@ -207,21 +203,18 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
             } else {
                 f4 = allowableStackPositionRegion.top;
             }
-            float f6 = f4;
             if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
                 f5 = allowableStackPositionRegion.right;
             } else {
                 f5 = allowableStackPositionRegion.bottom;
             }
-            float f7 = f5;
             FlingAnimation flingAnimation = new FlingAnimation(this, stackPositionProperty);
-            float f8 = f2;
             flingAnimation.setFriction(f2);
-            float f9 = f;
             flingAnimation.setStartVelocity(f);
-            flingAnimation.setMinValue(Math.min(value, f6));
-            flingAnimation.setMaxValue(Math.max(value, f7));
-            flingAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(viewProperty, springForce, f3, f6, f7) {
+            flingAnimation.setMinValue(Math.min(value, f4));
+            flingAnimation.setMaxValue(Math.max(value, f5));
+            flingAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(viewProperty, springForce, f3, f4, f5) {
+                /* class com.android.systemui.bubbles.animation.$$Lambda$StackAnimationController$bZgezj9fblRl_isenTD4ApewvoU */
                 public final /* synthetic */ DynamicAnimation.ViewProperty f$1;
                 public final /* synthetic */ SpringForce f$2;
                 public final /* synthetic */ Float f$3;
@@ -236,6 +229,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
                     this.f$5 = r6;
                 }
 
+                @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
                 public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
                     StackAnimationController.this.lambda$flingThenSpringFirstBubbleWithStackFollowing$0$StackAnimationController(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, dynamicAnimation, z, f, f2);
                 }
@@ -388,12 +382,14 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     public void animateStackDismissal(float f, Runnable runnable) {
         animationsForChildrenFromIndex(0, new PhysicsAnimationLayout.PhysicsAnimationController.ChildAnimationConfigurator(f) {
+            /* class com.android.systemui.bubbles.animation.$$Lambda$StackAnimationController$D5Qpma319hSMbP8sqDKnJq90JU */
             public final /* synthetic */ float f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController.ChildAnimationConfigurator
             public final void configureAnimationForChildAtIndex(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
                 StackAnimationController.this.lambda$animateStackDismissal$1$StackAnimationController(this.f$1, i, physicsPropertyAnimator);
             }
@@ -413,11 +409,12 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     /* access modifiers changed from: protected */
     public void springFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, SpringForce springForce, float f, float f2, Runnable... runnableArr) {
         if (this.mLayout.getChildCount() != 0 && isActiveController()) {
-            Log.d("Bubbs.StackCtrl", String.format("Springing %s to final position %f.", new Object[]{PhysicsAnimationLayout.getReadablePropertyName(viewProperty), Float.valueOf(f2)}));
+            Log.d("Bubbs.StackCtrl", String.format("Springing %s to final position %f.", PhysicsAnimationLayout.getReadablePropertyName(viewProperty), Float.valueOf(f2)));
             boolean z = this.mSpringToTouchOnNextMotionEvent;
             SpringAnimation springAnimation = new SpringAnimation(this, new StackPositionProperty(viewProperty));
             springAnimation.setSpring(springForce);
             springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(z, runnableArr) {
+                /* class com.android.systemui.bubbles.animation.$$Lambda$StackAnimationController$TVDnndU2JkVcHNzVQaINweVCLk */
                 public final /* synthetic */ boolean f$1;
                 public final /* synthetic */ Runnable[] f$2;
 
@@ -426,6 +423,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
                     this.f$2 = r3;
                 }
 
+                @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
                 public final void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
                     StackAnimationController.this.lambda$springFirstBubbleWithStackFollowing$2$StackAnimationController(this.f$1, this.f$2, dynamicAnimation, z, f, f2);
                 }
@@ -446,18 +444,20 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
             this.mRestingStackPosition.set(this.mStackPosition);
         }
         if (runnableArr != null) {
-            for (Runnable run : runnableArr) {
-                run.run();
+            for (Runnable runnable : runnableArr) {
+                runnable.run();
             }
         }
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public Set<DynamicAnimation.ViewProperty> getAnimatedProperties() {
         return Sets.newHashSet(new DynamicAnimation.ViewProperty[]{DynamicAnimation.TRANSLATION_X, DynamicAnimation.TRANSLATION_Y, DynamicAnimation.ALPHA, DynamicAnimation.SCALE_X, DynamicAnimation.SCALE_Y});
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public int getNextAnimationInChain(DynamicAnimation.ViewProperty viewProperty, int i) {
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_X) || viewProperty.equals(DynamicAnimation.TRANSLATION_Y)) {
             return i + 1;
@@ -466,6 +466,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public float getOffsetForChainedPropertyAnimation(DynamicAnimation.ViewProperty viewProperty) {
         if (!viewProperty.equals(DynamicAnimation.TRANSLATION_X) || isStackStuckToTarget()) {
             return 0.0f;
@@ -474,6 +475,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public SpringForce getSpringForce(DynamicAnimation.ViewProperty viewProperty, View view) {
         ContentResolver contentResolver = this.mLayout.getContext().getContentResolver();
         float f = Settings.Secure.getFloat(contentResolver, "bubble_stiffness", this.mIsMovingFromFlinging ? 20000.0f : 12000.0f);
@@ -485,6 +487,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onChildAdded(View view, int i) {
         if (!isStackStuckToTarget()) {
             if (getBubbleCount() == 1) {
@@ -496,6 +499,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onChildRemoved(View view, int i, Runnable runnable) {
         PhysicsAnimator instance = PhysicsAnimator.getInstance(view);
         instance.spring(DynamicAnimation.ALPHA, 0.0f);
@@ -518,6 +522,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onChildReordered(View view, int i, int i2) {
         if (isStackPositionSet()) {
             setStackPosition(this.mStackPosition);
@@ -525,6 +530,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onActiveControllerForLayout(PhysicsAnimationLayout physicsAnimationLayout) {
         Resources resources = physicsAnimationLayout.getResources();
         this.mStackOffset = (float) resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_offset);
@@ -553,6 +559,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     private void moveStackToStartPosition() {
         this.mLayout.setVisibility(4);
         this.mLayout.post(new Runnable() {
+            /* class com.android.systemui.bubbles.animation.$$Lambda$StackAnimationController$XG5dbVvx6CTopXCQV48uovjmoQo */
+
             public final void run() {
                 StackAnimationController.this.lambda$moveStackToStartPosition$3$StackAnimationController();
             }
@@ -576,7 +584,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     /* access modifiers changed from: private */
-    public void moveFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, float f) {
+    /* access modifiers changed from: public */
+    private void moveFirstBubbleWithStackFollowing(DynamicAnimation.ViewProperty viewProperty, float f) {
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
             this.mStackPosition.x = f;
         } else if (viewProperty.equals(DynamicAnimation.TRANSLATION_Y)) {
@@ -593,7 +602,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     }
 
     public void setStackPosition(PointF pointF) {
-        Log.d("Bubbs.StackCtrl", String.format("Setting position to (%f, %f).", new Object[]{Float.valueOf(pointF.x), Float.valueOf(pointF.y)}));
+        Log.d("Bubbs.StackCtrl", String.format("Setting position to (%f, %f).", Float.valueOf(pointF.x), Float.valueOf(pointF.y)));
         this.mStackPosition.set(pointF.x, pointF.y);
         if (this.mRestingStackPosition == null) {
             this.mRestingStackPosition = new PointF();
@@ -662,7 +671,9 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
 
     public MagnetizedObject<StackAnimationController> getMagnetizedStack(MagnetizedObject.MagneticTarget magneticTarget) {
         if (this.mMagnetizedStack == null) {
-            AnonymousClass2 r1 = new MagnetizedObject<StackAnimationController>(this.mLayout.getContext(), this, new StackPositionProperty(DynamicAnimation.TRANSLATION_X), new StackPositionProperty(DynamicAnimation.TRANSLATION_Y)) {
+            AnonymousClass2 r0 = new MagnetizedObject<StackAnimationController>(this.mLayout.getContext(), this, new StackPositionProperty(DynamicAnimation.TRANSLATION_X), new StackPositionProperty(DynamicAnimation.TRANSLATION_Y)) {
+                /* class com.android.systemui.bubbles.animation.StackAnimationController.AnonymousClass2 */
+
                 public float getWidth(StackAnimationController stackAnimationController) {
                     return (float) StackAnimationController.this.mBubbleSize;
                 }
@@ -676,8 +687,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
                     iArr[1] = (int) StackAnimationController.this.mStackPosition.y;
                 }
             };
-            this.mMagnetizedStack = r1;
-            r1.addTarget(magneticTarget);
+            this.mMagnetizedStack = r0;
+            r0.addTarget(magneticTarget);
             this.mMagnetizedStack.setHapticsEnabled(true);
             this.mMagnetizedStack.setFlingToTargetMinVelocity(4000.0f);
         }
@@ -695,7 +706,8 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         return this.mBubbleCountSupplier.getAsInt();
     }
 
-    private class StackPositionProperty extends FloatPropertyCompat<StackAnimationController> {
+    /* access modifiers changed from: private */
+    public class StackPositionProperty extends FloatPropertyCompat<StackAnimationController> {
         private final DynamicAnimation.ViewProperty mProperty;
 
         private StackPositionProperty(DynamicAnimation.ViewProperty viewProperty) {
@@ -711,7 +723,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         }
 
         public void setValue(StackAnimationController stackAnimationController, float f) {
-            StackAnimationController.this.moveFirstBubbleWithStackFollowing(this.mProperty, f);
+            StackAnimationController.this.moveFirstBubbleWithStackFollowing((StackAnimationController) this.mProperty, (DynamicAnimation.ViewProperty) f);
         }
     }
 }

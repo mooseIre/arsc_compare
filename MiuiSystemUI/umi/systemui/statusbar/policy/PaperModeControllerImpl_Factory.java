@@ -17,6 +17,7 @@ public final class PaperModeControllerImpl_Factory implements Factory<PaperModeC
         this.broadcastDispatcherProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public PaperModeControllerImpl get() {
         return provideInstance(this.contextProvider, this.bgLooperProvider, this.broadcastDispatcherProvider);
     }

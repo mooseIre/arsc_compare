@@ -17,10 +17,11 @@ final class ControlActionCoordinatorImpl$bouncerOrRun$1 implements ActivityStart
         this.$action = action;
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
     public final boolean onDismiss() {
         Log.d("ControlsUiController", "Device unlocked, invoking controls action");
         if (this.$closeGlobalActions.element) {
-            this.this$0.globalActionsComponent.handleShowGlobalActionsMenu();
+            ControlActionCoordinatorImpl.access$getGlobalActionsComponent$p(this.this$0).handleShowGlobalActionsMenu();
             return true;
         }
         this.$action.invoke();

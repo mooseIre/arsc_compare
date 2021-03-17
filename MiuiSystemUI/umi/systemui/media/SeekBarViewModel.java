@@ -20,23 +20,16 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: SeekBarViewModel.kt */
 public final class SeekBarViewModel {
-    /* access modifiers changed from: private */
-    public Progress _data = new Progress(false, false, (Integer) null, (Integer) null);
+    private Progress _data = new Progress(false, false, null, null);
     private final MutableLiveData<Progress> _progress;
     private final RepeatableExecutor bgExecutor;
     private SeekBarViewModel$callback$1 callback;
-    /* access modifiers changed from: private */
-    public Runnable cancel;
-    /* access modifiers changed from: private */
-    public MediaController controller;
-    /* access modifiers changed from: private */
-    public boolean isFalseSeek;
-    /* access modifiers changed from: private */
-    public boolean listening;
-    /* access modifiers changed from: private */
-    public PlaybackState playbackState;
-    /* access modifiers changed from: private */
-    public boolean scrubbing;
+    private Runnable cancel;
+    private MediaController controller;
+    private boolean isFalseSeek;
+    private boolean listening;
+    private PlaybackState playbackState;
+    private boolean scrubbing;
 
     public SeekBarViewModel(@NotNull RepeatableExecutor repeatableExecutor) {
         Intrinsics.checkParameterIsNotNull(repeatableExecutor, "bgExecutor");
@@ -69,7 +62,7 @@ public final class SeekBarViewModel {
         if (mediaController != null) {
             token = mediaController.getSessionToken();
         }
-        if (!Intrinsics.areEqual((Object) sessionToken, (Object) token)) {
+        if (!Intrinsics.areEqual(sessionToken, token)) {
             MediaController mediaController3 = this.controller;
             if (mediaController3 != null) {
                 mediaController3.unregisterCallback(this.callback);
@@ -145,9 +138,9 @@ public final class SeekBarViewModel {
         Integer duration = this._data.getDuration();
         int intValue = duration != null ? duration.intValue() : -1;
         PlaybackState playbackState2 = this.playbackState;
-        Integer valueOf = playbackState2 != null ? Integer.valueOf((int) SeekBarViewModelKt.computePosition(playbackState2, (long) intValue)) : null;
-        if (valueOf != null && (!Intrinsics.areEqual((Object) this._data.getElapsedTime(), (Object) valueOf))) {
-            set_data(Progress.copy$default(this._data, false, false, valueOf, (Integer) null, 11, (Object) null));
+        Integer valueOf = playbackState2 != null ? Integer.valueOf((int) SeekBarViewModelKt.access$computePosition(playbackState2, (long) intValue)) : null;
+        if (valueOf != null && (!Intrinsics.areEqual(this._data.getElapsedTime(), valueOf))) {
+            set_data(Progress.copy$default(this._data, false, false, valueOf, null, 11, null));
         }
     }
 
@@ -156,7 +149,7 @@ public final class SeekBarViewModel {
         boolean z = false;
         if (this.listening && !this.scrubbing) {
             PlaybackState playbackState2 = this.playbackState;
-            if (playbackState2 != null ? SeekBarViewModelKt.isInMotion(playbackState2) : false) {
+            if (playbackState2 != null ? SeekBarViewModelKt.access$isInMotion(playbackState2) : false) {
                 z = true;
             }
         }
@@ -182,8 +175,9 @@ public final class SeekBarViewModel {
         seekBar.setOnTouchListener(new SeekBarTouchListener(this, seekBar));
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: SeekBarViewModel.kt */
-    private static final class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+    public static final class SeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
         @NotNull
         private final SeekBarViewModel viewModel;
 
@@ -210,8 +204,9 @@ public final class SeekBarViewModel {
         }
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: SeekBarViewModel.kt */
-    private static final class SeekBarTouchListener implements View.OnTouchListener, GestureDetector.OnGestureListener {
+    public static final class SeekBarTouchListener implements View.OnTouchListener, GestureDetector.OnGestureListener {
         private final SeekBar bar;
         private final GestureDetectorCompat detector;
         private final int flingVelocity = (ViewConfiguration.get(this.bar.getContext()).getScaledMinimumFlingVelocity() * 10);
@@ -237,7 +232,7 @@ public final class SeekBarViewModel {
         public boolean onTouch(@NotNull View view, @NotNull MotionEvent motionEvent) {
             Intrinsics.checkParameterIsNotNull(view, "view");
             Intrinsics.checkParameterIsNotNull(motionEvent, "event");
-            if (!Intrinsics.areEqual((Object) view, (Object) this.bar)) {
+            if (!Intrinsics.areEqual(view, this.bar)) {
                 return false;
             }
             this.detector.onTouchEvent(motionEvent);
@@ -335,29 +330,32 @@ public final class SeekBarViewModel {
                 return false;
             }
             Progress progress = (Progress) obj;
-            return this.enabled == progress.enabled && this.seekAvailable == progress.seekAvailable && Intrinsics.areEqual((Object) this.elapsedTime, (Object) progress.elapsedTime) && Intrinsics.areEqual((Object) this.duration, (Object) progress.duration);
+            return this.enabled == progress.enabled && this.seekAvailable == progress.seekAvailable && Intrinsics.areEqual(this.elapsedTime, progress.elapsedTime) && Intrinsics.areEqual(this.duration, progress.duration);
         }
 
         public int hashCode() {
             boolean z = this.enabled;
-            boolean z2 = true;
+            int i = 1;
             if (z) {
                 z = true;
             }
-            int i = (z ? 1 : 0) * true;
-            boolean z3 = this.seekAvailable;
-            if (!z3) {
-                z2 = z3;
+            int i2 = z ? 1 : 0;
+            int i3 = z ? 1 : 0;
+            int i4 = z ? 1 : 0;
+            int i5 = i2 * 31;
+            boolean z2 = this.seekAvailable;
+            if (!z2) {
+                i = z2 ? 1 : 0;
             }
-            int i2 = (i + (z2 ? 1 : 0)) * 31;
+            int i6 = (i5 + i) * 31;
             Integer num = this.elapsedTime;
-            int i3 = 0;
-            int hashCode = (i2 + (num != null ? num.hashCode() : 0)) * 31;
+            int i7 = 0;
+            int hashCode = (i6 + (num != null ? num.hashCode() : 0)) * 31;
             Integer num2 = this.duration;
             if (num2 != null) {
-                i3 = num2.hashCode();
+                i7 = num2.hashCode();
             }
-            return hashCode + i3;
+            return hashCode + i7;
         }
 
         @NotNull

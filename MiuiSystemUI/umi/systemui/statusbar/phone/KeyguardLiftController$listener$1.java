@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public final class KeyguardLiftController$listener$1 extends TriggerEventListener {
     final /* synthetic */ KeyguardLiftController this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     KeyguardLiftController$listener$1(KeyguardLiftController keyguardLiftController) {
         this.this$0 = keyguardLiftController;
     }

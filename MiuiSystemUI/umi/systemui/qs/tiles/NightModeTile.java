@@ -22,8 +22,10 @@ import com.android.systemui.qs.tileimpl.QSTileImpl;
 
 public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     private ContentObserver mNightModeObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.qs.tiles.NightModeTile.AnonymousClass1 */
+
         public void onChange(boolean z) {
-            Log.d(NightModeTile.this.TAG, "night mode changed.");
+            Log.d(((QSTileImpl) NightModeTile.this).TAG, "night mode changed.");
             NightModeTile.this.refreshState();
         }
     };
@@ -31,10 +33,12 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     private boolean mShowAlert;
     private final UiModeManager mUiModeManager = ((UiModeManager) this.mContext.getSystemService("uimode"));
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean hideCustomizerAfterClick() {
         return true;
     }
@@ -46,6 +50,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         this.mShowAlert = (!"oled".equals(SystemProperties.get("ro.display.type")) || !Prefs.getBoolean(this.mContext, "QsShowNightAlert", true)) ? false : z;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         String str = this.TAG;
         StringBuilder sb = new StringBuilder();
@@ -69,6 +74,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             this.mResolver.registerContentObserver(Settings.Secure.getUriFor("ui_night_mode"), false, this.mNightModeObserver, -1);
@@ -98,7 +104,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.state = 1;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
@@ -106,22 +112,27 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return ActivityManager.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(C0010R$bool.config_support_night_mode);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_nightmode_label);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.DISPLAY_SETTINGS");
     }
@@ -131,7 +142,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public void run() {
-            AlertDialog create = new AlertDialog.Builder(NightModeTile.this.mContext, C0022R$style.Theme_Dialog_Alert).setMessage(C0021R$string.qs_open_night_mode_alert_summary).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+            AlertDialog create = new AlertDialog.Builder(((QSTileImpl) NightModeTile.this).mContext, C0022R$style.Theme_Dialog_Alert).setMessage(C0021R$string.qs_open_night_mode_alert_summary).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
             create.getWindow().setType(2010);
             create.show();
         }

@@ -87,6 +87,7 @@ public final class MiuiPhoneStatusBarPolicy_Factory implements Factory<MiuiPhone
         this.ringerModeTrackerProvider = provider27;
     }
 
+    @Override // javax.inject.Provider
     public MiuiPhoneStatusBarPolicy get() {
         return provideInstance(this.contextProvider, this.iconControllerProvider, this.commandQueueProvider, this.broadcastDispatcherProvider, this.uiBgExecutorProvider, this.resourcesProvider, this.castControllerProvider, this.hotspotControllerProvider, this.bluetoothControllerProvider, this.nextAlarmControllerProvider, this.userInfoControllerProvider, this.rotationLockControllerProvider, this.dataSaverControllerProvider, this.zenModeControllerProvider, this.deviceProvisionedControllerProvider, this.keyguardStateControllerProvider, this.locationControllerProvider, this.sensorPrivacyControllerProvider, this.iActivityManagerProvider, this.alarmManagerProvider, this.userManagerProvider, this.recordingControllerProvider, this.telecomManagerProvider, this.displayIdProvider, this.sharedPreferencesProvider, this.dateFormatUtilProvider, this.ringerModeTrackerProvider);
     }

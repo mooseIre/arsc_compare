@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$MiuiNotificationMenuRow$sm4UrPGqndr2
     private /* synthetic */ $$Lambda$MiuiNotificationMenuRow$sm4UrPGqndr28nGsxOySExKsjUY() {
     }
 
+    @Override // java.util.function.IntFunction
     public final Object apply(int i) {
         return MiuiNotificationMenuRow.lambda$onClickSnoozeItem$13(i);
     }

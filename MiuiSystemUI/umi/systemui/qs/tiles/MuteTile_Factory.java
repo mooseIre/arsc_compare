@@ -14,6 +14,7 @@ public final class MuteTile_Factory implements Factory<MuteTile> {
         this.zenModeControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MuteTile get() {
         return provideInstance(this.hostProvider, this.zenModeControllerProvider);
     }

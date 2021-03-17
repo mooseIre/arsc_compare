@@ -17,6 +17,7 @@ public final class RingerModeTrackerImpl_Factory implements Factory<RingerModeTr
         this.executorProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public RingerModeTrackerImpl get() {
         return provideInstance(this.audioManagerProvider, this.broadcastDispatcherProvider, this.executorProvider);
     }

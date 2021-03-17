@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$QSPanel$EbHBtJlVwGzmqefWXJDEYuyGlcQ 
     private /* synthetic */ $$Lambda$QSPanel$EbHBtJlVwGzmqefWXJDEYuyGlcQ() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((QSPanel.TileRecord) obj).tile.getTileSpec();
     }

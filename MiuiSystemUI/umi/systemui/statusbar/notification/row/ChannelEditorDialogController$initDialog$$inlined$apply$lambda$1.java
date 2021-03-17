@@ -2,8 +2,9 @@ package com.android.systemui.statusbar.notification.row;
 
 import android.content.DialogInterface;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChannelEditorDialogController.kt */
-final class ChannelEditorDialogController$initDialog$$inlined$apply$lambda$1 implements DialogInterface.OnDismissListener {
+public final class ChannelEditorDialogController$initDialog$$inlined$apply$lambda$1 implements DialogInterface.OnDismissListener {
     final /* synthetic */ ChannelEditorDialogController this$0;
 
     ChannelEditorDialogController$initDialog$$inlined$apply$lambda$1(ChannelEditorDialogController channelEditorDialogController) {

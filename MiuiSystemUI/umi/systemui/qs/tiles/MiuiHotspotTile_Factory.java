@@ -14,6 +14,7 @@ public final class MiuiHotspotTile_Factory implements Factory<MiuiHotspotTile> {
         this.hotspotControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiHotspotTile get() {
         return provideInstance(this.hostProvider, this.hotspotControllerProvider);
     }

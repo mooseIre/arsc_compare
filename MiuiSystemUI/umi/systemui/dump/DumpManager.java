@@ -7,6 +7,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Map;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.text.StringsKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: DumpManager.kt */
@@ -18,7 +19,7 @@ public final class DumpManager {
         Intrinsics.checkParameterIsNotNull(str, "name");
         Intrinsics.checkParameterIsNotNull(dumpable, "module");
         if (canAssignToNameLocked(str, dumpable)) {
-            this.dumpables.put(str, new RegisteredDumpable(str, dumpable));
+            this.dumpables.put(str, new RegisteredDumpable<>(str, dumpable));
         } else {
             throw new IllegalArgumentException('\'' + str + "' is already registered");
         }
@@ -33,7 +34,7 @@ public final class DumpManager {
         Intrinsics.checkParameterIsNotNull(str, "name");
         Intrinsics.checkParameterIsNotNull(logBuffer, "buffer");
         if (canAssignToNameLocked(str, logBuffer)) {
-            this.buffers.put(str, new RegisteredDumpable(str, logBuffer));
+            this.buffers.put(str, new RegisteredDumpable<>(str, logBuffer));
         } else {
             throw new IllegalArgumentException('\'' + str + "' is already registered");
         }
@@ -44,15 +45,15 @@ public final class DumpManager {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
-        for (RegisteredDumpable next : this.dumpables.values()) {
-            if (StringsKt__StringsJVMKt.endsWith$default(next.getName(), str, false, 2, (Object) null)) {
-                dumpDumpable(next, fileDescriptor, printWriter, strArr);
+        for (RegisteredDumpable<Dumpable> registeredDumpable : this.dumpables.values()) {
+            if (StringsKt.endsWith$default(registeredDumpable.getName(), str, false, 2, null)) {
+                dumpDumpable(registeredDumpable, fileDescriptor, printWriter, strArr);
                 return;
             }
         }
-        for (RegisteredDumpable next2 : this.buffers.values()) {
-            if (StringsKt__StringsJVMKt.endsWith$default(next2.getName(), str, false, 2, (Object) null)) {
-                dumpBuffer(next2, printWriter, i);
+        for (RegisteredDumpable<LogBuffer> registeredDumpable2 : this.buffers.values()) {
+            if (StringsKt.endsWith$default(registeredDumpable2.getName(), str, false, 2, null)) {
+                dumpBuffer(registeredDumpable2, printWriter, i);
                 return;
             }
         }
@@ -62,41 +63,41 @@ public final class DumpManager {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
-        for (RegisteredDumpable<Dumpable> dumpDumpable : this.dumpables.values()) {
-            dumpDumpable(dumpDumpable, fileDescriptor, printWriter, strArr);
+        for (RegisteredDumpable<Dumpable> registeredDumpable : this.dumpables.values()) {
+            dumpDumpable(registeredDumpable, fileDescriptor, printWriter, strArr);
         }
     }
 
     public final synchronized void listDumpables(@NotNull PrintWriter printWriter) {
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
-        for (RegisteredDumpable<Dumpable> name : this.dumpables.values()) {
-            printWriter.println(name.getName());
+        for (RegisteredDumpable<Dumpable> registeredDumpable : this.dumpables.values()) {
+            printWriter.println(registeredDumpable.getName());
         }
     }
 
     public final synchronized void dumpBuffers(@NotNull PrintWriter printWriter, int i) {
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
-        for (RegisteredDumpable<LogBuffer> dumpBuffer : this.buffers.values()) {
-            dumpBuffer(dumpBuffer, printWriter, i);
+        for (RegisteredDumpable<LogBuffer> registeredDumpable : this.buffers.values()) {
+            dumpBuffer(registeredDumpable, printWriter, i);
         }
     }
 
     public final synchronized void listBuffers(@NotNull PrintWriter printWriter) {
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
-        for (RegisteredDumpable<LogBuffer> name : this.buffers.values()) {
-            printWriter.println(name.getName());
+        for (RegisteredDumpable<LogBuffer> registeredDumpable : this.buffers.values()) {
+            printWriter.println(registeredDumpable.getName());
         }
     }
 
     public final synchronized void freezeBuffers() {
-        for (RegisteredDumpable<LogBuffer> dumpable : this.buffers.values()) {
-            ((LogBuffer) dumpable.getDumpable()).freeze();
+        for (RegisteredDumpable<LogBuffer> registeredDumpable : this.buffers.values()) {
+            registeredDumpable.getDumpable().freeze();
         }
     }
 
     public final synchronized void unfreezeBuffers() {
-        for (RegisteredDumpable<LogBuffer> dumpable : this.buffers.values()) {
-            ((LogBuffer) dumpable.getDumpable()).unfreeze();
+        for (RegisteredDumpable<LogBuffer> registeredDumpable : this.buffers.values()) {
+            registeredDumpable.getDumpable().unfreeze();
         }
     }
 
@@ -116,12 +117,12 @@ public final class DumpManager {
     }
 
     private final boolean canAssignToNameLocked(String str, Object obj) {
-        Object obj2;
-        RegisteredDumpable registeredDumpable = this.dumpables.get(str);
-        if (registeredDumpable == null || (obj2 = (Dumpable) registeredDumpable.getDumpable()) == null) {
-            RegisteredDumpable registeredDumpable2 = this.buffers.get(str);
-            obj2 = registeredDumpable2 != null ? (LogBuffer) registeredDumpable2.getDumpable() : null;
+        LogBuffer logBuffer;
+        RegisteredDumpable<Dumpable> registeredDumpable = this.dumpables.get(str);
+        if (registeredDumpable == null || (logBuffer = registeredDumpable.getDumpable()) == null) {
+            RegisteredDumpable<LogBuffer> registeredDumpable2 = this.buffers.get(str);
+            logBuffer = registeredDumpable2 != null ? registeredDumpable2.getDumpable() : null;
         }
-        return obj2 == null || Intrinsics.areEqual(obj, obj2);
+        return logBuffer == null || Intrinsics.areEqual(obj, logBuffer);
     }
 }

@@ -19,6 +19,7 @@ final class ControlActionCoordinatorImpl$longPress$1 extends Lambda implements F
         this.$cvh = controlViewHolder;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         Control control = this.$cvh.getCws().getControl();
         if (control != null) {

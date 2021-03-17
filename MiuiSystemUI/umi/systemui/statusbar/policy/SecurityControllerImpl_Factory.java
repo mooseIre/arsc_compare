@@ -20,6 +20,7 @@ public final class SecurityControllerImpl_Factory implements Factory<SecurityCon
         this.bgExecutorProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public SecurityControllerImpl get() {
         return provideInstance(this.contextProvider, this.bgHandlerProvider, this.broadcastDispatcherProvider, this.bgExecutorProvider);
     }

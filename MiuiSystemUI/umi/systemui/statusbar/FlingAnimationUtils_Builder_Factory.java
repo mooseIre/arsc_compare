@@ -12,6 +12,7 @@ public final class FlingAnimationUtils_Builder_Factory implements Factory<FlingA
         this.displayMetricsProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public FlingAnimationUtils.Builder get() {
         return provideInstance(this.displayMetricsProvider);
     }

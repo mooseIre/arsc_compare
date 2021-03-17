@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaCarouselScrollHandler$scrollChangedListener$1 implements View.OnScrollChangeListener {
     final /* synthetic */ MediaCarouselScrollHandler this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaCarouselScrollHandler$scrollChangedListener$1(MediaCarouselScrollHandler mediaCarouselScrollHandler) {
         this.this$0 = mediaCarouselScrollHandler;
     }

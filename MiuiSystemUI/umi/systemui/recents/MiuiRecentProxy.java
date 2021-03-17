@@ -11,11 +11,9 @@ import com.android.systemui.statusbar.CommandQueue;
 
 public class MiuiRecentProxy implements CommandQueue.Callbacks {
     private CommandQueue mCommandQueue;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private Handler mHandler;
-    /* access modifiers changed from: private */
-    public boolean mIsFsgMode = false;
+    private boolean mIsFsgMode = false;
     private boolean mStatusBarHidden;
 
     public MiuiRecentProxy(Context context, CommandQueue commandQueue, Handler handler) {
@@ -26,15 +24,18 @@ public class MiuiRecentProxy implements CommandQueue.Callbacks {
 
     public void start() {
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_fsg_nav_bar"), false, new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.recents.MiuiRecentProxy.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 MiuiRecentProxy miuiRecentProxy = MiuiRecentProxy.this;
-                boolean unused = miuiRecentProxy.mIsFsgMode = MiuiSettings.Global.getBoolean(miuiRecentProxy.mContext.getContentResolver(), "force_fsg_nav_bar");
+                miuiRecentProxy.mIsFsgMode = MiuiSettings.Global.getBoolean(miuiRecentProxy.mContext.getContentResolver(), "force_fsg_nav_bar");
             }
         });
         this.mIsFsgMode = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         boolean z2 = (i2 & 256) != 0;
         if (this.mStatusBarHidden != z2) {

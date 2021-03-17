@@ -23,6 +23,7 @@ public final class DozeParameters_Factory implements Factory<DozeParameters> {
         this.tunerServiceProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public DozeParameters get() {
         return provideInstance(this.resourcesProvider, this.ambientDisplayConfigurationProvider, this.alwaysOnDisplayPolicyProvider, this.powerManagerProvider, this.tunerServiceProvider);
     }

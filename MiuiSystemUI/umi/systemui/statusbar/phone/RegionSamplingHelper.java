@@ -15,29 +15,28 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
     private final SamplingCallback mCallback;
     private float mCurrentMedianLuma;
     private boolean mFirstSamplingAfterStart;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
+    private final Handler mHandler = new Handler();
     private boolean mIsDestroyed;
     private float mLastMedianLuma;
     private final float mLuminanceChangeThreshold;
     private final float mLuminanceThreshold;
     private final Rect mRegisteredSamplingBounds = new Rect();
     private SurfaceControl mRegisteredStopLayer = null;
-    /* access modifiers changed from: private */
-    public Runnable mRemoveDrawRunnable = new Runnable() {
+    private Runnable mRemoveDrawRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.RegionSamplingHelper.AnonymousClass2 */
+
         public void run() {
             RegionSamplingHelper.this.mSampledView.getViewTreeObserver().removeOnDrawListener(RegionSamplingHelper.this.mUpdateOnDraw);
         }
     };
-    /* access modifiers changed from: private */
-    public final View mSampledView;
-    /* access modifiers changed from: private */
-    public boolean mSamplingEnabled = false;
+    private final View mSampledView;
+    private boolean mSamplingEnabled = false;
     private final CompositionSamplingListener mSamplingListener;
     private boolean mSamplingListenerRegistered = false;
     private final Rect mSamplingRequestBounds = new Rect();
-    /* access modifiers changed from: private */
-    public ViewTreeObserver.OnDrawListener mUpdateOnDraw = new ViewTreeObserver.OnDrawListener() {
+    private ViewTreeObserver.OnDrawListener mUpdateOnDraw = new ViewTreeObserver.OnDrawListener() {
+        /* class com.android.systemui.statusbar.phone.RegionSamplingHelper.AnonymousClass1 */
+
         public void onDraw() {
             RegionSamplingHelper.this.mHandler.post(RegionSamplingHelper.this.mRemoveDrawRunnable);
             RegionSamplingHelper.this.onDraw();
@@ -49,7 +48,7 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
     public interface SamplingCallback {
         Rect getSampledRegion(View view);
 
-        boolean isSamplingEnabled() {
+        default boolean isSamplingEnabled() {
             return true;
         }
 
@@ -58,6 +57,8 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
 
     public RegionSamplingHelper(View view, SamplingCallback samplingCallback) {
         this.mSamplingListener = new CompositionSamplingListener(view.getContext().getMainExecutor()) {
+            /* class com.android.systemui.statusbar.phone.RegionSamplingHelper.AnonymousClass3 */
+
             public void onSampleCollected(float f) {
                 if (RegionSamplingHelper.this.mSamplingEnabled) {
                     RegionSamplingHelper.this.updateMediaLuma(f);
@@ -74,7 +75,8 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
     }
 
     /* access modifiers changed from: private */
-    public void onDraw() {
+    /* access modifiers changed from: public */
+    private void onDraw() {
         if (this.mWaitingOnDraw) {
             this.mWaitingOnDraw = false;
             updateSamplingListener();
@@ -157,7 +159,8 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
     }
 
     /* access modifiers changed from: private */
-    public void updateMediaLuma(float f) {
+    /* access modifiers changed from: public */
+    private void updateMediaLuma(float f) {
         this.mCurrentMedianLuma = f;
         if (Math.abs(f - this.mLastMedianLuma) > this.mLuminanceChangeThreshold) {
             this.mCallback.onRegionDarknessChanged(f < this.mLuminanceThreshold);

@@ -14,6 +14,7 @@ public abstract class CustomInterpolatorTransformation extends ViewTransformatio
         this.mViewType = i;
     }
 
+    @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
     public boolean transformTo(TransformState transformState, TransformableView transformableView, float f) {
         TransformState currentState;
         if (!hasCustomTransformation() || (currentState = transformableView.getCurrentState(this.mViewType)) == null) {
@@ -25,6 +26,7 @@ public abstract class CustomInterpolatorTransformation extends ViewTransformatio
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
     public boolean transformFrom(TransformState transformState, TransformableView transformableView, float f) {
         TransformState currentState;
         if (!hasCustomTransformation() || (currentState = transformableView.getCurrentState(this.mViewType)) == null) {

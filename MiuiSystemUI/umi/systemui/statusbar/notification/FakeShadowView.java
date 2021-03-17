@@ -10,14 +10,12 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.AlphaOptimizedFrameLayout;
 
 public class FakeShadowView extends AlphaOptimizedFrameLayout {
-    /* access modifiers changed from: private */
-    public View mFakeShadow;
-    /* access modifiers changed from: private */
-    public float mOutlineAlpha;
+    private View mFakeShadow;
+    private float mOutlineAlpha;
     private final int mShadowMinHeight;
 
     public FakeShadowView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public FakeShadowView(Context context, AttributeSet attributeSet) {
@@ -35,6 +33,8 @@ public class FakeShadowView extends AlphaOptimizedFrameLayout {
         view.setVisibility(4);
         this.mFakeShadow.setLayoutParams(new LinearLayout.LayoutParams(-1, (int) (getResources().getDisplayMetrics().density * 48.0f)));
         this.mFakeShadow.setOutlineProvider(new ViewOutlineProvider() {
+            /* class com.android.systemui.statusbar.notification.FakeShadowView.AnonymousClass1 */
+
             public void getOutline(View view, Outline outline) {
                 outline.setRect(0, 0, FakeShadowView.this.getWidth(), FakeShadowView.this.mFakeShadow.getHeight());
                 outline.setAlpha(FakeShadowView.this.mOutlineAlpha);

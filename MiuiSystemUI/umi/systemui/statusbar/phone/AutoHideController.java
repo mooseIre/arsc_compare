@@ -10,6 +10,8 @@ import com.android.systemui.statusbar.AutoHideUiElement;
 
 public class AutoHideController {
     private final Runnable mAutoHide = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$AutoHideController$sJYAhc6qJ_sO_ZdtlpSd2BPK504 */
+
         public final void run() {
             AutoHideController.this.lambda$new$0$AutoHideController();
         }
@@ -91,6 +93,8 @@ public class AutoHideController {
     private Runnable getCheckBarModesRunnable() {
         if (this.mStatusBar != null) {
             return new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$AutoHideController$Dw54NegELGCFcbvVgChoOa9gkLA */
+
                 public final void run() {
                     AutoHideController.this.lambda$getCheckBarModesRunnable$1$AutoHideController();
                 }
@@ -98,6 +102,8 @@ public class AutoHideController {
         }
         if (this.mNavigationBar != null) {
             return new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$AutoHideController$FON87SM6b42jIBTAjBTcUbKIM */
+
                 public final void run() {
                     AutoHideController.this.lambda$getCheckBarModesRunnable$2$AutoHideController();
                 }

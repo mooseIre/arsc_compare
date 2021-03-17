@@ -5,7 +5,7 @@ public interface AutoHideUiElement {
 
     boolean isVisible();
 
-    boolean shouldHideOnTouch() {
+    default boolean shouldHideOnTouch() {
         return true;
     }
 

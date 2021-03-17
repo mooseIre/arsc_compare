@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvidesViewMediatorCallbackFactory implem
         this.viewMediatorProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ViewMediatorCallback get() {
         return provideInstance(this.module, this.viewMediatorProvider);
     }

@@ -6,6 +6,7 @@ import dagger.internal.Factory;
 public final class PriorityOnboardingDialogController_Builder_Factory implements Factory<PriorityOnboardingDialogController.Builder> {
     private static final PriorityOnboardingDialogController_Builder_Factory INSTANCE = new PriorityOnboardingDialogController_Builder_Factory();
 
+    @Override // javax.inject.Provider
     public PriorityOnboardingDialogController.Builder get() {
         return provideInstance();
     }

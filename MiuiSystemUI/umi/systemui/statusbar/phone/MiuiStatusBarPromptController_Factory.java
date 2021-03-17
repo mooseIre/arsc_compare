@@ -11,6 +11,7 @@ public final class MiuiStatusBarPromptController_Factory implements Factory<Miui
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiStatusBarPromptController get() {
         return provideInstance(this.contextProvider);
     }

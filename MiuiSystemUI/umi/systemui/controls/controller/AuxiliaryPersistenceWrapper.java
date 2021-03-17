@@ -1,6 +1,5 @@
 package com.android.systemui.controls.controller;
 
-import android.app.backup.BackupManager;
 import android.app.job.JobInfo;
 import android.app.job.JobParameters;
 import android.app.job.JobService;
@@ -14,6 +13,8 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import kotlin.Pair;
+import kotlin.collections.CollectionsKt__CollectionsKt;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ public final class AuxiliaryPersistenceWrapper {
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public AuxiliaryPersistenceWrapper(@NotNull File file, @NotNull Executor executor) {
-        this(new ControlsFavoritePersistenceWrapper(file, executor, (BackupManager) null, 4, (DefaultConstructorMarker) null));
+        this(new ControlsFavoritePersistenceWrapper(file, executor, null, 4, null));
         Intrinsics.checkParameterIsNotNull(file, "file");
         Intrinsics.checkParameterIsNotNull(executor, "executor");
     }
@@ -46,7 +47,7 @@ public final class AuxiliaryPersistenceWrapper {
 
     public final void changeFile(@NotNull File file) {
         Intrinsics.checkParameterIsNotNull(file, "file");
-        this.persistenceWrapper.changeFileAndBackupManager(file, (BackupManager) null);
+        this.persistenceWrapper.changeFileAndBackupManager(file, null);
         initialize();
     }
 
@@ -69,11 +70,11 @@ public final class AuxiliaryPersistenceWrapper {
         List<StructureInfo> list = this.favorites;
         ArrayList arrayList = new ArrayList();
         ArrayList arrayList2 = new ArrayList();
-        for (T next : list) {
-            if (Intrinsics.areEqual((Object) ((StructureInfo) next).getComponentName(), (Object) componentName)) {
-                arrayList.add(next);
+        for (T t : list) {
+            if (Intrinsics.areEqual(t.getComponentName(), componentName)) {
+                arrayList.add(t);
             } else {
-                arrayList2.add(next);
+                arrayList2.add(t);
             }
         }
         Pair pair = new Pair(arrayList, arrayList2);
@@ -90,11 +91,9 @@ public final class AuxiliaryPersistenceWrapper {
 
     /* compiled from: AuxiliaryPersistenceWrapper.kt */
     public static final class DeletionJobService extends JobService {
-        public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-        /* access modifiers changed from: private */
-        public static final int DELETE_FILE_JOB_ID = 1000;
-        /* access modifiers changed from: private */
-        public static final long WEEK_IN_MILLIS = TimeUnit.DAYS.toMillis(7);
+        public static final Companion Companion = new Companion(null);
+        private static final int DELETE_FILE_JOB_ID = 1000;
+        private static final long WEEK_IN_MILLIS = TimeUnit.DAYS.toMillis(7);
 
         public boolean onStopJob(@Nullable JobParameters jobParameters) {
             return true;

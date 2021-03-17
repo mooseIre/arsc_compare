@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NearestTouchFrame$NP6mvtRuXVTLLChUNb
     private /* synthetic */ $$Lambda$NearestTouchFrame$NP6mvtRuXVTLLChUNbbl4JUIMyU() {
     }
 
+    @Override // java.util.function.ToIntFunction
     public final int applyAsInt(Object obj) {
         return ((Integer) ((Pair) obj).first).intValue();
     }

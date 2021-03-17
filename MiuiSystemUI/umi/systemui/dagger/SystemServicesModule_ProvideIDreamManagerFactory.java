@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemServicesModule_ProvideIDreamManagerFactory implements Factory<IDreamManager> {
     private static final SystemServicesModule_ProvideIDreamManagerFactory INSTANCE = new SystemServicesModule_ProvideIDreamManagerFactory();
 
+    @Override // javax.inject.Provider
     public IDreamManager get() {
         return provideInstance();
     }

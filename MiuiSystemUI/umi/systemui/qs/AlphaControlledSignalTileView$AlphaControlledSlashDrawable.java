@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 
 public class AlphaControlledSignalTileView$AlphaControlledSlashDrawable extends SlashDrawable {
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.SlashDrawable
     public void setDrawableTintList(ColorStateList colorStateList) {
     }
 

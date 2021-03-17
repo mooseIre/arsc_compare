@@ -11,6 +11,7 @@ public final class MiuiFlashlightHelper_Factory implements Factory<MiuiFlashligh
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiFlashlightHelper get() {
         return provideInstance(this.contextProvider);
     }

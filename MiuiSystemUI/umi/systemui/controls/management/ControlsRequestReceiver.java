@@ -8,12 +8,13 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.UserHandle;
 import android.util.Log;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: ControlsRequestReceiver.kt */
 public final class ControlsRequestReceiver extends BroadcastReceiver {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
 
     /* compiled from: ControlsRequestReceiver.kt */
     public static final class Companion {

@@ -31,6 +31,8 @@ public final class SmartReplyConstants {
     private volatile int mMinNumSystemGeneratedReplies;
     private volatile long mOnClickInitDelay;
     private final DeviceConfig.OnPropertiesChangedListener mOnPropertiesChangedListener = new DeviceConfig.OnPropertiesChangedListener() {
+        /* class com.android.systemui.statusbar.policy.SmartReplyConstants.AnonymousClass1 */
+
         public void onPropertiesChanged(DeviceConfig.Properties properties) {
             if (!"systemui".equals(properties.getNamespace())) {
                 Log.e("SmartReplyConstants", "Received update from DeviceConfig for unrelated namespace: " + properties.getNamespace());
@@ -62,6 +64,8 @@ public final class SmartReplyConstants {
 
     private void registerDeviceConfigListener() {
         this.mDeviceConfig.addOnPropertiesChangedListener("systemui", new Executor() {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$SmartReplyConstants$6OXW9pAAXeePuUfPuGxYU98bifc */
+
             public final void execute(Runnable runnable) {
                 SmartReplyConstants.this.postToHandler(runnable);
             }
@@ -74,7 +78,8 @@ public final class SmartReplyConstants {
     }
 
     /* access modifiers changed from: private */
-    public void updateConstants() {
+    /* access modifiers changed from: public */
+    private void updateConstants() {
         synchronized (this) {
             this.mEnabled = readDeviceConfigBooleanOrDefaultIfEmpty("ssin_enabled", this.mDefaultEnabled);
             this.mRequiresTargetingP = readDeviceConfigBooleanOrDefaultIfEmpty("ssin_requires_targeting_p", this.mDefaultRequiresP);

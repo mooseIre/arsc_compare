@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$0FLZQAxNoOm85ohJ3bgjkYQDWsU implemen
     private /* synthetic */ $$Lambda$0FLZQAxNoOm85ohJ3bgjkYQDWsU() {
     }
 
+    @Override // com.android.systemui.pip.PipSurfaceTransactionHelper.SurfaceControlTransactionFactory
     public final SurfaceControl.Transaction getTransaction() {
         return new SurfaceControl.Transaction();
     }

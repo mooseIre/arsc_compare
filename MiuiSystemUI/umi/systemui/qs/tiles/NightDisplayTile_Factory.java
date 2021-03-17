@@ -14,6 +14,7 @@ public final class NightDisplayTile_Factory implements Factory<NightDisplayTile>
         this.locationControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NightDisplayTile get() {
         return provideInstance(this.hostProvider, this.locationControllerProvider);
     }

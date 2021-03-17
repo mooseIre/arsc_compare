@@ -22,6 +22,7 @@ public final class RecordingService_Factory implements Factory<RecordingService>
         this.userContextTrackerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public RecordingService get() {
         return provideInstance(this.controllerProvider, this.executorProvider, this.uiEventLoggerProvider, this.notificationManagerProvider, this.userContextTrackerProvider);
     }

@@ -46,7 +46,8 @@ public class WeakIdentityHashMap<K, V> {
         return this.mMap.isEmpty();
     }
 
-    private static class CmpWeakReference<K> extends WeakReference<K> {
+    /* access modifiers changed from: private */
+    public static class CmpWeakReference<K> extends WeakReference<K> {
         private final int mHashCode;
 
         public CmpWeakReference(K k) {
@@ -67,10 +68,7 @@ public class WeakIdentityHashMap<K, V> {
             if (obj2 == null || !(obj instanceof CmpWeakReference)) {
                 return false;
             }
-            if (((CmpWeakReference) obj).get() == obj2) {
-                return true;
-            }
-            return false;
+            return ((CmpWeakReference) obj).get() == obj2;
         }
 
         public int hashCode() {

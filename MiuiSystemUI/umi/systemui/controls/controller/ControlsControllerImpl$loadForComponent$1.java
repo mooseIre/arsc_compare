@@ -3,8 +3,9 @@ package com.android.systemui.controls.controller;
 import android.content.ComponentName;
 import java.util.function.Consumer;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsControllerImpl.kt */
-final class ControlsControllerImpl$loadForComponent$1 implements Runnable {
+public final class ControlsControllerImpl$loadForComponent$1 implements Runnable {
     final /* synthetic */ Consumer $cancelWrapper;
     final /* synthetic */ ComponentName $componentName;
     final /* synthetic */ Consumer $dataCallback;

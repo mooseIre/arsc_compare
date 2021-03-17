@@ -16,7 +16,6 @@ import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import java.util.concurrent.Executor;
 
 public class SystemUIDialog extends AlertDialog {
     private final Context mContext;
@@ -91,6 +90,8 @@ public class SystemUIDialog extends AlertDialog {
     public static void registerDismissListener(Dialog dialog) {
         DismissReceiver dismissReceiver = new DismissReceiver(dialog);
         dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$SystemUIDialog$aJwQFxZ3HhCkUHQluqH61p2yCMc */
+
             public final void onDismiss(DialogInterface dialogInterface) {
                 SystemUIDialog.DismissReceiver.this.unregister();
             }
@@ -98,7 +99,8 @@ public class SystemUIDialog extends AlertDialog {
         dismissReceiver.register();
     }
 
-    private static class DismissReceiver extends BroadcastReceiver {
+    /* access modifiers changed from: private */
+    public static class DismissReceiver extends BroadcastReceiver {
         private static final IntentFilter INTENT_FILTER;
         private final BroadcastDispatcher mBroadcastDispatcher = ((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class));
         private final Dialog mDialog;
@@ -117,7 +119,7 @@ public class SystemUIDialog extends AlertDialog {
 
         /* access modifiers changed from: package-private */
         public void register() {
-            this.mBroadcastDispatcher.registerReceiver(this, INTENT_FILTER, (Executor) null, UserHandle.CURRENT);
+            this.mBroadcastDispatcher.registerReceiver(this, INTENT_FILTER, null, UserHandle.CURRENT);
             this.mRegistered = true;
         }
 

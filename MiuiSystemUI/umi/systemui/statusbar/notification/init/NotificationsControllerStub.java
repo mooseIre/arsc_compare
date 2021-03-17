@@ -17,21 +17,26 @@ import org.jetbrains.annotations.NotNull;
 public final class NotificationsControllerStub implements NotificationsController {
     private final NotificationListener notificationListener;
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public int getActiveNotificationsCount() {
         return 0;
     }
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public void requestNotificationUpdate(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "reason");
     }
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public void resetUserExpandedStates() {
     }
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public void setNotificationSnoozed(@NotNull StatusBarNotification statusBarNotification, int i) {
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
     }
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public void setNotificationSnoozed(@NotNull StatusBarNotification statusBarNotification, @NotNull NotificationSwipeActionHelper.SnoozeOption snoozeOption) {
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
         Intrinsics.checkParameterIsNotNull(snoozeOption, "snoozeOption");
@@ -42,6 +47,7 @@ public final class NotificationsControllerStub implements NotificationsControlle
         this.notificationListener = notificationListener2;
     }
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public void initialize(@NotNull StatusBar statusBar, @NotNull NotificationPresenter notificationPresenter, @NotNull NotificationListContainer notificationListContainer, @NotNull NotificationActivityStarter notificationActivityStarter, @NotNull NotificationRowBinderImpl.BindRowCallback bindRowCallback) {
         Intrinsics.checkParameterIsNotNull(statusBar, "statusBar");
         Intrinsics.checkParameterIsNotNull(notificationPresenter, "presenter");
@@ -51,6 +57,7 @@ public final class NotificationsControllerStub implements NotificationsControlle
         this.notificationListener.registerAsSystemService();
     }
 
+    @Override // com.android.systemui.statusbar.notification.init.NotificationsController
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr, boolean z) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");

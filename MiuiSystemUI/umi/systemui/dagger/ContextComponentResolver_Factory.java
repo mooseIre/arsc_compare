@@ -24,6 +24,7 @@ public final class ContextComponentResolver_Factory implements Factory<ContextCo
         this.broadcastReceiverCreatorsProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public ContextComponentResolver get() {
         return provideInstance(this.activityCreatorsProvider, this.serviceCreatorsProvider, this.systemUICreatorsProvider, this.recentsCreatorsProvider, this.broadcastReceiverCreatorsProvider);
     }

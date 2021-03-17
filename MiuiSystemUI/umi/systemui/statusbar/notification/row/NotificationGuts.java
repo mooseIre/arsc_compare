@@ -25,15 +25,13 @@ public class NotificationGuts extends FrameLayout {
     private int mClipBottomAmount;
     private int mClipTopAmount;
     private OnGutsClosedListener mClosedListener;
-    /* access modifiers changed from: private */
-    public boolean mExposed;
+    private boolean mExposed;
     private Runnable mFalsingCheck;
     private GutsContent mGutsContent;
     private View.AccessibilityDelegate mGutsContentAccessibilityDelegate;
     private Handler mHandler;
     private OnHeightChangedListener mHeightListener;
-    /* access modifiers changed from: private */
-    public boolean mNeedsFalsingProtection;
+    private boolean mNeedsFalsingProtection;
 
     public interface GutsContent {
         int getActualHeight();
@@ -42,13 +40,13 @@ public class NotificationGuts extends FrameLayout {
 
         boolean handleCloseControls(boolean z, boolean z2);
 
-        boolean isLeavebehind() {
+        default boolean isLeavebehind() {
             return false;
         }
 
         boolean needsFalsingProtection();
 
-        void onFinishedClosing() {
+        default void onFinishedClosing() {
         }
 
         void setAccessibilityDelegate(View.AccessibilityDelegate accessibilityDelegate);
@@ -75,6 +73,8 @@ public class NotificationGuts extends FrameLayout {
     public NotificationGuts(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mGutsContentAccessibilityDelegate = new View.AccessibilityDelegate() {
+            /* class com.android.systemui.statusbar.notification.row.NotificationGuts.AnonymousClass1 */
+
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_LONG_CLICK);
@@ -94,6 +94,8 @@ public class NotificationGuts extends FrameLayout {
         setWillNotDraw(false);
         this.mHandler = new Handler();
         this.mFalsingCheck = new Runnable() {
+            /* class com.android.systemui.statusbar.notification.row.NotificationGuts.AnonymousClass2 */
+
             public void run() {
                 if (NotificationGuts.this.mNeedsFalsingProtection && NotificationGuts.this.mExposed) {
                     NotificationGuts.this.closeControls(-1, -1, false, false);
@@ -104,7 +106,7 @@ public class NotificationGuts extends FrameLayout {
     }
 
     public NotificationGuts(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public void setGutsContent(GutsContent gutsContent) {
@@ -143,7 +145,7 @@ public class NotificationGuts extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        Drawable drawable = this.mContext.getDrawable(C0013R$drawable.notification_guts_bg);
+        Drawable drawable = ((FrameLayout) this).mContext.getDrawable(C0013R$drawable.notification_guts_bg);
         this.mBackground = drawable;
         if (drawable != null) {
             drawable.setCallback(this);
@@ -197,7 +199,8 @@ public class NotificationGuts extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void closeControls(int i, int i2, boolean z, boolean z2) {
+    /* access modifiers changed from: public */
+    private void closeControls(int i, int i2, boolean z, boolean z2) {
         boolean dismissCurrentBlockingHelper = ((NotificationBlockingHelperManager) Dependency.get(NotificationBlockingHelperManager.class)).dismissCurrentBlockingHelper();
         if (getWindowToken() == null) {
             OnGutsClosedListener onGutsClosedListener = this.mClosedListener;
@@ -329,7 +332,8 @@ public class NotificationGuts extends FrameLayout {
         return gutsContent != null && gutsContent.isLeavebehind();
     }
 
-    private static class AnimateOpenListener extends AnimatorListenerAdapter {
+    /* access modifiers changed from: private */
+    public static class AnimateOpenListener extends AnimatorListenerAdapter {
         final Runnable mOnAnimationEnd;
 
         private AnimateOpenListener(Runnable runnable) {
@@ -345,7 +349,8 @@ public class NotificationGuts extends FrameLayout {
         }
     }
 
-    private class AnimateCloseListener extends AnimatorListenerAdapter {
+    /* access modifiers changed from: private */
+    public class AnimateCloseListener extends AnimatorListenerAdapter {
         private final GutsContent mGutsContent;
         final View mView;
 

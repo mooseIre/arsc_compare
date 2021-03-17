@@ -12,10 +12,8 @@ import android.view.ViewRootImpl;
 
 public class SyncRtSurfaceTransactionApplierCompat {
     private Runnable mAfterApplyCallback;
-    /* access modifiers changed from: private */
-    public final Handler mApplyHandler;
-    /* access modifiers changed from: private */
-    public final SurfaceControl mBarrierSurfaceControl;
+    private final Handler mApplyHandler;
+    private final SurfaceControl mBarrierSurfaceControl;
     private int mPendingSequenceNumber = 0;
     private int mSequenceNumber = 0;
     private final ViewRootImpl mTargetViewRootImpl;
@@ -26,6 +24,8 @@ public class SyncRtSurfaceTransactionApplierCompat {
         this.mTargetViewRootImpl = viewRootImpl;
         this.mBarrierSurfaceControl = viewRootImpl != null ? viewRootImpl.getRenderSurfaceControl() : surfaceControl;
         this.mApplyHandler = new Handler(new Handler.Callback() {
+            /* class com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat.AnonymousClass1 */
+
             public boolean handleMessage(Message message) {
                 if (message.what != 0) {
                     return false;
@@ -37,7 +37,8 @@ public class SyncRtSurfaceTransactionApplierCompat {
     }
 
     /* access modifiers changed from: private */
-    public void onApplyMessage(int i) {
+    /* access modifiers changed from: public */
+    private void onApplyMessage(int i) {
         Runnable runnable;
         this.mSequenceNumber = i;
         if (i == this.mPendingSequenceNumber && (runnable = this.mAfterApplyCallback) != null) {
@@ -52,6 +53,8 @@ public class SyncRtSurfaceTransactionApplierCompat {
             final int i = this.mPendingSequenceNumber + 1;
             this.mPendingSequenceNumber = i;
             this.mTargetViewRootImpl.registerRtFrameCallback(new HardwareRenderer.FrameDrawingCallback() {
+                /* class com.android.systemui.shared.system.SyncRtSurfaceTransactionApplierCompat.AnonymousClass2 */
+
                 public void onFrameDraw(long j) {
                     if (SyncRtSurfaceTransactionApplierCompat.this.mBarrierSurfaceControl == null || !SyncRtSurfaceTransactionApplierCompat.this.mBarrierSurfaceControl.isValid()) {
                         Message.obtain(SyncRtSurfaceTransactionApplierCompat.this.mApplyHandler, 0, i, 0).sendToTarget();

@@ -14,7 +14,6 @@ import android.media.session.MediaController;
 import android.media.session.MediaSession;
 import android.media.session.MediaSessionManager;
 import android.media.session.PlaybackState;
-import android.os.Handler;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
@@ -30,13 +29,14 @@ public class PipMediaController {
     private final IActivityManager mActivityManager;
     private final Context mContext;
     private ArrayList<ActionListener> mListeners = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public MediaController mMediaController;
+    private MediaController mMediaController;
     private final MediaSessionManager mMediaSessionManager;
     private RemoteAction mNextAction;
     private RemoteAction mPauseAction;
     private RemoteAction mPlayAction;
     private BroadcastReceiver mPlayPauseActionReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.pip.phone.PipMediaController.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action.equals("com.android.systemui.pip.phone.PLAY")) {
@@ -51,12 +51,17 @@ public class PipMediaController {
         }
     };
     private final MediaController.Callback mPlaybackChangedListener = new MediaController.Callback() {
+        /* class com.android.systemui.pip.phone.PipMediaController.AnonymousClass2 */
+
         public void onPlaybackStateChanged(PlaybackState playbackState) {
             PipMediaController.this.notifyActionsChanged();
         }
     };
     private RemoteAction mPrevAction;
     private final MediaSessionManager.OnActiveSessionsChangedListener mSessionsChangedListener = new MediaSessionManager.OnActiveSessionsChangedListener() {
+        /* class com.android.systemui.pip.phone.PipMediaController.AnonymousClass3 */
+
+        @Override // android.media.session.MediaSessionManager.OnActiveSessionsChangedListener
         public void onActiveSessionsChanged(List<MediaController> list) {
             PipMediaController.this.resolveActiveMediaController(list);
         }
@@ -78,6 +83,9 @@ public class PipMediaController {
         createMediaActions();
         this.mMediaSessionManager = (MediaSessionManager) context.getSystemService("media_session");
         ((UserInfoController) Dependency.get(UserInfoController.class)).addCallback(new UserInfoController.OnUserInfoChangedListener() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMediaController$neOVZxIcmRkhimcM6huwsIEiXEw */
+
+            @Override // com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener
             public final void onUserInfoChanged(String str, Drawable drawable, String str2) {
                 PipMediaController.this.lambda$new$0$PipMediaController(str, drawable, str2);
             }
@@ -91,7 +99,7 @@ public class PipMediaController {
     }
 
     public void onActivityPinned() {
-        resolveActiveMediaController(this.mMediaSessionManager.getActiveSessionsForUser((ComponentName) null, -2));
+        resolveActiveMediaController(this.mMediaSessionManager.getActiveSessionsForUser(null, -2));
     }
 
     public void addListener(ActionListener actionListener) {
@@ -144,11 +152,12 @@ public class PipMediaController {
 
     private void registerSessionListenerForCurrentUser() {
         this.mMediaSessionManager.removeOnActiveSessionsChangedListener(this.mSessionsChangedListener);
-        this.mMediaSessionManager.addOnActiveSessionsChangedListener(this.mSessionsChangedListener, (ComponentName) null, -2, (Handler) null);
+        this.mMediaSessionManager.addOnActiveSessionsChangedListener(this.mSessionsChangedListener, null, -2, null);
     }
 
     /* access modifiers changed from: private */
-    public void resolveActiveMediaController(List<MediaController> list) {
+    /* access modifiers changed from: public */
+    private void resolveActiveMediaController(List<MediaController> list) {
         ComponentName componentName;
         if (!(list == null || (componentName = (ComponentName) PipUtils.getTopPipActivity(this.mContext, this.mActivityManager).first) == null)) {
             for (int i = 0; i < list.size(); i++) {
@@ -159,7 +168,7 @@ public class PipMediaController {
                 }
             }
         }
-        setActiveMediaController((MediaController) null);
+        setActiveMediaController(null);
     }
 
     private void setActiveMediaController(MediaController mediaController) {
@@ -177,15 +186,18 @@ public class PipMediaController {
     }
 
     /* access modifiers changed from: private */
-    public void notifyActionsChanged() {
+    /* access modifiers changed from: public */
+    private void notifyActionsChanged() {
         if (!this.mListeners.isEmpty()) {
             this.mListeners.forEach(new Consumer(getMediaActions()) {
+                /* class com.android.systemui.pip.phone.$$Lambda$PipMediaController$PGZH9Rcf3EMC5cibv13aaStfc2E */
                 public final /* synthetic */ List f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((PipMediaController.ActionListener) obj).onMediaActionsChanged(this.f$0);
                 }

@@ -17,6 +17,7 @@ public final class ControlsUiControllerImpl$createDropDown$3$onClick$$inlined$ap
         this.this$0 = controlsUiControllerImpl$createDropDown$3;
     }
 
+    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(@NotNull AdapterView<?> adapterView, @NotNull View view, int i, long j) {
         Intrinsics.checkParameterIsNotNull(adapterView, "parent");
         Intrinsics.checkParameterIsNotNull(view, "view");

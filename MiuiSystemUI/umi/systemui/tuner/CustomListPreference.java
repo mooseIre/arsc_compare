@@ -57,12 +57,15 @@ public class CustomListPreference extends ListPreference {
         }
 
         /* access modifiers changed from: protected */
+        @Override // androidx.preference.ListPreferenceDialogFragment, androidx.preference.PreferenceDialogFragment
         public void onPrepareDialogBuilder(AlertDialog.Builder builder) {
             super.onPrepareDialogBuilder(builder);
             this.mClickedDialogEntryIndex = getCustomizablePreference().findIndexOfValue(getCustomizablePreference().getValue());
             getCustomizablePreference().onPrepareDialogBuilder(builder, getOnItemClickListener());
             if (!getCustomizablePreference().isAutoClosePreference()) {
                 builder.setPositiveButton(17039370, new DialogInterface.OnClickListener() {
+                    /* class com.android.systemui.tuner.CustomListPreference.CustomListPreferenceDialogFragment.AnonymousClass1 */
+
                     public void onClick(DialogInterface dialogInterface, int i) {
                         CustomListPreferenceDialogFragment.this.onItemConfirmed();
                     }
@@ -70,6 +73,7 @@ public class CustomListPreference extends ListPreference {
             }
         }
 
+        @Override // androidx.preference.PreferenceDialogFragment
         public Dialog onCreateDialog(Bundle bundle) {
             Dialog onCreateDialog = super.onCreateDialog(bundle);
             if (bundle != null) {
@@ -78,6 +82,7 @@ public class CustomListPreference extends ListPreference {
             return getCustomizablePreference().onDialogCreated(this, onCreateDialog);
         }
 
+        @Override // androidx.preference.ListPreferenceDialogFragment, androidx.preference.PreferenceDialogFragment
         public void onSaveInstanceState(Bundle bundle) {
             super.onSaveInstanceState(bundle);
             bundle.putInt("settings.CustomListPrefDialog.KEY_CLICKED_ENTRY_INDEX", this.mClickedDialogEntryIndex);
@@ -91,6 +96,8 @@ public class CustomListPreference extends ListPreference {
         /* access modifiers changed from: protected */
         public DialogInterface.OnClickListener getOnItemClickListener() {
             return new DialogInterface.OnClickListener() {
+                /* class com.android.systemui.tuner.CustomListPreference.CustomListPreferenceDialogFragment.AnonymousClass2 */
+
                 public void onClick(DialogInterface dialogInterface, int i) {
                     CustomListPreferenceDialogFragment.this.setClickedDialogEntryIndex(i);
                     if (CustomListPreferenceDialogFragment.this.getCustomizablePreference().isAutoClosePreference()) {
@@ -119,6 +126,7 @@ public class CustomListPreference extends ListPreference {
             getDialog().dismiss();
         }
 
+        @Override // androidx.preference.ListPreferenceDialogFragment, androidx.preference.PreferenceDialogFragment
         public void onDialogClosed(boolean z) {
             getCustomizablePreference().onDialogClosed(z);
             CustomListPreference customizablePreference = getCustomizablePreference();

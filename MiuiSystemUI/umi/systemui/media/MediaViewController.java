@@ -30,13 +30,10 @@ public final class MediaViewController {
     private final ConstraintSet collapsedLayout = new ConstraintSet();
     private final ConfigurationController configurationController;
     private final MediaViewController$configurationListener$1 configurationListener = new MediaViewController$configurationListener$1(this);
-    /* access modifiers changed from: private */
-    public int currentEndLocation = -1;
+    private int currentEndLocation = -1;
     private int currentHeight;
-    /* access modifiers changed from: private */
-    public int currentStartLocation = -1;
-    /* access modifiers changed from: private */
-    public float currentTransitionProgress = 1.0f;
+    private int currentStartLocation = -1;
+    private float currentTransitionProgress = 1.0f;
     private int currentWidth;
     @NotNull
     private final ConstraintSet expandedLayout = new ConstraintSet();
@@ -48,12 +45,11 @@ public final class MediaViewController {
     public Function0<Unit> sizeChangedListener;
     @NotNull
     private final MediaHostStatesManager.Callback stateCallback = new MediaViewController$stateCallback$1(this);
-    private final CacheKey tmpKey = new CacheKey(0, 0, 0.0f, 7, (DefaultConstructorMarker) null);
+    private final CacheKey tmpKey = new CacheKey(0, 0, 0.0f, 7, null);
     private final TransitionViewState tmpState = new TransitionViewState();
     private final TransitionViewState tmpState2 = new TransitionViewState();
     private final TransitionViewState tmpState3 = new TransitionViewState();
-    /* access modifiers changed from: private */
-    public TransitionLayout transitionLayout;
+    private TransitionLayout transitionLayout;
     private final Map<CacheKey, TransitionViewState> viewStates = new LinkedHashMap();
 
     public MediaViewController(@NotNull Context context, @NotNull ConfigurationController configurationController2, @NotNull MediaHostStatesManager mediaHostStatesManager2) {
@@ -66,14 +62,18 @@ public final class MediaViewController {
         this.expandedLayout.load(context, C0023R$xml.media_expanded);
         this.mediaHostStatesManager.addController(this);
         this.layoutController.setSizeChangedListener(new Function2<Integer, Integer, Unit>(this) {
+            /* class com.android.systemui.media.MediaViewController.AnonymousClass1 */
             final /* synthetic */ MediaViewController this$0;
 
             {
                 this.this$0 = r1;
             }
 
-            public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2) {
-                invoke(((Number) obj).intValue(), ((Number) obj2).intValue());
+            /* Return type fixed from 'java.lang.Object' to match base method */
+            /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+            @Override // kotlin.jvm.functions.Function2
+            public /* bridge */ /* synthetic */ Unit invoke(Integer num, Integer num2) {
+                invoke(num.intValue(), num2.intValue());
                 return Unit.INSTANCE;
             }
 
@@ -154,8 +154,8 @@ public final class MediaViewController {
     }
 
     private final void ensureAllMeasurements() {
-        for (Map.Entry<Integer, MediaHostState> value : this.mediaHostStatesManager.getMediaHostStates().entrySet()) {
-            obtainViewState((MediaHostState) value.getValue());
+        for (Map.Entry<Integer, MediaHostState> entry : this.mediaHostStatesManager.getMediaHostStates().entrySet()) {
+            obtainViewState(entry.getValue());
         }
     }
 
@@ -173,7 +173,7 @@ public final class MediaViewController {
         if (transitionViewState != null) {
             return transitionViewState;
         }
-        CacheKey copy$default = CacheKey.copy$default(cacheKey, 0, 0, 0.0f, 7, (Object) null);
+        CacheKey copy$default = CacheKey.copy$default(cacheKey, 0, 0, 0.0f, 7, null);
         if (this.transitionLayout == null) {
             return null;
         }
@@ -200,7 +200,7 @@ public final class MediaViewController {
             copy2.setExpansion(1.0f);
             TransitionViewState obtainViewState2 = obtainViewState(copy2);
             if (obtainViewState2 != null) {
-                return TransitionLayoutController.getInterpolatedState$default(this.layoutController, obtainViewState, obtainViewState2, mediaHostState.getExpansion(), (TransitionViewState) null, 8, (Object) null);
+                return TransitionLayoutController.getInterpolatedState$default(this.layoutController, obtainViewState, obtainViewState2, mediaHostState.getExpansion(), null, 8, null);
             }
             throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.util.animation.TransitionViewState");
         }

@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotifCollectionLogger.kt */
-final class NotifCollectionLogger$logDismissAll$2 extends Lambda implements Function1<LogMessage, String> {
+public final class NotifCollectionLogger$logDismissAll$2 extends Lambda implements Function1<LogMessage, String> {
     public static final NotifCollectionLogger$logDismissAll$2 INSTANCE = new NotifCollectionLogger$logDismissAll$2();
 
     NotifCollectionLogger$logDismissAll$2() {

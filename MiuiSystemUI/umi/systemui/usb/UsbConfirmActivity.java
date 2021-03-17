@@ -31,7 +31,8 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
     private UsbDisconnectedReceiver mDisconnectedReceiver;
     private ResolveInfo mResolveInfo;
 
-    /* JADX WARNING: type inference failed for: r8v0, types: [android.content.DialogInterface$OnClickListener, android.content.Context, com.android.internal.app.AlertActivity, android.widget.CompoundButton$OnCheckedChangeListener, android.app.Activity, com.android.systemui.usb.UsbConfirmActivity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r8v0, resolved type: com.android.systemui.usb.UsbConfirmActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onCreate(Bundle bundle) {
         boolean z;
         int i;
@@ -42,7 +43,7 @@ public class UsbConfirmActivity extends AlertActivity implements DialogInterface
         this.mResolveInfo = (ResolveInfo) intent.getParcelableExtra("rinfo");
         String stringExtra = intent.getStringExtra("android.hardware.usb.extra.PACKAGE");
         String charSequence = this.mResolveInfo.loadLabel(getPackageManager()).toString();
-        AlertController.AlertParams alertParams = this.mAlertParams;
+        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
         alertParams.mTitle = charSequence;
         if (this.mDevice == null) {
             alertParams.mMessage = getString(C0021R$string.usb_accessory_confirm_prompt, new Object[]{charSequence, this.mAccessory.getDescription()});

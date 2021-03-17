@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideNetworkScoreManagerFactory implem
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NetworkScoreManager get() {
         return provideInstance(this.contextProvider);
     }

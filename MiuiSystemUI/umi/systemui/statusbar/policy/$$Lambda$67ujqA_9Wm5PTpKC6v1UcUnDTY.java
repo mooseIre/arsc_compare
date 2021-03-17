@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$67ujqA_9Wm5PTpKC6v1UcUnDTY implement
     private /* synthetic */ $$Lambda$67ujqA_9Wm5PTpKC6v1UcUnDTY() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((KeyguardStateController.Callback) obj).onUnlockedChanged();
     }

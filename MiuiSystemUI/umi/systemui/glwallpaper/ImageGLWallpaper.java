@@ -6,11 +6,13 @@ import android.opengl.GLUtils;
 import android.util.Log;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-class ImageGLWallpaper {
+/* access modifiers changed from: package-private */
+public class ImageGLWallpaper {
     private static final String TAG = "ImageGLWallpaper";
     private static final float[] TEXTURES = {0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f};
     private static final float[] VERTICES = {-1.0f, -1.0f, 1.0f, -1.0f, 1.0f, 1.0f, 1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f};
@@ -49,11 +51,11 @@ class ImageGLWallpaper {
     private void setupAttributes() {
         this.mAttrPosition = this.mProgram.getAttributeHandle("aPosition");
         this.mVertexBuffer.position(0);
-        GLES20.glVertexAttribPointer(this.mAttrPosition, 2, 5126, false, 0, this.mVertexBuffer);
+        GLES20.glVertexAttribPointer(this.mAttrPosition, 2, 5126, false, 0, (Buffer) this.mVertexBuffer);
         GLES20.glEnableVertexAttribArray(this.mAttrPosition);
         this.mAttrTextureCoordinates = this.mProgram.getAttributeHandle("aTextureCoordinates");
         this.mTextureBuffer.position(0);
-        GLES20.glVertexAttribPointer(this.mAttrTextureCoordinates, 2, 5126, false, 0, this.mTextureBuffer);
+        GLES20.glVertexAttribPointer(this.mAttrTextureCoordinates, 2, 5126, false, 0, (Buffer) this.mTextureBuffer);
         GLES20.glEnableVertexAttribArray(this.mAttrTextureCoordinates);
     }
 

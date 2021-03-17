@@ -14,6 +14,7 @@ public final class WorkModeTile_Factory implements Factory<WorkModeTile> {
         this.managedProfileControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public WorkModeTile get() {
         return provideInstance(this.hostProvider, this.managedProfileControllerProvider);
     }

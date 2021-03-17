@@ -12,8 +12,11 @@ final class RenderInfoKt$deviceIconMap$1 extends Lambda implements Function1<Int
         super(1);
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        return Integer.valueOf(invoke(((Number) obj).intValue()));
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Integer invoke(Integer num) {
+        return Integer.valueOf(invoke(num.intValue()));
     }
 
     public final int invoke(int i) {

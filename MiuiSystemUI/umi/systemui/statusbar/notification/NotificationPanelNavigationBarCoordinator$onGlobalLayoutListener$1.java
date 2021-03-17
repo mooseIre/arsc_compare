@@ -2,8 +2,9 @@ package com.android.systemui.statusbar.notification;
 
 import android.view.ViewTreeObserver;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationPanelNavigationBarCoordinator.kt */
-final class NotificationPanelNavigationBarCoordinator$onGlobalLayoutListener$1 implements ViewTreeObserver.OnGlobalLayoutListener {
+public final class NotificationPanelNavigationBarCoordinator$onGlobalLayoutListener$1 implements ViewTreeObserver.OnGlobalLayoutListener {
     final /* synthetic */ NotificationPanelNavigationBarCoordinator this$0;
 
     NotificationPanelNavigationBarCoordinator$onGlobalLayoutListener$1(NotificationPanelNavigationBarCoordinator notificationPanelNavigationBarCoordinator) {

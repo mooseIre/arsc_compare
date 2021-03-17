@@ -2,7 +2,7 @@ package com.android.systemui.plugins;
 
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
-@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_SENSOR_MANAGER", version = 1)
+@ProvidesInterface(action = SensorManagerPlugin.ACTION, version = 1)
 public interface SensorManagerPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_SENSOR_MANAGER";
     public static final int VERSION = 1;
@@ -41,7 +41,7 @@ public interface SensorManagerPlugin extends Plugin {
         int mVendorType;
 
         public SensorEvent(Sensor sensor, int i) {
-            this(sensor, i, (float[]) null);
+            this(sensor, i, null);
         }
 
         public SensorEvent(Sensor sensor, int i, float[] fArr) {

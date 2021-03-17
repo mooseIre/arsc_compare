@@ -12,6 +12,7 @@ public final class AutoAddTracker_Builder_Factory implements Factory<AutoAddTrac
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AutoAddTracker.Builder get() {
         return provideInstance(this.contextProvider);
     }

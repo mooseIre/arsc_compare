@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.policy;
 import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -33,6 +34,8 @@ public class BrightnessMirrorController implements CallbackController<Brightness
         this.mNotificationPanel = notificationPanelViewController;
         this.mDepthController = notificationShadeDepthController;
         notificationPanelViewController.setPanelAlphaEndAction(new Runnable() {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$BrightnessMirrorController$6Ez050oVQOhwQ3MfNjJAvUx4_k */
+
             public final void run() {
                 BrightnessMirrorController.this.lambda$new$0$BrightnessMirrorController();
             }
@@ -95,7 +98,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
     private void reinflate() {
         int indexOfChild = this.mStatusBarWindow.indexOfChild(this.mBrightnessMirror);
         this.mStatusBarWindow.removeView(this.mBrightnessMirror);
-        View inflate = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(C0017R$layout.brightness_mirror, this.mStatusBarWindow, false);
+        View inflate = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(C0017R$layout.brightness_mirror, (ViewGroup) this.mStatusBarWindow, false);
         this.mBrightnessMirror = inflate;
         this.mStatusBarWindow.addView(inflate, indexOfChild);
         for (int i = 0; i < this.mBrightnessMirrorListeners.size(); i++) {

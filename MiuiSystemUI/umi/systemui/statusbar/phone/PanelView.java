@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import com.android.systemui.statusbar.phone.PanelViewController;
 
@@ -38,7 +39,7 @@ public abstract class PanelView extends FrameLayout {
     }
 
     public void setOnTouchListener(PanelViewController.TouchHandler touchHandler) {
-        super.setOnTouchListener(touchHandler);
+        super.setOnTouchListener((View.OnTouchListener) touchHandler);
         this.mTouchHandler = touchHandler;
     }
 

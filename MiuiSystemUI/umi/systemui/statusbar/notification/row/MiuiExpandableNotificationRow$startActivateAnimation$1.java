@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MiuiExpandableNotificationRow$startActivateAnimation$1 extends AnimatorListenerAdapter {
     final /* synthetic */ MiuiExpandableNotificationRow this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiExpandableNotificationRow$startActivateAnimation$1(MiuiExpandableNotificationRow miuiExpandableNotificationRow) {
         this.this$0 = miuiExpandableNotificationRow;
     }

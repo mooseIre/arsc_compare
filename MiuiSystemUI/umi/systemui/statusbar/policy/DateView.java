@@ -22,10 +22,11 @@ import java.util.Locale;
 public class DateView extends TextView {
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final Date mCurrentTime = new Date();
-    /* access modifiers changed from: private */
-    public DateFormat mDateFormat;
+    private DateFormat mDateFormat;
     private String mDatePattern;
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.DateView.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             Handler handler = DateView.this.getHandler();
             if (handler != null) {
@@ -33,12 +34,16 @@ public class DateView extends TextView {
                 if ("android.intent.action.TIME_TICK".equals(action) || "android.intent.action.TIME_SET".equals(action) || "android.intent.action.TIMEZONE_CHANGED".equals(action) || "android.intent.action.LOCALE_CHANGED".equals(action)) {
                     if ("android.intent.action.LOCALE_CHANGED".equals(action) || "android.intent.action.TIMEZONE_CHANGED".equals(action)) {
                         handler.post(new Runnable() {
+                            /* class com.android.systemui.statusbar.policy.$$Lambda$DateView$1$I3qZI4QmwEIAfQqo2b2oUNiPII */
+
                             public final void run() {
                                 DateView.AnonymousClass1.this.lambda$onReceive$0$DateView$1();
                             }
                         });
                     }
                     handler.post(new Runnable() {
+                        /* class com.android.systemui.statusbar.policy.$$Lambda$DateView$1$v1y3JoGtv68dyea2Bk7AdwrkpMI */
+
                         public final void run() {
                             DateView.AnonymousClass1.this.lambda$onReceive$1$DateView$1();
                         }
@@ -50,7 +55,7 @@ public class DateView extends TextView {
         /* access modifiers changed from: private */
         /* renamed from: lambda$onReceive$0 */
         public /* synthetic */ void lambda$onReceive$0$DateView$1() {
-            DateFormat unused = DateView.this.mDateFormat = null;
+            DateView.this.mDateFormat = null;
         }
 
         /* access modifiers changed from: private */

@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -21,30 +22,31 @@ public final class BubbleXmlHelperKt {
         Intrinsics.checkParameterIsNotNull(list, "bubbles");
         FastXmlSerializer fastXmlSerializer = new FastXmlSerializer();
         fastXmlSerializer.setOutput(outputStream, StandardCharsets.UTF_8.name());
-        fastXmlSerializer.startDocument((String) null, Boolean.TRUE);
-        fastXmlSerializer.startTag((String) null, "bs");
-        fastXmlSerializer.attribute((String) null, "v", String.valueOf(1));
-        for (BubbleEntity writeXmlEntry : list) {
-            writeXmlEntry(fastXmlSerializer, writeXmlEntry);
+        fastXmlSerializer.startDocument(null, Boolean.TRUE);
+        fastXmlSerializer.startTag(null, "bs");
+        fastXmlSerializer.attribute(null, "v", String.valueOf(1));
+        Iterator<T> it = list.iterator();
+        while (it.hasNext()) {
+            writeXmlEntry(fastXmlSerializer, it.next());
         }
-        fastXmlSerializer.endTag((String) null, "bs");
+        fastXmlSerializer.endTag(null, "bs");
         fastXmlSerializer.endDocument();
     }
 
     private static final void writeXmlEntry(XmlSerializer xmlSerializer, BubbleEntity bubbleEntity) {
         try {
-            xmlSerializer.startTag((String) null, "bb");
-            xmlSerializer.attribute((String) null, "uid", String.valueOf(bubbleEntity.getUserId()));
-            xmlSerializer.attribute((String) null, "pkg", bubbleEntity.getPackageName());
-            xmlSerializer.attribute((String) null, "sid", bubbleEntity.getShortcutId());
-            xmlSerializer.attribute((String) null, "key", bubbleEntity.getKey());
-            xmlSerializer.attribute((String) null, "h", String.valueOf(bubbleEntity.getDesiredHeight()));
-            xmlSerializer.attribute((String) null, "hid", String.valueOf(bubbleEntity.getDesiredHeightResId()));
+            xmlSerializer.startTag(null, "bb");
+            xmlSerializer.attribute(null, "uid", String.valueOf(bubbleEntity.getUserId()));
+            xmlSerializer.attribute(null, "pkg", bubbleEntity.getPackageName());
+            xmlSerializer.attribute(null, "sid", bubbleEntity.getShortcutId());
+            xmlSerializer.attribute(null, "key", bubbleEntity.getKey());
+            xmlSerializer.attribute(null, "h", String.valueOf(bubbleEntity.getDesiredHeight()));
+            xmlSerializer.attribute(null, "hid", String.valueOf(bubbleEntity.getDesiredHeightResId()));
             String title = bubbleEntity.getTitle();
             if (title != null) {
-                xmlSerializer.attribute((String) null, "t", title);
+                xmlSerializer.attribute(null, "t", title);
             }
-            xmlSerializer.endTag((String) null, "bb");
+            xmlSerializer.endTag(null, "bb");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -97,7 +99,7 @@ public final class BubbleXmlHelperKt {
     private static final String getAttributeWithName(@NotNull XmlPullParser xmlPullParser, String str) {
         int attributeCount = xmlPullParser.getAttributeCount();
         for (int i = 0; i < attributeCount; i++) {
-            if (Intrinsics.areEqual((Object) xmlPullParser.getAttributeName(i), (Object) str)) {
+            if (Intrinsics.areEqual(xmlPullParser.getAttributeName(i), str)) {
                 return xmlPullParser.getAttributeValue(i);
             }
         }

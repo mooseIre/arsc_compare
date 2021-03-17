@@ -48,6 +48,8 @@ public class DoubleTapHelper {
 
     public DoubleTapHelper(View view, long j, ActivationListener activationListener, DoubleTapListener doubleTapListener, SlideBackListener slideBackListener, DoubleTapLogListener doubleTapLogListener) {
         this.mTapTimeoutRunnable = new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$DoubleTapHelper$GFsC9BR8swazZioXO__Yt7_6kU */
+
             public final void run() {
                 DoubleTapHelper.this.makeInactive();
             }

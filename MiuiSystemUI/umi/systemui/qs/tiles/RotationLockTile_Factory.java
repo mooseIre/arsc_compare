@@ -14,6 +14,7 @@ public final class RotationLockTile_Factory implements Factory<RotationLockTile>
         this.rotationLockControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public RotationLockTile get() {
         return provideInstance(this.hostProvider, this.rotationLockControllerProvider);
     }

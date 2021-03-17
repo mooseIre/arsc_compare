@@ -10,13 +10,12 @@ import java.util.ArrayList;
 public class FiveGControllerImpl {
     private final Context mContext;
     private MiuiFiveGServiceClient mFiveGServiceClient;
-    /* access modifiers changed from: private */
-    public MiuiFiveGServiceClient.FiveGServiceState[] mFiveGServiceStates;
-    /* access modifiers changed from: private */
-    public ArrayList<FiveGStateChangeCallback> mFiveGStateChangeCallbacks = new ArrayList<>();
+    private MiuiFiveGServiceClient.FiveGServiceState[] mFiveGServiceStates;
+    private ArrayList<FiveGStateChangeCallback> mFiveGStateChangeCallbacks = new ArrayList<>();
     private FiveGStateListener[] mFiveGStateListeners;
 
-    interface FiveGStateChangeCallback {
+    /* access modifiers changed from: package-private */
+    public interface FiveGStateChangeCallback {
         int getSlot();
 
         void onSignalStrengthChanged(int i, MobileSignalController.MobileIconGroup mobileIconGroup);
@@ -80,12 +79,14 @@ public class FiveGControllerImpl {
         this.mFiveGServiceClient.dump(printWriter);
     }
 
-    class FiveGStateListener implements MiuiFiveGServiceClient.IFiveGStateListener {
+    /* access modifiers changed from: package-private */
+    public class FiveGStateListener implements MiuiFiveGServiceClient.IFiveGStateListener {
         int mSlot;
 
         FiveGStateListener() {
         }
 
+        @Override // com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.IFiveGStateListener
         public void onStateChanged(MiuiFiveGServiceClient.FiveGServiceState fiveGServiceState) {
             if (fiveGServiceState != null) {
                 FiveGControllerImpl.this.mFiveGServiceStates[this.mSlot] = fiveGServiceState;

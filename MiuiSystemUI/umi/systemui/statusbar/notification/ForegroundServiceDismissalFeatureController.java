@@ -17,6 +17,6 @@ public final class ForegroundServiceDismissalFeatureController {
     }
 
     public final boolean isForegroundServiceDismissalEnabled() {
-        return ForegroundServiceDismissalFeatureControllerKt.isEnabled(this.proxy);
+        return ForegroundServiceDismissalFeatureControllerKt.access$isEnabled(this.proxy);
     }
 }

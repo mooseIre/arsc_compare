@@ -3,7 +3,8 @@ package com.android.systemui.util.leak;
 import java.util.Collection;
 import java.util.Iterator;
 
-abstract class AbstractCollection<T> implements Collection<T> {
+/* access modifiers changed from: package-private */
+public abstract class AbstractCollection<T> implements Collection<T> {
     AbstractCollection() {
     }
 
@@ -11,6 +12,7 @@ abstract class AbstractCollection<T> implements Collection<T> {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection, java.lang.Iterable
     public Iterator<T> iterator() {
         throw new UnsupportedOperationException();
     }
@@ -19,10 +21,12 @@ abstract class AbstractCollection<T> implements Collection<T> {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection
     public <T1> T1[] toArray(T1[] t1Arr) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection
     public boolean add(T t) {
         throw new UnsupportedOperationException();
     }
@@ -31,18 +35,22 @@ abstract class AbstractCollection<T> implements Collection<T> {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection
     public boolean containsAll(Collection<?> collection) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection
     public boolean addAll(Collection<? extends T> collection) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection
     public boolean removeAll(Collection<?> collection) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.Collection
     public boolean retainAll(Collection<?> collection) {
         throw new UnsupportedOperationException();
     }

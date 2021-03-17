@@ -10,7 +10,7 @@ public class AlphaOptimizedImageView extends ImageView {
     }
 
     public AlphaOptimizedImageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AlphaOptimizedImageView(Context context, AttributeSet attributeSet) {

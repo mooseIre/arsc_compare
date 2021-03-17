@@ -40,6 +40,9 @@ import java.util.function.Predicate;
 
 public class Divider extends SystemUI implements DividerView.DividerCallbacks, DisplayController.OnDisplaysChangedListener {
     private TaskStackChangeListener mActivityRestartListener = new TaskStackChangeListener() {
+        /* class com.android.systemui.stackdivider.Divider.AnonymousClass1 */
+
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) {
             if (z3 && runningTaskInfo.configuration.windowConfiguration.getWindowingMode() == 3 && Divider.this.mSplits.isSplitScreenSupported() && Divider.this.isMinimized()) {
                 Divider.this.onUndockingTask();
@@ -54,25 +57,24 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
     private Handler mHandler;
     private boolean mHomeStackResizable = false;
     private DisplayImeController mImeController;
-    /* access modifiers changed from: private */
-    public final DividerImeController mImePositionProcessor;
-    /* access modifiers changed from: private */
-    public KeyguardStateController mKeyguardStateController;
+    private final DividerImeController mImePositionProcessor;
+    private KeyguardStateController mKeyguardStateController;
     private boolean mMinimized = false;
     private final Optional<Lazy<Recents>> mRecentsOptionalLazy;
     private SplitDisplayLayout mRotateSplitLayout;
     private DisplayChangeController.OnDisplayChangingListener mRotationController = new DisplayChangeController.OnDisplayChangingListener() {
+        /* class com.android.systemui.stackdivider.$$Lambda$Divider$0WHTGcDpweqOnqzkpJAQb7brKYs */
+
+        @Override // com.android.systemui.wm.DisplayChangeController.OnDisplayChangingListener
         public final void onRotateDisplay(int i, int i2, int i3, WindowContainerTransaction windowContainerTransaction) {
             Divider.this.lambda$new$0$Divider(i, i2, i3, windowContainerTransaction);
         }
     };
     private SplitDisplayLayout mSplitLayout;
-    /* access modifiers changed from: private */
-    public SplitScreenTaskOrganizer mSplits = new SplitScreenTaskOrganizer(this);
+    private SplitScreenTaskOrganizer mSplits = new SplitScreenTaskOrganizer(this);
     private SystemWindows mSystemWindows;
     final TransactionPool mTransactionPool;
-    /* access modifiers changed from: private */
-    public DividerView mView;
+    private DividerView mView;
     private boolean mVisible = false;
     private DividerWindowManager mWindowManager;
     private WindowManagerProxy mWindowManagerProxy;
@@ -120,16 +122,22 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
         this.mImePositionProcessor = new DividerImeController(this.mSplits, this.mTransactionPool, this.mHandler);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mWindowManager = new DividerWindowManager(this.mSystemWindows);
         this.mDisplayController.addDisplayWindowListener(this);
         this.mKeyguardStateController.addCallback(new KeyguardStateController.Callback() {
+            /* class com.android.systemui.stackdivider.Divider.AnonymousClass2 */
+
+            @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
             public void onKeyguardFadingAwayChanged() {
             }
 
+            @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
             public void onUnlockedChanged() {
             }
 
+            @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
             public void onKeyguardShowingChanged() {
                 if (Divider.this.isSplitActive() && Divider.this.mView != null) {
                     Divider.this.mView.setHidden(Divider.this.mKeyguardStateController.isShowing());
@@ -141,6 +149,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
         });
     }
 
+    @Override // com.android.systemui.wm.DisplayController.OnDisplaysChangedListener
     public void onDisplayAdded(int i) {
         if (i == 0) {
             this.mSplitLayout = new SplitDisplayLayout(this.mDisplayController.getDisplayContext(i), this.mDisplayController.getDisplayLayout(i), this.mSplits);
@@ -164,6 +173,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
         }
     }
 
+    @Override // com.android.systemui.wm.DisplayController.OnDisplaysChangedListener
     public void onDisplayConfigurationChanged(int i, Configuration configuration) {
         if (i == 0 && this.mSplits.isSplitScreenSupported()) {
             SplitDisplayLayout splitDisplayLayout = new SplitDisplayLayout(this.mDisplayController.getDisplayContext(i), this.mDisplayController.getDisplayLayout(i), this.mSplits);
@@ -207,31 +217,12 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
     }
 
     /* access modifiers changed from: private */
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
-        r1 = r1.mSecondary;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isSplitActive() {
-        /*
-            r1 = this;
-            com.android.systemui.stackdivider.SplitScreenTaskOrganizer r1 = r1.mSplits
-            android.app.ActivityManager$RunningTaskInfo r0 = r1.mPrimary
-            if (r0 == 0) goto L_0x0014
-            android.app.ActivityManager$RunningTaskInfo r1 = r1.mSecondary
-            if (r1 == 0) goto L_0x0014
-            int r0 = r0.topActivityType
-            if (r0 != 0) goto L_0x0012
-            int r1 = r1.topActivityType
-            if (r1 == 0) goto L_0x0014
-        L_0x0012:
-            r1 = 1
-            goto L_0x0015
-        L_0x0014:
-            r1 = 0
-        L_0x0015:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.stackdivider.Divider.isSplitActive():boolean");
+    /* access modifiers changed from: public */
+    private boolean isSplitActive() {
+        ActivityManager.RunningTaskInfo runningTaskInfo;
+        SplitScreenTaskOrganizer splitScreenTaskOrganizer = this.mSplits;
+        ActivityManager.RunningTaskInfo runningTaskInfo2 = splitScreenTaskOrganizer.mPrimary;
+        return (runningTaskInfo2 == null || (runningTaskInfo = splitScreenTaskOrganizer.mSecondary) == null || (runningTaskInfo2.topActivityType == 0 && runningTaskInfo.topActivityType == 0)) ? false : true;
     }
 
     private void addDivider(Configuration configuration) {
@@ -282,6 +273,8 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
     /* access modifiers changed from: package-private */
     public void onTaskVanished() {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.stackdivider.$$Lambda$Divider$JQC7s2DcACmP1thtllRZ30N2PIw */
+
             public final void run() {
                 Divider.this.removeDivider();
             }
@@ -295,6 +288,9 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
             if (z) {
                 this.mView.enterSplitMode(this.mHomeStackResizable);
                 this.mWindowManagerProxy.runInSync(new SyncTransactionQueue.TransactionRunnable() {
+                    /* class com.android.systemui.stackdivider.$$Lambda$Divider$PFK1wU0r4FZbucBwkJAZvajxzCU */
+
+                    @Override // com.android.systemui.stackdivider.SyncTransactionQueue.TransactionRunnable
                     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
                         Divider.this.lambda$updateVisibility$1$Divider(transaction);
                     }
@@ -302,6 +298,9 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
             } else {
                 this.mView.exitSplitMode();
                 this.mWindowManagerProxy.runInSync(new SyncTransactionQueue.TransactionRunnable() {
+                    /* class com.android.systemui.stackdivider.$$Lambda$Divider$VIerqJCgwVozy2YX14uply8NzWc */
+
+                    @Override // com.android.systemui.stackdivider.SyncTransactionQueue.TransactionRunnable
                     public final void runWithTransaction(SurfaceControl.Transaction transaction) {
                         Divider.this.lambda$updateVisibility$2$Divider(transaction);
                     }
@@ -309,12 +308,14 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
             }
             synchronized (this.mDockedStackExistsListeners) {
                 this.mDockedStackExistsListeners.removeIf(new Predicate(z) {
+                    /* class com.android.systemui.stackdivider.$$Lambda$Divider$fg71CWqbbHGuQEcI_sx8tNWcJg */
                     public final /* synthetic */ boolean f$0;
 
                     {
                         this.f$0 = r1;
                     }
 
+                    @Override // java.util.function.Predicate
                     public final boolean test(Object obj) {
                         return Divider.lambda$updateVisibility$3(this.f$0, (WeakReference) obj);
                     }
@@ -345,6 +346,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
 
     public void setMinimized(boolean z) {
         this.mHandler.post(new Runnable(z) {
+            /* class com.android.systemui.stackdivider.$$Lambda$Divider$qaeq4YZm8Jheg2TUOpTbHIkGx8 */
             public final /* synthetic */ boolean f$1;
 
             {
@@ -451,18 +453,22 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
         }
     }
 
+    @Override // com.android.systemui.stackdivider.DividerView.DividerCallbacks
     public void onDraggingStart() {
         this.mForcedResizableController.onDraggingStart();
     }
 
+    @Override // com.android.systemui.stackdivider.DividerView.DividerCallbacks
     public void onDraggingEnd() {
         this.mForcedResizableController.onDraggingEnd();
     }
 
+    @Override // com.android.systemui.stackdivider.DividerView.DividerCallbacks
     public void growRecents() {
         this.mRecentsOptionalLazy.ifPresent($$Lambda$Divider$kUReJvdE1s1BPD9HklZGjPX7dM.INSTANCE);
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.print("  mVisible=");
         printWriter.println(this.mVisible);
@@ -480,7 +486,7 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
     public void registerInSplitScreenListener(Consumer<Boolean> consumer) {
         consumer.accept(Boolean.valueOf(isDividerVisible()));
         synchronized (this.mDockedStackExistsListeners) {
-            this.mDockedStackExistsListeners.add(new WeakReference(consumer));
+            this.mDockedStackExistsListeners.add(new WeakReference<>(consumer));
         }
     }
 

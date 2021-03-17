@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$BubbleStackView$gtti_QWIhKA2hCHaS7kl
     private /* synthetic */ $$Lambda$BubbleStackView$gtti_QWIhKA2hCHaS7klo4hfz0Y() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         BubbleStackView.lambda$updateExpandedViewTheme$15((Bubble) obj);
     }

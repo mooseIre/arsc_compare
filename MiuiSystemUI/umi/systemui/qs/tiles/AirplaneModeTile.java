@@ -22,6 +22,8 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(17302818);
     private boolean mListening;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.qs.tiles.AirplaneModeTile.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.AIRPLANE_MODE".equals(intent.getAction())) {
                 AirplaneModeTile.this.refreshState();
@@ -30,6 +32,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     };
     private final GlobalSetting mSetting;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 112;
     }
@@ -39,17 +42,22 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
         this.mActivityStarter = activityStarter;
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSetting = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
+            /* class com.android.systemui.qs.tiles.AirplaneModeTile.AnonymousClass1 */
+
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.qs.GlobalSetting
             public void handleValueChanged(int i) {
                 AirplaneModeTile.this.handleRefreshState(Integer.valueOf(i));
             }
         };
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         boolean z = ((QSTile.BooleanState) this.mState).value;
         MetricsLogger.action(this.mContext, getMetricsCategory(), !z);
@@ -64,10 +72,12 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
         ((ConnectivityManager) this.mContext.getSystemService("connectivity")).setAirplaneMode(z);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.AIRPLANE_MODE_SETTINGS");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.airplane_mode);
     }
@@ -93,6 +103,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_on);
@@ -100,6 +111,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
         return this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_off);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         if (this.mListening != z) {

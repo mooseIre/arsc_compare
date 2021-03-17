@@ -6,7 +6,7 @@ import android.util.ArraySet;
 import java.util.Set;
 
 public class PluginPrefs {
-    private final Set<String> mPluginActions = new ArraySet(this.mSharedPrefs.getStringSet("actions", (Set) null));
+    private final Set<String> mPluginActions = new ArraySet(this.mSharedPrefs.getStringSet("actions", null));
     private final SharedPreferences mSharedPrefs;
 
     public PluginPrefs(Context context) {

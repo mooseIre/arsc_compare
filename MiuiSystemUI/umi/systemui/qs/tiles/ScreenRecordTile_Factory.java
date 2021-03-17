@@ -17,6 +17,7 @@ public final class ScreenRecordTile_Factory implements Factory<ScreenRecordTile>
         this.keyguardDismissUtilProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ScreenRecordTile get() {
         return provideInstance(this.hostProvider, this.controllerProvider, this.keyguardDismissUtilProvider);
     }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
-import androidx.lifecycle.LifecycleOwner;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.ActivityStarter;
@@ -19,6 +18,7 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
     private final LocationController mController;
     private final KeyguardStateController mKeyguard;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowFixedWidthMajor;
     }
@@ -29,23 +29,27 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
         this.mCallback = callback;
         this.mController = locationController;
         this.mKeyguard = keyguardStateController;
-        locationController.observe((LifecycleOwner) this, callback);
-        this.mKeyguard.observe((LifecycleOwner) this, this.mCallback);
+        locationController.observe(this, callback);
+        this.mKeyguard.observe(this, this.mCallback);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.LOCATION_SOURCE_SETTINGS");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.location.gps");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         String str = this.TAG;
         StringBuilder sb = new StringBuilder();
@@ -57,6 +61,7 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
         this.mController.setLocationEnabled(!((QSTile.BooleanState) this.mState).value);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_location_label);
     }
@@ -76,6 +81,7 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_location_changed_on);
@@ -87,10 +93,12 @@ public class LocationTile extends QSTileImpl<QSTile.BooleanState> {
         private Callback() {
         }
 
+        @Override // com.android.systemui.statusbar.policy.LocationController.LocationChangeCallback
         public void onLocationSettingsChanged(boolean z) {
             LocationTile.this.refreshState();
         }
 
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onKeyguardShowingChanged() {
             LocationTile.this.refreshState();
         }

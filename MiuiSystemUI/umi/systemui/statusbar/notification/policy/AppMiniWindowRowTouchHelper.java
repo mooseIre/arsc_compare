@@ -22,6 +22,7 @@ import com.miui.systemui.events.MiniWindowEventSource;
 import com.miui.systemui.events.MiniWindowEvents;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
@@ -30,25 +31,19 @@ public final class AppMiniWindowRowTouchHelper {
     private final Context mContext;
     private boolean mEnterAnimationRunning;
     private final EventTracker mEventTracker;
-    /* access modifiers changed from: private */
-    public final MiniWindowExpandParameters mExpandedParams;
-    /* access modifiers changed from: private */
-    public final AppMiniWindowRowTouchHelper$mHandler$1 mHandler;
+    private final MiniWindowExpandParameters mExpandedParams;
+    private final AppMiniWindowRowTouchHelper$mHandler$1 mHandler;
     private float mInitialTouchX;
     private float mInitialTouchY;
-    /* access modifiers changed from: private */
-    public float mMaxTriggerThreshold;
-    /* access modifiers changed from: private */
-    public final NotificationEntryManager mNotificationEntryManager;
+    private float mMaxTriggerThreshold;
+    private final NotificationEntryManager mNotificationEntryManager;
     private int mPickedChildHeight;
     private int mPickedChildLeft;
     private int mPickedChildRight;
     private int mPickedChildTop;
     private int mPickedChildWidth;
-    /* access modifiers changed from: private */
-    public MiuiExpandableNotificationRow mPickedMiniWindowChild;
-    /* access modifiers changed from: private */
-    public final AppMiniWindowRowTouchCallback mTouchCallback;
+    private MiuiExpandableNotificationRow mPickedMiniWindowChild;
+    private final AppMiniWindowRowTouchCallback mTouchCallback;
     private final int mTouchSlop;
     private boolean mTouchingMiniWindowRow;
     private boolean mTrackingMiniWindowRow;
@@ -210,10 +205,11 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     /* access modifiers changed from: private */
-    public final void onMiniWindowReset() {
+    /* access modifiers changed from: public */
+    private final void onMiniWindowReset() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
-            miuiExpandableNotificationRow.applyMiniWindowExpandParams((MiniWindowExpandParameters) null);
+            miuiExpandableNotificationRow.applyMiniWindowExpandParams(null);
         }
         MiuiExpandableNotificationRow miuiExpandableNotificationRow2 = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow2 != null) {
@@ -225,7 +221,8 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     /* access modifiers changed from: private */
-    public final void onExpandedParamsUpdated() {
+    /* access modifiers changed from: public */
+    private final void onExpandedParamsUpdated() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
             miuiExpandableNotificationRow.applyMiniWindowExpandParams(this.mExpandedParams);
@@ -244,8 +241,8 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     private final void startResetToNotificationAnimation() {
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mExpandedParams.getBottom(), this.mExpandedParams.getTop() + this.mExpandedParams.getStartHeight()});
-        ofInt.setDuration(200);
+        ValueAnimator ofInt = ValueAnimator.ofInt(this.mExpandedParams.getBottom(), this.mExpandedParams.getTop() + this.mExpandedParams.getStartHeight());
+        ofInt.setDuration(200L);
         ofInt.setInterpolator(new DecelerateInterpolator());
         ofInt.addUpdateListener(new AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1(this));
         ofInt.addListener(new AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$2(this));
@@ -270,8 +267,8 @@ public final class AppMiniWindowRowTouchHelper {
         Rect freeformRect = MiuiMultiWindowUtils.getFreeformRect(this.mContext);
         freeformRect.right = freeformRect.left + ((int) (((float) freeformRect.width()) * MiuiMultiWindowUtils.sScale));
         freeformRect.bottom = freeformRect.top + ((int) (((float) freeformRect.height()) * MiuiMultiWindowUtils.sScale));
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        ofFloat.setDuration(300);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
+        ofFloat.setDuration(300L);
         ofFloat.setInterpolator(new DecelerateInterpolator(1.5f));
         ofFloat.addUpdateListener(new AppMiniWindowRowTouchHelper$startEnterMiniWindowAnimation$$inlined$apply$lambda$1(this, rect, freeformRect));
         ofFloat.start();
@@ -352,9 +349,10 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     /* access modifiers changed from: private */
-    public final void handleHideNotificationPanel() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
-        ofFloat.setDuration(300);
+    /* access modifiers changed from: public */
+    private final void handleHideNotificationPanel() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
+        ofFloat.setDuration(300L);
         ofFloat.setInterpolator(new DecelerateInterpolator());
         ofFloat.addUpdateListener(new AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$1(this));
         ofFloat.addListener(new AppMiniWindowRowTouchHelper$handleHideNotificationPanel$$inlined$apply$lambda$2(this));

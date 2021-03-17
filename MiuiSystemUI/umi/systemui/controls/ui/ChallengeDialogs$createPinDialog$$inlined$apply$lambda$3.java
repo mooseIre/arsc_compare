@@ -29,6 +29,8 @@ final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements 
         Intrinsics.checkExpressionValueIsNotNull(editText, "editText");
         challengeDialogs.setInputType(editText, checkBox.isChecked());
         ((CheckBox) this.$this_apply.requireViewById(C0015R$id.controls_pin_use_alpha)).setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.controls.ui.ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3.AnonymousClass1 */
+
             public final void onClick(View view) {
                 ChallengeDialogs challengeDialogs = ChallengeDialogs.INSTANCE;
                 EditText editText = editText;

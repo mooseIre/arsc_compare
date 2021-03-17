@@ -16,7 +16,6 @@ import com.android.systemui.statusbar.notification.collection.inflation.NotifInf
 import com.android.systemui.statusbar.notification.collection.listbuilder.OnBeforeFinalizeFilterListener;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
-import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotifInflationErrorManager;
 import java.util.List;
 import java.util.Map;
@@ -25,23 +24,18 @@ import java.util.Set;
 
 public class PreparationCoordinator implements Coordinator {
     private final int mChildBindCutoff;
-    /* access modifiers changed from: private */
-    public final Set<NotificationEntry> mInflatingNotifs;
+    private final Set<NotificationEntry> mInflatingNotifs;
     private final NotifInflationErrorManager.NotifInflationErrorListener mInflationErrorListener;
-    /* access modifiers changed from: private */
-    public final Map<NotificationEntry, Integer> mInflationStates;
+    private final Map<NotificationEntry, Integer> mInflationStates;
     private final PreparationCoordinatorLogger mLogger;
     private final NotifCollectionListener mNotifCollectionListener;
     private final NotifInflationErrorManager mNotifErrorManager;
     private final NotifInflater mNotifInflater;
     private final NotifFilter mNotifInflatingFilter;
-    /* access modifiers changed from: private */
-    public final NotifFilter mNotifInflationErrorFilter;
+    private final NotifFilter mNotifInflationErrorFilter;
     private final OnBeforeFinalizeFilterListener mOnBeforeFinalizeFilterListener;
-    /* access modifiers changed from: private */
-    public final IStatusBarService mStatusBarService;
-    /* access modifiers changed from: private */
-    public final NotifViewBarn mViewBarn;
+    private final IStatusBarService mStatusBarService;
+    private final NotifViewBarn mViewBarn;
 
     public PreparationCoordinator(PreparationCoordinatorLogger preparationCoordinatorLogger, NotifInflaterImpl notifInflaterImpl, NotifInflationErrorManager notifInflationErrorManager, NotifViewBarn notifViewBarn, IStatusBarService iStatusBarService) {
         this(preparationCoordinatorLogger, notifInflaterImpl, notifInflationErrorManager, notifViewBarn, iStatusBarService, 9);
@@ -52,26 +46,32 @@ public class PreparationCoordinator implements Coordinator {
         this.mInflationStates = new ArrayMap();
         this.mInflatingNotifs = new ArraySet();
         this.mNotifCollectionListener = new NotifCollectionListener() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryInit(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.mInflationStates.put(notificationEntry, 0);
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryUpdated(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.abortInflation(notificationEntry, "entryUpdated");
                 PreparationCoordinator.this.mInflatingNotifs.remove(notificationEntry);
-                int access$300 = PreparationCoordinator.this.getInflationState(notificationEntry);
-                if (access$300 == 1) {
+                int inflationState = PreparationCoordinator.this.getInflationState(notificationEntry);
+                if (inflationState == 1) {
                     PreparationCoordinator.this.mInflationStates.put(notificationEntry, 2);
-                } else if (access$300 == -1) {
+                } else if (inflationState == -1) {
                     PreparationCoordinator.this.mInflationStates.put(notificationEntry, 0);
                 }
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryRemoved(NotificationEntry notificationEntry, int i) {
                 PreparationCoordinator preparationCoordinator = PreparationCoordinator.this;
                 preparationCoordinator.abortInflation(notificationEntry, "entryRemoved reason=" + i);
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryCleanUp(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.mInflationStates.remove(notificationEntry);
                 PreparationCoordinator.this.mInflatingNotifs.remove(notificationEntry);
@@ -79,21 +79,33 @@ public class PreparationCoordinator implements Coordinator {
             }
         };
         this.mOnBeforeFinalizeFilterListener = new OnBeforeFinalizeFilterListener() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.$$Lambda$PreparationCoordinator$OkUtuWqdigLEcSds1YW_FvJtNg */
+
+            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.OnBeforeFinalizeFilterListener
             public final void onBeforeFinalizeFilter(List list) {
                 PreparationCoordinator.this.lambda$new$0$PreparationCoordinator(list);
             }
         };
         this.mNotifInflationErrorFilter = new NotifFilter("PreparationCoordinatorInflationError") {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.AnonymousClass2 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
             public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
                 return PreparationCoordinator.this.getInflationState(notificationEntry) == -1;
             }
         };
         this.mNotifInflatingFilter = new NotifFilter("PreparationCoordinatorInflating") {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.AnonymousClass3 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
             public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
                 return !PreparationCoordinator.this.isInflated(notificationEntry);
             }
         };
         AnonymousClass4 r0 = new NotifInflationErrorManager.NotifInflationErrorListener() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.PreparationCoordinator.AnonymousClass4 */
+
+            @Override // com.android.systemui.statusbar.notification.row.NotifInflationErrorManager.NotifInflationErrorListener
             public void onNotifInflationError(NotificationEntry notificationEntry, Exception exc) {
                 PreparationCoordinator.this.mViewBarn.removeViewForEntry(notificationEntry);
                 PreparationCoordinator.this.mInflationStates.put(notificationEntry, -1);
@@ -105,6 +117,7 @@ public class PreparationCoordinator implements Coordinator {
                 PreparationCoordinator.this.mNotifInflationErrorFilter.invalidateList();
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotifInflationErrorManager.NotifInflationErrorListener
             public void onNotifInflationErrorCleared(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.mNotifInflationErrorFilter.invalidateList();
             }
@@ -119,6 +132,7 @@ public class PreparationCoordinator implements Coordinator {
         this.mChildBindCutoff = i;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         notifPipeline.addCollectionListener(this.mNotifCollectionListener);
         notifPipeline.addOnBeforeFinalizeFilterListener(this.mOnBeforeFinalizeFilterListener);
@@ -178,6 +192,9 @@ public class PreparationCoordinator implements Coordinator {
         abortInflation(notificationEntry, str);
         this.mInflatingNotifs.add(notificationEntry);
         this.mNotifInflater.inflateViews(notificationEntry, new NotifInflater.InflationCallback() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.$$Lambda$PreparationCoordinator$tbJy9n4VTgoZq_0jM3QiWTlwU2k */
+
+            @Override // com.android.systemui.statusbar.notification.collection.inflation.NotifInflater.InflationCallback
             public final void onInflationFinished(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.onInflationFinished(notificationEntry);
             }
@@ -187,6 +204,9 @@ public class PreparationCoordinator implements Coordinator {
     private void rebind(NotificationEntry notificationEntry, String str) {
         this.mInflatingNotifs.add(notificationEntry);
         this.mNotifInflater.rebindViews(notificationEntry, new NotifInflater.InflationCallback() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.$$Lambda$PreparationCoordinator$tbJy9n4VTgoZq_0jM3QiWTlwU2k */
+
+            @Override // com.android.systemui.statusbar.notification.collection.inflation.NotifInflater.InflationCallback
             public final void onInflationFinished(NotificationEntry notificationEntry) {
                 PreparationCoordinator.this.onInflationFinished(notificationEntry);
             }
@@ -194,7 +214,8 @@ public class PreparationCoordinator implements Coordinator {
     }
 
     /* access modifiers changed from: private */
-    public void abortInflation(NotificationEntry notificationEntry, String str) {
+    /* access modifiers changed from: public */
+    private void abortInflation(NotificationEntry notificationEntry, String str) {
         this.mLogger.logInflationAborted(notificationEntry.getKey(), str);
         notificationEntry.abortTask();
         this.mInflatingNotifs.remove(notificationEntry);
@@ -211,18 +232,20 @@ public class PreparationCoordinator implements Coordinator {
 
     private void freeNotifViews(NotificationEntry notificationEntry) {
         this.mViewBarn.removeViewForEntry(notificationEntry);
-        notificationEntry.setRow((ExpandableNotificationRow) null);
+        notificationEntry.setRow(null);
         this.mInflationStates.put(notificationEntry, 0);
     }
 
     /* access modifiers changed from: private */
-    public boolean isInflated(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private boolean isInflated(NotificationEntry notificationEntry) {
         int inflationState = getInflationState(notificationEntry);
         return inflationState == 1 || inflationState == 2;
     }
 
     /* access modifiers changed from: private */
-    public int getInflationState(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private int getInflationState(NotificationEntry notificationEntry) {
         Integer num = this.mInflationStates.get(notificationEntry);
         Objects.requireNonNull(num, "Asking state of a notification preparation coordinator doesn't know about");
         return num.intValue();

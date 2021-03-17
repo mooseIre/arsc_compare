@@ -3,6 +3,7 @@ package com.android.systemui.globalactions;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
 import android.view.Window;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -34,17 +35,17 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
     private final ExtensionController.Extension<GlobalActionsPanelPlugin> mWalletPluginProvider;
 
     public GlobalActionsImpl(Context context, CommandQueue commandQueue, Lazy<GlobalActionsDialog> lazy, BlurUtils blurUtils) {
-        Class<GlobalActionsPanelPlugin> cls = GlobalActionsPanelPlugin.class;
         this.mContext = context;
         this.mGlobalActionsDialogLazy = lazy;
         this.mCommandQueue = commandQueue;
         this.mBlurUtils = blurUtils;
         commandQueue.addCallback((CommandQueue.Callbacks) this);
-        ExtensionController.ExtensionBuilder<GlobalActionsPanelPlugin> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(cls);
-        newExtension.withPlugin(cls);
+        ExtensionController.ExtensionBuilder newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(GlobalActionsPanelPlugin.class);
+        newExtension.withPlugin(GlobalActionsPanelPlugin.class);
         this.mWalletPluginProvider = newExtension.build();
     }
 
+    @Override // com.android.systemui.plugins.GlobalActions
     public void destroy() {
         this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
         GlobalActionsDialog globalActionsDialog = this.mGlobalActionsDialog;
@@ -54,6 +55,7 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
         }
     }
 
+    @Override // com.android.systemui.plugins.GlobalActions
     public void showGlobalActions(GlobalActions.GlobalActionsManager globalActionsManager) {
         if (!this.mDisabled) {
             GlobalActionsDialog globalActionsDialog = this.mGlobalActionsDialogLazy.get();
@@ -63,10 +65,12 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
         }
     }
 
+    @Override // com.android.systemui.plugins.GlobalActions
     public void showShutdownUi(boolean z, String str) {
-        ScrimDrawable scrimDrawable = new ScrimDrawable();
+        Drawable scrimDrawable = new ScrimDrawable();
         Dialog dialog = new Dialog(this.mContext, C0022R$style.Theme_SystemUI_Dialog_GlobalActions);
         dialog.setOnShowListener(new DialogInterface.OnShowListener(scrimDrawable, dialog) {
+            /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsImpl$FGsviRHv4VNB5P1rRHu2A1JPouY */
             public final /* synthetic */ ScrimDrawable f$1;
             public final /* synthetic */ Dialog f$2;
 
@@ -140,6 +144,7 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
         return this.mContext.getString(17041198);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         GlobalActionsDialog globalActionsDialog;
         boolean z2 = (i3 & 8) != 0;

@@ -18,8 +18,8 @@ final class ActionReceiver$onReceive$1$$special$$inlined$forEach$lambda$1 implem
         BroadcastReceiver receiver = this.$it.getReceiver();
         ActionReceiver$onReceive$1 actionReceiver$onReceive$1 = this.this$0;
         receiver.onReceive(actionReceiver$onReceive$1.$context, actionReceiver$onReceive$1.$intent);
-        BroadcastDispatcherLogger access$getLogger$p = this.this$0.this$0.logger;
+        BroadcastDispatcherLogger broadcastDispatcherLogger = this.this$0.this$0.logger;
         ActionReceiver$onReceive$1 actionReceiver$onReceive$12 = this.this$0;
-        access$getLogger$p.logBroadcastDispatched(actionReceiver$onReceive$12.$id, actionReceiver$onReceive$12.this$0.action, this.$it.getReceiver());
+        broadcastDispatcherLogger.logBroadcastDispatched(actionReceiver$onReceive$12.$id, actionReceiver$onReceive$12.this$0.action, this.$it.getReceiver());
     }
 }

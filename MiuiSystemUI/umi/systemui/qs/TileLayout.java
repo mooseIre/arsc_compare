@@ -33,7 +33,7 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
     }
 
     public TileLayout(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public TileLayout(Context context, AttributeSet attributeSet) {
@@ -48,10 +48,12 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         updateResources();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getOffsetTop(QSPanel.TileRecord tileRecord) {
         return getTop();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void setListening(boolean z) {
         if (this.mListening != z) {
             this.mListening = z;
@@ -62,6 +64,7 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean setMinRows(int i) {
         if (this.mMinRows == i) {
             return false;
@@ -71,11 +74,13 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         return true;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean setMaxColumns(int i) {
         this.mMaxColumns = i;
         return updateColumns();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void addTile(QSPanel.TileRecord tileRecord) {
         this.mRecords.add(tileRecord);
         tileRecord.tile.setListening(this, this.mListening);
@@ -87,6 +92,7 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         addView(tileRecord.tileView);
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void removeTile(QSPanel.TileRecord tileRecord) {
         this.mRecords.remove(tileRecord);
         tileRecord.tile.setListening(this, false);
@@ -102,10 +108,11 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         super.removeAllViews();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean updateResources() {
-        Resources resources = this.mContext.getResources();
+        Resources resources = ((ViewGroup) this).mContext.getResources();
         this.mResourceColumns = Math.max(1, resources.getInteger(C0016R$integer.quick_settings_num_columns));
-        this.mCellHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_height);
+        this.mCellHeight = ((ViewGroup) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_height);
         int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_content_margin_top);
         int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_content_margin_horizontal);
         setPadding(dimensionPixelSize2, dimensionPixelSize, dimensionPixelSize2, getPaddingBottom());
@@ -129,6 +136,8 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         return i != min;
     }
 
+    /* JADX DEBUG: Failed to insert an additional move for type inference into block B:18:0x0033 */
+    /* JADX DEBUG: Failed to insert an additional move for type inference into block B:20:0x0033 */
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         int size = this.mRecords.size();
@@ -229,6 +238,7 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
         return paddingStart + (i2 / 2) + (i * (this.mCellWidth + i2));
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getNumVisibleTiles() {
         return this.mRecords.size();
     }

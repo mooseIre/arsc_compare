@@ -12,11 +12,11 @@ import com.android.systemui.C0017R$layout;
 
 public class DemoFinishAct extends FsGestureDemoBaseActiivy {
     TextView finishView;
-    /* access modifiers changed from: private */
-    public boolean isFromPro;
+    private boolean isFromPro;
     TextView replayView;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(C0017R$layout.fs_gesture_demo_final_view);
@@ -26,6 +26,8 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
         TextView textView = (TextView) findViewById(C0015R$id.fs_gesture_final_restart);
         this.replayView = textView;
         textView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.fsgesture.DemoFinishAct.AnonymousClass1 */
+
             public void onClick(View view) {
                 Intent intent = new Intent();
                 if ("DEMO_TO_HOME".equals(stringExtra) || "DEMO_TO_RECENTTASK".equals(stringExtra)) {
@@ -48,6 +50,8 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
         TextView textView2 = (TextView) findViewById(C0015R$id.fs_gesture_final_over);
         this.finishView = textView2;
         textView2.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.fsgesture.DemoFinishAct.AnonymousClass2 */
+
             public void onClick(View view) {
                 if (DemoFinishAct.this.isFromPro) {
                     Intent intent = new Intent();

@@ -35,11 +35,14 @@ public class PluginFragment extends PreferenceFragment {
     private PluginEnabler mPluginEnabler;
     private PluginPrefs mPluginPrefs;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.tuner.PluginFragment.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             PluginFragment.this.loadPrefs();
         }
     };
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         IntentFilter intentFilter = new IntentFilter("android.intent.action.PACKAGE_ADDED");
@@ -55,13 +58,15 @@ public class PluginFragment extends PreferenceFragment {
         getContext().unregisterReceiver(this.mReceiver);
     }
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         this.mPluginEnabler = new PluginEnablerImpl(getContext());
         loadPrefs();
     }
 
     /* access modifiers changed from: private */
-    public void loadPrefs() {
+    /* access modifiers changed from: public */
+    private void loadPrefs() {
         PluginManager pluginManager = (PluginManager) Dependency.get(PluginManager.class);
         PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(getContext());
         createPreferenceScreen.setOrderingAsAdded(false);
@@ -70,17 +75,18 @@ public class PluginFragment extends PreferenceFragment {
         PackageManager packageManager = getContext().getPackageManager();
         Set<String> pluginList = this.mPluginPrefs.getPluginList();
         ArrayMap arrayMap = new ArrayMap();
-        for (String next : pluginList) {
-            String name = toName(next);
-            for (ResolveInfo resolveInfo : packageManager.queryIntentServices(new Intent(next), 512)) {
-                String str = resolveInfo.serviceInfo.packageName;
-                if (!arrayMap.containsKey(str)) {
-                    arrayMap.put(str, new ArraySet());
+        for (String str : pluginList) {
+            String name = toName(str);
+            for (ResolveInfo resolveInfo : packageManager.queryIntentServices(new Intent(str), 512)) {
+                String str2 = resolveInfo.serviceInfo.packageName;
+                if (!arrayMap.containsKey(str2)) {
+                    arrayMap.put(str2, new ArraySet());
                 }
-                ((ArraySet) arrayMap.get(str)).add(name);
+                ((ArraySet) arrayMap.get(str2)).add(name);
             }
         }
         packageManager.getPackagesHoldingPermissions(new String[]{"com.android.systemui.permission.PLUGIN"}, 516).forEach(new Consumer(arrayMap, pluginManager, context, createPreferenceScreen) {
+            /* class com.android.systemui.tuner.$$Lambda$PluginFragment$iW8kXrJfaof7fDZHqMxR_RNftYk */
             public final /* synthetic */ ArrayMap f$1;
             public final /* synthetic */ PluginManager f$2;
             public final /* synthetic */ Context f$3;
@@ -93,6 +99,7 @@ public class PluginFragment extends PreferenceFragment {
                 this.f$4 = r5;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 PluginFragment.this.lambda$loadPrefs$0$PluginFragment(this.f$1, this.f$2, this.f$3, this.f$4, (PackageInfo) obj);
             }
@@ -105,7 +112,7 @@ public class PluginFragment extends PreferenceFragment {
     public /* synthetic */ void lambda$loadPrefs$0$PluginFragment(ArrayMap arrayMap, PluginManager pluginManager, Context context, PreferenceScreen preferenceScreen, PackageInfo packageInfo) {
         if (arrayMap.containsKey(packageInfo.packageName) && !ArrayUtils.contains(pluginManager.getWhitelistedPlugins(), packageInfo.packageName)) {
             PluginPreference pluginPreference = new PluginPreference(context, packageInfo, this.mPluginEnabler);
-            pluginPreference.setSummary((CharSequence) "Plugins: " + toString((ArraySet) arrayMap.get(packageInfo.packageName)));
+            pluginPreference.setSummary("Plugins: " + toString((ArraySet) arrayMap.get(packageInfo.packageName)));
             preferenceScreen.addPreference(pluginPreference);
         }
     }
@@ -126,7 +133,8 @@ public class PluginFragment extends PreferenceFragment {
     private String toName(String str) {
         String replace = str.replace("com.android.systemui.action.PLUGIN_", "");
         StringBuilder sb = new StringBuilder();
-        for (String str2 : replace.split("_")) {
+        String[] split = replace.split("_");
+        for (String str2 : split) {
             if (sb.length() != 0) {
                 sb.append(' ');
             }
@@ -136,7 +144,8 @@ public class PluginFragment extends PreferenceFragment {
         return sb.toString();
     }
 
-    private static class PluginPreference extends SwitchPreference {
+    /* access modifiers changed from: private */
+    public static class PluginPreference extends SwitchPreference {
         private final boolean mHasSettings;
         private final PackageInfo mInfo;
         private final PluginEnabler mPluginEnabler;
@@ -163,6 +172,7 @@ public class PluginFragment extends PreferenceFragment {
         }
 
         /* access modifiers changed from: protected */
+        @Override // androidx.preference.Preference
         public boolean persistBoolean(boolean z) {
             PackageInfo packageInfo;
             int i = 0;
@@ -188,13 +198,14 @@ public class PluginFragment extends PreferenceFragment {
                 String str = packageInfo.packageName;
                 Uri uri = null;
                 if (str != null) {
-                    uri = Uri.fromParts("package", str, (String) null);
+                    uri = Uri.fromParts("package", str, null);
                 }
                 getContext().sendBroadcast(new Intent("com.android.systemui.action.PLUGIN_CHANGED", uri));
             }
             return true;
         }
 
+        @Override // androidx.preference.SwitchPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             super.onBindViewHolder(preferenceViewHolder);
             int i = 0;
@@ -205,11 +216,15 @@ public class PluginFragment extends PreferenceFragment {
             }
             findViewById.setVisibility(i);
             preferenceViewHolder.findViewById(C0015R$id.settings).setOnClickListener(new View.OnClickListener() {
+                /* class com.android.systemui.tuner.$$Lambda$PluginFragment$PluginPreference$Xt_y65tw1Tc7XykRWrNNbIDklTs */
+
                 public final void onClick(View view) {
                     PluginFragment.PluginPreference.this.lambda$onBindViewHolder$0$PluginFragment$PluginPreference(view);
                 }
             });
             preferenceViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                /* class com.android.systemui.tuner.$$Lambda$PluginFragment$PluginPreference$hyhKFHxbkbEXGxqXV7_N3Il_7XE */
+
                 public final boolean onLongClick(View view) {
                     return PluginFragment.PluginPreference.this.lambda$onBindViewHolder$1$PluginFragment$PluginPreference(view);
                 }
@@ -232,7 +247,7 @@ public class PluginFragment extends PreferenceFragment {
         /* renamed from: lambda$onBindViewHolder$1 */
         public /* synthetic */ boolean lambda$onBindViewHolder$1$PluginFragment$PluginPreference(View view) {
             Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-            intent.setData(Uri.fromParts("package", this.mInfo.packageName, (String) null));
+            intent.setData(Uri.fromParts("package", this.mInfo.packageName, null));
             getContext().startActivity(intent);
             return true;
         }

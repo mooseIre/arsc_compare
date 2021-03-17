@@ -31,15 +31,20 @@ import java.util.Set;
 public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     private static final Interpolator SCROLL_CUBIC = $$Lambda$PagedTileLayout$fHkBmUM3caZV4_eDd9apVT7Ho.INSTANCE;
     private final PagerAdapter mAdapter = new PagerAdapter() {
+        /* class com.android.systemui.qs.PagedTileLayout.AnonymousClass3 */
+
+        @Override // androidx.viewpager.widget.PagerAdapter
         public boolean isViewFromObject(View view, Object obj) {
             return view == obj;
         }
 
+        @Override // androidx.viewpager.widget.PagerAdapter
         public void destroyItem(ViewGroup viewGroup, int i, Object obj) {
             viewGroup.removeView((View) obj);
             PagedTileLayout.this.updateListening();
         }
 
+        @Override // androidx.viewpager.widget.PagerAdapter
         public Object instantiateItem(ViewGroup viewGroup, int i) {
             if (PagedTileLayout.this.isLayoutRtl()) {
                 i = (PagedTileLayout.this.mPages.size() - 1) - i;
@@ -53,12 +58,12 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
             return viewGroup2;
         }
 
+        @Override // androidx.viewpager.widget.PagerAdapter
         public int getCount() {
             return PagedTileLayout.this.mPages.size();
         }
     };
-    /* access modifiers changed from: private */
-    public AnimatorSet mBounceAnimatorSet;
+    private AnimatorSet mBounceAnimatorSet;
     private boolean mDistributeTiles = false;
     private int mExcessHeight;
     private int mLastExcessHeight;
@@ -70,42 +75,42 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     private int mMaxColumns = 100;
     private int mMinRows = 1;
     private final ViewPager.OnPageChangeListener mOnPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+        /* class com.android.systemui.qs.PagedTileLayout.AnonymousClass2 */
+
+        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageSelected(int i) {
             PagedTileLayout.this.updateSelected();
             if (PagedTileLayout.this.mPageIndicator != null && PagedTileLayout.this.mPageListener != null) {
-                PageListener access$300 = PagedTileLayout.this.mPageListener;
+                PageListener pageListener = PagedTileLayout.this.mPageListener;
                 boolean z = false;
                 if (!PagedTileLayout.this.isLayoutRtl() ? i == 0 : i == PagedTileLayout.this.mPages.size() - 1) {
                     z = true;
                 }
-                access$300.onPageChanged(z);
+                pageListener.onPageChanged(z);
             }
         }
 
+        @Override // androidx.viewpager.widget.ViewPager.OnPageChangeListener
         public void onPageScrolled(int i, float f, int i2) {
             if (PagedTileLayout.this.mPageIndicator != null) {
-                float unused = PagedTileLayout.this.mPageIndicatorPosition = ((float) i) + f;
+                PagedTileLayout.this.mPageIndicatorPosition = ((float) i) + f;
                 PagedTileLayout.this.mPageIndicator.setLocation(PagedTileLayout.this.mPageIndicatorPosition);
                 if (PagedTileLayout.this.mPageListener != null) {
-                    PageListener access$300 = PagedTileLayout.this.mPageListener;
+                    PageListener pageListener = PagedTileLayout.this.mPageListener;
                     boolean z = true;
                     if (i2 != 0 || (!PagedTileLayout.this.isLayoutRtl() ? i != 0 : i != PagedTileLayout.this.mPages.size() - 1)) {
                         z = false;
                     }
-                    access$300.onPageChanged(z);
+                    pageListener.onPageChanged(z);
                 }
             }
         }
     };
-    /* access modifiers changed from: private */
-    public MiuiPageIndicator mPageIndicator;
-    /* access modifiers changed from: private */
-    public float mPageIndicatorPosition;
-    /* access modifiers changed from: private */
-    public PageListener mPageListener;
+    private MiuiPageIndicator mPageIndicator;
+    private float mPageIndicatorPosition;
+    private PageListener mPageListener;
     private int mPageToRestore = -1;
-    /* access modifiers changed from: private */
-    public final ArrayList<TilePage> mPages = new ArrayList<>();
+    private final ArrayList<TilePage> mPages = new ArrayList<>();
     private Scroller mScroller;
     private final ArrayList<QSPanel.TileRecord> mTiles = new ArrayList<>();
     private final UiEventLogger mUiEventLogger = QSEvents.INSTANCE.getQsUiEventsLogger();
@@ -134,10 +139,12 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         new Rect();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void saveInstanceState(Bundle bundle) {
         bundle.putInt("current_page", getCurrentItem());
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void restoreInstanceState(Bundle bundle) {
         this.mPageToRestore = bundle.getInt("current_page", -1);
     }
@@ -164,6 +171,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // androidx.viewpager.widget.ViewPager
     public void setCurrentItem(int i, boolean z) {
         if (isLayoutRtl()) {
             i = (this.mPages.size() - 1) - i;
@@ -183,6 +191,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void setListening(boolean z) {
         if (this.mListening != z) {
             this.mListening = z;
@@ -191,7 +200,8 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateListening() {
+    /* access modifiers changed from: public */
+    private void updateListening() {
         Iterator<TilePage> it = this.mPages.iterator();
         while (it.hasNext()) {
             TilePage next = it.next();
@@ -199,6 +209,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // androidx.viewpager.widget.ViewPager
     public void fakeDragBy(float f) {
         try {
             super.fakeDragBy(f);
@@ -206,6 +217,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         } catch (NullPointerException e) {
             Log.e("PagedTileLayout", "FakeDragBy called before begin", e);
             post(new Runnable(this.mPages.size() - 1) {
+                /* class com.android.systemui.qs.$$Lambda$PagedTileLayout$EgpYNrlBIoNqA0Bh2xqmY_dv38 */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -230,6 +242,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         setOffscreenPageLimit(1);
     }
 
+    @Override // androidx.viewpager.widget.ViewPager
     public void endFakeDrag() {
         try {
             super.endFakeDrag();
@@ -238,6 +251,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // androidx.viewpager.widget.ViewPager
     public void computeScroll() {
         if (!this.mScroller.isFinished() && this.mScroller.computeScrollOffset()) {
             if (!isFakeDragging()) {
@@ -263,7 +277,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     }
 
     private TilePage createTilePage() {
-        TilePage tilePage = (TilePage) LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_paged_page, this, false);
+        TilePage tilePage = (TilePage) LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_paged_page, (ViewGroup) this, false);
         tilePage.setMinRows(this.mMinRows);
         tilePage.setMaxColumns(this.mMaxColumns);
         return tilePage;
@@ -275,6 +289,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         this.mPageIndicator.setLocation(this.mPageIndicatorPosition);
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getOffsetTop(QSPanel.TileRecord tileRecord) {
         ViewGroup viewGroup = (ViewGroup) tileRecord.tileView.getParent();
         if (viewGroup == null) {
@@ -283,12 +298,14 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         return viewGroup.getTop() + getTop();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void addTile(QSPanel.TileRecord tileRecord) {
         this.mTiles.add(tileRecord);
         this.mDistributeTiles = true;
         requestLayout();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void removeTile(QSPanel.TileRecord tileRecord) {
         if (this.mTiles.remove(tileRecord)) {
             this.mDistributeTiles = true;
@@ -296,13 +313,15 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void setExpansion(float f) {
         this.mLastExpansion = f;
         updateSelected();
     }
 
     /* access modifiers changed from: private */
-    public void updateSelected() {
+    /* access modifiers changed from: public */
+    private void updateSelected() {
         float f = this.mLastExpansion;
         if (f <= 0.0f || f >= 1.0f) {
             boolean z = this.mLastExpansion == 1.0f;
@@ -364,6 +383,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean updateResources() {
         getContext().getResources().getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
         setPadding(0, 0, 0, getContext().getResources().getDimensionPixelSize(C0012R$dimen.qs_paged_tile_layout_padding_bottom));
@@ -378,6 +398,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         return z;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean setMinRows(int i) {
         this.mMinRows = i;
         boolean z = false;
@@ -390,6 +411,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         return z;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean setMaxColumns(int i) {
         this.mMaxColumns = i;
         boolean z = false;
@@ -407,6 +429,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.viewpager.widget.ViewPager
     public void onMeasure(int i, int i2) {
         int size = this.mTiles.size();
         if (!(!this.mDistributeTiles && this.mLastMaxHeight == View.MeasureSpec.getSize(i2) && this.mLastExcessHeight == this.mExcessHeight)) {
@@ -448,6 +471,7 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         return size > this.mPages.get(0).maxTiles() * max ? max + 1 : max;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getNumVisibleTiles() {
         if (this.mPages.size() == 0) {
             return 0;
@@ -474,8 +498,10 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
             this.mBounceAnimatorSet = animatorSet;
             animatorSet.playTogether(arrayList);
             this.mBounceAnimatorSet.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.qs.PagedTileLayout.AnonymousClass1 */
+
                 public void onAnimationEnd(Animator animator) {
-                    AnimatorSet unused = PagedTileLayout.this.mBounceAnimatorSet = null;
+                    PagedTileLayout.this.mBounceAnimatorSet = null;
                     runnable.run();
                 }
             });
@@ -496,8 +522,8 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         view.setAlpha(0.0f);
         view.setScaleX(0.0f);
         view.setScaleY(0.0f);
-        ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(view, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(View.ALPHA, new float[]{1.0f}), PropertyValuesHolder.ofFloat(View.SCALE_X, new float[]{1.0f}), PropertyValuesHolder.ofFloat(View.SCALE_Y, new float[]{1.0f})});
-        ofPropertyValuesHolder.setDuration(450);
+        ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(view, PropertyValuesHolder.ofFloat(View.ALPHA, 1.0f), PropertyValuesHolder.ofFloat(View.SCALE_X, 1.0f), PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.0f));
+        ofPropertyValuesHolder.setDuration(450L);
         ofPropertyValuesHolder.setStartDelay((long) (i * 85));
         ofPropertyValuesHolder.setInterpolator(new OvershootInterpolator(1.3f));
         return ofPropertyValuesHolder;

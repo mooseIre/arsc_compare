@@ -13,6 +13,7 @@ public final class DozeService_Factory implements Factory<DozeService> {
         this.pluginManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DozeService get() {
         return provideInstance(this.dozeFactoryProvider, this.pluginManagerProvider);
     }

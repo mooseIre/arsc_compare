@@ -5,6 +5,8 @@ import android.os.Message;
 
 public class KeyguardLifecyclesDispatcher {
     private Handler mHandler = new Handler() {
+        /* class com.android.systemui.keyguard.KeyguardLifecyclesDispatcher.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             switch (message.what) {
                 case 0:
@@ -36,10 +38,8 @@ public class KeyguardLifecyclesDispatcher {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final ScreenLifecycle mScreenLifecycle;
-    /* access modifiers changed from: private */
-    public final WakefulnessLifecycle mWakefulnessLifecycle;
+    private final ScreenLifecycle mScreenLifecycle;
+    private final WakefulnessLifecycle mWakefulnessLifecycle;
 
     public KeyguardLifecyclesDispatcher(ScreenLifecycle screenLifecycle, WakefulnessLifecycle wakefulnessLifecycle) {
         this.mScreenLifecycle = screenLifecycle;

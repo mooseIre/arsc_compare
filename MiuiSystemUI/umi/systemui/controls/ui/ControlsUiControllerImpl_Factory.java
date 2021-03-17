@@ -34,6 +34,7 @@ public final class ControlsUiControllerImpl_Factory implements Factory<ControlsU
         this.shadeControllerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public ControlsUiControllerImpl get() {
         return provideInstance(this.controlsControllerProvider, this.contextProvider, this.uiExecutorProvider, this.bgExecutorProvider, this.controlsListingControllerProvider, this.sharedPreferencesProvider, this.controlActionCoordinatorProvider, this.activityStarterProvider, this.shadeControllerProvider);
     }

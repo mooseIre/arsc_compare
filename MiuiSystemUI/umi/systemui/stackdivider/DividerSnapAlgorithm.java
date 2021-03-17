@@ -388,8 +388,7 @@ public class DividerSnapAlgorithm {
     }
 
     public static class SnapTarget {
-        /* access modifiers changed from: private */
-        public final float distanceMultiplier;
+        private final float distanceMultiplier;
         public final int flag;
         public boolean isMiddleTarget;
         public final int position;

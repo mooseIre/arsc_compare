@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$ThemeOverlayManager$GlioDk646gj_04Nk
     private /* synthetic */ $$Lambda$ThemeOverlayManager$GlioDk646gj_04NkaTcsRN_awI4() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((OverlayInfo) obj).packageName;
     }

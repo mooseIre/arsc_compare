@@ -93,6 +93,7 @@ public final class ControlCenterTilesContainer extends SpringBackLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void addView(@Nullable View view, int i) {
         LinearLayout linearLayout = this.container;
         if (linearLayout != null) {

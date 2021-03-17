@@ -24,6 +24,7 @@ import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaControl
 import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.util.Utils;
+import com.android.systemui.util.animation.MeasurementInput;
 import com.android.systemui.util.animation.TransitionLayout;
 import com.android.systemui.util.animation.UniqueObjectHostView;
 import com.android.systemui.util.animation.UniqueObjectHostViewKt;
@@ -43,13 +44,11 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MediaCarouselController.kt */
 public final class MediaCarouselController {
-    /* access modifiers changed from: private */
-    public final ActivityStarter activityStarter;
+    private final ActivityStarter activityStarter;
     private int carouselMeasureHeight;
     private int carouselMeasureWidth;
     private final MediaCarouselController$configListener$1 configListener = new MediaCarouselController$configListener$1(this);
-    /* access modifiers changed from: private */
-    public final Context context;
+    private final Context context;
     private int currentCarouselHeight;
     private int currentCarouselWidth;
     private int currentEndLocation = -1;
@@ -59,23 +58,19 @@ public final class MediaCarouselController {
     private boolean currentlyShowingOnlyActive;
     private boolean currentlyVisibility;
     private MediaHostState desiredHostState;
-    /* access modifiers changed from: private */
-    public int desiredLocation = -1;
+    private int desiredLocation = -1;
     private boolean isRtl;
     private final MediaScrollView mediaCarousel;
-    /* access modifiers changed from: private */
-    public final MediaCarouselScrollHandler mediaCarouselScrollHandler;
+    private final MediaCarouselScrollHandler mediaCarouselScrollHandler;
     private final ViewGroup mediaContent;
     private final Provider<MiuiMediaControlPanel> mediaControlPanelFactory;
-    /* access modifiers changed from: private */
-    public final Map<String, MediaData> mediaData = new LinkedHashMap();
+    private final Map<String, MediaData> mediaData = new LinkedHashMap();
     @NotNull
     private final ViewGroup mediaFrame;
     private final MediaHostStatesManager mediaHostStatesManager;
     @NotNull
     private final Map<String, MediaControlPanel> mediaPlayers = new LinkedHashMap();
-    /* access modifiers changed from: private */
-    public boolean needsReordering;
+    private boolean needsReordering;
     private final PageIndicator pageIndicator;
     private boolean playersVisible;
     private View settingsButton;
@@ -83,29 +78,20 @@ public final class MediaCarouselController {
     private final VisualStabilityManager visualStabilityManager;
 
     public MediaCarouselController(@NotNull Context context2, @NotNull Provider<MiuiMediaControlPanel> provider, @NotNull VisualStabilityManager visualStabilityManager2, @NotNull MediaHostStatesManager mediaHostStatesManager2, @NotNull ActivityStarter activityStarter2, @NotNull DelayableExecutor delayableExecutor, @NotNull MediaDataFilter mediaDataFilter, @NotNull ConfigurationController configurationController, @NotNull FalsingManager falsingManager) {
-        Context context3 = context2;
-        Provider<MiuiMediaControlPanel> provider2 = provider;
-        VisualStabilityManager visualStabilityManager3 = visualStabilityManager2;
-        MediaHostStatesManager mediaHostStatesManager3 = mediaHostStatesManager2;
-        ActivityStarter activityStarter3 = activityStarter2;
-        MediaDataFilter mediaDataFilter2 = mediaDataFilter;
-        ConfigurationController configurationController2 = configurationController;
-        Intrinsics.checkParameterIsNotNull(context3, "context");
-        Intrinsics.checkParameterIsNotNull(provider2, "mediaControlPanelFactory");
-        Intrinsics.checkParameterIsNotNull(visualStabilityManager3, "visualStabilityManager");
-        Intrinsics.checkParameterIsNotNull(mediaHostStatesManager3, "mediaHostStatesManager");
-        Intrinsics.checkParameterIsNotNull(activityStarter3, "activityStarter");
-        DelayableExecutor delayableExecutor2 = delayableExecutor;
-        Intrinsics.checkParameterIsNotNull(delayableExecutor2, "executor");
-        Intrinsics.checkParameterIsNotNull(mediaDataFilter2, "mediaManager");
-        Intrinsics.checkParameterIsNotNull(configurationController2, "configurationController");
-        FalsingManager falsingManager2 = falsingManager;
-        Intrinsics.checkParameterIsNotNull(falsingManager2, "falsingManager");
-        this.context = context3;
-        this.mediaControlPanelFactory = provider2;
-        this.visualStabilityManager = visualStabilityManager3;
-        this.mediaHostStatesManager = mediaHostStatesManager3;
-        this.activityStarter = activityStarter3;
+        Intrinsics.checkParameterIsNotNull(context2, "context");
+        Intrinsics.checkParameterIsNotNull(provider, "mediaControlPanelFactory");
+        Intrinsics.checkParameterIsNotNull(visualStabilityManager2, "visualStabilityManager");
+        Intrinsics.checkParameterIsNotNull(mediaHostStatesManager2, "mediaHostStatesManager");
+        Intrinsics.checkParameterIsNotNull(activityStarter2, "activityStarter");
+        Intrinsics.checkParameterIsNotNull(delayableExecutor, "executor");
+        Intrinsics.checkParameterIsNotNull(mediaDataFilter, "mediaManager");
+        Intrinsics.checkParameterIsNotNull(configurationController, "configurationController");
+        Intrinsics.checkParameterIsNotNull(falsingManager, "falsingManager");
+        this.context = context2;
+        this.mediaControlPanelFactory = provider;
+        this.visualStabilityManager = visualStabilityManager2;
+        this.mediaHostStatesManager = mediaHostStatesManager2;
+        this.activityStarter = activityStarter2;
         ViewGroup inflateMediaCarousel = inflateMediaCarousel();
         this.mediaFrame = inflateMediaCarousel;
         View requireViewById = inflateMediaCarousel.requireViewById(C0015R$id.media_carousel_scroller);
@@ -114,39 +100,51 @@ public final class MediaCarouselController {
         View requireViewById2 = this.mediaFrame.requireViewById(C0015R$id.media_page_indicator);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "mediaFrame.requireViewBy….id.media_page_indicator)");
         this.pageIndicator = (PageIndicator) requireViewById2;
-        this.mediaCarouselScrollHandler = new MiuiMediaCarouselScrollHandler(this.mediaCarousel, this.pageIndicator, delayableExecutor2, new Function0<Unit>(mediaDataFilter2) {
+        this.mediaCarouselScrollHandler = new MiuiMediaCarouselScrollHandler(this.mediaCarousel, this.pageIndicator, delayableExecutor, new Function0<Unit>(mediaDataFilter) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass1 */
+
+            @Override // kotlin.jvm.internal.CallableReference
             public final String getName() {
                 return "onSwipeToDismiss";
             }
 
+            @Override // kotlin.jvm.internal.CallableReference
             public final KDeclarationContainer getOwner() {
                 return Reflection.getOrCreateKotlinClass(MediaDataFilter.class);
             }
 
+            @Override // kotlin.jvm.internal.CallableReference
             public final String getSignature() {
                 return "onSwipeToDismiss()V";
             }
 
+            @Override // kotlin.jvm.functions.Function0
             public final void invoke() {
                 ((MediaDataFilter) this.receiver).onSwipeToDismiss();
             }
         }, new Function0<Unit>(this) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass2 */
+
+            @Override // kotlin.jvm.internal.CallableReference
             public final String getName() {
                 return "updatePageIndicatorLocation";
             }
 
+            @Override // kotlin.jvm.internal.CallableReference
             public final KDeclarationContainer getOwner() {
                 return Reflection.getOrCreateKotlinClass(MediaCarouselController.class);
             }
 
+            @Override // kotlin.jvm.internal.CallableReference
             public final String getSignature() {
                 return "updatePageIndicatorLocation()V";
             }
 
+            @Override // kotlin.jvm.functions.Function0
             public final void invoke() {
                 ((MediaCarouselController) this.receiver).updatePageIndicatorLocation();
             }
-        }, falsingManager2);
+        }, falsingManager);
         Resources resources = this.context.getResources();
         Intrinsics.checkExpressionValueIsNotNull(resources, "context.resources");
         Configuration configuration = resources.getConfiguration();
@@ -156,14 +154,16 @@ public final class MediaCarouselController {
         View requireViewById3 = this.mediaCarousel.requireViewById(C0015R$id.media_carousel);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "mediaCarousel.requireViewById(R.id.media_carousel)");
         this.mediaContent = (ViewGroup) requireViewById3;
-        configurationController2.addCallback(this.configListener);
+        configurationController.addCallback(this.configListener);
         AnonymousClass3 r2 = new VisualStabilityManager.Callback(this) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass3 */
             final /* synthetic */ MediaCarouselController this$0;
 
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.statusbar.notification.VisualStabilityManager.Callback
             public final void onChangeAllowed() {
                 if (this.this$0.needsReordering) {
                     this.this$0.needsReordering = false;
@@ -175,23 +175,29 @@ public final class MediaCarouselController {
         this.visualStabilityCallback = r2;
         this.visualStabilityManager.addReorderingAllowedCallback(r2, true);
         this.visualStabilityManager.injector.addPanelVisibilityChangedCallback(new VisualStabilityManagerInjector$Companion$Callback(this) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass4 */
             final /* synthetic */ MediaCarouselController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.statusbar.notification.VisualStabilityManagerInjector$Companion$Callback
             public void onVisibilityChanged(boolean z) {
                 this.this$0.setCurrentlyVisibility(z);
             }
         });
-        mediaDataFilter2.addListener(new MediaDataManager.Listener(this) {
+        mediaDataFilter.addListener(new MediaDataManager.Listener(this) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass5 */
             final /* synthetic */ MediaCarouselController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.media.MediaDataManager.Listener
             public void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {
                 Intrinsics.checkParameterIsNotNull(str, "key");
                 Intrinsics.checkParameterIsNotNull(mediaData, "data");
@@ -206,6 +212,7 @@ public final class MediaCarouselController {
                 onMediaDataRemoved(str);
             }
 
+            @Override // com.android.systemui.media.MediaDataManager.Listener
             public void onMediaDataRemoved(@NotNull String str) {
                 Intrinsics.checkParameterIsNotNull(str, "key");
                 this.this$0.mediaData.remove(str);
@@ -213,6 +220,7 @@ public final class MediaCarouselController {
             }
         });
         this.mediaFrame.addOnLayoutChangeListener(new View.OnLayoutChangeListener(this) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass6 */
             final /* synthetic */ MediaCarouselController this$0;
 
             {
@@ -224,17 +232,20 @@ public final class MediaCarouselController {
             }
         });
         this.mediaHostStatesManager.addCallback(new MediaHostStatesManager.Callback(this) {
+            /* class com.android.systemui.media.MediaCarouselController.AnonymousClass7 */
             final /* synthetic */ MediaCarouselController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.media.MediaHostStatesManager.Callback
             public void onHostStateChanged(int i, @NotNull MediaHostState mediaHostState) {
                 Intrinsics.checkParameterIsNotNull(mediaHostState, "mediaHostState");
                 if (i == this.this$0.desiredLocation) {
                     MediaCarouselController mediaCarouselController = this.this$0;
-                    MediaCarouselController.onDesiredLocationChanged$default(mediaCarouselController, mediaCarouselController.desiredLocation, mediaHostState, false, 0, 0, 24, (Object) null);
+                    MediaCarouselController.onDesiredLocationChanged$default(mediaCarouselController, mediaCarouselController.desiredLocation, mediaHostState, false, 0, 0, 24, null);
                 }
             }
         });
@@ -257,18 +268,19 @@ public final class MediaCarouselController {
     private final void setCurrentlyExpanded(boolean z) {
         if (this.currentlyExpanded != z) {
             this.currentlyExpanded = z;
-            for (MediaControlPanel listening : this.mediaPlayers.values()) {
-                listening.setListening(this.currentlyExpanded && this.currentlyVisibility);
+            for (MediaControlPanel mediaControlPanel : this.mediaPlayers.values()) {
+                mediaControlPanel.setListening(this.currentlyExpanded && this.currentlyVisibility);
             }
         }
     }
 
     /* access modifiers changed from: private */
-    public final void setCurrentlyVisibility(boolean z) {
+    /* access modifiers changed from: public */
+    private final void setCurrentlyVisibility(boolean z) {
         if (this.currentlyVisibility != z) {
             this.currentlyVisibility = z;
-            for (MediaControlPanel listening : this.mediaPlayers.values()) {
-                listening.setListening(this.currentlyExpanded && this.currentlyVisibility);
+            for (MediaControlPanel mediaControlPanel : this.mediaPlayers.values()) {
+                mediaControlPanel.setListening(this.currentlyExpanded && this.currentlyVisibility);
             }
         }
     }
@@ -309,7 +321,7 @@ public final class MediaCarouselController {
     }
 
     private final ViewGroup inflateMediaCarousel() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.media_carousel, new UniqueObjectHostView(this.context), false);
+        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.media_carousel, (ViewGroup) new UniqueObjectHostView(this.context), false);
         if (inflate != null) {
             ViewGroup viewGroup = (ViewGroup) inflate;
             viewGroup.setLayoutDirection(3);
@@ -319,11 +331,12 @@ public final class MediaCarouselController {
     }
 
     /* access modifiers changed from: private */
-    public final void reorderAllPlayers() {
-        for (MediaControlPanel next : this.mediaPlayers.values()) {
-            PlayerViewHolder view = next.getView();
+    /* access modifiers changed from: public */
+    private final void reorderAllPlayers() {
+        for (MediaControlPanel mediaControlPanel : this.mediaPlayers.values()) {
+            PlayerViewHolder view = mediaControlPanel.getView();
             TransitionLayout player = view != null ? view.getPlayer() : null;
-            if (next.isPlaying() && this.mediaContent.indexOfChild(player) != 0) {
+            if (mediaControlPanel.isPlaying() && this.mediaContent.indexOfChild(player) != 0) {
                 this.mediaContent.removeView(player);
                 this.mediaContent.addView(player, 0);
             }
@@ -332,7 +345,8 @@ public final class MediaCarouselController {
     }
 
     /* access modifiers changed from: private */
-    public final void addOrUpdatePlayer(String str, String str2, MediaData mediaData2) {
+    /* access modifiers changed from: public */
+    private final void addOrUpdatePlayer(String str, String str2, MediaData mediaData2) {
         TransitionLayout player;
         TransitionLayout transitionLayout = null;
         if (this.mediaPlayers.get(str2) != null) {
@@ -352,33 +366,33 @@ public final class MediaCarouselController {
         }
         MediaControlPanel mediaControlPanel2 = this.mediaPlayers.get(str);
         if (mediaControlPanel2 == null) {
-            MediaControlPanel mediaControlPanel3 = this.mediaControlPanelFactory.get();
+            MiuiMediaControlPanel miuiMediaControlPanel = this.mediaControlPanelFactory.get();
             PlayerViewHolder.Companion companion = PlayerViewHolder.Companion;
             LayoutInflater from = LayoutInflater.from(this.context);
             Intrinsics.checkExpressionValueIsNotNull(from, "LayoutInflater.from(context)");
-            mediaControlPanel3.attach(companion.create(from, this.mediaContent));
-            Intrinsics.checkExpressionValueIsNotNull(mediaControlPanel3, "existingPlayer");
-            MiuiMediaControlPanel miuiMediaControlPanel = (MiuiMediaControlPanel) mediaControlPanel3;
-            miuiMediaControlPanel.getMediaViewController().setSizeChangedListener(new MediaCarouselController$addOrUpdatePlayer$2(this));
-            this.mediaPlayers.put(str, mediaControlPanel3);
+            miuiMediaControlPanel.attach(companion.create(from, this.mediaContent));
+            Intrinsics.checkExpressionValueIsNotNull(miuiMediaControlPanel, "existingPlayer");
+            MiuiMediaControlPanel miuiMediaControlPanel2 = miuiMediaControlPanel;
+            miuiMediaControlPanel2.getMediaViewController().setSizeChangedListener(new MediaCarouselController$addOrUpdatePlayer$2(this));
+            this.mediaPlayers.put(str, miuiMediaControlPanel);
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -2);
-            PlayerViewHolder view = miuiMediaControlPanel.getView();
+            PlayerViewHolder view = miuiMediaControlPanel2.getView();
             if (!(view == null || (player = view.getPlayer()) == null)) {
                 player.setLayoutParams(layoutParams);
             }
-            mediaControlPanel3.bind(mediaData2);
-            mediaControlPanel3.setListening(this.currentlyExpanded && this.currentlyVisibility);
-            updatePlayerToState(mediaControlPanel3, true);
-            if (miuiMediaControlPanel.isPlaying()) {
+            miuiMediaControlPanel.bind(mediaData2);
+            miuiMediaControlPanel.setListening(this.currentlyExpanded && this.currentlyVisibility);
+            updatePlayerToState(miuiMediaControlPanel, true);
+            if (miuiMediaControlPanel2.isPlaying()) {
                 ViewGroup viewGroup = this.mediaContent;
-                PlayerViewHolder view2 = miuiMediaControlPanel.getView();
+                PlayerViewHolder view2 = miuiMediaControlPanel2.getView();
                 if (view2 != null) {
                     transitionLayout = view2.getPlayer();
                 }
                 viewGroup.addView(transitionLayout, 0);
             } else {
                 ViewGroup viewGroup2 = this.mediaContent;
-                PlayerViewHolder view3 = miuiMediaControlPanel.getView();
+                PlayerViewHolder view3 = miuiMediaControlPanel2.getView();
                 if (view3 != null) {
                     transitionLayout = view3.getPlayer();
                 }
@@ -415,7 +429,8 @@ public final class MediaCarouselController {
     }
 
     /* access modifiers changed from: private */
-    public final void removePlayer(String str) {
+    /* access modifiers changed from: public */
+    private final void removePlayer(String str) {
         MediaControlPanel remove = this.mediaPlayers.remove(str);
         if (remove != null) {
             this.mediaCarouselScrollHandler.onPrePlayerRemoved(remove);
@@ -443,12 +458,12 @@ public final class MediaCarouselController {
     }
 
     public final void setCurrentState(int i, int i2, float f, boolean z) {
-        if (i != this.currentStartLocation || i2 != this.currentEndLocation || f != this.currentTransitionProgress || z) {
+        if (!(i == this.currentStartLocation && i2 == this.currentEndLocation && f == this.currentTransitionProgress && !z)) {
             this.currentStartLocation = i;
             this.currentEndLocation = i2;
             this.currentTransitionProgress = f;
-            for (MediaControlPanel updatePlayerToState : this.mediaPlayers.values()) {
-                updatePlayerToState(updatePlayerToState, z);
+            for (MediaControlPanel mediaControlPanel : this.mediaPlayers.values()) {
+                updatePlayerToState(mediaControlPanel, z);
             }
             maybeResetSettingsCog();
             updatePageIndicatorAlpha();
@@ -478,7 +493,8 @@ public final class MediaCarouselController {
     }
 
     /* access modifiers changed from: private */
-    public final void updatePageIndicatorLocation() {
+    /* access modifiers changed from: public */
+    private final void updatePageIndicatorLocation() {
         int i;
         int i2;
         if (this.isRtl) {
@@ -502,13 +518,13 @@ public final class MediaCarouselController {
     public final void updateCarouselDimensions() {
         int i = 0;
         int i2 = 0;
-        for (MediaControlPanel mediaViewController : this.mediaPlayers.values()) {
-            MediaViewController mediaViewController2 = mediaViewController.getMediaViewController();
-            Intrinsics.checkExpressionValueIsNotNull(mediaViewController2, "mediaPlayer.mediaViewController");
-            i = Math.max(i, mediaViewController2.getCurrentWidth() + ((int) mediaViewController2.getTranslationX()));
-            i2 = Math.max(i2, mediaViewController2.getCurrentHeight() + ((int) mediaViewController2.getTranslationY()));
+        for (MediaControlPanel mediaControlPanel : this.mediaPlayers.values()) {
+            MediaViewController mediaViewController = mediaControlPanel.getMediaViewController();
+            Intrinsics.checkExpressionValueIsNotNull(mediaViewController, "mediaPlayer.mediaViewController");
+            i = Math.max(i, mediaViewController.getCurrentWidth() + ((int) mediaViewController.getTranslationX()));
+            i2 = Math.max(i2, mediaViewController.getCurrentHeight() + ((int) mediaViewController.getTranslationY()));
         }
-        if (i != this.currentCarouselWidth || i2 != this.currentCarouselHeight) {
+        if (!(i == this.currentCarouselWidth && i2 == this.currentCarouselHeight)) {
             this.currentCarouselWidth = i;
             this.currentCarouselHeight = i2;
             this.mediaCarouselScrollHandler.setCarouselBounds(i + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2), this.currentCarouselHeight);
@@ -545,11 +561,11 @@ public final class MediaCarouselController {
             this.desiredLocation = i;
             this.desiredHostState = mediaHostState;
             setCurrentlyExpanded(mediaHostState.getExpansion() > ((float) 0));
-            for (MediaControlPanel next : this.mediaPlayers.values()) {
+            for (MediaControlPanel mediaControlPanel : this.mediaPlayers.values()) {
                 if (z) {
-                    next.getMediaViewController().animatePendingStateChange(j, j2);
+                    mediaControlPanel.getMediaViewController().animatePendingStateChange(j, j2);
                 }
-                next.getMediaViewController().onLocationPreChange(i);
+                mediaControlPanel.getMediaViewController().onLocationPreChange(i);
             }
             this.mediaCarouselScrollHandler.setShowsSettingsButton(!mediaHostState.getShowsOnlyActiveMedia());
             this.mediaCarouselScrollHandler.setFalsingProtectionNeeded(mediaHostState.getFalsingProtectionNeeded());
@@ -557,78 +573,32 @@ public final class MediaCarouselController {
             if (visible != this.playersVisible) {
                 this.playersVisible = visible;
                 if (visible) {
-                    MediaCarouselScrollHandler.resetTranslation$default(this.mediaCarouselScrollHandler, false, 1, (Object) null);
+                    MediaCarouselScrollHandler.resetTranslation$default(this.mediaCarouselScrollHandler, false, 1, null);
                 }
             }
             updateCarouselSize();
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0005, code lost:
-        r0 = r0.getMeasurementInput();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateCarouselSize() {
-        /*
-            r6 = this;
-            com.android.systemui.media.MediaHostState r0 = r6.desiredHostState
-            r1 = 0
-            if (r0 == 0) goto L_0x0010
-            com.android.systemui.util.animation.MeasurementInput r0 = r0.getMeasurementInput()
-            if (r0 == 0) goto L_0x0010
-            int r0 = r0.getWidth()
-            goto L_0x0011
-        L_0x0010:
-            r0 = r1
-        L_0x0011:
-            com.android.systemui.media.MediaHostState r2 = r6.desiredHostState
-            if (r2 == 0) goto L_0x0020
-            com.android.systemui.util.animation.MeasurementInput r2 = r2.getMeasurementInput()
-            if (r2 == 0) goto L_0x0020
-            int r2 = r2.getHeight()
-            goto L_0x0021
-        L_0x0020:
-            r2 = r1
-        L_0x0021:
-            int r3 = r6.carouselMeasureWidth
-            if (r0 == r3) goto L_0x0027
-            if (r0 != 0) goto L_0x002d
-        L_0x0027:
-            int r3 = r6.carouselMeasureHeight
-            if (r2 == r3) goto L_0x006c
-            if (r2 == 0) goto L_0x006c
-        L_0x002d:
-            r6.carouselMeasureWidth = r0
-            r6.carouselMeasureHeight = r2
-            com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView$Companion r2 = com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView.Companion
-            int r2 = r2.getMSidePaddings()
-            int r0 = r0 + r2
-            int r2 = r6.carouselMeasureWidth
-            com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView$Companion r3 = com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView.Companion
-            int r3 = r3.getMSidePaddings()
-            int r3 = r3 * 2
-            int r2 = r2 + r3
-            r3 = 1073741824(0x40000000, float:2.0)
-            int r3 = android.view.View.MeasureSpec.makeMeasureSpec(r2, r3)
-            com.android.systemui.media.MediaHostState r4 = r6.desiredHostState
-            if (r4 == 0) goto L_0x0058
-            com.android.systemui.util.animation.MeasurementInput r4 = r4.getMeasurementInput()
-            if (r4 == 0) goto L_0x0058
-            int r4 = r4.getHeightMeasureSpec()
-            goto L_0x0059
-        L_0x0058:
-            r4 = r1
-        L_0x0059:
-            com.android.systemui.media.MediaScrollView r5 = r6.mediaCarousel
-            r5.measure(r3, r4)
-            com.android.systemui.media.MediaScrollView r3 = r6.mediaCarousel
-            int r4 = r3.getMeasuredHeight()
-            r3.layout(r1, r1, r2, r4)
-            com.android.systemui.media.MediaCarouselScrollHandler r6 = r6.mediaCarouselScrollHandler
-            r6.setPlayerWidthPlusPadding(r0)
-        L_0x006c:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.MediaCarouselController.updateCarouselSize():void");
+        MeasurementInput measurementInput;
+        MeasurementInput measurementInput2;
+        MeasurementInput measurementInput3;
+        MediaHostState mediaHostState = this.desiredHostState;
+        int width = (mediaHostState == null || (measurementInput3 = mediaHostState.getMeasurementInput()) == null) ? 0 : measurementInput3.getWidth();
+        MediaHostState mediaHostState2 = this.desiredHostState;
+        int height = (mediaHostState2 == null || (measurementInput2 = mediaHostState2.getMeasurementInput()) == null) ? 0 : measurementInput2.getHeight();
+        if ((width != this.carouselMeasureWidth && width != 0) || (height != this.carouselMeasureHeight && height != 0)) {
+            this.carouselMeasureWidth = width;
+            this.carouselMeasureHeight = height;
+            int mSidePaddings = width + MiuiMediaHeaderView.Companion.getMSidePaddings();
+            int mSidePaddings2 = this.carouselMeasureWidth + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2);
+            int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(mSidePaddings2, 1073741824);
+            MediaHostState mediaHostState3 = this.desiredHostState;
+            this.mediaCarousel.measure(makeMeasureSpec, (mediaHostState3 == null || (measurementInput = mediaHostState3.getMeasurementInput()) == null) ? 0 : measurementInput.getHeightMeasureSpec());
+            MediaScrollView mediaScrollView = this.mediaCarousel;
+            mediaScrollView.layout(0, 0, mSidePaddings2, mediaScrollView.getMeasuredHeight());
+            this.mediaCarouselScrollHandler.setPlayerWidthPlusPadding(mSidePaddings);
+        }
     }
 }

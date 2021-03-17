@@ -15,26 +15,26 @@ public class AnimatorListenerWrapper implements Animator.AnimatorListener {
     }
 
     public void onAnimationStart(Animator animator) {
-        for (Animator.AnimatorListener onAnimationStart : this.mListeners) {
-            onAnimationStart.onAnimationStart(animator);
+        for (Animator.AnimatorListener animatorListener : this.mListeners) {
+            animatorListener.onAnimationStart(animator);
         }
     }
 
     public void onAnimationEnd(Animator animator) {
-        for (Animator.AnimatorListener onAnimationEnd : this.mListeners) {
-            onAnimationEnd.onAnimationEnd(animator);
+        for (Animator.AnimatorListener animatorListener : this.mListeners) {
+            animatorListener.onAnimationEnd(animator);
         }
     }
 
     public void onAnimationCancel(Animator animator) {
-        for (Animator.AnimatorListener onAnimationCancel : this.mListeners) {
-            onAnimationCancel.onAnimationCancel(animator);
+        for (Animator.AnimatorListener animatorListener : this.mListeners) {
+            animatorListener.onAnimationCancel(animator);
         }
     }
 
     public void onAnimationRepeat(Animator animator) {
-        for (Animator.AnimatorListener onAnimationRepeat : this.mListeners) {
-            onAnimationRepeat.onAnimationRepeat(animator);
+        for (Animator.AnimatorListener animatorListener : this.mListeners) {
+            animatorListener.onAnimationRepeat(animator);
         }
     }
 

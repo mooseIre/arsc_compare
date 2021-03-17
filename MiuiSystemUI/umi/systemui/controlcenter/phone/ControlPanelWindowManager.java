@@ -200,6 +200,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         return this.mTransToControlPanel;
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
         this.mIsHeadsUp = z;
         this.mIsRowPinned = notificationEntry.isRowPinned();

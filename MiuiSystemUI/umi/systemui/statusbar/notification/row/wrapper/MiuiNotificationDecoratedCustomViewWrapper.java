@@ -22,6 +22,7 @@ public class MiuiNotificationDecoratedCustomViewWrapper extends MiuiNotification
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationCustomViewWrapper
     public void setCustomViewMargin() {
         super.setCustomViewMargin();
         if (this.mView.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
@@ -65,11 +66,13 @@ public class MiuiNotificationDecoratedCustomViewWrapper extends MiuiNotification
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationCustomViewWrapper, com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         super.setVisible(z);
         this.mView.setAlpha(z ? 1.0f : 0.0f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationCustomViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         handleCustomView();

@@ -25,6 +25,7 @@ public final class UserSwitcherController_Factory implements Factory<UserSwitche
         this.uiEventLoggerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public UserSwitcherController get() {
         return provideInstance(this.contextProvider, this.keyguardStateControllerProvider, this.handlerProvider, this.activityStarterProvider, this.broadcastDispatcherProvider, this.uiEventLoggerProvider);
     }

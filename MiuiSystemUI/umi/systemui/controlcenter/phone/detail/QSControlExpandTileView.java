@@ -39,24 +39,20 @@ import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
 
 public class QSControlExpandTileView extends LinearLayout implements ExpandInfoController.Callback {
-    /* access modifiers changed from: private */
-    public QSBigTileView.BigQSTileAnimationController mAnimatorController;
-    /* access modifiers changed from: private */
-    public boolean mClicked;
+    private QSBigTileView.BigQSTileAnimationController mAnimatorController;
+    private boolean mClicked;
     private ExpandInfoController mExpandInfoController;
-    /* access modifiers changed from: private */
-    public ImageView mIndicator;
+    private ImageView mIndicator;
     private ExpandInfoController.Info mInfo;
     private int mLayoutDirection;
     private ControlPanelController mPanelController;
-    /* access modifiers changed from: private */
-    public QSControlExpandDetail mQsControlExpandDetail;
+    private QSControlExpandDetail mQsControlExpandDetail;
     private TextView mStatus;
     private ImageView mStatusIcon;
     private TextView mTitle;
 
     public QSControlExpandTileView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public QSControlExpandTileView(Context context, AttributeSet attributeSet) {
@@ -73,21 +69,27 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
         this.mIndicator = (ImageView) findViewById(C0015R$id.indicator);
         this.mTitle = (TextView) findViewById(C0015R$id.title);
         this.mStatus = (TextView) findViewById(C0015R$id.status);
-        this.mIndicator.setContentDescription(this.mContext.getResources().getString(C0021R$string.accessibility_expand_button));
+        this.mIndicator.setContentDescription(((LinearLayout) this).mContext.getResources().getString(C0021R$string.accessibility_expand_button));
         this.mIndicator.setVisibility(this.mPanelController.isSuperPowerMode() ? 8 : 0);
         this.mExpandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
         setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlExpandTileView.AnonymousClass1 */
+
             public void onClick(View view) {
-                boolean unused = QSControlExpandTileView.this.handleClick();
+                QSControlExpandTileView.this.handleClick();
             }
         });
         setOnLongClickListener(new View.OnLongClickListener() {
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlExpandTileView.AnonymousClass2 */
+
             public boolean onLongClick(View view) {
                 return QSControlExpandTileView.this.handleClick();
             }
         });
-        this.mQsControlExpandDetail = new QSControlExpandDetail(this.mContext, this, this.mIndicator);
+        this.mQsControlExpandDetail = new QSControlExpandDetail(((LinearLayout) this).mContext, this, this.mIndicator);
         this.mIndicator.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlExpandTileView.AnonymousClass3 */
+
             public void onClick(View view) {
                 ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new ExpandTileUnfoldEvent());
                 QSControlExpandTileView.this.mQsControlExpandDetail.show();
@@ -95,6 +97,8 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
         });
         this.mAnimatorController = new QSBigTileView.BigQSTileAnimationController(this, this.mIndicator, 0.7f, 1.0f);
         this.mIndicator.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlExpandTileView.AnonymousClass4 */
+
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int actionMasked = motionEvent.getActionMasked();
                 QSControlExpandTileView.this.mAnimatorController.onTouchEvent(motionEvent);
@@ -102,10 +106,10 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
                     view.callOnClick();
                 }
                 if (actionMasked == 0) {
-                    boolean unused = QSControlExpandTileView.this.mClicked = true;
+                    QSControlExpandTileView.this.mClicked = true;
                 }
                 if (actionMasked == 3 || actionMasked == 1) {
-                    boolean unused2 = QSControlExpandTileView.this.mClicked = false;
+                    QSControlExpandTileView.this.mClicked = false;
                 }
                 return true;
             }
@@ -151,9 +155,11 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
 
     private void updateIndicatorTouch() {
         this.mIndicator.post(new Runnable() {
+            /* class com.android.systemui.controlcenter.phone.detail.QSControlExpandTileView.AnonymousClass5 */
+
             public void run() {
-                int dimensionPixelSize = QSControlExpandTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_h);
-                int dimensionPixelSize2 = QSControlExpandTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_v);
+                int dimensionPixelSize = ((LinearLayout) QSControlExpandTileView.this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_h);
+                int dimensionPixelSize2 = ((LinearLayout) QSControlExpandTileView.this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_v);
                 Rect rect = new Rect();
                 QSControlExpandTileView.this.mIndicator.getHitRect(rect);
                 rect.top -= dimensionPixelSize2;
@@ -180,16 +186,18 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
         return super.onTouchEvent(motionEvent);
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController.Callback
     public void updateInfo(int i, ExpandInfoController.Info info) {
         updateViews();
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController.Callback
     public void updateSelectedType(int i) {
         updateViews();
     }
 
     public void updateResources() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_width);
+        int dimensionPixelSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_width);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
         if (layoutParams.width != dimensionPixelSize) {
             layoutParams.width = dimensionPixelSize;
@@ -200,12 +208,12 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
         updateBackground();
         this.mTitle.setTextAppearance(C0022R$style.TextAppearance_QSControl_ExpandTileTitle);
         this.mStatus.setTextAppearance(C0022R$style.TextAppearance_QSControl_ExpandTileSubTitle);
-        this.mIndicator.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.qs_big_tile_expand_indicator_dark));
+        this.mIndicator.setImageDrawable(((LinearLayout) this).mContext.getDrawable(C0013R$drawable.qs_big_tile_expand_indicator_dark));
         updateViews();
     }
 
     private void updateBackground() {
-        Drawable smoothRoundDrawable = ControlCenterUtils.getSmoothRoundDrawable(this.mContext, C0013R$drawable.ic_qs_big_tile_bg_0);
+        Drawable smoothRoundDrawable = ControlCenterUtils.getSmoothRoundDrawable(((LinearLayout) this).mContext, C0013R$drawable.ic_qs_big_tile_bg_0);
         if (smoothRoundDrawable != null) {
             setBackground(smoothRoundDrawable);
         }
@@ -213,8 +221,8 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
 
     private void updateIconMargins() {
         if (this.mStatusIcon != null) {
-            float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_icon_size);
-            float dimensionPixelSize2 = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_expand_tile_icon_size);
+            float dimensionPixelSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_icon_size);
+            float dimensionPixelSize2 = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_expand_tile_icon_size);
             if (dimensionPixelSize2 < dimensionPixelSize) {
                 int i = (int) ((dimensionPixelSize - dimensionPixelSize2) / 2.0f);
                 LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mStatusIcon.getLayoutParams();
@@ -226,7 +234,8 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
     }
 
     /* access modifiers changed from: private */
-    public boolean handleClick() {
+    /* access modifiers changed from: public */
+    private boolean handleClick() {
         Object obj;
         int selectedType = this.mExpandInfoController.getSelectedType();
         if (selectedType == 0) {
@@ -264,8 +273,8 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
             this.mStatusIcon.setImageBitmap(this.mInfo.icon);
             if (!TextUtils.isEmpty(this.mInfo.status)) {
                 SpannableString spannableString = new SpannableString(this.mInfo.status + " " + this.mInfo.unit);
-                spannableString.setSpan(new TextAppearanceSpan(this.mContext, C0022R$style.TextAppearance_QSControl_ExpandTileSubTitle), 0, this.mInfo.status.length() + -1, 18);
-                spannableString.setSpan(new TextAppearanceSpan(this.mContext, C0022R$style.TextAppearance_QSControl_ExpandTileUnit), this.mInfo.status.length(), spannableString.length(), 18);
+                spannableString.setSpan(new TextAppearanceSpan(((LinearLayout) this).mContext, C0022R$style.TextAppearance_QSControl_ExpandTileSubTitle), 0, this.mInfo.status.length() + -1, 18);
+                spannableString.setSpan(new TextAppearanceSpan(((LinearLayout) this).mContext, C0022R$style.TextAppearance_QSControl_ExpandTileUnit), this.mInfo.status.length(), spannableString.length(), 18);
                 this.mStatus.setText(spannableString);
             }
             StringBuilder sb = new StringBuilder(this.mTitle.getText());

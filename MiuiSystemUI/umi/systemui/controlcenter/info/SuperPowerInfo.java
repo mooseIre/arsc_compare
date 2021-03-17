@@ -19,6 +19,7 @@ public class SuperPowerInfo extends BaseInfo {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.controlcenter.info.BaseInfo
     public ExpandInfoController.Info getInfoDetail() {
         ExpandInfoController.Info info = new ExpandInfoController.Info();
         try {
@@ -39,6 +40,7 @@ public class SuperPowerInfo extends BaseInfo {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.controlcenter.info.BaseInfo
     public Uri getUri() {
         return URI;
     }

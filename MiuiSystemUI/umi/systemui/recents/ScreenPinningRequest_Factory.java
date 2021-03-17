@@ -16,6 +16,7 @@ public final class ScreenPinningRequest_Factory implements Factory<ScreenPinning
         this.statusBarOptionalLazyProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ScreenPinningRequest get() {
         return provideInstance(this.contextProvider, this.statusBarOptionalLazyProvider);
     }

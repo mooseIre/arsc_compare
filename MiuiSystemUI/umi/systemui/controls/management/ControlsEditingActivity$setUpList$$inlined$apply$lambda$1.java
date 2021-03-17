@@ -12,6 +12,7 @@ public final class ControlsEditingActivity$setUpList$$inlined$apply$lambda$1 ext
         this.$recyclerView$inlined = recyclerView;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.AdapterDataObserver
     public void onChanged() {
         if (!this.hasAnimated) {
             this.hasAnimated = true;

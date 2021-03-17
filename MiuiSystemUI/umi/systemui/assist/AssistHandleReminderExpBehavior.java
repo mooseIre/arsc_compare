@@ -28,7 +28,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
-final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorController.BehaviorController {
+/* access modifiers changed from: package-private */
+public final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorController.BehaviorController {
     private static final String[] DEFAULT_HOME_CHANGE_ACTIONS = {"android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED", "android.intent.action.PACKAGE_ADDED", "android.intent.action.PACKAGE_CHANGED", "android.intent.action.PACKAGE_REMOVED"};
     private static final long DEFAULT_LEARNING_TIME_MS = TimeUnit.DAYS.toMillis(10);
     private static final long DEFAULT_SHOW_AND_GO_DELAYED_LONG_DELAY_MS = TimeUnit.SECONDS.toMillis(1);
@@ -37,21 +38,25 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     private AssistHandleCallbacks mAssistHandleCallbacks;
     private final Lazy<BootCompleteCache> mBootCompleteCache;
     private final BootCompleteCache.BootCompleteListener mBootCompleteListener = new BootCompleteCache.BootCompleteListener() {
+        /* class com.android.systemui.assist.AssistHandleReminderExpBehavior.AnonymousClass6 */
+
+        @Override // com.android.systemui.BootCompleteCache.BootCompleteListener
         public void onBootComplete() {
             AssistHandleReminderExpBehavior assistHandleReminderExpBehavior = AssistHandleReminderExpBehavior.this;
-            ComponentName unused = assistHandleReminderExpBehavior.mDefaultHome = assistHandleReminderExpBehavior.getCurrentDefaultHome();
+            assistHandleReminderExpBehavior.mDefaultHome = assistHandleReminderExpBehavior.getCurrentDefaultHome();
         }
     };
     private final Lazy<BroadcastDispatcher> mBroadcastDispatcher;
     private final Clock mClock;
     private int mConsecutiveTaskSwitches;
     private Context mContext;
-    /* access modifiers changed from: private */
-    public ComponentName mDefaultHome;
+    private ComponentName mDefaultHome;
     private final BroadcastReceiver mDefaultHomeBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.assist.AssistHandleReminderExpBehavior.AnonymousClass5 */
+
         public void onReceive(Context context, Intent intent) {
             AssistHandleReminderExpBehavior assistHandleReminderExpBehavior = AssistHandleReminderExpBehavior.this;
-            ComponentName unused = assistHandleReminderExpBehavior.mDefaultHome = assistHandleReminderExpBehavior.getCurrentDefaultHome();
+            assistHandleReminderExpBehavior.mDefaultHome = assistHandleReminderExpBehavior.getCurrentDefaultHome();
         }
     };
     private final IntentFilter mDefaultHomeIntentFilter;
@@ -68,6 +73,9 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     private long mLearningTimeElapsed;
     private boolean mOnLockscreen;
     private final OverviewProxyService.OverviewProxyListener mOverviewProxyListener = new OverviewProxyService.OverviewProxyListener() {
+        /* class com.android.systemui.assist.AssistHandleReminderExpBehavior.AnonymousClass3 */
+
+        @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
         public void onOverviewShown(boolean z) {
             AssistHandleReminderExpBehavior.this.handleOverviewShown();
         }
@@ -75,50 +83,69 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     private final Lazy<OverviewProxyService> mOverviewProxyService;
     private final Lazy<PackageManagerWrapper> mPackageManagerWrapper;
     private final Runnable mResetConsecutiveTaskSwitches = new Runnable() {
+        /* class com.android.systemui.assist.$$Lambda$AssistHandleReminderExpBehavior$pwcnWUhYSvHUPTaX_vnnVqcvKYA */
+
         public final void run() {
-            AssistHandleReminderExpBehavior.this.resetConsecutiveTaskSwitches();
+            AssistHandleReminderExpBehavior.lambda$pwcnWUhYSvHUPTaX_vnnVqcvKYA(AssistHandleReminderExpBehavior.this);
         }
     };
     private int mRunningTaskId;
     private final Lazy<StatusBarStateController> mStatusBarStateController;
     private final StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() {
+        /* class com.android.systemui.assist.AssistHandleReminderExpBehavior.AnonymousClass1 */
+
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onStateChanged(int i) {
             AssistHandleReminderExpBehavior.this.handleStatusBarStateChanged(i);
         }
 
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onDozingChanged(boolean z) {
             AssistHandleReminderExpBehavior.this.handleDozingChanged(z);
         }
     };
     private final Lazy<SysUiState> mSysUiFlagContainer;
     private final SysUiState.SysUiStateCallback mSysUiStateCallback = new SysUiState.SysUiStateCallback() {
+        /* class com.android.systemui.assist.$$Lambda$AssistHandleReminderExpBehavior$V4NCzVQFEFRzsFBikU8WKQiVok */
+
+        @Override // com.android.systemui.model.SysUiState.SysUiStateCallback
         public final void onSystemUiStateChanged(int i) {
-            AssistHandleReminderExpBehavior.this.handleSystemUiStateChanged(i);
+            AssistHandleReminderExpBehavior.m10lambda$V4NCzVQFEFRzsFBikU8WKQiVok(AssistHandleReminderExpBehavior.this, i);
         }
     };
     private final TaskStackChangeListener mTaskStackChangeListener = new TaskStackChangeListener() {
+        /* class com.android.systemui.assist.AssistHandleReminderExpBehavior.AnonymousClass2 */
+
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
             AssistHandleReminderExpBehavior.this.handleTaskStackTopChanged(runningTaskInfo.taskId, runningTaskInfo.topActivity);
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskCreated(int i, ComponentName componentName) {
             AssistHandleReminderExpBehavior.this.handleTaskStackTopChanged(i, componentName);
         }
     };
     private final Lazy<WakefulnessLifecycle> mWakefulnessLifecycle;
     private final WakefulnessLifecycle.Observer mWakefulnessLifecycleObserver = new WakefulnessLifecycle.Observer() {
+        /* class com.android.systemui.assist.AssistHandleReminderExpBehavior.AnonymousClass4 */
+
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedWakingUp() {
             AssistHandleReminderExpBehavior.this.handleWakefullnessChanged(false);
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedWakingUp() {
             AssistHandleReminderExpBehavior.this.handleWakefullnessChanged(true);
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedGoingToSleep() {
             AssistHandleReminderExpBehavior.this.handleWakefullnessChanged(false);
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedGoingToSleep() {
             AssistHandleReminderExpBehavior.this.handleWakefullnessChanged(false);
         }
@@ -139,13 +166,14 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
         this.mWakefulnessLifecycle = lazy5;
         this.mPackageManagerWrapper = lazy6;
         this.mDefaultHomeIntentFilter = new IntentFilter();
-        for (String addAction : DEFAULT_HOME_CHANGE_ACTIONS) {
-            this.mDefaultHomeIntentFilter.addAction(addAction);
+        for (String str : DEFAULT_HOME_CHANGE_ACTIONS) {
+            this.mDefaultHomeIntentFilter.addAction(str);
         }
         this.mBroadcastDispatcher = lazy7;
         this.mBootCompleteCache = lazy8;
     }
 
+    @Override // com.android.systemui.assist.AssistHandleBehaviorController.BehaviorController
     public void onModeActivated(Context context, AssistHandleCallbacks assistHandleCallbacks) {
         int i;
         this.mContext = context;
@@ -176,6 +204,7 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
         callbackForCurrentState(false);
     }
 
+    @Override // com.android.systemui.assist.AssistHandleBehaviorController.BehaviorController
     public void onModeDeactivated() {
         this.mAssistHandleCallbacks = null;
         if (this.mContext != null) {
@@ -193,6 +222,7 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
         this.mWakefulnessLifecycle.get().removeObserver(this.mWakefulnessLifecycleObserver);
     }
 
+    @Override // com.android.systemui.assist.AssistHandleBehaviorController.BehaviorController
     public void onAssistantGesturePerformed() {
         Context context = this.mContext;
         if (context != null) {
@@ -203,6 +233,7 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
         }
     }
 
+    @Override // com.android.systemui.assist.AssistHandleBehaviorController.BehaviorController
     public void onAssistHandlesRequested() {
         if (this.mAssistHandleCallbacks != null && isFullyAwake() && !this.mIsNavBarHidden && !this.mOnLockscreen) {
             this.mAssistHandleCallbacks.showAndGo();
@@ -210,7 +241,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     }
 
     /* access modifiers changed from: private */
-    public ComponentName getCurrentDefaultHome() {
+    /* access modifiers changed from: public */
+    private ComponentName getCurrentDefaultHome() {
         ArrayList arrayList = new ArrayList();
         ComponentName homeActivities = this.mPackageManagerWrapper.get().getHomeActivities(arrayList);
         if (homeActivities != null) {
@@ -236,7 +268,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     }
 
     /* access modifiers changed from: private */
-    public void handleStatusBarStateChanged(int i) {
+    /* access modifiers changed from: public */
+    private void handleStatusBarStateChanged(int i) {
         boolean onLockscreen = onLockscreen(i);
         if (this.mOnLockscreen != onLockscreen) {
             resetConsecutiveTaskSwitches();
@@ -246,7 +279,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     }
 
     /* access modifiers changed from: private */
-    public void handleDozingChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleDozingChanged(boolean z) {
         if (this.mIsDozing != z) {
             resetConsecutiveTaskSwitches();
             this.mIsDozing = z;
@@ -255,7 +289,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     }
 
     /* access modifiers changed from: private */
-    public void handleWakefullnessChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleWakefullnessChanged(boolean z) {
         if (this.mIsAwake != z) {
             resetConsecutiveTaskSwitches();
             this.mIsAwake = z;
@@ -264,7 +299,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     }
 
     /* access modifiers changed from: private */
-    public void handleTaskStackTopChanged(int i, ComponentName componentName) {
+    /* access modifiers changed from: public */
+    private void handleTaskStackTopChanged(int i, ComponentName componentName) {
         if (this.mRunningTaskId != i && componentName != null) {
             this.mRunningTaskId = i;
             boolean equals = componentName.equals(this.mDefaultHome);
@@ -290,7 +326,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
     }
 
     /* access modifiers changed from: private */
-    public void handleOverviewShown() {
+    /* access modifiers changed from: public */
+    private void handleOverviewShown() {
         resetConsecutiveTaskSwitches();
         callbackForCurrentState(false);
     }
@@ -355,6 +392,8 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
             this.mLastLearningTimestamp = currentTimeMillis;
             this.mIsLearned = this.mLearningCount >= getLearningCount() || this.mLearningTimeElapsed >= getLearningTimeMs();
             this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.assist.$$Lambda$AssistHandleReminderExpBehavior$b5N62AJXKgTBT_CGtHJhpXuFas */
+
                 public final void run() {
                     AssistHandleReminderExpBehavior.this.lambda$updateLearningStatus$0$AssistHandleReminderExpBehavior();
                 }
@@ -419,6 +458,7 @@ final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorContr
         return this.mDeviceConfigHelper.getBoolean("assist_handles_show_when_taught", false);
     }
 
+    @Override // com.android.systemui.assist.AssistHandleBehaviorController.BehaviorController
     public void dump(PrintWriter printWriter, String str) {
         printWriter.println(str + "Current AssistHandleReminderExpBehavior State:");
         printWriter.println(str + "   mOnLockscreen=" + this.mOnLockscreen);

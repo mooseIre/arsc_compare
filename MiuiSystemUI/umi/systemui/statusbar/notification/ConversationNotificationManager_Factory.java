@@ -19,6 +19,7 @@ public final class ConversationNotificationManager_Factory implements Factory<Co
         this.mainHandlerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ConversationNotificationManager get() {
         return provideInstance(this.notificationEntryManagerProvider, this.notificationGroupManagerProvider, this.contextProvider, this.mainHandlerProvider);
     }

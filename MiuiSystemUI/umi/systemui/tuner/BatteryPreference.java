@@ -24,6 +24,7 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
         setEntryValues(new CharSequence[]{"percent", "default", "disabled"});
     }
 
+    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         boolean z = false;
@@ -34,11 +35,13 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
     }
 
+    @Override // androidx.preference.Preference
     public void onDetached() {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
         super.onDetached();
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("icon_blacklist".equals(str)) {
             ArraySet<String> iconBlacklist = StatusBarIconController.getIconBlacklist(getContext(), str2);
@@ -58,6 +61,7 @@ public class BatteryPreference extends DropDownPreference implements TunerServic
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.preference.Preference
     public boolean persistString(String str) {
         boolean equals = "percent".equals(str);
         MetricsLogger.action(getContext(), 237, equals);

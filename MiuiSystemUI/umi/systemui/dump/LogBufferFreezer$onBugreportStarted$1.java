@@ -2,8 +2,9 @@ package com.android.systemui.dump;
 
 import android.util.Log;
 
+/* access modifiers changed from: package-private */
 /* compiled from: LogBufferFreezer.kt */
-final class LogBufferFreezer$onBugreportStarted$1 implements Runnable {
+public final class LogBufferFreezer$onBugreportStarted$1 implements Runnable {
     final /* synthetic */ LogBufferFreezer this$0;
 
     LogBufferFreezer$onBugreportStarted$1(LogBufferFreezer logBufferFreezer) {

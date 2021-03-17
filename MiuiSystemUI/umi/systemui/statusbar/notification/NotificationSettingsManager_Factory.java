@@ -14,6 +14,7 @@ public final class NotificationSettingsManager_Factory implements Factory<Notifi
         this.managerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationSettingsManager get() {
         return provideInstance(this.contextProvider, this.managerProvider);
     }

@@ -29,13 +29,11 @@ public class FalsingManagerProxy implements FalsingManager, Dumpable {
     private DeviceConfig.OnPropertiesChangedListener mDeviceConfigListener;
     private final DisplayMetrics mDisplayMetrics;
     private final DockManager mDockManager;
-    /* access modifiers changed from: private */
-    public FalsingManager mInternalFalsingManager;
+    private FalsingManager mInternalFalsingManager;
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final ProximitySensor mProximitySensor;
     private final StatusBarStateController mStatusBarStateController;
-    /* access modifiers changed from: private */
-    public Executor mUiBgExecutor;
+    private Executor mUiBgExecutor;
 
     FalsingManagerProxy(final Context context, PluginManager pluginManager, Executor executor, DisplayMetrics displayMetrics, ProximitySensor proximitySensor, DeviceConfigProxy deviceConfigProxy, DockManager dockManager, KeyguardUpdateMonitor keyguardUpdateMonitor, DumpManager dumpManager, Executor executor2, StatusBarStateController statusBarStateController) {
         this.mDisplayMetrics = displayMetrics;
@@ -48,6 +46,7 @@ public class FalsingManagerProxy implements FalsingManager, Dumpable {
         this.mProximitySensor.setSensorDelay(1);
         this.mDeviceConfig = deviceConfigProxy;
         this.mDeviceConfigListener = new DeviceConfig.OnPropertiesChangedListener(context) {
+            /* class com.android.systemui.classifier.$$Lambda$FalsingManagerProxy$15gIs9mVwyDjJbglxP0IV0T3ag */
             public final /* synthetic */ Context f$1;
 
             {
@@ -61,16 +60,18 @@ public class FalsingManagerProxy implements FalsingManager, Dumpable {
         setupFalsingManager(context);
         this.mDeviceConfig.addOnPropertiesChangedListener("systemui", executor, this.mDeviceConfigListener);
         pluginManager.addPluginListener(new PluginListener<FalsingPlugin>() {
+            /* class com.android.systemui.classifier.FalsingManagerProxy.AnonymousClass1 */
+
             public void onPluginConnected(FalsingPlugin falsingPlugin, Context context) {
                 FalsingManager falsingManager = falsingPlugin.getFalsingManager(context);
                 if (falsingManager != null) {
                     FalsingManagerProxy.this.mInternalFalsingManager.cleanup();
-                    FalsingManager unused = FalsingManagerProxy.this.mInternalFalsingManager = falsingManager;
+                    FalsingManagerProxy.this.mInternalFalsingManager = falsingManager;
                 }
             }
 
             public void onPluginDisconnected(FalsingPlugin falsingPlugin) {
-                FalsingManager unused = FalsingManagerProxy.this.mInternalFalsingManager = new FalsingManagerImpl(context, FalsingManagerProxy.this.mUiBgExecutor);
+                FalsingManagerProxy.this.mInternalFalsingManager = new FalsingManagerImpl(context, FalsingManagerProxy.this.mUiBgExecutor);
             }
         }, FalsingPlugin.class);
         dumpManager.registerDumpable("FalsingManager", this);
@@ -110,154 +111,192 @@ public class FalsingManagerProxy implements FalsingManager, Dumpable {
         return this.mInternalFalsingManager;
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onSuccessfulUnlock() {
         this.mInternalFalsingManager.onSuccessfulUnlock();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationActive() {
         this.mInternalFalsingManager.onNotificationActive();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void setShowingAod(boolean z) {
         this.mInternalFalsingManager.setShowingAod(z);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificatonStartDraggingDown() {
         this.mInternalFalsingManager.onNotificatonStartDraggingDown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isUnlockingDisabled() {
         return this.mInternalFalsingManager.isUnlockingDisabled();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isFalseTouch() {
         return this.mInternalFalsingManager.isFalseTouch();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificatonStopDraggingDown() {
         this.mInternalFalsingManager.onNotificatonStartDraggingDown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void setNotificationExpanded() {
         this.mInternalFalsingManager.setNotificationExpanded();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isClassifierEnabled() {
         return this.mInternalFalsingManager.isClassifierEnabled();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onQsDown() {
         this.mInternalFalsingManager.onQsDown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void setQsExpanded(boolean z) {
         this.mInternalFalsingManager.setQsExpanded(z);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean shouldEnforceBouncer() {
         return this.mInternalFalsingManager.shouldEnforceBouncer();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onTrackingStarted(boolean z) {
         this.mInternalFalsingManager.onTrackingStarted(z);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onTrackingStopped() {
         this.mInternalFalsingManager.onTrackingStopped();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onLeftAffordanceOn() {
         this.mInternalFalsingManager.onLeftAffordanceOn();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onCameraOn() {
         this.mInternalFalsingManager.onCameraOn();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onAffordanceSwipingStarted(boolean z) {
         this.mInternalFalsingManager.onAffordanceSwipingStarted(z);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onAffordanceSwipingAborted() {
         this.mInternalFalsingManager.onAffordanceSwipingAborted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onStartExpandingFromPulse() {
         this.mInternalFalsingManager.onStartExpandingFromPulse();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onExpansionFromPulseStopped() {
         this.mInternalFalsingManager.onExpansionFromPulseStopped();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public Uri reportRejectedTouch() {
         return this.mInternalFalsingManager.reportRejectedTouch();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onScreenOnFromTouch() {
         this.mInternalFalsingManager.onScreenOnFromTouch();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isReportingEnabled() {
         return this.mInternalFalsingManager.isReportingEnabled();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onUnlockHintStarted() {
         this.mInternalFalsingManager.onUnlockHintStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onCameraHintStarted() {
         this.mInternalFalsingManager.onCameraHintStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onLeftAffordanceHintStarted() {
         this.mInternalFalsingManager.onLeftAffordanceHintStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onScreenTurningOn() {
         this.mInternalFalsingManager.onScreenTurningOn();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onScreenOff() {
         this.mInternalFalsingManager.onScreenOff();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationStopDismissing() {
         this.mInternalFalsingManager.onNotificationStopDismissing();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationDismissed() {
         this.mInternalFalsingManager.onNotificationDismissed();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationStartDismissing() {
         this.mInternalFalsingManager.onNotificationStartDismissing();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationDoubleTap(boolean z, float f, float f2) {
         this.mInternalFalsingManager.onNotificationDoubleTap(z, f, f2);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onBouncerShown() {
         this.mInternalFalsingManager.onBouncerShown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onBouncerHidden() {
         this.mInternalFalsingManager.onBouncerHidden();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onTouchEvent(MotionEvent motionEvent, int i, int i2) {
         this.mInternalFalsingManager.onTouchEvent(motionEvent, i, i2);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         this.mInternalFalsingManager.dump(printWriter);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void dump(PrintWriter printWriter) {
         this.mInternalFalsingManager.dump(printWriter);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void cleanup() {
         this.mDeviceConfig.removeOnPropertiesChangedListener(this.mDeviceConfigListener);
         this.mInternalFalsingManager.cleanup();

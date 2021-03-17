@@ -25,7 +25,8 @@ public class TrackedCollections {
         collectionState.lastUptime = SystemClock.uptimeMillis();
     }
 
-    private static class CollectionState {
+    /* access modifiers changed from: private */
+    public static class CollectionState {
         int halfwayCount;
         int lastCount;
         long lastUptime;
@@ -48,16 +49,15 @@ public class TrackedCollections {
         public void dump(PrintWriter printWriter) {
             long uptimeMillis = SystemClock.uptimeMillis();
             long j = this.startUptime;
-            long j2 = uptimeMillis;
-            printWriter.format("%s: %.2f (start-30min) / %.2f (30min-now) / %.2f (start-now) (growth rate in #/hour); %d (current size)", new Object[]{this.tag, Float.valueOf(ratePerHour(j, 0, j + 1800000, this.halfwayCount)), Float.valueOf(ratePerHour(this.startUptime + 1800000, this.halfwayCount, j2, this.lastCount)), Float.valueOf(ratePerHour(this.startUptime, 0, j2, this.lastCount)), Integer.valueOf(this.lastCount)});
+            printWriter.format("%s: %.2f (start-30min) / %.2f (30min-now) / %.2f (start-now) (growth rate in #/hour); %d (current size)", this.tag, Float.valueOf(ratePerHour(j, 0, j + 1800000, this.halfwayCount)), Float.valueOf(ratePerHour(this.startUptime + 1800000, this.halfwayCount, uptimeMillis, this.lastCount)), Float.valueOf(ratePerHour(this.startUptime, 0, uptimeMillis, this.lastCount)), Integer.valueOf(this.lastCount));
         }
     }
 
     public synchronized void dump(PrintWriter printWriter, Predicate<Collection<?>> predicate) {
-        for (Map.Entry next : this.mCollections.entrySet()) {
-            Collection collection = (Collection) ((WeakReference) next.getKey()).get();
+        for (Map.Entry<WeakReference<Collection<?>>, CollectionState> entry : this.mCollections.entrySet()) {
+            Collection<?> collection = entry.getKey().get();
             if (predicate == null || (collection != null && predicate.test(collection))) {
-                ((CollectionState) next.getValue()).dump(printWriter);
+                entry.getValue().dump(printWriter);
                 printWriter.println();
             }
         }

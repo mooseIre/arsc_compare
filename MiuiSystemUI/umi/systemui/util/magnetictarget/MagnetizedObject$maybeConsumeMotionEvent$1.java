@@ -5,8 +5,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MagnetizedObject.kt */
-final class MagnetizedObject$maybeConsumeMotionEvent$1 extends Lambda implements Function0<Unit> {
+public final class MagnetizedObject$maybeConsumeMotionEvent$1 extends Lambda implements Function0<Unit> {
     final /* synthetic */ MagnetizedObject.MagneticTarget $flungToTarget;
     final /* synthetic */ MagnetizedObject this$0;
 
@@ -17,6 +18,7 @@ final class MagnetizedObject$maybeConsumeMotionEvent$1 extends Lambda implements
         this.$flungToTarget = magneticTarget;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         this.this$0.getMagnetListener().onReleasedInTarget(this.$flungToTarget);
         this.this$0.targetObjectIsStuckTo = null;

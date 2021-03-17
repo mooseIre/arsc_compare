@@ -9,16 +9,16 @@ public class ScreenLifecycle extends Lifecycle<Observer> implements Dumpable {
     private int mScreenState = 0;
 
     public interface Observer {
-        void onScreenTurnedOff() {
+        default void onScreenTurnedOff() {
         }
 
-        void onScreenTurnedOn() {
+        default void onScreenTurnedOn() {
         }
 
-        void onScreenTurningOff() {
+        default void onScreenTurningOff() {
         }
 
-        void onScreenTurningOn() {
+        default void onScreenTurningOn() {
         }
     }
 
@@ -46,6 +46,7 @@ public class ScreenLifecycle extends Lifecycle<Observer> implements Dumpable {
         dispatch($$Lambda$K8LiTMkPknhhclqjA2eboLxaGEU.INSTANCE);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("ScreenLifecycle:");
         printWriter.println("  mScreenState=" + this.mScreenState);

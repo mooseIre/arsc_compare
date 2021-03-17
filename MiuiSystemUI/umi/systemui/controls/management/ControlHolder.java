@@ -23,8 +23,7 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: ControlAdapter.kt */
 public final class ControlHolder extends Holder {
     private final ControlHolderAccessibilityDelegate accessibilityDelegate;
-    /* access modifiers changed from: private */
-    public final CheckBox favorite;
+    private final CheckBox favorite;
     @NotNull
     private final Function2<String, Boolean, Unit> favoriteCallback;
     private final String favoriteStateDescription;
@@ -41,9 +40,11 @@ public final class ControlHolder extends Holder {
         return this.favoriteCallback;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r4v0, resolved type: kotlin.jvm.functions.Function2<? super java.lang.String, ? super java.lang.Boolean, kotlin.Unit> */
+    /* JADX WARN: Multi-variable type inference failed */
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ControlHolder(@NotNull View view, @Nullable ControlsModel.MoveHelper moveHelper2, @NotNull Function2<? super String, ? super Boolean, Unit> function2) {
-        super(view, (DefaultConstructorMarker) null);
+        super(view, null);
         Intrinsics.checkParameterIsNotNull(view, "view");
         Intrinsics.checkParameterIsNotNull(function2, "favoriteCallback");
         this.moveHelper = moveHelper2;
@@ -86,9 +87,10 @@ public final class ControlHolder extends Holder {
         }
         View view = this.itemView;
         Intrinsics.checkExpressionValueIsNotNull(view, "itemView");
-        return view.getContext().getString(C0021R$string.accessibility_control_favorite_position, new Object[]{Integer.valueOf(getLayoutPosition() + 1)});
+        return view.getContext().getString(C0021R$string.accessibility_control_favorite_position, Integer.valueOf(getLayoutPosition() + 1));
     }
 
+    @Override // com.android.systemui.controls.management.Holder
     public void bindData(@NotNull ElementWrapper elementWrapper) {
         CharSequence charSequence;
         Intrinsics.checkParameterIsNotNull(elementWrapper, "wrapper");
@@ -110,6 +112,7 @@ public final class ControlHolder extends Holder {
         applyRenderInfo(renderInfo, controlInterface);
     }
 
+    @Override // com.android.systemui.controls.management.Holder
     public void updateFavorite(boolean z) {
         this.favorite.setChecked(z);
         this.accessibilityDelegate.setFavorite(z);
@@ -124,7 +127,7 @@ public final class ControlHolder extends Holder {
         Intrinsics.checkExpressionValueIsNotNull(view, "itemView");
         Context context = view.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "itemView.context");
-        return RenderInfo.Companion.lookup$default(companion, context, componentName, i, 0, 8, (Object) null);
+        return RenderInfo.Companion.lookup$default(companion, context, componentName, i, 0, 8, null);
     }
 
     private final void applyRenderInfo(RenderInfo renderInfo, ControlInterface controlInterface) {

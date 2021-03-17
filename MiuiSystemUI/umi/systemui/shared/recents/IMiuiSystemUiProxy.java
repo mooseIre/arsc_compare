@@ -25,6 +25,7 @@ public interface IMiuiSystemUiProxy extends IInterface {
             attachInterface(this, "com.android.systemui.shared.recents.IMiuiSystemUiProxy");
         }
 
+        @Override // android.os.Binder
         public boolean onTransact(int i, Parcel parcel, Parcel parcel2, int i2) throws RemoteException {
             if (i == 2) {
                 parcel.enforceInterface("com.android.systemui.shared.recents.IMiuiSystemUiProxy");

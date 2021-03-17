@@ -29,83 +29,25 @@ import com.android.systemui.statusbar.views.NetworkSpeedView;
 import com.miui.systemui.util.CommonUtil;
 
 public class QSControlCenterHeaderView extends LinearLayout {
-    /* access modifiers changed from: private */
-    public ControlCenterActivityStarter mActStarter;
+    private ControlCenterActivityStarter mActStarter;
     private MiuiBatteryMeterView mBattery;
-    /* access modifiers changed from: private */
-    public MiuiClock mBigTime;
+    private MiuiClock mBigTime;
     private CarrierText mCarrierText;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public MiuiClock mDateView;
+    private Context mContext;
+    private MiuiClock mDateView;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
     private StatusBarIconController.MiuiLightDarkIconManager mIconManager;
     private Configuration mLastConfiguration;
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
+        /* class com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.AnonymousClass1 */
+
         /* JADX WARNING: Removed duplicated region for block: B:13:0x0053  */
         /* JADX WARNING: Removed duplicated region for block: B:15:0x0060  */
         /* JADX WARNING: Removed duplicated region for block: B:17:? A[RETURN, SYNTHETIC] */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void onClick(android.view.View r6) {
             /*
-                r5 = this;
-                com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView r0 = com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.this
-                com.android.systemui.statusbar.policy.MiuiClock r0 = r0.mBigTime
-                java.lang.String r1 = "settings"
-                java.lang.String r2 = "android.intent.action.MAIN"
-                r3 = 0
-                if (r6 != r0) goto L_0x001d
-                android.content.Intent r3 = new android.content.Intent
-                r3.<init>(r2)
-                java.lang.String r6 = "com.android.deskclock"
-                r3.setPackage(r6)
-                java.lang.String r6 = "clock"
-            L_0x0019:
-                r4 = r3
-                r3 = r6
-                r6 = r4
-                goto L_0x004d
-            L_0x001d:
-                com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView r0 = com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.this
-                com.android.systemui.statusbar.policy.MiuiClock r0 = r0.mDateView
-                if (r6 != r0) goto L_0x003a
-                android.content.Intent r3 = new android.content.Intent
-                r3.<init>(r2)
-                com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView r6 = com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.this
-                android.content.Context r6 = r6.mContext
-                java.lang.String r6 = com.android.systemui.controlcenter.utils.ControlCenterUtils.getCalendarPkg(r6)
-                r3.setPackage(r6)
-                java.lang.String r6 = "date"
-                goto L_0x0019
-            L_0x003a:
-                com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView r0 = com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.this
-                android.widget.ImageView r0 = r0.mShortcut
-                if (r6 != r0) goto L_0x004c
-                android.content.Intent r3 = new android.content.Intent
-                java.lang.String r6 = "android.settings.SETTINGS"
-                r3.<init>(r6)
-                r6 = r3
-                r3 = r1
-                goto L_0x004d
-            L_0x004c:
-                r6 = r3
-            L_0x004d:
-                boolean r0 = android.text.TextUtils.isEmpty(r3)
-                if (r0 != 0) goto L_0x005e
-                java.lang.Class<com.miui.systemui.analytics.SystemUIStat> r0 = com.miui.systemui.analytics.SystemUIStat.class
-                java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
-                com.miui.systemui.analytics.SystemUIStat r0 = (com.miui.systemui.analytics.SystemUIStat) r0
-                r0.handleClickShortcutEvent(r1)
-            L_0x005e:
-                if (r6 == 0) goto L_0x006e
-                r0 = 268435456(0x10000000, float:2.5243549E-29)
-                r6.addFlags(r0)
-                com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView r5 = com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.this
-                com.android.systemui.controlcenter.policy.ControlCenterActivityStarter r5 = r5.mActStarter
-                r5.startActivity(r6)
-            L_0x006e:
-                return
+            // Method dump skipped, instructions count: 111
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.AnonymousClass1.onClick(android.view.View):void");
         }
@@ -113,8 +55,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
     private int mOrientation;
     private ControlPanelController mPanelController;
     private ViewGroup mPanelHeader;
-    /* access modifiers changed from: private */
-    public ImageView mShortcut;
+    private ImageView mShortcut;
     private LinearLayout mStatusIcons;
     private ImageView mTilesEdit;
     private ViewGroup mTilesHeader;

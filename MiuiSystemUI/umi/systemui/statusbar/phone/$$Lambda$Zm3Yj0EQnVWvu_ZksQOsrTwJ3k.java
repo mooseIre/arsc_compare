@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$Zm3Yj0EQnVWvu_ZksQOsrTwJ3k implement
     private /* synthetic */ $$Lambda$Zm3Yj0EQnVWvu_ZksQOsrTwJ3k() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((ActivityManagerWrapper) obj).getRunningTask();
     }

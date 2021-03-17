@@ -6,7 +6,6 @@ import android.net.wifi.WifiManagerCompat;
 import android.util.Log;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
-import androidx.lifecycle.LifecycleOwner;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0019R$plurals;
 import com.android.systemui.C0021R$string;
@@ -27,6 +26,7 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
     private final QSTile.Icon mWifi6EnabledStatic = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_wifi_6_hotspot);
     private WifiManager mWifiManager;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowFixedHeightMajor;
     }
@@ -37,20 +37,23 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
         this.mCallbacks = hotspotAndDataSaverCallbacks;
         this.mHotspotController = hotspotController;
         this.mDataSaverController = dataSaverController;
-        hotspotController.observe((LifecycleOwner) this, hotspotAndDataSaverCallbacks);
-        this.mDataSaverController.observe((LifecycleOwner) this, this.mCallbacks);
+        hotspotController.observe(this, hotspotAndDataSaverCallbacks);
+        this.mDataSaverController.observe(this, this.mCallbacks);
         this.mWifiManager = (WifiManager) this.mContext.getSystemService("wifi");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mHotspotController.isHotspotSupported();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         if (this.mListening != z) {
@@ -61,15 +64,18 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.TETHER_SETTINGS");
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         Object obj;
         boolean z = ((QSTile.BooleanState) this.mState).value;
@@ -84,6 +90,7 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_hotspot_label);
     }
@@ -151,10 +158,11 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
         if (i <= 0 || !z) {
             return null;
         }
-        return this.mContext.getResources().getQuantityString(C0019R$plurals.quick_settings_hotspot_secondary_label_num_devices, i, new Object[]{Integer.valueOf(i)});
+        return this.mContext.getResources().getQuantityString(C0019R$plurals.quick_settings_hotspot_secondary_label_num_devices, i, Integer.valueOf(i));
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_on);
@@ -169,12 +177,14 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
             this.mCallbackInfo = new CallbackInfo();
         }
 
+        @Override // com.android.systemui.statusbar.policy.DataSaverController.Listener
         public void onDataSaverChanged(boolean z) {
             CallbackInfo callbackInfo = this.mCallbackInfo;
             callbackInfo.isDataSaverEnabled = z;
             HotspotTile.this.refreshState(callbackInfo);
         }
 
+        @Override // com.android.systemui.statusbar.policy.HotspotController.Callback
         public void onHotspotChanged(boolean z, int i) {
             CallbackInfo callbackInfo = this.mCallbackInfo;
             callbackInfo.isHotspotEnabled = z;
@@ -182,15 +192,17 @@ public class HotspotTile extends QSTileImpl<QSTile.BooleanState> {
             HotspotTile.this.refreshState(callbackInfo);
         }
 
+        @Override // com.android.systemui.statusbar.policy.HotspotController.Callback
         public void onHotspotAvailabilityChanged(boolean z) {
             if (!z) {
-                Log.d(HotspotTile.this.TAG, "Tile removed. Hotspot no longer available");
-                HotspotTile.this.mHost.removeTile(HotspotTile.this.getTileSpec());
+                Log.d(((QSTileImpl) HotspotTile.this).TAG, "Tile removed. Hotspot no longer available");
+                ((QSTileImpl) HotspotTile.this).mHost.removeTile(HotspotTile.this.getTileSpec());
             }
         }
     }
 
-    protected static final class CallbackInfo {
+    /* access modifiers changed from: protected */
+    public static final class CallbackInfo {
         boolean isDataSaverEnabled;
         boolean isHotspotEnabled;
         int numConnectedDevices;

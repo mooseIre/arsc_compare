@@ -19,15 +19,14 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class QSControlExpandDetail implements ExpandInfoController.Callback {
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private ExpandDetailAdapter mDetailAdapter = new ExpandDetailAdapter();
     private View mExpandIndicatorView;
-    /* access modifiers changed from: private */
-    public ExpandInfoController mExpandInfoController = ((ExpandInfoController) Dependency.get(ExpandInfoController.class));
+    private ExpandInfoController mExpandInfoController = ((ExpandInfoController) Dependency.get(ExpandInfoController.class));
     private MiuiQSPanel$MiuiRecord mRecord;
     private View mTileView;
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController.Callback
     public void updateInfo(int i, ExpandInfoController.Info info) {
     }
 
@@ -57,52 +56,61 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController.Callback
     public void updateInfosMap() {
         this.mDetailAdapter.updateItems();
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ExpandInfoController.Callback
     public void updateSelectedType(int i) {
         this.mDetailAdapter.updateItems();
     }
 
     public void updateResources() {
-        ExpandDetailItems unused = this.mDetailAdapter.mItems = null;
+        this.mDetailAdapter.mItems = null;
     }
 
     private class ExpandDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
-        /* access modifiers changed from: private */
-        public ExpandDetailItems mItems;
+        private ExpandDetailItems mItems;
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getMetricsCategory() {
             return 167;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Intent getSettingsIntent() {
             return null;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public boolean getToggleEnabled() {
             return false;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Boolean getToggleState() {
             return null;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public boolean hasHeader() {
             return true;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public void setToggleState(boolean z) {
         }
 
         private ExpandDetailAdapter() {
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
             return QSControlExpandDetail.this.mContext.getString(C0021R$string.qs_control_expand_detail_title);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             ExpandDetailItems convertOrInflate = ExpandDetailItems.convertOrInflate(context, view, viewGroup);
             this.mItems = convertOrInflate;
@@ -113,6 +121,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
             return this.mItems;
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
             if (item != null && item.tag != null) {
                 ExpandInfoController.Info info = QSControlExpandDetail.this.mExpandInfoController.getInfosMap().get(item.tag);
@@ -139,7 +148,8 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
         }
 
         /* access modifiers changed from: private */
-        public void updateItems() {
+        /* access modifiers changed from: public */
+        private void updateItems() {
             if (this.mItems != null) {
                 ArrayList arrayList = new ArrayList();
                 HashMap<Integer, ExpandInfoController.Info> infosMap = QSControlExpandDetail.this.mExpandInfoController.getInfosMap();
@@ -151,11 +161,11 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
                     setItemInfo(acquireItem, QSControlExpandDetail.this.mExpandInfoController.getSuperPowerInfo(), selectedType);
                     arrayList.add(acquireItem);
                 } else {
-                    for (Integer next : keySet) {
+                    for (Integer num : keySet) {
                         MiuiQSDetailItems.Item acquireItem2 = this.mItems.acquireItem();
-                        ExpandInfoController.Info info = infosMap.get(next);
+                        ExpandInfoController.Info info = infosMap.get(num);
                         if (info.available) {
-                            setItemInfo(acquireItem2, info, next.intValue());
+                            setItemInfo(acquireItem2, info, num.intValue());
                             arrayList.add(acquireItem2);
                         }
                     }

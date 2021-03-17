@@ -5,60 +5,42 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.media.session.MediaSession;
 import java.util.List;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: MediaData.kt */
 public final class MediaData {
-    @NotNull
     private final List<MediaAction> actions;
-    @NotNull
     private final List<Integer> actionsToShowInCompact;
     private boolean active;
-    @Nullable
     private final String app;
-    @Nullable
     private final Drawable appIcon;
-    @Nullable
     private final CharSequence artist;
-    @Nullable
     private final Icon artwork;
     private final int backgroundColor;
-    @Nullable
     private final PendingIntent clickIntent;
-    @Nullable
     private final MediaDeviceData device;
     private boolean hasCheckedForResume;
     private final boolean initialized;
-    @Nullable
     private final String notificationKey;
-    @NotNull
     private final String packageName;
-    @Nullable
     private Runnable resumeAction;
     private boolean resumption;
-    @Nullable
     private final CharSequence song;
-    @Nullable
     private final MediaSession.Token token;
     private final int userId;
 
     public static /* synthetic */ MediaData copy$default(MediaData mediaData, int i, boolean z, int i2, String str, Drawable drawable, CharSequence charSequence, CharSequence charSequence2, Icon icon, List list, List list2, String str2, MediaSession.Token token2, PendingIntent pendingIntent, MediaDeviceData mediaDeviceData, boolean z2, Runnable runnable, boolean z3, String str3, boolean z4, int i3, Object obj) {
-        MediaData mediaData2 = mediaData;
-        int i4 = i3;
-        return mediaData.copy((i4 & 1) != 0 ? mediaData2.userId : i, (i4 & 2) != 0 ? mediaData2.initialized : z, (i4 & 4) != 0 ? mediaData2.backgroundColor : i2, (i4 & 8) != 0 ? mediaData2.app : str, (i4 & 16) != 0 ? mediaData2.appIcon : drawable, (i4 & 32) != 0 ? mediaData2.artist : charSequence, (i4 & 64) != 0 ? mediaData2.song : charSequence2, (i4 & 128) != 0 ? mediaData2.artwork : icon, (i4 & 256) != 0 ? mediaData2.actions : list, (i4 & 512) != 0 ? mediaData2.actionsToShowInCompact : list2, (i4 & 1024) != 0 ? mediaData2.packageName : str2, (i4 & 2048) != 0 ? mediaData2.token : token2, (i4 & 4096) != 0 ? mediaData2.clickIntent : pendingIntent, (i4 & 8192) != 0 ? mediaData2.device : mediaDeviceData, (i4 & 16384) != 0 ? mediaData2.active : z2, (i4 & 32768) != 0 ? mediaData2.resumeAction : runnable, (i4 & 65536) != 0 ? mediaData2.resumption : z3, (i4 & 131072) != 0 ? mediaData2.notificationKey : str3, (i4 & 262144) != 0 ? mediaData2.hasCheckedForResume : z4);
+        return mediaData.copy((i3 & 1) != 0 ? mediaData.userId : i, (i3 & 2) != 0 ? mediaData.initialized : z, (i3 & 4) != 0 ? mediaData.backgroundColor : i2, (i3 & 8) != 0 ? mediaData.app : str, (i3 & 16) != 0 ? mediaData.appIcon : drawable, (i3 & 32) != 0 ? mediaData.artist : charSequence, (i3 & 64) != 0 ? mediaData.song : charSequence2, (i3 & 128) != 0 ? mediaData.artwork : icon, (i3 & 256) != 0 ? mediaData.actions : list, (i3 & 512) != 0 ? mediaData.actionsToShowInCompact : list2, (i3 & 1024) != 0 ? mediaData.packageName : str2, (i3 & 2048) != 0 ? mediaData.token : token2, (i3 & 4096) != 0 ? mediaData.clickIntent : pendingIntent, (i3 & 8192) != 0 ? mediaData.device : mediaDeviceData, (i3 & 16384) != 0 ? mediaData.active : z2, (i3 & 32768) != 0 ? mediaData.resumeAction : runnable, (i3 & 65536) != 0 ? mediaData.resumption : z3, (i3 & 131072) != 0 ? mediaData.notificationKey : str3, (i3 & 262144) != 0 ? mediaData.hasCheckedForResume : z4);
     }
 
-    @NotNull
-    public final MediaData copy(int i, boolean z, int i2, @Nullable String str, @Nullable Drawable drawable, @Nullable CharSequence charSequence, @Nullable CharSequence charSequence2, @Nullable Icon icon, @NotNull List<MediaAction> list, @NotNull List<Integer> list2, @NotNull String str2, @Nullable MediaSession.Token token2, @Nullable PendingIntent pendingIntent, @Nullable MediaDeviceData mediaDeviceData, boolean z2, @Nullable Runnable runnable, boolean z3, @Nullable String str3, boolean z4) {
+    public final MediaData copy(int i, boolean z, int i2, String str, Drawable drawable, CharSequence charSequence, CharSequence charSequence2, Icon icon, List<MediaAction> list, List<Integer> list2, String str2, MediaSession.Token token2, PendingIntent pendingIntent, MediaDeviceData mediaDeviceData, boolean z2, Runnable runnable, boolean z3, String str3, boolean z4) {
         Intrinsics.checkParameterIsNotNull(list, "actions");
         Intrinsics.checkParameterIsNotNull(list2, "actionsToShowInCompact");
         Intrinsics.checkParameterIsNotNull(str2, "packageName");
         return new MediaData(i, z, i2, str, drawable, charSequence, charSequence2, icon, list, list2, str2, token2, pendingIntent, mediaDeviceData, z2, runnable, z3, str3, z4);
     }
 
-    public boolean equals(@Nullable Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -66,19 +48,22 @@ public final class MediaData {
             return false;
         }
         MediaData mediaData = (MediaData) obj;
-        return this.userId == mediaData.userId && this.initialized == mediaData.initialized && this.backgroundColor == mediaData.backgroundColor && Intrinsics.areEqual((Object) this.app, (Object) mediaData.app) && Intrinsics.areEqual((Object) this.appIcon, (Object) mediaData.appIcon) && Intrinsics.areEqual((Object) this.artist, (Object) mediaData.artist) && Intrinsics.areEqual((Object) this.song, (Object) mediaData.song) && Intrinsics.areEqual((Object) this.artwork, (Object) mediaData.artwork) && Intrinsics.areEqual((Object) this.actions, (Object) mediaData.actions) && Intrinsics.areEqual((Object) this.actionsToShowInCompact, (Object) mediaData.actionsToShowInCompact) && Intrinsics.areEqual((Object) this.packageName, (Object) mediaData.packageName) && Intrinsics.areEqual((Object) this.token, (Object) mediaData.token) && Intrinsics.areEqual((Object) this.clickIntent, (Object) mediaData.clickIntent) && Intrinsics.areEqual((Object) this.device, (Object) mediaData.device) && this.active == mediaData.active && Intrinsics.areEqual((Object) this.resumeAction, (Object) mediaData.resumeAction) && this.resumption == mediaData.resumption && Intrinsics.areEqual((Object) this.notificationKey, (Object) mediaData.notificationKey) && this.hasCheckedForResume == mediaData.hasCheckedForResume;
+        return this.userId == mediaData.userId && this.initialized == mediaData.initialized && this.backgroundColor == mediaData.backgroundColor && Intrinsics.areEqual(this.app, mediaData.app) && Intrinsics.areEqual(this.appIcon, mediaData.appIcon) && Intrinsics.areEqual(this.artist, mediaData.artist) && Intrinsics.areEqual(this.song, mediaData.song) && Intrinsics.areEqual(this.artwork, mediaData.artwork) && Intrinsics.areEqual(this.actions, mediaData.actions) && Intrinsics.areEqual(this.actionsToShowInCompact, mediaData.actionsToShowInCompact) && Intrinsics.areEqual(this.packageName, mediaData.packageName) && Intrinsics.areEqual(this.token, mediaData.token) && Intrinsics.areEqual(this.clickIntent, mediaData.clickIntent) && Intrinsics.areEqual(this.device, mediaData.device) && this.active == mediaData.active && Intrinsics.areEqual(this.resumeAction, mediaData.resumeAction) && this.resumption == mediaData.resumption && Intrinsics.areEqual(this.notificationKey, mediaData.notificationKey) && this.hasCheckedForResume == mediaData.hasCheckedForResume;
     }
 
     public int hashCode() {
         int hashCode = Integer.hashCode(this.userId) * 31;
         boolean z = this.initialized;
-        boolean z2 = true;
+        int i = 1;
         if (z) {
             z = true;
         }
-        int hashCode2 = (((hashCode + (z ? 1 : 0)) * 31) + Integer.hashCode(this.backgroundColor)) * 31;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        int i4 = z ? 1 : 0;
+        int hashCode2 = (((hashCode + i2) * 31) + Integer.hashCode(this.backgroundColor)) * 31;
         String str = this.app;
-        int i = 0;
+        int i5 = 0;
         int hashCode3 = (hashCode2 + (str != null ? str.hashCode() : 0)) * 31;
         Drawable drawable = this.appIcon;
         int hashCode4 = (hashCode3 + (drawable != null ? drawable.hashCode() : 0)) * 31;
@@ -100,40 +85,44 @@ public final class MediaData {
         int hashCode12 = (hashCode11 + (pendingIntent != null ? pendingIntent.hashCode() : 0)) * 31;
         MediaDeviceData mediaDeviceData = this.device;
         int hashCode13 = (hashCode12 + (mediaDeviceData != null ? mediaDeviceData.hashCode() : 0)) * 31;
-        boolean z3 = this.active;
+        boolean z2 = this.active;
+        if (z2) {
+            z2 = true;
+        }
+        int i6 = z2 ? 1 : 0;
+        int i7 = z2 ? 1 : 0;
+        int i8 = z2 ? 1 : 0;
+        int i9 = (hashCode13 + i6) * 31;
+        Runnable runnable = this.resumeAction;
+        int hashCode14 = (i9 + (runnable != null ? runnable.hashCode() : 0)) * 31;
+        boolean z3 = this.resumption;
         if (z3) {
             z3 = true;
         }
-        int i2 = (hashCode13 + (z3 ? 1 : 0)) * 31;
-        Runnable runnable = this.resumeAction;
-        int hashCode14 = (i2 + (runnable != null ? runnable.hashCode() : 0)) * 31;
-        boolean z4 = this.resumption;
-        if (z4) {
-            z4 = true;
-        }
-        int i3 = (hashCode14 + (z4 ? 1 : 0)) * 31;
+        int i10 = z3 ? 1 : 0;
+        int i11 = z3 ? 1 : 0;
+        int i12 = z3 ? 1 : 0;
+        int i13 = (hashCode14 + i10) * 31;
         String str3 = this.notificationKey;
         if (str3 != null) {
-            i = str3.hashCode();
+            i5 = str3.hashCode();
         }
-        int i4 = (i3 + i) * 31;
-        boolean z5 = this.hasCheckedForResume;
-        if (!z5) {
-            z2 = z5;
+        int i14 = (i13 + i5) * 31;
+        boolean z4 = this.hasCheckedForResume;
+        if (!z4) {
+            i = z4 ? 1 : 0;
         }
-        return i4 + (z2 ? 1 : 0);
+        return i14 + i;
     }
 
-    @NotNull
     public String toString() {
         return "MediaData(userId=" + this.userId + ", initialized=" + this.initialized + ", backgroundColor=" + this.backgroundColor + ", app=" + this.app + ", appIcon=" + this.appIcon + ", artist=" + this.artist + ", song=" + this.song + ", artwork=" + this.artwork + ", actions=" + this.actions + ", actionsToShowInCompact=" + this.actionsToShowInCompact + ", packageName=" + this.packageName + ", token=" + this.token + ", clickIntent=" + this.clickIntent + ", device=" + this.device + ", active=" + this.active + ", resumeAction=" + this.resumeAction + ", resumption=" + this.resumption + ", notificationKey=" + this.notificationKey + ", hasCheckedForResume=" + this.hasCheckedForResume + ")";
     }
 
-    public MediaData(int i, boolean z, int i2, @Nullable String str, @Nullable Drawable drawable, @Nullable CharSequence charSequence, @Nullable CharSequence charSequence2, @Nullable Icon icon, @NotNull List<MediaAction> list, @NotNull List<Integer> list2, @NotNull String str2, @Nullable MediaSession.Token token2, @Nullable PendingIntent pendingIntent, @Nullable MediaDeviceData mediaDeviceData, boolean z2, @Nullable Runnable runnable, boolean z3, @Nullable String str3, boolean z4) {
-        String str4 = str2;
+    public MediaData(int i, boolean z, int i2, String str, Drawable drawable, CharSequence charSequence, CharSequence charSequence2, Icon icon, List<MediaAction> list, List<Integer> list2, String str2, MediaSession.Token token2, PendingIntent pendingIntent, MediaDeviceData mediaDeviceData, boolean z2, Runnable runnable, boolean z3, String str3, boolean z4) {
         Intrinsics.checkParameterIsNotNull(list, "actions");
         Intrinsics.checkParameterIsNotNull(list2, "actionsToShowInCompact");
-        Intrinsics.checkParameterIsNotNull(str4, "packageName");
+        Intrinsics.checkParameterIsNotNull(str2, "packageName");
         this.userId = i;
         this.initialized = z;
         this.backgroundColor = i2;
@@ -144,7 +133,7 @@ public final class MediaData {
         this.artwork = icon;
         this.actions = list;
         this.actionsToShowInCompact = list2;
-        this.packageName = str4;
+        this.packageName = str2;
         this.token = token2;
         this.clickIntent = pendingIntent;
         this.device = mediaDeviceData;
@@ -163,57 +152,46 @@ public final class MediaData {
         return this.backgroundColor;
     }
 
-    @Nullable
     public final String getApp() {
         return this.app;
     }
 
-    @Nullable
     public final Drawable getAppIcon() {
         return this.appIcon;
     }
 
-    @Nullable
     public final CharSequence getArtist() {
         return this.artist;
     }
 
-    @Nullable
     public final CharSequence getSong() {
         return this.song;
     }
 
-    @Nullable
     public final Icon getArtwork() {
         return this.artwork;
     }
 
-    @NotNull
     public final List<MediaAction> getActions() {
         return this.actions;
     }
 
-    @NotNull
     public final List<Integer> getActionsToShowInCompact() {
         return this.actionsToShowInCompact;
     }
 
-    @NotNull
     public final String getPackageName() {
         return this.packageName;
     }
 
-    @Nullable
     public final MediaSession.Token getToken() {
         return this.token;
     }
 
-    @Nullable
     public final PendingIntent getClickIntent() {
         return this.clickIntent;
     }
 
-    @Nullable
     public final MediaDeviceData getDevice() {
         return this.device;
     }
@@ -226,12 +204,11 @@ public final class MediaData {
         this.active = z;
     }
 
-    @Nullable
     public final Runnable getResumeAction() {
         return this.resumeAction;
     }
 
-    public final void setResumeAction(@Nullable Runnable runnable) {
+    public final void setResumeAction(Runnable runnable) {
         this.resumeAction = runnable;
     }
 

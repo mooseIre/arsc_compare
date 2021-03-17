@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationIconAreaController$S6CJ2
     private /* synthetic */ $$Lambda$NotificationIconAreaController$S6CJ2tXrA2ieNVmUpwBa8v9eeEY() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((NotificationEntry) obj).getIcons().getCenteredIcon();
     }

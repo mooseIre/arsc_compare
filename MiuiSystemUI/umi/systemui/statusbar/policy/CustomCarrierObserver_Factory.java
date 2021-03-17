@@ -16,6 +16,7 @@ public final class CustomCarrierObserver_Factory implements Factory<CustomCarrie
         this.bgHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public CustomCarrierObserver get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.bgHandlerProvider);
     }

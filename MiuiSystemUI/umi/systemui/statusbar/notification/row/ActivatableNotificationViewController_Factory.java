@@ -18,6 +18,7 @@ public final class ActivatableNotificationViewController_Factory implements Fact
         this.falsingManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ActivatableNotificationViewController get() {
         return provideInstance(this.viewProvider, this.expandableOutlineViewControllerProvider, this.accessibilityManagerProvider, this.falsingManagerProvider);
     }

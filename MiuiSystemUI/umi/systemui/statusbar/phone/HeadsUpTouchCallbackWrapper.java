@@ -22,19 +22,18 @@ final class HeadsUpTouchCallbackWrapper implements HeadsUpTouchHelper.Callback {
         this.base = callback;
     }
 
+    @Override // com.android.systemui.statusbar.phone.HeadsUpTouchHelper.Callback
     public boolean isExpanded() {
-        boolean z = this.headsUpManagerPhone.hasPinnedHeadsUp() && this.panelView.isExpectingSynthesizedDown$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core();
-        if (!this.base.isExpanded() || z) {
-            return false;
-        }
-        return true;
+        return this.base.isExpanded() && !(this.headsUpManagerPhone.hasPinnedHeadsUp() && this.panelView.isExpectingSynthesizedDown$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core());
     }
 
+    @Override // com.android.systemui.statusbar.phone.HeadsUpTouchHelper.Callback
     @Nullable
     public ExpandableView getChildAtRawPosition(float f, float f2) {
         return this.base.getChildAtRawPosition(f, f2);
     }
 
+    @Override // com.android.systemui.statusbar.phone.HeadsUpTouchHelper.Callback
     @NotNull
     public Context getContext() {
         Context context = this.base.getContext();

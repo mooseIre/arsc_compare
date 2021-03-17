@@ -15,6 +15,7 @@ public final class DumpHandler_Factory implements Factory<DumpHandler> {
         this.logBufferEulogizerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public DumpHandler get() {
         return provideInstance(this.contextProvider, this.dumpManagerProvider, this.logBufferEulogizerProvider);
     }

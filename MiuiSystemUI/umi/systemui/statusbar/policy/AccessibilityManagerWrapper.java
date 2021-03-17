@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
-import android.os.Handler;
 import android.view.accessibility.AccessibilityManager;
 
 public class AccessibilityManagerWrapper implements CallbackController<AccessibilityManager.AccessibilityServicesStateChangeListener> {
@@ -12,7 +11,7 @@ public class AccessibilityManagerWrapper implements CallbackController<Accessibi
     }
 
     public void addCallback(AccessibilityManager.AccessibilityServicesStateChangeListener accessibilityServicesStateChangeListener) {
-        this.mAccessibilityManager.addAccessibilityServicesStateChangeListener(accessibilityServicesStateChangeListener, (Handler) null);
+        this.mAccessibilityManager.addAccessibilityServicesStateChangeListener(accessibilityServicesStateChangeListener, null);
     }
 
     public void removeCallback(AccessibilityManager.AccessibilityServicesStateChangeListener accessibilityServicesStateChangeListener) {

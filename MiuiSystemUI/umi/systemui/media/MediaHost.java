@@ -5,6 +5,7 @@ import android.util.ArraySet;
 import com.android.systemui.util.animation.DisappearParameters;
 import com.android.systemui.util.animation.MeasurementInput;
 import com.android.systemui.util.animation.UniqueObjectHostView;
+import java.util.Iterator;
 import java.util.Objects;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -19,46 +20,49 @@ public final class MediaHost implements MediaHostState {
     private final Rect currentBounds = new Rect();
     @NotNull
     public UniqueObjectHostView hostView;
-    /* access modifiers changed from: private */
-    public final MediaHost$listener$1 listener = new MediaHost$listener$1(this);
+    private final MediaHost$listener$1 listener = new MediaHost$listener$1(this);
     private int location = -1;
-    /* access modifiers changed from: private */
-    public final MediaDataFilter mediaDataFilter;
+    private final MediaDataFilter mediaDataFilter;
     private final MediaHierarchyManager mediaHierarchyManager;
-    /* access modifiers changed from: private */
-    public final MediaHostStatesManager mediaHostStatesManager;
-    /* access modifiers changed from: private */
-    public final MediaHostStateHolder state;
+    private final MediaHostStatesManager mediaHostStatesManager;
+    private final MediaHostStateHolder state;
     private final int[] tmpLocationOnScreen = {0, 0};
     private ArraySet<Function1<Boolean, Unit>> visibleChangedListeners = new ArraySet<>();
 
+    @Override // com.android.systemui.media.MediaHostState
     @NotNull
     public MediaHostState copy() {
         return this.state.copy();
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     @NotNull
     public DisappearParameters getDisappearParameters() {
         return this.state.getDisappearParameters();
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     public float getExpansion() {
         return this.state.getExpansion();
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     public boolean getFalsingProtectionNeeded() {
         return this.state.getFalsingProtectionNeeded();
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     @Nullable
     public MeasurementInput getMeasurementInput() {
         return this.state.getMeasurementInput();
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     public boolean getShowsOnlyActiveMedia() {
         return this.state.getShowsOnlyActiveMedia();
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     public boolean getVisible() {
         return this.state.getVisible();
     }
@@ -68,6 +72,7 @@ public final class MediaHost implements MediaHostState {
         this.state.setDisappearParameters(disappearParameters);
     }
 
+    @Override // com.android.systemui.media.MediaHostState
     public void setExpansion(float f) {
         this.state.setExpansion(f);
     }
@@ -219,8 +224,9 @@ public final class MediaHost implements MediaHostState {
             UniqueObjectHostView uniqueObjectHostView2 = this.hostView;
             if (uniqueObjectHostView2 != null) {
                 uniqueObjectHostView2.setVisibility(i);
-                for (Function1 invoke : this.visibleChangedListeners) {
-                    invoke.invoke(Boolean.valueOf(getVisible()));
+                Iterator<T> it = this.visibleChangedListeners.iterator();
+                while (it.hasNext()) {
+                    it.next().invoke(Boolean.valueOf(getVisible()));
                 }
                 return;
             }
@@ -243,6 +249,7 @@ public final class MediaHost implements MediaHostState {
         private boolean showsOnlyActiveMedia;
         private boolean visible = true;
 
+        @Override // com.android.systemui.media.MediaHostState
         @Nullable
         public MeasurementInput getMeasurementInput() {
             return this.measurementInput;
@@ -253,25 +260,28 @@ public final class MediaHost implements MediaHostState {
                 this.measurementInput = measurementInput2;
                 Function0<Unit> function0 = this.changedListener;
                 if (function0 != null) {
-                    Unit invoke = function0.invoke();
+                    function0.invoke();
                 }
             }
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         public float getExpansion() {
             return this.expansion;
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         public void setExpansion(float f) {
             if (!Float.valueOf(f).equals(Float.valueOf(this.expansion))) {
                 this.expansion = f;
                 Function0<Unit> function0 = this.changedListener;
                 if (function0 != null) {
-                    Unit invoke = function0.invoke();
+                    function0.invoke();
                 }
             }
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         public boolean getShowsOnlyActiveMedia() {
             return this.showsOnlyActiveMedia;
         }
@@ -281,11 +291,12 @@ public final class MediaHost implements MediaHostState {
                 this.showsOnlyActiveMedia = z;
                 Function0<Unit> function0 = this.changedListener;
                 if (function0 != null) {
-                    Unit invoke = function0.invoke();
+                    function0.invoke();
                 }
             }
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         public boolean getVisible() {
             return this.visible;
         }
@@ -295,11 +306,12 @@ public final class MediaHost implements MediaHostState {
                 this.visible = z;
                 Function0<Unit> function0 = this.changedListener;
                 if (function0 != null) {
-                    Unit invoke = function0.invoke();
+                    function0.invoke();
                 }
             }
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         public boolean getFalsingProtectionNeeded() {
             return this.falsingProtectionNeeded;
         }
@@ -309,11 +321,12 @@ public final class MediaHost implements MediaHostState {
                 this.falsingProtectionNeeded = z;
                 Function0<Unit> function0 = this.changedListener;
                 if (function0 != null) {
-                    Unit invoke = function0.invoke();
+                    function0.invoke();
                 }
             }
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         @NotNull
         public DisappearParameters getDisappearParameters() {
             return this.disappearParameters;
@@ -327,7 +340,7 @@ public final class MediaHost implements MediaHostState {
                 this.lastDisappearHash = hashCode;
                 Function0<Unit> function0 = this.changedListener;
                 if (function0 != null) {
-                    Unit invoke = function0.invoke();
+                    function0.invoke();
                 }
             }
         }
@@ -336,6 +349,7 @@ public final class MediaHost implements MediaHostState {
             this.changedListener = function0;
         }
 
+        @Override // com.android.systemui.media.MediaHostState
         @NotNull
         public MediaHostState copy() {
             MediaHostStateHolder mediaHostStateHolder = new MediaHostStateHolder();
@@ -344,7 +358,7 @@ public final class MediaHost implements MediaHostState {
             MeasurementInput measurementInput2 = getMeasurementInput();
             MeasurementInput measurementInput3 = null;
             if (measurementInput2 != null) {
-                measurementInput3 = MeasurementInput.copy$default(measurementInput2, 0, 0, 3, (Object) null);
+                measurementInput3 = MeasurementInput.copy$default(measurementInput2, 0, 0, 3, null);
             }
             mediaHostStateHolder.setMeasurementInput(measurementInput3);
             mediaHostStateHolder.setVisible(getVisible());

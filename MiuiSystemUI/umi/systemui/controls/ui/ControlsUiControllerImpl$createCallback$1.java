@@ -6,6 +6,7 @@ import com.android.systemui.controls.ControlsServiceInfo;
 import com.android.systemui.controls.management.ControlsListingController;
 import java.util.ArrayList;
 import java.util.List;
+import kotlin.collections.CollectionsKt__IterablesKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -20,15 +21,16 @@ public final class ControlsUiControllerImpl$createCallback$1 implements Controls
         this.$onResult = function1;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsListingController.ControlsListingCallback
     public void onServicesUpdated(@NotNull List<ControlsServiceInfo> list) {
         Intrinsics.checkParameterIsNotNull(list, "serviceInfos");
         ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
-        for (ControlsServiceInfo controlsServiceInfo : list) {
-            CharSequence loadLabel = controlsServiceInfo.loadLabel();
+        for (T t : list) {
+            CharSequence loadLabel = t.loadLabel();
             Intrinsics.checkExpressionValueIsNotNull(loadLabel, "it.loadLabel()");
-            Drawable loadIcon = controlsServiceInfo.loadIcon();
+            Drawable loadIcon = t.loadIcon();
             Intrinsics.checkExpressionValueIsNotNull(loadIcon, "it.loadIcon()");
-            ComponentName componentName = controlsServiceInfo.componentName;
+            ComponentName componentName = t.componentName;
             Intrinsics.checkExpressionValueIsNotNull(componentName, "it.componentName");
             arrayList.add(new SelectionItem(loadLabel, "", loadIcon, componentName));
         }

@@ -9,20 +9,16 @@ import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 
 public class NotificationSection {
-    /* access modifiers changed from: private */
-    public ObjectAnimator mBottomAnimator = null;
+    private ObjectAnimator mBottomAnimator = null;
     private Rect mBounds = new Rect();
     private int mBucket;
     private Rect mCurrentBounds = new Rect(-1, -1, -1, -1);
-    /* access modifiers changed from: private */
-    public Rect mEndAnimationRect = new Rect();
+    private Rect mEndAnimationRect = new Rect();
     private ExpandableView mFirstVisibleChild;
     private ExpandableView mLastVisibleChild;
     private View mOwningView;
-    /* access modifiers changed from: private */
-    public Rect mStartAnimationRect = new Rect();
-    /* access modifiers changed from: private */
-    public ObjectAnimator mTopAnimator = null;
+    private Rect mStartAnimationRect = new Rect();
+    private ObjectAnimator mTopAnimator = null;
 
     NotificationSection(View view, int i) {
         this.mOwningView = view;
@@ -80,14 +76,16 @@ public class NotificationSection {
             if (objectAnimator != null) {
                 objectAnimator.cancel();
             }
-            ObjectAnimator ofInt = ObjectAnimator.ofInt(this, "backgroundTop", new int[]{this.mCurrentBounds.top, i2});
+            ObjectAnimator ofInt = ObjectAnimator.ofInt(this, "backgroundTop", this.mCurrentBounds.top, i2);
             ofInt.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-            ofInt.setDuration(300);
+            ofInt.setDuration(300L);
             ofInt.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.statusbar.notification.stack.NotificationSection.AnonymousClass1 */
+
                 public void onAnimationEnd(Animator animator) {
                     NotificationSection.this.mStartAnimationRect.top = -1;
                     NotificationSection.this.mEndAnimationRect.top = -1;
-                    ObjectAnimator unused = NotificationSection.this.mTopAnimator = null;
+                    NotificationSection.this.mTopAnimator = null;
                 }
             });
             ofInt.start();
@@ -96,7 +94,7 @@ public class NotificationSection {
             this.mTopAnimator = ofInt;
         } else if (objectAnimator != null) {
             int i3 = this.mStartAnimationRect.top;
-            objectAnimator.getValues()[0].setIntValues(new int[]{i3, i2});
+            objectAnimator.getValues()[0].setIntValues(i3, i2);
             this.mStartAnimationRect.top = i3;
             this.mEndAnimationRect.top = i2;
             objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
@@ -117,14 +115,16 @@ public class NotificationSection {
             if (objectAnimator != null) {
                 objectAnimator.cancel();
             }
-            ObjectAnimator ofInt = ObjectAnimator.ofInt(this, "backgroundBottom", new int[]{this.mCurrentBounds.bottom, i3});
+            ObjectAnimator ofInt = ObjectAnimator.ofInt(this, "backgroundBottom", this.mCurrentBounds.bottom, i3);
             ofInt.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-            ofInt.setDuration(300);
+            ofInt.setDuration(300L);
             ofInt.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.statusbar.notification.stack.NotificationSection.AnonymousClass2 */
+
                 public void onAnimationEnd(Animator animator) {
                     NotificationSection.this.mStartAnimationRect.bottom = -1;
                     NotificationSection.this.mEndAnimationRect.bottom = -1;
-                    ObjectAnimator unused = NotificationSection.this.mBottomAnimator = null;
+                    NotificationSection.this.mBottomAnimator = null;
                 }
             });
             ofInt.start();
@@ -132,7 +132,7 @@ public class NotificationSection {
             this.mEndAnimationRect.bottom = i3;
             this.mBottomAnimator = ofInt;
         } else if (objectAnimator != null) {
-            objectAnimator.getValues()[0].setIntValues(new int[]{i, i3});
+            objectAnimator.getValues()[0].setIntValues(i, i3);
             this.mStartAnimationRect.bottom = i;
             this.mEndAnimationRect.bottom = i3;
             objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());

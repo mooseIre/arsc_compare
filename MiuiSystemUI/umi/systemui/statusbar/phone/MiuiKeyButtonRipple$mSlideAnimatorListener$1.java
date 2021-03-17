@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MiuiKeyButtonRipple$mSlideAnimatorListener$1 extends AnimatorListenerAdapter {
     final /* synthetic */ MiuiKeyButtonRipple this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiKeyButtonRipple$mSlideAnimatorListener$1(MiuiKeyButtonRipple miuiKeyButtonRipple) {
         this.this$0 = miuiKeyButtonRipple;
     }
@@ -16,7 +17,7 @@ public final class MiuiKeyButtonRipple$mSlideAnimatorListener$1 extends Animator
     public void onAnimationEnd(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animation");
         this.this$0.getMRunningAnimations().remove(animator);
-        this.this$0.sildeSecondPart();
+        MiuiKeyButtonRipple.access$sildeSecondPart(this.this$0);
         if (this.this$0.getMRunningAnimations().isEmpty() && !this.this$0.getMPressed()) {
             this.this$0.setMDrawingHardwareGlow(false);
             this.this$0.invalidateSelf();

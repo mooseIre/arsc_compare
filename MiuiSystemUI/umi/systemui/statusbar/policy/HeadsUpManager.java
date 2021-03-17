@@ -17,8 +17,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 
 public abstract class HeadsUpManager extends AlertingNotificationManager {
-    /* access modifiers changed from: private */
-    public final AccessibilityManagerWrapper mAccessibilityMgr;
+    private final AccessibilityManagerWrapper mAccessibilityMgr;
     protected final Context mContext;
     protected boolean mHasPinnedNotification;
     protected final HashSet<OnHeadsUpChangedListener> mListeners = new HashSet<>();
@@ -27,6 +26,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     protected int mTouchAcceptanceDelay;
     protected int mUser;
 
+    @Override // com.android.systemui.statusbar.AlertingNotificationManager
     public int getContentFlag() {
         return 4;
     }
@@ -52,6 +52,8 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         this.mSnoozedPackages = new ArrayMap<>();
         this.mSnoozeLengthMs = Settings.Global.getInt(context.getContentResolver(), "heads_up_snooze_length_ms", resources.getInteger(C0016R$integer.heads_up_default_snooze_length_ms));
         context.getContentResolver().registerContentObserver(Settings.Global.getUriFor("heads_up_snooze_length_ms"), false, new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.statusbar.policy.HeadsUpManager.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 int i = Settings.Global.getInt(context.getContentResolver(), "heads_up_snooze_length_ms", -1);
                 if (i > -1) {
@@ -75,6 +77,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         this.mListeners.remove(onHeadsUpChangedListener);
     }
 
+    @Override // com.android.systemui.statusbar.AlertingNotificationManager
     public void updateNotification(String str, boolean z) {
         super.updateNotification(str, z);
         HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
@@ -115,6 +118,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.AlertingNotificationManager
     public void onAlertEntryAdded(AlertingNotificationManager.AlertEntry alertEntry) {
         NotificationEntry notificationEntry = alertEntry.mEntry;
         notificationEntry.setHeadsUp(true);
@@ -126,6 +130,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.AlertingNotificationManager
     public void onAlertEntryRemoved(AlertingNotificationManager.AlertEntry alertEntry) {
         NotificationEntry notificationEntry = alertEntry.mEntry;
         notificationEntry.setHeadsUp(false);
@@ -159,10 +164,10 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     }
 
     public void snooze() {
-        for (String headsUpEntry : this.mAlertEntries.keySet()) {
-            HeadsUpEntry headsUpEntry2 = getHeadsUpEntry(headsUpEntry);
-            String packageName = headsUpEntry2.mEntry.getSbn().getPackageName();
-            if (!HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry2.mEntry)) {
+        for (String str : this.mAlertEntries.keySet()) {
+            HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
+            String packageName = headsUpEntry.mEntry.getSbn().getPackageName();
+            if (!HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry.mEntry)) {
                 this.mSnoozedPackages.put(snoozeKey(packageName, this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
             }
         }
@@ -191,9 +196,9 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         if (this.mAlertEntries.isEmpty()) {
             return null;
         }
-        for (AlertingNotificationManager.AlertEntry next : this.mAlertEntries.values()) {
-            if (headsUpEntry == null || next.compareTo((AlertingNotificationManager.AlertEntry) headsUpEntry) < 0) {
-                headsUpEntry = (HeadsUpEntry) next;
+        for (AlertingNotificationManager.AlertEntry alertEntry : this.mAlertEntries.values()) {
+            if (headsUpEntry == null || alertEntry.compareTo((AlertingNotificationManager.AlertEntry) headsUpEntry) < 0) {
+                headsUpEntry = (HeadsUpEntry) alertEntry;
             }
         }
         return headsUpEntry;
@@ -232,8 +237,8 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     }
 
     private boolean hasPinnedNotificationInternal() {
-        for (String headsUpEntry : this.mAlertEntries.keySet()) {
-            if (getHeadsUpEntry(headsUpEntry).mEntry.isRowPinned()) {
+        for (String str : this.mAlertEntries.keySet()) {
+            if (getHeadsUpEntry(str).mEntry.isRowPinned()) {
                 return true;
             }
         }
@@ -242,12 +247,12 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
 
     public void unpinAll(boolean z) {
         NotificationEntry notificationEntry;
-        for (String headsUpEntry : this.mAlertEntries.keySet()) {
-            HeadsUpEntry headsUpEntry2 = getHeadsUpEntry(headsUpEntry);
-            setEntryPinned(headsUpEntry2, false);
-            headsUpEntry2.updateEntry(false);
-            if (z && (notificationEntry = headsUpEntry2.mEntry) != null && notificationEntry.mustStayOnScreen()) {
-                headsUpEntry2.mEntry.setHeadsUpIsVisible();
+        for (String str : this.mAlertEntries.keySet()) {
+            HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
+            setEntryPinned(headsUpEntry, false);
+            headsUpEntry.updateEntry(false);
+            if (z && (notificationEntry = headsUpEntry.mEntry) != null && notificationEntry.mustStayOnScreen()) {
+                headsUpEntry.mEntry.setHeadsUpIsVisible();
             }
         }
     }
@@ -269,11 +274,13 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.AlertingNotificationManager
     public HeadsUpEntry createAlertEntry() {
         return new HeadsUpEntry();
     }
 
-    protected class HeadsUpEntry extends AlertingNotificationManager.AlertEntry {
+    /* access modifiers changed from: protected */
+    public class HeadsUpEntry extends AlertingNotificationManager.AlertEntry {
         protected boolean expanded;
         public boolean remoteInputActive;
 
@@ -281,10 +288,12 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
             super();
         }
 
+        @Override // com.android.systemui.statusbar.AlertingNotificationManager.AlertEntry
         public boolean isSticky() {
             return (this.mEntry.isRowPinned() && this.expanded) || this.remoteInputActive || HeadsUpManager.this.hasFullScreenIntent(this.mEntry);
         }
 
+        @Override // com.android.systemui.statusbar.AlertingNotificationManager.AlertEntry
         public int compareTo(AlertingNotificationManager.AlertEntry alertEntry) {
             HeadsUpEntry headsUpEntry = (HeadsUpEntry) alertEntry;
             boolean isRowPinned = this.mEntry.isRowPinned();
@@ -316,6 +325,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
             this.expanded = z;
         }
 
+        @Override // com.android.systemui.statusbar.AlertingNotificationManager.AlertEntry
         public void reset() {
             super.reset();
             this.expanded = false;
@@ -323,13 +333,15 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.AlertingNotificationManager.AlertEntry
         public long calculatePostTime() {
             return super.calculatePostTime() + ((long) HeadsUpManager.this.mTouchAcceptanceDelay);
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.AlertingNotificationManager.AlertEntry
         public long calculateFinishTime() {
-            return this.mPostTime + ((long) getRecommendedHeadsUpTimeoutMs(HeadsUpManager.this.mAutoDismissNotificationDecay));
+            return this.mPostTime + ((long) getRecommendedHeadsUpTimeoutMs(((AlertingNotificationManager) HeadsUpManager.this).mAutoDismissNotificationDecay));
         }
 
         /* access modifiers changed from: protected */

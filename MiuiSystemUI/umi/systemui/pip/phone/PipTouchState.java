@@ -52,6 +52,9 @@ public class PipTouchState {
     public void onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         boolean z = false;
+        int i = 0;
+        z = false;
+        z = false;
         boolean z2 = true;
         if (actionMasked != 0) {
             if (actionMasked != 1) {
@@ -68,10 +71,10 @@ public class PipTouchState {
                             int actionIndex = motionEvent.getActionIndex();
                             if (motionEvent.getPointerId(actionIndex) == this.mActivePointerId) {
                                 if (actionIndex == 0) {
-                                    z = true;
+                                    i = 1;
                                 }
-                                this.mActivePointerId = motionEvent.getPointerId(z ? 1 : 0);
-                                this.mLastTouch.set(motionEvent.getRawX(z), motionEvent.getRawY(z));
+                                this.mActivePointerId = motionEvent.getPointerId(i);
+                                this.mLastTouch.set(motionEvent.getRawX(i), motionEvent.getRawY(i));
                                 return;
                             }
                             return;
@@ -94,10 +97,10 @@ public class PipTouchState {
                     PointF pointF3 = this.mDownDelta;
                     PointF pointF4 = this.mDownTouch;
                     pointF3.set(rawX - pointF4.x, rawY - pointF4.y);
-                    boolean z3 = this.mDownDelta.length() > ((float) this.mViewConfig.getScaledTouchSlop());
+                    Object[] objArr = this.mDownDelta.length() > ((float) this.mViewConfig.getScaledTouchSlop()) ? 1 : null;
                     if (this.mIsDragging) {
                         this.mStartedDragging = false;
-                    } else if (z3) {
+                    } else if (objArr != null) {
                         this.mIsDragging = true;
                         this.mStartedDragging = true;
                     }
@@ -117,9 +120,9 @@ public class PipTouchState {
                 }
                 this.mUpTouchTime = motionEvent.getEventTime();
                 this.mLastTouch.set(motionEvent.getRawX(findPointerIndex2), motionEvent.getRawY(findPointerIndex2));
-                boolean z4 = this.mIsDragging;
-                this.mPreviouslyDragging = z4;
-                if (!this.mIsDoubleTap && !z4 && this.mUpTouchTime - this.mDownTouchTime < DOUBLE_TAP_TIMEOUT) {
+                boolean z3 = this.mIsDragging;
+                this.mPreviouslyDragging = z3;
+                if (!this.mIsDoubleTap && !z3 && this.mUpTouchTime - this.mDownTouchTime < DOUBLE_TAP_TIMEOUT) {
                     z = true;
                 }
                 this.mIsWaitingForDoubleTap = z;
@@ -206,7 +209,7 @@ public class PipTouchState {
     @VisibleForTesting
     public long getDoubleTapTimeoutCallbackDelay() {
         if (this.mIsWaitingForDoubleTap) {
-            return Math.max(0, DOUBLE_TAP_TIMEOUT - (this.mUpTouchTime - this.mDownTouchTime));
+            return Math.max(0L, DOUBLE_TAP_TIMEOUT - (this.mUpTouchTime - this.mDownTouchTime));
         }
         return -1;
     }

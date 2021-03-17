@@ -24,6 +24,7 @@ public final class SystemUIModule_ProvideKeyguardLiftControllerFactory implement
         this.dumpManagerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardLiftController get() {
         return provideInstance(this.contextProvider, this.statusBarStateControllerProvider, this.asyncSensorManagerProvider, this.keyguardUpdateMonitorProvider, this.dumpManagerProvider);
     }

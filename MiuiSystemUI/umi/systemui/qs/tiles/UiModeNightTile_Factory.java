@@ -20,6 +20,7 @@ public final class UiModeNightTile_Factory implements Factory<UiModeNightTile> {
         this.locationControllerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public UiModeNightTile get() {
         return provideInstance(this.hostProvider, this.configurationControllerProvider, this.batteryControllerProvider, this.locationControllerProvider);
     }

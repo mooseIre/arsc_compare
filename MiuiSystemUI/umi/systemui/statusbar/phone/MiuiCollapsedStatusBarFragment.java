@@ -31,10 +31,12 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     private DarkCarrierText mStatusBarCarrier;
     private View mStatusBarPromptContainer;
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
         return layoutInflater.inflate(C0017R$layout.miui_status_bar, viewGroup, false);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void initNotificationIconArea(NotificationIconAreaController notificationIconAreaController) {
         View notificationInnerAreaView = notificationIconAreaController.getNotificationInnerAreaView();
         this.mNotificationIconAreaInner = notificationInnerAreaView;
@@ -53,6 +55,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void initMiuiViewsOnViewCreated(View view) {
         super.initMiuiViewsOnViewCreated(view);
         StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
@@ -72,13 +75,15 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
         this.mStatusBarCarrier = (DarkCarrierText) view.findViewById(C0015R$id.status_bar_carrier_text);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusBarCarrier);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mStatusBarCarrier);
         updateStatusBarCarrierVisibility();
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void onDestroyView() {
         super.onDestroyView();
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
@@ -88,36 +93,42 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (this.mDripRightDarkIconManager != null) {
             ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightDarkIconManager);
         }
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mStatusBarCarrier);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mStatusBarCarrier);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void hideSystemIconArea(boolean z) {
         super.hideSystemIconArea(z);
         animateHide(this.mDripSystemIconArea, z);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void showSystemIconArea(boolean z) {
         super.showSystemIconArea(z);
         animateShow(this.mDripSystemIconArea, z);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void hideMiuiStatusBarPrompt(boolean z) {
         super.hideMiuiStatusBarPrompt(z);
         animateHide(this.mStatusBarPromptContainer, z);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void showMiuiStatusBarPrompt(boolean z) {
         super.showMiuiStatusBarPrompt(z);
         animateShow(this.mStatusBarPromptContainer, z);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void hideClock(boolean z) {
         super.hideClock(z);
         hideNetworkSpeedSplitter(clockHiddenMode(), z);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void showClock(boolean z) {
         super.showClock(z);
         showNetworkSpeedSplitter(z);
@@ -133,6 +144,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
                 return;
             }
             this.mDripNetworkSpeedSplitter.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable(i) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiCollapsedStatusBarFragment$XgjLBVG_k9i0Qm6JCAVkLt9_8E */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -159,19 +171,21 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
             this.mDripNetworkSpeedSplitter.setAlpha(1.0f);
             return;
         }
-        this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction((Runnable) null);
+        this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
         if (this.mKeyguardStateController.isKeyguardFadingAway()) {
             this.mDripNetworkSpeedSplitter.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
         }
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void hideMiuiDripNetworkSpeedView(boolean z) {
         super.hideMiuiDripNetworkSpeedView(z);
         animateHideDripNetworkSpeedView(4, z);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void showMiuiDripNetworkSpeedView(boolean z) {
         super.showMiuiDripNetworkSpeedView(z);
         animateShowDripNetworkSpeedView(z);
@@ -187,6 +201,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
                 return;
             }
             this.mDripNetworkSpeedView.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable(i) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiCollapsedStatusBarFragment$21ZiEwIBLGqXEQcYfaOr5QmZJI */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -215,13 +230,14 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
                 this.mDripNetworkSpeedView.setAlpha(1.0f);
                 return;
             }
-            this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction((Runnable) null);
+            this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
             if (this.mKeyguardStateController.isKeyguardFadingAway()) {
                 this.mDripNetworkSpeedView.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
             }
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.RegionController.Callback
     public void onRegionChanged(String str) {
         this.mRegion = str;
         updateStatusBarCarrierVisibility();

@@ -33,6 +33,8 @@ import java.util.function.Consumer;
 
 public class QSContainerImpl extends FrameLayout implements TunerService.Tunable, BrightnessMirrorController.BrightnessMirrorListener {
     private static final FloatPropertyCompat<QSContainerImpl> BACKGROUND_BOTTOM = new FloatPropertyCompat<QSContainerImpl>("backgroundBottom") {
+        /* class com.android.systemui.qs.QSContainerImpl.AnonymousClass1 */
+
         public float getValue(QSContainerImpl qSContainerImpl) {
             return qSContainerImpl.getBackgroundBottom();
         }
@@ -113,11 +115,17 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
         this.mBackgroundGradient = findViewById(C0015R$id.quick_settings_gradient_view);
         updateResources();
         this.mQuickQSPanel.setMediaVisibilityChangedListener(new Consumer() {
+            /* class com.android.systemui.qs.$$Lambda$QSContainerImpl$SmgcCxPvK9MpCttxm75WvXCaB3s */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 QSContainerImpl.this.lambda$onFinishInflate$0$QSContainerImpl((Boolean) obj);
             }
         });
         this.mQSPanel.setMediaVisibilityChangedListener(new Consumer() {
+            /* class com.android.systemui.qs.$$Lambda$QSContainerImpl$671EqL2XSP9H1_W3SpTMCiE58Y */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 QSContainerImpl.this.lambda$onFinishInflate$1$QSContainerImpl((Boolean) obj);
             }
@@ -143,13 +151,15 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
     }
 
     /* access modifiers changed from: private */
-    public void setBackgroundBottom(int i) {
+    /* access modifiers changed from: public */
+    private void setBackgroundBottom(int i) {
         this.mBackgroundBottom = i;
         this.mBackground.setBottom(i);
     }
 
     /* access modifiers changed from: private */
-    public float getBackgroundBottom() {
+    /* access modifiers changed from: public */
+    private float getBackgroundBottom() {
         int i = this.mBackgroundBottom;
         return i == -1 ? (float) this.mBackground.getBottom() : (float) i;
     }
@@ -172,7 +182,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
         if (z) {
             displayHeight -= getResources().getDimensionPixelSize(C0012R$dimen.navigation_bar_height);
         }
-        int i3 = this.mPaddingLeft + this.mPaddingRight + marginLayoutParams.leftMargin + marginLayoutParams.rightMargin;
+        int i3 = ((FrameLayout) this).mPaddingLeft + ((FrameLayout) this).mPaddingRight + marginLayoutParams.leftMargin + marginLayoutParams.rightMargin;
         this.mQSPanelContainer.measure(FrameLayout.getChildMeasureSpec(i, i3, marginLayoutParams.width), View.MeasureSpec.makeMeasureSpec(displayHeight, Integer.MIN_VALUE));
         super.onMeasure(View.MeasureSpec.makeMeasureSpec(this.mQSPanelContainer.getMeasuredWidth() + i3, 1073741824), View.MeasureSpec.makeMeasureSpec(marginLayoutParams.topMargin + marginLayoutParams.bottomMargin + this.mQSPanelContainer.getMeasuredHeight() + this.mQSFooterBundle.getMeasuredHeight() + getPaddingBottom(), 1073741824));
         this.mQSCustomizer.measure(i, View.MeasureSpec.makeMeasureSpec(getDisplayHeight(), 1073741824));
@@ -338,6 +348,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
         return this.mQuickQSPanel;
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         ToggleSliderView toggleSliderView;
         if ("qs_show_brightness".equals(str) && (toggleSliderView = this.mBrightnessView) != null) {
@@ -370,7 +381,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
             QSFooterDataUsage qSFooterDataUsage = this.mDataUsage;
             if (qSFooterDataUsage != null) {
                 this.mQSFooterBundle.removeView(qSFooterDataUsage);
-                this.mDataUsage.setQSContainer((QSContainerImpl) null);
+                this.mDataUsage.setQSContainer(null);
                 this.mDataUsage = null;
             }
         } else if (this.mDataUsage == null) {
@@ -403,6 +414,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BrightnessMirrorController.BrightnessMirrorListener
     public void onBrightnessMirrorReinflated(View view) {
         updateBrightnessMirror();
     }
@@ -438,7 +450,7 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
     }
 
     private void setupAnimatedViews() {
-        List asList = Arrays.asList(new View[]{this.mQSFooterBundle, this.mDragHandle, this.mQuickQSPanel, this.mQSPanel, this.mBackground});
+        List<View> asList = Arrays.asList(this.mQSFooterBundle, this.mDragHandle, this.mQuickQSPanel, this.mQSPanel, this.mBackground);
         if (this.mExtraAnimatedViews != null) {
             ArrayList arrayList = new ArrayList(asList);
             arrayList.addAll(Arrays.asList(this.mExtraAnimatedViews));
@@ -458,14 +470,16 @@ public class QSContainerImpl extends FrameLayout implements TunerService.Tunable
                 this.mCaretAnimator.cancel();
                 this.mIndicatorDrawable.setCaretProgress(0.0f);
             }
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, f);
             this.mCaretAnimator = ofFloat;
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.qs.$$Lambda$QSContainerImpl$304nFTeTD2pE08Ua4zXfWxj8rG8 */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     QSContainerImpl.this.lambda$updateIndicator$2$QSContainerImpl(valueAnimator);
                 }
             });
-            this.mCaretAnimator.setDuration(200);
+            this.mCaretAnimator.setDuration(200L);
             this.mCaretAnimator.setInterpolator(this.mCaretInterpolator);
             this.mCaretAnimator.start();
         }

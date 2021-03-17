@@ -10,6 +10,7 @@ public final class BubbleOverflowActivity_Factory implements Factory<BubbleOverf
         this.controllerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BubbleOverflowActivity get() {
         return provideInstance(this.controllerProvider);
     }

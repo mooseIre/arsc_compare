@@ -26,7 +26,6 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.graphics.Rect;
 import android.media.AudioAttributes;
 import android.metrics.LogMaker;
 import android.net.Uri;
@@ -96,7 +95,6 @@ import com.android.systemui.DejankUtils;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
-import com.android.systemui.EventLogTags;
 import com.android.systemui.InitController;
 import com.android.systemui.Prefs;
 import com.android.systemui.SystemUI;
@@ -171,6 +169,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.NotificationGutsManager;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.phone.NotificationShadeWindowController;
 import com.android.systemui.statusbar.phone.ScrimController;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.phone.StatusBarNotificationActivityStarter;
@@ -217,14 +216,16 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private final Lazy<AssistManager> mAssistManagerLazy;
     private final AutoHideController mAutoHideController;
     private final BroadcastReceiver mBannerActionBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass15 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("com.android.systemui.statusbar.banner_action_cancel".equals(action) || "com.android.systemui.statusbar.banner_action_setup".equals(action)) {
-                ((NotificationManager) StatusBar.this.mContext.getSystemService("notification")).cancel(5);
-                Settings.Secure.putInt(StatusBar.this.mContext.getContentResolver(), "show_note_about_notification_hiding", 0);
+                ((NotificationManager) ((SystemUI) StatusBar.this).mContext.getSystemService("notification")).cancel(5);
+                Settings.Secure.putInt(((SystemUI) StatusBar.this).mContext.getContentResolver(), "show_note_about_notification_hiding", 0);
                 if ("com.android.systemui.statusbar.banner_action_setup".equals(action)) {
                     StatusBar.this.mShadeController.animateCollapsePanels(2, true);
-                    StatusBar.this.mContext.startActivity(new Intent("android.settings.ACTION_APP_NOTIFICATION_REDACTION").addFlags(268435456));
+                    ((SystemUI) StatusBar.this).mContext.startActivity(new Intent("android.settings.ACTION_APP_NOTIFICATION_REDACTION").addFlags(268435456));
                 }
             }
         }
@@ -239,6 +240,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private boolean mBrightnessMirrorVisible;
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass9 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             int i = 0;
@@ -276,14 +279,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final BubbleController mBubbleController;
+    private final BubbleController mBubbleController;
     private final BubbleController.BubbleExpandListener mBubbleExpandListener;
-    /* access modifiers changed from: private */
-    public final BypassHeadsUpNotifier mBypassHeadsUpNotifier;
+    private final BypassHeadsUpNotifier mBypassHeadsUpNotifier;
     private long[] mCameraLaunchGestureVibePattern;
-    /* access modifiers changed from: private */
-    public final Runnable mCheckBarModes = new Runnable() {
+    private final Runnable mCheckBarModes = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$KBnY14rlKZ6x8gvk_goBuFrr5eE */
+
         public final void run() {
             StatusBar.this.checkBarModes();
         }
@@ -297,6 +299,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private boolean mDemoMode;
     private boolean mDemoModeAllowed;
     private final BroadcastReceiver mDemoReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass10 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("com.android.systemui.demo".equals(action)) {
@@ -318,8 +322,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     };
     protected boolean mDeviceInteractive;
     protected DevicePolicyManager mDevicePolicyManager;
-    /* access modifiers changed from: private */
-    public final DeviceProvisionedController mDeviceProvisionedController;
+    private final DeviceProvisionedController mDeviceProvisionedController;
     private int mDisabled1 = 0;
     private int mDisabled2 = 0;
     private final DismissCallbackRegistry mDismissCallbackRegistry;
@@ -327,8 +330,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private int mDisplayId;
     private final DisplayMetrics mDisplayMetrics;
     private final Optional<Divider> mDividerOptional;
-    /* access modifiers changed from: private */
-    public final DozeParameters mDozeParameters;
+    private final DozeParameters mDozeParameters;
     protected DozeScrimController mDozeScrimController;
     @VisibleForTesting
     DozeServiceHost mDozeServiceHost;
@@ -338,11 +340,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private final DynamicPrivacyController mDynamicPrivacyController;
     private boolean mExpandedVisible;
     private final ExtensionController mExtensionController;
-    /* access modifiers changed from: private */
-    public final FalsingManager mFalsingManager;
+    private final FalsingManager mFalsingManager;
     private final GestureRecorder mGestureRec = null;
     protected PowerManager.WakeLock mGestureWakeLock;
     private final View.OnClickListener mGoToLockedShadeListener = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$yGW3LliHoPrdVSisJBkD7OsnTE */
+
         public final void onClick(View view) {
             StatusBar.this.lambda$new$0$StatusBar(view);
         }
@@ -351,8 +354,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private final NotificationGutsManager mGutsManager;
     protected final H mHandler = createHandler();
     private HeadsUpAppearanceController mHeadsUpAppearanceController;
-    /* access modifiers changed from: private */
-    public final HeadsUpManagerPhone mHeadsUpManager;
+    private final HeadsUpManagerPhone mHeadsUpManager;
     private boolean mHideIconsForBouncer;
     private final StatusBarIconController mIconController;
     private PhoneStatusBarPolicy mIconPolicy;
@@ -360,34 +362,27 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private int mInteractingWindows;
     protected boolean mIsKeyguard;
     private boolean mIsOccluded;
-    /* access modifiers changed from: private */
-    public final KeyguardBypassController mKeyguardBypassController;
+    private final KeyguardBypassController mKeyguardBypassController;
     private final KeyguardDismissUtil mKeyguardDismissUtil;
     KeyguardIndicationController mKeyguardIndicationController;
     protected KeyguardManager mKeyguardManager;
     private int mKeyguardNotifications = -1;
-    /* access modifiers changed from: private */
-    public final KeyguardStateController mKeyguardStateController;
+    private final KeyguardStateController mKeyguardStateController;
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private KeyguardUserSwitcher mKeyguardUserSwitcher;
     private final KeyguardViewMediator mKeyguardViewMediator;
     private ViewMediatorCallback mKeyguardViewMediatorCallback;
-    /* access modifiers changed from: private */
-    public int mLastCameraLaunchSource;
+    private int mLastCameraLaunchSource;
     private int mLastLoggedStateFingerprint;
-    /* access modifiers changed from: private */
-    public boolean mLaunchCameraOnFinishedGoingToSleep;
-    /* access modifiers changed from: private */
-    public boolean mLaunchCameraWhenFinishedWaking;
+    private boolean mLaunchCameraOnFinishedGoingToSleep;
+    private boolean mLaunchCameraWhenFinishedWaking;
     private Runnable mLaunchTransitionEndRunnable;
     private final LightBarController mLightBarController;
     private final LightsOutNotifController mLightsOutNotifController;
     private final LockscreenLockIconController mLockscreenLockIconController;
-    /* access modifiers changed from: private */
-    public final NotificationLockscreenUserManager mLockscreenUserManager;
+    private final NotificationLockscreenUserManager mLockscreenUserManager;
     protected LockscreenWallpaper mLockscreenWallpaper;
-    /* access modifiers changed from: private */
-    public final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
+    private final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
     private final NotificationMediaManager mMediaManager;
     private final MetricsLogger mMetricsLogger;
     private final NavigationBarController mNavigationBarController;
@@ -403,38 +398,38 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     protected NotificationShadeWindowView mNotificationShadeWindowView;
     protected NotificationShadeWindowViewController mNotificationShadeWindowViewController;
     protected NotificationShelf mNotificationShelf;
-    /* access modifiers changed from: private */
-    public NotificationsController mNotificationsController;
+    private NotificationsController mNotificationsController;
     protected boolean mPanelExpanded;
     protected StatusBarWindowView mPhoneStatusBarWindow;
     private final PluginDependencyProvider mPluginDependencyProvider;
     private final PluginManager mPluginManager;
     private final PowerManager mPowerManager;
     protected StatusBarNotificationPresenter mPresenter;
-    /* access modifiers changed from: private */
-    public Configuration mPreviousConfig;
-    /* access modifiers changed from: private */
-    public final PulseExpansionHandler mPulseExpansionHandler;
+    private Configuration mPreviousConfig;
+    private final PulseExpansionHandler mPulseExpansionHandler;
     private QSContainerImpl mQSContainer;
-    /* access modifiers changed from: private */
-    public QSPanel mQSPanel;
+    private QSPanel mQSPanel;
     private final Object mQueueLock = new Object();
     private final Optional<Recents> mRecentsOptional;
-    /* access modifiers changed from: private */
-    public final NotificationRemoteInputManager mRemoteInputManager;
+    private final NotificationRemoteInputManager mRemoteInputManager;
     private final RemoteInputQuickSettingsDisabler mRemoteInputQuickSettingsDisabler;
     private View mReportRejectedTouch;
     private final ScreenLifecycle mScreenLifecycle;
     final ScreenLifecycle.Observer mScreenObserver = new ScreenLifecycle.Observer() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass13 */
+
+        @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
         public void onScreenTurningOn() {
             StatusBar.this.mFalsingManager.onScreenTurningOn();
             StatusBar.this.mNotificationPanelViewController.onScreenTurningOn();
         }
 
+        @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
         public void onScreenTurnedOn() {
             StatusBar.this.mScrimController.onScreenTurnedOn();
         }
 
+        @Override // com.android.systemui.keyguard.ScreenLifecycle.Observer
         public void onScreenTurnedOff() {
             StatusBar.this.mDozeServiceHost.updateDozing();
             StatusBar.this.mFalsingManager.onScreenOff();
@@ -443,10 +438,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     };
     private final ScreenPinningRequest mScreenPinningRequest;
-    /* access modifiers changed from: private */
-    public final ScrimController mScrimController;
-    /* access modifiers changed from: private */
-    public final ShadeController mShadeController;
+    private final ScrimController mScrimController;
+    private final ShadeController mShadeController;
     protected ViewGroup mStackScroller;
     protected int mState;
     private final Provider<StatusBarComponent.Builder> mStatusBarComponentBuilder;
@@ -461,19 +454,23 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private boolean mStatusBarWindowHidden;
     private int mStatusBarWindowState = 0;
     final Runnable mStopTracing = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$RAI9_BB0sxI6fAXVPwmNkObnx6k */
+
         public final void run() {
             StatusBar.this.lambda$new$22$StatusBar();
         }
     };
     private final SuperStatusBarViewFactory mSuperStatusBarViewFactory;
-    /* access modifiers changed from: private */
-    public boolean mSupportsAmbientMode;
+    private boolean mSupportsAmbientMode;
     private final int[] mTmpInt2 = new int[2];
     private boolean mTopHidesStatusBar;
     private boolean mTransientShown;
     private final Executor mUiBgExecutor;
     private UiModeManager mUiModeManager;
     private final ScrimController.Callback mUnlockScrimCallback = new ScrimController.Callback() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass3 */
+
+        @Override // com.android.systemui.statusbar.phone.ScrimController.Callback
         public void onFinished() {
             StatusBar statusBar = StatusBar.this;
             if (statusBar.mStatusBarKeyguardViewManager == null) {
@@ -483,17 +480,22 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
         }
 
+        @Override // com.android.systemui.statusbar.phone.ScrimController.Callback
         public void onCancelled() {
             onFinished();
         }
     };
     private final KeyguardUpdateMonitorCallback mUpdateCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass4 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onDreamingStateChanged(boolean z) {
             if (z) {
                 StatusBar.this.maybeEscalateHeadsUp();
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStrongAuthStateChanged(int i) {
             super.onStrongAuthStateChanged(i);
             StatusBar.this.mNotificationsController.requestNotificationUpdate("onStrongAuthStateChanged");
@@ -503,6 +505,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     @VisibleForTesting
     protected boolean mUserSetup = false;
     private final DeviceProvisionedController.DeviceProvisionedListener mUserSetupObserver = new DeviceProvisionedController.DeviceProvisionedListener() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
         public void onUserSetupChanged() {
             boolean isUserSetup = StatusBar.this.mDeviceProvisionedController.isUserSetup(StatusBar.this.mDeviceProvisionedController.getCurrentUser());
             Log.d("StatusBar", "mUserSetupObserver - DeviceProvisionedListener called for user " + StatusBar.this.mDeviceProvisionedController.getCurrentUser());
@@ -528,33 +533,34 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     private final NotificationViewHierarchyManager mViewHierarchyManager;
     protected boolean mVisible;
     private boolean mVisibleToUser;
-    /* access modifiers changed from: private */
-    public final VisualStabilityManager mVisualStabilityManager;
+    private final VisualStabilityManager mVisualStabilityManager;
     private final VolumeComponent mVolumeComponent;
-    /* access modifiers changed from: private */
-    public boolean mWakeUpComingFromTouch;
-    /* access modifiers changed from: private */
-    public final NotificationWakeUpCoordinator mWakeUpCoordinator;
-    /* access modifiers changed from: private */
-    public PointF mWakeUpTouchLocation;
+    private boolean mWakeUpComingFromTouch;
+    private final NotificationWakeUpCoordinator mWakeUpCoordinator;
+    private PointF mWakeUpTouchLocation;
     private final WakefulnessLifecycle mWakefulnessLifecycle;
     @VisibleForTesting
     final WakefulnessLifecycle.Observer mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass12 */
+
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedGoingToSleep() {
             StatusBar.this.mNotificationPanelViewController.onAffordanceLaunchEnded();
             StatusBar.this.releaseGestureWakeLock();
-            boolean unused = StatusBar.this.mLaunchCameraWhenFinishedWaking = false;
+            StatusBar.this.mLaunchCameraWhenFinishedWaking = false;
             StatusBar statusBar = StatusBar.this;
             statusBar.mDeviceInteractive = false;
-            boolean unused2 = statusBar.mWakeUpComingFromTouch = false;
-            PointF unused3 = StatusBar.this.mWakeUpTouchLocation = null;
+            statusBar.mWakeUpComingFromTouch = false;
+            StatusBar.this.mWakeUpTouchLocation = null;
             StatusBar.this.mVisualStabilityManager.setScreenOn(false);
             StatusBar.this.updateVisibleToUser();
             StatusBar.this.updateNotificationPanelTouchState();
             StatusBar.this.mNotificationShadeWindowViewController.cancelCurrentTouch();
             if (StatusBar.this.mLaunchCameraOnFinishedGoingToSleep) {
-                boolean unused4 = StatusBar.this.mLaunchCameraOnFinishedGoingToSleep = false;
+                StatusBar.this.mLaunchCameraOnFinishedGoingToSleep = false;
                 StatusBar.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$12$y9_RRyD4rDeCN3cFnbhrxNLuI7g */
+
                     public final void run() {
                         StatusBar.AnonymousClass12.this.lambda$onFinishedGoingToSleep$0$StatusBar$12();
                     }
@@ -570,6 +576,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             statusBar.onCameraLaunchGestureDetected(statusBar.mLastCameraLaunchSource);
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedGoingToSleep() {
             DejankUtils.startDetectingBlockingIpcs("StatusBar#onStartedGoingToSleep");
             StatusBar.this.updateNotificationPanelTouchState();
@@ -581,6 +588,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             DejankUtils.stopDetectingBlockingIpcs("StatusBar#onStartedGoingToSleep");
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onStartedWakingUp() {
             DejankUtils.startDetectingBlockingIpcs("StatusBar#onStartedWakingUp");
             StatusBar statusBar = StatusBar.this;
@@ -598,6 +606,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             DejankUtils.stopDetectingBlockingIpcs("StatusBar#onStartedWakingUp");
         }
 
+        @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedWakingUp() {
             StatusBar.this.mWakeUpCoordinator.setFullyAwake(true);
             StatusBar.this.mBypassHeadsUpNotifier.setFullyAwake(true);
@@ -605,30 +614,31 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             if (StatusBar.this.mLaunchCameraWhenFinishedWaking) {
                 StatusBar statusBar = StatusBar.this;
                 statusBar.mNotificationPanelViewController.launchCamera(false, statusBar.mLastCameraLaunchSource);
-                boolean unused = StatusBar.this.mLaunchCameraWhenFinishedWaking = false;
+                StatusBar.this.mLaunchCameraWhenFinishedWaking = false;
             }
             StatusBar.this.updateScrimController();
         }
     };
     private final BroadcastReceiver mWallpaperChangedReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if (!StatusBar.this.mWallpaperSupported) {
                 Log.wtf("StatusBar", "WallpaperManager not supported");
                 return;
             }
             WallpaperInfo wallpaperInfo = ((WallpaperManager) context.getSystemService(WallpaperManager.class)).getWallpaperInfo(-2);
-            boolean z = StatusBar.this.mContext.getResources().getBoolean(17891426);
-            boolean unused = StatusBar.this.mSupportsAmbientMode = z && wallpaperInfo != null && wallpaperInfo.supportsAmbientMode();
+            boolean z = ((SystemUI) StatusBar.this).mContext.getResources().getBoolean(17891426);
+            StatusBar.this.mSupportsAmbientMode = z && wallpaperInfo != null && wallpaperInfo.supportsAmbientMode();
             StatusBar statusBar = StatusBar.this;
             statusBar.mNotificationShadeWindowController.setWallpaperSupportsAmbientMode(statusBar.mSupportsAmbientMode);
             StatusBar.this.mScrimController.setWallpaperSupportsAmbientMode(StatusBar.this.mSupportsAmbientMode);
-            Configuration unused2 = StatusBar.this.mPreviousConfig = new Configuration(StatusBar.this.mContext.getResources().getConfiguration());
+            StatusBar.this.mPreviousConfig = new Configuration(((SystemUI) StatusBar.this).mContext.getResources().getConfiguration());
             ((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).setWallpaperSupportsAmbientMode(StatusBar.this.mSupportsAmbientMode);
             Log.d("StatusBar", "deviceSupportsAodWallpaper:" + z + " supportsAmbientMode:" + StatusBar.this.mSupportsAmbientMode);
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mWallpaperSupported;
+    private boolean mWallpaperSupported;
     private boolean mWereIconsJustHidden;
     protected WindowManager mWindowManager;
 
@@ -646,7 +656,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     private static int getLoggingFingerprint(int i, boolean z, boolean z2, boolean z3, boolean z4, boolean z5) {
-        return (i & 255) | ((z ? 1 : 0) << true) | ((z2 ? 1 : 0) << true) | ((z3 ? 1 : 0) << true) | ((z4 ? 1 : 0) << true) | ((z5 ? 1 : 0) << true);
+        return (i & 255) | ((z ? 1 : 0) << 8) | ((z2 ? 1 : 0) << 9) | ((z3 ? 1 : 0) << 10) | ((z4 ? 1 : 0) << 11) | ((z5 ? 1 : 0) << 12);
     }
 
     public /* synthetic */ boolean lambda$executeRunnableDismissingKeyguard$19$StatusBar(Runnable runnable, boolean z, boolean z2) {
@@ -691,11 +701,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public /* synthetic */ void lambda$new$0$StatusBar(View view) {
         if (this.mState == 1) {
             wakeUpIfDozing(SystemClock.uptimeMillis(), view, "SHADE_CLICK");
-            goToLockedShade((View) null);
+            goToLockedShade(null);
         }
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public StatusBar(Context context, NotificationsController notificationsController, LightBarController lightBarController, AutoHideController autoHideController, KeyguardUpdateMonitor keyguardUpdateMonitor, StatusBarIconController statusBarIconController, PulseExpansionHandler pulseExpansionHandler, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardBypassController keyguardBypassController, KeyguardStateController keyguardStateController, HeadsUpManagerPhone headsUpManagerPhone, DynamicPrivacyController dynamicPrivacyController, BypassHeadsUpNotifier bypassHeadsUpNotifier, FalsingManager falsingManager, BroadcastDispatcher broadcastDispatcher, RemoteInputQuickSettingsDisabler remoteInputQuickSettingsDisabler, NotificationGutsManager notificationGutsManager, NotificationLogger notificationLogger, NotificationInterruptStateProvider notificationInterruptStateProvider, NotificationViewHierarchyManager notificationViewHierarchyManager, KeyguardViewMediator keyguardViewMediator, DisplayMetrics displayMetrics, MetricsLogger metricsLogger, Executor executor, NotificationMediaManager notificationMediaManager, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationRemoteInputManager notificationRemoteInputManager, UserSwitcherController userSwitcherController, NetworkController networkController, BatteryController batteryController, SysuiColorExtractor sysuiColorExtractor, ScreenLifecycle screenLifecycle, WakefulnessLifecycle wakefulnessLifecycle, SysuiStatusBarStateController sysuiStatusBarStateController, VibratorHelper vibratorHelper, BubbleController bubbleController, NotificationGroupManager notificationGroupManager, VisualStabilityManager visualStabilityManager, DeviceProvisionedController deviceProvisionedController, NavigationBarController navigationBarController, Lazy<AssistManager> lazy, ConfigurationController configurationController, NotificationShadeWindowController notificationShadeWindowController, LockscreenLockIconController lockscreenLockIconController, DozeParameters dozeParameters, ScrimController scrimController, KeyguardLiftController keyguardLiftController, Lazy<LockscreenWallpaper> lazy2, Lazy<BiometricUnlockController> lazy3, MiuiDozeServiceHost miuiDozeServiceHost, PowerManager powerManager, ScreenPinningRequest screenPinningRequest, DozeScrimController dozeScrimController, VolumeComponent volumeComponent, CommandQueue commandQueue, Optional<Recents> optional, Provider<StatusBarComponent.Builder> provider, PluginManager pluginManager, Optional<Divider> optional2, LightsOutNotifController lightsOutNotifController, StatusBarNotificationActivityStarter.Builder builder, ShadeController shadeController, SuperStatusBarViewFactory superStatusBarViewFactory, StatusBarKeyguardViewManager statusBarKeyguardViewManager, ViewMediatorCallback viewMediatorCallback, InitController initController, DarkIconDispatcher darkIconDispatcher, Handler handler, PluginDependencyProvider pluginDependencyProvider, KeyguardDismissUtil keyguardDismissUtil, ExtensionController extensionController, UserInfoControllerImpl userInfoControllerImpl, PhoneStatusBarPolicy phoneStatusBarPolicy, KeyguardIndicationController keyguardIndicationController, DismissCallbackRegistry dismissCallbackRegistry, Lazy<NotificationShadeDepthController> lazy4, StatusBarTouchableRegionManager statusBarTouchableRegionManager, ControlPanelController controlPanelController) {
         super(context);
         this.mNotificationsController = notificationsController;
@@ -773,6 +782,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mDismissCallbackRegistry = dismissCallbackRegistry;
         this.mControlPanelController = controlPanelController;
         this.mBubbleExpandListener = new BubbleController.BubbleExpandListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$be2UvXBqvJVkeR4_MOL5Z579OFk */
+
+            @Override // com.android.systemui.bubbles.BubbleController.BubbleExpandListener
             public final void onBubbleExpandChanged(boolean z, String str) {
                 StatusBar.this.lambda$new$1$StatusBar(z, str);
             }
@@ -787,6 +799,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         updateScrimController();
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         RegisterStatusBarResult registerStatusBarResult;
         this.mScreenLifecycle.addObserver(this.mScreenObserver);
@@ -820,8 +833,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
         createAndAddWindows(registerStatusBarResult);
         if (this.mWallpaperSupported) {
-            this.mBroadcastDispatcher.registerReceiver(this.mWallpaperChangedReceiver, new IntentFilter("android.intent.action.WALLPAPER_CHANGED"), (Executor) null, UserHandle.ALL);
-            this.mWallpaperChangedReceiver.onReceive(this.mContext, (Intent) null);
+            this.mBroadcastDispatcher.registerReceiver(this.mWallpaperChangedReceiver, new IntentFilter("android.intent.action.WALLPAPER_CHANGED"), null, UserHandle.ALL);
+            this.mWallpaperChangedReceiver.onReceive(this.mContext, null);
         }
         setUpPresenter();
         if (InsetsState.containsType(registerStatusBarResult.mTransientBarTypes, 0)) {
@@ -838,7 +851,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.android.systemui.statusbar.banner_action_cancel");
         intentFilter.addAction("com.android.systemui.statusbar.banner_action_setup");
-        this.mContext.registerReceiver(this.mBannerActionBroadcastReceiver, intentFilter, "com.android.systemui.permission.SELF", (Handler) null);
+        this.mContext.registerReceiver(this.mBannerActionBroadcastReceiver, intentFilter, "com.android.systemui.permission.SELF", null);
         if (this.mWallpaperSupported) {
             try {
                 IWallpaperManager.Stub.asInterface(ServiceManager.getService("wallpaper")).setInAmbientMode(false, 0);
@@ -853,6 +866,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mDozeServiceHost.initialize(this, this.mNotificationIconAreaController, this.mStatusBarKeyguardViewManager, this.mNotificationShadeWindowViewController, this.mNotificationPanelViewController, this.mAmbientIndicationContainer);
         this.mConfigurationController.addCallback(this);
         this.mInitController.addPostInitTask(new Runnable(registerStatusBarResult.mDisabledFlags1, registerStatusBarResult.mDisabledFlags2) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$JvvAhae7rLxiigih01CvipegIM */
             public final /* synthetic */ int f$1;
             public final /* synthetic */ int f$2;
 
@@ -865,12 +879,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 StatusBar.this.lambda$start$2$StatusBar(this.f$1, this.f$2);
             }
         });
-        this.mPluginManager.addPluginListener(new PluginListener<OverlayPlugin>() {
-            /* access modifiers changed from: private */
-            public ArraySet<OverlayPlugin> mOverlays = new ArraySet<>();
+        this.mPluginManager.addPluginListener((PluginListener) new PluginListener<OverlayPlugin>() {
+            /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5 */
+            private ArraySet<OverlayPlugin> mOverlays = new ArraySet<>();
 
             public void onPluginConnected(OverlayPlugin overlayPlugin, Context context) {
                 StatusBar.this.mMainThreadHandler.post(new Runnable(overlayPlugin) {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$5$Qb_zhFNCkzRUWOzTJgRH72E70q0 */
                     public final /* synthetic */ OverlayPlugin f$1;
 
                     {
@@ -891,6 +906,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
             public void onPluginDisconnected(OverlayPlugin overlayPlugin) {
                 StatusBar.this.mMainThreadHandler.post(new Runnable(overlayPlugin) {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$5$KN25JTGIyA1c8HpRGz8WZDvwP0Y */
                     public final /* synthetic */ OverlayPlugin f$1;
 
                     {
@@ -910,414 +926,70 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 StatusBar.this.mNotificationShadeWindowController.setForcePluginOpen(this.mOverlays.size() != 0);
             }
 
+            /* access modifiers changed from: package-private */
             /* renamed from: com.android.systemui.statusbar.phone.StatusBar$5$Callback */
-            class Callback implements OverlayPlugin.Callback {
+            public class Callback implements OverlayPlugin.Callback {
                 private final OverlayPlugin mPlugin;
 
                 Callback(OverlayPlugin overlayPlugin) {
                     this.mPlugin = overlayPlugin;
                 }
 
+                @Override // com.android.systemui.plugins.OverlayPlugin.Callback
                 public void onHoldStatusBarOpenChange() {
                     if (this.mPlugin.holdStatusBarOpen()) {
                         AnonymousClass5.this.mOverlays.add(this.mPlugin);
                     } else {
                         AnonymousClass5.this.mOverlays.remove(this.mPlugin);
                     }
-                    StatusBar.this.mMainThreadHandler.post(
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x002c: INVOKE  
-                          (wrap: android.os.Handler : 0x0023: INVOKE  (r0v4 android.os.Handler) = 
-                          (wrap: com.android.systemui.statusbar.phone.StatusBar : 0x0021: IGET  (r0v3 com.android.systemui.statusbar.phone.StatusBar) = 
-                          (wrap: com.android.systemui.statusbar.phone.StatusBar$5 : 0x001f: IGET  (r0v2 com.android.systemui.statusbar.phone.StatusBar$5) = 
-                          (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         com.android.systemui.statusbar.phone.StatusBar.5.Callback.this$1 com.android.systemui.statusbar.phone.StatusBar$5)
-                         com.android.systemui.statusbar.phone.StatusBar.5.this$0 com.android.systemui.statusbar.phone.StatusBar)
-                         com.android.systemui.statusbar.phone.StatusBar.access$1000(com.android.systemui.statusbar.phone.StatusBar):android.os.Handler type: STATIC)
-                          (wrap: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM : 0x0029: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM) = 
-                          (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR)
-                         android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.onHoldStatusBarOpenChange():void, dex: classes2.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0029: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM) = 
-                          (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.onHoldStatusBarOpenChange():void, dex: classes2.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 76 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 82 more
-                        */
-                    /*
-                        this = this;
-                        com.android.systemui.plugins.OverlayPlugin r0 = r2.mPlugin
-                        boolean r0 = r0.holdStatusBarOpen()
-                        if (r0 == 0) goto L_0x0014
-                        com.android.systemui.statusbar.phone.StatusBar$5 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.this
-                        android.util.ArraySet r0 = r0.mOverlays
-                        com.android.systemui.plugins.OverlayPlugin r1 = r2.mPlugin
-                        r0.add(r1)
-                        goto L_0x001f
-                    L_0x0014:
-                        com.android.systemui.statusbar.phone.StatusBar$5 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.this
-                        android.util.ArraySet r0 = r0.mOverlays
-                        com.android.systemui.plugins.OverlayPlugin r1 = r2.mPlugin
-                        r0.remove(r1)
-                    L_0x001f:
-                        com.android.systemui.statusbar.phone.StatusBar$5 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.this
-                        com.android.systemui.statusbar.phone.StatusBar r0 = com.android.systemui.statusbar.phone.StatusBar.this
-                        android.os.Handler r0 = r0.mMainThreadHandler
-                        com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM r1 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$U2F2-aeucZtrnZrV13H_iSFQwOM
-                        r1.<init>(r2)
-                        r0.post(r1)
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.Callback.onHoldStatusBarOpenChange():void");
+                    StatusBar.this.mMainThreadHandler.post(new Runnable() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$5$Callback$U2F2aeucZtrnZrV13H_iSFQwOM */
+
+                        public final void run() {
+                            StatusBar.AnonymousClass5.Callback.this.lambda$onHoldStatusBarOpenChange$2$StatusBar$5$Callback();
+                        }
+                    });
                 }
 
                 /* access modifiers changed from: private */
                 /* renamed from: lambda$onHoldStatusBarOpenChange$2 */
                 public /* synthetic */ void lambda$onHoldStatusBarOpenChange$2$StatusBar$5$Callback() {
-                    StatusBar.this.mNotificationShadeWindowController.setStateListener(
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000b: INVOKE  
-                          (wrap: com.android.systemui.statusbar.phone.NotificationShadeWindowController : 0x0004: IGET  (r0v2 com.android.systemui.statusbar.phone.NotificationShadeWindowController) = 
-                          (wrap: com.android.systemui.statusbar.phone.StatusBar : 0x0002: IGET  (r0v1 com.android.systemui.statusbar.phone.StatusBar) = 
-                          (wrap: com.android.systemui.statusbar.phone.StatusBar$5 : 0x0000: IGET  (r0v0 com.android.systemui.statusbar.phone.StatusBar$5) = 
-                          (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         com.android.systemui.statusbar.phone.StatusBar.5.Callback.this$1 com.android.systemui.statusbar.phone.StatusBar$5)
-                         com.android.systemui.statusbar.phone.StatusBar.5.this$0 com.android.systemui.statusbar.phone.StatusBar)
-                         com.android.systemui.statusbar.phone.StatusBar.mNotificationShadeWindowController com.android.systemui.statusbar.phone.NotificationShadeWindowController)
-                          (wrap: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ : 0x0008: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ) = 
-                          (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR)
-                         com.android.systemui.statusbar.phone.NotificationShadeWindowController.setStateListener(com.android.systemui.statusbar.phone.NotificationShadeWindowController$OtherwisedCollapsedListener):void type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$2():void, dex: classes2.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0008: CONSTRUCTOR  (r1v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ) = 
-                          (r2v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ.<init>(com.android.systemui.statusbar.phone.StatusBar$5$Callback):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$2():void, dex: classes2.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 76 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 82 more
-                        */
-                    /*
-                        this = this;
-                        com.android.systemui.statusbar.phone.StatusBar$5 r0 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.this
-                        com.android.systemui.statusbar.phone.StatusBar r0 = com.android.systemui.statusbar.phone.StatusBar.this
-                        com.android.systemui.statusbar.phone.NotificationShadeWindowController r0 = r0.mNotificationShadeWindowController
-                        com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ r1 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$99-TTdt0m5NBU3m1uv-R7PLiNeQ
-                        r1.<init>(r2)
-                        r0.setStateListener(r1)
-                        com.android.systemui.statusbar.phone.StatusBar$5 r2 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.this
-                        com.android.systemui.statusbar.phone.StatusBar r0 = com.android.systemui.statusbar.phone.StatusBar.this
-                        com.android.systemui.statusbar.phone.NotificationShadeWindowController r0 = r0.mNotificationShadeWindowController
-                        android.util.ArraySet r2 = r2.mOverlays
-                        int r2 = r2.size()
-                        if (r2 == 0) goto L_0x0020
-                        r2 = 1
-                        goto L_0x0021
-                    L_0x0020:
-                        r2 = 0
-                    L_0x0021:
-                        r0.setForcePluginOpen(r2)
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.Callback.lambda$onHoldStatusBarOpenChange$2$StatusBar$5$Callback():void");
+                    StatusBar.this.mNotificationShadeWindowController.setStateListener(new NotificationShadeWindowController.OtherwisedCollapsedListener() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$5$Callback$99TTdt0m5NBU3m1uvR7PLiNeQ */
+
+                        @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowController.OtherwisedCollapsedListener
+                        public final void setWouldOtherwiseCollapse(boolean z) {
+                            StatusBar.AnonymousClass5.Callback.this.lambda$onHoldStatusBarOpenChange$1$StatusBar$5$Callback(z);
+                        }
+                    });
+                    AnonymousClass5 r2 = AnonymousClass5.this;
+                    StatusBar.this.mNotificationShadeWindowController.setForcePluginOpen(r2.mOverlays.size() != 0);
                 }
 
                 /* access modifiers changed from: private */
                 /* renamed from: lambda$onHoldStatusBarOpenChange$1 */
                 public /* synthetic */ void lambda$onHoldStatusBarOpenChange$1$StatusBar$5$Callback(boolean z) {
-                    AnonymousClass5.this.mOverlays.forEach(
-                    /*  JADX ERROR: Method code generation error
-                        jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000b: INVOKE  
-                          (wrap: android.util.ArraySet : 0x0002: INVOKE  (r1v2 android.util.ArraySet) = 
-                          (wrap: com.android.systemui.statusbar.phone.StatusBar$5 : 0x0000: IGET  (r1v1 com.android.systemui.statusbar.phone.StatusBar$5) = 
-                          (r1v0 'this' com.android.systemui.statusbar.phone.StatusBar$5$Callback A[THIS])
-                         com.android.systemui.statusbar.phone.StatusBar.5.Callback.this$1 com.android.systemui.statusbar.phone.StatusBar$5)
-                         com.android.systemui.statusbar.phone.StatusBar.5.access$1100(com.android.systemui.statusbar.phone.StatusBar$5):android.util.ArraySet type: STATIC)
-                          (wrap: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg : 0x0008: CONSTRUCTOR  (r0v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg) = (r2v0 'z' boolean) call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg.<init>(boolean):void type: CONSTRUCTOR)
-                         android.util.ArraySet.forEach(java.util.function.Consumer):void type: VIRTUAL in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$1(boolean):void, dex: classes2.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                        	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                        	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                        	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                        	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                        	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                        	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                        	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                        	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                        	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                        	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                        	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                        	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                        	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                        	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                        	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                        	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                        	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                        	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                        	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                        	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                        	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                        	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                        	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                        	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                        	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                        Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x0008: CONSTRUCTOR  (r0v0 com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg) = (r2v0 'z' boolean) call: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg.<init>(boolean):void type: CONSTRUCTOR in method: com.android.systemui.statusbar.phone.StatusBar.5.Callback.lambda$onHoldStatusBarOpenChange$1(boolean):void, dex: classes2.dex
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                        	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                        	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                        	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                        	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                        	... 76 more
-                        Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg, state: NOT_LOADED
-                        	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                        	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                        	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                        	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                        	... 82 more
-                        */
-                    /*
-                        this = this;
-                        com.android.systemui.statusbar.phone.StatusBar$5 r1 = com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.this
-                        android.util.ArraySet r1 = r1.mOverlays
-                        com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg r0 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQ-SR0g_MCXg
-                        r0.<init>(r2)
-                        r1.forEach(r0)
-                        return
-                    */
-                    throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.AnonymousClass5.Callback.lambda$onHoldStatusBarOpenChange$1$StatusBar$5$Callback(boolean):void");
+                    AnonymousClass5.this.mOverlays.forEach(new Consumer(z) {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$5$Callback$X8h8BtL5sx95G3VYQSR0g_MCXg */
+                        public final /* synthetic */ boolean f$0;
+
+                        {
+                            this.f$0 = r1;
+                        }
+
+                        @Override // java.util.function.Consumer
+                        public final void accept(Object obj) {
+                            ((OverlayPlugin) obj).setCollapseDesired(this.f$0);
+                        }
+                    });
                 }
             }
-        }, (Class<?>) OverlayPlugin.class, true);
+        }, OverlayPlugin.class, true);
         this.mControlPanelController.addCallback((ControlPanelController.UseControlPanelChangeListener) this);
         ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).addCallback((SuperSaveModeController.SuperSaveModeChangeListener) new SuperSaveModeController.SuperSaveModeChangeListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$ouQNDbk7Jv9YxSe3vME3fitYOmg */
+
+            @Override // com.android.systemui.controlcenter.policy.SuperSaveModeController.SuperSaveModeChangeListener
             public final void onSuperSaveModeChange(boolean z) {
                 StatusBar.this.lambda$start$3$StatusBar(z);
             }
@@ -1332,13 +1004,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         updateQsExpansionEnabled();
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ControlPanelController.UseControlPanelChangeListener
     public void onUseControlPanelChange(boolean z) {
         updateQsExpansionEnabled();
     }
 
     /* access modifiers changed from: protected */
     public void makeStatusBarView(RegisterStatusBarResult registerStatusBarResult) {
-        Class<QS> cls = QS.class;
         Context context = this.mContext;
         updateDisplaySize();
         updateResources(false);
@@ -1358,16 +1030,21 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         NotificationIconAreaController notificationIconAreaController = this.mNotificationIconAreaController;
         Objects.requireNonNull(notificationIconAreaController);
         notificationPanelViewController.setOnReinflationListener(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$LyXF2jzAv77MElAagmeOMv_4xQ */
+
             public final void run() {
                 NotificationIconAreaController.this.initAodIcons();
             }
         });
         this.mNotificationPanelViewController.addExpansionListener(this.mWakeUpCoordinator);
-        this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mNotificationIconAreaController);
+        this.mDarkIconDispatcher.addDarkReceiver(this.mNotificationIconAreaController);
         this.mPluginDependencyProvider.allowPluginDependency(DarkIconDispatcher.class);
         this.mPluginDependencyProvider.allowPluginDependency(StatusBarStateController.class);
         FragmentHostManager fragmentHostManager = FragmentHostManager.get(this.mPhoneStatusBarWindow);
         fragmentHostManager.addTagListener("CollapsedStatusBarFragment", new FragmentHostManager.FragmentListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$dy7qcM4vmC01_Sduz1UMseDUmo */
+
+            @Override // com.android.systemui.fragments.FragmentHostManager.FragmentListener
             public final void onFragmentViewCreated(String str, Fragment fragment) {
                 StatusBar.this.lambda$makeStatusBarView$4$StatusBar(str, fragment);
             }
@@ -1385,9 +1062,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationPanelViewController.setKeyguardIndicationController(this.mKeyguardIndicationController);
         this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C0015R$id.ambient_indication_container);
         this.mBatteryController.addCallback(new BatteryController.BatteryStateChangeCallback() {
+            /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass6 */
+
+            @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
             public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
             }
 
+            @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
             public void onPowerSaveChanged(boolean z) {
                 StatusBar statusBar = StatusBar.this;
                 statusBar.mHandler.post(statusBar.mCheckBarModes);
@@ -1398,24 +1079,33 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             }
         });
         this.mAutoHideController.setStatusBar(new AutoHideUiElement() {
+            /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass7 */
+
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public void synchronizeState() {
                 StatusBar.this.checkBarModes();
             }
 
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public boolean shouldHideOnTouch() {
                 return !StatusBar.this.mRemoteInputManager.getController().isRemoteInputActive();
             }
 
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public boolean isVisible() {
                 return StatusBar.this.isTransientShown();
             }
 
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public void hide() {
                 StatusBar.this.clearTransient();
             }
         });
         ScrimView scrimForBubble = this.mBubbleController.getScrimForBubble();
         this.mScrimController.setScrimVisibleListener(new Consumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$aLenH7zcwVaIHX6ie2fIXARtA4g */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 StatusBar.this.lambda$makeStatusBarView$5$StatusBar((Integer) obj);
             }
@@ -1425,6 +1115,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C0015R$id.backdrop);
         this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C0015R$id.backdrop_front), (ImageView) backDropView.findViewById(C0015R$id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
         this.mNotificationShadeDepthControllerLazy.get().addListener(new NotificationShadeDepthController.DepthListener(this.mContext.getResources().getFloat(17105099), backDropView) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$W_OHXSTtWfSDBaVhSdiHPl7N8Fg */
             public final /* synthetic */ float f$0;
             public final /* synthetic */ BackDropView f$1;
 
@@ -1433,6 +1124,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.statusbar.NotificationShadeDepthController.DepthListener
             public final void onWallpaperZoomOutChanged(float f) {
                 StatusBar.lambda$makeStatusBarView$6(this.f$0, this.f$1, f);
             }
@@ -1445,6 +1137,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         LockscreenLockIconController lockscreenLockIconController = this.mLockscreenLockIconController;
         Objects.requireNonNull(lockscreenLockIconController);
         notificationPanelViewController2.setLaunchAffordanceListener(new Consumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$sBkty3XIL7r37AAUJ1Bk1mVwNfA */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 LockscreenLockIconController.this.onShowingLaunchAffordanceChanged((Boolean) obj);
             }
@@ -1453,20 +1148,29 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         if (findViewById != null) {
             FragmentHostManager fragmentHostManager2 = FragmentHostManager.get(findViewById);
             int i = C0015R$id.qs_frame;
-            ExtensionController.ExtensionBuilder<QS> newExtension = this.mExtensionController.newExtension(cls);
-            newExtension.withPlugin(cls);
+            ExtensionController.ExtensionBuilder newExtension = this.mExtensionController.newExtension(QS.class);
+            newExtension.withPlugin(QS.class);
             newExtension.withDefault(new Supplier() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$Zqmz5npIKuMPJHZWVxICwxzCPwk */
+
+                @Override // java.util.function.Supplier
                 public final Object get() {
                     return StatusBar.this.createDefaultQSFragment();
                 }
             });
             ExtensionFragmentListener.attachExtensonToFragment(findViewById, QS.TAG, i, newExtension.build());
             this.mBrightnessMirrorController = new BrightnessMirrorController(this.mNotificationShadeWindowView, this.mNotificationPanelViewController, this.mNotificationShadeDepthControllerLazy.get(), new Consumer() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$0m7F6e2QtJDG3hy0Y3EVPv_U6WQ */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     StatusBar.this.lambda$makeStatusBarView$7$StatusBar((Boolean) obj);
                 }
             });
             fragmentHostManager2.addTagListener(QS.TAG, new FragmentHostManager.FragmentListener() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$PK92anhRWLDXkprajoojY6dzepA */
+
+                @Override // com.android.systemui.fragments.FragmentHostManager.FragmentListener
                 public final void onFragmentViewCreated(String str, Fragment fragment) {
                     StatusBar.this.lambda$makeStatusBarView$8$StatusBar(str, fragment);
                 }
@@ -1477,6 +1181,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         if (findViewById2 != null) {
             updateReportRejectedTouchVisibility();
             this.mReportRejectedTouch.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$ggtzWYldpP6XbhwYmX0SNphBaak */
+
                 public final void onClick(View view) {
                     StatusBar.this.lambda$makeStatusBarView$9$StatusBar(view);
                 }
@@ -1495,7 +1201,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         registerBroadcastReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("com.android.systemui.demo");
-        context.registerReceiverAsUser(this.mDemoReceiver, UserHandle.ALL, intentFilter, "android.permission.DUMP", (Handler) null);
+        context.registerReceiverAsUser(this.mDemoReceiver, UserHandle.ALL, intentFilter, "android.permission.DUMP", null);
         this.mDeviceProvisionedController.addCallback(this.mUserSetupObserver);
         this.mUserSetupObserver.onUserSetupChanged();
         ThreadedRenderer.overrideProperty("disableProfileBars", "true");
@@ -1595,7 +1301,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         intentFilter.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
         intentFilter.addAction("android.intent.action.SCREEN_OFF");
         intentFilter.addAction("android.app.action.SHOW_DEVICE_MONITORING_DIALOG");
-        this.mBroadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter, (Executor) null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mBroadcastReceiver, intentFilter, null, UserHandle.ALL);
     }
 
     /* access modifiers changed from: protected */
@@ -1604,9 +1310,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     private void setUpPresenter() {
-        MiuiActivityLaunchAnimator miuiActivityLaunchAnimator = r0;
-        MiuiActivityLaunchAnimator miuiActivityLaunchAnimator2 = new MiuiActivityLaunchAnimator(this.mNotificationShadeWindowViewController, this, this.mNotificationPanelViewController, this.mNotificationShadeDepthControllerLazy.get(), (NotificationListContainer) this.mStackScroller, this.mContext.getMainExecutor());
-        this.mActivityLaunchAnimator = miuiActivityLaunchAnimator2;
+        MiuiActivityLaunchAnimator miuiActivityLaunchAnimator = new MiuiActivityLaunchAnimator(this.mNotificationShadeWindowViewController, this, this.mNotificationPanelViewController, this.mNotificationShadeDepthControllerLazy.get(), (NotificationListContainer) this.mStackScroller, this.mContext.getMainExecutor());
+        this.mActivityLaunchAnimator = miuiActivityLaunchAnimator;
         StatusBarNotificationPresenter statusBarNotificationPresenter = new StatusBarNotificationPresenter(this.mContext, this.mNotificationPanelViewController, this.mHeadsUpManager, this.mNotificationShadeWindowView, this.mStackScroller, this.mDozeScrimController, this.mScrimController, miuiActivityLaunchAnimator, this.mDynamicPrivacyController, this.mKeyguardStateController, this.mKeyguardIndicationController, this, this.mShadeController, this.mCommandQueue, this.mInitController, this.mNotificationInterruptStateProvider);
         this.mPresenter = statusBarNotificationPresenter;
         this.mNotificationShelf.setOnActivatedListener(statusBarNotificationPresenter);
@@ -1622,8 +1327,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mGutsManager.setNotificationActivityStarter(this.mNotificationActivityStarter);
         NotificationsController notificationsController = this.mNotificationsController;
         StatusBarNotificationPresenter statusBarNotificationPresenter2 = this.mPresenter;
-        NotificationActivityStarter notificationActivityStarter = this.mNotificationActivityStarter;
-        notificationsController.initialize(this, statusBarNotificationPresenter2, (NotificationListContainer) this.mStackScroller, notificationActivityStarter, statusBarNotificationPresenter2);
+        notificationsController.initialize(this, statusBarNotificationPresenter2, (NotificationListContainer) this.mStackScroller, this.mNotificationActivityStarter, statusBarNotificationPresenter2);
     }
 
     /* access modifiers changed from: protected */
@@ -1651,6 +1355,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* access modifiers changed from: protected */
     public View.OnTouchListener getStatusBarWindowTouchListener() {
         return new View.OnTouchListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$n71p2lA3I37oyoKRz8xFfo1UnRo */
+
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 return StatusBar.this.lambda$getStatusBarWindowTouchListener$10$StatusBar(view, motionEvent);
             }
@@ -1674,6 +1380,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         notificationShelf.setOnClickListener(this.mGoToLockedShadeListener);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         BrightnessMirrorController brightnessMirrorController = this.mBrightnessMirrorController;
         if (brightnessMirrorController != null) {
@@ -1689,6 +1396,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mHeadsUpManager.onDensityOrFontScaleChanged();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onThemeChanged() {
         StatusBarKeyguardViewManager statusBarKeyguardViewManager = this.mStatusBarKeyguardViewManager;
         if (statusBarKeyguardViewManager != null) {
@@ -1701,6 +1409,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationIconAreaController.onThemeChanged();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onOverlayChanged() {
         BrightnessMirrorController brightnessMirrorController = this.mBrightnessMirrorController;
         if (brightnessMirrorController != null) {
@@ -1710,6 +1419,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         onThemeChanged();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         BrightnessMirrorController brightnessMirrorController = this.mBrightnessMirrorController;
         if (brightnessMirrorController != null) {
@@ -1745,6 +1455,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mLightBarController.setBiometricUnlockController(this.mBiometricUnlockController);
         this.mMediaManager.setBiometricUnlockController(this.mBiometricUnlockController);
         this.mKeyguardDismissUtil.setDismissHandler(new KeyguardDismissHandler() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$SBKxeejWdiPVIqMxMI8pU8ipA */
+
+            @Override // com.android.systemui.statusbar.phone.KeyguardDismissHandler
             public final void executeWhenUnlocked(ActivityStarter.OnDismissAction onDismissAction, boolean z) {
                 StatusBar.this.executeWhenUnlocked(onDismissAction, z);
             }
@@ -1789,7 +1502,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             if (navBarPosition == 1) {
                 i3 = 1;
             }
-            return this.mRecentsOptional.get().splitPrimaryTask(i3, (Rect) null, i);
+            return this.mRecentsOptional.get().splitPrimaryTask(i3, null, i);
         } else if (divider.isMinimized() && !divider.isHomeStackResizable()) {
             return false;
         } else {
@@ -1802,11 +1515,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:18:0x003c, code lost:
         if (r0 == false) goto L_0x0040;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void updateQsExpansionEnabled() {
+    private void updateQsExpansionEnabled() {
         /*
             r4 = this;
             com.android.systemui.controlcenter.phone.ControlPanelController r0 = r4.mControlPanelController
@@ -1829,7 +1543,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             if (r1 != 0) goto L_0x003f
             boolean r1 = r4.mDozing
             if (r1 != 0) goto L_0x003f
-            boolean r1 = ONLY_CORE_APPS
+            boolean r1 = com.android.systemui.statusbar.phone.StatusBar.ONLY_CORE_APPS
             if (r1 != 0) goto L_0x003f
             java.lang.Class<com.android.systemui.controlcenter.policy.SuperSaveModeController> r1 = com.android.systemui.controlcenter.policy.SuperSaveModeController.class
             java.lang.Object r1 = com.android.systemui.Dependency.get(r1)
@@ -1856,6 +1570,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.updateQsExpansionEnabled():void");
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void addQsTile(ComponentName componentName) {
         QSPanel qSPanel = this.mQSPanel;
         if (qSPanel != null && qSPanel.getHost() != null) {
@@ -1863,6 +1578,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void remQsTile(ComponentName componentName) {
         QSPanel qSPanel = this.mQSPanel;
         if (qSPanel != null && qSPanel.getHost() != null) {
@@ -1870,6 +1586,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void clickTile(ComponentName componentName) {
         this.mQSPanel.clickTile(componentName);
     }
@@ -1891,76 +1608,76 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
-        int i4 = i2;
         if (i == this.mDisplayId) {
-            EventLog.writeEvent(30099, i4);
+            EventLog.writeEvent(30099, i2);
             int adjustDisableFlags = this.mRemoteInputQuickSettingsDisabler.adjustDisableFlags(i3);
-            int i5 = this.mStatusBarWindowState;
-            int i6 = this.mDisabled1 ^ i4;
-            this.mDisabled1 = i4;
-            int i7 = this.mDisabled2 ^ adjustDisableFlags;
+            int i4 = this.mStatusBarWindowState;
+            int i5 = this.mDisabled1 ^ i2;
+            this.mDisabled1 = i2;
+            int i6 = this.mDisabled2 ^ adjustDisableFlags;
             this.mDisabled2 = adjustDisableFlags;
             StringBuilder sb = new StringBuilder();
             sb.append("disable<");
-            int i8 = i4 & 65536;
-            sb.append(i8 != 0 ? 'E' : 'e');
-            int i9 = 65536 & i6;
-            sb.append(i9 != 0 ? '!' : ' ');
+            int i7 = i2 & 65536;
+            sb.append(i7 != 0 ? 'E' : 'e');
+            int i8 = 65536 & i5;
+            sb.append(i8 != 0 ? '!' : ' ');
             char c = 'I';
-            sb.append((i4 & 131072) != 0 ? 'I' : 'i');
-            sb.append((131072 & i6) != 0 ? '!' : ' ');
-            sb.append((i4 & 262144) != 0 ? 'A' : 'a');
-            int i10 = 262144 & i6;
-            sb.append(i10 != 0 ? '!' : ' ');
+            sb.append((i2 & 131072) != 0 ? 'I' : 'i');
+            sb.append((131072 & i5) != 0 ? '!' : ' ');
+            sb.append((i2 & 262144) != 0 ? 'A' : 'a');
+            int i9 = 262144 & i5;
+            sb.append(i9 != 0 ? '!' : ' ');
             char c2 = 'S';
-            sb.append((i4 & 1048576) != 0 ? 'S' : 's');
-            sb.append((1048576 & i6) != 0 ? '!' : ' ');
-            sb.append((i4 & 4194304) != 0 ? 'B' : 'b');
-            sb.append((4194304 & i6) != 0 ? '!' : ' ');
-            sb.append((i4 & 2097152) != 0 ? 'H' : 'h');
-            sb.append((2097152 & i6) != 0 ? '!' : ' ');
-            int i11 = i4 & 16777216;
-            sb.append(i11 != 0 ? 'R' : 'r');
-            int i12 = i6 & 16777216;
-            sb.append(i12 != 0 ? '!' : ' ');
-            sb.append((i4 & 8388608) != 0 ? 'C' : 'c');
-            sb.append((i6 & 8388608) != 0 ? '!' : ' ');
-            if ((i4 & 33554432) == 0) {
+            sb.append((i2 & 1048576) != 0 ? 'S' : 's');
+            sb.append((1048576 & i5) != 0 ? '!' : ' ');
+            sb.append((i2 & 4194304) != 0 ? 'B' : 'b');
+            sb.append((4194304 & i5) != 0 ? '!' : ' ');
+            sb.append((i2 & 2097152) != 0 ? 'H' : 'h');
+            sb.append((2097152 & i5) != 0 ? '!' : ' ');
+            int i10 = i2 & 16777216;
+            sb.append(i10 != 0 ? 'R' : 'r');
+            int i11 = i5 & 16777216;
+            sb.append(i11 != 0 ? '!' : ' ');
+            sb.append((i2 & 8388608) != 0 ? 'C' : 'c');
+            sb.append((i5 & 8388608) != 0 ? '!' : ' ');
+            if ((i2 & 33554432) == 0) {
                 c2 = 's';
             }
             sb.append(c2);
-            sb.append((i6 & 33554432) != 0 ? '!' : ' ');
+            sb.append((i5 & 33554432) != 0 ? '!' : ' ');
             sb.append("> disable2<");
             sb.append((adjustDisableFlags & 1) != 0 ? 'Q' : 'q');
-            int i13 = i7 & 1;
-            sb.append(i13 != 0 ? '!' : ' ');
+            int i12 = i6 & 1;
+            sb.append(i12 != 0 ? '!' : ' ');
             if ((adjustDisableFlags & 2) == 0) {
                 c = 'i';
             }
             sb.append(c);
-            sb.append((i7 & 2) != 0 ? '!' : ' ');
+            sb.append((i6 & 2) != 0 ? '!' : ' ');
             sb.append((adjustDisableFlags & 4) != 0 ? 'N' : 'n');
-            int i14 = i7 & 4;
-            sb.append(i14 != 0 ? '!' : ' ');
+            int i13 = i6 & 4;
+            sb.append(i13 != 0 ? '!' : ' ');
             sb.append('>');
             Log.d("StatusBar", sb.toString());
-            if (!(i9 == 0 || i8 == 0)) {
+            if (!(i8 == 0 || i7 == 0)) {
                 this.mShadeController.animateCollapsePanels();
             }
-            if (!(i12 == 0 || i11 == 0)) {
+            if (!(i11 == 0 || i10 == 0)) {
                 this.mHandler.removeMessages(1020);
                 this.mHandler.sendEmptyMessage(1020);
             }
-            if (i10 != 0 && areNotificationAlertsDisabled()) {
+            if (i9 != 0 && areNotificationAlertsDisabled()) {
                 this.mHeadsUpManager.releaseAllImmediately();
+            }
+            if (i12 != 0) {
+                updateQsExpansionEnabled();
             }
             if (i13 != 0) {
                 updateQsExpansionEnabled();
-            }
-            if (i14 != 0) {
-                updateQsExpansionEnabled();
-                if ((i4 & 4) != 0) {
+                if ((i2 & 4) != 0) {
                     this.mShadeController.animateCollapsePanels();
                 }
             }
@@ -1977,18 +1694,22 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return new H();
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void startActivity(Intent intent, boolean z, boolean z2, int i) {
         startActivityDismissingKeyguard(intent, z, z2, i);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void startActivity(Intent intent, boolean z) {
         startActivityDismissingKeyguard(intent, false, z);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void startActivity(Intent intent, boolean z, boolean z2) {
         startActivityDismissingKeyguard(intent, z, z2);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void startActivity(Intent intent, boolean z, ActivityStarter.Callback callback) {
         startActivityDismissingKeyguard(intent, false, z, false, callback, 0);
     }
@@ -2013,11 +1734,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         logStateToEventlog();
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onUnlockedChanged() {
         updateKeyguardState();
         logStateToEventlog();
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpPinnedModeChanged(boolean z) {
         if (z) {
             this.mNotificationShadeWindowController.setHeadsUpShowing(true);
@@ -2025,6 +1748,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 this.mNotificationPanelViewController.getView().requestLayout();
                 this.mNotificationShadeWindowController.setForceWindowCollapsed(true);
                 this.mNotificationPanelViewController.getView().post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$a1PwGueSv8bkjX5GxiVzM2PDffE */
+
                     public final void run() {
                         StatusBar.this.lambda$onHeadsUpPinnedModeChanged$11$StatusBar();
                     }
@@ -2044,6 +1769,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
         this.mHeadsUpManager.setHeadsUpGoingAway(true);
         this.mNotificationPanelViewController.runAfterAnimationFinished(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$vQbe7Nr2PT8R2UTHbkZ0b3R4w */
+
             public final void run() {
                 StatusBar.this.lambda$onHeadsUpPinnedModeChanged$12$StatusBar();
             }
@@ -2066,6 +1793,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mRemoteInputManager.onPanelCollapsed();
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
         this.mNotificationsController.requestNotificationUpdate("onHeadsUpStateChanged");
         if (this.mStatusBarStateController.isDozing() && z) {
@@ -2144,6 +1872,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             } else {
                 this.mWereIconsJustHidden = true;
                 this.mHandler.postDelayed(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$a1IsrkRZhqgkId0jst0xYX6PoT4 */
+
                     public final void run() {
                         StatusBar.this.lambda$updateHideIconsForBouncer$13$StatusBar();
                     }
@@ -2166,12 +1896,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return this.mHeadsUpAppearanceController.shouldBeVisible();
     }
 
+    @Override // com.android.systemui.statusbar.notification.ActivityLaunchAnimator.Callback
     public void onLaunchAnimationCancelled() {
         if (!this.mPresenter.isCollapsing()) {
             onClosingFinished();
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.ActivityLaunchAnimator.Callback
     public void onExpandAnimationFinished(boolean z) {
         if (!this.mPresenter.isCollapsing()) {
             onClosingFinished();
@@ -2181,6 +1913,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.ActivityLaunchAnimator.Callback
     public void onExpandAnimationTimedOut() {
         ActivityLaunchAnimator activityLaunchAnimator;
         if (!this.mPresenter.isPresenterFullyCollapsed() || this.mPresenter.isCollapsing() || (activityLaunchAnimator = this.mActivityLaunchAnimator) == null || activityLaunchAnimator.isLaunchForActivity()) {
@@ -2190,6 +1923,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.ActivityLaunchAnimator.Callback
     public boolean areLaunchAnimationsEnabled() {
         return this.mState == 0;
     }
@@ -2214,7 +1948,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mUserSetup = z;
     }
 
-    protected class H extends Handler {
+    /* access modifiers changed from: protected */
+    public class H extends Handler {
         protected H() {
         }
 
@@ -2263,6 +1998,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void handleSystemKey(int i) {
         if (this.mCommandQueue.panelsEnabled() && this.mKeyguardUpdateMonitor.isDeviceInteractive()) {
             if ((this.mKeyguardStateController.isShowing() && !this.mKeyguardStateController.isOccluded()) || !this.mUserSetup) {
@@ -2289,12 +2025,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showPinningEnterExitToast(boolean z) {
         if (getNavigationBarView() != null) {
             getNavigationBarView().showPinningEnterExitToast(z);
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showPinningEscapeToast() {
         if (getNavigationBarView() != null) {
             getNavigationBarView().showPinningEscapeToast();
@@ -2317,6 +2055,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         ShadeController shadeController = this.mShadeController;
         Objects.requireNonNull(shadeController);
         h.post(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$XCWkmsWO8Vw7cZeQUx0r8bL0Lus */
+
             public final void run() {
                 ShadeController.this.animateCollapsePanels();
             }
@@ -2331,6 +2071,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void postAnimateForceCollapsePanels() {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$vsXwLw7AvX4yDOof5dgbuWdLbIs */
+
             public final void run() {
                 StatusBar.this.lambda$postAnimateForceCollapsePanels$15$StatusBar();
             }
@@ -2341,6 +2083,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mHandler.sendEmptyMessage(1002);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void togglePanel() {
         if (this.mPanelExpanded) {
             this.mShadeController.animateCollapsePanels();
@@ -2349,6 +2092,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateCollapsePanels(int i, boolean z) {
         this.mShadeController.animateCollapsePanels(i, z, false, 1.0f);
         ((NotificationStat) Dependency.get(NotificationStat.class)).onPanelCollapsed(true, this.mNotificationPanelViewController.getActiveNotificationsCount());
@@ -2380,12 +2124,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateExpandNotificationsPanel() {
         if (this.mCommandQueue.panelsEnabled()) {
             this.mNotificationPanelViewController.expandWithoutQs();
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateExpandSettingsPanel(String str) {
         if (this.mCommandQueue.panelsEnabled() && this.mUserSetup) {
             if (str != null) {
@@ -2448,6 +2194,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return this.mGestureRec;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setWindowState(int i, int i2, int i3) {
         if (i == this.mDisplayId) {
             if (this.mNotificationShadeWindowView != null) {
@@ -2467,6 +2214,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onSystemBarAppearanceChanged(int i, int i2, AppearanceRegion[] appearanceRegionArr, boolean z) {
         if (i == this.mDisplayId) {
             boolean z2 = false;
@@ -2479,6 +2227,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showTransient(int i, int[] iArr) {
         if (i == this.mDisplayId && InsetsState.containsType(iArr, 0)) {
             showTransientUnchecked();
@@ -2493,6 +2242,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void abortTransient(int i, int[] iArr) {
         if (i == this.mDisplayId && InsetsState.containsType(iArr, 0)) {
             clearTransient();
@@ -2500,7 +2250,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    public void clearTransient() {
+    /* access modifiers changed from: public */
+    private void clearTransient() {
         if (this.mTransientShown) {
             this.mTransientShown = false;
             handleTransientChanged();
@@ -2525,6 +2276,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void topAppWindowChanged(int i, boolean z, boolean z2) {
         if (i == this.mDisplayId) {
             this.mAppFullscreen = z;
@@ -2533,22 +2285,28 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showWirelessChargingAnimation(int i) {
         if (this.mDozing || this.mKeyguardManager.isKeyguardLocked()) {
-            WirelessChargingAnimation.makeWirelessChargingAnimation(this.mContext, (Looper) null, i, new WirelessChargingAnimation.Callback() {
+            WirelessChargingAnimation.makeWirelessChargingAnimation(this.mContext, null, i, new WirelessChargingAnimation.Callback() {
+                /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass8 */
+
+                @Override // com.android.systemui.charging.WirelessChargingAnimation.Callback
                 public void onAnimationStarting() {
-                    CrossFadeHelper.fadeOut((View) StatusBar.this.mNotificationPanelViewController.getView(), 1.0f);
+                    CrossFadeHelper.fadeOut(StatusBar.this.mNotificationPanelViewController.getView(), 1.0f);
                 }
 
+                @Override // com.android.systemui.charging.WirelessChargingAnimation.Callback
                 public void onAnimationEnded() {
                     CrossFadeHelper.fadeIn(StatusBar.this.mNotificationPanelViewController.getView());
                 }
             }, this.mDozing).show();
         } else {
-            WirelessChargingAnimation.makeWirelessChargingAnimation(this.mContext, (Looper) null, i, (WirelessChargingAnimation.Callback) null, false).show();
+            WirelessChargingAnimation.makeWirelessChargingAnimation(this.mContext, null, i, null, false).show();
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onRecentsAnimationStateChanged(boolean z) {
         setInteracting(2, z);
     }
@@ -2586,7 +2344,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    public void finishBarAnimations() {
+    /* access modifiers changed from: public */
+    private void finishBarAnimations() {
         if (!(this.mNotificationShadeWindowController == null || this.mNotificationShadeWindowViewController.getBarTransitions() == null)) {
             this.mNotificationShadeWindowViewController.getBarTransitions().finishAnimations();
         }
@@ -2618,7 +2377,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    public void dismissVolumeDialog() {
+    /* access modifiers changed from: public */
+    private void dismissVolumeDialog() {
         VolumeComponent volumeComponent = this.mVolumeComponent;
         if (volumeComponent != null) {
             volumeComponent.dismissNow();
@@ -2637,8 +2397,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return "[(" + view.getLeft() + "," + view.getTop() + ")(" + view.getRight() + "," + view.getBottom() + ") " + view.getWidth() + "x" + view.getHeight() + "]";
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        String str;
         synchronized (this.mQueueLock) {
             printWriter.println("Current Status Bar state:");
             printWriter.println("  mExpandedVisible=" + this.mExpandedVisible);
@@ -2679,11 +2439,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             ((Dumpable) this.mStackScroller).dump(fileDescriptor, printWriter, strArr);
         }
         printWriter.println("  Theme:");
-        if (this.mUiModeManager == null) {
-            str = "null";
-        } else {
-            str = this.mUiModeManager.getNightMode() + "";
-        }
+        String str = this.mUiModeManager == null ? "null" : this.mUiModeManager.getNightMode() + "";
         StringBuilder sb = new StringBuilder();
         sb.append("    dark theme: ");
         sb.append(str);
@@ -2732,11 +2488,11 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mFalsingManager.dump(printWriter);
         FalsingLog.dump(printWriter);
         printWriter.println("SharedPreferences:");
-        for (Map.Entry next : Prefs.getAll(this.mContext).entrySet()) {
+        for (Map.Entry<String, ?> entry : Prefs.getAll(this.mContext).entrySet()) {
             printWriter.print("  ");
-            printWriter.print((String) next.getKey());
+            printWriter.print(entry.getKey());
             printWriter.print("=");
-            printWriter.println(next.getValue());
+            printWriter.println(entry.getValue());
         }
     }
 
@@ -2780,7 +2536,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2, int i) {
-        startActivityDismissingKeyguard(intent, z, z2, false, (ActivityStarter.Callback) null, i);
+        startActivityDismissingKeyguard(intent, z, z2, false, null, i);
     }
 
     public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2) {
@@ -2789,8 +2545,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void startActivityDismissingKeyguard(Intent intent, boolean z, boolean z2, boolean z3, ActivityStarter.Callback callback, int i) {
         if (!z || this.mDeviceProvisionedController.isDeviceProvisioned()) {
-            boolean wouldLaunchResolverActivity = this.mActivityIntentHelper.wouldLaunchResolverActivity(intent, this.mLockscreenUserManager.getCurrentUserId());
             executeRunnableDismissingKeyguard(new Runnable(intent, i, z3, callback) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$cYI_U_ShQVlsmm6P5qEeF15rkKQ */
                 public final /* synthetic */ Intent f$1;
                 public final /* synthetic */ int f$2;
                 public final /* synthetic */ boolean f$3;
@@ -2807,10 +2563,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                     StatusBar.this.lambda$startActivityDismissingKeyguard$17$StatusBar(this.f$1, this.f$2, this.f$3, this.f$4);
                 }
             }, new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$GXuArppP3Gxe5JvIROZsOAy5v74 */
+
                 public final void run() {
                     StatusBar.lambda$startActivityDismissingKeyguard$18(ActivityStarter.Callback.this);
                 }
-            }, z2, wouldLaunchResolverActivity, true);
+            }, z2, this.mActivityIntentHelper.wouldLaunchResolverActivity(intent, this.mLockscreenUserManager.getCurrentUserId()), true);
         }
     }
 
@@ -2818,27 +2576,25 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* renamed from: lambda$startActivityDismissingKeyguard$17 */
     public /* synthetic */ void lambda$startActivityDismissingKeyguard$17$StatusBar(Intent intent, int i, boolean z, ActivityStarter.Callback callback) {
         int i2;
-        Intent intent2 = intent;
-        ActivityStarter.Callback callback2 = callback;
         this.mAssistManagerLazy.get().hideAssist();
-        intent2.setFlags(335544320);
+        intent.setFlags(335544320);
         intent.addFlags(i);
-        ActivityOptions activityOptions = new ActivityOptions(getActivityOptions((RemoteAnimationAdapter) null));
+        ActivityOptions activityOptions = new ActivityOptions(getActivityOptions(null));
         activityOptions.setDisallowEnterPictureInPictureWhileLaunching(z);
-        if (intent2 == KeyguardBottomAreaView.INSECURE_CAMERA_INTENT) {
+        if (intent == KeyguardBottomAreaView.INSECURE_CAMERA_INTENT) {
             activityOptions.setRotationAnimationHint(3);
         }
         if (intent.getAction() == "android.settings.panel.action.VOLUME") {
             activityOptions.setDisallowEnterPictureInPictureWhileLaunching(true);
         }
         try {
-            i2 = ActivityTaskManager.getService().startActivityAsUser((IApplicationThread) null, this.mContext.getBasePackageName(), this.mContext.getAttributionTag(), intent, intent2.resolveTypeIfNeeded(this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, 268435456, (ProfilerInfo) null, activityOptions.toBundle(), UserHandle.CURRENT.getIdentifier());
+            i2 = ActivityTaskManager.getService().startActivityAsUser((IApplicationThread) null, this.mContext.getBasePackageName(), this.mContext.getAttributionTag(), intent, intent.resolveTypeIfNeeded(this.mContext.getContentResolver()), (IBinder) null, (String) null, 0, 268435456, (ProfilerInfo) null, activityOptions.toBundle(), UserHandle.CURRENT.getIdentifier());
         } catch (RemoteException e) {
             Log.w("StatusBar", "Unable to start activity", e);
             i2 = -96;
         }
-        if (callback2 != null) {
-            callback2.onActivityStarted(i2);
+        if (callback != null) {
+            callback.onActivityStarted(i2);
         }
     }
 
@@ -2854,6 +2610,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void executeRunnableDismissingKeyguard(Runnable runnable, Runnable runnable2, boolean z, boolean z2, boolean z3) {
         dismissKeyguardThenExecute(new ActivityStarter.OnDismissAction(runnable, z, z3) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$L4kE_3rylr6H_pNi7mB0rm5zMes */
             public final /* synthetic */ Runnable f$1;
             public final /* synthetic */ boolean f$2;
             public final /* synthetic */ boolean f$3;
@@ -2864,6 +2621,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 this.f$3 = r4;
             }
 
+            @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
             public final boolean onDismiss() {
                 return StatusBar.this.lambda$executeRunnableDismissingKeyguard$19$StatusBar(this.f$1, this.f$2, this.f$3);
             }
@@ -2887,6 +2645,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 ShadeController shadeController = this.mShadeController;
                 Objects.requireNonNull(shadeController);
                 h.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$1D7d4MB3IfMdSh7fQ1kWsUzvPD8 */
+
                     public final void run() {
                         ShadeController.this.runPostCollapseRunnables();
                     }
@@ -2899,6 +2659,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             StatusBarKeyguardViewManager statusBarKeyguardViewManager = this.mStatusBarKeyguardViewManager;
             Objects.requireNonNull(statusBarKeyguardViewManager);
             h2.post(new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$JQMd1r5WuAA5n3kv4yv5u3MFjI8 */
+
                 public final void run() {
                     StatusBarKeyguardViewManager.this.readyForKeyguardDone();
                 }
@@ -2916,14 +2678,15 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         if (this.mStatusBarKeyguardViewManager.isShowing() && z) {
             this.mStatusBarStateController.setLeaveOpenOnKeyguardHide(true);
         }
-        dismissKeyguardThenExecute(onDismissAction, (Runnable) null, false);
+        dismissKeyguardThenExecute(onDismissAction, null, false);
     }
 
     /* access modifiers changed from: protected */
     public void dismissKeyguardThenExecute(ActivityStarter.OnDismissAction onDismissAction, boolean z) {
-        dismissKeyguardThenExecute(onDismissAction, (Runnable) null, z);
+        dismissKeyguardThenExecute(onDismissAction, null, z);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void dismissKeyguardThenExecute(ActivityStarter.OnDismissAction onDismissAction, Runnable runnable, boolean z) {
         if (this.mWakefulnessLifecycle.getWakefulness() == 0 && this.mKeyguardStateController.canDismissLockScreen() && !this.mStatusBarStateController.leaveOpenOnKeyguardHide() && this.mDozeServiceHost.isPulsing()) {
             this.mBiometricUnlockController.startWakeAndUnlock(2);
@@ -2935,6 +2698,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         if (this.mPreviousConfig == null) {
             this.mPreviousConfig = new Configuration(configuration);
@@ -2952,7 +2716,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
         this.mScrimController.setCurrentUser(i);
         if (this.mWallpaperSupported) {
-            this.mWallpaperChangedReceiver.onReceive(this.mContext, (Intent) null);
+            this.mWallpaperChangedReceiver.onReceive(this.mContext, null);
         }
     }
 
@@ -3000,54 +2764,39 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: package-private */
-    /* JADX WARNING: Code restructure failed: missing block: B:3:0x0011, code lost:
-        r0 = r3.mState;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void handleVisibleToUserChangedImpl(boolean r4) {
-        /*
-            r3 = this;
-            if (r4 == 0) goto L_0x0038
-            com.android.systemui.statusbar.phone.HeadsUpManagerPhone r4 = r3.mHeadsUpManager
-            boolean r4 = r4.hasPinnedHeadsUp()
-            com.android.systemui.statusbar.phone.StatusBarNotificationPresenter r0 = r3.mPresenter
-            boolean r0 = r0.isPresenterFullyCollapsed()
-            r1 = 1
-            if (r0 != 0) goto L_0x001a
-            int r0 = r3.mState
-            if (r0 == 0) goto L_0x0018
-            r2 = 2
-            if (r0 != r2) goto L_0x001a
-        L_0x0018:
-            r0 = r1
-            goto L_0x001b
-        L_0x001a:
-            r0 = 0
-        L_0x001b:
-            com.android.systemui.statusbar.notification.init.NotificationsController r2 = r3.mNotificationsController
-            int r2 = r2.getActiveNotificationsCount()
-            if (r4 == 0) goto L_0x002c
-            com.android.systemui.statusbar.phone.StatusBarNotificationPresenter r4 = r3.mPresenter
-            boolean r4 = r4.isPresenterFullyCollapsed()
-            if (r4 == 0) goto L_0x002c
-            goto L_0x002d
-        L_0x002c:
-            r1 = r2
-        L_0x002d:
-            java.util.concurrent.Executor r4 = r3.mUiBgExecutor
-            com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$HmJQbKES5h2Nfz54WrIvhU_YRh4 r2 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$HmJQbKES5h2Nfz54WrIvhU_YRh4
-            r2.<init>(r0, r1)
-            r4.execute(r2)
-            goto L_0x0042
-        L_0x0038:
-            java.util.concurrent.Executor r4 = r3.mUiBgExecutor
-            com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$c9qjiwrIU9RXDCI3JWlVp8xvdoU r0 = new com.android.systemui.statusbar.phone.-$$Lambda$StatusBar$c9qjiwrIU9RXDCI3JWlVp8xvdoU
-            r0.<init>()
-            r4.execute(r0)
-        L_0x0042:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.handleVisibleToUserChangedImpl(boolean):void");
+    public void handleVisibleToUserChangedImpl(boolean z) {
+        int i;
+        if (z) {
+            boolean hasPinnedHeadsUp = this.mHeadsUpManager.hasPinnedHeadsUp();
+            int i2 = 1;
+            boolean z2 = !this.mPresenter.isPresenterFullyCollapsed() && ((i = this.mState) == 0 || i == 2);
+            int activeNotificationsCount = this.mNotificationsController.getActiveNotificationsCount();
+            if (!hasPinnedHeadsUp || !this.mPresenter.isPresenterFullyCollapsed()) {
+                i2 = activeNotificationsCount;
+            }
+            this.mUiBgExecutor.execute(new Runnable(z2, i2) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$HmJQbKES5h2Nfz54WrIvhU_YRh4 */
+                public final /* synthetic */ boolean f$1;
+                public final /* synthetic */ int f$2;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                }
+
+                public final void run() {
+                    StatusBar.this.lambda$handleVisibleToUserChangedImpl$20$StatusBar(this.f$1, this.f$2);
+                }
+            });
+            return;
+        }
+        this.mUiBgExecutor.execute(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$c9qjiwrIU9RXDCI3JWlVp8xvdoU */
+
+            public final void run() {
+                StatusBar.this.lambda$handleVisibleToUserChangedImpl$21$StatusBar();
+            }
+        });
     }
 
     /* access modifiers changed from: private */
@@ -3068,26 +2817,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
+    /* JADX WARNING: Unknown variable types count: 1 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {
-        boolean isShowing = this.mStatusBarKeyguardViewManager.isShowing();
-        boolean isOccluded = this.mStatusBarKeyguardViewManager.isOccluded();
-        boolean isBouncerShowing = this.mStatusBarKeyguardViewManager.isBouncerShowing();
-        boolean isMethodSecure = this.mKeyguardStateController.isMethodSecure();
-        boolean canDismissLockScreen = this.mKeyguardStateController.canDismissLockScreen();
-        int loggingFingerprint = getLoggingFingerprint(this.mState, isShowing, isOccluded, isBouncerShowing, isMethodSecure, canDismissLockScreen);
-        if (loggingFingerprint != this.mLastLoggedStateFingerprint) {
-            if (this.mStatusBarStateLog == null) {
-                this.mStatusBarStateLog = new LogMaker(0);
-            }
-            this.mMetricsLogger.write(this.mStatusBarStateLog.setCategory(isBouncerShowing ? 197 : 196).setType(isShowing ? 1 : 2).setSubtype(isMethodSecure ? 1 : 0));
-            EventLogTags.writeSysuiStatusBarState(this.mState, isShowing ? 1 : 0, isOccluded ? 1 : 0, isBouncerShowing ? 1 : 0, isMethodSecure ? 1 : 0, canDismissLockScreen ? 1 : 0);
-            this.mLastLoggedStateFingerprint = loggingFingerprint;
-            StringBuilder sb = new StringBuilder();
-            sb.append(isBouncerShowing ? "BOUNCER" : "LOCKSCREEN");
-            sb.append(isShowing ? "_OPEN" : "_CLOSE");
-            sb.append(isMethodSecure ? "_SECURE" : "_INSECURE");
-            sUiEventLogger.log(StatusBarUiEvent.valueOf(sb.toString()));
-        }
+        /*
+        // Method dump skipped, instructions count: 149
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBar.logStateToEventlog():void");
     }
 
     /* access modifiers changed from: package-private */
@@ -3103,8 +2840,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         vibrate();
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void postQSRunnableDismissingKeyguard(Runnable runnable) {
         this.mHandler.post(new Runnable(runnable) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$GjkAle6Yh2ihV21EScdNFN2cPY */
             public final /* synthetic */ Runnable f$1;
 
             {
@@ -3122,6 +2861,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$24$StatusBar(Runnable runnable) {
         this.mStatusBarStateController.setLeaveOpenOnKeyguardHide(true);
         executeRunnableDismissingKeyguard(new Runnable(runnable) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$AWaoQDCpm4WLbje2ihIy1hyU7w */
             public final /* synthetic */ Runnable f$1;
 
             {
@@ -3131,7 +2871,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             public final void run() {
                 StatusBar.this.lambda$postQSRunnableDismissingKeyguard$23$StatusBar(this.f$1);
             }
-        }, (Runnable) null, false, false, false);
+        }, null, false, false, false);
     }
 
     /* access modifiers changed from: private */
@@ -3140,8 +2880,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mHandler.post(runnable);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void postStartActivityDismissingKeyguard(PendingIntent pendingIntent) {
         this.mHandler.post(new Runnable(pendingIntent) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$Ca0j1OxP0PIbbWLJ9seRzJaosY4 */
             public final /* synthetic */ PendingIntent f$1;
 
             {
@@ -3154,8 +2896,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         });
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void postStartActivityDismissingKeyguard(Intent intent, int i) {
         this.mHandler.postDelayed(new Runnable(intent) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$CSd9n4rtnrfFyOdT2eTFRNUO5xM */
             public final /* synthetic */ Intent f$1;
 
             {
@@ -3178,6 +2922,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         startActivityDismissingKeyguard(intent, z, true);
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         View view;
         VolumeComponent volumeComponent;
@@ -3346,6 +3091,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mHandler.removeMessages(1003);
         this.mLaunchTransitionEndRunnable = runnable2;
         $$Lambda$StatusBar$urITUg_bdosu58crbZMswPW7bvo r4 = new Runnable(runnable) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$urITUg_bdosu58crbZMswPW7bvo */
             public final /* synthetic */ Runnable f$1;
 
             {
@@ -3374,6 +3120,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mPresenter.updateMediaMetaData(false, true);
         this.mNotificationPanelViewController.setAlpha(1.0f);
         this.mNotificationPanelViewController.fadeOut(100, 300, new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$GDSEpzokV1v2uNGuP8V5K9Jrjw */
+
             public final void run() {
                 StatusBar.this.onLaunchTransitionFadingEnded();
             }
@@ -3383,6 +3131,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void fadeKeyguardWhilePulsing() {
         this.mNotificationPanelViewController.fadeOut(0, 96, new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$KlfqlCeP0_t3Ji18QuG8__kx4ws */
+
             public final void run() {
                 StatusBar.this.lambda$fadeKeyguardWhilePulsing$28$StatusBar();
             }
@@ -3406,7 +3156,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    public void onLaunchTransitionTimeout() {
+    /* access modifiers changed from: public */
+    private void onLaunchTransitionTimeout() {
         Log.w("StatusBar", "Launch transition: Timeout!");
         this.mNotificationPanelViewController.onAffordanceLaunchEnded();
         releaseGestureWakeLock();
@@ -3464,7 +3215,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    public void releaseGestureWakeLock() {
+    /* access modifiers changed from: public */
+    private void releaseGestureWakeLock() {
         if (this.mGestureWakeLock.isHeld()) {
             this.mGestureWakeLock.release();
         }
@@ -3500,9 +3252,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         Trace.traceCounter(4096, "dozing", this.mDozing ? 1 : 0);
         Trace.beginSection("StatusBar#updateDozingState");
         boolean z = false;
-        boolean z2 = this.mStatusBarKeyguardViewManager.isShowing() && !this.mStatusBarKeyguardViewManager.isOccluded();
-        boolean z3 = this.mBiometricUnlockController.getMode() == 1;
-        if ((!this.mDozing && this.mDozeServiceHost.shouldAnimateWakeup() && !z3) || (this.mDozing && this.mDozeServiceHost.shouldAnimateScreenOff() && z2)) {
+        Object[] objArr = (!this.mStatusBarKeyguardViewManager.isShowing() || this.mStatusBarKeyguardViewManager.isOccluded()) ? null : 1;
+        Object[] objArr2 = this.mBiometricUnlockController.getMode() == 1 ? 1 : null;
+        if ((!this.mDozing && this.mDozeServiceHost.shouldAnimateWakeup() && objArr2 == null) || (this.mDozing && this.mDozeServiceHost.shouldAnimateScreenOff() && objArr != null)) {
             z = true;
         }
         this.mNotificationPanelViewController.setDozing(this.mDozing, z, this.mWakeUpTouchLocation);
@@ -3592,6 +3344,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mShadeController.runPostCollapseRunnables();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStatePreChange(int i, int i2) {
         if (this.mVisible && (i2 == 2 || this.mStatusBarStateController.goingToFullShade())) {
             clearNotificationEffects();
@@ -3602,6 +3355,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
         this.mState = i;
         updateReportRejectedTouchVisibility();
@@ -3647,6 +3401,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         Trace.endSection();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
         Trace.beginSection("StatusBar#updateDozing");
         this.mDozing = z;
@@ -3767,6 +3522,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return this.mScreenLifecycle.getScreenState() == 0;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showScreenPinningRequest(int i) {
         if (!this.mKeyguardStateController.isShowing()) {
             showScreenPinningRequest(i, true);
@@ -3777,18 +3533,21 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mScreenPinningRequest.showPrompt(i, z);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void appTransitionCancelled(int i) {
         if (i == this.mDisplayId) {
             this.mDividerOptional.ifPresent($$Lambda$0LwwxILcL3cgEtrSMW_qhRkAhLc.INSTANCE);
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void appTransitionFinished(int i) {
         if (i == this.mDisplayId) {
             this.mDividerOptional.ifPresent($$Lambda$0LwwxILcL3cgEtrSMW_qhRkAhLc.INSTANCE);
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onCameraLaunchGestureDetected(int i) {
         this.mLastCameraLaunchSource = i;
         if (isGoingToSleep()) {
@@ -3803,7 +3562,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 this.mKeyguardUpdateMonitor.onCameraLaunched();
             }
             if (!this.mStatusBarKeyguardViewManager.isShowing()) {
-                startActivityDismissingKeyguard(KeyguardBottomAreaView.INSECURE_CAMERA_INTENT, false, true, true, (ActivityStarter.Callback) null, 0);
+                startActivityDismissingKeyguard(KeyguardBottomAreaView.INSECURE_CAMERA_INTENT, false, true, true, null, 0);
                 return;
             }
             if (!this.mDeviceInteractive) {
@@ -3823,13 +3582,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: package-private */
     public boolean isCameraAllowedByAdmin() {
-        if (this.mDevicePolicyManager.getCameraDisabled((ComponentName) null, this.mLockscreenUserManager.getCurrentUserId())) {
+        if (this.mDevicePolicyManager.getCameraDisabled(null, this.mLockscreenUserManager.getCurrentUserId())) {
             return false;
         }
         if (this.mStatusBarKeyguardViewManager != null && (!isKeyguardShowing() || !isKeyguardSecure())) {
             return true;
         }
-        if ((this.mDevicePolicyManager.getKeyguardDisabledFeatures((ComponentName) null, this.mLockscreenUserManager.getCurrentUserId()) & 2) == 0) {
+        if ((this.mDevicePolicyManager.getKeyguardDisabledFeatures(null, this.mLockscreenUserManager.getCurrentUserId()) & 2) == 0) {
             return true;
         }
         return false;
@@ -3870,6 +3629,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             this.mScrimController.transitionTo(ScrimState.PULSING, this.mDozeScrimController.getScrimCallback());
         } else if (this.mDozeServiceHost.hasPendingScreenOffCallback()) {
             this.mScrimController.transitionTo(ScrimState.OFF, new ScrimController.Callback() {
+                /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass14 */
+
+                @Override // com.android.systemui.statusbar.phone.ScrimController.Callback
                 public void onFinished() {
                     StatusBar.this.mDozeServiceHost.executePendingScreenOffCallback();
                 }
@@ -3911,6 +3673,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationsController.setNotificationSnoozed(statusBarNotification, i);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void toggleSplitScreen() {
         toggleSplitScreenMode(-1, -1);
     }
@@ -3918,6 +3681,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* access modifiers changed from: package-private */
     public void awakenDreams() {
         this.mUiBgExecutor.execute(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$1WMogreweqZK6K0lu_QDplFsRxA */
+
             public final void run() {
                 StatusBar.this.lambda$awakenDreams$29$StatusBar();
             }
@@ -3934,26 +3699,31 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void preloadRecentApps() {
         this.mHandler.removeMessages(1022);
         this.mHandler.sendEmptyMessage(1022);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void cancelPreloadRecentApps() {
         this.mHandler.removeMessages(1023);
         this.mHandler.sendEmptyMessage(1023);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void dismissKeyboardShortcutsMenu() {
         this.mHandler.removeMessages(1027);
         this.mHandler.sendEmptyMessage(1027);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void toggleKeyboardShortcutsMenu(int i) {
         this.mHandler.removeMessages(1026);
         this.mHandler.obtainMessage(1026, i, 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setTopAppHidesStatusBar(boolean z) {
         this.mTopHidesStatusBar = z;
         if (!z && this.mWereIconsJustHidden) {
@@ -3986,12 +3756,14 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void executeActionDismissingKeyguard(Runnable runnable, boolean z) {
         if (this.mDeviceProvisionedController.isDeviceProvisioned()) {
             dismissKeyguardThenExecute(new ActivityStarter.OnDismissAction(runnable) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$5tYL8h68wVhXiSExxOPbxnmho */
                 public final /* synthetic */ Runnable f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
+                @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
                 public final boolean onDismiss() {
                     return StatusBar.this.lambda$executeActionDismissingKeyguard$31$StatusBar(this.f$1);
                 }
@@ -4003,6 +3775,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* renamed from: lambda$executeActionDismissingKeyguard$31 */
     public /* synthetic */ boolean lambda$executeActionDismissingKeyguard$31$StatusBar(Runnable runnable) {
         new Thread(new Runnable(runnable) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$rrJIUwwFAGtQcqHBV4p5CzxIhOg */
             public final /* synthetic */ Runnable f$0;
 
             {
@@ -4024,17 +3797,21 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         runnable.run();
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     /* renamed from: startPendingIntentDismissingKeyguard */
     public void lambda$postStartActivityDismissingKeyguard$25(PendingIntent pendingIntent) {
-        startPendingIntentDismissingKeyguard(pendingIntent, (Runnable) null);
+        startPendingIntentDismissingKeyguard(pendingIntent, null);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable) {
-        startPendingIntentDismissingKeyguard(pendingIntent, runnable, (View) null);
+        startPendingIntentDismissingKeyguard(pendingIntent, runnable, null);
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter
     public void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, View view) {
         executeActionDismissingKeyguard(new Runnable(pendingIntent, view, runnable) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$mKzh129ZNRMAmJIVxc67nbFDtvE */
             public final /* synthetic */ PendingIntent f$1;
             public final /* synthetic */ View f$2;
             public final /* synthetic */ Runnable f$3;
@@ -4055,7 +3832,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* renamed from: lambda$startPendingIntentDismissingKeyguard$32 */
     public /* synthetic */ void lambda$startPendingIntentDismissingKeyguard$32$StatusBar(PendingIntent pendingIntent, View view, Runnable runnable) {
         try {
-            pendingIntent.send((Context) null, 0, (Intent) null, (PendingIntent.OnFinished) null, (Handler) null, (String) null, getActivityOptions(this.mActivityLaunchAnimator.getLaunchAnimation(view, isOccluded())));
+            pendingIntent.send(null, 0, null, null, null, null, getActivityOptions(this.mActivityLaunchAnimator.getLaunchAnimation(view, isOccluded())));
         } catch (PendingIntent.CanceledException e) {
             Log.w("StatusBar", "Sending intent failed: " + e);
         }
@@ -4147,6 +3924,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showAssistDisclosure() {
         this.mAssistManagerLazy.get().showDisclosure();
     }
@@ -4155,6 +3933,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         return this.mNotificationPanelViewController;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void startAssist(Bundle bundle) {
         this.mAssistManagerLazy.get().startAssist(bundle);
     }
@@ -4164,10 +3943,12 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: private */
-    public boolean isTransientShown() {
+    /* access modifiers changed from: public */
+    private boolean isTransientShown() {
         return this.mTransientShown;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void suppressAmbientDisplay(boolean z) {
         this.mDozeServiceHost.setDozeSuppressed(z);
     }
@@ -4192,6 +3973,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onBootCompleted() {
         super.onBootCompleted();
         sBootCompleted = true;

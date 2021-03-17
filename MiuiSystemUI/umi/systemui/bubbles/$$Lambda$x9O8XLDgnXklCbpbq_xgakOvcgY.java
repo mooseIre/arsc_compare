@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$x9O8XLDgnXklCbpbq_xgakOvcgY implemen
     private /* synthetic */ $$Lambda$x9O8XLDgnXklCbpbq_xgakOvcgY() {
     }
 
+    @Override // java.util.function.ToLongFunction
     public final long applyAsLong(Object obj) {
         return ((Bubble) obj).getLastActivity();
     }

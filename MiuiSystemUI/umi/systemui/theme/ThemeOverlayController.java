@@ -38,6 +38,7 @@ public class ThemeOverlayController extends SystemUI {
         this.mBgHandler = handler;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mUserManager = (UserManager) this.mContext.getSystemService(UserManager.class);
         this.mThemeManager = new ThemeOverlayManager((OverlayManager) this.mContext.getSystemService(OverlayManager.class), AsyncTask.THREAD_POOL_EXECUTOR, this.mContext.getString(C0021R$string.launcher_overlayable_package), this.mContext.getString(C0021R$string.themepicker_overlayable_package));
@@ -45,11 +46,15 @@ public class ThemeOverlayController extends SystemUI {
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
         intentFilter.addAction("android.intent.action.MANAGED_PROFILE_ADDED");
         this.mBroadcastDispatcher.registerReceiverWithHandler(new BroadcastReceiver() {
+            /* class com.android.systemui.theme.ThemeOverlayController.AnonymousClass1 */
+
             public void onReceive(Context context, Intent intent) {
                 ThemeOverlayController.this.updateThemeOverlays();
             }
         }, intentFilter, this.mBgHandler, UserHandle.ALL);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("theme_customization_overlay_packages"), false, new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.theme.ThemeOverlayController.AnonymousClass2 */
+
             public void onChange(boolean z, Collection<Uri> collection, int i, int i2) {
                 if (ActivityManager.getCurrentUser() == i2) {
                     ThemeOverlayController.this.updateThemeOverlays();
@@ -59,16 +64,17 @@ public class ThemeOverlayController extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void updateThemeOverlays() {
+    /* access modifiers changed from: public */
+    private void updateThemeOverlays() {
         int currentUser = ActivityManager.getCurrentUser();
         String stringForUser = Settings.Secure.getStringForUser(this.mContext.getContentResolver(), "theme_customization_overlay_packages", currentUser);
         ArrayMap arrayMap = new ArrayMap();
         if (!TextUtils.isEmpty(stringForUser)) {
             try {
                 JSONObject jSONObject = new JSONObject(stringForUser);
-                for (String next : ThemeOverlayManager.THEME_CATEGORIES) {
-                    if (jSONObject.has(next)) {
-                        arrayMap.put(next, jSONObject.getString(next));
+                for (String str : ThemeOverlayManager.THEME_CATEGORIES) {
+                    if (jSONObject.has(str)) {
+                        arrayMap.put(str, jSONObject.getString(str));
                     }
                 }
             } catch (JSONException e) {

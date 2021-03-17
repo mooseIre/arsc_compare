@@ -22,6 +22,7 @@ public class TunerFragment extends PreferenceFragment {
     private static final String[] DEBUG_ONLY = {"nav_bar", "lockscreen", "picture_in_picture"};
     private static final CharSequence KEY_DOZE = "doze";
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setHasOptionsMenu(true);
@@ -32,6 +33,7 @@ public class TunerFragment extends PreferenceFragment {
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         addPreferencesFromResource(C0023R$xml.tuner_prefs);
         if (!PluginPrefs.hasPlugins(getContext())) {
@@ -82,6 +84,8 @@ public class TunerFragment extends PreferenceFragment {
         int itemId = menuItem.getItemId();
         if (itemId == 2) {
             TunerService.showResetRequest(getContext(), new Runnable() {
+                /* class com.android.systemui.tuner.TunerFragment.AnonymousClass1 */
+
                 public void run() {
                     if (TunerFragment.this.getActivity() != null) {
                         TunerFragment.this.getActivity().finish();
@@ -100,6 +104,8 @@ public class TunerFragment extends PreferenceFragment {
     public static class TunerWarningFragment extends DialogFragment {
         public Dialog onCreateDialog(Bundle bundle) {
             return new AlertDialog.Builder(getContext()).setTitle(C0021R$string.tuner_warning_title).setMessage(C0021R$string.tuner_warning).setPositiveButton(C0021R$string.got_it, new DialogInterface.OnClickListener() {
+                /* class com.android.systemui.tuner.TunerFragment.TunerWarningFragment.AnonymousClass1 */
+
                 public void onClick(DialogInterface dialogInterface, int i) {
                     Settings.Secure.putInt(TunerWarningFragment.this.getContext().getContentResolver(), "seen_tuner_warning", 1);
                 }

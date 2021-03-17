@@ -19,6 +19,7 @@ final class ControlActionCoordinatorImpl$toggle$1 extends Lambda implements Func
         this.$isChecked = z;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         this.$cvh.getLayout().performHapticFeedback(6);
         this.$cvh.action(new BooleanAction(this.$templateId, !this.$isChecked));

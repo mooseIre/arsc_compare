@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$BubbleData$vPZCImnk7rTPTX1c7nr0PX7FO
     private /* synthetic */ $$Lambda$BubbleData$vPZCImnk7rTPTX1c7nr0PX7FO2o() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return Long.valueOf(BubbleData.sortKey((Bubble) obj));
     }

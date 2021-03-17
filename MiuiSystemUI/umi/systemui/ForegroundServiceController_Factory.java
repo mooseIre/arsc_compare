@@ -17,6 +17,7 @@ public final class ForegroundServiceController_Factory implements Factory<Foregr
         this.mainHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ForegroundServiceController get() {
         return provideInstance(this.entryManagerProvider, this.appOpsControllerProvider, this.mainHandlerProvider);
     }

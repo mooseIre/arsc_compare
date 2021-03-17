@@ -14,6 +14,7 @@ public final class SuperSaveModeController_Factory implements Factory<SuperSaveM
         this.observerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public SuperSaveModeController get() {
         return provideInstance(this.contextProvider, this.observerProvider);
     }

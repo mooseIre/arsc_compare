@@ -16,6 +16,7 @@ import com.android.systemui.util.Assert;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import kotlin.TypeCastException;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.functions.Function3;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Reflection;
@@ -25,8 +26,7 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: ForegroundServiceSectionController.kt */
 public final class ForegroundServiceSectionController {
-    /* access modifiers changed from: private */
-    public final Set<NotificationEntry> entries = new LinkedHashSet();
+    private final Set<NotificationEntry> entries = new LinkedHashSet();
     private View entriesView;
     @NotNull
     private final NotificationEntryManager entryManager;
@@ -40,20 +40,28 @@ public final class ForegroundServiceSectionController {
         this.featureController = foregroundServiceDismissalFeatureController;
         if (this.featureController.isForegroundServiceDismissalEnabled()) {
             this.entryManager.addNotificationRemoveInterceptor(new ForegroundServiceSectionController$sam$com_android_systemui_statusbar_NotificationRemoveInterceptor$0(new Function3<String, NotificationEntry, Integer, Boolean>(this) {
+                /* class com.android.systemui.statusbar.notification.stack.ForegroundServiceSectionController.AnonymousClass1 */
+
+                @Override // kotlin.jvm.internal.CallableReference
                 public final String getName() {
                     return "shouldInterceptRemoval";
                 }
 
+                @Override // kotlin.jvm.internal.CallableReference
                 public final KDeclarationContainer getOwner() {
                     return Reflection.getOrCreateKotlinClass(ForegroundServiceSectionController.class);
                 }
 
+                @Override // kotlin.jvm.internal.CallableReference
                 public final String getSignature() {
                     return "shouldInterceptRemoval(Ljava/lang/String;Lcom/android/systemui/statusbar/notification/collection/NotificationEntry;I)Z";
                 }
 
-                public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2, Object obj3) {
-                    return Boolean.valueOf(invoke((String) obj, (NotificationEntry) obj2, ((Number) obj3).intValue()));
+                /* Return type fixed from 'java.lang.Object' to match base method */
+                /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object, java.lang.Object] */
+                @Override // kotlin.jvm.functions.Function3
+                public /* bridge */ /* synthetic */ Boolean invoke(String str, NotificationEntry notificationEntry, Integer num) {
+                    return Boolean.valueOf(invoke(str, notificationEntry, num.intValue()));
                 }
 
                 public final boolean invoke(@NotNull String str, @Nullable NotificationEntry notificationEntry, int i) {
@@ -62,12 +70,15 @@ public final class ForegroundServiceSectionController {
                 }
             }));
             this.entryManager.addNotificationEntryListener(new NotificationEntryListener(this) {
+                /* class com.android.systemui.statusbar.notification.stack.ForegroundServiceSectionController.AnonymousClass2 */
                 final /* synthetic */ ForegroundServiceSectionController this$0;
 
+                /* JADX WARN: Incorrect args count in method signature: ()V */
                 {
                     this.this$0 = r1;
                 }
 
+                @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
                 public void onPostEntryUpdated(@NotNull NotificationEntry notificationEntry) {
                     Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
                     if (this.this$0.entries.contains(notificationEntry)) {
@@ -86,7 +97,8 @@ public final class ForegroundServiceSectionController {
     }
 
     /* access modifiers changed from: private */
-    public final boolean shouldInterceptRemoval(String str, NotificationEntry notificationEntry, int i) {
+    /* access modifiers changed from: public */
+    private final boolean shouldInterceptRemoval(String str, NotificationEntry notificationEntry, int i) {
         Assert.isMainThread();
         boolean z = i == 3;
         boolean z2 = i == 2 || i == 1;
@@ -123,13 +135,15 @@ public final class ForegroundServiceSectionController {
     }
 
     /* access modifiers changed from: private */
-    public final void removeEntry(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private final void removeEntry(NotificationEntry notificationEntry) {
         Assert.isMainThread();
         this.entries.remove(notificationEntry);
     }
 
     /* access modifiers changed from: private */
-    public final void addEntry(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private final void addEntry(NotificationEntry notificationEntry) {
         Assert.isMainThread();
         this.entries.add(notificationEntry);
     }
@@ -159,7 +173,8 @@ public final class ForegroundServiceSectionController {
     }
 
     /* access modifiers changed from: private */
-    public final void update() {
+    /* access modifiers changed from: public */
+    private final void update() {
         Assert.isMainThread();
         View view = this.entriesView;
         if (view == null) {
@@ -169,12 +184,12 @@ public final class ForegroundServiceSectionController {
             if (findViewById != null) {
                 LinearLayout linearLayout = (LinearLayout) findViewById;
                 linearLayout.removeAllViews();
-                for (T t : CollectionsKt___CollectionsKt.sortedWith(this.entries, new ForegroundServiceSectionController$$special$$inlined$sortedBy$1())) {
+                for (NotificationEntry notificationEntry : CollectionsKt___CollectionsKt.sortedWith(this.entries, new ForegroundServiceSectionController$$special$$inlined$sortedBy$1())) {
                     View inflate = LayoutInflater.from(linearLayout.getContext()).inflate(C0017R$layout.foreground_service_dungeon_row, (ViewGroup) null);
                     if (inflate != null) {
                         DungeonRow dungeonRow = (DungeonRow) inflate;
-                        dungeonRow.setEntry(t);
-                        dungeonRow.setOnClickListener(new ForegroundServiceSectionController$update$$inlined$apply$lambda$1(dungeonRow, t, linearLayout, this));
+                        dungeonRow.setEntry(notificationEntry);
+                        dungeonRow.setOnClickListener(new ForegroundServiceSectionController$update$$inlined$apply$lambda$1(dungeonRow, notificationEntry, linearLayout, this));
                         linearLayout.addView(dungeonRow);
                     } else {
                         throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.notification.row.DungeonRow");

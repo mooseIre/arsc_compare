@@ -8,25 +8,30 @@ import org.jetbrains.annotations.Nullable;
 public final class ControlCenterPanelViewController$toCollapseAnimation$animConfig$1 extends TransitionListener {
     final /* synthetic */ ControlCenterPanelViewController this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     ControlCenterPanelViewController$toCollapseAnimation$animConfig$1(ControlCenterPanelViewController controlCenterPanelViewController) {
         this.this$0 = controlCenterPanelViewController;
     }
 
+    @Override // miuix.animation.listener.TransitionListener
     public void onBegin(@Nullable Object obj) {
-        this.this$0.animatingToCollapse = true;
+        ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, true);
     }
 
+    @Override // miuix.animation.listener.TransitionListener
     public void onUpdate(@Nullable Object obj, @Nullable FloatProperty<?> floatProperty, float f, float f2, boolean z) {
         ControlCenterPanelViewController controlCenterPanelViewController = this.this$0;
-        controlCenterPanelViewController.setTransRatio((f - ((float) controlCenterPanelViewController.tileLayoutMinHeight)) / ((float) this.this$0.expandThreshold));
+        ControlCenterPanelViewController.access$setTransRatio$p(controlCenterPanelViewController, (f - ((float) ControlCenterPanelViewController.access$getTileLayoutMinHeight$p(controlCenterPanelViewController))) / ((float) ControlCenterPanelViewController.access$getExpandThreshold$p(this.this$0)));
     }
 
+    @Override // miuix.animation.listener.TransitionListener
     public void onComplete(@Nullable Object obj) {
-        this.this$0.animatingToCollapse = false;
+        ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, false);
     }
 
+    @Override // miuix.animation.listener.TransitionListener
     public void onCancel(@Nullable Object obj) {
-        this.this$0.animatingToCollapse = false;
-        this.this$0.calculateTransitionValues();
+        ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, false);
+        ControlCenterPanelViewController.access$calculateTransitionValues(this.this$0);
     }
 }

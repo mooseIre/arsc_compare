@@ -16,8 +16,7 @@ import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 
 public class DragDownHelper implements Gefingerpoken {
-    /* access modifiers changed from: private */
-    public ExpandHelper.Callback mCallback;
+    private ExpandHelper.Callback mCallback;
     private DragDownCallback mDragDownCallback;
     private boolean mDraggedFarEnough;
     private boolean mDraggingDown;
@@ -61,6 +60,7 @@ public class DragDownHelper implements Gefingerpoken {
         this.mFalsingManager = falsingManager;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
         float f;
         float x = motionEvent.getX();
@@ -95,6 +95,7 @@ public class DragDownHelper implements Gefingerpoken {
         return false;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onTouchEvent(MotionEvent motionEvent) {
         if (!this.mDraggingDown) {
             return false;
@@ -185,10 +186,12 @@ public class DragDownHelper implements Gefingerpoken {
             this.mCallback.setUserLockedChild(expandableView, false);
             return;
         }
-        ObjectAnimator ofInt = ObjectAnimator.ofInt(expandableView, "actualHeight", new int[]{expandableView.getActualHeight(), expandableView.getCollapsedHeight()});
+        ObjectAnimator ofInt = ObjectAnimator.ofInt(expandableView, "actualHeight", expandableView.getActualHeight(), expandableView.getCollapsedHeight());
         ofInt.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        ofInt.setDuration(375);
+        ofInt.setDuration(375L);
         ofInt.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.statusbar.DragDownHelper.AnonymousClass1 */
+
             public void onAnimationEnd(Animator animator) {
                 DragDownHelper.this.mCallback.setUserLockedChild(expandableView, false);
             }
@@ -197,10 +200,12 @@ public class DragDownHelper implements Gefingerpoken {
     }
 
     private void cancelExpansion() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mLastHeight, 0.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mLastHeight, 0.0f);
         ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        ofFloat.setDuration(375);
+        ofFloat.setDuration(375L);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.statusbar.$$Lambda$DragDownHelper$q6x0oNk24uuvhTw3d_iOE5k6pV4 */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 DragDownHelper.this.lambda$cancelExpansion$0$DragDownHelper(valueAnimator);
             }
@@ -238,6 +243,6 @@ public class DragDownHelper implements Gefingerpoken {
     }
 
     public boolean isDragDownEnabled() {
-        return this.mDragDownCallback.isDragDownEnabledForView((ExpandableView) null);
+        return this.mDragDownCallback.isDragDownEnabledForView(null);
     }
 }

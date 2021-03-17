@@ -38,6 +38,7 @@ public class NetworkSpeedView extends TextView implements DarkIconDispatcher.Dar
         this.mNetworkSpeedController.removeFromViewList(this);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (z) {
             setTextColor(DarkIconDispatcher.getTint(rect, this, i));
@@ -77,9 +78,9 @@ public class NetworkSpeedView extends TextView implements DarkIconDispatcher.Dar
     /* access modifiers changed from: protected */
     public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        Iterator it = this.mVisibilityListeners.iterator();
+        Iterator<NetworkSpeedVisibilityListener> it = this.mVisibilityListeners.iterator();
         while (it.hasNext()) {
-            ((NetworkSpeedVisibilityListener) it.next()).onNetworkSpeedVisibilityChanged(isShown());
+            it.next().onNetworkSpeedVisibilityChanged(isShown());
         }
     }
 

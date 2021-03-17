@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationSectionsLogger.kt */
-final class NotificationSectionsLogger$logPosition$4 extends Lambda implements Function1<LogMessage, String> {
+public final class NotificationSectionsLogger$logPosition$4 extends Lambda implements Function1<LogMessage, String> {
     public static final NotificationSectionsLogger$logPosition$4 INSTANCE = new NotificationSectionsLogger$logPosition$4();
 
     NotificationSectionsLogger$logPosition$4() {

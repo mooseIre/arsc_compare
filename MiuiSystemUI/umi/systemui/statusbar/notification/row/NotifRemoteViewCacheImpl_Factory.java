@@ -11,6 +11,7 @@ public final class NotifRemoteViewCacheImpl_Factory implements Factory<NotifRemo
         this.collectionProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotifRemoteViewCacheImpl get() {
         return provideInstance(this.collectionProvider);
     }

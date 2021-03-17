@@ -14,6 +14,7 @@ public final class BatterySaverTile_Factory implements Factory<BatterySaverTile>
         this.batteryControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public BatterySaverTile get() {
         return provideInstance(this.hostProvider, this.batteryControllerProvider);
     }

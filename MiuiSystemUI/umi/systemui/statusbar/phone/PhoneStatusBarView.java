@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -31,6 +32,8 @@ public class PhoneStatusBarView extends PanelBar {
     protected DisplayCutout mDisplayCutout;
     private boolean mHeadsUpVisible;
     private Runnable mHideExpandedRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.PhoneStatusBarView.AnonymousClass1 */
+
         public void run() {
             PhoneStatusBarView phoneStatusBarView = PhoneStatusBarView.this;
             if (phoneStatusBarView.mPanelFraction == 0.0f) {
@@ -62,6 +65,7 @@ public class PhoneStatusBarView extends PanelBar {
         this.mScrimController = scrimController;
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onFinishInflate() {
         this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C0015R$id.battery);
         this.mCutoutSpace = findViewById(C0015R$id.cutout_space_view);
@@ -105,7 +109,7 @@ public class PhoneStatusBarView extends PanelBar {
 
     private boolean updateOrientationAndCutout() {
         boolean z;
-        int exactRotation = RotationUtils.getExactRotation(this.mContext);
+        int exactRotation = RotationUtils.getExactRotation(((FrameLayout) this).mContext);
         if (exactRotation != this.mRotationOrientation) {
             this.mRotationOrientation = exactRotation;
             z = true;
@@ -119,6 +123,7 @@ public class PhoneStatusBarView extends PanelBar {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public boolean panelEnabled() {
         return this.mCommandQueue.panelsEnabled();
     }
@@ -134,11 +139,13 @@ public class PhoneStatusBarView extends PanelBar {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onPanelPeeked() {
         super.onPanelPeeked();
         this.mBar.makeExpandedVisible(false);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onPanelCollapsed() {
         super.onPanelCollapsed();
         post(this.mHideExpandedRunnable);
@@ -149,6 +156,7 @@ public class PhoneStatusBarView extends PanelBar {
         removeCallbacks(this.mHideExpandedRunnable);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onPanelFullyOpened() {
         super.onPanelFullyOpened();
         if (!this.mIsFullyOpenedPanel) {
@@ -157,10 +165,12 @@ public class PhoneStatusBarView extends PanelBar {
         this.mIsFullyOpenedPanel = true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public boolean onTouchEvent(MotionEvent motionEvent) {
         return this.mBar.interceptTouchEvent(motionEvent) || handleEvent(motionEvent) || super.onTouchEvent(motionEvent);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onTrackingStarted() {
         super.onTrackingStarted();
         this.mBar.onTrackingStarted();
@@ -168,16 +178,19 @@ public class PhoneStatusBarView extends PanelBar {
         removePendingHideExpandedRunnables();
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onClosingFinished() {
         super.onClosingFinished();
         this.mBar.onClosingFinished();
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onTrackingStopped(boolean z) {
         super.onTrackingStopped(z);
         this.mBar.onTrackingStopped(z);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onExpandingFinished() {
         super.onExpandingFinished();
         this.mScrimController.onExpandingFinished();
@@ -187,6 +200,7 @@ public class PhoneStatusBarView extends PanelBar {
         return this.mBar.interceptTouchEvent(motionEvent) || super.onInterceptTouchEvent(motionEvent);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void panelScrimMinFractionChanged(float f) {
         if (Float.isNaN(f)) {
             throw new IllegalArgumentException("minFraction cannot be NaN");
@@ -196,6 +210,7 @@ public class PhoneStatusBarView extends PanelBar {
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public void panelExpansionChanged(float f, boolean z) {
         super.panelExpansionChanged(f, z);
         updateScrimFraction();
@@ -273,6 +288,7 @@ public class PhoneStatusBarView extends PanelBar {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PanelBar
     public boolean shouldPanelBeVisible() {
         return this.mHeadsUpVisible || super.shouldPanelBeVisible();
     }

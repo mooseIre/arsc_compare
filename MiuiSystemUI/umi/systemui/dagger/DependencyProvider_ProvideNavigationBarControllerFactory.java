@@ -21,6 +21,7 @@ public final class DependencyProvider_ProvideNavigationBarControllerFactory impl
         this.commandQueueProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public NavigationBarController get() {
         return provideInstance(this.module, this.contextProvider, this.mainHandlerProvider, this.commandQueueProvider);
     }

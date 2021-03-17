@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationFilterController$1$e4t_h
     private /* synthetic */ $$Lambda$NotificationFilterController$1$e4t_htKeCYj4iaLS9q0WMaQzhp4() {
     }
 
+    @Override // java.util.function.IntFunction
     public final Object apply(int i) {
         return NotificationFilterController.AnonymousClass1.lambda$getActiveNotifications$1(i);
     }

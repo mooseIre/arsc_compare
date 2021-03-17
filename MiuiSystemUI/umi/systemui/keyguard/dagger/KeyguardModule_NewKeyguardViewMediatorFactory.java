@@ -51,6 +51,7 @@ public final class KeyguardModule_NewKeyguardViewMediatorFactory implements Fact
         this.navigationModeControllerProvider = provider13;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardViewMediator get() {
         return provideInstance(this.contextProvider, this.falsingManagerProvider, this.lockPatternUtilsProvider, this.broadcastDispatcherProvider, this.statusBarKeyguardViewManagerLazyProvider, this.dismissCallbackRegistryProvider, this.updateMonitorProvider, this.dumpManagerProvider, this.powerManagerProvider, this.trustManagerProvider, this.uiBgExecutorProvider, this.deviceConfigProvider, this.navigationModeControllerProvider);
     }

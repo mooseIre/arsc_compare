@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$ProcessArtworkTask$5NgxIsban__ilCnG4
     private /* synthetic */ $$Lambda$ProcessArtworkTask$5NgxIsban__ilCnG4_czslaOjX0() {
     }
 
+    @Override // androidx.palette.graphics.Palette.Filter
     public final boolean isAllowed(int i, float[] fArr) {
         return ProcessArtworkTask.lambda$new$0(i, fArr);
     }

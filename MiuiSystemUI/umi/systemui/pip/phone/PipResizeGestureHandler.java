@@ -37,8 +37,7 @@ public class PipResizeGestureHandler {
     private final int mDisplayId;
     private final PointF mDownPoint = new PointF();
     private final Rect mDragCornerSize = new Rect();
-    /* access modifiers changed from: private */
-    public boolean mEnableUserResize;
+    private boolean mEnableUserResize;
     private InputEventReceiver mInputEventReceiver;
     private InputMonitor mInputMonitor;
     private boolean mIsAttached;
@@ -76,9 +75,11 @@ public class PipResizeGestureHandler {
         reloadResources();
         this.mEnableUserResize = DeviceConfig.getBoolean("systemui", "pip_user_resize", true);
         deviceConfigProxy.addOnPropertiesChangedListener("systemui", this.mMainExecutor, new DeviceConfig.OnPropertiesChangedListener() {
+            /* class com.android.systemui.pip.phone.PipResizeGestureHandler.AnonymousClass1 */
+
             public void onPropertiesChanged(DeviceConfig.Properties properties) {
                 if (properties.getKeyset().contains("pip_user_resize")) {
-                    boolean unused = PipResizeGestureHandler.this.mEnableUserResize = properties.getBoolean("pip_user_resize", true);
+                    PipResizeGestureHandler.this.mEnableUserResize = properties.getBoolean("pip_user_resize", true);
                 }
             }
         });
@@ -141,7 +142,8 @@ public class PipResizeGestureHandler {
     }
 
     /* access modifiers changed from: private */
-    public void onInputEvent(InputEvent inputEvent) {
+    /* access modifiers changed from: public */
+    private void onInputEvent(InputEvent inputEvent) {
         if (inputEvent instanceof MotionEvent) {
             onMotionEvent((MotionEvent) inputEvent);
         }
@@ -270,7 +272,7 @@ public class PipResizeGestureHandler {
                         }
                         rect.set(TaskResizingAlgorithm.resizeDrag(x, y, f, f2, bounds, i, i2, i3, point2, true, z));
                         this.mPipBoundsHandler.transformBoundsToAspectRatio(this.mLastResizeBounds);
-                        this.mPipTaskOrganizer.scheduleUserResizePip(this.mLastDownBounds, this.mLastResizeBounds, (Consumer<Rect>) null);
+                        this.mPipTaskOrganizer.scheduleUserResizePip(this.mLastDownBounds, this.mLastResizeBounds, null);
                         return;
                     }
                     return;
@@ -284,6 +286,9 @@ public class PipResizeGestureHandler {
             }
             if (!this.mLastResizeBounds.isEmpty()) {
                 this.mPipTaskOrganizer.scheduleFinishResizePip(this.mLastResizeBounds, new Consumer() {
+                    /* class com.android.systemui.pip.phone.$$Lambda$PipResizeGestureHandler$RnFltK7aDIBKCAT3ErPSvbZbyg */
+
+                    @Override // java.util.function.Consumer
                     public final void accept(Object obj) {
                         PipResizeGestureHandler.this.lambda$onMotionEvent$1$PipResizeGestureHandler((Rect) obj);
                     }
@@ -298,6 +303,8 @@ public class PipResizeGestureHandler {
     /* renamed from: lambda$onMotionEvent$1 */
     public /* synthetic */ void lambda$onMotionEvent$1$PipResizeGestureHandler(Rect rect) {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipResizeGestureHandler$Z3nEFx0Z3KpDDBgJ9VHLzJ4HnEg */
+
             public final void run() {
                 PipResizeGestureHandler.this.lambda$onMotionEvent$0$PipResizeGestureHandler();
             }
@@ -338,7 +345,8 @@ public class PipResizeGestureHandler {
         printWriter.println(str2 + "mThresholdCrossed=" + this.mThresholdCrossed);
     }
 
-    class SysUiInputEventReceiver extends BatchedInputEventReceiver {
+    /* access modifiers changed from: package-private */
+    public class SysUiInputEventReceiver extends BatchedInputEventReceiver {
         SysUiInputEventReceiver(InputChannel inputChannel, Looper looper) {
             super(inputChannel, looper, Choreographer.getSfInstance());
         }

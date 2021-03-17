@@ -4,8 +4,9 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationPanelViewController.kt */
-final class MiuiNotificationPanelViewController$endNssCoveringQsMotion$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class MiuiNotificationPanelViewController$endNssCoveringQsMotion$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
     MiuiNotificationPanelViewController$endNssCoveringQsMotion$1(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {

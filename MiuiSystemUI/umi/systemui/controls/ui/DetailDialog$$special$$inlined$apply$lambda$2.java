@@ -6,8 +6,9 @@ import android.widget.ImageView;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: DetailDialog.kt */
-final class DetailDialog$$special$$inlined$apply$lambda$2 implements View.OnClickListener {
+public final class DetailDialog$$special$$inlined$apply$lambda$2 implements View.OnClickListener {
     final /* synthetic */ ImageView $this_apply;
     final /* synthetic */ DetailDialog this$0;
 

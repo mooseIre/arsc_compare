@@ -7,7 +7,7 @@ public interface StatusIconDisplayable extends DarkIconDispatcher.DarkReceiver {
 
     int getVisibleState();
 
-    boolean isIconBlocked() {
+    default boolean isIconBlocked() {
         return false;
     }
 
@@ -15,7 +15,7 @@ public interface StatusIconDisplayable extends DarkIconDispatcher.DarkReceiver {
 
     void setVisibleState(int i, boolean z);
 
-    void setVisibleState(int i) {
+    default void setVisibleState(int i) {
         setVisibleState(i, false);
     }
 }

@@ -4,7 +4,8 @@ import android.view.MotionEvent;
 import com.android.systemui.util.sensors.ProximitySensor;
 import java.util.List;
 
-abstract class FalsingClassifier {
+/* access modifiers changed from: package-private */
+public abstract class FalsingClassifier {
     private final FalsingDataProvider mDataProvider;
 
     /* access modifiers changed from: package-private */

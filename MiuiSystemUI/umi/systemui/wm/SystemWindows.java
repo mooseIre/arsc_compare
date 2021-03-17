@@ -34,19 +34,23 @@ public class SystemWindows {
     Context mContext;
     DisplayController mDisplayController;
     private final DisplayController.OnDisplaysChangedListener mDisplayListener;
-    /* access modifiers changed from: private */
-    public final SparseArray<PerDisplay> mPerDisplay = new SparseArray<>();
+    private final SparseArray<PerDisplay> mPerDisplay = new SparseArray<>();
     final HashMap<View, SurfaceControlViewHost> mViewRoots = new HashMap<>();
     IWindowManager mWmService;
 
     public SystemWindows(Context context, DisplayController displayController, IWindowManager iWindowManager) {
         AnonymousClass1 r0 = new DisplayController.OnDisplaysChangedListener() {
+            /* class com.android.systemui.wm.SystemWindows.AnonymousClass1 */
+
+            @Override // com.android.systemui.wm.DisplayController.OnDisplaysChangedListener
             public void onDisplayAdded(int i) {
             }
 
+            @Override // com.android.systemui.wm.DisplayController.OnDisplaysChangedListener
             public void onDisplayRemoved(int i) {
             }
 
+            @Override // com.android.systemui.wm.DisplayController.OnDisplaysChangedListener
             public void onDisplayConfigurationChanged(int i, Configuration configuration) {
                 PerDisplay perDisplay = (PerDisplay) SystemWindows.this.mPerDisplay.get(i);
                 if (perDisplay != null) {
@@ -61,6 +65,8 @@ public class SystemWindows {
         displayController.addDisplayWindowListener(r0);
         try {
             iWindowManager.openSession(new IWindowSessionCallback.Stub(this) {
+                /* class com.android.systemui.wm.SystemWindows.AnonymousClass2 */
+
                 public void onAnimatorScaleChanged(float f) {
                 }
             });
@@ -112,10 +118,10 @@ public class SystemWindows {
         return null;
     }
 
-    private class PerDisplay {
+    /* access modifiers changed from: private */
+    public class PerDisplay {
         final int mDisplayId;
-        /* access modifiers changed from: private */
-        public final SparseArray<SysUiWindowManager> mWwms = new SparseArray<>();
+        private final SparseArray<SysUiWindowManager> mWwms = new SparseArray<>();
 
         PerDisplay(int i) {
             this.mDisplayId = i;
@@ -204,7 +210,8 @@ public class SystemWindows {
         }
     }
 
-    class ContainerWindow extends IWindow.Stub {
+    /* access modifiers changed from: package-private */
+    public class ContainerWindow extends IWindow.Stub {
         public void closeSystemDialogs(String str) {
         }
 

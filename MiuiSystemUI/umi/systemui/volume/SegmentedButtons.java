@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +20,8 @@ public class SegmentedButtons extends LinearLayout {
     private static final Typeface REGULAR = Typeface.create("sans-serif", 0);
     private Callback mCallback;
     private final View.OnClickListener mClick = new View.OnClickListener() {
+        /* class com.android.systemui.volume.SegmentedButtons.AnonymousClass2 */
+
         public void onClick(View view) {
             SegmentedButtons.this.setSelectedValue(view.getTag(), true);
         }
@@ -67,7 +70,7 @@ public class SegmentedButtons extends LinearLayout {
     }
 
     public Button inflateButton() {
-        return (Button) this.mInflater.inflate(C0017R$layout.segmented_button, this, false);
+        return (Button) this.mInflater.inflate(C0017R$layout.segmented_button, (ViewGroup) this, false);
     }
 
     public void addButton(int i, int i2, Object obj) {
@@ -85,6 +88,9 @@ public class SegmentedButtons extends LinearLayout {
         inflateButton.setTag(obj);
         inflateButton.setOnClickListener(this.mClick);
         Interaction.register(inflateButton, new Interaction.Callback() {
+            /* class com.android.systemui.volume.SegmentedButtons.AnonymousClass1 */
+
+            @Override // com.android.systemui.volume.Interaction.Callback
             public void onInteraction() {
                 SegmentedButtons.this.fireInteraction();
             }
@@ -104,7 +110,8 @@ public class SegmentedButtons extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void fireInteraction() {
+    /* access modifiers changed from: public */
+    private void fireInteraction() {
         Callback callback = this.mCallback;
         if (callback != null) {
             callback.onInteraction();

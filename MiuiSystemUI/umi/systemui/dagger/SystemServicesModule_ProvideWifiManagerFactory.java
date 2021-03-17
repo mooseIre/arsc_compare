@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideWifiManagerFactory implements Fac
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public WifiManager get() {
         return provideInstance(this.contextProvider);
     }

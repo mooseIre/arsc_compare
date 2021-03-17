@@ -31,31 +31,39 @@ public class QuickQSPanel extends QSPanel {
     private boolean mDisabledByPolicy;
     private int mMaxTiles;
     private final TunerService.Tunable mNumTiles = new TunerService.Tunable(this) {
+        /* class com.android.systemui.qs.QuickQSPanel.AnonymousClass1 */
+
+        @Override // com.android.systemui.tuner.TunerService.Tunable
         public void onTuningChanged(String str, String str2) {
         }
     };
     protected QSAnimator mQsAnimator;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public void addSecurityFooter() {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public boolean displayMediaMarginsOnMedia() {
         return false;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public String getDumpableTag() {
         return "QuickQSPanel";
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public int getTileCallbackType() {
         return 4;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public boolean needsDynamicRowsAndColumns() {
         return false;
     }
@@ -64,6 +72,7 @@ public class QuickQSPanel extends QSPanel {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public void updatePadding() {
     }
 
@@ -73,16 +82,19 @@ public class QuickQSPanel extends QSPanel {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public TileLayout createRegularTileLayout() {
         return new HeaderTileLayout(this.mContext, this.mUiEventLogger);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public QSPanel.QSTileLayout createHorizontalTileLayout() {
         return new DoubleLineTileLayout(this.mContext, this.mUiEventLogger);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public void initMediaHostState() {
         this.mMediaHost.setExpansion(0.0f);
         this.mMediaHost.setShowsOnlyActiveMedia(true);
@@ -90,23 +102,27 @@ public class QuickQSPanel extends QSPanel {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this.mNumTiles, "sysui_qqs_count");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this.mNumTiles);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public boolean shouldShowDetail() {
         return !this.mExpanded;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public void drawTile(QSPanel.TileRecord tileRecord, QSTile.State state) {
         if (state instanceof QSTile.SignalState) {
             QSTile.SignalState signalState = new QSTile.SignalState();
@@ -118,6 +134,7 @@ public class QuickQSPanel extends QSPanel {
         super.drawTile(tileRecord, state);
     }
 
+    @Override // com.android.systemui.qs.QSPanel
     public void setHost(QSTileHost qSTileHost, MiuiQSCustomizer miuiQSCustomizer) {
         super.setHost(qSTileHost, miuiQSCustomizer);
         setTiles(this.mHost.getTiles());
@@ -137,17 +154,19 @@ public class QuickQSPanel extends QSPanel {
         }
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable, com.android.systemui.qs.QSPanel
     public void onTuningChanged(String str, String str2) {
         if ("qs_show_brightness".equals(str)) {
             super.onTuningChanged(str, "0");
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel
     public void setTiles(Collection<QSTile> collection) {
         if (!((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter()) {
             ArrayList arrayList = new ArrayList();
-            for (QSTile add : collection) {
-                arrayList.add(add);
+            for (QSTile qSTile : collection) {
+                arrayList.add(qSTile);
                 if (arrayList.size() == this.mMaxTiles) {
                     break;
                 }
@@ -184,16 +203,19 @@ public class QuickQSPanel extends QSPanel {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public QSEvent openPanelEvent() {
         return QSEvent.QQS_PANEL_EXPANDED;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.QSPanel
     public QSEvent closePanelEvent() {
         return QSEvent.QQS_PANEL_COLLAPSED;
     }
 
-    private static class HeaderTileLayout extends TileLayout {
+    /* access modifiers changed from: private */
+    public static class HeaderTileLayout extends TileLayout {
         private Rect mClippingBounds = new Rect();
         private final UiEventLogger mUiEventLogger;
 
@@ -223,11 +245,13 @@ public class QuickQSPanel extends QSPanel {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.qs.TileLayout
         public void addTileView(QSPanel.TileRecord tileRecord) {
             addView(tileRecord.tileView, getChildCount(), generateTileLayoutParams());
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.qs.TileLayout
         public void onLayout(boolean z, int i, int i2, int i3, int i4) {
             this.mClippingBounds.set(0, 0, i3 - i, 10000);
             setClipBounds(this.mClippingBounds);
@@ -241,8 +265,9 @@ public class QuickQSPanel extends QSPanel {
             layoutTileRecords(this.mColumns);
         }
 
+        @Override // com.android.systemui.qs.QSPanel.QSTileLayout, com.android.systemui.qs.TileLayout
         public boolean updateResources() {
-            Resources resources = this.mContext.getResources();
+            Resources resources = ((ViewGroup) this).mContext.getResources();
             int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_icon_bg_size);
             this.mCellWidth = dimensionPixelSize;
             this.mCellHeight = dimensionPixelSize;
@@ -281,12 +306,11 @@ public class QuickQSPanel extends QSPanel {
                     this.mCellMarginHorizontal = (measuredWidth - (this.mCellWidth * i)) / (i - 1);
                 }
             }
-            if (this.mColumns != i2) {
-                return true;
-            }
-            return false;
+            return this.mColumns != i2;
         }
 
+        /* JADX DEBUG: Failed to insert an additional move for type inference into block B:11:0x0011 */
+        /* JADX DEBUG: Failed to insert an additional move for type inference into block B:13:0x0011 */
         private void setAccessibilityOrder() {
             ArrayList<QSPanel.TileRecord> arrayList = this.mRecords;
             if (arrayList != null && arrayList.size() > 0) {
@@ -304,6 +328,7 @@ public class QuickQSPanel extends QSPanel {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.qs.TileLayout
         public void onMeasure(int i, int i2) {
             Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
             while (it.hasNext()) {
@@ -319,11 +344,13 @@ public class QuickQSPanel extends QSPanel {
             setMeasuredDimension(View.MeasureSpec.getSize(i), paddingTop);
         }
 
+        @Override // com.android.systemui.qs.QSPanel.QSTileLayout, com.android.systemui.qs.TileLayout
         public int getNumVisibleTiles() {
             return this.mColumns;
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.qs.TileLayout
         public int getColumnStart(int i) {
             if (this.mColumns == 1) {
                 return getPaddingStart() + this.mCellMarginHorizontal;
@@ -331,6 +358,7 @@ public class QuickQSPanel extends QSPanel {
             return getPaddingStart() + (i * (this.mCellWidth + this.mCellMarginHorizontal));
         }
 
+        @Override // com.android.systemui.qs.QSPanel.QSTileLayout, com.android.systemui.qs.TileLayout
         public void setListening(boolean z) {
             boolean z2 = !this.mListening && z;
             super.setListening(z);
@@ -351,6 +379,7 @@ public class QuickQSPanel extends QSPanel {
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel
     public void updateResources() {
         setMaxTiles(getResources().getInteger(C0016R$integer.quick_settings_qqs_count));
     }

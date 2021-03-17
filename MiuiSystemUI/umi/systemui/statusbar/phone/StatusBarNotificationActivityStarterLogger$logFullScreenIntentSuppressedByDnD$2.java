@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: StatusBarNotificationActivityStarterLogger.kt */
-final class StatusBarNotificationActivityStarterLogger$logFullScreenIntentSuppressedByDnD$2 extends Lambda implements Function1<LogMessage, String> {
+public final class StatusBarNotificationActivityStarterLogger$logFullScreenIntentSuppressedByDnD$2 extends Lambda implements Function1<LogMessage, String> {
     public static final StatusBarNotificationActivityStarterLogger$logFullScreenIntentSuppressedByDnD$2 INSTANCE = new StatusBarNotificationActivityStarterLogger$logFullScreenIntentSuppressedByDnD$2();
 
     StatusBarNotificationActivityStarterLogger$logFullScreenIntentSuppressedByDnD$2() {

@@ -22,6 +22,7 @@ public class AboveShelfObserver implements AboveShelfChangedListener {
         this.mListener = hasViewAboveShelfChangedListener;
     }
 
+    @Override // com.android.systemui.statusbar.notification.AboveShelfChangedListener
     public void onAboveShelfStateChanged(boolean z) {
         ViewGroup viewGroup;
         if (!z && (viewGroup = this.mHostLayout) != null) {

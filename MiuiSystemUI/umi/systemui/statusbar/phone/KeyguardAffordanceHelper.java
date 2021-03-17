@@ -16,12 +16,9 @@ public class KeyguardAffordanceHelper {
     private final Context mContext;
     private KeyguardAffordanceView mLeftIcon;
     private KeyguardAffordanceView mRightIcon;
-    /* access modifiers changed from: private */
-    public Animator mSwipeAnimator;
-    /* access modifiers changed from: private */
-    public boolean mSwipingInProgress;
-    /* access modifiers changed from: private */
-    public View mTargetedView;
+    private Animator mSwipeAnimator;
+    private boolean mSwipingInProgress;
+    private View mTargetedView;
     private int mTouchTargetSize;
 
     public interface Callback {
@@ -46,10 +43,12 @@ public class KeyguardAffordanceHelper {
 
     public KeyguardAffordanceHelper(Callback callback, Context context, FalsingManager falsingManager) {
         new AnimatorListenerAdapter() {
+            /* class com.android.systemui.statusbar.phone.KeyguardAffordanceHelper.AnonymousClass1 */
+
             public void onAnimationEnd(Animator animator) {
-                Animator unused = KeyguardAffordanceHelper.this.mSwipeAnimator = null;
-                boolean unused2 = KeyguardAffordanceHelper.this.mSwipingInProgress = false;
-                View unused3 = KeyguardAffordanceHelper.this.mTargetedView = null;
+                KeyguardAffordanceHelper.this.mSwipeAnimator = null;
+                KeyguardAffordanceHelper.this.mSwipingInProgress = false;
+                KeyguardAffordanceHelper.this.mTargetedView = null;
             }
         };
         this.mContext = context;

@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class ScreenLifecycle_Factory implements Factory<ScreenLifecycle> {
     private static final ScreenLifecycle_Factory INSTANCE = new ScreenLifecycle_Factory();
 
+    @Override // javax.inject.Provider
     public ScreenLifecycle get() {
         return provideInstance();
     }

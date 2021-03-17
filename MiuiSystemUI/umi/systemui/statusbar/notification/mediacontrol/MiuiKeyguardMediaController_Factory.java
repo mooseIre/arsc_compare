@@ -20,6 +20,7 @@ public final class MiuiKeyguardMediaController_Factory implements Factory<MiuiKe
         this.notifLockscreenUserManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public MiuiKeyguardMediaController get() {
         return provideInstance(this.mediaHostProvider, this.bypassControllerProvider, this.statusBarStateControllerProvider, this.notifLockscreenUserManagerProvider);
     }

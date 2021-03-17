@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -14,12 +15,9 @@ import com.android.systemui.statusbar.notification.stack.ViewState;
 import java.util.ArrayList;
 
 public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout {
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ADD_ICON_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ANIMATE_ALL_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties X_ANIMATION_PROPERTIES;
+    private static final AnimationProperties ADD_ICON_PROPERTIES;
+    private static final AnimationProperties ANIMATE_ALL_PROPERTIES;
+    private static final AnimationProperties X_ANIMATION_PROPERTIES;
     private int mIconSpacing;
     private ArrayList<String> mIgnoredSlots;
     private ArrayList<StatusIconState> mLayoutStates;
@@ -29,7 +27,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
     private int mUnderflowWidth;
 
     public MiuiDripLeftStatusIconContainer(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiDripLeftStatusIconContainer(Context context, AttributeSet attributeSet) {
@@ -78,39 +76,34 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
 
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
-        int i3;
         this.mMeasureViews.clear();
         int mode = View.MeasureSpec.getMode(i);
         int size = View.MeasureSpec.getSize(i);
         int childCount = getChildCount();
-        for (int i4 = 0; i4 < childCount; i4++) {
-            StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) getChildAt(i4);
+        for (int i3 = 0; i3 < childCount; i3++) {
+            StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) getChildAt(i3);
             if (statusIconDisplayable.isIconVisible() && !statusIconDisplayable.isIconBlocked() && !this.mIgnoredSlots.contains(statusIconDisplayable.getSlot())) {
                 this.mMeasureViews.add((View) statusIconDisplayable);
             }
         }
         int size2 = this.mMeasureViews.size();
-        int i5 = this.mPaddingLeft + this.mPaddingRight;
+        int i4 = ((LinearLayout) this).mPaddingLeft + ((LinearLayout) this).mPaddingRight;
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size, 0);
         if (!(mode == 1073741824 || mode == Integer.MIN_VALUE)) {
             size = 1073741823;
         }
         boolean z = true;
-        for (int i6 = 0; i6 < size2; i6++) {
-            View view = this.mMeasureViews.get(i6);
+        for (int i5 = 0; i5 < size2; i5++) {
+            View view = this.mMeasureViews.get(i5);
             measureChild(view, makeMeasureSpec, i2);
-            if (i6 == size2 - 1) {
-                i3 = 0;
-            } else {
-                i3 = this.mIconSpacing;
-            }
-            if (!z || getViewTotalMeasuredWidth(view) + i5 + i3 > size) {
+            int i6 = i5 == size2 - 1 ? 0 : this.mIconSpacing;
+            if (!z || getViewTotalMeasuredWidth(view) + i4 + i6 > size) {
                 z = false;
             } else {
-                i5 += getViewTotalMeasuredWidth(view) + i3;
+                i4 += getViewTotalMeasuredWidth(view) + i6;
             }
         }
-        setMeasuredDimension(i5, View.MeasureSpec.getSize(i2));
+        setMeasuredDimension(i4, View.MeasureSpec.getSize(i2));
     }
 
     public void onViewAdded(View view) {
@@ -122,7 +115,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
 
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
-        view.setTag(C0015R$id.status_bar_view_state_tag, (Object) null);
+        view.setTag(C0015R$id.status_bar_view_state_tag, null);
     }
 
     private void calculateIconTranslations() {
@@ -218,6 +211,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
         public boolean justAdded = true;
         public int visibleState = 0;
 
+        @Override // com.android.systemui.statusbar.notification.stack.ViewState
         public void applyToView(View view) {
             float width = (view.getParent() instanceof View ? (float) ((View) view.getParent()).getWidth() : 0.0f) - this.xTranslation;
             if (view instanceof StatusIconDisplayable) {
@@ -256,6 +250,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
 
     static {
         AnonymousClass1 r0 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.MiuiDripLeftStatusIconContainer.AnonymousClass1 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -264,6 +259,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -272,6 +268,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
         r0.setDelay(50);
         ADD_ICON_PROPERTIES = r0;
         AnonymousClass2 r02 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.MiuiDripLeftStatusIconContainer.AnonymousClass2 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -280,6 +277,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -287,6 +285,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
         r02.setDuration(200);
         X_ANIMATION_PROPERTIES = r02;
         AnonymousClass3 r03 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.MiuiDripLeftStatusIconContainer.AnonymousClass3 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -298,6 +297,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }

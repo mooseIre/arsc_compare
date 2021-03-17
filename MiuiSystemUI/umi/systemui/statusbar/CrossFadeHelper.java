@@ -2,7 +2,6 @@ package com.android.systemui.statusbar;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.graphics.Paint;
 import android.view.View;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
@@ -19,6 +18,8 @@ public class CrossFadeHelper {
     public static void fadeOut(final View view, long j, int i, final Runnable runnable) {
         view.animate().cancel();
         view.animate().alpha(0.0f).setDuration(j).setInterpolator(Interpolators.ALPHA_OUT).setStartDelay((long) i).withEndAction(new Runnable() {
+            /* class com.android.systemui.statusbar.CrossFadeHelper.AnonymousClass1 */
+
             public void run() {
                 Runnable runnable = runnable;
                 if (runnable != null) {
@@ -60,10 +61,10 @@ public class CrossFadeHelper {
     private static void updateLayerType(View view, float f) {
         if (!view.hasOverlappingRendering() || f <= 0.0f || f >= 1.0f) {
             if (view.getLayerType() == 2 && view.getTag(C0015R$id.cross_fade_layer_type_changed_tag) != null && view.getTag(C0015R$id.cross_fade_layer_type_changed_tag) != null) {
-                view.setLayerType(0, (Paint) null);
+                view.setLayerType(0, null);
             }
         } else if (view.getLayerType() != 2) {
-            view.setLayerType(2, (Paint) null);
+            view.setLayerType(2, null);
             view.setTag(C0015R$id.cross_fade_layer_type_changed_tag, Boolean.TRUE);
         }
     }
@@ -79,11 +80,13 @@ public class CrossFadeHelper {
             view.setVisibility(0);
         }
         view.animate().alpha(1.0f).setDuration(j).setStartDelay((long) i).setInterpolator(Interpolators.ALPHA_IN).setListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.statusbar.CrossFadeHelper.AnonymousClass2 */
+
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
                 view.setAlpha(1.0f);
             }
-        }).withEndAction((Runnable) null);
+        }).withEndAction(null);
         if (view.hasOverlappingRendering() && view.getLayerType() != 2) {
             view.animate().withLayer();
         }

@@ -1,6 +1,5 @@
 package com.android.systemui.controls.management;
 
-import com.android.systemui.controls.ControlsServiceInfo;
 import java.util.Comparator;
 import kotlin.jvm.internal.Intrinsics;
 
@@ -12,11 +11,14 @@ public final class AppAdapter$callback$1$onServicesUpdated$1$$special$$inlined$c
         this.$comparator = comparator;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r1v1, resolved type: java.util.Comparator */
+    /* JADX WARN: Multi-variable type inference failed */
+    @Override // java.util.Comparator
     public final int compare(T t, T t2) {
         Comparator comparator = this.$comparator;
-        CharSequence loadLabel = ((ControlsServiceInfo) t).loadLabel();
+        CharSequence loadLabel = t.loadLabel();
         Intrinsics.checkExpressionValueIsNotNull(loadLabel, "it.loadLabel()");
-        CharSequence loadLabel2 = ((ControlsServiceInfo) t2).loadLabel();
+        CharSequence loadLabel2 = t2.loadLabel();
         Intrinsics.checkExpressionValueIsNotNull(loadLabel2, "it.loadLabel()");
         return comparator.compare(loadLabel, loadLabel2);
     }

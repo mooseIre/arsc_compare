@@ -14,6 +14,7 @@ public final class ForegroundServiceLifetimeExtender_Factory implements Factory<
         this.systemClockProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ForegroundServiceLifetimeExtender get() {
         return provideInstance(this.interactionTrackerProvider, this.systemClockProvider);
     }

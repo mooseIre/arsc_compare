@@ -12,6 +12,7 @@ public final class MiuiAnimatedNotificationRowBase$performRemoveAnimation$$inlin
         this.$onFinishedRunnable$inlined = runnable;
     }
 
+    @Override // miuix.animation.listener.TransitionListener
     public void onComplete(@Nullable Object obj) {
         Runnable runnable = this.$onFinishedRunnable$inlined;
         if (runnable != null) {

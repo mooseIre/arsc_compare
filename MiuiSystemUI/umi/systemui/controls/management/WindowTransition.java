@@ -16,6 +16,8 @@ public final class WindowTransition extends Transition {
     @NotNull
     private final Function1<View, Animator> animator;
 
+    /* JADX DEBUG: Multi-variable search result rejected for r2v0, resolved type: kotlin.jvm.functions.Function1<? super android.view.View, ? extends android.animation.Animator> */
+    /* JADX WARN: Multi-variable type inference failed */
     public WindowTransition(@NotNull Function1<? super View, ? extends Animator> function1) {
         Intrinsics.checkParameterIsNotNull(function1, "animator");
         this.animator = function1;

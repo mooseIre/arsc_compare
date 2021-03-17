@@ -18,6 +18,7 @@ public final class TvStatusBar_Factory implements Factory<TvStatusBar> {
         this.assistManagerLazyProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public TvStatusBar get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.assistManagerLazyProvider);
     }

@@ -13,6 +13,7 @@ public final class ConcurrencyModule_ProvideBgHandlerFactory implements Factory<
         this.bgLooperProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Handler get() {
         return provideInstance(this.bgLooperProvider);
     }

@@ -15,6 +15,7 @@ final class MiuiExpandableNotificationRow$mMiniBar$2 extends Lambda implements F
         this.this$0 = miuiExpandableNotificationRow;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final View invoke() {
         return this.this$0.findViewById(C0015R$id.mini_window_bar);
     }

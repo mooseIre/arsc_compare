@@ -42,13 +42,14 @@ public class PropertyAnimator {
                         valueAnimator.cancel();
                     }
                     if (animationFinishListener != null) {
-                        animationFinishListener.onAnimationEnd((Animator) null);
+                        animationFinishListener.onAnimationEnd(null);
                         return;
                     }
                     return;
                 }
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f4.floatValue(), f});
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(f4.floatValue(), f);
                 ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(property, t) {
+                    /* class com.android.systemui.statusbar.notification.$$Lambda$PropertyAnimator$VEXcQpkY9kIrKbFhOrW7gy9zN4 */
                     public final /* synthetic */ Property f$0;
                     public final /* synthetic */ View f$1;
 
@@ -58,7 +59,7 @@ public class PropertyAnimator {
                     }
 
                     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                        this.f$0.set(this.f$1, (Float) valueAnimator.getAnimatedValue());
+                        PropertyAnimator.lambda$startAnimation$0(this.f$0, this.f$1, valueAnimator);
                     }
                 });
                 Interpolator customInterpolator = animationProperties.getCustomInterpolator(t, property);
@@ -74,10 +75,12 @@ public class PropertyAnimator {
                     ofFloat.addListener(animationFinishListener);
                 }
                 ofFloat.addListener(new AnimatorListenerAdapter() {
+                    /* class com.android.systemui.statusbar.notification.PropertyAnimator.AnonymousClass1 */
+
                     public void onAnimationEnd(Animator animator) {
-                        t.setTag(animatorTag, (Object) null);
-                        t.setTag(animationStartTag, (Object) null);
-                        t.setTag(animationEndTag, (Object) null);
+                        t.setTag(animatorTag, null);
+                        t.setTag(animationStartTag, null);
+                        t.setTag(animationEndTag, null);
                     }
                 });
                 ViewState.startAnimator(ofFloat, animationFinishListener);
@@ -87,7 +90,7 @@ public class PropertyAnimator {
             } else if (valueAnimator != null) {
                 PropertyValuesHolder[] values = valueAnimator.getValues();
                 float floatValue = f2.floatValue() + (f - f3.floatValue());
-                values[0].setFloatValues(new float[]{floatValue, f});
+                values[0].setFloatValues(floatValue, f);
                 t.setTag(animationStartTag, Float.valueOf(floatValue));
                 t.setTag(animationEndTag, Float.valueOf(f));
                 valueAnimator.setCurrentPlayTime(valueAnimator.getCurrentPlayTime());

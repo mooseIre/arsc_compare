@@ -11,6 +11,7 @@ public final class DozeLogger_Factory implements Factory<DozeLogger> {
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DozeLogger get() {
         return provideInstance(this.bufferProvider);
     }

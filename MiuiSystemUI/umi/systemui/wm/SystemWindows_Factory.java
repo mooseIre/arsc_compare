@@ -16,6 +16,7 @@ public final class SystemWindows_Factory implements Factory<SystemWindows> {
         this.wmServiceProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public SystemWindows get() {
         return provideInstance(this.contextProvider, this.displayControllerProvider, this.wmServiceProvider);
     }

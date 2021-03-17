@@ -3,8 +3,8 @@ package com.android.systemui.plugins.statusbar;
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
-@DependsOn(target = StateListener.class)
 @ProvidesInterface(version = 1)
+@DependsOn(target = StateListener.class)
 public interface StatusBarStateController {
     public static final int VERSION = 1;
 
@@ -12,25 +12,25 @@ public interface StatusBarStateController {
     public interface StateListener {
         public static final int VERSION = 1;
 
-        void onDozeAmountChanged(float f, float f2) {
+        default void onDozeAmountChanged(float f, float f2) {
         }
 
-        void onDozingChanged(boolean z) {
+        default void onDozingChanged(boolean z) {
         }
 
-        void onFullscreenStateChanged(boolean z, boolean z2) {
+        default void onFullscreenStateChanged(boolean z, boolean z2) {
         }
 
-        void onPulsingChanged(boolean z) {
+        default void onPulsingChanged(boolean z) {
         }
 
-        void onStateChanged(int i) {
+        default void onStateChanged(int i) {
         }
 
-        void onStatePostChange() {
+        default void onStatePostChange() {
         }
 
-        void onStatePreChange(int i, int i2) {
+        default void onStatePreChange(int i, int i2) {
         }
     }
 

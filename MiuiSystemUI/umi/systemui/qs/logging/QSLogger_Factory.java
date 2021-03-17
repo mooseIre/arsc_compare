@@ -11,6 +11,7 @@ public final class QSLogger_Factory implements Factory<QSLogger> {
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public QSLogger get() {
         return provideInstance(this.bufferProvider);
     }

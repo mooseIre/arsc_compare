@@ -5,8 +5,9 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlViewHolder.kt */
-final class ControlViewHolder$setErrorStatus$1 extends Lambda implements Function0<Unit> {
+public final class ControlViewHolder$setErrorStatus$1 extends Lambda implements Function0<Unit> {
     final /* synthetic */ String $text;
     final /* synthetic */ ControlViewHolder this$0;
 
@@ -17,6 +18,7 @@ final class ControlViewHolder$setErrorStatus$1 extends Lambda implements Functio
         this.$text = str;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         ControlViewHolder controlViewHolder = this.this$0;
         String str = this.$text;

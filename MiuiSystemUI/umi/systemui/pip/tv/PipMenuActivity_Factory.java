@@ -13,6 +13,7 @@ public final class PipMenuActivity_Factory implements Factory<PipMenuActivity> {
         this.pipManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PipMenuActivity get() {
         return provideInstance(this.pipComponentBuilderProvider, this.pipManagerProvider);
     }

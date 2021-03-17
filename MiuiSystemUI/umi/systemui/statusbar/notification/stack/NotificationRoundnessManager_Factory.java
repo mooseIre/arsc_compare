@@ -14,6 +14,7 @@ public final class NotificationRoundnessManager_Factory implements Factory<Notif
         this.sectionsFeatureManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationRoundnessManager get() {
         return provideInstance(this.keyguardBypassControllerProvider, this.sectionsFeatureManagerProvider);
     }

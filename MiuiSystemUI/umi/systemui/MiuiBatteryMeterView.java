@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -34,36 +35,27 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     private ImageView mBatteryChargingView;
     private BatteryController mBatteryController;
     private FrameLayout mBatteryDigitalView;
-    /* access modifiers changed from: private */
-    public MiuiBatteryMeterIconView mBatteryIconView;
+    private MiuiBatteryMeterIconView mBatteryIconView;
     private BatteryMeterViewDelegate mBatteryMeterViewDelegate;
     private TextView mBatteryPercentMarkView;
     private TextView mBatteryPercentView;
     private int mBatteryStyle;
     private int[] mBatteryTextColors;
     private TextView mBatteryTextDigitView;
-    /* access modifiers changed from: private */
-    public boolean mCharging;
+    private boolean mCharging;
     private Context mContext;
     private float mDarkIntensity;
     private boolean mDemoMode;
     private Typeface mDigitTypeface;
-    /* access modifiers changed from: private */
-    public boolean mExtremePowerSave;
-    /* access modifiers changed from: private */
-    public boolean mForceShowDigit;
-    /* access modifiers changed from: private */
-    public int mIconId;
+    private boolean mExtremePowerSave;
+    private boolean mForceShowDigit;
+    private int mIconId;
     MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
-    /* access modifiers changed from: private */
-    public int mLevel;
+    private int mLevel;
     private Typeface mMarkTypeface;
-    /* access modifiers changed from: private */
-    public boolean mPowerSave;
-    /* access modifiers changed from: private */
-    public boolean mQuickCharging;
-    /* access modifiers changed from: private */
-    public int mQuickCharingStatus;
+    private boolean mPowerSave;
+    private boolean mQuickCharging;
+    private int mQuickCharingStatus;
     private boolean mShowBatteryDigitFull;
     private boolean mShowPercent;
     private Rect mTintArea;
@@ -89,7 +81,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     }
 
     public MiuiBatteryMeterView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiBatteryMeterView(Context context, AttributeSet attributeSet) {
@@ -106,6 +98,9 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         this.mTintArea = new Rect();
         this.mBatteryTextColors = new int[7];
         this.mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+            /* class com.android.systemui.MiuiBatteryMeterView.AnonymousClass1 */
+
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onRefreshBatteryInfo(MiuiBatteryStatus miuiBatteryStatus) {
                 int i;
                 super.onRefreshBatteryInfo(miuiBatteryStatus);
@@ -113,12 +108,12 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
                 boolean z = isCharging && miuiBatteryStatus.isQuickCharge();
                 int level = miuiBatteryStatus.getLevel();
                 if (isCharging != MiuiBatteryMeterView.this.mCharging) {
-                    boolean unused = MiuiBatteryMeterView.this.mCharging = isCharging;
+                    MiuiBatteryMeterView.this.mCharging = isCharging;
                     MiuiBatteryMeterView.this.mBatteryIconView.update(MiuiBatteryMeterView.this.mLevel, MiuiBatteryMeterView.this.mIconId, MiuiBatteryMeterView.this.mForceShowDigit, MiuiBatteryMeterView.this.mQuickCharging, MiuiBatteryMeterView.this.mCharging, MiuiBatteryMeterView.this.mPowerSave || MiuiBatteryMeterView.this.mExtremePowerSave, false);
                 }
                 if (!isCharging) {
-                    boolean unused2 = MiuiBatteryMeterView.this.mQuickCharging = false;
-                    int unused3 = MiuiBatteryMeterView.this.mQuickCharingStatus = 0;
+                    MiuiBatteryMeterView.this.mQuickCharging = false;
+                    MiuiBatteryMeterView.this.mQuickCharingStatus = 0;
                 } else if (z) {
                     MiuiBatteryMeterView.access$876(MiuiBatteryMeterView.this, 1);
                 } else {
@@ -130,19 +125,19 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
                     }
                 }
                 MiuiBatteryMeterView miuiBatteryMeterView = MiuiBatteryMeterView.this;
-                boolean unused4 = miuiBatteryMeterView.mQuickCharging = miuiBatteryMeterView.mQuickCharingStatus > 0;
-                int unused5 = MiuiBatteryMeterView.this.mLevel = level;
-                boolean unused6 = MiuiBatteryMeterView.this.mCharging = isCharging;
+                miuiBatteryMeterView.mQuickCharging = miuiBatteryMeterView.mQuickCharingStatus > 0;
+                MiuiBatteryMeterView.this.mLevel = level;
+                MiuiBatteryMeterView.this.mCharging = isCharging;
                 MiuiBatteryMeterView miuiBatteryMeterView2 = MiuiBatteryMeterView.this;
-                int unused7 = miuiBatteryMeterView2.mIconId = miuiBatteryMeterView2.getIconId();
-                MiuiBatteryMeterIconView access$700 = MiuiBatteryMeterView.this.mBatteryIconView;
+                miuiBatteryMeterView2.mIconId = miuiBatteryMeterView2.getIconId();
+                MiuiBatteryMeterIconView miuiBatteryMeterIconView = MiuiBatteryMeterView.this.mBatteryIconView;
                 Context context = MiuiBatteryMeterView.this.getContext();
                 if (isCharging) {
                     i = C0021R$string.accessibility_battery_level_charging;
                 } else {
                     i = C0021R$string.accessibility_battery_level;
                 }
-                access$700.setContentDescription(context.getString(i, new Object[]{Integer.valueOf(level)}));
+                miuiBatteryMeterIconView.setContentDescription(context.getString(i, Integer.valueOf(level)));
                 MiuiBatteryMeterView.this.update();
             }
         };
@@ -174,6 +169,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         onDarkChanged(new Rect(), 0.0f, -1, 0, 0, true);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         this.mTintArea.set(rect);
         this.mDarkIntensity = f;
@@ -249,6 +245,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onBatteryStyleChanged(int i) {
         Log.d("MiuiBatteryMeterView", "onBatteryStyleChanged: batteryStyle = " + i);
         if (CustomizeUtil.HAS_NOTCH && i == 2) {
@@ -305,7 +302,8 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     }
 
     /* access modifiers changed from: private */
-    public void update() {
+    /* access modifiers changed from: public */
+    private void update() {
         int i = 0;
         if (this.mDemoMode) {
             this.mBatteryIconView.update(100, this.mIconId, this.mForceShowDigit, this.mQuickCharging, this.mCharging, this.mPowerSave || this.mExtremePowerSave, false);
@@ -334,12 +332,14 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         this.mBatteryChargingInView.setVisibility(8);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         updateResources();
         this.mIconId = getIconId();
         update();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         scaleBatteryMeterViews();
         TextView textView = this.mBatteryTextDigitView;
@@ -367,45 +367,18 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         new LinearLayout.LayoutParams((int) (((float) dimensionPixelSize2) * f), (int) (((float) dimensionPixelSize) * f)).setMargins(0, 0, 0, resources.getDimensionPixelSize(C0012R$dimen.battery_margin_bottom));
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:4:0x000d, code lost:
-        r3 = r5.mBatteryStyle;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateChargingIconView() {
-        /*
-            r5 = this;
-            boolean r0 = r5.mUseLegacyDrawable
-            r1 = 8
-            r2 = 0
-            if (r0 != 0) goto L_0x001a
-            android.widget.ImageView r0 = r5.mBatteryChargingInView
-            boolean r3 = r5.mCharging
-            if (r3 == 0) goto L_0x0016
-            int r3 = r5.mBatteryStyle
-            if (r3 == 0) goto L_0x0014
-            r4 = 3
-            if (r3 != r4) goto L_0x0016
-        L_0x0014:
-            r3 = r2
-            goto L_0x0017
-        L_0x0016:
-            r3 = r1
-        L_0x0017:
-            r0.setVisibility(r3)
-        L_0x001a:
-            android.widget.ImageView r0 = r5.mBatteryChargingView
-            int r5 = r5.mBatteryStyle
-            r3 = 2
-            if (r5 == r3) goto L_0x0024
-            r3 = 1
-            if (r5 != r3) goto L_0x0025
-        L_0x0024:
-            r1 = r2
-        L_0x0025:
-            r0.setVisibility(r1)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.MiuiBatteryMeterView.updateChargingIconView():void");
+        int i;
+        int i2 = 8;
+        if (!this.mUseLegacyDrawable) {
+            this.mBatteryChargingInView.setVisibility((!this.mCharging || !((i = this.mBatteryStyle) == 0 || i == 3)) ? 8 : 0);
+        }
+        ImageView imageView = this.mBatteryChargingView;
+        int i3 = this.mBatteryStyle;
+        if (i3 == 2 || i3 == 1) {
+            i2 = 0;
+        }
+        imageView.setVisibility(i2);
     }
 
     private int getChargingIconId() {
@@ -422,7 +395,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
                 i2 = Icons.getLightDrawableId(i);
             }
             imageView.setImageResource(i2);
-            imageView.setImageTintList((ColorStateList) null);
+            imageView.setImageTintList(null);
             return;
         }
         imageView.setImageResource(Icons.getTintDrawableId(i));
@@ -430,7 +403,8 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     }
 
     /* access modifiers changed from: private */
-    public int getIconId() {
+    /* access modifiers changed from: public */
+    private int getIconId() {
         return this.mCharging ? this.mForceShowDigit ? C0020R$raw.stat_sys_battery_charge_digit : C0020R$raw.stat_sys_battery_charge : (this.mPowerSave || this.mExtremePowerSave) ? this.mForceShowDigit ? C0020R$raw.stat_sys_battery_power_save_digit : C0020R$raw.stat_sys_battery_power_save : this.mForceShowDigit ? C0020R$raw.stat_sys_battery_digital : C0020R$raw.stat_sys_battery;
     }
 
@@ -460,9 +434,9 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         } else if (z) {
             removeView(this.mBatteryPercentView);
             this.mBatteryPercentView = null;
-            TextView textView = this.mBatteryPercentMarkView;
-            if (textView != null) {
-                removeView(textView);
+            View view = this.mBatteryPercentMarkView;
+            if (view != null) {
+                removeView(view);
                 this.mBatteryPercentMarkView = null;
             }
             BatteryMeterViewDelegate batteryMeterViewDelegate2 = this.mBatteryMeterViewDelegate;
@@ -515,6 +489,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         return (TextView) LayoutInflater.from(getContext()).inflate(C0017R$layout.battery_percentage_mark_view, (ViewGroup) null);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         int i;
         this.mPowerSave = z;
@@ -527,12 +502,13 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
             } else {
                 i = C0021R$string.accessibility_battery_level;
             }
-            miuiBatteryMeterIconView.setContentDescription(context.getString(i, new Object[]{Integer.valueOf(this.mLevel)}));
+            miuiBatteryMeterIconView.setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
             setDigitViewTextColor();
             update();
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onExtremePowerSaveChanged(boolean z) {
         int i;
         this.mExtremePowerSave = z;
@@ -545,12 +521,13 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
             } else {
                 i = C0021R$string.accessibility_battery_level;
             }
-            miuiBatteryMeterIconView.setContentDescription(context.getString(i, new Object[]{Integer.valueOf(this.mLevel)}));
+            miuiBatteryMeterIconView.setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
             setDigitViewTextColor();
             update();
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;

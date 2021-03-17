@@ -82,6 +82,7 @@ public final class NotificationEntry extends ListEntry {
         void onSensitivityChanged(NotificationEntry notificationEntry);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.ListEntry
     public NotificationEntry getRepresentativeEntry() {
         return this;
     }
@@ -94,58 +95,12 @@ public final class NotificationEntry extends ListEntry {
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public NotificationEntry(android.service.notification.StatusBarNotification r5, android.service.notification.NotificationListenerService.Ranking r6, boolean r7, long r8) {
         /*
-            r4 = this;
-            java.util.Objects.requireNonNull(r5)
-            r0 = r5
-            android.service.notification.StatusBarNotification r0 = (android.service.notification.StatusBarNotification) r0
-            java.lang.String r0 = r0.getKey()
-            java.util.Objects.requireNonNull(r0)
-            java.lang.String r0 = (java.lang.String) r0
-            r4.<init>(r0)
-            java.util.ArrayList r0 = new java.util.ArrayList
-            r0.<init>()
-            r4.mLifetimeExtenders = r0
-            java.util.ArrayList r0 = new java.util.ArrayList
-            r0.<init>()
-            r4.mDismissInterceptors = r0
-            r0 = -1
-            r4.mCancellationReason = r0
-            com.android.systemui.statusbar.notification.collection.NotificationEntry$DismissState r0 = com.android.systemui.statusbar.notification.collection.NotificationEntry.DismissState.NOT_DISMISSED
-            r4.mDismissState = r0
-            r0 = 0
-            com.android.systemui.statusbar.notification.icon.IconPack r1 = com.android.systemui.statusbar.notification.icon.IconPack.buildEmptyPack(r0)
-            r4.mIcons = r1
-            r1 = -2000(0xfffffffffffff830, double:NaN)
-            r4.lastFullScreenIntentLaunchTime = r1
-            r3 = 1
-            r4.mCachedContrastColor = r3
-            r4.mCachedContrastColorIsFor = r3
-            r4.mRunningTask = r0
-            r4.lastRemoteInputSent = r1
-            android.util.ArraySet r0 = new android.util.ArraySet
-            r1 = 3
-            r0.<init>(r1)
-            r4.mActiveAppOps = r0
-            r0 = -1
-            r4.initializationTime = r0
-            r4.mSensitive = r3
-            java.util.ArrayList r0 = new java.util.ArrayList
-            r0.<init>()
-            r4.mOnSensitivityChangedListeners = r0
-            r0 = 5
-            r4.mBucket = r0
-            java.util.Objects.requireNonNull(r6)
-            r4.mCreationTime = r8
-            java.lang.String r8 = r5.getKey()
-            r4.mKey = r8
-            r4.setSbn(r5)
-            r4.setRanking(r6)
-            r4.mAllowFgsDismissal = r7
-            return
+        // Method dump skipped, instructions count: 103
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.collection.NotificationEntry.<init>(android.service.notification.StatusBarNotification, android.service.notification.NotificationListenerService$Ranking, boolean, long):void");
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.ListEntry
     public String getKey() {
         return this.mKey;
     }
@@ -316,8 +271,8 @@ public final class NotificationEntry extends ListEntry {
             return null;
         }
         ArrayList arrayList = new ArrayList();
-        for (ExpandableNotificationRow entry : attachedChildren) {
-            arrayList.add(entry.getEntry());
+        for (ExpandableNotificationRow expandableNotificationRow2 : attachedChildren) {
+            arrayList.add(expandableNotificationRow2.getEntry());
         }
         return arrayList;
     }

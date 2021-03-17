@@ -34,17 +34,13 @@ import java.util.concurrent.Executor;
 public class TileQueryHelper {
     private final Executor mBgExecutor;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public MiuiQSCustomizer mCustomizer;
+    private MiuiQSCustomizer mCustomizer;
     private boolean mFinished;
-    /* access modifiers changed from: private */
-    public TileStateListener mListener;
+    private TileStateListener mListener;
     private final HashMap<String, QSTile> mLiveTiles = new HashMap<>();
-    /* access modifiers changed from: private */
-    public final Executor mMainExecutor;
+    private final Executor mMainExecutor;
     private final ArraySet<String> mSpecs = new ArraySet<>();
-    /* access modifiers changed from: private */
-    public final ArrayList<TileInfo> mTiles = new ArrayList<>();
+    private final ArrayList<TileInfo> mTiles = new ArrayList<>();
     protected String mTilesStock;
 
     public static class TileInfo {
@@ -72,6 +68,8 @@ public class TileQueryHelper {
         this.mSpecs.clear();
         this.mFinished = false;
         this.mBgExecutor.execute(new Runnable() {
+            /* class com.android.systemui.qs.customize.TileQueryHelper.AnonymousClass1 */
+
             public void run() {
                 TileQueryHelper.this.addCurrentAndStockTiles(qSTileHost);
                 TileQueryHelper.this.addPackageTiles(qSTileHost);
@@ -80,9 +78,9 @@ public class TileQueryHelper {
     }
 
     public void releaseTiles() {
-        for (QSTile next : this.mLiveTiles.values()) {
-            next.removeCallbacksByType(2);
-            next.setListening(this, false);
+        for (QSTile qSTile : this.mLiveTiles.values()) {
+            qSTile.removeCallbacksByType(2);
+            qSTile.setListening(this, false);
         }
         this.mLiveTiles.clear();
     }
@@ -92,17 +90,19 @@ public class TileQueryHelper {
     }
 
     /* access modifiers changed from: private */
-    public void addCurrentAndStockTiles(QSTileHost qSTileHost) {
+    /* access modifiers changed from: public */
+    private void addCurrentAndStockTiles(QSTileHost qSTileHost) {
         QSTile createTile;
         String string = Settings.Secure.getString(this.mContext.getContentResolver(), "sysui_qs_tiles");
         this.mTilesStock = qSTileHost.getHostInjector().getQsStockTiles();
-        ArrayList arrayList = new ArrayList();
+        ArrayList<String> arrayList = new ArrayList<>();
         if (string != null) {
             arrayList.addAll(Arrays.asList(string.split(",")));
         } else {
             string = "";
         }
-        for (String str : this.mTilesStock.split(",")) {
+        String[] split = this.mTilesStock.split(",");
+        for (String str : split) {
             if (!string.contains(str)) {
                 arrayList.add(str);
             }
@@ -112,19 +112,19 @@ public class TileQueryHelper {
         }
         filterBigTile(arrayList);
         ArrayList arrayList2 = new ArrayList();
-        Iterator it = arrayList.iterator();
+        Iterator<String> it = arrayList.iterator();
         while (it.hasNext()) {
-            String str2 = (String) it.next();
-            if (!str2.startsWith("custom(") && (createTile = qSTileHost.createTile(str2)) != null) {
+            String next = it.next();
+            if (!next.startsWith("custom(") && (createTile = qSTileHost.createTile(next)) != null) {
                 if (!createTile.isAvailable()) {
-                    createTile.setTileSpec(str2);
+                    createTile.setTileSpec(next);
                     createTile.destroy();
                 } else {
                     createTile.setListening(this, true);
                     createTile.addCallback(new TileCallback(createTile));
-                    createTile.setTileSpec(str2);
+                    createTile.setTileSpec(next);
                     arrayList2.add(createTile);
-                    this.mLiveTiles.put(str2, createTile);
+                    this.mLiveTiles.put(next, createTile);
                 }
             }
         }
@@ -133,12 +133,13 @@ public class TileQueryHelper {
             QSTile qSTile = (QSTile) it2.next();
             QSTile.State copy = qSTile.getState().copy();
             copy.label = qSTile.getTileLabel();
-            addTile(qSTile.getTileSpec(), (CharSequence) null, copy, true);
+            addTile(qSTile.getTileSpec(), null, copy, true);
         }
     }
 
     /* access modifiers changed from: private */
-    public void addPackageTiles(QSTileHost qSTileHost) {
+    /* access modifiers changed from: public */
+    private void addPackageTiles(QSTileHost qSTileHost) {
         Collection<QSTile> tiles = qSTileHost.getTiles();
         PackageManager packageManager = this.mContext.getPackageManager();
         for (ResolveInfo resolveInfo : packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, ActivityManager.getCurrentUser())) {
@@ -184,6 +185,7 @@ public class TileQueryHelper {
 
     private void notifyTilesChanged(boolean z) {
         this.mMainExecutor.execute(new Runnable(new ArrayList(this.mTiles), z) {
+            /* class com.android.systemui.qs.customize.$$Lambda$TileQueryHelper$Le1UOp9cit0qDyKlhpo9THBQqcQ */
             public final /* synthetic */ ArrayList f$1;
             public final /* synthetic */ boolean f$2;
 
@@ -209,15 +211,16 @@ public class TileQueryHelper {
     }
 
     /* access modifiers changed from: private */
-    public void updateStateForCustomizer(QSTile.State state) {
+    /* access modifiers changed from: public */
+    private void updateStateForCustomizer(QSTile.State state) {
         state.dualTarget = false;
         state.expandedAccessibilityClassName = Button.class.getName();
     }
 
     private QSTile.State getState(Collection<QSTile> collection, String str) {
-        for (QSTile next : collection) {
-            if (str.equals(next.getTileSpec())) {
-                return next.getState().copy();
+        for (QSTile qSTile : collection) {
+            if (str.equals(qSTile.getTileSpec())) {
+                return qSTile.getState().copy();
             }
         }
         return null;
@@ -249,22 +252,28 @@ public class TileQueryHelper {
         addTile(str, charSequence2, state, false);
     }
 
-    private class TileCallback implements QSTile.Callback {
+    /* access modifiers changed from: private */
+    public class TileCallback implements QSTile.Callback {
         private QSTile mTile;
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public int getCallbackType() {
             return 2;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onAnnouncementRequested(CharSequence charSequence) {
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onScanStateChanged(boolean z) {
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onShowDetail(boolean z) {
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onToggleStateChanged(boolean z) {
         }
 
@@ -272,6 +281,7 @@ public class TileQueryHelper {
             this.mTile = qSTile;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onStateChanged(QSTile.State state) {
             QSTile.State copy = this.mTile.getState().copy();
             TileQueryHelper.this.updateStateForCustomizer(copy);
@@ -282,6 +292,7 @@ public class TileQueryHelper {
                 if (TextUtils.equals(this.mTile.getTileSpec(), tileInfo.spec)) {
                     tileInfo.state = copy;
                     TileQueryHelper.this.mMainExecutor.execute(new Runnable(tileInfo) {
+                        /* class com.android.systemui.qs.customize.$$Lambda$TileQueryHelper$TileCallback$cigH6rvu6uVvWACtkz00IKk3erk */
                         public final /* synthetic */ TileQueryHelper.TileInfo f$1;
 
                         {
@@ -303,8 +314,11 @@ public class TileQueryHelper {
             TileQueryHelper.this.mListener.onTileChanged(tileInfo);
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onShowEdit(boolean z) {
             TileQueryHelper.this.mMainExecutor.execute(new Runnable() {
+                /* class com.android.systemui.qs.customize.$$Lambda$TileQueryHelper$TileCallback$kw7sHT_TtVudGXAX_r1kNZ61twc */
+
                 public final void run() {
                     TileQueryHelper.TileCallback.this.lambda$onShowEdit$1$TileQueryHelper$TileCallback();
                 }
@@ -325,13 +339,13 @@ public class TileQueryHelper {
     }
 
     public interface TileStateListener {
-        void onTileChanged(TileInfo tileInfo) {
+        default void onTileChanged(TileInfo tileInfo) {
         }
 
-        void onTilesChanged(List<TileInfo> list) {
+        default void onTilesChanged(List<TileInfo> list) {
         }
 
-        void onTilesChanged(List<TileInfo> list, Map<String, QSTile> map) {
+        default void onTilesChanged(List<TileInfo> list, Map<String, QSTile> map) {
             onTilesChanged(list);
         }
     }

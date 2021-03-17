@@ -92,7 +92,8 @@ public class ContextualButtonGroup extends ButtonDispatcher {
         return -1;
     }
 
-    private static final class ButtonData {
+    /* access modifiers changed from: private */
+    public static final class ButtonData {
         ContextualButton button;
         boolean markedVisible = false;
 

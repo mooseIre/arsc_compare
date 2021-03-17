@@ -16,6 +16,7 @@ public final class MediaViewController_Factory implements Factory<MediaViewContr
         this.mediaHostStatesManagerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public MediaViewController get() {
         return provideInstance(this.contextProvider, this.configurationControllerProvider, this.mediaHostStatesManagerProvider);
     }

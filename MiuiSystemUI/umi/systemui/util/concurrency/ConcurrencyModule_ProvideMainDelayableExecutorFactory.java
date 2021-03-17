@@ -12,6 +12,7 @@ public final class ConcurrencyModule_ProvideMainDelayableExecutorFactory impleme
         this.looperProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DelayableExecutor get() {
         return provideInstance(this.looperProvider);
     }

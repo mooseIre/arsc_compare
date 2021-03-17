@@ -15,6 +15,7 @@ public final class LeakReporter_Factory implements Factory<LeakReporter> {
         this.leakReportEmailProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public LeakReporter get() {
         return provideInstance(this.contextProvider, this.leakDetectorProvider, this.leakReportEmailProvider);
     }

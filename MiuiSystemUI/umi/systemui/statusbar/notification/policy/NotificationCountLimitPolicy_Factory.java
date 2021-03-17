@@ -11,6 +11,7 @@ public final class NotificationCountLimitPolicy_Factory implements Factory<Notif
         this.entryManagerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationCountLimitPolicy get() {
         return provideInstance(this.entryManagerProvider);
     }

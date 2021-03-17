@@ -11,6 +11,7 @@ public final class AutoBrightnessTile_Factory implements Factory<AutoBrightnessT
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AutoBrightnessTile get() {
         return provideInstance(this.hostProvider);
     }

@@ -11,6 +11,7 @@ public final class RegionController_Factory implements Factory<RegionController>
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public RegionController get() {
         return provideInstance(this.contextProvider);
     }

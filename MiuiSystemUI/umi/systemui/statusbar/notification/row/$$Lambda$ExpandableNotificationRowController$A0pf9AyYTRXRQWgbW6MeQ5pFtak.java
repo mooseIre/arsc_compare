@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$ExpandableNotificationRowController$
     private /* synthetic */ $$Lambda$ExpandableNotificationRowController$A0pf9AyYTRXRQWgbW6MeQ5pFtak() {
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
     public final boolean onDismiss() {
         return ExpandableNotificationRowController.lambda$init$0();
     }

@@ -5,7 +5,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.graphics.Paint;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
@@ -23,70 +22,72 @@ import java.lang.reflect.Modifier;
 
 public class ViewState extends MiuiViewStateBase implements Dumpable {
     protected static final AnimationProperties NO_NEW_ANIMATIONS = new AnimationProperties() {
+        /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass1 */
         AnimationFilter mAnimationFilter = new AnimationFilter();
 
+        @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
         public AnimationFilter getAnimationFilter() {
             return this.mAnimationFilter;
         }
     };
     private static final AnimatableProperty SCALE_X_PROPERTY = new AnimatableProperty() {
+        /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationStartTag() {
             return C0015R$id.scale_x_animator_start_value_tag;
         }
 
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationEndTag() {
             return C0015R$id.scale_x_animator_end_value_tag;
         }
 
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimatorTag() {
             return C0015R$id.scale_x_animator_tag;
         }
 
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public Property getProperty() {
             return View.SCALE_X;
         }
     };
     private static final AnimatableProperty SCALE_Y_PROPERTY = new AnimatableProperty() {
+        /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass3 */
+
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationStartTag() {
             return C0015R$id.scale_y_animator_start_value_tag;
         }
 
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationEndTag() {
             return C0015R$id.scale_y_animator_end_value_tag;
         }
 
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimatorTag() {
             return C0015R$id.scale_y_animator_tag;
         }
 
+        @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public Property getProperty() {
             return View.SCALE_Y;
         }
     };
-    /* access modifiers changed from: private */
-    public static final int TAG_ANIMATOR_ALPHA = C0015R$id.alpha_animator_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_ANIMATOR_TRANSLATION_X = C0015R$id.translation_x_animator_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_ANIMATOR_TRANSLATION_Y = C0015R$id.translation_y_animator_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_ANIMATOR_TRANSLATION_Z = C0015R$id.translation_z_animator_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_END_ALPHA = C0015R$id.alpha_animator_end_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_END_TRANSLATION_X = C0015R$id.translation_x_animator_end_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_END_TRANSLATION_Y = C0015R$id.translation_y_animator_end_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_END_TRANSLATION_Z = C0015R$id.translation_z_animator_end_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_START_ALPHA = C0015R$id.alpha_animator_start_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_START_TRANSLATION_X = C0015R$id.translation_x_animator_start_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_START_TRANSLATION_Y = C0015R$id.translation_y_animator_start_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_START_TRANSLATION_Z = C0015R$id.translation_z_animator_start_value_tag;
+    private static final int TAG_ANIMATOR_ALPHA = C0015R$id.alpha_animator_tag;
+    private static final int TAG_ANIMATOR_TRANSLATION_X = C0015R$id.translation_x_animator_tag;
+    private static final int TAG_ANIMATOR_TRANSLATION_Y = C0015R$id.translation_y_animator_tag;
+    private static final int TAG_ANIMATOR_TRANSLATION_Z = C0015R$id.translation_z_animator_tag;
+    private static final int TAG_END_ALPHA = C0015R$id.alpha_animator_end_value_tag;
+    private static final int TAG_END_TRANSLATION_X = C0015R$id.translation_x_animator_end_value_tag;
+    private static final int TAG_END_TRANSLATION_Y = C0015R$id.translation_y_animator_end_value_tag;
+    private static final int TAG_END_TRANSLATION_Z = C0015R$id.translation_z_animator_end_value_tag;
+    private static final int TAG_START_ALPHA = C0015R$id.alpha_animator_start_value_tag;
+    private static final int TAG_START_TRANSLATION_X = C0015R$id.translation_x_animator_start_value_tag;
+    private static final int TAG_START_TRANSLATION_Y = C0015R$id.translation_y_animator_start_value_tag;
+    private static final int TAG_START_TRANSLATION_Z = C0015R$id.translation_z_animator_start_value_tag;
     public float alpha;
     public boolean gone;
     public boolean hidden;
@@ -186,7 +187,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                     int layerType = view.getLayerType();
                     int i2 = z ? 2 : 0;
                     if (layerType != i2) {
-                        view.setLayerType(i2, (Paint) null);
+                        view.setLayerType(i2, null);
                     }
                     view.setAlpha(this.alpha);
                 }
@@ -218,6 +219,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
         return getChildTag(view, animatableProperty.getAnimatorTag()) != null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.MiuiViewStateBase
     public void animateTo(View view, AnimationProperties animationProperties) {
         super.animateTo(view, animationProperties);
         boolean z = false;
@@ -282,7 +284,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                 if (objectAnimator != null) {
                     PropertyValuesHolder[] values = objectAnimator.getValues();
                     float floatValue = f.floatValue() + (f3 - f2.floatValue());
-                    values[0].setFloatValues(new float[]{floatValue, f3});
+                    values[0].setFloatValues(floatValue, f3);
                     view.setTag(TAG_START_ALPHA, Float.valueOf(floatValue));
                     view.setTag(TAG_END_ALPHA, Float.valueOf(f3));
                     objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
@@ -293,24 +295,25 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                     view.setVisibility(4);
                 }
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.ALPHA, new float[]{view.getAlpha(), f3});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.ALPHA, view.getAlpha(), f3);
             Interpolator customInterpolator = animationProperties.getCustomInterpolator(view, View.ALPHA);
             if (customInterpolator == null) {
                 customInterpolator = Interpolators.FAST_OUT_SLOW_IN;
             }
             ofFloat.setInterpolator(customInterpolator);
-            view.setLayerType(2, (Paint) null);
+            view.setLayerType(2, null);
             ofFloat.addListener(new AnimatorListenerAdapter(this) {
+                /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass4 */
                 public boolean mWasCancelled;
 
                 public void onAnimationEnd(Animator animator) {
-                    view.setLayerType(0, (Paint) null);
+                    view.setLayerType(0, null);
                     if (f3 == 0.0f && !this.mWasCancelled && view.getVisibility() == 0) {
                         view.setVisibility(4);
                     }
-                    view.setTag(ViewState.TAG_ANIMATOR_ALPHA, (Object) null);
-                    view.setTag(ViewState.TAG_START_ALPHA, (Object) null);
-                    view.setTag(ViewState.TAG_END_ALPHA, (Object) null);
+                    view.setTag(ViewState.TAG_ANIMATOR_ALPHA, null);
+                    view.setTag(ViewState.TAG_START_ALPHA, null);
+                    view.setTag(ViewState.TAG_END_ALPHA, null);
                 }
 
                 public void onAnimationCancel(Animator animator) {
@@ -354,7 +357,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                 if (objectAnimator != null) {
                     PropertyValuesHolder[] values = objectAnimator.getValues();
                     float floatValue = f.floatValue() + (f3 - f2.floatValue());
-                    values[0].setFloatValues(new float[]{floatValue, f3});
+                    values[0].setFloatValues(floatValue, f3);
                     view.setTag(TAG_START_TRANSLATION_Z, Float.valueOf(floatValue));
                     view.setTag(TAG_END_TRANSLATION_Z, Float.valueOf(f3));
                     objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
@@ -362,7 +365,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                 }
                 view.setTranslationZ(f3);
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_Z, new float[]{view.getTranslationZ(), f3});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_Z, view.getTranslationZ(), f3);
             ofFloat.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
             ofFloat.setDuration(cancelAnimatorAndGetNewDuration(animationProperties.duration, objectAnimator));
             if (animationProperties.delay > 0 && (objectAnimator == null || objectAnimator.getAnimatedFraction() == 0.0f)) {
@@ -373,10 +376,12 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                 ofFloat.addListener(animationFinishListener);
             }
             ofFloat.addListener(new AnimatorListenerAdapter(this) {
+                /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass5 */
+
                 public void onAnimationEnd(Animator animator) {
-                    view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_Z, (Object) null);
-                    view.setTag(ViewState.TAG_START_TRANSLATION_Z, (Object) null);
-                    view.setTag(ViewState.TAG_END_TRANSLATION_Z, (Object) null);
+                    view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_Z, null);
+                    view.setTag(ViewState.TAG_START_TRANSLATION_Z, null);
+                    view.setTag(ViewState.TAG_END_TRANSLATION_Z, null);
                 }
             });
             startAnimator(ofFloat, animationFinishListener);
@@ -397,7 +402,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
         if (f2 == null || f2.floatValue() != f3) {
             ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, TAG_ANIMATOR_TRANSLATION_X);
             if (animationProperties.getAnimationFilter().animateX) {
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, new float[]{view.getTranslationX(), f3});
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_X, view.getTranslationX(), f3);
                 Interpolator customInterpolator = animationProperties.getCustomInterpolator(view, View.TRANSLATION_X);
                 if (customInterpolator == null) {
                     customInterpolator = Interpolators.FAST_OUT_SLOW_IN;
@@ -412,10 +417,12 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                     ofFloat.addListener(animationFinishListener);
                 }
                 ofFloat.addListener(new AnimatorListenerAdapter(this) {
+                    /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass6 */
+
                     public void onAnimationEnd(Animator animator) {
-                        view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_X, (Object) null);
-                        view.setTag(ViewState.TAG_START_TRANSLATION_X, (Object) null);
-                        view.setTag(ViewState.TAG_END_TRANSLATION_X, (Object) null);
+                        view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_X, null);
+                        view.setTag(ViewState.TAG_START_TRANSLATION_X, null);
+                        view.setTag(ViewState.TAG_END_TRANSLATION_X, null);
                     }
                 });
                 startAnimator(ofFloat, animationFinishListener);
@@ -425,7 +432,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
             } else if (objectAnimator != null) {
                 PropertyValuesHolder[] values = objectAnimator.getValues();
                 float floatValue = f.floatValue() + (f3 - f2.floatValue());
-                values[0].setFloatValues(new float[]{floatValue, f3});
+                values[0].setFloatValues(floatValue, f3);
                 view.setTag(TAG_START_TRANSLATION_X, Float.valueOf(floatValue));
                 view.setTag(TAG_END_TRANSLATION_X, Float.valueOf(f3));
                 objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
@@ -446,7 +453,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
         if (f2 == null || f2.floatValue() != f3) {
             ObjectAnimator objectAnimator = (ObjectAnimator) getChildTag(view, TAG_ANIMATOR_TRANSLATION_Y);
             if (animationProperties.getAnimationFilter().shouldAnimateY(view)) {
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, new float[]{view.getTranslationY(), f3});
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.TRANSLATION_Y, view.getTranslationY(), f3);
                 Interpolator customInterpolator = animationProperties.getCustomInterpolator(view, View.TRANSLATION_Y);
                 if (customInterpolator == null) {
                     customInterpolator = Interpolators.FAST_OUT_SLOW_IN;
@@ -461,11 +468,13 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
                     ofFloat.addListener(animationFinishListener);
                 }
                 ofFloat.addListener(new AnimatorListenerAdapter() {
+                    /* class com.android.systemui.statusbar.notification.stack.ViewState.AnonymousClass7 */
+
                     public void onAnimationEnd(Animator animator) {
                         HeadsUpUtil.setIsClickedHeadsUpNotification(view, false);
-                        view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_Y, (Object) null);
-                        view.setTag(ViewState.TAG_START_TRANSLATION_Y, (Object) null);
-                        view.setTag(ViewState.TAG_END_TRANSLATION_Y, (Object) null);
+                        view.setTag(ViewState.TAG_ANIMATOR_TRANSLATION_Y, null);
+                        view.setTag(ViewState.TAG_START_TRANSLATION_Y, null);
+                        view.setTag(ViewState.TAG_END_TRANSLATION_Y, null);
                         ViewState.this.onYTranslationAnimationFinished(view);
                     }
                 });
@@ -476,7 +485,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
             } else if (objectAnimator != null) {
                 PropertyValuesHolder[] values = objectAnimator.getValues();
                 float floatValue = f.floatValue() + (f3 - f2.floatValue());
-                values[0].setFloatValues(new float[]{floatValue, f3});
+                values[0].setFloatValues(floatValue, f3);
                 view.setTag(TAG_START_TRANSLATION_Y, Float.valueOf(floatValue));
                 view.setTag(TAG_END_TRANSLATION_Y, Float.valueOf(f3));
                 objectAnimator.setCurrentPlayTime(objectAnimator.getCurrentPlayTime());
@@ -501,7 +510,7 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
     }
 
     public static <T> T getChildTag(View view, int i) {
-        return view.getTag(i);
+        return (T) view.getTag(i);
     }
 
     /* access modifiers changed from: protected */
@@ -574,12 +583,14 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         StringBuilder sb = new StringBuilder();
         sb.append("ViewState { ");
         boolean z = true;
-        for (Class cls = getClass(); cls != null; cls = cls.getSuperclass()) {
-            for (Field field : cls.getDeclaredFields()) {
+        for (Class<?> cls = getClass(); cls != null; cls = cls.getSuperclass()) {
+            Field[] declaredFields = cls.getDeclaredFields();
+            for (Field field : declaredFields) {
                 int modifiers = field.getModifiers();
                 if (!Modifier.isStatic(modifiers) && !field.isSynthetic() && !Modifier.isTransient(modifiers)) {
                     if (!z) {

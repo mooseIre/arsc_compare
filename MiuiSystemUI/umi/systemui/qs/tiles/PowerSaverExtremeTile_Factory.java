@@ -11,6 +11,7 @@ public final class PowerSaverExtremeTile_Factory implements Factory<PowerSaverEx
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PowerSaverExtremeTile get() {
         return provideInstance(this.hostProvider);
     }

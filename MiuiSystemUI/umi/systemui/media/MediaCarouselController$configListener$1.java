@@ -8,19 +8,23 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaCarouselController$configListener$1 implements ConfigurationController.ConfigurationListener {
     final /* synthetic */ MediaCarouselController this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaCarouselController$configListener$1(MediaCarouselController mediaCarouselController) {
         this.this$0 = mediaCarouselController;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         this.this$0.recreatePlayers();
         this.this$0.inflateSettingsButton();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onOverlayChanged() {
         this.this$0.inflateSettingsButton();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(@Nullable Configuration configuration) {
         if (configuration != null) {
             MediaCarouselController mediaCarouselController = this.this$0;

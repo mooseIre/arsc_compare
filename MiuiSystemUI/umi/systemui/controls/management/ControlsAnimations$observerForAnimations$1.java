@@ -22,8 +22,9 @@ public final class ControlsAnimations$observerForAnimations$1 implements Lifecyc
         this.showAnimation = intent.getBooleanExtra("extra_animate", false);
         viewGroup.setTransitionGroup(true);
         viewGroup.setTransitionAlpha(0.0f);
+        ControlsAnimations controlsAnimations2 = ControlsAnimations.INSTANCE;
         if (ControlsAnimations.translationY == -1.0f) {
-            ControlsAnimations controlsAnimations2 = ControlsAnimations.INSTANCE;
+            ControlsAnimations controlsAnimations3 = ControlsAnimations.INSTANCE;
             Context context = viewGroup.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context, "view.context");
             ControlsAnimations.translationY = (float) context.getResources().getDimensionPixelSize(C0012R$dimen.global_actions_controls_y_translation);

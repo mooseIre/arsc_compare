@@ -35,6 +35,7 @@ public final class StatusBarRemoteInputCallback_Factory implements Factory<Statu
         this.clickLoggerProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarRemoteInputCallback get() {
         return provideInstance(this.contextProvider, this.groupManagerProvider, this.notificationLockscreenUserManagerProvider, this.keyguardStateControllerProvider, this.statusBarStateControllerProvider, this.statusBarKeyguardViewManagerProvider, this.activityStarterProvider, this.shadeControllerProvider, this.commandQueueProvider, this.clickLoggerProvider);
     }

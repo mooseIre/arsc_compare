@@ -2,8 +2,9 @@ package com.android.systemui.util;
 
 import android.view.View;
 
+/* access modifiers changed from: package-private */
 /* compiled from: RelativeTouchListener.kt */
-final class RelativeTouchListener$onTouch$1 implements Runnable {
+public final class RelativeTouchListener$onTouch$1 implements Runnable {
     final /* synthetic */ View $v;
     final /* synthetic */ RelativeTouchListener this$0;
 

@@ -50,7 +50,7 @@ public final class MiuiPageIndicator extends ViewGroup {
 
     public final void setLocation(float f) {
         int i = (int) f;
-        setContentDescription(getContext().getString(C0021R$string.accessibility_quick_settings_page, new Object[]{Integer.valueOf(i + 1), Integer.valueOf(getChildCount())}));
+        setContentDescription(getContext().getString(C0021R$string.accessibility_quick_settings_page, Integer.valueOf(i + 1), Integer.valueOf(getChildCount())));
         int i2 = this.mPosition;
         if (i == i2) {
             return;

@@ -1,7 +1,5 @@
 package com.android.systemui.bubbles;
 
-import android.app.Notification;
-import android.app.Person;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -9,20 +7,17 @@ import android.content.pm.ShortcutInfo;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.PathParser;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import com.android.internal.graphics.ColorUtils;
 import com.android.launcher3.icons.BitmapInfo;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.bubbles.Bubble;
-import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
 
@@ -49,7 +44,7 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
 
     /* access modifiers changed from: protected */
     public BubbleViewInfo doInBackground(Void... voidArr) {
-        return BubbleViewInfo.populate((Context) this.mContext.get(), (BubbleStackView) this.mStackView.get(), this.mIconFactory, this.mBubble, this.mSkipInflation);
+        return BubbleViewInfo.populate(this.mContext.get(), this.mStackView.get(), this.mIconFactory, this.mBubble, this.mSkipInflation);
     }
 
     /* access modifiers changed from: protected */
@@ -62,7 +57,8 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
         }
     }
 
-    static class BubbleViewInfo {
+    /* access modifiers changed from: package-private */
+    public static class BubbleViewInfo {
         String appName;
         Drawable badgedAppIcon;
         Bitmap badgedBubbleImage;
@@ -80,8 +76,8 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
             BubbleViewInfo bubbleViewInfo = new BubbleViewInfo();
             if (!z && !bubble.isInflated()) {
                 LayoutInflater from = LayoutInflater.from(context);
-                bubbleViewInfo.imageView = (BadgedImageView) from.inflate(C0017R$layout.bubble_view, bubbleStackView, false);
-                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C0017R$layout.bubble_expanded_view, bubbleStackView, false);
+                bubbleViewInfo.imageView = (BadgedImageView) from.inflate(C0017R$layout.bubble_view, (ViewGroup) bubbleStackView, false);
+                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C0017R$layout.bubble_expanded_view, (ViewGroup) bubbleStackView, false);
                 bubbleViewInfo.expandedView = bubbleExpandedView;
                 bubbleExpandedView.setStackView(bubbleStackView);
             }
@@ -105,7 +101,7 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
                 bubbleViewInfo.badgedBubbleImage = bubbleIconFactory.getBubbleBitmap(applicationIcon, badgeBitmap).icon;
                 Path createPathFromPathData = PathParser.createPathFromPathData(context.getResources().getString(17039929));
                 Matrix matrix = new Matrix();
-                float scale = bubbleIconFactory.getNormalizer().getScale(applicationIcon, (RectF) null, (Path) null, (boolean[]) null);
+                float scale = bubbleIconFactory.getNormalizer().getScale(applicationIcon, null, null, null);
                 matrix.setScale(scale, scale, 50.0f, 50.0f);
                 createPathFromPathData.transform(matrix);
                 bubbleViewInfo.dotPath = createPathFromPathData;
@@ -123,51 +119,19 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
         }
     }
 
-    static Bubble.FlyoutMessage extractFlyoutMessage(NotificationEntry notificationEntry) {
-        Objects.requireNonNull(notificationEntry);
-        Notification notification = notificationEntry.getSbn().getNotification();
-        Class notificationStyle = notification.getNotificationStyle();
-        Bubble.FlyoutMessage flyoutMessage = new Bubble.FlyoutMessage();
-        flyoutMessage.isGroupChat = notification.extras.getBoolean("android.isGroupConversation");
-        try {
-            if (Notification.BigTextStyle.class.equals(notificationStyle)) {
-                CharSequence charSequence = notification.extras.getCharSequence("android.bigText");
-                if (TextUtils.isEmpty(charSequence)) {
-                    charSequence = notification.extras.getCharSequence("android.text");
-                }
-                flyoutMessage.message = charSequence;
-                return flyoutMessage;
-            }
-            if (Notification.MessagingStyle.class.equals(notificationStyle)) {
-                Notification.MessagingStyle.Message findLatestIncomingMessage = Notification.MessagingStyle.findLatestIncomingMessage(Notification.MessagingStyle.Message.getMessagesFromBundleArray((Parcelable[]) notification.extras.get("android.messages")));
-                if (findLatestIncomingMessage != null) {
-                    flyoutMessage.message = findLatestIncomingMessage.getText();
-                    Person senderPerson = findLatestIncomingMessage.getSenderPerson();
-                    Icon icon = null;
-                    flyoutMessage.senderName = senderPerson != null ? senderPerson.getName() : null;
-                    flyoutMessage.senderAvatar = null;
-                    if (senderPerson != null) {
-                        icon = senderPerson.getIcon();
-                    }
-                    flyoutMessage.senderIcon = icon;
-                    return flyoutMessage;
-                }
-            } else if (Notification.InboxStyle.class.equals(notificationStyle)) {
-                CharSequence[] charSequenceArray = notification.extras.getCharSequenceArray("android.textLines");
-                if (charSequenceArray != null && charSequenceArray.length > 0) {
-                    flyoutMessage.message = charSequenceArray[charSequenceArray.length - 1];
-                    return flyoutMessage;
-                }
-            } else if (Notification.MediaStyle.class.equals(notificationStyle)) {
-                return flyoutMessage;
-            } else {
-                flyoutMessage.message = notification.extras.getCharSequence("android.text");
-                return flyoutMessage;
-            }
-            return flyoutMessage;
-        } catch (ArrayIndexOutOfBoundsException | ClassCastException | NullPointerException e) {
-            e.printStackTrace();
-        }
+    /* JADX WARNING: Code restructure failed: missing block: B:35:0x00ab, code lost:
+        r4 = move-exception;
+     */
+    /* JADX WARNING: Code restructure failed: missing block: B:36:0x00ac, code lost:
+        r4.printStackTrace();
+     */
+    /* JADX WARNING: Removed duplicated region for block: B:35:0x00ab A[ExcHandler: ArrayIndexOutOfBoundsException | ClassCastException | NullPointerException (r4v14 'e' java.lang.RuntimeException A[CUSTOM_DECLARE]), Splitter:B:2:0x0028] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    static com.android.systemui.bubbles.Bubble.FlyoutMessage extractFlyoutMessage(com.android.systemui.statusbar.notification.collection.NotificationEntry r4) {
+        /*
+        // Method dump skipped, instructions count: 176
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.bubbles.BubbleViewInfoTask.extractFlyoutMessage(com.android.systemui.statusbar.notification.collection.NotificationEntry):com.android.systemui.bubbles.Bubble$FlyoutMessage");
     }
 
     static Drawable loadSenderAvatar(Context context, Icon icon) {

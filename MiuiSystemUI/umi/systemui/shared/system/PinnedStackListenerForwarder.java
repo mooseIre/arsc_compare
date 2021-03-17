@@ -42,50 +42,50 @@ public class PinnedStackListenerForwarder extends IPinnedStackListener.Stub {
     }
 
     public void onListenerRegistered(IPinnedStackController iPinnedStackController) {
-        for (PinnedStackListener onListenerRegistered : this.mListeners) {
-            onListenerRegistered.onListenerRegistered(iPinnedStackController);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onListenerRegistered(iPinnedStackController);
         }
     }
 
     public void onMovementBoundsChanged(boolean z) {
-        for (PinnedStackListener onMovementBoundsChanged : this.mListeners) {
-            onMovementBoundsChanged.onMovementBoundsChanged(z);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onMovementBoundsChanged(z);
         }
     }
 
     public void onImeVisibilityChanged(boolean z, int i) {
-        for (PinnedStackListener onImeVisibilityChanged : this.mListeners) {
-            onImeVisibilityChanged.onImeVisibilityChanged(z, i);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onImeVisibilityChanged(z, i);
         }
     }
 
     public void onActionsChanged(ParceledListSlice parceledListSlice) {
-        for (PinnedStackListener onActionsChanged : this.mListeners) {
-            onActionsChanged.onActionsChanged(parceledListSlice);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onActionsChanged(parceledListSlice);
         }
     }
 
     public void onActivityHidden(ComponentName componentName) {
-        for (PinnedStackListener onActivityHidden : this.mListeners) {
-            onActivityHidden.onActivityHidden(componentName);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onActivityHidden(componentName);
         }
     }
 
     public void onDisplayInfoChanged(DisplayInfo displayInfo) {
-        for (PinnedStackListener onDisplayInfoChanged : this.mListeners) {
-            onDisplayInfoChanged.onDisplayInfoChanged(displayInfo);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onDisplayInfoChanged(displayInfo);
         }
     }
 
     public void onConfigurationChanged() {
-        for (PinnedStackListener onConfigurationChanged : this.mListeners) {
-            onConfigurationChanged.onConfigurationChanged();
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onConfigurationChanged();
         }
     }
 
     public void onAspectRatioChanged(float f) {
-        for (PinnedStackListener onAspectRatioChanged : this.mListeners) {
-            onAspectRatioChanged.onAspectRatioChanged(f);
+        for (PinnedStackListener pinnedStackListener : this.mListeners) {
+            pinnedStackListener.onAspectRatioChanged(f);
         }
     }
 }

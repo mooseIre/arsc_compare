@@ -24,6 +24,7 @@ public final class MiuiStatusBarModule_ProvideLightBarControllerFactory implemen
         this.navModeControllerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public LightBarController get() {
         return provideInstance(this.module, this.ctxProvider, this.darkIconDispatcherProvider, this.batteryControllerProvider, this.navModeControllerProvider);
     }

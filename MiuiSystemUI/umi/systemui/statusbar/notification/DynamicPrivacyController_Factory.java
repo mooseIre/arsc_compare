@@ -17,6 +17,7 @@ public final class DynamicPrivacyController_Factory implements Factory<DynamicPr
         this.stateControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public DynamicPrivacyController get() {
         return provideInstance(this.notificationLockscreenUserManagerProvider, this.keyguardStateControllerProvider, this.stateControllerProvider);
     }

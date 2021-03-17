@@ -47,8 +47,8 @@ public abstract class CornerPathRenderer {
         Path path = new Path();
         if (list.size() > 0) {
             path.moveTo(list.get(0).x, list.get(0).y);
-            for (PointF next : list.subList(1, list.size())) {
-                path.lineTo(next.x, next.y);
+            for (PointF pointF : list.subList(1, list.size())) {
+                path.lineTo(pointF.x, pointF.y);
             }
         }
         return path;

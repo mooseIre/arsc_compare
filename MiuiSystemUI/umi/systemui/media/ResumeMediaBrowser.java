@@ -13,11 +13,11 @@ import android.util.Log;
 import java.util.List;
 
 public class ResumeMediaBrowser {
-    /* access modifiers changed from: private */
-    public final Callback mCallback;
-    /* access modifiers changed from: private */
-    public ComponentName mComponentName;
+    private final Callback mCallback;
+    private ComponentName mComponentName;
     private final MediaBrowser.ConnectionCallback mConnectionCallback = new MediaBrowser.ConnectionCallback() {
+        /* class com.android.systemui.media.ResumeMediaBrowser.AnonymousClass2 */
+
         public void onConnected() {
             Log.d("ResumeMediaBrowser", "Service connected for " + ResumeMediaBrowser.this.mComponentName);
             if (ResumeMediaBrowser.this.mMediaBrowser != null && ResumeMediaBrowser.this.mMediaBrowser.isConnected()) {
@@ -43,12 +43,12 @@ public class ResumeMediaBrowser {
             ResumeMediaBrowser.this.disconnect();
         }
     };
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public MediaBrowser mMediaBrowser;
-    /* access modifiers changed from: private */
-    public final MediaBrowser.SubscriptionCallback mSubscriptionCallback = new MediaBrowser.SubscriptionCallback() {
+    private final Context mContext;
+    private MediaBrowser mMediaBrowser;
+    private final MediaBrowser.SubscriptionCallback mSubscriptionCallback = new MediaBrowser.SubscriptionCallback() {
+        /* class com.android.systemui.media.ResumeMediaBrowser.AnonymousClass1 */
+
+        @Override // android.media.browse.MediaBrowser.SubscriptionCallback
         public void onChildrenLoaded(String str, List<MediaBrowser.MediaItem> list) {
             if (list.size() == 0) {
                 Log.d("ResumeMediaBrowser", "No children found for " + ResumeMediaBrowser.this.mComponentName);
@@ -117,6 +117,8 @@ public class ResumeMediaBrowser {
         Bundle bundle = new Bundle();
         bundle.putBoolean("android.service.media.extra.RECENT", true);
         MediaBrowser mediaBrowser = new MediaBrowser(this.mContext, this.mComponentName, new MediaBrowser.ConnectionCallback() {
+            /* class com.android.systemui.media.ResumeMediaBrowser.AnonymousClass3 */
+
             public void onConnected() {
                 Log.d("ResumeMediaBrowser", "Connected for restart " + ResumeMediaBrowser.this.mMediaBrowser.isConnected());
                 if (ResumeMediaBrowser.this.mMediaBrowser == null || !ResumeMediaBrowser.this.mMediaBrowser.isConnected()) {
@@ -157,6 +159,8 @@ public class ResumeMediaBrowser {
     public void testConnection() {
         disconnect();
         AnonymousClass4 r0 = new MediaBrowser.ConnectionCallback() {
+            /* class com.android.systemui.media.ResumeMediaBrowser.AnonymousClass4 */
+
             public void onConnected() {
                 Log.d("ResumeMediaBrowser", "connected");
                 if (ResumeMediaBrowser.this.mMediaBrowser == null || !ResumeMediaBrowser.this.mMediaBrowser.isConnected() || TextUtils.isEmpty(ResumeMediaBrowser.this.mMediaBrowser.getRoot())) {

@@ -12,6 +12,7 @@ public class NotificationDecoratedCustomViewWrapper extends NotificationTemplate
         super(context, view, expandableNotificationRow);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationTemplateViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         ViewGroup viewGroup = (ViewGroup) this.mView.findViewById(16909238);
         Integer num = (Integer) viewGroup.getTag(16909236);

@@ -19,7 +19,7 @@ public final class StructureContainer {
             return false;
         }
         StructureContainer structureContainer = (StructureContainer) obj;
-        return Intrinsics.areEqual((Object) this.structureName, (Object) structureContainer.structureName) && Intrinsics.areEqual((Object) this.model, (Object) structureContainer.model);
+        return Intrinsics.areEqual(this.structureName, structureContainer.structureName) && Intrinsics.areEqual(this.model, structureContainer.model);
     }
 
     public int hashCode() {

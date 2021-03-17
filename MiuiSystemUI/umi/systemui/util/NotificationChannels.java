@@ -31,7 +31,7 @@ public class NotificationChannels extends SystemUI {
         String string = Settings.Global.getString(context.getContentResolver(), "low_battery_sound");
         notificationChannel.setSound(Uri.parse("file://" + string), new AudioAttributes.Builder().setContentType(4).setUsage(10).build());
         notificationChannel.setBlockable(true);
-        notificationManager.createNotificationChannels(Arrays.asList(new NotificationChannel[]{new NotificationChannel(ALERTS, context.getString(C0021R$string.notification_channel_alerts), 4), new NotificationChannel(GENERAL, context.getString(C0021R$string.notification_channel_general), 1), new NotificationChannel(STORAGE, context.getString(C0021R$string.notification_channel_storage), isTv(context) ? 3 : 2), createScreenshotChannel(context.getString(C0021R$string.notification_channel_screenshot), notificationManager.getNotificationChannel(SCREENSHOTS_LEGACY)), notificationChannel, new NotificationChannel(HINTS, context.getString(C0021R$string.notification_channel_hints), 3)}));
+        notificationManager.createNotificationChannels(Arrays.asList(new NotificationChannel(ALERTS, context.getString(C0021R$string.notification_channel_alerts), 4), new NotificationChannel(GENERAL, context.getString(C0021R$string.notification_channel_general), 1), new NotificationChannel(STORAGE, context.getString(C0021R$string.notification_channel_storage), isTv(context) ? 3 : 2), createScreenshotChannel(context.getString(C0021R$string.notification_channel_screenshot), notificationManager.getNotificationChannel(SCREENSHOTS_LEGACY)), notificationChannel, new NotificationChannel(HINTS, context.getString(C0021R$string.notification_channel_hints), 3)));
         notificationManager.deleteNotificationChannel(SCREENSHOTS_LEGACY);
         if (isTv(context)) {
             notificationManager.createNotificationChannel(new NotificationChannel(TVPIP, context.getString(C0021R$string.notification_channel_tv_pip), 5));
@@ -41,7 +41,7 @@ public class NotificationChannels extends SystemUI {
     @VisibleForTesting
     static NotificationChannel createScreenshotChannel(String str, NotificationChannel notificationChannel) {
         NotificationChannel notificationChannel2 = new NotificationChannel(SCREENSHOTS_HEADSUP, str, 4);
-        notificationChannel2.setSound((Uri) null, new AudioAttributes.Builder().setUsage(5).build());
+        notificationChannel2.setSound(null, new AudioAttributes.Builder().setUsage(5).build());
         notificationChannel2.setBlockable(true);
         if (notificationChannel != null) {
             int userLockedFields = notificationChannel.getUserLockedFields();
@@ -61,6 +61,7 @@ public class NotificationChannels extends SystemUI {
         return notificationChannel2;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         createAll(this.mContext);
     }

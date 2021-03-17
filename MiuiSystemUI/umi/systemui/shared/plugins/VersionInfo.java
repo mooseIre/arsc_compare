@@ -40,7 +40,8 @@ public class VersionInfo {
             }
             Requirements requirements = (Requirements) cls.getDeclaredAnnotation(Requirements.class);
             if (requirements != null) {
-                for (Requires requires2 : requirements.value()) {
+                Requires[] value = requirements.value();
+                for (Requires requires2 : value) {
                     this.mVersions.put(requires2.target(), new Version(requires2.version(), z));
                 }
             }
@@ -50,8 +51,8 @@ public class VersionInfo {
             }
             Dependencies dependencies = (Dependencies) cls.getDeclaredAnnotation(Dependencies.class);
             if (dependencies != null) {
-                for (DependsOn target : dependencies.value()) {
-                    addClass(target.target(), true);
+                for (DependsOn dependsOn2 : dependencies.value()) {
+                    addClass(dependsOn2.target(), true);
                 }
             }
         }
@@ -60,6 +61,8 @@ public class VersionInfo {
     public void checkVersion(VersionInfo versionInfo) throws InvalidVersionException {
         final ArrayMap arrayMap = new ArrayMap(this.mVersions);
         versionInfo.mVersions.forEach(new BiConsumer<Class<?>, Version>() {
+            /* class com.android.systemui.shared.plugins.VersionInfo.AnonymousClass1 */
+
             public void accept(Class<?> cls, Version version) {
                 Version version2 = (Version) arrayMap.remove(cls);
                 if (version2 == null) {
@@ -77,6 +80,8 @@ public class VersionInfo {
             }
         });
         arrayMap.forEach(new BiConsumer<Class<?>, Version>(this) {
+            /* class com.android.systemui.shared.plugins.VersionInfo.AnonymousClass2 */
+
             public void accept(Class<?> cls, Version version) {
                 if (version.mRequired) {
                     throw new InvalidVersionException("Missing required dependency " + cls.getSimpleName(), false);
@@ -86,7 +91,8 @@ public class VersionInfo {
     }
 
     /* access modifiers changed from: private */
-    public Version createVersion(Class<?> cls) {
+    /* access modifiers changed from: public */
+    private Version createVersion(Class<?> cls) {
         ProvidesInterface providesInterface = (ProvidesInterface) cls.getDeclaredAnnotation(ProvidesInterface.class);
         if (providesInterface != null) {
             return new Version(providesInterface.version(), false);
@@ -116,11 +122,10 @@ public class VersionInfo {
         }
     }
 
-    private static class Version {
-        /* access modifiers changed from: private */
-        public final boolean mRequired;
-        /* access modifiers changed from: private */
-        public final int mVersion;
+    /* access modifiers changed from: private */
+    public static class Version {
+        private final boolean mRequired;
+        private final int mVersion;
 
         public Version(int i, boolean z) {
             this.mVersion = i;

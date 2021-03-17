@@ -13,17 +13,18 @@ import android.util.Log;
 import java.util.Map;
 import kotlin.TuplesKt;
 import kotlin.Unit;
+import kotlin.collections.MapsKt__MapsJVMKt;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: BackupHelper.kt */
 public final class BackupHelper extends BackupAgentHelper {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    /* access modifiers changed from: private */
+    public static final Companion Companion = new Companion(null);
     @NotNull
-    public static final Object controlsDataLock = new Object();
+    private static final Object controlsDataLock = new Object();
 
     /* compiled from: BackupHelper.kt */
     public static final class Companion {
@@ -63,6 +64,8 @@ public final class BackupHelper extends BackupAgentHelper {
         @NotNull
         private final Object lock;
 
+        /* JADX DEBUG: Multi-variable search result rejected for r5v0, resolved type: java.util.Map<java.lang.String, ? extends kotlin.jvm.functions.Function0<kotlin.Unit>> */
+        /* JADX WARN: Multi-variable type inference failed */
         /* JADX WARNING: Illegal instructions before constructor call */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public NoOverwriteFileBackupHelper(@org.jetbrains.annotations.NotNull java.lang.Object r3, @org.jetbrains.annotations.NotNull android.content.Context r4, @org.jetbrains.annotations.NotNull java.util.Map<java.lang.String, ? extends kotlin.jvm.functions.Function0<kotlin.Unit>> r5) {
@@ -105,9 +108,9 @@ public final class BackupHelper extends BackupAgentHelper {
             }
             synchronized (this.lock) {
                 super.restoreEntity(backupDataInputStream);
-                Function0 function0 = this.fileNamesAndPostProcess.get(backupDataInputStream.getKey());
+                Function0<Unit> function0 = this.fileNamesAndPostProcess.get(backupDataInputStream.getKey());
                 if (function0 != null) {
-                    Unit unit = (Unit) function0.invoke();
+                    function0.invoke();
                 }
             }
         }

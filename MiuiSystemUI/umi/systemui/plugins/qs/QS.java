@@ -6,8 +6,8 @@ import com.android.systemui.plugins.FragmentBase;
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
+@ProvidesInterface(action = QS.ACTION, version = 8)
 @DependsOn(target = HeightListener.class)
-@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_QS", version = 8)
 public interface QS extends FragmentBase {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_QS";
     public static final String TAG = "QS";
@@ -50,7 +50,7 @@ public interface QS extends FragmentBase {
 
     void setExpanded(boolean z);
 
-    void setHasNotifications(boolean z) {
+    default void setHasNotifications(boolean z) {
     }
 
     void setHeaderClickable(boolean z);
@@ -67,10 +67,10 @@ public interface QS extends FragmentBase {
 
     void setQsExpansion(float f, float f2);
 
-    void setShowCollapsedOnKeyguard(boolean z) {
+    default void setShowCollapsedOnKeyguard(boolean z) {
     }
 
-    boolean disallowPanelTouches() {
+    default boolean disallowPanelTouches() {
         return isShowingDetail();
     }
 }

@@ -40,6 +40,7 @@ public final class NotificationRowBinderImpl_Factory implements Factory<Notifica
         this.lowPriorityInflationHelperProvider = provider11;
     }
 
+    @Override // javax.inject.Provider
     public NotificationRowBinderImpl get() {
         return provideInstance(this.contextProvider, this.notificationMessagingUtilProvider, this.notificationRemoteInputManagerProvider, this.notificationLockscreenUserManagerProvider, this.notifBindPipelineProvider, this.rowContentBindStageProvider, this.notificationInterruptionStateProvider, this.rowInflaterTaskProvider, this.expandableNotificationRowComponentBuilderProvider, this.iconManagerProvider, this.lowPriorityInflationHelperProvider);
     }

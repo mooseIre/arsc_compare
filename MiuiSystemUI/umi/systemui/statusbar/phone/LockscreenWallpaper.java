@@ -7,7 +7,6 @@ import android.app.WallpaperColors;
 import android.app.WallpaperManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
@@ -24,19 +23,14 @@ import java.io.PrintWriter;
 import libcore.io.IoUtils;
 
 public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implements Runnable, Dumpable {
-    /* access modifiers changed from: private */
-    public Bitmap mCache;
-    /* access modifiers changed from: private */
-    public boolean mCached;
+    private Bitmap mCache;
+    private boolean mCached;
     private int mCurrentUserId = ActivityManager.getCurrentUser();
     private final Handler mH;
-    /* access modifiers changed from: private */
-    public AsyncTask<Void, Void, LoaderResult> mLoader;
-    /* access modifiers changed from: private */
-    public final NotificationMediaManager mMediaManager;
+    private AsyncTask<Void, Void, LoaderResult> mLoader;
+    private final NotificationMediaManager mMediaManager;
     private UserHandle mSelectedUser;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor mUpdateMonitor;
+    private final KeyguardUpdateMonitor mUpdateMonitor;
     private final WallpaperManager mWallpaperManager;
 
     public void onWallpaperColorsChanged(WallpaperColors wallpaperColors, int i, int i2) {
@@ -59,7 +53,7 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
 
     public LoaderResult loadBitmap(int i, UserHandle userHandle) {
         if (!this.mWallpaperManager.isWallpaperSupported()) {
-            return LoaderResult.success((Bitmap) null);
+            return LoaderResult.success(null);
         }
         if (userHandle != null) {
             i = userHandle.getIdentifier();
@@ -69,7 +63,7 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
             try {
                 BitmapFactory.Options options = new BitmapFactory.Options();
                 options.inPreferredConfig = Bitmap.Config.HARDWARE;
-                return LoaderResult.success(BitmapFactory.decodeFileDescriptor(wallpaperFile.getFileDescriptor(), (Rect) null, options));
+                return LoaderResult.success(BitmapFactory.decodeFileDescriptor(wallpaperFile.getFileDescriptor(), null, options));
             } catch (OutOfMemoryError e) {
                 Log.w("LockscreenWallpaper", "Can't decode file", e);
                 return LoaderResult.fail();
@@ -79,7 +73,7 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
         } else if (userHandle != null) {
             return LoaderResult.success(this.mWallpaperManager.getBitmapAsUser(userHandle.getIdentifier(), true));
         } else {
-            return LoaderResult.success((Bitmap) null);
+            return LoaderResult.success(null);
         }
     }
 
@@ -115,6 +109,8 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
         final int i = this.mCurrentUserId;
         final UserHandle userHandle = this.mSelectedUser;
         this.mLoader = new AsyncTask<Void, Void, LoaderResult>() {
+            /* class com.android.systemui.statusbar.phone.LockscreenWallpaper.AnonymousClass1 */
+
             /* access modifiers changed from: protected */
             public LoaderResult doInBackground(Void... voidArr) {
                 return LockscreenWallpaper.this.loadBitmap(i, userHandle);
@@ -122,20 +118,21 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
 
             /* access modifiers changed from: protected */
             public void onPostExecute(LoaderResult loaderResult) {
-                super.onPostExecute(loaderResult);
+                super.onPostExecute((Object) loaderResult);
                 if (!isCancelled()) {
                     if (loaderResult.success) {
-                        boolean unused = LockscreenWallpaper.this.mCached = true;
-                        Bitmap unused2 = LockscreenWallpaper.this.mCache = loaderResult.bitmap;
+                        LockscreenWallpaper.this.mCached = true;
+                        LockscreenWallpaper.this.mCache = loaderResult.bitmap;
                         LockscreenWallpaper.this.mUpdateMonitor.setHasLockscreenWallpaper(loaderResult.bitmap != null);
                         LockscreenWallpaper.this.mMediaManager.updateMediaMetaData(true, true);
                     }
-                    AsyncTask unused3 = LockscreenWallpaper.this.mLoader = null;
+                    LockscreenWallpaper.this.mLoader = null;
                 }
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println(LockscreenWallpaper.class.getSimpleName() + ":");
         IndentingPrintWriter increaseIndent = new IndentingPrintWriter(printWriter, "  ").increaseIndent();
@@ -145,7 +142,8 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
         increaseIndent.println("mSelectedUser=" + this.mSelectedUser);
     }
 
-    private static class LoaderResult {
+    /* access modifiers changed from: private */
+    public static class LoaderResult {
         public final Bitmap bitmap;
         public final boolean success;
 
@@ -159,7 +157,7 @@ public class LockscreenWallpaper extends IWallpaperManagerCallback.Stub implemen
         }
 
         static LoaderResult fail() {
-            return new LoaderResult(false, (Bitmap) null);
+            return new LoaderResult(false, null);
         }
     }
 }

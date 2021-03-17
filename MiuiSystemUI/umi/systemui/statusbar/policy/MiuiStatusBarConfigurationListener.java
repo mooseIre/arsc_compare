@@ -18,6 +18,7 @@ public class MiuiStatusBarConfigurationListener implements ConfigurationControll
         this.mConfigurationController.addCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         BatteryIcon.getInstance(this.mContext).clear();
     }

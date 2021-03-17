@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideMediaRouter2ManagerFactory implem
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MediaRouter2Manager get() {
         return provideInstance(this.contextProvider);
     }

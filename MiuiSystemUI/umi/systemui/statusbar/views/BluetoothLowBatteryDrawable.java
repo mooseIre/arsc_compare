@@ -15,9 +15,10 @@ public class BluetoothLowBatteryDrawable extends DrawableWrapper {
     private Drawable mFillDrawable;
 
     public BluetoothLowBatteryDrawable() {
-        super((Drawable) null);
+        super(null);
     }
 
+    @Override // android.graphics.drawable.Drawable, android.graphics.drawable.DrawableWrapper
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(resources, xmlPullParser, attributeSet, theme);
         setDrawable(resources.getDrawable(C0013R$drawable.stat_sys_bluetooth_handsfree_battery_1_not_tint, theme).mutate());

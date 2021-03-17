@@ -88,11 +88,11 @@ public class HybridGroupManager {
         if (textView == null) {
             textView = inflateOverflowNumber(viewGroup);
         }
-        String string = this.mContext.getResources().getString(C0021R$string.notification_group_overflow_indicator, new Object[]{Integer.valueOf(i)});
+        String string = this.mContext.getResources().getString(C0021R$string.notification_group_overflow_indicator, Integer.valueOf(i));
         if (!string.equals(textView.getText())) {
             textView.setText(string);
         }
-        textView.setContentDescription(String.format(this.mContext.getResources().getQuantityString(C0019R$plurals.notification_group_overflow_description, i), new Object[]{Integer.valueOf(i)}));
+        textView.setContentDescription(String.format(this.mContext.getResources().getQuantityString(C0019R$plurals.notification_group_overflow_description, i), Integer.valueOf(i)));
         textView.setTextSize(0, this.mOverflowNumberSize);
         updateOverFlowNumberColor(textView);
         return textView;

@@ -38,6 +38,7 @@ public final class PeopleHubDataSourceImpl_Factory implements Factory<PeopleHubD
         this.peopleNotificationIdentifierProvider = provider11;
     }
 
+    @Override // javax.inject.Provider
     public PeopleHubDataSourceImpl get() {
         return provideInstance(this.notificationEntryManagerProvider, this.extractorProvider, this.userManagerProvider, this.launcherAppsProvider, this.packageManagerProvider, this.contextProvider, this.notificationListenerProvider, this.bgExecutorProvider, this.mainExecutorProvider, this.notifLockscreenUserMgrProvider, this.peopleNotificationIdentifierProvider);
     }

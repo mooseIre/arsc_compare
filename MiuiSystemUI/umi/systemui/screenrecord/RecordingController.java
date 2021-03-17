@@ -14,22 +14,18 @@ import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.policy.CallbackController;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.Executor;
 
 public class RecordingController implements CallbackController<RecordingStateChangeCallback> {
-    /* access modifiers changed from: private */
-    public BroadcastDispatcher mBroadcastDispatcher;
+    private BroadcastDispatcher mBroadcastDispatcher;
     private CountDownTimer mCountDownTimer = null;
-    /* access modifiers changed from: private */
-    public boolean mIsRecording;
-    /* access modifiers changed from: private */
-    public boolean mIsStarting;
-    /* access modifiers changed from: private */
-    public ArrayList<RecordingStateChangeCallback> mListeners = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public PendingIntent mStopIntent;
+    private boolean mIsRecording;
+    private boolean mIsStarting;
+    private ArrayList<RecordingStateChangeCallback> mListeners = new ArrayList<>();
+    private PendingIntent mStopIntent;
     @VisibleForTesting
     protected final BroadcastReceiver mUserChangeReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.screenrecord.RecordingController.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             if (RecordingController.this.mStopIntent != null) {
                 RecordingController.this.stopRecording();
@@ -38,16 +34,16 @@ public class RecordingController implements CallbackController<RecordingStateCha
     };
 
     public interface RecordingStateChangeCallback {
-        void onCountdown(long j) {
+        default void onCountdown(long j) {
         }
 
-        void onCountdownEnd() {
+        default void onCountdownEnd() {
         }
 
-        void onRecordingEnd() {
+        default void onRecordingEnd() {
         }
 
-        void onRecordingStart() {
+        default void onRecordingStart() {
         }
     }
 
@@ -63,11 +59,12 @@ public class RecordingController implements CallbackController<RecordingStateCha
         return intent;
     }
 
-    public void startCountdown(long j, long j2, PendingIntent pendingIntent, PendingIntent pendingIntent2) {
+    public void startCountdown(long j, long j2, final PendingIntent pendingIntent, PendingIntent pendingIntent2) {
         this.mIsStarting = true;
         this.mStopIntent = pendingIntent2;
-        final PendingIntent pendingIntent3 = pendingIntent;
-        AnonymousClass2 r1 = new CountDownTimer(j, j2) {
+        AnonymousClass2 r14 = new CountDownTimer(j, j2) {
+            /* class com.android.systemui.screenrecord.RecordingController.AnonymousClass2 */
+
             public void onTick(long j) {
                 Iterator it = RecordingController.this.mListeners.iterator();
                 while (it.hasNext()) {
@@ -76,23 +73,23 @@ public class RecordingController implements CallbackController<RecordingStateCha
             }
 
             public void onFinish() {
-                boolean unused = RecordingController.this.mIsStarting = false;
-                boolean unused2 = RecordingController.this.mIsRecording = true;
+                RecordingController.this.mIsStarting = false;
+                RecordingController.this.mIsRecording = true;
                 Iterator it = RecordingController.this.mListeners.iterator();
                 while (it.hasNext()) {
                     ((RecordingStateChangeCallback) it.next()).onCountdownEnd();
                 }
                 try {
-                    pendingIntent3.send();
-                    RecordingController.this.mBroadcastDispatcher.registerReceiver(RecordingController.this.mUserChangeReceiver, new IntentFilter("android.intent.action.USER_SWITCHED"), (Executor) null, UserHandle.ALL);
+                    pendingIntent.send();
+                    RecordingController.this.mBroadcastDispatcher.registerReceiver(RecordingController.this.mUserChangeReceiver, new IntentFilter("android.intent.action.USER_SWITCHED"), null, UserHandle.ALL);
                     Log.d("RecordingController", "sent start intent");
                 } catch (PendingIntent.CanceledException e) {
                     Log.e("RecordingController", "Pending intent was cancelled: " + e.getMessage());
                 }
             }
         };
-        this.mCountDownTimer = r1;
-        r1.start();
+        this.mCountDownTimer = r14;
+        r14.start();
     }
 
     public void cancelCountdown() {

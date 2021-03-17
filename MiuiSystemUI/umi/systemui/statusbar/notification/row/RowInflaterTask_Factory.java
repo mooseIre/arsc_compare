@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class RowInflaterTask_Factory implements Factory<RowInflaterTask> {
     private static final RowInflaterTask_Factory INSTANCE = new RowInflaterTask_Factory();
 
+    @Override // javax.inject.Provider
     public RowInflaterTask get() {
         return provideInstance();
     }

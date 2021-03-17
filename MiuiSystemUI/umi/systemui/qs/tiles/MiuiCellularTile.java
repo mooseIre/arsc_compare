@@ -36,17 +36,15 @@ import miui.telephony.TelephonyManager;
 public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     private static final boolean DETAIL_ADAPTER_ENABLED;
     private final NetworkController mController;
-    /* access modifiers changed from: private */
-    public final DataUsageController mDataController;
-    /* access modifiers changed from: private */
-    public final CellularDetailAdapter mDetailAdapter;
+    private final DataUsageController mDataController;
+    private final CellularDetailAdapter mDetailAdapter;
     private final CellSignalCallback mSignalCallback = new CellSignalCallback();
-    /* access modifiers changed from: private */
-    public List<SubscriptionInfo> mSimInfoRecordList;
+    private List<SubscriptionInfo> mSimInfoRecordList;
 
     static /* synthetic */ void lambda$showConfirmDialog$0(DialogInterface dialogInterface, int i) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 115;
     }
@@ -67,10 +65,13 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         this.mController.observe(getLifecycle(), this.mSignalCallback);
     }
 
-    public QSTile.SignalState newTileState() {
+    /* Return type fixed from 'com.android.systemui.plugins.qs.QSTile$SignalState' to match base method */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
+    public QSTile.BooleanState newTileState() {
         return new QSTile.SignalState();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public DetailAdapter getDetailAdapter() {
         return this.mDetailAdapter;
     }
@@ -80,6 +81,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         return new CellularDetailAdapter();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         if (!((QSTile.BooleanState) this.mState).disabledByPolicy) {
             return longClickDataIntent();
@@ -89,6 +91,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         return intent;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void click() {
         if (!this.mDataController.isMobileDataSupported()) {
             return;
@@ -101,6 +104,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (this.mDataController.isMobileDataSupported()) {
             String str = this.TAG;
@@ -115,6 +119,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSecondaryClick() {
         if (((QSTile.BooleanState) this.mState).dualTarget) {
             showDetail(true);
@@ -125,6 +130,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
     }
@@ -189,13 +195,13 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         if (callbackInfo.noSim) {
             StringBuilder sb = new StringBuilder();
-            sb.append(booleanState.label);
+            sb.append((Object) booleanState.label);
             sb.append(",");
             sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
             booleanState.contentDescription = sb.toString();
         } else {
             StringBuilder sb2 = new StringBuilder();
-            sb2.append(booleanState.label);
+            sb2.append((Object) booleanState.label);
             sb2.append(",");
             sb2.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
             sb2.append(",");
@@ -205,11 +211,13 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mController.hasMobileDataFeature();
     }
 
-    private static final class CallbackInfo {
+    /* access modifiers changed from: private */
+    public static final class CallbackInfo {
         boolean activityIn;
         boolean activityOut;
         boolean airplaneModeEnabled;
@@ -229,10 +237,11 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
-    private final class CellSignalCallback implements NetworkController.SignalCallback {
-        /* access modifiers changed from: private */
-        public final CallbackInfo mInfo;
+    /* access modifiers changed from: private */
+    public final class CellSignalCallback implements NetworkController.SignalCallback {
+        private final CallbackInfo mInfo;
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setEthernetIndicators(NetworkController.IconState iconState) {
         }
 
@@ -240,6 +249,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             this.mInfo = new CallbackInfo();
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4) {
             if (iconState2 != null) {
                 CallbackInfo callbackInfo = this.mInfo;
@@ -262,6 +272,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setNoSims(boolean z, boolean z2) {
             CallbackInfo callbackInfo = this.mInfo;
             callbackInfo.noSim = z;
@@ -269,19 +280,21 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
                 callbackInfo.mobileSignalIconId = 0;
                 callbackInfo.dataTypeIconId = 0;
                 callbackInfo.enabled = true;
-                callbackInfo.enabledDesc = MiuiCellularTile.this.mContext.getString(C0021R$string.keyguard_missing_sim_message_short);
+                callbackInfo.enabledDesc = ((QSTileImpl) MiuiCellularTile.this).mContext.getString(C0021R$string.keyguard_missing_sim_message_short);
                 CallbackInfo callbackInfo2 = this.mInfo;
                 callbackInfo2.signalContentDescription = callbackInfo2.enabledDesc;
             }
             MiuiCellularTile.this.refreshState(this.mInfo);
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsAirplaneMode(NetworkController.IconState iconState) {
             CallbackInfo callbackInfo = this.mInfo;
             callbackInfo.airplaneModeEnabled = iconState.visible;
             MiuiCellularTile.this.refreshState(callbackInfo);
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setMobileDataEnabled(boolean z) {
             MiuiCellularTile.this.mDetailAdapter.setMobileDataEnabled(z);
             MiuiCellularTile.this.refreshState(this.mInfo);
@@ -290,8 +303,9 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setSubs(List<android.telephony.SubscriptionInfo> list) {
-            List unused = MiuiCellularTile.this.mSimInfoRecordList = SubscriptionManager.getDefault().getSubscriptionInfoList();
+            MiuiCellularTile.this.mSimInfoRecordList = SubscriptionManager.getDefault().getSubscriptionInfoList();
             MiuiCellularTile.this.refreshState(this.mInfo);
             if (!MiuiCellularTile.this.isShowingDetail()) {
                 return;
@@ -303,6 +317,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsDefaultDataSim(int i, boolean z) {
             if (z) {
                 MiuiCellularTile.this.mDetailAdapter.setDefaultDataSlot(i);
@@ -316,24 +331,29 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
-    private final class CellularDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
+    /* access modifiers changed from: private */
+    public final class CellularDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
         private final int[] SIM_SLOT_DISABLED_ICON;
         private final int[] SIM_SLOT_ICON;
         private int mDefaultDataSlot;
         private MiuiQSDetailItems mItems;
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getMetricsCategory() {
             return R$styleable.AppCompatTheme_windowActionBar;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public boolean getToggleEnabled() {
             return true;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public boolean hasHeader() {
             return true;
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemDisconnect(MiuiQSDetailItems.Item item) {
         }
 
@@ -342,23 +362,28 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             this.SIM_SLOT_DISABLED_ICON = new int[]{C0013R$drawable.ic_qs_sim_card1_disable, C0013R$drawable.ic_qs_sim_card2_disable};
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return MiuiCellularTile.this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
+            return ((QSTileImpl) MiuiCellularTile.this).mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Boolean getToggleState() {
-            return Boolean.valueOf(((QSTile.BooleanState) MiuiCellularTile.this.mState).value);
+            return Boolean.valueOf(((QSTile.BooleanState) ((QSTileImpl) MiuiCellularTile.this).mState).value);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Intent getSettingsIntent() {
             return MiuiCellularTile.longClickDataIntent();
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public void setToggleState(boolean z) {
-            MetricsLogger.action(MiuiCellularTile.this.mContext, 155, z);
+            MetricsLogger.action(((QSTileImpl) MiuiCellularTile.this).mContext, 155, z);
             MiuiCellularTile.this.mDataController.setMobileDataEnabled(z);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             MiuiQSDetailItems convertOrInflate = MiuiQSDetailItems.convertOrInflate(context, view, viewGroup);
             this.mItems = convertOrInflate;
@@ -371,7 +396,8 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         /* access modifiers changed from: private */
-        public void setDefaultDataSlot(int i) {
+        /* access modifiers changed from: public */
+        private void setDefaultDataSlot(int i) {
             boolean z = this.mDefaultDataSlot != i;
             this.mDefaultDataSlot = i;
             if (z && MiuiCellularTile.this.isShowingDetail()) {
@@ -380,7 +406,8 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         /* access modifiers changed from: private */
-        public void updateItems() {
+        /* access modifiers changed from: public */
+        private void updateItems() {
             if (this.mItems != null) {
                 int size = MiuiCellularTile.this.mSimInfoRecordList != null ? MiuiCellularTile.this.mSimInfoRecordList.size() : 0;
                 if (size > 0) {
@@ -394,7 +421,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
                     this.mItems.setItems((MiuiQSDetailItems.Item[]) arrayList.toArray(new MiuiQSDetailItems.Item[0]));
                     return;
                 }
-                this.mItems.setItems((MiuiQSDetailItems.Item[]) null);
+                this.mItems.setItems(null);
             }
         }
 
@@ -406,13 +433,13 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
                 if (i < iArr.length) {
                     acquireItem.icon = iArr[i];
                 }
-                acquireItem.line1 = VirtualSimUtils.isVirtualSim(MiuiCellularTile.this.mContext, subscriptionInfo.getSlotId()) ? VirtualSimUtils.getVirtualSimCarrierName(MiuiCellularTile.this.mContext) : subscriptionInfo.getDisplayName();
+                acquireItem.line1 = VirtualSimUtils.isVirtualSim(((QSTileImpl) MiuiCellularTile.this).mContext, subscriptionInfo.getSlotId()) ? VirtualSimUtils.getVirtualSimCarrierName(((QSTileImpl) MiuiCellularTile.this).mContext) : subscriptionInfo.getDisplayName();
                 acquireItem.activated = true;
             } else {
                 if (i < this.SIM_SLOT_ICON.length) {
                     acquireItem.icon = this.SIM_SLOT_DISABLED_ICON[i];
                 }
-                acquireItem.line1 = subscriptionInfo.getDisplayName() + MiuiCellularTile.this.mContext.getResources().getString(C0021R$string.quick_settings_sim_disabled);
+                acquireItem.line1 = ((Object) subscriptionInfo.getDisplayName()) + ((QSTileImpl) MiuiCellularTile.this).mContext.getResources().getString(C0021R$string.quick_settings_sim_disabled);
                 acquireItem.activated = false;
             }
             if (this.mDefaultDataSlot != i) {
@@ -429,11 +456,12 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             MiuiCellularTile.this.fireToggleStateChanged(z);
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
             int intValue;
             if (this.mItems != null) {
                 if (((CallStateControllerImpl) Dependency.get(CallStateControllerImpl.class)).getCallState() != 0) {
-                    Toast.makeText(MiuiCellularTile.this.mContext, C0021R$string.quick_settings_cellular_detail_unable_change, 0).show();
+                    Toast.makeText(((QSTileImpl) MiuiCellularTile.this).mContext, C0021R$string.quick_settings_cellular_detail_unable_change, 0).show();
                     return;
                 }
                 Object obj = item.tag;
@@ -443,8 +471,9 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getContainerHeight() {
-            return MiuiCellularTile.this.mContext.getResources().getConfiguration().orientation == 1 ? -2 : -1;
+            return ((QSTileImpl) MiuiCellularTile.this).mContext.getResources().getConfiguration().orientation == 1 ? -2 : -1;
         }
     }
 
@@ -480,6 +509,8 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             i2 = C0021R$string.quick_settings_cellular_detail_dialog_positive_button_ok;
         }
         builder.setPositiveButton(i2, new DialogInterface.OnClickListener() {
+            /* class com.android.systemui.qs.tiles.$$Lambda$MiuiCellularTile$rtBxbt8ETyneRHa1GLE2FGUkQeM */
+
             public final void onClick(DialogInterface dialogInterface, int i) {
                 MiuiCellularTile.this.lambda$showConfirmDialog$1$MiuiCellularTile(dialogInterface, i);
             }

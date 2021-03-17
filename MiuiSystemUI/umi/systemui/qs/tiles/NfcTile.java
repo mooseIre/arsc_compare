@@ -20,17 +20,21 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     private BroadcastDispatcher mBroadcastDispatcher;
     private boolean mListening;
     private BroadcastReceiver mNfcReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.qs.tiles.NfcTile.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             NfcTile.this.refreshState();
         }
     };
     private boolean mTransientEnabling;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 800;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
     }
 
@@ -39,10 +43,12 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
         this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         this.mListening = z;
@@ -53,15 +59,18 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mContext.getPackageManager().hasSystemFeature("android.hardware.nfc");
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.NFC_SETTINGS");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (!RestrictionsHelper.hasNFCRestriction(this.mContext)) {
             NfcAdapter adapter = getAdapter();
@@ -86,10 +95,12 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSecondaryClick() {
         handleClick();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_nfc_label);
     }
@@ -120,6 +131,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.quick_settings_nfc_on);

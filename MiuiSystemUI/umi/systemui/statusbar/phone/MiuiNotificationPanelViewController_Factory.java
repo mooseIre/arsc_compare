@@ -105,6 +105,7 @@ public final class MiuiNotificationPanelViewController_Factory implements Factor
         this.shadeWindowControllerProvider = provider35;
     }
 
+    @Override // javax.inject.Provider
     public MiuiNotificationPanelViewController get() {
         return provideInstance(this.panelViewProvider, this.injectionInflationControllerProvider, this.coordinatorProvider, this.pulseExpansionHandlerProvider, this.dynamicPrivacyControllerProvider, this.bypassControllerProvider, this.falsingManagerProvider, this.shadeControllerProvider, this.notificationLockscreenUserManagerProvider, this.notificationEntryManagerProvider, this.keyguardStateControllerProvider, this.statusBarStateControllerProvider, this.dozeLogProvider, this.dozeParametersProvider, this.commandQueueProvider, this.vibratorHelperProvider, this.latencyTrackerProvider, this.powerManagerProvider, this.accessibilityManagerProvider, this.displayIdProvider, this.keyguardUpdateMonitorProvider, this.metricsLoggerProvider, this.activityManagerProvider, this.zenModeControllerProvider, this.configurationControllerProvider, this.flingAnimationUtilsBuilderProvider, this.statusBarTouchableRegionManagerProvider, this.conversationNotificationManagerProvider, this.mediaHierarchyManagerProvider, this.biometricUnlockControllerProvider, this.statusBarKeyguardViewManagerProvider, this.controlPanelControllerProvider, this.eventTrackerProvider, this.wakefulnessLifecycleProvider, this.shadeWindowControllerProvider);
     }

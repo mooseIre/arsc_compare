@@ -70,11 +70,12 @@ import kotlin.jvm.functions.Function1;
 
 public class BubbleController implements ConfigurationController.ConfigurationListener, Dumpable {
     private boolean mAddedToWindowManager = false;
-    /* access modifiers changed from: private */
-    public IStatusBarService mBarService;
-    /* access modifiers changed from: private */
-    public BubbleData mBubbleData;
+    private IStatusBarService mBarService;
+    private BubbleData mBubbleData;
     private final BubbleData.Listener mBubbleDataListener = new BubbleData.Listener() {
+        /* class com.android.systemui.bubbles.BubbleController.AnonymousClass10 */
+
+        @Override // com.android.systemui.bubbles.BubbleData.Listener
         public void applyUpdate(BubbleData.Update update) {
             NotificationEntry pendingOrActiveNotif;
             BubbleController.this.ensureStackViewCreated();
@@ -119,8 +120,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                     }
                     if (pendingOrActiveNotif2 != null) {
                         if (BubbleController.this.mBubbleData.getBubblesInGroup(pendingOrActiveNotif2.getSbn().getGroupKey(), BubbleController.this.mNotificationEntryManager).isEmpty()) {
-                            for (NotifCallback maybeCancelSummary : BubbleController.this.mCallbacks) {
-                                maybeCancelSummary.maybeCancelSummary(pendingOrActiveNotif2);
+                            for (NotifCallback notifCallback2 : BubbleController.this.mCallbacks) {
+                                notifCallback2.maybeCancelSummary(pendingOrActiveNotif2);
                             }
                         }
                     }
@@ -147,56 +148,44 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             if (update.expandedChanged && update.expanded && BubbleController.this.mStackView != null) {
                 BubbleController.this.mStackView.setExpanded(true);
                 BubbleController bubbleController = BubbleController.this;
-                boolean unused = bubbleController.mHadTopUi = bubbleController.mNotificationShadeWindowController.getForceHasTopUi();
+                bubbleController.mHadTopUi = bubbleController.mNotificationShadeWindowController.getForceHasTopUi();
                 BubbleController.this.mNotificationShadeWindowController.setForceHasTopUi(true);
             }
-            for (NotifCallback invalidateNotifications : BubbleController.this.mCallbacks) {
-                invalidateNotifications.invalidateNotifications("BubbleData.Listener.applyUpdate");
+            for (NotifCallback notifCallback3 : BubbleController.this.mCallbacks) {
+                notifCallback3.invalidateNotifications("BubbleData.Listener.applyUpdate");
             }
             BubbleController.this.updateStack();
         }
     };
     private BubbleIconFactory mBubbleIconFactory;
     private ScrimView mBubbleScrim;
-    /* access modifiers changed from: private */
-    public final List<NotifCallback> mCallbacks = new ArrayList();
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public int mCurrentUserId;
-    /* access modifiers changed from: private */
-    public final BubbleDataRepository mDataRepository;
+    private final List<NotifCallback> mCallbacks = new ArrayList();
+    private final Context mContext;
+    private int mCurrentUserId;
+    private final BubbleDataRepository mDataRepository;
     private int mDensityDpi = 0;
     private BubbleExpandListener mExpandListener;
     private final FloatingContentCoordinator mFloatingContentCoordinator;
-    /* access modifiers changed from: private */
-    public boolean mHadTopUi = false;
+    private boolean mHadTopUi = false;
     private Handler mHandler = new Handler();
     private INotificationManager mINotificationManager;
-    /* access modifiers changed from: private */
-    public boolean mImeVisible = false;
+    private boolean mImeVisible = false;
     private boolean mInflateSynchronously;
     private int mLayoutDirection = -1;
     private BubbleLogger mLogger = new BubbleLoggerImpl();
-    /* access modifiers changed from: private */
-    public NotificationEntry mNotifEntryToExpandOnShadeUnlock;
+    private NotificationEntry mNotifEntryToExpandOnShadeUnlock;
     private final NotifPipeline mNotifPipeline;
     private final NotificationLockscreenUserManager mNotifUserManager;
-    /* access modifiers changed from: private */
-    public final NotificationEntryManager mNotificationEntryManager;
-    /* access modifiers changed from: private */
-    public final NotificationGroupManager mNotificationGroupManager;
+    private final NotificationEntryManager mNotificationEntryManager;
+    private final NotificationGroupManager mNotificationGroupManager;
     private final NotificationInterruptStateProvider mNotificationInterruptStateProvider;
-    /* access modifiers changed from: private */
-    public final NotificationShadeWindowController mNotificationShadeWindowController;
+    private final NotificationShadeWindowController mNotificationShadeWindowController;
     private int mOrientation = 0;
-    /* access modifiers changed from: private */
-    public Runnable mOverflowCallback = null;
+    private Runnable mOverflowCallback = null;
     private boolean mOverflowDataLoaded = false;
     private final SparseSetArray<String> mSavedBubbleKeysPerUser;
     private final ShadeController mShadeController;
-    /* access modifiers changed from: private */
-    public BubbleStackView mStackView;
+    private BubbleStackView mStackView;
     private StatusBarStateListener mStatusBarStateListener;
     private BubbleStackView.SurfaceSynchronizer mSurfaceSynchronizer;
     private SysUiState mSysUiState;
@@ -226,7 +215,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         void onPendingIntentCanceled(Bubble bubble);
     }
 
-    private class StatusBarStateListener implements StatusBarStateController.StateListener {
+    /* access modifiers changed from: private */
+    public class StatusBarStateListener implements StatusBarStateController.StateListener {
         private int mState;
 
         private StatusBarStateListener() {
@@ -236,6 +226,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             return this.mState;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onStateChanged(int i) {
             this.mState = i;
             if (i != 0) {
@@ -244,36 +235,40 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             if (BubbleController.this.mNotifEntryToExpandOnShadeUnlock != null) {
                 BubbleController bubbleController = BubbleController.this;
                 bubbleController.expandStackAndSelectBubble(bubbleController.mNotifEntryToExpandOnShadeUnlock);
-                NotificationEntry unused = BubbleController.this.mNotifEntryToExpandOnShadeUnlock = null;
+                BubbleController.this.mNotifEntryToExpandOnShadeUnlock = null;
             }
             BubbleController.this.updateStack();
         }
     }
 
     public BubbleController(Context context, NotificationShadeWindowController notificationShadeWindowController, StatusBarStateController statusBarStateController, ShadeController shadeController, BubbleData bubbleData, BubbleStackView.SurfaceSynchronizer surfaceSynchronizer, ConfigurationController configurationController, NotificationInterruptStateProvider notificationInterruptStateProvider, ZenModeController zenModeController, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationGroupManager notificationGroupManager, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, FeatureFlags featureFlags, DumpManager dumpManager, FloatingContentCoordinator floatingContentCoordinator, BubbleDataRepository bubbleDataRepository, SysUiState sysUiState, INotificationManager iNotificationManager, IStatusBarService iStatusBarService, WindowManager windowManager, LauncherApps launcherApps) {
-        ZenModeController zenModeController2 = zenModeController;
         dumpManager.registerDumpable("Bubbles", this);
         this.mContext = context;
         this.mShadeController = shadeController;
         this.mNotificationInterruptStateProvider = notificationInterruptStateProvider;
         this.mNotifUserManager = notificationLockscreenUserManager;
-        this.mZenModeController = zenModeController2;
+        this.mZenModeController = zenModeController;
         this.mFloatingContentCoordinator = floatingContentCoordinator;
         this.mDataRepository = bubbleDataRepository;
         this.mINotificationManager = iNotificationManager;
-        zenModeController2.addCallback(new ZenModeController.Callback() {
+        zenModeController.addCallback(new ZenModeController.Callback() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
             public void onConfigChanged(ZenModeConfig zenModeConfig) {
-                for (Bubble next : BubbleController.this.mBubbleData.getBubbles()) {
-                    next.setShowDot(next.showInShade());
+                for (Bubble bubble : BubbleController.this.mBubbleData.getBubbles()) {
+                    bubble.setShowDot(bubble.showInShade());
                 }
             }
         });
-        ConfigurationController configurationController2 = configurationController;
         configurationController.addCallback(this);
         this.mSysUiState = sysUiState;
         this.mBubbleData = bubbleData;
         bubbleData.setListener(this.mBubbleDataListener);
         this.mBubbleData.setSuppressionChangedListener(new NotificationSuppressionChangedListener() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass2 */
+
+            @Override // com.android.systemui.bubbles.BubbleController.NotificationSuppressionChangedListener
             public void onBubbleNotificationSuppressionChange(Bubble bubble) {
                 try {
                     BubbleController.this.mBarService.onBubbleNotificationSuppressionChanged(bubble.getKey(), !bubble.showInShade());
@@ -282,6 +277,9 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
         });
         this.mBubbleData.setPendingIntentCancelledListener(new PendingIntentCanceledListener() {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleController$nWhc82cKJiqwvfEf64TRF3Q5U6g */
+
+            @Override // com.android.systemui.bubbles.BubbleController.PendingIntentCanceledListener
             public final void onPendingIntentCanceled(Bubble bubble) {
                 BubbleController.this.lambda$new$1$BubbleController(bubble);
             }
@@ -297,7 +295,6 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         this.mNotificationShadeWindowController = notificationShadeWindowController;
         StatusBarStateListener statusBarStateListener = new StatusBarStateListener();
         this.mStatusBarStateListener = statusBarStateListener;
-        StatusBarStateController statusBarStateController2 = statusBarStateController;
         statusBarStateController.addCallback(statusBarStateListener);
         this.mTaskStackListener = new BubbleTaskStackListener();
         ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
@@ -315,16 +312,21 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         this.mSavedBubbleKeysPerUser = new SparseSetArray<>();
         this.mCurrentUserId = this.mNotifUserManager.getCurrentUserId();
         this.mNotifUserManager.addUserChangedListener(new NotificationLockscreenUserManager.UserChangedListener() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass3 */
+
+            @Override // com.android.systemui.statusbar.NotificationLockscreenUserManager.UserChangedListener
             public void onUserChanged(int i) {
                 BubbleController bubbleController = BubbleController.this;
                 bubbleController.saveBubbles(bubbleController.mCurrentUserId);
                 BubbleController.this.mBubbleData.dismissAll(8);
                 BubbleController.this.restoreBubbles(i);
-                int unused = BubbleController.this.mCurrentUserId = i;
+                BubbleController.this.mCurrentUserId = i;
             }
         });
         this.mBubbleIconFactory = new BubbleIconFactory(context);
         launcherApps.registerCallback(new LauncherApps.Callback() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass4 */
+
             public void onPackageAdded(String str, UserHandle userHandle) {
             }
 
@@ -339,11 +341,12 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
 
             public void onPackagesUnavailable(String[] strArr, UserHandle userHandle, boolean z) {
-                for (String removeBubblesWithPackageName : strArr) {
-                    BubbleController.this.mBubbleData.removeBubblesWithPackageName(removeBubblesWithPackageName, 13);
+                for (String str : strArr) {
+                    BubbleController.this.mBubbleData.removeBubblesWithPackageName(str, 13);
                 }
             }
 
+            @Override // android.content.pm.LauncherApps.Callback
             public void onShortcutsChanged(String str, List<ShortcutInfo> list, UserHandle userHandle) {
                 super.onShortcutsChanged(str, list, userHandle);
                 BubbleController.this.mBubbleData.removeBubblesWithInvalidShortcuts(str, list, 12);
@@ -359,6 +362,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                 bubble.setPendingIntentCanceled();
             } else {
                 this.mHandler.post(new Runnable(bubble) {
+                    /* class com.android.systemui.bubbles.$$Lambda$BubbleController$itibjTNfFjFc1_LsSQYkBCjvNQ */
                     public final /* synthetic */ Bubble f$1;
 
                     {
@@ -393,23 +397,32 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
 
     private void setupNEM() {
         this.mNotificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass5 */
+
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPendingEntryAdded(NotificationEntry notificationEntry) {
                 BubbleController.this.onEntryAdded(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                 BubbleController.this.onEntryUpdated(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
                 BubbleController.this.onEntryRemoved(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onNotificationRankingUpdated(NotificationListenerService.RankingMap rankingMap) {
                 BubbleController.this.onRankingUpdated(rankingMap);
             }
         });
         this.mNotificationEntryManager.addNotificationRemoveInterceptor(new NotificationRemoveInterceptor() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass6 */
+
+            @Override // com.android.systemui.statusbar.NotificationRemoveInterceptor
             public boolean onNotificationRemoveRequested(String str, NotificationEntry notificationEntry, int i) {
                 boolean z = true;
                 boolean z2 = i == 3;
@@ -426,6 +439,9 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
         });
         this.mNotificationGroupManager.addOnGroupChangeListener(new NotificationGroupManager.OnGroupChangeListener() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass7 */
+
+            @Override // com.android.systemui.statusbar.phone.NotificationGroupManager.OnGroupChangeListener
             public void onGroupSuppressionChanged(NotificationGroupManager.NotificationGroup notificationGroup, boolean z) {
                 NotificationEntry notificationEntry = notificationGroup.summary;
                 String groupKey = notificationEntry != null ? notificationEntry.getSbn().getGroupKey() : null;
@@ -435,14 +451,19 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
         });
         addNotifCallback(new NotifCallback() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass8 */
+
+            @Override // com.android.systemui.bubbles.BubbleController.NotifCallback
             public void removeNotification(NotificationEntry notificationEntry, int i) {
                 BubbleController.this.mNotificationEntryManager.performRemoveNotification(notificationEntry.getSbn(), i);
             }
 
+            @Override // com.android.systemui.bubbles.BubbleController.NotifCallback
             public void invalidateNotifications(String str) {
                 BubbleController.this.mNotificationEntryManager.updateNotifications(str);
             }
 
+            @Override // com.android.systemui.bubbles.BubbleController.NotifCallback
             public void maybeCancelSummary(NotificationEntry notificationEntry) {
                 String groupKey = notificationEntry.getSbn().getGroupKey();
                 if (BubbleController.this.mBubbleData.isSummarySuppressed(groupKey)) {
@@ -468,18 +489,24 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
 
     private void setupNotifPipeline() {
         this.mNotifPipeline.addCollectionListener(new NotifCollectionListener() {
+            /* class com.android.systemui.bubbles.BubbleController.AnonymousClass9 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryAdded(NotificationEntry notificationEntry) {
                 BubbleController.this.onEntryAdded(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryUpdated(NotificationEntry notificationEntry) {
                 BubbleController.this.onEntryUpdated(notificationEntry);
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
                 BubbleController.this.onRankingUpdated(rankingMap);
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryRemoved(NotificationEntry notificationEntry, int i) {
                 BubbleController.this.onEntryRemoved(notificationEntry);
             }
@@ -514,17 +541,25 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     /* access modifiers changed from: private */
-    public void ensureStackViewCreated() {
+    /* access modifiers changed from: public */
+    private void ensureStackViewCreated() {
         if (this.mStackView == null) {
             BubbleStackView bubbleStackView = new BubbleStackView(this.mContext, this.mBubbleData, this.mSurfaceSynchronizer, this.mFloatingContentCoordinator, this.mSysUiState, new Runnable() {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleController$9ZgvorygajtGrm7C34N9mjHiRg4 */
+
                 public final void run() {
                     BubbleController.this.onAllBubblesAnimatedOut();
                 }
             }, new Consumer() {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleController$n5Txkm3_6gK60tp4RYvQGkCgICc */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     BubbleController.this.onImeVisibilityChanged(((Boolean) obj).booleanValue());
                 }
             }, new Runnable() {
+                /* class com.android.systemui.bubbles.$$Lambda$jFCV6yHjrilnLmu1dvU8ruP2Llk */
+
                 public final void run() {
                     BubbleController.this.hideCurrentInputMethod();
                 }
@@ -536,6 +571,9 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                 this.mStackView.setExpandListener(bubbleExpandListener);
             }
             this.mStackView.setUnbubbleConversationCallback(new Consumer() {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleController$QJVf62b5wCS3J_DHWUbuCKTKs3M */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     BubbleController.this.lambda$ensureStackViewCreated$2$BubbleController((String) obj);
                 }
@@ -625,30 +663,34 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     /* access modifiers changed from: private */
-    public void saveBubbles(int i) {
+    /* access modifiers changed from: public */
+    private void saveBubbles(int i) {
         this.mSavedBubbleKeysPerUser.remove(i);
-        for (Bubble key : this.mBubbleData.getBubbles()) {
-            this.mSavedBubbleKeysPerUser.add(i, key.getKey());
+        for (Bubble bubble : this.mBubbleData.getBubbles()) {
+            this.mSavedBubbleKeysPerUser.add(i, bubble.getKey());
         }
     }
 
     /* access modifiers changed from: private */
-    public void restoreBubbles(int i) {
+    /* access modifiers changed from: public */
+    private void restoreBubbles(int i) {
         ArraySet arraySet = this.mSavedBubbleKeysPerUser.get(i);
         if (arraySet != null) {
-            for (NotificationEntry next : this.mNotificationEntryManager.getActiveNotificationsForCurrentUser()) {
-                if (arraySet.contains(next.getKey()) && this.mNotificationInterruptStateProvider.shouldBubbleUp(next) && next.isBubble() && canLaunchInActivityView(this.mContext, next)) {
-                    updateBubble(next, true, false);
+            for (NotificationEntry notificationEntry : this.mNotificationEntryManager.getActiveNotificationsForCurrentUser()) {
+                if (arraySet.contains(notificationEntry.getKey()) && this.mNotificationInterruptStateProvider.shouldBubbleUp(notificationEntry) && notificationEntry.isBubble() && canLaunchInActivityView(this.mContext, notificationEntry)) {
+                    updateBubble(notificationEntry, true, false);
                 }
             }
             this.mSavedBubbleKeysPerUser.remove(this.mCurrentUserId);
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         updateForThemeChanges();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onOverlayChanged() {
         updateForThemeChanges();
     }
@@ -659,14 +701,15 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             bubbleStackView.onThemeChanged();
         }
         this.mBubbleIconFactory = new BubbleIconFactory(this.mContext);
-        for (Bubble inflate : this.mBubbleData.getBubbles()) {
-            inflate.inflate((BubbleViewInfoTask.Callback) null, this.mContext, this.mStackView, this.mBubbleIconFactory, false);
+        for (Bubble bubble : this.mBubbleData.getBubbles()) {
+            bubble.inflate(null, this.mContext, this.mStackView, this.mBubbleIconFactory, false);
         }
-        for (Bubble inflate2 : this.mBubbleData.getOverflowBubbles()) {
-            inflate2.inflate((BubbleViewInfoTask.Callback) null, this.mContext, this.mStackView, this.mBubbleIconFactory, false);
+        for (Bubble bubble2 : this.mBubbleData.getOverflowBubbles()) {
+            bubble2.inflate(null, this.mContext, this.mStackView, this.mBubbleIconFactory, false);
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         BubbleStackView bubbleStackView = this.mStackView;
         if (bubbleStackView != null && configuration != null) {
@@ -696,12 +739,14 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
 
     public void setExpandListener(BubbleExpandListener bubbleExpandListener) {
         $$Lambda$BubbleController$0VC4vw4gvzIdDv19h0ZrywF_riU r0 = new BubbleExpandListener(bubbleExpandListener) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleController$0VC4vw4gvzIdDv19h0ZrywF_riU */
             public final /* synthetic */ BubbleController.BubbleExpandListener f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.bubbles.BubbleController.BubbleExpandListener
             public final void onBubbleExpandChanged(boolean z, String str) {
                 BubbleController.this.lambda$setExpandListener$3$BubbleController(this.f$1, z, str);
             }
@@ -743,40 +788,12 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         String key = notificationEntry.getKey();
         boolean z = this.mBubbleData.hasAnyBubbleWithKey(key) && !this.mBubbleData.getAnyBubbleWithkey(key).showInShade();
         String groupKey = notificationEntry.getSbn().getGroupKey();
-        boolean isSummarySuppressed = this.mBubbleData.isSummarySuppressed(groupKey);
-        if ((!key.equals(this.mBubbleData.getSummaryKey(groupKey)) || !isSummarySuppressed) && !z) {
-            return false;
-        }
-        return true;
+        return (key.equals(this.mBubbleData.getSummaryKey(groupKey)) && this.mBubbleData.isSummarySuppressed(groupKey)) || z;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
-        r0 = r1.mBubbleData;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean isBubbleExpanded(com.android.systemui.statusbar.notification.collection.NotificationEntry r2) {
-        /*
-            r1 = this;
-            boolean r0 = r1.isStackExpanded()
-            if (r0 == 0) goto L_0x0026
-            com.android.systemui.bubbles.BubbleData r0 = r1.mBubbleData
-            if (r0 == 0) goto L_0x0026
-            com.android.systemui.bubbles.Bubble r0 = r0.getSelectedBubble()
-            if (r0 == 0) goto L_0x0026
-            com.android.systemui.bubbles.BubbleData r1 = r1.mBubbleData
-            com.android.systemui.bubbles.Bubble r1 = r1.getSelectedBubble()
-            java.lang.String r1 = r1.getKey()
-            java.lang.String r2 = r2.getKey()
-            boolean r1 = r1.equals(r2)
-            if (r1 == 0) goto L_0x0026
-            r1 = 1
-            goto L_0x0027
-        L_0x0026:
-            r1 = 0
-        L_0x0027:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.bubbles.BubbleController.isBubbleExpanded(com.android.systemui.statusbar.notification.collection.NotificationEntry):boolean");
+    public boolean isBubbleExpanded(NotificationEntry notificationEntry) {
+        BubbleData bubbleData;
+        return isStackExpanded() && (bubbleData = this.mBubbleData) != null && bubbleData.getSelectedBubble() != null && this.mBubbleData.getSelectedBubble().getKey().equals(notificationEntry.getKey());
     }
 
     /* access modifiers changed from: package-private */
@@ -838,6 +855,9 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         if (this.mBubbleData.getOverflowBubbles().isEmpty() && !this.mOverflowDataLoaded) {
             this.mOverflowDataLoaded = true;
             this.mDataRepository.loadBubbles(new Function1() {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleController$DOCWkNShFlaO6cGprPyPx98P4oE */
+
+                @Override // kotlin.jvm.functions.Function1
                 public final Object invoke(Object obj) {
                     return BubbleController.this.lambda$loadOverflowBubblesFromDisk$6$BubbleController((List) obj);
                 }
@@ -849,6 +869,9 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     /* renamed from: lambda$loadOverflowBubblesFromDisk$6 */
     public /* synthetic */ Unit lambda$loadOverflowBubblesFromDisk$6$BubbleController(List list) {
         list.forEach(new Consumer() {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleController$_mg4UF9QSoehsZuSwJtOultVl1U */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 BubbleController.this.lambda$loadOverflowBubblesFromDisk$5$BubbleController((Bubble) obj);
             }
@@ -861,12 +884,14 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     public /* synthetic */ void lambda$loadOverflowBubblesFromDisk$5$BubbleController(Bubble bubble) {
         if (!this.mBubbleData.hasAnyBubbleWithKey(bubble.getKey())) {
             bubble.inflate(new BubbleViewInfoTask.Callback(bubble) {
+                /* class com.android.systemui.bubbles.$$Lambda$BubbleController$2Y1b47AMtxrttMHzCCBd8aAXiw */
                 public final /* synthetic */ Bubble f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
+                @Override // com.android.systemui.bubbles.BubbleViewInfoTask.Callback
                 public final void onBubbleViewsReady(Bubble bubble) {
                     BubbleController.this.lambda$loadOverflowBubblesFromDisk$4$BubbleController(this.f$1, bubble);
                 }
@@ -885,7 +910,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         if (notificationEntry.getImportance() >= 4) {
             notificationEntry.setInterruption();
         }
-        inflateAndAdd(this.mBubbleData.getOrCreateBubble(notificationEntry, (Bubble) null), z, z2);
+        inflateAndAdd(this.mBubbleData.getOrCreateBubble(notificationEntry, null), z, z2);
     }
 
     /* access modifiers changed from: package-private */
@@ -893,6 +918,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         ensureStackViewCreated();
         bubble.setInflateSynchronously(this.mInflateSynchronously);
         bubble.inflate(new BubbleViewInfoTask.Callback(z, z2) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleController$kBf4keAqVIQRxl9SNI0prTDdem4 */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ boolean f$2;
 
@@ -901,6 +927,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                 this.f$2 = r3;
             }
 
+            @Override // com.android.systemui.bubbles.BubbleViewInfoTask.Callback
             public final void onBubbleViewsReady(Bubble bubble) {
                 BubbleController.this.lambda$inflateAndAdd$7$BubbleController(this.f$1, this.f$2, bubble);
             }
@@ -951,14 +978,16 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     /* access modifiers changed from: private */
-    public void onEntryAdded(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void onEntryAdded(NotificationEntry notificationEntry) {
         if (this.mNotificationInterruptStateProvider.shouldBubbleUp(notificationEntry) && notificationEntry.isBubble() && canLaunchInActivityView(this.mContext, notificationEntry)) {
             updateBubble(notificationEntry);
         }
     }
 
     /* access modifiers changed from: private */
-    public void onEntryUpdated(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void onEntryUpdated(NotificationEntry notificationEntry) {
         boolean z = this.mNotificationInterruptStateProvider.shouldBubbleUp(notificationEntry) && canLaunchInActivityView(this.mContext, notificationEntry);
         if (!z && this.mBubbleData.hasAnyBubbleWithKey(notificationEntry.getKey())) {
             removeBubble(notificationEntry.getKey(), 7);
@@ -968,7 +997,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     /* access modifiers changed from: private */
-    public void onEntryRemoved(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void onEntryRemoved(NotificationEntry notificationEntry) {
         if (isSummaryOfBubbles(notificationEntry)) {
             String groupKey = notificationEntry.getSbn().getGroupKey();
             this.mBubbleData.removeSuppressedSummary(groupKey);
@@ -982,7 +1012,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     /* access modifiers changed from: private */
-    public void onRankingUpdated(NotificationListenerService.RankingMap rankingMap) {
+    /* access modifiers changed from: public */
+    private void onRankingUpdated(NotificationListenerService.RankingMap rankingMap) {
         if (this.mTmpRanking == null) {
             this.mTmpRanking = new NotificationListenerService.Ranking();
         }
@@ -1018,14 +1049,15 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
     }
 
     /* access modifiers changed from: private */
-    public void setIsBubble(Bubble bubble, boolean z) {
+    /* access modifiers changed from: public */
+    private void setIsBubble(Bubble bubble, boolean z) {
         Objects.requireNonNull(bubble);
         bubble.setIsBubble(z);
         NotificationEntry pendingOrActiveNotif = this.mNotificationEntryManager.getPendingOrActiveNotif(bubble.getKey());
         if (pendingOrActiveNotif != null) {
             setIsBubble(pendingOrActiveNotif, z, bubble.shouldAutoExpand());
         } else if (z) {
-            Bubble orCreateBubble = this.mBubbleData.getOrCreateBubble((NotificationEntry) null, bubble);
+            Bubble orCreateBubble = this.mBubbleData.getOrCreateBubble(null, bubble);
             inflateAndAdd(orCreateBubble, orCreateBubble.shouldAutoExpand(), !orCreateBubble.shouldAutoExpand());
         }
     }
@@ -1047,8 +1079,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             bubbleInStackWithKey.setSuppressNotification(true);
             bubbleInStackWithKey.setShowDot(false);
         }
-        for (NotifCallback invalidateNotifications : this.mCallbacks) {
-            invalidateNotifications.invalidateNotifications("BubbleController.handleDismissalInterception");
+        for (NotifCallback notifCallback : this.mCallbacks) {
+            notifCallback.invalidateNotifications("BubbleController.handleDismissalInterception");
         }
         return true;
     }
@@ -1083,8 +1115,8 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
                         anyBubbleWithkey.setShowDot(false);
                     }
                 } else {
-                    for (NotifCallback removeNotification : this.mCallbacks) {
-                        removeNotification.removeNotification(notificationEntry2, 12);
+                    for (NotifCallback notifCallback : this.mCallbacks) {
+                        notifCallback.removeNotification(notificationEntry2, 12);
                     }
                 }
             }
@@ -1122,6 +1154,7 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         return this.mStackView;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("BubbleController state:");
         this.mBubbleData.dump(fileDescriptor, printWriter, strArr);
@@ -1137,28 +1170,32 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         private BubbleTaskStackListener() {
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
             if (BubbleController.this.mStackView != null && runningTaskInfo.displayId == 0 && !BubbleController.this.mStackView.isExpansionAnimating()) {
                 BubbleController.this.mBubbleData.setExpanded(false);
             }
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onActivityRestartAttempt(ActivityManager.RunningTaskInfo runningTaskInfo, boolean z, boolean z2, boolean z3) {
-            for (Bubble next : BubbleController.this.mBubbleData.getBubbles()) {
-                if (next.getDisplayId() == runningTaskInfo.displayId) {
-                    BubbleController.this.mBubbleData.setSelectedBubble(next);
+            for (Bubble bubble : BubbleController.this.mBubbleData.getBubbles()) {
+                if (bubble.getDisplayId() == runningTaskInfo.displayId) {
+                    BubbleController.this.mBubbleData.setSelectedBubble(bubble);
                     BubbleController.this.mBubbleData.setExpanded(true);
                     return;
                 }
             }
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onActivityLaunchOnSecondaryDisplayRerouted() {
             if (BubbleController.this.mStackView != null) {
                 BubbleController.this.mBubbleData.setExpanded(false);
             }
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onBackPressedOnTaskRoot(ActivityManager.RunningTaskInfo runningTaskInfo) {
             if (BubbleController.this.mStackView != null) {
                 int i = runningTaskInfo.displayId;
@@ -1174,12 +1211,14 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
             }
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onSingleTaskDisplayDrawn(int i) {
             if (BubbleController.this.mStackView != null) {
                 BubbleController.this.mStackView.showExpandedViewContents(i);
             }
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onSingleTaskDisplayEmpty(int i) {
             BubbleViewProvider expandedBubble = BubbleController.this.mStackView != null ? BubbleController.this.mStackView.getExpandedBubble() : null;
             int displayId = expandedBubble != null ? expandedBubble.getDisplayId() : -1;
@@ -1211,13 +1250,16 @@ public class BubbleController implements ConfigurationController.ConfigurationLi
         }
     }
 
-    private class BubblesImeListener extends PinnedStackListenerForwarder.PinnedStackListener {
+    /* access modifiers changed from: private */
+    public class BubblesImeListener extends PinnedStackListenerForwarder.PinnedStackListener {
         private BubblesImeListener() {
         }
 
+        @Override // com.android.systemui.shared.system.PinnedStackListenerForwarder.PinnedStackListener
         public void onImeVisibilityChanged(boolean z, int i) {
             if (BubbleController.this.mStackView != null) {
                 BubbleController.this.mStackView.post(new Runnable(z, i) {
+                    /* class com.android.systemui.bubbles.$$Lambda$BubbleController$BubblesImeListener$k3Ccv01hiK8jFFaKEuMmcHqId4 */
                     public final /* synthetic */ boolean f$1;
                     public final /* synthetic */ int f$2;
 

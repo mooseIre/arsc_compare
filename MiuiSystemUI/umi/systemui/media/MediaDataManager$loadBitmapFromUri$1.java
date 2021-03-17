@@ -3,8 +3,9 @@ package com.android.systemui.media;
 import android.graphics.ImageDecoder;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaDataManager.kt */
-final class MediaDataManager$loadBitmapFromUri$1 implements ImageDecoder.OnHeaderDecodedListener {
+public final class MediaDataManager$loadBitmapFromUri$1 implements ImageDecoder.OnHeaderDecodedListener {
     public static final MediaDataManager$loadBitmapFromUri$1 INSTANCE = new MediaDataManager$loadBitmapFromUri$1();
 
     MediaDataManager$loadBitmapFromUri$1() {

@@ -78,10 +78,14 @@ public class NotificationShadeWindowController implements RemoteInputController.
         this.mConfiguration = new Configuration();
         this.mUserActivityTime = 10000;
         this.mStateListener = new StatusBarStateController.StateListener() {
+            /* class com.android.systemui.statusbar.phone.NotificationShadeWindowController.AnonymousClass1 */
+
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 NotificationShadeWindowController.this.setStatusBarState(i);
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onDozingChanged(boolean z) {
                 NotificationShadeWindowController.this.setDozing(z);
             }
@@ -101,6 +105,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
         ((SysuiStatusBarStateController) statusBarStateController).addCallback(this.mStateListener, 1);
         configurationController.addCallback(this);
         this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(context.getDisplay().getSupportedModes()).filter(new Predicate(context.getResources().getInteger(C0016R$integer.config_keyguardRefreshRate), context.getDisplay().getMode()) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationShadeWindowController$eZhKF4qxAkYFnq9gGQ6_QkkGic4 */
             public final /* synthetic */ int f$0;
             public final /* synthetic */ Display.Mode f$1;
 
@@ -109,10 +114,11 @@ public class NotificationShadeWindowController implements RemoteInputController.
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return NotificationShadeWindowController.lambda$new$0(this.f$0, this.f$1, (Display.Mode) obj);
             }
-        }).findFirst().orElse((Object) null);
+        }).findFirst().orElse(null);
         this.mOnPcMode = (context.getResources().getConfiguration().uiMode & 8192) != 0 ? true : z;
     }
 
@@ -121,15 +127,12 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     public void registerCallback(StatusBarWindowCallback statusBarWindowCallback) {
-        int i = 0;
-        while (i < this.mCallbacks.size()) {
-            if (this.mCallbacks.get(i).get() != statusBarWindowCallback) {
-                i++;
-            } else {
+        for (int i = 0; i < this.mCallbacks.size(); i++) {
+            if (this.mCallbacks.get(i).get() == statusBarWindowCallback) {
                 return;
             }
         }
-        this.mCallbacks.add(new WeakReference(statusBarWindowCallback));
+        this.mCallbacks.add(new WeakReference<>(statusBarWindowCallback));
     }
 
     public void setScrimsVisibilityListener(Consumer<Integer> consumer) {
@@ -346,7 +349,9 @@ public class NotificationShadeWindowController implements RemoteInputController.
             this.mWindowManager.updateViewLayout(this.mNotificationShadeView, this.mLp);
         }
         if (this.mHasTopUi != this.mHasTopUiChanged) {
-            DejankUtils.whitelistIpcs((Runnable) new Runnable() {
+            DejankUtils.whitelistIpcs(new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationShadeWindowController$cWnla7q4SPNKNSlx9hB8mcjvaHk */
+
                 public final void run() {
                     NotificationShadeWindowController.this.lambda$apply$1$NotificationShadeWindowController();
                 }
@@ -368,7 +373,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
 
     public void notifyStateChangedCallbacks() {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
-            StatusBarWindowCallback statusBarWindowCallback = (StatusBarWindowCallback) this.mCallbacks.get(i).get();
+            StatusBarWindowCallback statusBarWindowCallback = this.mCallbacks.get(i).get();
             if (statusBarWindowCallback != null) {
                 State state = this.mCurrentState;
                 statusBarWindowCallback.onStateChanged(state.mKeyguardShowing, state.mKeyguardOccluded, state.mBouncerShowing);
@@ -517,7 +522,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
     }
 
     /* access modifiers changed from: private */
-    public void setStatusBarState(int i) {
+    /* access modifiers changed from: public */
+    private void setStatusBarState(int i) {
         State state = this.mCurrentState;
         state.mStatusBarState = i;
         apply(state);
@@ -535,12 +541,14 @@ public class NotificationShadeWindowController implements RemoteInputController.
         apply(state);
     }
 
+    @Override // com.android.systemui.statusbar.RemoteInputController.Callback
     public void onRemoteInputActive(boolean z) {
         State state = this.mCurrentState;
         state.mRemoteInputActive = z;
         apply(state);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         boolean shouldEnableKeyguardScreenRotation;
         boolean z = (configuration.uiMode & 8192) != 0;
@@ -598,6 +606,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
         this.mForcePluginOpenListener = forcePluginOpenListener;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("NotificationShadeWindowController:");
         printWriter.println("  mKeyguardDisplayMode=" + this.mKeyguardDisplayMode);
@@ -606,6 +615,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
         printWriter.println(this.mCurrentState);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onThemeChanged() {
         if (this.mNotificationShadeView != null) {
             setKeyguardDark(this.mColorExtractor.getNeutralColors().supportsDarkText());
@@ -628,7 +638,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
         apply(state);
     }
 
-    private static class State {
+    /* access modifiers changed from: private */
+    public static class State {
         boolean keygaurdTransparent;
         boolean mBackdropShowing;
         int mBackgroundBlurRadius;
@@ -661,7 +672,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
         }
 
         /* access modifiers changed from: private */
-        public boolean isKeyguardShowingAndNotOccluded() {
+        /* access modifiers changed from: public */
+        private boolean isKeyguardShowingAndNotOccluded() {
             return this.mKeyguardShowing && !this.mKeyguardOccluded;
         }
 
@@ -669,7 +681,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
             StringBuilder sb = new StringBuilder();
             sb.append("Window State {");
             sb.append("\n");
-            for (Field field : State.class.getDeclaredFields()) {
+            Field[] declaredFields = State.class.getDeclaredFields();
+            for (Field field : declaredFields) {
                 sb.append("  ");
                 try {
                     sb.append(field.getName());

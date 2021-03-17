@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideNotificationMessagingUtilFactory im
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationMessagingUtil get() {
         return provideInstance(this.module, this.contextProvider);
     }

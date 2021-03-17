@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvideTimeTickHandlerFactory implements F
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public Handler get() {
         return provideInstance(this.module);
     }

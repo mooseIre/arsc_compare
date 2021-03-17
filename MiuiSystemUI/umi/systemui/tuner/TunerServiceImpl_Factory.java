@@ -20,6 +20,7 @@ public final class TunerServiceImpl_Factory implements Factory<TunerServiceImpl>
         this.broadcastDispatcherProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public TunerServiceImpl get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.leakDetectorProvider, this.broadcastDispatcherProvider);
     }

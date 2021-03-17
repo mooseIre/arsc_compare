@@ -5,8 +5,9 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotifViewManager.kt */
-final class NotifViewManager$getListItems$1 extends Lambda implements Function1<Integer, View> {
+public final class NotifViewManager$getListItems$1 extends Lambda implements Function1<Integer, View> {
     final /* synthetic */ SimpleNotificationListContainer $container;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -15,8 +16,11 @@ final class NotifViewManager$getListItems$1 extends Lambda implements Function1<
         this.$container = simpleNotificationListContainer;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        return invoke(((Number) obj).intValue());
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ View invoke(Integer num) {
+        return invoke(num.intValue());
     }
 
     @NotNull

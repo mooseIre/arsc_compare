@@ -11,10 +11,10 @@ import com.android.systemui.biometrics.AuthCredentialPatternView;
 import java.util.List;
 
 public class AuthCredentialPatternView extends AuthCredentialView {
-    /* access modifiers changed from: private */
-    public LockPatternView mLockPatternView;
+    private LockPatternView mLockPatternView;
 
-    private class UnlockPatternListener implements LockPatternView.OnPatternListener {
+    /* access modifiers changed from: private */
+    public class UnlockPatternListener implements LockPatternView.OnPatternListener {
         public void onPatternCellAdded(List<LockPatternView.Cell> list) {
         }
 
@@ -34,14 +34,16 @@ public class AuthCredentialPatternView extends AuthCredentialView {
             }
             AuthCredentialPatternView.this.mLockPatternView.setEnabled(false);
             if (list.size() < 4) {
-                onPatternVerified((byte[]) null, 0);
+                onPatternVerified(null, 0);
                 return;
             }
             LockscreenCredential createPattern = LockscreenCredential.createPattern(list);
             try {
                 AuthCredentialPatternView.this.mPendingLockCheck = LockPatternChecker.verifyCredential(AuthCredentialPatternView.this.mLockPatternUtils, createPattern, AuthCredentialPatternView.this.mOperationId, AuthCredentialPatternView.this.mEffectiveUserId, new LockPatternChecker.OnVerifyCallback() {
+                    /* class com.android.systemui.biometrics.$$Lambda$AuthCredentialPatternView$UnlockPatternListener$i26rXOj6tOr6sIKp7_roy07Tuw */
+
                     public final void onVerified(byte[] bArr, int i) {
-                        AuthCredentialPatternView.UnlockPatternListener.this.onPatternVerified(bArr, i);
+                        AuthCredentialPatternView.UnlockPatternListener.m11lambda$i26rXOj6tOr6sIKp7_roy07Tuw(AuthCredentialPatternView.UnlockPatternListener.this, bArr, i);
                     }
                 });
                 if (createPattern != null) {
@@ -67,6 +69,7 @@ public class AuthCredentialPatternView extends AuthCredentialView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthCredentialView
     public void onErrorTimeoutFinish() {
         super.onErrorTimeoutFinish();
         this.mLockPatternView.setEnabled(true);
@@ -77,6 +80,7 @@ public class AuthCredentialPatternView extends AuthCredentialView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthCredentialView
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         LockPatternView findViewById = findViewById(C0015R$id.lockPattern);

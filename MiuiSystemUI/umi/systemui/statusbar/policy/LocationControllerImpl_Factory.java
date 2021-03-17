@@ -22,6 +22,7 @@ public final class LocationControllerImpl_Factory implements Factory<LocationCon
         this.bootCompleteCacheProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public LocationControllerImpl get() {
         return provideInstance(this.contextProvider, this.mainLooperProvider, this.bgLooperProvider, this.broadcastDispatcherProvider, this.bootCompleteCacheProvider);
     }

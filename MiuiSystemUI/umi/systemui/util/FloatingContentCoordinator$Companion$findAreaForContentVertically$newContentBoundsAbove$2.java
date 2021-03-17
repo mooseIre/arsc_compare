@@ -1,14 +1,16 @@
 package com.android.systemui.util;
 
 import android.graphics.Rect;
-import java.util.List;
+import java.util.Collection;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 import kotlin.jvm.internal.Ref$ObjectRef;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: FloatingContentCoordinator.kt */
-final class FloatingContentCoordinator$Companion$findAreaForContentVertically$newContentBoundsAbove$2 extends Lambda implements Function0<Rect> {
+public final class FloatingContentCoordinator$Companion$findAreaForContentVertically$newContentBoundsAbove$2 extends Lambda implements Function0<Rect> {
     final /* synthetic */ Rect $contentRect;
     final /* synthetic */ Rect $newlyOverlappingRect;
     final /* synthetic */ Ref$ObjectRef $rectsToAvoidAbove;
@@ -21,8 +23,9 @@ final class FloatingContentCoordinator$Companion$findAreaForContentVertically$ne
         this.$newlyOverlappingRect = rect2;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     @NotNull
     public final Rect invoke() {
-        return FloatingContentCoordinator.Companion.findAreaForContentAboveOrBelow(this.$contentRect, CollectionsKt___CollectionsKt.plus((List) this.$rectsToAvoidAbove.element, this.$newlyOverlappingRect), true);
+        return FloatingContentCoordinator.Companion.findAreaForContentAboveOrBelow(this.$contentRect, CollectionsKt___CollectionsKt.plus((Collection) this.$rectsToAvoidAbove.element, (Object) this.$newlyOverlappingRect), true);
     }
 }

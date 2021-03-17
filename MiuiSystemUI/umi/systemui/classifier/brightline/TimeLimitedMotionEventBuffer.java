@@ -9,16 +9,20 @@ import java.util.ListIterator;
 
 public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
     private long mMaxAgeMs;
-    /* access modifiers changed from: private */
-    public final LinkedList<MotionEvent> mMotionEvents = new LinkedList<>();
+    private final LinkedList<MotionEvent> mMotionEvents = new LinkedList<>();
 
-    public /* bridge */ /* synthetic */ void add(int i, Object obj) {
-        add(i, (MotionEvent) obj);
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [int, java.lang.Object] */
+    @Override // java.util.List
+    public /* bridge */ /* synthetic */ void add(int i, MotionEvent motionEvent) {
+        add(i, motionEvent);
         throw null;
     }
 
-    public /* bridge */ /* synthetic */ Object set(int i, Object obj) {
-        set(i, (MotionEvent) obj);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [int, java.lang.Object] */
+    @Override // java.util.List
+    public /* bridge */ /* synthetic */ MotionEvent set(int i, MotionEvent motionEvent) {
+        set(i, motionEvent);
         throw null;
     }
 
@@ -44,6 +48,7 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.List
     public MotionEvent remove(int i) {
         return this.mMotionEvents.remove(i);
     }
@@ -68,6 +73,7 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
         return this.mMotionEvents.contains(obj);
     }
 
+    @Override // java.util.List, java.util.Collection, java.lang.Iterable
     public Iterator<MotionEvent> iterator() {
         return this.mMotionEvents.iterator();
     }
@@ -76,8 +82,9 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
         return this.mMotionEvents.toArray();
     }
 
+    @Override // java.util.List, java.util.Collection
     public <T> T[] toArray(T[] tArr) {
-        return this.mMotionEvents.toArray(tArr);
+        return (T[]) this.mMotionEvents.toArray(tArr);
     }
 
     public boolean add(MotionEvent motionEvent) {
@@ -86,28 +93,34 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
         return add;
     }
 
+    @Override // java.util.List
     public boolean remove(Object obj) {
         return this.mMotionEvents.remove(obj);
     }
 
+    @Override // java.util.List, java.util.Collection
     public boolean containsAll(Collection<?> collection) {
         return this.mMotionEvents.containsAll(collection);
     }
 
+    @Override // java.util.List, java.util.Collection
     public boolean addAll(Collection<? extends MotionEvent> collection) {
         boolean addAll = this.mMotionEvents.addAll(collection);
         ejectOldEvents();
         return addAll;
     }
 
+    @Override // java.util.List
     public boolean addAll(int i, Collection<? extends MotionEvent> collection) {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.List, java.util.Collection
     public boolean removeAll(Collection<?> collection) {
         return this.mMotionEvents.removeAll(collection);
     }
 
+    @Override // java.util.List, java.util.Collection
     public boolean retainAll(Collection<?> collection) {
         return this.mMotionEvents.retainAll(collection);
     }
@@ -124,6 +137,7 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
         return this.mMotionEvents.hashCode();
     }
 
+    @Override // java.util.List
     public MotionEvent get(int i) {
         return this.mMotionEvents.get(i);
     }
@@ -132,28 +146,36 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
         throw new UnsupportedOperationException();
     }
 
+    @Override // java.util.List
     public ListIterator<MotionEvent> listIterator() {
         return new Iter(this, 0);
     }
 
+    @Override // java.util.List
     public ListIterator<MotionEvent> listIterator(int i) {
         return new Iter(this, i);
     }
 
+    @Override // java.util.List
     public List<MotionEvent> subList(int i, int i2) {
         throw new UnsupportedOperationException();
     }
 
-    class Iter implements ListIterator<MotionEvent> {
+    /* access modifiers changed from: package-private */
+    public class Iter implements ListIterator<MotionEvent> {
         private final ListIterator<MotionEvent> mIterator;
 
-        public /* bridge */ /* synthetic */ void add(Object obj) {
-            add((MotionEvent) obj);
+        /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+        @Override // java.util.ListIterator
+        public /* bridge */ /* synthetic */ void add(MotionEvent motionEvent) {
+            add(motionEvent);
             throw null;
         }
 
-        public /* bridge */ /* synthetic */ void set(Object obj) {
-            set((MotionEvent) obj);
+        /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+        @Override // java.util.ListIterator
+        public /* bridge */ /* synthetic */ void set(MotionEvent motionEvent) {
+            set(motionEvent);
             throw null;
         }
 
@@ -165,6 +187,7 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
             return this.mIterator.hasNext();
         }
 
+        @Override // java.util.Iterator, java.util.ListIterator
         public MotionEvent next() {
             return this.mIterator.next();
         }
@@ -173,6 +196,7 @@ public class TimeLimitedMotionEventBuffer implements List<MotionEvent> {
             return this.mIterator.hasPrevious();
         }
 
+        @Override // java.util.ListIterator
         public MotionEvent previous() {
             return this.mIterator.previous();
         }

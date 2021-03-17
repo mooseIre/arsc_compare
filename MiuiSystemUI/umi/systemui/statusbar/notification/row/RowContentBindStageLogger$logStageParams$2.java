@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: RowContentBindStageLogger.kt */
-final class RowContentBindStageLogger$logStageParams$2 extends Lambda implements Function1<LogMessage, String> {
+public final class RowContentBindStageLogger$logStageParams$2 extends Lambda implements Function1<LogMessage, String> {
     public static final RowContentBindStageLogger$logStageParams$2 INSTANCE = new RowContentBindStageLogger$logStageParams$2();
 
     RowContentBindStageLogger$logStageParams$2() {

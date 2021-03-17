@@ -11,6 +11,7 @@ public final class PreparationCoordinatorLogger_Factory implements Factory<Prepa
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PreparationCoordinatorLogger get() {
         return provideInstance(this.bufferProvider);
     }

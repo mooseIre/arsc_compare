@@ -13,6 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class LifecycleActivity extends Activity implements LifecycleOwner {
     private final Lifecycle lifecycle = new Lifecycle(this);
 
+    @Override // androidx.lifecycle.LifecycleOwner
     @NotNull
     public Lifecycle getLifecycle() {
         return this.lifecycle;

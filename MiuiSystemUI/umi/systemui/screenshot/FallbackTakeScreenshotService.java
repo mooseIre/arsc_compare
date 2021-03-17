@@ -22,6 +22,8 @@ import java.util.function.Consumer;
 
 public class FallbackTakeScreenshotService extends Service {
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.screenshot.FallbackTakeScreenshotService.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction()) && FallbackTakeScreenshotService.this.mScreenshot != null) {
                 FallbackTakeScreenshotService.this.mScreenshot.dismissScreenshot("close system dialogs", true);
@@ -29,20 +31,25 @@ public class FallbackTakeScreenshotService extends Service {
         }
     };
     private Handler mHandler = new Handler(Looper.myLooper()) {
+        /* class com.android.systemui.screenshot.FallbackTakeScreenshotService.AnonymousClass2 */
+
         public void handleMessage(Message message) {
             Messenger messenger = message.replyTo;
             $$Lambda$FallbackTakeScreenshotService$2$BCZP2BsU_7az9K_C7RZADOY3iZo r8 = new Consumer(messenger) {
+                /* class com.android.systemui.screenshot.$$Lambda$FallbackTakeScreenshotService$2$BCZP2BsU_7az9K_C7RZADOY3iZo */
                 public final /* synthetic */ Messenger f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     FallbackTakeScreenshotService.AnonymousClass2.lambda$handleMessage$0(this.f$0, (Uri) obj);
                 }
             };
             $$Lambda$FallbackTakeScreenshotService$2$PePM3eE2JSWT2tguvy8VbhRI0Tc r9 = new Runnable(messenger) {
+                /* class com.android.systemui.screenshot.$$Lambda$FallbackTakeScreenshotService$2$PePM3eE2JSWT2tguvy8VbhRI0Tc */
                 public final /* synthetic */ Messenger f$0;
 
                 {
@@ -56,6 +63,7 @@ public class FallbackTakeScreenshotService extends Service {
             if (!FallbackTakeScreenshotService.this.mUserManager.isUserUnlocked()) {
                 Log.w("TakeScreenshotService", "Skipping screenshot because storage is locked!");
                 post(new Runnable(r8) {
+                    /* class com.android.systemui.screenshot.$$Lambda$FallbackTakeScreenshotService$2$Pn52_UjuPWms4LS9K_s9O3bSGFA */
                     public final /* synthetic */ Consumer f$0;
 
                     {
@@ -63,7 +71,7 @@ public class FallbackTakeScreenshotService extends Service {
                     }
 
                     public final void run() {
-                        this.f$0.accept((Object) null);
+                        this.f$0.accept(null);
                     }
                 });
                 post(r9);
@@ -73,7 +81,7 @@ public class FallbackTakeScreenshotService extends Service {
             FallbackTakeScreenshotService.this.mUiEventLogger.log(ScreenshotEvent.getScreenshotSource(screenshotRequest.getSource()));
             int i = message.what;
             if (i == 1) {
-                FallbackTakeScreenshotService.this.mScreenshot.takeScreenshot((Consumer<Uri>) r8, (Runnable) r9);
+                FallbackTakeScreenshotService.this.mScreenshot.takeScreenshot(r8, r9);
             } else if (i == 2) {
                 FallbackTakeScreenshotService.this.mScreenshot.takeScreenshotPartial(r8, r9);
             } else if (i != 3) {
@@ -85,7 +93,7 @@ public class FallbackTakeScreenshotService extends Service {
 
         static /* synthetic */ void lambda$handleMessage$0(Messenger messenger, Uri uri) {
             try {
-                messenger.send(Message.obtain((Handler) null, 1, uri));
+                messenger.send(Message.obtain(null, 1, uri));
             } catch (RemoteException unused) {
             }
         }
@@ -97,12 +105,9 @@ public class FallbackTakeScreenshotService extends Service {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final GlobalScreenshot mScreenshot;
-    /* access modifiers changed from: private */
-    public final UiEventLogger mUiEventLogger;
-    /* access modifiers changed from: private */
-    public final UserManager mUserManager;
+    private final GlobalScreenshot mScreenshot;
+    private final UiEventLogger mUiEventLogger;
+    private final UserManager mUserManager;
 
     public FallbackTakeScreenshotService(GlobalScreenshot globalScreenshot, UserManager userManager, UiEventLogger uiEventLogger) {
         this.mScreenshot = globalScreenshot;

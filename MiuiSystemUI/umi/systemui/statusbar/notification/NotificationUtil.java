@@ -36,15 +36,12 @@ public class NotificationUtil {
         if (expandedNotification == null) {
             return false;
         }
-        if ((z && expandedNotification.isCustomHeight()) || isMediaNotification(expandedNotification)) {
-            return true;
-        }
-        return false;
+        return (z && expandedNotification.isCustomHeight()) || isMediaNotification(expandedNotification);
     }
 
     public static boolean isXmsfChannel(String str, String str2) {
         if (!TextUtils.isEmpty(str2)) {
-            if (str2.startsWith(String.format("mipush|%s|pre", new Object[]{str}))) {
+            if (str2.startsWith(String.format("mipush|%s|pre", str))) {
                 return true;
             }
         }
@@ -249,6 +246,8 @@ public class NotificationUtil {
 
     public static void setViewRoundCorner(View view, final float f) {
         view.setOutlineProvider(new ViewOutlineProvider() {
+            /* class com.android.systemui.statusbar.notification.NotificationUtil.AnonymousClass1 */
+
             public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(new Rect(0, 0, view.getWidth(), view.getHeight()), f);
             }

@@ -9,10 +9,14 @@ import java.util.Objects;
 
 public class Task$TaskKey implements Parcelable {
     public static final Parcelable.Creator<Task$TaskKey> CREATOR = new Parcelable.Creator<Task$TaskKey>() {
+        /* class com.android.systemui.shared.recents.model.Task$TaskKey.AnonymousClass1 */
+
+        @Override // android.os.Parcelable.Creator
         public Task$TaskKey createFromParcel(Parcel parcel) {
             return Task$TaskKey.readFromParcel(parcel);
         }
 
+        @Override // android.os.Parcelable.Creator
         public Task$TaskKey[] newArray(int i) {
             return new Task$TaskKey[i];
         }
@@ -67,7 +71,7 @@ public class Task$TaskKey implements Parcelable {
     }
 
     private void updateHashCode() {
-        this.mHashCode = Objects.hash(new Object[]{Integer.valueOf(this.id), Integer.valueOf(this.windowingMode), Integer.valueOf(this.userId)});
+        this.mHashCode = Objects.hash(Integer.valueOf(this.id), Integer.valueOf(this.windowingMode), Integer.valueOf(this.userId));
     }
 
     public final void writeToParcel(Parcel parcel, int i) {

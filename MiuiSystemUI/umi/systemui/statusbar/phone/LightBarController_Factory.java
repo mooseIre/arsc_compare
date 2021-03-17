@@ -19,6 +19,7 @@ public final class LightBarController_Factory implements Factory<LightBarControl
         this.navModeControllerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public LightBarController get() {
         return provideInstance(this.ctxProvider, this.darkIconDispatcherProvider, this.batteryControllerProvider, this.navModeControllerProvider);
     }

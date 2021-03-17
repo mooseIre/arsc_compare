@@ -11,6 +11,7 @@ public final class AccessibilityManagerWrapper_Factory implements Factory<Access
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AccessibilityManagerWrapper get() {
         return provideInstance(this.contextProvider);
     }

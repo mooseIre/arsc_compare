@@ -19,7 +19,7 @@ public final class EntryRemovedEvent extends NotifEvent {
             return false;
         }
         EntryRemovedEvent entryRemovedEvent = (EntryRemovedEvent) obj;
-        return Intrinsics.areEqual((Object) this.entry, (Object) entryRemovedEvent.entry) && this.reason == entryRemovedEvent.reason;
+        return Intrinsics.areEqual(this.entry, entryRemovedEvent.entry) && this.reason == entryRemovedEvent.reason;
     }
 
     public int hashCode() {
@@ -34,12 +34,13 @@ public final class EntryRemovedEvent extends NotifEvent {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public EntryRemovedEvent(@NotNull NotificationEntry notificationEntry, int i) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         this.entry = notificationEntry;
         this.reason = i;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifEvent
     public void dispatchToListener(@NotNull NotifCollectionListener notifCollectionListener) {
         Intrinsics.checkParameterIsNotNull(notifCollectionListener, "listener");
         notifCollectionListener.onEntryRemoved(this.entry, this.reason);

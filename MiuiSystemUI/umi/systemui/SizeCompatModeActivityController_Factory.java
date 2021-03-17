@@ -17,6 +17,7 @@ public final class SizeCompatModeActivityController_Factory implements Factory<S
         this.commandQueueProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public SizeCompatModeActivityController get() {
         return provideInstance(this.contextProvider, this.amProvider, this.commandQueueProvider);
     }

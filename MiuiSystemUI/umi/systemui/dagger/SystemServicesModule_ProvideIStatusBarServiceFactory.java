@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemServicesModule_ProvideIStatusBarServiceFactory implements Factory<IStatusBarService> {
     private static final SystemServicesModule_ProvideIStatusBarServiceFactory INSTANCE = new SystemServicesModule_ProvideIStatusBarServiceFactory();
 
+    @Override // javax.inject.Provider
     public IStatusBarService get() {
         return provideInstance();
     }

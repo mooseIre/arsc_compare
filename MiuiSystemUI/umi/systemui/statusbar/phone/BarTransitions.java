@@ -27,7 +27,7 @@ public class BarTransitions {
     }
 
     public BarTransitions(View view, int i) {
-        "BarTransitions." + view.getClass().getSimpleName();
+        String str = "BarTransitions." + view.getClass().getSimpleName();
         this.mView = view;
         BarBackgroundDrawable barBackgroundDrawable = new BarBackgroundDrawable(this.mView.getContext(), i);
         this.mBarBackground = barBackgroundDrawable;
@@ -95,7 +95,8 @@ public class BarTransitions {
         this.mBarBackground.finishAnimation();
     }
 
-    protected static class BarBackgroundDrawable extends Drawable {
+    /* access modifiers changed from: protected */
+    public static class BarBackgroundDrawable extends Drawable {
         private boolean mAnimating;
         private int mColor;
         private int mColorStart;

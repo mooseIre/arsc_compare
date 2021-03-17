@@ -14,6 +14,7 @@ public final class MiuiHeadsUpPolicy_Factory implements Factory<MiuiHeadsUpPolic
         this.headsUpManagerPhoneProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiHeadsUpPolicy get() {
         return provideInstance(this.broadcastDispatcherProvider, this.headsUpManagerPhoneProvider);
     }

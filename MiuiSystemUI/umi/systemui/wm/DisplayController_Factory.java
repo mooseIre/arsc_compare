@@ -17,6 +17,7 @@ public final class DisplayController_Factory implements Factory<DisplayControlle
         this.wmServiceProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public DisplayController get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.wmServiceProvider);
     }

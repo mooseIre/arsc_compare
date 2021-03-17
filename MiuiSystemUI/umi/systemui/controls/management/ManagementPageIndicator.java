@@ -21,6 +21,7 @@ public final class ManagementPageIndicator extends PageIndicator {
         Intrinsics.checkParameterIsNotNull(attributeSet, "attrs");
     }
 
+    @Override // com.android.systemui.qs.PageIndicator
     public void setLocation(float f) {
         if (getLayoutDirection() == 1) {
             super.setLocation(((float) (getChildCount() - 1)) - f);
@@ -38,7 +39,7 @@ public final class ManagementPageIndicator extends PageIndicator {
     public void onVisibilityChanged(@NotNull View view, int i) {
         Intrinsics.checkParameterIsNotNull(view, "changedView");
         super.onVisibilityChanged(view, i);
-        if (Intrinsics.areEqual((Object) view, (Object) this)) {
+        if (Intrinsics.areEqual(view, this)) {
             this.visibilityListener.invoke(Integer.valueOf(i));
         }
     }

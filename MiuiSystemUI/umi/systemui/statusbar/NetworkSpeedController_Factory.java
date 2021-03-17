@@ -14,6 +14,7 @@ public final class NetworkSpeedController_Factory implements Factory<NetworkSpee
         this.bgLooperProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NetworkSpeedController get() {
         return provideInstance(this.contextProvider, this.bgLooperProvider);
     }

@@ -47,6 +47,7 @@ public class Utils {
             this.mView = null;
         }
 
+        @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
         public void disable(int i, int i2, int i3, boolean z) {
             if (i == this.mView.getDisplay().getDisplayId()) {
                 int i4 = this.mMask1 & i2;

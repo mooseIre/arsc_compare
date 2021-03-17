@@ -31,7 +31,7 @@ public class ScrimView extends View {
     }
 
     public ScrimView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ScrimView(Context context, AttributeSet attributeSet) {

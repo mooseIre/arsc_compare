@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class DependencyProvider_ProvideUiEventLoggerFactory implements Factory<UiEventLogger> {
     private static final DependencyProvider_ProvideUiEventLoggerFactory INSTANCE = new DependencyProvider_ProvideUiEventLoggerFactory();
 
+    @Override // javax.inject.Provider
     public UiEventLogger get() {
         return provideInstance();
     }

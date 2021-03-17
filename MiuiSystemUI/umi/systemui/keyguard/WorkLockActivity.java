@@ -17,12 +17,13 @@ import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
-import java.util.concurrent.Executor;
 
 public class WorkLockActivity extends Activity {
     private final BroadcastDispatcher mBroadcastDispatcher;
     private KeyguardManager mKgm;
     private final BroadcastReceiver mLockEventReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.keyguard.WorkLockActivity.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             int targetUserId = WorkLockActivity.this.getTargetUserId();
             if (intent.getIntExtra("android.intent.extra.user_handle", targetUserId) == targetUserId && !WorkLockActivity.this.getKeyguardManager().isDeviceLocked(targetUserId)) {
@@ -43,7 +44,7 @@ public class WorkLockActivity extends Activity {
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        this.mBroadcastDispatcher.registerReceiver(this.mLockEventReceiver, new IntentFilter("android.intent.action.DEVICE_LOCKED_CHANGED"), (Executor) null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mLockEventReceiver, new IntentFilter("android.intent.action.DEVICE_LOCKED_CHANGED"), null, UserHandle.ALL);
         if (!getKeyguardManager().isDeviceLocked(getTargetUserId())) {
             finish();
             return;
@@ -74,7 +75,7 @@ public class WorkLockActivity extends Activity {
 
     private void showConfirmCredentialActivity() {
         Intent createConfirmDeviceCredentialIntent;
-        if (!isFinishing() && getKeyguardManager().isDeviceLocked(getTargetUserId()) && (createConfirmDeviceCredentialIntent = getKeyguardManager().createConfirmDeviceCredentialIntent((CharSequence) null, (CharSequence) null, getTargetUserId(), true)) != null) {
+        if (!isFinishing() && getKeyguardManager().isDeviceLocked(getTargetUserId()) && (createConfirmDeviceCredentialIntent = getKeyguardManager().createConfirmDeviceCredentialIntent(null, null, getTargetUserId(), true)) != null) {
             ActivityOptions makeBasic = ActivityOptions.makeBasic();
             makeBasic.setLaunchTaskId(getTaskId());
             PendingIntent activity = PendingIntent.getActivity(this, -1, getIntent(), 1409286144, makeBasic.toBundle());
@@ -103,7 +104,8 @@ public class WorkLockActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public KeyguardManager getKeyguardManager() {
+    /* access modifiers changed from: public */
+    private KeyguardManager getKeyguardManager() {
         if (this.mKgm == null) {
             this.mKgm = (KeyguardManager) getSystemService("keyguard");
         }

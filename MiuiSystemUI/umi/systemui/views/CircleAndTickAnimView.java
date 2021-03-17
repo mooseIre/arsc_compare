@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PathMeasure;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -23,25 +22,22 @@ public class CircleAndTickAnimView extends View {
     private AnimatorSet mAnimatorSet;
     private Drawable mBackDrawable;
     private ValueAnimator mCircleAnimator;
-    /* access modifiers changed from: private */
-    public float mCircleRotateDegrees;
+    private float mCircleRotateDegrees;
     private int mDiameter;
     private Drawable mNormalDrawable;
     private final Rect mOutRect;
     private Path mTickDstPath;
-    /* access modifiers changed from: private */
-    public float mTickEndPoint;
+    private float mTickEndPoint;
     private ValueAnimator mTickEndPointAnimator;
     private Paint mTickPaint;
     private float mTickPathLength;
     private PathMeasure mTickPathMeasure;
-    /* access modifiers changed from: private */
-    public float mTickStartPoint;
+    private float mTickStartPoint;
     private ValueAnimator mTickStartPointAnimator;
     private final Rect mViewRect;
 
     public CircleAndTickAnimView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public CircleAndTickAnimView(Context context, AttributeSet attributeSet) {
@@ -64,33 +60,39 @@ public class CircleAndTickAnimView extends View {
     }
 
     private void initAnimator() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, -90.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, -90.0f);
         this.mCircleAnimator = ofFloat;
-        ofFloat.setDuration(200);
+        ofFloat.setDuration(200L);
         this.mCircleAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.views.CircleAndTickAnimView.AnonymousClass1 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = CircleAndTickAnimView.this.mCircleRotateDegrees = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                CircleAndTickAnimView.this.mCircleRotateDegrees = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 CircleAndTickAnimView.this.invalidate();
             }
         });
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 0.31f});
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 0.31f);
         this.mTickStartPointAnimator = ofFloat2;
         ofFloat2.setInterpolator(new CubicEaseOutInterpolator());
         this.mTickStartPointAnimator.setStartDelay(50);
-        this.mTickStartPointAnimator.setDuration(250);
+        this.mTickStartPointAnimator.setDuration(250L);
         this.mTickStartPointAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.views.CircleAndTickAnimView.AnonymousClass2 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = CircleAndTickAnimView.this.mTickStartPoint = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                CircleAndTickAnimView.this.mTickStartPoint = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 CircleAndTickAnimView.this.invalidate();
             }
         });
-        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mTickEndPointAnimator = ofFloat3;
         ofFloat3.setInterpolator(new CubicEaseOutInterpolator());
-        this.mTickEndPointAnimator.setDuration(300);
+        this.mTickEndPointAnimator.setDuration(300L);
         this.mTickEndPointAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.views.CircleAndTickAnimView.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = CircleAndTickAnimView.this.mTickEndPoint = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                CircleAndTickAnimView.this.mTickEndPoint = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 CircleAndTickAnimView.this.invalidate();
             }
         });
@@ -232,7 +234,7 @@ public class CircleAndTickAnimView extends View {
                 canvas.restore();
             }
         }
-        canvas.saveLayer((RectF) null, (Paint) null);
+        canvas.saveLayer(null, null);
         this.mTickDstPath.reset();
         float f2 = this.mTickPathLength;
         this.mTickPathMeasure.getSegment(this.mTickStartPoint * f2, f2 * this.mTickEndPoint, this.mTickDstPath, true);

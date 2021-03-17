@@ -40,6 +40,7 @@ public final class FalsingManagerProxy_Factory implements Factory<FalsingManager
         this.statusBarStateControllerProvider = provider11;
     }
 
+    @Override // javax.inject.Provider
     public FalsingManagerProxy get() {
         return provideInstance(this.contextProvider, this.pluginManagerProvider, this.executorProvider, this.displayMetricsProvider, this.proximitySensorProvider, this.deviceConfigProvider, this.dockManagerProvider, this.keyguardUpdateMonitorProvider, this.dumpManagerProvider, this.uiBgExecutorProvider, this.statusBarStateControllerProvider);
     }

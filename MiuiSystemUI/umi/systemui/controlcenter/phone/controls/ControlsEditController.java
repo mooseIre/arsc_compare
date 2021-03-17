@@ -18,10 +18,14 @@ public class ControlsEditController {
     private boolean isShown = false;
     private IStateStyle mAnim;
     public ControlsEditCallback mCallback = new ControlsEditCallback() {
+        /* class com.android.systemui.controlcenter.phone.controls.ControlsEditController.AnonymousClass1 */
+
+        @Override // com.android.systemui.plugins.miui.controls.ControlsEditCallback
         public void showEditView() {
             ControlsEditController.this.startAnim(true);
         }
 
+        @Override // com.android.systemui.plugins.miui.controls.ControlsEditCallback
         public void hideEditView() {
             ControlsEditController.this.startAnim(false);
         }
@@ -29,8 +33,7 @@ public class ControlsEditController {
     private ControlCenterPanelView mControlCenterPanelView;
     private ControlPanelContentView mControlPanelContentView;
     private View mControlsEditView;
-    /* access modifiers changed from: private */
-    public ControlsPluginManager mControlsPluginManager;
+    private ControlsPluginManager mControlsPluginManager;
     private AnimState mHideAnim;
     private IStateStyle mPanelAnim;
     private AnimState mPanelHideAnim;
@@ -95,7 +98,8 @@ public class ControlsEditController {
     }
 
     /* access modifiers changed from: private */
-    public void startAnim(boolean z) {
+    /* access modifiers changed from: public */
+    private void startAnim(boolean z) {
         if (this.mControlsEditView != null) {
             if (z) {
                 this.mControlsPluginManager.showControlsEditView();
@@ -120,6 +124,9 @@ public class ControlsEditController {
                 AnimState animState6 = this.mHideAnim;
                 AnimConfig animConfig3 = new AnimConfig();
                 animConfig3.addListeners(new TransitionListener() {
+                    /* class com.android.systemui.controlcenter.phone.controls.ControlsEditController.AnonymousClass2 */
+
+                    @Override // miuix.animation.listener.TransitionListener
                     public void onComplete(Object obj) {
                         super.onComplete(obj);
                         ControlsEditController.this.mControlsPluginManager.hideControlsEditView();

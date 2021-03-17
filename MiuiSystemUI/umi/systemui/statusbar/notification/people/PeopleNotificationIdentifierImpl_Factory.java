@@ -13,6 +13,7 @@ public final class PeopleNotificationIdentifierImpl_Factory implements Factory<P
         this.groupManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PeopleNotificationIdentifierImpl get() {
         return provideInstance(this.personExtractorProvider, this.groupManagerProvider);
     }

@@ -16,6 +16,7 @@ public final class GroupCoalescer_Factory implements Factory<GroupCoalescer> {
         this.loggerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public GroupCoalescer get() {
         return provideInstance(this.mainExecutorProvider, this.clockProvider, this.loggerProvider);
     }

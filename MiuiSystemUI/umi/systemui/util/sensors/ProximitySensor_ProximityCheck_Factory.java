@@ -14,6 +14,7 @@ public final class ProximitySensor_ProximityCheck_Factory implements Factory<Pro
         this.delayableExecutorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ProximitySensor.ProximityCheck get() {
         return provideInstance(this.sensorProvider, this.delayableExecutorProvider);
     }

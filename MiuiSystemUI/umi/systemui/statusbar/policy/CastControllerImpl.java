@@ -23,8 +23,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class CastControllerImpl implements CastController {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable("CastController", 3);
+    private static final boolean DEBUG = Log.isLoggable("CastController", 3);
     private boolean mCallbackRegistered;
     @GuardedBy({"mCallbacks"})
     private final ArrayList<CastController.Callback> mCallbacks = new ArrayList<>();
@@ -32,6 +31,8 @@ public class CastControllerImpl implements CastController {
     private boolean mDiscovering;
     private final Object mDiscoveringLock = new Object();
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
+        /* class com.android.systemui.statusbar.policy.CastControllerImpl.AnonymousClass1 */
+
         public void onRouteAdded(MediaRouter mediaRouter, MediaRouter.RouteInfo routeInfo) {
             if (CastControllerImpl.DEBUG) {
                 Log.d("CastController", "onRouteAdded: " + CastControllerImpl.routeToString(routeInfo));
@@ -70,6 +71,8 @@ public class CastControllerImpl implements CastController {
     private final MediaRouter mMediaRouter;
     private MediaProjectionInfo mProjection;
     private final MediaProjectionManager.Callback mProjectionCallback = new MediaProjectionManager.Callback() {
+        /* class com.android.systemui.statusbar.policy.CastControllerImpl.AnonymousClass2 */
+
         public void onStart(MediaProjectionInfo mediaProjectionInfo) {
             CastControllerImpl.this.setProjection(mediaProjectionInfo, true);
         }
@@ -96,6 +99,7 @@ public class CastControllerImpl implements CastController {
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("CastController state:");
         printWriter.print("  mDiscovering=");
@@ -135,6 +139,7 @@ public class CastControllerImpl implements CastController {
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.CastController
     public void setDiscovering(boolean z) {
         synchronized (this.mDiscoveringLock) {
             if (this.mDiscovering != z) {
@@ -167,34 +172,36 @@ public class CastControllerImpl implements CastController {
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.CastController
     public void setCurrentUserId(int i) {
         this.mMediaRouter.rebindAsUser(i);
     }
 
+    @Override // com.android.systemui.statusbar.policy.CastController
     public List<CastController.CastDevice> getCastDevices() {
         ArrayList arrayList = new ArrayList();
         synchronized (this.mRoutes) {
-            for (MediaRouter.RouteInfo next : this.mRoutes.values()) {
+            for (MediaRouter.RouteInfo routeInfo : this.mRoutes.values()) {
                 CastController.CastDevice castDevice = new CastController.CastDevice();
-                castDevice.id = next.getTag().toString();
-                CharSequence name = next.getName(this.mContext);
+                castDevice.id = routeInfo.getTag().toString();
+                CharSequence name = routeInfo.getName(this.mContext);
                 castDevice.name = name != null ? name.toString() : null;
-                CharSequence description = next.getDescription();
+                CharSequence description = routeInfo.getDescription();
                 if (description != null) {
                     description.toString();
                 }
-                int statusCode = next.getStatusCode();
+                int statusCode = routeInfo.getStatusCode();
                 if (statusCode == 2) {
                     castDevice.state = 1;
                 } else {
-                    if (!next.isSelected()) {
+                    if (!routeInfo.isSelected()) {
                         if (statusCode != 6) {
                             castDevice.state = 0;
                         }
                     }
                     castDevice.state = 2;
                 }
-                castDevice.tag = next;
+                castDevice.tag = routeInfo;
                 arrayList.add(castDevice);
             }
         }
@@ -212,6 +219,7 @@ public class CastControllerImpl implements CastController {
         return arrayList;
     }
 
+    @Override // com.android.systemui.statusbar.policy.CastController
     public void startCasting(CastController.CastDevice castDevice) {
         Object obj;
         if (castDevice != null && (obj = castDevice.tag) != null) {
@@ -223,6 +231,7 @@ public class CastControllerImpl implements CastController {
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.CastController
     public void stopCasting(CastController.CastDevice castDevice) {
         boolean z = castDevice.tag instanceof MediaProjectionInfo;
         if (DEBUG) {
@@ -241,7 +250,8 @@ public class CastControllerImpl implements CastController {
     }
 
     /* access modifiers changed from: private */
-    public void setProjection(MediaProjectionInfo mediaProjectionInfo, boolean z) {
+    /* access modifiers changed from: public */
+    private void setProjection(MediaProjectionInfo mediaProjectionInfo, boolean z) {
         boolean z2;
         MediaProjectionInfo mediaProjectionInfo2 = this.mProjection;
         synchronized (this.mProjectionLock) {
@@ -284,7 +294,8 @@ public class CastControllerImpl implements CastController {
     }
 
     /* access modifiers changed from: private */
-    public void updateRemoteDisplays() {
+    /* access modifiers changed from: public */
+    private void updateRemoteDisplays() {
         synchronized (this.mRoutes) {
             this.mRoutes.clear();
             int routeCount = this.mMediaRouter.getRouteCount();

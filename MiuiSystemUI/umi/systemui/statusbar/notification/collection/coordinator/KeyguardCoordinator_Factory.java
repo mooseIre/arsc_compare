@@ -32,6 +32,7 @@ public final class KeyguardCoordinator_Factory implements Factory<KeyguardCoordi
         this.highPriorityProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardCoordinator get() {
         return provideInstance(this.contextProvider, this.mainThreadHandlerProvider, this.keyguardStateControllerProvider, this.lockscreenUserManagerProvider, this.broadcastDispatcherProvider, this.statusBarStateControllerProvider, this.keyguardUpdateMonitorProvider, this.highPriorityProvider);
     }

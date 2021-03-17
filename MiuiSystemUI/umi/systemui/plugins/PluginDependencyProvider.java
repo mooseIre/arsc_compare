@@ -14,6 +14,8 @@ public class PluginDependencyProvider extends PluginDependency.DependencyProvide
         PluginDependency.sProvider = this;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r1v0, resolved type: com.android.systemui.plugins.PluginDependencyProvider */
+    /* JADX WARN: Multi-variable type inference failed */
     public <T> void allowPluginDependency(Class<T> cls) {
         allowPluginDependency(cls, Dependency.get(cls));
     }
@@ -25,12 +27,13 @@ public class PluginDependencyProvider extends PluginDependency.DependencyProvide
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.plugins.PluginDependency.DependencyProvider
     public <T> T get(Plugin plugin, Class<T> cls) {
         T t;
         if (this.mManager.dependsOn(plugin, cls)) {
             synchronized (this.mDependencies) {
                 if (this.mDependencies.containsKey(cls)) {
-                    t = this.mDependencies.get(cls);
+                    t = (T) this.mDependencies.get(cls);
                 } else {
                     throw new IllegalArgumentException("Unknown dependency " + cls);
                 }

@@ -36,9 +36,9 @@ public final class ChannelRow extends LinearLayout {
     }
 
     public static final /* synthetic */ Switch access$getSwitch$p(ChannelRow channelRow) {
-        Switch switchR = channelRow.f1switch;
-        if (switchR != null) {
-            return switchR;
+        Switch r0 = channelRow.f1switch;
+        if (r0 != null) {
+            return r0;
         }
         Intrinsics.throwUninitializedPropertyAccessException("switch");
         throw null;
@@ -81,10 +81,10 @@ public final class ChannelRow extends LinearLayout {
         this.channelDescription = (TextView) findViewById2;
         View findViewById3 = findViewById(C0015R$id.toggle);
         Intrinsics.checkExpressionValueIsNotNull(findViewById3, "findViewById(R.id.toggle)");
-        Switch switchR = (Switch) findViewById3;
-        this.f1switch = switchR;
-        if (switchR != null) {
-            switchR.setOnCheckedChangeListener(new ChannelRow$onFinishInflate$1(this));
+        Switch r0 = (Switch) findViewById3;
+        this.f1switch = r0;
+        if (r0 != null) {
+            r0.setOnCheckedChangeListener(new ChannelRow$onFinishInflate$1(this));
             setOnClickListener(new ChannelRow$onFinishInflate$2(this));
             return;
         }
@@ -93,9 +93,9 @@ public final class ChannelRow extends LinearLayout {
     }
 
     public final void playHighlight() {
-        ValueAnimator ofObject = ValueAnimator.ofObject(new ArgbEvaluator(), new Object[]{0, Integer.valueOf(this.highlightColor)});
+        ValueAnimator ofObject = ValueAnimator.ofObject(new ArgbEvaluator(), 0, Integer.valueOf(this.highlightColor));
         Intrinsics.checkExpressionValueIsNotNull(ofObject, "fadeInLoop");
-        ofObject.setDuration(200);
+        ofObject.setDuration(200L);
         ofObject.addUpdateListener(new ChannelRow$playHighlight$1(this));
         ofObject.setRepeatMode(2);
         ofObject.setRepeatCount(5);
@@ -107,84 +107,7 @@ public final class ChannelRow extends LinearLayout {
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateViews() {
         /*
-            r6 = this;
-            android.app.NotificationChannel r0 = r6.channel
-            if (r0 == 0) goto L_0x0085
-            android.widget.TextView r1 = r6.channelName
-            r2 = 0
-            if (r1 == 0) goto L_0x007f
-            java.lang.CharSequence r3 = r0.getName()
-            if (r3 == 0) goto L_0x0010
-            goto L_0x0012
-        L_0x0010:
-            java.lang.String r3 = ""
-        L_0x0012:
-            r1.setText(r3)
-            java.lang.String r1 = r0.getGroup()
-            java.lang.String r3 = "channelDescription"
-            if (r1 == 0) goto L_0x0037
-            android.widget.TextView r4 = r6.channelDescription
-            if (r4 == 0) goto L_0x0033
-            com.android.systemui.statusbar.notification.row.ChannelEditorDialogController r5 = r6.controller
-            if (r5 == 0) goto L_0x002d
-            java.lang.CharSequence r1 = r5.groupNameForId(r1)
-            r4.setText(r1)
-            goto L_0x0037
-        L_0x002d:
-            java.lang.String r6 = "controller"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r6)
-            throw r2
-        L_0x0033:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r3)
-            throw r2
-        L_0x0037:
-            java.lang.String r1 = r0.getGroup()
-            r4 = 0
-            if (r1 == 0) goto L_0x005d
-            android.widget.TextView r1 = r6.channelDescription
-            if (r1 == 0) goto L_0x0059
-            java.lang.CharSequence r1 = r1.getText()
-            boolean r1 = android.text.TextUtils.isEmpty(r1)
-            if (r1 == 0) goto L_0x004d
-            goto L_0x005d
-        L_0x004d:
-            android.widget.TextView r1 = r6.channelDescription
-            if (r1 == 0) goto L_0x0055
-            r1.setVisibility(r4)
-            goto L_0x0066
-        L_0x0055:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r3)
-            throw r2
-        L_0x0059:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r3)
-            throw r2
-        L_0x005d:
-            android.widget.TextView r1 = r6.channelDescription
-            if (r1 == 0) goto L_0x007b
-            r3 = 8
-            r1.setVisibility(r3)
-        L_0x0066:
-            android.widget.Switch r6 = r6.f1switch
-            if (r6 == 0) goto L_0x0075
-            int r0 = r0.getImportance()
-            if (r0 == 0) goto L_0x0071
-            r4 = 1
-        L_0x0071:
-            r6.setChecked(r4)
-            return
-        L_0x0075:
-            java.lang.String r6 = "switch"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r6)
-            throw r2
-        L_0x007b:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r3)
-            throw r2
-        L_0x007f:
-            java.lang.String r6 = "channelName"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r6)
-            throw r2
-        L_0x0085:
-            return
+        // Method dump skipped, instructions count: 134
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.row.ChannelRow.updateViews():void");
     }

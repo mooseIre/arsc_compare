@@ -41,8 +41,7 @@ public final class ToggleRangeBehavior implements Behavior {
     public ControlViewHolder cvh;
     private boolean isChecked;
     private boolean isToggleable;
-    /* access modifiers changed from: private */
-    public ValueAnimator rangeAnimator;
+    private ValueAnimator rangeAnimator;
     @NotNull
     public RangeTemplate rangeTemplate;
     @NotNull
@@ -96,6 +95,7 @@ public final class ToggleRangeBehavior implements Behavior {
         return this.isToggleable;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void initialize(@NotNull ControlViewHolder controlViewHolder) {
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         this.cvh = controlViewHolder;
@@ -152,6 +152,7 @@ public final class ToggleRangeBehavior implements Behavior {
         }
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void bind(@NotNull ControlWithState controlWithState, int i) {
         Intrinsics.checkParameterIsNotNull(controlWithState, "cws");
         Control control2 = controlWithState.getControl();
@@ -164,7 +165,7 @@ public final class ToggleRangeBehavior implements Behavior {
                 this.currentStatusText = statusText;
                 ControlViewHolder controlViewHolder = this.cvh;
                 if (controlViewHolder != null) {
-                    controlViewHolder.getLayout().setOnLongClickListener((View.OnLongClickListener) null);
+                    controlViewHolder.getLayout().setOnLongClickListener(null);
                     ControlViewHolder controlViewHolder2 = this.cvh;
                     if (controlViewHolder2 != null) {
                         Drawable background = controlViewHolder2.getLayout().getBackground();
@@ -185,7 +186,7 @@ public final class ToggleRangeBehavior implements Behavior {
                                         updateRange(rangeToLevelValue(rangeTemplate2.getCurrentValue()), this.isChecked, false);
                                         ControlViewHolder controlViewHolder3 = this.cvh;
                                         if (controlViewHolder3 != null) {
-                                            ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, this.isChecked, i, false, 4, (Object) null);
+                                            ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, this.isChecked, i, false, 4, null);
                                             ControlViewHolder controlViewHolder4 = this.cvh;
                                             if (controlViewHolder4 != null) {
                                                 controlViewHolder4.getLayout().setAccessibilityDelegate(new ToggleRangeBehavior$bind$1(this));
@@ -303,7 +304,7 @@ public final class ToggleRangeBehavior implements Behavior {
                         ValueAnimator ofInt = ValueAnimator.ofInt(iArr);
                         ofInt.addUpdateListener(new ToggleRangeBehavior$updateRange$$inlined$apply$lambda$1(this));
                         ofInt.addListener(new ToggleRangeBehavior$updateRange$$inlined$apply$lambda$2(this));
-                        ofInt.setDuration(700);
+                        ofInt.setDuration(700L);
                         ofInt.setInterpolator(Interpolators.CONTROL_STATE);
                         ofInt.start();
                         this.rangeAnimator = ofInt;
@@ -330,7 +331,7 @@ public final class ToggleRangeBehavior implements Behavior {
                     } else {
                         ControlViewHolder controlViewHolder5 = this.cvh;
                         if (controlViewHolder5 != null) {
-                            ControlViewHolder.setStatusText$default(controlViewHolder5, this.currentStatusText + ' ' + this.currentRangeValue, false, 2, (Object) null);
+                            ControlViewHolder.setStatusText$default(controlViewHolder5, this.currentStatusText + ' ' + this.currentRangeValue, false, 2, null);
                             return;
                         }
                         Intrinsics.throwUninitializedPropertyAccessException("cvh");
@@ -343,7 +344,7 @@ public final class ToggleRangeBehavior implements Behavior {
             } else {
                 ControlViewHolder controlViewHolder6 = this.cvh;
                 if (controlViewHolder6 != null) {
-                    ControlViewHolder.setStatusText$default(controlViewHolder6, this.currentStatusText, false, 2, (Object) null);
+                    ControlViewHolder.setStatusText$default(controlViewHolder6, this.currentStatusText, false, 2, null);
                 } else {
                     Intrinsics.throwUninitializedPropertyAccessException("cvh");
                     throw null;
@@ -363,7 +364,7 @@ public final class ToggleRangeBehavior implements Behavior {
             return format;
         } catch (IllegalFormatException e) {
             Log.w("ControlsUiController", "Illegal format in range template", e);
-            if (Intrinsics.areEqual((Object) str2, (Object) "")) {
+            if (Intrinsics.areEqual(str2, "")) {
                 return "";
             }
             return format(str2, "", f);

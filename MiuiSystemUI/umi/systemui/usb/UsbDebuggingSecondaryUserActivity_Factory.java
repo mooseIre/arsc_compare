@@ -11,6 +11,7 @@ public final class UsbDebuggingSecondaryUserActivity_Factory implements Factory<
         this.broadcastDispatcherProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public UsbDebuggingSecondaryUserActivity get() {
         return provideInstance(this.broadcastDispatcherProvider);
     }

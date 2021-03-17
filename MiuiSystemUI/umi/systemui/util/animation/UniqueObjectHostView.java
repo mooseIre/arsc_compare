@@ -56,6 +56,7 @@ public final class UniqueObjectHostView extends FrameLayout {
         throw null;
     }
 
+    @Override // android.view.ViewGroup
     public void addView(@Nullable View view, int i, @Nullable ViewGroup.LayoutParams layoutParams) {
         if (view == null) {
             throw new IllegalArgumentException("child must be non-null");

@@ -7,16 +7,16 @@ public interface ToggleSlider {
 
         void onInit(ToggleSlider toggleSlider);
 
-        void onStart(int i) {
+        default void onStart(int i) {
         }
 
-        void onStop(int i) {
+        default void onStop(int i) {
         }
     }
 
     int getValue();
 
-    boolean isChecked() {
+    default boolean isChecked() {
         return false;
     }
 

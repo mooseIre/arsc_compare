@@ -64,7 +64,8 @@ public class HistoryEvaluator {
         }
     }
 
-    private static class Data {
+    /* access modifiers changed from: private */
+    public static class Data {
         public float evaluation;
         public float weight = 1.0f;
 

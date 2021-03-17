@@ -27,8 +27,7 @@ public final class SlaveWifiHelper {
     private final ConnectivityManager connectivityManager;
     @NotNull
     private final Context context;
-    /* access modifiers changed from: private */
-    public final SlaveWifiUtils slaveWifiUtils;
+    private final SlaveWifiUtils slaveWifiUtils;
 
     public SlaveWifiHelper(@NotNull Context context2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
@@ -169,7 +168,7 @@ public final class SlaveWifiHelper {
 
     private final boolean is24Ghz(WifiInfo wifiInfo) {
         try {
-            Object invoke = WifiUtils.class.getDeclaredMethod("is24Ghz", new Class[]{WifiInfo.class}).invoke((Object) null, new Object[]{wifiInfo});
+            Object invoke = WifiUtils.class.getDeclaredMethod("is24Ghz", WifiInfo.class).invoke(null, wifiInfo);
             if (invoke != null) {
                 return ((Boolean) invoke).booleanValue();
             }

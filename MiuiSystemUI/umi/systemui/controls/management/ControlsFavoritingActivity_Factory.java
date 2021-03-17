@@ -22,6 +22,7 @@ public final class ControlsFavoritingActivity_Factory implements Factory<Control
         this.globalActionsComponentProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public ControlsFavoritingActivity get() {
         return provideInstance(this.executorProvider, this.controllerProvider, this.listingControllerProvider, this.broadcastDispatcherProvider, this.globalActionsComponentProvider);
     }

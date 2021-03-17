@@ -16,6 +16,7 @@ public final class LogModule_ProvideNotifInteractionLogBufferFactory implements 
         this.dumpManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public LogBuffer get() {
         return provideInstance(this.echoTrackerProvider, this.dumpManagerProvider);
     }

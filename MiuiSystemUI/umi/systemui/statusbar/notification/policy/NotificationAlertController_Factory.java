@@ -38,6 +38,7 @@ public final class NotificationAlertController_Factory implements Factory<Notifi
         this.statusBarKeyguardViewManagerProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public NotificationAlertController get() {
         return provideInstance(this.contextProvider, this.nmProvider, this.entryManagerProvider, this.groupManagerProvider, this.statusBarStateControllerProvider, this.screenLifecycleProvider, this.zenModeControllerProvider, this.settingsManagerProvider, this.notificationLockscreenUserManagerProvider, this.statusBarKeyguardViewManagerProvider);
     }

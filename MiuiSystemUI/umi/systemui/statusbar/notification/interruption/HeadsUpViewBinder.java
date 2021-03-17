@@ -30,12 +30,14 @@ public class HeadsUpViewBinder {
         rowContentBindParams.setUseIncreasedHeadsUpHeight(this.mNotificationMessagingUtil.isImportantMessaging(notificationEntry.getSbn(), notificationEntry.getImportance()) && !this.mNotificationPresenter.isPresenterFullyCollapsed());
         rowContentBindParams.requireContentViews(4);
         CancellationSignal requestRebind = this.mStage.requestRebind(notificationEntry, new NotifBindPipeline.BindCallback(bindCallback) {
+            /* class com.android.systemui.statusbar.notification.interruption.$$Lambda$HeadsUpViewBinder$6G6TWnHGbt5lFbnq41xlKU8ib20 */
             public final /* synthetic */ NotifBindPipeline.BindCallback f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotifBindPipeline.BindCallback
             public final void onBindFinished(NotificationEntry notificationEntry) {
                 HeadsUpViewBinder.lambda$bindHeadsUpView$0(RowContentBindParams.this, this.f$1, notificationEntry);
             }
@@ -61,6 +63,6 @@ public class HeadsUpViewBinder {
     public void unbindHeadsUpView(NotificationEntry notificationEntry) {
         abortBindCallback(notificationEntry);
         ((RowContentBindParams) this.mStage.getStageParams(notificationEntry)).markContentViewsFreeable(4);
-        this.mStage.requestRebind(notificationEntry, (NotifBindPipeline.BindCallback) null);
+        this.mStage.requestRebind(notificationEntry, null);
     }
 }

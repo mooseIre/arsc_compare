@@ -14,6 +14,7 @@ public final class WindowMagnification_Factory implements Factory<WindowMagnific
         this.mainHandlerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public WindowMagnification get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider);
     }

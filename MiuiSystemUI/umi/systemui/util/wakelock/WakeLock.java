@@ -12,21 +12,22 @@ public interface WakeLock {
 
     Runnable wrap(Runnable runnable);
 
-    static WakeLock createPartial(Context context, String str) {
+    static default WakeLock createPartial(Context context, String str) {
         return createPartial(context, str, 20000);
     }
 
-    static WakeLock createPartial(Context context, String str, long j) {
+    static default WakeLock createPartial(Context context, String str, long j) {
         return wrap(createPartialInner(context, str), j);
     }
 
-    static PowerManager.WakeLock createPartialInner(Context context, String str) {
+    static default PowerManager.WakeLock createPartialInner(Context context, String str) {
         return ((PowerManager) context.getSystemService(PowerManager.class)).newWakeLock(1, str);
     }
 
-    static Runnable wrapImpl(WakeLock wakeLock, Runnable runnable) {
+    static default Runnable wrapImpl(WakeLock wakeLock, Runnable runnable) {
         wakeLock.acquire("wrap");
         return new Runnable(runnable, wakeLock) {
+            /* class com.android.systemui.util.wakelock.$$Lambda$WakeLock$Rdut1DSGlHtPOM8Y87P7galvtM */
             public final /* synthetic */ Runnable f$0;
             public final /* synthetic */ WakeLock f$1;
 
@@ -41,7 +42,7 @@ public interface WakeLock {
         };
     }
 
-    static /* synthetic */ void lambda$wrapImpl$0(Runnable runnable, WakeLock wakeLock) {
+    static /* synthetic */ default void lambda$wrapImpl$0(Runnable runnable, WakeLock wakeLock) {
         try {
             runnable.run();
         } finally {
@@ -49,10 +50,12 @@ public interface WakeLock {
         }
     }
 
-    static WakeLock wrap(final PowerManager.WakeLock wakeLock, final long j) {
+    static default WakeLock wrap(final PowerManager.WakeLock wakeLock, final long j) {
         return new WakeLock() {
+            /* class com.android.systemui.util.wakelock.WakeLock.AnonymousClass1 */
             private final HashMap<String, Integer> mActiveClients = new HashMap<>();
 
+            @Override // com.android.systemui.util.wakelock.WakeLock
             public void acquire(String str) {
                 this.mActiveClients.putIfAbsent(str, 0);
                 HashMap<String, Integer> hashMap = this.mActiveClients;
@@ -60,6 +63,7 @@ public interface WakeLock {
                 wakeLock.acquire(j);
             }
 
+            @Override // com.android.systemui.util.wakelock.WakeLock
             public void release(String str) {
                 Integer num = this.mActiveClients.get(str);
                 if (num == null) {
@@ -72,6 +76,7 @@ public interface WakeLock {
                 wakeLock.release();
             }
 
+            @Override // com.android.systemui.util.wakelock.WakeLock
             public Runnable wrap(Runnable runnable) {
                 return WakeLock.wrapImpl(this, runnable);
             }

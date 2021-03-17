@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$WyKlJnsW9STKD48w13qf39mFKI implement
     private /* synthetic */ $$Lambda$WyKlJnsW9STKD48w13qf39mFKI() {
     }
 
+    @Override // androidx.slice.Clock
     public final long currentTimeMillis() {
         return SystemClock.uptimeMillis();
     }

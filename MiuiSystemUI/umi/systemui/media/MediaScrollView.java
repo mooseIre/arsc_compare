@@ -10,6 +10,7 @@ import android.widget.HorizontalScrollView;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.util.animation.PhysicsAnimatorKt;
 import kotlin.TypeCastException;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,11 +24,11 @@ public class MediaScrollView extends HorizontalScrollView {
     private Gefingerpoken touchListener;
 
     public MediaScrollView(@NotNull Context context) {
-        this(context, (AttributeSet) null, 0, 6, (DefaultConstructorMarker) null);
+        this(context, null, 0, 6, null);
     }
 
     public MediaScrollView(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 4, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 4, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -97,13 +98,13 @@ public class MediaScrollView extends HorizontalScrollView {
     }
 
     public void scrollTo(int i, int i2) {
-        if (this.mScrollX != i || this.mScrollY != i2) {
-            int i3 = this.mScrollX;
-            int i4 = this.mScrollY;
-            this.mScrollX = i;
-            this.mScrollY = i2;
+        if (((HorizontalScrollView) this).mScrollX != i || ((HorizontalScrollView) this).mScrollY != i2) {
+            int i3 = ((HorizontalScrollView) this).mScrollX;
+            int i4 = ((HorizontalScrollView) this).mScrollY;
+            ((HorizontalScrollView) this).mScrollX = i;
+            ((HorizontalScrollView) this).mScrollY = i2;
             invalidateParentCaches();
-            onScrollChanged(this.mScrollX, this.mScrollY, i3, i4);
+            onScrollChanged(((HorizontalScrollView) this).mScrollX, ((HorizontalScrollView) this).mScrollY, i3, i4);
             if (!awakenScrollBars()) {
                 postInvalidateOnAnimation();
             }

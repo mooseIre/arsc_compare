@@ -11,6 +11,7 @@ public final class PowerModeTile_Factory implements Factory<PowerModeTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PowerModeTile get() {
         return provideInstance(this.hostProvider);
     }

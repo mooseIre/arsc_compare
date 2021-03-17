@@ -36,6 +36,7 @@ public final class NotificationShadeWindowController_Factory implements Factory<
         this.dumpManagerProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public NotificationShadeWindowController get() {
         return provideInstance(this.contextProvider, this.windowManagerProvider, this.activityManagerProvider, this.dozeParametersProvider, this.statusBarStateControllerProvider, this.configurationControllerProvider, this.keyguardViewMediatorProvider, this.keyguardBypassControllerProvider, this.colorExtractorProvider, this.dumpManagerProvider);
     }

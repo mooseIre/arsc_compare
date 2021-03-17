@@ -14,7 +14,7 @@ public interface NotificationLifetimeExtender {
 
     boolean shouldExtendLifetime(NotificationEntry notificationEntry);
 
-    boolean shouldExtendLifetimeForPendingNotification(NotificationEntry notificationEntry) {
+    default boolean shouldExtendLifetimeForPendingNotification(NotificationEntry notificationEntry) {
         return false;
     }
 }

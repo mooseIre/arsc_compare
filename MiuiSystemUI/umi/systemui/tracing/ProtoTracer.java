@@ -26,10 +26,12 @@ public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<
         dumpManager.registerDumpable(ProtoTracer.class.getName(), this);
     }
 
+    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public File getTraceFile() {
         return new File(this.mContext.getFilesDir(), "sysui_trace.pb");
     }
 
+    @Override // com.android.systemui.shared.tracing.FrameProtoTracer.ProtoTraceParams
     public SystemUiTraceFileProto getEncapsulatingTraceProto() {
         return new SystemUiTraceFileProto();
     }
@@ -85,6 +87,7 @@ public class ProtoTracer implements Dumpable, FrameProtoTracer.ProtoTraceParams<
         this.mProtoTracer.update();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("ProtoTracer:");
         printWriter.print("    ");

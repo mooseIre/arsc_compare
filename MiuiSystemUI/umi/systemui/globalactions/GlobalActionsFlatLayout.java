@@ -11,6 +11,7 @@ import com.android.systemui.HardwareBgDrawable;
 
 public class GlobalActionsFlatLayout extends GlobalActionsLayout {
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     public HardwareBgDrawable getBackgroundDrawable(int i) {
         return null;
     }
@@ -20,6 +21,7 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     @VisibleForTesting
     public boolean shouldReverseListItems() {
         int currentRotation = getCurrentRotation();
@@ -43,6 +45,7 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     public void addToListView(View view, boolean z) {
         super.addToListView(view, z);
         View overflowButton = getOverflowButton();
@@ -53,6 +56,7 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.MultiListLayout
     public void removeAllListViews() {
         View overflowButton = getOverflowButton();
         super.removeAllListViews();
@@ -94,6 +98,7 @@ public class GlobalActionsFlatLayout extends GlobalActionsLayout {
         return getGridItemSize() / 2.0f;
     }
 
+    @Override // com.android.systemui.MultiListLayout
     public float getAnimationOffsetX() {
         return getAnimationDistance();
     }

@@ -1,13 +1,14 @@
 package com.android.systemui.controls.controller;
 
 import android.service.controls.Control;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: ControlInfo.kt */
 public final class ControlInfo {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
     @NotNull
     private final String controlId;
     @NotNull
@@ -48,7 +49,7 @@ public final class ControlInfo {
             return false;
         }
         ControlInfo controlInfo = (ControlInfo) obj;
-        return Intrinsics.areEqual((Object) this.controlId, (Object) controlInfo.controlId) && Intrinsics.areEqual((Object) this.controlTitle, (Object) controlInfo.controlTitle) && Intrinsics.areEqual((Object) this.controlSubtitle, (Object) controlInfo.controlSubtitle) && this.deviceType == controlInfo.deviceType;
+        return Intrinsics.areEqual(this.controlId, controlInfo.controlId) && Intrinsics.areEqual(this.controlTitle, controlInfo.controlTitle) && Intrinsics.areEqual(this.controlSubtitle, controlInfo.controlSubtitle) && this.deviceType == controlInfo.deviceType;
     }
 
     public int hashCode() {

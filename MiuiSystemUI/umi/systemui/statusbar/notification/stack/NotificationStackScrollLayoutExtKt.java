@@ -1,8 +1,11 @@
 package com.android.systemui.statusbar.notification.stack;
 
 import android.view.View;
+import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.util.ConvenienceExtensionsKt;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: NotificationStackScrollLayoutExt.kt */
@@ -15,10 +18,10 @@ public final class NotificationStackScrollLayoutExtKt {
             notificationStackScrollLayout.requestChildrenUpdate();
         }
         if (!isPanelStretching(notificationStackScrollLayout) && z) {
-            for (View next : ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout)) {
+            for (View view : ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout)) {
                 MiuiNotificationAnimations miuiNotificationAnimations = MiuiNotificationAnimations.INSTANCE;
-                Intrinsics.checkExpressionValueIsNotNull(next, "it");
-                miuiNotificationAnimations.cancelSpringAnimations(next);
+                Intrinsics.checkExpressionValueIsNotNull(view, "it");
+                miuiNotificationAnimations.cancelSpringAnimations(view);
             }
         }
         notificationStackScrollLayout.getAmbientState().setPanelStretching(z);
@@ -31,8 +34,8 @@ public final class NotificationStackScrollLayoutExtKt {
 
     public static final void generateHeadsUpChildrenPositionAnimation(@NotNull NotificationStackScrollLayout notificationStackScrollLayout) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$generateHeadsUpChildrenPositionAnimation");
-        for (R headsUpPositionEvent : SequencesKt___SequencesKt.map(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout), NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$1.INSTANCE), NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2.INSTANCE)) {
-            notificationStackScrollLayout.getAnimationEvents().add(new HeadsUpPositionEvent(headsUpPositionEvent));
+        for (ExpandableView expandableView : SequencesKt___SequencesKt.map(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout), NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$1.INSTANCE), NotificationStackScrollLayoutExtKt$generateHeadsUpChildrenPositionAnimation$2.INSTANCE)) {
+            notificationStackScrollLayout.getAnimationEvents().add(new HeadsUpPositionEvent(expandableView));
         }
     }
 
@@ -44,8 +47,8 @@ public final class NotificationStackScrollLayoutExtKt {
                 notificationStackScrollLayout.requestAnimation();
             }
             notificationStackScrollLayout.requestChildrenUpdate();
-            for (R cancelAppearDrawing : SequencesKt___SequencesKt.map(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout), NotificationStackScrollLayoutExtKt$setPanelAppeared$1.INSTANCE), NotificationStackScrollLayoutExtKt$setPanelAppeared$2.INSTANCE)) {
-                cancelAppearDrawing.cancelAppearDrawing();
+            for (ExpandableNotificationRow expandableNotificationRow : SequencesKt___SequencesKt.map(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout), NotificationStackScrollLayoutExtKt$setPanelAppeared$1.INSTANCE), NotificationStackScrollLayoutExtKt$setPanelAppeared$2.INSTANCE)) {
+                expandableNotificationRow.cancelAppearDrawing();
             }
         }
         notificationStackScrollLayout.getAmbientState().setPanelAppeared(z);

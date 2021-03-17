@@ -1,6 +1,5 @@
 package com.android.systemui.biometrics;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -64,26 +63,34 @@ public class AuthPanelController extends ViewOutlineProvider {
             f = this.mContext.getResources().getDimension(C0012R$dimen.biometric_dialog_corner_size);
         }
         if (i3 > 0) {
-            ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{this.mMargin, i4});
+            ValueAnimator ofInt = ValueAnimator.ofInt(this.mMargin, i4);
             ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthPanelController$FfAW_fJIxdruLyni5niGyYZPKQI */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     AuthPanelController.this.lambda$updateForContentDimensions$2$AuthPanelController(valueAnimator);
                 }
             });
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mCornerRadius, f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mCornerRadius, f);
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthPanelController$InH1YHCYbFS1oQ8661noD2sY0tQ */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     AuthPanelController.this.lambda$updateForContentDimensions$3$AuthPanelController(valueAnimator);
                 }
             });
-            ValueAnimator ofInt2 = ValueAnimator.ofInt(new int[]{this.mContentHeight, i2});
+            ValueAnimator ofInt2 = ValueAnimator.ofInt(this.mContentHeight, i2);
             ofInt2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthPanelController$gEQd5p8htInmfU5UNk3JBrR4jEs */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     AuthPanelController.this.lambda$updateForContentDimensions$4$AuthPanelController(valueAnimator);
                 }
             });
-            ValueAnimator ofInt3 = ValueAnimator.ofInt(new int[]{this.mContentWidth, i});
+            ValueAnimator ofInt3 = ValueAnimator.ofInt(this.mContentWidth, i);
             ofInt3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthPanelController$T_ye3d_LoD4zTMypSnctnhLSMzU */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     AuthPanelController.this.lambda$updateForContentDimensions$5$AuthPanelController(valueAnimator);
                 }
@@ -91,7 +98,7 @@ public class AuthPanelController extends ViewOutlineProvider {
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.setDuration((long) i3);
             animatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
-            animatorSet.playTogether(new Animator[]{ofFloat, ofInt2, ofInt3, ofInt});
+            animatorSet.playTogether(ofFloat, ofInt2, ofInt3, ofInt);
             animatorSet.start();
             return;
         }

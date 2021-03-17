@@ -17,15 +17,14 @@ import miui.app.Activity;
 import miui.app.AlertDialog;
 
 public class UsbDebuggingActivity extends Activity {
-    /* access modifiers changed from: private */
-    public AlertDialog mCheckBoxDialog;
+    private AlertDialog mCheckBoxDialog;
     private UsbDisconnectedReceiver mDisconnectedReceiver;
-    /* access modifiers changed from: private */
-    public String mKey;
+    private String mKey;
     private DialogInterface.OnClickListener onClickListener;
     private DialogInterface.OnDismissListener onDismissListener;
 
-    /* JADX WARNING: type inference failed for: r6v0, types: [android.content.Context, com.android.systemui.usb.UsbDebuggingActivity, miui.app.Activity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r6v0, resolved type: com.android.systemui.usb.UsbDebuggingActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onCreate(Bundle bundle) {
         UsbDebuggingActivity.super.onCreate(bundle);
         if (getActionBar() != null) {
@@ -44,6 +43,8 @@ public class UsbDebuggingActivity extends Activity {
             return;
         }
         this.onClickListener = new DialogInterface.OnClickListener() {
+            /* class com.android.systemui.usb.UsbDebuggingActivity.AnonymousClass1 */
+
             public void onClick(DialogInterface dialogInterface, int i) {
                 boolean z = true;
                 boolean z2 = i == -1;
@@ -63,6 +64,8 @@ public class UsbDebuggingActivity extends Activity {
             }
         };
         this.onDismissListener = new DialogInterface.OnDismissListener() {
+            /* class com.android.systemui.usb.UsbDebuggingActivity.AnonymousClass2 */
+
             public void onDismiss(DialogInterface dialogInterface) {
                 UsbDebuggingActivity.this.finish();
             }

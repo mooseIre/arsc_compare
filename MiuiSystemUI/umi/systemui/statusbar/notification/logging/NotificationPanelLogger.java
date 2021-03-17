@@ -8,7 +8,7 @@ import com.android.systemui.statusbar.notification.logging.nano.Notifications$No
 import java.util.List;
 
 public interface NotificationPanelLogger {
-    static int toNotificationSection(int i) {
+    static default int toNotificationSection(int i) {
         switch (i) {
             case 1:
                 return 2;
@@ -51,15 +51,15 @@ public interface NotificationPanelLogger {
         }
     }
 
-    static Notifications$NotificationList toNotificationProto(List<NotificationEntry> list) {
+    static default Notifications$NotificationList toNotificationProto(List<NotificationEntry> list) {
         Notifications$NotificationList notifications$NotificationList = new Notifications$NotificationList();
         if (list == null) {
             return notifications$NotificationList;
         }
         Notifications$Notification[] notifications$NotificationArr = new Notifications$Notification[list.size()];
         int i = 0;
-        for (NotificationEntry next : list) {
-            ExpandedNotification sbn = next.getSbn();
+        for (NotificationEntry notificationEntry : list) {
+            ExpandedNotification sbn = notificationEntry.getSbn();
             if (sbn != null) {
                 Notifications$Notification notifications$Notification = new Notifications$Notification();
                 notifications$Notification.uid = sbn.getUid();
@@ -70,7 +70,7 @@ public interface NotificationPanelLogger {
                 if (sbn.getNotification() != null) {
                     notifications$Notification.isGroupSummary = sbn.getNotification().isGroupSummary();
                 }
-                notifications$Notification.section = toNotificationSection(next.getBucket());
+                notifications$Notification.section = toNotificationSection(notificationEntry.getBucket());
                 notifications$NotificationArr[i] = notifications$Notification;
             }
             i++;

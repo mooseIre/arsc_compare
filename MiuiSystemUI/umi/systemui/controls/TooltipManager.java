@@ -17,19 +17,18 @@ import com.android.systemui.recents.TriangleShape;
 import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: TooltipManager.kt */
 public final class TooltipManager {
     private final View arrowView;
-    /* access modifiers changed from: private */
-    public final boolean below;
+    private final boolean below;
     @NotNull
     private final ViewGroup layout;
     private final int maxTimesShown;
-    /* access modifiers changed from: private */
-    public final String preferenceName;
+    private final String preferenceName;
     @NotNull
     private final Function1<Integer, Unit> preferenceStorer;
     private int shown;

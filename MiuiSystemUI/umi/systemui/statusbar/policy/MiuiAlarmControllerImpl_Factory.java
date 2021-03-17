@@ -11,6 +11,7 @@ public final class MiuiAlarmControllerImpl_Factory implements Factory<MiuiAlarmC
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiAlarmControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

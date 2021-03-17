@@ -25,10 +25,10 @@ public class RemoteInputController {
     private final ArrayMap<String, Object> mSpinning = new ArrayMap<>();
 
     public interface Callback {
-        void onRemoteInputActive(boolean z) {
+        default void onRemoteInputActive(boolean z) {
         }
 
-        void onRemoteInputSent(NotificationEntry notificationEntry) {
+        default void onRemoteInputSent(NotificationEntry notificationEntry) {
         }
     }
 
@@ -76,7 +76,7 @@ public class RemoteInputController {
                 }
                 if (action != null) {
                     Notification.Builder recoverBuilder = Notification.Builder.recoverBuilder(context, notification);
-                    recoverBuilder.setActions(new Notification.Action[]{action});
+                    recoverBuilder.setActions(action);
                     recoverBuilder.build();
                 }
             }
@@ -86,15 +86,15 @@ public class RemoteInputController {
     public void addRemoteInput(NotificationEntry notificationEntry, Object obj) {
         Objects.requireNonNull(notificationEntry);
         Objects.requireNonNull(obj);
-        if (!pruneWeakThenRemoveAndContains(notificationEntry, (NotificationEntry) null, obj)) {
-            this.mOpen.add(new Pair(new WeakReference(notificationEntry), obj));
+        if (!pruneWeakThenRemoveAndContains(notificationEntry, null, obj)) {
+            this.mOpen.add(new Pair<>(new WeakReference(notificationEntry), obj));
         }
         apply(notificationEntry);
     }
 
     public void removeRemoteInput(NotificationEntry notificationEntry, Object obj) {
         Objects.requireNonNull(notificationEntry);
-        pruneWeakThenRemoveAndContains((NotificationEntry) null, notificationEntry, obj);
+        pruneWeakThenRemoveAndContains(null, notificationEntry, obj);
         apply(notificationEntry);
     }
 
@@ -129,11 +129,11 @@ public class RemoteInputController {
     }
 
     public boolean isRemoteInputActive(NotificationEntry notificationEntry) {
-        return pruneWeakThenRemoveAndContains(notificationEntry, (NotificationEntry) null, (Object) null);
+        return pruneWeakThenRemoveAndContains(notificationEntry, null, null);
     }
 
     public boolean isRemoteInputActive() {
-        pruneWeakThenRemoveAndContains((NotificationEntry) null, (NotificationEntry) null, (Object) null);
+        pruneWeakThenRemoveAndContains(null, null, null);
         return !this.mOpen.isEmpty();
     }
 

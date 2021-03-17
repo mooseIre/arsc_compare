@@ -13,9 +13,9 @@ public class TrackedObjects {
 
     public synchronized <T> void track(T t) {
         Class<?> cls = t.getClass();
-        TrackedClass trackedClass = this.mTrackedClasses.get(cls);
+        TrackedClass<?> trackedClass = this.mTrackedClasses.get(cls);
         if (trackedClass == null) {
-            trackedClass = new TrackedClass();
+            trackedClass = new TrackedClass<>();
             this.mTrackedClasses.put(cls, trackedClass);
         }
         trackedClass.track(t);
@@ -26,7 +26,8 @@ public class TrackedObjects {
         return collection instanceof TrackedClass;
     }
 
-    private static class TrackedClass<T> extends AbstractCollection<T> {
+    /* access modifiers changed from: private */
+    public static class TrackedClass<T> extends AbstractCollection<T> {
         final WeakIdentityHashMap<T, Void> instances;
 
         private TrackedClass() {

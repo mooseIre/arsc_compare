@@ -29,12 +29,12 @@ public class FalsingDataProvider {
 
     /* access modifiers changed from: package-private */
     public void onMotionEvent(MotionEvent motionEvent) {
-        int actionMasked = motionEvent.getActionMasked();
+        motionEvent.getActionMasked();
         List<MotionEvent> unpackMotionEvent = unpackMotionEvent(motionEvent);
         FalsingClassifier.logDebug("Unpacked into: " + unpackMotionEvent.size());
         if (BrightLineFalsingManager.DEBUG) {
-            for (MotionEvent next : unpackMotionEvent) {
-                FalsingClassifier.logDebug("x,y,t: " + next.getX() + "," + next.getY() + "," + next.getEventTime());
+            for (MotionEvent motionEvent2 : unpackMotionEvent) {
+                FalsingClassifier.logDebug("x,y,t: " + motionEvent2.getX() + "," + motionEvent2.getY() + "," + motionEvent2.getEventTime());
             }
         }
         if (motionEvent.getActionMasked() == 0) {
@@ -173,14 +173,13 @@ public class FalsingDataProvider {
     }
 
     private List<MotionEvent> unpackMotionEvent(MotionEvent motionEvent) {
-        MotionEvent motionEvent2 = motionEvent;
         ArrayList arrayList = new ArrayList();
         ArrayList arrayList2 = new ArrayList();
         int pointerCount = motionEvent.getPointerCount();
         int i = 0;
         for (int i2 = 0; i2 < pointerCount; i2++) {
             MotionEvent.PointerProperties pointerProperties = new MotionEvent.PointerProperties();
-            motionEvent2.getPointerProperties(i2, pointerProperties);
+            motionEvent.getPointerProperties(i2, pointerProperties);
             arrayList2.add(pointerProperties);
         }
         MotionEvent.PointerProperties[] pointerPropertiesArr = new MotionEvent.PointerProperties[arrayList2.size()];
@@ -191,12 +190,10 @@ public class FalsingDataProvider {
             ArrayList arrayList3 = new ArrayList();
             for (int i4 = i; i4 < pointerCount; i4++) {
                 MotionEvent.PointerCoords pointerCoords = new MotionEvent.PointerCoords();
-                motionEvent2.getHistoricalPointerCoords(i4, i3, pointerCoords);
+                motionEvent.getHistoricalPointerCoords(i4, i3, pointerCoords);
                 arrayList3.add(pointerCoords);
             }
-            long downTime = motionEvent.getDownTime();
-            long historicalEventTime = motionEvent2.getHistoricalEventTime(i3);
-            arrayList.add(MotionEvent.obtain(downTime, historicalEventTime, motionEvent.getAction(), pointerCount, pointerPropertiesArr, (MotionEvent.PointerCoords[]) arrayList3.toArray(new MotionEvent.PointerCoords[i]), motionEvent.getMetaState(), motionEvent.getButtonState(), motionEvent.getXPrecision(), motionEvent.getYPrecision(), motionEvent.getDeviceId(), motionEvent.getEdgeFlags(), motionEvent.getSource(), motionEvent.getFlags()));
+            arrayList.add(MotionEvent.obtain(motionEvent.getDownTime(), motionEvent.getHistoricalEventTime(i3), motionEvent.getAction(), pointerCount, pointerPropertiesArr, (MotionEvent.PointerCoords[]) arrayList3.toArray(new MotionEvent.PointerCoords[i]), motionEvent.getMetaState(), motionEvent.getButtonState(), motionEvent.getXPrecision(), motionEvent.getYPrecision(), motionEvent.getDeviceId(), motionEvent.getEdgeFlags(), motionEvent.getSource(), motionEvent.getFlags()));
             i3++;
             pointerPropertiesArr = pointerPropertiesArr;
             i = i;

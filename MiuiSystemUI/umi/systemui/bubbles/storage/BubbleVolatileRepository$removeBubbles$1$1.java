@@ -4,8 +4,9 @@ import java.util.function.Predicate;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: BubbleVolatileRepository.kt */
-final class BubbleVolatileRepository$removeBubbles$1$1<T> implements Predicate<BubbleEntity> {
+public final class BubbleVolatileRepository$removeBubbles$1$1<T> implements Predicate<BubbleEntity> {
     final /* synthetic */ BubbleEntity $b;
 
     BubbleVolatileRepository$removeBubbles$1$1(BubbleEntity bubbleEntity) {
@@ -14,6 +15,6 @@ final class BubbleVolatileRepository$removeBubbles$1$1<T> implements Predicate<B
 
     public final boolean test(@NotNull BubbleEntity bubbleEntity) {
         Intrinsics.checkParameterIsNotNull(bubbleEntity, "e");
-        return Intrinsics.areEqual((Object) this.$b.getKey(), (Object) bubbleEntity.getKey());
+        return Intrinsics.areEqual(this.$b.getKey(), bubbleEntity.getKey());
     }
 }

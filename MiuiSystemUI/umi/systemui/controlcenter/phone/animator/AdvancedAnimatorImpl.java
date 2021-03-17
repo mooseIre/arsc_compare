@@ -10,9 +10,9 @@ import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.controlcenter.utils.FolmeAnimState;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
@@ -40,6 +40,7 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         this.ccController = controlPanelController;
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void onFinishInflate() {
         super.onFinishInflate();
         AnimState animState = new AnimState("control_panel_show");
@@ -73,7 +74,7 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         if (!this.controller.isSuperPowerMode()) {
             View shortCut = getPanelView().getHeader().getShortCut();
             addAnimateView(shortCut, 1);
-            Folme.useAt(shortCut).state().setTo((Object) FolmeAnimState.mPanelShowAnim);
+            Folme.useAt(shortCut).state().setTo(FolmeAnimState.mPanelShowAnim);
         }
         addAnimateView(getPanelView().getHeader().getBigTime(), 1);
         addAnimateView(getPanelView().getHeader().getDateTime(), 1);
@@ -88,8 +89,8 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         if (this.controller.isPortrait() && !this.controller.isSuperPowerMode()) {
             View editTile = getPanelView().getHeader().getEditTile();
             addAnimateView(editTile, 1);
-            Folme.useAt(editTile).state().setTo((Object) FolmeAnimState.mPanelShowAnim);
-            Folme.useAt(getPanelView().getFooter().getIndicator()).state().setTo((Object) FolmeAnimState.mPanelShowAnim);
+            Folme.useAt(editTile).state().setTo(FolmeAnimState.mPanelShowAnim);
+            Folme.useAt(getPanelView().getFooter().getIndicator()).state().setTo(FolmeAnimState.mPanelShowAnim);
         }
         if (this.controller.isPortrait()) {
             addTransAnimateView(getPanelView().getHeader().getPanelHeader(), 0);
@@ -125,19 +126,23 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void notifyOrientationChanged() {
         getPanelView().getTileLayout().setBaseLineIdx(this.controller.isPortrait() ? 4 : 0);
         updateViews();
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void animateShowPanelWithoutScale(boolean z) {
         getPanelAnim().cancel();
         getPanelAnim().to(z ? getPanelShowAnim() : getPanelHideAnim(), getAnimConfig());
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void animateShowPanel(boolean z) {
-        for (View animateShow : this.mViews) {
-            animateShow(animateShow, z);
+        Iterator<T> it = this.mViews.iterator();
+        while (it.hasNext()) {
+            animateShow(it.next(), z);
         }
         View[] visAnimViews = getPanelView().getTileLayout().getVisAnimViews();
         Intrinsics.checkExpressionValueIsNotNull(visAnimViews, "panelView.tileLayout.visAnimViews");
@@ -162,16 +167,18 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
                 Intrinsics.checkExpressionValueIsNotNull(view, "it");
                 resetShowAnim(view);
             }
-            for (View resetShowAnim : this.mViews) {
-                resetShowAnim(resetShowAnim);
+            Iterator<T> it = this.mViews.iterator();
+            while (it.hasNext()) {
+                resetShowAnim(it.next());
             }
         }
     }
 
     private final void resetShowAnim(View view) {
-        Folme.useAt(view).state().setTo((Object) FolmeAnimState.mPanelHideAnim);
+        Folme.useAt(view).state().setTo(FolmeAnimState.mPanelHideAnim);
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void notifyTileChanged() {
         resetAnimViewState();
     }
@@ -207,6 +214,7 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         }
     }
 
+    @Override // com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator
     public void updateOverExpandHeight(float f) {
         super.updateOverExpandHeight(f);
         if (this.controller.isPortrait()) {
@@ -220,21 +228,21 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
                 return;
             }
             float screenHeight = (float) this.controller.getScreenHeight();
-            float coerceIn = RangesKt___RangesKt.coerceIn(f, 0.0f, screenHeight);
-            for (View view : this.mTransViews) {
-                Object tag = view.getTag(C0015R$id.tag_control_center_trans);
+            float f2 = RangesKt___RangesKt.coerceIn(f, 0.0f, screenHeight);
+            for (T t : this.mTransViews) {
+                Object tag = t.getTag(C0015R$id.tag_control_center_trans);
                 if (tag != null) {
-                    view.setTranslationY(ControlCenterUtils.getTranslationY(((Integer) tag).intValue(), this.overFlingLines, coerceIn, screenHeight));
+                    t.setTranslationY(ControlCenterUtils.getTranslationY(((Integer) tag).intValue(), this.overFlingLines, f2, screenHeight));
                 } else {
                     throw new TypeCastException("null cannot be cast to non-null type kotlin.Int");
                 }
             }
             ImageView indicator = getPanelView().getFooter().getIndicator();
             int i = this.overFlingLines;
-            indicator.setTranslationY(ControlCenterUtils.getTranslationY(i - 1, i, coerceIn, screenHeight));
+            indicator.setTranslationY(ControlCenterUtils.getTranslationY(i - 1, i, f2, screenHeight));
             int i2 = this.overFlingLines;
-            getPanelView().getSmartHomeContainer().setTranslationY(ControlCenterUtils.getTranslationY(i2 - 2, i2, coerceIn, screenHeight));
-            getPanelView().getTileLayout().updateTransHeight((List<View>) null, f, this.controller.getScreenHeight(), this.overFlingLines);
+            getPanelView().getSmartHomeContainer().setTranslationY(ControlCenterUtils.getTranslationY(i2 - 2, i2, f2, screenHeight));
+            getPanelView().getTileLayout().updateTransHeight(null, f, this.controller.getScreenHeight(), this.overFlingLines);
         }
     }
 }

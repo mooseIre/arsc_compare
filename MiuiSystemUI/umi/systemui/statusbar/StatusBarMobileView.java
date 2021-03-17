@@ -23,7 +23,6 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
-import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
 import com.android.systemui.statusbar.policy.DemoModeController;
 import java.util.Objects;
@@ -130,10 +129,10 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     }
 
     private void initDotView() {
-        StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (ExpandedNotification) null);
+        StatusBarIconView statusBarIconView = new StatusBarIconView(((LinearLayout) this).mContext, this.mSlot, null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
+        int dimensionPixelSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);
@@ -316,6 +315,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         return Build.IS_CM_CUSTOMIZATION_TEST || Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST;
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         boolean z2;
         this.mRect.set(rect);
@@ -326,16 +326,16 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         if (this.mUseTint != z) {
             this.mUseTint = z;
             if (!z) {
-                this.mMobile.setImageTintList((ColorStateList) null);
-                this.mSmallRoaming.setImageTintList((ColorStateList) null);
-                this.mSmallHd.setImageTintList((ColorStateList) null);
-                this.mMobileRoaming.setImageTintList((ColorStateList) null);
-                this.mVolte.setImageTintList((ColorStateList) null);
-                this.mVowifi.setImageTintList((ColorStateList) null);
-                this.mSpeechHd.setImageTintList((ColorStateList) null);
-                this.mLeftInOut.setImageTintList((ColorStateList) null);
-                this.mRightInOut.setImageTintList((ColorStateList) null);
-                this.mMobileTypeImage.setImageTintList((ColorStateList) null);
+                this.mMobile.setImageTintList(null);
+                this.mSmallRoaming.setImageTintList(null);
+                this.mSmallHd.setImageTintList(null);
+                this.mMobileRoaming.setImageTintList(null);
+                this.mVolte.setImageTintList(null);
+                this.mVowifi.setImageTintList(null);
+                this.mSpeechHd.setImageTintList(null);
+                this.mLeftInOut.setImageTintList(null);
+                this.mRightInOut.setImageTintList(null);
+                this.mMobileTypeImage.setImageTintList(null);
             }
             z2 = true;
         } else {
@@ -378,6 +378,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         this.mDotView.setIconColor(this.mColor, false);
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public String getSlot() {
         return this.mSlot;
     }
@@ -386,10 +387,12 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         this.mSlot = str;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconVisible() {
         return this.mState.visible;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setVisibleState(int i, boolean z) {
         if (this.mInDemoMode) {
             this.mVisibleState = i;
@@ -411,6 +414,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         }
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public int getVisibleState() {
         return this.mVisibleState;
     }
@@ -443,10 +447,10 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             Paint.FontMetrics fontMetrics = paint.getFontMetrics();
             float f = fontMetrics.bottom - fontMetrics.top;
             float measureText = paint.measureText(str);
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_half_to_top_distance);
-            int dimensionPixelSize2 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_left_inout_over_strength);
-            int dimensionPixelSize3 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_middle_to_strength_start);
-            boolean z = this.mContext.getResources().getConfiguration().getLayoutDirection() == 1;
+            int dimensionPixelSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_half_to_top_distance);
+            int dimensionPixelSize2 = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_left_inout_over_strength);
+            int dimensionPixelSize3 = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_middle_to_strength_start);
+            boolean z = ((LinearLayout) this).mContext.getResources().getConfiguration().getLayoutDirection() == 1;
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mMobileType.getLayoutParams();
             layoutParams.topMargin = (int) (((float) dimensionPixelSize) - (f / 2.0f));
             this.mMobileType.setLayoutParams(layoutParams);
@@ -466,6 +470,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         return !Objects.equals(str, this.mLastShowName);
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mInDemoMode && str.equals("enter")) {
             this.mInDemoMode = true;

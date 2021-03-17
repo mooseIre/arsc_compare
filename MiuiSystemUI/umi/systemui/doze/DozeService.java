@@ -28,7 +28,7 @@ public class DozeService extends DreamService implements DozeMachine.Service, Do
     public void onCreate() {
         super.onCreate();
         setWindowless(true);
-        this.mPluginManager.addPluginListener(this, (Class<?>) DozeServicePlugin.class, false);
+        this.mPluginManager.addPluginListener((PluginListener) this, DozeServicePlugin.class, false);
         this.mDozeMachine = this.mDozeFactory.assembleMachine(this);
     }
 
@@ -83,10 +83,12 @@ public class DozeService extends DreamService implements DozeMachine.Service, Do
         }
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Service
     public void requestWakeUp() {
         ((PowerManager) getSystemService(PowerManager.class)).wakeUp(SystemClock.uptimeMillis(), 4, "com.android.systemui:NODOZE");
     }
 
+    @Override // com.android.systemui.plugins.DozeServicePlugin.RequestDoze
     public void onRequestShowDoze() {
         DozeMachine dozeMachine = this.mDozeMachine;
         if (dozeMachine != null) {
@@ -94,6 +96,7 @@ public class DozeService extends DreamService implements DozeMachine.Service, Do
         }
     }
 
+    @Override // com.android.systemui.plugins.DozeServicePlugin.RequestDoze
     public void onRequestHideDoze() {
         DozeMachine dozeMachine = this.mDozeMachine;
         if (dozeMachine != null) {

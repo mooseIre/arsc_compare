@@ -28,10 +28,12 @@ public class RowInflaterTask implements InflationTask, AsyncLayoutInflater.OnInf
         asyncLayoutInflater.inflate(C0017R$layout.status_bar_notification_row, viewGroup, this);
     }
 
+    @Override // com.android.systemui.statusbar.InflationTask
     public void abort() {
         this.mCancelled = true;
     }
 
+    @Override // androidx.asynclayoutinflater.view.AsyncLayoutInflater.OnInflateFinishedListener
     public void onInflateFinished(View view, int i, ViewGroup viewGroup) {
         if (!this.mCancelled) {
             try {

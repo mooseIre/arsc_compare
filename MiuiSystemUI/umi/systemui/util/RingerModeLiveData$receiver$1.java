@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public final class RingerModeLiveData$receiver$1 extends BroadcastReceiver {
     final /* synthetic */ RingerModeLiveData this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     RingerModeLiveData$receiver$1(RingerModeLiveData ringerModeLiveData) {
         this.this$0 = ringerModeLiveData;
     }
@@ -17,7 +18,7 @@ public final class RingerModeLiveData$receiver$1 extends BroadcastReceiver {
     public void onReceive(@NotNull Context context, @NotNull Intent intent) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
-        this.this$0.initialSticky = isInitialStickyBroadcast();
+        RingerModeLiveData.access$setInitialSticky$p(this.this$0, isInitialStickyBroadcast());
         this.this$0.postValue(Integer.valueOf(intent.getIntExtra("android.media.EXTRA_RINGER_MODE", -1)));
     }
 }

@@ -19,6 +19,7 @@ public final class SystemUIDefaultModule_ProvideRecentsFactory implements Factor
         this.commandQueueProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public Recents get() {
         return provideInstance(this.contextProvider, this.recentsImplementationProvider, this.commandQueueProvider);
     }

@@ -15,10 +15,8 @@ import java.util.Iterator;
 import java.util.stream.Stream;
 
 public abstract class AlertingNotificationManager implements NotificationLifetimeExtender {
-    /* access modifiers changed from: protected */
-    public final ArrayMap<String, AlertEntry> mAlertEntries = new ArrayMap<>();
-    /* access modifiers changed from: protected */
-    public int mAutoDismissNotificationDecay;
+    protected final ArrayMap<String, AlertEntry> mAlertEntries = new ArrayMap<>();
+    protected int mAutoDismissNotificationDecay;
     protected final Clock mClock = new Clock();
     protected final ArraySet<NotificationEntry> mExtendedLifetimeAlertEntries = new ArraySet<>();
     @VisibleForTesting
@@ -136,14 +134,17 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {
         this.mNotificationLifetimeFinishedCallback = notificationSafeToRemoveCallback;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
         return !canRemoveImmediately(notificationEntry.getKey());
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
         if (z) {
             this.mExtendedLifetimeAlertEntries.add(notificationEntry);
@@ -153,7 +154,8 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
         this.mExtendedLifetimeAlertEntries.remove(notificationEntry);
     }
 
-    protected class AlertEntry implements Comparable<AlertEntry> {
+    /* access modifiers changed from: protected */
+    public class AlertEntry implements Comparable<AlertEntry> {
         public long mEarliestRemovaltime;
         public NotificationEntry mEntry;
         public long mPostTime;
@@ -174,6 +176,7 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
 
         public void setEntry(NotificationEntry notificationEntry) {
             setEntry(notificationEntry, new Runnable(notificationEntry) {
+                /* class com.android.systemui.statusbar.$$Lambda$AlertingNotificationManager$AlertEntry$H0BO9fDKgUoiMeVuexcatZzpMyY */
                 public final /* synthetic */ NotificationEntry f$1;
 
                 {
@@ -256,7 +259,8 @@ public abstract class AlertingNotificationManager implements NotificationLifetim
         }
     }
 
-    protected static final class Clock {
+    /* access modifiers changed from: protected */
+    public static final class Clock {
         protected Clock() {
         }
 

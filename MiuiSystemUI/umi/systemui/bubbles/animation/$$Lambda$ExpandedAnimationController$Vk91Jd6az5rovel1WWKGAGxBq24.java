@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$ExpandedAnimationController$Vk91Jd6a
     private /* synthetic */ $$Lambda$ExpandedAnimationController$Vk91Jd6az5rovel1WWKGAGxBq24() {
     }
 
+    @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController.ChildAnimationConfigurator
     public final void configureAnimationForChildAtIndex(int i, PhysicsAnimationLayout.PhysicsPropertyAnimator physicsPropertyAnimator) {
         ExpandedAnimationController.lambda$onActiveControllerForLayout$6(i, physicsPropertyAnimator);
     }

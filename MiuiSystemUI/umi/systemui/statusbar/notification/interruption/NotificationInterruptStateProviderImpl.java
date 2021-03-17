@@ -23,8 +23,7 @@ import java.util.List;
 public class NotificationInterruptStateProviderImpl implements NotificationInterruptStateProvider {
     private final AmbientDisplayConfiguration mAmbientDisplayConfiguration;
     private final BatteryController mBatteryController;
-    /* access modifiers changed from: private */
-    public final ContentResolver mContentResolver;
+    private final ContentResolver mContentResolver;
     private final IDreamManager mDreamManager;
     protected HeadsUpManager mHeadsUpManager;
     private final ContentObserver mHeadsUpObserver;
@@ -45,6 +44,8 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
         this.mStatusBarStateController = statusBarStateController;
         this.mHeadsUpManager = headsUpManager;
         this.mHeadsUpObserver = new ContentObserver(handler) {
+            /* class com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProviderImpl.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 NotificationInterruptStateProviderImpl notificationInterruptStateProviderImpl = NotificationInterruptStateProviderImpl.this;
                 boolean z2 = notificationInterruptStateProviderImpl.mUseHeadsUp;
@@ -69,10 +70,12 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
         this.mHeadsUpObserver.onChange(true);
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public void addSuppressor(NotificationInterruptSuppressor notificationInterruptSuppressor) {
         this.mSuppressors.add(notificationInterruptSuppressor);
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public boolean shouldBubbleUp(NotificationEntry notificationEntry) {
         ExpandedNotification sbn = notificationEntry.getSbn();
         if (!canAlertCommon(notificationEntry) || !canAlertAwakeCommon(notificationEntry)) {
@@ -89,6 +92,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public boolean shouldHeadsUp(NotificationEntry notificationEntry) {
         if (this.mStatusBarStateController.isDozing()) {
             return shouldHeadsUpWhenDozing(notificationEntry);
@@ -96,6 +100,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
         return shouldHeadsUpWhenAwake(notificationEntry);
     }
 
+    @Override // com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider
     public boolean shouldLaunchFullScreenIntentWhenAdded(NotificationEntry notificationEntry) {
         if (notificationEntry.getSbn().getNotification().fullScreenIntent == null || (shouldHeadsUp(notificationEntry) && this.mStatusBarStateController.getState() != 1)) {
             return false;

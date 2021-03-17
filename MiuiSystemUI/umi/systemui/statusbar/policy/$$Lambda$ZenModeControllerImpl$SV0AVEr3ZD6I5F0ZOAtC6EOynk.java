@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$ZenModeControllerImpl$SV0AVEr3ZD6I5F
     private /* synthetic */ $$Lambda$ZenModeControllerImpl$SV0AVEr3ZD6I5F0ZOAtC6EOynk() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((ZenModeController.Callback) obj).onEffectsSupressorChanged();
     }

@@ -17,6 +17,7 @@ public final class SmartReplyConstants_Factory implements Factory<SmartReplyCons
         this.deviceConfigProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public SmartReplyConstants get() {
         return provideInstance(this.handlerProvider, this.contextProvider, this.deviceConfigProvider);
     }

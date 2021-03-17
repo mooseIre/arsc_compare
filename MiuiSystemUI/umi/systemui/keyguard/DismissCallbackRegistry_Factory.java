@@ -11,6 +11,7 @@ public final class DismissCallbackRegistry_Factory implements Factory<DismissCal
         this.uiBgExecutorProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DismissCallbackRegistry get() {
         return provideInstance(this.uiBgExecutorProvider);
     }

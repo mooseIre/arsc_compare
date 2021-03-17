@@ -34,7 +34,7 @@ public class SystemUIFactory {
     private SystemUIRootComponent mRootComponent;
 
     public static <T extends SystemUIFactory> T getInstance() {
-        return mFactory;
+        return (T) mFactory;
     }
 
     public static void createFromConfig(Context context) {

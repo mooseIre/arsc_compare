@@ -14,6 +14,7 @@ public final class ControlsListingControllerImpl_Factory implements Factory<Cont
         this.executorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ControlsListingControllerImpl get() {
         return provideInstance(this.contextProvider, this.executorProvider);
     }

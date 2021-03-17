@@ -86,6 +86,7 @@ public class QSFactoryImpl implements QSFactory {
         this.mQSFactoryInjector = qSFactoryInjector;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSFactory
     public QSTile createTile(String str) {
         return createTile(str, false);
     }
@@ -105,7 +106,7 @@ public class QSFactoryImpl implements QSFactory {
                 break;
             case -1183073498:
                 if (str.equals("flashlight")) {
-                    c = 8;
+                    c = '\b';
                     break;
                 }
                 break;
@@ -123,7 +124,7 @@ public class QSFactoryImpl implements QSFactory {
                 break;
             case -331239923:
                 if (str.equals("battery")) {
-                    c = 13;
+                    c = '\r';
                     break;
                 }
                 break;
@@ -153,7 +154,7 @@ public class QSFactoryImpl implements QSFactory {
                 break;
             case 3046207:
                 if (str.equals("cast")) {
-                    c = 10;
+                    c = '\n';
                     break;
                 }
                 break;
@@ -171,7 +172,7 @@ public class QSFactoryImpl implements QSFactory {
                 break;
             case 3599307:
                 if (str.equals("user")) {
-                    c = 12;
+                    c = '\f';
                     break;
                 }
                 break;
@@ -207,7 +208,7 @@ public class QSFactoryImpl implements QSFactory {
                 break;
             case 1901043637:
                 if (str.equals("location")) {
-                    c = 9;
+                    c = '\t';
                     break;
                 }
                 break;
@@ -229,17 +230,17 @@ public class QSFactoryImpl implements QSFactory {
                 return this.mWorkModeTileProvider.get();
             case 7:
                 return this.mRotationLockTileProvider.get();
-            case 8:
+            case '\b':
                 return this.mFlashlightTileProvider.get();
-            case 9:
+            case '\t':
                 return this.mLocationTileProvider.get();
-            case 10:
+            case '\n':
                 return this.mCastTileProvider.get();
             case 11:
                 return this.mHotspotTileProvider.get();
-            case 12:
+            case '\f':
                 return this.mUserTileProvider.get();
-            case 13:
+            case '\r':
                 return this.mBatterySaverTileProvider.get();
             case 14:
                 return this.mDataSaverTileProvider.get();
@@ -263,6 +264,7 @@ public class QSFactoryImpl implements QSFactory {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSFactory
     public QSTileView createTileView(QSTile qSTile, boolean z) {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mQsHostLazy.get().getContext(), C0022R$style.qs_theme);
         QSIconView createTileView = qSTile.createTileView(contextThemeWrapper);
@@ -272,6 +274,7 @@ public class QSFactoryImpl implements QSFactory {
         return new MiuiQSTileView(contextThemeWrapper, createTileView);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSFactory
     public QSTile createTile(String str, boolean z) {
         QSTileImpl createTileInternal = createTileInternal(str);
         if (createTileInternal != null) {

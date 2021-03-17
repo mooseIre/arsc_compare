@@ -3,13 +3,14 @@ package com.android.systemui.statusbar.notification.collection;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifPromoter;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifSection;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: ListAttachState.kt */
 public final class ListAttachState {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
     @Nullable
     private NotifFilter excludingFilter;
     @Nullable
@@ -33,7 +34,7 @@ public final class ListAttachState {
             return false;
         }
         ListAttachState listAttachState = (ListAttachState) obj;
-        return Intrinsics.areEqual((Object) this.parent, (Object) listAttachState.parent) && Intrinsics.areEqual((Object) this.section, (Object) listAttachState.section) && this.sectionIndex == listAttachState.sectionIndex && Intrinsics.areEqual((Object) this.excludingFilter, (Object) listAttachState.excludingFilter) && Intrinsics.areEqual((Object) this.promoter, (Object) listAttachState.promoter);
+        return Intrinsics.areEqual(this.parent, listAttachState.parent) && Intrinsics.areEqual(this.section, listAttachState.section) && this.sectionIndex == listAttachState.sectionIndex && Intrinsics.areEqual(this.excludingFilter, listAttachState.excludingFilter) && Intrinsics.areEqual(this.promoter, listAttachState.promoter);
     }
 
     public int hashCode() {
@@ -140,7 +141,7 @@ public final class ListAttachState {
 
         @NotNull
         public final ListAttachState create() {
-            return new ListAttachState((GroupEntry) null, (NotifSection) null, -1, (NotifFilter) null, (NotifPromoter) null, (DefaultConstructorMarker) null);
+            return new ListAttachState(null, null, -1, null, null, null);
         }
     }
 }

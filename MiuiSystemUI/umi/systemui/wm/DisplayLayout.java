@@ -275,11 +275,8 @@ public class DisplayLayout {
         }
         boolean z = displayInfo.type == 5 && displayInfo.ownerUid != 1000;
         boolean z2 = Settings.Global.getInt(context.getContentResolver(), "force_desktop_mode_on_external_displays", 0) != 0;
-        if ((displayInfo.flags & 64) != 0) {
-            return true;
-        }
-        if (!z2 || z) {
-            return false;
+        if ((displayInfo.flags & 64) == 0) {
+            return z2 && !z;
         }
         return true;
     }

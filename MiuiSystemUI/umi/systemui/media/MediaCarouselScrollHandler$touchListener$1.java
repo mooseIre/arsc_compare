@@ -9,10 +9,12 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaCarouselScrollHandler$touchListener$1 implements Gefingerpoken {
     final /* synthetic */ MediaCarouselScrollHandler this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaCarouselScrollHandler$touchListener$1(MediaCarouselScrollHandler mediaCarouselScrollHandler) {
         this.this$0 = mediaCarouselScrollHandler;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onTouchEvent(@Nullable MotionEvent motionEvent) {
         MediaCarouselScrollHandler mediaCarouselScrollHandler = this.this$0;
         if (motionEvent != null) {
@@ -22,6 +24,7 @@ public final class MediaCarouselScrollHandler$touchListener$1 implements Gefinge
         throw null;
     }
 
+    @Override // com.android.systemui.Gefingerpoken
     public boolean onInterceptTouchEvent(@Nullable MotionEvent motionEvent) {
         MediaCarouselScrollHandler mediaCarouselScrollHandler = this.this$0;
         if (motionEvent != null) {

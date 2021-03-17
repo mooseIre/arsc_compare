@@ -18,6 +18,7 @@ public final class DependencyProvider_ProvideNightDisplayListenerFactory impleme
         this.bgHandlerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NightDisplayListener get() {
         return provideInstance(this.module, this.contextProvider, this.bgHandlerProvider);
     }

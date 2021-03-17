@@ -25,6 +25,7 @@ public final class ControlActionCoordinatorImpl_Factory implements Factory<Contr
         this.globalActionsComponentProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public ControlActionCoordinatorImpl get() {
         return provideInstance(this.contextProvider, this.bgExecutorProvider, this.uiExecutorProvider, this.activityStarterProvider, this.keyguardStateControllerProvider, this.globalActionsComponentProvider);
     }

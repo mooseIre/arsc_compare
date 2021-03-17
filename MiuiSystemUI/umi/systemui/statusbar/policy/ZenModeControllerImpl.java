@@ -39,13 +39,14 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     private ZenModeConfig mConfig;
     private final GlobalSetting mConfigSetting;
     private NotificationManager.Policy mConsolidatedNotificationPolicy;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private volatile boolean mLastRingerMode;
     private volatile boolean mLastZenMode;
     private final GlobalSetting mModeSetting;
     private final NotificationManager mNoMan;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.ZenModeControllerImpl.AnonymousClass5 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.app.action.NEXT_ALARM_CLOCK_CHANGED".equals(intent.getAction())) {
                 ZenModeControllerImpl.this.fireNextAlarmChanged();
@@ -56,15 +57,16 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         }
     };
     private boolean mRegistered;
-    /* access modifiers changed from: private */
-    public volatile boolean mRingerMode;
+    private volatile boolean mRingerMode;
     private final BroadcastReceiver mRingerReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.ZenModeControllerImpl.AnonymousClass6 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.media.RINGER_MODE_CHANGED".equals(intent.getAction())) {
                 ZenModeControllerImpl zenModeControllerImpl = ZenModeControllerImpl.this;
-                boolean unused = zenModeControllerImpl.mRingerMode = MiuiSettings.SoundMode.isSilenceModeOn(zenModeControllerImpl.mContext);
+                zenModeControllerImpl.mRingerMode = MiuiSettings.SoundMode.isSilenceModeOn(zenModeControllerImpl.mContext);
                 ZenModeControllerImpl zenModeControllerImpl2 = ZenModeControllerImpl.this;
-                boolean unused2 = zenModeControllerImpl2.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl2.mContext);
+                zenModeControllerImpl2.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl2.mContext);
                 Log.d("ZenModeController", "onReceive: RINGER_MODE_CHANGED_ACTION, mVibrateEnable = " + ZenModeControllerImpl.this.mVibrateEnable + " mRingerMode = " + ZenModeControllerImpl.this.mRingerMode);
                 ZenModeControllerImpl.this.onZenOrRingerModeMayChanged();
             }
@@ -72,14 +74,11 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     };
     private GlobalSetting mRingerSetting;
     private final SetupObserver mSetupObserver;
-    /* access modifiers changed from: private */
-    public int mUserId;
+    private int mUserId;
     private final UserManager mUserManager;
-    /* access modifiers changed from: private */
-    public volatile boolean mVibrateEnable;
+    private volatile boolean mVibrateEnable;
     private ContentObserver mVibrateEnableObserver;
-    /* access modifiers changed from: private */
-    public volatile boolean mZenMode;
+    private volatile boolean mZenMode;
     private long mZenUpdateTime;
 
     static {
@@ -90,22 +89,28 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         super(broadcastDispatcher);
         this.mContext = context;
         this.mModeSetting = new GlobalSetting(this.mContext, handler, "zen_mode") {
+            /* class com.android.systemui.statusbar.policy.ZenModeControllerImpl.AnonymousClass1 */
+
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.qs.GlobalSetting
             public void handleValueChanged(int i) {
                 ZenModeControllerImpl zenModeControllerImpl = ZenModeControllerImpl.this;
-                boolean unused = zenModeControllerImpl.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl.mContext);
+                zenModeControllerImpl.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl.mContext);
                 ZenModeControllerImpl zenModeControllerImpl2 = ZenModeControllerImpl.this;
-                boolean unused2 = zenModeControllerImpl2.mZenMode = MiuiSettings.SoundMode.isZenModeOn(zenModeControllerImpl2.mContext);
+                zenModeControllerImpl2.mZenMode = MiuiSettings.SoundMode.isZenModeOn(zenModeControllerImpl2.mContext);
                 ZenModeControllerImpl.this.onZenOrRingerModeMayChanged();
             }
         };
         AnonymousClass2 r0 = new GlobalSetting(this.mContext, handler, "mode_ringer") {
+            /* class com.android.systemui.statusbar.policy.ZenModeControllerImpl.AnonymousClass2 */
+
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.qs.GlobalSetting
             public void handleValueChanged(int i) {
                 ZenModeControllerImpl zenModeControllerImpl = ZenModeControllerImpl.this;
-                boolean unused = zenModeControllerImpl.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl.mContext);
+                zenModeControllerImpl.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl.mContext);
                 ZenModeControllerImpl zenModeControllerImpl2 = ZenModeControllerImpl.this;
-                boolean unused2 = zenModeControllerImpl2.mRingerMode = MiuiSettings.SoundMode.isSilenceModeOn(zenModeControllerImpl2.mContext);
+                zenModeControllerImpl2.mRingerMode = MiuiSettings.SoundMode.isSilenceModeOn(zenModeControllerImpl2.mContext);
                 ZenModeControllerImpl.this.onZenOrRingerModeMayChanged();
             }
         };
@@ -116,9 +121,11 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         intentFilter.addAction("android.media.RINGER_MODE_CHANGED");
         broadcastDispatcher.registerReceiverWithHandler(this.mRingerReceiver, intentFilter, handler);
         this.mVibrateEnableObserver = new ContentObserver(handler) {
+            /* class com.android.systemui.statusbar.policy.ZenModeControllerImpl.AnonymousClass3 */
+
             public void onChange(boolean z) {
                 ZenModeControllerImpl zenModeControllerImpl = ZenModeControllerImpl.this;
-                boolean unused = zenModeControllerImpl.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl.mContext);
+                zenModeControllerImpl.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(zenModeControllerImpl.mContext);
                 ZenModeControllerImpl.this.fireVibrateChanged();
             }
         };
@@ -126,7 +133,10 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("vibrate_in_normal"), false, this.mVibrateEnableObserver, -1);
         this.mVibrateEnable = AudioManagerHelper.isVibrateEnabled(this.mContext);
         this.mConfigSetting = new GlobalSetting(this.mContext, handler, "zen_mode_config_etag") {
+            /* class com.android.systemui.statusbar.policy.ZenModeControllerImpl.AnonymousClass4 */
+
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.qs.GlobalSetting
             public void handleValueChanged(int i) {
                 ZenModeControllerImpl.this.updateZenModeConfig();
             }
@@ -145,10 +155,12 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         startTracking();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean isVolumeRestricted() {
         return this.mUserManager.hasUserRestriction("no_adjust_volume", new UserHandle(this.mUserId));
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean areNotificationsHiddenInShade() {
         if (!this.mZenMode || (this.mConsolidatedNotificationPolicy.suppressedVisualEffects & 256) == 0) {
             return false;
@@ -168,18 +180,22 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public int getZen() {
         return this.mModeSetting.getValue();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public void setZen(int i, Uri uri, String str) {
         this.mNoMan.setZenMode(i, uri, str);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean isZenAvailable() {
         return this.mSetupObserver.isDeviceProvisioned() && this.mSetupObserver.isUserSetup();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public ZenModeConfig.ZenRule getManualRule() {
         ZenModeConfig zenModeConfig = this.mConfig;
         if (zenModeConfig == null) {
@@ -188,14 +204,17 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         return zenModeConfig.manualRule;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public ZenModeConfig getConfig() {
         return this.mConfig;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public NotificationManager.Policy getConsolidatedPolicy() {
         return this.mConsolidatedNotificationPolicy;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public long getNextAlarm() {
         AlarmManager.AlarmClockInfo nextAlarmClock = this.mAlarmManager.getNextAlarmClock(this.mUserId);
         if (nextAlarmClock != null) {
@@ -204,6 +223,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         return 0;
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(int i) {
         this.mUserId = i;
         if (this.mRegistered) {
@@ -211,35 +231,40 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         }
         IntentFilter intentFilter = new IntentFilter("android.app.action.NEXT_ALARM_CLOCK_CHANGED");
         intentFilter.addAction("android.os.action.ACTION_EFFECTS_SUPPRESSOR_CHANGED");
-        this.mContext.registerReceiverAsUser(this.mReceiver, new UserHandle(this.mUserId), intentFilter, (String) null, (Handler) null);
+        this.mContext.registerReceiverAsUser(this.mReceiver, new UserHandle(this.mUserId), intentFilter, null, null);
         this.mRegistered = true;
         this.mSetupObserver.register();
     }
 
     /* access modifiers changed from: private */
-    public void fireNextAlarmChanged() {
+    /* access modifiers changed from: public */
+    private void fireNextAlarmChanged() {
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, $$Lambda$ZenModeControllerImpl$6_S_aAoRd9fsiJr9D0TIwCJGb6M.INSTANCE);
         }
     }
 
     /* access modifiers changed from: private */
-    public void fireEffectsSuppressorChanged() {
+    /* access modifiers changed from: public */
+    private void fireEffectsSuppressorChanged() {
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, $$Lambda$ZenModeControllerImpl$SV0AVEr3ZD6I5F0ZOAtC6EOynk.INSTANCE);
         }
     }
 
     /* access modifiers changed from: private */
-    public void fireZenAvailableChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void fireZenAvailableChanged(boolean z) {
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, new Consumer(z) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$SZ6Og1sK4NAnerjv0COJMr2bCU */
                 public final /* synthetic */ boolean f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((ZenModeController.Callback) obj).onZenAvailableChanged(this.f$0);
                 }
@@ -250,12 +275,14 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     private void fireManualRuleChanged(ZenModeConfig.ZenRule zenRule) {
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, new Consumer(zenRule) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$8iaDxlkHjmysoUP7KwjUaBzkBiQ */
                 public final /* synthetic */ ZenModeConfig.ZenRule f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((ZenModeController.Callback) obj).onManualRuleChanged(this.f$0);
                 }
@@ -266,12 +293,14 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     private void fireConsolidatedPolicyChanged(NotificationManager.Policy policy) {
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, new Consumer(policy) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$8ESweSQi2XbEG_Qu7VUYzDq1Zcs */
                 public final /* synthetic */ NotificationManager.Policy f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((ZenModeController.Callback) obj).onConsolidatedPolicyChanged(this.f$0);
                 }
@@ -284,12 +313,14 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     public void fireConfigChanged(ZenModeConfig zenModeConfig) {
         synchronized (this.mCallbacksLock) {
             Utils.safeForeach(this.mCallbacks, new Consumer(zenModeConfig) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$idmtZJFosRgAGQLYktOBo_UGp5E */
                 public final /* synthetic */ ZenModeConfig f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((ZenModeController.Callback) obj).onConfigChanged(this.f$0);
                 }
@@ -340,6 +371,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("ZenModeControllerImpl:");
         printWriter.println("  mZenMode=" + this.mZenMode);
@@ -347,10 +379,11 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
         printWriter.println("  mRingerMode=" + this.mRingerMode);
         printWriter.println("  mConfig=" + this.mConfig);
         printWriter.println("  mConsolidatedNotificationPolicy=" + this.mConsolidatedNotificationPolicy);
-        printWriter.println("  mZenUpdateTime=" + DateFormat.format("MM-dd HH:mm:ss", this.mZenUpdateTime));
+        printWriter.println("  mZenUpdateTime=" + ((Object) DateFormat.format("MM-dd HH:mm:ss", this.mZenUpdateTime)));
     }
 
-    private final class SetupObserver extends ContentObserver {
+    /* access modifiers changed from: private */
+    public final class SetupObserver extends ContentObserver {
         private boolean mRegistered;
         private final ContentResolver mResolver;
 
@@ -399,32 +432,38 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
     /* access modifiers changed from: protected */
     public void fireVibrateChanged() {
         Utils.safeForeach(this.mCallbacks, new Consumer(this.mVibrateEnable) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$uKt_3WXZ4L13263SobuGkOac7Uw */
             public final /* synthetic */ boolean f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((ZenModeController.Callback) obj).onVibrateChanged(this.f$0);
             }
         });
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean isVibrateOn() {
         return this.mVibrateEnable;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean isZenModeOn() {
         return this.mZenMode;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean isRingerModeOn() {
         return this.mRingerMode;
     }
 
     private void fireZenOrRingerChanged() {
         Utils.safeForeach(this.mCallbacks, new Consumer(this.mZenMode, this.mRingerMode) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$ZenModeControllerImpl$CowTOyLJxNXw1gez1pZVPvO14fs */
             public final /* synthetic */ boolean f$0;
             public final /* synthetic */ boolean f$1;
 
@@ -433,20 +472,24 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((ZenModeController.Callback) obj).onZenOrRingerChanged(this.f$0, this.f$1);
             }
         });
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public void toggleSilent() {
         AudioManagerHelper.toggleSilent(this.mContext, 4);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public void toggleVibrate() {
         AudioManagerHelper.toggleVibrateSetting(this.mContext);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController
     public boolean isVibratorAvailable() {
         return ((Vibrator) this.mContext.getSystemService("vibrator")).hasVibrator();
     }

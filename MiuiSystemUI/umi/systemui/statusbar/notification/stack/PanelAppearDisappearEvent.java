@@ -3,19 +3,18 @@ package com.android.systemui.statusbar.notification.stack;
 import android.animation.Animator;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
-import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.miui.systemui.animation.PhysicBasedInterpolator;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiNotificationAnimationExtensions.kt */
 public final class PanelAppearDisappearEvent extends NotificationStackScrollLayout.AnimationEvent {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    /* access modifiers changed from: private */
+    public static final Companion Companion = new Companion(null);
     @NotNull
-    public static final PhysicBasedInterpolator INTERPOLATOR;
+    private static final PhysicBasedInterpolator INTERPOLATOR;
 
     /* compiled from: MiuiNotificationAnimationExtensions.kt */
     public static final class Companion {
@@ -55,12 +54,12 @@ public final class PanelAppearDisappearEvent extends NotificationStackScrollLayo
 
         public final void animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull View view, boolean z) {
             Intrinsics.checkParameterIsNotNull(view, "$this$animateAppearDisappear");
-            animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(view, z, (Animator.AnimatorListener) null);
+            animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(view, z, null);
         }
     }
 
     public PanelAppearDisappearEvent() {
-        super((ExpandableView) null, 17, 450, MiuiNotificationAnimations.INSTANCE.getPANEL_APPEAR_DISAPPEAR_FILTER());
+        super(null, 17, 450, MiuiNotificationAnimations.INSTANCE.getPANEL_APPEAR_DISAPPEAR_FILTER());
     }
 
     static {

@@ -32,6 +32,8 @@ import java.util.function.Consumer;
 public class RotationButtonController {
     private AccessibilityManagerWrapper mAccessibilityManagerWrapper;
     private final Runnable mCancelPendingRotationProposal = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$RotationButtonController$rLt402gKIdgNcqykKz16VIeLAMM */
+
         public final void run() {
             RotationButtonController.this.lambda$new$1$RotationButtonController();
         }
@@ -41,24 +43,25 @@ public class RotationButtonController {
     private boolean mIsNavigationBarShowing;
     private int mLastRotationSuggestion;
     private boolean mListenersRegistered = false;
-    /* access modifiers changed from: private */
-    public final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
+    private final Handler mMainThreadHandler = new Handler(Looper.getMainLooper());
     private boolean mPendingRotationSuggestion;
     private final Runnable mRemoveRotationProposal = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$RotationButtonController$9GntNFTDdKoyCtcSVI_eBCW3dMQ */
+
         public final void run() {
             RotationButtonController.this.lambda$new$0$RotationButtonController();
         }
     };
-    /* access modifiers changed from: private */
-    public Consumer<Integer> mRotWatcherListener;
+    private Consumer<Integer> mRotWatcherListener;
     private Animator mRotateHideAnimator;
-    /* access modifiers changed from: private */
-    public final RotationButton mRotationButton;
-    /* access modifiers changed from: private */
-    public RotationLockController mRotationLockController;
+    private final RotationButton mRotationButton;
+    private RotationLockController mRotationLockController;
     private final IRotationWatcher.Stub mRotationWatcher = new IRotationWatcher.Stub() {
+        /* class com.android.systemui.statusbar.phone.RotationButtonController.AnonymousClass1 */
+
         public void onRotationChanged(int i) throws RemoteException {
             RotationButtonController.this.mMainThreadHandler.postAtFrontOfQueue(new Runnable(i) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$RotationButtonController$1$wNXXdlqLeBk1NR5FrlGSJawDu0I */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -154,11 +157,15 @@ public class RotationButtonController {
         this.mAccessibilityManagerWrapper = (AccessibilityManagerWrapper) Dependency.get(AccessibilityManagerWrapper.class);
         this.mTaskStackListener = new TaskStackListenerImpl();
         this.mRotationButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$RotationButtonController$nGgIS1iCjy5uWWIfPZ9LUPKtUUc */
+
             public final void onClick(View view) {
                 RotationButtonController.this.onRotateSuggestionClick(view);
             }
         });
         this.mRotationButton.setOnHoverListener(new View.OnHoverListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$RotationButtonController$ITAepcsPx2pDX6xNt4OEwYvoRc */
+
             public final boolean onHover(View view, MotionEvent motionEvent) {
                 return RotationButtonController.this.onRotateSuggestionHover(view, motionEvent);
             }
@@ -248,10 +255,12 @@ public class RotationButtonController {
             }
             Animator animator3 = this.mRotateHideAnimator;
             if (animator3 == null || !animator3.isRunning()) {
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(currentView, "alpha", new float[]{0.0f});
-                ofFloat.setDuration(100);
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(currentView, "alpha", 0.0f);
+                ofFloat.setDuration(100L);
                 ofFloat.setInterpolator(Interpolators.LINEAR);
                 ofFloat.addListener(new AnimatorListenerAdapter() {
+                    /* class com.android.systemui.statusbar.phone.RotationButtonController.AnonymousClass2 */
+
                     public void onAnimationEnd(Animator animator) {
                         RotationButtonController.this.mRotationButton.hide();
                     }
@@ -356,7 +365,8 @@ public class RotationButtonController {
     }
 
     /* access modifiers changed from: private */
-    public boolean shouldOverrideUserLockPrefs(int i) {
+    /* access modifiers changed from: public */
+    private boolean shouldOverrideUserLockPrefs(int i) {
         if (this.mSkipOverrideUserLockPrefsOnce) {
             this.mSkipOverrideUserLockPrefsOnce = false;
             return false;
@@ -394,30 +404,37 @@ public class RotationButtonController {
         }
     }
 
-    private class TaskStackListenerImpl extends TaskStackChangeListener {
+    /* access modifiers changed from: private */
+    public class TaskStackListenerImpl extends TaskStackChangeListener {
         private TaskStackListenerImpl() {
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskStackChanged() {
             RotationButtonController.this.setRotateSuggestionButtonState(false);
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskRemoved(int i) {
             RotationButtonController.this.setRotateSuggestionButtonState(false);
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskMovedToFront(int i) {
             RotationButtonController.this.setRotateSuggestionButtonState(false);
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onActivityRequestedOrientationChanged(int i, int i2) {
             Optional.ofNullable(ActivityManagerWrapper.getInstance()).map($$Lambda$Zm3Yj0EQnVWvu_ZksQOsrTwJ3k.INSTANCE).ifPresent(new Consumer(i) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$RotationButtonController$TaskStackListenerImpl$zCjhcFpUTQGdzdQEgIMUjTrjPZU */
                 public final /* synthetic */ int f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     RotationButtonController.TaskStackListenerImpl.this.lambda$onActivityRequestedOrientationChanged$0$RotationButtonController$TaskStackListenerImpl(this.f$1, (ActivityManager.RunningTaskInfo) obj);
                 }
@@ -433,13 +450,15 @@ public class RotationButtonController {
         }
     }
 
-    private class ViewRippler {
+    /* access modifiers changed from: private */
+    public class ViewRippler {
         private final Runnable mRipple;
-        /* access modifiers changed from: private */
-        public View mRoot;
+        private View mRoot;
 
         private ViewRippler(RotationButtonController rotationButtonController) {
             this.mRipple = new Runnable() {
+                /* class com.android.systemui.statusbar.phone.RotationButtonController.ViewRippler.AnonymousClass1 */
+
                 public void run() {
                     if (ViewRippler.this.mRoot.isAttachedToWindow()) {
                         ViewRippler.this.mRoot.setPressed(true);
@@ -467,7 +486,8 @@ public class RotationButtonController {
         }
     }
 
-    enum RotationButtonEvent implements UiEventLogger.UiEventEnum {
+    /* access modifiers changed from: package-private */
+    public enum RotationButtonEvent implements UiEventLogger.UiEventEnum {
         ROTATION_SUGGESTION_SHOWN(206),
         ROTATION_SUGGESTION_ACCEPTED(207);
         

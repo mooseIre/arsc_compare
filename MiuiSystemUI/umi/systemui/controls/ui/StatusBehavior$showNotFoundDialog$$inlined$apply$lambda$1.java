@@ -6,8 +6,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.service.controls.Control;
 
+/* access modifiers changed from: package-private */
 /* compiled from: StatusBehavior.kt */
-final class StatusBehavior$showNotFoundDialog$$inlined$apply$lambda$1 implements DialogInterface.OnClickListener {
+public final class StatusBehavior$showNotFoundDialog$$inlined$apply$lambda$1 implements DialogInterface.OnClickListener {
     final /* synthetic */ ControlViewHolder $cvh$inlined;
     final /* synthetic */ ControlWithState $cws$inlined;
     final /* synthetic */ AlertDialog.Builder $this_apply;

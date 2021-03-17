@@ -9,22 +9,23 @@ import android.view.ViewAnimationUtils;
 import com.miui.systemui.util.MiuiInterpolators;
 
 public class QSDetailClipper {
-    /* access modifiers changed from: private */
-    public Animator mAnimator;
-    /* access modifiers changed from: private */
-    public final Drawable mBackground;
-    /* access modifiers changed from: private */
-    public final View mDetail;
+    private Animator mAnimator;
+    private final Drawable mBackground;
+    private final View mDetail;
     private final AnimatorListenerAdapter mGoneOnEnd = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.qs.QSDetailClipper.AnonymousClass3 */
+
         public void onAnimationEnd(Animator animator) {
             QSDetailClipper.this.mDetail.setVisibility(8);
             if (QSDetailClipper.this.mBackground instanceof TransitionDrawable) {
                 ((TransitionDrawable) QSDetailClipper.this.mBackground).resetTransition();
             }
-            Animator unused = QSDetailClipper.this.mAnimator = null;
+            QSDetailClipper.this.mAnimator = null;
         }
     };
     private final Runnable mReverseBackground = new Runnable() {
+        /* class com.android.systemui.qs.QSDetailClipper.AnonymousClass1 */
+
         public void run() {
             if (QSDetailClipper.this.mAnimator != null && (QSDetailClipper.this.mBackground instanceof TransitionDrawable)) {
                 ((TransitionDrawable) QSDetailClipper.this.mBackground).reverseTransition((int) (((double) QSDetailClipper.this.mAnimator.getDuration()) * 0.35d));
@@ -32,12 +33,14 @@ public class QSDetailClipper {
         }
     };
     private final AnimatorListenerAdapter mVisibleOnStart = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.qs.QSDetailClipper.AnonymousClass2 */
+
         public void onAnimationStart(Animator animator) {
             QSDetailClipper.this.mDetail.setVisibility(0);
         }
 
         public void onAnimationEnd(Animator animator) {
-            Animator unused = QSDetailClipper.this.mAnimator = null;
+            QSDetailClipper.this.mAnimator = null;
         }
     };
 

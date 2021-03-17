@@ -10,6 +10,7 @@ public class KeyguardDismissUtil implements KeyguardDismissHandler {
         this.mDismissHandler = keyguardDismissHandler;
     }
 
+    @Override // com.android.systemui.statusbar.phone.KeyguardDismissHandler
     public void executeWhenUnlocked(ActivityStarter.OnDismissAction onDismissAction, boolean z) {
         KeyguardDismissHandler keyguardDismissHandler = this.mDismissHandler;
         if (keyguardDismissHandler == null) {

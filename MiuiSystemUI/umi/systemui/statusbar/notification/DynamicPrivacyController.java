@@ -28,10 +28,12 @@ public class DynamicPrivacyController implements KeyguardStateController.Callbac
         this.mLastDynamicUnlocked = isDynamicallyUnlocked();
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onKeyguardFadingAwayChanged() {
         onUnlockedChanged();
     }
 
+    @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
     public void onUnlockedChanged() {
         if (isDynamicPrivacyEnabled()) {
             boolean isDynamicallyUnlocked = isDynamicallyUnlocked();

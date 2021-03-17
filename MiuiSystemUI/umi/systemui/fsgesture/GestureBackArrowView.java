@@ -29,54 +29,46 @@ public class GestureBackArrowView extends View {
     private ValueAnimator mArrowAnimator;
     private Rect mArrowDstRect;
     private int mArrowHeight;
-    /* access modifiers changed from: private */
-    public Paint mArrowPaint;
-    /* access modifiers changed from: private */
-    public boolean mArrowShown;
+    private Paint mArrowPaint;
+    private boolean mArrowShown;
     private int mArrowWidth;
     private Rect mBackDstRect;
     private int mBackHeight;
     private int mBackWidth;
     private Paint mBgPaint;
     private ContentResolver mContentResolver;
-    /* access modifiers changed from: private */
-    public int mCurArrowAlpha;
+    private int mCurArrowAlpha;
     private float mCurrentY;
     private int mDisplayWidth;
     private float mExpectBackHeight;
     private int mIconHeight;
-    /* access modifiers changed from: private */
-    public boolean mIconNeedDraw;
-    /* access modifiers changed from: private */
-    public float mIconScale;
+    private boolean mIconNeedDraw;
+    private float mIconScale;
     private int mIconWidth;
     private KeyguardManager mKeyguardManager;
     private Configuration mLastConfiguration;
-    /* access modifiers changed from: private */
-    public ValueAnimator mLastIconAnimator;
+    private ValueAnimator mLastIconAnimator;
     private Bitmap mLeftBackground;
     private Drawable mNoneTaskIcon;
-    /* access modifiers changed from: private */
-    public float mOffsetX;
+    private float mOffsetX;
     private int mPosition;
-    /* access modifiers changed from: private */
-    public ReadyState mReadyState;
+    private ReadyState mReadyState;
     private Drawable mRecentTaskIcon;
     private Bitmap mRightBackground;
-    /* access modifiers changed from: private */
-    public float mScale;
+    private float mScale;
     private float mStartX;
     private Vibrator mVibrator;
     private ValueAnimator mWaveChangeAnimator;
 
-    enum ReadyState {
+    /* access modifiers changed from: package-private */
+    public enum ReadyState {
         READY_STATE_NONE,
         READY_STATE_BACK,
         READY_STATE_RECENT
     }
 
     public GestureBackArrowView(Context context, int i) {
-        this(context, (AttributeSet) null, i);
+        this(context, null, i);
     }
 
     public GestureBackArrowView(Context context, AttributeSet attributeSet, int i) {
@@ -260,14 +252,16 @@ public class GestureBackArrowView extends View {
         ofInt.setDuration((long) i);
         this.mArrowAnimator.setInterpolator(CUBIC_EASE_OUT_INTERPOLATOR);
         this.mArrowAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.GestureBackArrowView.AnonymousClass1 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 int intValue = ((Integer) valueAnimator.getAnimatedValue()).intValue();
                 GestureBackArrowView.this.mArrowPaint.setAlpha(intValue);
                 GestureBackArrowView.this.invalidate();
                 if (intValue == 0 && !z) {
-                    boolean unused = GestureBackArrowView.this.mIconNeedDraw = false;
+                    GestureBackArrowView.this.mIconNeedDraw = false;
                 }
-                int unused2 = GestureBackArrowView.this.mCurArrowAlpha = intValue;
+                GestureBackArrowView.this.mCurArrowAlpha = intValue;
             }
         });
         this.mArrowAnimator.start();
@@ -304,17 +298,19 @@ public class GestureBackArrowView extends View {
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, f2});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f, f2);
         this.mWaveChangeAnimator = ofFloat;
         ofFloat.setDuration((long) i);
         this.mWaveChangeAnimator.setInterpolator(CUBIC_EASE_OUT_INTERPOLATOR);
         this.mWaveChangeAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.GestureBackArrowView.AnonymousClass2 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 if (z) {
                     GestureBackArrowView gestureBackArrowView = GestureBackArrowView.this;
-                    float unused = gestureBackArrowView.mScale = f + (((GesturesBackController.convertOffset(gestureBackArrowView.mOffsetX) / 20.0f) - f) * valueAnimator.getAnimatedFraction());
+                    gestureBackArrowView.mScale = f + (((GesturesBackController.convertOffset(gestureBackArrowView.mOffsetX) / 20.0f) - f) * valueAnimator.getAnimatedFraction());
                 } else {
-                    float unused2 = GestureBackArrowView.this.mScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                    GestureBackArrowView.this.mScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 }
                 GestureBackArrowView.this.invalidate();
             }
@@ -324,16 +320,18 @@ public class GestureBackArrowView extends View {
         if (valueAnimator2 != null) {
             valueAnimator2.cancel();
         }
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mLastIconAnimator = ofFloat2;
-        ofFloat2.setDuration(100);
+        ofFloat2.setDuration(100L);
         this.mLastIconAnimator.setInterpolator(QUAD_EASE_OUT_INTERPOLATOR);
         this.mLastIconAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.GestureBackArrowView.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 if (GestureBackArrowView.this.mReadyState == ReadyState.READY_STATE_NONE) {
                     GestureBackArrowView.this.mLastIconAnimator.cancel();
                 }
-                float unused = GestureBackArrowView.this.mIconScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                GestureBackArrowView.this.mIconScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
             }
         });
         this.mLastIconAnimator.start();
@@ -375,30 +373,9 @@ public class GestureBackArrowView extends View {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
-        r2 = r2.mWaveChangeAnimator;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private boolean skipChangeScaleOnAcitonMove() {
-        /*
-            r2 = this;
-            com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r0 = r2.mReadyState
-            com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r1 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_RECENT
-            if (r0 == r1) goto L_0x0013
-            android.animation.ValueAnimator r2 = r2.mWaveChangeAnimator
-            if (r2 == 0) goto L_0x0011
-            boolean r2 = r2.isRunning()
-            if (r2 == 0) goto L_0x0011
-            goto L_0x0013
-        L_0x0011:
-            r2 = 0
-            goto L_0x0014
-        L_0x0013:
-            r2 = 1
-        L_0x0014:
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.GestureBackArrowView.skipChangeScaleOnAcitonMove():boolean");
+        ValueAnimator valueAnimator;
+        return this.mReadyState == ReadyState.READY_STATE_RECENT || ((valueAnimator = this.mWaveChangeAnimator) != null && valueAnimator.isRunning());
     }
 
     /* access modifiers changed from: package-private */
@@ -418,17 +395,19 @@ public class GestureBackArrowView extends View {
         this.mIconScale = 1.0f;
         float f2 = f / 20.0f;
         this.mScale = f2;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f2, 0.0f});
-        ofFloat.setDuration(100);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f2, 0.0f);
+        ofFloat.setDuration(100L);
         ofFloat.setInterpolator(QUAD_EASE_OUT_INTERPOLATOR);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.fsgesture.GestureBackArrowView.AnonymousClass4 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = GestureBackArrowView.this.mScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                GestureBackArrowView.this.mScale = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 long currentPlayTime = valueAnimator.getCurrentPlayTime();
                 if (currentPlayTime > 0 && currentPlayTime < 50) {
                     GestureBackArrowView gestureBackArrowView = GestureBackArrowView.this;
-                    boolean unused2 = gestureBackArrowView.mArrowShown = false;
-                    boolean unused3 = gestureBackArrowView.mIconNeedDraw = false;
+                    gestureBackArrowView.mArrowShown = false;
+                    gestureBackArrowView.mIconNeedDraw = false;
                 }
                 GestureBackArrowView.this.invalidate();
             }

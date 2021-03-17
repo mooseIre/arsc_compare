@@ -12,6 +12,7 @@ public final class NotificationConversationTemplateViewWrapper$updateTransformed
     NotificationConversationTemplateViewWrapper$updateTransformedTypes$1() {
     }
 
+    @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
     public boolean transformTo(@NotNull TransformState transformState, @NotNull TransformableView transformableView, float f) {
         Intrinsics.checkParameterIsNotNull(transformState, "ownState");
         Intrinsics.checkParameterIsNotNull(transformableView, "otherView");
@@ -22,6 +23,7 @@ public final class NotificationConversationTemplateViewWrapper$updateTransformed
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation
     public boolean transformFrom(@NotNull TransformState transformState, @NotNull TransformableView transformableView, float f) {
         Intrinsics.checkParameterIsNotNull(transformState, "ownState");
         Intrinsics.checkParameterIsNotNull(transformableView, "otherView");

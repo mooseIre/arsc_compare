@@ -19,6 +19,7 @@ public final class PeopleNotificationIdentifierImpl implements PeopleNotificatio
         this.groupManager = notificationGroupManager;
     }
 
+    @Override // com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier
     public int getPeopleNotificationType(@NotNull StatusBarNotification statusBarNotification, @NotNull NotificationListenerService.Ranking ranking) {
         int upperBound;
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
@@ -30,6 +31,7 @@ public final class PeopleNotificationIdentifierImpl implements PeopleNotificatio
         return upperBound(upperBound, getPeopleTypeOfSummary(statusBarNotification));
     }
 
+    @Override // com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifier
     public int compareTo(int i, int i2) {
         return Intrinsics.compare(i2, i);
     }
@@ -53,8 +55,7 @@ public final class PeopleNotificationIdentifierImpl implements PeopleNotificatio
         return this.personExtractor.isPersonNotification(statusBarNotification) ? 1 : 0;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:10:0x0027 A[LOOP:0: B:10:0x0027->B:13:0x003c, LOOP_START, PHI: r1 
-      PHI: (r1v2 int) = (r1v0 int), (r1v3 int) binds: [B:9:0x0023, B:13:0x003c] A[DONT_GENERATE, DONT_INLINE]] */
+    /* JADX WARNING: Removed duplicated region for block: B:12:0x002d  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final int getPeopleTypeOfSummary(android.service.notification.StatusBarNotification r3) {
         /*
@@ -68,11 +69,11 @@ public final class PeopleNotificationIdentifierImpl implements PeopleNotificatio
             com.android.systemui.statusbar.phone.NotificationGroupManager r0 = r2.groupManager
             java.util.ArrayList r3 = r0.getChildren(r3)
             if (r3 == 0) goto L_0x003e
-            kotlin.sequences.Sequence r3 = kotlin.collections.CollectionsKt___CollectionsKt.asSequence(r3)
+            kotlin.sequences.Sequence r3 = kotlin.collections.CollectionsKt.asSequence(r3)
             if (r3 == 0) goto L_0x003e
             com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifierImpl$getPeopleTypeOfSummary$childTypes$1 r0 = new com.android.systemui.statusbar.notification.people.PeopleNotificationIdentifierImpl$getPeopleTypeOfSummary$childTypes$1
             r0.<init>(r2)
-            kotlin.sequences.Sequence r3 = kotlin.sequences.SequencesKt___SequencesKt.map(r3, r0)
+            kotlin.sequences.Sequence r3 = kotlin.sequences.SequencesKt.map(r3, r0)
             if (r3 == 0) goto L_0x003e
             java.util.Iterator r3 = r3.iterator()
         L_0x0027:

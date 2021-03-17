@@ -10,7 +10,6 @@ import com.android.internal.widget.MessagingImageMessage;
 import com.android.internal.widget.MessagingLinearLayout;
 import com.android.internal.widget.MessagingPropertyAnimator;
 import com.android.systemui.Interpolators;
-import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.notification.TransformState;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +29,7 @@ public class MessagingLayoutTransformState extends TransformState {
         return new MessagingLayoutTransformState();
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void initFrom(View view, TransformState.TransformInfo transformInfo) {
         super.initFrom(view, transformInfo);
         MessagingLinearLayout messagingLinearLayout = this.mTransformedView;
@@ -41,6 +41,7 @@ public class MessagingLayoutTransformState extends TransformState {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public boolean transformViewTo(TransformState transformState, float f) {
         if (!(transformState instanceof MessagingLayoutTransformState)) {
             return super.transformViewTo(transformState, f);
@@ -49,6 +50,7 @@ public class MessagingLayoutTransformState extends TransformState {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void transformViewFrom(TransformState transformState, float f) {
         if (transformState instanceof MessagingLayoutTransformState) {
             transformViewInternal((MessagingLayoutTransformState) transformState, f, false);
@@ -120,7 +122,7 @@ public class MessagingLayoutTransformState extends TransformState {
             }
         }
         appear(messagingGroup.getAvatar(), f);
-        appear((View) messagingGroup.getSenderView(), f);
+        appear(messagingGroup.getSenderView(), f);
         appear((View) messagingGroup.getIsolatedMessage(), f);
         setClippingDeactivated(messagingGroup.getSenderView(), true);
         setClippingDeactivated(messagingGroup.getAvatar(), true);
@@ -151,7 +153,7 @@ public class MessagingLayoutTransformState extends TransformState {
             }
         }
         disappear(messagingGroup.getAvatar(), f);
-        disappear((View) messagingGroup.getSenderView(), f);
+        disappear(messagingGroup.getSenderView(), f);
         disappear((View) messagingGroup.getIsolatedMessage(), f);
         setClippingDeactivated(messagingGroup.getSenderView(), true);
         setClippingDeactivated(messagingGroup.getAvatar(), true);
@@ -160,7 +162,7 @@ public class MessagingLayoutTransformState extends TransformState {
     private void appear(View view, float f) {
         if (view != null && view.getVisibility() != 8) {
             TransformState createFrom = TransformState.createFrom(view, this.mTransformInfo);
-            createFrom.appear(f, (TransformableView) null);
+            createFrom.appear(f, null);
             createFrom.recycle();
         }
     }
@@ -168,7 +170,7 @@ public class MessagingLayoutTransformState extends TransformState {
     private void disappear(View view, float f) {
         if (view != null && view.getVisibility() != 8) {
             TransformState createFrom = TransformState.createFrom(view, this.mTransformInfo);
-            createFrom.disappear(f, (TransformableView) null);
+            createFrom.disappear(f, null);
             createFrom.recycle();
         }
     }
@@ -198,8 +200,6 @@ public class MessagingLayoutTransformState extends TransformState {
         return hasEllipses(textView) != hasEllipses(textView2);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x008d  */
-    /* JADX WARNING: Removed duplicated region for block: B:25:0x00b0  */
     /* JADX WARNING: Removed duplicated region for block: B:28:0x00cf  */
     /* JADX WARNING: Removed duplicated region for block: B:29:0x00d1  */
     /* JADX WARNING: Removed duplicated region for block: B:38:0x00ed  */
@@ -207,160 +207,7 @@ public class MessagingLayoutTransformState extends TransformState {
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private int transformGroups(com.android.internal.widget.MessagingGroup r22, com.android.internal.widget.MessagingGroup r23, float r24, boolean r25) {
         /*
-            r21 = this;
-            r7 = r21
-            com.android.internal.widget.MessagingImageMessage r0 = r23.getIsolatedMessage()
-            r9 = 1
-            if (r0 != 0) goto L_0x0013
-            com.android.systemui.statusbar.notification.TransformState$TransformInfo r0 = r7.mTransformInfo
-            boolean r0 = r0.isAnimating()
-            if (r0 != 0) goto L_0x0013
-            r10 = r9
-            goto L_0x0014
-        L_0x0013:
-            r10 = 0
-        L_0x0014:
-            android.widget.TextView r11 = r22.getSenderView()
-            android.widget.TextView r4 = r23.getSenderView()
-            boolean r0 = r7.needsReflow(r11, r4)
-            r5 = r0 ^ 1
-            r0 = r21
-            r1 = r24
-            r2 = r25
-            r3 = r11
-            r6 = r10
-            r0.transformView(r1, r2, r3, r4, r5, r6)
-            android.view.View r3 = r22.getAvatar()
-            android.view.View r4 = r23.getAvatar()
-            r5 = 1
-            int r12 = r0.transformView(r1, r2, r3, r4, r5, r6)
-            java.util.List r13 = r22.getMessages()
-            java.util.List r14 = r23.getMessages()
-            r15 = 0
-            r17 = r9
-            r16 = r15
-            r6 = 0
-        L_0x0048:
-            int r0 = r13.size()
-            if (r6 >= r0) goto L_0x011d
-            int r0 = r13.size()
-            int r0 = r0 - r9
-            int r0 = r0 - r6
-            java.lang.Object r0 = r13.get(r0)
-            com.android.internal.widget.MessagingMessage r0 = (com.android.internal.widget.MessagingMessage) r0
-            android.view.View r5 = r0.getView()
-            boolean r0 = r7.isGone(r5)
-            if (r0 == 0) goto L_0x006a
-            r3 = r22
-            r19 = r6
-            goto L_0x0119
-        L_0x006a:
-            int r0 = r14.size()
-            int r0 = r0 - r9
-            int r0 = r0 - r6
-            r1 = 0
-            if (r0 < 0) goto L_0x0086
-            java.lang.Object r0 = r14.get(r0)
-            com.android.internal.widget.MessagingMessage r0 = (com.android.internal.widget.MessagingMessage) r0
-            android.view.View r0 = r0.getView()
-            boolean r2 = r7.isGone(r0)
-            if (r2 == 0) goto L_0x0084
-            goto L_0x0086
-        L_0x0084:
-            r4 = r0
-            goto L_0x0087
-        L_0x0086:
-            r4 = r1
-        L_0x0087:
-            if (r4 != 0) goto L_0x00b0
-            int r0 = (r16 > r15 ? 1 : (r16 == r15 ? 0 : -1))
-            if (r0 >= 0) goto L_0x00b0
-            int r0 = r5.getTop()
-            int r1 = r5.getHeight()
-            int r0 = r0 + r1
-            float r0 = (float) r0
-            float r0 = r0 + r16
-            int r1 = r5.getHeight()
-            float r1 = (float) r1
-            float r0 = r0 / r1
-            r1 = 1065353216(0x3f800000, float:1.0)
-            float r0 = java.lang.Math.min(r1, r0)
-            float r0 = java.lang.Math.max(r15, r0)
-            if (r25 == 0) goto L_0x00ad
-            float r0 = r1 - r0
-        L_0x00ad:
-            r18 = r0
-            goto L_0x00b2
-        L_0x00b0:
-            r18 = r24
-        L_0x00b2:
-            r19 = 0
-            r0 = r21
-            r1 = r18
-            r2 = r25
-            r3 = r5
-            r20 = r4
-            r8 = r5
-            r5 = r19
-            r19 = r6
-            r6 = r10
-            int r0 = r0.transformView(r1, r2, r3, r4, r5, r6)
-            com.android.internal.widget.MessagingImageMessage r1 = r23.getIsolatedMessage()
-            r2 = r20
-            if (r1 != r2) goto L_0x00d1
-            r1 = r9
-            goto L_0x00d2
-        L_0x00d1:
-            r1 = 0
-        L_0x00d2:
-            int r3 = (r18 > r15 ? 1 : (r18 == r15 ? 0 : -1))
-            if (r3 != 0) goto L_0x00e9
-            if (r1 != 0) goto L_0x00de
-            boolean r3 = r23.isSingleLine()
-            if (r3 == 0) goto L_0x00e9
-        L_0x00de:
-            r3 = r22
-            r3.setClippingDisabled(r9)
-            com.android.internal.widget.IMessagingLayout r4 = r7.mMessagingLayout
-            r4.setMessagingClippingDisabled(r9)
-            goto L_0x00eb
-        L_0x00e9:
-            r3 = r22
-        L_0x00eb:
-            if (r2 != 0) goto L_0x00fe
-            if (r17 == 0) goto L_0x00f3
-            float r16 = r11.getTranslationY()
-        L_0x00f3:
-            r0 = r16
-            r8.setTranslationY(r0)
-            r7.setClippingDeactivated(r8, r9)
-        L_0x00fb:
-            r16 = r0
-            goto L_0x0117
-        L_0x00fe:
-            com.android.internal.widget.MessagingImageMessage r4 = r22.getIsolatedMessage()
-            if (r4 == r8) goto L_0x0117
-            if (r1 == 0) goto L_0x0107
-            goto L_0x0117
-        L_0x0107:
-            if (r25 == 0) goto L_0x0112
-            float r1 = r2.getTranslationY()
-            float r0 = (float) r0
-            float r1 = r1 - r0
-            r16 = r1
-            goto L_0x0117
-        L_0x0112:
-            float r0 = r8.getTranslationY()
-            goto L_0x00fb
-        L_0x0117:
-            r17 = 0
-        L_0x0119:
-            int r6 = r19 + 1
-            goto L_0x0048
-        L_0x011d:
-            r3 = r22
-            r22.updateClipRect()
-            return r12
+        // Method dump skipped, instructions count: 291
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MessagingLayoutTransformState.transformGroups(com.android.internal.widget.MessagingGroup, com.android.internal.widget.MessagingGroup, float, boolean):int");
     }
@@ -379,14 +226,14 @@ public class MessagingLayoutTransformState extends TransformState {
                     createFrom.transformViewTo(createFrom2, f);
                 } else {
                     if (!isGone(view)) {
-                        createFrom.disappear(f, (TransformableView) null);
+                        createFrom.disappear(f, null);
                     }
                     createFrom.transformViewVerticalTo(createFrom2, f);
                 }
                 i = createFrom.getLaidOutLocationOnScreen()[1] - createFrom2.getLaidOutLocationOnScreen()[1];
                 createFrom2.recycle();
             } else {
-                createFrom.disappear(f, (TransformableView) null);
+                createFrom.disappear(f, null);
             }
         } else if (view2 != null) {
             TransformState createFrom3 = TransformState.createFrom(view2, this.mTransformInfo);
@@ -394,14 +241,14 @@ public class MessagingLayoutTransformState extends TransformState {
                 createFrom.transformViewFrom(createFrom3, f);
             } else {
                 if (!isGone(view)) {
-                    createFrom.appear(f, (TransformableView) null);
+                    createFrom.appear(f, null);
                 }
                 createFrom.transformViewVerticalFrom(createFrom3, f);
             }
             i = createFrom.getLaidOutLocationOnScreen()[1] - createFrom3.getLaidOutLocationOnScreen()[1];
             createFrom3.recycle();
         } else {
-            createFrom.appear(f, (TransformableView) null);
+            createFrom.appear(f, null);
         }
         createFrom.recycle();
         return i;
@@ -441,6 +288,7 @@ public class MessagingLayoutTransformState extends TransformState {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void setVisible(boolean z, boolean z2) {
         super.setVisible(z, z2);
         resetTransformedView();
@@ -471,6 +319,7 @@ public class MessagingLayoutTransformState extends TransformState {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void resetTransformedView() {
         super.resetTransformedView();
         ArrayList messagingGroups = this.mMessagingLayout.getMessagingGroups();
@@ -503,6 +352,7 @@ public class MessagingLayoutTransformState extends TransformState {
         this.mMessagingLayout.setMessagingClippingDisabled(false);
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void prepareFadeIn() {
         super.prepareFadeIn();
         setVisible(true, false);
@@ -515,12 +365,14 @@ public class MessagingLayoutTransformState extends TransformState {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void reset() {
         super.reset();
         this.mMessageContainer = null;
         this.mMessagingLayout = null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void recycle() {
         super.recycle();
         this.mGroupMap.clear();

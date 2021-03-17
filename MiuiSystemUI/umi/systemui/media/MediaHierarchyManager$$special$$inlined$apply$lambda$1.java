@@ -3,8 +3,9 @@ package com.android.systemui.media;
 import android.animation.ValueAnimator;
 import android.graphics.Rect;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaHierarchyManager.kt */
-final class MediaHierarchyManager$$special$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class MediaHierarchyManager$$special$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ ValueAnimator $this_apply;
     final /* synthetic */ MediaHierarchyManager this$0;
 
@@ -18,6 +19,6 @@ final class MediaHierarchyManager$$special$$inlined$apply$lambda$1 implements Va
         MediaHierarchyManager mediaHierarchyManager = this.this$0;
         Rect unused = mediaHierarchyManager.interpolateBounds(mediaHierarchyManager.animationStartBounds, this.this$0.targetBounds, this.$this_apply.getAnimatedFraction(), this.this$0.currentBounds);
         MediaHierarchyManager mediaHierarchyManager2 = this.this$0;
-        MediaHierarchyManager.applyState$default(mediaHierarchyManager2, mediaHierarchyManager2.currentBounds, false, 2, (Object) null);
+        MediaHierarchyManager.applyState$default(mediaHierarchyManager2, mediaHierarchyManager2.currentBounds, false, 2, null);
     }
 }

@@ -8,10 +8,11 @@ public class PluginDependency {
     static DependencyProvider sProvider;
 
     public static <T> T get(Plugin plugin, Class<T> cls) {
-        return sProvider.get(plugin, cls);
+        return (T) sProvider.get(plugin, cls);
     }
 
-    static abstract class DependencyProvider {
+    /* access modifiers changed from: package-private */
+    public static abstract class DependencyProvider {
         /* access modifiers changed from: package-private */
         public abstract <T> T get(Plugin plugin, Class<T> cls);
 

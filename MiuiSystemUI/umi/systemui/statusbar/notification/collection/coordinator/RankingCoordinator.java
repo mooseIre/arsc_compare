@@ -6,8 +6,10 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 
 public class RankingCoordinator implements Coordinator {
-    /* access modifiers changed from: private */
-    public final NotifFilter mDozingFilter = new NotifFilter("IsDozingFilter") {
+    private final NotifFilter mDozingFilter = new NotifFilter("IsDozingFilter") {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.RankingCoordinator.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             if (RankingCoordinator.this.mStatusBarStateController.isDozing() && notificationEntry.shouldSuppressAmbient()) {
                 return true;
@@ -19,13 +21,18 @@ public class RankingCoordinator implements Coordinator {
         }
     };
     private final StatusBarStateController.StateListener mStatusBarStateCallback = new StatusBarStateController.StateListener() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.RankingCoordinator.AnonymousClass3 */
+
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onDozingChanged(boolean z) {
             RankingCoordinator.this.mDozingFilter.invalidateList();
         }
     };
-    /* access modifiers changed from: private */
-    public final StatusBarStateController mStatusBarStateController;
+    private final StatusBarStateController mStatusBarStateController;
     private final NotifFilter mSuspendedFilter = new NotifFilter(this, "IsSuspendedFilter") {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.RankingCoordinator.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             return notificationEntry.getRanking().isSuspended();
         }
@@ -35,6 +42,7 @@ public class RankingCoordinator implements Coordinator {
         this.mStatusBarStateController = statusBarStateController;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mStatusBarStateController.addCallback(this.mStatusBarStateCallback);
         notifPipeline.addPreGroupFilter(this.mSuspendedFilter);

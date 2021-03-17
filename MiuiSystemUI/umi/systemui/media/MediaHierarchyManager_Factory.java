@@ -28,6 +28,7 @@ public final class MediaHierarchyManager_Factory implements Factory<MediaHierarc
         this.wakefulnessLifecycleProvider = provider7;
     }
 
+    @Override // javax.inject.Provider
     public MediaHierarchyManager get() {
         return provideInstance(this.contextProvider, this.statusBarStateControllerProvider, this.keyguardStateControllerProvider, this.bypassControllerProvider, this.mediaCarouselControllerProvider, this.notifLockscreenUserManagerProvider, this.wakefulnessLifecycleProvider);
     }

@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
@@ -22,26 +23,31 @@ public class PipControlsViewController {
     private List<RemoteAction> mCustomActions = new ArrayList();
     private ArrayList<PipControlButtonView> mCustomButtonViews = new ArrayList<>();
     private final View.OnFocusChangeListener mFocusChangeListener = new View.OnFocusChangeListener() {
+        /* class com.android.systemui.pip.tv.PipControlsViewController.AnonymousClass3 */
+
         public void onFocusChange(View view, boolean z) {
             if (z) {
-                PipControlButtonView unused = PipControlsViewController.this.mFocusedChild = (PipControlButtonView) view;
+                PipControlsViewController.this.mFocusedChild = (PipControlButtonView) view;
             } else if (PipControlsViewController.this.mFocusedChild == view) {
-                PipControlButtonView unused2 = PipControlsViewController.this.mFocusedChild = null;
+                PipControlsViewController.this.mFocusedChild = null;
             }
         }
     };
-    /* access modifiers changed from: private */
-    public PipControlButtonView mFocusedChild;
+    private PipControlButtonView mFocusedChild;
     private final Handler mHandler;
     private final LayoutInflater mLayoutInflater;
     private Listener mListener;
     private MediaController mMediaController;
     private MediaController.Callback mMediaControllerCallback = new MediaController.Callback() {
+        /* class com.android.systemui.pip.tv.PipControlsViewController.AnonymousClass2 */
+
         public void onPlaybackStateChanged(PlaybackState playbackState) {
             PipControlsViewController.this.updateUserActions();
         }
     };
     private View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener() {
+        /* class com.android.systemui.pip.tv.PipControlsViewController.AnonymousClass1 */
+
         public void onViewAttachedToWindow(View view) {
             PipControlsViewController.this.updateMediaController();
             PipControlsViewController.this.mPipManager.addMediaListener(PipControlsViewController.this.mPipMediaListener);
@@ -51,12 +57,13 @@ public class PipControlsViewController {
             PipControlsViewController.this.mPipManager.removeMediaListener(PipControlsViewController.this.mPipMediaListener);
         }
     };
-    /* access modifiers changed from: private */
-    public final PipManager mPipManager;
-    /* access modifiers changed from: private */
-    public final PipManager.MediaListener mPipMediaListener = new PipManager.MediaListener() {
+    private final PipManager mPipManager;
+    private final PipManager.MediaListener mPipMediaListener = new PipManager.MediaListener() {
+        /* class com.android.systemui.pip.tv.$$Lambda$PipControlsViewController$kZf8PkTX4QNE7Vc5zsES51WG3gA */
+
+        @Override // com.android.systemui.pip.tv.PipManager.MediaListener
         public final void onMediaControllerChanged() {
-            PipControlsViewController.this.updateMediaController();
+            PipControlsViewController.lambda$kZf8PkTX4QNE7Vc5zsES51WG3gA(PipControlsViewController.this);
         }
     };
     private final PipControlButtonView mPlayPauseButtonView;
@@ -82,6 +89,8 @@ public class PipControlsViewController {
         PipControlButtonView fullButtonView = this.mView.getFullButtonView();
         fullButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
         fullButtonView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.pip.tv.$$Lambda$PipControlsViewController$rQPZrjnmUU8eHBhj9PVaj2cMJVs */
+
             public final void onClick(View view) {
                 PipControlsViewController.this.lambda$new$0$PipControlsViewController(view);
             }
@@ -89,6 +98,8 @@ public class PipControlsViewController {
         PipControlButtonView closeButtonView = this.mView.getCloseButtonView();
         closeButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
         closeButtonView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.pip.tv.$$Lambda$PipControlsViewController$rqMCDyXd4qEJoGxUNtb2wXHRu3A */
+
             public final void onClick(View view) {
                 PipControlsViewController.this.lambda$new$1$PipControlsViewController(view);
             }
@@ -97,6 +108,8 @@ public class PipControlsViewController {
         this.mPlayPauseButtonView = playPauseButtonView;
         playPauseButtonView.setOnFocusChangeListener(this.mFocusChangeListener);
         this.mPlayPauseButtonView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.pip.tv.$$Lambda$PipControlsViewController$q5wDnhpgYTIhYtkeUXKZ3KQDbyI */
+
             public final void onClick(View view) {
                 PipControlsViewController.this.lambda$new$2$PipControlsViewController(view);
             }
@@ -133,6 +146,7 @@ public class PipControlsViewController {
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     public void updateMediaController() {
         MediaController mediaController = this.mPipManager.getMediaController();
         MediaController mediaController2 = this.mMediaController;
@@ -149,11 +163,12 @@ public class PipControlsViewController {
     }
 
     /* access modifiers changed from: private */
-    public void updateUserActions() {
+    /* access modifiers changed from: public */
+    private void updateUserActions() {
         int i = 0;
         if (!this.mCustomActions.isEmpty()) {
             while (this.mCustomButtonViews.size() < this.mCustomActions.size()) {
-                PipControlButtonView pipControlButtonView = (PipControlButtonView) this.mLayoutInflater.inflate(C0017R$layout.tv_pip_custom_control, this.mView, false);
+                PipControlButtonView pipControlButtonView = (PipControlButtonView) this.mLayoutInflater.inflate(C0017R$layout.tv_pip_custom_control, (ViewGroup) this.mView, false);
                 this.mView.addView(pipControlButtonView);
                 this.mCustomButtonViews.add(pipControlButtonView);
             }
@@ -166,6 +181,8 @@ public class PipControlsViewController {
                 RemoteAction remoteAction = this.mCustomActions.get(i);
                 PipControlButtonView pipControlButtonView2 = this.mCustomButtonViews.get(i);
                 remoteAction.getIcon().loadDrawableAsync(this.mView.getContext(), new Icon.OnDrawableLoadedListener() {
+                    /* class com.android.systemui.pip.tv.$$Lambda$PipControlsViewController$kC7tvkXWtpNyYLWHDbM2CyhHzr4 */
+
                     public final void onDrawableLoaded(Drawable drawable) {
                         PipControlsViewController.lambda$updateUserActions$3(PipControlButtonView.this, drawable);
                     }
@@ -173,6 +190,7 @@ public class PipControlsViewController {
                 pipControlButtonView2.setText(remoteAction.getContentDescription());
                 if (remoteAction.isEnabled()) {
                     pipControlButtonView2.setOnClickListener(new View.OnClickListener(remoteAction) {
+                        /* class com.android.systemui.pip.tv.$$Lambda$PipControlsViewController$1reZdb40mM6nxQSPhdAKH0IMN6M */
                         public final /* synthetic */ RemoteAction f$0;
 
                         {

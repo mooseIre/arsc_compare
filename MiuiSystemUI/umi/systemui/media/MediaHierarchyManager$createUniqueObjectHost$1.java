@@ -29,9 +29,9 @@ public final class MediaHierarchyManager$createUniqueObjectHost$1 implements Vie
             Intrinsics.checkExpressionValueIsNotNull(viewRootImpl, "viewHost.viewRootImpl");
             mediaHierarchyManager.rootView = viewRootImpl.getView();
             MediaHierarchyManager mediaHierarchyManager2 = this.this$0;
-            View access$getRootView$p = mediaHierarchyManager2.rootView;
-            if (access$getRootView$p != null) {
-                ViewOverlay overlay = access$getRootView$p.getOverlay();
+            View view2 = mediaHierarchyManager2.rootView;
+            if (view2 != null) {
+                ViewOverlay overlay = view2.getOverlay();
                 if (overlay != null) {
                     mediaHierarchyManager2.rootOverlay = (ViewGroupOverlay) overlay;
                 } else {

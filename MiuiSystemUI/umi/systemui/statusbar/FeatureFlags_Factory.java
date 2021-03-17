@@ -11,6 +11,7 @@ public final class FeatureFlags_Factory implements Factory<FeatureFlags> {
         this.executorProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public FeatureFlags get() {
         return provideInstance(this.executorProvider);
     }

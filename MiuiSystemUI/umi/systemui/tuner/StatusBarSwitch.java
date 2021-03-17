@@ -20,16 +20,19 @@ public class StatusBarSwitch extends SwitchPreference implements TunerService.Tu
         super(context, attributeSet);
     }
 
+    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist");
     }
 
+    @Override // androidx.preference.Preference
     public void onDetached() {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
         super.onDetached();
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("icon_blacklist".equals(str)) {
             ArraySet<String> iconBlacklist = StatusBarIconController.getIconBlacklist(getContext(), str2);
@@ -39,6 +42,7 @@ public class StatusBarSwitch extends SwitchPreference implements TunerService.Tu
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.preference.Preference
     public boolean persistBoolean(boolean z) {
         if (!z) {
             if (this.mBlacklist.contains(getKey())) {

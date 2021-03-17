@@ -18,7 +18,7 @@ public final class ShortcutKey {
             return false;
         }
         ShortcutKey shortcutKey = (ShortcutKey) obj;
-        return this.userId == shortcutKey.userId && Intrinsics.areEqual((Object) this.pkg, (Object) shortcutKey.pkg);
+        return this.userId == shortcutKey.userId && Intrinsics.areEqual(this.pkg, shortcutKey.pkg);
     }
 
     public int hashCode() {

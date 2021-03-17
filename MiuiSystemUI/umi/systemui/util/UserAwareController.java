@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: UserAwareController.kt */
 public interface UserAwareController {
-    void changeUser(@NotNull UserHandle userHandle) {
+    default void changeUser(@NotNull UserHandle userHandle) {
         Intrinsics.checkParameterIsNotNull(userHandle, "newUser");
     }
 

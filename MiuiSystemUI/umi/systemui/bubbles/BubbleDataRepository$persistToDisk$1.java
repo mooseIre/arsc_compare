@@ -1,8 +1,10 @@
 package com.android.systemui.bubbles;
 
+import androidx.constraintlayout.widget.R$styleable;
 import kotlin.ResultKt;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
@@ -14,9 +16,10 @@ import kotlinx.coroutines.YieldKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@DebugMetadata(c = "com.android.systemui.bubbles.BubbleDataRepository$persistToDisk$1", f = "BubbleDataRepository.kt", l = {107, 109}, m = "invokeSuspend")
+/* access modifiers changed from: package-private */
+@DebugMetadata(c = "com.android.systemui.bubbles.BubbleDataRepository$persistToDisk$1", f = "BubbleDataRepository.kt", l = {R$styleable.Constraint_progress, R$styleable.Constraint_transitionPathRotate}, m = "invokeSuspend")
 /* compiled from: BubbleDataRepository.kt */
-final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
+public final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
     final /* synthetic */ Job $prev;
     Object L$0;
     int label;
@@ -30,6 +33,7 @@ final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implement
         this.$prev = job;
     }
 
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @NotNull
     public final Continuation<Unit> create(@Nullable Object obj, @NotNull Continuation<?> continuation) {
         Intrinsics.checkParameterIsNotNull(continuation, "completion");
@@ -38,14 +42,17 @@ final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implement
         return bubbleDataRepository$persistToDisk$1;
     }
 
-    public final Object invoke(Object obj, Object obj2) {
-        return ((BubbleDataRepository$persistToDisk$1) create(obj, (Continuation) obj2)).invokeSuspend(Unit.INSTANCE);
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function2
+    public final Object invoke(CoroutineScope coroutineScope, Continuation<? super Unit> continuation) {
+        return ((BubbleDataRepository$persistToDisk$1) create(coroutineScope, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @Nullable
     public final Object invokeSuspend(@NotNull Object obj) {
         CoroutineScope coroutineScope;
-        Object coroutine_suspended = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
+        Object obj2 = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
         int i = this.label;
         if (i == 0) {
             ResultKt.throwOnFailure(obj);
@@ -54,8 +61,8 @@ final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implement
             if (job != null) {
                 this.L$0 = coroutineScope;
                 this.label = 1;
-                if (JobKt.cancelAndJoin(job, this) == coroutine_suspended) {
-                    return coroutine_suspended;
+                if (JobKt.cancelAndJoin(job, this) == obj2) {
+                    return obj2;
                 }
             }
         } else if (i == 1) {
@@ -71,8 +78,8 @@ final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implement
         }
         this.L$0 = coroutineScope;
         this.label = 2;
-        if (YieldKt.yield(this) == coroutine_suspended) {
-            return coroutine_suspended;
+        if (YieldKt.yield(this) == obj2) {
+            return obj2;
         }
         this.this$0.persistentRepository.persistsToDisk(this.this$0.volatileRepository.getBubbles());
         return Unit.INSTANCE;

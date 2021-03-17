@@ -25,6 +25,7 @@ public final class SystemUIDefaultModule_ProvideHeadsUpManagerPhoneFactory imple
         this.configurationControllerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public HeadsUpManagerPhone get() {
         return provideInstance(this.contextProvider, this.statusBarStateControllerProvider, this.bypassControllerProvider, this.groupManagerProvider, this.configurationControllerProvider);
     }

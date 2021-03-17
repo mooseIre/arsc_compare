@@ -39,6 +39,7 @@ public final class StatusBarDependenciesModule_ProvideNotificationMediaManagerFa
         this.mediaDataManagerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public NotificationMediaManager get() {
         return provideInstance(this.contextProvider, this.statusBarLazyProvider, this.notificationShadeWindowControllerProvider, this.notificationEntryManagerProvider, this.mediaArtworkProcessorProvider, this.keyguardBypassControllerProvider, this.mainExecutorProvider, this.deviceConfigProxyProvider, this.mediaDataManagerProvider);
     }

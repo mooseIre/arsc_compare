@@ -16,6 +16,7 @@ public final class SettingsModule_ProvideCurrentUserContextTrackerFactory implem
         this.broadcastDispatcherProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public CurrentUserContextTracker get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider);
     }

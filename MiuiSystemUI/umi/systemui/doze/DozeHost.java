@@ -3,13 +3,13 @@ package com.android.systemui.doze;
 public interface DozeHost {
 
     public interface Callback {
-        void onDozeSuppressedChanged(boolean z) {
+        default void onDozeSuppressedChanged(boolean z) {
         }
 
-        void onNotificationAlerted(Runnable runnable) {
+        default void onNotificationAlerted(Runnable runnable) {
         }
 
-        void onPowerSaveChanged(boolean z) {
+        default void onPowerSaveChanged(boolean z) {
         }
     }
 
@@ -51,7 +51,7 @@ public interface DozeHost {
 
     void setAnimateWakeup(boolean z);
 
-    void setAodDimmingScrim(float f) {
+    default void setAodDimmingScrim(float f) {
     }
 
     void setDozeScreenBrightness(int i);

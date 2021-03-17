@@ -63,6 +63,8 @@ public abstract class TunerService {
         systemUIDialog.setMessage(C0021R$string.remove_from_settings_prompt);
         systemUIDialog.setButton(-2, context.getString(C0021R$string.cancel), (DialogInterface.OnClickListener) null);
         systemUIDialog.setButton(-1, context.getString(C0021R$string.guest_exit_guest_dialog_remove), new DialogInterface.OnClickListener() {
+            /* class com.android.systemui.tuner.TunerService.AnonymousClass1 */
+
             public void onClick(DialogInterface dialogInterface, int i) {
                 context.sendBroadcast(new Intent("com.android.systemui.action.CLEAR_TUNER"));
                 TunerService.setTunerEnabled(context, false);

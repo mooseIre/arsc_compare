@@ -21,7 +21,7 @@ public class AdTracker {
     }
 
     public static void trackRemove(Context context, NotificationEntry notificationEntry) {
-        trackEvent(context, "NOTIFICATION_REMOVE", getExtra(getJSONTag(notificationEntry)), notificationEntry, (List<String>) null);
+        trackEvent(context, "NOTIFICATION_REMOVE", getExtra(getJSONTag(notificationEntry)), notificationEntry, null);
     }
 
     private static void trackEvent(Context context, String str, String str2, NotificationEntry notificationEntry, List<String> list) {

@@ -19,6 +19,8 @@ public class AssistDisclosure {
     private final Context mContext;
     private final Handler mHandler;
     private Runnable mShowRunnable = new Runnable() {
+        /* class com.android.systemui.assist.AssistDisclosure.AnonymousClass1 */
+
         public void run() {
             AssistDisclosure.this.show();
         }
@@ -39,7 +41,8 @@ public class AssistDisclosure {
     }
 
     /* access modifiers changed from: private */
-    public void show() {
+    /* access modifiers changed from: public */
+    private void show() {
         if (this.mView == null) {
             this.mView = new AssistDisclosureView(this.mContext);
         }
@@ -53,14 +56,16 @@ public class AssistDisclosure {
     }
 
     /* access modifiers changed from: private */
-    public void hide() {
+    /* access modifiers changed from: public */
+    private void hide() {
         if (this.mViewAdded) {
             this.mWm.removeView(this.mView);
             this.mViewAdded = false;
         }
     }
 
-    private class AssistDisclosureView extends View implements ValueAnimator.AnimatorUpdateListener {
+    /* access modifiers changed from: private */
+    public class AssistDisclosureView extends View implements ValueAnimator.AnimatorUpdateListener {
         private int mAlpha = 0;
         private final ValueAnimator mAlphaInAnimator;
         private final ValueAnimator mAlphaOutAnimator;
@@ -72,11 +77,11 @@ public class AssistDisclosure {
 
         public AssistDisclosureView(Context context) {
             super(context);
-            ValueAnimator duration = ValueAnimator.ofInt(new int[]{0, 222}).setDuration(400);
+            ValueAnimator duration = ValueAnimator.ofInt(0, 222).setDuration(400L);
             this.mAlphaInAnimator = duration;
             duration.addUpdateListener(this);
             this.mAlphaInAnimator.setInterpolator(Interpolators.CUSTOM_40_40);
-            ValueAnimator duration2 = ValueAnimator.ofInt(new int[]{222, 0}).setDuration(300);
+            ValueAnimator duration2 = ValueAnimator.ofInt(222, 0).setDuration(300L);
             this.mAlphaOutAnimator = duration2;
             duration2.addUpdateListener(this);
             this.mAlphaOutAnimator.setInterpolator(Interpolators.CUSTOM_40_40);
@@ -84,6 +89,7 @@ public class AssistDisclosure {
             this.mAnimator = animatorSet;
             animatorSet.play(this.mAlphaInAnimator).before(this.mAlphaOutAnimator);
             this.mAnimator.addListener(new AnimatorListenerAdapter(AssistDisclosure.this) {
+                /* class com.android.systemui.assist.AssistDisclosure.AssistDisclosureView.AnonymousClass1 */
                 boolean mCancelled;
 
                 public void onAnimationStart(Animator animator) {
@@ -143,15 +149,11 @@ public class AssistDisclosure {
             float f3 = (float) height;
             float f4 = f3 - f2;
             float f5 = (float) width;
-            Canvas canvas2 = canvas;
-            Paint paint2 = paint;
-            float f6 = f;
-            drawBeam(canvas2, 0.0f, f4, f5, f3, paint2, f6);
-            float f7 = f4;
-            drawBeam(canvas2, 0.0f, 0.0f, f2, f7, paint2, f6);
-            float f8 = f5 - f2;
-            drawBeam(canvas2, f8, 0.0f, f5, f7, paint2, f6);
-            drawBeam(canvas2, f2, 0.0f, f8, f2, paint2, f6);
+            drawBeam(canvas, 0.0f, f4, f5, f3, paint, f);
+            drawBeam(canvas, 0.0f, 0.0f, f2, f4, paint, f);
+            float f6 = f5 - f2;
+            drawBeam(canvas, f6, 0.0f, f5, f4, paint, f);
+            drawBeam(canvas, f2, 0.0f, f6, f2, paint, f);
         }
 
         private void drawBeam(Canvas canvas, float f, float f2, float f3, float f4, Paint paint, float f5) {

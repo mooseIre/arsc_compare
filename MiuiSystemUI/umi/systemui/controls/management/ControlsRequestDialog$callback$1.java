@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: ControlsRequestDialog.kt */
 public final class ControlsRequestDialog$callback$1 implements ControlsListingController.ControlsListingCallback {
+    @Override // com.android.systemui.controls.management.ControlsListingController.ControlsListingCallback
     public void onServicesUpdated(@NotNull List<ControlsServiceInfo> list) {
         Intrinsics.checkParameterIsNotNull(list, "serviceInfos");
     }

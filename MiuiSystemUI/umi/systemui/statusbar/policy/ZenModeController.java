@@ -7,28 +7,28 @@ import android.service.notification.ZenModeConfig;
 public interface ZenModeController extends CallbackController<Callback> {
 
     public interface Callback {
-        void onConfigChanged(ZenModeConfig zenModeConfig) {
+        default void onConfigChanged(ZenModeConfig zenModeConfig) {
         }
 
-        void onConsolidatedPolicyChanged(NotificationManager.Policy policy) {
+        default void onConsolidatedPolicyChanged(NotificationManager.Policy policy) {
         }
 
-        void onEffectsSupressorChanged() {
+        default void onEffectsSupressorChanged() {
         }
 
-        void onManualRuleChanged(ZenModeConfig.ZenRule zenRule) {
+        default void onManualRuleChanged(ZenModeConfig.ZenRule zenRule) {
         }
 
-        void onNextAlarmChanged() {
+        default void onNextAlarmChanged() {
         }
 
-        void onVibrateChanged(boolean z) {
+        default void onVibrateChanged(boolean z) {
         }
 
-        void onZenAvailableChanged(boolean z) {
+        default void onZenAvailableChanged(boolean z) {
         }
 
-        void onZenOrRingerChanged(boolean z, boolean z2) {
+        default void onZenOrRingerChanged(boolean z, boolean z2) {
         }
     }
 

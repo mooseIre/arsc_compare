@@ -31,6 +31,7 @@ public class PipSurfaceTransactionHelper implements ConfigurationController.Conf
         configurationController.addCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         this.mCornerRadius = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.pip_corner_radius);
     }

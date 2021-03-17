@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvidePowerManagerFactory implements Fa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PowerManager get() {
         return provideInstance(this.contextProvider);
     }

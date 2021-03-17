@@ -16,6 +16,7 @@ public final class RemoteInputQuickSettingsDisabler_Factory implements Factory<R
         this.commandQueueProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public RemoteInputQuickSettingsDisabler get() {
         return provideInstance(this.contextProvider, this.configControllerProvider, this.commandQueueProvider);
     }

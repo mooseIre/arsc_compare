@@ -90,6 +90,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mConfigurationController = configurationController;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mControlPanelController.addCallback((ControlPanelController.UseControlPanelChangeListener) this);
         this.mConfigurationController.addCallback(this);
@@ -104,11 +105,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onBootCompleted() {
         super.onBootCompleted();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         ControlPanelContentView controlPanelContentView;
         if (this.mControlPanelWindowView != null) {
@@ -129,32 +132,38 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         if (isCollapsed()) {
             reCreateWindow();
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateCollapsePanels(int i, boolean z) {
         if (this.mControlPanelWindowView != null && !isCollapsed()) {
             collapse(true);
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateExpandSettingsPanel(String str) {
         if (this.mControlPanelWindowView != null && isCollapsed()) {
             openPanel();
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void addQsTile(ComponentName componentName) {
         this.mQSControlTileHost.addTile(componentName);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void remQsTile(ComponentName componentName) {
         this.mQSControlTileHost.removeTile(componentName);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void clickTile(ComponentName componentName) {
         ControlPanelContentView controlPanelContentView = this.mControlPanelContentView;
         if (controlPanelContentView != null && controlPanelContentView.getControlCenterPanel() != null) {
@@ -162,6 +171,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         if (i == this.mDisplayId) {
             int i4 = this.mDisabled1;
@@ -171,8 +181,8 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             int i7 = i3 ^ i6;
             this.mDisabled2 = i3;
             if (DEBUG) {
-                Log.d("ControlCenter", String.format("disable1: 0x%08x -> 0x%08x (diff1: 0x%08x)", new Object[]{Integer.valueOf(i4), Integer.valueOf(i2), Integer.valueOf(i5)}));
-                Log.d("ControlCenter", String.format("disable2: 0x%08x -> 0x%08x (diff2: 0x%08x)", new Object[]{Integer.valueOf(i6), Integer.valueOf(i3), Integer.valueOf(i7)}));
+                Log.d("ControlCenter", String.format("disable1: 0x%08x -> 0x%08x (diff1: 0x%08x)", Integer.valueOf(i4), Integer.valueOf(i2), Integer.valueOf(i5)));
+                Log.d("ControlCenter", String.format("disable2: 0x%08x -> 0x%08x (diff2: 0x%08x)", Integer.valueOf(i6), Integer.valueOf(i3), Integer.valueOf(i7)));
             }
             if ((i5 & 65536) != 0 && (65536 & i2) != 0) {
                 collapse(true);
@@ -217,6 +227,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void preloadRecentApps() {
         collapse(false);
     }
@@ -224,8 +235,8 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     /* access modifiers changed from: protected */
     public void removeControlPanelWindow() {
         if (this.mControlPanelWindowView != null) {
-            this.mControlCenterActivityStarter.setControlCenter((ControlCenter) null);
-            this.mControlPanelController.setControlCenter((ControlCenter) null);
+            this.mControlCenterActivityStarter.setControlCenter(null);
+            this.mControlPanelController.setControlCenter(null);
             this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
             this.mSuperSaveModeController.removeCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
             unregister();
@@ -302,7 +313,8 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     }
 
     /* access modifiers changed from: private */
-    public void handleOpenPanel() {
+    /* access modifiers changed from: public */
+    private void handleOpenPanel() {
         if (this.mControlPanelWindowView != null && panelEnabled()) {
             this.mControlPanelWindowView.expandPanel();
         }
@@ -315,6 +327,8 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
 
     public void postStartActivityDismissingKeyguard(Intent intent) {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.controlcenter.ControlCenter.AnonymousClass1 */
+
             public void run() {
                 ControlCenter.this.handleCollapsePanel(true);
             }
@@ -322,6 +336,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mStatusBarActivityStarter.postStartActivityDismissingKeyguard(intent, 350);
     }
 
+    @Override // com.android.systemui.controlcenter.phone.ControlPanelController.UseControlPanelChangeListener
     public void onUseControlPanelChange(boolean z) {
         if (this.mUseControlCenter != z) {
             this.mUseControlCenter = z;
@@ -334,6 +349,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         }
     }
 
+    @Override // com.android.systemui.controlcenter.policy.SuperSaveModeController.SuperSaveModeChangeListener
     public void onSuperSaveModeChange(boolean z) {
         if (this.mSuperPowerModeOn != z) {
             this.mSuperPowerModeOn = z;

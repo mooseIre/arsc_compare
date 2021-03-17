@@ -15,11 +15,11 @@ import android.window.WindowOrganizer;
 import com.android.systemui.TransactionPool;
 import com.android.systemui.wm.DisplayImeController;
 
-class DividerImeController implements DisplayImeController.ImePositionProcessor {
+/* access modifiers changed from: package-private */
+public class DividerImeController implements DisplayImeController.ImePositionProcessor {
     private boolean mAdjusted = false;
     private boolean mAdjustedWhileHidden = false;
-    /* access modifiers changed from: private */
-    public ValueAnimator mAnimation = null;
+    private ValueAnimator mAnimation = null;
     private final Handler mHandler;
     private int mHiddenTop = 0;
     private boolean mImeWasShown = false;
@@ -35,8 +35,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
     private float mTargetPrimaryDim = 0.0f;
     private float mTargetSecondaryDim = 0.0f;
     private boolean mTargetShown = false;
-    /* access modifiers changed from: private */
-    public final TransactionPool mTransactionPool;
+    private final TransactionPool mTransactionPool;
 
     DividerImeController(SplitScreenTaskOrganizer splitScreenTaskOrganizer, TransactionPool transactionPool, Handler handler) {
         this.mSplits = splitScreenTaskOrganizer;
@@ -89,6 +88,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
         this.mTargetSecondaryDim = f;
     }
 
+    @Override // com.android.systemui.wm.DisplayImeController.ImePositionProcessor
     public int onImeStartPositioning(int i, int i2, int i3, boolean z, boolean z2, SurfaceControl.Transaction transaction) {
         this.mHiddenTop = i2;
         this.mShownTop = i3;
@@ -196,6 +196,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
         this.mAdjustedWhileHidden = false;
     }
 
+    @Override // com.android.systemui.wm.DisplayImeController.ImePositionProcessor
     public void onImePositionChanged(int i, int i2, SurfaceControl.Transaction transaction) {
         if (this.mAnimation == null && isDividerVisible() && !this.mPaused) {
             float f = (float) i2;
@@ -208,6 +209,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
         }
     }
 
+    @Override // com.android.systemui.wm.DisplayImeController.ImePositionProcessor
     public void onImeEndPositioning(int i, boolean z, SurfaceControl.Transaction transaction) {
         if (this.mAnimation == null && isDividerVisible() && !this.mPaused) {
             onEnd(z, transaction);
@@ -245,7 +247,8 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
     }
 
     /* access modifiers changed from: private */
-    public void onEnd(boolean z, SurfaceControl.Transaction transaction) {
+    /* access modifiers changed from: public */
+    private void onEnd(boolean z, SurfaceControl.Transaction transaction) {
         if (!z) {
             onProgress(1.0f, transaction);
             boolean z2 = this.mTargetAdjusted;
@@ -262,9 +265,9 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
         if (valueAnimator != null) {
             valueAnimator.cancel();
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mAnimation = ofFloat;
-        ofFloat.setDuration(275);
+        ofFloat.setDuration(275L);
         boolean z = this.mTargetAdjusted;
         if (z != this.mAdjusted) {
             int i = this.mHiddenTop;
@@ -275,12 +278,15 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
             this.mAnimation.setCurrentFraction(f);
         }
         this.mAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.stackdivider.$$Lambda$DividerImeController$w9tTEADRpkU2gnFFBrPgOh19s0k */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 DividerImeController.this.lambda$startAsyncAnimation$0$DividerImeController(valueAnimator);
             }
         });
         this.mAnimation.setInterpolator(DisplayImeController.INTERPOLATOR);
         this.mAnimation.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.stackdivider.DividerImeController.AnonymousClass1 */
             private boolean mCancel = false;
 
             public void onAnimationCancel(Animator animator) {
@@ -292,7 +298,7 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
                 DividerImeController.this.onEnd(this.mCancel, acquire);
                 acquire.apply();
                 DividerImeController.this.mTransactionPool.release(acquire);
-                ValueAnimator unused = DividerImeController.this.mAnimation = null;
+                DividerImeController.this.mAnimation = null;
             }
         });
         this.mAnimation.start();
@@ -309,6 +315,8 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
 
     public void pause(int i) {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.stackdivider.$$Lambda$DividerImeController$WahrdFPYjNuoSU9XvYFcvsrVnqE */
+
             public final void run() {
                 DividerImeController.this.lambda$pause$1$DividerImeController();
             }
@@ -335,6 +343,8 @@ class DividerImeController implements DisplayImeController.ImePositionProcessor 
 
     public void resume(int i) {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.stackdivider.$$Lambda$DividerImeController$BXScwQHRnelwDiQfpGXRr_rI2HQ */
+
             public final void run() {
                 DividerImeController.this.lambda$resume$2$DividerImeController();
             }

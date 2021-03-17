@@ -27,6 +27,7 @@ public final class HeadsUpController_Factory implements Factory<HeadsUpControlle
         this.notificationListenerProvider = provider7;
     }
 
+    @Override // javax.inject.Provider
     public HeadsUpController get() {
         return provideInstance(this.headsUpViewBinderProvider, this.notificationInterruptStateProvider, this.headsUpManagerProvider, this.remoteInputManagerProvider, this.statusBarStateControllerProvider, this.visualStabilityManagerProvider, this.notificationListenerProvider);
     }

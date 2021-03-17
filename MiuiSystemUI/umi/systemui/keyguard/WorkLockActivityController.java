@@ -29,6 +29,9 @@ public class WorkLockActivityController {
     @VisibleForTesting
     WorkLockActivityController(Context context, ActivityManagerWrapper activityManagerWrapper, IActivityTaskManager iActivityTaskManager) {
         AnonymousClass1 r0 = new TaskStackChangeListener() {
+            /* class com.android.systemui.keyguard.WorkLockActivityController.AnonymousClass1 */
+
+            @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onTaskProfileLocked(int i, int i2) {
                 WorkLockActivityController.this.startWorkChallengeInTask(i, i2);
             }
@@ -40,7 +43,8 @@ public class WorkLockActivityController {
     }
 
     /* access modifiers changed from: private */
-    public void startWorkChallengeInTask(int i, int i2) {
+    /* access modifiers changed from: public */
+    private void startWorkChallengeInTask(int i, int i2) {
         ActivityManager.TaskDescription taskDescription;
         try {
             taskDescription = this.mIatm.getTaskDescription(i);

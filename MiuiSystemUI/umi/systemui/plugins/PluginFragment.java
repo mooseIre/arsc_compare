@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 public abstract class PluginFragment extends Fragment implements Plugin {
     private Context mPluginContext;
 
+    @Override // com.android.systemui.plugins.Plugin
     public void onCreate(Context context, Context context2) {
         this.mPluginContext = context2;
     }

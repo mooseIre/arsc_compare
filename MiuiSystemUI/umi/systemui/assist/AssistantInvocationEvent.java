@@ -1,29 +1,57 @@
 package com.android.systemui.assist;
 
 import com.android.internal.logging.UiEventLogger;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import org.jetbrains.annotations.NotNull;
 
+/* JADX INFO: Failed to restore enum class, 'enum' modifier removed */
 /* compiled from: AssistantInvocationEvent.kt */
-public enum AssistantInvocationEvent implements UiEventLogger.UiEventEnum {
-    ASSISTANT_INVOCATION_UNKNOWN(442),
-    ASSISTANT_INVOCATION_TOUCH_GESTURE(443),
-    ASSISTANT_INVOCATION_HOTWORD(445),
-    ASSISTANT_INVOCATION_QUICK_SEARCH_BAR(446),
-    ASSISTANT_INVOCATION_HOME_LONG_PRESS(447),
-    ASSISTANT_INVOCATION_PHYSICAL_GESTURE(448),
-    ASSISTANT_INVOCATION_START_UNKNOWN(530),
-    ASSISTANT_INVOCATION_START_TOUCH_GESTURE(531),
-    ASSISTANT_INVOCATION_START_PHYSICAL_GESTURE(532);
-    
-    public static final Companion Companion = null;
+public final class AssistantInvocationEvent extends Enum<AssistantInvocationEvent> implements UiEventLogger.UiEventEnum {
+    private static final /* synthetic */ AssistantInvocationEvent[] $VALUES;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_HOME_LONG_PRESS;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_HOTWORD;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_PHYSICAL_GESTURE;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_QUICK_SEARCH_BAR;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_START_PHYSICAL_GESTURE;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_START_TOUCH_GESTURE;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_START_UNKNOWN;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_TOUCH_GESTURE;
+    public static final AssistantInvocationEvent ASSISTANT_INVOCATION_UNKNOWN;
+    public static final Companion Companion = new Companion(null);
     private final int id;
 
-    private AssistantInvocationEvent(int i) {
-        this.id = i;
+    public static AssistantInvocationEvent valueOf(String str) {
+        return (AssistantInvocationEvent) Enum.valueOf(AssistantInvocationEvent.class, str);
+    }
+
+    public static AssistantInvocationEvent[] values() {
+        return (AssistantInvocationEvent[]) $VALUES.clone();
+    }
+
+    private AssistantInvocationEvent(String str, int i, int i2) {
+        this.id = i2;
     }
 
     static {
-        Companion = new Companion((DefaultConstructorMarker) null);
+        AssistantInvocationEvent assistantInvocationEvent = new AssistantInvocationEvent("ASSISTANT_INVOCATION_UNKNOWN", 0, 442);
+        ASSISTANT_INVOCATION_UNKNOWN = assistantInvocationEvent;
+        AssistantInvocationEvent assistantInvocationEvent2 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_TOUCH_GESTURE", 1, 443);
+        ASSISTANT_INVOCATION_TOUCH_GESTURE = assistantInvocationEvent2;
+        AssistantInvocationEvent assistantInvocationEvent3 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_HOTWORD", 3, 445);
+        ASSISTANT_INVOCATION_HOTWORD = assistantInvocationEvent3;
+        AssistantInvocationEvent assistantInvocationEvent4 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_QUICK_SEARCH_BAR", 4, 446);
+        ASSISTANT_INVOCATION_QUICK_SEARCH_BAR = assistantInvocationEvent4;
+        AssistantInvocationEvent assistantInvocationEvent5 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_HOME_LONG_PRESS", 5, 447);
+        ASSISTANT_INVOCATION_HOME_LONG_PRESS = assistantInvocationEvent5;
+        AssistantInvocationEvent assistantInvocationEvent6 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_PHYSICAL_GESTURE", 6, 448);
+        ASSISTANT_INVOCATION_PHYSICAL_GESTURE = assistantInvocationEvent6;
+        AssistantInvocationEvent assistantInvocationEvent7 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_START_UNKNOWN", 7, 530);
+        ASSISTANT_INVOCATION_START_UNKNOWN = assistantInvocationEvent7;
+        AssistantInvocationEvent assistantInvocationEvent8 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_START_TOUCH_GESTURE", 8, 531);
+        ASSISTANT_INVOCATION_START_TOUCH_GESTURE = assistantInvocationEvent8;
+        AssistantInvocationEvent assistantInvocationEvent9 = new AssistantInvocationEvent("ASSISTANT_INVOCATION_START_PHYSICAL_GESTURE", 9, 532);
+        ASSISTANT_INVOCATION_START_PHYSICAL_GESTURE = assistantInvocationEvent9;
+        $VALUES = new AssistantInvocationEvent[]{assistantInvocationEvent, assistantInvocationEvent2, new AssistantInvocationEvent("ASSISTANT_INVOCATION_TOUCH_GESTURE_ALT", 2, 444), assistantInvocationEvent3, assistantInvocationEvent4, assistantInvocationEvent5, assistantInvocationEvent6, assistantInvocationEvent7, assistantInvocationEvent8, assistantInvocationEvent9};
     }
 
     public int getId() {

@@ -43,6 +43,7 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends Notif
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         super.setVisible(z);
         View view = this.mView;
@@ -50,6 +51,7 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends Notif
         view.setAlpha(z ? 1.0f : 0.0f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setContentHeight(int i, int i2) {
         super.setContentHeight(i, i2);
         this.mContentHeight = i;
@@ -57,6 +59,7 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends Notif
         updateActionOffset();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public boolean shouldClipToRounding(boolean z, boolean z2) {
         View view;
         if (super.shouldClipToRounding(z, z2)) {
@@ -68,12 +71,14 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends Notif
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void onContentUpdated(@NotNull ExpandableNotificationRow expandableNotificationRow) {
         Intrinsics.checkParameterIsNotNull(expandableNotificationRow, "row");
         resolveViews();
         super.onContentUpdated(expandableNotificationRow);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     @NotNull
     public View getExpandButton() {
         View view = this.expandButtonInnerContainer;
@@ -84,49 +89,33 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends Notif
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void updateExpandability(boolean z, @Nullable View.OnClickListener onClickListener) {
         this.conversationLayout.updateExpandability(z, onClickListener);
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:15:0x0029  */
-    /* JADX WARNING: Removed duplicated region for block: B:20:? A[RETURN, SYNTHETIC] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean disallowSingleClick(float r6, float r7) {
-        /*
-            r5 = this;
-            android.view.View r0 = r5.expandButtonContainer
-            r1 = 0
-            java.lang.String r2 = "expandButtonContainer"
-            if (r0 == 0) goto L_0x002b
-            int r0 = r0.getVisibility()
-            r3 = 1
-            r4 = 0
-            if (r0 != 0) goto L_0x001f
-            android.view.View r0 = r5.expandButtonContainer
-            if (r0 == 0) goto L_0x001b
-            boolean r0 = r5.isOnView(r0, r6, r7)
-            if (r0 == 0) goto L_0x001f
-            r0 = r3
-            goto L_0x0020
-        L_0x001b:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r2)
-            throw r1
-        L_0x001f:
-            r0 = r4
-        L_0x0020:
-            if (r0 != 0) goto L_0x002a
-            boolean r5 = super.disallowSingleClick(r6, r7)
-            if (r5 == 0) goto L_0x0029
-            goto L_0x002a
-        L_0x0029:
-            r3 = r4
-        L_0x002a:
-            return r3
-        L_0x002b:
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r2)
-            throw r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationConversationTemplateViewWrapper.disallowSingleClick(float, float):boolean");
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
+    public boolean disallowSingleClick(float f, float f2) {
+        boolean z;
+        View view = this.expandButtonContainer;
+        if (view != null) {
+            if (view.getVisibility() == 0) {
+                View view2 = this.expandButtonContainer;
+                if (view2 == null) {
+                    Intrinsics.throwUninitializedPropertyAccessException("expandButtonContainer");
+                    throw null;
+                } else if (isOnView(view2, f, f2)) {
+                    z = true;
+                    return z || super.disallowSingleClick(f, f2);
+                }
+            }
+            z = false;
+            if (z) {
+                return true;
+            }
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("expandButtonContainer");
+        throw null;
     }
 
     private final void updateActionOffset() {

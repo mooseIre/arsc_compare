@@ -15,9 +15,6 @@ import android.graphics.drawable.InsetDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.text.Layout;
-import android.text.TextPaint;
-import android.text.method.TransformationMethod;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ContextThemeWrapper;
@@ -62,7 +59,7 @@ public class SmartReplyView extends ViewGroup {
     private final int mDefaultTextColor;
     private final int mDefaultTextColorDarkBg;
     private final int mDoubleLineButtonPaddingHorizontal;
-    private final int mHeightUpperLimit = NotificationUtils.getFontScaledHeight(this.mContext, C0012R$dimen.smart_reply_button_max_height);
+    private final int mHeightUpperLimit = NotificationUtils.getFontScaledHeight(((ViewGroup) this).mContext, C0012R$dimen.smart_reply_button_max_height);
     private final KeyguardDismissUtil mKeyguardDismissUtil = ((KeyguardDismissUtil) Dependency.get(KeyguardDismissUtil.class));
     private final double mMinStrokeContrast;
     private final NotificationRemoteInputManager mRemoteInputManager = ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class));
@@ -75,7 +72,8 @@ public class SmartReplyView extends ViewGroup {
     private final int mSpacing;
     private final int mStrokeWidth;
 
-    private enum SmartButtonType {
+    /* access modifiers changed from: private */
+    public enum SmartButtonType {
         REPLY,
         ACTION
     }
@@ -89,10 +87,10 @@ public class SmartReplyView extends ViewGroup {
         int color = context.getColor(C0011R$color.smart_reply_button_background);
         this.mCurrentBackgroundColor = color;
         this.mDefaultBackgroundColor = color;
-        this.mDefaultTextColor = this.mContext.getColor(C0011R$color.smart_reply_button_text);
-        this.mDefaultTextColorDarkBg = this.mContext.getColor(C0011R$color.smart_reply_button_text_dark_bg);
-        this.mDefaultStrokeColor = this.mContext.getColor(C0011R$color.smart_reply_button_stroke);
-        int color2 = this.mContext.getColor(C0011R$color.notification_ripple_untinted_color);
+        this.mDefaultTextColor = ((ViewGroup) this).mContext.getColor(C0011R$color.smart_reply_button_text);
+        this.mDefaultTextColorDarkBg = ((ViewGroup) this).mContext.getColor(C0011R$color.smart_reply_button_text_dark_bg);
+        this.mDefaultStrokeColor = ((ViewGroup) this).mContext.getColor(C0011R$color.smart_reply_button_stroke);
+        int color2 = ((ViewGroup) this).mContext.getColor(C0011R$color.notification_ripple_untinted_color);
         this.mRippleColor = color2;
         this.mRippleColorDarkBg = Color.argb(Color.alpha(color2), 255, 255, 255);
         this.mMinStrokeContrast = ContrastColorUtil.calculateContrast(this.mDefaultStrokeColor, this.mDefaultBackgroundColor);
@@ -139,8 +137,8 @@ public class SmartReplyView extends ViewGroup {
     }
 
     public void addPreInflatedButtons(List<Button> list) {
-        for (Button addView : list) {
-            addView(addView);
+        for (Button button : list) {
+            addView(button);
         }
         reallocateCandidateButtonQueueForSqueezing();
     }
@@ -157,12 +155,11 @@ public class SmartReplyView extends ViewGroup {
     }
 
     public List<Button> inflateSmartActions(Context context, SmartActions smartActions, SmartReplyController smartReplyController, NotificationEntry notificationEntry, HeadsUpManager headsUpManager, boolean z) {
-        SmartActions smartActions2 = smartActions;
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, this.mContext.getTheme());
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, ((ViewGroup) this).mContext.getTheme());
         ArrayList arrayList = new ArrayList();
-        int size = smartActions2.actions.size();
+        int size = smartActions.actions.size();
         for (int i = 0; i < size; i++) {
-            if (smartActions2.actions.get(i).actionIntent != null) {
+            if (smartActions.actions.get(i).actionIntent != null) {
                 arrayList.add(inflateActionButton(this, getContext(), contextThemeWrapper, i, smartActions, smartReplyController, notificationEntry, headsUpManager, z));
             }
         }
@@ -175,12 +172,11 @@ public class SmartReplyView extends ViewGroup {
 
     @VisibleForTesting
     static Button inflateReplyButton(SmartReplyView smartReplyView, Context context, int i, SmartReplies smartReplies, SmartReplyController smartReplyController, NotificationEntry notificationEntry, boolean z) {
-        SmartReplyView smartReplyView2 = smartReplyView;
-        Button button = (Button) LayoutInflater.from(context).inflate(C0017R$layout.smart_reply_button, smartReplyView, false);
-        SmartReplies smartReplies2 = smartReplies;
-        CharSequence charSequence = smartReplies2.choices.get(i);
+        Button button = (Button) LayoutInflater.from(context).inflate(C0017R$layout.smart_reply_button, (ViewGroup) smartReplyView, false);
+        CharSequence charSequence = smartReplies.choices.get(i);
         button.setText(charSequence);
-        View.OnClickListener r0 = new View.OnClickListener(new ActivityStarter.OnDismissAction(smartReplies2, charSequence, i, button, smartReplyController, notificationEntry, context) {
+        View.OnClickListener r0 = new View.OnClickListener(new ActivityStarter.OnDismissAction(smartReplies, charSequence, i, button, smartReplyController, notificationEntry, context) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$SmartReplyView$rVuoX0krAdMy7xAwdbzCHW8AzI */
             public final /* synthetic */ SmartReplyView.SmartReplies f$1;
             public final /* synthetic */ CharSequence f$2;
             public final /* synthetic */ int f$3;
@@ -199,10 +195,12 @@ public class SmartReplyView extends ViewGroup {
                 this.f$7 = r8;
             }
 
+            @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
             public final boolean onDismiss() {
                 return SmartReplyView.lambda$inflateReplyButton$1(SmartReplyView.this, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7);
             }
         }, notificationEntry) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$SmartReplyView$zCSq2JAzcY64WTEY4XQsFyGXs */
             public final /* synthetic */ ActivityStarter.OnDismissAction f$1;
             public final /* synthetic */ NotificationEntry f$2;
 
@@ -212,104 +210,110 @@ public class SmartReplyView extends ViewGroup {
             }
 
             public final void onClick(View view) {
-                SmartReplyView.this.mKeyguardDismissUtil.executeWhenUnlocked(this.f$1, !this.f$2.isRowPinned());
+                SmartReplyView smartReplyView = SmartReplyView.this;
+                ActivityStarter.OnDismissAction onDismissAction = this.f$1;
+                NotificationEntry notificationEntry = this.f$2;
+                smartReplyView.mKeyguardDismissUtil.executeWhenUnlocked(onDismissAction, !notificationEntry.isRowPinned());
             }
         };
         if (z) {
-            r0 = new DelayedOnClickListener(r0, smartReplyView2.mConstants.getOnClickInitDelay());
+            r0 = new DelayedOnClickListener(r0, smartReplyView.mConstants.getOnClickInitDelay());
         }
         button.setOnClickListener(r0);
         button.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            /* class com.android.systemui.statusbar.policy.SmartReplyView.AnonymousClass1 */
+
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, SmartReplyView.this.getResources().getString(C0021R$string.accessibility_send_smart_reply)));
             }
         });
-        setButtonColors(button, smartReplyView2.mCurrentBackgroundColor, smartReplyView2.mDefaultStrokeColor, smartReplyView2.mDefaultTextColor, smartReplyView2.mRippleColor, smartReplyView2.mStrokeWidth);
+        setButtonColors(button, smartReplyView.mCurrentBackgroundColor, smartReplyView.mDefaultStrokeColor, smartReplyView.mDefaultTextColor, smartReplyView.mRippleColor, smartReplyView.mStrokeWidth);
         return button;
     }
 
     static /* synthetic */ boolean lambda$inflateReplyButton$1(SmartReplyView smartReplyView, SmartReplies smartReplies, CharSequence charSequence, int i, Button button, SmartReplyController smartReplyController, NotificationEntry notificationEntry, Context context) {
-        SmartReplyView smartReplyView2 = smartReplyView;
-        SmartReplies smartReplies2 = smartReplies;
-        if (smartReplyView2.mConstants.getEffectiveEditChoicesBeforeSending(smartReplies2.remoteInput.getEditChoicesBeforeSending())) {
+        if (smartReplyView.mConstants.getEffectiveEditChoicesBeforeSending(smartReplies.remoteInput.getEditChoicesBeforeSending())) {
             NotificationEntry.EditedSuggestionInfo editedSuggestionInfo = new NotificationEntry.EditedSuggestionInfo(charSequence, i);
-            NotificationRemoteInputManager notificationRemoteInputManager = smartReplyView2.mRemoteInputManager;
-            RemoteInput remoteInput = smartReplies2.remoteInput;
-            Button button2 = button;
-            notificationRemoteInputManager.activateRemoteInput(button2, new RemoteInput[]{remoteInput}, remoteInput, smartReplies2.pendingIntent, editedSuggestionInfo);
+            NotificationRemoteInputManager notificationRemoteInputManager = smartReplyView.mRemoteInputManager;
+            RemoteInput remoteInput = smartReplies.remoteInput;
+            notificationRemoteInputManager.activateRemoteInput(button, new RemoteInput[]{remoteInput}, remoteInput, smartReplies.pendingIntent, editedSuggestionInfo);
             return false;
         }
-        CharSequence charSequence2 = charSequence;
-        int i2 = i;
         smartReplyController.smartReplySent(notificationEntry, i, button.getText(), NotificationLogger.getNotificationLocation(notificationEntry).toMetricsEventEnum(), false);
         Bundle bundle = new Bundle();
-        bundle.putString(smartReplies2.remoteInput.getResultKey(), charSequence.toString());
+        bundle.putString(smartReplies.remoteInput.getResultKey(), charSequence.toString());
         Intent addFlags = new Intent().addFlags(268435456);
-        RemoteInput.addResultsToIntent(new RemoteInput[]{smartReplies2.remoteInput}, addFlags, bundle);
+        RemoteInput.addResultsToIntent(new RemoteInput[]{smartReplies.remoteInput}, addFlags, bundle);
         RemoteInput.setResultsSource(addFlags, 1);
         notificationEntry.setHasSentReply();
         try {
-            smartReplies2.pendingIntent.send(context, 0, addFlags);
+            smartReplies.pendingIntent.send(context, 0, addFlags);
         } catch (PendingIntent.CanceledException e) {
             Log.w("SmartReplyView", "Unable to send smart reply", e);
         }
-        smartReplyView2.mSmartReplyContainer.setVisibility(8);
+        smartReplyView.mSmartReplyContainer.setVisibility(8);
         return false;
     }
 
-    /* JADX WARNING: type inference failed for: r0v10, types: [com.android.systemui.statusbar.policy.SmartReplyView$DelayedOnClickListener] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    @com.android.internal.annotations.VisibleForTesting
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    static android.widget.Button inflateActionButton(com.android.systemui.statusbar.policy.SmartReplyView r11, android.content.Context r12, android.content.Context r13, int r14, com.android.systemui.statusbar.policy.SmartReplyView.SmartActions r15, com.android.systemui.statusbar.SmartReplyController r16, com.android.systemui.statusbar.notification.collection.NotificationEntry r17, com.android.systemui.statusbar.policy.HeadsUpManager r18, boolean r19) {
-        /*
-            r8 = r11
-            r6 = r15
-            java.util.List<android.app.Notification$Action> r0 = r6.actions
-            r5 = r14
-            java.lang.Object r0 = r0.get(r14)
-            r2 = r0
-            android.app.Notification$Action r2 = (android.app.Notification.Action) r2
-            android.view.LayoutInflater r0 = android.view.LayoutInflater.from(r12)
-            int r1 = com.android.systemui.C0017R$layout.smart_action_button
-            r3 = 0
-            android.view.View r0 = r0.inflate(r1, r11, r3)
-            r9 = r0
-            android.widget.Button r9 = (android.widget.Button) r9
-            java.lang.CharSequence r0 = r2.title
-            r9.setText(r0)
-            android.graphics.drawable.Icon r0 = r2.getIcon()
-            r1 = r13
-            android.graphics.drawable.Drawable r0 = r0.loadDrawable(r13)
-            android.content.res.Resources r1 = r12.getResources()
-            int r4 = com.android.systemui.C0012R$dimen.smart_action_button_icon_size
-            int r1 = r1.getDimensionPixelSize(r4)
-            r0.setBounds(r3, r3, r1, r1)
-            r1 = 0
-            r9.setCompoundDrawables(r0, r1, r1, r1)
-            com.android.systemui.statusbar.policy.-$$Lambda$SmartReplyView$tct0o0Zp_9czv90IHtUOrdcaxl0 r10 = new com.android.systemui.statusbar.policy.-$$Lambda$SmartReplyView$tct0o0Zp_9czv90IHtUOrdcaxl0
-            r0 = r10
-            r1 = r11
-            r3 = r16
-            r4 = r17
-            r7 = r18
-            r0.<init>(r2, r3, r4, r5, r6, r7)
-            if (r19 == 0) goto L_0x0054
-            com.android.systemui.statusbar.policy.SmartReplyView$DelayedOnClickListener r0 = new com.android.systemui.statusbar.policy.SmartReplyView$DelayedOnClickListener
-            com.android.systemui.statusbar.policy.SmartReplyConstants r1 = r8.mConstants
-            long r1 = r1.getOnClickInitDelay()
-            r0.<init>(r10, r1)
-            r10 = r0
-        L_0x0054:
-            r9.setOnClickListener(r10)
-            android.view.ViewGroup$LayoutParams r0 = r9.getLayoutParams()
-            com.android.systemui.statusbar.policy.SmartReplyView$LayoutParams r0 = (com.android.systemui.statusbar.policy.SmartReplyView.LayoutParams) r0
-            com.android.systemui.statusbar.policy.SmartReplyView$SmartButtonType r1 = com.android.systemui.statusbar.policy.SmartReplyView.SmartButtonType.ACTION
-            com.android.systemui.statusbar.policy.SmartReplyView.SmartButtonType unused = r0.buttonType = r1
-            return r9
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.SmartReplyView.inflateActionButton(com.android.systemui.statusbar.policy.SmartReplyView, android.content.Context, android.content.Context, int, com.android.systemui.statusbar.policy.SmartReplyView$SmartActions, com.android.systemui.statusbar.SmartReplyController, com.android.systemui.statusbar.notification.collection.NotificationEntry, com.android.systemui.statusbar.policy.HeadsUpManager, boolean):android.widget.Button");
+    @VisibleForTesting
+    static Button inflateActionButton(SmartReplyView smartReplyView, Context context, Context context2, int i, SmartActions smartActions, SmartReplyController smartReplyController, NotificationEntry notificationEntry, HeadsUpManager headsUpManager, boolean z) {
+        Notification.Action action = smartActions.actions.get(i);
+        Button button = (Button) LayoutInflater.from(context).inflate(C0017R$layout.smart_action_button, (ViewGroup) smartReplyView, false);
+        button.setText(action.title);
+        Drawable loadDrawable = action.getIcon().loadDrawable(context2);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.smart_action_button_icon_size);
+        loadDrawable.setBounds(0, 0, dimensionPixelSize, dimensionPixelSize);
+        button.setCompoundDrawables(loadDrawable, null, null, null);
+        View.OnClickListener r10 = new View.OnClickListener(action, smartReplyController, notificationEntry, i, smartActions, headsUpManager) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$SmartReplyView$tct0o0Zp_9czv90IHtUOrdcaxl0 */
+            public final /* synthetic */ Notification.Action f$1;
+            public final /* synthetic */ SmartReplyController f$2;
+            public final /* synthetic */ NotificationEntry f$3;
+            public final /* synthetic */ int f$4;
+            public final /* synthetic */ SmartReplyView.SmartActions f$5;
+            public final /* synthetic */ HeadsUpManager f$6;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+                this.f$3 = r4;
+                this.f$4 = r5;
+                this.f$5 = r6;
+                this.f$6 = r7;
+            }
+
+            public final void onClick(View view) {
+                Notification.Action action;
+                NotificationEntry notificationEntry;
+                SmartReplyView.this.getActivityStarter().startPendingIntentDismissingKeyguard(action.actionIntent, new Runnable(notificationEntry, this.f$4, this.f$1, this.f$5, this.f$6) {
+                    /* class com.android.systemui.statusbar.policy.$$Lambda$SmartReplyView$TA933H11Yl_oDGgX0f0ntr5xGgI */
+                    public final /* synthetic */ NotificationEntry f$1;
+                    public final /* synthetic */ int f$2;
+                    public final /* synthetic */ Notification.Action f$3;
+                    public final /* synthetic */ SmartReplyView.SmartActions f$4;
+                    public final /* synthetic */ HeadsUpManager f$5;
+
+                    {
+                        this.f$1 = r2;
+                        this.f$2 = r3;
+                        this.f$3 = r4;
+                        this.f$4 = r5;
+                        this.f$5 = r6;
+                    }
+
+                    public final void run() {
+                        SmartReplyView.lambda$inflateActionButton$3(SmartReplyController.this, this.f$1, this.f$2, this.f$3, this.f$4, this.f$5);
+                    }
+                }, this.f$3.getRow());
+            }
+        };
+        if (z) {
+            r10 = new DelayedOnClickListener(r10, smartReplyView.mConstants.getOnClickInitDelay());
+        }
+        button.setOnClickListener(r10);
+        ((LayoutParams) button.getLayoutParams()).buttonType = SmartButtonType.ACTION;
+        return button;
     }
 
     static /* synthetic */ void lambda$inflateActionButton$3(SmartReplyController smartReplyController, NotificationEntry notificationEntry, int i, Notification.Action action, SmartActions smartActions, HeadsUpManager headsUpManager) {
@@ -317,8 +321,9 @@ public class SmartReplyView extends ViewGroup {
         headsUpManager.removeNotification(notificationEntry.getKey(), true);
     }
 
+    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attributeSet) {
-        return new LayoutParams(this.mContext, attributeSet);
+        return new LayoutParams(((ViewGroup) this).mContext, attributeSet);
     }
 
     /* access modifiers changed from: protected */
@@ -327,6 +332,7 @@ public class SmartReplyView extends ViewGroup {
     }
 
     /* access modifiers changed from: protected */
+    @Override // android.view.ViewGroup
     public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return new LayoutParams(layoutParams.width, layoutParams.height);
     }
@@ -337,7 +343,6 @@ public class SmartReplyView extends ViewGroup {
         Iterator it;
         int i4;
         int i5;
-        int i6 = i2;
         if (View.MeasureSpec.getMode(i) == 0) {
             i3 = Integer.MAX_VALUE;
         } else {
@@ -348,25 +353,25 @@ public class SmartReplyView extends ViewGroup {
             Log.wtf("SmartReplyView", "Single line button queue leaked between onMeasure calls");
             this.mCandidateButtonQueueForSqueezing.clear();
         }
-        SmartSuggestionMeasures smartSuggestionMeasures = new SmartSuggestionMeasures(this.mPaddingLeft + this.mPaddingRight, 0, this.mSingleLineButtonPaddingHorizontal);
+        SmartSuggestionMeasures smartSuggestionMeasures = new SmartSuggestionMeasures(((ViewGroup) this).mPaddingLeft + ((ViewGroup) this).mPaddingRight, 0, this.mSingleLineButtonPaddingHorizontal);
         List<View> filterActionsOrReplies = filterActionsOrReplies(SmartButtonType.ACTION);
         List<View> filterActionsOrReplies2 = filterActionsOrReplies(SmartButtonType.REPLY);
-        ArrayList<View> arrayList = new ArrayList<>(filterActionsOrReplies);
+        ArrayList<View> arrayList = new ArrayList(filterActionsOrReplies);
         arrayList.addAll(filterActionsOrReplies2);
         ArrayList arrayList2 = new ArrayList();
         SmartSuggestionMeasures smartSuggestionMeasures2 = null;
         int maxNumActions = this.mConstants.getMaxNumActions();
         Iterator it2 = arrayList.iterator();
+        int i6 = 0;
         int i7 = 0;
-        int i8 = 0;
         while (it2.hasNext()) {
             View view = (View) it2.next();
             LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
-            if (maxNumActions == -1 || layoutParams.buttonType != SmartButtonType.ACTION || i7 < maxNumActions) {
+            if (maxNumActions == -1 || layoutParams.buttonType != SmartButtonType.ACTION || i6 < maxNumActions) {
                 i4 = maxNumActions;
                 it = it2;
                 view.setPadding(smartSuggestionMeasures.mButtonPaddingHorizontal, view.getPaddingTop(), smartSuggestionMeasures.mButtonPaddingHorizontal, view.getPaddingBottom());
-                view.measure(MEASURE_SPEC_ANY_LENGTH, i6);
+                view.measure(MEASURE_SPEC_ANY_LENGTH, i2);
                 arrayList2.add(view);
                 Button button = (Button) view;
                 int lineCount = button.getLineCount();
@@ -378,24 +383,23 @@ public class SmartReplyView extends ViewGroup {
                     if (smartSuggestionMeasures2 == null && layoutParams.buttonType == SmartButtonType.REPLY) {
                         smartSuggestionMeasures2 = smartSuggestionMeasures.clone();
                     }
-                    if (i8 == 0) {
+                    if (i7 == 0) {
                         i5 = 0;
                     } else {
                         i5 = this.mSpacing;
                     }
                     int measuredWidth = view.getMeasuredWidth();
                     int measuredHeight = view.getMeasuredHeight();
-                    SmartSuggestionMeasures smartSuggestionMeasures3 = clone;
                     smartSuggestionMeasures.mMeasuredWidth += i5 + measuredWidth;
                     smartSuggestionMeasures.mMaxChildHeight = Math.max(smartSuggestionMeasures.mMaxChildHeight, measuredHeight);
                     if (smartSuggestionMeasures.mButtonPaddingHorizontal == this.mSingleLineButtonPaddingHorizontal && (lineCount == 2 || smartSuggestionMeasures.mMeasuredWidth > i3)) {
-                        smartSuggestionMeasures.mMeasuredWidth += (i8 + 1) * this.mSingleToDoubleLineButtonWidthIncrease;
+                        smartSuggestionMeasures.mMeasuredWidth += (i7 + 1) * this.mSingleToDoubleLineButtonWidthIncrease;
                         smartSuggestionMeasures.mButtonPaddingHorizontal = this.mDoubleLineButtonPaddingHorizontal;
                     }
                     if (smartSuggestionMeasures.mMeasuredWidth > i3) {
                         while (smartSuggestionMeasures.mMeasuredWidth > i3 && !this.mCandidateButtonQueueForSqueezing.isEmpty()) {
                             Button poll = this.mCandidateButtonQueueForSqueezing.poll();
-                            int squeezeButton = squeezeButton(poll, i6);
+                            int squeezeButton = squeezeButton(poll, i2);
                             if (squeezeButton != -1) {
                                 smartSuggestionMeasures.mMaxChildHeight = Math.max(smartSuggestionMeasures.mMaxChildHeight, poll.getMeasuredHeight());
                                 smartSuggestionMeasures.mMeasuredWidth -= squeezeButton;
@@ -405,15 +409,15 @@ public class SmartReplyView extends ViewGroup {
                             markButtonsWithPendingSqueezeStatusAs(3, arrayList2);
                             maxNumActions = i4;
                             it2 = it;
-                            smartSuggestionMeasures = smartSuggestionMeasures3;
+                            smartSuggestionMeasures = clone;
                         } else {
                             markButtonsWithPendingSqueezeStatusAs(2, arrayList2);
                         }
                     }
-                    boolean unused = layoutParams.show = true;
-                    i8++;
+                    layoutParams.show = true;
+                    i7++;
                     if (layoutParams.buttonType == SmartButtonType.ACTION) {
-                        i7++;
+                        i6++;
                     }
                 }
             } else {
@@ -424,18 +428,18 @@ public class SmartReplyView extends ViewGroup {
             it2 = it;
         }
         if (this.mSmartRepliesGeneratedByAssistant && !gotEnoughSmartReplies(filterActionsOrReplies2)) {
-            for (View layoutParams2 : filterActionsOrReplies2) {
-                boolean unused2 = ((LayoutParams) layoutParams2.getLayoutParams()).show = false;
+            for (View view2 : filterActionsOrReplies2) {
+                ((LayoutParams) view2.getLayoutParams()).show = false;
             }
             smartSuggestionMeasures = smartSuggestionMeasures2;
         }
         this.mCandidateButtonQueueForSqueezing.clear();
         remeasureButtonsIfNecessary(smartSuggestionMeasures.mButtonPaddingHorizontal, smartSuggestionMeasures.mMaxChildHeight);
-        int max = Math.max(getSuggestedMinimumHeight(), this.mPaddingTop + smartSuggestionMeasures.mMaxChildHeight + this.mPaddingBottom);
-        for (View view2 : arrayList) {
-            setCornerRadius((Button) view2, ((float) max) / 2.0f);
+        int max = Math.max(getSuggestedMinimumHeight(), ((ViewGroup) this).mPaddingTop + smartSuggestionMeasures.mMaxChildHeight + ((ViewGroup) this).mPaddingBottom);
+        for (View view3 : arrayList) {
+            setCornerRadius((Button) view3, ((float) max) / 2.0f);
         }
-        setMeasuredDimension(ViewGroup.resolveSize(Math.max(getSuggestedMinimumWidth(), smartSuggestionMeasures.mMeasuredWidth), i), ViewGroup.resolveSize(max, i6));
+        setMeasuredDimension(ViewGroup.resolveSize(Math.max(getSuggestedMinimumWidth(), smartSuggestionMeasures.mMeasuredWidth), i), ViewGroup.resolveSize(max, i2));
     }
 
     private static class SmartSuggestionMeasures {
@@ -456,8 +460,8 @@ public class SmartReplyView extends ViewGroup {
 
     private boolean gotEnoughSmartReplies(List<View> list) {
         int i = 0;
-        for (View layoutParams : list) {
-            if (((LayoutParams) layoutParams.getLayoutParams()).show) {
+        for (View view : list) {
+            if (((LayoutParams) view.getLayoutParams()).show) {
                 i++;
             }
         }
@@ -484,8 +488,8 @@ public class SmartReplyView extends ViewGroup {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             LayoutParams layoutParams = (LayoutParams) getChildAt(i).getLayoutParams();
-            boolean unused = layoutParams.show = false;
-            int unused2 = layoutParams.squeezeStatus = 0;
+            layoutParams.show = false;
+            layoutParams.squeezeStatus = 0;
         }
     }
 
@@ -497,51 +501,14 @@ public class SmartReplyView extends ViewGroup {
         return squeezeButtonToTextWidth(button, i, estimateOptimalSqueezedButtonTextWidth);
     }
 
-    private int estimateOptimalSqueezedButtonTextWidth(Button button) {
-        String charSequence = button.getText().toString();
-        TransformationMethod transformationMethod = button.getTransformationMethod();
-        if (transformationMethod != null) {
-            charSequence = transformationMethod.getTransformation(charSequence, button).toString();
-        }
-        int length = charSequence.length();
-        this.mBreakIterator.setText(charSequence);
-        if (this.mBreakIterator.preceding(length / 2) == -1 && this.mBreakIterator.next() == -1) {
-            return -1;
-        }
-        TextPaint paint = button.getPaint();
-        int current = this.mBreakIterator.current();
-        float desiredWidth = Layout.getDesiredWidth(charSequence, 0, current, paint);
-        float desiredWidth2 = Layout.getDesiredWidth(charSequence, current, length, paint);
-        float max = Math.max(desiredWidth, desiredWidth2);
-        int i = (desiredWidth > desiredWidth2 ? 1 : (desiredWidth == desiredWidth2 ? 0 : -1));
-        if (i != 0) {
-            boolean z = i > 0;
-            int maxSqueezeRemeasureAttempts = this.mConstants.getMaxSqueezeRemeasureAttempts();
-            int i2 = 0;
-            while (true) {
-                if (i2 >= maxSqueezeRemeasureAttempts) {
-                    break;
-                }
-                BreakIterator breakIterator = this.mBreakIterator;
-                int previous = z ? breakIterator.previous() : breakIterator.next();
-                if (previous == -1) {
-                    break;
-                }
-                float desiredWidth3 = Layout.getDesiredWidth(charSequence, 0, previous, paint);
-                float desiredWidth4 = Layout.getDesiredWidth(charSequence, previous, length, paint);
-                float max2 = Math.max(desiredWidth3, desiredWidth4);
-                if (max2 >= max) {
-                    break;
-                }
-                if (!z ? desiredWidth3 >= desiredWidth4 : desiredWidth3 <= desiredWidth4) {
-                    max = max2;
-                    break;
-                }
-                i2++;
-                max = max2;
-            }
-        }
-        return (int) Math.ceil((double) max);
+    /* JADX WARNING: Removed duplicated region for block: B:32:0x0090 A[LOOP:0: B:15:0x005c->B:32:0x0090, LOOP_END] */
+    /* JADX WARNING: Removed duplicated region for block: B:36:0x008e A[SYNTHETIC] */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    private int estimateOptimalSqueezedButtonTextWidth(android.widget.Button r14) {
+        /*
+        // Method dump skipped, instructions count: 155
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.SmartReplyView.estimateOptimalSqueezedButtonTextWidth(android.widget.Button):int");
     }
 
     private int getLeftCompoundDrawableWidthWithPadding(Button button) {
@@ -562,10 +529,10 @@ public class SmartReplyView extends ViewGroup {
         int measuredWidth2 = button.getMeasuredWidth();
         LayoutParams layoutParams = (LayoutParams) button.getLayoutParams();
         if (button.getLineCount() > 2 || measuredWidth2 >= measuredWidth) {
-            int unused = layoutParams.squeezeStatus = 3;
+            layoutParams.squeezeStatus = 3;
             return -1;
         }
-        int unused2 = layoutParams.squeezeStatus = 1;
+        layoutParams.squeezeStatus = 1;
         return measuredWidth - measuredWidth2;
     }
 
@@ -607,10 +574,10 @@ public class SmartReplyView extends ViewGroup {
     }
 
     private void markButtonsWithPendingSqueezeStatusAs(int i, List<View> list) {
-        for (View layoutParams : list) {
-            LayoutParams layoutParams2 = (LayoutParams) layoutParams.getLayoutParams();
-            if (layoutParams2.squeezeStatus == 1) {
-                int unused = layoutParams2.squeezeStatus = i;
+        for (View view : list) {
+            LayoutParams layoutParams = (LayoutParams) view.getLayoutParams();
+            if (layoutParams.squeezeStatus == 1) {
+                layoutParams.squeezeStatus = i;
             }
         }
     }
@@ -621,7 +588,7 @@ public class SmartReplyView extends ViewGroup {
         if (getLayoutDirection() != 1) {
             z2 = false;
         }
-        int i5 = z2 ? (i3 - i) - this.mPaddingRight : this.mPaddingLeft;
+        int i5 = z2 ? (i3 - i) - ((ViewGroup) this).mPaddingRight : ((ViewGroup) this).mPaddingLeft;
         int childCount = getChildCount();
         for (int i6 = 0; i6 < childCount; i6++) {
             View childAt = getChildAt(i6);
@@ -696,14 +663,12 @@ public class SmartReplyView extends ViewGroup {
         return this.mActivityStarter;
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    static class LayoutParams extends ViewGroup.LayoutParams {
-        /* access modifiers changed from: private */
-        public SmartButtonType buttonType;
-        /* access modifiers changed from: private */
-        public boolean show;
-        /* access modifiers changed from: private */
-        public int squeezeStatus;
+    public static class LayoutParams extends ViewGroup.LayoutParams {
+        private SmartButtonType buttonType;
+        private boolean show;
+        private int squeezeStatus;
 
         private LayoutParams(Context context, AttributeSet attributeSet) {
             super(context, attributeSet);
@@ -750,7 +715,8 @@ public class SmartReplyView extends ViewGroup {
         }
     }
 
-    private static class DelayedOnClickListener implements View.OnClickListener {
+    /* access modifiers changed from: private */
+    public static class DelayedOnClickListener implements View.OnClickListener {
         private final View.OnClickListener mActualListener;
         private final long mInitDelayMs;
         private final long mInitTimeMs = SystemClock.elapsedRealtime();

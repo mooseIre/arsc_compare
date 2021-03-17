@@ -3,8 +3,9 @@ package com.android.systemui.statusbar.notification.row;
 import android.app.NotificationChannel;
 import android.content.DialogInterface;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChannelEditorDialogController.kt */
-final class ChannelEditorDialogController$initDialog$$inlined$apply$lambda$2 implements DialogInterface.OnShowListener {
+public final class ChannelEditorDialogController$initDialog$$inlined$apply$lambda$2 implements DialogInterface.OnShowListener {
     final /* synthetic */ ChannelEditorListView $listView;
     final /* synthetic */ ChannelEditorDialogController this$0;
 

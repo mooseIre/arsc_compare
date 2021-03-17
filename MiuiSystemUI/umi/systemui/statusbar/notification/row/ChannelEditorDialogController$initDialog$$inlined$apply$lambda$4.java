@@ -3,8 +3,9 @@ package com.android.systemui.statusbar.notification.row;
 import android.view.View;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChannelEditorDialogController.kt */
-final class ChannelEditorDialogController$initDialog$$inlined$apply$lambda$4 implements View.OnClickListener {
+public final class ChannelEditorDialogController$initDialog$$inlined$apply$lambda$4 implements View.OnClickListener {
     final /* synthetic */ ChannelEditorDialogController this$0;
 
     ChannelEditorDialogController$initDialog$$inlined$apply$lambda$4(ChannelEditorDialogController channelEditorDialogController) {

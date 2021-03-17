@@ -14,6 +14,8 @@ public class DozePauser implements DozeMachine.Part {
     public DozePauser(Handler handler, DozeMachine dozeMachine, AlarmManager alarmManager, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy) {
         this.mMachine = dozeMachine;
         this.mPauseTimeout = new AlarmTimeout(alarmManager, new AlarmManager.OnAlarmListener() {
+            /* class com.android.systemui.doze.$$Lambda$DozePauser$RaYrBg9_HgEkLP8ozxXkVSg4K5c */
+
             public final void onAlarm() {
                 DozePauser.this.onTimeout();
             }
@@ -35,6 +37,7 @@ public class DozePauser implements DozeMachine.Part {
         }
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         if (AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()] != 1) {
             this.mPauseTimeout.cancel();

@@ -22,6 +22,7 @@ public final class PhoneStateMonitor_Factory implements Factory<PhoneStateMonito
         this.bootCompleteCacheProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public PhoneStateMonitor get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.statusBarOptionalLazyProvider, this.bootCompleteCacheProvider);
     }

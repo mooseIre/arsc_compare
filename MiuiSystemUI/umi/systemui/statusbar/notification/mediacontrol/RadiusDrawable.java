@@ -40,14 +40,15 @@ public final class RadiusDrawable extends Drawable {
         }
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void inflate(@NotNull Resources resources, @NotNull XmlPullParser xmlPullParser, @NotNull AttributeSet attributeSet, @Nullable Resources.Theme theme) {
         Intrinsics.checkParameterIsNotNull(resources, "r");
         Intrinsics.checkParameterIsNotNull(xmlPullParser, "parser");
         Intrinsics.checkParameterIsNotNull(attributeSet, "attrs");
-        TypedArray r2 = Drawable.obtainAttributes(resources, theme, attributeSet, R$styleable.RadiusDrawable);
-        if (r2.hasValue(R$styleable.RadiusDrawable_radius)) {
-            this.cornerRadius = r2.getDimension(R$styleable.RadiusDrawable_radius, this.cornerRadius);
-            r2.recycle();
+        TypedArray obtainAttributes = Drawable.obtainAttributes(resources, theme, attributeSet, R$styleable.RadiusDrawable);
+        if (obtainAttributes.hasValue(R$styleable.RadiusDrawable_radius)) {
+            this.cornerRadius = obtainAttributes.getDimension(R$styleable.RadiusDrawable_radius, this.cornerRadius);
+            obtainAttributes.recycle();
         }
     }
 

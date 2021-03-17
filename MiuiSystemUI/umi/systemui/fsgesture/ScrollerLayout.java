@@ -10,7 +10,7 @@ public class ScrollerLayout extends ViewGroup {
     private int mHorizontalGap;
 
     public ScrollerLayout(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ScrollerLayout(Context context, AttributeSet attributeSet) {

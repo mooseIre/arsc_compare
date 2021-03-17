@@ -5,13 +5,13 @@ import android.content.Intent;
 public interface LocationController extends CallbackController<LocationChangeCallback> {
 
     public interface LocationChangeCallback {
-        void onLocationActiveChanged(boolean z) {
+        default void onLocationActiveChanged(boolean z) {
         }
 
-        void onLocationSettingsChanged(boolean z) {
+        default void onLocationSettingsChanged(boolean z) {
         }
 
-        void onLocationStatusChanged(Intent intent) {
+        default void onLocationStatusChanged(Intent intent) {
         }
     }
 

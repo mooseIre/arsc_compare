@@ -14,10 +14,8 @@ public final class RingerModeLiveData extends MutableLiveData<Integer> {
     private final BroadcastDispatcher broadcastDispatcher;
     private final Executor executor;
     private final IntentFilter filter;
-    /* access modifiers changed from: private */
-    public final Function0<Integer> getter;
-    /* access modifiers changed from: private */
-    public boolean initialSticky;
+    private final Function0<Integer> getter;
+    private boolean initialSticky;
     private final RingerModeLiveData$receiver$1 receiver = new RingerModeLiveData$receiver$1(this);
 
     public RingerModeLiveData(@NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull Executor executor2, @NotNull String str, @NotNull Function0<Integer> function0) {
@@ -35,6 +33,7 @@ public final class RingerModeLiveData extends MutableLiveData<Integer> {
         return this.initialSticky;
     }
 
+    @Override // androidx.lifecycle.LiveData
     @NotNull
     public Integer getValue() {
         Integer num = (Integer) super.getValue();
@@ -42,6 +41,7 @@ public final class RingerModeLiveData extends MutableLiveData<Integer> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.lifecycle.LiveData
     public void onActive() {
         super.onActive();
         BroadcastDispatcher broadcastDispatcher2 = this.broadcastDispatcher;
@@ -55,6 +55,7 @@ public final class RingerModeLiveData extends MutableLiveData<Integer> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.lifecycle.LiveData
     public void onInactive() {
         super.onInactive();
         this.broadcastDispatcher.unregisterReceiver(this.receiver);

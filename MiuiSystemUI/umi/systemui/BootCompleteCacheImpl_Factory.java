@@ -11,6 +11,7 @@ public final class BootCompleteCacheImpl_Factory implements Factory<BootComplete
         this.dumpManagerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BootCompleteCacheImpl get() {
         return provideInstance(this.dumpManagerProvider);
     }

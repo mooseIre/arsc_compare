@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideAlarmManagerFactory implements Fa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AlarmManager get() {
         return provideInstance(this.contextProvider);
     }

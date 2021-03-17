@@ -11,6 +11,7 @@ public final class CastControllerImpl_Factory implements Factory<CastControllerI
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public CastControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

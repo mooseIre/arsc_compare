@@ -4,7 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Path;
 import android.view.View;
 
-interface BubbleViewProvider {
+/* access modifiers changed from: package-private */
+public interface BubbleViewProvider {
     Bitmap getBadgedImage();
 
     int getDisplayId();

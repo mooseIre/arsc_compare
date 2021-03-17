@@ -79,7 +79,8 @@ public class MiuiBatteryMeterIconView extends ImageView {
     private boolean mUseTint;
     private Drawable mWhiteBg;
 
-    private enum BatteryStatus {
+    /* access modifiers changed from: private */
+    public enum BatteryStatus {
         UNKNOWN,
         LOW,
         LOW_DIGIT,
@@ -92,7 +93,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
     }
 
     public MiuiBatteryMeterIconView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiBatteryMeterIconView(Context context, AttributeSet attributeSet) {
@@ -147,7 +148,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
             this.mLayerDrawable = null;
             this.mProgressClipDrawable = null;
             this.mTintBgDrawable = null;
-            setImageDrawable((Drawable) null);
+            setImageDrawable(null);
             return;
         }
         LayerDrawable layerDrawable = (LayerDrawable) getContext().getResources().getDrawable(C0013R$drawable.battery_meter);
@@ -265,7 +266,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
         if (this.mUseTint != z) {
             this.mUseTint = z;
             if (!z) {
-                this.mLayerDrawable.setTintList((ColorStateList) null);
+                this.mLayerDrawable.setTintList(null);
             }
             z3 = true;
         }
@@ -288,7 +289,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
                     this.mProgressClipDrawable.setDrawable(drawable3);
                 }
             } else {
-                this.mProgressClipDrawable.setTintList((ColorStateList) null);
+                this.mProgressClipDrawable.setTintList(null);
                 this.mLayerDrawable.setDrawableByLayerId(C0015R$id.background, this.mDark ? this.mDarkBg : this.mWhiteBg);
                 if (this.mDark) {
                     drawable = this.mProgressDarkDrawables.get(getStatus());
@@ -309,8 +310,9 @@ public class MiuiBatteryMeterIconView extends ImageView {
         }
     }
 
+    /* access modifiers changed from: package-private */
     /* renamed from: com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$1  reason: invalid class name */
-    static /* synthetic */ class AnonymousClass1 {
+    public static /* synthetic */ class AnonymousClass1 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(18:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|(3:17|18|20)) */
@@ -325,64 +327,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
         /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus[] r0 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.values()
-                int r0 = r0.length
-                int[] r0 = new int[r0]
-                $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus = r0
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.LOW     // Catch:{ NoSuchFieldError -> 0x0012 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
-                r2 = 1
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
-            L_0x0012:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x001d }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.LOW_DIGIT     // Catch:{ NoSuchFieldError -> 0x001d }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
-                r2 = 2
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
-            L_0x001d:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0028 }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.NORMAL_DIGIT     // Catch:{ NoSuchFieldError -> 0x0028 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
-                r2 = 3
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
-            L_0x0028:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0033 }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.POWER_SAVE     // Catch:{ NoSuchFieldError -> 0x0033 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
-                r2 = 4
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
-            L_0x0033:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x003e }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.POWER_SAVE_DIGIT     // Catch:{ NoSuchFieldError -> 0x003e }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
-                r2 = 5
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
-            L_0x003e:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0049 }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.CHARGING     // Catch:{ NoSuchFieldError -> 0x0049 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
-                r2 = 6
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
-            L_0x0049:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0054 }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.CHARGING_DIGIT     // Catch:{ NoSuchFieldError -> 0x0054 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
-                r2 = 7
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
-            L_0x0054:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x0060 }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.NORMAL     // Catch:{ NoSuchFieldError -> 0x0060 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
-                r2 = 8
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
-            L_0x0060:
-                int[] r0 = $SwitchMap$com$android$systemui$statusbar$policy$MiuiBatteryMeterIconView$BatteryStatus     // Catch:{ NoSuchFieldError -> 0x006c }
-                com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView$BatteryStatus r1 = com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.BatteryStatus.UNKNOWN     // Catch:{ NoSuchFieldError -> 0x006c }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
-                r2 = 9
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
-            L_0x006c:
-                return
+            // Method dump skipped, instructions count: 109
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MiuiBatteryMeterIconView.AnonymousClass1.<clinit>():void");
         }
@@ -479,7 +424,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
             super.onDraw(canvas);
             return;
         }
-        int saveLayer = canvas.saveLayer(0.0f, 0.0f, (float) canvas.getWidth(), (float) canvas.getHeight(), (Paint) null, 31);
+        int saveLayer = canvas.saveLayer(0.0f, 0.0f, (float) canvas.getWidth(), (float) canvas.getHeight(), null, 31);
         super.onDraw(canvas);
         if (this.mMaskCharging && (path = this.mChargingMaskPath) != null && this.mCharging && !this.mIsDigit) {
             if (this.mQuickCharging) {

@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideAlwaysOnDisplayPolicyFactory implem
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AlwaysOnDisplayPolicy get() {
         return provideInstance(this.module, this.contextProvider);
     }

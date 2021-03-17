@@ -2,8 +2,9 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.view.View;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationSectionsManager.kt */
-final class NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$1 implements View.OnClickListener {
+public final class NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$1 implements View.OnClickListener {
     final /* synthetic */ NotificationSectionsManager this$0;
 
     NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$1(NotificationSectionsManager notificationSectionsManager) {

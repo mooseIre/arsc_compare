@@ -20,6 +20,7 @@ public final class GlobalActionsImpl_Factory implements Factory<GlobalActionsImp
         this.blurUtilsProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public GlobalActionsImpl get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.globalActionsDialogLazyProvider, this.blurUtilsProvider);
     }

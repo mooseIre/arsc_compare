@@ -2,7 +2,6 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.view.MotionEvent;
-import com.android.systemui.statusbar.notification.ActivityLaunchAnimator;
 import com.android.systemui.statusbar.notification.MiniWindowExpandParameters;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback;
@@ -46,6 +45,7 @@ public final class MiuiHeadsUpTouchHelper extends HeadsUpTouchHelper implements 
         this.mTouchHelper = new AppMiniWindowRowTouchHelper(this, notificationEntryManager, eventTracker, MiniWindowEventSource.HEADS_UP);
     }
 
+    @Override // com.android.systemui.Gefingerpoken, com.android.systemui.statusbar.phone.HeadsUpTouchHelper
     public boolean onInterceptTouchEvent(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if (!this.mTouchHelper.onInterceptTouchEvent(motionEvent)) {
@@ -54,6 +54,7 @@ public final class MiuiHeadsUpTouchHelper extends HeadsUpTouchHelper implements 
         return true;
     }
 
+    @Override // com.android.systemui.Gefingerpoken, com.android.systemui.statusbar.phone.HeadsUpTouchHelper
     public boolean onTouchEvent(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if (!this.mTouchHelper.onTouchEvent(motionEvent)) {
@@ -62,6 +63,7 @@ public final class MiuiHeadsUpTouchHelper extends HeadsUpTouchHelper implements 
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public void onMiniWindowTrackingStart() {
         this.mTrackingMiniWindowHeadsUp = true;
         setTrackingHeadsUp(true);
@@ -69,36 +71,43 @@ public final class MiuiHeadsUpTouchHelper extends HeadsUpTouchHelper implements 
         this.mPanel.clearNotificationEffects();
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public void onMiniWindowTrackingEnd() {
         this.mTrackingMiniWindowHeadsUp = false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public void onMiniWindowReset() {
-        this.mContainer.applyExpandAnimationParams((ActivityLaunchAnimator.ExpandAnimationParameters) null);
+        this.mContainer.applyExpandAnimationParams(null);
         setTrackingHeadsUp(false);
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public void onExpandedParamsUpdated(@NotNull MiniWindowExpandParameters miniWindowExpandParameters) {
         Intrinsics.checkParameterIsNotNull(miniWindowExpandParameters, "expandParams");
         this.mContainer.applyExpandAnimationParams(miniWindowExpandParameters);
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public void onMiniWindowAppLaunched() {
         this.mStackScrollLayout.setHeadsUpGoingAwayAnimationsAllowed(false);
         this.mHeadsUpManager.releaseAllImmediately();
         this.mStackScrollLayout.setHeadsUpGoingAwayAnimationsAllowed(true);
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     @Nullable
     public ExpandableView getChildAtRawPosition(float f, float f2) {
         return this.callback.getChildAtRawPosition(f, f2);
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public boolean canChildBePicked(@NotNull ExpandableView expandableView) {
         Intrinsics.checkParameterIsNotNull(expandableView, "child");
         return !this.callback.isExpanded() && (expandableView instanceof MiuiExpandableNotificationRow) && ((MiuiExpandableNotificationRow) expandableView).isHeadsUp() && expandableView.isPinned();
     }
 
+    @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     @NotNull
     public Context getContext() {
         Context context = this.callback.getContext();

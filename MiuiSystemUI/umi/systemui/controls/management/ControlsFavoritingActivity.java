@@ -28,42 +28,30 @@ import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executor;
+import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ControlsFavoritingActivity.kt */
 public final class ControlsFavoritingActivity extends LifecycleActivity {
-    /* access modifiers changed from: private */
-    public CharSequence appName;
-    /* access modifiers changed from: private */
-    public Runnable cancelLoadRunnable;
+    private CharSequence appName;
+    private Runnable cancelLoadRunnable;
     private Comparator<StructureContainer> comparator;
-    /* access modifiers changed from: private */
-    public ComponentName component;
-    /* access modifiers changed from: private */
-    public final ControlsControllerImpl controller;
-    /* access modifiers changed from: private */
-    public final ControlsFavoritingActivity$controlsModelCallback$1 controlsModelCallback;
+    private ComponentName component;
+    private final ControlsControllerImpl controller;
+    private final ControlsFavoritingActivity$controlsModelCallback$1 controlsModelCallback;
     private final ControlsFavoritingActivity$currentUserTracker$1 currentUserTracker;
     private View doneButton;
-    /* access modifiers changed from: private */
-    public final Executor executor;
+    private final Executor executor;
     private boolean fromProviderSelector;
-    /* access modifiers changed from: private */
-    public final GlobalActionsComponent globalActionsComponent;
+    private final GlobalActionsComponent globalActionsComponent;
     private boolean isPagerLoaded;
-    /* access modifiers changed from: private */
-    public List<StructureContainer> listOfStructures = CollectionsKt__CollectionsKt.emptyList();
+    private List<StructureContainer> listOfStructures = CollectionsKt__CollectionsKt.emptyList();
     private final ControlsFavoritingActivity$listingCallback$1 listingCallback;
     private final ControlsListingController listingController;
-    /* access modifiers changed from: private */
-    public TooltipManager mTooltipManager;
+    private TooltipManager mTooltipManager;
     private View otherAppsButton;
     private ManagementPageIndicator pageIndicator;
     private TextView statusText;
-    /* access modifiers changed from: private */
-    public CharSequence structureExtra;
+    private CharSequence structureExtra;
     private ViewPager2 structurePager;
     private TextView subtitleView;
     private TextView titleView;
@@ -84,6 +72,10 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
         Intrinsics.throwUninitializedPropertyAccessException("doneButton");
         throw null;
+    }
+
+    public static final /* synthetic */ TooltipManager access$getMTooltipManager$p(ControlsFavoritingActivity controlsFavoritingActivity) {
+        return controlsFavoritingActivity.mTooltipManager;
     }
 
     public static final /* synthetic */ View access$getOtherAppsButton$p(ControlsFavoritingActivity controlsFavoritingActivity) {
@@ -140,7 +132,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    public ControlsFavoritingActivity(@NotNull Executor executor2, @NotNull ControlsControllerImpl controlsControllerImpl, @NotNull ControlsListingController controlsListingController, @NotNull BroadcastDispatcher broadcastDispatcher, @NotNull GlobalActionsComponent globalActionsComponent2) {
+    public ControlsFavoritingActivity(Executor executor2, ControlsControllerImpl controlsControllerImpl, ControlsListingController controlsListingController, BroadcastDispatcher broadcastDispatcher, GlobalActionsComponent globalActionsComponent2) {
         Intrinsics.checkParameterIsNotNull(executor2, "executor");
         Intrinsics.checkParameterIsNotNull(controlsControllerImpl, "controller");
         Intrinsics.checkParameterIsNotNull(controlsListingController, "listingController");
@@ -162,8 +154,8 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         animateExitAndFinish();
     }
 
-    /* access modifiers changed from: protected */
-    public void onCreate(@Nullable Bundle bundle) {
+    @Override // com.android.systemui.util.LifecycleActivity
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Resources resources = getResources();
         Intrinsics.checkExpressionValueIsNotNull(resources, "resources");
@@ -238,7 +230,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
             if (textView != null) {
                 Context context = textView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "statusText.context");
-                TooltipManager tooltipManager = new TooltipManager(context, "ControlsStructureSwipeTooltipCount", 2, false, 8, (DefaultConstructorMarker) null);
+                TooltipManager tooltipManager = new TooltipManager(context, "ControlsStructureSwipeTooltipCount", 2, false, 8, null);
                 this.mTooltipManager = tooltipManager;
                 addContentView(tooltipManager != null ? tooltipManager.getLayout() : null, new FrameLayout.LayoutParams(-2, -2, 51));
             } else {
@@ -278,8 +270,8 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    public final void animateExitAndFinish() {
+    /* access modifiers changed from: public */
+    private final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");
         ControlsAnimations.exitAnimation(viewGroup, new ControlsFavoritingActivity$animateExitAndFinish$1(this)).start();
@@ -299,7 +291,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         this.doneButton = requireViewById2;
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onPause() {
         super.onPause();
         TooltipManager tooltipManager = this.mTooltipManager;
@@ -308,14 +300,14 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onStart() {
         super.onStart();
         this.listingController.addCallback(this.listingCallback);
         this.currentUserTracker.startTracking();
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onResume() {
         super.onResume();
         if (!this.isPagerLoaded) {
@@ -325,14 +317,14 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onStop() {
         super.onStop();
         this.listingController.removeCallback(this.listingCallback);
         this.currentUserTracker.stopTracking();
     }
 
-    public void onConfigurationChanged(@NotNull Configuration configuration) {
+    public void onConfigurationChanged(Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         super.onConfigurationChanged(configuration);
         TooltipManager tooltipManager = this.mTooltipManager;
@@ -341,7 +333,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         Runnable runnable = this.cancelLoadRunnable;
         if (runnable != null) {

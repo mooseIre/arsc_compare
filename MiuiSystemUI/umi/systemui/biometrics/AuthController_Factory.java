@@ -14,6 +14,7 @@ public final class AuthController_Factory implements Factory<AuthController> {
         this.commandQueueProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public AuthController get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider);
     }

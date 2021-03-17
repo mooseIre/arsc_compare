@@ -9,10 +9,12 @@ import kotlin.jvm.internal.Intrinsics;
 public final class MiuiNotificationSectionsManager$configurationListener$1 implements ConfigurationController.ConfigurationListener {
     final /* synthetic */ MiuiNotificationSectionsManager this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiNotificationSectionsManager$configurationListener$1(MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
         this.this$0 = miuiNotificationSectionsManager;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         ZenModeView zenModeView = this.this$0.getZenModeView();
         if (zenModeView != null) {
@@ -20,6 +22,7 @@ public final class MiuiNotificationSectionsManager$configurationListener$1 imple
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onLocaleListChanged() {
         MiuiNotificationSectionsManager miuiNotificationSectionsManager = this.this$0;
         LayoutInflater from = LayoutInflater.from(miuiNotificationSectionsManager.getParent().getContext());

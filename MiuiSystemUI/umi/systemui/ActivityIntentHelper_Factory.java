@@ -11,6 +11,7 @@ public final class ActivityIntentHelper_Factory implements Factory<ActivityInten
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ActivityIntentHelper get() {
         return provideInstance(this.contextProvider);
     }

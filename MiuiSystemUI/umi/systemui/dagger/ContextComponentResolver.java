@@ -23,29 +23,34 @@ public class ContextComponentResolver implements ContextComponentHelper {
         this.mBroadcastReceiverCreators = map5;
     }
 
+    @Override // com.android.systemui.dagger.ContextComponentHelper
     public Activity resolveActivity(String str) {
         return (Activity) resolve(str, this.mActivityCreators);
     }
 
+    @Override // com.android.systemui.dagger.ContextComponentHelper
     public BroadcastReceiver resolveBroadcastReceiver(String str) {
         return (BroadcastReceiver) resolve(str, this.mBroadcastReceiverCreators);
     }
 
+    @Override // com.android.systemui.dagger.ContextComponentHelper
     public RecentsImplementation resolveRecents(String str) {
         return (RecentsImplementation) resolve(str, this.mRecentsCreators);
     }
 
+    @Override // com.android.systemui.dagger.ContextComponentHelper
     public Service resolveService(String str) {
         return (Service) resolve(str, this.mServiceCreators);
     }
 
+    @Override // com.android.systemui.dagger.ContextComponentHelper
     public SystemUI resolveSystemUI(String str) {
         return (SystemUI) resolve(str, this.mSystemUICreators);
     }
 
     private <T> T resolve(String str, Map<Class<?>, Provider<T>> map) {
         try {
-            Provider provider = map.get(Class.forName(str));
+            Provider<T> provider = map.get(Class.forName(str));
             if (provider == null) {
                 return null;
             }

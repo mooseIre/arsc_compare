@@ -31,10 +31,8 @@ import java.util.concurrent.Executor;
 public class MediaControlPanel {
     public static final int[] ACTION_IDS = {C0015R$id.action0, C0015R$id.action1, C0015R$id.action2, C0015R$id.action3, C0015R$id.action4};
     protected final ActivityStarter mActivityStarter;
-    /* access modifiers changed from: private */
-    public int mAlbumArtRadius;
-    /* access modifiers changed from: private */
-    public int mAlbumArtSize;
+    private int mAlbumArtRadius;
+    private int mAlbumArtSize;
     protected int mBackgroundColor;
     protected final Executor mBackgroundExecutor;
     protected Context mContext;
@@ -45,6 +43,8 @@ public class MediaControlPanel {
     protected MediaSession.Token mToken;
     private PlayerViewHolder mViewHolder;
     private final ViewOutlineProvider mViewOutlineProvider = new ViewOutlineProvider() {
+        /* class com.android.systemui.media.MediaControlPanel.AnonymousClass1 */
+
         public void getOutline(View view, Outline outline) {
             outline.setRoundRect(0, 0, MediaControlPanel.this.mAlbumArtSize, MediaControlPanel.this.mAlbumArtSize, (float) MediaControlPanel.this.mAlbumArtRadius);
         }
@@ -116,6 +116,7 @@ public class MediaControlPanel {
             PendingIntent clickIntent = mediaData.getClickIntent();
             if (clickIntent != null) {
                 this.mViewHolder.getPlayer().setOnClickListener(new View.OnClickListener(clickIntent) {
+                    /* class com.android.systemui.media.$$Lambda$MediaControlPanel$r2fXPXw2z1qXnX31VuekOYH3JxQ */
                     public final /* synthetic */ PendingIntent f$1;
 
                     {
@@ -147,6 +148,7 @@ public class MediaControlPanel {
             setVisibleAndAlpha(collapsedLayout, C0015R$id.media_seamless, true);
             setVisibleAndAlpha(expandedLayout, C0015R$id.media_seamless, true);
             this.mViewHolder.getSeamless().setOnClickListener(new View.OnClickListener(mediaData) {
+                /* class com.android.systemui.media.$$Lambda$MediaControlPanel$TE2FbF426T83JfnZb2pju5PDfs */
                 public final /* synthetic */ MediaData f$1;
 
                 {
@@ -176,7 +178,7 @@ public class MediaControlPanel {
             collapsedLayout.setAlpha(id, f);
             this.mViewHolder.getSeamless().setEnabled(!mediaData.getResumption());
             if (z2) {
-                seamlessIcon.setImageDrawable((Drawable) null);
+                seamlessIcon.setImageDrawable(null);
                 seamlessText.setText((CharSequence) null);
             } else if (device != null) {
                 Drawable icon = device.getIcon();
@@ -209,6 +211,7 @@ public class MediaControlPanel {
                 } else {
                     action.setEnabled(true);
                     action.setOnClickListener(new View.OnClickListener(action2) {
+                        /* class com.android.systemui.media.$$Lambda$MediaControlPanel$_SKXzyUYhhL8GMTnpSLM2qnRFFw */
                         public final /* synthetic */ Runnable f$0;
 
                         {
@@ -230,6 +233,7 @@ public class MediaControlPanel {
                 i3++;
             }
             this.mBackgroundExecutor.execute(new Runnable(getController()) {
+                /* class com.android.systemui.media.$$Lambda$MediaControlPanel$hrbddZ18Mr3EF0WaK5GAsQc9Ds */
                 public final /* synthetic */ MediaController f$1;
 
                 {

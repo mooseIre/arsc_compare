@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.notification.row;
 
+import android.animation.TimeInterpolator;
 import android.app.INotificationManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -48,19 +49,16 @@ import javax.inject.Provider;
 
 public class NotificationConversationInfo extends LinearLayout implements NotificationGuts.GutsContent {
     private int mActualHeight;
-    /* access modifiers changed from: private */
-    public int mAppBubble;
+    private int mAppBubble;
     private String mAppName;
     private int mAppUid;
     private Handler mBgHandler;
-    /* access modifiers changed from: private */
-    public BubbleController mBubbleController;
+    private BubbleController mBubbleController;
     private Notification.BubbleMetadata mBubbleMetadata;
     private Provider<PriorityOnboardingDialogController.Builder> mBuilderProvider;
     private TextView mDefaultDescriptionView;
     private String mDelegatePkg;
-    /* access modifiers changed from: private */
-    public NotificationEntry mEntry;
+    private NotificationEntry mEntry;
     private NotificationGuts mGutsContainer;
     private INotificationManager mINotificationManager;
     private ConversationIconFactory mIconFactory;
@@ -69,21 +67,29 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     private NotificationChannel mNotificationChannel;
     private OnConversationSettingsClickListener mOnConversationSettingsClickListener;
     private View.OnClickListener mOnDefaultClick = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$MMDb1SDKJPIzmFXTDLDSkJw5h7E */
+
         public final void onClick(View view) {
             NotificationConversationInfo.this.lambda$new$1$NotificationConversationInfo(view);
         }
     };
     private View.OnClickListener mOnDone = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$a2pWqojuRPeVF2IYicCGQXQa0w */
+
         public final void onClick(View view) {
             NotificationConversationInfo.this.lambda$new$3$NotificationConversationInfo(view);
         }
     };
     private View.OnClickListener mOnFavoriteClick = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$2f29XNzTuIQXwaIUqXUdjSebnE */
+
         public final void onClick(View view) {
             NotificationConversationInfo.this.lambda$new$0$NotificationConversationInfo(view);
         }
     };
     private View.OnClickListener mOnMuteClick = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$b1cMFzfzYhzwNF5Nsg_2Oi0i80o */
+
         public final void onClick(View view) {
             NotificationConversationInfo.this.lambda$new$2$NotificationConversationInfo(view);
         }
@@ -113,6 +119,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     public interface OnSnoozeClickListener {
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public View getContentView() {
         return this;
     }
@@ -122,13 +129,16 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean needsFalsingProtection() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void onFinishedClosing() {
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean willBeRemoved() {
         return false;
     }
@@ -221,7 +231,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
 
     private void bindActions() {
         if (this.mAppBubble == 1) {
-            ((TextView) findViewById(C0015R$id.default_summary)).setText(getResources().getString(C0021R$string.notification_channel_summary_default_with_bubbles, new Object[]{this.mAppName}));
+            ((TextView) findViewById(C0015R$id.default_summary)).setText(getResources().getString(C0021R$string.notification_channel_summary_default_with_bubbles, this.mAppName));
         }
         findViewById(C0015R$id.priority).setOnClickListener(this.mOnFavoriteClick);
         findViewById(C0015R$id.default_behavior).setOnClickListener(this.mOnDefaultClick);
@@ -243,6 +253,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             return null;
         }
         return new View.OnClickListener(i) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$jd7IzkV9FIzPNu4O1qyUjmumXQA */
             public final /* synthetic */ int f$1;
 
             {
@@ -333,10 +344,10 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 
@@ -347,8 +358,8 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             TransitionSet transitionSet = new TransitionSet();
             transitionSet.setOrdering(0);
             transitionSet.addTransition(new Fade(2)).addTransition(new ChangeBounds()).addTransition(new Fade(1).setStartDelay(150).setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN));
-            transitionSet.setDuration(350);
-            transitionSet.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
+            transitionSet.setDuration(350L);
+            transitionSet.setInterpolator((TimeInterpolator) Interpolators.FAST_OUT_SLOW_IN);
             TransitionManager.beginDelayedTransition(this, transitionSet);
         }
         View findViewById = findViewById(C0015R$id.priority);
@@ -359,6 +370,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             this.mSilentDescriptionView.setVisibility(8);
             this.mPriorityDescriptionView.setVisibility(8);
             post(new Runnable(findViewById, findViewById2, findViewById3) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$u26KNDMKK01ES1xNd4IeWex638 */
                 public final /* synthetic */ View f$0;
                 public final /* synthetic */ View f$1;
                 public final /* synthetic */ View f$2;
@@ -378,6 +390,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             this.mDefaultDescriptionView.setVisibility(8);
             this.mSilentDescriptionView.setVisibility(8);
             post(new Runnable(findViewById, findViewById2, findViewById3) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$B9YxfzUwTI8bD0EYToJb0uOXmZg */
                 public final /* synthetic */ View f$0;
                 public final /* synthetic */ View f$1;
                 public final /* synthetic */ View f$2;
@@ -397,6 +410,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             this.mDefaultDescriptionView.setVisibility(8);
             this.mPriorityDescriptionView.setVisibility(8);
             post(new Runnable(findViewById, findViewById2, findViewById3) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$kfzFLSnOxGZqEtBbC1UizD6b0 */
                 public final /* synthetic */ View f$0;
                 public final /* synthetic */ View f$1;
                 public final /* synthetic */ View f$2;
@@ -464,6 +478,8 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         VisualStabilityManager visualStabilityManager = this.mVisualStabilityManager;
         Objects.requireNonNull(visualStabilityManager);
         handler.postDelayed(new Runnable() {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$s0tJwNXwV57TLmqR7wIRXxgPwoc */
+
             public final void run() {
                 VisualStabilityManager.this.temporarilyAllowReordering();
             }
@@ -476,13 +492,13 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
 
     private void showPriorityOnboarding() {
         boolean z;
-        View inflate = LayoutInflater.from(this.mContext).inflate(C0017R$layout.priority_onboarding_half_shell, (ViewGroup) null);
+        View inflate = LayoutInflater.from(((LinearLayout) this).mContext).inflate(C0017R$layout.priority_onboarding_half_shell, (ViewGroup) null);
         boolean z2 = true;
         try {
             if (this.mINotificationManager.getConsolidatedNotificationPolicy().priorityConversationSenders == 2) {
                 z = true;
                 Notification.BubbleMetadata bubbleMetadata = this.mBubbleMetadata;
-                if (bubbleMetadata == null || !bubbleMetadata.getAutoExpandBubble() || Settings.Global.getInt(this.mContext.getContentResolver(), "notification_bubbles", 0) != 1) {
+                if (bubbleMetadata == null || !bubbleMetadata.getAutoExpandBubble() || Settings.Global.getInt(((LinearLayout) this).mContext.getContentResolver(), "notification_bubbles", 0) != 1) {
                     z2 = false;
                 }
                 PriorityOnboardingDialogController.Builder builder = this.mBuilderProvider.get();
@@ -516,14 +532,17 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         build2.show();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void setGutsParent(NotificationGuts notificationGuts) {
         this.mGutsContainer = notificationGuts;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean shouldBeSaved() {
         return this.mPressedApply;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean handleCloseControls(boolean z, boolean z2) {
         if (!z || this.mSelectedAction <= -1) {
             return false;
@@ -532,6 +551,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public int getActualHeight() {
         return this.mActualHeight;
     }
@@ -542,7 +562,8 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         this.mActualHeight = getHeight();
     }
 
-    class UpdateChannelRunnable implements Runnable {
+    /* access modifiers changed from: package-private */
+    public class UpdateChannelRunnable implements Runnable {
         private final int mAction;
         private final String mAppPkg;
         private final int mAppUid;
@@ -574,6 +595,8 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
                             this.mINotificationManager.setBubblesAllowed(this.mAppPkg, this.mAppUid, 2);
                         }
                         NotificationConversationInfo.this.post(new Runnable() {
+                            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationConversationInfo$UpdateChannelRunnable$_TdBndU_iWORDLe32ALCWoJYfU */
+
                             public final void run() {
                                 NotificationConversationInfo.UpdateChannelRunnable.this.lambda$run$0$NotificationConversationInfo$UpdateChannelRunnable();
                             }

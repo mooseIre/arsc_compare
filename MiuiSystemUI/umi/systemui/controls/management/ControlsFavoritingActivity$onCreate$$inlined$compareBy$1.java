@@ -10,7 +10,10 @@ public final class ControlsFavoritingActivity$onCreate$$inlined$compareBy$1<T> i
         this.$comparator = comparator;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r0v1, resolved type: java.util.Comparator */
+    /* JADX WARN: Multi-variable type inference failed */
+    @Override // java.util.Comparator
     public final int compare(T t, T t2) {
-        return this.$comparator.compare(((StructureContainer) t).getStructureName(), ((StructureContainer) t2).getStructureName());
+        return this.$comparator.compare(t.getStructureName(), t2.getStructureName());
     }
 }

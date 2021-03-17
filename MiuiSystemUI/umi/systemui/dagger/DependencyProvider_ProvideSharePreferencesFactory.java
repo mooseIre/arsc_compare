@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideSharePreferencesFactory implements 
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SharedPreferences get() {
         return provideInstance(this.module, this.contextProvider);
     }

@@ -11,6 +11,7 @@ public final class ControlsFavoritingActivity$setUpPager$$inlined$apply$lambda$1
         this.this$0 = controlsFavoritingActivity;
     }
 
+    @Override // androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
     public void onPageSelected(int i) {
         super.onPageSelected(i);
         CharSequence structureName = ((StructureContainer) this.this$0.listOfStructures.get(i)).getStructureName();
@@ -21,6 +22,7 @@ public final class ControlsFavoritingActivity$setUpPager$$inlined$apply$lambda$1
         ControlsFavoritingActivity.access$getTitleView$p(this.this$0).requestFocus();
     }
 
+    @Override // androidx.viewpager2.widget.ViewPager2.OnPageChangeCallback
     public void onPageScrolled(int i, float f, int i2) {
         super.onPageScrolled(i, f, i2);
         ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0).setLocation(((float) i) + f);

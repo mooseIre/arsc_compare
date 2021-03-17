@@ -19,6 +19,7 @@ public final class LogBufferEulogizer_Factory implements Factory<LogBufferEulogi
         this.filesProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public LogBufferEulogizer get() {
         return provideInstance(this.contextProvider, this.dumpManagerProvider, this.systemClockProvider, this.filesProvider);
     }

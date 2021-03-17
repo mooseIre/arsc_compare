@@ -19,27 +19,19 @@ import com.android.systemui.statusbar.policy.BrightnessMirrorController;
 
 public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
     private final CompoundButton.OnCheckedChangeListener mCheckListener;
-    /* access modifiers changed from: private */
-    public boolean mIgnoreTrackingEvent;
+    private boolean mIgnoreTrackingEvent;
     private TextView mLabel;
-    /* access modifiers changed from: private */
-    public int mLastTouchAction;
-    /* access modifiers changed from: private */
-    public ToggleSlider.Listener mListener;
-    /* access modifiers changed from: private */
-    public ToggleSliderView mMirror;
-    /* access modifiers changed from: private */
-    public BrightnessMirrorController mMirrorController;
+    private int mLastTouchAction;
+    private ToggleSlider.Listener mListener;
+    private ToggleSliderView mMirror;
+    private BrightnessMirrorController mMirrorController;
     private final SeekBar.OnSeekBarChangeListener mSeekListener;
-    /* access modifiers changed from: private */
-    public ToggleSeekBar mSlider;
-    /* access modifiers changed from: private */
-    public CompoundButton mToggle;
-    /* access modifiers changed from: private */
-    public boolean mTracking;
+    private ToggleSeekBar mSlider;
+    private CompoundButton mToggle;
+    private boolean mTracking;
 
     public ToggleSliderView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ToggleSliderView(Context context, AttributeSet attributeSet) {
@@ -49,12 +41,14 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
     public ToggleSliderView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mCheckListener = new CompoundButton.OnCheckedChangeListener() {
+            /* class com.android.systemui.settings.ToggleSliderView.AnonymousClass1 */
+
             public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
                 ToggleSliderView.this.mSlider.setEnabled(!z);
                 if (ToggleSliderView.this.mListener != null) {
-                    ToggleSlider.Listener access$100 = ToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = ToggleSliderView.this.mListener;
                     ToggleSliderView toggleSliderView = ToggleSliderView.this;
-                    access$100.onChanged(toggleSliderView, toggleSliderView.mTracking, z, ToggleSliderView.this.mSlider.getProgress(), false);
+                    listener.onChanged(toggleSliderView, toggleSliderView.mTracking, z, ToggleSliderView.this.mSlider.getProgress(), false);
                 }
                 if (ToggleSliderView.this.mMirror != null) {
                     ToggleSliderView.this.mMirror.mToggle.setChecked(z);
@@ -62,26 +56,28 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
             }
         };
         this.mSeekListener = new SeekBar.OnSeekBarChangeListener() {
+            /* class com.android.systemui.settings.ToggleSliderView.AnonymousClass2 */
+
             public void onProgressChanged(SeekBar seekBar, int i, boolean z) {
                 if (ToggleSliderView.this.mListener != null) {
-                    ToggleSlider.Listener access$100 = ToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = ToggleSliderView.this.mListener;
                     ToggleSliderView toggleSliderView = ToggleSliderView.this;
-                    access$100.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), i, false);
+                    listener.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), i, false);
                 }
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
                 if (ToggleSliderView.this.mLastTouchAction == 1) {
-                    boolean unused = ToggleSliderView.this.mIgnoreTrackingEvent = true;
+                    ToggleSliderView.this.mIgnoreTrackingEvent = true;
                     Log.w("ToggleSliderView", "ignoring onStartTrackingTouch, maybe tap event");
                     return;
                 }
-                boolean unused2 = ToggleSliderView.this.mTracking = true;
+                ToggleSliderView.this.mTracking = true;
                 if (ToggleSliderView.this.mListener != null) {
                     ToggleSliderView.this.mListener.onStart(seekBar.getProgress());
-                    ToggleSlider.Listener access$100 = ToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = ToggleSliderView.this.mListener;
                     ToggleSliderView toggleSliderView = ToggleSliderView.this;
-                    access$100.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), ToggleSliderView.this.mSlider.getProgress(), false);
+                    listener.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), ToggleSliderView.this.mSlider.getProgress(), false);
                 }
                 ToggleSliderView.this.mToggle.setChecked(false);
                 if (ToggleSliderView.this.mMirrorController != null) {
@@ -92,15 +88,15 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 if (ToggleSliderView.this.mIgnoreTrackingEvent) {
-                    boolean unused = ToggleSliderView.this.mIgnoreTrackingEvent = false;
+                    ToggleSliderView.this.mIgnoreTrackingEvent = false;
                     Log.w("ToggleSliderView", "ignoring onStopTrackingTouch, maybe tap event");
                     return;
                 }
-                boolean unused2 = ToggleSliderView.this.mTracking = false;
+                ToggleSliderView.this.mTracking = false;
                 if (ToggleSliderView.this.mListener != null) {
-                    ToggleSlider.Listener access$100 = ToggleSliderView.this.mListener;
+                    ToggleSlider.Listener listener = ToggleSliderView.this.mListener;
                     ToggleSliderView toggleSliderView = ToggleSliderView.this;
-                    access$100.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), ToggleSliderView.this.mSlider.getProgress(), true);
+                    listener.onChanged(toggleSliderView, toggleSliderView.mTracking, ToggleSliderView.this.mToggle.isChecked(), ToggleSliderView.this.mSlider.getProgress(), true);
                     ToggleSliderView.this.mListener.onStop(seekBar.getProgress());
                 }
                 if (ToggleSliderView.this.mMirrorController != null) {
@@ -157,6 +153,7 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
         this.mSlider.setEnforcedAdmin(enforcedAdmin);
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setOnChangedListener(ToggleSlider.Listener listener) {
         this.mListener = listener;
     }
@@ -165,10 +162,12 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
         this.mToggle.setChecked(z);
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public boolean isChecked() {
         return this.mToggle.isChecked();
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setMax(int i) {
         this.mSlider.setMax(i);
         ToggleSliderView toggleSliderView = this.mMirror;
@@ -177,6 +176,7 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
         }
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public void setValue(int i) {
         this.mSlider.setProgress(i);
         ToggleSliderView toggleSliderView = this.mMirror;
@@ -185,6 +185,7 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
         }
     }
 
+    @Override // com.android.systemui.settings.ToggleSlider
     public int getValue() {
         return this.mSlider.getProgress();
     }

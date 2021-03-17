@@ -39,6 +39,7 @@ public final class AssistManager_Factory implements Factory<AssistManager> {
         this.assistLoggerProvider = provider11;
     }
 
+    @Override // javax.inject.Provider
     public AssistManager get() {
         return provideInstance(this.controllerProvider, this.contextProvider, this.assistUtilsProvider, this.handleControllerProvider, this.commandQueueProvider, this.phoneStateMonitorProvider, this.overviewProxyServiceProvider, this.configurationControllerProvider, this.sysUiStateProvider, this.defaultUiControllerProvider, this.assistLoggerProvider);
     }

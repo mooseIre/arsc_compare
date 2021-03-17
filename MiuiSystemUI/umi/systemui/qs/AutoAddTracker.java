@@ -16,11 +16,12 @@ import java.util.Collections;
 
 public class AutoAddTracker implements UserAwareController {
     private static final String[][] CONVERT_PREFS = {new String[]{"QsHotspotAdded", "hotspot"}, new String[]{"QsDataSaverAdded", "saver"}, new String[]{"QsInvertColorsAdded", "inversion"}, new String[]{"QsWorkAdded", "work"}, new String[]{"QsNightDisplayAdded", "night"}};
-    /* access modifiers changed from: private */
-    public final ArraySet<String> mAutoAdded;
+    private final ArraySet<String> mAutoAdded;
     private final Context mContext;
     @VisibleForTesting
     protected final ContentObserver mObserver = new ContentObserver(new Handler()) {
+        /* class com.android.systemui.qs.AutoAddTracker.AnonymousClass1 */
+
         public void onChange(boolean z) {
             AutoAddTracker.this.mAutoAdded.clear();
             AutoAddTracker.this.mAutoAdded.addAll(AutoAddTracker.this.getAdded());
@@ -33,16 +34,18 @@ public class AutoAddTracker implements UserAwareController {
         this.mUserId = i;
         this.mAutoAdded = new ArraySet<>(getAdded());
         if (this.mUserId == 0) {
-            for (String[] strArr : CONVERT_PREFS) {
-                if (Prefs.getBoolean(context, strArr[0], false)) {
-                    setTileAdded(strArr[1]);
-                    Prefs.remove(context, strArr[0]);
+            String[][] strArr = CONVERT_PREFS;
+            for (String[] strArr2 : strArr) {
+                if (Prefs.getBoolean(context, strArr2[0], false)) {
+                    setTileAdded(strArr2[1]);
+                    Prefs.remove(context, strArr2[0]);
                 }
             }
         }
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("qs_auto_tiles"), false, this.mObserver, -1);
     }
 
+    @Override // com.android.systemui.util.UserAwareController
     public void changeUser(UserHandle userHandle) {
         if (userHandle.getIdentifier() != this.mUserId) {
             this.mUserId = userHandle.getIdentifier();
@@ -51,6 +54,7 @@ public class AutoAddTracker implements UserAwareController {
         }
     }
 
+    @Override // com.android.systemui.util.UserAwareController
     public int getCurrentUserId() {
         return this.mUserId;
     }
@@ -76,7 +80,8 @@ public class AutoAddTracker implements UserAwareController {
     }
 
     /* access modifiers changed from: private */
-    public Collection<String> getAdded() {
+    /* access modifiers changed from: public */
+    private Collection<String> getAdded() {
         String stringForUser = Settings.Secure.getStringForUser(this.mContext.getContentResolver(), "qs_auto_tiles", this.mUserId);
         if (stringForUser == null) {
             return Collections.emptyList();

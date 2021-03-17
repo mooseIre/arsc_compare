@@ -16,12 +16,12 @@ public interface HotspotController extends CallbackController<Callback>, Dumpabl
     void setHotspotEnabled(boolean z);
 
     public interface Callback {
-        void onHotspotAvailabilityChanged(boolean z) {
+        default void onHotspotAvailabilityChanged(boolean z) {
         }
 
         void onHotspotChanged(boolean z, int i);
 
-        void onHotspotChanged(boolean z, int i, int i2) {
+        default void onHotspotChanged(boolean z, int i, int i2) {
             onHotspotChanged(z, i);
         }
     }

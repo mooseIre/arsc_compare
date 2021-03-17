@@ -71,6 +71,8 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
                 }
             } else if (i == 16) {
                 this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.pip.phone.$$Lambda$PipAccessibilityInteractionConnection$yj5JMyeINsNwnRK777qXcVORJV0 */
+
                     public final void run() {
                         PipAccessibilityInteractionConnection.this.lambda$performAccessibilityAction$0$PipAccessibilityInteractionConnection();
                     }
@@ -104,6 +106,9 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
     private void setToExpandedBounds() {
         this.mSnapAlgorithm.applySnapFraction(this.mExpandedBounds, this.mExpandedMovementBounds, this.mSnapAlgorithm.getSnapFraction(new Rect(this.mTaskOrganizer.getLastReportedBounds()), this.mNormalMovementBounds));
         this.mTaskOrganizer.scheduleFinishResizePip(this.mExpandedBounds, new Consumer() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipAccessibilityInteractionConnection$ooTCZxn3Zqg4Jawuz5C0YCDXc2E */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 PipAccessibilityInteractionConnection.this.lambda$setToExpandedBounds$1$PipAccessibilityInteractionConnection((Rect) obj);
             }
@@ -120,6 +125,9 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
     private void setToNormalBounds() {
         this.mSnapAlgorithm.applySnapFraction(this.mNormalBounds, this.mNormalMovementBounds, this.mSnapAlgorithm.getSnapFraction(new Rect(this.mTaskOrganizer.getLastReportedBounds()), this.mExpandedMovementBounds));
         this.mTaskOrganizer.scheduleFinishResizePip(this.mNormalBounds, new Consumer() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipAccessibilityInteractionConnection$79jkZILLclQeuRzkIEwlk9IySM */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 PipAccessibilityInteractionConnection.this.lambda$setToNormalBounds$2$PipAccessibilityInteractionConnection((Rect) obj);
             }

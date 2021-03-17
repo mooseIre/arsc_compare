@@ -32,6 +32,7 @@ public final class SystemUiTraceEntryProto extends MessageNano {
         return this;
     }
 
+    @Override // com.google.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
         long j = this.elapsedRealtimeNanos;
         if (j != 0) {
@@ -45,6 +46,7 @@ public final class SystemUiTraceEntryProto extends MessageNano {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.google.protobuf.nano.MessageNano
     public int computeSerializedSize() {
         int computeSerializedSize = super.computeSerializedSize();
         long j = this.elapsedRealtimeNanos;

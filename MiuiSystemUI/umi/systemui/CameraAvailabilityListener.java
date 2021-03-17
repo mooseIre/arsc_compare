@@ -8,16 +8,21 @@ import android.graphics.RectF;
 import android.hardware.camera2.CameraManager;
 import android.util.PathParser;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import kotlin.TypeCastException;
+import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.math.MathKt__MathJVMKt;
+import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: CameraAvailabilityListener.kt */
 public final class CameraAvailabilityListener {
-    public static final Factory Factory = new Factory((DefaultConstructorMarker) null);
+    public static final Factory Factory = new Factory(null);
     private final CameraManager.AvailabilityCallback availabilityCallback = new CameraAvailabilityListener$availabilityCallback$1(this);
     private final CameraManager cameraManager;
     private Rect cutoutBounds = new Rect();
@@ -25,8 +30,7 @@ public final class CameraAvailabilityListener {
     private final Set<String> excludedPackageIds;
     private final Executor executor;
     private final List<CameraTransitionCallback> listeners = new ArrayList();
-    /* access modifiers changed from: private */
-    public final String targetCameraId;
+    private final String targetCameraId;
 
     /* compiled from: CameraAvailabilityListener.kt */
     public interface CameraTransitionCallback {
@@ -48,7 +52,7 @@ public final class CameraAvailabilityListener {
         RectF rectF = new RectF();
         this.cutoutProtectionPath.computeBounds(rectF, false);
         this.cutoutBounds.set(MathKt__MathJVMKt.roundToInt(rectF.left), MathKt__MathJVMKt.roundToInt(rectF.top), MathKt__MathJVMKt.roundToInt(rectF.right), MathKt__MathJVMKt.roundToInt(rectF.bottom));
-        this.excludedPackageIds = CollectionsKt___CollectionsKt.toSet(StringsKt__StringsKt.split$default(str2, new String[]{","}, false, 0, 6, (Object) null));
+        this.excludedPackageIds = CollectionsKt___CollectionsKt.toSet(StringsKt__StringsKt.split$default(str2, new String[]{","}, false, 0, 6, null));
     }
 
     public final void startListening() {
@@ -71,15 +75,17 @@ public final class CameraAvailabilityListener {
 
     /* access modifiers changed from: private */
     public final void notifyCameraActive() {
-        for (CameraTransitionCallback onApplyCameraProtection : this.listeners) {
-            onApplyCameraProtection.onApplyCameraProtection(this.cutoutProtectionPath, this.cutoutBounds);
+        Iterator<T> it = this.listeners.iterator();
+        while (it.hasNext()) {
+            it.next().onApplyCameraProtection(this.cutoutProtectionPath, this.cutoutBounds);
         }
     }
 
     /* access modifiers changed from: private */
     public final void notifyCameraInactive() {
-        for (CameraTransitionCallback onHideCameraProtection : this.listeners) {
-            onHideCameraProtection.onHideCameraProtection();
+        Iterator<T> it = this.listeners.iterator();
+        while (it.hasNext()) {
+            it.next().onHideCameraProtection();
         }
     }
 
@@ -98,6 +104,7 @@ public final class CameraAvailabilityListener {
             Intrinsics.checkParameterIsNotNull(executor, "executor");
             Object systemService = context.getSystemService("camera");
             if (systemService != null) {
+                CameraManager cameraManager = (CameraManager) systemService;
                 Resources resources = context.getResources();
                 String string = resources.getString(C0021R$string.config_frontBuiltInDisplayCutoutProtection);
                 String string2 = resources.getString(C0021R$string.config_protectedCameraId);
@@ -106,7 +113,7 @@ public final class CameraAvailabilityListener {
                 Path pathFromString = pathFromString(string);
                 Intrinsics.checkExpressionValueIsNotNull(string2, "cameraId");
                 Intrinsics.checkExpressionValueIsNotNull(string3, "excluded");
-                return new CameraAvailabilityListener((CameraManager) systemService, pathFromString, string2, string3, executor);
+                return new CameraAvailabilityListener(cameraManager, pathFromString, string2, string3, executor);
             }
             throw new TypeCastException("null cannot be cast to non-null type android.hardware.camera2.CameraManager");
         }

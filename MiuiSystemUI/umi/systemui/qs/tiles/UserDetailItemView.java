@@ -31,7 +31,7 @@ public class UserDetailItemView extends LinearLayout {
     }
 
     public UserDetailItemView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public UserDetailItemView(Context context, AttributeSet attributeSet) {

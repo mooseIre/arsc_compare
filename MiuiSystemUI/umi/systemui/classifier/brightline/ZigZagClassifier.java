@@ -6,9 +6,9 @@ import com.android.systemui.util.DeviceConfigProxy;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 
-class ZigZagClassifier extends FalsingClassifier {
+/* access modifiers changed from: package-private */
+public class ZigZagClassifier extends FalsingClassifier {
     private float mLastDevianceX;
     private float mLastDevianceY;
     private float mLastMaxXDeviance;
@@ -27,6 +27,7 @@ class ZigZagClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public boolean isFalseTouch() {
         List<Point> list;
         float f;
@@ -48,16 +49,16 @@ class ZigZagClassifier extends FalsingClassifier {
         float f5 = 0.0f;
         float f6 = 0.0f;
         float f7 = 0.0f;
-        for (Point next : list) {
+        for (Point point : list) {
             if (z) {
-                f6 = (float) next.x;
-                f7 = (float) next.y;
+                f6 = (float) point.x;
+                f7 = (float) point.y;
                 z = false;
             } else {
-                f4 += Math.abs(((float) next.x) - f6);
-                f5 += Math.abs(((float) next.y) - f7);
-                f6 = (float) next.x;
-                f7 = (float) next.y;
+                f4 += Math.abs(((float) point.x) - f6);
+                f5 += Math.abs(((float) point.y) - f7);
+                f6 = (float) point.x;
+                f7 = (float) point.y;
                 FalsingClassifier.logDebug("(x, y, runningAbsDx, runningAbsDy) - (" + f6 + ", " + f7 + ", " + f4 + ", " + f5 + ")");
             }
         }
@@ -88,8 +89,9 @@ class ZigZagClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public String getReason() {
-        return String.format((Locale) null, "{devianceX=%f, maxDevianceX=%s, devianceY=%s, maxDevianceY=%s}", new Object[]{Float.valueOf(this.mLastDevianceX), Float.valueOf(this.mLastMaxXDeviance), Float.valueOf(this.mLastDevianceY), Float.valueOf(this.mLastMaxYDeviance)});
+        return String.format(null, "{devianceX=%f, maxDevianceX=%s, devianceY=%s, maxDevianceY=%s}", Float.valueOf(this.mLastDevianceX), Float.valueOf(this.mLastMaxXDeviance), Float.valueOf(this.mLastDevianceY), Float.valueOf(this.mLastMaxYDeviance));
     }
 
     private float getAtan2LastPoint() {
@@ -112,11 +114,10 @@ class ZigZagClassifier extends FalsingClassifier {
     }
 
     private List<Point> rotateMotionEvents(List<MotionEvent> list, double d) {
-        List<MotionEvent> list2 = list;
         ArrayList arrayList = new ArrayList();
         double cos = Math.cos(d);
         double sin = Math.sin(d);
-        MotionEvent motionEvent = list2.get(0);
+        MotionEvent motionEvent = list.get(0);
         float x = motionEvent.getX();
         float y = motionEvent.getY();
         for (Iterator<MotionEvent> it = list.iterator(); it.hasNext(); it = it) {
@@ -126,11 +127,10 @@ class ZigZagClassifier extends FalsingClassifier {
             arrayList.add(new Point((int) ((cos * x2) + (sin * y2) + ((double) x)), (int) (((-sin) * x2) + (y2 * cos) + ((double) y))));
             motionEvent = motionEvent;
         }
-        MotionEvent motionEvent2 = motionEvent;
-        MotionEvent motionEvent3 = list2.get(list.size() - 1);
+        MotionEvent motionEvent2 = list.get(list.size() - 1);
         Point point = (Point) arrayList.get(0);
         Point point2 = (Point) arrayList.get(arrayList.size() - 1);
-        FalsingClassifier.logDebug("Before: (" + motionEvent2.getX() + "," + motionEvent2.getY() + "), (" + motionEvent3.getX() + "," + motionEvent3.getY() + ")");
+        FalsingClassifier.logDebug("Before: (" + motionEvent.getX() + "," + motionEvent.getY() + "), (" + motionEvent2.getX() + "," + motionEvent2.getY() + ")");
         FalsingClassifier.logDebug("After: (" + point.x + "," + point.y + "), (" + point2.x + "," + point2.y + ")");
         return arrayList;
     }

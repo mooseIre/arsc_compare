@@ -4,8 +4,9 @@ import android.view.View;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: DetailDialog.kt */
-final class DetailDialog$$special$$inlined$apply$lambda$1 implements View.OnClickListener {
+public final class DetailDialog$$special$$inlined$apply$lambda$1 implements View.OnClickListener {
     final /* synthetic */ DetailDialog this$0;
 
     DetailDialog$$special$$inlined$apply$lambda$1(DetailDialog detailDialog) {

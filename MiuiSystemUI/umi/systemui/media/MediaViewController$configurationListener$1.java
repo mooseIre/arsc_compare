@@ -9,17 +9,19 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaViewController$configurationListener$1 implements ConfigurationController.ConfigurationListener {
     final /* synthetic */ MediaViewController this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaViewController$configurationListener$1(MediaViewController mediaViewController) {
         this.this$0 = mediaViewController;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(@Nullable Configuration configuration) {
         if (configuration != null) {
-            TransitionLayout access$getTransitionLayout$p = this.this$0.transitionLayout;
-            if (access$getTransitionLayout$p == null || access$getTransitionLayout$p.getRawLayoutDirection() != configuration.getLayoutDirection()) {
-                TransitionLayout access$getTransitionLayout$p2 = this.this$0.transitionLayout;
-                if (access$getTransitionLayout$p2 != null) {
-                    access$getTransitionLayout$p2.setLayoutDirection(configuration.getLayoutDirection());
+            TransitionLayout transitionLayout = this.this$0.transitionLayout;
+            if (transitionLayout == null || transitionLayout.getRawLayoutDirection() != configuration.getLayoutDirection()) {
+                TransitionLayout transitionLayout2 = this.this$0.transitionLayout;
+                if (transitionLayout2 != null) {
+                    transitionLayout2.setLayoutDirection(configuration.getLayoutDirection());
                 }
                 this.this$0.refreshState();
             }

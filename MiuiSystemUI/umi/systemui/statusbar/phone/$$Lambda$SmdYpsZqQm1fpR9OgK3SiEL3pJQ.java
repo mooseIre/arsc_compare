@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$SmdYpsZqQm1fpR9OgK3SiEL3pJQ implemen
     private /* synthetic */ $$Lambda$SmdYpsZqQm1fpR9OgK3SiEL3pJQ() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return Float.valueOf(((NotificationPanelView) obj).getCurrentPanelAlpha());
     }

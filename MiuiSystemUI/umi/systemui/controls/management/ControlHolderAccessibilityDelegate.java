@@ -14,8 +14,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
-final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateCompat {
+public final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateCompat {
     private static final int MOVE_AFTER_ID = C0015R$id.accessibility_action_controls_move_after;
     private static final int MOVE_BEFORE_ID = C0015R$id.accessibility_action_controls_move_before;
     private boolean isFavorite;
@@ -26,6 +27,8 @@ final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateComp
     @NotNull
     private final Function1<Boolean, CharSequence> stateRetriever;
 
+    /* JADX DEBUG: Multi-variable search result rejected for r2v0, resolved type: kotlin.jvm.functions.Function1<? super java.lang.Boolean, ? extends java.lang.CharSequence> */
+    /* JADX WARN: Multi-variable type inference failed */
     public ControlHolderAccessibilityDelegate(@NotNull Function1<? super Boolean, ? extends CharSequence> function1, @NotNull Function0<Integer> function0, @Nullable ControlsModel.MoveHelper moveHelper2) {
         Intrinsics.checkParameterIsNotNull(function1, "stateRetriever");
         Intrinsics.checkParameterIsNotNull(function0, "positionRetriever");
@@ -38,6 +41,7 @@ final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateComp
         this.isFavorite = z;
     }
 
+    @Override // androidx.core.view.AccessibilityDelegateCompat
     public void onInitializeAccessibilityNodeInfo(@NotNull View view, @NotNull AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         Intrinsics.checkParameterIsNotNull(view, "host");
         Intrinsics.checkParameterIsNotNull(accessibilityNodeInfoCompat, "info");
@@ -47,10 +51,11 @@ final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateComp
         maybeAddMoveBeforeAction(view, accessibilityNodeInfoCompat);
         maybeAddMoveAfterAction(view, accessibilityNodeInfoCompat);
         accessibilityNodeInfoCompat.setStateDescription(this.stateRetriever.invoke(Boolean.valueOf(this.isFavorite)));
-        accessibilityNodeInfoCompat.setCollectionItemInfo((Object) null);
+        accessibilityNodeInfoCompat.setCollectionItemInfo(null);
         accessibilityNodeInfoCompat.setClassName(Switch.class.getName());
     }
 
+    @Override // androidx.core.view.AccessibilityDelegateCompat
     public boolean performAccessibilityAction(@Nullable View view, int i, @Nullable Bundle bundle) {
         if (super.performAccessibilityAction(view, i, bundle)) {
             return true;
@@ -87,7 +92,7 @@ final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateComp
     private final void maybeAddMoveBeforeAction(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         ControlsModel.MoveHelper moveHelper2 = this.moveHelper;
         if (moveHelper2 != null ? moveHelper2.canMoveBefore(this.positionRetriever.invoke().intValue()) : false) {
-            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_BEFORE_ID, view.getContext().getString(C0021R$string.accessibility_control_move, new Object[]{Integer.valueOf((this.positionRetriever.invoke().intValue() + 1) - 1)})));
+            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_BEFORE_ID, view.getContext().getString(C0021R$string.accessibility_control_move, Integer.valueOf((this.positionRetriever.invoke().intValue() + 1) - 1))));
             accessibilityNodeInfoCompat.setContextClickable(true);
         }
     }
@@ -95,7 +100,7 @@ final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateComp
     private final void maybeAddMoveAfterAction(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         ControlsModel.MoveHelper moveHelper2 = this.moveHelper;
         if (moveHelper2 != null ? moveHelper2.canMoveAfter(this.positionRetriever.invoke().intValue()) : false) {
-            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_AFTER_ID, view.getContext().getString(C0021R$string.accessibility_control_move, new Object[]{Integer.valueOf(this.positionRetriever.invoke().intValue() + 1 + 1)})));
+            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_AFTER_ID, view.getContext().getString(C0021R$string.accessibility_control_move, Integer.valueOf(this.positionRetriever.invoke().intValue() + 1 + 1))));
             accessibilityNodeInfoCompat.setContextClickable(true);
         }
     }

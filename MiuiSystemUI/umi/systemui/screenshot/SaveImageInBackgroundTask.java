@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CancellationSignal;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ParcelFileDescriptor;
@@ -52,7 +51,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
+/* access modifiers changed from: package-private */
+public class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
     private final Context mContext;
     private final GlobalScreenshot.SavedImageData mImageData;
     private final String mImageFileName;
@@ -68,8 +68,8 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         this.mImageData = new GlobalScreenshot.SavedImageData();
         this.mParams = saveImageInBackgroundData;
         this.mImageTime = System.currentTimeMillis();
-        this.mImageFileName = String.format("Screenshot_%s.png", new Object[]{new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date(this.mImageTime))});
-        this.mScreenshotId = String.format("Screenshot_%s", new Object[]{UUID.randomUUID()});
+        this.mImageFileName = String.format("Screenshot_%s.png", new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date(this.mImageTime)));
+        this.mScreenshotId = String.format("Screenshot_%s", UUID.randomUUID());
         boolean z = DeviceConfig.getBoolean("systemui", "enable_screenshot_notification_smart_actions", true);
         this.mSmartActionsEnabled = z;
         if (z) {
@@ -81,8 +81,6 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
 
     /* access modifiers changed from: protected */
     public Void doInBackground(Void... voidArr) {
-        OutputStream openOutputStream;
-        ParcelFileDescriptor openFile;
         if (isCancelled()) {
             return null;
         }
@@ -98,57 +96,64 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
             contentValues.put("date_added", Long.valueOf(this.mImageTime / 1000));
             contentValues.put("date_modified", Long.valueOf(this.mImageTime / 1000));
             contentValues.put("date_expires", Long.valueOf((this.mImageTime + 86400000) / 1000));
-            contentValues.put("is_pending", 1);
+            contentValues.put("is_pending", (Integer) 1);
             Uri insert = contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
             CompletableFuture<List<Notification.Action>> smartActionsFuture = ScreenshotSmartActions.getSmartActionsFuture(this.mScreenshotId, insert, bitmap, this.mSmartActionsProvider, this.mSmartActionsEnabled, getUserHandle(this.mContext));
             try {
-                openOutputStream = contentResolver.openOutputStream(insert);
-                if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, openOutputStream)) {
-                    if (openOutputStream != null) {
-                        openOutputStream.close();
-                    }
-                    openFile = contentResolver.openFile(insert, "rw", (CancellationSignal) null);
-                    ExifInterface exifInterface = new ExifInterface(openFile.getFileDescriptor());
-                    exifInterface.setAttribute("Software", "Android " + Build.DISPLAY);
-                    exifInterface.setAttribute("ImageWidth", Integer.toString(bitmap.getWidth()));
-                    exifInterface.setAttribute("ImageLength", Integer.toString(bitmap.getHeight()));
-                    ZonedDateTime ofInstant = ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.mImageTime), ZoneId.systemDefault());
-                    exifInterface.setAttribute("DateTimeOriginal", DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss").format(ofInstant));
-                    exifInterface.setAttribute("SubSecTimeOriginal", DateTimeFormatter.ofPattern("SSS").format(ofInstant));
-                    if (Objects.equals(ofInstant.getOffset(), ZoneOffset.UTC)) {
-                        exifInterface.setAttribute("OffsetTimeOriginal", "+00:00");
+                OutputStream openOutputStream = contentResolver.openOutputStream(insert);
+                try {
+                    if (bitmap.compress(Bitmap.CompressFormat.PNG, 100, openOutputStream)) {
+                        if (openOutputStream != null) {
+                            openOutputStream.close();
+                        }
+                        ParcelFileDescriptor openFile = contentResolver.openFile(insert, "rw", null);
+                        try {
+                            ExifInterface exifInterface = new ExifInterface(openFile.getFileDescriptor());
+                            exifInterface.setAttribute("Software", "Android " + Build.DISPLAY);
+                            exifInterface.setAttribute("ImageWidth", Integer.toString(bitmap.getWidth()));
+                            exifInterface.setAttribute("ImageLength", Integer.toString(bitmap.getHeight()));
+                            ZonedDateTime ofInstant = ZonedDateTime.ofInstant(Instant.ofEpochMilli(this.mImageTime), ZoneId.systemDefault());
+                            exifInterface.setAttribute("DateTimeOriginal", DateTimeFormatter.ofPattern("yyyy:MM:dd HH:mm:ss").format(ofInstant));
+                            exifInterface.setAttribute("SubSecTimeOriginal", DateTimeFormatter.ofPattern("SSS").format(ofInstant));
+                            if (Objects.equals(ofInstant.getOffset(), ZoneOffset.UTC)) {
+                                exifInterface.setAttribute("OffsetTimeOriginal", "+00:00");
+                            } else {
+                                exifInterface.setAttribute("OffsetTimeOriginal", DateTimeFormatter.ofPattern("XXX").format(ofInstant));
+                            }
+                            exifInterface.saveAttributes();
+                            if (openFile != null) {
+                                openFile.close();
+                            }
+                            contentValues.clear();
+                            contentValues.put("is_pending", (Integer) 0);
+                            contentValues.putNull("date_expires");
+                            contentResolver.update(insert, contentValues, null, null);
+                            ArrayList arrayList = new ArrayList();
+                            if (this.mSmartActionsEnabled) {
+                                arrayList.addAll(buildSmartActions(ScreenshotSmartActions.getSmartActions(this.mScreenshotId, smartActionsFuture, DeviceConfig.getInt("systemui", "screenshot_notification_smart_actions_timeout_ms", 1000), this.mSmartActionsProvider), this.mContext));
+                            }
+                            this.mImageData.uri = insert;
+                            this.mImageData.smartActions = arrayList;
+                            this.mImageData.shareAction = createShareAction(this.mContext, this.mContext.getResources(), insert);
+                            this.mImageData.editAction = createEditAction(this.mContext, this.mContext.getResources(), insert);
+                            this.mImageData.deleteAction = createDeleteAction(this.mContext, this.mContext.getResources(), insert);
+                            this.mParams.mActionsReadyListener.onActionsReady(this.mImageData);
+                            this.mParams.finisher.accept(this.mImageData.uri);
+                            this.mParams.image = null;
+                            this.mParams.errorMsgResId = 0;
+                            return null;
+                        } catch (Throwable th) {
+                            th.addSuppressed(th);
+                        }
                     } else {
-                        exifInterface.setAttribute("OffsetTimeOriginal", DateTimeFormatter.ofPattern("XXX").format(ofInstant));
+                        throw new IOException("Failed to compress");
                     }
-                    exifInterface.saveAttributes();
-                    if (openFile != null) {
-                        openFile.close();
-                    }
-                    contentValues.clear();
-                    contentValues.put("is_pending", 0);
-                    contentValues.putNull("date_expires");
-                    contentResolver.update(insert, contentValues, (String) null, (String[]) null);
-                    ArrayList arrayList = new ArrayList();
-                    if (this.mSmartActionsEnabled) {
-                        arrayList.addAll(buildSmartActions(ScreenshotSmartActions.getSmartActions(this.mScreenshotId, smartActionsFuture, DeviceConfig.getInt("systemui", "screenshot_notification_smart_actions_timeout_ms", 1000), this.mSmartActionsProvider), this.mContext));
-                    }
-                    this.mImageData.uri = insert;
-                    this.mImageData.smartActions = arrayList;
-                    this.mImageData.shareAction = createShareAction(this.mContext, this.mContext.getResources(), insert);
-                    this.mImageData.editAction = createEditAction(this.mContext, this.mContext.getResources(), insert);
-                    this.mImageData.deleteAction = createDeleteAction(this.mContext, this.mContext.getResources(), insert);
-                    this.mParams.mActionsReadyListener.onActionsReady(this.mImageData);
-                    this.mParams.finisher.accept(this.mImageData.uri);
-                    this.mParams.image = null;
-                    this.mParams.errorMsgResId = 0;
-                    return null;
+                } catch (Throwable th2) {
+                    th.addSuppressed(th2);
                 }
-                throw new IOException("Failed to compress");
             } catch (Exception e) {
-                contentResolver.delete(insert, (Bundle) null);
+                contentResolver.delete(insert, null);
                 throw e;
-            } catch (Throwable th) {
-                th.addSuppressed(th);
             }
         } catch (Exception e2) {
             Slog.e("SaveImageInBackgroundTask", "unable to save screenshot", e2);
@@ -156,7 +161,7 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
             this.mParams.errorMsgResId = C0021R$string.screenshot_failed_to_save_text;
             this.mImageData.reset();
             this.mParams.mActionsReadyListener.onActionsReady(this.mImageData);
-            this.mParams.finisher.accept((Object) null);
+            this.mParams.finisher.accept(null);
         }
         throw th;
         throw th;
@@ -168,17 +173,17 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
     }
 
     /* access modifiers changed from: protected */
-    public void onCancelled(Void voidR) {
+    public void onCancelled(Void r2) {
         this.mImageData.reset();
         this.mParams.mActionsReadyListener.onActionsReady(this.mImageData);
-        this.mParams.finisher.accept((Object) null);
+        this.mParams.finisher.accept(null);
         this.mParams.clearImage();
     }
 
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public Notification.Action createShareAction(Context context, Resources resources, Uri uri) {
-        String format = String.format("Screenshot (%s)", new Object[]{DateFormat.getDateTimeInstance().format(new Date(this.mImageTime))});
+        String format = String.format("Screenshot (%s)", DateFormat.getDateTimeInstance().format(new Date(this.mImageTime)));
         Intent intent = new Intent("android.intent.action.SEND");
         intent.setType("image/png");
         intent.putExtra("android.intent.extra.STREAM", uri);
@@ -186,7 +191,7 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         intent.putExtra("android.intent.extra.SUBJECT", format);
         intent.addFlags(1);
         int userId = context.getUserId();
-        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_share), resources.getString(17041328), PendingIntent.getBroadcastAsUser(context, userId, new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", PendingIntent.getActivityAsUser(context, 0, Intent.createChooser(intent, (CharSequence) null, PendingIntent.getBroadcast(context, userId, new Intent(context, GlobalScreenshot.TargetChosenReceiver.class), 1342177280).getIntentSender()).addFlags(268468224).addFlags(1), 268435456, (Bundle) null, UserHandle.CURRENT)).putExtra("android:screenshot_disallow_enter_pip", true).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.SEND").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
+        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_share), resources.getString(17041328), PendingIntent.getBroadcastAsUser(context, userId, new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", PendingIntent.getActivityAsUser(context, 0, Intent.createChooser(intent, null, PendingIntent.getBroadcast(context, userId, new Intent(context, GlobalScreenshot.TargetChosenReceiver.class), 1342177280).getIntentSender()).addFlags(268468224).addFlags(1), 268435456, null, UserHandle.CURRENT)).putExtra("android:screenshot_disallow_enter_pip", true).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.SEND").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
     }
 
     /* access modifiers changed from: package-private */
@@ -203,7 +208,7 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         intent.addFlags(1);
         intent.addFlags(2);
         intent.addFlags(268468224);
-        PendingIntent activityAsUser = PendingIntent.getActivityAsUser(context, 0, intent, 0, (Bundle) null, UserHandle.CURRENT);
+        PendingIntent activityAsUser = PendingIntent.getActivityAsUser(context, 0, intent, 0, null, UserHandle.CURRENT);
         int userId = this.mContext.getUserId();
         Intent putExtra = new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", activityAsUser);
         if (intent.getComponent() == null) {
@@ -233,12 +238,12 @@ class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
 
     private List<Notification.Action> buildSmartActions(List<Notification.Action> list, Context context) {
         ArrayList arrayList = new ArrayList();
-        for (Notification.Action next : list) {
-            Bundle extras = next.getExtras();
+        for (Notification.Action action : list) {
+            Bundle extras = action.getExtras();
             String string = extras.getString("action_type", "Smart Action");
-            Intent addFlags = new Intent(context, GlobalScreenshot.SmartActionsReceiver.class).putExtra("android:screenshot_action_intent", next.actionIntent).addFlags(268435456);
+            Intent addFlags = new Intent(context, GlobalScreenshot.SmartActionsReceiver.class).putExtra("android:screenshot_action_intent", action.actionIntent).addFlags(268435456);
             addIntentExtras(this.mScreenshotId, addFlags, string, this.mSmartActionsEnabled);
-            arrayList.add(new Notification.Action.Builder(next.getIcon(), next.title, PendingIntent.getBroadcast(context, this.mRandom.nextInt(), addFlags, 268435456)).setContextual(true).addExtras(extras).build());
+            arrayList.add(new Notification.Action.Builder(action.getIcon(), action.title, PendingIntent.getBroadcast(context, this.mRandom.nextInt(), addFlags, 268435456)).setContextual(true).addExtras(extras).build());
         }
         return arrayList;
     }

@@ -13,6 +13,7 @@ public final class ConcurrencyModule_ProvideMainHandlerFactory implements Factor
         this.mainLooperProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Handler get() {
         return provideInstance(this.mainLooperProvider);
     }

@@ -51,9 +51,9 @@ public final class AppControlView extends LinearLayout {
 
     @NotNull
     public final Switch getSwitch() {
-        Switch switchR = this.f0switch;
-        if (switchR != null) {
-            return switchR;
+        Switch r0 = this.f0switch;
+        if (r0 != null) {
+            return r0;
         }
         Intrinsics.throwUninitializedPropertyAccessException("switch");
         throw null;

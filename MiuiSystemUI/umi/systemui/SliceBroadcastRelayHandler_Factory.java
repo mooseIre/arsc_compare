@@ -14,6 +14,7 @@ public final class SliceBroadcastRelayHandler_Factory implements Factory<SliceBr
         this.broadcastDispatcherProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public SliceBroadcastRelayHandler get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider);
     }

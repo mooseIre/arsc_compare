@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -32,21 +31,28 @@ public class NotificationBadgeController {
     NotificationEntryManager mEntryManager;
     NotificationGroupManager mGroupManager;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.notification.policy.NotificationBadgeController.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             boolean booleanExtra = intent.getBooleanExtra("com.miui.extra_update_request_first_time", false);
             Log.d("NotifBadge", "recevie broadbcast ACTION_APPLICATION_MESSAGE_QUERY, requestFirstTime=" + booleanExtra);
             if (booleanExtra) {
                 new ArrayList(NotificationBadgeController.this.mEntryManager.getVisibleNotifications()).stream().filter(new Predicate(ConcurrentHashMap.newKeySet()) {
+                    /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationBadgeController$1$0mL3CghvQ1p7y9g_5i3XGE7mrBc */
                     public final /* synthetic */ Set f$0;
 
                     {
                         this.f$0 = r1;
                     }
 
+                    @Override // java.util.function.Predicate
                     public final boolean test(Object obj) {
                         return this.f$0.add(((NotificationEntry) obj).getSbn().getPackageName());
                     }
                 }).forEach(new Consumer() {
+                    /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationBadgeController$1$OV2_G18o0KzMKTB_MqN4Xkr5sk */
+
+                    @Override // java.util.function.Consumer
                     public final void accept(Object obj) {
                         NotificationBadgeController.AnonymousClass1.this.lambda$onReceive$1$NotificationBadgeController$1((NotificationEntry) obj);
                     }
@@ -68,8 +74,11 @@ public class NotificationBadgeController {
         this.mBroadcastDispatcher = broadcastDispatcher;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.APPLICATION_MESSAGE_QUERY");
-        this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter, (Executor) null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mReceiver, intentFilter, null, UserHandle.ALL);
         new CurrentUserTracker(this.mBroadcastDispatcher) {
+            /* class com.android.systemui.statusbar.notification.policy.NotificationBadgeController.AnonymousClass2 */
+
+            @Override // com.android.systemui.settings.CurrentUserTracker
             public void onUserSwitched(int i) {
                 Intent intent = new Intent("android.intent.action.APPLICATION_MESSAGE_QUERY");
                 intent.putExtra("com.miui.extra_update_request_first_time", true);
@@ -89,6 +98,9 @@ public class NotificationBadgeController {
         int i2 = 0;
         if (canShowBadge) {
             List<NotificationEntry> list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate() {
+                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationBadgeController$ZhLIvBsM7w4Mj28WNhyGMzN0h7w */
+
+                @Override // java.util.function.Predicate
                 public final boolean test(Object obj) {
                     return NotificationBadgeController.lambda$updateAppBadgeNum$0(ExpandedNotification.this, (NotificationEntry) obj);
                 }
@@ -125,7 +137,7 @@ public class NotificationBadgeController {
         if (str == null) {
             str2 = "";
         } else {
-            str2 = str + "/" + charSequence;
+            str2 = str + "/" + ((Object) charSequence);
         }
         Intent intent = new Intent("android.intent.action.APPLICATION_MESSAGE_UPDATE");
         intent.putExtra("android.intent.extra.update_application_message_text", i > 0 ? String.valueOf(i) : null);
@@ -158,9 +170,6 @@ public class NotificationBadgeController {
         if (expandedNotification == null || expandedNotification2 == null) {
             return false;
         }
-        if ((expandedNotification.getMessageCount() != expandedNotification2.getMessageCount()) || needStatBadgeNum(expandedNotification) != needStatBadgeNum(expandedNotification2) || !TextUtils.equals(expandedNotification.getTargetPackageName(), expandedNotification2.getTargetPackageName())) {
-            return true;
-        }
-        return false;
+        return (expandedNotification.getMessageCount() != expandedNotification2.getMessageCount()) || needStatBadgeNum(expandedNotification) != needStatBadgeNum(expandedNotification2) || !TextUtils.equals(expandedNotification.getTargetPackageName(), expandedNotification2.getTargetPackageName());
     }
 }

@@ -11,6 +11,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -20,11 +21,9 @@ public class GroupCoalescer implements Dumpable {
     private final SystemClock mClock;
     private final Map<String, CoalescedEvent> mCoalescedEvents;
     private final Comparator<CoalescedEvent> mEventComparator;
-    /* access modifiers changed from: private */
-    public BatchableNotificationHandler mHandler;
+    private BatchableNotificationHandler mHandler;
     private final NotificationListener.NotificationHandler mListener;
-    /* access modifiers changed from: private */
-    public final GroupCoalescerLogger mLogger;
+    private final GroupCoalescerLogger mLogger;
     private final DelayableExecutor mMainExecutor;
     private final long mMaxGroupLingerDuration;
     private final long mMinGroupLingerDuration;
@@ -41,6 +40,9 @@ public class GroupCoalescer implements Dumpable {
         this.mCoalescedEvents = new ArrayMap();
         this.mBatches = new ArrayMap();
         this.mListener = new NotificationListener.NotificationHandler() {
+            /* class com.android.systemui.statusbar.notification.collection.coalescer.GroupCoalescer.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
                 GroupCoalescer.this.maybeEmitBatch(statusBarNotification);
                 GroupCoalescer.this.applyRanking(rankingMap);
@@ -52,17 +54,20 @@ public class GroupCoalescer implements Dumpable {
                 GroupCoalescer.this.mHandler.onNotificationPosted(statusBarNotification, rankingMap);
             }
 
+            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
                 GroupCoalescer.this.maybeEmitBatch(statusBarNotification);
                 GroupCoalescer.this.applyRanking(rankingMap);
                 GroupCoalescer.this.mHandler.onNotificationRemoved(statusBarNotification, rankingMap, i);
             }
 
+            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
                 GroupCoalescer.this.applyRanking(rankingMap);
                 GroupCoalescer.this.mHandler.onNotificationRankingUpdate(rankingMap);
             }
 
+            @Override // com.android.systemui.statusbar.NotificationListener.NotificationHandler
             public void onNotificationsInitialized() {
                 GroupCoalescer.this.mHandler.onNotificationsInitialized();
             }
@@ -84,7 +89,8 @@ public class GroupCoalescer implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void maybeEmitBatch(StatusBarNotification statusBarNotification) {
+    /* access modifiers changed from: public */
+    private void maybeEmitBatch(StatusBarNotification statusBarNotification) {
         CoalescedEvent coalescedEvent = this.mCoalescedEvents.get(statusBarNotification.getKey());
         EventBatch eventBatch = this.mBatches.get(statusBarNotification.getGroupKey());
         if (coalescedEvent != null) {
@@ -103,7 +109,8 @@ public class GroupCoalescer implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public boolean handleNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
+    /* access modifiers changed from: public */
+    private boolean handleNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         if (this.mCoalescedEvents.containsKey(statusBarNotification.getKey())) {
             throw new IllegalStateException("Notification has already been coalesced: " + statusBarNotification.getKey());
         } else if (!statusBarNotification.isGroup()) {
@@ -134,6 +141,7 @@ public class GroupCoalescer implements Dumpable {
             runnable.run();
         }
         eventBatch.mCancelShortTimeout = this.mMainExecutor.executeDelayed(new Runnable(eventBatch) {
+            /* class com.android.systemui.statusbar.notification.collection.coalescer.$$Lambda$GroupCoalescer$CkC530E2KSp8Q8dstQvPigtYz5M */
             public final /* synthetic */ EventBatch f$1;
 
             {
@@ -163,10 +171,10 @@ public class GroupCoalescer implements Dumpable {
                 eventBatch.mCancelShortTimeout = null;
             }
             this.mBatches.remove(eventBatch.mGroupKey);
-            ArrayList<CoalescedEvent> arrayList = new ArrayList<>(eventBatch.mMembers);
+            ArrayList<CoalescedEvent> arrayList = new ArrayList(eventBatch.mMembers);
             for (CoalescedEvent coalescedEvent : arrayList) {
                 this.mCoalescedEvents.remove(coalescedEvent.getKey());
-                coalescedEvent.setBatch((EventBatch) null);
+                coalescedEvent.setBatch(null);
             }
             arrayList.sort(this.mEventComparator);
             this.mLogger.logEmitBatch(eventBatch.mGroupKey);
@@ -185,35 +193,39 @@ public class GroupCoalescer implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void applyRanking(NotificationListenerService.RankingMap rankingMap) {
-        for (CoalescedEvent next : this.mCoalescedEvents.values()) {
+    /* access modifiers changed from: public */
+    private void applyRanking(NotificationListenerService.RankingMap rankingMap) {
+        for (CoalescedEvent coalescedEvent : this.mCoalescedEvents.values()) {
             NotificationListenerService.Ranking ranking = new NotificationListenerService.Ranking();
-            if (rankingMap.getRanking(next.getKey(), ranking)) {
-                next.setRanking(ranking);
+            if (rankingMap.getRanking(coalescedEvent.getKey(), ranking)) {
+                coalescedEvent.setRanking(ranking);
             } else {
-                this.mLogger.logMissingRanking(next.getKey());
+                this.mLogger.logMissingRanking(coalescedEvent.getKey());
             }
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         long uptimeMillis = this.mClock.uptimeMillis();
         printWriter.println();
         printWriter.println("Coalesced notifications:");
         int i = 0;
-        for (EventBatch next : this.mBatches.values()) {
-            printWriter.println("   Batch " + next.mGroupKey + ":");
-            printWriter.println("       Created " + (uptimeMillis - next.mCreatedTimestamp) + "ms ago");
-            for (CoalescedEvent key : next.mMembers) {
-                printWriter.println("       " + key.getKey());
+        for (EventBatch eventBatch : this.mBatches.values()) {
+            printWriter.println("   Batch " + eventBatch.mGroupKey + ":");
+            printWriter.println("       Created " + (uptimeMillis - eventBatch.mCreatedTimestamp) + "ms ago");
+            Iterator<CoalescedEvent> it = eventBatch.mMembers.iterator();
+            while (it.hasNext()) {
+                printWriter.println("       " + it.next().getKey());
                 i++;
             }
         }
         if (i != this.mCoalescedEvents.size()) {
             printWriter.println("    ERROR: batches contain " + this.mCoalescedEvents.size() + " events but am tracking " + this.mCoalescedEvents.size() + " total events");
             printWriter.println("    All tracked events:");
-            for (CoalescedEvent key2 : this.mCoalescedEvents.values()) {
-                printWriter.println("        " + key2.getKey());
+            Iterator<CoalescedEvent> it2 = this.mCoalescedEvents.values().iterator();
+            while (it2.hasNext()) {
+                printWriter.println("        " + it2.next().getKey());
             }
         }
     }

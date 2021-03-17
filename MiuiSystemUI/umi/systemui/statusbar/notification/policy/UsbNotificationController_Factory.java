@@ -11,6 +11,7 @@ public final class UsbNotificationController_Factory implements Factory<UsbNotif
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public UsbNotificationController get() {
         return provideInstance(this.contextProvider);
     }

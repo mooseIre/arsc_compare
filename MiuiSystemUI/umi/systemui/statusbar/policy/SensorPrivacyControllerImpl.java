@@ -20,6 +20,7 @@ public class SensorPrivacyControllerImpl implements SensorPrivacyController, Sen
         this.mListeners = new ArrayList(1);
     }
 
+    @Override // com.android.systemui.statusbar.policy.SensorPrivacyController
     public boolean isSensorPrivacyEnabled() {
         boolean z;
         synchronized (this.mLock) {
@@ -44,8 +45,8 @@ public class SensorPrivacyControllerImpl implements SensorPrivacyController, Sen
     public void onSensorPrivacyChanged(boolean z) {
         synchronized (this.mLock) {
             this.mSensorPrivacyEnabled = z;
-            for (SensorPrivacyController.OnSensorPrivacyChangedListener notifyListenerLocked : this.mListeners) {
-                notifyListenerLocked(notifyListenerLocked);
+            for (SensorPrivacyController.OnSensorPrivacyChangedListener onSensorPrivacyChangedListener : this.mListeners) {
+                notifyListenerLocked(onSensorPrivacyChangedListener);
             }
         }
     }

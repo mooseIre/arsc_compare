@@ -17,6 +17,7 @@ public final class AppOpsCoordinator_Factory implements Factory<AppOpsCoordinato
         this.mainExecutorProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public AppOpsCoordinator get() {
         return provideInstance(this.foregroundServiceControllerProvider, this.appOpsControllerProvider, this.mainExecutorProvider);
     }

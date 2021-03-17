@@ -9,19 +9,23 @@ import java.util.Objects;
 public class NotificationListController {
     private final DeviceProvisionedController mDeviceProvisionedController;
     private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() {
+        /* class com.android.systemui.statusbar.notification.NotificationListController.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
         public void onDeviceProvisionedChanged() {
             NotificationListController.this.mEntryManager.updateNotifications("device provisioned changed");
         }
     };
     private final NotificationEntryListener mEntryListener = new NotificationEntryListener() {
+        /* class com.android.systemui.statusbar.notification.NotificationListController.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
         public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
             NotificationListController.this.mListContainer.cleanUpViewStateForEntry(notificationEntry);
         }
     };
-    /* access modifiers changed from: private */
-    public final NotificationEntryManager mEntryManager;
-    /* access modifiers changed from: private */
-    public final NotificationListContainer mListContainer;
+    private final NotificationEntryManager mEntryManager;
+    private final NotificationListContainer mListContainer;
 
     public NotificationListController(NotificationEntryManager notificationEntryManager, NotificationListContainer notificationListContainer, DeviceProvisionedController deviceProvisionedController) {
         Objects.requireNonNull(notificationEntryManager);

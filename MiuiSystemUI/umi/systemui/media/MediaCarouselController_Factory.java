@@ -33,6 +33,7 @@ public final class MediaCarouselController_Factory implements Factory<MediaCarou
         this.falsingManagerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public MediaCarouselController get() {
         return provideInstance(this.contextProvider, this.mediaControlPanelFactoryProvider, this.visualStabilityManagerProvider, this.mediaHostStatesManagerProvider, this.activityStarterProvider, this.executorProvider, this.mediaManagerProvider, this.configurationControllerProvider, this.falsingManagerProvider);
     }

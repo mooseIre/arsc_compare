@@ -24,17 +24,18 @@ public class DozeUi implements DozeMachine.Part {
     private final DozeParameters mDozeParameters;
     private final Handler mHandler;
     private final DozeHost mHost;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardShowing;
+    private boolean mKeyguardShowing;
     private final KeyguardUpdateMonitorCallback mKeyguardVisibilityCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.doze.DozeUi.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
-            boolean unused = DozeUi.this.mKeyguardShowing = z;
+            DozeUi.this.mKeyguardShowing = z;
             DozeUi.this.updateAnimateScreenOff();
         }
     };
     private long mLastTimeTickElapsed = 0;
-    /* access modifiers changed from: private */
-    public final DozeMachine mMachine;
+    private final DozeMachine mMachine;
     private final AlarmTimeout mTimeTicker;
     private final WakeLock mWakeLock;
 
@@ -50,6 +51,8 @@ public class DozeUi implements DozeMachine.Part {
         this.mCanAnimateTransition = !dozeParameters.getDisplayNeedsBlanking();
         this.mDozeParameters = dozeParameters;
         this.mTimeTicker = new AlarmTimeout(alarmManager, new AlarmManager.OnAlarmListener() {
+            /* class com.android.systemui.doze.$$Lambda$DozeUi$FO90hbI6xqXYUh2DtwuwMuzJzs */
+
             public final void onAlarm() {
                 DozeUi.this.onTimeTick();
             }
@@ -59,7 +62,8 @@ public class DozeUi implements DozeMachine.Part {
     }
 
     /* access modifiers changed from: private */
-    public void updateAnimateScreenOff() {
+    /* access modifiers changed from: public */
+    private void updateAnimateScreenOff() {
         if (this.mCanAnimateTransition) {
             boolean z = this.mDozeParameters.getAlwaysOn() && this.mKeyguardShowing && !this.mHost.isPowerSaveActive();
             this.mDozeParameters.setControlScreenOffAnimation(z);
@@ -69,28 +73,33 @@ public class DozeUi implements DozeMachine.Part {
 
     private void pulseWhileDozing(final int i) {
         this.mHost.pulseWhileDozing(new DozeHost.PulseCallback() {
+            /* class com.android.systemui.doze.DozeUi.AnonymousClass2 */
+
+            @Override // com.android.systemui.doze.DozeHost.PulseCallback
             public void onPulseStarted() {
                 DozeMachine.State state;
                 try {
-                    DozeMachine access$200 = DozeUi.this.mMachine;
+                    DozeMachine dozeMachine = DozeUi.this.mMachine;
                     if (i == 8) {
                         state = DozeMachine.State.DOZE_PULSING_BRIGHT;
                     } else {
                         state = DozeMachine.State.DOZE_PULSING;
                     }
-                    access$200.requestState(state);
+                    dozeMachine.requestState(state);
                 } catch (IllegalStateException unused) {
                 }
             }
 
+            @Override // com.android.systemui.doze.DozeHost.PulseCallback
             public void onPulseFinished() {
                 DozeUi.this.mMachine.requestState(DozeMachine.State.DOZE_PULSE_DONE);
             }
         }, i);
     }
 
+    /* access modifiers changed from: package-private */
     /* renamed from: com.android.systemui.doze.DozeUi$3  reason: invalid class name */
-    static /* synthetic */ class AnonymousClass3 {
+    public static /* synthetic */ class AnonymousClass3 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(22:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|(3:21|22|24)) */
@@ -108,81 +117,13 @@ public class DozeUi implements DozeMachine.Part {
         /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
         static {
             /*
-                com.android.systemui.doze.DozeMachine$State[] r0 = com.android.systemui.doze.DozeMachine.State.values()
-                int r0 = r0.length
-                int[] r0 = new int[r0]
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State = r0
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD     // Catch:{ NoSuchFieldError -> 0x0012 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
-                r2 = 1
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
-            L_0x0012:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x001d }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_DOCKED     // Catch:{ NoSuchFieldError -> 0x001d }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
-                r2 = 2
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
-            L_0x001d:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0028 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_PAUSING     // Catch:{ NoSuchFieldError -> 0x0028 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
-                r2 = 3
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
-            L_0x0028:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0033 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE     // Catch:{ NoSuchFieldError -> 0x0033 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
-                r2 = 4
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
-            L_0x0033:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x003e }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_PAUSED     // Catch:{ NoSuchFieldError -> 0x003e }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
-                r2 = 5
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
-            L_0x003e:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0049 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_REQUEST_PULSE     // Catch:{ NoSuchFieldError -> 0x0049 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
-                r2 = 6
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
-            L_0x0049:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0054 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.INITIALIZED     // Catch:{ NoSuchFieldError -> 0x0054 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
-                r2 = 7
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
-            L_0x0054:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0060 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.FINISH     // Catch:{ NoSuchFieldError -> 0x0060 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0060 }
-                r2 = 8
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0060 }
-            L_0x0060:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x006c }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_PULSING     // Catch:{ NoSuchFieldError -> 0x006c }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x006c }
-                r2 = 9
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x006c }
-            L_0x006c:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0078 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_PULSING_BRIGHT     // Catch:{ NoSuchFieldError -> 0x0078 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0078 }
-                r2 = 10
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0078 }
-            L_0x0078:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0084 }
-                com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_PULSE_DONE     // Catch:{ NoSuchFieldError -> 0x0084 }
-                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0084 }
-                r2 = 11
-                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0084 }
-            L_0x0084:
-                return
+            // Method dump skipped, instructions count: 133
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeUi.AnonymousClass3.<clinit>():void");
         }
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         switch (AnonymousClass3.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {
             case 1:
@@ -194,6 +135,8 @@ public class DozeUi implements DozeMachine.Part {
                     DozeHost dozeHost = this.mHost;
                     Objects.requireNonNull(dozeHost);
                     handler.postDelayed(wakeLock.wrap(new Runnable() {
+                        /* class com.android.systemui.doze.$$Lambda$TvDuFxrq6WnRSNRP7k8oBY4uOBc */
+
                         public final void run() {
                             DozeHost.this.dozeTimeTick();
                         }
@@ -232,14 +175,15 @@ public class DozeUi implements DozeMachine.Part {
             case 11:
                 this.mHost.setAnimateWakeup(true);
                 return;
-            case 8:
-                return;
+            case 7:
             default:
                 DozeHost dozeHost = this.mHost;
                 if (!this.mCanAnimateTransition || !this.mDozeParameters.getAlwaysOn()) {
                     z = false;
                 }
                 dozeHost.setAnimateWakeup(z);
+                return;
+            case 8:
                 return;
         }
     }

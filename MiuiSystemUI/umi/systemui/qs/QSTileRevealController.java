@@ -13,13 +13,15 @@ import java.util.Set;
 public class QSTileRevealController {
     private final Context mContext;
     private final Handler mHandler = new Handler();
-    /* access modifiers changed from: private */
-    public final PagedTileLayout mPagedTileLayout;
-    /* access modifiers changed from: private */
-    public final QSPanel mQSPanel;
+    private final PagedTileLayout mPagedTileLayout;
+    private final QSPanel mQSPanel;
     private final Runnable mRevealQsTiles = new Runnable() {
+        /* class com.android.systemui.qs.QSTileRevealController.AnonymousClass1 */
+
         public void run() {
             QSTileRevealController.this.mPagedTileLayout.startTileReveal(QSTileRevealController.this.mTilesToReveal, new Runnable() {
+                /* class com.android.systemui.qs.$$Lambda$QSTileRevealController$1$gTMt7UW3YL6K0ko8X3nSQ3r95I */
+
                 public final void run() {
                     QSTileRevealController.AnonymousClass1.this.lambda$run$0$QSTileRevealController$1();
                 }
@@ -36,8 +38,7 @@ public class QSTileRevealController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final ArraySet<String> mTilesToReveal = new ArraySet<>();
+    private final ArraySet<String> mTilesToReveal = new ArraySet<>();
 
     QSTileRevealController(Context context, QSPanel qSPanel, PagedTileLayout pagedTileLayout) {
         this.mContext = context;
@@ -54,9 +55,9 @@ public class QSTileRevealController {
     }
 
     public void updateRevealedTiles(Collection<QSTile> collection) {
-        ArraySet arraySet = new ArraySet();
-        for (QSTile tileSpec : collection) {
-            arraySet.add(tileSpec.getTileSpec());
+        ArraySet<String> arraySet = new ArraySet<>();
+        for (QSTile qSTile : collection) {
+            arraySet.add(qSTile.getTileSpec());
         }
         Set<String> stringSet = Prefs.getStringSet(this.mContext, "QsTileSpecsRevealed", Collections.EMPTY_SET);
         if (stringSet.isEmpty() || this.mQSPanel.isShowingCustomize()) {
@@ -64,13 +65,14 @@ public class QSTileRevealController {
             return;
         }
         arraySet.removeAll(stringSet);
-        this.mTilesToReveal.addAll(arraySet);
+        this.mTilesToReveal.addAll((ArraySet<? extends String>) arraySet);
     }
 
     /* access modifiers changed from: private */
-    public void addTileSpecsToRevealed(ArraySet<String> arraySet) {
+    /* access modifiers changed from: public */
+    private void addTileSpecsToRevealed(ArraySet<String> arraySet) {
         ArraySet arraySet2 = new ArraySet(Prefs.getStringSet(this.mContext, "QsTileSpecsRevealed", Collections.EMPTY_SET));
-        arraySet2.addAll(arraySet);
+        arraySet2.addAll((ArraySet) arraySet);
         Prefs.putStringSet(this.mContext, "QsTileSpecsRevealed", arraySet2);
     }
 }

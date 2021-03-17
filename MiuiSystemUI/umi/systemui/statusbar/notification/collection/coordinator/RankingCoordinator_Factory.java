@@ -11,6 +11,7 @@ public final class RankingCoordinator_Factory implements Factory<RankingCoordina
         this.statusBarStateControllerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public RankingCoordinator get() {
         return provideInstance(this.statusBarStateControllerProvider);
     }

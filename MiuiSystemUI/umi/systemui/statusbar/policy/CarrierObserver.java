@@ -16,6 +16,8 @@ import miui.telephony.SubscriptionManager;
 public class CarrierObserver {
     protected Handler mBgHandler;
     protected BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.CarrierObserver.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             final int intExtra = intent.getIntExtra(SubscriptionManager.SLOT_KEY, SubscriptionManager.INVALID_SLOT_ID);
             if (intExtra != SubscriptionManager.INVALID_SLOT_ID) {
@@ -40,6 +42,8 @@ public class CarrierObserver {
                 }
                 if (intExtra < CarrierObserver.this.mPhoneCount) {
                     CarrierObserver.this.mMainHandler.post(new Runnable() {
+                        /* class com.android.systemui.statusbar.policy.CarrierObserver.AnonymousClass1.AnonymousClass1 */
+
                         public void run() {
                             CarrierObserver.this.fireCarrierTextChanged(intExtra, str);
                         }
@@ -71,12 +75,12 @@ public class CarrierObserver {
         for (int i = 1; i < this.mPhoneCount; i++) {
             intentFilter.addAction("android.telephony.action.SERVICE_PROVIDERS_UPDATED" + i);
         }
-        this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter, (String) null, this.mBgHandler);
+        this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter, null, this.mBgHandler);
     }
 
     public void addCallback(Callback callback) {
         if (callback != null) {
-            this.mCallbacks.add(new WeakReference(callback));
+            this.mCallbacks.add(new WeakReference<>(callback));
             callback.onCarrierChanged(this.mCarriers);
         }
     }
@@ -88,7 +92,7 @@ public class CarrierObserver {
             if (i < strArr.length) {
                 strArr[i] = str;
                 for (int size = this.mCallbacks.size() - 1; size >= 0; size--) {
-                    Callback callback = (Callback) this.mCallbacks.get(size).get();
+                    Callback callback = this.mCallbacks.get(size).get();
                     if (callback != null) {
                         callback.onCarrierChanged(this.mCarriers);
                     }

@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$Yf7sZoTIPl0lv58dfbsbQ3za13A implemen
     private /* synthetic */ $$Lambda$Yf7sZoTIPl0lv58dfbsbQ3za13A() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((PipMenuActivityController.Listener) obj).onPipExpand();
     }

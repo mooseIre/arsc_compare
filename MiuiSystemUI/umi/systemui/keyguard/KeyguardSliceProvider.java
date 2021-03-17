@@ -8,7 +8,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.database.ContentObserver;
 import android.graphics.drawable.Icon;
 import android.icu.text.DateFormat;
 import android.icu.text.DisplayContext;
@@ -65,6 +64,8 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     protected final Uri mHeaderUri = Uri.parse("content://com.android.systemui.keyguard/header");
     @VisibleForTesting
     final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.keyguard.KeyguardSliceProvider.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("android.intent.action.DATE_CHANGED".equals(action)) {
@@ -81,12 +82,16 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     public KeyguardBypassController mKeyguardBypassController;
     @VisibleForTesting
     final KeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.keyguard.KeyguardSliceProvider.AnonymousClass2 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onTimeChanged() {
             synchronized (this) {
                 KeyguardSliceProvider.this.updateClockLocked();
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onTimeZoneChanged(TimeZone timeZone) {
             synchronized (this) {
                 KeyguardSliceProvider.this.cleanDateFormatLocked();
@@ -111,6 +116,8 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     private int mStatusBarState;
     public StatusBarStateController mStatusBarStateController;
     private final AlarmManager.OnAlarmListener mUpdateNextAlarm = new AlarmManager.OnAlarmListener() {
+        /* class com.android.systemui.keyguard.$$Lambda$KeyguardSliceProvider$IhzByd8TsqFuOrSyuGurVskyPLo */
+
         public final void onAlarm() {
             KeyguardSliceProvider.this.updateNextAlarm();
         }
@@ -125,6 +132,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         return sInstance;
     }
 
+    @Override // androidx.slice.SliceProvider
     public Slice onBindSlice(Uri uri) {
         Slice build;
         Trace.beginSection("KeyguardSliceProvider#onBindSlice");
@@ -149,12 +157,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     /* access modifiers changed from: protected */
     public boolean needsMediaLocked() {
         KeyguardBypassController keyguardBypassController = this.mKeyguardBypassController;
-        boolean z = keyguardBypassController != null && keyguardBypassController.getBypassEnabled() && this.mDozeParameters.getAlwaysOn();
-        boolean z2 = this.mStatusBarState == 0 && this.mMediaIsVisible;
-        if (TextUtils.isEmpty(this.mMediaTitle) || !this.mMediaIsVisible || (!this.mDozing && !z && !z2)) {
-            return false;
-        }
-        return true;
+        return !TextUtils.isEmpty(this.mMediaTitle) && this.mMediaIsVisible && (this.mDozing || (keyguardBypassController != null && keyguardBypassController.getBypassEnabled() && this.mDozeParameters.getAlwaysOn()) || (this.mStatusBarState == 0 && this.mMediaIsVisible));
     }
 
     /* access modifiers changed from: protected */
@@ -214,6 +217,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         return this.mZenModeController.getZen() != 0;
     }
 
+    @Override // androidx.slice.SliceProvider
     public boolean onCreateSliceProvider() {
         this.mContextAvailableCallback.onContextAvailable(getContext());
         inject();
@@ -259,6 +263,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onConfigChanged(ZenModeConfig zenModeConfig) {
         notifyChange();
     }
@@ -293,7 +298,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
                 IntentFilter intentFilter = new IntentFilter();
                 intentFilter.addAction("android.intent.action.DATE_CHANGED");
                 intentFilter.addAction("android.intent.action.LOCALE_CHANGED");
-                getContext().registerReceiver(this.mIntentReceiver, intentFilter, (String) null, (Handler) null);
+                getContext().registerReceiver(this.mIntentReceiver, intentFilter, null, null);
                 getKeyguardUpdateMonitor().registerCallback(this.mKeyguardUpdateMonitorCallback);
                 this.mRegistered = true;
             }
@@ -336,6 +341,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         this.mDateFormat = null;
     }
 
+    @Override // com.android.systemui.statusbar.policy.NextAlarmController.NextAlarmChangeCallback
     public void onNextAlarmChanged(AlarmManager.AlarmClockInfo alarmClockInfo) {
         long triggerTime;
         synchronized (this) {
@@ -346,9 +352,8 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
             } else {
                 triggerTime = this.mNextAlarmInfo.getTriggerTime() - TimeUnit.HOURS.toMillis(12);
             }
-            long j = triggerTime;
-            if (j > 0) {
-                this.mAlarmManager.setExact(1, j, "lock_screen_next_alarm", this.mUpdateNextAlarm, this.mHandler);
+            if (triggerTime > 0) {
+                this.mAlarmManager.setExact(1, triggerTime, "lock_screen_next_alarm", this.mUpdateNextAlarm, this.mHandler);
             }
         }
         updateNextAlarm();
@@ -358,16 +363,18 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         return (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
     }
 
+    @Override // com.android.systemui.statusbar.NotificationMediaManager.MediaListener
     public void onPrimaryMetadataOrStateChanged(MediaMetadata mediaMetadata, int i) {
         synchronized (this) {
             boolean isPlayingState = NotificationMediaManager.isPlayingState(i);
-            this.mMediaHandler.removeCallbacksAndMessages((Object) null);
+            this.mMediaHandler.removeCallbacksAndMessages(null);
             if (!this.mMediaIsVisible || isPlayingState || this.mStatusBarState == 0) {
                 this.mMediaWakeLock.setAcquired(false);
                 updateMediaStateLocked(mediaMetadata, i);
             } else {
                 this.mMediaWakeLock.setAcquired(true);
                 this.mMediaHandler.postDelayed(new Runnable(mediaMetadata, i) {
+                    /* class com.android.systemui.keyguard.$$Lambda$KeyguardSliceProvider$ZXZ19al6fy8sNCp7cWhRFX26Q9o */
                     public final /* synthetic */ MediaMetadata f$1;
                     public final /* synthetic */ int f$2;
 
@@ -418,9 +425,10 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
 
     /* access modifiers changed from: protected */
     public void notifyChange() {
-        this.mContentResolver.notifyChange(this.mSliceUri, (ContentObserver) null);
+        this.mContentResolver.notifyChange(this.mSliceUri, null);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
         boolean z2;
         synchronized (this) {
@@ -433,6 +441,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
         boolean z;
         synchronized (this) {
@@ -445,6 +454,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         }
     }
 
+    @Override // com.android.systemui.SystemUIAppComponentFactory.ContextInitializer
     public void setContextAvailableCallback(SystemUIAppComponentFactory.ContextAvailableCallback contextAvailableCallback) {
         this.mContextAvailableCallback = contextAvailableCallback;
     }

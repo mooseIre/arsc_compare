@@ -45,21 +45,15 @@ import java.util.Iterator;
 
 public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile, LifecycleOwner, Dumpable {
     protected static final Object ARG_SHOW_TRANSIENT_ENABLING = new Object();
-    /* access modifiers changed from: protected */
-    public static final boolean DEBUG = Log.isLoggable("Tile", 3);
+    protected static final boolean DEBUG = Log.isLoggable("Tile", 3);
     protected static boolean mInControlCenter;
-    /* access modifiers changed from: protected */
-    public final String TAG = ("Tile." + getClass().getSimpleName());
+    protected final String TAG = ("Tile." + getClass().getSimpleName());
     private boolean mAnnounceNextStateChange;
     private final ArrayList<QSTile.Callback> mCallbacks = new ArrayList<>();
-    /* access modifiers changed from: protected */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
-    /* access modifiers changed from: protected */
-    public QSTileImpl<TState>.H mHandler = new H((Looper) Dependency.get(Dependency.BG_LOOPER));
-    /* access modifiers changed from: protected */
-    public final QSHost mHost;
+    protected final Context mContext;
+    private RestrictedLockUtils.EnforcedAdmin mEnforcedAdmin;
+    protected QSTileImpl<TState>.H mHandler = new H((Looper) Dependency.get(Dependency.BG_LOOPER));
+    protected final QSHost mHost;
     private int mIndex = -1;
     private final InstanceId mInstanceId;
     private int mIsFullQs;
@@ -69,8 +63,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     private final QSLogger mQSLogger;
     private boolean mShowingDetail;
     private final Object mStaleListener = new Object();
-    /* access modifiers changed from: protected */
-    public TState mState;
+    protected TState mState;
     private final StatusBarStateController mStatusBarStateController = ((StatusBarStateController) Dependency.get(StatusBarStateController.class));
     private String mTileSpec;
     private TState mTmpState;
@@ -82,12 +75,14 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         return null;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public DetailAdapter getDetailAdapter() {
         return null;
     }
 
     public abstract Intent getLongClickIntent();
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public abstract int getMetricsCategory();
 
     /* access modifiers changed from: protected */
@@ -106,12 +101,14 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         return false;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public boolean isAvailable() {
         return true;
     }
 
     public abstract TState newTileState();
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void setDetailListening(boolean z) {
     }
 
@@ -136,14 +133,17 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mTmpState = newTileState();
     }
 
+    @Override // androidx.lifecycle.LifecycleOwner
     public Lifecycle getLifecycle() {
         return this.mLifecycle;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public InstanceId getInstanceId() {
         return this.mInstanceId;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void setListening(Object obj, boolean z) {
         this.mHandler.obtainMessage(13, z ? 1 : 0, 0, obj).sendToTarget();
     }
@@ -153,10 +153,12 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         setListening(this.mStaleListener, true);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public String getTileSpec() {
         return this.mTileSpec;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void setTileSpec(String str) {
         this.mTileSpec = str;
     }
@@ -165,30 +167,37 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         return this.mHost;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public QSIconView createTileView(Context context) {
         return new MiuiQSIconViewImpl(context);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public QSIconView createControlCenterTileView(Context context) {
         return new CCQSIconViewImpl(context);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void addCallback(QSTile.Callback callback) {
         this.mHandler.obtainMessage(1, callback).sendToTarget();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void removeCallback(QSTile.Callback callback) {
         this.mHandler.obtainMessage(12, callback).sendToTarget();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void removeCallbacks() {
         this.mHandler.sendEmptyMessage(11);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void removeCallbacksByType(int i) {
         this.mHandler.obtainMessage(1002, i, 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void click(boolean z) {
         this.mMetricsLogger.write(populate(new LogMaker(925).setType(4).addTaggedData(1592, Integer.valueOf(this.mStatusBarStateController.getState()))));
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).onClickQSTile(getTileSpec(), z, getIndex());
@@ -209,6 +218,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         return this.mIndex;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void secondaryClick() {
         this.mMetricsLogger.write(populate(new LogMaker(926).setType(4).addTaggedData(1592, Integer.valueOf(this.mStatusBarStateController.getState()))));
         boolean z = false;
@@ -225,6 +235,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         systemUIStat.handleTrackQSTileSecondaryClick(tileSpec, index, z);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void longClick() {
         this.mMetricsLogger.write(populate(new LogMaker(366).setType(4).addTaggedData(1592, Integer.valueOf(this.mStatusBarStateController.getState()))));
         this.mUiEventLogger.logWithInstanceId(QSEvent.QS_ACTION_LONG_PRESS, 0, getMetricsSpec(), getInstanceId());
@@ -234,6 +245,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleTrackQSTileLongClick(getTileSpec(), getIndex());
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public LogMaker populate(LogMaker logMaker) {
         TState tstate = this.mState;
         if (tstate instanceof QSTile.BooleanState) {
@@ -250,8 +262,9 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mHandler.obtainMessage(1001, z ? 1 : 0, 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void refreshState() {
-        refreshState((Object) null);
+        refreshState(null);
     }
 
     /* access modifiers changed from: protected */
@@ -259,6 +272,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mHandler.obtainMessage(5, obj).sendToTarget();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void userSwitch(int i) {
         this.mHandler.obtainMessage(7, i, 0).sendToTarget();
     }
@@ -271,32 +285,38 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mHandler.obtainMessage(9, z ? 1 : 0, 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public void destroy() {
         this.mHandler.sendEmptyMessage(10);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public TState getState() {
         return this.mState;
     }
 
     /* access modifiers changed from: private */
-    public void handleAddCallback(QSTile.Callback callback) {
+    /* access modifiers changed from: public */
+    private void handleAddCallback(QSTile.Callback callback) {
         this.mCallbacks.add(callback);
         callback.onStateChanged(this.mState);
     }
 
     /* access modifiers changed from: private */
-    public void handleRemoveCallback(QSTile.Callback callback) {
+    /* access modifiers changed from: public */
+    private void handleRemoveCallback(QSTile.Callback callback) {
         this.mCallbacks.remove(callback);
     }
 
     /* access modifiers changed from: private */
-    public void handleRemoveCallbacks() {
+    /* access modifiers changed from: public */
+    private void handleRemoveCallbacks() {
         this.mCallbacks.clear();
     }
 
     /* access modifiers changed from: private */
-    public void handleRemoveCallbacksByType(int i) {
+    /* access modifiers changed from: public */
+    private void handleRemoveCallbacksByType(int i) {
         if (this.mCallbacks.size() != 0) {
             Iterator<QSTile.Callback> it = this.mCallbacks.iterator();
             while (it.hasNext()) {
@@ -359,7 +379,8 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     }
 
     /* access modifiers changed from: private */
-    public void handleShowDetail(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleShowDetail(boolean z) {
         this.mShowingDetail = z;
         for (int i = 0; i < this.mCallbacks.size(); i++) {
             this.mCallbacks.get(i).onShowDetail(z);
@@ -367,7 +388,8 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     }
 
     /* access modifiers changed from: private */
-    public void handleShowEdit(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleShowEdit(boolean z) {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
             this.mCallbacks.get(i).onShowEdit(z);
         }
@@ -379,14 +401,16 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     }
 
     /* access modifiers changed from: private */
-    public void handleToggleStateChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleToggleStateChanged(boolean z) {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
             this.mCallbacks.get(i).onToggleStateChanged(z);
         }
     }
 
     /* access modifiers changed from: private */
-    public void handleScanStateChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleScanStateChanged(boolean z) {
         for (int i = 0; i < this.mCallbacks.size(); i++) {
             this.mCallbacks.get(i).onScanStateChanged(z);
         }
@@ -394,11 +418,12 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
 
     /* access modifiers changed from: protected */
     public void handleUserSwitch(int i) {
-        handleRefreshState((Object) null);
+        handleRefreshState(null);
     }
 
     /* access modifiers changed from: private */
-    public void handleSetListeningInternal(Object obj, boolean z) {
+    /* access modifiers changed from: public */
+    private void handleSetListeningInternal(Object obj, boolean z) {
         if (z) {
             if (this.mListeners.add(obj) && this.mListeners.size() == 1) {
                 if (DEBUG) {
@@ -443,7 +468,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
             handleSetListening(false);
         }
         this.mCallbacks.clear();
-        this.mHandler.removeCallbacksAndMessages((Object) null);
+        this.mHandler.removeCallbacksAndMessages(null);
     }
 
     /* access modifiers changed from: protected */
@@ -458,6 +483,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mEnforcedAdmin = checkIfRestrictionEnforced;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public String getMetricsSpec() {
         return this.mTileSpec;
     }
@@ -476,7 +502,8 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         return 0;
     }
 
-    protected final class H extends Handler {
+    /* access modifiers changed from: protected */
+    public final class H extends Handler {
         @VisibleForTesting
         protected H(Looper looper) {
             super(looper);
@@ -493,7 +520,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
                     QSTileImpl.this.handleRemoveCallback((QSTile.Callback) message.obj);
                 } else if (message.what == 2) {
                     if (message.obj instanceof Boolean) {
-                        boolean booleanValue = ((Boolean) message.obj).booleanValue();
+                        ((Boolean) message.obj).booleanValue();
                     }
                     if (QSTileImpl.this.mState.disabledByPolicy) {
                         QSTileImpl.this.postStartActivityDismissingKeyguard(RestrictedLockUtils.getShowAdminSupportDetailsIntent(QSTileImpl.this.mContext, QSTileImpl.this.mEnforcedAdmin), 0);
@@ -549,7 +576,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
                     throw new IllegalArgumentException("Unknown msg: " + message.what);
                 }
             } catch (Throwable th) {
-                String str = "Error in " + null;
+                String str = "Error in " + ((String) null);
                 Log.w(QSTileImpl.this.TAG, str, th);
                 QSTileImpl.this.mHost.warn(str, th);
             }
@@ -560,6 +587,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         protected final Drawable mDrawable;
         protected final Drawable mInvisibleDrawable;
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public String toString() {
             return "DrawableIcon";
         }
@@ -569,10 +597,12 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
             this.mInvisibleDrawable = drawable.getConstantState().newDrawable();
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public Drawable getDrawable(Context context) {
             return this.mDrawable;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public Drawable getInvisibleDrawable(Context context) {
             return this.mInvisibleDrawable;
         }
@@ -599,10 +629,12 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
             return icon;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public Drawable getDrawable(Context context) {
             return context.getDrawable(this.mResId);
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public Drawable getInvisibleDrawable(Context context) {
             return context.getDrawable(this.mResId);
         }
@@ -611,11 +643,13 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
             return (obj instanceof ResourceIcon) && ((ResourceIcon) obj).mResId == this.mResId;
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Icon
         public String toString() {
-            return String.format("ResourceIcon[resId=0x%08x]", new Object[]{Integer.valueOf(this.mResId)});
+            return String.format("ResourceIcon[resId=0x%08x]", Integer.valueOf(this.mResId));
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println(getClass().getSimpleName() + ":");
         printWriter.print("    ");

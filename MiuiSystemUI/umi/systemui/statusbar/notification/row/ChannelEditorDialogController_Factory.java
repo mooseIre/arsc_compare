@@ -17,6 +17,7 @@ public final class ChannelEditorDialogController_Factory implements Factory<Chan
         this.dialogBuilderProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ChannelEditorDialogController get() {
         return provideInstance(this.cProvider, this.noManProvider, this.dialogBuilderProvider);
     }

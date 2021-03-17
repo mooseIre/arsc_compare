@@ -17,21 +17,20 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: KeyguardBypassController.kt */
 public class KeyguardBypassController implements Dumpable {
     private boolean bouncerShowing;
-    /* access modifiers changed from: private */
-    public boolean bypassEnabled;
+    private boolean bypassEnabled;
     private boolean hasFaceFeature;
     private boolean isPulseExpanding;
     private boolean launchingAffordance;
     private final KeyguardStateController mKeyguardStateController;
-    /* access modifiers changed from: private */
-    public PendingUnlock pendingUnlock;
+    private PendingUnlock pendingUnlock;
     private boolean qSExpanded;
     private final StatusBarStateController statusBarStateController;
     @NotNull
     public BiometricUnlockController unlockController;
 
+    /* access modifiers changed from: private */
     /* compiled from: KeyguardBypassController.kt */
-    private static final class PendingUnlock {
+    public static final class PendingUnlock {
         private final boolean isStrongBiometric;
         @NotNull
         private final BiometricSourceType pendingUnlockType;
@@ -44,7 +43,7 @@ public class KeyguardBypassController implements Dumpable {
                 return false;
             }
             PendingUnlock pendingUnlock = (PendingUnlock) obj;
-            return Intrinsics.areEqual((Object) this.pendingUnlockType, (Object) pendingUnlock.pendingUnlockType) && this.isStrongBiometric == pendingUnlock.isStrongBiometric;
+            return Intrinsics.areEqual(this.pendingUnlockType, pendingUnlock.pendingUnlockType) && this.isStrongBiometric == pendingUnlock.isStrongBiometric;
         }
 
         public int hashCode() {
@@ -54,7 +53,10 @@ public class KeyguardBypassController implements Dumpable {
             if (z) {
                 z = true;
             }
-            return hashCode + (z ? 1 : 0);
+            int i = z ? 1 : 0;
+            int i2 = z ? 1 : 0;
+            int i3 = z ? 1 : 0;
+            return hashCode + i;
         }
 
         @NotNull
@@ -121,12 +123,15 @@ public class KeyguardBypassController implements Dumpable {
         if (hasSystemFeature) {
             dumpManager.registerDumpable("KeyguardBypassController", this);
             statusBarStateController2.addCallback(new StatusBarStateController.StateListener(this) {
+                /* class com.android.systemui.statusbar.phone.KeyguardBypassController.AnonymousClass1 */
                 final /* synthetic */ KeyguardBypassController this$0;
 
+                /* JADX WARN: Incorrect args count in method signature: ()V */
                 {
                     this.this$0 = r1;
                 }
 
+                @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
                 public void onStateChanged(int i) {
                     if (i != 1) {
                         this.this$0.pendingUnlock = null;
@@ -135,23 +140,28 @@ public class KeyguardBypassController implements Dumpable {
             });
             final int i = context.getResources().getBoolean(17891460) ? 1 : 0;
             tunerService.addTunable(new TunerService.Tunable(this) {
+                /* class com.android.systemui.statusbar.phone.KeyguardBypassController.AnonymousClass2 */
                 final /* synthetic */ KeyguardBypassController this$0;
 
                 {
                     this.this$0 = r1;
                 }
 
+                @Override // com.android.systemui.tuner.TunerService.Tunable
                 public void onTuningChanged(@Nullable String str, @Nullable String str2) {
                     this.this$0.bypassEnabled = tunerService.getValue(str, i) != 0;
                 }
             }, "face_unlock_dismisses_keyguard");
             notificationLockscreenUserManager.addUserChangedListener(new NotificationLockscreenUserManager.UserChangedListener(this) {
+                /* class com.android.systemui.statusbar.phone.KeyguardBypassController.AnonymousClass3 */
                 final /* synthetic */ KeyguardBypassController this$0;
 
+                /* JADX WARN: Incorrect args count in method signature: ()V */
                 {
                     this.this$0 = r1;
                 }
 
+                @Override // com.android.systemui.statusbar.NotificationLockscreenUserManager.UserChangedListener
                 public void onUserChanged(int i) {
                     this.this$0.pendingUnlock = null;
                 }
@@ -223,6 +233,7 @@ public class KeyguardBypassController implements Dumpable {
         this.pendingUnlock = null;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");

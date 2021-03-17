@@ -19,42 +19,32 @@ import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: MediaCarouselScrollHandler.kt */
 public class MediaCarouselScrollHandler {
     private static final MediaCarouselScrollHandler$Companion$CONTENT_TRANSLATION$1 CONTENT_TRANSLATION = new MediaCarouselScrollHandler$Companion$CONTENT_TRANSLATION$1("contentTranslation");
     private int activeMediaIndex;
-    /* access modifiers changed from: private */
-    public int carouselHeight;
-    /* access modifiers changed from: private */
-    public int carouselWidth;
+    private int carouselHeight;
+    private int carouselWidth;
     private float contentTranslation;
-    /* access modifiers changed from: private */
-    public int cornerRadius;
-    /* access modifiers changed from: private */
-    public final Function0<Unit> dismissCallback;
-    /* access modifiers changed from: private */
-    public final FalsingManager falsingManager;
+    private int cornerRadius;
+    private final Function0<Unit> dismissCallback;
+    private final FalsingManager falsingManager;
     private boolean falsingProtectionNeeded;
     private final GestureDetectorCompat gestureDetector = new GestureDetectorCompat(this.scrollView.getContext(), this.gestureListener);
     private final MediaCarouselScrollHandler$gestureListener$1 gestureListener = new MediaCarouselScrollHandler$gestureListener$1(this);
     private final DelayableExecutor mainExecutor;
-    @NotNull
     private ViewGroup mediaContent;
     private final PageIndicator pageIndicator;
     private int playerWidthPlusPadding;
     private final MediaCarouselScrollHandler$scrollChangedListener$1 scrollChangedListener = new MediaCarouselScrollHandler$scrollChangedListener$1(this);
     private int scrollIntoCurrentMedia;
-    @NotNull
     private final MediaScrollView scrollView;
     private View settingsButton;
     private boolean showsSettingsButton;
     private final MediaCarouselScrollHandler$touchListener$1 touchListener = new MediaCarouselScrollHandler$touchListener$1(this);
     private Function0<Unit> translationChangedListener;
 
-    public MediaCarouselScrollHandler(@NotNull MediaScrollView mediaScrollView, @NotNull PageIndicator pageIndicator2, @NotNull DelayableExecutor delayableExecutor, @NotNull Function0<Unit> function0, @NotNull Function0<Unit> function02, @NotNull FalsingManager falsingManager2) {
+    public MediaCarouselScrollHandler(MediaScrollView mediaScrollView, PageIndicator pageIndicator2, DelayableExecutor delayableExecutor, Function0<Unit> function0, Function0<Unit> function02, FalsingManager falsingManager2) {
         Intrinsics.checkParameterIsNotNull(mediaScrollView, "scrollView");
         Intrinsics.checkParameterIsNotNull(pageIndicator2, "pageIndicator");
         Intrinsics.checkParameterIsNotNull(delayableExecutor, "mainExecutor");
@@ -72,13 +62,14 @@ public class MediaCarouselScrollHandler {
         this.mediaContent = this.scrollView.getContentContainer();
         this.scrollView.setOnScrollChangeListener(this.scrollChangedListener);
         this.scrollView.setOutlineProvider(new ViewOutlineProvider(this) {
+            /* class com.android.systemui.media.MediaCarouselScrollHandler.AnonymousClass1 */
             final /* synthetic */ MediaCarouselScrollHandler this$0;
 
             {
                 this.this$0 = r1;
             }
 
-            public void getOutline(@Nullable View view, @Nullable Outline outline) {
+            public void getOutline(View view, Outline outline) {
                 if (outline != null) {
                     outline.setRoundRect(0, 0, this.this$0.carouselWidth, this.this$0.carouselHeight, (float) this.this$0.cornerRadius);
                 }
@@ -86,8 +77,6 @@ public class MediaCarouselScrollHandler {
         });
     }
 
-    /* access modifiers changed from: protected */
-    @NotNull
     public final MediaScrollView getScrollView() {
         return this.scrollView;
     }
@@ -104,8 +93,6 @@ public class MediaCarouselScrollHandler {
         this.falsingProtectionNeeded = z;
     }
 
-    /* access modifiers changed from: protected */
-    @NotNull
     public final ViewGroup getMediaContent() {
         return this.mediaContent;
     }
@@ -114,8 +101,8 @@ public class MediaCarouselScrollHandler {
         return this.contentTranslation;
     }
 
-    /* access modifiers changed from: private */
-    public final void setContentTranslation(float f) {
+    /* access modifiers changed from: public */
+    private final void setContentTranslation(float f) {
         this.contentTranslation = f;
         this.mediaContent.setTranslationX(f);
         updateSettingsPresentation();
@@ -138,7 +125,7 @@ public class MediaCarouselScrollHandler {
         this.showsSettingsButton = z;
     }
 
-    public final void onSettingsButtonUpdated(@NotNull View view) {
+    public final void onSettingsButtonUpdated(View view) {
         Intrinsics.checkParameterIsNotNull(view, "button");
         this.settingsButton = view;
         if (view != null) {
@@ -250,8 +237,8 @@ public class MediaCarouselScrollHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    public final boolean onTouch(MotionEvent motionEvent) {
+    /* access modifiers changed from: public */
+    private final boolean onTouch(MotionEvent motionEvent) {
         float f;
         boolean z = true;
         boolean z2 = motionEvent.getAction() == 1;
@@ -299,7 +286,6 @@ public class MediaCarouselScrollHandler {
         }
     }
 
-    /* access modifiers changed from: protected */
     public void startScroll(int i, int i2, float f) {
         this.mainExecutor.execute(new MediaCarouselScrollHandler$startScroll$1(this, i, i2));
     }
@@ -320,12 +306,12 @@ public class MediaCarouselScrollHandler {
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    public final boolean onInterceptTouch(MotionEvent motionEvent) {
+    /* access modifiers changed from: public */
+    private final boolean onInterceptTouch(MotionEvent motionEvent) {
         return this.gestureDetector.onTouchEvent(motionEvent);
     }
 
-    public final boolean onScroll(@NotNull MotionEvent motionEvent, @NotNull MotionEvent motionEvent2, float f) {
+    public final boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent2, float f) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "down");
         Intrinsics.checkParameterIsNotNull(motionEvent2, "lastMotion");
         if (!this.scrollView.canScrollHorizontally((int) (-(motionEvent2.getX() - motionEvent.getX())))) {
@@ -357,8 +343,8 @@ public class MediaCarouselScrollHandler {
         return true;
     }
 
-    /* access modifiers changed from: private */
-    public final boolean onFling(float f, float f2) {
+    /* access modifiers changed from: public */
+    private final boolean onFling(float f, float f2) {
         float f3 = f * f;
         double d = (double) f2;
         if (((double) f3) < 0.5d * d * d || f3 < ((float) 1000000)) {
@@ -421,8 +407,8 @@ public class MediaCarouselScrollHandler {
         this.scrollView.setClipToOutline((this.contentTranslation == 0.0f && this.scrollIntoCurrentMedia == 0) ? false : true);
     }
 
-    /* access modifiers changed from: private */
-    public final void onMediaScrollingChanged(int i, int i2) {
+    /* access modifiers changed from: public */
+    private final void onMediaScrollingChanged(int i, int i2) {
         boolean z = false;
         boolean z2 = this.scrollIntoCurrentMedia != 0;
         this.scrollIntoCurrentMedia = i2;
@@ -448,7 +434,6 @@ public class MediaCarouselScrollHandler {
         updateMediaPaddings();
     }
 
-    /* access modifiers changed from: protected */
     public void updateMediaPaddings() {
         Context context = this.scrollView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "scrollView.context");
@@ -488,7 +473,7 @@ public class MediaCarouselScrollHandler {
         }
     }
 
-    public final void onPrePlayerRemoved(@NotNull MediaControlPanel mediaControlPanel) {
+    public final void onPrePlayerRemoved(MediaControlPanel mediaControlPanel) {
         Intrinsics.checkParameterIsNotNull(mediaControlPanel, "removed");
         ViewGroup viewGroup = this.mediaContent;
         PlayerViewHolder view = mediaControlPanel.getView();

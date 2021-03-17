@@ -14,6 +14,7 @@ public final class AsyncSensorManager_Factory implements Factory<AsyncSensorMana
         this.pluginManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public AsyncSensorManager get() {
         return provideInstance(this.contextProvider, this.pluginManagerProvider);
     }

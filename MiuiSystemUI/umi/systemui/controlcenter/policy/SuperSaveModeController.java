@@ -43,12 +43,14 @@ public class SuperSaveModeController implements CallbackController<SuperSaveMode
     }
 
     /* access modifiers changed from: private */
-    public void notifyAllListeners() {
-        for (SuperSaveModeChangeListener onSuperSaveModeChange : this.mListeners) {
-            onSuperSaveModeChange.onSuperSaveModeChange(this.mSuperSaveModeOn);
+    /* access modifiers changed from: public */
+    private void notifyAllListeners() {
+        for (SuperSaveModeChangeListener superSaveModeChangeListener : this.mListeners) {
+            superSaveModeChangeListener.onSuperSaveModeChange(this.mSuperSaveModeOn);
         }
     }
 
+    @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if (((str.hashCode() == 280401189 && str.equals("power_supersave_mode_open")) ? (char) 0 : 65535) == 0) {
             this.mSuperSaveModeOn = MiuiTextUtils.parseBoolean(str2, false);
@@ -58,7 +60,8 @@ public class SuperSaveModeController implements CallbackController<SuperSaveMode
     }
 
     /* access modifiers changed from: private */
-    public void addCallbackLocked(SuperSaveModeChangeListener superSaveModeChangeListener) {
+    /* access modifiers changed from: public */
+    private void addCallbackLocked(SuperSaveModeChangeListener superSaveModeChangeListener) {
         this.mListeners.add(superSaveModeChangeListener);
         if (this.mListeners.size() == 1) {
             register();
@@ -68,7 +71,8 @@ public class SuperSaveModeController implements CallbackController<SuperSaveMode
     }
 
     /* access modifiers changed from: private */
-    public void removeCallbackLocked(SuperSaveModeChangeListener superSaveModeChangeListener) {
+    /* access modifiers changed from: public */
+    private void removeCallbackLocked(SuperSaveModeChangeListener superSaveModeChangeListener) {
         this.mListeners.remove(superSaveModeChangeListener);
         if (this.mListeners.size() == 0) {
             unRegister();

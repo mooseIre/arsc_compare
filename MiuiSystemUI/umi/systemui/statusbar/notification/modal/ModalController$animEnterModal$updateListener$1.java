@@ -3,8 +3,9 @@ package com.android.systemui.statusbar.notification.modal;
 import android.animation.ValueAnimator;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ModalController.kt */
-final class ModalController$animEnterModal$updateListener$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class ModalController$animEnterModal$updateListener$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ ModalController this$0;
 
     ModalController$animEnterModal$updateListener$1(ModalController modalController) {

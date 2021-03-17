@@ -23,6 +23,7 @@ public final class KeyguardNotificationController_Factory implements Factory<Key
         this.lockscreenUserManagerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardNotificationController get() {
         return provideInstance(this.contextProvider, this.entryManagerProvider, this.groupManagerProvider, this.keyguardStateControllerProvider, this.lockscreenUserManagerProvider);
     }

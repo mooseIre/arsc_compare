@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$AlertingNotificationManager$pA8yzC_B
     private /* synthetic */ $$Lambda$AlertingNotificationManager$pA8yzC_BK0PtkudKAmBZExfo() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((AlertingNotificationManager.AlertEntry) obj).mEntry;
     }

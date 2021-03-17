@@ -3,6 +3,7 @@ package com.android.systemui.qs;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.android.systemui.C0012R$dimen;
@@ -23,6 +24,7 @@ public class SignalTileView extends QSIconViewImpl {
     private int mWideOverlayIconStartPadding;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSIconViewImpl
     public int getIconMeasureMode() {
         return Integer.MIN_VALUE;
     }
@@ -42,7 +44,7 @@ public class SignalTileView extends QSIconViewImpl {
     }
 
     private ImageView addTrafficView(int i) {
-        ImageView imageView = new ImageView(this.mContext);
+        ImageView imageView = new ImageView(((ViewGroup) this).mContext);
         imageView.setImageResource(i);
         imageView.setAlpha(0.0f);
         addView(imageView);
@@ -50,12 +52,13 @@ public class SignalTileView extends QSIconViewImpl {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSIconViewImpl
     public View createIcon() {
-        this.mIconFrame = new FrameLayout(this.mContext);
-        SlashImageView createSlashImageView = createSlashImageView(this.mContext);
+        this.mIconFrame = new FrameLayout(((ViewGroup) this).mContext);
+        SlashImageView createSlashImageView = createSlashImageView(((ViewGroup) this).mContext);
         this.mSignal = createSlashImageView;
         this.mIconFrame.addView(createSlashImageView);
-        ImageView imageView = new ImageView(this.mContext);
+        ImageView imageView = new ImageView(((ViewGroup) this).mContext);
         this.mOverlay = imageView;
         this.mIconFrame.addView(imageView, -2, -2);
         return this.mIconFrame;
@@ -67,6 +70,7 @@ public class SignalTileView extends QSIconViewImpl {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSIconViewImpl
     public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.mIconFrame.getMeasuredHeight(), 1073741824);
@@ -76,6 +80,7 @@ public class SignalTileView extends QSIconViewImpl {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSIconViewImpl
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         layoutIndicator(this.mIn);
@@ -99,6 +104,7 @@ public class SignalTileView extends QSIconViewImpl {
         view.layout(i, this.mIconFrame.getBottom() - view.getMeasuredHeight(), i2, this.mIconFrame.getBottom());
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIcon(QSTile.State state, boolean z) {
         QSTile.SignalState signalState = (QSTile.SignalState) state;
         setIcon(this.mSignal, signalState, z);

@@ -4,8 +4,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaHierarchyManager.kt */
-final class MediaHierarchyManager$register$1 extends Lambda implements Function1<Boolean, Unit> {
+public final class MediaHierarchyManager$register$1 extends Lambda implements Function1<Boolean, Unit> {
     final /* synthetic */ MediaHierarchyManager this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -14,8 +15,11 @@ final class MediaHierarchyManager$register$1 extends Lambda implements Function1
         this.this$0 = mediaHierarchyManager;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke(((Boolean) obj).booleanValue());
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(Boolean bool) {
+        invoke(bool.booleanValue());
         return Unit.INSTANCE;
     }
 

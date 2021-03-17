@@ -43,6 +43,7 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
         return (this.smallTileSize * 2) + (this.cellMarginVertical * 1);
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void addTile(@NotNull QSPanel.TileRecord tileRecord) {
         Intrinsics.checkParameterIsNotNull(tileRecord, "tile");
         this.mRecords.add(tileRecord);
@@ -56,6 +57,7 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
         addView(tileRecord.tileView);
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void removeTile(@NotNull QSPanel.TileRecord tileRecord) {
         Intrinsics.checkParameterIsNotNull(tileRecord, "tile");
         this.mRecords.remove(tileRecord);
@@ -64,19 +66,22 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
     }
 
     public void removeAllViews() {
-        for (QSPanel.TileRecord tileRecord : this.mRecords) {
-            tileRecord.tile.setListening(this, false);
+        Iterator<T> it = this.mRecords.iterator();
+        while (it.hasNext()) {
+            it.next().tile.setListening(this, false);
         }
         this.mRecords.clear();
         super.removeAllViews();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getOffsetTop(@Nullable QSPanel.TileRecord tileRecord) {
         return getTop();
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean updateResources() {
-        Context context = this.mContext;
+        Context context = ((ViewGroup) this).mContext;
         Intrinsics.checkExpressionValueIsNotNull(context, "mContext");
         Resources resources = context.getResources();
         this.smallTileSize = resources.getDimensionPixelSize(C0012R$dimen.qs_quick_tile_size);
@@ -86,6 +91,7 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
         return false;
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public void setListening(boolean z) {
         if (this._listening != z) {
             this._listening = z;
@@ -106,6 +112,7 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
         }
     }
 
+    @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public int getNumVisibleTiles() {
         return this.tilesToShow;
     }
@@ -125,8 +132,9 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
 
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
-        for (QSPanel.TileRecord tileRecord : this.mRecords) {
-            tileRecord.tileView.measure(TileLayout.exactly(this.smallTileSize), TileLayout.exactly(this.smallTileSize));
+        Iterator<T> it = this.mRecords.iterator();
+        while (it.hasNext()) {
+            it.next().tileView.measure(TileLayout.exactly(this.smallTileSize), TileLayout.exactly(this.smallTileSize));
         }
         setMeasuredDimension(View.MeasureSpec.getSize(i), getTwoLineHeight() + getPaddingBottom() + getPaddingTop());
     }
@@ -142,32 +150,27 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        int i5;
         int paddingLeft = ((i3 - i) - getPaddingLeft()) - getPaddingRight();
         int min = Math.min(calculateMaxColumns(paddingLeft), this.mRecords.size() / 2);
         if (min != 0) {
             this.tilesToShow = min * 2;
-            int i6 = paddingLeft / min;
+            int i5 = paddingLeft / min;
             int size = this.mRecords.size();
-            for (int i7 = 0; i7 < size; i7++) {
-                QSTileView qSTileView = this.mRecords.get(i7).tileView;
-                if (i7 >= this.tilesToShow) {
+            for (int i6 = 0; i6 < size; i6++) {
+                QSTileView qSTileView = this.mRecords.get(i6).tileView;
+                if (i6 >= this.tilesToShow) {
                     Intrinsics.checkExpressionValueIsNotNull(qSTileView, "tileView");
                     qSTileView.setVisibility(8);
                 } else {
                     Intrinsics.checkExpressionValueIsNotNull(qSTileView, "tileView");
                     qSTileView.setVisibility(0);
-                    if (i7 > 0) {
-                        qSTileView.updateAccessibilityOrder(this.mRecords.get(i7 - 1).tileView);
+                    if (i6 > 0) {
+                        qSTileView.updateAccessibilityOrder(this.mRecords.get(i6 - 1).tileView);
                     }
-                    int leftForColumn = getLeftForColumn(i7 % min, i6);
-                    if (i7 < min) {
-                        i5 = 0;
-                    } else {
-                        i5 = getTopBottomRow();
-                    }
-                    int i8 = this.smallTileSize;
-                    qSTileView.layout(leftForColumn, i5, leftForColumn + i8, i8 + i5);
+                    int leftForColumn = getLeftForColumn(i6 % min, i5);
+                    int topBottomRow = i6 < min ? 0 : getTopBottomRow();
+                    int i7 = this.smallTileSize;
+                    qSTileView.layout(leftForColumn, topBottomRow, leftForColumn + i7, i7 + topBottomRow);
                 }
             }
         }

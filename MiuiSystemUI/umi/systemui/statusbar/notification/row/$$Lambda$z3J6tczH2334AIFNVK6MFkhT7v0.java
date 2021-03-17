@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$z3J6tczH2334AIFNVK6MFkhT7v0 implemen
     private /* synthetic */ $$Lambda$z3J6tczH2334AIFNVK6MFkhT7v0() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((NotificationSwipeActionHelper.SnoozeOption) obj).getDescription();
     }
