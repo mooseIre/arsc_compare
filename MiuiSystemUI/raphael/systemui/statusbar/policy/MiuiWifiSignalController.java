@@ -17,19 +17,19 @@ import java.util.Objects;
 public class MiuiWifiSignalController extends SignalController<WifiState, SignalController.IconGroup> {
     private final WifiStatusTracker mWifiTracker;
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiWifiSignalController(Context context, boolean z, CallbackHandler callbackHandler, NetworkControllerImpl networkControllerImpl, WifiManager wifiManager, ConnectivityManager connectivityManager, NetworkScoreManager networkScoreManager) {
         super("WifiSignalController", context, 1, callbackHandler, networkControllerImpl);
-        WifiManager wifiManager2 = wifiManager;
         WifiStatusTracker wifiStatusTracker = new WifiStatusTracker(this.mContext, wifiManager, networkScoreManager, connectivityManager, new Runnable() {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiWifiSignalController$MUWAVC22i7B3vqU5A1N8W3Oo91w */
+
             public final void run() {
-                MiuiWifiSignalController.this.handleStatusUpdated();
+                MiuiWifiSignalController.lambda$MUWAVC22i7B3vqU5A1N8W3Oo91w(MiuiWifiSignalController.this);
             }
         });
         this.mWifiTracker = wifiStatusTracker;
         wifiStatusTracker.setListening(true);
-        if (wifiManager2 != null) {
-            wifiManager2.registerTrafficStateCallback(context.getMainExecutor(), new WifiTrafficStateCallback());
+        if (wifiManager != null) {
+            wifiManager.registerTrafficStateCallback(context.getMainExecutor(), new WifiTrafficStateCallback());
         }
         SignalController.IconGroup iconGroup = new SignalController.IconGroup("Wi-Fi Icons", MiuiWifiIcons.WIFI_SIGNAL_STRENGTH, MiuiWifiIcons.QS_WIFI_SIGNAL_STRENGTH, AccessibilityContentDescriptions.WIFI_CONNECTION_STRENGTH, MiuiWifiIcons.WIFI_NO_NETWORK, MiuiWifiIcons.QS_WIFI_NO_NETWORK, MiuiWifiIcons.WIFI_NO_NETWORK, MiuiWifiIcons.QS_WIFI_NO_NETWORK, AccessibilityContentDescriptions.WIFI_NO_CONNECTION);
         ((WifiState) this.mLastState).iconGroup = iconGroup;
@@ -37,6 +37,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.policy.SignalController
     public WifiState cleanState() {
         return new WifiState();
     }
@@ -46,6 +47,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
         this.mWifiTracker.refreshLocale();
     }
 
+    @Override // com.android.systemui.statusbar.policy.SignalController
     public void notifyListeners(NetworkController.SignalCallback signalCallback) {
         T t = this.mCurrentState;
         boolean z = ((WifiState) t).enabled && ((WifiState) t).connected;
@@ -131,7 +133,8 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
         }
     }
 
-    static class WifiState extends SignalController.State {
+    /* access modifiers changed from: package-private */
+    public static class WifiState extends SignalController.State {
         boolean isReady;
         boolean isTransient;
         boolean noNetwork;
@@ -142,6 +145,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
         WifiState() {
         }
 
+        @Override // com.android.systemui.statusbar.policy.SignalController.State
         public void copyFrom(SignalController.State state) {
             super.copyFrom(state);
             WifiState wifiState = (WifiState) state;
@@ -154,6 +158,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.policy.SignalController.State
         public void toString(StringBuilder sb) {
             super.toString(sb);
             sb.append(",ssid=");
@@ -170,6 +175,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
             sb.append(this.statusLabel);
         }
 
+        @Override // com.android.systemui.statusbar.policy.SignalController.State
         public boolean equals(Object obj) {
             if (!super.equals(obj)) {
                 return false;

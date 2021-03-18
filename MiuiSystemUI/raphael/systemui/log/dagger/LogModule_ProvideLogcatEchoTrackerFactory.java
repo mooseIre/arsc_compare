@@ -16,6 +16,7 @@ public final class LogModule_ProvideLogcatEchoTrackerFactory implements Factory<
         this.looperProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public LogcatEchoTracker get() {
         return provideInstance(this.contentResolverProvider, this.looperProvider);
     }

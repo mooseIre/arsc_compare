@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public final class LogBufferFreezer$attach$1 extends BroadcastReceiver {
     final /* synthetic */ LogBufferFreezer this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     LogBufferFreezer$attach$1(LogBufferFreezer logBufferFreezer) {
         this.this$0 = logBufferFreezer;
     }

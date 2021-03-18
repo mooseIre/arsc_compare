@@ -19,6 +19,7 @@ final class ControlActionCoordinatorImpl$setValue$1 extends Lambda implements Fu
         this.$newValue = f;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         this.$cvh.action(new FloatAction(this.$templateId, this.$newValue));
     }

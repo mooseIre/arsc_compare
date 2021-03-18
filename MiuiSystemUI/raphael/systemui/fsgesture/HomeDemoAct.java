@@ -15,26 +15,19 @@ import com.android.systemui.C0017R$layout;
 public class HomeDemoAct extends FsGestureDemoBaseActiivy {
     private View appBgView;
     private View appNoteImg;
-    /* access modifiers changed from: private */
-    public FsGestureDemoSwipeView fsGestureDemoSwipeView;
+    private FsGestureDemoSwipeView fsGestureDemoSwipeView;
     private FsGestureDemoTitleView fsGestureDemoTitleView;
-    /* access modifiers changed from: private */
-    public NavStubDemoView fsgNavView;
+    private NavStubDemoView fsgNavView;
     Handler handler = new Handler();
     private LinearLayout homeIconImg;
-    /* access modifiers changed from: private */
-    public View mAnimIcon;
-    /* access modifiers changed from: private */
-    public LinearLayout mRecentsCardContainer;
+    private View mAnimIcon;
+    private LinearLayout mRecentsCardContainer;
     private View mRecentsFirstCardIconView;
     private View navSubViewBgView;
     private View recentsBgView;
 
-    static {
-        Class<HomeDemoAct> cls = HomeDemoAct.class;
-    }
-
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(C0017R$layout.home_demo_layout);
@@ -46,6 +39,8 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
         ImageView imageView = (ImageView) findViewById(C0015R$id.anim_icon);
         this.mAnimIcon = imageView;
         imageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            /* class com.android.systemui.fsgesture.HomeDemoAct.AnonymousClass1 */
+
             public void onGlobalLayout() {
                 HomeDemoAct.this.mAnimIcon.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 int[] locationOnScreen = HomeDemoAct.this.mAnimIcon.getLocationOnScreen();
@@ -60,6 +55,8 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
         this.mRecentsCardContainer = (LinearLayout) findViewById(C0015R$id.recents_card_container);
         this.mRecentsFirstCardIconView = findViewById(C0015R$id.recents_first_card_icon);
         this.mRecentsCardContainer.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            /* class com.android.systemui.fsgesture.HomeDemoAct.AnonymousClass2 */
+
             public void onGlobalLayout() {
                 HomeDemoAct.this.mRecentsCardContainer.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 Rect rect = new Rect();
@@ -77,6 +74,8 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
         int i = (!"DEMO_FULLY_SHOW".equals(stringExtra) ? !"DEMO_TO_HOME".equals(stringExtra) : intExtra != 1) ? 3 : 2;
         this.fsGestureDemoTitleView.prepareTitleView(i);
         this.fsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
+            /* class com.android.systemui.fsgesture.HomeDemoAct.AnonymousClass3 */
+
             public void onClick(View view) {
                 HomeDemoAct.this.finish();
             }
@@ -108,6 +107,8 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
 
     private void startSwipeViewAnimation(final int i) {
         this.handler.postDelayed(new Runnable() {
+            /* class com.android.systemui.fsgesture.HomeDemoAct.AnonymousClass4 */
+
             public void run() {
                 HomeDemoAct.this.fsGestureDemoSwipeView.prepare(i);
                 HomeDemoAct.this.fsGestureDemoSwipeView.startAnimation(i);

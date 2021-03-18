@@ -3,7 +3,6 @@ package com.android.systemui.statusbar;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Trace;
-import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.collection.inflation.LowPriorityInflationHelper;
 import com.android.systemui.statusbar.notification.policy.NotificationSensitiveController;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.ForegroundServiceSectionController;
 import com.android.systemui.statusbar.notification.stack.NotificationListContainer;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
@@ -106,7 +106,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                 if (!this.mVisualStabilityManager.areGroupChangesAllowed() && notificationEntry.hasFinishedInitialization()) {
                     z = false;
                 }
-                NotificationEntry groupSummary = this.mGroupManager.getGroupSummary((StatusBarNotification) notificationEntry.getSbn());
+                NotificationEntry groupSummary = this.mGroupManager.getGroupSummary(notificationEntry.getSbn());
                 if (!z) {
                     boolean isChildInGroup = notificationEntry.isChildInGroup();
                     if (isChildInGroupWithSummary && !isChildInGroup) {
@@ -118,15 +118,15 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                     isChildInGroupWithSummary = isChildInGroup;
                 }
                 if (isChildInGroupWithSummary) {
-                    List list = this.mTmpChildOrderMap.get(groupSummary);
+                    List<NotificationEntry> list = this.mTmpChildOrderMap.get(groupSummary);
                     if (list == null) {
-                        list = new ArrayList();
+                        list = new ArrayList<>();
                         this.mTmpChildOrderMap.put(groupSummary, list);
                     }
                     list.add(notificationEntry);
                 } else {
                     if (!this.mTmpChildOrderMap.containsKey(notificationEntry)) {
-                        this.mTmpChildOrderMap.put(notificationEntry, (Object) null);
+                        this.mTmpChildOrderMap.put(notificationEntry, null);
                     }
                     arrayList.add(notificationEntry.getRow());
                 }
@@ -200,11 +200,11 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
             if (containerChildAt instanceof ExpandableNotificationRow) {
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) containerChildAt;
                 List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow.getAttachedChildren();
-                List list = this.mTmpChildOrderMap.get(expandableNotificationRow.getEntry());
+                List<NotificationEntry> list = this.mTmpChildOrderMap.get(expandableNotificationRow.getEntry());
                 if (list != null) {
                     expandableNotificationRow.setUntruncatedChildCount(list.size());
                     for (int i2 = 0; i2 < list.size(); i2++) {
-                        ExpandableNotificationRow row = ((NotificationEntry) list.get(i2)).getRow();
+                        ExpandableNotificationRow row = list.get(i2).getRow();
                         if (attachedChildren == null || !attachedChildren.contains(row)) {
                             if (row.getParent() != null) {
                                 Log.wtf("NotificationViewHierarchyManager", "trying to add a notification child that already has a parent. class:" + row.getParent().getClass() + "\n child: " + row);
@@ -212,7 +212,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                             }
                             this.mVisualStabilityManager.notifyViewAddition(row);
                             expandableNotificationRow.addChildNotification(row, i2);
-                            this.mListContainer.notifyGroupChildAdded(row);
+                            this.mListContainer.notifyGroupChildAdded((ExpandableView) row);
                         }
                         arrayList.add(row);
                     }
@@ -233,20 +233,20 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
             if (containerChildAt instanceof ExpandableNotificationRow) {
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) containerChildAt;
                 List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow.getAttachedChildren();
-                List list = this.mTmpChildOrderMap.get(expandableNotificationRow.getEntry());
+                List<NotificationEntry> list = this.mTmpChildOrderMap.get(expandableNotificationRow.getEntry());
                 if (attachedChildren != null) {
                     arrayList.clear();
-                    for (ExpandableNotificationRow next : attachedChildren) {
-                        if ((list == null || !list.contains(next.getEntry())) && !next.keepInParent()) {
-                            arrayList.add(next);
+                    for (ExpandableNotificationRow expandableNotificationRow2 : attachedChildren) {
+                        if ((list == null || !list.contains(expandableNotificationRow2.getEntry())) && !expandableNotificationRow2.keepInParent()) {
+                            arrayList.add(expandableNotificationRow2);
                         }
                     }
                     Iterator it = arrayList.iterator();
                     while (it.hasNext()) {
-                        ExpandableNotificationRow expandableNotificationRow2 = (ExpandableNotificationRow) it.next();
-                        expandableNotificationRow.removeChildNotification(expandableNotificationRow2);
-                        if (this.mEntryManager.getActiveNotificationUnfiltered(expandableNotificationRow2.getEntry().getSbn().getKey()) == null) {
-                            this.mListContainer.notifyGroupChildRemoved(expandableNotificationRow2, expandableNotificationRow.getChildrenContainer());
+                        ExpandableNotificationRow expandableNotificationRow3 = (ExpandableNotificationRow) it.next();
+                        expandableNotificationRow.removeChildNotification(expandableNotificationRow3);
+                        if (this.mEntryManager.getActiveNotificationUnfiltered(expandableNotificationRow3.getEntry().getSbn().getKey()) == null) {
+                            this.mListContainer.notifyGroupChildRemoved((ExpandableView) expandableNotificationRow3, (ViewGroup) expandableNotificationRow.getChildrenContainer());
                         }
                     }
                 }
@@ -318,6 +318,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         Trace.endSection();
     }
 
+    @Override // com.android.systemui.statusbar.notification.DynamicPrivacyController.Listener
     public void onDynamicPrivacyChanged() {
         if (this.mPerformingUpdate) {
             Log.w("NotificationViewHierarchyManager", "onDynamicPrivacyChanged made a re-entrant call");
@@ -325,6 +326,8 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
         if (!this.mIsHandleDynamicPrivacyChangeScheduled) {
             this.mIsHandleDynamicPrivacyChangeScheduled = true;
             this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.$$Lambda$NotificationViewHierarchyManager$VZHW9NMJkqBLUXo3lkuiamxmEXo */
+
                 public final void run() {
                     NotificationViewHierarchyManager.this.onHandleDynamicPrivacyChanged();
                 }

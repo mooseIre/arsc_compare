@@ -46,6 +46,7 @@ public final class BiometricUnlockController_Factory implements Factory<Biometri
         this.dumpManagerProvider = provider15;
     }
 
+    @Override // javax.inject.Provider
     public BiometricUnlockController get() {
         return provideInstance(this.contextProvider, this.dozeScrimControllerProvider, this.keyguardViewMediatorProvider, this.scrimControllerProvider, this.statusBarProvider, this.shadeControllerProvider, this.notificationShadeWindowControllerProvider, this.keyguardStateControllerProvider, this.handlerProvider, this.keyguardUpdateMonitorProvider, this.resourcesProvider, this.keyguardBypassControllerProvider, this.dozeParametersProvider, this.metricsLoggerProvider, this.dumpManagerProvider);
     }

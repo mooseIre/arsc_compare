@@ -24,9 +24,9 @@ public final class ControlsUiControllerImpl$reload$1 extends AnimatorListenerAda
         this.this$0.controlsById.clear();
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
         controlsUiControllerImpl.show(this.$parent, ControlsUiControllerImpl.access$getDismissGlobalActions$p(controlsUiControllerImpl));
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.$parent, "alpha", new float[]{0.0f, 1.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.$parent, "alpha", 0.0f, 1.0f);
         ofFloat.setInterpolator(new DecelerateInterpolator(1.0f));
-        ofFloat.setDuration(200);
+        ofFloat.setDuration(200L);
         ofFloat.start();
     }
 }

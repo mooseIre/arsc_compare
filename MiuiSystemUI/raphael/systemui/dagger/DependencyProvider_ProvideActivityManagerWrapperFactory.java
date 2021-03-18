@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvideActivityManagerWrapperFactory imple
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public ActivityManagerWrapper get() {
         return provideInstance(this.module);
     }

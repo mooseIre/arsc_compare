@@ -11,6 +11,7 @@ public final class DateFormatUtil_Factory implements Factory<DateFormatUtil> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DateFormatUtil get() {
         return provideInstance(this.contextProvider);
     }

@@ -14,6 +14,7 @@ public final class BubbleCoordinator_Factory implements Factory<BubbleCoordinato
         this.notifCollectionProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public BubbleCoordinator get() {
         return provideInstance(this.bubbleControllerProvider, this.notifCollectionProvider);
     }

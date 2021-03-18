@@ -13,6 +13,7 @@ public final class ScreenRecordDialog_Factory implements Factory<ScreenRecordDia
         this.currentUserContextTrackerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ScreenRecordDialog get() {
         return provideInstance(this.controllerProvider, this.currentUserContextTrackerProvider);
     }

@@ -14,6 +14,7 @@ public final class MiuiNotificationSectionsFeatureManager extends NotificationSe
         Intrinsics.checkParameterIsNotNull(context, "mContext");
     }
 
+    @Override // com.android.systemui.statusbar.notification.NotificationSectionsFeatureManager
     @NotNull
     public int[] getNotificationBuckets() {
         if (isFilteringEnabled() && isMediaControlsEnabled()) {

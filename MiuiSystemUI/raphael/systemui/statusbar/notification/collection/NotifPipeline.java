@@ -20,10 +20,12 @@ public class NotifPipeline implements CommonNotifCollection {
         this.mShadeListBuilder = shadeListBuilder;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection
     public Collection<NotificationEntry> getAllNotifs() {
         return this.mNotifCollection.getAllNotifs();
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.CommonNotifCollection
     public void addCollectionListener(NotifCollectionListener notifCollectionListener) {
         this.mNotifCollection.addCollectionListener(notifCollectionListener);
     }

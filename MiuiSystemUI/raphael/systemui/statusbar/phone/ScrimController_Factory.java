@@ -36,6 +36,7 @@ public final class ScrimController_Factory implements Factory<ScrimController> {
         this.blurUtilsProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public ScrimController get() {
         return provideInstance(this.lightBarControllerProvider, this.dozeParametersProvider, this.alarmManagerProvider, this.keyguardStateControllerProvider, this.delayedWakeLockBuilderProvider, this.handlerProvider, this.keyguardUpdateMonitorProvider, this.sysuiColorExtractorProvider, this.dockManagerProvider, this.blurUtilsProvider);
     }

@@ -10,7 +10,7 @@ import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 
 public class MiuiLightBarController extends LightBarController implements ForceBlackObserver.Callback, ConfigurationController.ConfigurationListener {
     private BarModeChangeListener mBarModeChangeListener;
-    private boolean mForceBlack;
+    private boolean mForceBlack = ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).isForceBlack();
     private int mOrientation;
     protected boolean mSmartDarkEnable;
     protected boolean mSmartDarkLight;
@@ -19,21 +19,20 @@ public class MiuiLightBarController extends LightBarController implements ForceB
         void onBarModeChanged(int i);
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiLightBarController(Context context, DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController) {
         super(context, darkIconDispatcher, batteryController, navigationModeController);
-        Class cls = ForceBlackObserver.class;
-        ((ForceBlackObserver) Dependency.get(cls)).addCallback(this);
-        this.mForceBlack = ((ForceBlackObserver) Dependency.get(cls)).isForceBlack();
+        ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).addCallback(this);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         this.mOrientation = context.getResources().getConfiguration().orientation;
     }
 
+    @Override // com.miui.systemui.statusbar.phone.ForceBlackObserver.Callback
     public void onForceBlackChange(boolean z, boolean z2) {
         this.mForceBlack = z;
         updateStatus();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         this.mOrientation = configuration.orientation;
         updateStatus();
@@ -50,6 +49,7 @@ public class MiuiLightBarController extends LightBarController implements ForceB
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.LightBarController
     public void updateStatus() {
         if (this.mForceBlack && this.mOrientation == 1) {
             this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
@@ -67,6 +67,7 @@ public class MiuiLightBarController extends LightBarController implements ForceB
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.statusbar.phone.LightBarController
     public void onStatusBarModeChanged(int i) {
         super.onStatusBarModeChanged(i);
         BarModeChangeListener barModeChangeListener = this.mBarModeChangeListener;

@@ -22,6 +22,7 @@ public final class StructureAdapter extends RecyclerView.Adapter<StructureHolder
         this.models = list;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     @NotNull
     public StructureHolder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
@@ -30,6 +31,7 @@ public final class StructureAdapter extends RecyclerView.Adapter<StructureHolder
         return new StructureHolder(inflate);
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.models.size();
     }

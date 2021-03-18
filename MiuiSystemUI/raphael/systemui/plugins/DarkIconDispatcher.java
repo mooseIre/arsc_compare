@@ -6,8 +6,8 @@ import android.widget.ImageView;
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
-@DependsOn(target = DarkReceiver.class)
 @ProvidesInterface(version = 1)
+@DependsOn(target = DarkReceiver.class)
 public interface DarkIconDispatcher {
     public static final int DEFAULT_ICON_TINT = -1;
     public static final int VERSION = 1;
@@ -31,7 +31,7 @@ public interface DarkIconDispatcher {
 
     int getLightModeIconColorSingleTone();
 
-    void reapply() {
+    default void reapply() {
     }
 
     void removeDarkReceiver(ImageView imageView);
@@ -42,21 +42,21 @@ public interface DarkIconDispatcher {
 
     boolean useTint();
 
-    static int getTint(Rect rect, View view, int i) {
+    static default int getTint(Rect rect, View view, int i) {
         if (isInArea(rect, view)) {
             return i;
         }
         return -1;
     }
 
-    static float getDarkIntensity(Rect rect, View view, float f) {
+    static default float getDarkIntensity(Rect rect, View view, float f) {
         if (isInArea(rect, view)) {
             return f;
         }
         return 0.0f;
     }
 
-    static boolean isInArea(Rect rect, View view) {
+    static default boolean isInArea(Rect rect, View view) {
         if (rect.isEmpty()) {
             return true;
         }

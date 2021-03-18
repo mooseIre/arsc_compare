@@ -4,7 +4,6 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.ViewOutlineProvider;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.Interpolators;
 
@@ -12,6 +11,8 @@ public abstract class StackScrollerDecorView extends ExpandableView {
     protected View mContent;
     private boolean mContentAnimating;
     private final Runnable mContentVisibilityEndRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$StackScrollerDecorView$GE_2dwloJkJho6ozN7VXOOo7f2I */
+
         public final void run() {
             StackScrollerDecorView.this.lambda$new$0$StackScrollerDecorView();
         }
@@ -23,6 +24,8 @@ public abstract class StackScrollerDecorView extends ExpandableView {
     private boolean mSecondaryAnimating = false;
     protected View mSecondaryView;
     private final Runnable mSecondaryVisibilityEndRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$StackScrollerDecorView$2MZ2DZW5S75DgdV6pIZbLhsQuUs */
+
         public final void run() {
             StackScrollerDecorView.this.lambda$new$1$StackScrollerDecorView();
         }
@@ -34,14 +37,17 @@ public abstract class StackScrollerDecorView extends ExpandableView {
     /* access modifiers changed from: protected */
     public abstract View findSecondaryView();
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean hasOverlappingRendering() {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean isTransparent() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public boolean needsClippingToShelf() {
         return false;
     }
@@ -81,9 +87,10 @@ public abstract class StackScrollerDecorView extends ExpandableView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
-        setOutlineProvider((ViewOutlineProvider) null);
+        setOutlineProvider(null);
     }
 
     public void setContentVisible(boolean z) {
@@ -166,11 +173,13 @@ public abstract class StackScrollerDecorView extends ExpandableView {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, Runnable runnable, AnimatorListenerAdapter animatorListenerAdapter) {
         setContentVisible(false);
         return 0;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void performAddAnimation(long j, long j2, boolean z) {
         setContentVisible(true);
     }

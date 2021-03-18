@@ -91,8 +91,10 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setWifiIndicators(boolean z, NetworkController.IconState iconState, NetworkController.IconState iconState2, boolean z2, boolean z3, int i, String str, boolean z4, String str2, boolean z5) {
         post(new Runnable(z, iconState, iconState2, z2, z3, i, str, z4, str2, z5) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$CallbackHandler$teGtBh4s8e4F0kF88Yhtgulw40 */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ boolean f$10;
             public final /* synthetic */ NetworkController.IconState f$2;
@@ -132,9 +134,10 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
-        $$Lambda$CallbackHandler$TQfkWJYrezLiwOeHBSSxFOP4ACs r16 = r0;
-        $$Lambda$CallbackHandler$TQfkWJYrezLiwOeHBSSxFOP4ACs r0 = new Runnable(iconState, iconState2, i, i2, z, z2, i3, charSequence, charSequence2, charSequence3, z3, i4, z4, miuiMobileState) {
+        post(new Runnable(iconState, iconState2, i, i2, z, z2, i3, charSequence, charSequence2, charSequence3, z3, i4, z4, miuiMobileState) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$CallbackHandler$TQfkWJYrezLiwOeHBSSxFOP4ACs */
             public final /* synthetic */ NetworkController.IconState f$1;
             public final /* synthetic */ CharSequence f$10;
             public final /* synthetic */ boolean f$11;
@@ -170,8 +173,7 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
             public final void run() {
                 CallbackHandler.this.lambda$setMobileDataIndicators$1$CallbackHandler(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, this.f$6, this.f$7, this.f$8, this.f$9, this.f$10, this.f$11, this.f$12, this.f$13, this.f$14);
             }
-        };
-        post(r16);
+        });
     }
 
     /* access modifiers changed from: private */
@@ -183,12 +185,15 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setIsDefaultDataSim(int i, boolean z) {
         obtainMessage(100, i, 0, Boolean.valueOf(z)).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setWifiIndicators(boolean z, NetworkController.IconState iconState, NetworkController.IconState iconState2, boolean z2, boolean z3, String str, boolean z4, String str2) {
         post(new Runnable(z, iconState, iconState2, z2, z3, str, z4, str2) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$CallbackHandler$4ydSKK9FqSMzYAAvkfeyBMRlZs */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ NetworkController.IconState f$2;
             public final /* synthetic */ NetworkController.IconState f$3;
@@ -224,8 +229,10 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4) {
         post(new Runnable(iconState, iconState2, i, i2, z, z2, i3, charSequence, charSequence2, charSequence3, z3, i4, z4) {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$CallbackHandler$4oXuOzEU1dJJfSIVy69kxPkm6g */
             public final /* synthetic */ NetworkController.IconState f$1;
             public final /* synthetic */ CharSequence f$10;
             public final /* synthetic */ boolean f$11;
@@ -271,26 +278,32 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setSubs(List<SubscriptionInfo> list) {
         obtainMessage(1, list).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setNoSims(boolean z, boolean z2) {
         obtainMessage(2, z ? 1 : 0, z2 ? 1 : 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataEnabled(boolean z) {
         obtainMessage(5, z ? 1 : 0, 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.EmergencyListener
     public void setEmergencyCallsOnly(boolean z) {
         obtainMessage(0, z ? 1 : 0, 0).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setEthernetIndicators(NetworkController.IconState iconState) {
         obtainMessage(3, iconState).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setIsAirplaneMode(NetworkController.IconState iconState) {
         obtainMessage(4, iconState).sendToTarget();
     }

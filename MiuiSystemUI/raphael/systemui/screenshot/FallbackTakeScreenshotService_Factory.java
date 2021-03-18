@@ -16,6 +16,7 @@ public final class FallbackTakeScreenshotService_Factory implements Factory<Fall
         this.uiEventLoggerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public FallbackTakeScreenshotService get() {
         return provideInstance(this.globalScreenshotProvider, this.userManagerProvider, this.uiEventLoggerProvider);
     }

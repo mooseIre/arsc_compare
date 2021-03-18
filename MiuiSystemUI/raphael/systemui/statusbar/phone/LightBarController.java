@@ -2,7 +2,6 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.view.InsetsFlags;
 import android.view.ViewDebug;
 import com.android.internal.colorextraction.ColorExtractor;
@@ -44,6 +43,9 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         this.mBatteryController = batteryController;
         batteryController.addCallback(this);
         this.mNavigationMode = navigationModeController.addListener(new NavigationModeController.ModeChangedListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$LightBarController$jv_bCwiUMKhQXOE_5D5jhZNF2Tw */
+
+            @Override // com.android.systemui.statusbar.phone.NavigationModeController.ModeChangedListener
             public final void onNavigationModeChanged(int i) {
                 LightBarController.this.lambda$new$0$LightBarController(i);
             }
@@ -169,7 +171,7 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
             }
         }
         if (i2 == length) {
-            this.mStatusBarIconController.setIconsDarkArea((Rect) null);
+            this.mStatusBarIconController.setIconsDarkArea(null);
             this.mStatusBarIconController.getTransitionsController().setIconsDark(true, animateChange());
         } else if (i2 == 0) {
             this.mStatusBarIconController.getTransitionsController().setIconsDark(false, animateChange());
@@ -185,10 +187,12 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         reevaluate();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("LightBarController: ");
         printWriter.print(" mAppearance=");

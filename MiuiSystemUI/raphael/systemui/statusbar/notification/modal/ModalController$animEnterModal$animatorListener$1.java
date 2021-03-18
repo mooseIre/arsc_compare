@@ -23,8 +23,8 @@ public final class ModalController$animEnterModal$animatorListener$1 extends Ani
         Intrinsics.checkParameterIsNotNull(animator, "animation");
         ((NotificationStat) Dependency.get(NotificationStat.class)).onOpenMenu(this.$row.getEntry());
         this.this$0.isAnimating = false;
-        for (ModalController.OnModalChangeListener onChange : this.this$0.onModalChangeListeners) {
-            onChange.onChange(true);
+        for (ModalController.OnModalChangeListener onModalChangeListener : this.this$0.onModalChangeListeners) {
+            onModalChangeListener.onChange(true);
         }
     }
 }

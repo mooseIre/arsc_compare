@@ -20,6 +20,7 @@ public final class ShadeListBuilder_Factory implements Factory<ShadeListBuilder>
         this.interactionTrackerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ShadeListBuilder get() {
         return provideInstance(this.systemClockProvider, this.loggerProvider, this.dumpManagerProvider, this.interactionTrackerProvider);
     }

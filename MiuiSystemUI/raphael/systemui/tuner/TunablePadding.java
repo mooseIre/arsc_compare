@@ -9,6 +9,7 @@ public class TunablePadding implements TunerService.Tunable {
     private final int mFlags;
     private final View mView;
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         int i = this.mDefaultSize;
         if (str2 != null) {

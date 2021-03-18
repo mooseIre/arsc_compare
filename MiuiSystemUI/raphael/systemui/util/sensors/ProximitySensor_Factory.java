@@ -13,6 +13,7 @@ public final class ProximitySensor_Factory implements Factory<ProximitySensor> {
         this.sensorManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ProximitySensor get() {
         return provideInstance(this.resourcesProvider, this.sensorManagerProvider);
     }

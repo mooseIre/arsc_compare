@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$MiuiQSTileHostInjector$TvxZmf6huBGaf
     private /* synthetic */ $$Lambda$MiuiQSTileHostInjector$TvxZmf6huBGafjkUs3QMGNRueDw() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((QSTile) obj).destroy();
     }

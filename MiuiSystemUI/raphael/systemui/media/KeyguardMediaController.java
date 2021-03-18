@@ -8,21 +8,16 @@ import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: KeyguardMediaController.kt */
 public class KeyguardMediaController {
     private final KeyguardBypassController bypassController;
     private final MediaHost mediaHost;
     private final NotificationLockscreenUserManager notifLockscreenUserManager;
     private final SysuiStatusBarStateController statusBarStateController;
-    @Nullable
     private MediaHeaderView view;
-    @Nullable
     private Function1<? super Boolean, Unit> visibilityChangedListener;
 
-    public KeyguardMediaController(@NotNull MediaHost mediaHost2, @NotNull KeyguardBypassController keyguardBypassController, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager) {
+    public KeyguardMediaController(MediaHost mediaHost2, KeyguardBypassController keyguardBypassController, SysuiStatusBarStateController sysuiStatusBarStateController, NotificationLockscreenUserManager notificationLockscreenUserManager) {
         Intrinsics.checkParameterIsNotNull(mediaHost2, "mediaHost");
         Intrinsics.checkParameterIsNotNull(keyguardBypassController, "bypassController");
         Intrinsics.checkParameterIsNotNull(sysuiStatusBarStateController, "statusBarStateController");
@@ -32,28 +27,29 @@ public class KeyguardMediaController {
         this.statusBarStateController = sysuiStatusBarStateController;
         this.notifLockscreenUserManager = notificationLockscreenUserManager;
         sysuiStatusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
+            /* class com.android.systemui.media.KeyguardMediaController.AnonymousClass1 */
             final /* synthetic */ KeyguardMediaController this$0;
 
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 this.this$0.updateVisibility();
             }
         });
     }
 
-    public final void setVisibilityChangedListener(@Nullable Function1<? super Boolean, Unit> function1) {
+    public final void setVisibilityChangedListener(Function1<? super Boolean, Unit> function1) {
         this.visibilityChangedListener = function1;
     }
 
-    @Nullable
     public final MediaHeaderView getView() {
         return this.view;
     }
 
-    public final void attach(@NotNull MediaHeaderView mediaHeaderView) {
+    public final void attach(MediaHeaderView mediaHeaderView) {
         Intrinsics.checkParameterIsNotNull(mediaHeaderView, "mediaView");
         this.view = mediaHeaderView;
         this.mediaHost.addVisibilityChangeListener(new KeyguardMediaController$attach$1(this));
@@ -65,8 +61,7 @@ public class KeyguardMediaController {
         updateVisibility();
     }
 
-    /* access modifiers changed from: private */
-    public final void updateVisibility() {
+    private final void updateVisibility() {
         Function1<? super Boolean, Unit> function1;
         int i = 0;
         boolean z = true;
@@ -84,7 +79,7 @@ public class KeyguardMediaController {
             mediaHeaderView2.setVisibility(i);
         }
         if (visibility != i && (function1 = this.visibilityChangedListener) != null) {
-            Unit invoke = function1.invoke(Boolean.valueOf(z));
+            function1.invoke(Boolean.valueOf(z));
         }
     }
 }

@@ -36,6 +36,7 @@ public final class MiuiNotificationShadePolicy implements StatusBarWindowCallbac
         this.notificationShadeWindowController.registerCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.phone.StatusBarWindowCallback
     public void onStateChanged(boolean z, boolean z2, boolean z3) {
         boolean z4 = (this.notificationShadeWindowController.getPanelExpanded() || !this.controlPanelController.isCCFullyCollapsed()) && !this.headsUpManagerPhone.hasPinnedHeadsUp() && !z && CommonUtil.isFullScreenGestureEnabled();
         if (this.mShouldDisableHomeFsg != z4) {

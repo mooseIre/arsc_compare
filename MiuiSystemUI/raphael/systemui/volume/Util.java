@@ -2,7 +2,8 @@ package com.android.systemui.volume;
 
 import android.view.View;
 
-class Util extends com.android.settingslib.volume.Util {
+/* access modifiers changed from: package-private */
+public class Util extends com.android.settingslib.volume.Util {
     public static String logTag(Class<?> cls) {
         String str = "vol." + cls.getSimpleName();
         return str.length() < 23 ? str : str.substring(0, 23);

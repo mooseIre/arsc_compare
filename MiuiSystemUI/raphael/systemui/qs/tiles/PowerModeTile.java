@@ -19,12 +19,15 @@ import miui.util.FeatureParser;
 
 public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
     private final ContentObserver mPowerModeObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.qs.tiles.PowerModeTile.AnonymousClass1 */
+
         public void onChange(boolean z) {
             PowerModeTile.this.refreshState();
         }
     };
     private ContentResolver mResolver = this.mContext.getContentResolver();
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -34,14 +37,17 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             this.mResolver.registerContentObserver(Settings.System.getUriFor("power_mode"), false, this.mPowerModeObserver, -1);
@@ -50,11 +56,13 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return longClickPowerModeIntent();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         String stringForUser = Settings.System.getStringForUser(this.mContext.getContentResolver(), "power_mode", -2);
         String str = "middle";
@@ -69,6 +77,7 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
         this.mContext.sendBroadcastAsUser(new Intent("miui.intent.action.POWER_MODE_CHANGE"), UserHandle.CURRENT);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_powermode_label);
     }
@@ -89,13 +98,14 @@ public class PowerModeTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_power_high_off);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return FeatureParser.getBoolean("support_power_mode", false);
     }

@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideConnectivityManagagerFactory impl
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ConnectivityManager get() {
         return provideInstance(this.contextProvider);
     }

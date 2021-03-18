@@ -16,6 +16,6 @@ final class BootCompleteCacheImpl$removeListener$$inlined$synchronized$lambda$1<
 
     public final boolean test(@NotNull WeakReference<BootCompleteCache.BootCompleteListener> weakReference) {
         Intrinsics.checkParameterIsNotNull(weakReference, "it");
-        return weakReference.get() == null || ((BootCompleteCache.BootCompleteListener) weakReference.get()) == this.$listener$inlined;
+        return weakReference.get() == null || weakReference.get() == this.$listener$inlined;
     }
 }

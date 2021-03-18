@@ -10,6 +10,7 @@ public class DozeBrightnessHostForwarder extends DozeMachine.Service.Delegate {
         this.mHost = dozeHost;
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Service, com.android.systemui.doze.DozeMachine.Service.Delegate
     public void setDozeScreenBrightness(int i) {
         super.setDozeScreenBrightness(i);
         this.mHost.setDozeScreenBrightness(i);

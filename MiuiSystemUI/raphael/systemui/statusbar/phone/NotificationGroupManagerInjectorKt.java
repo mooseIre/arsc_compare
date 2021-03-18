@@ -34,10 +34,10 @@ public final class NotificationGroupManagerInjectorKt {
     }
 
     private static final boolean isAutoGroupSummary(StatusBarNotification statusBarNotification) {
-        if (statusBarNotification.getId() == Integer.MAX_VALUE && Intrinsics.areEqual((Object) "ranker_group", (Object) statusBarNotification.getTag())) {
+        if (statusBarNotification.getId() == Integer.MAX_VALUE && Intrinsics.areEqual("ranker_group", statusBarNotification.getTag())) {
             Notification notification = statusBarNotification.getNotification();
             Intrinsics.checkExpressionValueIsNotNull(notification, "sbn.notification");
-            if (Intrinsics.areEqual((Object) "ranker_group", (Object) notification.getGroup())) {
+            if (Intrinsics.areEqual("ranker_group", notification.getGroup())) {
                 return true;
             }
         }

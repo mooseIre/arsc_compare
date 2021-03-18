@@ -4,7 +4,8 @@ import com.android.systemui.statusbar.NotificationLifetimeExtender;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.modal.ModalController;
 
-class ModalLifetimeExtender implements NotificationLifetimeExtender {
+/* access modifiers changed from: package-private */
+public class ModalLifetimeExtender implements NotificationLifetimeExtender {
     private NotificationEntry mEntry;
     private ModalController mModalController;
     private NotificationLifetimeExtender.NotificationSafeToRemoveCallback mNotificationSafeToRemoveCallback;
@@ -13,6 +14,9 @@ class ModalLifetimeExtender implements NotificationLifetimeExtender {
     public ModalLifetimeExtender(ModalController modalController) {
         this.mModalController = modalController;
         modalController.addOnModalChangeListener(new ModalController.OnModalChangeListener() {
+            /* class com.android.systemui.statusbar.notification.modal.$$Lambda$ModalLifetimeExtender$Z4VhIhFHNazmO05kc8SzTocxo */
+
+            @Override // com.android.systemui.statusbar.notification.modal.ModalController.OnModalChangeListener
             public final void onChange(boolean z) {
                 ModalLifetimeExtender.this.lambda$new$0$ModalLifetimeExtender(z);
             }
@@ -29,14 +33,17 @@ class ModalLifetimeExtender implements NotificationLifetimeExtender {
         this.mEntry = null;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {
         this.mNotificationSafeToRemoveCallback = notificationSafeToRemoveCallback;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
         return this.mModalController.shouldExtendLifetime(notificationEntry);
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
         if (shouldExtendLifetime(notificationEntry)) {
             this.mShouldManager = z;

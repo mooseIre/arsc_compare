@@ -23,6 +23,7 @@ public final class MiuiNotificationShadePolicy_Factory implements Factory<MiuiNo
         this.controlPanelControllerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public MiuiNotificationShadePolicy get() {
         return provideInstance(this.contextProvider, this.handlerProvider, this.headsUpManagerPhoneProvider, this.notificationShadeWindowControllerProvider, this.controlPanelControllerProvider);
     }

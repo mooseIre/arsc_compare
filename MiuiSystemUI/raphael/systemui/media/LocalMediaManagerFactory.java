@@ -1,6 +1,5 @@
 package com.android.systemui.media;
 
-import android.app.Notification;
 import android.content.Context;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.media.InfoMediaManager;
@@ -23,6 +22,6 @@ public final class LocalMediaManagerFactory {
     @NotNull
     public final LocalMediaManager create(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "packageName");
-        return new LocalMediaManager(this.context, this.localBluetoothManager, new InfoMediaManager(this.context, str, (Notification) null, this.localBluetoothManager), str);
+        return new LocalMediaManager(this.context, this.localBluetoothManager, new InfoMediaManager(this.context, str, null, this.localBluetoothManager), str);
     }
 }

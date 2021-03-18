@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideLatencyTrackerFactory implements 
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public LatencyTracker get() {
         return provideInstance(this.contextProvider);
     }

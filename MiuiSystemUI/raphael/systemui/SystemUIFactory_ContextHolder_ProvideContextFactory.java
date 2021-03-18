@@ -12,6 +12,7 @@ public final class SystemUIFactory_ContextHolder_ProvideContextFactory implement
         this.module = contextHolder;
     }
 
+    @Override // javax.inject.Provider
     public Context get() {
         return provideInstance(this.module);
     }

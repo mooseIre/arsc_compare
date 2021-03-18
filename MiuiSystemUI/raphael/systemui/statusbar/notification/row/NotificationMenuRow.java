@@ -34,10 +34,8 @@ import java.util.ArrayList;
 import java.util.Map;
 
 public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnClickListener, ExpandableNotificationRow.LayoutListener {
-    /* access modifiers changed from: private */
-    public float mAlpha = 0.0f;
-    /* access modifiers changed from: private */
-    public boolean mAnimating;
+    private float mAlpha = 0.0f;
+    private boolean mAnimating;
     private NotificationMenuRowPlugin.MenuItem mAppOpsItem;
     private CheckForDrag mCheckForDrag;
     private Context mContext;
@@ -53,32 +51,32 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
     private boolean mIsUserTouching;
     private ArrayList<NotificationMenuRowPlugin.MenuItem> mLeftMenuItems;
     private FrameLayout mMenuContainer;
-    /* access modifiers changed from: private */
-    public boolean mMenuFadedIn;
+    private boolean mMenuFadedIn;
     private final Map<View, NotificationMenuRowPlugin.MenuItem> mMenuItemsByView = new ArrayMap();
     private NotificationMenuRowPlugin.OnMenuEventListener mMenuListener;
     private boolean mMenuSnapped;
     private boolean mMenuSnappedOnLeft;
     private boolean mOnLeft;
-    /* access modifiers changed from: private */
-    public ExpandableNotificationRow mParent;
+    private ExpandableNotificationRow mParent;
     private int[] mParentLocation = new int[2];
     private final PeopleNotificationIdentifier mPeopleNotificationIdentifier;
     private ArrayList<NotificationMenuRowPlugin.MenuItem> mRightMenuItems;
     private boolean mShouldShowMenu;
     private boolean mSnapping;
     private NotificationMenuRowPlugin.MenuItem mSnoozeItem;
-    /* access modifiers changed from: private */
-    public float mTranslation;
+    private float mTranslation;
     private int mVertSpaceForIcons = -1;
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public NotificationMenuRowPlugin.MenuItem menuItemToExposeOnSnap() {
         return null;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void setMenuItems(ArrayList<NotificationMenuRowPlugin.MenuItem> arrayList) {
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean shouldShowGutsOnSnapOpen() {
         return false;
     }
@@ -92,18 +90,22 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         this.mPeopleNotificationIdentifier = peopleNotificationIdentifier;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public ArrayList<NotificationMenuRowPlugin.MenuItem> getMenuItems(Context context) {
         return this.mOnLeft ? this.mLeftMenuItems : this.mRightMenuItems;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public NotificationMenuRowPlugin.MenuItem getLongpressMenuItem(Context context) {
         return this.mInfoItem;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public NotificationMenuRowPlugin.MenuItem getAppOpsMenuItem(Context context) {
         return this.mAppOpsItem;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public NotificationMenuRowPlugin.MenuItem getSnoozeMenuItem(Context context) {
         return this.mSnoozeItem;
     }
@@ -144,15 +146,18 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return this.mSnapping;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void setMenuClickListener(NotificationMenuRowPlugin.OnMenuEventListener onMenuEventListener) {
         this.mMenuListener = onMenuEventListener;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void createMenu(ViewGroup viewGroup, StatusBarNotification statusBarNotification) {
         this.mParent = (ExpandableNotificationRow) viewGroup;
         createMenuViews(true, (statusBarNotification == null || (statusBarNotification.getNotification().flags & 64) == 0) ? false : true);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean isMenuVisible() {
         return this.mAlpha > 0.0f;
     }
@@ -163,10 +168,12 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return this.mIsUserTouching;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean shouldShowMenu() {
         return this.mShouldShowMenu;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public View getMenuView() {
         return this.mMenuContainer;
     }
@@ -177,14 +184,17 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return this.mTranslation;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void resetMenu() {
         resetState(true);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onTouchEnd() {
         this.mIsUserTouching = false;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onNotificationUpdated(StatusBarNotification statusBarNotification) {
         if (this.mMenuContainer != null) {
             boolean z = true;
@@ -196,10 +206,12 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onConfigurationChanged() {
         this.mParent.setLayoutListener(this);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.LayoutListener
     public void onLayout() {
         this.mIconsPlaced = false;
         setMenuLocation();
@@ -274,6 +286,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onTouchMove(float f) {
         this.mSnapping = false;
         if (!isTowardsMenu(f) && isMenuLocationChange()) {
@@ -308,10 +321,12 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         this.mIsUserTouching = true;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onTouchStart() {
         beginDrag();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onSnapOpen() {
         ExpandableNotificationRow expandableNotificationRow;
         this.mMenuSnapped = true;
@@ -325,12 +340,14 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onSnapClosed() {
         cancelDrag();
         this.mMenuSnapped = false;
         this.mSnapping = true;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onDismiss() {
         cancelDrag();
         this.mMenuSnapped = false;
@@ -359,10 +376,12 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return ((float) this.mHorizSpaceForIcon) * 0.2f;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean isTowardsMenu(float f) {
         return isMenuVisible() && ((isMenuOnLeft() && f <= 0.0f) || (!isMenuOnLeft() && f >= 0.0f));
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void setAppName(String str) {
         if (str != null) {
             setAppName(str, this.mLeftMenuItems);
@@ -375,7 +394,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         int size = arrayList.size();
         for (int i = 0; i < size; i++) {
             NotificationMenuRowPlugin.MenuItem menuItem = arrayList.get(i);
-            String format = String.format(resources.getString(C0021R$string.notification_menu_accessibility), new Object[]{str, menuItem.getContentDescription()});
+            String format = String.format(resources.getString(C0021R$string.notification_menu_accessibility), str, menuItem.getContentDescription());
             View menuView = menuItem.getMenuView();
             if (menuView != null) {
                 menuView.setContentDescription(format);
@@ -383,6 +402,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onParentHeightUpdate() {
         float f;
         if (this.mParent == null) {
@@ -400,6 +420,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void onParentTranslationUpdate(float f) {
         this.mTranslation = f;
         if (!this.mAnimating && this.mMenuFadedIn) {
@@ -429,7 +450,8 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
     }
 
     /* access modifiers changed from: private */
-    public boolean isMenuLocationChange() {
+    /* access modifiers changed from: public */
+    private boolean isMenuLocationChange() {
         return (isMenuOnLeft() && ((this.mTranslation > ((float) (-this.mIconPadding)) ? 1 : (this.mTranslation == ((float) (-this.mIconPadding)) ? 0 : -1)) < 0)) || (!isMenuOnLeft() && ((this.mTranslation > ((float) this.mIconPadding) ? 1 : (this.mTranslation == ((float) this.mIconPadding) ? 0 : -1)) > 0));
     }
 
@@ -483,7 +505,8 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return this.mHorizSpaceForIcon * this.mMenuContainer.getChildCount();
     }
 
-    private final class CheckForDrag implements Runnable {
+    /* access modifiers changed from: private */
+    public final class CheckForDrag implements Runnable {
         private CheckForDrag() {
         }
 
@@ -498,7 +521,8 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
     }
 
     /* access modifiers changed from: private */
-    public void fadeInMenu(final float f) {
+    /* access modifiers changed from: public */
+    private void fadeInMenu(final float f) {
         if (!this.mDismissing && !this.mAnimating) {
             if (isMenuLocationChange()) {
                 setMenuAlpha(0.0f);
@@ -506,9 +530,11 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
             final float f2 = this.mTranslation;
             final boolean z = f2 > 0.0f;
             setMenuLocation();
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mAlpha, 1.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mAlpha, 1.0f);
             this.mFadeAnimator = ofFloat;
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.statusbar.notification.row.NotificationMenuRow.AnonymousClass1 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     if (((z && f2 <= f) || (!z && Math.abs(f2) <= f)) && !NotificationMenuRow.this.mMenuFadedIn) {
                         NotificationMenuRow.this.setMenuAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
@@ -516,8 +542,10 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
                 }
             });
             this.mFadeAnimator.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.statusbar.notification.row.NotificationMenuRow.AnonymousClass2 */
+
                 public void onAnimationStart(Animator animator) {
-                    boolean unused = NotificationMenuRow.this.mAnimating = true;
+                    NotificationMenuRow.this.mAnimating = true;
                 }
 
                 public void onAnimationCancel(Animator animator) {
@@ -526,20 +554,21 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
 
                 public void onAnimationEnd(Animator animator) {
                     boolean z = false;
-                    boolean unused = NotificationMenuRow.this.mAnimating = false;
+                    NotificationMenuRow.this.mAnimating = false;
                     NotificationMenuRow notificationMenuRow = NotificationMenuRow.this;
                     if (notificationMenuRow.mAlpha == 1.0f) {
                         z = true;
                     }
-                    boolean unused2 = notificationMenuRow.mMenuFadedIn = z;
+                    notificationMenuRow.mMenuFadedIn = z;
                 }
             });
             this.mFadeAnimator.setInterpolator(Interpolators.ALPHA_IN);
-            this.mFadeAnimator.setDuration(200);
+            this.mFadeAnimator.setDuration(200L);
             this.mFadeAnimator.start();
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public Point getRevealAnimationOrigin() {
         View menuView = this.mInfoItem.getMenuView();
         int left = menuView.getLeft() + menuView.getPaddingLeft() + (menuView.getWidth() / 2);
@@ -567,7 +596,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
     }
 
     static NotificationMenuRowPlugin.MenuItem createAppOpsItem(Context context) {
-        return new NotificationMenuItem(context, (String) null, (AppOpsInfo) LayoutInflater.from(context).inflate(C0017R$layout.app_ops_info, (ViewGroup) null, false), -1);
+        return new NotificationMenuItem(context, null, (AppOpsInfo) LayoutInflater.from(context).inflate(C0017R$layout.app_ops_info, (ViewGroup) null, false), -1);
     }
 
     private void addMenuView(NotificationMenuRowPlugin.MenuItem menuItem, ViewGroup viewGroup) {
@@ -597,6 +626,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return ((float) getParent().getWidth()) * 0.6f;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean isWithinSnapMenuThreshold() {
         float translation = getTranslation();
         float snapBackThreshold = getSnapBackThreshold();
@@ -611,18 +641,21 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return false;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean isSwipedEnoughToShowMenu() {
         float minimumSwipeDistance = getMinimumSwipeDistance();
         float translation = getTranslation();
         return isMenuVisible() && (!isMenuOnLeft() ? translation < (-minimumSwipeDistance) : translation > minimumSwipeDistance);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public int getMenuSnapTarget() {
         boolean isMenuOnLeft = isMenuOnLeft();
         int spaceForMenu = getSpaceForMenu();
         return isMenuOnLeft ? spaceForMenu : -spaceForMenu;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean shouldSnapBack() {
         float translation = getTranslation();
         float snapBackThreshold = getSnapBackThreshold();
@@ -636,14 +669,17 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         return false;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean isSnappedAndOnSameSide() {
         return isMenuSnapped() && isMenuVisible() && isMenuSnappedOnLeft() == isMenuOnLeft();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public boolean canBeDismissed() {
         return getParent().canViewBeDismissed();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin
     public void setDismissRtl(boolean z) {
         if (this.mMenuContainer != null) {
             createMenuViews(true, this.mIsForeground);
@@ -671,14 +707,17 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
             this.mGutsContent = gutsContent;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.MenuItem
         public View getMenuView() {
             return this.mMenuView;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.MenuItem
         public View getGutsView() {
             return this.mGutsContent.getContentView();
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.MenuItem
         public String getContentDescription() {
             return this.mContentDescription;
         }

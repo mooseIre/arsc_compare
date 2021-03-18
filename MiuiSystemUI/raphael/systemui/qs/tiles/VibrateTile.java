@@ -13,6 +13,7 @@ import com.android.systemui.statusbar.policy.ZenModeController;
 public class VibrateTile extends QSTileImpl<QSTile.BooleanState> implements ZenModeController.Callback {
     private final ZenModeController mZenModeController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -24,19 +25,23 @@ public class VibrateTile extends QSTileImpl<QSTile.BooleanState> implements ZenM
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return longClickVibrateIntent();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         String str = this.TAG;
         StringBuilder sb = new StringBuilder();
@@ -48,6 +53,7 @@ public class VibrateTile extends QSTileImpl<QSTile.BooleanState> implements ZenM
         this.mZenModeController.toggleVibrate();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_vibrate_label);
     }
@@ -64,13 +70,14 @@ public class VibrateTile extends QSTileImpl<QSTile.BooleanState> implements ZenM
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_vibrate_off);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mZenModeController.isVibratorAvailable();
     }
@@ -82,6 +89,7 @@ public class VibrateTile extends QSTileImpl<QSTile.BooleanState> implements ZenM
         return intent;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onVibrateChanged(boolean z) {
         refreshState();
     }

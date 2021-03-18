@@ -3,12 +3,12 @@ package com.android.systemui.assist.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.content.ComponentName;
 import android.content.Context;
 import android.metrics.LogMaker;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.PathInterpolator;
 import android.widget.FrameLayout;
@@ -27,11 +27,9 @@ public class DefaultUiController implements AssistManager.UiController {
     protected final AssistLogger mAssistLogger;
     private boolean mAttached = false;
     private ValueAnimator mInvocationAnimator = new ValueAnimator();
-    /* access modifiers changed from: private */
-    public boolean mInvocationInProgress = false;
+    private boolean mInvocationInProgress = false;
     protected InvocationLightsView mInvocationLightsView;
-    /* access modifiers changed from: private */
-    public float mLastInvocationProgress = 0.0f;
+    private float mLastInvocationProgress = 0.0f;
     private final WindowManager.LayoutParams mLayoutParams;
     private final PathInterpolator mProgressInterpolator = new PathInterpolator(0.83f, 0.0f, 0.84f, 1.0f);
     protected final FrameLayout mRoot;
@@ -47,12 +45,13 @@ public class DefaultUiController implements AssistManager.UiController {
         layoutParams.gravity = 80;
         layoutParams.setFitInsetsTypes(0);
         this.mLayoutParams.setTitle("Assist");
-        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C0017R$layout.invocation_lights, this.mRoot, false);
+        InvocationLightsView invocationLightsView = (InvocationLightsView) LayoutInflater.from(context).inflate(C0017R$layout.invocation_lights, (ViewGroup) this.mRoot, false);
         this.mInvocationLightsView = invocationLightsView;
         invocationLightsView.setColors(-16776961, -65536, -256, -16711936);
         this.mRoot.addView(this.mInvocationLightsView);
     }
 
+    @Override // com.android.systemui.assist.AssistManager.UiController
     public void onInvocationProgress(int i, float f) {
         boolean z = this.mInvocationInProgress;
         if (f == 1.0f) {
@@ -71,6 +70,7 @@ public class DefaultUiController implements AssistManager.UiController {
         logInvocationProgressMetrics(i, f, z);
     }
 
+    @Override // com.android.systemui.assist.AssistManager.UiController
     public void onGestureCompletion(float f) {
         animateInvocationCompletion(1, f);
         logInvocationProgressMetrics(1, 1.0f, this.mInvocationInProgress);
@@ -95,7 +95,7 @@ public class DefaultUiController implements AssistManager.UiController {
             if (VERBOSE) {
                 Log.v("DefaultUiController", "Invocation started: type=" + i);
             }
-            this.mAssistLogger.reportAssistantInvocationEventFromLegacy(i, false, (ComponentName) null, (Integer) null);
+            this.mAssistLogger.reportAssistantInvocationEventFromLegacy(i, false, null, null);
             MetricsLogger.action(new LogMaker(1716).setType(4).setSubtype(((AssistManager) Dependency.get(AssistManager.class)).toLoggingSubType(i)));
         }
         ValueAnimator valueAnimator = this.mInvocationAnimator;
@@ -140,11 +140,12 @@ public class DefaultUiController implements AssistManager.UiController {
     }
 
     private void animateInvocationCompletion(int i, float f) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mLastInvocationProgress, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mLastInvocationProgress, 1.0f);
         this.mInvocationAnimator = ofFloat;
         ofFloat.setStartDelay(1);
-        this.mInvocationAnimator.setDuration(200);
+        this.mInvocationAnimator.setDuration(200L);
         this.mInvocationAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(i) {
+            /* class com.android.systemui.assist.ui.$$Lambda$DefaultUiController$DsyFMixn8vpgo7pkqARg9d_ZEVw */
             public final /* synthetic */ int f$1;
 
             {
@@ -156,10 +157,12 @@ public class DefaultUiController implements AssistManager.UiController {
             }
         });
         this.mInvocationAnimator.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.assist.ui.DefaultUiController.AnonymousClass1 */
+
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
-                boolean unused = DefaultUiController.this.mInvocationInProgress = false;
-                float unused2 = DefaultUiController.this.mLastInvocationProgress = 0.0f;
+                DefaultUiController.this.mInvocationInProgress = false;
+                DefaultUiController.this.mLastInvocationProgress = 0.0f;
                 DefaultUiController.this.hide();
             }
         });

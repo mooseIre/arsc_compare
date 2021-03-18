@@ -23,6 +23,8 @@ public class DismissCallbackRegistry {
             Executor executor = this.mUiBgExecutor;
             Objects.requireNonNull(dismissCallbackWrapper);
             executor.execute(new Runnable() {
+                /* class com.android.systemui.keyguard.$$Lambda$zM6bayhThdtgvBghgFXo519LeO0 */
+
                 public final void run() {
                     DismissCallbackWrapper.this.notifyDismissCancelled();
                 }
@@ -37,6 +39,8 @@ public class DismissCallbackRegistry {
             Executor executor = this.mUiBgExecutor;
             Objects.requireNonNull(dismissCallbackWrapper);
             executor.execute(new Runnable() {
+                /* class com.android.systemui.keyguard.$$Lambda$2j_lq_QeR0jp4UUzPHOB_8BlctI */
+
                 public final void run() {
                     DismissCallbackWrapper.this.notifyDismissSucceeded();
                 }

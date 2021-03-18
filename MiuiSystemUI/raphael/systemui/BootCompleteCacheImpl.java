@@ -7,6 +7,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import kotlin.Unit;
@@ -24,6 +25,7 @@ public final class BootCompleteCacheImpl implements BootCompleteCache, Dumpable 
         dumpManager.registerDumpable("BootCompleteCacheImpl", this);
     }
 
+    @Override // com.android.systemui.BootCompleteCache
     public boolean isBootComplete() {
         return this.bootComplete.get();
     }
@@ -31,8 +33,9 @@ public final class BootCompleteCacheImpl implements BootCompleteCache, Dumpable 
     public final void setBootComplete() {
         if (this.bootComplete.compareAndSet(false, true)) {
             synchronized (this.listeners) {
-                for (WeakReference weakReference : this.listeners) {
-                    BootCompleteCache.BootCompleteListener bootCompleteListener = (BootCompleteCache.BootCompleteListener) weakReference.get();
+                Iterator<T> it = this.listeners.iterator();
+                while (it.hasNext()) {
+                    BootCompleteCache.BootCompleteListener bootCompleteListener = (BootCompleteCache.BootCompleteListener) it.next().get();
                     if (bootCompleteListener != null) {
                         bootCompleteListener.onBootComplete();
                     }
@@ -43,6 +46,7 @@ public final class BootCompleteCacheImpl implements BootCompleteCache, Dumpable 
         }
     }
 
+    @Override // com.android.systemui.BootCompleteCache
     public boolean addListener(@NotNull BootCompleteCache.BootCompleteListener bootCompleteListener) {
         Intrinsics.checkParameterIsNotNull(bootCompleteListener, "listener");
         if (this.bootComplete.get()) {
@@ -52,11 +56,12 @@ public final class BootCompleteCacheImpl implements BootCompleteCache, Dumpable 
             if (this.bootComplete.get()) {
                 return true;
             }
-            this.listeners.add(new WeakReference(bootCompleteListener));
+            this.listeners.add(new WeakReference<>(bootCompleteListener));
             return false;
         }
     }
 
+    @Override // com.android.systemui.BootCompleteCache
     public void removeListener(@NotNull BootCompleteCache.BootCompleteListener bootCompleteListener) {
         Intrinsics.checkParameterIsNotNull(bootCompleteListener, "listener");
         if (!this.bootComplete.get()) {
@@ -67,6 +72,7 @@ public final class BootCompleteCacheImpl implements BootCompleteCache, Dumpable 
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
@@ -76,8 +82,9 @@ public final class BootCompleteCacheImpl implements BootCompleteCache, Dumpable 
         if (!isBootComplete()) {
             printWriter.println("  listeners:");
             synchronized (this.listeners) {
-                for (WeakReference weakReference : this.listeners) {
-                    printWriter.println("    " + weakReference);
+                Iterator<T> it = this.listeners.iterator();
+                while (it.hasNext()) {
+                    printWriter.println("    " + ((Object) it.next()));
                 }
                 Unit unit = Unit.INSTANCE;
             }

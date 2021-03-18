@@ -17,17 +17,18 @@ import java.lang.reflect.Method;
 
 public class FragmentService implements Dumpable {
     private ConfigurationController.ConfigurationListener mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        /* class com.android.systemui.fragments.FragmentService.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onConfigChanged(Configuration configuration) {
-            for (FragmentHostState sendConfigurationChange : FragmentService.this.mHosts.values()) {
-                sendConfigurationChange.sendConfigurationChange(configuration);
+            for (FragmentHostState fragmentHostState : FragmentService.this.mHosts.values()) {
+                fragmentHostState.sendConfigurationChange(configuration);
             }
         }
     };
     private final FragmentCreator mFragmentCreator;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler();
-    /* access modifiers changed from: private */
-    public final ArrayMap<View, FragmentHostState> mHosts = new ArrayMap<>();
+    private final Handler mHandler = new Handler();
+    private final ArrayMap<View, FragmentHostState> mHosts = new ArrayMap<>();
     private final ArrayMap<String, Method> mInjectionMap = new ArrayMap<>();
 
     public interface FragmentCreator {
@@ -53,7 +54,8 @@ public class FragmentService implements Dumpable {
     }
 
     private void initInjectionMap() {
-        for (Method method : FragmentCreator.class.getDeclaredMethods()) {
+        Method[] declaredMethods = FragmentCreator.class.getDeclaredMethods();
+        for (Method method : declaredMethods) {
             if (Fragment.class.isAssignableFrom(method.getReturnType()) && (method.getModifiers() & 1) != 0) {
                 this.mInjectionMap.put(method.getReturnType().getName(), method);
             }
@@ -78,21 +80,22 @@ public class FragmentService implements Dumpable {
     }
 
     public void destroyAll() {
-        for (FragmentHostState access$100 : this.mHosts.values()) {
-            access$100.mFragmentHostManager.destroy();
+        for (FragmentHostState fragmentHostState : this.mHosts.values()) {
+            fragmentHostState.mFragmentHostManager.destroy();
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("Dumping fragments:");
-        for (FragmentHostState access$100 : this.mHosts.values()) {
-            access$100.mFragmentHostManager.getFragmentManager().dump("  ", fileDescriptor, printWriter, strArr);
+        for (FragmentHostState fragmentHostState : this.mHosts.values()) {
+            fragmentHostState.mFragmentHostManager.getFragmentManager().dump("  ", fileDescriptor, printWriter, strArr);
         }
     }
 
-    private class FragmentHostState {
-        /* access modifiers changed from: private */
-        public FragmentHostManager mFragmentHostManager;
+    /* access modifiers changed from: private */
+    public class FragmentHostState {
+        private FragmentHostManager mFragmentHostManager;
         private final View mView;
 
         public FragmentHostState(View view) {
@@ -102,6 +105,7 @@ public class FragmentService implements Dumpable {
 
         public void sendConfigurationChange(Configuration configuration) {
             FragmentService.this.mHandler.post(new Runnable(configuration) {
+                /* class com.android.systemui.fragments.$$Lambda$FragmentService$FragmentHostState$kEJEvu5Mq9Z5e9srOLcsFn7Glto */
                 public final /* synthetic */ Configuration f$1;
 
                 {

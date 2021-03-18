@@ -11,6 +11,7 @@ public final class NotificationClickerLogger_Factory implements Factory<Notifica
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationClickerLogger get() {
         return provideInstance(this.bufferProvider);
     }

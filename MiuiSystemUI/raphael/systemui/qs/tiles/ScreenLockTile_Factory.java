@@ -11,6 +11,7 @@ public final class ScreenLockTile_Factory implements Factory<ScreenLockTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ScreenLockTile get() {
         return provideInstance(this.hostProvider);
     }

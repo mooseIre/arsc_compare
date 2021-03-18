@@ -3,8 +3,9 @@ package com.android.systemui.statusbar.notification;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import java.util.Iterator;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationWakeUpCoordinator.kt */
-final class NotificationWakeUpCoordinator$setStackScroller$1 implements Runnable {
+public final class NotificationWakeUpCoordinator$setStackScroller$1 implements Runnable {
     final /* synthetic */ NotificationWakeUpCoordinator this$0;
 
     NotificationWakeUpCoordinator$setStackScroller$1(NotificationWakeUpCoordinator notificationWakeUpCoordinator) {

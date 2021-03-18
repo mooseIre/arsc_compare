@@ -17,7 +17,7 @@ public class ScreenshotSelectorView extends View {
     private Point mStartPoint;
 
     public ScreenshotSelectorView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ScreenshotSelectorView(Context context, AttributeSet attributeSet) {
@@ -56,7 +56,7 @@ public class ScreenshotSelectorView extends View {
     }
 
     public void draw(Canvas canvas) {
-        canvas.drawRect((float) this.mLeft, (float) this.mTop, (float) this.mRight, (float) this.mBottom, this.mPaintBackground);
+        canvas.drawRect((float) ((View) this).mLeft, (float) ((View) this).mTop, (float) ((View) this).mRight, (float) ((View) this).mBottom, this.mPaintBackground);
         Rect rect = this.mSelectionRect;
         if (rect != null) {
             canvas.drawRect(rect, this.mPaintSelection);

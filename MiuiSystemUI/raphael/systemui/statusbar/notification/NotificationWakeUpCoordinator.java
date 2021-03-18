@@ -29,34 +29,30 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
     private final Set<NotificationEntry> mEntrySetToClearWhenFinished = new LinkedHashSet();
     private final HeadsUpManager mHeadsUpManager;
     private float mLinearDozeAmount;
-    /* access modifiers changed from: private */
-    public float mLinearVisibilityAmount;
+    private float mLinearVisibilityAmount;
     private final NotificationWakeUpCoordinator$mNotificationVisibility$1 mNotificationVisibility = new NotificationWakeUpCoordinator$mNotificationVisibility$1("notificationVisibility");
     private float mNotificationVisibleAmount;
     private boolean mNotificationsVisible;
-    /* access modifiers changed from: private */
-    public boolean mNotificationsVisibleForExpansion;
+    private boolean mNotificationsVisibleForExpansion;
     private NotificationStackScrollLayout mStackScroller;
     private float mVisibilityAmount;
     private ObjectAnimator mVisibilityAnimator;
     private Interpolator mVisibilityInterpolator = Interpolators.FAST_OUT_SLOW_IN_REVERSE;
     private boolean notificationsFullyHidden;
-    /* access modifiers changed from: private */
-    public boolean pulseExpanding;
+    private boolean pulseExpanding;
     private boolean pulsing;
     private int state = 1;
     private final StatusBarStateController statusBarStateController;
-    /* access modifiers changed from: private */
-    public final ArrayList<WakeUpListener> wakeUpListeners = new ArrayList<>();
+    private final ArrayList<WakeUpListener> wakeUpListeners = new ArrayList<>();
     private boolean wakingUp;
     private boolean willWakeUp;
 
     /* compiled from: NotificationWakeUpCoordinator.kt */
     public interface WakeUpListener {
-        void onFullyHiddenChanged(boolean z) {
+        default void onFullyHiddenChanged(boolean z) {
         }
 
-        void onPulseExpansionChanged(boolean z) {
+        default void onPulseExpansionChanged(boolean z) {
         }
     }
 
@@ -76,12 +72,15 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         this.mHeadsUpManager.addListener(this);
         this.statusBarStateController.addCallback(this);
         addListener(new WakeUpListener(this) {
+            /* class com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.AnonymousClass1 */
             final /* synthetic */ NotificationWakeUpCoordinator this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
             public void onFullyHiddenChanged(boolean z) {
                 if (z && this.this$0.mNotificationsVisibleForExpansion) {
                     this.this$0.setNotificationsVisibleForExpansion(false, false, false);
@@ -212,6 +211,7 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozeAmountChanged(float f, float f2) {
         if (!updateDozeAmountIfBypass()) {
             if (!(f == 1.0f || f == 0.0f)) {
@@ -243,6 +243,7 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         throw null;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
         updateDozeAmountIfBypass();
         if (this.bypassController.getBypassEnabled() && i == 1 && this.state == 2 && (!this.statusBarStateController.isDozing() || shouldAnimateVisibility())) {
@@ -252,6 +253,7 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         this.state = i;
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelExpansionListener
     public void onPanelExpansionChanged(float f, boolean z) {
         boolean z2 = f <= 0.9f;
         if (z2 != this.collapsedEnoughToHide) {
@@ -291,7 +293,7 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         if (this.mNotificationsVisible) {
             f2 = 1.0f;
         }
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, this.mNotificationVisibility, new float[]{f2});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, this.mNotificationVisibility, f2);
         ofFloat.setInterpolator(Interpolators.LINEAR);
         long j = (long) 500;
         if (z) {
@@ -312,8 +314,9 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
 
     private final void handleAnimationFinished() {
         if (this.mLinearDozeAmount == 0.0f || this.mLinearVisibilityAmount == 0.0f) {
-            for (NotificationEntry headsUpAnimatingAway : this.mEntrySetToClearWhenFinished) {
-                headsUpAnimatingAway.setHeadsUpAnimatingAway(false);
+            Iterator<T> it = this.mEntrySetToClearWhenFinished.iterator();
+            while (it.hasNext()) {
+                it.next().setHeadsUpAnimatingAway(false);
             }
             this.mEntrySetToClearWhenFinished.clear();
         }
@@ -351,6 +354,7 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
         if (z) {
             setNotificationsVisible(false, false, false);
@@ -370,6 +374,7 @@ public final class NotificationWakeUpCoordinator implements OnHeadsUpChangedList
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(@NotNull NotificationEntry notificationEntry, boolean z) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         boolean shouldAnimateVisibility = shouldAnimateVisibility();

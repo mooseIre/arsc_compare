@@ -7,6 +7,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
@@ -47,10 +48,12 @@ public class MiuiQSIconViewImpl extends QSIconView {
         addView(createIcon);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setAnimationEnabled(boolean z) {
         this.mAnimationEnabled = z;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public View getIconView() {
         return this.mIcon;
     }
@@ -67,12 +70,14 @@ public class MiuiQSIconViewImpl extends QSIconView {
         layout(this.mIcon, (getMeasuredWidth() - this.mIcon.getMeasuredWidth()) / 2, 0);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void updateResources() {
         Resources resources = getResources();
         this.mIconColorEnabled = resources.getColor(C0011R$color.qs_tile_icon_enabled_color);
         this.mIconColorDisabled = resources.getColor(C0011R$color.qs_tile_icon_disabled_color);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIcon(QSTile.State state, boolean z) {
         setIcon((ImageView) this.mIcon, state, z);
     }
@@ -89,7 +94,7 @@ public class MiuiQSIconViewImpl extends QSIconView {
         QSTile.Icon icon = supplier != null ? supplier.get() : state.icon;
         if (!Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag))) {
             imageView.setTag(C0015R$id.qs_icon_tag, icon);
-            Drawable drawable = icon != null ? icon.getDrawable(this.mContext) : null;
+            Drawable drawable = icon != null ? icon.getDrawable(((ViewGroup) this).mContext) : null;
             if (drawable != null) {
                 boolean z2 = drawable instanceof AnimatedVectorDrawable;
                 if (z2) {
@@ -146,12 +151,13 @@ public class MiuiQSIconViewImpl extends QSIconView {
             this.mAnimator.removeAllUpdateListeners();
             this.mAnimator = null;
         }
-        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
+        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", 255 - i, i).setDuration(300L);
         this.mAnimator = duration;
         duration.setInterpolator(MiuiInterpolators.EXP_EASE_OUT);
         this.mAnimator.start();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIsCustomTile(boolean z) {
         this.mIsCustomTile = z;
     }
@@ -168,7 +174,7 @@ public class MiuiQSIconViewImpl extends QSIconView {
 
     /* access modifiers changed from: protected */
     public View createIcon() {
-        ImageView imageView = new ImageView(this.mContext);
+        ImageView imageView = new ImageView(((ViewGroup) this).mContext);
         imageView.setId(16908294);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         return imageView;

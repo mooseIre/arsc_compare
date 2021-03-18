@@ -19,6 +19,7 @@ public final class StatusBarDependenciesModule_ProvideNotificationListenerFactor
         this.mainHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public NotificationListener get() {
         return provideInstance(this.contextProvider, this.notificationManagerProvider, this.mainHandlerProvider);
     }

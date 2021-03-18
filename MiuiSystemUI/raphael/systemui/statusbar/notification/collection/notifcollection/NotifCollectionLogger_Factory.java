@@ -11,6 +11,7 @@ public final class NotifCollectionLogger_Factory implements Factory<NotifCollect
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotifCollectionLogger get() {
         return provideInstance(this.bufferProvider);
     }

@@ -10,6 +10,7 @@ public final class PeopleHubViewAdapterImpl_Factory implements Factory<PeopleHub
         this.dataSourceProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PeopleHubViewAdapterImpl get() {
         return provideInstance(this.dataSourceProvider);
     }

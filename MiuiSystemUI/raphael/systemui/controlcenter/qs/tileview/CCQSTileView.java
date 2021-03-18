@@ -38,13 +38,10 @@ public class CCQSTileView extends QSTileView {
     private String mAccessibilityClass;
     private ObjectAnimator mBreathAnimator;
     private boolean mClicked;
-    /* access modifiers changed from: private */
-    public final H mHandler;
+    private final H mHandler;
     protected QSIconView mIcon;
-    /* access modifiers changed from: private */
-    public final FrameLayout mIconFrame;
-    /* access modifiers changed from: private */
-    public ITouchStyle mIconMouseAnim;
+    private final FrameLayout mIconFrame;
+    private ITouchStyle mIconMouseAnim;
     protected TextView mLabel;
     private int mState;
     private boolean mTileState;
@@ -69,9 +66,9 @@ public class CCQSTileView extends QSTileView {
         addView(this.mIconFrame, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
         this.mIcon = qSIconView;
         this.mIconFrame.addView(qSIconView, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mIcon.getIconView(), "alpha", new float[]{0.5f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mIcon.getIconView(), "alpha", 0.5f);
         this.mBreathAnimator = ofFloat;
-        ofFloat.setDuration(400);
+        ofFloat.setDuration(400L);
         this.mBreathAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         this.mBreathAnimator.setRepeatMode(2);
         this.mBreathAnimator.setRepeatCount(-1);
@@ -81,16 +78,23 @@ public class CCQSTileView extends QSTileView {
         setImportantForAccessibility(2);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public void init(final QSTile qSTile) {
         init(new View.OnClickListener(this) {
+            /* class com.android.systemui.controlcenter.qs.tileview.CCQSTileView.AnonymousClass1 */
+
             public void onClick(View view) {
                 qSTile.click();
             }
         }, new View.OnClickListener(this) {
+            /* class com.android.systemui.controlcenter.qs.tileview.CCQSTileView.AnonymousClass2 */
+
             public void onClick(View view) {
                 qSTile.secondaryClick();
             }
         }, new View.OnLongClickListener(this) {
+            /* class com.android.systemui.controlcenter.qs.tileview.CCQSTileView.AnonymousClass3 */
+
             public boolean onLongClick(View view) {
                 qSTile.longClick();
                 return true;
@@ -100,7 +104,7 @@ public class CCQSTileView extends QSTileView {
 
     /* access modifiers changed from: protected */
     public void createLabel(boolean z) {
-        this.mLabel = createQSStyleLabel(this.mContext);
+        this.mLabel = createQSStyleLabel(((LinearLayout) this).mContext);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-1, -2);
         layoutParams.gravity = 17;
         addView(this.mLabel, layoutParams);
@@ -133,13 +137,15 @@ public class CCQSTileView extends QSTileView {
         this.mIconFrame.setOnClickListener(onClickListener);
         this.mIconFrame.setOnLongClickListener(onLongClickListener);
         this.mIconFrame.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.controlcenter.qs.tileview.CCQSTileView.AnonymousClass4 */
+
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 boolean z = true;
                 if (CCQSTileView.this.mIconMouseAnim == null) {
                     CCQSTileView cCQSTileView = CCQSTileView.this;
                     ITouchStyle iTouchStyle = Folme.useAt(view).touch();
                     iTouchStyle.setTint(0.0f, 0.0f, 0.0f, 0.0f);
-                    ITouchStyle unused = cCQSTileView.mIconMouseAnim = iTouchStyle;
+                    cCQSTileView.mIconMouseAnim = iTouchStyle;
                 }
                 CCQSTileView.this.mIconMouseAnim.onMotionEventEx(view, motionEvent, new AnimConfig[0]);
                 int actionMasked = motionEvent.getActionMasked();
@@ -160,11 +166,13 @@ public class CCQSTileView extends QSTileView {
         });
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public View updateAccessibilityOrder(View view) {
         setAccessibilityTraversalAfter(view.getId());
         return this;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public void onStateChanged(QSTile.State state) {
         this.mHandler.obtainMessage(1, state).sendToTarget();
     }
@@ -200,10 +208,12 @@ public class CCQSTileView extends QSTileView {
         getLabel().setTextAppearance(C0022R$style.TextAppearance_QSControl_CCTileLabel);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public int getDetailY() {
         return getTop() + (getHeight() / 2);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public QSIconView getIcon() {
         return this.mIcon;
     }
@@ -232,6 +242,7 @@ public class CCQSTileView extends QSTileView {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public View getIconWithBackground() {
         return this.mIconFrame;
     }
@@ -268,7 +279,8 @@ public class CCQSTileView extends QSTileView {
         }
     }
 
-    private class H extends Handler {
+    /* access modifiers changed from: private */
+    public class H extends Handler {
         public H() {
             super(Looper.getMainLooper());
         }

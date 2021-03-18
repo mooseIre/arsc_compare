@@ -14,6 +14,7 @@ public final class PowerNotificationWarnings_Factory implements Factory<PowerNot
         this.activityStarterProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PowerNotificationWarnings get() {
         return provideInstance(this.contextProvider, this.activityStarterProvider);
     }

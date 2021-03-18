@@ -23,15 +23,12 @@ import org.jetbrains.annotations.Nullable;
 @SuppressLint({"ViewConstructor"})
 /* compiled from: QSFooterDataUsage.kt */
 public final class QSFooterDataUsage extends FrameLayout {
-    /* access modifiers changed from: private */
-    public final ActivityStarter activityStarter;
+    private final ActivityStarter activityStarter;
     private final QueryDataUsageHandler bgHandler;
     private TextView dataUsage;
     private final H handler;
-    /* access modifiers changed from: private */
-    public Intent intent1;
-    /* access modifiers changed from: private */
-    public Intent intent2;
+    private Intent intent1;
+    private Intent intent2;
     private Boolean isAvailable;
     private final Uri networkUri = Uri.parse("content://com.miui.networkassistant.provider/datausage_noti_status");
     private ImageView pieImage;
@@ -108,7 +105,8 @@ public final class QSFooterDataUsage extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public final void setDataUsage(DataUsageInfo dataUsageInfo) {
+    /* access modifiers changed from: public */
+    private final void setDataUsage(DataUsageInfo dataUsageInfo) {
         boolean isDataUsageAvailable = dataUsageInfo.isDataUsageAvailable();
         if (isDataUsageAvailable) {
             ImageView imageView = this.pieImage;
@@ -133,7 +131,7 @@ public final class QSFooterDataUsage extends FrameLayout {
                 throw null;
             }
         }
-        if (this.isAvailable == null || (!Intrinsics.areEqual((Object) Boolean.valueOf(isDataUsageAvailable), (Object) this.isAvailable))) {
+        if (this.isAvailable == null || (!Intrinsics.areEqual(Boolean.valueOf(isDataUsageAvailable), this.isAvailable))) {
             this.isAvailable = Boolean.valueOf(isDataUsageAvailable);
             setVisibility(isDataUsageAvailable ? 0 : 8);
             QSContainerImpl qSContainerImpl = this.qsContainer;
@@ -143,8 +141,9 @@ public final class QSFooterDataUsage extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: QSFooterDataUsage.kt */
-    private final class H extends Handler {
+    public final class H extends Handler {
         final /* synthetic */ QSFooterDataUsage this$0;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -168,8 +167,9 @@ public final class QSFooterDataUsage extends FrameLayout {
         }
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: QSFooterDataUsage.kt */
-    private final class QueryDataUsageHandler extends Handler {
+    public final class QueryDataUsageHandler extends Handler {
         final /* synthetic */ QSFooterDataUsage this$0;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -187,174 +187,24 @@ public final class QSFooterDataUsage extends FrameLayout {
         }
     }
 
-    /* JADX WARNING: type inference failed for: r3v0 */
-    /* JADX WARNING: type inference failed for: r3v2, types: [android.database.Cursor] */
-    /* JADX WARNING: type inference failed for: r3v4 */
-    /* JADX WARNING: type inference failed for: r3v6, types: [java.lang.CharSequence] */
-    /* JADX WARNING: type inference failed for: r3v12 */
     /* access modifiers changed from: private */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Removed duplicated region for block: B:44:0x0114  */
-    /* JADX WARNING: Removed duplicated region for block: B:50:0x0143  */
-    /* JADX WARNING: Removed duplicated region for block: B:52:0x0149  */
-    /* JADX WARNING: Removed duplicated region for block: B:55:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:57:? A[RETURN, SYNTHETIC] */
+    /* access modifiers changed from: public */
+    /* JADX WARNING: Removed duplicated region for block: B:37:0x0114  */
+    /* JADX WARNING: Removed duplicated region for block: B:43:0x0143  */
+    /* JADX WARNING: Removed duplicated region for block: B:45:0x0149  */
+    /* JADX WARNING: Removed duplicated region for block: B:48:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:50:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public final void queryDataUsage() {
+    private final void queryDataUsage() {
         /*
-            r11 = this;
-            java.lang.String r0 = "context"
-            java.lang.String r1 = "QSFooterDataUsage"
-            boolean r2 = com.android.systemui.statusbar.phone.StatusBar.isBootCompleted()
-            if (r2 != 0) goto L_0x000b
-            return
-        L_0x000b:
-            com.android.systemui.qs.QSFooterDataUsage$DataUsageInfo r2 = new com.android.systemui.qs.QSFooterDataUsage$DataUsageInfo
-            r2.<init>(r11)
-            r3 = 0
-            android.content.Context r4 = r11.getContext()     // Catch:{ Exception -> 0x011a }
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r4, r0)     // Catch:{ Exception -> 0x011a }
-            android.content.ContentResolver r5 = r4.getContentResolver()     // Catch:{ Exception -> 0x011a }
-            android.net.Uri r6 = r11.networkUri     // Catch:{ Exception -> 0x011a }
-            r7 = 0
-            r8 = 0
-            r9 = 0
-            r10 = 0
-            android.database.Cursor r4 = r5.query(r6, r7, r8, r9, r10)     // Catch:{ Exception -> 0x011a }
-            if (r4 == 0) goto L_0x00f9
-            boolean r5 = r4.moveToFirst()     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r6 = 1
-            if (r5 != r6) goto L_0x00f9
-            java.lang.String r5 = "text1"
-            int r5 = r4.getColumnIndex(r5)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r5 = r4.getString(r5)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r7 = "cursor.getString(cursor.…olumnIndex(COLUMN_TEXT1))"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r5, r7)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r7 = "text2"
-            int r7 = r4.getColumnIndex(r7)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r7 = r4.getString(r7)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r8 = "cursor.getString(cursor.…olumnIndex(COLUMN_TEXT2))"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r7, r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            boolean r8 = android.text.TextUtils.isEmpty(r5)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            if (r8 == 0) goto L_0x0062
-            boolean r8 = android.text.TextUtils.isEmpty(r7)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            if (r8 == 0) goto L_0x0062
-            java.lang.String r11 = "queryDataUsage: cannot find text1, text2."
-            android.util.Log.d(r1, r11)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r4.close()
-            return
-        L_0x0062:
-            java.lang.String r8 = "icon"
-            int r8 = r4.getColumnIndex(r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r8 = r4.getString(r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r9 = "cursor.getString(cursor.…ColumnIndex(COLUMN_ICON))"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r8, r9)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.net.Uri r8 = android.net.Uri.parse(r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.content.Context r9 = r11.getContext()     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r9, r0)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.content.ContentResolver r0 = r9.getContentResolver()     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r9 = "r"
-            android.os.ParcelFileDescriptor r0 = r0.openFileDescriptor(r8, r9)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.os.ParcelFileDescriptor$AutoCloseInputStream r8 = new android.os.ParcelFileDescriptor$AutoCloseInputStream     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r8.<init>(r0)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.graphics.Bitmap r0 = android.graphics.BitmapFactory.decodeStream(r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            if (r0 != 0) goto L_0x009a
-            java.lang.String r11 = "queryDataUsage: cannot load icon."
-            android.util.Log.d(r1, r11)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r4.close()
-            return
-        L_0x009a:
-            java.lang.String r8 = "action1"
-            int r8 = r4.getColumnIndex(r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r8 = r4.getString(r8)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r9 = "cursor.getString(cursor.…umnIndex(COLUMN_ACTION1))"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r8, r9)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r9 = "action2"
-            int r9 = r4.getColumnIndex(r9)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r9 = r4.getString(r9)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r10 = "cursor.getString(cursor.…umnIndex(COLUMN_ACTION2))"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r9, r10)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.content.Intent r8 = android.content.Intent.parseUri(r8, r6)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r11.intent1 = r8     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.content.Intent r8 = android.content.Intent.parseUri(r9, r6)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r11.intent2 = r8     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.content.Intent r9 = r11.intent1     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            if (r9 != 0) goto L_0x00d3
-            if (r8 != 0) goto L_0x00d3
-            java.lang.String r11 = "queryDataUsage: cannot find action1, action2."
-            android.util.Log.d(r1, r11)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r4.close()
-            return
-        L_0x00d3:
-            r2.setDataUsageAvailable(r6)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            if (r5 == 0) goto L_0x00e9
-            java.lang.String r3 = "&nbsp;"
-            kotlin.text.Regex r6 = new kotlin.text.Regex     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r6.<init>((java.lang.String) r3)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            java.lang.String r3 = "&ensp;"
-            java.lang.String r3 = r6.replace(r5, r3)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.text.Spanned r3 = android.text.Html.fromHtml(r3)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-        L_0x00e9:
-            r2.setText1(r3)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r2.setText2(r7)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r2.setIconImage(r0)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            goto L_0x00fd
-        L_0x00f3:
-            r11 = move-exception
-            r3 = r4
-            goto L_0x0147
-        L_0x00f6:
-            r11 = move-exception
-            r3 = r4
-            goto L_0x011b
-        L_0x00f9:
-            r0 = 0
-            r2.setDataUsageAvailable(r0)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-        L_0x00fd:
-            com.android.systemui.qs.QSFooterDataUsage$H r0 = r11.handler     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r3 = 100000(0x186a0, float:1.4013E-40)
-            r0.removeMessages(r3)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            android.os.Message r0 = android.os.Message.obtain()     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r0.what = r3     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r0.obj = r2     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            com.android.systemui.qs.QSFooterDataUsage$H r11 = r11.handler     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            r11.sendMessage(r0)     // Catch:{ Exception -> 0x00f6, all -> 0x00f3 }
-            if (r4 == 0) goto L_0x0146
-            r4.close()
-            goto L_0x0146
-        L_0x0118:
-            r11 = move-exception
-            goto L_0x0147
-        L_0x011a:
-            r11 = move-exception
-        L_0x011b:
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder     // Catch:{ all -> 0x0118 }
-            r0.<init>()     // Catch:{ all -> 0x0118 }
-            java.lang.Throwable r2 = r11.getCause()     // Catch:{ all -> 0x0118 }
-            java.lang.String r2 = java.lang.String.valueOf(r2)     // Catch:{ all -> 0x0118 }
-            r0.append(r2)     // Catch:{ all -> 0x0118 }
-            java.lang.String r2 = ", "
-            r0.append(r2)     // Catch:{ all -> 0x0118 }
-            java.lang.String r2 = r11.getMessage()     // Catch:{ all -> 0x0118 }
-            r0.append(r2)     // Catch:{ all -> 0x0118 }
-            java.lang.String r0 = r0.toString()     // Catch:{ all -> 0x0118 }
-            android.util.Log.d(r1, r0)     // Catch:{ all -> 0x0118 }
-            r11.printStackTrace()     // Catch:{ all -> 0x0118 }
-            if (r3 == 0) goto L_0x0146
-            r3.close()
-        L_0x0146:
-            return
-        L_0x0147:
-            if (r3 == 0) goto L_0x014c
-            r3.close()
-        L_0x014c:
-            throw r11
+        // Method dump skipped, instructions count: 333
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.QSFooterDataUsage.queryDataUsage():void");
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: QSFooterDataUsage.kt */
-    private final class DataUsageInfo {
+    public final class DataUsageInfo {
         @Nullable
         private Bitmap iconImage;
         private boolean isDataUsageAvailable;
@@ -363,6 +213,7 @@ public final class QSFooterDataUsage extends FrameLayout {
         @Nullable
         private String text2;
 
+        /* JADX WARN: Incorrect args count in method signature: ()V */
         public DataUsageInfo(QSFooterDataUsage qSFooterDataUsage) {
         }
 

@@ -20,6 +20,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     private int mTrackingPointer;
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     MiuiNotificationPanelViewController$createTouchHandler$1(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
         super();
@@ -27,6 +28,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController.NotificationPanelTouchHandler
     public boolean onMiuiIntercept(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if (motionEvent.getActionMasked() == 0) {
@@ -44,6 +46,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController.NotificationPanelTouchHandler
     public boolean handleMiuiTouch(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if (motionEvent.getActionMasked() == 0) {
@@ -60,12 +63,12 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             return false;
         }
         if (miuiNotificationPanelViewController.isOnKeyguard()) {
-            KeyguardPanelViewInjector access$getMKeyguardPanelViewInjector$p = this.this$0.mKeyguardPanelViewInjector;
-            int access$getMBarState$p = this.this$0.mBarState;
+            KeyguardPanelViewInjector keyguardPanelViewInjector = this.this$0.mKeyguardPanelViewInjector;
+            int i = this.this$0.mBarState;
             float f = this.mInitialTouchX;
             float f2 = this.mInitialTouchY;
             MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.this$0;
-            z = access$getMKeyguardPanelViewInjector$p.onTouchEvent(motionEvent, access$getMBarState$p, f, f2, miuiNotificationPanelViewController2.mIsExpanding, miuiNotificationPanelViewController2.mHintAnimationRunning, miuiNotificationPanelViewController2.mQsExpanded, miuiNotificationPanelViewController2.mDozing, miuiNotificationPanelViewController2.mTracking, miuiNotificationPanelViewController2.mClosing);
+            z = keyguardPanelViewInjector.onTouchEvent(motionEvent, i, f, f2, miuiNotificationPanelViewController2.mIsExpanding, miuiNotificationPanelViewController2.mHintAnimationRunning, miuiNotificationPanelViewController2.mQsExpanded, miuiNotificationPanelViewController2.mDozing, miuiNotificationPanelViewController2.mTracking, miuiNotificationPanelViewController2.mClosing);
         }
         if (handleMiniWindowTracking(motionEvent)) {
             return true;
@@ -79,11 +82,11 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     }
 
     private final boolean handleMiniWindowTracking(MotionEvent motionEvent) {
-        boolean access$getMTrackingMiniWindowHeadsUp$p = this.this$0.mTrackingMiniWindowHeadsUp;
+        boolean z = this.this$0.mTrackingMiniWindowHeadsUp;
         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
         miuiNotificationPanelViewController.mTrackingMiniWindowHeadsUp = miuiNotificationPanelViewController.isTrackingMiniWindowHeadsUp();
         int actionMasked = motionEvent.getActionMasked();
-        return (actionMasked == 1 || actionMasked == 3) ? access$getMTrackingMiniWindowHeadsUp$p : this.this$0.mTrackingMiniWindowHeadsUp;
+        return (actionMasked == 1 || actionMasked == 3) ? z : this.this$0.mTrackingMiniWindowHeadsUp;
     }
 
     private final boolean handleStretchState(float f, float f2, float f3) {
@@ -91,10 +94,10 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             Object obj = this.this$0.controlPanelController.get();
             Intrinsics.checkExpressionValueIsNotNull(obj, "controlPanelController.get()");
             boolean isUseControlCenter = ((ControlPanelController) obj).isUseControlCenter();
-            boolean z = this.isFullyCollapsedOnDown && !this.this$0.mExpandingFromHeadsUp && !this.this$0.mNssCoveredQs;
+            boolean z = this.isFullyCollapsedOnDown && !(this.this$0.mExpandingFromHeadsUp) && !(this.this$0.mNssCoveredQs);
             boolean z2 = this.isFullyExpandedOnDown && isUseControlCenter && this.this$0.getMNotificationStackScroller().isScrolledToTop();
             if (z || z2) {
-                if (isUseControlCenter && !this.this$0.getMPanelStretching()) {
+                if (isUseControlCenter && !(this.this$0.getMPanelStretching())) {
                     this.this$0.cancelFlingSpring();
                 }
                 return true;
@@ -117,58 +120,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final boolean handleSlideState(float r3, float r4, float r5) {
         /*
-            r2 = this;
-            boolean r5 = r2.isFullyExpandedOnDown
-            r0 = 0
-            if (r5 == 0) goto L_0x0078
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r5 = r2.this$0
-            dagger.Lazy r5 = r5.controlPanelController
-            java.lang.Object r5 = r5.get()
-            java.lang.String r1 = "controlPanelController.get()"
-            kotlin.jvm.internal.Intrinsics.checkExpressionValueIsNotNull(r5, r1)
-            com.android.systemui.controlcenter.phone.ControlPanelController r5 = (com.android.systemui.controlcenter.phone.ControlPanelController) r5
-            boolean r5 = r5.isUseControlCenter()
-            if (r5 != 0) goto L_0x0078
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r5 = r2.this$0
-            boolean r5 = r5.isQsExpanded()
-            if (r5 != 0) goto L_0x0078
-            float r5 = java.lang.Math.abs(r3)
-            float r4 = java.lang.Math.abs(r4)
-            int r4 = (r5 > r4 ? 1 : (r5 == r4 ? 0 : -1))
-            if (r4 <= 0) goto L_0x0078
-            float r4 = java.lang.Math.abs(r3)
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r5 = r2.this$0
-            int r5 = r5.mTouchSlop
-            float r5 = (float) r5
-            int r4 = (r4 > r5 ? 1 : (r4 == r5 ? 0 : -1))
-            if (r4 <= 0) goto L_0x0078
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r4 = r2.this$0
-            boolean r4 = r4.mNssCoveredQs
-            r5 = 1
-            if (r4 == 0) goto L_0x005a
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r2.this$0
-            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r2 = r2.getMNotificationStackScroller()
-            boolean r2 = r2.isScrolledToTop()
-            if (r2 == 0) goto L_0x0078
-            float r2 = (float) r0
-            int r2 = (r3 > r2 ? 1 : (r3 == r2 ? 0 : -1))
-            if (r2 <= 0) goto L_0x0078
-            return r5
-        L_0x005a:
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r4 = r2.this$0
-            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r4 = r4.getMNotificationStackScroller()
-            boolean r4 = r4.isScrolledToTop()
-            if (r4 == 0) goto L_0x0078
-            com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController r2 = r2.this$0
-            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r2 = r2.getMNotificationStackScroller()
-            boolean r2 = r2.isScrolledToBottom()
-            if (r2 != 0) goto L_0x0078
-            float r2 = (float) r0
-            int r2 = (r3 > r2 ? 1 : (r3 == r2 ? 0 : -1))
-            if (r2 >= 0) goto L_0x0078
-            return r5
-        L_0x0078:
-            return r0
+        // Method dump skipped, instructions count: 121
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController$createTouchHandler$1.handleSlideState(float, float, float):boolean");
     }
@@ -212,11 +164,11 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     float f2 = y - this.mInitialTouchY;
                     this.this$0.setMPanelStretching(handleStretchState(f2, f, y));
                     this.this$0.mPanelCollapsing = handleCollapseState(f2, f, this.mInitialTouchY);
-                    if (!this.this$0.mNssCoveringQs) {
+                    if (!(this.this$0.mNssCoveringQs)) {
                         this.this$0.mNssCoveringQs = handleSlideState(f2, f, y);
                     }
                     MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-                    if (miuiNotificationPanelViewController.getMPanelStretching() || this.this$0.mPanelCollapsing || this.this$0.mNssCoveringQs) {
+                    if ((miuiNotificationPanelViewController.getMPanelStretching()) || (this.this$0.mPanelCollapsing) || (this.this$0.mNssCoveringQs)) {
                         z = true;
                     }
                     miuiNotificationPanelViewController.mPanelIntercepting = z;
@@ -261,12 +213,12 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     boolean handleStretchState = handleStretchState(f2, f, y);
                     boolean handleCollapseState = handleCollapseState(f2, f, this.mInitialTouchY);
                     boolean handleSlideState = handleSlideState(f2, f, y);
-                    if (!this.this$0.mPanelIntercepting) {
+                    if (!(this.this$0.mPanelIntercepting)) {
                         this.this$0.mPanelIntercepting = handleStretchState || handleCollapseState || handleSlideState;
                     }
                     if (this.isFullyCollapsedOnDown) {
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-                        miuiNotificationPanelViewController.setMPanelOpening(!miuiNotificationPanelViewController.mPanelOpening ? handleStretchState : true);
+                        miuiNotificationPanelViewController.setMPanelOpening(!(miuiNotificationPanelViewController.mPanelOpening) ? handleStretchState : true);
                     } else if (this.isFullyExpandedOnDown) {
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.this$0;
                         if (miuiNotificationPanelViewController2.mNssCoveringQs) {
@@ -274,7 +226,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                         }
                         miuiNotificationPanelViewController2.mNssCoveringQs = handleSlideState;
                     }
-                    if (!this.this$0.mPanelIntercepting || this.this$0.mNssCoveringQs || this.this$0.mNssCoveredQs) {
+                    if (!(this.this$0.mPanelIntercepting) || (this.this$0.mNssCoveringQs) || (this.this$0.mNssCoveredQs)) {
                         this.this$0.setMPanelStretching(handleStretchState);
                         this.this$0.mPanelCollapsing = handleCollapseState;
                     } else {
@@ -287,16 +239,16 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                         miuiNotificationPanelViewController4.mPanelCollapsing = !miuiNotificationPanelViewController4.getMPanelStretching();
                     }
                     if (this.this$0.mNssCoveringQs) {
-                        ValueAnimator access$getMQsTopPaddingAnimator$p = this.this$0.mQsTopPaddingAnimator;
-                        if (access$getMQsTopPaddingAnimator$p != null && access$getMQsTopPaddingAnimator$p.isRunning()) {
-                            access$getMQsTopPaddingAnimator$p.cancel();
+                        ValueAnimator valueAnimator = this.this$0.mQsTopPaddingAnimator;
+                        if (valueAnimator != null && valueAnimator.isRunning()) {
+                            valueAnimator.cancel();
                         }
                         if (this.this$0.mVelocityTracker == null) {
                             this.this$0.initVelocityTracker();
                         }
                         this.this$0.trackMovement(motionEvent);
                         this.this$0.handleNssCoverQs(y - this.mLastTouchY);
-                    } else if (this.this$0.getMPanelStretching() || this.this$0.mPanelCollapsing) {
+                    } else if ((this.this$0.getMPanelStretching()) || (this.this$0.mPanelCollapsing)) {
                         this.this$0.setMStretchLength(f2);
                     }
                     this.mLastTouchY = y;
@@ -317,7 +269,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
             this.this$0.mPanelCollapsing = false;
             this.this$0.mPanelIntercepting = false;
             this.this$0.setMStretchLength(0.0f);
-            if (!this.this$0.getMPanelAppeared() && !this.this$0.mExpandingFromHeadsUp) {
+            if (!(this.this$0.getMPanelAppeared()) && !(this.this$0.mExpandingFromHeadsUp)) {
                 this.this$0.scheduleHidePanel();
             }
         } else {

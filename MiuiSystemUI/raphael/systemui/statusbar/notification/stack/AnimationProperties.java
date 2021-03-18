@@ -20,6 +20,9 @@ public class AnimationProperties {
 
     public AnimationFilter getAnimationFilter() {
         return new AnimationFilter(this) {
+            /* class com.android.systemui.statusbar.notification.stack.AnimationProperties.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationFilter
             public boolean shouldAnimateProperty(Property property) {
                 return true;
             }
@@ -32,6 +35,7 @@ public class AnimationProperties {
             return null;
         }
         return new AnimatorListenerAdapter(this) {
+            /* class com.android.systemui.statusbar.notification.stack.AnimationProperties.AnonymousClass2 */
             private boolean mCancelled;
 
             public void onAnimationCancel(Animator animator) {
@@ -65,7 +69,7 @@ public class AnimationProperties {
             if (this.mInterpolatorMap == null) {
                 this.mInterpolatorMap = new ArrayMap<>();
             }
-            this.mInterpolatorMap.putAll(arrayMap);
+            this.mInterpolatorMap.putAll((ArrayMap<? extends Property, ? extends Interpolator>) arrayMap);
         }
     }
 

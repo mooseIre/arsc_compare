@@ -6,6 +6,7 @@ import dagger.internal.Factory;
 public final class MediaHost_MediaHostStateHolder_Factory implements Factory<MediaHost.MediaHostStateHolder> {
     private static final MediaHost_MediaHostStateHolder_Factory INSTANCE = new MediaHost_MediaHostStateHolder_Factory();
 
+    @Override // javax.inject.Provider
     public MediaHost.MediaHostStateHolder get() {
         return provideInstance();
     }

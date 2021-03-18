@@ -26,7 +26,7 @@ public final class CoalescedEvent {
             return false;
         }
         CoalescedEvent coalescedEvent = (CoalescedEvent) obj;
-        return Intrinsics.areEqual((Object) this.key, (Object) coalescedEvent.key) && this.position == coalescedEvent.position && Intrinsics.areEqual((Object) this.sbn, (Object) coalescedEvent.sbn) && Intrinsics.areEqual((Object) this.ranking, (Object) coalescedEvent.ranking) && Intrinsics.areEqual((Object) this.batch, (Object) coalescedEvent.batch);
+        return Intrinsics.areEqual(this.key, coalescedEvent.key) && this.position == coalescedEvent.position && Intrinsics.areEqual(this.sbn, coalescedEvent.sbn) && Intrinsics.areEqual(this.ranking, coalescedEvent.ranking) && Intrinsics.areEqual(this.batch, coalescedEvent.batch);
     }
 
     public int hashCode() {

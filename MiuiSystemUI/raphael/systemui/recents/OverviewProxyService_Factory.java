@@ -40,6 +40,7 @@ public final class OverviewProxyService_Factory implements Factory<OverviewProxy
         this.broadcastDispatcherProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public OverviewProxyService get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.navBarControllerProvider, this.navModeControllerProvider, this.statusBarWinControllerProvider, this.sysUiStateProvider, this.pipUIProvider, this.dividerOptionalProvider, this.statusBarOptionalLazyProvider, this.broadcastDispatcherProvider);
     }

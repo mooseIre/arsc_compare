@@ -7,6 +7,7 @@ import java.util.concurrent.Executor;
 public final class ConcurrencyModule_ProvideUiBackgroundExecutorFactory implements Factory<Executor> {
     private static final ConcurrencyModule_ProvideUiBackgroundExecutorFactory INSTANCE = new ConcurrencyModule_ProvideUiBackgroundExecutorFactory();
 
+    @Override // javax.inject.Provider
     public Executor get() {
         return provideInstance();
     }

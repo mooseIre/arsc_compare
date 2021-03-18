@@ -17,6 +17,7 @@ public final class LightsOutNotifController_Factory implements Factory<LightsOut
         this.commandQueueProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public LightsOutNotifController get() {
         return provideInstance(this.windowManagerProvider, this.entryManagerProvider, this.commandQueueProvider);
     }

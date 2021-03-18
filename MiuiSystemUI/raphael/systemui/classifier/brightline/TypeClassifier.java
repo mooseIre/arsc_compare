@@ -5,6 +5,7 @@ public class TypeClassifier extends FalsingClassifier {
         super(falsingDataProvider);
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public boolean isFalseTouch() {
         boolean isVertical = isVertical();
         boolean isUp = isUp();
@@ -35,7 +36,8 @@ public class TypeClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public String getReason() {
-        return String.format("{vertical=%s, up=%s, right=%s}", new Object[]{Boolean.valueOf(isVertical()), Boolean.valueOf(isUp()), Boolean.valueOf(isRight())});
+        return String.format("{vertical=%s, up=%s, right=%s}", Boolean.valueOf(isVertical()), Boolean.valueOf(isUp()), Boolean.valueOf(isRight()));
     }
 }

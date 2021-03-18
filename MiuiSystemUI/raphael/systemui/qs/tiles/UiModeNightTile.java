@@ -23,6 +23,7 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
     private final LocationController mLocationController;
     private final UiModeManager mUiModeManager;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 1706;
     }
@@ -36,19 +37,23 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
         batteryController.observe(getLifecycle(), this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
         refreshState();
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         refreshState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (((QSTile.BooleanState) getState()).state != 0) {
             boolean z = !((QSTile.BooleanState) this.mState).value;
@@ -102,7 +107,7 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
         if (TextUtils.isEmpty(booleanState.secondaryLabel)) {
             charSequence = booleanState.label;
         } else {
-            charSequence = TextUtils.concat(new CharSequence[]{booleanState.label, ", ", booleanState.secondaryLabel});
+            charSequence = TextUtils.concat(booleanState.label, ", ", booleanState.secondaryLabel);
         }
         booleanState.contentDescription = charSequence;
         if (isPowerSave) {
@@ -117,10 +122,12 @@ public class UiModeNightTile extends QSTileImpl<QSTile.BooleanState> implements 
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.DARK_THEME_SETTINGS");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return ((QSTile.BooleanState) getState()).label;
     }

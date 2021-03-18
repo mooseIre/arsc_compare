@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideTrustManagerFactory implements Fa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public TrustManager get() {
         return provideInstance(this.contextProvider);
     }

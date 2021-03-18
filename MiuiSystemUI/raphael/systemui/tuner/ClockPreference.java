@@ -24,16 +24,19 @@ public class ClockPreference extends DropDownPreference implements TunerService.
         setEntryValues(new CharSequence[]{"seconds", "default", "disabled"});
     }
 
+    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "icon_blacklist", "clock_seconds");
     }
 
+    @Override // androidx.preference.Preference
     public void onDetached() {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
         super.onDetached();
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("icon_blacklist".equals(str)) {
             this.mReceivedClock = true;
@@ -57,15 +60,15 @@ public class ClockPreference extends DropDownPreference implements TunerService.
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.preference.Preference
     public boolean persistString(String str) {
-        Class cls = TunerService.class;
-        ((TunerService) Dependency.get(cls)).setValue("clock_seconds", "seconds".equals(str) ? 1 : 0);
+        ((TunerService) Dependency.get(TunerService.class)).setValue("clock_seconds", "seconds".equals(str) ? 1 : 0);
         if ("disabled".equals(str)) {
             this.mBlacklist.add(this.mClock);
         } else {
             this.mBlacklist.remove(this.mClock);
         }
-        ((TunerService) Dependency.get(cls)).setValue("icon_blacklist", TextUtils.join(",", this.mBlacklist));
+        ((TunerService) Dependency.get(TunerService.class)).setValue("icon_blacklist", TextUtils.join(",", this.mBlacklist));
         return true;
     }
 }

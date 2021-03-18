@@ -16,10 +16,11 @@ public class FrameProtoTracer<P, S extends P, T extends P, R> implements Choreog
     private final TraceBuffer<P, S, T> mBuffer;
     private volatile boolean mEnabled;
     private final Object mLock = new Object();
-    /* access modifiers changed from: private */
-    public final ProtoTraceParams<P, S, T, R> mParams;
+    private final ProtoTraceParams<P, S, T, R> mParams;
     private final Queue<T> mPool = new LinkedList();
     private final TraceBuffer.ProtoProvider<P, S, T> mProvider = new TraceBuffer.ProtoProvider<P, S, T>() {
+        /* class com.android.systemui.shared.tracing.FrameProtoTracer.AnonymousClass1 */
+
         public int getItemSize(P p) {
             return FrameProtoTracer.this.mParams.getProtoSize(p);
         }
@@ -53,6 +54,9 @@ public class FrameProtoTracer<P, S extends P, T extends P, R> implements Choreog
     public FrameProtoTracer(ProtoTraceParams<P, S, T, R> protoTraceParams) {
         this.mParams = protoTraceParams;
         this.mBuffer = new TraceBuffer<>(1048576, this.mProvider, new Consumer<T>() {
+            /* class com.android.systemui.shared.tracing.FrameProtoTracer.AnonymousClass2 */
+
+            @Override // java.util.function.Consumer
             public void accept(T t) {
                 FrameProtoTracer.this.onProtoDequeued(t);
             }
@@ -111,7 +115,8 @@ public class FrameProtoTracer<P, S extends P, T extends P, R> implements Choreog
     }
 
     /* access modifiers changed from: private */
-    public void onProtoDequeued(T t) {
+    /* access modifiers changed from: public */
+    private void onProtoDequeued(T t) {
         this.mPool.add(t);
     }
 

@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
-import android.util.Property;
 import android.view.View;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
@@ -12,18 +11,12 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 
 public class ExpandableViewState extends ViewState {
-    /* access modifiers changed from: private */
-    public static final int TAG_ANIMATOR_HEIGHT = C0015R$id.height_animator_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_ANIMATOR_TOP_INSET = C0015R$id.top_inset_animator_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_END_HEIGHT = C0015R$id.height_animator_end_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_END_TOP_INSET = C0015R$id.top_inset_animator_end_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_START_HEIGHT = C0015R$id.height_animator_start_value_tag;
-    /* access modifiers changed from: private */
-    public static final int TAG_START_TOP_INSET = C0015R$id.top_inset_animator_start_value_tag;
+    private static final int TAG_ANIMATOR_HEIGHT = C0015R$id.height_animator_tag;
+    private static final int TAG_ANIMATOR_TOP_INSET = C0015R$id.top_inset_animator_tag;
+    private static final int TAG_END_HEIGHT = C0015R$id.height_animator_end_value_tag;
+    private static final int TAG_END_TOP_INSET = C0015R$id.top_inset_animator_end_value_tag;
+    private static final int TAG_START_HEIGHT = C0015R$id.height_animator_start_value_tag;
+    private static final int TAG_START_TOP_INSET = C0015R$id.top_inset_animator_start_value_tag;
     public boolean belowSpeedBump;
     public int clipTopAmount;
     public boolean dimmed;
@@ -34,6 +27,7 @@ public class ExpandableViewState extends ViewState {
     public int location;
     public int notGoneIndex;
 
+    @Override // com.android.systemui.statusbar.notification.stack.ViewState
     public void copyFrom(ViewState viewState) {
         super.copyFrom(viewState);
         if (viewState instanceof ExpandableViewState) {
@@ -49,6 +43,7 @@ public class ExpandableViewState extends ViewState {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.ViewState
     public void applyToView(View view) {
         super.applyToView(view);
         if (view instanceof ExpandableView) {
@@ -73,6 +68,7 @@ public class ExpandableViewState extends ViewState {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.ViewState, com.android.systemui.statusbar.notification.stack.MiuiViewStateBase
     public void animateTo(View view, AnimationProperties animationProperties) {
         super.animateTo(view, animationProperties);
         if (view instanceof ExpandableView) {
@@ -114,8 +110,10 @@ public class ExpandableViewState extends ViewState {
         if (num2 == null || num2.intValue() != i4) {
             ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(expandableView, i);
             if (animationProperties.getAnimationFilter().animateHeight) {
-                ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{expandableView.getActualHeight(), i4});
+                ValueAnimator ofInt = ValueAnimator.ofInt(expandableView.getActualHeight(), i4);
                 ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
+                    /* class com.android.systemui.statusbar.notification.stack.ExpandableViewState.AnonymousClass1 */
+
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         expandableView.setActualHeight(((Integer) valueAnimator.getAnimatedValue()).intValue(), false);
                     }
@@ -125,17 +123,18 @@ public class ExpandableViewState extends ViewState {
                 if (animationProperties.delay > 0 && (valueAnimator == null || valueAnimator.getAnimatedFraction() == 0.0f)) {
                     ofInt.setStartDelay(animationProperties.delay);
                 }
-                AnimatorListenerAdapter animationFinishListener = animationProperties.getAnimationFinishListener((Property) null);
+                AnimatorListenerAdapter animationFinishListener = animationProperties.getAnimationFinishListener(null);
                 if (animationFinishListener != null) {
                     ofInt.addListener(animationFinishListener);
                 }
                 ofInt.addListener(new AnimatorListenerAdapter(this) {
+                    /* class com.android.systemui.statusbar.notification.stack.ExpandableViewState.AnonymousClass2 */
                     boolean mWasCancelled;
 
                     public void onAnimationEnd(Animator animator) {
-                        expandableView.setTag(ExpandableViewState.TAG_ANIMATOR_HEIGHT, (Object) null);
-                        expandableView.setTag(ExpandableViewState.TAG_START_HEIGHT, (Object) null);
-                        expandableView.setTag(ExpandableViewState.TAG_END_HEIGHT, (Object) null);
+                        expandableView.setTag(ExpandableViewState.TAG_ANIMATOR_HEIGHT, null);
+                        expandableView.setTag(ExpandableViewState.TAG_START_HEIGHT, null);
+                        expandableView.setTag(ExpandableViewState.TAG_END_HEIGHT, null);
                         expandableView.setActualHeightAnimating(false);
                         if (!this.mWasCancelled) {
                             ExpandableView expandableView = expandableView;
@@ -161,7 +160,7 @@ public class ExpandableViewState extends ViewState {
             } else if (valueAnimator != null) {
                 PropertyValuesHolder[] values = valueAnimator.getValues();
                 int intValue = num.intValue() + (i4 - num2.intValue());
-                values[0].setIntValues(new int[]{intValue, i4});
+                values[0].setIntValues(intValue, i4);
                 expandableView.setTag(i3, Integer.valueOf(intValue));
                 expandableView.setTag(i2, Integer.valueOf(i4));
                 valueAnimator.setCurrentPlayTime(valueAnimator.getCurrentPlayTime());
@@ -181,8 +180,10 @@ public class ExpandableViewState extends ViewState {
         if (num2 == null || num2.intValue() != i4) {
             ValueAnimator valueAnimator = (ValueAnimator) ViewState.getChildTag(expandableView, i);
             if (animationProperties.getAnimationFilter().animateTopInset) {
-                ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{expandableView.getClipTopAmount(), i4});
+                ValueAnimator ofInt = ValueAnimator.ofInt(expandableView.getClipTopAmount(), i4);
                 ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(this) {
+                    /* class com.android.systemui.statusbar.notification.stack.ExpandableViewState.AnonymousClass3 */
+
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         expandableView.setClipTopAmount(((Integer) valueAnimator.getAnimatedValue()).intValue());
                     }
@@ -192,15 +193,17 @@ public class ExpandableViewState extends ViewState {
                 if (animationProperties.delay > 0 && (valueAnimator == null || valueAnimator.getAnimatedFraction() == 0.0f)) {
                     ofInt.setStartDelay(animationProperties.delay);
                 }
-                AnimatorListenerAdapter animationFinishListener = animationProperties.getAnimationFinishListener((Property) null);
+                AnimatorListenerAdapter animationFinishListener = animationProperties.getAnimationFinishListener(null);
                 if (animationFinishListener != null) {
                     ofInt.addListener(animationFinishListener);
                 }
                 ofInt.addListener(new AnimatorListenerAdapter(this) {
+                    /* class com.android.systemui.statusbar.notification.stack.ExpandableViewState.AnonymousClass4 */
+
                     public void onAnimationEnd(Animator animator) {
-                        expandableView.setTag(ExpandableViewState.TAG_ANIMATOR_TOP_INSET, (Object) null);
-                        expandableView.setTag(ExpandableViewState.TAG_START_TOP_INSET, (Object) null);
-                        expandableView.setTag(ExpandableViewState.TAG_END_TOP_INSET, (Object) null);
+                        expandableView.setTag(ExpandableViewState.TAG_ANIMATOR_TOP_INSET, null);
+                        expandableView.setTag(ExpandableViewState.TAG_START_TOP_INSET, null);
+                        expandableView.setTag(ExpandableViewState.TAG_END_TOP_INSET, null);
                     }
                 });
                 ViewState.startAnimator(ofInt, animationFinishListener);
@@ -210,7 +213,7 @@ public class ExpandableViewState extends ViewState {
             } else if (valueAnimator != null) {
                 PropertyValuesHolder[] values = valueAnimator.getValues();
                 int intValue = num.intValue() + (i4 - num2.intValue());
-                values[0].setIntValues(new int[]{intValue, i4});
+                values[0].setIntValues(intValue, i4);
                 expandableView.setTag(i3, Integer.valueOf(intValue));
                 expandableView.setTag(i2, Integer.valueOf(i4));
                 valueAnimator.setCurrentPlayTime(valueAnimator.getCurrentPlayTime());
@@ -230,6 +233,7 @@ public class ExpandableViewState extends ViewState {
         return ((Integer) ViewState.getChildTag(expandableView, TAG_END_HEIGHT)).intValue();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.ViewState
     public void cancelAnimations(View view) {
         super.cancelAnimations(view);
         Animator animator = (Animator) ViewState.getChildTag(view, TAG_ANIMATOR_HEIGHT);

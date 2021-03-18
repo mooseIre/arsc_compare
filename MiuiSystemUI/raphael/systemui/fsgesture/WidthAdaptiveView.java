@@ -8,7 +8,7 @@ import android.view.View;
 
 public class WidthAdaptiveView extends View {
     public WidthAdaptiveView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public WidthAdaptiveView(Context context, AttributeSet attributeSet) {

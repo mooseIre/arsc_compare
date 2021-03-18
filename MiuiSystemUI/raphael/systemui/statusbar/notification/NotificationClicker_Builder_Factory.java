@@ -14,6 +14,7 @@ public final class NotificationClicker_Builder_Factory implements Factory<Notifi
         this.loggerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationClicker.Builder get() {
         return provideInstance(this.bubbleControllerProvider, this.loggerProvider);
     }

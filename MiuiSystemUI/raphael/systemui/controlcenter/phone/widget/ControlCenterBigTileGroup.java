@@ -3,6 +3,7 @@ package com.android.systemui.controlcenter.phone.widget;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -208,25 +209,25 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
         if (qSBigTileView == null) {
             QSControlExpandTileView qSControlExpandTileView = this.expandTileView;
             if (qSControlExpandTileView != null) {
-                T layoutParams = qSControlExpandTileView.getLayoutParams();
+                ViewGroup.LayoutParams layoutParams = qSControlExpandTileView.getLayoutParams();
                 if (layoutParams != null) {
-                    T t = (RelativeLayout.LayoutParams) layoutParams;
+                    T t = (T) ((RelativeLayout.LayoutParams) layoutParams);
                     ref$ObjectRef.element = t;
                     ((RelativeLayout.LayoutParams) t).height = dimensionPixelSize;
-                    qSControlExpandTileView.setLayoutParams((RelativeLayout.LayoutParams) t);
+                    qSControlExpandTileView.setLayoutParams(t);
                 } else {
                     throw new TypeCastException("null cannot be cast to non-null type android.widget.RelativeLayout.LayoutParams");
                 }
             }
         } else if (qSBigTileView != null) {
-            T layoutParams2 = qSBigTileView.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams2 = qSBigTileView.getLayoutParams();
             if (layoutParams2 != null) {
-                T t2 = (RelativeLayout.LayoutParams) layoutParams2;
+                T t2 = (T) ((RelativeLayout.LayoutParams) layoutParams2);
                 ref$ObjectRef.element = t2;
                 ((RelativeLayout.LayoutParams) t2).height = dimensionPixelSize;
                 QSBigTileView qSBigTileView2 = this.bigTile0;
                 if (qSBigTileView2 != null) {
-                    qSBigTileView2.setLayoutParams((RelativeLayout.LayoutParams) t2);
+                    qSBigTileView2.setLayoutParams(t2);
                 } else {
                     Intrinsics.throwNpe();
                     throw null;
@@ -240,38 +241,38 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
         }
         QSBigTileView qSBigTileView3 = this.bigTile1;
         if (qSBigTileView3 != null) {
-            T layoutParams3 = qSBigTileView3.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams3 = qSBigTileView3.getLayoutParams();
             if (layoutParams3 != null) {
-                T t3 = (RelativeLayout.LayoutParams) layoutParams3;
+                T t3 = (T) ((RelativeLayout.LayoutParams) layoutParams3);
                 ref$ObjectRef.element = t3;
                 ((RelativeLayout.LayoutParams) t3).height = dimensionPixelSize;
-                qSBigTileView3.setLayoutParams((RelativeLayout.LayoutParams) t3);
+                qSBigTileView3.setLayoutParams(t3);
             } else {
                 throw new TypeCastException("null cannot be cast to non-null type android.widget.RelativeLayout.LayoutParams");
             }
         }
         QSBigTileView qSBigTileView4 = this.bigTile2;
         if (qSBigTileView4 != null) {
-            T layoutParams4 = qSBigTileView4.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams4 = qSBigTileView4.getLayoutParams();
             if (layoutParams4 != null) {
-                T t4 = (RelativeLayout.LayoutParams) layoutParams4;
+                T t4 = (T) ((RelativeLayout.LayoutParams) layoutParams4);
                 ref$ObjectRef.element = t4;
                 ((RelativeLayout.LayoutParams) t4).height = dimensionPixelSize;
                 ((RelativeLayout.LayoutParams) t4).topMargin = dimensionPixelSize2;
-                qSBigTileView4.setLayoutParams((RelativeLayout.LayoutParams) t4);
+                qSBigTileView4.setLayoutParams(t4);
             } else {
                 throw new TypeCastException("null cannot be cast to non-null type android.widget.RelativeLayout.LayoutParams");
             }
         }
         QSBigTileView qSBigTileView5 = this.bigTile3;
         if (qSBigTileView5 != null) {
-            T layoutParams5 = qSBigTileView5.getLayoutParams();
+            ViewGroup.LayoutParams layoutParams5 = qSBigTileView5.getLayoutParams();
             if (layoutParams5 != null) {
-                T t5 = (RelativeLayout.LayoutParams) layoutParams5;
+                T t5 = (T) ((RelativeLayout.LayoutParams) layoutParams5);
                 ref$ObjectRef.element = t5;
                 ((RelativeLayout.LayoutParams) t5).height = dimensionPixelSize;
                 ((RelativeLayout.LayoutParams) t5).topMargin = dimensionPixelSize2;
-                qSBigTileView5.setLayoutParams((RelativeLayout.LayoutParams) t5);
+                qSBigTileView5.setLayoutParams(t5);
                 return;
             }
             throw new TypeCastException("null cannot be cast to non-null type android.widget.RelativeLayout.LayoutParams");

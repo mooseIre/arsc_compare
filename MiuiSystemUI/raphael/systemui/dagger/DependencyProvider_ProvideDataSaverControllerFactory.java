@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideDataSaverControllerFactory implemen
         this.networkControllerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DataSaverController get() {
         return provideInstance(this.module, this.networkControllerProvider);
     }

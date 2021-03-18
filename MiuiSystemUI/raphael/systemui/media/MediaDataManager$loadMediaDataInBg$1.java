@@ -9,8 +9,9 @@ import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$ObjectRef;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaDataManager.kt */
-final class MediaDataManager$loadMediaDataInBg$1 implements Runnable {
+public final class MediaDataManager$loadMediaDataInBg$1 implements Runnable {
     final /* synthetic */ List $actionIcons;
     final /* synthetic */ List $actionsToShowCollapsed;
     final /* synthetic */ String $app;
@@ -58,8 +59,6 @@ final class MediaDataManager$loadMediaDataInBg$1 implements Runnable {
         List list2 = this.$actionsToShowCollapsed;
         String packageName = this.$sbn.getPackageName();
         Intrinsics.checkExpressionValueIsNotNull(packageName, "sbn.packageName");
-        MediaData mediaData4 = r2;
-        MediaData mediaData5 = new MediaData(this.$sbn.getNormalizedUserId(), true, this.$bgColor, this.$app, this.$smallIconDrawable, (CharSequence) this.$artist.element, (CharSequence) this.$song.element, icon, list, list2, packageName, this.$token, this.$notif.contentIntent, (MediaDeviceData) null, active, resumeAction, false, this.$key, z, 65536, (DefaultConstructorMarker) null);
-        mediaDataManager.onMediaDataLoaded(str, str2, mediaData4);
+        mediaDataManager.onMediaDataLoaded(str, str2, new MediaData(this.$sbn.getNormalizedUserId(), true, this.$bgColor, this.$app, this.$smallIconDrawable, this.$artist.element, this.$song.element, icon, list, list2, packageName, this.$token, this.$notif.contentIntent, null, active, resumeAction, false, this.$key, z, 65536, null));
     }
 }

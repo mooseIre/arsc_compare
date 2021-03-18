@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class NotifInflationErrorManager_Factory implements Factory<NotifInflationErrorManager> {
     private static final NotifInflationErrorManager_Factory INSTANCE = new NotifInflationErrorManager_Factory();
 
+    @Override // javax.inject.Provider
     public NotifInflationErrorManager get() {
         return provideInstance();
     }

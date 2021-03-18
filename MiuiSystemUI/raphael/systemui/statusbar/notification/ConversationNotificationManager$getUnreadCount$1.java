@@ -8,8 +8,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ConversationNotifications.kt */
-final class ConversationNotificationManager$getUnreadCount$1<T, U, R> implements BiFunction<String, ConversationNotificationManager.ConversationState, ConversationNotificationManager.ConversationState> {
+public final class ConversationNotificationManager$getUnreadCount$1<T, U, R> implements BiFunction<String, ConversationNotificationManager.ConversationState, ConversationNotificationManager.ConversationState> {
     final /* synthetic */ NotificationEntry $entry;
     final /* synthetic */ Notification.Builder $recoveredBuilder;
     final /* synthetic */ ConversationNotificationManager this$0;

@@ -26,10 +26,14 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     private float mLastPosition;
     private boolean mNeedsAnimatorUpdate = false;
     private final TouchAnimator.Listener mNonFirstPageListener = new TouchAnimator.ListenerAdapter() {
+        /* class com.android.systemui.qs.QSAnimator.AnonymousClass1 */
+
+        @Override // com.android.systemui.qs.TouchAnimator.Listener
         public void onAnimationAtEnd() {
             QSAnimator.this.mQuickQsPanel.setVisibility(4);
         }
 
+        @Override // com.android.systemui.qs.TouchAnimator.Listener
         public void onAnimationStarted() {
             QSAnimator.this.mQuickQsPanel.setVisibility(0);
         }
@@ -41,13 +45,14 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     private PagedTileLayout mPagedLayout;
     private final QS mQs;
     private final QSPanel mQsPanel;
-    /* access modifiers changed from: private */
-    public final QuickQSPanel mQuickQsPanel;
+    private final QuickQSPanel mQuickQsPanel;
     private final ArrayList<View> mQuickQsViews = new ArrayList<>();
     private boolean mShowCollapsedOnKeyguard;
     private TouchAnimator mTranslationXAnimator;
     private TouchAnimator mTranslationYAnimator;
     private Runnable mUpdateAnimators = new Runnable() {
+        /* class com.android.systemui.qs.QSAnimator.AnonymousClass2 */
+
         public void run() {
             QSAnimator.this.miuiUpdateAnimators();
             QSAnimator.this.setCurrentPosition();
@@ -61,7 +66,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         qSPanel.addOnAttachStateChangeListener(this);
         qs.getView().addOnLayoutChangeListener(this);
         if (this.mQsPanel.isAttachedToWindow()) {
-            onViewAttachedToWindow((View) null);
+            onViewAttachedToWindow(null);
         }
         QSPanel.QSTileLayout tileLayout = this.mQsPanel.getTileLayout();
         if (tileLayout instanceof PagedTileLayout) {
@@ -96,7 +101,8 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     }
 
     /* access modifiers changed from: private */
-    public void setCurrentPosition() {
+    /* access modifiers changed from: public */
+    private void setCurrentPosition() {
         setPosition(this.mLastPosition);
     }
 
@@ -116,7 +122,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     }
 
     public void onViewDetachedFromWindow(View view) {
-        this.mQuickQsPanel.setQsAnimator((QSAnimator) null);
+        this.mQuickQsPanel.setQsAnimator(null);
         QSTileHost qSTileHost = this.mHost;
         if (qSTileHost != null) {
             qSTileHost.removeCallback(this);
@@ -124,6 +130,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("sysui_qs_fancy_anim".equals(str)) {
             boolean parseIntegerSwitch = TunerService.parseIntegerSwitch(str2, true);
@@ -137,6 +144,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         miuiUpdateAnimators();
     }
 
+    @Override // com.android.systemui.qs.PagedTileLayout.PageListener
     public void onPageChanged(boolean z) {
         if (this.mOnFirstPage != z) {
             if (!z) {
@@ -147,7 +155,8 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     }
 
     /* access modifiers changed from: private */
-    public void miuiUpdateAnimators() {
+    /* access modifiers changed from: public */
+    private void miuiUpdateAnimators() {
         int i;
         float f;
         Collection<QSTile> collection;
@@ -218,7 +227,6 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
                 it2 = it;
                 tiles = collection;
             }
-            Collection<QSTile> collection2 = tiles;
             if (this.mAllowFancy) {
                 View brightnessView = this.mQsPanel.getBrightnessView();
                 if (brightnessView != null) {
@@ -249,8 +257,8 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
                 if (this.mQsPanel.getDivider() != null) {
                     float[] fArr = new float[i];
                     // fill-array-data instruction
-                    fArr[0] = 0;
-                    fArr[1] = 1065353216;
+                    fArr[0] = 0.0f;
+                    fArr[1] = 1.0f;
                     builder6.addFloat(this.mQsPanel.getDivider(), "alpha", fArr);
                 }
                 this.mAllPagesDelayedAnimator = builder6.build();
@@ -260,10 +268,10 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
                 if (this.mQsPanel.getDivider() != null) {
                     this.mAllViews.add(this.mQsPanel.getDivider());
                 }
-                if (collection2.size() <= 3) {
+                if (tiles.size() <= 3) {
                     f = 1.0f;
                 } else {
-                    f = collection2.size() <= 6 ? 0.4f : 0.0f;
+                    f = tiles.size() <= 6 ? 0.4f : 0.0f;
                 }
                 PathInterpolatorBuilder pathInterpolatorBuilder = new PathInterpolatorBuilder(0.0f, 0.0f, f, 1.0f);
                 builder2.setInterpolator(pathInterpolatorBuilder.getXInterpolator());
@@ -332,10 +340,12 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         }
     }
 
+    @Override // com.android.systemui.qs.TouchAnimator.Listener
     public void onAnimationAtStart() {
         this.mQuickQsPanel.setVisibility(0);
     }
 
+    @Override // com.android.systemui.qs.TouchAnimator.Listener
     public void onAnimationAtEnd() {
         this.mQuickQsPanel.setVisibility(4);
         int size = this.mQuickQsViews.size();
@@ -344,6 +354,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         }
     }
 
+    @Override // com.android.systemui.qs.TouchAnimator.Listener
     public void onAnimationStarted() {
         updateQQSVisibility();
         if (this.mOnFirstPage) {
@@ -373,6 +384,7 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         this.mQsPanel.post(this.mUpdateAnimators);
     }
 
+    @Override // com.android.systemui.qs.QSHost.Callback
     public void onTilesChanged() {
         this.mQsPanel.post(this.mUpdateAnimators);
     }

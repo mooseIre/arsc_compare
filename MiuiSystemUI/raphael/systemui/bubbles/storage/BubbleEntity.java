@@ -26,7 +26,7 @@ public final class BubbleEntity {
             return false;
         }
         BubbleEntity bubbleEntity = (BubbleEntity) obj;
-        return this.userId == bubbleEntity.userId && Intrinsics.areEqual((Object) this.packageName, (Object) bubbleEntity.packageName) && Intrinsics.areEqual((Object) this.shortcutId, (Object) bubbleEntity.shortcutId) && Intrinsics.areEqual((Object) this.key, (Object) bubbleEntity.key) && this.desiredHeight == bubbleEntity.desiredHeight && this.desiredHeightResId == bubbleEntity.desiredHeightResId && Intrinsics.areEqual((Object) this.title, (Object) bubbleEntity.title);
+        return this.userId == bubbleEntity.userId && Intrinsics.areEqual(this.packageName, bubbleEntity.packageName) && Intrinsics.areEqual(this.shortcutId, bubbleEntity.shortcutId) && Intrinsics.areEqual(this.key, bubbleEntity.key) && this.desiredHeight == bubbleEntity.desiredHeight && this.desiredHeightResId == bubbleEntity.desiredHeightResId && Intrinsics.areEqual(this.title, bubbleEntity.title);
     }
 
     public int hashCode() {

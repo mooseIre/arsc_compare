@@ -68,6 +68,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
         this.mNotificationClicker = notificationClicker;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinder
     public void inflateViews(NotificationEntry notificationEntry, Runnable runnable, NotificationRowContentBinder.InflationCallback inflationCallback) throws InflationException {
         ViewGroup viewParentForNotification = this.mListContainer.getViewParentForNotification(notificationEntry);
         if (notificationEntry.rowExists()) {
@@ -81,6 +82,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
         }
         this.mIconManager.createIcons(notificationEntry);
         this.mRowInflaterTaskProvider.get().inflate(this.mContext, viewParentForNotification, notificationEntry, new RowInflaterTask.RowInflationFinishedListener(notificationEntry, runnable, inflationCallback) {
+            /* class com.android.systemui.statusbar.notification.collection.inflation.$$Lambda$NotificationRowBinderImpl$SFe64hfrb5m8XyXzSK440usXoQw */
             public final /* synthetic */ NotificationEntry f$1;
             public final /* synthetic */ Runnable f$2;
             public final /* synthetic */ NotificationRowContentBinder.InflationCallback f$3;
@@ -91,6 +93,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
                 this.f$3 = r4;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.RowInflaterTask.RowInflationFinishedListener
             public final void onInflationFinished(ExpandableNotificationRow expandableNotificationRow) {
                 NotificationRowBinderImpl.this.lambda$inflateViews$0$NotificationRowBinderImpl(this.f$1, this.f$2, this.f$3, expandableNotificationRow);
             }
@@ -118,6 +121,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
         this.mBindRowCallback.onBindRow(expandableNotificationRow);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.inflation.NotificationRowBinder
     public void onNotificationRankingUpdated(NotificationEntry notificationEntry, Integer num, NotificationUiAdjustment notificationUiAdjustment, NotificationUiAdjustment notificationUiAdjustment2, NotificationRowContentBinder.InflationCallback inflationCallback) {
         if (NotificationUiAdjustment.needReinflate(notificationUiAdjustment, notificationUiAdjustment2)) {
             if (notificationEntry.rowExists()) {
@@ -148,6 +152,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
         expandableNotificationRow.setNeedsRedaction(this.mNotificationLockscreenUserManager.needsRedaction(notificationEntry));
         rowContentBindParams.rebindAllContentViews();
         this.mRowContentBindStage.requestRebind(notificationEntry, new NotifBindPipeline.BindCallback(isImportantMessaging, shouldUseLowPriorityView, inflationCallback) {
+            /* class com.android.systemui.statusbar.notification.collection.inflation.$$Lambda$NotificationRowBinderImpl$M_8U_SW8MSCq5I74bBphTK6ZY4 */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ boolean f$2;
             public final /* synthetic */ NotificationRowContentBinder.InflationCallback f$3;
@@ -158,6 +163,7 @@ public class NotificationRowBinderImpl implements NotificationRowBinder {
                 this.f$3 = r4;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotifBindPipeline.BindCallback
             public final void onBindFinished(NotificationEntry notificationEntry) {
                 NotificationRowBinderImpl.lambda$inflateContentViews$1(ExpandableNotificationRow.this, this.f$1, this.f$2, this.f$3, notificationEntry);
             }

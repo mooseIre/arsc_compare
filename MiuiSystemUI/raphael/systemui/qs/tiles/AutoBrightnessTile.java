@@ -26,6 +26,8 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     private boolean mAutoBrightnessAvailable = this.mResource.getBoolean(285474817);
     private boolean mAutoBrightnessMode;
     private ContentObserver mAutoBrightnessObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.qs.tiles.AutoBrightnessTile.AnonymousClass1 */
+
         public void onChange(boolean z) {
             AutoBrightnessTile.this.refreshState();
         }
@@ -35,6 +37,7 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     private final ContentResolver mResolver = this.mContext.getContentResolver();
     private final Resources mResource = this.mContext.getResources();
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -44,14 +47,17 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             if (!SUPPORT_AUTO_BRIGHTNESS_OPTIMIZE) {
@@ -65,15 +71,18 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
         this.mCurrentUserId = i;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return longClickAutoBrightnessIntent();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (this.mAutoBrightnessMode) {
             this.mAutoBrightnessMode = false;
@@ -88,6 +97,7 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
         Settings.System.putIntForUser(contentResolver, "screen_brightness_mode", z ? 1 : 0, this.mCurrentUserId);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_autobrightness_label);
     }
@@ -105,7 +115,7 @@ public class AutoBrightnessTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_brightness_manual);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();

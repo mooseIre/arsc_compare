@@ -32,15 +32,12 @@ import com.android.systemui.statusbar.policy.NetworkController;
 
 public class CellularTile extends QSTileImpl<QSTile.SignalState> {
     private final ActivityStarter mActivityStarter;
-    /* access modifiers changed from: private */
-    public final NetworkController mController;
-    /* access modifiers changed from: private */
-    public final DataUsageController mDataController;
-    /* access modifiers changed from: private */
-    public final CellularDetailAdapter mDetailAdapter;
-    /* access modifiers changed from: private */
-    public final CellSignalCallback mSignalCallback = new CellSignalCallback();
+    private final NetworkController mController;
+    private final DataUsageController mDataController;
+    private final CellularDetailAdapter mDetailAdapter;
+    private final CellSignalCallback mSignalCallback = new CellSignalCallback();
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 115;
     }
@@ -54,18 +51,22 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         this.mController.observe(getLifecycle(), this.mSignalCallback);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.SignalState newTileState() {
         return new QSTile.SignalState();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public QSIconView createTileView(Context context) {
         return new SignalTileView(context);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public DetailAdapter getDetailAdapter() {
         return this.mDetailAdapter;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         if (((QSTile.SignalState) getState()).state == 0) {
             return new Intent("android.settings.WIRELESS_SETTINGS");
@@ -74,6 +75,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (((QSTile.SignalState) getState()).state != 0) {
             if (this.mDataController.isMobileDataEnabled()) {
@@ -93,7 +95,9 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         if (TextUtils.isEmpty(mobileDataNetworkName)) {
             mobileDataNetworkName = this.mContext.getString(C0021R$string.mobile_data_disable_message_default_carrier);
         }
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C0021R$string.mobile_data_disable_title).setMessage(this.mContext.getString(C0021R$string.mobile_data_disable_message, new Object[]{mobileDataNetworkName})).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039638, new DialogInterface.OnClickListener() {
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C0021R$string.mobile_data_disable_title).setMessage(this.mContext.getString(C0021R$string.mobile_data_disable_message, mobileDataNetworkName)).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039638, new DialogInterface.OnClickListener() {
+            /* class com.android.systemui.qs.tiles.$$Lambda$CellularTile$oLJGrvqAwKFs9wNM4MvnfZ_a1QQ */
+
             public final void onClick(DialogInterface dialogInterface, int i) {
                 CellularTile.this.lambda$maybeShowDisableDialog$0$CellularTile(dialogInterface, i);
             }
@@ -113,6 +117,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSecondaryClick() {
         if (this.mDataController.isMobileDataSupported()) {
             showDetail(true);
@@ -121,6 +126,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
     }
@@ -177,14 +183,14 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         if (TextUtils.isEmpty(charSequence)) {
             return Html.fromHtml(charSequence2.toString(), 0);
         }
-        return Html.fromHtml(this.mContext.getString(C0021R$string.mobile_carrier_text_format, new Object[]{charSequence, charSequence2}), 0);
+        return Html.fromHtml(this.mContext.getString(C0021R$string.mobile_carrier_text_format, charSequence, charSequence2), 0);
     }
 
     private CharSequence getMobileDataContentName(CallbackInfo callbackInfo) {
         if (callbackInfo.roaming && !TextUtils.isEmpty(callbackInfo.dataContentDescription)) {
             String string = this.mContext.getString(C0021R$string.data_connection_roaming);
             String charSequence = callbackInfo.dataContentDescription.toString();
-            return this.mContext.getString(C0021R$string.mobile_data_text_format, new Object[]{string, charSequence});
+            return this.mContext.getString(C0021R$string.mobile_data_text_format, string, charSequence);
         } else if (callbackInfo.roaming) {
             return this.mContext.getString(C0021R$string.data_connection_roaming);
         } else {
@@ -192,11 +198,13 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mController.hasMobileDataFeature();
     }
 
-    private static final class CallbackInfo {
+    /* access modifiers changed from: private */
+    public static final class CallbackInfo {
         boolean activityIn;
         boolean activityOut;
         boolean airplaneModeEnabled;
@@ -210,14 +218,15 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         }
     }
 
-    private final class CellSignalCallback implements NetworkController.SignalCallback {
-        /* access modifiers changed from: private */
-        public final CallbackInfo mInfo;
+    /* access modifiers changed from: private */
+    public final class CellSignalCallback implements NetworkController.SignalCallback {
+        private final CallbackInfo mInfo;
 
         private CellSignalCallback() {
             this.mInfo = new CallbackInfo();
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4) {
             if (iconState2 != null) {
                 this.mInfo.dataSubscriptionName = CellularTile.this.mController.getMobileDataNetworkName();
@@ -239,18 +248,21 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setNoSims(boolean z, boolean z2) {
             CallbackInfo callbackInfo = this.mInfo;
             callbackInfo.noSim = z;
             CellularTile.this.refreshState(callbackInfo);
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsAirplaneMode(NetworkController.IconState iconState) {
             CallbackInfo callbackInfo = this.mInfo;
             callbackInfo.airplaneModeEnabled = iconState.visible;
             CellularTile.this.refreshState(callbackInfo);
         }
 
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setMobileDataEnabled(boolean z) {
             CellularTile.this.mDetailAdapter.setMobileDataEnabled(z);
         }
@@ -264,7 +276,9 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         return intent;
     }
 
-    private final class CellularDetailAdapter implements DetailAdapter {
+    /* access modifiers changed from: private */
+    public final class CellularDetailAdapter implements DetailAdapter {
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getMetricsCategory() {
             return R$styleable.AppCompatTheme_windowActionBar;
         }
@@ -272,10 +286,12 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         private CellularDetailAdapter() {
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return CellularTile.this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
+            return ((QSTileImpl) CellularTile.this).mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Boolean getToggleState() {
             if (CellularTile.this.mDataController.isMobileDataSupported()) {
                 return Boolean.valueOf(CellularTile.this.mDataController.isMobileDataEnabled());
@@ -283,19 +299,22 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
             return null;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Intent getSettingsIntent() {
             return CellularTile.getCellularSettingIntent();
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public void setToggleState(boolean z) {
-            MetricsLogger.action(CellularTile.this.mContext, 155, z);
+            MetricsLogger.action(((QSTileImpl) CellularTile.this).mContext, 155, z);
             CellularTile.this.mDataController.setMobileDataEnabled(z);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             int i = 0;
             if (view == null) {
-                view = LayoutInflater.from(CellularTile.this.mContext).inflate(C0017R$layout.data_usage, viewGroup, false);
+                view = LayoutInflater.from(((QSTileImpl) CellularTile.this).mContext).inflate(C0017R$layout.data_usage, viewGroup, false);
             }
             DataUsageDetailView dataUsageDetailView = (DataUsageDetailView) view;
             DataUsageController.DataUsageInfo dataUsageInfo = CellularTile.this.mDataController.getDataUsageInfo();

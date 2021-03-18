@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar;
 
-import android.app.Notification;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
@@ -28,30 +27,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MediaTransferManager {
-    /* access modifiers changed from: private */
-    public final ActivityStarter mActivityStarter;
+    private final ActivityStarter mActivityStarter;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public MediaDevice mDevice;
-    /* access modifiers changed from: private */
-    public LocalMediaManager mLocalMediaManager;
+    private MediaDevice mDevice;
+    private LocalMediaManager mLocalMediaManager;
     private final LocalMediaManager.DeviceCallback mMediaDeviceCallback = new LocalMediaManager.DeviceCallback() {
+        /* class com.android.systemui.statusbar.MediaTransferManager.AnonymousClass2 */
+
+        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onDeviceListUpdate(List<MediaDevice> list) {
             MediaDevice currentConnectedDevice = MediaTransferManager.this.mLocalMediaManager.getCurrentConnectedDevice();
             if (MediaTransferManager.this.mDevice == null || !MediaTransferManager.this.mDevice.equals(currentConnectedDevice)) {
-                MediaDevice unused = MediaTransferManager.this.mDevice = currentConnectedDevice;
+                MediaTransferManager.this.mDevice = currentConnectedDevice;
                 MediaTransferManager.this.updateAllChips();
             }
         }
 
+        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onSelectedDeviceStateChanged(MediaDevice mediaDevice, int i) {
             if (MediaTransferManager.this.mDevice == null || !MediaTransferManager.this.mDevice.equals(mediaDevice)) {
-                MediaDevice unused = MediaTransferManager.this.mDevice = mediaDevice;
+                MediaTransferManager.this.mDevice = mediaDevice;
                 MediaTransferManager.this.updateAllChips();
             }
         }
     };
     private final View.OnClickListener mOnClickHandler = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.MediaTransferManager.AnonymousClass1 */
+
         public void onClick(View view) {
             if (handleMediaTransfer(view)) {
             }
@@ -71,7 +73,7 @@ public class MediaTransferManager {
         this.mContext = context;
         this.mActivityStarter = (ActivityStarter) Dependency.get(ActivityStarter.class);
         LocalBluetoothManager localBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class);
-        this.mLocalMediaManager = new LocalMediaManager(this.mContext, localBluetoothManager, new InfoMediaManager(this.mContext, (String) null, (Notification) null, localBluetoothManager), (String) null);
+        this.mLocalMediaManager = new LocalMediaManager(this.mContext, localBluetoothManager, new InfoMediaManager(this.mContext, null, null, localBluetoothManager), null);
     }
 
     public void setRemoved(View view) {
@@ -86,7 +88,8 @@ public class MediaTransferManager {
     }
 
     /* access modifiers changed from: private */
-    public ExpandableNotificationRow getRowForParent(ViewParent viewParent) {
+    /* access modifiers changed from: public */
+    private ExpandableNotificationRow getRowForParent(ViewParent viewParent) {
         while (viewParent != null) {
             if (viewParent instanceof ExpandableNotificationRow) {
                 return (ExpandableNotificationRow) viewParent;
@@ -114,9 +117,10 @@ public class MediaTransferManager {
     }
 
     /* access modifiers changed from: private */
-    public void updateAllChips() {
-        for (View updateChip : this.mViews) {
-            updateChip(updateChip);
+    /* access modifiers changed from: public */
+    private void updateAllChips() {
+        for (View view : this.mViews) {
+            updateChip(view);
         }
     }
 

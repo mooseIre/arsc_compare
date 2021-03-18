@@ -1,11 +1,9 @@
 package com.android.systemui.statusbar;
 
 import android.annotation.SuppressLint;
-import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.pm.ShortcutInfo;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.service.notification.NotificationListenerService;
@@ -36,7 +34,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     }
 
     public interface NotificationSettingsListener {
-        void onStatusBarIconsBehaviorChanged(boolean z) {
+        default void onStatusBarIconsBehaviorChanged(boolean z) {
         }
     }
 
@@ -66,6 +64,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
             return;
         }
         this.mMainHandler.post(new Runnable(activeNotifications, getCurrentRanking()) {
+            /* class com.android.systemui.statusbar.$$Lambda$NotificationListener$IqvG8K3BFQSXJ_G1S_U_QONW3G4 */
             public final /* synthetic */ StatusBarNotification[] f$1;
             public final /* synthetic */ NotificationListenerService.RankingMap f$2;
 
@@ -85,25 +84,26 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     /* renamed from: lambda$onListenerConnected$0 */
     public /* synthetic */ void lambda$onListenerConnected$0$NotificationListener(StatusBarNotification[] statusBarNotificationArr, NotificationListenerService.RankingMap rankingMap) {
         ArrayList arrayList = new ArrayList();
-        for (StatusBarNotification key : statusBarNotificationArr) {
-            arrayList.add(getRankingOrTemporaryStandIn(rankingMap, key.getKey()));
+        for (StatusBarNotification statusBarNotification : statusBarNotificationArr) {
+            arrayList.add(getRankingOrTemporaryStandIn(rankingMap, statusBarNotification.getKey()));
         }
         NotificationListenerService.RankingMap rankingMap2 = new NotificationListenerService.RankingMap((NotificationListenerService.Ranking[]) arrayList.toArray(new NotificationListenerService.Ranking[0]));
-        for (StatusBarNotification statusBarNotification : statusBarNotificationArr) {
-            if (!NotificationGroupManagerInjectorKt.shouldHideGroupSummary(statusBarNotification)) {
-                for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
-                    onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap2);
+        for (StatusBarNotification statusBarNotification2 : statusBarNotificationArr) {
+            if (!NotificationGroupManagerInjectorKt.shouldHideGroupSummary(statusBarNotification2)) {
+                for (NotificationHandler notificationHandler : this.mNotificationHandlers) {
+                    notificationHandler.onNotificationPosted(statusBarNotification2, rankingMap2);
                 }
             }
         }
-        for (NotificationHandler onNotificationsInitialized : this.mNotificationHandlers) {
-            onNotificationsInitialized.onNotificationsInitialized();
+        for (NotificationHandler notificationHandler2 : this.mNotificationHandlers) {
+            notificationHandler2.onNotificationsInitialized();
         }
     }
 
     public void onNotificationPosted(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         if (statusBarNotification != null && !onPluginNotificationPosted(statusBarNotification, rankingMap)) {
             this.mMainHandler.post(new Runnable(statusBarNotification, rankingMap) {
+                /* class com.android.systemui.statusbar.$$Lambda$NotificationListener$NvFmU0XrVPuc5pizHcri9I0apkw */
                 public final /* synthetic */ StatusBarNotification f$1;
                 public final /* synthetic */ NotificationListenerService.RankingMap f$2;
 
@@ -124,8 +124,8 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     public /* synthetic */ void lambda$onNotificationPosted$1$NotificationListener(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap) {
         RemoteInputController.processForRemoteInput(statusBarNotification.getNotification(), this.mContext);
         if (!NotificationGroupManagerInjectorKt.shouldHideGroupSummary(statusBarNotification)) {
-            for (NotificationHandler onNotificationPosted : this.mNotificationHandlers) {
-                onNotificationPosted.onNotificationPosted(statusBarNotification, rankingMap);
+            for (NotificationHandler notificationHandler : this.mNotificationHandlers) {
+                notificationHandler.onNotificationPosted(statusBarNotification, rankingMap);
             }
         }
     }
@@ -133,6 +133,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     public void onNotificationRemoved(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
         if (statusBarNotification != null && !onPluginNotificationRemoved(statusBarNotification, rankingMap)) {
             this.mMainHandler.post(new Runnable(statusBarNotification, rankingMap, i) {
+                /* class com.android.systemui.statusbar.$$Lambda$NotificationListener$WRx7hwuhf4Oq9iR81FcmuDk9R0 */
                 public final /* synthetic */ StatusBarNotification f$1;
                 public final /* synthetic */ NotificationListenerService.RankingMap f$2;
                 public final /* synthetic */ int f$3;
@@ -153,8 +154,8 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onNotificationRemoved$2 */
     public /* synthetic */ void lambda$onNotificationRemoved$2$NotificationListener(StatusBarNotification statusBarNotification, NotificationListenerService.RankingMap rankingMap, int i) {
-        for (NotificationHandler onNotificationRemoved : this.mNotificationHandlers) {
-            onNotificationRemoved.onNotificationRemoved(statusBarNotification, rankingMap, i);
+        for (NotificationHandler notificationHandler : this.mNotificationHandlers) {
+            notificationHandler.onNotificationRemoved(statusBarNotification, rankingMap, i);
         }
     }
 
@@ -165,6 +166,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     public void onNotificationRankingUpdate(NotificationListenerService.RankingMap rankingMap) {
         if (rankingMap != null) {
             this.mMainHandler.post(new Runnable(onPluginRankingUpdate(rankingMap)) {
+                /* class com.android.systemui.statusbar.$$Lambda$NotificationListener$MPB4hTnfgfJz099PViVIkkbEBIE */
                 public final /* synthetic */ NotificationListenerService.RankingMap f$1;
 
                 {
@@ -181,8 +183,8 @@ public class NotificationListener extends NotificationListenerWithPlugins {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onNotificationRankingUpdate$3 */
     public /* synthetic */ void lambda$onNotificationRankingUpdate$3$NotificationListener(NotificationListenerService.RankingMap rankingMap) {
-        for (NotificationHandler onNotificationRankingUpdate : this.mNotificationHandlers) {
-            onNotificationRankingUpdate.onNotificationRankingUpdate(rankingMap);
+        for (NotificationHandler notificationHandler : this.mNotificationHandlers) {
+            notificationHandler.onNotificationRankingUpdate(rankingMap);
         }
     }
 
@@ -206,16 +208,7 @@ public class NotificationListener extends NotificationListenerWithPlugins {
         if (rankingMap.getRanking(str, ranking)) {
             return ranking;
         }
-        ArrayList arrayList = r0;
-        ArrayList arrayList2 = new ArrayList();
-        ArrayList arrayList3 = r0;
-        ArrayList arrayList4 = new ArrayList();
-        ArrayList arrayList5 = r0;
-        ArrayList arrayList6 = new ArrayList();
-        ArrayList arrayList7 = r0;
-        ArrayList arrayList8 = new ArrayList();
-        NotificationListenerService.Ranking ranking2 = ranking;
-        ranking.populate(str, 0, false, 0, 0, 0, (CharSequence) null, (String) null, (NotificationChannel) null, arrayList, arrayList3, false, 0, false, 0, false, arrayList5, arrayList7, false, false, false, (ShortcutInfo) null, false);
-        return ranking2;
+        ranking.populate(str, 0, false, 0, 0, 0, null, null, null, new ArrayList(), new ArrayList(), false, 0, false, 0, false, new ArrayList(), new ArrayList(), false, false, false, null, false);
+        return ranking;
     }
 }

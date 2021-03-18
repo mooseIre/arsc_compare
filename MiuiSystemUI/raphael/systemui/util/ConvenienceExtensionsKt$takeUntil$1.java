@@ -12,9 +12,10 @@ import kotlin.sequences.SequenceScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 @DebugMetadata(c = "com.android.systemui.util.ConvenienceExtensionsKt$takeUntil$1", f = "ConvenienceExtensions.kt", l = {32}, m = "invokeSuspend")
 /* compiled from: ConvenienceExtensions.kt */
-final class ConvenienceExtensionsKt$takeUntil$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super T>, Continuation<? super Unit>, Object> {
+public final class ConvenienceExtensionsKt$takeUntil$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super T>, Continuation<? super Unit>, Object> {
     final /* synthetic */ Function1 $pred;
     final /* synthetic */ Sequence $this_takeUntil;
     Object L$0;
@@ -30,6 +31,7 @@ final class ConvenienceExtensionsKt$takeUntil$1 extends RestrictedSuspendLambda 
         this.$pred = function1;
     }
 
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @NotNull
     public final Continuation<Unit> create(@Nullable Object obj, @NotNull Continuation<?> continuation) {
         Intrinsics.checkParameterIsNotNull(continuation, "completion");
@@ -38,19 +40,22 @@ final class ConvenienceExtensionsKt$takeUntil$1 extends RestrictedSuspendLambda 
         return convenienceExtensionsKt$takeUntil$1;
     }
 
-    public final Object invoke(Object obj, Object obj2) {
-        return ((ConvenienceExtensionsKt$takeUntil$1) create(obj, (Continuation) obj2)).invokeSuspend(Unit.INSTANCE);
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function2
+    public final Object invoke(Object obj, Continuation<? super Unit> continuation) {
+        return ((ConvenienceExtensionsKt$takeUntil$1) create(obj, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x0052, code lost:
         if (((java.lang.Boolean) r5.$pred.invoke(r3)).booleanValue() == false) goto L_0x002d;
      */
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @org.jetbrains.annotations.Nullable
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public final java.lang.Object invokeSuspend(@org.jetbrains.annotations.NotNull java.lang.Object r6) {
         /*
             r5 = this;
-            java.lang.Object r0 = kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED()
+            java.lang.Object r0 = kotlin.coroutines.intrinsics.IntrinsicsKt.getCOROUTINE_SUSPENDED()
             int r1 = r5.label
             r2 = 1
             if (r1 == 0) goto L_0x0021

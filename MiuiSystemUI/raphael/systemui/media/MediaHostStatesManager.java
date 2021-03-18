@@ -39,11 +39,11 @@ public final class MediaHostStatesManager {
             MediaHostState copy = mediaHostState.copy();
             this.mediaHostStates.put(Integer.valueOf(i), copy);
             updateCarouselDimensions(i, mediaHostState);
-            for (MediaViewController stateCallback : this.controllers) {
-                stateCallback.getStateCallback().onHostStateChanged(i, copy);
+            for (MediaViewController mediaViewController : this.controllers) {
+                mediaViewController.getStateCallback().onHostStateChanged(i, copy);
             }
-            for (Callback onHostStateChanged : this.callbacks) {
-                onHostStateChanged.onHostStateChanged(i, copy);
+            for (Callback callback : this.callbacks) {
+                callback.onHostStateChanged(i, copy);
             }
         }
     }
@@ -52,14 +52,14 @@ public final class MediaHostStatesManager {
     public final MeasurementOutput updateCarouselDimensions(int i, @NotNull MediaHostState mediaHostState) {
         Intrinsics.checkParameterIsNotNull(mediaHostState, "hostState");
         MeasurementOutput measurementOutput = new MeasurementOutput(0, 0);
-        for (MediaViewController measurementsForState : this.controllers) {
-            MeasurementOutput measurementsForState2 = measurementsForState.getMeasurementsForState(mediaHostState);
-            if (measurementsForState2 != null) {
-                if (measurementsForState2.getMeasuredHeight() > measurementOutput.getMeasuredHeight()) {
-                    measurementOutput.setMeasuredHeight(measurementsForState2.getMeasuredHeight());
+        for (MediaViewController mediaViewController : this.controllers) {
+            MeasurementOutput measurementsForState = mediaViewController.getMeasurementsForState(mediaHostState);
+            if (measurementsForState != null) {
+                if (measurementsForState.getMeasuredHeight() > measurementOutput.getMeasuredHeight()) {
+                    measurementOutput.setMeasuredHeight(measurementsForState.getMeasuredHeight());
                 }
-                if (measurementsForState2.getMeasuredWidth() + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2) > measurementOutput.getMeasuredWidth()) {
-                    measurementOutput.setMeasuredWidth(measurementsForState2.getMeasuredWidth() + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2));
+                if (measurementsForState.getMeasuredWidth() + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2) > measurementOutput.getMeasuredWidth()) {
+                    measurementOutput.setMeasuredWidth(measurementsForState.getMeasuredWidth() + (MiuiMediaHeaderView.Companion.getMSidePaddings() * 2));
                 }
             }
         }

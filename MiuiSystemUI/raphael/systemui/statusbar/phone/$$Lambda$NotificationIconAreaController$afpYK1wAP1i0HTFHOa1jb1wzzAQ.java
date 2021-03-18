@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationIconAreaController$afpYK
     private /* synthetic */ $$Lambda$NotificationIconAreaController$afpYK1wAP1i0HTFHOa1jb1wzzAQ() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((NotificationEntry) obj).getIcons().getShelfIcon();
     }

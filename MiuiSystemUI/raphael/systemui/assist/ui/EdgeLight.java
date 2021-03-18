@@ -29,7 +29,7 @@ public final class EdgeLight {
 
     public void setEndpoints(float f, float f2) {
         if (f > f2) {
-            Log.e("EdgeLight", String.format("Endpoint must be >= start (add 1 if necessary). Got [%f, %f]", new Object[]{Float.valueOf(f), Float.valueOf(f2)}));
+            Log.e("EdgeLight", String.format("Endpoint must be >= start (add 1 if necessary). Got [%f, %f]", Float.valueOf(f), Float.valueOf(f2)));
             return;
         }
         this.mStart = f;

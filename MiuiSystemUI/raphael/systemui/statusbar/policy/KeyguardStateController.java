@@ -3,13 +3,13 @@ package com.android.systemui.statusbar.policy;
 public interface KeyguardStateController extends CallbackController<Callback> {
 
     public interface Callback {
-        void onKeyguardFadingAwayChanged() {
+        default void onKeyguardFadingAwayChanged() {
         }
 
-        void onKeyguardShowingChanged() {
+        default void onKeyguardShowingChanged() {
         }
 
-        void onUnlockedChanged() {
+        default void onUnlockedChanged() {
         }
     }
 
@@ -21,11 +21,11 @@ public interface KeyguardStateController extends CallbackController<Callback> {
 
     long getKeyguardFadingAwayDuration();
 
-    boolean isBypassFadingAnimation() {
+    default boolean isBypassFadingAnimation() {
         return false;
     }
 
-    boolean isFaceAuthEnabled() {
+    default boolean isFaceAuthEnabled() {
         return false;
     }
 
@@ -41,26 +41,26 @@ public interface KeyguardStateController extends CallbackController<Callback> {
 
     boolean isShowing();
 
-    void notifyKeyguardDoneFading() {
+    default void notifyKeyguardDoneFading() {
     }
 
-    void notifyKeyguardFadingAway(long j, long j2, boolean z) {
+    default void notifyKeyguardFadingAway(long j, long j2, boolean z) {
     }
 
-    void notifyKeyguardGoingAway(boolean z) {
+    default void notifyKeyguardGoingAway(boolean z) {
     }
 
-    void notifyKeyguardState(boolean z, boolean z2) {
+    default void notifyKeyguardState(boolean z, boolean z2) {
     }
 
-    void setLaunchTransitionFadingAway(boolean z) {
+    default void setLaunchTransitionFadingAway(boolean z) {
     }
 
-    boolean isUnlocked() {
+    default boolean isUnlocked() {
         return !isShowing() || canDismissLockScreen();
     }
 
-    long getShortenedFadingAwayDuration() {
+    default long getShortenedFadingAwayDuration() {
         if (isBypassFadingAnimation()) {
             return getKeyguardFadingAwayDuration();
         }

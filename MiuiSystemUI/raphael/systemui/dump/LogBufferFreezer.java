@@ -11,12 +11,10 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: LogBufferFreezer.kt */
 public final class LogBufferFreezer {
-    /* access modifiers changed from: private */
-    public final DumpManager dumpManager;
+    private final DumpManager dumpManager;
     private final DelayableExecutor executor;
     private final long freezeDuration;
-    /* access modifiers changed from: private */
-    public Runnable pendingToken;
+    private Runnable pendingToken;
 
     public LogBufferFreezer(@NotNull DumpManager dumpManager2, @NotNull DelayableExecutor delayableExecutor, long j) {
         Intrinsics.checkParameterIsNotNull(dumpManager2, "dumpManager");

@@ -14,6 +14,7 @@ final class MiuiExpandableNotificationRow$mBackgroundDimmed$2 extends Lambda imp
         this.this$0 = miuiExpandableNotificationRow;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final NotificationBackgroundView invoke() {
         return (NotificationBackgroundView) this.this$0.findViewById(C0015R$id.backgroundDimmed);
     }

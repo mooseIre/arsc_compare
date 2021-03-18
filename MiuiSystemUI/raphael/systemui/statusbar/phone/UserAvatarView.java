@@ -46,7 +46,7 @@ public class UserAvatarView extends View {
     }
 
     public UserAvatarView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public void setActivated(boolean z) {

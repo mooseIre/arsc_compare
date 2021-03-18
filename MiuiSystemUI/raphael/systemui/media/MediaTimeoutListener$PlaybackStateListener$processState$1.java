@@ -3,8 +3,9 @@ package com.android.systemui.media;
 import android.util.Log;
 import com.android.systemui.media.MediaTimeoutListener;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaTimeoutListener.kt */
-final class MediaTimeoutListener$PlaybackStateListener$processState$1 implements Runnable {
+public final class MediaTimeoutListener$PlaybackStateListener$processState$1 implements Runnable {
     final /* synthetic */ boolean $dispatchEvents;
     final /* synthetic */ MediaTimeoutListener.PlaybackStateListener this$0;
 

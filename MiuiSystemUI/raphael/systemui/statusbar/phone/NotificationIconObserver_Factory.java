@@ -14,6 +14,7 @@ public final class NotificationIconObserver_Factory implements Factory<Notificat
         this.mainHandlerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationIconObserver get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider);
     }

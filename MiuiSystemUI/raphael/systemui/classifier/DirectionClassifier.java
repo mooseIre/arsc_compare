@@ -1,6 +1,7 @@
 package com.android.systemui.classifier;
 
 public class DirectionClassifier extends StrokeClassifier {
+    @Override // com.android.systemui.classifier.Classifier
     public String getTag() {
         return "DIR";
     }
@@ -8,6 +9,7 @@ public class DirectionClassifier extends StrokeClassifier {
     public DirectionClassifier(ClassifierData classifierData) {
     }
 
+    @Override // com.android.systemui.classifier.StrokeClassifier
     public float getFalseTouchEvaluation(int i, Stroke stroke) {
         Point point = stroke.getPoints().get(0);
         Point point2 = stroke.getPoints().get(stroke.getPoints().size() - 1);

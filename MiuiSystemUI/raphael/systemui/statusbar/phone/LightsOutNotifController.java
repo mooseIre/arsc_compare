@@ -14,6 +14,9 @@ public class LightsOutNotifController {
     @VisibleForTesting
     int mAppearance;
     private final CommandQueue.Callbacks mCallback = new CommandQueue.Callbacks() {
+        /* class com.android.systemui.statusbar.phone.LightsOutNotifController.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
         public void onSystemBarAppearanceChanged(int i, int i2, AppearanceRegion[] appearanceRegionArr, boolean z) {
             if (i == LightsOutNotifController.this.mDisplayId) {
                 LightsOutNotifController lightsOutNotifController = LightsOutNotifController.this;
@@ -23,24 +26,27 @@ public class LightsOutNotifController {
         }
     };
     private final CommandQueue mCommandQueue;
-    /* access modifiers changed from: private */
-    public int mDisplayId;
+    private int mDisplayId;
     private final NotificationEntryListener mEntryListener = new NotificationEntryListener() {
+        /* class com.android.systemui.statusbar.phone.LightsOutNotifController.AnonymousClass3 */
+
+        @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
         public void onNotificationAdded(NotificationEntry notificationEntry) {
             LightsOutNotifController.this.updateLightsOutView();
         }
 
+        @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
         public void onPostEntryUpdated(NotificationEntry notificationEntry) {
             LightsOutNotifController.this.updateLightsOutView();
         }
 
+        @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
         public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
             LightsOutNotifController.this.updateLightsOutView();
         }
     };
     private final NotificationEntryManager mEntryManager;
-    /* access modifiers changed from: private */
-    public View mLightsOutNotifView;
+    private View mLightsOutNotifView;
     private final WindowManager mWindowManager;
 
     LightsOutNotifController(WindowManager windowManager, NotificationEntryManager notificationEntryManager, CommandQueue commandQueue) {

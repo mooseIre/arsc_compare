@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$AiBS48IhN8ohBVmcN3CRVHIBtQ8 implemen
     private /* synthetic */ $$Lambda$AiBS48IhN8ohBVmcN3CRVHIBtQ8() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((KeyguardStateController.Callback) obj).onKeyguardShowingChanged();
     }

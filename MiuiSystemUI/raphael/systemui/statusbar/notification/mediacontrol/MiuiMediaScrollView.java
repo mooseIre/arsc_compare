@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import com.android.systemui.media.MediaScrollView;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -13,11 +14,11 @@ public final class MiuiMediaScrollView extends MediaScrollView {
     private int mDownX;
 
     public MiuiMediaScrollView(@NotNull Context context) {
-        this(context, (AttributeSet) null, 0, 6, (DefaultConstructorMarker) null);
+        this(context, null, 0, 6, null);
     }
 
     public MiuiMediaScrollView(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 4, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 4, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -31,6 +32,7 @@ public final class MiuiMediaScrollView extends MediaScrollView {
         Intrinsics.checkParameterIsNotNull(context, "context");
     }
 
+    @Override // com.android.systemui.media.MediaScrollView
     public boolean onInterceptTouchEvent(@Nullable MotionEvent motionEvent) {
         boolean processTouchEvent = processTouchEvent(motionEvent);
         if (!processTouchEvent) {

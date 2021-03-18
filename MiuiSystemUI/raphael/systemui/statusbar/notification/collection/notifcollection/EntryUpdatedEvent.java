@@ -12,7 +12,7 @@ public final class EntryUpdatedEvent extends NotifEvent {
 
     public boolean equals(@Nullable Object obj) {
         if (this != obj) {
-            return (obj instanceof EntryUpdatedEvent) && Intrinsics.areEqual((Object) this.entry, (Object) ((EntryUpdatedEvent) obj).entry);
+            return (obj instanceof EntryUpdatedEvent) && Intrinsics.areEqual(this.entry, ((EntryUpdatedEvent) obj).entry);
         }
         return true;
     }
@@ -32,11 +32,12 @@ public final class EntryUpdatedEvent extends NotifEvent {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public EntryUpdatedEvent(@NotNull NotificationEntry notificationEntry) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         this.entry = notificationEntry;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifEvent
     public void dispatchToListener(@NotNull NotifCollectionListener notifCollectionListener) {
         Intrinsics.checkParameterIsNotNull(notifCollectionListener, "listener");
         notifCollectionListener.onEntryUpdated(this.entry);

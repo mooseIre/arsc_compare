@@ -25,9 +25,10 @@ public class ScreenRecordDrawable extends DrawableWrapper {
     private int mWidthPx;
 
     public ScreenRecordDrawable() {
-        super((Drawable) null);
+        super(null);
     }
 
+    @Override // android.graphics.drawable.Drawable, android.graphics.drawable.DrawableWrapper
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(resources, xmlPullParser, attributeSet, theme);
         setDrawable(resources.getDrawable(C0013R$drawable.ic_screen_record_background, theme).mutate());
@@ -36,7 +37,7 @@ public class ScreenRecordDrawable extends DrawableWrapper {
         this.mHorizontalPadding = resources.getDimensionPixelSize(C0012R$dimen.status_bar_horizontal_padding);
         this.mTextSize = (float) resources.getDimensionPixelSize(C0012R$dimen.screenrecord_status_text_size);
         this.mIconRadius = resources.getDimensionPixelSize(C0012R$dimen.screenrecord_status_icon_radius);
-        this.mLevel = attributeSet.getAttributeIntValue((String) null, "level", 0);
+        this.mLevel = attributeSet.getAttributeIntValue(null, "level", 0);
         Paint paint = new Paint();
         this.mPaint = paint;
         paint.setTextAlign(Paint.Align.CENTER);

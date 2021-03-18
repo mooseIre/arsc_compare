@@ -18,7 +18,7 @@ final class ActionReceiver$onReceive$1 implements Runnable {
     }
 
     public final void run() {
-        for (ReceiverData receiverData : this.this$0.receiverDatas) {
+        for (ReceiverData receiverData : ActionReceiver.access$getReceiverDatas$p(this.this$0)) {
             if (receiverData.getFilter().matchCategories(this.$intent.getCategories()) == null) {
                 receiverData.getExecutor().execute(new ActionReceiver$onReceive$1$$special$$inlined$forEach$lambda$1(receiverData, this));
             }

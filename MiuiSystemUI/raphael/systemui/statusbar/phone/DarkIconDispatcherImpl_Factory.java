@@ -14,6 +14,7 @@ public final class DarkIconDispatcherImpl_Factory implements Factory<DarkIconDis
         this.commandQueueProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DarkIconDispatcherImpl get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider);
     }

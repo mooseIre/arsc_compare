@@ -20,6 +20,7 @@ public final class ZenModeViewController_Factory implements Factory<ZenModeViewC
         this.notifLockscreenUserManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ZenModeViewController get() {
         return provideInstance(this.zenModeControllerProvider, this.bypassControllerProvider, this.statusBarStateControllerProvider, this.notifLockscreenUserManagerProvider);
     }

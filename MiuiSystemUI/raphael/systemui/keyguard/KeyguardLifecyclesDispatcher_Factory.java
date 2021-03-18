@@ -12,6 +12,7 @@ public final class KeyguardLifecyclesDispatcher_Factory implements Factory<Keygu
         this.wakefulnessLifecycleProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardLifecyclesDispatcher get() {
         return provideInstance(this.screenLifecycleProvider, this.wakefulnessLifecycleProvider);
     }

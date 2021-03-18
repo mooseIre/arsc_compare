@@ -50,7 +50,7 @@ public abstract class MultiListLayout extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        int rotation = RotationUtils.getRotation(this.mContext);
+        int rotation = RotationUtils.getRotation(((LinearLayout) this).mContext);
         int i = this.mRotation;
         if (rotation != i) {
             rotate(i, rotation);

@@ -11,6 +11,7 @@ public final class NotifBindPipelineLogger_Factory implements Factory<NotifBindP
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotifBindPipelineLogger get() {
         return provideInstance(this.bufferProvider);
     }

@@ -34,13 +34,11 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
     @VisibleForTesting
     AuthDialog mCurrentDialog;
     private SomeArgs mCurrentDialogArgs;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
+    private Handler mHandler;
     private final Injector mInjector;
     @VisibleForTesting
     IBiometricServiceReceiverInternal mReceiver;
-    /* access modifiers changed from: private */
-    public final Runnable mTaskStackChangedRunnable;
+    private final Runnable mTaskStackChangedRunnable;
     @VisibleForTesting
     BiometricTaskStackListener mTaskStackListener;
     private WindowManager mWindowManager;
@@ -81,6 +79,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         }
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialogCallback
     public void onTryAgainPressed() {
         IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
         if (iBiometricServiceReceiverInternal == null) {
@@ -94,6 +93,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         }
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialogCallback
     public void onDeviceCredentialPressed() {
         IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
         if (iBiometricServiceReceiverInternal == null) {
@@ -107,6 +107,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         }
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialogCallback
     public void onSystemEvent(int i) {
         IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal = this.mReceiver;
         if (iBiometricServiceReceiverInternal == null) {
@@ -120,6 +121,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         }
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialogCallback
     public void onDismissed(int i, byte[] bArr) {
         switch (i) {
             case 1:
@@ -179,6 +181,8 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         super(context);
         this.mHandler = new Handler(Looper.getMainLooper());
         this.mBroadcastReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.biometrics.AuthController.AnonymousClass1 */
+
             public void onReceive(Context context, Intent intent) {
                 if (AuthController.this.mCurrentDialog != null && "android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                     Log.w("BiometricPrompt/AuthController", "ACTION_CLOSE_SYSTEM_DIALOGS received");
@@ -197,6 +201,8 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
             }
         };
         this.mTaskStackChangedRunnable = new Runnable() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthController$9xrKq1STVRQV2C5tA3mmrn4d1Bk */
+
             public final void run() {
                 AuthController.this.lambda$new$0$AuthController();
             }
@@ -208,6 +214,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         context.registerReceiver(this.mBroadcastReceiver, intentFilter);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
         this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
@@ -221,6 +228,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showAuthenticationDialog(Bundle bundle, IBiometricServiceReceiverInternal iBiometricServiceReceiverInternal, int i, boolean z, int i2, String str, long j, int i3) {
         boolean z2;
         int authenticators = Utils.getAuthenticators(bundle);
@@ -240,13 +248,15 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         } else {
             z2 = false;
         }
-        showDialog(obtain, z2, (Bundle) null);
+        showDialog(obtain, z2, null);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onBiometricAuthenticated() {
         this.mCurrentDialog.onAuthenticationSucceeded();
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onBiometricHelp(String str) {
         Log.d("BiometricPrompt/AuthController", "onBiometricHelp: " + str);
         this.mCurrentDialog.onHelp(str);
@@ -259,10 +269,11 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         return FingerprintManager.getErrorString(this.mContext, i2, i3);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onBiometricError(int i, int i2, int i3) {
         String str;
         boolean z = false;
-        Log.d("BiometricPrompt/AuthController", String.format("onBiometricError(%d, %d, %d)", new Object[]{Integer.valueOf(i), Integer.valueOf(i2), Integer.valueOf(i3)}));
+        Log.d("BiometricPrompt/AuthController", String.format("onBiometricError(%d, %d, %d)", Integer.valueOf(i), Integer.valueOf(i2), Integer.valueOf(i3)));
         boolean z2 = i2 == 7 || i2 == 9;
         if (i2 == 100 || i2 == 3) {
             z = true;
@@ -285,6 +296,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void hideAuthenticationDialog() {
         Log.d("BiometricPrompt/AuthController", "hideAuthenticationDialog: " + this.mCurrentDialog);
         AuthDialog authDialog = this.mCurrentDialog;
@@ -295,27 +307,27 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
     }
 
     private void showDialog(SomeArgs someArgs, boolean z, Bundle bundle) {
-        SomeArgs someArgs2 = someArgs;
-        Bundle bundle2 = bundle;
-        this.mCurrentDialogArgs = someArgs2;
-        int i = someArgs2.argi1;
-        boolean booleanValue = ((Boolean) someArgs2.arg3).booleanValue();
-        int i2 = someArgs2.argi2;
-        long longValue = ((Long) someArgs2.arg5).longValue();
-        int i3 = someArgs2.argi3;
-        AuthDialog buildDialog = buildDialog((Bundle) someArgs2.arg1, booleanValue, i2, i, (String) someArgs2.arg4, z, longValue, i3);
+        this.mCurrentDialogArgs = someArgs;
+        int i = someArgs.argi1;
+        Bundle bundle2 = (Bundle) someArgs.arg1;
+        boolean booleanValue = ((Boolean) someArgs.arg3).booleanValue();
+        int i2 = someArgs.argi2;
+        String str = (String) someArgs.arg4;
+        long longValue = ((Long) someArgs.arg5).longValue();
+        int i3 = someArgs.argi3;
+        AuthDialog buildDialog = buildDialog(bundle2, booleanValue, i2, i, str, z, longValue, i3);
         if (buildDialog == null) {
             Log.e("BiometricPrompt/AuthController", "Unsupported type: " + i);
             return;
         }
-        Log.d("BiometricPrompt/AuthController", "userId: " + i2 + " savedState: " + bundle2 + " mCurrentDialog: " + this.mCurrentDialog + " newDialog: " + buildDialog + " type: " + i + " sysUiSessionId: " + i3);
+        Log.d("BiometricPrompt/AuthController", "userId: " + i2 + " savedState: " + bundle + " mCurrentDialog: " + this.mCurrentDialog + " newDialog: " + buildDialog + " type: " + i + " sysUiSessionId: " + i3);
         AuthDialog authDialog = this.mCurrentDialog;
         if (authDialog != null) {
             authDialog.dismissWithoutCallback(false);
         }
-        this.mReceiver = (IBiometricServiceReceiverInternal) someArgs2.arg2;
+        this.mReceiver = (IBiometricServiceReceiverInternal) someArgs.arg2;
         this.mCurrentDialog = buildDialog;
-        buildDialog.show(this.mWindowManager, bundle2);
+        buildDialog.show(this.mWindowManager, bundle);
     }
 
     private void onDialogDismissed(int i) {
@@ -328,6 +340,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         if (this.mCurrentDialog != null) {

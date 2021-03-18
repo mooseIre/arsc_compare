@@ -20,7 +20,7 @@ public class ControlsPluginManager implements PluginListener<MiuiControlsPlugin>
 
     public void addControlsPluginListener() {
         if (this.mMiuiControlsPlugin == null) {
-            ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener(this, (Class<?>) MiuiControlsPlugin.class, true);
+            ((PluginManager) Dependency.get(PluginManager.class)).addPluginListener((PluginListener) this, MiuiControlsPlugin.class, true);
         }
         this.currentState = STATE_ADDING;
     }

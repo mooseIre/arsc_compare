@@ -16,15 +16,15 @@ import com.android.systemui.C0021R$string;
 
 public class WifiDebuggingSecondaryUserActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private WifiChangeReceiver mWifiChangeReceiver;
-    /* access modifiers changed from: private */
-    public WifiManager mWifiManager;
+    private WifiManager mWifiManager;
 
-    /* JADX WARNING: type inference failed for: r1v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, android.app.Activity, com.android.systemui.wifi.WifiDebuggingSecondaryUserActivity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r1v0, resolved type: com.android.systemui.wifi.WifiDebuggingSecondaryUserActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onCreate(Bundle bundle) {
         WifiDebuggingSecondaryUserActivity.super.onCreate(bundle);
         this.mWifiManager = (WifiManager) getSystemService("wifi");
         this.mWifiChangeReceiver = new WifiChangeReceiver(this);
-        AlertController.AlertParams alertParams = this.mAlertParams;
+        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
         alertParams.mTitle = getString(C0021R$string.wifi_debugging_secondary_user_title);
         alertParams.mMessage = getString(C0021R$string.wifi_debugging_secondary_user_message);
         alertParams.mPositiveButtonText = getString(17039370);

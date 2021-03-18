@@ -15,6 +15,8 @@ import com.android.systemui.controlcenter.phone.ExpandInfoController;
 public abstract class BaseInfo {
     protected Bitmap mBpBitmap;
     private ContentObserver mContentObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass3 */
+
         public void onChange(boolean z) {
             BaseInfo.this.refresh();
         }
@@ -25,6 +27,8 @@ public abstract class BaseInfo {
     protected ExpandInfoController.Info mInfo = new ExpandInfoController.Info();
     private boolean mObserverRigstered;
     private BroadcastReceiver mSIMDataReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if (intent != null) {
                 if ("android.intent.action.SIM_STATE_CHANGED".equals(intent.getAction())) {
@@ -103,13 +107,16 @@ public abstract class BaseInfo {
     /* access modifiers changed from: protected */
     public void refresh(long j) {
         this.mHandler.postDelayed(new Runnable() {
+            /* class com.android.systemui.controlcenter.info.BaseInfo.AnonymousClass1 */
+
             public void run() {
                 BaseInfo.this.refresh();
             }
         }, j);
     }
 
-    private class UpdateInfoDetailTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {
+    /* access modifiers changed from: private */
+    public class UpdateInfoDetailTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {
         private UpdateInfoDetailTask() {
         }
 
@@ -120,7 +127,7 @@ public abstract class BaseInfo {
 
         /* access modifiers changed from: protected */
         public void onPostExecute(ExpandInfoController.Info info) {
-            super.onPostExecute(info);
+            super.onPostExecute((Object) info);
             if (!BaseInfo.this.mInfo.equal(info)) {
                 BaseInfo baseInfo = BaseInfo.this;
                 baseInfo.mInfo = info;

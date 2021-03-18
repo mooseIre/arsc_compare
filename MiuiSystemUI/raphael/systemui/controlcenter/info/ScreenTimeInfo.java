@@ -17,12 +17,14 @@ public class ScreenTimeInfo extends BaseInfo {
         requestData(this.mUserHandle);
     }
 
+    @Override // com.android.systemui.controlcenter.info.BaseInfo
     public void requestData(UserHandle userHandle) {
         super.registerObserver();
         new UpdateTask().executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.controlcenter.info.BaseInfo
     public ExpandInfoController.Info getInfoDetail() {
         Bundle bundle;
         ExpandInfoController.Info info = new ExpandInfoController.Info();
@@ -53,7 +55,8 @@ public class ScreenTimeInfo extends BaseInfo {
     }
 
     /* access modifiers changed from: private */
-    public void sendUpdate() {
+    /* access modifiers changed from: public */
+    private void sendUpdate() {
         if (this.mInfo.available) {
             try {
                 Bundle bundle = new Bundle();
@@ -66,11 +69,13 @@ public class ScreenTimeInfo extends BaseInfo {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.controlcenter.info.BaseInfo
     public Uri getUri() {
         return this.mUri;
     }
 
-    private class UpdateTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {
+    /* access modifiers changed from: private */
+    public class UpdateTask extends AsyncTask<Void, Void, ExpandInfoController.Info> {
         private UpdateTask() {
         }
 
@@ -83,7 +88,7 @@ public class ScreenTimeInfo extends BaseInfo {
 
         /* access modifiers changed from: protected */
         public void onPostExecute(ExpandInfoController.Info info) {
-            super.onPostExecute(info);
+            super.onPostExecute((Object) info);
             if (!ScreenTimeInfo.this.mInfo.equal(info)) {
                 ScreenTimeInfo screenTimeInfo = ScreenTimeInfo.this;
                 screenTimeInfo.mInfo = info;

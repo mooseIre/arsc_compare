@@ -21,7 +21,7 @@ public class HybridConversationNotificationView extends HybridNotificationView {
     private int mFacePileSize;
 
     public HybridConversationNotificationView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public HybridConversationNotificationView(Context context, AttributeSet attributeSet) {
@@ -37,6 +37,7 @@ public class HybridConversationNotificationView extends HybridNotificationView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.HybridNotificationView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mConversationIconView = (ImageView) requireViewById(16908892);
@@ -50,6 +51,7 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         MiuiStyleInjector.INSTANCE.alignConversationIcon(this.mConversationIconView, getResources());
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.HybridNotificationView
     public void bind(CharSequence charSequence, CharSequence charSequence2, View view) {
         if (!(view instanceof ConversationLayout)) {
             super.bind(charSequence, charSequence2, view);

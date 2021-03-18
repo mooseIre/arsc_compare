@@ -25,8 +25,7 @@ import java.util.function.Consumer;
 public class LocationControllerImpl extends BroadcastReceiver implements LocationController {
     private static final int[] mHighPowerRequestAppOpArray = {42};
     private AppOpsManager mAppOpsManager;
-    /* access modifiers changed from: private */
-    public boolean mAreActiveLocationRequests;
+    private boolean mAreActiveLocationRequests;
     private BootCompleteCache mBootCompleteCache;
     private BroadcastDispatcher mBroadcastDispatcher;
     private Context mContext;
@@ -57,6 +56,7 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         this.mHandler.obtainMessage(4, locationChangeCallback).sendToTarget();
     }
 
+    @Override // com.android.systemui.statusbar.policy.LocationController
     public boolean setLocationEnabled(boolean z) {
         int currentUser = ActivityManager.getCurrentUser();
         if (isUserLocationRestricted(currentUser)) {
@@ -66,10 +66,12 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.policy.LocationController
     public boolean isLocationEnabled() {
         return this.mBootCompleteCache.isBootComplete() && ((LocationManager) this.mContext.getSystemService("location")).isLocationEnabledForUser(UserHandle.of(ActivityManager.getCurrentUser()));
     }
 
+    @Override // com.android.systemui.statusbar.policy.LocationController
     public boolean isLocationActive() {
         return this.mAreActiveLocationRequests;
     }
@@ -120,7 +122,8 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
         }
     }
 
-    private final class H extends Handler {
+    /* access modifiers changed from: private */
+    public final class H extends Handler {
         private ArrayList<LocationController.LocationChangeCallback> mSettingsChangeCallbacks = new ArrayList<>();
 
         H(Looper looper) {
@@ -144,6 +147,9 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
         private void locationActiveChanged() {
             com.android.systemui.util.Utils.safeForeach(this.mSettingsChangeCallbacks, new Consumer() {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$LocationControllerImpl$H$vKTe7eMzgWgCJvXCt8UIIkFyg78 */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     LocationControllerImpl.H.this.lambda$locationActiveChanged$0$LocationControllerImpl$H((LocationController.LocationChangeCallback) obj);
                 }
@@ -158,12 +164,14 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
         private void locationSettingsChanged() {
             com.android.systemui.util.Utils.safeForeach(this.mSettingsChangeCallbacks, new Consumer(LocationControllerImpl.this.isLocationEnabled()) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$LocationControllerImpl$H$xXVOboFsQOHoRYEFzvZuIOYh0 */
                 public final /* synthetic */ boolean f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((LocationController.LocationChangeCallback) obj).onLocationSettingsChanged(this.f$0);
                 }
@@ -172,12 +180,14 @@ public class LocationControllerImpl extends BroadcastReceiver implements Locatio
 
         private void locationStatusChanged(Intent intent) {
             com.android.systemui.util.Utils.safeForeach(this.mSettingsChangeCallbacks, new Consumer(intent) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$LocationControllerImpl$H$30hp0_d_kTB_SAwrFdJsBzk0umU */
                 public final /* synthetic */ Intent f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((LocationController.LocationChangeCallback) obj).onLocationStatusChanged(this.f$0);
                 }

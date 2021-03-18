@@ -18,7 +18,7 @@ public class ScreenshotActionChip extends FrameLayout {
     private TextView mText;
 
     public ScreenshotActionChip(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ScreenshotActionChip(Context context, AttributeSet attributeSet) {
@@ -56,6 +56,7 @@ public class ScreenshotActionChip extends FrameLayout {
     /* access modifiers changed from: package-private */
     public void setPendingIntent(PendingIntent pendingIntent, Runnable runnable) {
         setOnClickListener(new View.OnClickListener(pendingIntent, runnable) {
+            /* class com.android.systemui.screenshot.$$Lambda$ScreenshotActionChip$ESyR9a8Hwpm3rCY_qaXPGrIojI */
             public final /* synthetic */ PendingIntent f$0;
             public final /* synthetic */ Runnable f$1;
 

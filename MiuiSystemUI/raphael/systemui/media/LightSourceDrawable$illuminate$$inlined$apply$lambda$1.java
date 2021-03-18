@@ -4,8 +4,9 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: LightSourceDrawable.kt */
-final class LightSourceDrawable$illuminate$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class LightSourceDrawable$illuminate$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ LightSourceDrawable this$0;
 
     LightSourceDrawable$illuminate$$inlined$apply$lambda$1(LightSourceDrawable lightSourceDrawable) {
@@ -13,11 +14,11 @@ final class LightSourceDrawable$illuminate$$inlined$apply$lambda$1 implements Va
     }
 
     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-        RippleData access$getRippleData$p = this.this$0.rippleData;
+        RippleData rippleData = this.this$0.rippleData;
         Intrinsics.checkExpressionValueIsNotNull(valueAnimator, "it");
         Object animatedValue = valueAnimator.getAnimatedValue();
         if (animatedValue != null) {
-            access$getRippleData$p.setAlpha(((Float) animatedValue).floatValue());
+            rippleData.setAlpha(((Float) animatedValue).floatValue());
             this.this$0.invalidateSelf();
             return;
         }

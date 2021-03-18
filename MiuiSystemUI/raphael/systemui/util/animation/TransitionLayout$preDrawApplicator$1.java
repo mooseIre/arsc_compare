@@ -6,6 +6,7 @@ import android.view.ViewTreeObserver;
 public final class TransitionLayout$preDrawApplicator$1 implements ViewTreeObserver.OnPreDrawListener {
     final /* synthetic */ TransitionLayout this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     TransitionLayout$preDrawApplicator$1(TransitionLayout transitionLayout) {
         this.this$0 = transitionLayout;
     }

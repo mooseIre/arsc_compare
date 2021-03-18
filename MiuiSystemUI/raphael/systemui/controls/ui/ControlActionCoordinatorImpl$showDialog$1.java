@@ -5,8 +5,9 @@ import android.content.pm.ResolveInfo;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
+public final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
     final /* synthetic */ ControlViewHolder $cvh;
     final /* synthetic */ Intent $intent;
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
@@ -21,6 +22,7 @@ final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
         final List<ResolveInfo> queryIntentActivities = this.$cvh.getContext().getPackageManager().queryIntentActivities(this.$intent, 65536);
         Intrinsics.checkExpressionValueIsNotNull(queryIntentActivities, "cvh.context.packageManag…EFAULT_ONLY\n            )");
         this.this$0.uiExecutor.execute(new Runnable(this) {
+            /* class com.android.systemui.controls.ui.ControlActionCoordinatorImpl$showDialog$1.AnonymousClass1 */
             final /* synthetic */ ControlActionCoordinatorImpl$showDialog$1 this$0;
 
             {

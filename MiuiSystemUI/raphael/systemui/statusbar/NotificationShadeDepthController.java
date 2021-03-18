@@ -29,36 +29,30 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: NotificationShadeDepthController.kt */
 public final class NotificationShadeDepthController implements PanelExpansionListener, Dumpable {
     private final BiometricUnlockController biometricUnlockController;
-    /* access modifiers changed from: private */
-    public View blurRoot;
-    /* access modifiers changed from: private */
-    public final BlurUtils blurUtils;
+    private View blurRoot;
+    private final BlurUtils blurUtils;
     @NotNull
     private DepthAnimation brightnessMirrorSpring = new DepthAnimation();
     private final Choreographer choreographer;
     private final DozeParameters dozeParameters;
     @NotNull
     private DepthAnimation globalActionsSpring = new DepthAnimation();
-    /* access modifiers changed from: private */
-    public boolean ignoreShadeBlurUntilHidden;
+    private boolean ignoreShadeBlurUntilHidden;
     private boolean isBlurred;
     private boolean isClosed = true;
     private boolean isOpen;
     private final KeyguardStateController keyguardStateController;
-    /* access modifiers changed from: private */
-    public List<DepthListener> listeners = new ArrayList();
+    private List<DepthListener> listeners = new ArrayList();
     @Nullable
     private ActivityLaunchAnimator.ExpandAnimationParameters notificationLaunchAnimationParams;
-    /* access modifiers changed from: private */
-    public final NotificationShadeWindowController notificationShadeWindowController;
+    private final NotificationShadeWindowController notificationShadeWindowController;
     private int prevShadeDirection;
     private float prevShadeVelocity;
     private long prevTimestamp = -1;
     private boolean prevTracking;
     @NotNull
     public View root;
-    /* access modifiers changed from: private */
-    public boolean scrimsVisible;
+    private boolean scrimsVisible;
     @NotNull
     private DepthAnimation shadeAnimation = new DepthAnimation();
     private float shadeExpansion;
@@ -68,12 +62,9 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
     private final StatusBarStateController statusBarStateController;
     @NotNull
     private final Choreographer.FrameCallback updateBlurCallback = new NotificationShadeDepthController$updateBlurCallback$1(this);
-    /* access modifiers changed from: private */
-    public boolean updateScheduled;
-    /* access modifiers changed from: private */
-    public int wakeAndUnlockBlurRadius;
-    /* access modifiers changed from: private */
-    public final WallpaperManager wallpaperManager;
+    private boolean updateScheduled;
+    private int wakeAndUnlockBlurRadius;
+    private final WallpaperManager wallpaperManager;
 
     /* compiled from: NotificationShadeDepthController.kt */
     public interface DepthListener {
@@ -159,7 +150,7 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
     }
 
     public final void setBrightnessMirrorVisible(boolean z) {
-        DepthAnimation.animateTo$default(this.brightnessMirrorSpring, z ? this.blurUtils.blurRadiusOfRatio(1.0f) : 0, (View) null, 2, (Object) null);
+        DepthAnimation.animateTo$default(this.brightnessMirrorSpring, z ? this.blurUtils.blurRadiusOfRatio(1.0f) : 0, null, 2, null);
     }
 
     @Nullable
@@ -170,12 +161,12 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
     public final void setNotificationLaunchAnimationParams(@Nullable ActivityLaunchAnimator.ExpandAnimationParameters expandAnimationParameters) {
         this.notificationLaunchAnimationParams = expandAnimationParameters;
         if (expandAnimationParameters != null) {
-            scheduleUpdate$default(this, (View) null, 1, (Object) null);
+            scheduleUpdate$default(this, null, 1, null);
         } else if (this.shadeSpring.getRadius() != 0 || this.shadeAnimation.getRadius() != 0) {
             this.ignoreShadeBlurUntilHidden = true;
-            DepthAnimation.animateTo$default(this.shadeSpring, 0, (View) null, 2, (Object) null);
+            DepthAnimation.animateTo$default(this.shadeSpring, 0, null, 2, null);
             this.shadeSpring.finishIfRunning();
-            DepthAnimation.animateTo$default(this.shadeAnimation, 0, (View) null, 2, (Object) null);
+            DepthAnimation.animateTo$default(this.shadeAnimation, 0, null, 2, null);
             this.shadeAnimation.finishIfRunning();
         }
     }
@@ -185,6 +176,7 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
         this.listeners.add(depthListener);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PanelExpansionListener
     public void onPanelExpansionChanged(float f, boolean z) {
         long elapsedRealtimeNanos = SystemClock.elapsedRealtimeNanos();
         if (this.shadeExpansion == f && this.prevTracking == z) {
@@ -246,11 +238,11 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
         this.isBlurred = z;
         float f2 = (!z || !isOnKeyguardNotDismissing()) ? 0.0f : 1.0f;
         this.shadeAnimation.setStartVelocity(f);
-        DepthAnimation.animateTo$default(this.shadeAnimation, this.blurUtils.blurRadiusOfRatio(f2), (View) null, 2, (Object) null);
+        DepthAnimation.animateTo$default(this.shadeAnimation, this.blurUtils.blurRadiusOfRatio(f2), null, 2, null);
     }
 
     private final void updateShadeBlur() {
-        DepthAnimation.animateTo$default(this.shadeSpring, isOnKeyguardNotDismissing() ? this.blurUtils.blurRadiusOfRatio(this.shadeExpansion) : 0, (View) null, 2, (Object) null);
+        DepthAnimation.animateTo$default(this.shadeSpring, isOnKeyguardNotDismissing() ? this.blurUtils.blurRadiusOfRatio(this.shadeExpansion) : 0, null, 2, null);
     }
 
     static /* synthetic */ void scheduleUpdate$default(NotificationShadeDepthController notificationShadeDepthController, View view, int i, Object obj) {
@@ -278,6 +270,7 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
         this.globalActionsSpring.animateTo(this.blurUtils.blurRadiusOfRatio(f), view);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
@@ -300,13 +293,12 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
 
     /* compiled from: NotificationShadeDepthController.kt */
     public final class DepthAnimation {
-        /* access modifiers changed from: private */
-        public int pendingRadius = -1;
+        private int pendingRadius = -1;
         private int radius;
         private SpringAnimation springAnimation;
-        /* access modifiers changed from: private */
-        public View view;
+        private View view;
 
+        /* JADX WARN: Incorrect args count in method signature: ()V */
         public DepthAnimation() {
             SpringAnimation springAnimation2 = new SpringAnimation(this, new NotificationShadeDepthController$DepthAnimation$springAnimation$1(this, "blurRadius"));
             this.springAnimation = springAnimation2;
@@ -318,12 +310,14 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
             Intrinsics.checkExpressionValueIsNotNull(spring2, "springAnimation.spring");
             spring2.setStiffness(10000.0f);
             this.springAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(this) {
+                /* class com.android.systemui.statusbar.NotificationShadeDepthController.DepthAnimation.AnonymousClass1 */
                 final /* synthetic */ DepthAnimation this$0;
 
                 {
                     this.this$0 = r1;
                 }
 
+                @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
                 public final void onAnimationEnd(DynamicAnimation<DynamicAnimation<?>> dynamicAnimation, boolean z, float f, float f2) {
                     this.this$0.pendingRadius = -1;
                 }
@@ -350,7 +344,7 @@ public final class NotificationShadeDepthController implements PanelExpansionLis
         }
 
         public final void animateTo(int i, @Nullable View view2) {
-            if (this.pendingRadius != i || !Intrinsics.areEqual((Object) this.view, (Object) view2)) {
+            if (this.pendingRadius != i || !Intrinsics.areEqual(this.view, view2)) {
                 this.view = view2;
                 this.pendingRadius = i;
                 this.springAnimation.animateToFinalPosition((float) i);

@@ -16,6 +16,7 @@ public class ImageTransformState extends TransformState {
     private static Pools.SimplePool<ImageTransformState> sInstancePool = new Pools.SimplePool<>(40);
     private Icon mIcon;
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void initFrom(View view, TransformState.TransformInfo transformInfo) {
         super.initFrom(view, transformInfo);
         if (view instanceof ImageView) {
@@ -24,6 +25,7 @@ public class ImageTransformState extends TransformState {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public boolean sameAs(TransformState transformState) {
         if (super.sameAs(transformState)) {
             return true;
@@ -38,6 +40,7 @@ public class ImageTransformState extends TransformState {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void appear(float f, TransformableView transformableView) {
         if (transformableView instanceof HybridNotificationView) {
             if (f == 0.0f) {
@@ -56,6 +59,7 @@ public class ImageTransformState extends TransformState {
         super.appear(f, transformableView);
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void disappear(float f, TransformableView transformableView) {
         if (transformableView instanceof HybridNotificationView) {
             if (f == 0.0f) {
@@ -89,6 +93,7 @@ public class ImageTransformState extends TransformState {
         return new ImageTransformState();
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void recycle() {
         super.recycle();
         if (getClass() == ImageTransformState.class) {
@@ -97,6 +102,7 @@ public class ImageTransformState extends TransformState {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void reset() {
         super.reset();
         this.mIcon = null;

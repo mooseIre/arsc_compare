@@ -12,6 +12,7 @@ public final class NotifBindPipelineInitializer_Factory implements Factory<Notif
         this.stageProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotifBindPipelineInitializer get() {
         return provideInstance(this.pipelineProvider, this.stageProvider);
     }

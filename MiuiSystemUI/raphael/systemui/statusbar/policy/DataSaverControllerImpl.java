@@ -10,12 +10,15 @@ import com.android.systemui.statusbar.policy.DataSaverController;
 import java.util.ArrayList;
 
 public class DataSaverControllerImpl implements DataSaverController {
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final ArrayList<DataSaverController.Listener> mListeners = new ArrayList<>();
     private final INetworkPolicyListener mPolicyListener = new NetworkPolicyManager.Listener() {
+        /* class com.android.systemui.statusbar.policy.DataSaverControllerImpl.AnonymousClass1 */
+
         public void onRestrictBackgroundChanged(final boolean z) {
             DataSaverControllerImpl.this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.policy.DataSaverControllerImpl.AnonymousClass1.AnonymousClass1 */
+
                 public void run() {
                     DataSaverControllerImpl.this.handleRestrictBackgroundChanged(z);
                 }
@@ -29,7 +32,8 @@ public class DataSaverControllerImpl implements DataSaverController {
     }
 
     /* access modifiers changed from: private */
-    public void handleRestrictBackgroundChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleRestrictBackgroundChanged(boolean z) {
         synchronized (this.mListeners) {
             for (int i = 0; i < this.mListeners.size(); i++) {
                 this.mListeners.get(i).onDataSaverChanged(z);
@@ -56,10 +60,12 @@ public class DataSaverControllerImpl implements DataSaverController {
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.DataSaverController
     public boolean isDataSaverEnabled() {
         return this.mPolicyManager.getRestrictBackground();
     }
 
+    @Override // com.android.systemui.statusbar.policy.DataSaverController
     public void setDataSaverEnabled(boolean z) {
         this.mPolicyManager.setRestrictBackground(z);
         try {

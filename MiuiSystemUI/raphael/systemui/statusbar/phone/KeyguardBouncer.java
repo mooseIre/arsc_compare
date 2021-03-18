@@ -44,51 +44,52 @@ import miui.system.R;
 
 public class KeyguardBouncer {
     private boolean isDefaultTheme;
-    /* access modifiers changed from: private */
-    public ImageView mBgImageView;
-    /* access modifiers changed from: private */
-    public int mBouncerPromptReason;
+    private ImageView mBgImageView;
+    private int mBouncerPromptReason;
     protected final ViewMediatorCallback mCallback;
     protected final ViewGroup mContainer;
     protected final Context mContext;
     private final DismissCallbackRegistry mDismissCallbackRegistry;
-    /* access modifiers changed from: private */
-    public float mExpansion = 1.0f;
+    private float mExpansion = 1.0f;
     private final BouncerExpansionCallback mExpansionCallback;
-    /* access modifiers changed from: private */
-    public boolean mFaceAuthTimeOut;
-    /* access modifiers changed from: private */
-    public final Runnable mFaceShakeRunnable = new Runnable(this) {
+    private boolean mFaceAuthTimeOut;
+    private final Runnable mFaceShakeRunnable = new Runnable(this) {
+        /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass3 */
+
         public void run() {
             ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extHapticFeedback(82, false, 0);
         }
     };
     private KeyguardUpdateMonitorCallback mFaceUnlockCallBack = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass2 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
             super.onBiometricError(i, str, biometricSourceType);
             if (biometricSourceType == BiometricSourceType.FACE && i == 3) {
-                boolean unused = KeyguardBouncer.this.mFaceAuthTimeOut = true;
+                KeyguardBouncer.this.mFaceAuthTimeOut = true;
             }
         }
     };
     private final FalsingManager mFalsingManager;
-    /* access modifiers changed from: private */
-    public Drawable mForegroundDrawable;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
+    private Drawable mForegroundDrawable;
+    private final Handler mHandler;
     private boolean mIsAnimatingAway;
     private boolean mIsScrimmed;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     protected KeyguardHostView mKeyguardView;
     protected final LockPatternUtils mLockPatternUtils;
     private final Runnable mRemoveViewRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$iQsniWdIxLGqyYwRi09kQAh02M */
+
         public final void run() {
             KeyguardBouncer.this.removeView();
         }
     };
     protected ViewGroup mRoot;
     private final Runnable mShowRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass5 */
+
         public void run() {
             KeyguardBouncer.this.mRoot.setVisibility(0);
             KeyguardBouncer.this.mKeyguardView.onResume();
@@ -96,13 +97,15 @@ public class KeyguardBouncer {
             keyguardBouncer.showPromptReason(keyguardBouncer.mBouncerPromptReason);
             if (!KeyguardBouncer.this.isFullscreenBouncer() && KeyguardBouncer.this.mKeyguardUpdateMonitor.isScreenOn()) {
                 if (KeyguardBouncer.this.mFaceAuthTimeOut) {
-                    boolean unused = KeyguardBouncer.this.mFaceAuthTimeOut = false;
+                    KeyguardBouncer.this.mFaceAuthTimeOut = false;
                     KeyguardBouncer.this.mHandler.postDelayed(KeyguardBouncer.this.mFaceShakeRunnable, 500);
                 }
                 KeyguardBouncer.this.mKeyguardView.applyHintAnimation(500);
             }
             if (KeyguardBouncer.this.mKeyguardView.getHeight() == 0 || KeyguardBouncer.this.mKeyguardView.getHeight() == KeyguardBouncer.this.mStatusBarHeight) {
                 KeyguardBouncer.this.mKeyguardView.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass5.AnonymousClass1 */
+
                     public boolean onPreDraw() {
                         KeyguardBouncer.this.mKeyguardView.getViewTreeObserver().removeOnPreDrawListener(this);
                         KeyguardBouncer.this.mKeyguardView.startAppearAnimation();
@@ -113,7 +116,7 @@ public class KeyguardBouncer {
             } else {
                 KeyguardBouncer.this.mKeyguardView.startAppearAnimation();
             }
-            boolean unused2 = KeyguardBouncer.this.mShowingSoon = false;
+            KeyguardBouncer.this.mShowingSoon = false;
             if (KeyguardBouncer.this.mExpansion == 0.0f) {
                 KeyguardBouncer.this.mKeyguardView.onResume();
                 KeyguardBouncer.this.mKeyguardView.resetSecurityContainer();
@@ -123,24 +126,29 @@ public class KeyguardBouncer {
             SysUiStatsLog.write(63, 2);
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mShowingSoon;
-    /* access modifiers changed from: private */
-    public int mStatusBarHeight;
+    private boolean mShowingSoon;
+    private int mStatusBarHeight;
     private final KeyguardUpdateMonitorCallback mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStrongAuthStateChanged(int i) {
             KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
-            int unused = keyguardBouncer.mBouncerPromptReason = keyguardBouncer.mCallback.getBouncerPromptReason();
+            keyguardBouncer.mBouncerPromptReason = keyguardBouncer.mCallback.getBouncerPromptReason();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardBouncerChanged(boolean z) {
             if (!KeyguardBouncer.this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasOwnerUserAuthenticatedSinceBoot() && z) {
                 KeyguardBouncer keyguardBouncer = KeyguardBouncer.this;
-                int unused = keyguardBouncer.mBouncerPromptReason = keyguardBouncer.mCallback.getBouncerPromptReason();
+                keyguardBouncer.mBouncerPromptReason = keyguardBouncer.mCallback.getBouncerPromptReason();
             }
         }
     };
     private final IMiuiKeyguardWallpaperController.IWallpaperChangeCallback mWallpaperChangeCallback = new IMiuiKeyguardWallpaperController.IWallpaperChangeCallback() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$KeyguardBouncer$dLXes0S_KzG5ebErOJJpnU2vSM8 */
+
+        @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
         public final void onWallpaperChange(boolean z) {
             KeyguardBouncer.this.lambda$new$1$KeyguardBouncer(z);
         }
@@ -178,6 +186,8 @@ public class KeyguardBouncer {
         }
         if (!this.isDefaultTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur() || DeviceConfig.isLowGpuDevice()) {
             new AsyncTask<Void, Void, Drawable>() {
+                /* class com.android.systemui.statusbar.phone.KeyguardBouncer.AnonymousClass4 */
+
                 /* access modifiers changed from: protected */
                 public Drawable doInBackground(Void... voidArr) {
                     return new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).getLockWallpaperPreview());
@@ -196,7 +206,7 @@ public class KeyguardBouncer {
                         KeyguardBouncer.this.mBgImageView.setImageDrawable(drawable);
                         return;
                     }
-                    KeyguardBouncer.this.mBgImageView.setForeground((Drawable) null);
+                    KeyguardBouncer.this.mBgImageView.setForeground(null);
                     if (drawable == null) {
                         bitmap = null;
                     } else {
@@ -213,13 +223,13 @@ public class KeyguardBouncer {
                         i2 = (int) (((float) bitmap.getHeight()) * 0.33333334f);
                     }
                     if (i <= 0 || i2 <= 0) {
-                        KeyguardBouncer.this.mBgImageView.setImageDrawable((Drawable) null);
+                        KeyguardBouncer.this.mBgImageView.setImageDrawable(null);
                         KeyguardBouncer.this.mBgImageView.setBackgroundColor(KeyguardBouncer.this.mContext.getResources().getColor(R.color.blur_background_mask));
                         return;
                     }
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
                     KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
-                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), BitmapUtils.getBlurBackground(createScaledBitmap, (Bitmap) null)));
+                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), BitmapUtils.getBlurBackground(createScaledBitmap, null)));
                     createScaledBitmap.recycle();
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
@@ -345,30 +355,9 @@ public class KeyguardBouncer {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0004, code lost:
-        r0 = r1.mRoot;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean isShowing() {
-        /*
-            r1 = this;
-            boolean r0 = r1.mShowingSoon
-            if (r0 != 0) goto L_0x000e
-            android.view.ViewGroup r0 = r1.mRoot
-            if (r0 == 0) goto L_0x0016
-            int r0 = r0.getVisibility()
-            if (r0 != 0) goto L_0x0016
-        L_0x000e:
-            boolean r1 = r1.isAnimatingAway()
-            if (r1 != 0) goto L_0x0016
-            r1 = 1
-            goto L_0x0017
-        L_0x0016:
-            r1 = 0
-        L_0x0017:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.KeyguardBouncer.isShowing():boolean");
+        ViewGroup viewGroup;
+        return (this.mShowingSoon || ((viewGroup = this.mRoot) != null && viewGroup.getVisibility() == 0)) && !isAnimatingAway();
     }
 
     public boolean inTransit() {

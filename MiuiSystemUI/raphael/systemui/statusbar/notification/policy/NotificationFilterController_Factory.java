@@ -23,6 +23,7 @@ public final class NotificationFilterController_Factory implements Factory<Notif
         this.broadcastDispatcherProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public NotificationFilterController get() {
         return provideInstance(this.contextProvider, this.notificationListenerProvider, this.entryManagerProvider, this.settingsManagerProvider, this.broadcastDispatcherProvider);
     }

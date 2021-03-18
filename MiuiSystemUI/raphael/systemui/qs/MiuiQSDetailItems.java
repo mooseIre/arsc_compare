@@ -29,6 +29,7 @@ import miuix.recyclerview.widget.RecyclerView;
 public class MiuiQSDetailItems extends FrameLayout {
     private static final boolean DEBUG = Log.isLoggable("MiuiQSDetailItems", 3);
     private static final Pools.Pool<Item> ITEM_POOL = Pools.createSoftReferencePool(new Pools.Manager<Item>() {
+        /* class com.android.systemui.qs.MiuiQSDetailItems.AnonymousClass1 */
         private int count = 0;
 
         public Item createInstance() {
@@ -44,46 +45,38 @@ public class MiuiQSDetailItems extends FrameLayout {
         }
     }, 50);
     protected Adapter mAdapter = new Adapter();
-    /* access modifiers changed from: protected */
-    public Callback mCallback;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public ControlPanelController mControlPanelController;
+    protected Callback mCallback;
+    private final Context mContext;
+    private ControlPanelController mControlPanelController;
     private View mEmpty;
-    /* access modifiers changed from: private */
-    public ImageView mEmptyIcon;
+    private ImageView mEmptyIcon;
     protected Runnable mEmptyStateRunnable = new Runnable() {
+        /* class com.android.systemui.qs.MiuiQSDetailItems.AnonymousClass2 */
+
         public void run() {
             MiuiQSDetailItems.this.mEmptyIcon.setImageResource(MiuiQSDetailItems.this.mIconId);
             MiuiQSDetailItems.this.mEmptyText.setText(MiuiQSDetailItems.this.mTextId);
         }
     };
-    /* access modifiers changed from: private */
-    public TextView mEmptyText;
+    private TextView mEmptyText;
     private final H mHandler = new H();
-    /* access modifiers changed from: private */
-    public int mIconId;
+    private int mIconId;
     protected boolean mIsDetailShowing = false;
     protected boolean mIsExpanding = false;
     private boolean mItemClicked;
     private RecyclerView mItemList;
-    /* access modifiers changed from: protected */
-    public Item[] mItems;
-    /* access modifiers changed from: private */
-    public boolean mItemsVisible = true;
-    /* access modifiers changed from: private */
-    public final int mQsDetailIconOverlaySize;
+    protected Item[] mItems;
+    private boolean mItemsVisible = true;
+    private final int mQsDetailIconOverlaySize;
     private Item[] mScrapItems;
     private String mSuffix;
     private String mTag;
-    /* access modifiers changed from: private */
-    public int mTextId;
+    private int mTextId;
 
     public interface Callback {
         void onDetailItemClick(Item item);
 
-        void onDetailItemDisconnect(Item item) {
+        default void onDetailItemDisconnect(Item item) {
         }
     }
 
@@ -169,8 +162,8 @@ public class MiuiQSDetailItems extends FrameLayout {
         Item[] itemArr2 = this.mScrapItems;
         if (!(itemArr2 == itemArr || itemArr2 == null)) {
             synchronized (ITEM_POOL) {
-                for (Item release : this.mScrapItems) {
-                    ITEM_POOL.release(release);
+                for (Item item : this.mScrapItems) {
+                    ITEM_POOL.release(item);
                 }
             }
         }
@@ -185,12 +178,14 @@ public class MiuiQSDetailItems extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleSetCallback(Callback callback) {
+    /* access modifiers changed from: public */
+    private void handleSetCallback(Callback callback) {
         this.mCallback = callback;
     }
 
     /* access modifiers changed from: private */
-    public void handleSetItems(Item[] itemArr) {
+    /* access modifiers changed from: public */
+    private void handleSetItems(Item[] itemArr) {
         int i = 0;
         int length = itemArr != null ? itemArr.length : 0;
         this.mEmpty.setVisibility(length == 0 ? 0 : 8);
@@ -222,7 +217,8 @@ public class MiuiQSDetailItems extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleSetItemsVisible(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleSetItemsVisible(boolean z) {
         if (this.mItemsVisible != z) {
             this.mItemsVisible = z;
             for (int i = 0; i < this.mItemList.getChildCount(); i++) {
@@ -240,14 +236,16 @@ public class MiuiQSDetailItems extends FrameLayout {
 
     public Item acquireItem() {
         Item item = (Item) ITEM_POOL.acquire();
-        Item unused = item.reset();
+        item.reset();
         return item;
     }
 
-    protected class Adapter extends RecyclerView.Adapter<ItemHolder> {
+    /* access modifiers changed from: protected */
+    public class Adapter extends RecyclerView.Adapter<ItemHolder> {
         protected Adapter() {
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public ItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             int i2;
             if (i == 2) {
@@ -285,6 +283,8 @@ public class MiuiQSDetailItems extends FrameLayout {
                 completeItemHolder.summary.setText(z ? item.line2 : null);
                 if (item.activated) {
                     completeItemHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                        /* class com.android.systemui.qs.MiuiQSDetailItems.Adapter.AnonymousClass1 */
+
                         public void onClick(View view) {
                             Callback callback = MiuiQSDetailItems.this.mCallback;
                             if (callback != null) {
@@ -293,13 +293,15 @@ public class MiuiQSDetailItems extends FrameLayout {
                         }
                     });
                 } else {
-                    completeItemHolder.itemView.setOnClickListener((View.OnClickListener) null);
+                    completeItemHolder.itemView.setOnClickListener(null);
                 }
                 if (item.canDisconnect) {
                     completeItemHolder.button.setImageResource(C0013R$drawable.ic_qs_cancel);
                     completeItemHolder.button.setVisibility(0);
                     completeItemHolder.button.setClickable(true);
                     completeItemHolder.button.setOnClickListener(new View.OnClickListener() {
+                        /* class com.android.systemui.qs.MiuiQSDetailItems.Adapter.AnonymousClass2 */
+
                         public void onClick(View view) {
                             Callback callback = MiuiQSDetailItems.this.mCallback;
                             if (callback != null) {
@@ -317,6 +319,7 @@ public class MiuiQSDetailItems extends FrameLayout {
             }
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemCount() {
             Item[] itemArr = MiuiQSDetailItems.this.mItems;
             if (itemArr != null) {
@@ -325,6 +328,7 @@ public class MiuiQSDetailItems extends FrameLayout {
             return 0;
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemViewType(int i) {
             if (i < 0) {
                 return 1;
@@ -343,7 +347,8 @@ public class MiuiQSDetailItems extends FrameLayout {
         }
     }
 
-    protected static class CompleteItemHolder extends ItemHolder {
+    /* access modifiers changed from: protected */
+    public static class CompleteItemHolder extends ItemHolder {
         public ImageView button;
         public ImageView icon;
         public TextView summary;
@@ -358,7 +363,8 @@ public class MiuiQSDetailItems extends FrameLayout {
         }
     }
 
-    protected static class LineItemHolder extends ItemHolder {
+    /* access modifiers changed from: protected */
+    public static class LineItemHolder extends ItemHolder {
         public LineItemHolder(View view) {
             super(view);
         }
@@ -402,7 +408,8 @@ public class MiuiQSDetailItems extends FrameLayout {
         public CharSequence unit;
 
         /* access modifiers changed from: private */
-        public Item reset() {
+        /* access modifiers changed from: public */
+        private Item reset() {
             this.icon2 = -1;
             this.icon = -1;
             this.overlay = null;

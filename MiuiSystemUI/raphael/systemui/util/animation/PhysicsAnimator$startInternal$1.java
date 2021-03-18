@@ -7,8 +7,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: PhysicsAnimator.kt */
-final class PhysicsAnimator$startInternal$1 extends Lambda implements Function0<Unit> {
+public final class PhysicsAnimator$startInternal$1 extends Lambda implements Function0<Unit> {
     final /* synthetic */ FloatPropertyCompat $animatedProperty;
     final /* synthetic */ float $currentValue;
     final /* synthetic */ PhysicsAnimator.FlingConfig $flingConfig;
@@ -25,13 +26,14 @@ final class PhysicsAnimator$startInternal$1 extends Lambda implements Function0<
         this.$target = obj;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         PhysicsAnimator.FlingConfig flingConfig = this.$flingConfig;
         flingConfig.setMin$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(Math.min(this.$currentValue, flingConfig.getMin$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core()));
         flingConfig.setMax$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(Math.max(this.$currentValue, flingConfig.getMax$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core()));
         this.this$0.cancel(this.$animatedProperty);
-        FlingAnimation access$getFlingAnimation = this.this$0.getFlingAnimation(this.$animatedProperty, this.$target);
-        this.$flingConfig.applyToAnimation$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(access$getFlingAnimation);
-        access$getFlingAnimation.start();
+        FlingAnimation flingAnimation = this.this$0.getFlingAnimation(this.$animatedProperty, this.$target);
+        this.$flingConfig.applyToAnimation$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(flingAnimation);
+        flingAnimation.start();
     }
 }

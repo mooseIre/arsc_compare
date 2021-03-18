@@ -22,18 +22,18 @@ import java.io.PrintWriter;
 public class PipBoundsHandler {
     private static final String TAG = "PipBoundsHandler";
     private float mAspectRatio;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private int mCurrentMinSize;
     private float mDefaultAspectRatio;
     private int mDefaultMinSize;
     private int mDefaultStackGravity;
-    /* access modifiers changed from: private */
-    public final DisplayController mDisplayController;
+    private final DisplayController mDisplayController;
     private final DisplayInfo mDisplayInfo = new DisplayInfo();
-    /* access modifiers changed from: private */
-    public final DisplayLayout mDisplayLayout;
+    private final DisplayLayout mDisplayLayout;
     private final DisplayController.OnDisplaysChangedListener mDisplaysChangedListener = new DisplayController.OnDisplaysChangedListener() {
+        /* class com.android.systemui.pip.PipBoundsHandler.AnonymousClass1 */
+
+        @Override // com.android.systemui.wm.DisplayController.OnDisplaysChangedListener
         public void onDisplayAdded(int i) {
             if (i == PipBoundsHandler.this.mContext.getDisplayId()) {
                 PipBoundsHandler.this.mDisplayLayout.set(PipBoundsHandler.this.mDisplayController.getDisplayLayout(i));
@@ -103,7 +103,7 @@ public class PipBoundsHandler {
 
     public void onMovementBoundsChanged(Rect rect, Rect rect2, Rect rect3, DisplayInfo displayInfo) {
         getInsetBounds(rect);
-        Rect defaultBounds = getDefaultBounds(-1.0f, (Size) null);
+        Rect defaultBounds = getDefaultBounds(-1.0f, null);
         rect2.set(defaultBounds);
         if (rect3.isEmpty()) {
             rect3.set(defaultBounds);

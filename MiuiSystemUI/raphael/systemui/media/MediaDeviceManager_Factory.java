@@ -24,6 +24,7 @@ public final class MediaDeviceManager_Factory implements Factory<MediaDeviceMana
         this.dumpManagerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public MediaDeviceManager get() {
         return provideInstance(this.contextProvider, this.localMediaManagerFactoryProvider, this.mr2managerProvider, this.fgExecutorProvider, this.mediaDataManagerProvider, this.dumpManagerProvider);
     }

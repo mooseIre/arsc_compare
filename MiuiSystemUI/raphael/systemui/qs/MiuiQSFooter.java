@@ -21,9 +21,11 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
     private TouchAnimator mFooterAnimator;
     private MiuiPageIndicator mPageIndicator;
 
+    @Override // com.android.systemui.qs.QSFooter
     public void disable(int i, int i2, boolean z) {
     }
 
+    @Override // com.android.systemui.qs.QSFooter
     public void setListening(boolean z) {
     }
 
@@ -59,6 +61,7 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
         updateResources();
     }
 
+    @Override // com.android.systemui.qs.QSFooter
     public void setQSPanel(@Nullable QSPanel qSPanel) {
         if (qSPanel != null) {
             MiuiPageIndicator miuiPageIndicator = this.mPageIndicator;
@@ -92,21 +95,25 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
         throw null;
     }
 
+    @Override // com.android.systemui.qs.QSFooter
     public void setKeyguardShowing(boolean z) {
         setExpansion(this.mExpansionAmount);
     }
 
+    @Override // com.android.systemui.qs.QSFooter
     public void setExpandClickListener(@NotNull View.OnClickListener onClickListener) {
         Intrinsics.checkParameterIsNotNull(onClickListener, "onClickListener");
         this.mExpandClickListener = onClickListener;
     }
 
+    @Override // com.android.systemui.qs.QSFooter
     public void setExpanded(boolean z) {
         if (this.mExpanded != z) {
             this.mExpanded = z;
         }
     }
 
+    @Override // com.android.systemui.qs.QSFooter
     public void setExpansion(float f) {
         this.mExpansionAmount = f;
         TouchAnimator touchAnimator = this.mFooterAnimator;
@@ -132,7 +139,7 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
             return super.performAccessibilityAction(i, bundle);
         }
         if (onClickListener != null) {
-            onClickListener.onClick((View) null);
+            onClickListener.onClick(null);
             return true;
         }
         Intrinsics.throwNpe();

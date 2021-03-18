@@ -24,7 +24,7 @@ public final class ControlWithState {
             return false;
         }
         ControlWithState controlWithState = (ControlWithState) obj;
-        return Intrinsics.areEqual((Object) this.componentName, (Object) controlWithState.componentName) && Intrinsics.areEqual((Object) this.ci, (Object) controlWithState.ci) && Intrinsics.areEqual((Object) this.control, (Object) controlWithState.control);
+        return Intrinsics.areEqual(this.componentName, controlWithState.componentName) && Intrinsics.areEqual(this.ci, controlWithState.ci) && Intrinsics.areEqual(this.control, controlWithState.control);
     }
 
     public int hashCode() {

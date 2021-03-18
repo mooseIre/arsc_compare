@@ -11,7 +11,7 @@ public final class ZoneNameWrapper extends ElementWrapper {
 
     public boolean equals(@Nullable Object obj) {
         if (this != obj) {
-            return (obj instanceof ZoneNameWrapper) && Intrinsics.areEqual((Object) this.zoneName, (Object) ((ZoneNameWrapper) obj).zoneName);
+            return (obj instanceof ZoneNameWrapper) && Intrinsics.areEqual(this.zoneName, ((ZoneNameWrapper) obj).zoneName);
         }
         return true;
     }
@@ -31,7 +31,7 @@ public final class ZoneNameWrapper extends ElementWrapper {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ZoneNameWrapper(@NotNull CharSequence charSequence) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(charSequence, "zoneName");
         this.zoneName = charSequence;
     }

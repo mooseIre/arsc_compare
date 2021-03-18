@@ -1,14 +1,15 @@
 package com.android.systemui.media;
 
 import android.app.PendingIntent;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.media.MediaDescription;
 import android.media.session.MediaSession;
 import java.util.List;
+import kotlin.collections.CollectionsKt__CollectionsJVMKt;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaDataManager.kt */
-final class MediaDataManager$loadMediaDataInBgForResumption$1 implements Runnable {
+public final class MediaDataManager$loadMediaDataInBgForResumption$1 implements Runnable {
     final /* synthetic */ PendingIntent $appIntent;
     final /* synthetic */ String $appName;
     final /* synthetic */ Icon $artworkIcon;
@@ -44,11 +45,9 @@ final class MediaDataManager$loadMediaDataInBgForResumption$1 implements Runnabl
         CharSequence subtitle = this.$desc.getSubtitle();
         CharSequence title = this.$desc.getTitle();
         Icon icon = this.$artworkIcon;
-        List listOf = CollectionsKt__CollectionsJVMKt.listOf(this.$mediaAction);
-        List listOf2 = CollectionsKt__CollectionsJVMKt.listOf(0);
+        List list = CollectionsKt__CollectionsJVMKt.listOf(this.$mediaAction);
+        List list2 = CollectionsKt__CollectionsJVMKt.listOf(0);
         String str3 = this.$packageName;
-        MediaData mediaData = r3;
-        MediaData mediaData2 = new MediaData(i, true, i2, str2, (Drawable) null, subtitle, title, icon, listOf, listOf2, str3, this.$token, this.$appIntent, (MediaDeviceData) null, false, this.$resumeAction, true, str3, true);
-        mediaDataManager.onMediaDataLoaded(str, (String) null, mediaData);
+        mediaDataManager.onMediaDataLoaded(str, null, new MediaData(i, true, i2, str2, null, subtitle, title, icon, list, list2, str3, this.$token, this.$appIntent, null, false, this.$resumeAction, true, str3, true));
     }
 }

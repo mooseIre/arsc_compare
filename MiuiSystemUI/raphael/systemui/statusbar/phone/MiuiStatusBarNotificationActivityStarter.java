@@ -7,13 +7,11 @@ import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.service.dreams.IDreamManager;
 import android.util.Log;
 import android.util.MiuiMultiWindowUtils;
-import android.view.RemoteAnimationAdapter;
 import android.view.View;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.widget.LockPatternUtils;
@@ -46,14 +44,14 @@ public class MiuiStatusBarNotificationActivityStarter extends StatusBarNotificat
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.StatusBarNotificationActivityStarter
     public void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2) {
         ActivityOptions activityOptions = MiuiMultiWindowUtils.getActivityOptions(this.mContext, pendingIntent.getCreatorPackage());
         boolean z3 = activityOptions != null;
         Log.i("MiuiMultiWindowUtils", "startNotificationIntent: " + HeadsUpUtil.isClickedHeadsUpNotification(view));
         if (!HeadsUpUtil.isClickedHeadsUpNotification(view) || z3) {
             try {
-                pendingIntent.send(this.mContext, 0, intent, (PendingIntent.OnFinished) null, (Handler) null, (String) null, activityOptions != null ? activityOptions.toBundle() : StatusBar.getActivityOptions((RemoteAnimationAdapter) null));
-                PendingIntent pendingIntent2 = pendingIntent;
+                pendingIntent.send(this.mContext, 0, intent, null, null, null, activityOptions != null ? activityOptions.toBundle() : StatusBar.getActivityOptions(null));
                 this.mLogger.logStartNotificationIntent(notificationEntry.getKey(), pendingIntent);
             } catch (PendingIntent.CanceledException e) {
                 this.mLogger.logSendingIntentFailed(e);
@@ -63,18 +61,24 @@ public class MiuiStatusBarNotificationActivityStarter extends StatusBarNotificat
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.NotificationActivityStarter
     public void startHistoryIntent(boolean z) {
         this.mActivityStarter.dismissKeyguardThenExecute(new ActivityStarter.OnDismissAction() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiStatusBarNotificationActivityStarter$a_g4gvpeq50l4NdGw98GmMoHic */
+
+            @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
             public final boolean onDismiss() {
                 return MiuiStatusBarNotificationActivityStarter.this.lambda$startHistoryIntent$2$MiuiStatusBarNotificationActivityStarter();
             }
-        }, (Runnable) null, false);
+        }, null, false);
     }
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$startHistoryIntent$2 */
     public /* synthetic */ boolean lambda$startHistoryIntent$2$MiuiStatusBarNotificationActivityStarter() {
         AsyncTask.execute(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiStatusBarNotificationActivityStarter$qacJoUvB8BJQHjYvoj9Rb4sgpus */
+
             public final void run() {
                 MiuiStatusBarNotificationActivityStarter.this.lambda$startHistoryIntent$1$MiuiStatusBarNotificationActivityStarter();
             }
@@ -85,9 +89,11 @@ public class MiuiStatusBarNotificationActivityStarter extends StatusBarNotificat
     /* access modifiers changed from: private */
     /* renamed from: lambda$startHistoryIntent$1 */
     public /* synthetic */ void lambda$startHistoryIntent$1$MiuiStatusBarNotificationActivityStarter() {
-        TaskStackBuilder.create(this.mContext).addNextIntent(MiuiNotificationSectionsManager.Companion.intent4NotificationControlCenterSettings()).startActivities((Bundle) null, UserHandle.CURRENT);
+        TaskStackBuilder.create(this.mContext).addNextIntent(MiuiNotificationSectionsManager.Companion.intent4NotificationControlCenterSettings()).startActivities(null, UserHandle.CURRENT);
         if (shouldCollapse()) {
             this.mMainThreadHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiStatusBarNotificationActivityStarter$_hUcnxDSXis59CS060JgJuCbSc */
+
                 public final void run() {
                     MiuiStatusBarNotificationActivityStarter.this.lambda$startHistoryIntent$0$MiuiStatusBarNotificationActivityStarter();
                 }

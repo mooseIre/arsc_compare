@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: DozeLogger.kt */
-final class DozeLogger$logScreenOn$2 extends Lambda implements Function1<LogMessage, String> {
+public final class DozeLogger$logScreenOn$2 extends Lambda implements Function1<LogMessage, String> {
     public static final DozeLogger$logScreenOn$2 INSTANCE = new DozeLogger$logScreenOn$2();
 
     DozeLogger$logScreenOn$2() {

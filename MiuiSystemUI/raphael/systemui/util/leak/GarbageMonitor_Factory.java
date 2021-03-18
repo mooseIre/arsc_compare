@@ -18,6 +18,7 @@ public final class GarbageMonitor_Factory implements Factory<GarbageMonitor> {
         this.leakReporterProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public GarbageMonitor get() {
         return provideInstance(this.contextProvider, this.bgLooperProvider, this.leakDetectorProvider, this.leakReporterProvider);
     }

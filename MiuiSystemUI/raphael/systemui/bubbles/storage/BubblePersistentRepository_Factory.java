@@ -11,6 +11,7 @@ public final class BubblePersistentRepository_Factory implements Factory<BubbleP
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BubblePersistentRepository get() {
         return provideInstance(this.contextProvider);
     }

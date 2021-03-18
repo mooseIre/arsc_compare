@@ -68,80 +68,28 @@ public final class LogBuffer {
         return logMessageImpl;
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:17:0x006b, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public final synchronized void push(@org.jetbrains.annotations.NotNull com.android.systemui.log.LogMessage r4) {
-        /*
-            r3 = this;
-            monitor-enter(r3)
-            java.lang.String r0 = "message"
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r4, r0)     // Catch:{ all -> 0x006c }
-            boolean r0 = r3.frozen     // Catch:{ all -> 0x006c }
-            if (r0 == 0) goto L_0x000c
-            monitor-exit(r3)
-            return
-        L_0x000c:
-            java.util.ArrayDeque<com.android.systemui.log.LogMessageImpl> r0 = r3.buffer     // Catch:{ all -> 0x006c }
-            int r0 = r0.size()     // Catch:{ all -> 0x006c }
-            int r1 = r3.maxLogs     // Catch:{ all -> 0x006c }
-            if (r0 != r1) goto L_0x0038
-            java.lang.String r0 = "LogBuffer"
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x006c }
-            r1.<init>()     // Catch:{ all -> 0x006c }
-            java.lang.String r2 = "LogBuffer "
-            r1.append(r2)     // Catch:{ all -> 0x006c }
-            java.lang.String r2 = r3.name     // Catch:{ all -> 0x006c }
-            r1.append(r2)     // Catch:{ all -> 0x006c }
-            java.lang.String r2 = " has exceeded its pool size"
-            r1.append(r2)     // Catch:{ all -> 0x006c }
-            java.lang.String r1 = r1.toString()     // Catch:{ all -> 0x006c }
-            android.util.Log.e(r0, r1)     // Catch:{ all -> 0x006c }
-            java.util.ArrayDeque<com.android.systemui.log.LogMessageImpl> r0 = r3.buffer     // Catch:{ all -> 0x006c }
-            r0.removeFirst()     // Catch:{ all -> 0x006c }
-        L_0x0038:
-            java.util.ArrayDeque<com.android.systemui.log.LogMessageImpl> r0 = r3.buffer     // Catch:{ all -> 0x006c }
-            r1 = r4
-            com.android.systemui.log.LogMessageImpl r1 = (com.android.systemui.log.LogMessageImpl) r1     // Catch:{ all -> 0x006c }
-            r0.add(r1)     // Catch:{ all -> 0x006c }
-            com.android.systemui.log.LogcatEchoTracker r0 = r3.logcatEchoTracker     // Catch:{ all -> 0x006c }
-            java.lang.String r1 = r3.name     // Catch:{ all -> 0x006c }
-            r2 = r4
-            com.android.systemui.log.LogMessageImpl r2 = (com.android.systemui.log.LogMessageImpl) r2     // Catch:{ all -> 0x006c }
-            com.android.systemui.log.LogLevel r2 = r2.getLevel()     // Catch:{ all -> 0x006c }
-            boolean r0 = r0.isBufferLoggable(r1, r2)     // Catch:{ all -> 0x006c }
-            if (r0 != 0) goto L_0x0067
-            com.android.systemui.log.LogcatEchoTracker r0 = r3.logcatEchoTracker     // Catch:{ all -> 0x006c }
-            r1 = r4
-            com.android.systemui.log.LogMessageImpl r1 = (com.android.systemui.log.LogMessageImpl) r1     // Catch:{ all -> 0x006c }
-            java.lang.String r1 = r1.getTag()     // Catch:{ all -> 0x006c }
-            r2 = r4
-            com.android.systemui.log.LogMessageImpl r2 = (com.android.systemui.log.LogMessageImpl) r2     // Catch:{ all -> 0x006c }
-            com.android.systemui.log.LogLevel r2 = r2.getLevel()     // Catch:{ all -> 0x006c }
-            boolean r0 = r0.isTagLoggable(r1, r2)     // Catch:{ all -> 0x006c }
-            if (r0 == 0) goto L_0x006a
-        L_0x0067:
-            r3.echoToLogcat(r4)     // Catch:{ all -> 0x006c }
-        L_0x006a:
-            monitor-exit(r3)
-            return
-        L_0x006c:
-            r4 = move-exception
-            monitor-exit(r3)
-            throw r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.log.LogBuffer.push(com.android.systemui.log.LogMessage):void");
+    public final synchronized void push(@NotNull LogMessage logMessage) {
+        Intrinsics.checkParameterIsNotNull(logMessage, "message");
+        if (!this.frozen) {
+            if (this.buffer.size() == this.maxLogs) {
+                Log.e("LogBuffer", "LogBuffer " + this.name + " has exceeded its pool size");
+                this.buffer.removeFirst();
+            }
+            this.buffer.add((LogMessageImpl) logMessage);
+            if (this.logcatEchoTracker.isBufferLoggable(this.name, ((LogMessageImpl) logMessage).getLevel()) || this.logcatEchoTracker.isTagLoggable(((LogMessageImpl) logMessage).getTag(), ((LogMessageImpl) logMessage).getLevel())) {
+                echoToLogcat(logMessage);
+            }
+        }
     }
 
     public final synchronized void dump(@NotNull PrintWriter printWriter, int i) {
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         int i2 = 0;
         int size = i <= 0 ? 0 : this.buffer.size() - i;
-        for (LogMessageImpl logMessageImpl : this.buffer) {
+        for (T t : this.buffer) {
             if (i2 >= size) {
-                Intrinsics.checkExpressionValueIsNotNull(logMessageImpl, "message");
-                dumpMessage(logMessageImpl, printWriter);
+                Intrinsics.checkExpressionValueIsNotNull(t, "message");
+                dumpMessage(t, printWriter);
             }
             i2++;
         }
@@ -174,7 +122,7 @@ public final class LogBuffer {
     }
 
     private final void dumpMessage(LogMessage logMessage, PrintWriter printWriter) {
-        printWriter.print(LogBufferKt.DATE_FORMAT.format(Long.valueOf(logMessage.getTimestamp())));
+        printWriter.print(LogBufferKt.access$getDATE_FORMAT$p().format(Long.valueOf(logMessage.getTimestamp())));
         printWriter.print(" ");
         printWriter.print(logMessage.getLevel());
         printWriter.print(" ");

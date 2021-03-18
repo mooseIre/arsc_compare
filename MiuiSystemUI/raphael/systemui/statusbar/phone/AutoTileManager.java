@@ -26,10 +26,12 @@ import org.apache.miui.commons.lang3.ArrayUtils;
 
 public class AutoTileManager implements UserAwareController {
     private final ArrayList<AutoAddSetting> mAutoAddSettingList = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public final AutoAddTracker mAutoTracker;
+    private final AutoAddTracker mAutoTracker;
     @VisibleForTesting
     final CastController.Callback mCastCallback = new CastController.Callback() {
+        /* class com.android.systemui.statusbar.phone.AutoTileManager.AnonymousClass5 */
+
+        @Override // com.android.systemui.statusbar.policy.CastController.Callback
         public void onCastDevicesChanged() {
             if (!AutoTileManager.this.mAutoTracker.isAdded("cast")) {
                 boolean z = false;
@@ -53,6 +55,8 @@ public class AutoTileManager implements UserAwareController {
                     AutoTileManager.this.mHost.addTile("cast");
                     AutoTileManager.this.mAutoTracker.setTileAdded("cast");
                     AutoTileManager.this.mHandler.post(new Runnable() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$5$1GZPv7QA0z8r97QhKE685hmdwXU */
+
                         public final void run() {
                             AutoTileManager.AnonymousClass5.this.lambda$onCastDevicesChanged$0$AutoTileManager$5();
                         }
@@ -67,19 +71,21 @@ public class AutoTileManager implements UserAwareController {
             AutoTileManager.this.mCastController.removeCallback(AutoTileManager.this.mCastCallback);
         }
     };
-    /* access modifiers changed from: private */
-    public final CastController mCastController;
+    private final CastController mCastController;
     private final Context mContext;
     private UserHandle mCurrentUser;
-    /* access modifiers changed from: private */
-    public final DataSaverController mDataSaverController;
-    /* access modifiers changed from: private */
-    public final DataSaverController.Listener mDataSaverListener = new DataSaverController.Listener() {
+    private final DataSaverController mDataSaverController;
+    private final DataSaverController.Listener mDataSaverListener = new DataSaverController.Listener() {
+        /* class com.android.systemui.statusbar.phone.AutoTileManager.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.DataSaverController.Listener
         public void onDataSaverChanged(boolean z) {
             if (!AutoTileManager.this.mAutoTracker.isAdded("saver") && z) {
                 AutoTileManager.this.mHost.addTile("saver");
                 AutoTileManager.this.mAutoTracker.setTileAdded("saver");
                 AutoTileManager.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$2$aKs9haH_6r0xP_BBV2VFTNLlSTM */
+
                     public final void run() {
                         AutoTileManager.AnonymousClass2.this.lambda$onDataSaverChanged$0$AutoTileManager$2();
                     }
@@ -93,17 +99,19 @@ public class AutoTileManager implements UserAwareController {
             AutoTileManager.this.mDataSaverController.removeCallback(AutoTileManager.this.mDataSaverListener);
         }
     };
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
-    /* access modifiers changed from: private */
-    public final QSTileHost mHost;
-    /* access modifiers changed from: private */
-    public final HotspotController.Callback mHotspotCallback = new HotspotController.Callback() {
+    private final Handler mHandler;
+    private final QSTileHost mHost;
+    private final HotspotController.Callback mHotspotCallback = new HotspotController.Callback() {
+        /* class com.android.systemui.statusbar.phone.AutoTileManager.AnonymousClass3 */
+
+        @Override // com.android.systemui.statusbar.policy.HotspotController.Callback
         public void onHotspotChanged(boolean z, int i) {
             if (!AutoTileManager.this.mAutoTracker.isAdded("hotspot") && z) {
                 AutoTileManager.this.mHost.addTile("hotspot");
                 AutoTileManager.this.mAutoTracker.setTileAdded("hotspot");
                 AutoTileManager.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$3$87T2WHtAMmDdyVJTv6iCOd5Jwd4 */
+
                     public final void run() {
                         AutoTileManager.AnonymousClass3.this.lambda$onHotspotChanged$0$AutoTileManager$3();
                     }
@@ -117,12 +125,12 @@ public class AutoTileManager implements UserAwareController {
             AutoTileManager.this.mHotspotController.removeCallback(AutoTileManager.this.mHotspotCallback);
         }
     };
-    /* access modifiers changed from: private */
-    public final HotspotController mHotspotController;
-    /* access modifiers changed from: private */
-    public final ManagedProfileController mManagedProfileController;
+    private final HotspotController mHotspotController;
+    private final ManagedProfileController mManagedProfileController;
     @VisibleForTesting
     final NightDisplayListener.Callback mNightDisplayCallback = new NightDisplayListener.Callback() {
+        /* class com.android.systemui.statusbar.phone.AutoTileManager.AnonymousClass4 */
+
         public void onActivated(boolean z) {
             if (z) {
                 addNightTile();
@@ -140,6 +148,8 @@ public class AutoTileManager implements UserAwareController {
                 AutoTileManager.this.mHost.addTile("night");
                 AutoTileManager.this.mAutoTracker.setTileAdded("night");
                 AutoTileManager.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$4$PdMTvLTZ6PP_LASECKaYJDhadms */
+
                     public final void run() {
                         AutoTileManager.AnonymousClass4.this.lambda$addNightTile$0$AutoTileManager$4();
                     }
@@ -153,12 +163,15 @@ public class AutoTileManager implements UserAwareController {
             AutoTileManager.this.mNightDisplayListener.setCallback((NightDisplayListener.Callback) null);
         }
     };
-    /* access modifiers changed from: private */
-    public final NightDisplayListener mNightDisplayListener;
+    private final NightDisplayListener mNightDisplayListener;
     private final ManagedProfileController.Callback mProfileCallback = new ManagedProfileController.Callback() {
+        /* class com.android.systemui.statusbar.phone.AutoTileManager.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.phone.ManagedProfileController.Callback
         public void onManagedProfileRemoved() {
         }
 
+        @Override // com.android.systemui.statusbar.phone.ManagedProfileController.Callback
         public void onManagedProfileChanged() {
             if (!AutoTileManager.this.mAutoTracker.isAdded("work") && AutoTileManager.this.mManagedProfileController.hasActiveProfile()) {
                 AutoTileManager.this.mHost.addTile("work");
@@ -226,7 +239,8 @@ public class AutoTileManager implements UserAwareController {
 
     private void populateSettingsList() {
         try {
-            for (String str : addMiuiSettings(this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd))) {
+            String[] addMiuiSettings = addMiuiSettings(this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd));
+            for (String str : addMiuiSettings) {
                 String[] split = str.split(":");
                 if (split.length == 2) {
                     this.mAutoAddSettingList.add(new AutoAddSetting(this.mContext, this.mHandler, split[0], split[1]));
@@ -248,10 +262,12 @@ public class AutoTileManager implements UserAwareController {
         }
     }
 
+    @Override // com.android.systemui.util.UserAwareController
     /* renamed from: changeUser */
     public void lambda$changeUser$0(UserHandle userHandle) {
         if (!Thread.currentThread().equals(this.mHandler.getLooper().getThread())) {
             this.mHandler.post(new Runnable(userHandle) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$YUAOoFSfDM4QNvsf1l5gpCAopQ */
                 public final /* synthetic */ UserHandle f$1;
 
                 {
@@ -274,6 +290,7 @@ public class AutoTileManager implements UserAwareController {
         }
     }
 
+    @Override // com.android.systemui.util.UserAwareController
     public int getCurrentUserId() {
         return this.mCurrentUser.getIdentifier();
     }
@@ -287,7 +304,7 @@ public class AutoTileManager implements UserAwareController {
     public SecureSetting getSecureSettingForKey(String str) {
         Iterator<AutoAddSetting> it = this.mAutoAddSettingList.iterator();
         while (it.hasNext()) {
-            SecureSetting next = it.next();
+            AutoAddSetting next = it.next();
             if (Objects.equals(str, next.getKey())) {
                 return next;
             }
@@ -295,9 +312,9 @@ public class AutoTileManager implements UserAwareController {
         return null;
     }
 
-    private class AutoAddSetting extends SecureSetting {
-        /* access modifiers changed from: private */
-        public final String mSpec;
+    /* access modifiers changed from: private */
+    public class AutoAddSetting extends SecureSetting {
+        private final String mSpec;
 
         AutoAddSetting(Context context, Handler handler, String str, String str2) {
             super(context, handler, str);
@@ -305,9 +322,12 @@ public class AutoTileManager implements UserAwareController {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.qs.SecureSetting
         public void handleValueChanged(int i, boolean z) {
             if (AutoTileManager.this.mAutoTracker.isAdded(this.mSpec)) {
                 AutoTileManager.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$AutoAddSetting$b5h6ITGFUhhbZfNJqWDC6XxQfJE */
+
                     public final void run() {
                         AutoTileManager.AutoAddSetting.this.lambda$handleValueChanged$0$AutoTileManager$AutoAddSetting();
                     }
@@ -320,6 +340,8 @@ public class AutoTileManager implements UserAwareController {
                 }
                 AutoTileManager.this.mAutoTracker.setTileAdded(this.mSpec);
                 AutoTileManager.this.mHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$AutoTileManager$AutoAddSetting$bs0leZa_T3XhOtGqbTRqC7ErikE */
+
                     public final void run() {
                         AutoTileManager.AutoAddSetting.this.lambda$handleValueChanged$1$AutoTileManager$AutoAddSetting();
                     }

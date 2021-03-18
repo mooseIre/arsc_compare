@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$iDWyu_PNFZfGQr9kcCLSWoFYxpI implemen
     private /* synthetic */ $$Lambda$iDWyu_PNFZfGQr9kcCLSWoFYxpI() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return Float.valueOf(((ExpandableOutlineView) obj).getCurrentTopRoundness());
     }

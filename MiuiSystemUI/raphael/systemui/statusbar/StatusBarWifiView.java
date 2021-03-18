@@ -17,7 +17,6 @@ import com.android.systemui.C0017R$layout;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
-import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
 import com.android.systemui.statusbar.policy.DemoModeController;
 
@@ -78,15 +77,18 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         ((DemoModeController) Dependency.get(DemoModeController.class)).removeCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public String getSlot() {
         return this.mSlot;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconVisible() {
         StatusBarSignalPolicy.WifiIconState wifiIconState = this.mState;
         return wifiIconState != null && wifiIconState.visible;
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setVisibleState(int i, boolean z) {
         if (this.mInDemoMode) {
             this.mVisibleState = i;
@@ -108,6 +110,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         }
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public int getVisibleState() {
         return this.mVisibleState;
     }
@@ -131,10 +134,10 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     private void initDotView() {
-        StatusBarIconView statusBarIconView = new StatusBarIconView(this.mContext, this.mSlot, (ExpandedNotification) null);
+        StatusBarIconView statusBarIconView = new StatusBarIconView(((FrameLayout) this).mContext, this.mSlot, null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
+        int dimensionPixelSize = ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);
@@ -162,16 +165,16 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     private void updateState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
         setContentDescription(wifiIconState.contentDescription);
         if (wifiIconState.wifiNoNetwork) {
-            this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
+            this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
         } else {
             int i = wifiIconState.resId;
             if (i > 0) {
-                this.mWifiIcon.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
+                this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
             }
         }
         int i2 = wifiIconState.activityResId;
         if (i2 > 0) {
-            this.mWifiActivityView.setImageDrawable(this.mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
+            this.mWifiActivityView.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
         }
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mWifiActivityView.getLayoutParams();
         int i3 = 0;
@@ -194,6 +197,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
 
     /* JADX WARNING: Removed duplicated region for block: B:21:0x0041  */
     /* JADX WARNING: Removed duplicated region for block: B:22:0x0047  */
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onDarkChanged(android.graphics.Rect r3, float r4, int r5, int r6, int r7, boolean r8) {
         /*
@@ -275,6 +279,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         return "StatusBarWifiView(slot=" + this.mSlot + " state=" + this.mState + ")";
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mInDemoMode && str.equals("enter")) {
             this.mInDemoMode = true;

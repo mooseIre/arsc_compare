@@ -10,6 +10,7 @@ public final class SystemUIAuxiliaryDumpService_Factory implements Factory<Syste
         this.dumpHandlerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SystemUIAuxiliaryDumpService get() {
         return provideInstance(this.dumpHandlerProvider);
     }

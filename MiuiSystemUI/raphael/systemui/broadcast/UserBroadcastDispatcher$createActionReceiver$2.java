@@ -8,8 +8,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: UserBroadcastDispatcher.kt */
-final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implements Function1<BroadcastReceiver, Unit> {
+public final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implements Function1<BroadcastReceiver, Unit> {
     final /* synthetic */ String $action;
     final /* synthetic */ UserBroadcastDispatcher this$0;
 
@@ -20,8 +21,11 @@ final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implem
         this.$action = str;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke((BroadcastReceiver) obj);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(BroadcastReceiver broadcastReceiver) {
+        invoke(broadcastReceiver);
         return Unit.INSTANCE;
     }
 

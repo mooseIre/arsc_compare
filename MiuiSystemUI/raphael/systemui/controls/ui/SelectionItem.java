@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final class SelectionItem {
+public final class SelectionItem {
     @NotNull
     private final CharSequence appName;
     @NotNull
@@ -50,7 +51,7 @@ final class SelectionItem {
             return false;
         }
         SelectionItem selectionItem = (SelectionItem) obj;
-        return Intrinsics.areEqual((Object) this.appName, (Object) selectionItem.appName) && Intrinsics.areEqual((Object) this.structure, (Object) selectionItem.structure) && Intrinsics.areEqual((Object) this.icon, (Object) selectionItem.icon) && Intrinsics.areEqual((Object) this.componentName, (Object) selectionItem.componentName);
+        return Intrinsics.areEqual(this.appName, selectionItem.appName) && Intrinsics.areEqual(this.structure, selectionItem.structure) && Intrinsics.areEqual(this.icon, selectionItem.icon) && Intrinsics.areEqual(this.componentName, selectionItem.componentName);
     }
 
     public int hashCode() {

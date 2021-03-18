@@ -13,6 +13,7 @@ public final class HideNotifsForOtherUsersCoordinator_Factory implements Factory
         this.loggerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public HideNotifsForOtherUsersCoordinator get() {
         return provideInstance(this.lockscreenUserManagerProvider, this.loggerProvider);
     }

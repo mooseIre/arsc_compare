@@ -11,6 +11,7 @@ public final class MiuiAirplaneModeTile_Factory implements Factory<MiuiAirplaneM
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiAirplaneModeTile get() {
         return provideInstance(this.hostProvider);
     }

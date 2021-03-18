@@ -57,6 +57,7 @@ public final class DozeServiceHost_Factory implements Factory<DozeServiceHost> {
         this.lockscreenLockIconControllerProvider = provider18;
     }
 
+    @Override // javax.inject.Provider
     public DozeServiceHost get() {
         return provideInstance(this.dozeLogProvider, this.powerManagerProvider, this.wakefulnessLifecycleProvider, this.statusBarStateControllerProvider, this.deviceProvisionedControllerProvider, this.headsUpManagerPhoneProvider, this.batteryControllerProvider, this.scrimControllerProvider, this.biometricUnlockControllerLazyProvider, this.keyguardViewMediatorProvider, this.assistManagerLazyProvider, this.dozeScrimControllerProvider, this.keyguardUpdateMonitorProvider, this.visualStabilityManagerProvider, this.pulseExpansionHandlerProvider, this.notificationShadeWindowControllerProvider, this.notificationWakeUpCoordinatorProvider, this.lockscreenLockIconControllerProvider);
     }

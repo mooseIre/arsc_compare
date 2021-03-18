@@ -35,6 +35,7 @@ public final class PipManager_Factory implements Factory<PipManager> {
         this.sysUiStateProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public PipManager get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.displayControllerProvider, this.floatingContentCoordinatorProvider, this.deviceConfigProvider, this.pipBoundsHandlerProvider, this.pipSnapAlgorithmProvider, this.pipTaskOrganizerProvider, this.sysUiStateProvider);
     }

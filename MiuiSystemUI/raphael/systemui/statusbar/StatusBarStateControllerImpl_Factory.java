@@ -11,6 +11,7 @@ public final class StatusBarStateControllerImpl_Factory implements Factory<Statu
         this.uiEventLoggerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarStateControllerImpl get() {
         return provideInstance(this.uiEventLoggerProvider);
     }

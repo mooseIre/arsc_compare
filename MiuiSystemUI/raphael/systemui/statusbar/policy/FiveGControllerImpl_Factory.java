@@ -11,6 +11,7 @@ public final class FiveGControllerImpl_Factory implements Factory<FiveGControlle
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public FiveGControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

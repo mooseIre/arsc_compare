@@ -11,6 +11,7 @@ public final class SlaveWifiHelper_Factory implements Factory<SlaveWifiHelper> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SlaveWifiHelper get() {
         return provideInstance(this.contextProvider);
     }

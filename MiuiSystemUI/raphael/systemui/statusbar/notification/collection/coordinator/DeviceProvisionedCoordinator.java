@@ -9,16 +9,20 @@ import com.android.systemui.statusbar.notification.collection.listbuilder.plugga
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
 
 public class DeviceProvisionedCoordinator implements Coordinator {
-    /* access modifiers changed from: private */
-    public final DeviceProvisionedController mDeviceProvisionedController;
+    private final DeviceProvisionedController mDeviceProvisionedController;
     private final DeviceProvisionedController.DeviceProvisionedListener mDeviceProvisionedListener = new DeviceProvisionedController.DeviceProvisionedListener() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.DeviceProvisionedCoordinator.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController.DeviceProvisionedListener
         public void onDeviceProvisionedChanged() {
             DeviceProvisionedCoordinator.this.mNotifFilter.invalidateList();
         }
     };
     private final IPackageManager mIPackageManager;
-    /* access modifiers changed from: private */
-    public final NotifFilter mNotifFilter = new NotifFilter("DeviceProvisionedCoordinator") {
+    private final NotifFilter mNotifFilter = new NotifFilter("DeviceProvisionedCoordinator") {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.DeviceProvisionedCoordinator.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             return !DeviceProvisionedCoordinator.this.mDeviceProvisionedController.isDeviceProvisioned() && !DeviceProvisionedCoordinator.this.showNotificationEvenIfUnprovisioned(notificationEntry.getSbn());
         }
@@ -29,17 +33,16 @@ public class DeviceProvisionedCoordinator implements Coordinator {
         this.mIPackageManager = iPackageManager;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         this.mDeviceProvisionedController.addCallback(this.mDeviceProvisionedListener);
         notifPipeline.addPreGroupFilter(this.mNotifFilter);
     }
 
     /* access modifiers changed from: private */
-    public boolean showNotificationEvenIfUnprovisioned(StatusBarNotification statusBarNotification) {
-        if (!(checkUidPermission("android.permission.NOTIFICATION_DURING_SETUP", statusBarNotification.getUid()) == 0) || !statusBarNotification.getNotification().extras.getBoolean("android.allowDuringSetup")) {
-            return false;
-        }
-        return true;
+    /* access modifiers changed from: public */
+    private boolean showNotificationEvenIfUnprovisioned(StatusBarNotification statusBarNotification) {
+        return (checkUidPermission("android.permission.NOTIFICATION_DURING_SETUP", statusBarNotification.getUid()) == 0) && statusBarNotification.getNotification().extras.getBoolean("android.allowDuringSetup");
     }
 
     private int checkUidPermission(String str, int i) {

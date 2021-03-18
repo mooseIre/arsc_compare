@@ -8,10 +8,12 @@ import kotlin.jvm.internal.Intrinsics;
 public final class NotificationSectionsManager$configurationListener$1 implements ConfigurationController.ConfigurationListener {
     final /* synthetic */ NotificationSectionsManager this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     NotificationSectionsManager$configurationListener$1(NotificationSectionsManager notificationSectionsManager) {
         this.this$0 = notificationSectionsManager;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onLocaleListChanged() {
         NotificationSectionsManager notificationSectionsManager = this.this$0;
         LayoutInflater from = LayoutInflater.from(notificationSectionsManager.getParent().getContext());

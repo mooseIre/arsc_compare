@@ -27,41 +27,43 @@ public class LockIcon extends KeyguardAffordanceView {
     private boolean mKeyguardJustShown;
     private int mOldState;
     private final ViewTreeObserver.OnPreDrawListener mOnPreDrawListener = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.statusbar.phone.LockIcon.AnonymousClass1 */
+
         public boolean onPreDraw() {
             LockIcon.this.getViewTreeObserver().removeOnPreDrawListener(this);
-            boolean unused = LockIcon.this.mPredrawRegistered = false;
-            final int access$100 = LockIcon.this.mState;
-            Drawable access$200 = LockIcon.this.getIcon(access$100);
-            LockIcon.this.setImageDrawable(access$200, false);
-            if (access$100 == 2) {
+            LockIcon.this.mPredrawRegistered = false;
+            final int i = LockIcon.this.mState;
+            Drawable icon = LockIcon.this.getIcon(i);
+            LockIcon.this.setImageDrawable(icon, false);
+            if (i == 2) {
                 LockIcon lockIcon = LockIcon.this;
                 lockIcon.announceForAccessibility(lockIcon.getResources().getString(C0021R$string.accessibility_scanning_face));
             }
-            if (!(access$200 instanceof AnimatedVectorDrawable)) {
+            if (!(icon instanceof AnimatedVectorDrawable)) {
                 return true;
             }
-            final AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) access$200;
+            final AnimatedVectorDrawable animatedVectorDrawable = (AnimatedVectorDrawable) icon;
             animatedVectorDrawable.forceAnimationOnUI();
             animatedVectorDrawable.clearAnimationCallbacks();
             animatedVectorDrawable.registerAnimationCallback(new Animatable2.AnimationCallback() {
+                /* class com.android.systemui.statusbar.phone.LockIcon.AnonymousClass1.AnonymousClass1 */
+
                 public void onAnimationEnd(Drawable drawable) {
-                    if (LockIcon.this.getDrawable() == animatedVectorDrawable && access$100 == LockIcon.this.mState && access$100 == 2) {
+                    if (LockIcon.this.getDrawable() == animatedVectorDrawable && i == LockIcon.this.mState && i == 2) {
                         animatedVectorDrawable.start();
                     } else {
-                        Trace.endAsyncSection("LockIcon#Animation", access$100);
+                        Trace.endAsyncSection("LockIcon#Animation", i);
                     }
                 }
             });
-            Trace.beginAsyncSection("LockIcon#Animation", access$100);
+            Trace.beginAsyncSection("LockIcon#Animation", i);
             animatedVectorDrawable.start();
             return true;
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mPredrawRegistered;
+    private boolean mPredrawRegistered;
     private boolean mPulsing;
-    /* access modifiers changed from: private */
-    public int mState;
+    private int mState;
 
     private static int getAnimationIndexForTransition(int i, int i2, boolean z, boolean z2, boolean z3) {
         if (z2 && !z) {
@@ -135,7 +137,8 @@ public class LockIcon extends KeyguardAffordanceView {
     }
 
     /* access modifiers changed from: private */
-    public Drawable getIcon(int i) {
+    /* access modifiers changed from: public */
+    private Drawable getIcon(int i) {
         int animationIndexForTransition = getAnimationIndexForTransition(this.mOldState, i, this.mPulsing, this.mDozing, this.mKeyguardJustShown);
         int themedAnimationResId = animationIndexForTransition != -1 ? getThemedAnimationResId(animationIndexForTransition) : getIconForState(i);
         if (!this.mDrawableCache.contains(themedAnimationResId)) {

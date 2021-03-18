@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class DumpManager_Factory implements Factory<DumpManager> {
     private static final DumpManager_Factory INSTANCE = new DumpManager_Factory();
 
+    @Override // javax.inject.Provider
     public DumpManager get() {
         return provideInstance();
     }

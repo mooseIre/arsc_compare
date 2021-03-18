@@ -13,6 +13,7 @@ public final class LogBufferFreezer_Factory implements Factory<LogBufferFreezer>
         this.executorProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public LogBufferFreezer get() {
         return provideInstance(this.dumpManagerProvider, this.executorProvider);
     }

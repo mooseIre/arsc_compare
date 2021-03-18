@@ -16,6 +16,9 @@ public class ForcedResizableInfoActivityController {
     private final Context mContext;
     private boolean mDividerDragging;
     private final Consumer<Boolean> mDockedStackExistsListener = new Consumer() {
+        /* class com.android.systemui.stackdivider.$$Lambda$ForcedResizableInfoActivityController$54i4Imkkt5mUAQHgG0VrHpWhZ10 */
+
+        @Override // java.util.function.Consumer
         public final void accept(Object obj) {
             ForcedResizableInfoActivityController.this.lambda$new$0$ForcedResizableInfoActivityController((Boolean) obj);
         }
@@ -24,6 +27,8 @@ public class ForcedResizableInfoActivityController {
     private final ArraySet<String> mPackagesShownInSession = new ArraySet<>();
     private final ArraySet<PendingTaskRecord> mPendingTasks = new ArraySet<>();
     private final Runnable mTimeoutRunnable = new Runnable() {
+        /* class com.android.systemui.stackdivider.ForcedResizableInfoActivityController.AnonymousClass1 */
+
         public void run() {
             ForcedResizableInfoActivityController.this.showPending();
         }
@@ -37,7 +42,8 @@ public class ForcedResizableInfoActivityController {
         }
     }
 
-    private class PendingTaskRecord {
+    /* access modifiers changed from: private */
+    public class PendingTaskRecord {
         int reason;
         int taskId;
 
@@ -50,14 +56,19 @@ public class ForcedResizableInfoActivityController {
     public ForcedResizableInfoActivityController(Context context, Divider divider) {
         this.mContext = context;
         ActivityManagerWrapper.getInstance().registerTaskStackListener(new TaskStackChangeListener() {
+            /* class com.android.systemui.stackdivider.ForcedResizableInfoActivityController.AnonymousClass2 */
+
+            @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onActivityForcedResizable(String str, int i, int i2) {
                 ForcedResizableInfoActivityController.this.activityForcedResizable(str, i, i2);
             }
 
+            @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onActivityDismissingDockedStack() {
                 ForcedResizableInfoActivityController.this.activityDismissingDockedStack();
             }
 
+            @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onActivityLaunchOnSecondaryDisplayFailed() {
                 ForcedResizableInfoActivityController.this.activityLaunchOnSecondaryDisplayFailed();
             }
@@ -84,7 +95,8 @@ public class ForcedResizableInfoActivityController {
     }
 
     /* access modifiers changed from: private */
-    public void activityForcedResizable(String str, int i, int i2) {
+    /* access modifiers changed from: public */
+    private void activityForcedResizable(String str, int i, int i2) {
         if (!debounce(str)) {
             this.mPendingTasks.add(new PendingTaskRecord(this, i, i2));
             postTimeout();
@@ -92,17 +104,20 @@ public class ForcedResizableInfoActivityController {
     }
 
     /* access modifiers changed from: private */
-    public void activityDismissingDockedStack() {
+    /* access modifiers changed from: public */
+    private void activityDismissingDockedStack() {
         Toast.makeText(this.mContext, C0021R$string.dock_non_resizeble_failed_to_dock_text, 0).show();
     }
 
     /* access modifiers changed from: private */
-    public void activityLaunchOnSecondaryDisplayFailed() {
+    /* access modifiers changed from: public */
+    private void activityLaunchOnSecondaryDisplayFailed() {
         Toast.makeText(this.mContext, C0021R$string.activity_launch_on_secondary_display_failed_text, 0).show();
     }
 
     /* access modifiers changed from: private */
-    public void showPending() {
+    /* access modifiers changed from: public */
+    private void showPending() {
         this.mHandler.removeCallbacks(this.mTimeoutRunnable);
         for (int size = this.mPendingTasks.size() - 1; size >= 0; size--) {
             PendingTaskRecord valueAt = this.mPendingTasks.valueAt(size);

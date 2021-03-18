@@ -30,7 +30,8 @@ public class NotificationInlineImageResolver implements ImageResolver {
     protected int mMaxImageWidth;
     private Set<Uri> mWantedUriSet;
 
-    interface ImageCache {
+    /* access modifiers changed from: package-private */
+    public interface ImageCache {
         Drawable get(Uri uri);
 
         boolean hasEntry(Uri uri);
@@ -112,6 +113,9 @@ public class NotificationInlineImageResolver implements ImageResolver {
         if (hasCache()) {
             retrieveWantedUriSet(notification);
             getWantedUriSet().forEach(new Consumer() {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInlineImageResolver$9tt2CqLsWBYt2coRCrkS9VmF2EU */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     NotificationInlineImageResolver.this.lambda$preloadImages$0$NotificationInlineImageResolver((Uri) obj);
                 }
@@ -134,19 +138,14 @@ public class NotificationInlineImageResolver implements ImageResolver {
     }
 
     private void retrieveWantedUriSet(Notification notification) {
-        List<Notification.MessagingStyle.Message> list;
         HashSet hashSet = new HashSet();
         Bundle bundle = notification.extras;
         if (bundle != null) {
             Parcelable[] parcelableArray = bundle.getParcelableArray("android.messages");
-            List<Notification.MessagingStyle.Message> list2 = null;
-            if (parcelableArray == null) {
-                list = null;
-            } else {
-                list = Notification.MessagingStyle.Message.getMessagesFromBundleArray(parcelableArray);
-            }
-            if (list != null) {
-                for (Notification.MessagingStyle.Message message : list) {
+            List<Notification.MessagingStyle.Message> list = null;
+            List<Notification.MessagingStyle.Message> messagesFromBundleArray = parcelableArray == null ? null : Notification.MessagingStyle.Message.getMessagesFromBundleArray(parcelableArray);
+            if (messagesFromBundleArray != null) {
+                for (Notification.MessagingStyle.Message message : messagesFromBundleArray) {
                     if (MessagingMessage.hasImage(message)) {
                         hashSet.add(message.getDataUri());
                     }
@@ -154,10 +153,10 @@ public class NotificationInlineImageResolver implements ImageResolver {
             }
             Parcelable[] parcelableArray2 = bundle.getParcelableArray("android.messages.historic");
             if (parcelableArray2 != null) {
-                list2 = Notification.MessagingStyle.Message.getMessagesFromBundleArray(parcelableArray2);
+                list = Notification.MessagingStyle.Message.getMessagesFromBundleArray(parcelableArray2);
             }
-            if (list2 != null) {
-                for (Notification.MessagingStyle.Message message2 : list2) {
+            if (list != null) {
+                for (Notification.MessagingStyle.Message message2 : list) {
                     if (MessagingMessage.hasImage(message2)) {
                         hashSet.add(message2.getDataUri());
                     }

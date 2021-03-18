@@ -23,6 +23,7 @@ public final class ScreenDecorations_Factory implements Factory<ScreenDecoration
         this.commandQueueProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public ScreenDecorations get() {
         return provideInstance(this.contextProvider, this.handlerProvider, this.broadcastDispatcherProvider, this.tunerServiceProvider, this.commandQueueProvider);
     }

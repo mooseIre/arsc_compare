@@ -2,7 +2,6 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.os.Handler;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -15,16 +14,18 @@ import java.util.List;
 import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: KeyOrderObserver.kt */
 public final class KeyOrderObserver {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
     @NotNull
     private static final HashSet<Integer> sKeyIdSet = new HashSet<>();
     private Function0<Unit> keyOrderCallback;
-    private final KeyOrderObserver$observer$1 observer = new KeyOrderObserver$observer$1(this, (Handler) null);
+    private final KeyOrderObserver$observer$1 observer = new KeyOrderObserver$observer$1(this, null);
 
     public KeyOrderObserver() {
         sKeyIdSet.add(Integer.valueOf(C0015R$id.menu));
@@ -68,9 +69,9 @@ public final class KeyOrderObserver {
             String stringForUser = Settings.System.getStringForUser(contentResolver, "screen_key_order", -2);
             if (!TextUtils.isEmpty(stringForUser)) {
                 Intrinsics.checkExpressionValueIsNotNull(stringForUser, "keyList");
-                List<String> split$default = StringsKt__StringsKt.split$default(stringForUser, new String[]{" "}, false, 0, 6, (Object) null);
-                if (split$default != null) {
-                    for (String str : split$default) {
+                List<String> list = StringsKt__StringsKt.split$default(stringForUser, new String[]{" "}, false, 0, 6, null);
+                if (list != null) {
+                    for (String str : list) {
                         if (str != null) {
                             try {
                                 if (!TextUtils.isEmpty(StringsKt__StringsKt.trim(str).toString())) {

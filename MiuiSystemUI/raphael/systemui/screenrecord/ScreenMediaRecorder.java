@@ -11,8 +11,6 @@ import android.media.projection.IMediaProjection;
 import android.media.projection.IMediaProjectionManager;
 import android.media.projection.MediaProjection;
 import android.net.Uri;
-import android.os.CancellationSignal;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.provider.MediaStore;
@@ -85,7 +83,7 @@ public class ScreenMediaRecorder {
         this.mMediaRecorder.prepare();
         Surface surface = this.mMediaRecorder.getSurface();
         this.mInputSurface = surface;
-        this.mVirtualDisplay = this.mMediaProjection.createVirtualDisplay("Recording Display", i, i2, displayMetrics.densityDpi, 16, surface, (VirtualDisplay.Callback) null, (Handler) null);
+        this.mVirtualDisplay = this.mMediaProjection.createVirtualDisplay("Recording Display", i, i2, displayMetrics.densityDpi, 16, surface, null, null);
         this.mMediaRecorder.setOnInfoListener(this.mListener);
         ScreenRecordingAudioSource screenRecordingAudioSource = this.mAudioSource;
         if (screenRecordingAudioSource == ScreenRecordingAudioSource.INTERNAL || screenRecordingAudioSource == ScreenRecordingAudioSource.MIC_AND_INTERNAL) {
@@ -181,7 +179,7 @@ public class ScreenMediaRecorder {
         protected SavedRecording(ScreenMediaRecorder screenMediaRecorder, Uri uri, File file, Size size) {
             this.mUri = uri;
             try {
-                this.mThumbnailBitmap = ThumbnailUtils.createVideoThumbnail(file, size, (CancellationSignal) null);
+                this.mThumbnailBitmap = ThumbnailUtils.createVideoThumbnail(file, size, null);
             } catch (IOException e) {
                 Log.e("ScreenMediaRecorder", "Error creating thumbnail", e);
             }

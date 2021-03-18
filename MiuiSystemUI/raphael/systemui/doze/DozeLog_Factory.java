@@ -16,6 +16,7 @@ public final class DozeLog_Factory implements Factory<DozeLog> {
         this.loggerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public DozeLog get() {
         return provideInstance(this.keyguardUpdateMonitorProvider, this.dumpManagerProvider, this.loggerProvider);
     }

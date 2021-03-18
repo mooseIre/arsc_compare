@@ -15,20 +15,14 @@ import com.android.internal.logging.UiEventLogger;
 import miui.util.Log;
 
 public class TakeScreenshotService extends Service {
-    /* access modifiers changed from: private */
-    public volatile Messenger mFallbackMessenger;
-    /* access modifiers changed from: private */
-    public volatile ServiceConnection mFallbackServiceConnection;
-    /* access modifiers changed from: private */
-    public final Object mFallbackServiceLock = new Object();
+    private volatile Messenger mFallbackMessenger;
+    private volatile ServiceConnection mFallbackServiceConnection;
+    private final Object mFallbackServiceLock = new Object();
     private Handler mProxyHandler;
     private final HandlerThread mProxyThread = new HandlerThread("screen_proxy_thread", -2);
-    /* access modifiers changed from: private */
-    public volatile Messenger mRealMessenger;
-    /* access modifiers changed from: private */
-    public volatile ServiceConnection mRealServiceConnection;
-    /* access modifiers changed from: private */
-    public final Object mServiceLock = new Object();
+    private volatile Messenger mRealMessenger;
+    private volatile ServiceConnection mRealServiceConnection;
+    private final Object mServiceLock = new Object();
 
     public IBinder onBind(Intent intent) {
         return new Messenger(this.mProxyHandler).getBinder();
@@ -41,6 +35,8 @@ public class TakeScreenshotService extends Service {
         super.onCreate();
         this.mProxyThread.start();
         this.mProxyHandler = new Handler(this.mProxyThread.getLooper()) {
+            /* class com.android.systemui.screenshot.TakeScreenshotService.AnonymousClass1 */
+
             public void handleMessage(Message message) {
                 if (TakeScreenshotService.this.mRealServiceConnection == null) {
                     synchronized (TakeScreenshotService.this.mServiceLock) {
@@ -101,38 +97,41 @@ public class TakeScreenshotService extends Service {
     }
 
     /* access modifiers changed from: private */
-    public void bindRealService() {
+    /* access modifiers changed from: public */
+    private void bindRealService() {
         if (this.mRealServiceConnection == null) {
             Log.i("TakeScreenshotService", "bindRealService: ");
             ComponentName componentName = new ComponentName("com.miui.screenshot", "com.miui.screenshot.TakeScreenshotService");
             Intent intent = new Intent();
             intent.setComponent(componentName);
             AnonymousClass2 r0 = new ServiceConnection() {
+                /* class com.android.systemui.screenshot.TakeScreenshotService.AnonymousClass2 */
+
                 public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                     synchronized (TakeScreenshotService.this.mServiceLock) {
-                        Messenger unused = TakeScreenshotService.this.mRealMessenger = new Messenger(iBinder);
+                        TakeScreenshotService.this.mRealMessenger = new Messenger(iBinder);
                         TakeScreenshotService.this.mServiceLock.notifyAll();
                     }
                 }
 
                 public void onServiceDisconnected(ComponentName componentName) {
                     synchronized (TakeScreenshotService.this.mServiceLock) {
-                        Messenger unused = TakeScreenshotService.this.mRealMessenger = null;
+                        TakeScreenshotService.this.mRealMessenger = null;
                         TakeScreenshotService.this.mServiceLock.notifyAll();
                         if (TakeScreenshotService.this.mRealServiceConnection != null) {
                             TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mRealServiceConnection);
-                            ServiceConnection unused2 = TakeScreenshotService.this.mRealServiceConnection = null;
+                            TakeScreenshotService.this.mRealServiceConnection = null;
                         }
                     }
                 }
 
                 public void onBindingDied(ComponentName componentName) {
                     synchronized (TakeScreenshotService.this.mServiceLock) {
-                        Messenger unused = TakeScreenshotService.this.mRealMessenger = null;
+                        TakeScreenshotService.this.mRealMessenger = null;
                         TakeScreenshotService.this.mServiceLock.notifyAll();
                         if (TakeScreenshotService.this.mRealServiceConnection != null) {
                             TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mRealServiceConnection);
-                            ServiceConnection unused2 = TakeScreenshotService.this.mRealServiceConnection = null;
+                            TakeScreenshotService.this.mRealServiceConnection = null;
                         }
                     }
                 }
@@ -144,38 +143,41 @@ public class TakeScreenshotService extends Service {
     }
 
     /* access modifiers changed from: private */
-    public void bindFallbackService() {
+    /* access modifiers changed from: public */
+    private void bindFallbackService() {
         if (this.mFallbackServiceConnection == null) {
             Log.i("TakeScreenshotService", "bindFallbackService: ");
             ComponentName componentName = new ComponentName("com.android.systemui", "com.android.systemui.screenshot.FallbackTakeScreenshotService");
             Intent intent = new Intent();
             intent.setComponent(componentName);
             AnonymousClass3 r0 = new ServiceConnection() {
+                /* class com.android.systemui.screenshot.TakeScreenshotService.AnonymousClass3 */
+
                 public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
                     synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
-                        Messenger unused = TakeScreenshotService.this.mFallbackMessenger = new Messenger(iBinder);
+                        TakeScreenshotService.this.mFallbackMessenger = new Messenger(iBinder);
                         TakeScreenshotService.this.mFallbackServiceLock.notifyAll();
                     }
                 }
 
                 public void onServiceDisconnected(ComponentName componentName) {
                     synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
-                        Messenger unused = TakeScreenshotService.this.mFallbackMessenger = null;
+                        TakeScreenshotService.this.mFallbackMessenger = null;
                         TakeScreenshotService.this.mFallbackServiceLock.notifyAll();
                         if (TakeScreenshotService.this.mFallbackServiceConnection != null) {
                             TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mFallbackServiceConnection);
-                            ServiceConnection unused2 = TakeScreenshotService.this.mFallbackServiceConnection = null;
+                            TakeScreenshotService.this.mFallbackServiceConnection = null;
                         }
                     }
                 }
 
                 public void onBindingDied(ComponentName componentName) {
                     synchronized (TakeScreenshotService.this.mFallbackServiceLock) {
-                        Messenger unused = TakeScreenshotService.this.mFallbackMessenger = null;
+                        TakeScreenshotService.this.mFallbackMessenger = null;
                         TakeScreenshotService.this.mFallbackServiceLock.notifyAll();
                         if (TakeScreenshotService.this.mFallbackServiceConnection != null) {
                             TakeScreenshotService.this.unbindService(TakeScreenshotService.this.mFallbackServiceConnection);
-                            ServiceConnection unused2 = TakeScreenshotService.this.mFallbackServiceConnection = null;
+                            TakeScreenshotService.this.mFallbackServiceConnection = null;
                         }
                     }
                 }

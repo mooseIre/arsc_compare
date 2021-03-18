@@ -10,6 +10,8 @@ public class FeatureFlags {
 
     public FeatureFlags(Executor executor) {
         DeviceConfig.addOnPropertiesChangedListener("systemui", executor, new DeviceConfig.OnPropertiesChangedListener() {
+            /* class com.android.systemui.statusbar.$$Lambda$FeatureFlags$quCg0PddUt747ILcyW36A9ZoNcM */
+
             public final void onPropertiesChanged(DeviceConfig.Properties properties) {
                 FeatureFlags.this.onPropertiesChanged(properties);
             }
@@ -30,8 +32,8 @@ public class FeatureFlags {
     /* access modifiers changed from: private */
     public void onPropertiesChanged(DeviceConfig.Properties properties) {
         synchronized (this.mCachedDeviceConfigFlags) {
-            for (String remove : properties.getKeyset()) {
-                this.mCachedDeviceConfigFlags.remove(remove);
+            for (String str : properties.getKeyset()) {
+                this.mCachedDeviceConfigFlags.remove(str);
             }
         }
     }

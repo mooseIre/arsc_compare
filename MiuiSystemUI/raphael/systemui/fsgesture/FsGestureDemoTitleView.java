@@ -1,7 +1,6 @@
 package com.android.systemui.fsgesture;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,7 @@ public class FsGestureDemoTitleView extends FrameLayout {
     private TextView mTitleView;
 
     public FsGestureDemoTitleView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public FsGestureDemoTitleView(Context context, AttributeSet attributeSet) {
@@ -61,7 +60,7 @@ public class FsGestureDemoTitleView extends FrameLayout {
     public void prepareTitleView(int i) {
         int i2;
         int i3;
-        setBackground(getResources().getDrawable(C0013R$drawable.fs_gesture_back_bg, (Resources.Theme) null));
+        setBackground(getResources().getDrawable(C0013R$drawable.fs_gesture_back_bg, null));
         switch (i) {
             case 0:
                 i2 = C0021R$string.fs_gesture_back_ready_title;
@@ -106,7 +105,7 @@ public class FsGestureDemoTitleView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     public void notifyFinish() {
-        setBackground(getResources().getDrawable(C0013R$drawable.fs_gesture_finish_bg, (Resources.Theme) null));
+        setBackground(getResources().getDrawable(C0013R$drawable.fs_gesture_finish_bg, null));
         this.mTitleView.setVisibility(4);
         this.mSummaryView.setTranslationY(this.mSummaryView.getTranslationX() - 15.0f);
         this.mSummaryView.setText(C0021R$string.fs_gesture_finish);

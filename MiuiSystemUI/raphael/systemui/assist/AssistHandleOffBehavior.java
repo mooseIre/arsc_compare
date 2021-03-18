@@ -7,6 +7,7 @@ final class AssistHandleOffBehavior implements AssistHandleBehaviorController.Be
     AssistHandleOffBehavior() {
     }
 
+    @Override // com.android.systemui.assist.AssistHandleBehaviorController.BehaviorController
     public void onModeActivated(Context context, AssistHandleCallbacks assistHandleCallbacks) {
         assistHandleCallbacks.hide();
     }

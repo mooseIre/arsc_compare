@@ -15,6 +15,7 @@ final class MiuiExpandableNotificationRow$mFakeShadowView$2 extends Lambda imple
         this.this$0 = miuiExpandableNotificationRow;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final FakeShadowView invoke() {
         return (FakeShadowView) this.this$0.findViewById(C0015R$id.fake_shadow);
     }

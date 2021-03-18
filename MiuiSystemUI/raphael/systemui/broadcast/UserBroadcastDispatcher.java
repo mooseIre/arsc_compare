@@ -18,8 +18,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicInteger;
+import kotlin.collections.CollectionsKt__MutableCollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt__SequencesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: UserBroadcastDispatcher.kt */
@@ -27,20 +29,17 @@ public class UserBroadcastDispatcher implements Dumpable {
     @NotNull
     private final ArrayMap<String, ActionReceiver> actionsToActionsReceivers = new ArrayMap<>();
     private final Executor bgExecutor;
-    /* access modifiers changed from: private */
-    public final UserBroadcastDispatcher$bgHandler$1 bgHandler = new UserBroadcastDispatcher$bgHandler$1(this, this.bgLooper);
+    private final UserBroadcastDispatcher$bgHandler$1 bgHandler = new UserBroadcastDispatcher$bgHandler$1(this, this.bgLooper);
     private final Looper bgLooper;
-    /* access modifiers changed from: private */
-    public final Context context;
-    /* access modifiers changed from: private */
-    public final BroadcastDispatcherLogger logger;
+    private final Context context;
+    private final BroadcastDispatcherLogger logger;
     private final ArrayMap<BroadcastReceiver, Set<String>> receiverToActions = new ArrayMap<>();
-    /* access modifiers changed from: private */
-    public final int userId;
+    private final int userId;
 
     public static /* synthetic */ void actionsToActionsReceivers$annotations() {
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
@@ -49,9 +48,9 @@ public class UserBroadcastDispatcher implements Dumpable {
         if (z) {
             ((IndentingPrintWriter) printWriter).increaseIndent();
         }
-        for (Map.Entry next : this.actionsToActionsReceivers.entrySet()) {
-            printWriter.println(((String) next.getKey()) + ':');
-            ((ActionReceiver) next.getValue()).dump(fileDescriptor, printWriter, strArr);
+        for (Map.Entry<String, ActionReceiver> entry : this.actionsToActionsReceivers.entrySet()) {
+            printWriter.println(entry.getKey() + ':');
+            entry.getValue().dump(fileDescriptor, printWriter, strArr);
         }
         if (z) {
             ((IndentingPrintWriter) printWriter).decreaseIndent();
@@ -83,7 +82,7 @@ public class UserBroadcastDispatcher implements Dumpable {
             Iterator<T> it = values.iterator();
             while (true) {
                 if (it.hasNext()) {
-                    if (((ActionReceiver) it.next()).hasReceiver(broadcastReceiver)) {
+                    if (it.next().hasReceiver(broadcastReceiver)) {
                         z = true;
                         break;
                     }
@@ -93,10 +92,7 @@ public class UserBroadcastDispatcher implements Dumpable {
             }
         }
         z = false;
-        if (z || this.receiverToActions.containsKey(broadcastReceiver)) {
-            return true;
-        }
-        return false;
+        return z || this.receiverToActions.containsKey(broadcastReceiver);
     }
 
     public final void registerReceiver(@NotNull ReceiverData receiverData) {
@@ -111,7 +107,7 @@ public class UserBroadcastDispatcher implements Dumpable {
 
     /* access modifiers changed from: private */
     public final void handleRegisterReceiver(ReceiverData receiverData) {
-        Sequence<T> sequence;
+        Sequence sequence;
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");
         Preconditions.checkState(looper.isCurrentThread(), "This method should only be called from BG thread");
@@ -122,12 +118,12 @@ public class UserBroadcastDispatcher implements Dumpable {
             set = new ArraySet<>();
             arrayMap.put(receiver, set);
         }
-        Collection collection = set;
+        Set<String> set2 = set;
         Iterator<String> actionsIterator = receiverData.getFilter().actionsIterator();
         if (actionsIterator == null || (sequence = SequencesKt__SequencesKt.asSequence(actionsIterator)) == null) {
             sequence = SequencesKt__SequencesKt.emptySequence();
         }
-        boolean unused = CollectionsKt__MutableCollectionsKt.addAll(collection, sequence);
+        boolean unused = CollectionsKt__MutableCollectionsKt.addAll(set2, sequence);
         Iterator<String> actionsIterator2 = receiverData.getFilter().actionsIterator();
         Intrinsics.checkExpressionValueIsNotNull(actionsIterator2, "receiverData.filter.actionsIterator()");
         while (actionsIterator2.hasNext()) {
@@ -155,10 +151,11 @@ public class UserBroadcastDispatcher implements Dumpable {
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");
         Preconditions.checkState(looper.isCurrentThread(), "This method should only be called from BG thread");
-        Object orDefault = this.receiverToActions.getOrDefault(broadcastReceiver, new LinkedHashSet());
+        Set<String> orDefault = this.receiverToActions.getOrDefault(broadcastReceiver, new LinkedHashSet());
         Intrinsics.checkExpressionValueIsNotNull(orDefault, "receiverToActions.getOrD…receiver, mutableSetOf())");
-        for (String str : (Iterable) orDefault) {
-            ActionReceiver actionReceiver = this.actionsToActionsReceivers.get(str);
+        Iterator<T> it = orDefault.iterator();
+        while (it.hasNext()) {
+            ActionReceiver actionReceiver = this.actionsToActionsReceivers.get(it.next());
             if (actionReceiver != null) {
                 actionReceiver.removeReceiver(broadcastReceiver);
             }

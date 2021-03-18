@@ -31,6 +31,7 @@ public final class ControlsControllerImpl_Factory implements Factory<ControlsCon
         this.dumpManagerProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public ControlsControllerImpl get() {
         return provideInstance(this.contextProvider, this.executorProvider, this.uiControllerProvider, this.bindingControllerProvider, this.listingControllerProvider, this.broadcastDispatcherProvider, this.optionalWrapperProvider, this.dumpManagerProvider);
     }

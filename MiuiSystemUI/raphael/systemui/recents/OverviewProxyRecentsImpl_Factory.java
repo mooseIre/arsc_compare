@@ -16,6 +16,7 @@ public final class OverviewProxyRecentsImpl_Factory implements Factory<OverviewP
         this.dividerOptionalProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public OverviewProxyRecentsImpl get() {
         return provideInstance(this.statusBarLazyProvider, this.dividerOptionalProvider);
     }

@@ -16,7 +16,8 @@ public class NotificationPanelView extends PanelView {
     private boolean mDozing;
     private RtlChangeListener mRtlChangeListener;
 
-    interface RtlChangeListener {
+    /* access modifiers changed from: package-private */
+    public interface RtlChangeListener {
         void onRtlPropertielsChanged(int i);
     }
 

@@ -20,6 +20,7 @@ public final class NotificationWakeUpCoordinator_Factory implements Factory<Noti
         this.dozeParametersProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public NotificationWakeUpCoordinator get() {
         return provideInstance(this.mHeadsUpManagerProvider, this.statusBarStateControllerProvider, this.bypassControllerProvider, this.dozeParametersProvider);
     }

@@ -12,6 +12,7 @@ public final class SystemServicesModule_ProvideVibratorFactory implements Factor
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Vibrator get() {
         return provideInstance(this.contextProvider);
     }

@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$PipAnimationController$iXb7MLu8McpFb
     private /* synthetic */ $$Lambda$PipAnimationController$iXb7MLu8McpFbUwX5eyjXMVFMI() {
     }
 
+    @Override // java.util.function.Supplier
     public final Object get() {
         return PipAnimationController.lambda$new$0();
     }

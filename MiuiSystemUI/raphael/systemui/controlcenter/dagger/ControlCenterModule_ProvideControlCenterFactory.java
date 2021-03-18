@@ -55,6 +55,7 @@ public final class ControlCenterModule_ProvideControlCenterFactory implements Fa
         this.configurationControllerProvider = provider15;
     }
 
+    @Override // javax.inject.Provider
     public ControlCenter get() {
         return provideInstance(this.contextProvider, this.controlPanelControllerProvider, this.iconControllerProvider, this.expandInfoControllerProvider, this.activityStarterProvider, this.commandQueueProvider, this.injectionInflaterProvider, this.superSaveModeControllerProvider, this.controlCenterActivityStarterProvider, this.qsControlTileHostProvider, this.controlPanelWindowManagerProvider, this.statusBarProvider, this.controlsPluginManagerProvider, this.broadcastDispatcherProvider, this.configurationControllerProvider);
     }

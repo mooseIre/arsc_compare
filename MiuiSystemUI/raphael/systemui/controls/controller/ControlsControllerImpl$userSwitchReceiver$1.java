@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ControlsControllerImpl$userSwitchReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ ControlsControllerImpl this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     ControlsControllerImpl$userSwitchReceiver$1(ControlsControllerImpl controlsControllerImpl) {
         this.this$0 = controlsControllerImpl;
     }
@@ -18,10 +19,10 @@ public final class ControlsControllerImpl$userSwitchReceiver$1 extends Broadcast
     public void onReceive(@NotNull Context context, @NotNull Intent intent) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
-        if (Intrinsics.areEqual((Object) intent.getAction(), (Object) "android.intent.action.USER_SWITCHED")) {
+        if (Intrinsics.areEqual(intent.getAction(), "android.intent.action.USER_SWITCHED")) {
             this.this$0.userChanging = true;
             UserHandle of = UserHandle.of(intent.getIntExtra("android.intent.extra.user_handle", getSendingUserId()));
-            if (Intrinsics.areEqual((Object) this.this$0.currentUser, (Object) of)) {
+            if (Intrinsics.areEqual(this.this$0.currentUser, of)) {
                 this.this$0.userChanging = false;
                 return;
             }

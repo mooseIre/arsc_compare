@@ -29,6 +29,7 @@ public final class MiuiQSTileHostInjector_Factory implements Factory<MiuiQSTileH
         this.deviceProvisionedControllerProvider = provider7;
     }
 
+    @Override // javax.inject.Provider
     public MiuiQSTileHostInjector get() {
         return provideInstance(this.contextProvider, this.pluginManagerProvider, this.tunerServiceProvider, this.controllerProvider, this.superSaveModeControllerProvider, this.oldModeControllerProvider, this.deviceProvisionedControllerProvider);
     }

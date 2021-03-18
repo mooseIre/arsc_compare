@@ -16,8 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public final class HeadsetPolicy {
     private final Context mContext;
     private final BroadcastReceiver mIntentReceiver;
-    /* access modifiers changed from: private */
-    public final PowerManager mPowerManager;
+    private final PowerManager mPowerManager;
 
     public HeadsetPolicy(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
@@ -37,7 +36,7 @@ public final class HeadsetPolicy {
             Handler handler = new Handler((Looper) obj);
             IntentFilter intentFilter = new IntentFilter();
             intentFilter.addAction("android.intent.action.HEADSET_PLUG");
-            this.mContext.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, handler);
+            this.mContext.registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, null, handler);
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type android.os.Looper");

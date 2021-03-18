@@ -10,8 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: QSLogger.kt */
 public final class QSLogger {
-    /* access modifiers changed from: private */
-    public final LogBuffer buffer;
+    private final LogBuffer buffer;
 
     private final String toStateString(int i) {
         return i != 0 ? i != 1 ? i != 2 ? "wrong state" : "active" : "inactive" : "unavailable";
@@ -26,11 +25,11 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str, "tileSpec");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logTileAdded$2 qSLogger$logTileAdded$2 = QSLogger$logTileAdded$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileAdded$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileAdded$2);
             obtain.setStr1(str);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -39,12 +38,12 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str2, "reason");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logTileDestroyed$2 qSLogger$logTileDestroyed$2 = QSLogger$logTileDestroyed$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileDestroyed$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileDestroyed$2);
             obtain.setStr1(str);
             obtain.setStr2(str2);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -52,12 +51,12 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str, "tileSpec");
         LogLevel logLevel = LogLevel.VERBOSE;
         QSLogger$logTileChangeListening$2 qSLogger$logTileChangeListening$2 = QSLogger$logTileChangeListening$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileChangeListening$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileChangeListening$2);
             obtain.setBool1(z);
             obtain.setStr1(str);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -66,13 +65,13 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str2, "allSpecs");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logAllTilesChangeListening$2 qSLogger$logAllTilesChangeListening$2 = QSLogger$logAllTilesChangeListening$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logAllTilesChangeListening$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logAllTilesChangeListening$2);
             obtain.setBool1(z);
             obtain.setStr1(str);
             obtain.setStr2(str2);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -80,14 +79,14 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str, "tileSpec");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logTileClick$2 qSLogger$logTileClick$2 = QSLogger$logTileClick$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileClick$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileClick$2);
             obtain.setStr1(str);
             obtain.setInt1(i);
             obtain.setStr2(StatusBarState.toShortString(i));
             obtain.setStr3(toStateString(i2));
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -95,14 +94,14 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str, "tileSpec");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logTileSecondaryClick$2 qSLogger$logTileSecondaryClick$2 = QSLogger$logTileSecondaryClick$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileSecondaryClick$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileSecondaryClick$2);
             obtain.setStr1(str);
             obtain.setInt1(i);
             obtain.setStr2(StatusBarState.toShortString(i));
             obtain.setStr3(toStateString(i2));
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -110,14 +109,14 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str, "tileSpec");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logTileLongClick$2 qSLogger$logTileLongClick$2 = QSLogger$logTileLongClick$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileLongClick$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileLongClick$2);
             obtain.setStr1(str);
             obtain.setInt1(i);
             obtain.setStr2(StatusBarState.toShortString(i));
             obtain.setStr3(toStateString(i2));
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -126,9 +125,9 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(state, "state");
         LogLevel logLevel = LogLevel.VERBOSE;
         QSLogger$logTileUpdated$2 qSLogger$logTileUpdated$2 = QSLogger$logTileUpdated$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logTileUpdated$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logTileUpdated$2);
             obtain.setStr1(str);
             CharSequence charSequence = state.label;
             String str2 = null;
@@ -145,7 +144,7 @@ public final class QSLogger {
                 obtain.setBool2(signalState.activityIn);
                 obtain.setBool3(signalState.activityOut);
             }
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -153,12 +152,12 @@ public final class QSLogger {
         Intrinsics.checkParameterIsNotNull(str, "containerName");
         LogLevel logLevel = LogLevel.DEBUG;
         QSLogger$logPanelExpanded$2 qSLogger$logPanelExpanded$2 = QSLogger$logPanelExpanded$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("QSLog", logLevel, qSLogger$logPanelExpanded$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("QSLog", logLevel, qSLogger$logPanelExpanded$2);
             obtain.setStr1(str);
             obtain.setBool1(z);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 }

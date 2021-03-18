@@ -9,6 +9,6 @@ final class MiuiKeyButtonRipple$setPressedSoftware$1 implements Runnable {
     }
 
     public final void run() {
-        this.this$0.enterSoftware();
+        MiuiKeyButtonRipple.access$enterSoftware(this.this$0);
     }
 }

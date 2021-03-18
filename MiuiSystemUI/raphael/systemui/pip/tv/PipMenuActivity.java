@@ -22,9 +22,11 @@ public class PipMenuActivity extends Activity implements PipManager.Listener {
     private boolean mRestorePipSizeWhenClose;
     private TvPipComponent mTvPipComponent;
 
+    @Override // com.android.systemui.pip.tv.PipManager.Listener
     public void onPipEntered(String str) {
     }
 
+    @Override // com.android.systemui.pip.tv.PipManager.Listener
     public void onShowPipMenu() {
     }
 
@@ -51,13 +53,13 @@ public class PipMenuActivity extends Activity implements PipManager.Listener {
         Animator loadAnimator2 = AnimatorInflater.loadAnimator(this, C0007R$anim.tv_pip_menu_fade_out_animation);
         this.mFadeOutAnimation = loadAnimator2;
         loadAnimator2.setTarget(this.mPipControlsViewController.getView());
-        onPipMenuActionsChanged(getIntent().getParcelableExtra("custom_actions"));
+        onPipMenuActionsChanged((ParceledListSlice) getIntent().getParcelableExtra("custom_actions"));
     }
 
     /* access modifiers changed from: protected */
     public void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        onPipMenuActionsChanged(getIntent().getParcelableExtra("custom_actions"));
+        onPipMenuActionsChanged((ParceledListSlice) getIntent().getParcelableExtra("custom_actions"));
     }
 
     private void restorePipAndFinish() {
@@ -89,19 +91,23 @@ public class PipMenuActivity extends Activity implements PipManager.Listener {
         restorePipAndFinish();
     }
 
+    @Override // com.android.systemui.pip.tv.PipManager.Listener
     public void onPipActivityClosed() {
         finish();
     }
 
+    @Override // com.android.systemui.pip.tv.PipManager.Listener
     public void onPipMenuActionsChanged(ParceledListSlice parceledListSlice) {
         this.mPipControlsViewController.setActions(parceledListSlice != null && !parceledListSlice.getList().isEmpty() ? parceledListSlice.getList() : Collections.EMPTY_LIST);
     }
 
+    @Override // com.android.systemui.pip.tv.PipManager.Listener
     public void onMoveToFullscreen() {
         this.mRestorePipSizeWhenClose = false;
         finish();
     }
 
+    @Override // com.android.systemui.pip.tv.PipManager.Listener
     public void onPipResizeAboutToStart() {
         finish();
         this.mPipManager.suspendPipResizing(1);

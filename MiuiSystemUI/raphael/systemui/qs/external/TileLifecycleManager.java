@@ -26,8 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class TileLifecycleManager extends BroadcastReceiver implements IQSTileService, ServiceConnection, IBinder.DeathRecipient {
     private int mBindRetryDelay;
     private int mBindTryCount;
-    /* access modifiers changed from: private */
-    public boolean mBound;
+    private boolean mBound;
     private final BroadcastDispatcher mBroadcastDispatcher;
     private TileChangeListener mChangeListener;
     private IBinder mClickBinder;
@@ -202,6 +201,8 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
             this.mWrapper = null;
             if (this.mBound && checkComponentState()) {
                 this.mHandler.postDelayed(new Runnable() {
+                    /* class com.android.systemui.qs.external.TileLifecycleManager.AnonymousClass1 */
+
                     public void run() {
                         if (TileLifecycleManager.this.mBound) {
                             TileLifecycleManager.this.setBindService(true);
@@ -226,7 +227,7 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
         intentFilter.addDataScheme("package");
         try {
             this.mPackageReceiverRegistered.set(true);
-            this.mContext.registerReceiverAsUser(this, this.mUser, intentFilter, (String) null, this.mHandler);
+            this.mContext.registerReceiverAsUser(this, this.mUser, intentFilter, null, this.mHandler);
         } catch (Exception e) {
             this.mPackageReceiverRegistered.set(false);
             Log.e("TileLifecycleManager", "Could not register package receiver", e);

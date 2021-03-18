@@ -63,30 +63,8 @@ public class DozeScreenBrightness extends BroadcastReceiver implements DozeMachi
         }
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public DozeScreenBrightness(android.content.Context r16, com.android.systemui.doze.DozeMachine.Service r17, android.hardware.SensorManager r18, android.hardware.Sensor r19, com.android.systemui.broadcast.BroadcastDispatcher r20, com.android.systemui.doze.DozeHost r21, android.os.Handler r22, com.android.systemui.doze.AlwaysOnDisplayPolicy r23) {
-        /*
-            r15 = this;
-            r0 = r23
-            android.content.res.Resources r1 = r16.getResources()
-            r2 = 17694890(0x10e00aa, float:2.6081757E-38)
-            int r11 = r1.getInteger(r2)
-            int[] r12 = r0.screenBrightnessArray
-            int[] r13 = r0.dimmingScrimArray
-            boolean r14 = DEBUG_AOD_BRIGHTNESS
-            r3 = r15
-            r4 = r16
-            r5 = r17
-            r6 = r18
-            r7 = r19
-            r8 = r20
-            r9 = r21
-            r10 = r22
-            r3.<init>(r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.doze.DozeScreenBrightness.<init>(android.content.Context, com.android.systemui.doze.DozeMachine$Service, android.hardware.SensorManager, android.hardware.Sensor, com.android.systemui.broadcast.BroadcastDispatcher, com.android.systemui.doze.DozeHost, android.os.Handler, com.android.systemui.doze.AlwaysOnDisplayPolicy):void");
+    public DozeScreenBrightness(Context context, DozeMachine.Service service, SensorManager sensorManager, Sensor sensor, BroadcastDispatcher broadcastDispatcher, DozeHost dozeHost, Handler handler, AlwaysOnDisplayPolicy alwaysOnDisplayPolicy) {
+        this(context, service, sensorManager, sensor, broadcastDispatcher, dozeHost, handler, context.getResources().getInteger(17694890), alwaysOnDisplayPolicy.screenBrightnessArray, alwaysOnDisplayPolicy.dimmingScrimArray, DEBUG_AOD_BRIGHTNESS);
     }
 
     /* renamed from: com.android.systemui.doze.DozeScreenBrightness$1  reason: invalid class name */
@@ -105,37 +83,37 @@ public class DozeScreenBrightness extends BroadcastReceiver implements DozeMachi
                 com.android.systemui.doze.DozeMachine$State[] r0 = com.android.systemui.doze.DozeMachine.State.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State = r0
+                com.android.systemui.doze.DozeScreenBrightness.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State = r0
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.INITIALIZED     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = com.android.systemui.doze.DozeScreenBrightness.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = com.android.systemui.doze.DozeScreenBrightness.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_REQUEST_PULSE     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
             L_0x0028:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int[] r0 = com.android.systemui.doze.DozeScreenBrightness.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0033 }
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE_AOD_DOCKED     // Catch:{ NoSuchFieldError -> 0x0033 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
                 r2 = 4
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
             L_0x0033:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x003e }
+                int[] r0 = com.android.systemui.doze.DozeScreenBrightness.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x003e }
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.DOZE     // Catch:{ NoSuchFieldError -> 0x003e }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
                 r2 = 5
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
             L_0x003e:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int[] r0 = com.android.systemui.doze.DozeScreenBrightness.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x0049 }
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.FINISH     // Catch:{ NoSuchFieldError -> 0x0049 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
                 r2 = 6
@@ -147,6 +125,7 @@ public class DozeScreenBrightness extends BroadcastReceiver implements DozeMachi
         }
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         boolean z = false;
         switch (AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()]) {

@@ -49,8 +49,7 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
     private ClassLoaderFilter mParentClassLoader;
     private final PluginEnabler mPluginEnabler;
     private final PluginInitializer mPluginInitializer;
-    /* access modifiers changed from: private */
-    public final ArrayMap<PluginListener<?>, PluginInstanceManager> mPluginMap;
+    private final ArrayMap<PluginListener<?>, PluginInstanceManager> mPluginMap;
     private final PluginPrefs mPluginPrefs;
     private final ArraySet<String> mWhitelistedPlugins;
 
@@ -74,12 +73,15 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         this.mPluginInitializer = pluginInitializer;
         Thread.setUncaughtExceptionPreHandler(new PluginExceptionHandler(uncaughtExceptionHandler));
         new Handler(this.mLooper).post(new Runnable(this) {
+            /* class com.android.systemui.shared.plugins.PluginManagerImpl.AnonymousClass1 */
+
             public void run() {
                 pluginInitializer.onPluginManagerInit();
             }
         });
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginManager
     public String[] getWhitelistedPlugins() {
         return (String[]) this.mWhitelistedPlugins.toArray(new String[0]);
     }
@@ -88,14 +90,17 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         return this.mPluginEnabler;
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginManager
     public <T extends Plugin> void addPluginListener(PluginListener<T> pluginListener, Class<?> cls) {
-        addPluginListener(pluginListener, cls, false);
+        addPluginListener((PluginListener) pluginListener, cls, false);
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginManager
     public <T extends Plugin> void addPluginListener(PluginListener<T> pluginListener, Class<?> cls, boolean z) {
         addPluginListener(PluginManager.Helper.getAction(cls), pluginListener, cls, z);
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginManager
     public <T extends Plugin> void addPluginListener(String str, PluginListener<T> pluginListener, Class<?> cls) {
         addPluginListener(str, pluginListener, cls, false);
     }
@@ -110,37 +115,16 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         startListening();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:10:0x0022, code lost:
-        return;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void removePluginListener(com.android.systemui.plugins.PluginListener<?> r2) {
-        /*
-            r1 = this;
-            monitor-enter(r1)
-            android.util.ArrayMap<com.android.systemui.plugins.PluginListener<?>, com.android.systemui.shared.plugins.PluginInstanceManager> r0 = r1.mPluginMap     // Catch:{ all -> 0x0023 }
-            boolean r0 = r0.containsKey(r2)     // Catch:{ all -> 0x0023 }
-            if (r0 != 0) goto L_0x000b
-            monitor-exit(r1)     // Catch:{ all -> 0x0023 }
-            return
-        L_0x000b:
-            android.util.ArrayMap<com.android.systemui.plugins.PluginListener<?>, com.android.systemui.shared.plugins.PluginInstanceManager> r0 = r1.mPluginMap     // Catch:{ all -> 0x0023 }
-            java.lang.Object r2 = r0.remove(r2)     // Catch:{ all -> 0x0023 }
-            com.android.systemui.shared.plugins.PluginInstanceManager r2 = (com.android.systemui.shared.plugins.PluginInstanceManager) r2     // Catch:{ all -> 0x0023 }
-            r2.destroy()     // Catch:{ all -> 0x0023 }
-            android.util.ArrayMap<com.android.systemui.plugins.PluginListener<?>, com.android.systemui.shared.plugins.PluginInstanceManager> r2 = r1.mPluginMap     // Catch:{ all -> 0x0023 }
-            int r2 = r2.size()     // Catch:{ all -> 0x0023 }
-            if (r2 != 0) goto L_0x0021
-            r1.stopListening()     // Catch:{ all -> 0x0023 }
-        L_0x0021:
-            monitor-exit(r1)     // Catch:{ all -> 0x0023 }
-            return
-        L_0x0023:
-            r2 = move-exception
-            monitor-exit(r1)     // Catch:{ all -> 0x0023 }
-            throw r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.shared.plugins.PluginManagerImpl.removePluginListener(com.android.systemui.plugins.PluginListener):void");
+    @Override // com.android.systemui.shared.plugins.PluginManager
+    public void removePluginListener(PluginListener<?> pluginListener) {
+        synchronized (this) {
+            if (this.mPluginMap.containsKey(pluginListener)) {
+                this.mPluginMap.remove(pluginListener).destroy();
+                if (this.mPluginMap.size() == 0) {
+                    stopListening();
+                }
+            }
+        }
     }
 
     private void startListening() {
@@ -171,8 +155,8 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         String str2 = TAG;
         if ("android.intent.action.USER_UNLOCKED".equals(intent.getAction())) {
             synchronized (this) {
-                for (PluginInstanceManager loadAll : this.mPluginMap.values()) {
-                    loadAll.loadAll();
+                for (PluginInstanceManager pluginInstanceManager : this.mPluginMap.values()) {
+                    pluginInstanceManager.loadAll();
                 }
             }
         } else if ("com.android.systemui.action.DISABLE_PLUGIN".equals(intent.getAction())) {
@@ -213,12 +197,12 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
             }
             synchronized (this) {
                 if (!"android.intent.action.PACKAGE_REMOVED".equals(intent.getAction())) {
-                    for (PluginInstanceManager onPackageChange : this.mPluginMap.values()) {
-                        onPackageChange.onPackageChange(encodedSchemeSpecificPart);
+                    for (PluginInstanceManager pluginInstanceManager2 : this.mPluginMap.values()) {
+                        pluginInstanceManager2.onPackageChange(encodedSchemeSpecificPart);
                     }
                 } else {
-                    for (PluginInstanceManager onPackageRemoved : this.mPluginMap.values()) {
-                        onPackageRemoved.onPackageRemoved(encodedSchemeSpecificPart);
+                    for (PluginInstanceManager pluginInstanceManager3 : this.mPluginMap.values()) {
+                        pluginInstanceManager3.onPackageRemoved(encodedSchemeSpecificPart);
                     }
                 }
             }
@@ -254,6 +238,7 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         return this.mParentClassLoader;
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginManager
     public <T> boolean dependsOn(Plugin plugin, Class<T> cls) {
         synchronized (this) {
             for (int i = 0; i < this.mPluginMap.size(); i++) {
@@ -310,7 +295,8 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         return false;
     }
 
-    private static class ClassLoaderFilter extends ClassLoader {
+    /* access modifiers changed from: private */
+    public static class ClassLoaderFilter extends ClassLoader {
         private final ClassLoader mBase;
         private final String mPackage;
 
@@ -321,6 +307,7 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         }
 
         /* access modifiers changed from: protected */
+        @Override // java.lang.ClassLoader
         public Class<?> loadClass(String str, boolean z) throws ClassNotFoundException {
             if (!str.startsWith(this.mPackage)) {
                 super.loadClass(str, z);
@@ -344,8 +331,8 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
             boolean checkStack = checkStack(th);
             if (!checkStack) {
                 synchronized (this) {
-                    for (PluginInstanceManager disableAll : PluginManagerImpl.this.mPluginMap.values()) {
-                        checkStack |= disableAll.disableAll();
+                    for (PluginInstanceManager pluginInstanceManager : PluginManagerImpl.this.mPluginMap.values()) {
+                        checkStack |= pluginInstanceManager.disableAll();
                     }
                 }
             }
@@ -361,10 +348,11 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
                 return false;
             }
             synchronized (this) {
+                StackTraceElement[] stackTrace = th.getStackTrace();
                 z = false;
-                for (StackTraceElement stackTraceElement : th.getStackTrace()) {
-                    for (PluginInstanceManager checkAndDisable : PluginManagerImpl.this.mPluginMap.values()) {
-                        z |= checkAndDisable.checkAndDisable(stackTraceElement.getClassName());
+                for (StackTraceElement stackTraceElement : stackTrace) {
+                    for (PluginInstanceManager pluginInstanceManager : PluginManagerImpl.this.mPluginMap.values()) {
+                        z |= pluginInstanceManager.checkAndDisable(stackTraceElement.getClassName());
                     }
                 }
             }

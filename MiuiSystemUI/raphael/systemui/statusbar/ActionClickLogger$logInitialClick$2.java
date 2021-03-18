@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ActionClickLogger.kt */
-final class ActionClickLogger$logInitialClick$2 extends Lambda implements Function1<LogMessage, String> {
+public final class ActionClickLogger$logInitialClick$2 extends Lambda implements Function1<LogMessage, String> {
     public static final ActionClickLogger$logInitialClick$2 INSTANCE = new ActionClickLogger$logInitialClick$2();
 
     ActionClickLogger$logInitialClick$2() {

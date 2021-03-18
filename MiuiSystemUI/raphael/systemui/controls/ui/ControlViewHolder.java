@@ -39,8 +39,11 @@ import java.util.List;
 import java.util.Set;
 import kotlin.TypeCastException;
 import kotlin.Unit;
+import kotlin.collections.CollectionsKt__CollectionsKt;
+import kotlin.collections.SetsKt__SetsKt;
 import kotlin.jvm.JvmClassMappingKt;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$IntRef;
 import kotlin.jvm.internal.Reflection;
@@ -52,10 +55,9 @@ import org.jetbrains.annotations.Nullable;
 public final class ControlViewHolder {
     private static final int[] ATTR_DISABLED = {-16842910};
     private static final int[] ATTR_ENABLED = {16842910};
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
-    private static final Set<Integer> FORCE_PANEL_DEVICES = SetsKt__SetsKt.setOf(49, 50);
-    /* access modifiers changed from: private */
-    public final GradientDrawable baseLayer;
+    public static final Companion Companion = new Companion(null);
+    private static final Set<Integer> FORCE_PANEL_DEVICES = SetsKt__SetsKt.setOf((Object[]) new Integer[]{49, 50});
+    private final GradientDrawable baseLayer;
     @Nullable
     private Behavior behavior;
     @NotNull
@@ -73,18 +75,14 @@ public final class ControlViewHolder {
     private boolean isLoading;
     @Nullable
     private ControlAction lastAction;
-    /* access modifiers changed from: private */
-    public Dialog lastChallengeDialog;
+    private Dialog lastChallengeDialog;
     @NotNull
     private final ViewGroup layout;
     private CharSequence nextStatusText = "";
     private final Function0<Unit> onDialogCancel;
-    /* access modifiers changed from: private */
-    public ValueAnimator stateAnimator;
-    /* access modifiers changed from: private */
-    public final TextView status;
-    /* access modifiers changed from: private */
-    public Animator statusAnimator;
+    private ValueAnimator stateAnimator;
+    private final TextView status;
+    private Animator statusAnimator;
     @NotNull
     private final TextView subtitle;
     @NotNull
@@ -173,29 +171,27 @@ public final class ControlViewHolder {
 
         @NotNull
         public final KClass<? extends Behavior> findBehaviorClass(int i, @NotNull ControlTemplate controlTemplate, int i2) {
-            Class<ToggleRangeBehavior> cls = ToggleRangeBehavior.class;
-            Class<TouchBehavior> cls2 = TouchBehavior.class;
             Intrinsics.checkParameterIsNotNull(controlTemplate, "template");
             if (i != 1) {
                 return Reflection.getOrCreateKotlinClass(StatusBehavior.class);
             }
             if (i2 == 50) {
-                return Reflection.getOrCreateKotlinClass(cls2);
+                return Reflection.getOrCreateKotlinClass(TouchBehavior.class);
             }
-            if (Intrinsics.areEqual((Object) controlTemplate, (Object) ControlTemplate.NO_TEMPLATE)) {
-                return Reflection.getOrCreateKotlinClass(cls2);
+            if (Intrinsics.areEqual(controlTemplate, ControlTemplate.NO_TEMPLATE)) {
+                return Reflection.getOrCreateKotlinClass(TouchBehavior.class);
             }
             if (controlTemplate instanceof ToggleTemplate) {
                 return Reflection.getOrCreateKotlinClass(ToggleBehavior.class);
             }
             if (controlTemplate instanceof StatelessTemplate) {
-                return Reflection.getOrCreateKotlinClass(cls2);
+                return Reflection.getOrCreateKotlinClass(TouchBehavior.class);
             }
             if (controlTemplate instanceof ToggleRangeTemplate) {
-                return Reflection.getOrCreateKotlinClass(cls);
+                return Reflection.getOrCreateKotlinClass(ToggleRangeBehavior.class);
             }
             if (controlTemplate instanceof RangeTemplate) {
-                return Reflection.getOrCreateKotlinClass(cls);
+                return Reflection.getOrCreateKotlinClass(ToggleRangeBehavior.class);
             }
             if (controlTemplate instanceof TemperatureControlTemplate) {
                 return Reflection.getOrCreateKotlinClass(TemperatureControlBehavior.class);
@@ -314,7 +310,7 @@ public final class ControlViewHolder {
                 this.controlActionCoordinator.runPendingAction(controlWithState.getCi().getControlId());
             }
             this.isLoading = false;
-            this.behavior = bindBehavior$default(this, this.behavior, Companion.findBehaviorClass(getControlStatus(), getControlTemplate(), getDeviceType()), 0, 4, (Object) null);
+            this.behavior = bindBehavior$default(this, this.behavior, Companion.findBehaviorClass(getControlStatus(), getControlTemplate(), getDeviceType()), 0, 4, null);
             updateContentDescription();
         }
     }
@@ -407,7 +403,7 @@ public final class ControlViewHolder {
     }
 
     public final boolean usePanel() {
-        return FORCE_PANEL_DEVICES.contains(Integer.valueOf(getDeviceType())) || Intrinsics.areEqual((Object) getControlTemplate(), (Object) ControlTemplate.NO_TEMPLATE);
+        return FORCE_PANEL_DEVICES.contains(Integer.valueOf(getDeviceType())) || Intrinsics.areEqual(getControlTemplate(), ControlTemplate.NO_TEMPLATE);
     }
 
     public static /* synthetic */ Behavior bindBehavior$default(ControlViewHolder controlViewHolder, Behavior behavior2, KClass kClass, int i, int i2, Object obj) {
@@ -420,10 +416,10 @@ public final class ControlViewHolder {
     @NotNull
     public final Behavior bindBehavior(@Nullable Behavior behavior2, @NotNull KClass<? extends Behavior> kClass, int i) {
         Intrinsics.checkParameterIsNotNull(kClass, "clazz");
-        if (behavior2 == null || (!Intrinsics.areEqual((Object) Reflection.getOrCreateKotlinClass(behavior2.getClass()), (Object) kClass))) {
+        if (behavior2 == null || (!Intrinsics.areEqual(Reflection.getOrCreateKotlinClass(behavior2.getClass()), kClass))) {
             behavior2 = (Behavior) JvmClassMappingKt.getJavaClass(kClass).newInstance();
             behavior2.initialize(this);
-            this.layout.setAccessibilityDelegate((View.AccessibilityDelegate) null);
+            this.layout.setAccessibilityDelegate(null);
         }
         ControlWithState controlWithState = this.cws;
         if (controlWithState != null) {
@@ -459,7 +455,7 @@ public final class ControlViewHolder {
             ControlWithState controlWithState2 = this.cws;
             if (controlWithState2 != null) {
                 Control control = controlWithState2.getControl();
-                boolean z3 = Intrinsics.areEqual((Object) charSequence, (Object) this.status.getText()) ? false : z2;
+                boolean z3 = Intrinsics.areEqual(charSequence, this.status.getText()) ? false : z2;
                 animateStatusChange(z3, new ControlViewHolder$applyRenderInfo$1(this, z, charSequence, lookup, colorStateList, control));
                 animateBackgroundChange(z3, z, lookup.getEnabledBackground());
                 return;
@@ -508,13 +504,13 @@ public final class ControlViewHolder {
                 } else {
                     i2 = customColor.getColorForState(new int[]{16842910}, customColor.getDefaultColor());
                 }
-                list = CollectionsKt__CollectionsKt.listOf(Integer.valueOf(i2), 255);
+                list = CollectionsKt__CollectionsKt.listOf((Object[]) new Integer[]{Integer.valueOf(i2), 255});
             } else {
                 Intrinsics.throwUninitializedPropertyAccessException("cws");
                 throw null;
             }
         } else {
-            list = CollectionsKt__CollectionsKt.listOf(Integer.valueOf(this.context.getResources().getColor(C0011R$color.control_default_background, this.context.getTheme())), 0);
+            list = CollectionsKt__CollectionsKt.listOf((Object[]) new Integer[]{Integer.valueOf(this.context.getResources().getColor(C0011R$color.control_default_background, this.context.getTheme())), 0});
         }
         ref$IntRef.element = ((Number) list.get(0)).intValue();
         ref$IntRef2.element = ((Number) list.get(1)).intValue();
@@ -532,24 +528,10 @@ public final class ControlViewHolder {
                 ColorStateList color3 = this.baseLayer.getColor();
                 int defaultColor2 = color3 != null ? color3.getDefaultColor() : blendARGB;
                 float alpha = this.layout.getAlpha();
-                int[] iArr = {this.clipLayer.getAlpha(), ref$IntRef2.element};
-                GradientDrawable gradientDrawable2 = gradientDrawable;
-                int i3 = defaultColor;
-                int i4 = defaultColor2;
-                int i5 = blendARGB;
-                float f = alpha;
-                int i6 = color;
-                ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1 controlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1 = r0;
-                Ref$IntRef ref$IntRef3 = ref$IntRef;
-                Ref$IntRef ref$IntRef4 = ref$IntRef;
-                ValueAnimator ofInt = ValueAnimator.ofInt(iArr);
-                boolean z3 = z;
-                int i7 = blendARGB;
-                Ref$IntRef ref$IntRef5 = ref$IntRef2;
-                ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1 controlViewHolder$animateBackgroundChange$$inlined$apply$lambda$12 = new ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1(gradientDrawable2, i3, i4, i5, f, this, i6, ref$IntRef3, z3, ref$IntRef5);
-                ofInt.addUpdateListener(controlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1);
-                ofInt.addListener(new ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$2(gradientDrawable2, i3, i4, i7, f, this, i6, ref$IntRef4, z3, ref$IntRef5));
-                ofInt.setDuration(700);
+                ValueAnimator ofInt = ValueAnimator.ofInt(this.clipLayer.getAlpha(), ref$IntRef2.element);
+                ofInt.addUpdateListener(new ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$1(gradientDrawable, defaultColor, defaultColor2, blendARGB, alpha, this, color, ref$IntRef, z, ref$IntRef2));
+                ofInt.addListener(new ControlViewHolder$animateBackgroundChange$$inlined$apply$lambda$2(gradientDrawable, defaultColor, defaultColor2, blendARGB, alpha, this, color, ref$IntRef, z, ref$IntRef2));
+                ofInt.setDuration(700L);
                 ofInt.setInterpolator(Interpolators.CONTROL_STATE);
                 ofInt.start();
                 this.stateAnimator = ofInt;
@@ -573,24 +555,24 @@ public final class ControlViewHolder {
             function0.invoke();
         } else if (this.isLoading) {
             function0.invoke();
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.status, "alpha", new float[]{0.45f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.status, "alpha", 0.45f);
             ofFloat.setRepeatMode(2);
             ofFloat.setRepeatCount(-1);
-            ofFloat.setDuration(500);
+            ofFloat.setDuration(500L);
             ofFloat.setInterpolator(Interpolators.LINEAR);
             ofFloat.setStartDelay(900);
             ofFloat.start();
             this.statusAnimator = ofFloat;
         } else {
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.status, "alpha", new float[]{0.0f});
-            ofFloat2.setDuration(200);
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.status, "alpha", 0.0f);
+            ofFloat2.setDuration(200L);
             ofFloat2.setInterpolator(Interpolators.LINEAR);
             ofFloat2.addListener(new ControlViewHolder$animateStatusChange$$inlined$apply$lambda$1(function0));
-            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(this.status, "alpha", new float[]{1.0f});
-            ofFloat3.setDuration(200);
+            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(this.status, "alpha", 1.0f);
+            ofFloat3.setDuration(200L);
             ofFloat3.setInterpolator(Interpolators.LINEAR);
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playSequentially(new Animator[]{ofFloat2, ofFloat3});
+            animatorSet.playSequentially(ofFloat2, ofFloat3);
             animatorSet.addListener(new ControlViewHolder$animateStatusChange$$inlined$apply$lambda$2(this, ofFloat2, ofFloat3));
             animatorSet.start();
             this.statusAnimator = animatorSet;
@@ -620,7 +602,7 @@ public final class ControlViewHolder {
             return;
         }
         if (this.icon.getImageTintList() != null) {
-            this.icon.setImageTintList((ColorStateList) null);
+            this.icon.setImageTintList(null);
         }
         this.icon.setImageIcon(customIcon);
     }

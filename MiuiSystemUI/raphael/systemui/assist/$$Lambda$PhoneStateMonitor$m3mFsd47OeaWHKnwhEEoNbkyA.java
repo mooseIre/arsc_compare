@@ -12,6 +12,7 @@ public final /* synthetic */ class $$Lambda$PhoneStateMonitor$m3mFsd47OeaWHKnwhE
     private /* synthetic */ $$Lambda$PhoneStateMonitor$m3mFsd47OeaWHKnwhEEoNbkyA() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return Boolean.valueOf(((StatusBar) ((Lazy) obj).get()).isBouncerShowing());
     }

@@ -27,6 +27,7 @@ public final class DependencyProvider_ProvidesBroadcastDispatcherFactory impleme
         this.loggerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public BroadcastDispatcher get() {
         return provideInstance(this.module, this.contextProvider, this.backgroundLooperProvider, this.backgroundExecutorProvider, this.dumpManagerProvider, this.loggerProvider);
     }

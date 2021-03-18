@@ -11,6 +11,7 @@ public final class RecordingController_Factory implements Factory<RecordingContr
         this.broadcastDispatcherProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public RecordingController get() {
         return provideInstance(this.broadcastDispatcherProvider);
     }

@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.transition.AutoTransition;
+import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -82,9 +83,9 @@ public final class ChannelEditorListView extends LinearLayout {
     public final void highlightChannel(@NotNull NotificationChannel notificationChannel) {
         Intrinsics.checkParameterIsNotNull(notificationChannel, "channel");
         Assert.isMainThread();
-        for (ChannelRow next : this.channelRows) {
-            if (Intrinsics.areEqual((Object) next.getChannel(), (Object) notificationChannel)) {
-                next.playHighlight();
+        for (ChannelRow channelRow : this.channelRows) {
+            if (Intrinsics.areEqual(channelRow.getChannel(), notificationChannel)) {
+                channelRow.playHighlight();
             }
         }
     }
@@ -95,19 +96,19 @@ public final class ChannelEditorListView extends LinearLayout {
         if (channelEditorDialogController != null) {
             boolean areAppNotificationsEnabled = channelEditorDialogController.areAppNotificationsEnabled();
             AutoTransition autoTransition = new AutoTransition();
-            autoTransition.setDuration(200);
-            autoTransition.addListener(new ChannelEditorListView$updateRows$1(this));
+            autoTransition.setDuration(200L);
+            autoTransition.addListener((Transition.TransitionListener) new ChannelEditorListView$updateRows$1(this));
             TransitionManager.beginDelayedTransition(this, autoTransition);
-            for (ChannelRow removeView : this.channelRows) {
-                removeView(removeView);
+            for (ChannelRow channelRow : this.channelRows) {
+                removeView(channelRow);
             }
             this.channelRows.clear();
             updateAppControlRow(areAppNotificationsEnabled);
             if (areAppNotificationsEnabled) {
                 LayoutInflater from = LayoutInflater.from(getContext());
-                for (NotificationChannel addChannelRow : this.channels) {
+                for (NotificationChannel notificationChannel : this.channels) {
                     Intrinsics.checkExpressionValueIsNotNull(from, "inflater");
-                    addChannelRow(addChannelRow, from);
+                    addChannelRow(notificationChannel, from);
                 }
                 return;
             }
@@ -144,7 +145,7 @@ public final class ChannelEditorListView extends LinearLayout {
                 TextView channelName = appControlView2.getChannelName();
                 Context context = getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "context");
-                channelName.setText(context.getResources().getString(C0021R$string.notification_channel_dialog_title, new Object[]{this.appName}));
+                channelName.setText(context.getResources().getString(C0021R$string.notification_channel_dialog_title, this.appName));
                 AppControlView appControlView3 = this.appControlRow;
                 if (appControlView3 != null) {
                     appControlView3.getSwitch().setChecked(z);

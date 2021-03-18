@@ -35,6 +35,7 @@ public final class NotifPipelineInitializer_Factory implements Factory<NotifPipe
         this.notifViewManagerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public NotifPipelineInitializer get() {
         return provideInstance(this.pipelineWrapperProvider, this.groupCoalescerProvider, this.notifCollectionProvider, this.listBuilderProvider, this.notifCoordinatorsProvider, this.notifInflaterProvider, this.dumpManagerProvider, this.featureFlagsProvider, this.notifViewManagerProvider);
     }

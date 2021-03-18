@@ -58,21 +58,23 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
     private NotificationSwipeActionHelper.SnoozeOption mSelectedOption;
     private TextView mSelectedOptionText;
     private NotificationSwipeActionHelper mSnoozeListener;
-    /* access modifiers changed from: private */
-    public ViewGroup mSnoozeOptionContainer;
+    private ViewGroup mSnoozeOptionContainer;
     private List<NotificationSwipeActionHelper.SnoozeOption> mSnoozeOptions;
     private View mSnoozeView;
     private boolean mSnoozing;
     private TextView mUndoButton;
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean isLeavebehind() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean needsFalsingProtection() {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean shouldBeSaved() {
         return true;
     }
@@ -143,12 +145,9 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
             undoSnooze(this.mUndoButton);
             return true;
         }
-        int i2 = 0;
-        while (i2 < this.mSnoozeOptions.size()) {
+        for (int i2 = 0; i2 < this.mSnoozeOptions.size(); i2++) {
             NotificationSwipeActionHelper.SnoozeOption snoozeOption = this.mSnoozeOptions.get(i2);
-            if (snoozeOption.getAccessibilityAction() == null || snoozeOption.getAccessibilityAction().getId() != i) {
-                i2++;
-            } else {
+            if (snoozeOption.getAccessibilityAction() != null && snoozeOption.getAccessibilityAction().getId() == i) {
                 setSelected(snoozeOption, true);
                 return true;
             }
@@ -218,16 +217,16 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
             i3 = C0019R$plurals.snoozeMinuteOptions;
         }
         int i4 = z ? i / 60 : i;
-        String quantityString = resources.getQuantityString(i3, i4, new Object[]{Integer.valueOf(i4)});
-        String format = String.format(resources.getString(C0021R$string.snoozed_for_time), new Object[]{quantityString});
+        String quantityString = resources.getQuantityString(i3, i4, Integer.valueOf(i4));
+        String format = String.format(resources.getString(C0021R$string.snoozed_for_time), quantityString);
         AccessibilityNodeInfo.AccessibilityAction accessibilityAction = new AccessibilityNodeInfo.AccessibilityAction(i2, quantityString);
         int indexOf = format.indexOf(quantityString);
         if (indexOf == -1) {
-            return new NotificationSnoozeOption(this, (SnoozeCriterion) null, i, quantityString, format, accessibilityAction);
+            return new NotificationSnoozeOption(this, null, i, quantityString, format, accessibilityAction);
         }
         SpannableString spannableString = new SpannableString(format);
         spannableString.setSpan(new StyleSpan(1), indexOf, quantityString.length() + indexOf, 0);
-        return new NotificationSnoozeOption(this, (SnoozeCriterion) null, i, quantityString, spannableString, accessibilityAction);
+        return new NotificationSnoozeOption(this, null, i, quantityString, spannableString, accessibilityAction);
     }
 
     private void createOptionViews() {
@@ -286,10 +285,11 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         this.mSnoozeOptionContainer.setVisibility(0);
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mExpandAnimation = animatorSet2;
-        animatorSet2.playTogether(new Animator[]{ofFloat, ofFloat2});
-        this.mExpandAnimation.setDuration(150);
+        animatorSet2.playTogether(ofFloat, ofFloat2);
+        this.mExpandAnimation.setDuration(150L);
         this.mExpandAnimation.setInterpolator(z ? Interpolators.ALPHA_IN : Interpolators.ALPHA_OUT);
         this.mExpandAnimation.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.statusbar.notification.row.NotificationSnooze.AnonymousClass1 */
             boolean cancelled = false;
 
             public void onAnimationCancel(Animator animator) {
@@ -353,23 +353,28 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
         this.mGutsContainer.closeControls(view, false);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public int getActualHeight() {
         return this.mExpanded ? getHeight() : this.mCollapsedHeight;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean willBeRemoved() {
         return this.mSnoozing;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public View getContentView() {
         setSelected(this.mDefaultOption, false);
         return this;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void setGutsParent(NotificationGuts notificationGuts) {
         this.mGutsContainer = notificationGuts;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean handleCloseControls(boolean z, boolean z2) {
         NotificationSwipeActionHelper.SnoozeOption snoozeOption;
         if (!this.mExpanded || z2) {
@@ -401,22 +406,27 @@ public class NotificationSnooze extends LinearLayout implements NotificationGuts
             this.mAction = accessibilityAction;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption
         public SnoozeCriterion getSnoozeCriterion() {
             return this.mCriterion;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption
         public CharSequence getDescription() {
             return this.mDescription;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption
         public CharSequence getConfirmation() {
             return this.mConfirmation;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption
         public int getMinutesToSnoozeFor() {
             return this.mMinutesToSnoozeFor;
         }
 
+        @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.SnoozeOption
         public AccessibilityNodeInfo.AccessibilityAction getAccessibilityAction() {
             return this.mAction;
         }

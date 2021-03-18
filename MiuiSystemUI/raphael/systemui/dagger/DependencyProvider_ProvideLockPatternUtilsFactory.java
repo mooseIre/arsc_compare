@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideLockPatternUtilsFactory implements 
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public LockPatternUtils get() {
         return provideInstance(this.module, this.contextProvider);
     }

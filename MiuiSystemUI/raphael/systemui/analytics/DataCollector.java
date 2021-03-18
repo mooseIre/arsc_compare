@@ -25,28 +25,28 @@ import java.io.IOException;
 public class DataCollector implements SensorEventListener {
     private static DataCollector sInstance;
     private boolean mAllowReportRejectedTouch = false;
-    /* access modifiers changed from: private */
-    public boolean mCollectBadTouches = false;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private boolean mCollectBadTouches = false;
+    private final Context mContext;
     private boolean mCornerSwiping = false;
     private SensorLoggerSession mCurrentSession = null;
-    /* access modifiers changed from: private */
-    public boolean mDisableUnlocking = false;
+    private boolean mDisableUnlocking = false;
     private boolean mEnableCollector = false;
-    /* access modifiers changed from: private */
-    public FalsingPlugin mFalsingPlugin = null;
+    private FalsingPlugin mFalsingPlugin = null;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final PluginListener mPluginListener = new PluginListener<FalsingPlugin>() {
+        /* class com.android.systemui.analytics.DataCollector.AnonymousClass2 */
+
         public void onPluginConnected(FalsingPlugin falsingPlugin, Context context) {
-            FalsingPlugin unused = DataCollector.this.mFalsingPlugin = falsingPlugin;
+            DataCollector.this.mFalsingPlugin = falsingPlugin;
         }
 
         public void onPluginDisconnected(FalsingPlugin falsingPlugin) {
-            FalsingPlugin unused = DataCollector.this.mFalsingPlugin = null;
+            DataCollector.this.mFalsingPlugin = null;
         }
     };
     protected final ContentObserver mSettingsObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.analytics.DataCollector.AnonymousClass1 */
+
         public void onChange(boolean z) {
             DataCollector.this.updateConfiguration();
         }
@@ -80,7 +80,8 @@ public class DataCollector implements SensorEventListener {
     }
 
     /* access modifiers changed from: private */
-    public void updateConfiguration() {
+    /* access modifiers changed from: public */
+    private void updateConfiguration() {
         boolean z = true;
         boolean z2 = Build.IS_DEBUGGABLE && Settings.Secure.getInt(this.mContext.getContentResolver(), "data_collector_enable", 0) != 0;
         this.mEnableCollector = z2;
@@ -143,15 +144,17 @@ public class DataCollector implements SensorEventListener {
 
     private void queueSession(final SensorLoggerSession sensorLoggerSession) {
         AsyncTask.execute(new Runnable() {
+            /* class com.android.systemui.analytics.DataCollector.AnonymousClass3 */
+
             public void run() {
                 byte[] byteArray = MessageNano.toByteArray(sensorLoggerSession.toProto());
                 boolean z = true;
                 if (DataCollector.this.mFalsingPlugin != null) {
-                    FalsingPlugin access$100 = DataCollector.this.mFalsingPlugin;
+                    FalsingPlugin falsingPlugin = DataCollector.this.mFalsingPlugin;
                     if (sensorLoggerSession.getResult() != 1) {
                         z = false;
                     }
-                    access$100.dataCollected(z, byteArray);
+                    falsingPlugin.dataCollected(z, byteArray);
                     return;
                 }
                 String absolutePath = DataCollector.this.mContext.getFilesDir().getAbsolutePath();

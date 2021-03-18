@@ -17,7 +17,6 @@ import android.text.TextUtils;
 import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.TextView;
 import com.android.systemui.C0015R$id;
@@ -33,8 +32,8 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
     private int mUid;
 
     public void onCreate(Bundle bundle) {
-        CharSequence charSequence;
         String str;
+        String str2;
         super.onCreate(bundle);
         this.mPackageName = getCallingPackage();
         this.mService = IMediaProjectionManager.Stub.asInterface(ServiceManager.getService("media_projection"));
@@ -56,41 +55,41 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 TextPaint textPaint = new TextPaint();
                 textPaint.setTextSize(42.0f);
                 if (Utils.isHeadlessRemoteDisplayProvider(packageManager, this.mPackageName)) {
-                    charSequence = getString(C0021R$string.media_projection_dialog_service_text);
-                    str = getString(C0021R$string.media_projection_dialog_service_title);
+                    str = getString(C0021R$string.media_projection_dialog_service_text);
+                    str2 = getString(C0021R$string.media_projection_dialog_service_title);
                 } else {
-                    String charSequence2 = applicationInfo.loadLabel(packageManager).toString();
-                    int length = charSequence2.length();
+                    String charSequence = applicationInfo.loadLabel(packageManager).toString();
+                    int length = charSequence.length();
                     int i2 = 0;
                     while (true) {
                         if (i2 >= length) {
                             break;
                         }
-                        int codePointAt = charSequence2.codePointAt(i2);
+                        int codePointAt = charSequence.codePointAt(i2);
                         int type = Character.getType(codePointAt);
                         if (type == 13 || type == 15 || type == 14) {
-                            charSequence2 = charSequence2.substring(0, i2) + "…";
+                            charSequence = charSequence.substring(0, i2) + "…";
                         } else {
                             i2 += Character.charCount(codePointAt);
                         }
                     }
-                    charSequence2 = charSequence2.substring(0, i2) + "…";
-                    if (charSequence2.isEmpty()) {
-                        charSequence2 = this.mPackageName;
+                    charSequence = charSequence.substring(0, i2) + "…";
+                    if (charSequence.isEmpty()) {
+                        charSequence = this.mPackageName;
                     }
-                    String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(TextUtils.ellipsize(charSequence2, textPaint, 500.0f, TextUtils.TruncateAt.END).toString());
+                    String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(TextUtils.ellipsize(charSequence, textPaint, 500.0f, TextUtils.TruncateAt.END).toString());
                     String string = getString(C0021R$string.media_projection_dialog_text, new Object[]{unicodeWrap});
                     SpannableString spannableString = new SpannableString(string);
                     int indexOf = string.indexOf(unicodeWrap);
                     if (indexOf >= 0) {
                         spannableString.setSpan(new StyleSpan(1), indexOf, unicodeWrap.length() + indexOf, 0);
                     }
-                    str = getString(C0021R$string.media_projection_dialog_title, new Object[]{unicodeWrap});
-                    charSequence = spannableString;
+                    str2 = getString(C0021R$string.media_projection_dialog_title, new Object[]{unicodeWrap});
+                    str = spannableString;
                 }
-                View inflate = View.inflate(this, C0017R$layout.media_projection_dialog_title, (ViewGroup) null);
-                ((TextView) inflate.findViewById(C0015R$id.dialog_title)).setText(str);
-                AlertDialog create = new AlertDialog.Builder(this, 8).setCustomTitle(inflate).setMessage(charSequence).setPositiveButton(C0021R$string.media_projection_action_text, this).setNegativeButton(17039360, this).setOnCancelListener(this).create();
+                View inflate = View.inflate(this, C0017R$layout.media_projection_dialog_title, null);
+                ((TextView) inflate.findViewById(C0015R$id.dialog_title)).setText(str2);
+                AlertDialog create = new AlertDialog.Builder(this, 8).setCustomTitle(inflate).setMessage(str).setPositiveButton(C0021R$string.media_projection_action_text, this).setNegativeButton(17039360, this).setOnCancelListener(this).create();
                 this.mDialog = create;
                 create.create();
                 this.mDialog.getButton(-1).setFilterTouchesWhenObscured(true);

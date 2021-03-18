@@ -22,10 +22,12 @@ public class PluginEnablerImpl implements PluginEnabler {
         this.mPm = packageManager;
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginEnabler
     public void setEnabled(ComponentName componentName) {
         setDisabled(componentName, 0);
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginEnabler
     public void setDisabled(ComponentName componentName, int i) {
         boolean z = i == 0;
         this.mPm.setComponentEnabledSetting(componentName, z ? 1 : 2, 1);
@@ -36,10 +38,12 @@ public class PluginEnablerImpl implements PluginEnabler {
         }
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginEnabler
     public boolean isEnabled(ComponentName componentName) {
         return this.mPm.getComponentEnabledSetting(componentName) != 2;
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginEnabler
     public int getDisableReason(ComponentName componentName) {
         if (isEnabled(componentName)) {
             return 0;

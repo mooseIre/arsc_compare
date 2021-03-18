@@ -17,6 +17,7 @@ public final class SystemUiTraceProto extends MessageNano {
         return this;
     }
 
+    @Override // com.google.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
         EdgeBackGestureHandlerProto edgeBackGestureHandlerProto = this.edgeBackGestureHandler;
         if (edgeBackGestureHandlerProto != null) {
@@ -26,6 +27,7 @@ public final class SystemUiTraceProto extends MessageNano {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.google.protobuf.nano.MessageNano
     public int computeSerializedSize() {
         int computeSerializedSize = super.computeSerializedSize();
         EdgeBackGestureHandlerProto edgeBackGestureHandlerProto = this.edgeBackGestureHandler;

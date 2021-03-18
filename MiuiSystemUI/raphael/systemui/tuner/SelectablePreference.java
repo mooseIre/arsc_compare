@@ -10,6 +10,7 @@ import com.android.systemui.statusbar.ScalingDrawableWrapper;
 public class SelectablePreference extends CheckBoxPreference {
     private final int mSize;
 
+    @Override // androidx.preference.Preference
     public String toString() {
         return "";
     }
@@ -21,7 +22,8 @@ public class SelectablePreference extends CheckBoxPreference {
         this.mSize = (int) TypedValue.applyDimension(1, 32.0f, context.getResources().getDisplayMetrics());
     }
 
+    @Override // androidx.preference.Preference
     public void setIcon(Drawable drawable) {
-        super.setIcon((Drawable) new ScalingDrawableWrapper(drawable, ((float) this.mSize) / ((float) drawable.getIntrinsicWidth())));
+        super.setIcon(new ScalingDrawableWrapper(drawable, ((float) this.mSize) / ((float) drawable.getIntrinsicWidth())));
     }
 }

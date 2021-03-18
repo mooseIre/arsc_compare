@@ -103,14 +103,14 @@ public class AnimationFilter {
         this.animateAlpha |= animationFilter.animateAlpha;
         this.animateX |= animationFilter.animateX;
         this.animateY |= animationFilter.animateY;
-        this.animateYViews.addAll(animationFilter.animateYViews);
+        this.animateYViews.addAll((ArraySet<? extends View>) animationFilter.animateYViews);
         this.animateZ |= animationFilter.animateZ;
         this.animateHeight |= animationFilter.animateHeight;
         this.animateTopInset |= animationFilter.animateTopInset;
         this.animateDimmed |= animationFilter.animateDimmed;
         this.animateHideSensitive |= animationFilter.animateHideSensitive;
         this.hasDelays |= animationFilter.hasDelays;
-        this.mAnimatedProperties.addAll(animationFilter.mAnimatedProperties);
+        this.mAnimatedProperties.addAll((ArraySet<? extends Property>) animationFilter.mAnimatedProperties);
     }
 
     public void reset() {

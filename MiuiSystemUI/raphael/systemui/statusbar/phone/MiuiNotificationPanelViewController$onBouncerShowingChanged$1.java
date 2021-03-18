@@ -5,8 +5,9 @@ import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationPanelViewController.kt */
-final class MiuiNotificationPanelViewController$onBouncerShowingChanged$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class MiuiNotificationPanelViewController$onBouncerShowingChanged$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
     MiuiNotificationPanelViewController$onBouncerShowingChanged$1(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {

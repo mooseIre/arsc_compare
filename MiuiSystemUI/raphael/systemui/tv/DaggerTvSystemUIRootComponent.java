@@ -1010,42 +1010,31 @@ import javax.inject.Provider;
 
 public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootComponent {
     private static final Provider ABSENT_JDK_OPTIONAL_PROVIDER = InstanceFactory.create(Optional.empty());
-    /* access modifiers changed from: private */
-    public Provider<AccessibilityController> accessibilityControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AccessibilityManagerWrapper> accessibilityManagerWrapperProvider;
+    private Provider<AccessibilityController> accessibilityControllerProvider;
+    private Provider<AccessibilityManagerWrapper> accessibilityManagerWrapperProvider;
     private ActionClickLogger_Factory actionClickLoggerProvider;
     private GlobalScreenshot_ActionProxyReceiver_Factory actionProxyReceiverProvider;
     private Provider<ActivityIntentHelper> activityIntentHelperProvider;
-    /* access modifiers changed from: private */
-    public Provider<ActivityStarterDelegate> activityStarterDelegateProvider;
+    private Provider<ActivityStarterDelegate> activityStarterDelegateProvider;
     private AirplaneModeTile_Factory airplaneModeTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<AppIconsManager> appIconsManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AppMiniWindowManager> appMiniWindowManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AppOpsControllerImpl> appOpsControllerImplProvider;
+    private Provider<AppIconsManager> appIconsManagerProvider;
+    private Provider<AppMiniWindowManager> appMiniWindowManagerProvider;
+    private Provider<AppOpsControllerImpl> appOpsControllerImplProvider;
     private Provider<AppOpsCoordinator> appOpsCoordinatorProvider;
     private Provider<AssistHandleBehaviorController> assistHandleBehaviorControllerProvider;
     private Provider assistHandleLikeHomeBehaviorProvider;
     private Provider assistHandleOffBehaviorProvider;
     private Provider assistHandleReminderExpBehaviorProvider;
     private Provider<AssistLogger> assistLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AssistManager> assistManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AsyncSensorManager> asyncSensorManagerProvider;
+    private Provider<AssistManager> assistManagerProvider;
+    private Provider<AsyncSensorManager> asyncSensorManagerProvider;
     private Provider<AuthController> authControllerProvider;
     private AutoBrightnessTile_Factory autoBrightnessTileProvider;
     private AutoTileManager_Factory autoTileManagerProvider;
     private BatterySaverTile_Factory batterySaverTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<SystemClock> bindSystemClockProvider;
-    /* access modifiers changed from: private */
-    public Provider<BiometricUnlockController> biometricUnlockControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<BluetoothControllerImpl> bluetoothControllerImplProvider;
+    private Provider<SystemClock> bindSystemClockProvider;
+    private Provider<BiometricUnlockController> biometricUnlockControllerProvider;
+    private Provider<BluetoothControllerImpl> bluetoothControllerImplProvider;
     private BluetoothTile_Factory bluetoothTileProvider;
     private Provider<BlurUtils> blurUtilsProvider;
     private Provider<BootCompleteCacheImpl> bootCompleteCacheImplProvider;
@@ -1063,199 +1052,137 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<StatusBarNotificationActivityStarter.Builder> builderProvider4;
     private AutoAddTracker_Builder_Factory builderProvider5;
     private Provider<BypassHeadsUpNotifier> bypassHeadsUpNotifierProvider;
-    /* access modifiers changed from: private */
-    public Provider<CallStateControllerImpl> callStateControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<CastControllerImpl> castControllerImplProvider;
+    private Provider<CallStateControllerImpl> callStateControllerImplProvider;
+    private Provider<CastControllerImpl> castControllerImplProvider;
     private CastTile_Factory castTileProvider;
     private CellularTile_Factory cellularTileProvider;
     private Provider<ChannelEditorDialogController> channelEditorDialogControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ClockManager> clockManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<CloudDataManager> cloudDataManagerProvider;
+    private Provider<ClockManager> clockManagerProvider;
+    private Provider<CloudDataManager> cloudDataManagerProvider;
     private ColorInversionTile_Factory colorInversionTileProvider;
-    /* access modifiers changed from: private */
-    public Context context;
+    private Context context;
     private Provider<ContextComponentResolver> contextComponentResolverProvider;
-    /* access modifiers changed from: private */
-    public Provider<Context> contextProvider;
+    private Provider<Context> contextProvider;
     private Provider<ControlActionCoordinatorImpl> controlActionCoordinatorImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<ControlCenterActivityStarter> controlCenterActivityStarterProvider;
-    /* access modifiers changed from: private */
-    public Provider<ControlPanelController> controlPanelControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ControlPanelWindowManager> controlPanelWindowManagerProvider;
+    private Provider<ControlCenterActivityStarter> controlCenterActivityStarterProvider;
+    private Provider<ControlPanelController> controlPanelControllerProvider;
+    private Provider<ControlPanelWindowManager> controlPanelWindowManagerProvider;
     private Provider<ControlsBindingControllerImpl> controlsBindingControllerImplProvider;
     private Provider<ControlsComponent> controlsComponentProvider;
     private Provider<ControlsControllerImpl> controlsControllerImplProvider;
     private ControlsEditingActivity_Factory controlsEditingActivityProvider;
     private ControlsFavoritingActivity_Factory controlsFavoritingActivityProvider;
     private Provider<ControlsListingControllerImpl> controlsListingControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<ControlsPluginManager> controlsPluginManagerProvider;
+    private Provider<ControlsPluginManager> controlsPluginManagerProvider;
     private ControlsProviderSelectorActivity_Factory controlsProviderSelectorActivityProvider;
     private ControlsRequestDialog_Factory controlsRequestDialogProvider;
     private Provider<ControlsUiControllerImpl> controlsUiControllerImplProvider;
     private Provider<ConversationCoordinator> conversationCoordinatorProvider;
-    /* access modifiers changed from: private */
-    public Provider<ConversationNotificationManager> conversationNotificationManagerProvider;
+    private Provider<ConversationNotificationManager> conversationNotificationManagerProvider;
     private ConversationNotificationProcessor_Factory conversationNotificationProcessorProvider;
-    /* access modifiers changed from: private */
-    public Provider<CustomCarrierObserver> customCarrierObserverProvider;
-    /* access modifiers changed from: private */
-    public Provider<DarkIconDispatcherImpl> darkIconDispatcherImplProvider;
+    private Provider<CustomCarrierObserver> customCarrierObserverProvider;
+    private Provider<DarkIconDispatcherImpl> darkIconDispatcherImplProvider;
     private DataSaverTile_Factory dataSaverTileProvider;
     private DateFormatUtil_Factory dateFormatUtilProvider;
     private Provider<DefaultUiController> defaultUiControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DemoModeController> demoModeControllerProvider;
+    private Provider<DemoModeController> demoModeControllerProvider;
     private Provider<DeviceConfigHelper> deviceConfigHelperProvider;
-    /* access modifiers changed from: private */
-    public Provider<DeviceProvisionedControllerImpl> deviceProvisionedControllerImplProvider;
+    private Provider<DeviceProvisionedControllerImpl> deviceProvisionedControllerImplProvider;
     private Provider<DeviceProvisionedCoordinator> deviceProvisionedCoordinatorProvider;
     private Provider<DismissCallbackRegistry> dismissCallbackRegistryProvider;
-    /* access modifiers changed from: private */
-    public Provider<DisplayController> displayControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DisplayImeController> displayImeControllerProvider;
+    private Provider<DisplayController> displayControllerProvider;
+    private Provider<DisplayImeController> displayImeControllerProvider;
     private DndTile_Factory dndTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<DockManagerImpl> dockManagerImplProvider;
+    private Provider<DockManagerImpl> dockManagerImplProvider;
     private DozeFactory_Factory dozeFactoryProvider;
-    /* access modifiers changed from: private */
-    public Provider<DozeLog> dozeLogProvider;
+    private Provider<DozeLog> dozeLogProvider;
     private DozeLogger_Factory dozeLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DozeParameters> dozeParametersProvider;
+    private Provider<DozeParameters> dozeParametersProvider;
     private Provider<DozeScrimController> dozeScrimControllerProvider;
     private Provider<DozeServiceHost> dozeServiceHostProvider;
     private DozeService_Factory dozeServiceProvider;
     private DriveModeControllerImpl_Factory driveModeControllerImplProvider;
     private DriveModeTile_Factory driveModeTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<DualClockObserver> dualClockObserverProvider;
+    private Provider<DualClockObserver> dualClockObserverProvider;
     private DumpHandler_Factory dumpHandlerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DumpManager> dumpManagerProvider;
+    private Provider<DumpManager> dumpManagerProvider;
     private DynamicChildBindController_Factory dynamicChildBindControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DynamicPrivacyController> dynamicPrivacyControllerProvider;
+    private Provider<DynamicPrivacyController> dynamicPrivacyControllerProvider;
     private EditTile_Factory editTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<EnhancedEstimatesImpl> enhancedEstimatesImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<EventTracker> eventTrackerProvider;
+    private Provider<EnhancedEstimatesImpl> enhancedEstimatesImplProvider;
+    private Provider<EventTracker> eventTrackerProvider;
     private Provider<ExpandableNotificationRowComponent.Builder> expandableNotificationRowComponentBuilderProvider;
     private NotificationLogger_ExpansionStateLogger_Factory expansionStateLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ExtensionControllerImpl> extensionControllerImplProvider;
+    private Provider<ExtensionControllerImpl> extensionControllerImplProvider;
     private FallbackTakeScreenshotService_Factory fallbackTakeScreenshotServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<FalsingManagerProxy> falsingManagerProxyProvider;
-    /* access modifiers changed from: private */
-    public Provider<FeatureFlags> featureFlagsProvider;
+    private Provider<FalsingManagerProxy> falsingManagerProxyProvider;
+    private Provider<FeatureFlags> featureFlagsProvider;
     private Provider<Files> filesProvider;
-    /* access modifiers changed from: private */
-    public Provider<FiveGControllerImpl> fiveGControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<FlashlightControllerImpl> flashlightControllerImplProvider;
+    private Provider<FiveGControllerImpl> fiveGControllerImplProvider;
+    private Provider<FlashlightControllerImpl> flashlightControllerImplProvider;
     private FlashlightTile_Factory flashlightTileProvider;
     private Provider<FloatingContentCoordinator> floatingContentCoordinatorProvider;
-    /* access modifiers changed from: private */
-    public Provider<ForceBlackObserver> forceBlackObserverProvider;
-    /* access modifiers changed from: private */
-    public Provider<ForegroundServiceController> foregroundServiceControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ForegroundServiceDismissalFeatureController> foregroundServiceDismissalFeatureControllerProvider;
+    private Provider<ForceBlackObserver> forceBlackObserverProvider;
+    private Provider<ForegroundServiceController> foregroundServiceControllerProvider;
+    private Provider<ForegroundServiceDismissalFeatureController> foregroundServiceDismissalFeatureControllerProvider;
     private ForegroundServiceLifetimeExtender_Factory foregroundServiceLifetimeExtenderProvider;
-    /* access modifiers changed from: private */
-    public Provider<ForegroundServiceNotificationListener> foregroundServiceNotificationListenerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ForegroundServiceSectionController> foregroundServiceSectionControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<FragmentService> fragmentServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<GarbageMonitor> garbageMonitorProvider;
+    private Provider<ForegroundServiceNotificationListener> foregroundServiceNotificationListenerProvider;
+    private Provider<ForegroundServiceSectionController> foregroundServiceSectionControllerProvider;
+    private Provider<FragmentService> fragmentServiceProvider;
+    private Provider<GarbageMonitor> garbageMonitorProvider;
     private Provider<GlobalActionsComponent> globalActionsComponentProvider;
     private GlobalActionsDialog_Factory globalActionsDialogProvider;
     private GlobalActionsImpl_Factory globalActionsImplProvider;
     private Provider<GlobalScreenshot> globalScreenshotProvider;
     private GroupCoalescerLogger_Factory groupCoalescerLoggerProvider;
     private GroupCoalescer_Factory groupCoalescerProvider;
-    /* access modifiers changed from: private */
-    public Provider<HapticFeedBackImpl> hapticFeedBackImplProvider;
+    private Provider<HapticFeedBackImpl> hapticFeedBackImplProvider;
     private Provider<HeadsUpController> headsUpControllerProvider;
     private Provider<HeadsUpCoordinator> headsUpCoordinatorProvider;
     private Provider<HeadsUpViewBinder> headsUpViewBinderProvider;
     private Provider<HeadsetPolicy> headsetPolicyProvider;
     private HideNotifsForOtherUsersCoordinator_Factory hideNotifsForOtherUsersCoordinatorProvider;
     private Provider<HighPriorityProvider> highPriorityProvider;
-    /* access modifiers changed from: private */
-    public Provider<HotspotControllerImpl> hotspotControllerImplProvider;
+    private Provider<HotspotControllerImpl> hotspotControllerImplProvider;
     private HotspotTile_Factory hotspotTileProvider;
     private IconBuilder_Factory iconBuilderProvider;
     private Provider<InitController> initControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<InjectionInflationController> injectionInflationControllerProvider;
+    private Provider<InjectionInflationController> injectionInflationControllerProvider;
     private Provider<InstantAppNotifier> instantAppNotifierProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardBottomAreaInjector> keyguardBottomAreaInjectorProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardBypassController> keyguardBypassControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardClockInjector> keyguardClockInjectorProvider;
+    private Provider<KeyguardBottomAreaInjector> keyguardBottomAreaInjectorProvider;
+    private Provider<KeyguardBypassController> keyguardBypassControllerProvider;
+    private Provider<KeyguardClockInjector> keyguardClockInjectorProvider;
     private Provider<KeyguardCoordinator> keyguardCoordinatorProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardDismissUtil> keyguardDismissUtilProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardEnvironmentImpl> keyguardEnvironmentImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardIndicationController> keyguardIndicationControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardIndicationInjector> keyguardIndicationInjectorProvider;
+    private Provider<KeyguardDismissUtil> keyguardDismissUtilProvider;
+    private Provider<KeyguardEnvironmentImpl> keyguardEnvironmentImplProvider;
+    private Provider<KeyguardIndicationController> keyguardIndicationControllerProvider;
+    private Provider<KeyguardIndicationInjector> keyguardIndicationInjectorProvider;
     private Provider<KeyguardLifecyclesDispatcher> keyguardLifecyclesDispatcherProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardNegative1PageInjector> keyguardNegative1PageInjectorProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardNotificationController> keyguardNotificationControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardPanelViewInjector> keyguardPanelViewInjectorProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardSecurityModel> keyguardSecurityModelProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardSensorInjector> keyguardSensorInjectorProvider;
+    private Provider<KeyguardNegative1PageInjector> keyguardNegative1PageInjectorProvider;
+    private Provider<KeyguardNotificationController> keyguardNotificationControllerProvider;
+    private Provider<KeyguardPanelViewInjector> keyguardPanelViewInjectorProvider;
+    private Provider<KeyguardSecurityModel> keyguardSecurityModelProvider;
+    private Provider<KeyguardSensorInjector> keyguardSensorInjectorProvider;
     private KeyguardService_Factory keyguardServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardStateControllerImpl> keyguardStateControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardUpdateMonitorInjector> keyguardUpdateMonitorInjectorProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
-    /* access modifiers changed from: private */
-    public Provider<KeyguardViewMediatorInjector> keyguardViewMediatorInjectorProvider;
+    private Provider<KeyguardStateControllerImpl> keyguardStateControllerImplProvider;
+    private Provider<KeyguardUpdateMonitorInjector> keyguardUpdateMonitorInjectorProvider;
+    private Provider<KeyguardUpdateMonitor> keyguardUpdateMonitorProvider;
+    private Provider<KeyguardViewMediatorInjector> keyguardViewMediatorInjectorProvider;
     private Provider<LatencyTester> latencyTesterProvider;
-    /* access modifiers changed from: private */
-    public Provider<LeakReporter> leakReporterProvider;
-    /* access modifiers changed from: private */
-    public Provider<LightBarController> lightBarControllerProvider;
+    private Provider<LeakReporter> leakReporterProvider;
+    private Provider<LightBarController> lightBarControllerProvider;
     private Provider<LightsOutNotifController> lightsOutNotifControllerProvider;
     private LocalMediaManagerFactory_Factory localMediaManagerFactoryProvider;
-    /* access modifiers changed from: private */
-    public Provider<LocationControllerImpl> locationControllerImplProvider;
+    private Provider<LocationControllerImpl> locationControllerImplProvider;
     private LocationTile_Factory locationTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<LockScreenMagazineController> lockScreenMagazineControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<LockscreenGestureLogger> lockscreenGestureLoggerProvider;
+    private Provider<LockScreenMagazineController> lockScreenMagazineControllerProvider;
+    private Provider<LockscreenGestureLogger> lockscreenGestureLoggerProvider;
     private Provider<LockscreenLockIconController> lockscreenLockIconControllerProvider;
     private Provider<LockscreenWallpaper> lockscreenWallpaperProvider;
     private Provider<LogBufferEulogizer> logBufferEulogizerProvider;
     private LogBufferFreezer_Factory logBufferFreezerProvider;
     private Provider<LowPriorityInflationHelper> lowPriorityInflationHelperProvider;
-    /* access modifiers changed from: private */
-    public Provider<ManagedProfileControllerImpl> managedProfileControllerImplProvider;
+    private Provider<ManagedProfileControllerImpl> managedProfileControllerImplProvider;
     private Provider<Map<Class<?>, Provider<Activity>>> mapOfClassOfAndProviderOfActivityProvider;
     private Provider<Map<Class<?>, Provider<BroadcastReceiver>>> mapOfClassOfAndProviderOfBroadcastReceiverProvider;
     private Provider<Map<Class<?>, Provider<RecentsImplementation>>> mapOfClassOfAndProviderOfRecentsImplementationProvider;
@@ -1266,49 +1193,36 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private MediaControllerFactory_Factory mediaControllerFactoryProvider;
     private MediaCoordinator_Factory mediaCoordinatorProvider;
     private Provider<MediaDataCombineLatest> mediaDataCombineLatestProvider;
-    /* access modifiers changed from: private */
-    public Provider<MediaDataFilter> mediaDataFilterProvider;
+    private Provider<MediaDataFilter> mediaDataFilterProvider;
     private Provider<MediaDataManager> mediaDataManagerProvider;
     private Provider<MediaDeviceManager> mediaDeviceManagerProvider;
     private MediaFeatureFlag_Factory mediaFeatureFlagProvider;
-    /* access modifiers changed from: private */
-    public Provider<MediaHierarchyManager> mediaHierarchyManagerProvider;
+    private Provider<MediaHierarchyManager> mediaHierarchyManagerProvider;
     private MediaHost_Factory mediaHostProvider;
     private Provider<MediaHostStatesManager> mediaHostStatesManagerProvider;
     private Provider<MediaResumeListener> mediaResumeListenerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MediaTimeoutListener> mediaTimeoutListenerProvider;
+    private Provider<MediaTimeoutListener> mediaTimeoutListenerProvider;
     private MediaViewController_Factory mediaViewControllerProvider;
     private Provider<MemoryMonitor> memoryMonitorProvider;
     private GarbageMonitor_MemoryTile_Factory memoryTileProvider;
     private MiuiAirplaneModeTile_Factory miuiAirplaneModeTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiAlarmControllerImpl> miuiAlarmControllerImplProvider;
+    private Provider<MiuiAlarmControllerImpl> miuiAlarmControllerImplProvider;
     private MiuiCellularTile_Factory miuiCellularTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiChargeController> miuiChargeControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiChargeManager> miuiChargeManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiDozeServiceHost> miuiDozeServiceHostProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiDripLeftStatusBarIconControllerImpl> miuiDripLeftStatusBarIconControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiFaceUnlockManager> miuiFaceUnlockManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiFastUnlockController> miuiFastUnlockControllerProvider;
+    private Provider<MiuiChargeController> miuiChargeControllerProvider;
+    private Provider<MiuiChargeManager> miuiChargeManagerProvider;
+    private Provider<MiuiDozeServiceHost> miuiDozeServiceHostProvider;
+    private Provider<MiuiDripLeftStatusBarIconControllerImpl> miuiDripLeftStatusBarIconControllerImplProvider;
+    private Provider<MiuiFaceUnlockManager> miuiFaceUnlockManagerProvider;
+    private Provider<MiuiFastUnlockController> miuiFastUnlockControllerProvider;
     private Provider<MiuiFlashlightHelper> miuiFlashlightHelperProvider;
     private Provider<MiuiFullScreenGestureProxy> miuiFullScreenGestureProxyProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiGxzwManager> miuiGxzwManagerProvider;
+    private Provider<MiuiGxzwManager> miuiGxzwManagerProvider;
     private Provider<MiuiGxzwPolicy> miuiGxzwPolicyProvider;
     private Provider<MiuiHeadsUpPolicy> miuiHeadsUpPolicyProvider;
     private MiuiHotspotTile_Factory miuiHotspotTileProvider;
     private MiuiIconManager_Factory miuiIconManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiKeyguardMediaController> miuiKeyguardMediaControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiKeyguardWallpaperControllerImpl> miuiKeyguardWallpaperControllerImplProvider;
+    private Provider<MiuiKeyguardMediaController> miuiKeyguardMediaControllerProvider;
+    private Provider<MiuiKeyguardWallpaperControllerImpl> miuiKeyguardWallpaperControllerImplProvider;
     private MiuiMediaControlPanel_Factory miuiMediaControlPanelProvider;
     private Provider<MiuiMediaTransferManager> miuiMediaTransferManagerProvider;
     private Provider<MiuiNotificationInterruptStateProviderImpl> miuiNotificationInterruptStateProviderImplProvider;
@@ -1318,27 +1232,19 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<MiuiQSTileHostInjector> miuiQSTileHostInjectorProvider;
     private Provider<MiuiRecentProxy> miuiRecentProxyProvider;
     private Provider<MiuiStatusBarConfigurationListener> miuiStatusBarConfigurationListenerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiStatusBarPromptController> miuiStatusBarPromptControllerProvider;
+    private Provider<MiuiStatusBarPromptController> miuiStatusBarPromptControllerProvider;
     private Provider<MiuiVendorServices> miuiVendorServicesProvider;
-    /* access modifiers changed from: private */
-    public Provider<MiuiWallpaperClient> miuiWallpaperClientProvider;
+    private Provider<MiuiWallpaperClient> miuiWallpaperClientProvider;
     private Provider<MiuiWallpaperZoomOutService> miuiWallpaperZoomOutServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<ModalController> modalControllerProvider;
+    private Provider<ModalController> modalControllerProvider;
     private Provider<ModalRowInflater> modalRowInflaterProvider;
     private MuteTile_Factory muteTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<NavigationModeController> navigationModeControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NetworkControllerImpl> networkControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<NetworkSpeedController> networkSpeedControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<BubbleController> newBubbleControllerProvider;
+    private Provider<NavigationModeController> navigationModeControllerProvider;
+    private Provider<NetworkControllerImpl> networkControllerImplProvider;
+    private Provider<NetworkSpeedController> networkSpeedControllerProvider;
+    private Provider<BubbleController> newBubbleControllerProvider;
     private Provider<KeyguardViewMediator> newKeyguardViewMediatorProvider;
-    /* access modifiers changed from: private */
-    public Provider<NextAlarmControllerImpl> nextAlarmControllerImplProvider;
+    private Provider<NextAlarmControllerImpl> nextAlarmControllerImplProvider;
     private NfcTile_Factory nfcTileProvider;
     private NightDisplayTile_Factory nightDisplayTileProvider;
     private NightModeTile_Factory nightModeTileProvider;
@@ -1346,20 +1252,17 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private NotifBindPipelineLogger_Factory notifBindPipelineLoggerProvider;
     private Provider<NotifBindPipeline> notifBindPipelineProvider;
     private NotifCollectionLogger_Factory notifCollectionLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotifCollection> notifCollectionProvider;
+    private Provider<NotifCollection> notifCollectionProvider;
     private Provider<NotifCoordinators> notifCoordinatorsProvider;
     private Provider<NotifInflaterImpl> notifInflaterImplProvider;
     private Provider<NotifInflationErrorManager> notifInflationErrorManagerProvider;
     private Provider<NotifPipelineInitializer> notifPipelineInitializerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotifPipeline> notifPipelineProvider;
+    private Provider<NotifPipeline> notifPipelineProvider;
     private NotifRemoteViewCacheImpl_Factory notifRemoteViewCacheImplProvider;
     private Provider<NotifViewBarn> notifViewBarnProvider;
     private Provider<NotifViewManager> notifViewManagerProvider;
     private Provider<NotificationAlertController> notificationAlertControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationBadgeController> notificationBadgeControllerProvider;
+    private Provider<NotificationBadgeController> notificationBadgeControllerProvider;
     private Provider<NotificationClickNotifier> notificationClickNotifierProvider;
     private NotificationClickerLogger_Factory notificationClickerLoggerProvider;
     private Provider<NotificationContentInflater> notificationContentInflaterProvider;
@@ -1367,36 +1270,24 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<NotificationDynamicFpsController> notificationDynamicFpsControllerProvider;
     private NotificationEntryManagerLogger_Factory notificationEntryManagerLoggerProvider;
     private Provider<NotificationFilterController> notificationFilterControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationFilter> notificationFilterProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationGroupManager> notificationGroupManagerProvider;
+    private Provider<NotificationFilter> notificationFilterProvider;
+    private Provider<NotificationGroupManager> notificationGroupManagerProvider;
     private Provider<NotificationInteractionTracker> notificationInteractionTrackerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationLockscreenUserManagerImpl> notificationLockscreenUserManagerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationPanelNavigationBarCoordinator> notificationPanelNavigationBarCoordinatorProvider;
+    private Provider<NotificationLockscreenUserManagerImpl> notificationLockscreenUserManagerImplProvider;
+    private Provider<NotificationPanelNavigationBarCoordinator> notificationPanelNavigationBarCoordinatorProvider;
     private Provider<NotificationPanelStat> notificationPanelStatProvider;
     private Provider<NotificationPersonExtractorPluginBoundary> notificationPersonExtractorPluginBoundaryProvider;
     private NotificationRankingManager_Factory notificationRankingManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationRoundnessManager> notificationRoundnessManagerProvider;
+    private Provider<NotificationRoundnessManager> notificationRoundnessManagerProvider;
     private Provider<NotificationRowBinderImpl> notificationRowBinderImplProvider;
     private Provider<NotificationRowComponent.Builder> notificationRowComponentBuilderProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationSectionsLogger> notificationSectionsLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationSensitiveController> notificationSensitiveControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationSettingsManager> notificationSettingsManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationShadeDepthController> notificationShadeDepthControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationShadeWindowController> notificationShadeWindowControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationStat> notificationStatProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationWakeUpCoordinator> notificationWakeUpCoordinatorProvider;
+    private Provider<NotificationSectionsLogger> notificationSectionsLoggerProvider;
+    private Provider<NotificationSensitiveController> notificationSensitiveControllerProvider;
+    private Provider<NotificationSettingsManager> notificationSettingsManagerProvider;
+    private Provider<NotificationShadeDepthController> notificationShadeDepthControllerProvider;
+    private Provider<NotificationShadeWindowController> notificationShadeWindowControllerProvider;
+    private Provider<NotificationStat> notificationStatProvider;
+    private Provider<NotificationWakeUpCoordinator> notificationWakeUpCoordinatorProvider;
     private Provider<NotificationsControllerImpl> notificationsControllerImplProvider;
     private NotificationsControllerStub_Factory notificationsControllerStubProvider;
     private Provider<OLEDScreenHelper> oLEDScreenHelperProvider;
@@ -1409,239 +1300,170 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<Optional<StatusBar>> optionalOfStatusBarProvider;
     private Provider<OrientationPolicy> orientationPolicyProvider;
     private Provider<OverviewProxyRecentsImpl> overviewProxyRecentsImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<OverviewProxyService> overviewProxyServiceProvider;
+    private Provider<OverviewProxyService> overviewProxyServiceProvider;
     private Provider<PackageEventController> packageEventControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<PanelExpansionObserver> panelExpansionObserverProvider;
+    private Provider<PanelExpansionObserver> panelExpansionObserverProvider;
     private PaperModeControllerImpl_Factory paperModeControllerImplProvider;
     private PaperModeTile_Factory paperModeTileProvider;
     private Provider<PeopleHubDataSourceImpl> peopleHubDataSourceImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<PeopleHubViewAdapterImpl> peopleHubViewAdapterImplProvider;
+    private Provider<PeopleHubViewAdapterImpl> peopleHubViewAdapterImplProvider;
     private Provider<PeopleHubViewModelFactoryDataSourceImpl> peopleHubViewModelFactoryDataSourceImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<PeopleNotificationIdentifierImpl> peopleNotificationIdentifierImplProvider;
+    private Provider<PeopleNotificationIdentifierImpl> peopleNotificationIdentifierImplProvider;
     private Provider<PerformanceTools> performanceToolsProvider;
-    /* access modifiers changed from: private */
-    public Provider<PhoneSignalControllerImpl> phoneSignalControllerImplProvider;
+    private Provider<PhoneSignalControllerImpl> phoneSignalControllerImplProvider;
     private Provider<PhoneStateMonitor> phoneStateMonitorProvider;
     private PipAnimationController_Factory pipAnimationControllerProvider;
     private Provider<PipBoundsHandler> pipBoundsHandlerProvider;
-    /* access modifiers changed from: private */
-    public Provider<PipManager> pipManagerProvider;
+    private Provider<PipManager> pipManagerProvider;
     private PipMenuActivity_Factory pipMenuActivityProvider;
     private PipSnapAlgorithm_Factory pipSnapAlgorithmProvider;
     private Provider<PipSurfaceTransactionHelper> pipSurfaceTransactionHelperProvider;
     private Provider<PipTaskOrganizer> pipTaskOrganizerProvider;
     private Provider<PipUI> pipUIProvider;
-    /* access modifiers changed from: private */
-    public Provider<PluginDependencyProvider> pluginDependencyProvider;
+    private Provider<PluginDependencyProvider> pluginDependencyProvider;
     private PowerModeTile_Factory powerModeTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<PowerNotificationWarnings> powerNotificationWarningsProvider;
+    private Provider<PowerNotificationWarnings> powerNotificationWarningsProvider;
     private PowerSaverExtremeTile_Factory powerSaverExtremeTileProvider;
     private PowerSaverTile_Factory powerSaverTileProvider;
     private Provider<PowerUI> powerUIProvider;
     private PreparationCoordinatorLogger_Factory preparationCoordinatorLoggerProvider;
     private Provider<PreparationCoordinator> preparationCoordinatorProvider;
-    /* access modifiers changed from: private */
-    public Provider<ProtoTracer> protoTracerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AccessibilityManager> provideAccessibilityManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ActivityManager> provideActivityManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<ActivityManagerWrapper> provideActivityManagerWrapperProvider;
-    /* access modifiers changed from: private */
-    public Provider<AlarmManager> provideAlarmManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<Boolean> provideAllowNotificationLongPressProvider;
+    private Provider<ProtoTracer> protoTracerProvider;
+    private Provider<AccessibilityManager> provideAccessibilityManagerProvider;
+    private Provider<ActivityManager> provideActivityManagerProvider;
+    private Provider<ActivityManagerWrapper> provideActivityManagerWrapperProvider;
+    private Provider<AlarmManager> provideAlarmManagerProvider;
+    private Provider<Boolean> provideAllowNotificationLongPressProvider;
     private DependencyProvider_ProvideAlwaysOnDisplayPolicyFactory provideAlwaysOnDisplayPolicyProvider;
     private DependencyProvider_ProvideAmbientDisplayConfigurationFactory provideAmbientDisplayConfigurationProvider;
     private Provider provideAssistHandleBehaviorControllerMapProvider;
     private AssistModule_ProvideAssistHandleViewControllerFactory provideAssistHandleViewControllerProvider;
     private Provider<AssistUtils> provideAssistUtilsProvider;
     private Provider<AudioManager> provideAudioManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<AutoHideController> provideAutoHideControllerProvider;
+    private Provider<AutoHideController> provideAutoHideControllerProvider;
     private Provider<DelayableExecutor> provideBackgroundDelayableExecutorProvider;
-    /* access modifiers changed from: private */
-    public Provider<Executor> provideBackgroundExecutorProvider;
+    private Provider<Executor> provideBackgroundExecutorProvider;
     private Provider<Handler> provideBackgroundHandlerProvider;
     private Provider<RepeatableExecutor> provideBackgroundRepeatableExecutorProvider;
-    /* access modifiers changed from: private */
-    public Provider<BatteryController> provideBatteryControllerProvider;
-    /* access modifiers changed from: private */
-    public ConcurrencyModule_ProvideBgHandlerFactory provideBgHandlerProvider;
-    /* access modifiers changed from: private */
-    public Provider<Looper> provideBgLooperProvider;
+    private Provider<BatteryController> provideBatteryControllerProvider;
+    private ConcurrencyModule_ProvideBgHandlerFactory provideBgHandlerProvider;
+    private Provider<Looper> provideBgLooperProvider;
     private Provider<LogBuffer> provideBroadcastDispatcherLogBufferProvider;
-    /* access modifiers changed from: private */
-    public Provider<CommandQueue> provideCommandQueueProvider;
+    private Provider<CommandQueue> provideCommandQueueProvider;
     private Provider<CommonNotifCollection> provideCommonNotifCollectionProvider;
-    /* access modifiers changed from: private */
-    public Provider<ConfigurationController> provideConfigurationControllerProvider;
+    private Provider<ConfigurationController> provideConfigurationControllerProvider;
     private Provider<ConnectivityManager> provideConnectivityManagagerProvider;
     private Provider<ContentResolver> provideContentResolverProvider;
     private Provider<ControlCenter> provideControlCenterProvider;
     private Provider<CurrentUserContextTracker> provideCurrentUserContextTrackerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DataSaverController> provideDataSaverControllerProvider;
+    private Provider<DataSaverController> provideDataSaverControllerProvider;
     private Provider<DelayableExecutor> provideDelayableExecutorProvider;
     private Provider<DevicePolicyManager> provideDevicePolicyManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<DevicePolicyManagerWrapper> provideDevicePolicyManagerWrapperProvider;
-    /* access modifiers changed from: private */
-    public SystemServicesModule_ProvideDisplayIdFactory provideDisplayIdProvider;
-    /* access modifiers changed from: private */
-    public Provider<DisplayMetrics> provideDisplayMetricsProvider;
-    /* access modifiers changed from: private */
-    public Provider<Divider> provideDividerProvider;
+    private Provider<DevicePolicyManagerWrapper> provideDevicePolicyManagerWrapperProvider;
+    private SystemServicesModule_ProvideDisplayIdFactory provideDisplayIdProvider;
+    private Provider<DisplayMetrics> provideDisplayMetricsProvider;
+    private Provider<Divider> provideDividerProvider;
     private Provider<LogBuffer> provideDozeLogBufferProvider;
     private Provider<Executor> provideExecutorProvider;
-    /* access modifiers changed from: private */
-    public Provider<ExpandInfoController> provideExpandInfoControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<HeadsUpManagerPhone> provideHeadsUpManagerPhoneProvider;
+    private Provider<ExpandInfoController> provideExpandInfoControllerProvider;
+    private Provider<HeadsUpManagerPhone> provideHeadsUpManagerPhoneProvider;
     private Provider<IActivityManager> provideIActivityManagerProvider;
     private Provider<IBatteryStats> provideIBatteryStatsProvider;
     private Provider<IDreamManager> provideIDreamManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<INotificationManager> provideINotificationManagerProvider;
+    private Provider<INotificationManager> provideINotificationManagerProvider;
     private Provider<IPackageManager> provideIPackageManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<IStatusBarService> provideIStatusBarServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<IWindowManager> provideIWindowManagerProvider;
+    private Provider<IStatusBarService> provideIStatusBarServiceProvider;
+    private Provider<IWindowManager> provideIWindowManagerProvider;
     private Provider<KeyguardLiftController> provideKeyguardLiftControllerProvider;
     private Provider<KeyguardManager> provideKeyguardManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<LatencyTracker> provideLatencyTrackerProvider;
+    private Provider<LatencyTracker> provideLatencyTrackerProvider;
     private Provider<LauncherApps> provideLauncherAppsProvider;
-    /* access modifiers changed from: private */
-    public Provider<LeakDetector> provideLeakDetectorProvider;
-    /* access modifiers changed from: private */
-    public Provider<String> provideLeakReportEmailProvider;
-    /* access modifiers changed from: private */
-    public Provider<LocalBluetoothManager> provideLocalBluetoothControllerProvider;
+    private Provider<LeakDetector> provideLeakDetectorProvider;
+    private Provider<String> provideLeakReportEmailProvider;
+    private Provider<LocalBluetoothManager> provideLocalBluetoothControllerProvider;
     private DependencyProvider_ProvideLockPatternUtilsFactory provideLockPatternUtilsProvider;
     private Provider<LogcatEchoTracker> provideLogcatEchoTrackerProvider;
     private Provider<Executor> provideLongRunningExecutorProvider;
     private Provider<Looper> provideLongRunningLooperProvider;
     private Provider<DelayableExecutor> provideMainDelayableExecutorProvider;
     private ConcurrencyModule_ProvideMainExecutorFactory provideMainExecutorProvider;
-    /* access modifiers changed from: private */
-    public ConcurrencyModule_ProvideMainHandlerFactory provideMainHandlerProvider;
+    private ConcurrencyModule_ProvideMainHandlerFactory provideMainHandlerProvider;
     private SystemServicesModule_ProvideMediaRouter2ManagerFactory provideMediaRouter2ManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<MetricsLogger> provideMetricsLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NavigationBarController> provideNavigationBarControllerProvider;
+    private Provider<MetricsLogger> provideMetricsLoggerProvider;
+    private Provider<NavigationBarController> provideNavigationBarControllerProvider;
     private Provider<NetworkScoreManager> provideNetworkScoreManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NightDisplayListener> provideNightDisplayListenerProvider;
+    private Provider<NightDisplayListener> provideNightDisplayListenerProvider;
     private Provider<LogBuffer> provideNotifInteractionLogBufferProvider;
     private Provider<NotifRemoteViewCache> provideNotifRemoteViewCacheProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationBlockingHelperManager> provideNotificationBlockingHelperManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationEntryManager> provideNotificationEntryManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationGroupAlertTransferHelper> provideNotificationGroupAlertTransferHelperProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationGutsManager> provideNotificationGutsManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationListener> provideNotificationListenerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationLogger> provideNotificationLoggerProvider;
+    private Provider<NotificationBlockingHelperManager> provideNotificationBlockingHelperManagerProvider;
+    private Provider<NotificationEntryManager> provideNotificationEntryManagerProvider;
+    private Provider<NotificationGroupAlertTransferHelper> provideNotificationGroupAlertTransferHelperProvider;
+    private Provider<NotificationGutsManager> provideNotificationGutsManagerProvider;
+    private Provider<NotificationListener> provideNotificationListenerProvider;
+    private Provider<NotificationLogger> provideNotificationLoggerProvider;
     private Provider<NotificationManager> provideNotificationManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationMediaManager> provideNotificationMediaManagerProvider;
+    private Provider<NotificationMediaManager> provideNotificationMediaManagerProvider;
     private DependencyProvider_ProvideNotificationMessagingUtilFactory provideNotificationMessagingUtilProvider;
     private Provider<NotificationPanelLogger> provideNotificationPanelLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationRemoteInputManager> provideNotificationRemoteInputManagerProvider;
+    private Provider<NotificationRemoteInputManager> provideNotificationRemoteInputManagerProvider;
     private Provider<LogBuffer> provideNotificationSectionLogBufferProvider;
-    /* access modifiers changed from: private */
-    public Provider<NotificationViewHierarchyManager> provideNotificationViewHierarchyManagerProvider;
+    private Provider<NotificationViewHierarchyManager> provideNotificationViewHierarchyManagerProvider;
     private Provider<NotificationsController> provideNotificationsControllerProvider;
     private Provider<LogBuffer> provideNotificationsLogBufferProvider;
     private Provider<PackageManager> providePackageManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<PackageManagerWrapper> providePackageManagerWrapperProvider;
-    /* access modifiers changed from: private */
-    public Provider<PluginManager> providePluginManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<PowerManager> providePowerManagerProvider;
+    private Provider<PackageManagerWrapper> providePackageManagerWrapperProvider;
+    private Provider<PluginManager> providePluginManagerProvider;
+    private Provider<PowerManager> providePowerManagerProvider;
     private Provider<LogBuffer> provideQuickSettingsLogBufferProvider;
     private RecentsModule_ProvideRecentsImplFactory provideRecentsImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<Recents> provideRecentsProvider;
+    private Provider<Recents> provideRecentsProvider;
     private SystemServicesModule_ProvideResourcesFactory provideResourcesProvider;
-    /* access modifiers changed from: private */
-    public Provider<SensorPrivacyManager> provideSensorPrivacyManagerProvider;
+    private Provider<SensorPrivacyManager> provideSensorPrivacyManagerProvider;
     private DependencyProvider_ProvideSharePreferencesFactory provideSharePreferencesProvider;
     private Provider<ShortcutManager> provideShortcutManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<SmartReplyController> provideSmartReplyControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBar> provideStatusBarProvider;
-    /* access modifiers changed from: private */
-    public Provider<SysUiState> provideSysUiStateProvider;
+    private Provider<SmartReplyController> provideSmartReplyControllerProvider;
+    private Provider<StatusBar> provideStatusBarProvider;
+    private Provider<SysUiState> provideSysUiStateProvider;
     private Provider<Clock> provideSystemClockProvider;
     private Provider<TelecomManager> provideTelecomManagerProvider;
     private Provider<TelephonyManager> provideTelephonyManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<Handler> provideTimeTickHandlerProvider;
+    private Provider<Handler> provideTimeTickHandlerProvider;
     private Provider<TrustManager> provideTrustManagerProvider;
     private Provider<Executor> provideUiBackgroundExecutorProvider;
-    /* access modifiers changed from: private */
-    public Provider<UiEventLogger> provideUiEventLoggerProvider;
+    private Provider<UiEventLogger> provideUiEventLoggerProvider;
     private Provider<UserManager> provideUserManagerProvider;
     private Provider<Vibrator> provideVibratorProvider;
-    /* access modifiers changed from: private */
-    public Provider<VisualStabilityManager> provideVisualStabilityManagerProvider;
+    private Provider<VisualStabilityManager> provideVisualStabilityManagerProvider;
     private SystemServicesModule_ProvideWallpaperManagerFactory provideWallpaperManagerProvider;
     private Provider<WifiManager> provideWifiManagerProvider;
     private Provider<WindowManager> provideWindowManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<LayoutInflater> providerLayoutInflaterProvider;
-    /* access modifiers changed from: private */
-    public Provider<BroadcastDispatcher> providesBroadcastDispatcherProvider;
+    private Provider<LayoutInflater> providerLayoutInflaterProvider;
+    private Provider<BroadcastDispatcher> providesBroadcastDispatcherProvider;
     private Provider<Choreographer> providesChoreographerProvider;
     private Provider<Boolean> providesControlsFeatureEnabledProvider;
     private DependencyProvider_ProvidesViewMediatorCallbackFactory providesViewMediatorCallbackProvider;
     private ProximitySensor_ProximityCheck_Factory proximityCheckProvider;
     private ProximitySensor_Factory proximitySensorProvider;
-    /* access modifiers changed from: private */
-    public Provider<PulseExpansionHandler> pulseExpansionHandlerProvider;
+    private Provider<PulseExpansionHandler> pulseExpansionHandlerProvider;
     private Provider<QSFactoryImpl> qSFactoryImplProvider;
     private Provider<QSFactoryInjectorImpl> qSFactoryInjectorImplProvider;
     private QSLogger_Factory qSLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<QSTileHost> qSTileHostProvider;
+    private Provider<QSTileHost> qSTileHostProvider;
     private QuietModeTile_Factory quietModeTileProvider;
     private Provider<RankingCoordinator> rankingCoordinatorProvider;
-    /* access modifiers changed from: private */
-    public Provider<RecordingController> recordingControllerProvider;
+    private Provider<RecordingController> recordingControllerProvider;
     private RecordingService_Factory recordingServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<RegionController> regionControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<RemoteInputQuickSettingsDisabler> remoteInputQuickSettingsDisablerProvider;
+    private Provider<RegionController> regionControllerProvider;
+    private Provider<RemoteInputQuickSettingsDisabler> remoteInputQuickSettingsDisablerProvider;
     private Provider<RemoteInputUriController> remoteInputUriControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<RingerModeTrackerImpl> ringerModeTrackerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<RotationLockControllerImpl> rotationLockControllerImplProvider;
+    private Provider<RingerModeTrackerImpl> ringerModeTrackerImplProvider;
+    private Provider<RotationLockControllerImpl> rotationLockControllerImplProvider;
     private RotationLockTile_Factory rotationLockTileProvider;
     private RowContentBindStageLogger_Factory rowContentBindStageLoggerProvider;
     private Provider<RowContentBindStage> rowContentBindStageProvider;
     private ScreenButtonTile_Factory screenButtonTileProvider;
     private Provider<ScreenDecorations> screenDecorationsProvider;
-    /* access modifiers changed from: private */
-    public Provider<ScreenLifecycle> screenLifecycleProvider;
+    private Provider<ScreenLifecycle> screenLifecycleProvider;
     private ScreenLockTile_Factory screenLockTileProvider;
     private ScreenPinningRequest_Factory screenPinningRequestProvider;
     private ScreenRecordDialog_Factory screenRecordDialogProvider;
@@ -1649,106 +1471,74 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private ScreenShotTile_Factory screenShotTileProvider;
     private ScreenshotNotificationsController_Factory screenshotNotificationsControllerProvider;
     private Provider<ScrimController> scrimControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<SecurityControllerImpl> securityControllerImplProvider;
+    private Provider<SecurityControllerImpl> securityControllerImplProvider;
     private SeekBarViewModel_Factory seekBarViewModelProvider;
-    /* access modifiers changed from: private */
-    public Provider<SensorPrivacyControllerImpl> sensorPrivacyControllerImplProvider;
+    private Provider<SensorPrivacyControllerImpl> sensorPrivacyControllerImplProvider;
     private Provider<GarbageMonitor.Service> serviceProvider;
-    /* access modifiers changed from: private */
-    public Provider<SettingsManager> settingsManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<SettingsObserverImpl> settingsObserverImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<ShadeControllerImpl> shadeControllerImplProvider;
+    private Provider<SettingsManager> settingsManagerProvider;
+    private Provider<SettingsObserverImpl> settingsObserverImplProvider;
+    private Provider<ShadeControllerImpl> shadeControllerImplProvider;
     private ShadeListBuilderLogger_Factory shadeListBuilderLoggerProvider;
     private Provider<ShadeListBuilder> shadeListBuilderProvider;
     private SharedCoordinatorLogger_Factory sharedCoordinatorLoggerProvider;
     private Provider<ShortcutKeyDispatcher> shortcutKeyDispatcherProvider;
     private Provider<SizeCompatModeActivityController> sizeCompatModeActivityControllerProvider;
     private Provider<SlaveWifiHelper> slaveWifiHelperProvider;
-    /* access modifiers changed from: private */
-    public Provider<SlaveWifiSignalController> slaveWifiSignalControllerProvider;
+    private Provider<SlaveWifiSignalController> slaveWifiSignalControllerProvider;
     private Provider<SliceBroadcastRelayHandler> sliceBroadcastRelayHandlerProvider;
-    /* access modifiers changed from: private */
-    public Provider<SmartDarkObserver> smartDarkObserverProvider;
-    /* access modifiers changed from: private */
-    public Provider<SmartReplyConstants> smartReplyConstantsProvider;
+    private Provider<SmartDarkObserver> smartDarkObserverProvider;
+    private Provider<SmartReplyConstants> smartReplyConstantsProvider;
     private Provider<StatusBarComponent.Builder> statusBarComponentBuilderProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBarIconControllerImpl> statusBarIconControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBarKeyguardViewManager> statusBarKeyguardViewManagerProvider;
+    private Provider<StatusBarIconControllerImpl> statusBarIconControllerImplProvider;
+    private Provider<StatusBarKeyguardViewManager> statusBarKeyguardViewManagerProvider;
     private StatusBarNotificationActivityStarterLogger_Factory statusBarNotificationActivityStarterLoggerProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBarRemoteInputCallback> statusBarRemoteInputCallbackProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBarStateControllerImpl> statusBarStateControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBarTouchableRegionManager> statusBarTouchableRegionManagerProvider;
-    /* access modifiers changed from: private */
-    public Provider<StatusBarWindowController> statusBarWindowControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<SuperSaveModeController> superSaveModeControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<SuperStatusBarViewFactory> superStatusBarViewFactoryProvider;
+    private Provider<StatusBarRemoteInputCallback> statusBarRemoteInputCallbackProvider;
+    private Provider<StatusBarStateControllerImpl> statusBarStateControllerImplProvider;
+    private Provider<StatusBarTouchableRegionManager> statusBarTouchableRegionManagerProvider;
+    private Provider<StatusBarWindowController> statusBarWindowControllerProvider;
+    private Provider<SuperSaveModeController> superSaveModeControllerProvider;
+    private Provider<SuperStatusBarViewFactory> superStatusBarViewFactoryProvider;
     private SyncTile_Factory syncTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<SystemActions> systemActionsProvider;
+    private Provider<SystemActions> systemActionsProvider;
     private SystemUIAuxiliaryDumpService_Factory systemUIAuxiliaryDumpServiceProvider;
     private SystemUIService_Factory systemUIServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<SystemUIStat> systemUIStatProvider;
-    /* access modifiers changed from: private */
-    public Provider<SystemWindows> systemWindowsProvider;
-    /* access modifiers changed from: private */
-    public Provider<SysuiColorExtractor> sysuiColorExtractorProvider;
+    private Provider<SystemUIStat> systemUIStatProvider;
+    private Provider<SystemWindows> systemWindowsProvider;
+    private Provider<SysuiColorExtractor> sysuiColorExtractorProvider;
     private TakeScreenshotService_Factory takeScreenshotServiceProvider;
     private Provider<TargetSdkResolver> targetSdkResolverProvider;
     private Provider<ThemeOverlayController> themeOverlayControllerProvider;
     private Provider<ToastUI> toastUIProvider;
-    /* access modifiers changed from: private */
-    public Provider<ToggleManagerController> toggleManagerControllerProvider;
+    private Provider<ToggleManagerController> toggleManagerControllerProvider;
     private Provider<TransactionPool> transactionPoolProvider;
-    /* access modifiers changed from: private */
-    public Provider<TunablePadding.TunablePaddingService> tunablePaddingServiceProvider;
-    /* access modifiers changed from: private */
-    public Provider<TunerServiceImpl> tunerServiceImplProvider;
+    private Provider<TunablePadding.TunablePaddingService> tunablePaddingServiceProvider;
+    private Provider<TunerServiceImpl> tunerServiceImplProvider;
     private Provider<TvPipComponent.Builder> tvPipComponentBuilderProvider;
     private Provider<TvStatusBar> tvStatusBarProvider;
     private Provider<TvSystemUIRootComponent> tvSystemUIRootComponentProvider;
     private UiModeNightTile_Factory uiModeNightTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<UiOffloadThread> uiOffloadThreadProvider;
+    private Provider<UiOffloadThread> uiOffloadThreadProvider;
     private UsbDebuggingSecondaryUserActivity_Factory usbDebuggingSecondaryUserActivityProvider;
-    /* access modifiers changed from: private */
-    public Provider<UsbNotificationController> usbNotificationControllerProvider;
-    /* access modifiers changed from: private */
-    public Provider<UserInfoControllerImpl> userInfoControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<UserSwitcherController> userSwitcherControllerProvider;
+    private Provider<UsbNotificationController> usbNotificationControllerProvider;
+    private Provider<UserInfoControllerImpl> userInfoControllerImplProvider;
+    private Provider<UserSwitcherController> userSwitcherControllerProvider;
     private UserTile_Factory userTileProvider;
     private VibrateTile_Factory vibrateTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<VibratorHelper> vibratorHelperProvider;
+    private Provider<VibratorHelper> vibratorHelperProvider;
     private Provider<ViewLeakMonitor> viewLeakMonitorProvider;
     private Provider<VolumeDialogComponent> volumeDialogComponentProvider;
-    /* access modifiers changed from: private */
-    public Provider<VolumeDialogControllerImpl> volumeDialogControllerImplProvider;
+    private Provider<VolumeDialogControllerImpl> volumeDialogControllerImplProvider;
     private Provider<VolumeUI> volumeUIProvider;
-    /* access modifiers changed from: private */
-    public Provider<WakefulnessLifecycle> wakefulnessLifecycleProvider;
-    /* access modifiers changed from: private */
-    public Provider<WallpaperCommandSender> wallpaperCommandSenderProvider;
+    private Provider<WakefulnessLifecycle> wakefulnessLifecycleProvider;
+    private Provider<WallpaperCommandSender> wallpaperCommandSenderProvider;
     private WifiTile_Factory wifiTileProvider;
     private Provider<WindowMagnification> windowMagnificationProvider;
     private WorkLockActivity_Factory workLockActivityProvider;
     private WorkModeTile_Factory workModeTileProvider;
-    /* access modifiers changed from: private */
-    public Provider<ZenModeControllerImpl> zenModeControllerImplProvider;
-    /* access modifiers changed from: private */
-    public Provider<ZenModeViewController> zenModeViewControllerProvider;
+    private Provider<ZenModeControllerImpl> zenModeControllerImplProvider;
+    private Provider<ZenModeViewController> zenModeViewControllerProvider;
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public void inject(ContentProvider contentProvider) {
     }
 
@@ -1766,32 +1556,38 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     }
 
     /* access modifiers changed from: private */
-    public Handler getMainHandler() {
+    /* access modifiers changed from: public */
+    private Handler getMainHandler() {
         return ConcurrencyModule_ProvideMainHandlerFactory.proxyProvideMainHandler(ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper());
     }
 
     /* access modifiers changed from: private */
-    public Executor getMainExecutor() {
+    /* access modifiers changed from: public */
+    private Executor getMainExecutor() {
         return ConcurrencyModule_ProvideMainExecutorFactory.proxyProvideMainExecutor(this.context);
     }
 
     /* access modifiers changed from: private */
-    public MiuiNotificationSectionsFeatureManager getMiuiNotificationSectionsFeatureManager() {
+    /* access modifiers changed from: public */
+    private MiuiNotificationSectionsFeatureManager getMiuiNotificationSectionsFeatureManager() {
         return new MiuiNotificationSectionsFeatureManager(new DeviceConfigProxy(), this.context);
     }
 
     /* access modifiers changed from: private */
-    public Resources getMainResources() {
+    /* access modifiers changed from: public */
+    private Resources getMainResources() {
         return SystemServicesModule_ProvideResourcesFactory.proxyProvideResources(this.context);
     }
 
     /* access modifiers changed from: private */
-    public QSLogger getQSLogger() {
+    /* access modifiers changed from: public */
+    private QSLogger getQSLogger() {
         return new QSLogger(this.provideQuickSettingsLogBufferProvider.get());
     }
 
     /* access modifiers changed from: private */
-    public MediaHost getMediaHost() {
+    /* access modifiers changed from: public */
+    private MediaHost getMediaHost() {
         return new MediaHost(new MediaHost.MediaHostStateHolder(), this.mediaHierarchyManagerProvider.get(), this.mediaDataFilterProvider.get(), this.mediaHostStatesManagerProvider.get());
     }
 
@@ -1951,6 +1747,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.statusBarKeyguardViewManagerProvider = delegateFactory;
         this.miuiNotificationInterruptStateProviderImplProvider = DoubleCheck.provider(MiuiNotificationInterruptStateProviderImpl_Factory.create(this.contextProvider, this.provideContentResolverProvider, this.providePowerManagerProvider, this.provideIDreamManagerProvider, this.provideAmbientDisplayConfigurationProvider, this.notificationFilterProvider, this.provideBatteryControllerProvider, this.statusBarStateControllerImplProvider, this.provideHeadsUpManagerPhoneProvider, this.provideMainHandlerProvider, this.zenModeControllerImplProvider, this.settingsManagerProvider, this.provideCommandQueueProvider, delegateFactory, this.deviceProvisionedControllerImplProvider));
         this.expandableNotificationRowComponentBuilderProvider = new Provider<ExpandableNotificationRowComponent.Builder>() {
+            /* class com.android.systemui.tv.DaggerTvSystemUIRootComponent.AnonymousClass1 */
+
+            @Override // javax.inject.Provider
             public ExpandableNotificationRowComponent.Builder get() {
                 return new ExpandableNotificationRowComponentBuilder();
             }
@@ -2042,9 +1841,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.dynamicChildBindControllerProvider = create9;
         this.provideNotificationViewHierarchyManagerProvider = DoubleCheck.provider(StatusBarDependenciesModule_ProvideNotificationViewHierarchyManagerFactory.create(this.contextProvider, this.provideMainHandlerProvider, this.notificationLockscreenUserManagerImplProvider, this.notificationGroupManagerProvider, this.provideVisualStabilityManagerProvider, this.statusBarStateControllerImplProvider, this.provideNotificationEntryManagerProvider, this.keyguardBypassControllerProvider, this.newBubbleControllerProvider, this.dynamicPrivacyControllerProvider, this.foregroundServiceSectionControllerProvider, create9, this.lowPriorityInflationHelperProvider));
         this.provideMetricsLoggerProvider = DoubleCheck.provider(DependencyProvider_ProvideMetricsLoggerFactory.create(builder.dependencyProvider));
-        Provider<Optional<Lazy<StatusBar>>> access$400 = PresentJdkOptionalLazyProvider.of(this.provideStatusBarProvider);
-        this.optionalOfLazyOfStatusBarProvider = access$400;
-        Provider<ActivityStarterDelegate> provider15 = DoubleCheck.provider(ActivityStarterDelegate_Factory.create(access$400));
+        Provider<Optional<Lazy<StatusBar>>> of = PresentJdkOptionalLazyProvider.of(this.provideStatusBarProvider);
+        this.optionalOfLazyOfStatusBarProvider = of;
+        Provider<ActivityStarterDelegate> provider15 = DoubleCheck.provider(ActivityStarterDelegate_Factory.create(of));
         this.activityStarterDelegateProvider = provider15;
         this.userSwitcherControllerProvider = DoubleCheck.provider(UserSwitcherController_Factory.create(this.contextProvider, this.keyguardStateControllerImplProvider, this.provideMainHandlerProvider, provider15, this.providesBroadcastDispatcherProvider, this.provideUiEventLoggerProvider));
         this.provideConnectivityManagagerProvider = DoubleCheck.provider(SystemServicesModule_ProvideConnectivityManagagerFactory.create(this.contextProvider));
@@ -2095,9 +1894,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         Provider<PipManager> provider5 = DoubleCheck.provider(PipManager_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider, this.pipBoundsHandlerProvider, provider4, this.pipSurfaceTransactionHelperProvider, this.provideDividerProvider));
         this.pipManagerProvider = provider5;
         this.pipUIProvider = DoubleCheck.provider(PipUI_Factory.create(this.contextProvider, this.provideCommandQueueProvider, provider5));
-        Provider<Optional<Divider>> access$500 = PresentJdkOptionalInstanceProvider.of(this.provideDividerProvider);
-        this.optionalOfDividerProvider = access$500;
-        this.overviewProxyServiceProvider = DoubleCheck.provider(OverviewProxyService_Factory.create(this.contextProvider, this.provideCommandQueueProvider, this.provideNavigationBarControllerProvider, this.navigationModeControllerProvider, this.notificationShadeWindowControllerProvider, this.provideSysUiStateProvider, this.pipUIProvider, access$500, this.optionalOfLazyOfStatusBarProvider, this.providesBroadcastDispatcherProvider));
+        Provider<Optional<Divider>> of = PresentJdkOptionalInstanceProvider.of(this.provideDividerProvider);
+        this.optionalOfDividerProvider = of;
+        this.overviewProxyServiceProvider = DoubleCheck.provider(OverviewProxyService_Factory.create(this.contextProvider, this.provideCommandQueueProvider, this.provideNavigationBarControllerProvider, this.navigationModeControllerProvider, this.notificationShadeWindowControllerProvider, this.provideSysUiStateProvider, this.pipUIProvider, of, this.optionalOfLazyOfStatusBarProvider, this.providesBroadcastDispatcherProvider));
         Provider<PackageManagerWrapper> provider6 = DoubleCheck.provider(SystemServicesModule_ProvidePackageManagerWrapperFactory.create());
         this.providePackageManagerWrapperProvider = provider6;
         Provider provider7 = DoubleCheck.provider(AssistHandleReminderExpBehavior_Factory.create(this.provideSystemClockProvider, this.provideBackgroundHandlerProvider, this.deviceConfigHelperProvider, this.statusBarStateControllerImplProvider, this.provideActivityManagerWrapperProvider, this.overviewProxyServiceProvider, this.provideSysUiStateProvider, this.wakefulnessLifecycleProvider, provider6, this.providesBroadcastDispatcherProvider, this.bootCompleteCacheImplProvider));
@@ -2146,6 +1945,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.volumeDialogComponentProvider = DoubleCheck.provider(VolumeDialogComponent_Factory.create(this.contextProvider, this.newKeyguardViewMediatorProvider, provider18));
         this.optionalOfRecentsProvider = PresentJdkOptionalInstanceProvider.of(this.provideRecentsProvider);
         this.statusBarComponentBuilderProvider = new Provider<StatusBarComponent.Builder>() {
+            /* class com.android.systemui.tv.DaggerTvSystemUIRootComponent.AnonymousClass2 */
+
+            @Override // javax.inject.Provider
             public StatusBarComponent.Builder get() {
                 return new StatusBarComponentBuilder();
             }
@@ -2160,6 +1962,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.tvSystemUIRootComponentProvider = create6;
         this.injectionInflationControllerProvider = DoubleCheck.provider(InjectionInflationController_Factory.create(create6));
         AnonymousClass3 r1 = new Provider<NotificationRowComponent.Builder>() {
+            /* class com.android.systemui.tv.DaggerTvSystemUIRootComponent.AnonymousClass3 */
+
+            @Override // javax.inject.Provider
             public NotificationRowComponent.Builder get() {
                 return new NotificationRowComponentBuilder();
             }
@@ -2274,6 +2079,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.controlsEditingActivityProvider = ControlsEditingActivity_Factory.create(this.controlsControllerImplProvider, this.providesBroadcastDispatcherProvider, this.globalActionsComponentProvider);
         this.controlsRequestDialogProvider = ControlsRequestDialog_Factory.create(this.controlsControllerImplProvider, this.providesBroadcastDispatcherProvider, this.controlsListingControllerImplProvider);
         AnonymousClass4 r1 = new Provider<TvPipComponent.Builder>() {
+            /* class com.android.systemui.tv.DaggerTvSystemUIRootComponent.AnonymousClass4 */
+
+            @Override // javax.inject.Provider
             public TvPipComponent.Builder get() {
                 return new TvPipComponentBuilder();
             }
@@ -2423,9 +2231,10 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.oldModeControllerProvider = provider4;
         Provider<MiuiQSTileHostInjector> provider5 = DoubleCheck.provider(MiuiQSTileHostInjector_Factory.create(this.contextProvider, this.providePluginManagerProvider, this.tunerServiceImplProvider, this.controlPanelControllerProvider, this.superSaveModeControllerProvider, provider4, this.deviceProvisionedControllerImplProvider));
         this.miuiQSTileHostInjectorProvider = provider5;
+        DelegateFactory delegateFactory = (DelegateFactory) this.qSTileHostProvider;
         Provider<QSTileHost> provider6 = DoubleCheck.provider(QSTileHost_Factory.create(this.contextProvider, this.statusBarIconControllerImplProvider, this.qSFactoryImplProvider, this.provideMainHandlerProvider, this.provideBgLooperProvider, this.providePluginManagerProvider, this.tunerServiceImplProvider, this.autoTileManagerProvider, this.dumpManagerProvider, this.providesBroadcastDispatcherProvider, this.optionalOfStatusBarProvider, this.qSLoggerProvider, this.provideUiEventLoggerProvider, this.statusBarStateControllerImplProvider, provider5, this.controlPanelControllerProvider));
         this.qSTileHostProvider = provider6;
-        ((DelegateFactory) this.qSTileHostProvider).setDelegatedProvider(provider6);
+        delegateFactory.setDelegatedProvider(provider6);
         Provider<MiuiNotificationShadePolicy> provider7 = DoubleCheck.provider(MiuiNotificationShadePolicy_Factory.create(this.contextProvider, this.provideBgHandlerProvider, this.provideHeadsUpManagerPhoneProvider, this.notificationShadeWindowControllerProvider, this.controlPanelControllerProvider));
         this.miuiNotificationShadePolicyProvider = provider7;
         this.controlPanelWindowManagerProvider = DoubleCheck.provider(ControlPanelWindowManager_Factory.create(this.contextProvider, this.provideStatusBarProvider, this.controlPanelControllerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, provider7));
@@ -2603,42 +2412,52 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.providerLayoutInflaterProvider = DoubleCheck.provider(DependencyProvider_ProviderLayoutInflaterFactory.create(builder.dependencyProvider, this.contextProvider));
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public BootCompleteCacheImpl provideBootCacheImpl() {
         return this.bootCompleteCacheImplProvider.get();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public ConfigurationController getConfigurationController() {
         return this.provideConfigurationControllerProvider.get();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public ContextComponentHelper getContextComponentHelper() {
         return this.contextComponentResolverProvider.get();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public DumpManager createDumpManager() {
         return this.dumpManagerProvider.get();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public InitController getInitController() {
         return this.initControllerProvider.get();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public void inject(SystemUIAppComponentFactory systemUIAppComponentFactory) {
         injectSystemUIAppComponentFactory(systemUIAppComponentFactory);
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public void inject(KeyguardSliceProvider keyguardSliceProvider) {
         injectKeyguardSliceProvider(keyguardSliceProvider);
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public Dependency.DependencyInjector createDependency() {
         return new DependencyInjectorImpl();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public FragmentService.FragmentCreator createFragmentCreator() {
         return new FragmentCreatorImpl();
     }
 
+    @Override // com.android.systemui.dagger.SystemUIRootComponent
     public InjectionInflationController.ViewCreator createViewCreator() {
         return new ViewCreatorImpl();
     }
@@ -2664,7 +2483,8 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         return ABSENT_JDK_OPTIONAL_PROVIDER;
     }
 
-    private static final class PresentJdkOptionalLazyProvider<T> implements Provider<Optional<Lazy<T>>> {
+    /* access modifiers changed from: private */
+    public static final class PresentJdkOptionalLazyProvider<T> implements Provider<Optional<Lazy<T>>> {
         private final Provider<T> delegate;
 
         private PresentJdkOptionalLazyProvider(Provider<T> provider) {
@@ -2672,6 +2492,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.delegate = provider;
         }
 
+        @Override // javax.inject.Provider
         public Optional<Lazy<T>> get() {
             return Optional.of(DoubleCheck.lazy(this.delegate));
         }
@@ -2682,7 +2503,8 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         }
     }
 
-    private static final class PresentJdkOptionalInstanceProvider<T> implements Provider<Optional<T>> {
+    /* access modifiers changed from: private */
+    public static final class PresentJdkOptionalInstanceProvider<T> implements Provider<Optional<T>> {
         private final Provider<T> delegate;
 
         private PresentJdkOptionalInstanceProvider(Provider<T> provider) {
@@ -2690,6 +2512,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.delegate = provider;
         }
 
+        @Override // javax.inject.Provider
         public Optional<T> get() {
             return Optional.of(this.delegate.get());
         }
@@ -2700,15 +2523,15 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         }
     }
 
-    private static final class Builder implements TvSystemUIRootComponent.Builder {
-        /* access modifiers changed from: private */
-        public Context context;
-        /* access modifiers changed from: private */
-        public DependencyProvider dependencyProvider;
+    /* access modifiers changed from: private */
+    public static final class Builder implements TvSystemUIRootComponent.Builder {
+        private Context context;
+        private DependencyProvider dependencyProvider;
 
         private Builder() {
         }
 
+        @Override // com.android.systemui.tv.TvSystemUIRootComponent.Builder
         public TvSystemUIRootComponent build() {
             if (this.dependencyProvider == null) {
                 this.dependencyProvider = new DependencyProvider();
@@ -2719,6 +2542,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             throw new IllegalStateException(Context.class.getCanonicalName() + " must be set");
         }
 
+        @Override // com.android.systemui.tv.TvSystemUIRootComponent.Builder
         public Builder context(Context context2) {
             Preconditions.checkNotNull(context2);
             this.context = context2;
@@ -2745,6 +2569,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider, DaggerTvSystemUIRootComponent.this.systemUIStatProvider);
         }
 
+        @Override // com.android.systemui.Dependency.DependencyInjector
         public void createSystemUI(Dependency dependency) {
             injectDependency(dependency);
         }
@@ -2933,19 +2758,23 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         private FragmentCreatorImpl() {
         }
 
+        @Override // com.android.systemui.fragments.FragmentService.FragmentCreator
         public NavigationBarFragment createNavigationBarFragment() {
             return new NavigationBarFragment((AccessibilityManagerWrapper) DaggerTvSystemUIRootComponent.this.accessibilityManagerWrapperProvider.get(), (DeviceProvisionedController) DaggerTvSystemUIRootComponent.this.deviceProvisionedControllerImplProvider.get(), (MetricsLogger) DaggerTvSystemUIRootComponent.this.provideMetricsLoggerProvider.get(), (AssistManager) DaggerTvSystemUIRootComponent.this.assistManagerProvider.get(), (OverviewProxyService) DaggerTvSystemUIRootComponent.this.overviewProxyServiceProvider.get(), (NavigationModeController) DaggerTvSystemUIRootComponent.this.navigationModeControllerProvider.get(), (StatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (SysUiState) DaggerTvSystemUIRootComponent.this.provideSysUiStateProvider.get(), (BroadcastDispatcher) DaggerTvSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), (CommandQueue) DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider.get(), (Divider) DaggerTvSystemUIRootComponent.this.provideDividerProvider.get(), Optional.of((Recents) DaggerTvSystemUIRootComponent.this.provideRecentsProvider.get()), DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.provideStatusBarProvider), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (NotificationRemoteInputManager) DaggerTvSystemUIRootComponent.this.provideNotificationRemoteInputManagerProvider.get(), (SystemActions) DaggerTvSystemUIRootComponent.this.systemActionsProvider.get(), DaggerTvSystemUIRootComponent.this.getMainHandler(), (UiEventLogger) DaggerTvSystemUIRootComponent.this.provideUiEventLoggerProvider.get());
         }
 
+        @Override // com.android.systemui.fragments.FragmentService.FragmentCreator
         public QSFragment createQSFragment() {
             return new QSFragment((RemoteInputQuickSettingsDisabler) DaggerTvSystemUIRootComponent.this.remoteInputQuickSettingsDisablerProvider.get(), (InjectionInflationController) DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (QSTileHost) DaggerTvSystemUIRootComponent.this.qSTileHostProvider.get(), (StatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (CommandQueue) DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), DaggerTvSystemUIRootComponent.this.context, (Looper) DaggerTvSystemUIRootComponent.this.provideBgLooperProvider.get(), DaggerTvSystemUIRootComponent.this.getMainExecutor());
         }
     }
 
-    private final class ViewCreatorImpl implements InjectionInflationController.ViewCreator {
+    /* access modifiers changed from: private */
+    public final class ViewCreatorImpl implements InjectionInflationController.ViewCreator {
         private ViewCreatorImpl() {
         }
 
+        @Override // com.android.systemui.util.InjectionInflationController.ViewCreator
         public InjectionInflationController.ViewInstanceCreator createInstanceCreator(InjectionInflationController.ViewAttributeProvider viewAttributeProvider) {
             return new ViewInstanceCreatorImpl(viewAttributeProvider);
         }
@@ -2978,83 +2807,95 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
                 this.viewAttributeProvider = viewAttributeProvider2;
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QuickStatusBarHeader createQsHeader() {
                 return new QuickStatusBarHeader(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (NextAlarmController) DaggerTvSystemUIRootComponent.this.nextAlarmControllerImplProvider.get(), (ZenModeController) DaggerTvSystemUIRootComponent.this.zenModeControllerImplProvider.get(), (StatusBarIconController) DaggerTvSystemUIRootComponent.this.statusBarIconControllerImplProvider.get(), (ActivityStarter) DaggerTvSystemUIRootComponent.this.activityStarterDelegateProvider.get(), (CommandQueue) DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider.get(), (RingerModeTracker) DaggerTvSystemUIRootComponent.this.ringerModeTrackerImplProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QSFooterImpl createQsFooter() {
                 return new QSFooterImpl(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ActivityStarter) DaggerTvSystemUIRootComponent.this.activityStarterDelegateProvider.get(), (UserInfoController) DaggerTvSystemUIRootComponent.this.userInfoControllerImplProvider.get(), (DeviceProvisionedController) DaggerTvSystemUIRootComponent.this.deviceProvisionedControllerImplProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public NotificationStackScrollLayout createNotificationStackScrollLayout() {
                 return new NotificationStackScrollLayout(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), ((Boolean) DaggerTvSystemUIRootComponent.this.provideAllowNotificationLongPressProvider.get()).booleanValue(), (NotificationRoundnessManager) DaggerTvSystemUIRootComponent.this.notificationRoundnessManagerProvider.get(), (DynamicPrivacyController) DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider.get(), (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (HeadsUpManagerPhone) DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider.get(), (KeyguardBypassController) DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider.get(), (MiuiKeyguardMediaController) DaggerTvSystemUIRootComponent.this.miuiKeyguardMediaControllerProvider.get(), (ZenModeViewController) DaggerTvSystemUIRootComponent.this.zenModeViewControllerProvider.get(), (FalsingManager) DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider.get(), (NotificationLockscreenUserManager) DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider.get(), (NotificationGutsManager) DaggerTvSystemUIRootComponent.this.provideNotificationGutsManagerProvider.get(), (ZenModeController) DaggerTvSystemUIRootComponent.this.zenModeControllerImplProvider.get(), getMiuiNotificationSectionsManager(), (ForegroundServiceSectionController) DaggerTvSystemUIRootComponent.this.foregroundServiceSectionControllerProvider.get(), (ForegroundServiceDismissalFeatureController) DaggerTvSystemUIRootComponent.this.foregroundServiceDismissalFeatureControllerProvider.get(), (FeatureFlags) DaggerTvSystemUIRootComponent.this.featureFlagsProvider.get(), (NotifPipeline) DaggerTvSystemUIRootComponent.this.notifPipelineProvider.get(), (NotificationEntryManager) DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider.get(), (NotifCollection) DaggerTvSystemUIRootComponent.this.notifCollectionProvider.get(), (UiEventLogger) DaggerTvSystemUIRootComponent.this.provideUiEventLoggerProvider.get(), (MediaTimeoutListener) DaggerTvSystemUIRootComponent.this.mediaTimeoutListenerProvider.get(), (MediaDataFilter) DaggerTvSystemUIRootComponent.this.mediaDataFilterProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public NotificationShelf creatNotificationShelf() {
                 return new NotificationShelf(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (KeyguardBypassController) DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public KeyguardClockSwitch createKeyguardClockSwitch() {
                 return new KeyguardClockSwitch(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (StatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (SysuiColorExtractor) DaggerTvSystemUIRootComponent.this.sysuiColorExtractorProvider.get(), (ClockManager) DaggerTvSystemUIRootComponent.this.clockManagerProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public KeyguardSliceView createKeyguardSliceView() {
                 return new KeyguardSliceView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ActivityStarter) DaggerTvSystemUIRootComponent.this.activityStarterDelegateProvider.get(), (ConfigurationController) DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider.get(), (TunerService) DaggerTvSystemUIRootComponent.this.tunerServiceImplProvider.get(), DaggerTvSystemUIRootComponent.this.getMainResources());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public KeyguardMessageArea createKeyguardMessageArea() {
                 return new KeyguardMessageArea(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ConfigurationController) DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QSPanel createQSPanel() {
                 return new QSPanel(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (DumpManager) DaggerTvSystemUIRootComponent.this.dumpManagerProvider.get(), (BroadcastDispatcher) DaggerTvSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), DaggerTvSystemUIRootComponent.this.getQSLogger(), DaggerTvSystemUIRootComponent.this.getMediaHost(), (UiEventLogger) DaggerTvSystemUIRootComponent.this.provideUiEventLoggerProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QuickQSPanel createQuickQSPanel() {
                 return new QuickQSPanel(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (DumpManager) DaggerTvSystemUIRootComponent.this.dumpManagerProvider.get(), (BroadcastDispatcher) DaggerTvSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), DaggerTvSystemUIRootComponent.this.getQSLogger(), DaggerTvSystemUIRootComponent.this.getMediaHost(), (UiEventLogger) DaggerTvSystemUIRootComponent.this.provideUiEventLoggerProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public MiuiQSCustomizer createQSCustomizer() {
                 return new MiuiQSCustomizer(DaggerTvSystemUIRootComponent.this.context, InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (LightBarController) DaggerTvSystemUIRootComponent.this.lightBarControllerProvider.get(), (KeyguardStateController) DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider.get(), (ScreenLifecycle) DaggerTvSystemUIRootComponent.this.screenLifecycleProvider.get(), getTileQueryHelper(), (UiEventLogger) DaggerTvSystemUIRootComponent.this.provideUiEventLoggerProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QSControlCustomizer createQSControlCustomizer() {
                 return new QSControlCustomizer(DaggerTvSystemUIRootComponent.this.context, InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), getCCTileQueryHelper(), (KeyguardUpdateMonitorInjector) DaggerTvSystemUIRootComponent.this.keyguardUpdateMonitorInjectorProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QSContainerImpl createQSContainerImpl() {
                 return new QSContainerImpl(DaggerTvSystemUIRootComponent.this.context, InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerTvSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), (InjectionInflationController) DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (TunerService) DaggerTvSystemUIRootComponent.this.tunerServiceImplProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QSFooterDataUsage createQSFooterDataUsage() {
                 return new QSFooterDataUsage(DaggerTvSystemUIRootComponent.this.context, InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ActivityStarter) DaggerTvSystemUIRootComponent.this.activityStarterDelegateProvider.get(), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (Looper) DaggerTvSystemUIRootComponent.this.provideBgLooperProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public ControlCenterPanelView createControlCenterPanelView() {
                 return new ControlCenterPanelView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (ConfigurationController) DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider.get(), (ControlsPluginManager) DaggerTvSystemUIRootComponent.this.controlsPluginManagerProvider.get(), (ControlPanelController) DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider.get(), getNCSwitchController(), (StatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get());
             }
 
+            @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public ControlCenterBrightnessView createControlCenterBrightnessView() {
                 return new ControlCenterBrightnessView(InjectionInflationController_ViewAttributeProvider_ProvideContextFactory.proxyProvideContext(this.viewAttributeProvider), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerTvSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get());
             }
         }
     }
 
-    private final class ExpandableNotificationRowComponentBuilder implements ExpandableNotificationRowComponent.Builder {
-        /* access modifiers changed from: private */
-        public ExpandableNotificationRow expandableNotificationRow;
-        /* access modifiers changed from: private */
-        public NotificationEntry notificationEntry;
-        /* access modifiers changed from: private */
-        public Runnable onDismissRunnable;
-        /* access modifiers changed from: private */
-        public ExpandableNotificationRow.OnExpandClickListener onExpandClickListener;
-        /* access modifiers changed from: private */
-        public RowContentBindStage rowContentBindStage;
+    /* access modifiers changed from: private */
+    public final class ExpandableNotificationRowComponentBuilder implements ExpandableNotificationRowComponent.Builder {
+        private ExpandableNotificationRow expandableNotificationRow;
+        private NotificationEntry notificationEntry;
+        private Runnable onDismissRunnable;
+        private ExpandableNotificationRow.OnExpandClickListener onExpandClickListener;
+        private RowContentBindStage rowContentBindStage;
 
         private ExpandableNotificationRowComponentBuilder() {
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent.Builder
         public ExpandableNotificationRowComponent build() {
             if (this.expandableNotificationRow == null) {
                 throw new IllegalStateException(ExpandableNotificationRow.class.getCanonicalName() + " must be set");
@@ -3071,30 +2912,35 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             }
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent.Builder
         public ExpandableNotificationRowComponentBuilder expandableNotificationRow(ExpandableNotificationRow expandableNotificationRow2) {
             Preconditions.checkNotNull(expandableNotificationRow2);
             this.expandableNotificationRow = expandableNotificationRow2;
             return this;
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent.Builder
         public ExpandableNotificationRowComponentBuilder notificationEntry(NotificationEntry notificationEntry2) {
             Preconditions.checkNotNull(notificationEntry2);
             this.notificationEntry = notificationEntry2;
             return this;
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent.Builder
         public ExpandableNotificationRowComponentBuilder onDismissRunnable(Runnable runnable) {
             Preconditions.checkNotNull(runnable);
             this.onDismissRunnable = runnable;
             return this;
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent.Builder
         public ExpandableNotificationRowComponentBuilder rowContentBindStage(RowContentBindStage rowContentBindStage2) {
             Preconditions.checkNotNull(rowContentBindStage2);
             this.rowContentBindStage = rowContentBindStage2;
             return this;
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent.Builder
         public ExpandableNotificationRowComponentBuilder onExpandClickListener(ExpandableNotificationRow.OnExpandClickListener onExpandClickListener2) {
             Preconditions.checkNotNull(onExpandClickListener2);
             this.onExpandClickListener = onExpandClickListener2;
@@ -3139,18 +2985,20 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.expandableNotificationRowControllerProvider = DoubleCheck.provider(ExpandableNotificationRowController_Factory.create(this.expandableNotificationRowProvider, this.activatableNotificationViewControllerProvider, DaggerTvSystemUIRootComponent.this.provideNotificationMediaManagerProvider, DaggerTvSystemUIRootComponent.this.providePluginManagerProvider, DaggerTvSystemUIRootComponent.this.bindSystemClockProvider, this.provideAppNameProvider, this.provideNotificationKeyProvider, DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider, DaggerTvSystemUIRootComponent.this.notificationGroupManagerProvider, this.rowContentBindStageProvider, DaggerTvSystemUIRootComponent.this.provideNotificationLoggerProvider, DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider, this.onExpandClickListenerProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideNotificationGutsManagerProvider, DaggerTvSystemUIRootComponent.this.provideAllowNotificationLongPressProvider, this.onDismissRunnableProvider, DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider, DaggerTvSystemUIRootComponent.this.peopleNotificationIdentifierImplProvider));
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.ExpandableNotificationRowComponent
         public ExpandableNotificationRowController getExpandableNotificationRowController() {
             return this.expandableNotificationRowControllerProvider.get();
         }
     }
 
-    private final class StatusBarComponentBuilder implements StatusBarComponent.Builder {
-        /* access modifiers changed from: private */
-        public NotificationShadeWindowView statusBarWindowView;
+    /* access modifiers changed from: private */
+    public final class StatusBarComponentBuilder implements StatusBarComponent.Builder {
+        private NotificationShadeWindowView statusBarWindowView;
 
         private StatusBarComponentBuilder() {
         }
 
+        @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent.Builder
         public StatusBarComponent build() {
             if (this.statusBarWindowView != null) {
                 return new StatusBarComponentImpl(this);
@@ -3158,6 +3006,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             throw new IllegalStateException(NotificationShadeWindowView.class.getCanonicalName() + " must be set");
         }
 
+        @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent.Builder
         public StatusBarComponentBuilder statusBarWindowView(NotificationShadeWindowView notificationShadeWindowView) {
             Preconditions.checkNotNull(notificationShadeWindowView);
             this.statusBarWindowView = notificationShadeWindowView;
@@ -3189,26 +3038,30 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.miuiNotificationPanelViewControllerProvider = DoubleCheck.provider(MiuiNotificationPanelViewController_Factory.create(this.getNotificationPanelViewProvider, DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider, DaggerTvSystemUIRootComponent.this.notificationWakeUpCoordinatorProvider, DaggerTvSystemUIRootComponent.this.pulseExpansionHandlerProvider, DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider, DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider, DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider, DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider, DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.dozeLogProvider, DaggerTvSystemUIRootComponent.this.dozeParametersProvider, DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider, DaggerTvSystemUIRootComponent.this.vibratorHelperProvider, DaggerTvSystemUIRootComponent.this.provideLatencyTrackerProvider, DaggerTvSystemUIRootComponent.this.providePowerManagerProvider, DaggerTvSystemUIRootComponent.this.provideAccessibilityManagerProvider, DaggerTvSystemUIRootComponent.this.provideDisplayIdProvider, DaggerTvSystemUIRootComponent.this.keyguardUpdateMonitorProvider, DaggerTvSystemUIRootComponent.this.provideMetricsLoggerProvider, DaggerTvSystemUIRootComponent.this.provideActivityManagerProvider, DaggerTvSystemUIRootComponent.this.zenModeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideConfigurationControllerProvider, this.builderProvider, DaggerTvSystemUIRootComponent.this.statusBarTouchableRegionManagerProvider, DaggerTvSystemUIRootComponent.this.conversationNotificationManagerProvider, DaggerTvSystemUIRootComponent.this.mediaHierarchyManagerProvider, DaggerTvSystemUIRootComponent.this.biometricUnlockControllerProvider, DaggerTvSystemUIRootComponent.this.statusBarKeyguardViewManagerProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.eventTrackerProvider, DaggerTvSystemUIRootComponent.this.wakefulnessLifecycleProvider, DaggerTvSystemUIRootComponent.this.notificationShadeWindowControllerProvider));
         }
 
+        @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent
         public NotificationShadeWindowViewController getNotificationShadeWindowViewController() {
             return new NotificationShadeWindowViewController((InjectionInflationController) DaggerTvSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (NotificationWakeUpCoordinator) DaggerTvSystemUIRootComponent.this.notificationWakeUpCoordinatorProvider.get(), (PulseExpansionHandler) DaggerTvSystemUIRootComponent.this.pulseExpansionHandlerProvider.get(), (DynamicPrivacyController) DaggerTvSystemUIRootComponent.this.dynamicPrivacyControllerProvider.get(), (KeyguardBypassController) DaggerTvSystemUIRootComponent.this.keyguardBypassControllerProvider.get(), (FalsingManager) DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider.get(), (PluginManager) DaggerTvSystemUIRootComponent.this.providePluginManagerProvider.get(), (TunerService) DaggerTvSystemUIRootComponent.this.tunerServiceImplProvider.get(), (NotificationLockscreenUserManager) DaggerTvSystemUIRootComponent.this.notificationLockscreenUserManagerImplProvider.get(), (NotificationEntryManager) DaggerTvSystemUIRootComponent.this.provideNotificationEntryManagerProvider.get(), (KeyguardStateController) DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider.get(), (SysuiStatusBarStateController) DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (DozeLog) DaggerTvSystemUIRootComponent.this.dozeLogProvider.get(), (DozeParameters) DaggerTvSystemUIRootComponent.this.dozeParametersProvider.get(), (CommandQueue) DaggerTvSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ShadeController) DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider.get(), (DockManager) DaggerTvSystemUIRootComponent.this.dockManagerImplProvider.get(), (NotificationShadeDepthController) DaggerTvSystemUIRootComponent.this.notificationShadeDepthControllerProvider.get(), this.statusBarWindowView, this.miuiNotificationPanelViewControllerProvider.get(), (SuperStatusBarViewFactory) DaggerTvSystemUIRootComponent.this.superStatusBarViewFactoryProvider.get(), (ControlPanelWindowManager) DaggerTvSystemUIRootComponent.this.controlPanelWindowManagerProvider.get(), getNCSwitchController(), (MiuiKeyguardMediaController) DaggerTvSystemUIRootComponent.this.miuiKeyguardMediaControllerProvider.get());
         }
 
+        @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent
         public StatusBarWindowController getStatusBarWindowController() {
             return (StatusBarWindowController) DaggerTvSystemUIRootComponent.this.statusBarWindowControllerProvider.get();
         }
 
+        @Override // com.android.systemui.statusbar.phone.dagger.StatusBarComponent
         public MiuiNotificationPanelViewController getNotificationPanelViewController() {
             return this.miuiNotificationPanelViewControllerProvider.get();
         }
     }
 
-    private final class NotificationRowComponentBuilder implements NotificationRowComponent.Builder {
-        /* access modifiers changed from: private */
-        public ActivatableNotificationView activatableNotificationView;
+    /* access modifiers changed from: private */
+    public final class NotificationRowComponentBuilder implements NotificationRowComponent.Builder {
+        private ActivatableNotificationView activatableNotificationView;
 
         private NotificationRowComponentBuilder() {
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.NotificationRowComponent.Builder
         public NotificationRowComponent build() {
             if (this.activatableNotificationView != null) {
                 return new NotificationRowComponentImpl(this);
@@ -3216,6 +3069,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             throw new IllegalStateException(ActivatableNotificationView.class.getCanonicalName() + " must be set");
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.NotificationRowComponent.Builder
         public NotificationRowComponentBuilder activatableNotificationView(ActivatableNotificationView activatableNotificationView2) {
             Preconditions.checkNotNull(activatableNotificationView2);
             this.activatableNotificationView = activatableNotificationView2;
@@ -3242,18 +3096,20 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.activatableNotificationView = notificationRowComponentBuilder.activatableNotificationView;
         }
 
+        @Override // com.android.systemui.statusbar.notification.row.dagger.NotificationRowComponent
         public ActivatableNotificationViewController getActivatableNotificationViewController() {
             return new ActivatableNotificationViewController(this.activatableNotificationView, getExpandableOutlineViewController(), (AccessibilityManager) DaggerTvSystemUIRootComponent.this.provideAccessibilityManagerProvider.get(), (FalsingManager) DaggerTvSystemUIRootComponent.this.falsingManagerProxyProvider.get());
         }
     }
 
-    private final class TvPipComponentBuilder implements TvPipComponent.Builder {
-        /* access modifiers changed from: private */
-        public PipControlsView pipControlsView;
+    /* access modifiers changed from: private */
+    public final class TvPipComponentBuilder implements TvPipComponent.Builder {
+        private PipControlsView pipControlsView;
 
         private TvPipComponentBuilder() {
         }
 
+        @Override // com.android.systemui.pip.tv.dagger.TvPipComponent.Builder
         public TvPipComponent build() {
             if (this.pipControlsView != null) {
                 return new TvPipComponentImpl(this);
@@ -3261,6 +3117,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             throw new IllegalStateException(PipControlsView.class.getCanonicalName() + " must be set");
         }
 
+        @Override // com.android.systemui.pip.tv.dagger.TvPipComponent.Builder
         public TvPipComponentBuilder pipControlsView(PipControlsView pipControlsView2) {
             Preconditions.checkNotNull(pipControlsView2);
             this.pipControlsView = pipControlsView2;
@@ -3279,6 +3136,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.pipControlsView = tvPipComponentBuilder.pipControlsView;
         }
 
+        @Override // com.android.systemui.pip.tv.dagger.TvPipComponent
         public PipControlsViewController getPipControlsViewController() {
             return new PipControlsViewController(this.pipControlsView, (PipManager) DaggerTvSystemUIRootComponent.this.pipManagerProvider.get(), (LayoutInflater) DaggerTvSystemUIRootComponent.this.providerLayoutInflaterProvider.get(), DaggerTvSystemUIRootComponent.this.getMainHandler());
         }

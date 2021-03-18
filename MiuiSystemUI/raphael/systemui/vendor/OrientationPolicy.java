@@ -3,7 +3,6 @@ package com.android.systemui.vendor;
 import android.content.Context;
 import android.hardware.display.DisplayManager;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
@@ -34,7 +33,7 @@ public class OrientationPolicy {
             z = false;
         }
         if (z) {
-            ((DisplayManager) this.mContext.getSystemService("display")).registerDisplayListener(new CustomDisplayListener(), (Handler) null);
+            ((DisplayManager) this.mContext.getSystemService("display")).registerDisplayListener(new CustomDisplayListener(), null);
             writeRotationForBsp();
         }
     }
@@ -55,11 +54,14 @@ public class OrientationPolicy {
     }
 
     /* access modifiers changed from: private */
-    public void writeRotationForBsp() {
+    /* access modifiers changed from: public */
+    private void writeRotationForBsp() {
         int rotation = this.mDisplay.getRotation();
         final int i = rotation != 0 ? rotation != 1 ? rotation != 2 ? rotation != 3 ? -1 : 270 : 180 : 90 : 0;
         if (this.mLastRotation != i) {
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(this) {
+                /* class com.android.systemui.vendor.OrientationPolicy.AnonymousClass1 */
+
                 public void run() {
                     try {
                         SystemProperties.set("sys.tp.grip_enable", Integer.toString(i));

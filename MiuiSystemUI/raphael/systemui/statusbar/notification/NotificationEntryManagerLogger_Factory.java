@@ -11,6 +11,7 @@ public final class NotificationEntryManagerLogger_Factory implements Factory<Not
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationEntryManagerLogger get() {
         return provideInstance(this.bufferProvider);
     }

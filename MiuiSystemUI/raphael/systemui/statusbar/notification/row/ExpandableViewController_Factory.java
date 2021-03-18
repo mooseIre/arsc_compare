@@ -10,6 +10,7 @@ public final class ExpandableViewController_Factory implements Factory<Expandabl
         this.viewProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ExpandableViewController get() {
         return provideInstance(this.viewProvider);
     }

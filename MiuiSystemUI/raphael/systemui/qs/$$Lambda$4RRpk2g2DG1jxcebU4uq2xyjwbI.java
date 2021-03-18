@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$4RRpk2g2DG1jxcebU4uq2xyjwbI implemen
     private /* synthetic */ $$Lambda$4RRpk2g2DG1jxcebU4uq2xyjwbI() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((StatusBar) obj).postAnimateCollapsePanels();
     }

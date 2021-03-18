@@ -16,12 +16,9 @@ public class NotificationDynamicFpsController {
     private static final boolean SUPPORT_FPS_DYNAMIC = SystemProperties.getBoolean("ro.vendor.smart_dfps.enable", false);
     private NotificationEntryManager mEntryManager;
     private HeadsUpManager mHeadsUpManager;
-    /* access modifiers changed from: private */
-    public ScreenLifecycle mScreenLifecycle;
-    /* access modifiers changed from: private */
-    public StatusBar mStatusBar;
-    /* access modifiers changed from: private */
-    public StatusBarStateController mStatusBarStateController;
+    private ScreenLifecycle mScreenLifecycle;
+    private StatusBar mStatusBar;
+    private StatusBarStateController mStatusBarStateController;
 
     public NotificationDynamicFpsController(Context context, NotificationEntryManager notificationEntryManager, HeadsUpManager headsUpManager, StatusBar statusBar, StatusBarStateController statusBarStateController, ScreenLifecycle screenLifecycle) {
         this.mEntryManager = notificationEntryManager;
@@ -33,6 +30,9 @@ public class NotificationDynamicFpsController {
 
     public void start() {
         this.mEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+            /* class com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onNotificationAdded(NotificationEntry notificationEntry) {
                 if (NotificationDynamicFpsController.this.mScreenLifecycle.getScreenState() == 2 && notificationEntry.getImportance() >= 3) {
                     if (NotificationDynamicFpsController.this.mStatusBar.isExpandedVisible() || NotificationDynamicFpsController.this.mStatusBarStateController.getState() == 1) {
@@ -42,6 +42,9 @@ public class NotificationDynamicFpsController {
             }
         });
         this.mHeadsUpManager.addListener(new OnHeadsUpChangedListener(this) {
+            /* class com.android.systemui.statusbar.notification.policy.NotificationDynamicFpsController.AnonymousClass2 */
+
+            @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
             public void onHeadsUpPinnedModeChanged(boolean z) {
                 NotificationDynamicFpsController.requestScreenFpsDynamic();
             }

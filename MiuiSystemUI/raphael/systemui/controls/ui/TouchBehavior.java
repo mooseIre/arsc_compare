@@ -17,10 +17,8 @@ public final class TouchBehavior implements Behavior {
     public Control control;
     @NotNull
     public ControlViewHolder cvh;
-    /* access modifiers changed from: private */
-    public int lastColorOffset;
-    /* access modifiers changed from: private */
-    public boolean statelessTouch;
+    private int lastColorOffset;
+    private boolean statelessTouch;
     @NotNull
     public ControlTemplate template;
 
@@ -49,12 +47,14 @@ public final class TouchBehavior implements Behavior {
         return this.lastColorOffset > 0 || this.statelessTouch;
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void initialize(@NotNull ControlViewHolder controlViewHolder) {
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         this.cvh = controlViewHolder;
         controlViewHolder.getLayout().setOnClickListener(new TouchBehavior$initialize$1(this, controlViewHolder));
     }
 
+    @Override // com.android.systemui.controls.ui.Behavior
     public void bind(@NotNull ControlWithState controlWithState, int i) {
         Intrinsics.checkParameterIsNotNull(controlWithState, "cws");
         Control control2 = controlWithState.getControl();
@@ -69,7 +69,7 @@ public final class TouchBehavior implements Behavior {
                 CharSequence statusText = control2.getStatusText();
                 Intrinsics.checkExpressionValueIsNotNull(statusText, "control.getStatusText()");
                 int i2 = 0;
-                ControlViewHolder.setStatusText$default(controlViewHolder, statusText, false, 2, (Object) null);
+                ControlViewHolder.setStatusText$default(controlViewHolder, statusText, false, 2, null);
                 Control control3 = this.control;
                 if (control3 != null) {
                     ControlTemplate controlTemplate = control3.getControlTemplate();
@@ -89,7 +89,7 @@ public final class TouchBehavior implements Behavior {
                                 findDrawableByLayerId.setLevel(i2);
                                 ControlViewHolder controlViewHolder3 = this.cvh;
                                 if (controlViewHolder3 != null) {
-                                    ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, getEnabled(), i, false, 4, (Object) null);
+                                    ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(controlViewHolder3, getEnabled(), i, false, 4, null);
                                 } else {
                                     Intrinsics.throwUninitializedPropertyAccessException("cvh");
                                     throw null;

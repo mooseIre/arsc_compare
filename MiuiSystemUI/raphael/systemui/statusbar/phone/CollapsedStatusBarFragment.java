@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.app.Fragment;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +23,7 @@ import com.android.systemui.statusbar.policy.NetworkController;
 public class CollapsedStatusBarFragment extends Fragment implements CommandQueue.Callbacks, StatusBarStateController.StateListener {
     protected View mCenteredIconArea;
     private View mClockView;
-    /* access modifiers changed from: private */
-    public CommandQueue mCommandQueue;
+    private CommandQueue mCommandQueue;
     private StatusBarIconController.DarkIconManager mDarkIconManager;
     private int mDisabled1;
     protected KeyguardStateController mKeyguardStateController;
@@ -31,6 +31,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     protected View mNotificationIconAreaInner;
     private View mOperatorNameFrame;
     private NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback() {
+        /* class com.android.systemui.statusbar.phone.CollapsedStatusBarFragment.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsAirplaneMode(NetworkController.IconState iconState) {
             CollapsedStatusBarFragment.this.mCommandQueue.recomputeDisableFlags(CollapsedStatusBarFragment.this.getContext().getDisplayId(), true);
         }
@@ -52,6 +55,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     public void initMiuiViewsOnViewCreated(View view) {
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
     }
 
@@ -97,7 +101,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void onSaveInstanceState(Bundle bundle) {
         super.onSaveInstanceState(bundle);
-        SparseArray sparseArray = new SparseArray();
+        SparseArray<? extends Parcelable> sparseArray = new SparseArray<>();
         this.mStatusBar.saveHierarchyState(sparseArray);
         bundle.putSparseParcelableArray("panel_state", sparseArray);
     }
@@ -140,6 +144,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         showNotificationIconArea(false);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         if (i == getContext().getDisplayId()) {
             int adjustDisableFlags = adjustDisableFlags(i2);
@@ -256,6 +261,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             return;
         }
         view.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable(view, i) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$CollapsedStatusBarFragment$27RMKG7VU7GD3kVXbGdyl_3FVd4 */
             public final /* synthetic */ View f$0;
             public final /* synthetic */ int f$1;
 
@@ -265,7 +271,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             }
 
             public final void run() {
-                this.f$0.setVisibility(this.f$1);
+                CollapsedStatusBarFragment.lambda$animateHiddenState$0(this.f$0, this.f$1);
             }
         });
     }
@@ -283,7 +289,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             view.setAlpha(1.0f);
             return;
         }
-        view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction((Runnable) null);
+        view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
         if (this.mKeyguardStateController.isKeyguardFadingAway()) {
             view.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
         }
@@ -305,6 +311,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0015R$id.operator_name)).inflate();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
         int displayId = getContext().getDisplayId();
         int i = this.mDisabled1;

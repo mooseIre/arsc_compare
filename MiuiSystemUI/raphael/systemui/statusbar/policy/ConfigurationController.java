@@ -5,25 +5,25 @@ import android.content.res.Configuration;
 public interface ConfigurationController extends CallbackController<ConfigurationListener> {
 
     public interface ConfigurationListener {
-        void onConfigChanged(Configuration configuration) {
+        default void onConfigChanged(Configuration configuration) {
         }
 
-        void onDensityOrFontScaleChanged() {
+        default void onDensityOrFontScaleChanged() {
         }
 
-        void onLocaleListChanged() {
+        default void onLocaleListChanged() {
         }
 
-        void onMiuiThemeChanged(boolean z) {
+        default void onMiuiThemeChanged(boolean z) {
         }
 
-        void onOverlayChanged() {
+        default void onOverlayChanged() {
         }
 
-        void onThemeChanged() {
+        default void onThemeChanged() {
         }
 
-        void onUiModeChanged() {
+        default void onUiModeChanged() {
         }
     }
 

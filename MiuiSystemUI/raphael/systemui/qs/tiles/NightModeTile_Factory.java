@@ -11,6 +11,7 @@ public final class NightModeTile_Factory implements Factory<NightModeTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NightModeTile get() {
         return provideInstance(this.hostProvider);
     }

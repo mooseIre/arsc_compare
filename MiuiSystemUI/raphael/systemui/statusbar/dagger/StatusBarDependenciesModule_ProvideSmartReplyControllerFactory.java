@@ -19,6 +19,7 @@ public final class StatusBarDependenciesModule_ProvideSmartReplyControllerFactor
         this.clickNotifierProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public SmartReplyController get() {
         return provideInstance(this.entryManagerProvider, this.statusBarServiceProvider, this.clickNotifierProvider);
     }

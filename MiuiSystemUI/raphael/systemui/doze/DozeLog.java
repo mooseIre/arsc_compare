@@ -13,22 +13,29 @@ import java.lang.reflect.Array;
 public class DozeLog implements Dumpable {
     private SummaryStats mEmergencyCallStats;
     private final KeyguardUpdateMonitorCallback mKeyguardCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.doze.DozeLog.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onEmergencyCallAction() {
             DozeLog.this.traceEmergencyCall();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardBouncerChanged(boolean z) {
             DozeLog.this.traceKeyguardBouncerChanged(z);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStartedWakingUp() {
             DozeLog.this.traceScreenOn();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onFinishedGoingToSleep(int i) {
             DozeLog.this.traceScreenOff(i);
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             DozeLog.this.traceKeyguard(z);
         }
@@ -41,8 +48,7 @@ public class DozeLog implements Dumpable {
     private boolean mPulsing;
     private SummaryStats mScreenOnNotPulsingStats;
     private SummaryStats mScreenOnPulsingStats;
-    /* access modifiers changed from: private */
-    public long mSince;
+    private long mSince;
 
     public DozeLog(KeyguardUpdateMonitor keyguardUpdateMonitor, DumpManager dumpManager, DozeLogger dozeLogger) {
         this.mLogger = dozeLogger;
@@ -53,7 +59,7 @@ public class DozeLog implements Dumpable {
         this.mScreenOnPulsingStats = new SummaryStats();
         this.mScreenOnNotPulsingStats = new SummaryStats();
         this.mEmergencyCallStats = new SummaryStats();
-        this.mProxStats = (SummaryStats[][]) Array.newInstance(SummaryStats.class, new int[]{10, 2});
+        this.mProxStats = (SummaryStats[][]) Array.newInstance(SummaryStats.class, 10, 2);
         for (int i = 0; i < 10; i++) {
             this.mProxStats[i][0] = new SummaryStats();
             this.mProxStats[i][1] = new SummaryStats();
@@ -143,9 +149,10 @@ public class DozeLog implements Dumpable {
 
     public void traceProximityResult(boolean z, long j, int i) {
         this.mLogger.logProximityResult(z, j, i);
-        this.mProxStats[i][!z].append();
+        this.mProxStats[i][!z ? 1 : 0].append();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         synchronized (DozeLog.class) {
             printWriter.print("  Doze summary stats (for ");
@@ -185,7 +192,8 @@ public class DozeLog implements Dumpable {
         this.mLogger.logDozeSuppressed(state);
     }
 
-    private class SummaryStats {
+    /* access modifiers changed from: private */
+    public class SummaryStats {
         private int mCount;
 
         private SummaryStats() {

@@ -12,8 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiOverviewProxy.kt */
 public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
-    /* access modifiers changed from: private */
-    public final OverviewProxyService proxyService;
+    private final OverviewProxyService proxyService;
 
     /* access modifiers changed from: private */
     public final void notifyGestureLineProgress(float f) {
@@ -24,6 +23,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         this.proxyService = overviewProxyService;
     }
 
+    @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
     public void exitSplitScreen() {
         if (verifyCaller("startScreenPinning")) {
             long clearCallingIdentity = Binder.clearCallingIdentity();
@@ -39,6 +39,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         }
     }
 
+    @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
     @Nullable
     public Rect getMiddleSplitScreenSecondaryBounds() {
         if (!verifyCaller("getMiddleSplitScreenSecondaryBounds")) {
@@ -60,6 +61,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         }
     }
 
+    @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
     public void onGestureLineProgress(float f) {
         if (verifyCaller("onGestureLineProgress")) {
             long clearCallingIdentity = Binder.clearCallingIdentity();
@@ -71,6 +73,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         }
     }
 
+    @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
     public void onAssistantGestureCompletion() {
         if (verifyCaller("onAssistantGestureCompletion")) {
             long clearCallingIdentity = Binder.clearCallingIdentity();

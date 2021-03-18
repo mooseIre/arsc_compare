@@ -34,16 +34,12 @@ import miui.widget.SlidingButton;
 public class MiuiQSDetail extends LinearLayout {
     private Animator.AnimatorListener mAnimInListener;
     private Animator.AnimatorListener mAnimOutListener;
-    /* access modifiers changed from: private */
-    public boolean mAnimatingOpen;
+    private boolean mAnimatingOpen;
     private QSDetailClipper mClipper;
-    /* access modifiers changed from: private */
-    public boolean mClosingDetail;
-    /* access modifiers changed from: private */
-    public DetailAdapter mDetailAdapter;
+    private boolean mClosingDetail;
+    private DetailAdapter mDetailAdapter;
     private View mDetailContainer;
-    /* access modifiers changed from: private */
-    public ViewGroup mDetailContent;
+    private ViewGroup mDetailContent;
     protected TextView mDetailDoneButton;
     protected TextView mDetailSettingsButton;
     private final SparseArray<View> mDetailViews = new SparseArray<>();
@@ -51,14 +47,16 @@ public class MiuiQSDetail extends LinearLayout {
     private boolean mFullyExpanded;
     private MiuiNotificationShadeHeader mHeader;
     private final AnimatorListenerAdapter mHideGridContentWhenDone = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.qs.MiuiQSDetail.AnonymousClass2 */
+
         public void onAnimationCancel(Animator animator) {
             animator.removeListener(this);
-            boolean unused = MiuiQSDetail.this.mAnimatingOpen = false;
+            MiuiQSDetail.this.mAnimatingOpen = false;
             MiuiQSDetail.this.checkPendingAnimations();
         }
 
         public void onAnimationEnd(Animator animator) {
-            boolean unused = MiuiQSDetail.this.mAnimatingOpen = false;
+            MiuiQSDetail.this.mAnimatingOpen = false;
             MiuiQSDetail.this.checkPendingAnimations();
         }
     };
@@ -73,6 +71,8 @@ public class MiuiQSDetail extends LinearLayout {
     protected TextView mQsDetailHeaderTitle;
     private QSPanel mQsPanel;
     protected Callback mQsPanelCallback = new Callback() {
+        /* class com.android.systemui.qs.MiuiQSDetail.AnonymousClass1 */
+
         /* access modifiers changed from: private */
         /* renamed from: lambda$onToggleStateChanged$0 */
         public /* synthetic */ void lambda$onToggleStateChanged$0$MiuiQSDetail$1(boolean z) {
@@ -80,8 +80,10 @@ public class MiuiQSDetail extends LinearLayout {
             miuiQSDetail.handleToggleStateChanged(z, miuiQSDetail.mDetailAdapter != null && MiuiQSDetail.this.mDetailAdapter.getToggleEnabled());
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetail.Callback
         public void onToggleStateChanged(boolean z) {
             MiuiQSDetail.this.post(new Runnable(z) {
+                /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$1$omLPU6ca8j87lMH45TyZrYZWl50 */
                 public final /* synthetic */ boolean f$1;
 
                 {
@@ -94,8 +96,10 @@ public class MiuiQSDetail extends LinearLayout {
             });
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetail.Callback
         public void onShowingDetail(DetailAdapter detailAdapter, int i, int i2) {
             MiuiQSDetail.this.post(new Runnable(detailAdapter, i, i2) {
+                /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$1$_HWXuQHZgY6THwzAXMxeIaok */
                 public final /* synthetic */ DetailAdapter f$1;
                 public final /* synthetic */ int f$2;
                 public final /* synthetic */ int f$3;
@@ -126,8 +130,10 @@ public class MiuiQSDetail extends LinearLayout {
             MiuiQSDetail.this.handleScanStateChanged(z);
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetail.Callback
         public void onScanStateChanged(boolean z) {
             MiuiQSDetail.this.post(new Runnable(z) {
+                /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$1$3FsPnbIjHjXwyg5W3S_hQtzzuqQ */
                 public final /* synthetic */ boolean f$1;
 
                 {
@@ -161,10 +167,12 @@ public class MiuiQSDetail extends LinearLayout {
     public MiuiQSDetail(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         AnonymousClass3 r1 = new AnimatorListenerAdapter() {
+            /* class com.android.systemui.qs.MiuiQSDetail.AnonymousClass3 */
+
             public void onAnimationEnd(Animator animator) {
                 MiuiQSDetail.this.mDetailContent.removeAllViews();
                 MiuiQSDetail.this.setVisibility(4);
-                boolean unused = MiuiQSDetail.this.mClosingDetail = false;
+                MiuiQSDetail.this.mClosingDetail = false;
             }
         };
         this.mTeardownDetailWhenDone = r1;
@@ -196,6 +204,8 @@ public class MiuiQSDetail extends LinearLayout {
         updateDetailText();
         this.mClipper = new QSDetailClipper(this);
         this.mDetailDoneButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$2fBnEkbvnzxQmaLsoeOX3XlfwcA */
+
             public final void onClick(View view) {
                 MiuiQSDetail.this.lambda$onFinishInflate$0$MiuiQSDetail(view);
             }
@@ -206,7 +216,7 @@ public class MiuiQSDetail extends LinearLayout {
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflate$0 */
     public /* synthetic */ void lambda$onFinishInflate$0$MiuiQSDetail(View view) {
-        announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_desc_quick_settings));
+        announceForAccessibility(((LinearLayout) this).mContext.getString(C0021R$string.accessibility_desc_quick_settings));
         this.mQsPanel.closeDetail();
     }
 
@@ -254,7 +264,7 @@ public class MiuiQSDetail extends LinearLayout {
                 this.mTriggeredExpand = false;
             } else {
                 this.mTriggeredExpand = true;
-                ((CommandQueue) Dependency.get(CommandQueue.class)).animateExpandSettingsPanel((String) null);
+                ((CommandQueue) Dependency.get(CommandQueue.class)).animateExpandSettingsPanel(null);
             }
             this.mOpenX = i3;
             this.mOpenY = paddingTop;
@@ -270,7 +280,7 @@ public class MiuiQSDetail extends LinearLayout {
         if (z3 || this.mDetailAdapter != detailAdapter) {
             if (detailAdapter != null) {
                 int metricsCategory = detailAdapter.getMetricsCategory();
-                View createDetailView = detailAdapter.createDetailView(this.mContext, this.mDetailViews.get(metricsCategory), this.mDetailContent);
+                View createDetailView = detailAdapter.createDetailView(((LinearLayout) this).mContext, this.mDetailViews.get(metricsCategory), this.mDetailContent);
                 if (createDetailView != null) {
                     setupDetailFooter(detailAdapter);
                     this.mDetailContent.removeAllViews();
@@ -278,7 +288,7 @@ public class MiuiQSDetail extends LinearLayout {
                     this.mDetailViews.put(metricsCategory, createDetailView);
                     ((MetricsLogger) Dependency.get(MetricsLogger.class)).visible(detailAdapter.getMetricsCategory());
                     this.mUiEventLogger.log(detailAdapter.openDetailEvent());
-                    announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_quick_settings_detail, new Object[]{detailAdapter.getTitle()}));
+                    announceForAccessibility(((LinearLayout) this).mContext.getString(C0021R$string.accessibility_quick_settings_detail, detailAdapter.getTitle()));
                     this.mDetailAdapter = detailAdapter;
                     animatorListener = this.mAnimInListener;
                     setVisibility(0);
@@ -327,6 +337,7 @@ public class MiuiQSDetail extends LinearLayout {
         Intent settingsIntent = detailAdapter.getSettingsIntent();
         this.mDetailSettingsButton.setVisibility(settingsIntent != null ? 0 : 8);
         this.mDetailSettingsButton.setOnClickListener(new View.OnClickListener(detailAdapter, settingsIntent) {
+            /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$xw5zXA9qdEPWxv2ak7yP3xz0T5E */
             public final /* synthetic */ DetailAdapter f$1;
             public final /* synthetic */ Intent f$2;
 
@@ -369,14 +380,17 @@ public class MiuiQSDetail extends LinearLayout {
         this.mQsDetailHeaderSwitch.setClickable(true);
         handleToggleStateChanged(toggleState.booleanValue(), detailAdapter.getToggleEnabled());
         this.mQsDetailHeaderSwitch.setOnPerformCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$AdNHpUBZdRe21F6S_5YM97n9iFM */
+
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                DetailAdapter.this.setToggleState(z);
+                MiuiQSDetail.lambda$setupDetailHeader$2(DetailAdapter.this, compoundButton, z);
             }
         });
     }
 
     /* access modifiers changed from: private */
-    public void handleToggleStateChanged(boolean z, boolean z2) {
+    /* access modifiers changed from: public */
+    private void handleToggleStateChanged(boolean z, boolean z2) {
         this.mSwitchState = z;
         if (!this.mAnimatingOpen) {
             SlidingButton slidingButton = this.mQsDetailHeaderSwitch;
@@ -391,14 +405,16 @@ public class MiuiQSDetail extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleScanStateChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void handleScanStateChanged(boolean z) {
         if (this.mScanState != z) {
             this.mScanState = z;
         }
     }
 
     /* access modifiers changed from: private */
-    public void checkPendingAnimations() {
+    /* access modifiers changed from: public */
+    private void checkPendingAnimations() {
         boolean z = this.mSwitchState;
         DetailAdapter detailAdapter = this.mDetailAdapter;
         handleToggleStateChanged(z, detailAdapter != null && detailAdapter.getToggleEnabled());

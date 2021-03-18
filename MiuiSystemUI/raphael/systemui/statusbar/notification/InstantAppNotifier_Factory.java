@@ -20,6 +20,7 @@ public final class InstantAppNotifier_Factory implements Factory<InstantAppNotif
         this.dividerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public InstantAppNotifier get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.uiBgExecutorProvider, this.dividerProvider);
     }

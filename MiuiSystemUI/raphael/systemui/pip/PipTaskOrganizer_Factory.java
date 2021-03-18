@@ -23,6 +23,7 @@ public final class PipTaskOrganizer_Factory implements Factory<PipTaskOrganizer>
         this.pipAnimationControllerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public PipTaskOrganizer get() {
         return provideInstance(this.contextProvider, this.boundsHandlerProvider, this.surfaceTransactionHelperProvider, this.dividerProvider, this.displayControllerProvider, this.pipAnimationControllerProvider);
     }

@@ -6,6 +6,7 @@ public class ProgressTransformState extends TransformState {
     private static Pools.SimplePool<ProgressTransformState> sInstancePool = new Pools.SimplePool<>(40);
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public boolean sameAs(TransformState transformState) {
         if (transformState instanceof ProgressTransformState) {
             return true;
@@ -21,6 +22,7 @@ public class ProgressTransformState extends TransformState {
         return new ProgressTransformState();
     }
 
+    @Override // com.android.systemui.statusbar.notification.TransformState
     public void recycle() {
         super.recycle();
         sInstancePool.release(this);

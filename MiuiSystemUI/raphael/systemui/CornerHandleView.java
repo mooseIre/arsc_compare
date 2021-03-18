@@ -28,9 +28,9 @@ public class CornerHandleView extends View {
         this.mPaint.setStyle(Paint.Style.STROKE);
         this.mPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mPaint.setStrokeWidth(getStrokePx());
-        int themeAttr = Utils.getThemeAttr(this.mContext, C0009R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mContext, Utils.getThemeAttr(this.mContext, C0009R$attr.lightIconTheme));
-        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(this.mContext, themeAttr);
+        int themeAttr = Utils.getThemeAttr(((View) this).mContext, C0009R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(((View) this).mContext, Utils.getThemeAttr(((View) this).mContext, C0009R$attr.lightIconTheme));
+        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(((View) this).mContext, themeAttr);
         this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.singleToneColor);
         this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor);
         updatePath();
@@ -57,7 +57,7 @@ public class CornerHandleView extends View {
         RectF rectF = new RectF(f2, f2, f4, f4);
         if (angle >= 90.0f) {
             float f5 = marginPx + innerRadiusPx;
-            float convertDpToPixel = convertDpToPixel(((31.0f - ((convertPixelToDp(f3 * 3.1415927f, this.mContext) * getAngle()) / 360.0f)) - 8.0f) / 2.0f, this.mContext) + f5;
+            float convertDpToPixel = convertDpToPixel(((31.0f - ((convertPixelToDp(f3 * 3.1415927f, ((View) this).mContext) * getAngle()) / 360.0f)) - 8.0f) / 2.0f, ((View) this).mContext) + f5;
             this.mPath.moveTo(f2, convertDpToPixel);
             this.mPath.lineTo(f2, f5);
             this.mPath.arcTo(rectF, f, angle);
@@ -94,7 +94,7 @@ public class CornerHandleView extends View {
     }
 
     private float getAngle() {
-        float convertPixelToDp = (31.0f / convertPixelToDp((getOuterRadiusPx() * 2.0f) * 3.1415927f, this.mContext)) * 360.0f;
+        float convertPixelToDp = (31.0f / convertPixelToDp((getOuterRadiusPx() * 2.0f) * 3.1415927f, ((View) this).mContext)) * 360.0f;
         if (convertPixelToDp > 90.0f) {
             return 90.0f;
         }
@@ -102,7 +102,7 @@ public class CornerHandleView extends View {
     }
 
     private float getMarginPx() {
-        return convertDpToPixel(8.0f, this.mContext);
+        return convertDpToPixel(8.0f, ((View) this).mContext);
     }
 
     private float getInnerRadiusPx() {
@@ -118,7 +118,7 @@ public class CornerHandleView extends View {
             dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.config_rounded_mask_size_top);
         }
         if (dimensionPixelSize == 0) {
-            dimensionPixelSize = (int) convertDpToPixel(15.0f, this.mContext);
+            dimensionPixelSize = (int) convertDpToPixel(15.0f, ((View) this).mContext);
         }
         return (float) dimensionPixelSize;
     }

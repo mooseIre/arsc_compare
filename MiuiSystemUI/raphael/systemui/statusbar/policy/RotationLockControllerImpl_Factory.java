@@ -11,6 +11,7 @@ public final class RotationLockControllerImpl_Factory implements Factory<Rotatio
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public RotationLockControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

@@ -38,6 +38,7 @@ import com.miui.systemui.events.SetConfigEvent;
 import com.miui.systemui.events.VisibleEvent;
 import com.miui.systemui.util.CommonUtil;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -52,8 +53,7 @@ public class NotificationStat {
     private Context mContext;
     private NotificationEntryManager mEntryManager;
     private EventTracker mEventTracker;
-    /* access modifiers changed from: private */
-    public NotificationGroupManager mGroupManager;
+    private NotificationGroupManager mGroupManager;
     private HeadsUpManagerPhone mHeadsUpManager;
     private KeyguardStateController mKeyguardStateController;
     private NotificationPanelStat mPanelStat;
@@ -67,6 +67,9 @@ public class NotificationStat {
         this.mEventTracker = eventTracker;
         this.mPanelStat = notificationPanelStat;
         notificationGroupManager.addOnGroupChangeListener(new NotificationGroupManager.OnGroupChangeListener() {
+            /* class com.android.systemui.statusbar.notification.analytics.NotificationStat.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.phone.NotificationGroupManager.OnGroupChangeListener
             public void onGroupExpansionChanged(ExpandableNotificationRow expandableNotificationRow, boolean z) {
                 if (z) {
                     NotificationStat.this.onGroupExpand(expandableNotificationRow.getEntry(), NotificationStat.this.mGroupManager.getChildren(expandableNotificationRow.getEntry().getSbn()).size());
@@ -125,8 +128,8 @@ public class NotificationStat {
         int notifIndex = getNotifIndex(notificationEntry);
         onRemoveSingle(notificationEntry, notifIndex);
         if (this.mGroupManager.isSummaryOfGroup(notificationEntry.getSbn()) && (children = this.mGroupManager.getChildren(notificationEntry.getSbn())) != null) {
-            for (NotificationEntry onRemoveSingle : children) {
-                onRemoveSingle(onRemoveSingle, notifIndex);
+            for (NotificationEntry notificationEntry2 : children) {
+                onRemoveSingle(notificationEntry2, notifIndex);
                 notifIndex++;
             }
         }
@@ -206,7 +209,7 @@ public class NotificationStat {
     }
 
     public void onFloatManualCollapse(NotificationEntry notificationEntry, boolean z) {
-        handleFloatManualCollapse(notificationEntry, z ^ true ? 1 : 0);
+        handleFloatManualCollapse(notificationEntry, !z ? 1 : 0);
     }
 
     public void onClickAllowNotification(NotificationEntry notificationEntry) {
@@ -257,6 +260,9 @@ public class NotificationStat {
 
     public void logVisibilityChanges(List<String> list, List<String> list2, boolean z, boolean z2) {
         list.forEach(new Consumer() {
+            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$h58jkTJPtvADAYsXdsJA1kVW9lE */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 NotificationStat.this.lambda$logVisibilityChanges$0$NotificationStat((String) obj);
             }
@@ -287,21 +293,26 @@ public class NotificationStat {
     private void handleVisibleEvent(String str, String str2) {
         ArrayList arrayList = new ArrayList(1);
         arrayList.add(str);
-        handleVisibleEvent((List<String>) arrayList, str2);
+        handleVisibleEvent(arrayList, str2);
     }
 
     private void handleVisibleEvent(List<String> list, String str) {
         List list2 = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate(list) {
+            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$57_sNF2n7Ax5LcAxQDxEiKpAB4Y */
             public final /* synthetic */ List f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return this.f$0.contains(((NotificationEntry) obj).getKey());
             }
         }).map(new Function() {
+            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$sqwH11aQ0BBdkw0RiRU2q_c1VZ8 */
+
+            @Override // java.util.function.Function
             public final Object apply(Object obj) {
                 return NotificationStat.this.lambda$handleVisibleEvent$2$NotificationStat((NotificationEntry) obj);
             }
@@ -319,11 +330,11 @@ public class NotificationStat {
         hashMap.put("duration", Long.valueOf(System.currentTimeMillis() - notificationEntry.getSbn().seeTime));
         hashMap.put("index", Integer.valueOf(getNotifIndex(notificationEntry)));
         if (notificationEntry.getSbn().getNotification().isGroupSummary()) {
-            hashMap.put("items", new JSONArray(getChildrenPostTime(notificationEntry)).toString());
+            hashMap.put("items", new JSONArray((Collection) getChildrenPostTime(notificationEntry)).toString());
         } else {
             List<Long> entranceChildrenIds = getEntranceChildrenIds(notificationEntry);
             if (!entranceChildrenIds.isEmpty()) {
-                hashMap.put("items", new JSONArray(entranceChildrenIds).toString());
+                hashMap.put("items", new JSONArray((Collection) entranceChildrenIds).toString());
             }
         }
         notificationEntry.getSbn().seeTime = 0;
@@ -344,8 +355,8 @@ public class NotificationStat {
             return Collections.emptyList();
         }
         ArrayList arrayList = new ArrayList(longArray.length);
-        for (long valueOf : longArray) {
-            arrayList.add(Long.valueOf(valueOf));
+        for (long j : longArray) {
+            arrayList.add(Long.valueOf(j));
         }
         return arrayList;
     }

@@ -62,37 +62,15 @@ public class DozeFactory {
 
     /* access modifiers changed from: package-private */
     public DozeMachine assembleMachine(DozeService dozeService) {
-        DozeService dozeService2 = dozeService;
-        AmbientDisplayConfiguration ambientDisplayConfiguration = new AmbientDisplayConfiguration(dozeService2);
+        AmbientDisplayConfiguration ambientDisplayConfiguration = new AmbientDisplayConfiguration(dozeService);
         DelayedWakeLock.Builder builder = this.mDelayedWakeLockBuilder;
         builder.setHandler(this.mHandler);
         builder.setTag("Doze");
         DelayedWakeLock build = builder.build();
-        DozeMachine.Service wrapIfNeeded = DozeSuspendScreenStatePreventingAdapter.wrapIfNeeded(DozeScreenStatePreventingAdapter.wrapIfNeeded(new DozeBrightnessHostForwarder(dozeService2, this.mDozeHost), this.mDozeParameters), this.mDozeParameters);
+        DozeMachine.Service wrapIfNeeded = DozeSuspendScreenStatePreventingAdapter.wrapIfNeeded(DozeScreenStatePreventingAdapter.wrapIfNeeded(new DozeBrightnessHostForwarder(dozeService, this.mDozeHost), this.mDozeParameters), this.mDozeParameters);
         DozeMachine dozeMachine = new DozeMachine(wrapIfNeeded, ambientDisplayConfiguration, build, this.mWakefulnessLifecycle, this.mBatteryController, this.mDozeLog, this.mDockManager, this.mDozeHost);
-        DozeMachine.Part[] partArr = new DozeMachine.Part[9];
-        partArr[0] = new DozePauser(this.mHandler, dozeMachine, this.mAlarmManager, this.mDozeParameters.getPolicy());
-        partArr[1] = new DozeFalsingManagerAdapter(this.mFalsingManager);
-        AsyncSensorManager asyncSensorManager = this.mAsyncSensorManager;
-        DozeHost dozeHost = this.mDozeHost;
-        AlarmManager alarmManager = this.mAlarmManager;
-        DozeParameters dozeParameters = this.mDozeParameters;
-        DockManager dockManager = this.mDockManager;
-        DozeLog dozeLog = this.mDozeLog;
-        DozeMachine.Part[] partArr2 = partArr;
-        DozeLog dozeLog2 = dozeLog;
-        DozeMachine dozeMachine2 = dozeMachine;
-        partArr2[2] = createDozeTriggers(dozeService, asyncSensorManager, dozeHost, alarmManager, ambientDisplayConfiguration, dozeParameters, build, dozeMachine, dockManager, dozeLog2, this.mProximityCheck);
-        partArr2[3] = createDozeUi(dozeService, this.mDozeHost, build, dozeMachine2, this.mHandler, this.mAlarmManager, this.mDozeParameters, this.mDozeLog);
-        partArr2[4] = new DozeScreenState(wrapIfNeeded, this.mHandler, this.mDozeHost, this.mDozeParameters, build);
-        partArr2[5] = createDozeScreenBrightness(dozeService, wrapIfNeeded, this.mAsyncSensorManager, this.mDozeHost, this.mDozeParameters, this.mHandler);
-        partArr2[6] = new DozeWallpaperState(this.mWallpaperManager, this.mBiometricUnlockController, this.mDozeParameters);
-        DozeMachine dozeMachine3 = dozeMachine2;
-        partArr2[7] = new DozeDockHandler(ambientDisplayConfiguration, dozeMachine3, this.mDockManager);
-        DozeMachine.Part[] partArr3 = partArr2;
-        partArr3[8] = new DozeAuthRemover(dozeService);
-        dozeMachine3.setParts(partArr3);
-        return dozeMachine3;
+        dozeMachine.setParts(new DozeMachine.Part[]{new DozePauser(this.mHandler, dozeMachine, this.mAlarmManager, this.mDozeParameters.getPolicy()), new DozeFalsingManagerAdapter(this.mFalsingManager), createDozeTriggers(dozeService, this.mAsyncSensorManager, this.mDozeHost, this.mAlarmManager, ambientDisplayConfiguration, this.mDozeParameters, build, dozeMachine, this.mDockManager, this.mDozeLog, this.mProximityCheck), createDozeUi(dozeService, this.mDozeHost, build, dozeMachine, this.mHandler, this.mAlarmManager, this.mDozeParameters, this.mDozeLog), new DozeScreenState(wrapIfNeeded, this.mHandler, this.mDozeHost, this.mDozeParameters, build), createDozeScreenBrightness(dozeService, wrapIfNeeded, this.mAsyncSensorManager, this.mDozeHost, this.mDozeParameters, this.mHandler), new DozeWallpaperState(this.mWallpaperManager, this.mBiometricUnlockController, this.mDozeParameters), new DozeDockHandler(ambientDisplayConfiguration, dozeMachine, this.mDockManager), new DozeAuthRemover(dozeService)});
+        return dozeMachine;
     }
 
     private DozeMachine.Part createDozeScreenBrightness(Context context, DozeMachine.Service service, SensorManager sensorManager, DozeHost dozeHost, DozeParameters dozeParameters, Handler handler) {

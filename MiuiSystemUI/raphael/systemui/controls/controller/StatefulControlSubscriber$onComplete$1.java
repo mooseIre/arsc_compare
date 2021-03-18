@@ -15,6 +15,7 @@ final class StatefulControlSubscriber$onComplete$1 extends Lambda implements Fun
         this.this$0 = statefulControlSubscriber;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         if (this.this$0.subscriptionOpen) {
             this.this$0.subscriptionOpen = false;

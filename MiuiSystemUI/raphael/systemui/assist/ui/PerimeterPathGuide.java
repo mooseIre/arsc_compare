@@ -31,7 +31,8 @@ public class PerimeterPathGuide {
         BOTTOM_LEFT
     }
 
-    private class RegionAttributes {
+    /* access modifiers changed from: private */
+    public class RegionAttributes {
         public float absoluteLength;
         public float endCoordinate;
         public float normalizedLength;
@@ -189,8 +190,9 @@ public class PerimeterPathGuide {
             return;
         }
         strokeRegion(path, (Region) placePoint.first, ((Float) placePoint.second).floatValue(), 1.0f);
+        Region[] values = Region.values();
         boolean z = false;
-        for (Region region : Region.values()) {
+        for (Region region : values) {
             if (region.equals(placePoint.first)) {
                 z = true;
             } else if (!z) {
@@ -227,7 +229,8 @@ public class PerimeterPathGuide {
         if (f < 0.0f || f > 1.0f) {
             f = ((f % 1.0f) + 1.0f) % 1.0f;
         }
-        for (Region region : Region.values()) {
+        Region[] values = Region.values();
+        for (Region region : values) {
             if (f <= this.mRegions[region.ordinal()].endCoordinate) {
                 return region;
             }

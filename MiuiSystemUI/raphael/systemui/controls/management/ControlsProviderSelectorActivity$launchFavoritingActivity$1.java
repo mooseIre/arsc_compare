@@ -5,8 +5,9 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.util.Pair;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsProviderSelectorActivity.kt */
-final class ControlsProviderSelectorActivity$launchFavoritingActivity$1 implements Runnable {
+public final class ControlsProviderSelectorActivity$launchFavoritingActivity$1 implements Runnable {
     final /* synthetic */ ComponentName $component;
     final /* synthetic */ ControlsProviderSelectorActivity this$0;
 

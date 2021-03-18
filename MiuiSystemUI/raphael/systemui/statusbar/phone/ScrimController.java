@@ -51,8 +51,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     private Runnable mBlankingTransitionRunnable;
     private float mBubbleAlpha = -1.0f;
     private int mBubbleTint;
-    /* access modifiers changed from: private */
-    public Callback mCallback;
+    private Callback mCallback;
     private final SysuiColorExtractor mColorExtractor;
     private ColorExtractor.GradientColors mColors;
     private boolean mDarkenWhileDragging;
@@ -69,8 +68,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     private final KeyguardStateController mKeyguardStateController;
     private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private final KeyguardVisibilityCallback mKeyguardVisibilityCallback;
-    /* access modifiers changed from: private */
-    public boolean mNeedsDrawableColorUpdate;
+    private boolean mNeedsDrawableColorUpdate;
     private Runnable mPendingFrameCallback;
     private boolean mScreenBlankingCallbackCalled;
     private boolean mScreenOn;
@@ -91,16 +89,16 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     private boolean mWallpaperVisibilityTimedOut;
 
     public interface Callback {
-        void onCancelled() {
+        default void onCancelled() {
         }
 
-        void onDisplayBlanked() {
+        default void onDisplayBlanked() {
         }
 
-        void onFinished() {
+        default void onFinished() {
         }
 
-        void onStart() {
+        default void onStart() {
         }
     }
 
@@ -110,6 +108,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     public ScrimController(LightBarController lightBarController, DozeParameters dozeParameters, AlarmManager alarmManager, final KeyguardStateController keyguardStateController, DelayedWakeLock.Builder builder, Handler handler, KeyguardUpdateMonitor keyguardUpdateMonitor, SysuiColorExtractor sysuiColorExtractor, DockManager dockManager, BlurUtils blurUtils) {
         Objects.requireNonNull(lightBarController);
         this.mScrimStateListener = new TriConsumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$v3pYAGeeZEy0j9LKp92o1adNfrk */
+
             public final void accept(Object obj, Object obj2, Object obj3) {
                 LightBarController.this.setScrimState((ScrimState) obj, ((Float) obj2).floatValue(), (ColorExtractor.GradientColors) obj3);
             }
@@ -121,6 +121,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
         this.mKeyguardVisibilityCallback = new KeyguardVisibilityCallback();
         this.mHandler = handler;
         this.mTimeTicker = new AlarmTimeout(alarmManager, new AlarmManager.OnAlarmListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$ZxOK9HbkOUnaEI0FKoidLb2saOY */
+
             public final void onAlarm() {
                 ScrimController.this.onHideWallpaperTimeout();
             }
@@ -131,6 +133,9 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
         this.mDozeParameters = dozeParameters;
         this.mDockManager = dockManager;
         keyguardStateController.addCallback(new KeyguardStateController.Callback() {
+            /* class com.android.systemui.statusbar.phone.ScrimController.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
             public void onKeyguardFadingAwayChanged() {
                 ScrimController.this.setKeyguardFadingAway(keyguardStateController.isKeyguardFadingAway(), keyguardStateController.getKeyguardFadingAwayDuration());
             }
@@ -164,7 +169,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     public void transitionTo(ScrimState scrimState) {
-        transitionTo(scrimState, (Callback) null);
+        transitionTo(scrimState, null);
     }
 
     public void transitionTo(ScrimState scrimState, Callback callback) {
@@ -219,6 +224,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
                 this.mWallpaperVisibilityTimedOut = false;
                 if (shouldFadeAwayWallpaper()) {
                     DejankUtils.postAfterTraversal(new Runnable() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$ScrimController$YQJRwwTLFgaOweq9aHvS8f9csz8 */
+
                         public final void run() {
                             ScrimController.this.lambda$transitionTo$0$ScrimController();
                         }
@@ -227,6 +234,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
                     AlarmTimeout alarmTimeout = this.mTimeTicker;
                     Objects.requireNonNull(alarmTimeout);
                     DejankUtils.postAfterTraversal(new Runnable() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$0ZxUFLvlsGlm9ET2o7nSDW8wc5w */
+
                         public final void run() {
                             AlarmTimeout.this.cancel();
                         }
@@ -234,6 +243,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
                 }
                 if (this.mKeyguardUpdateMonitor.needsSlowUnlockTransition() && this.mState == ScrimState.UNLOCKED) {
                     this.mScrimInFront.postOnAnimationDelayed(new Runnable() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$5DY8P9cXHTvbVZZOVB_VSCJUZk0 */
+
                         public final void run() {
                             ScrimController.this.scheduleUpdate();
                         }
@@ -362,6 +373,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
             if (this.mWallpaperVisibilityTimedOut) {
                 this.mWallpaperVisibilityTimedOut = false;
                 DejankUtils.postAfterTraversal(new Runnable() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$ScrimController$qcAzw93VG0gxAU1AfapPWpIf3aU */
+
                     public final void run() {
                         ScrimController.this.lambda$applyAndDispatchExpansion$1$ScrimController();
                     }
@@ -393,12 +406,12 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     public void setWakeLockScreenSensorActive(boolean z) {
-        for (ScrimState wakeLockScreenSensorActive : ScrimState.values()) {
-            wakeLockScreenSensorActive.setWakeLockScreenSensorActive(z);
+        for (ScrimState scrimState : ScrimState.values()) {
+            scrimState.setWakeLockScreenSensorActive(z);
         }
-        ScrimState scrimState = this.mState;
-        if (scrimState == ScrimState.PULSING) {
-            float behindAlpha = scrimState.getBehindAlpha();
+        ScrimState scrimState2 = this.mState;
+        if (scrimState2 == ScrimState.PULSING) {
+            float behindAlpha = scrimState2.getBehindAlpha();
             if (this.mBehindAlpha != behindAlpha) {
                 this.mBehindAlpha = behindAlpha;
                 if (!Float.isNaN(behindAlpha)) {
@@ -460,7 +473,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     /* access modifiers changed from: private */
-    public void dispatchScrimsVisible() {
+    /* access modifiers changed from: public */
+    private void dispatchScrimsVisible() {
         int i = (this.mScrimInFront.getViewAlpha() == 1.0f || this.mScrimBehind.getViewAlpha() == 1.0f) ? 2 : (this.mScrimInFront.getViewAlpha() == 0.0f && this.mScrimBehind.getViewAlpha() == 0.0f) ? 0 : 1;
         if (this.mScrimsVisibility != i) {
             this.mScrimsVisibility = i;
@@ -514,12 +528,13 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     private void startScrimAnimation(final View view, float f) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         Animator.AnimatorListener animatorListener = this.mAnimatorListener;
         if (animatorListener != null) {
             ofFloat.addListener(animatorListener);
         }
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(view, view instanceof ScrimView ? ((ScrimView) view).getTint() : 0) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$ScrimController$pQ1ZzyQHHAbZJylpLDQQk40ggTo */
             public final /* synthetic */ View f$1;
             public final /* synthetic */ int f$2;
 
@@ -536,10 +551,11 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
         ofFloat.setStartDelay(this.mAnimationDelay);
         ofFloat.setDuration(this.mAnimationDuration);
         ofFloat.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.statusbar.phone.ScrimController.AnonymousClass2 */
             private Callback lastCallback = ScrimController.this.mCallback;
 
             public void onAnimationEnd(Animator animator) {
-                view.setTag(ScrimController.TAG_KEY_ANIM, (Object) null);
+                view.setTag(ScrimController.TAG_KEY_ANIM, null);
                 ScrimController.this.onFinished(this.lastCallback);
                 ScrimController.this.dispatchScrimsVisible();
             }
@@ -604,7 +620,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     /* access modifiers changed from: private */
-    public void onFinished(Callback callback) {
+    /* access modifiers changed from: public */
+    private void onFinished(Callback callback) {
         if (this.mPendingFrameCallback == null) {
             if (!isAnimating(this.mScrimBehind) && !isAnimating(this.mScrimInFront) && !isAnimating(this.mScrimForBubble)) {
                 if (this.mWakeLockHeld) {
@@ -685,6 +702,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     private void blankDisplay() {
         updateScrimColor(this.mScrimInFront, 1.0f, -16777216);
         $$Lambda$ScrimController$ag08GXJhpSWypcA8hrLE9y1Zo r0 = new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$ScrimController$ag08GXJhpSWypcA8hrLE9y1Zo */
+
             public final void run() {
                 ScrimController.this.lambda$blankDisplay$4$ScrimController();
             }
@@ -702,6 +721,8 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
             this.mScreenBlankingCallbackCalled = true;
         }
         this.mBlankingTransitionRunnable = new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$ScrimController$naUAB1OlntOHTCtGQlLQ0dSkAuw */
+
             public final void run() {
                 ScrimController.this.lambda$blankDisplay$3$ScrimController();
             }
@@ -738,6 +759,7 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
         scheduleUpdate();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println(" ScrimController: ");
         printWriter.print("  state: ");
@@ -772,10 +794,10 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     public void setWallpaperSupportsAmbientMode(boolean z) {
+        ScrimState[] values;
         this.mWallpaperSupportsAmbientMode = z;
-        ScrimState[] values = ScrimState.values();
-        for (ScrimState wallpaperSupportsAmbientMode : values) {
-            wallpaperSupportsAmbientMode.setWallpaperSupportsAmbientMode(z);
+        for (ScrimState scrimState : ScrimState.values()) {
+            scrimState.setWallpaperSupportsAmbientMode(z);
         }
     }
 
@@ -807,11 +829,11 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     public void setHasBackdrop(boolean z) {
-        for (ScrimState hasBackdrop : ScrimState.values()) {
-            hasBackdrop.setHasBackdrop(z);
+        for (ScrimState scrimState : ScrimState.values()) {
+            scrimState.setHasBackdrop(z);
         }
-        ScrimState scrimState = this.mState;
-        if (scrimState == ScrimState.AOD || scrimState == ScrimState.PULSING) {
+        ScrimState scrimState2 = this.mState;
+        if (scrimState2 == ScrimState.AOD || scrimState2 == ScrimState.PULSING) {
             float behindAlpha = this.mState.getBehindAlpha();
             if (Float.isNaN(behindAlpha)) {
                 throw new IllegalStateException("Scrim opacity is NaN for state: " + this.mState + ", back: " + this.mBehindAlpha);
@@ -823,24 +845,27 @@ public class ScrimController implements ViewTreeObserver.OnPreDrawListener, Colo
     }
 
     /* access modifiers changed from: private */
-    public void setKeyguardFadingAway(boolean z, long j) {
-        for (ScrimState keyguardFadingAway : ScrimState.values()) {
-            keyguardFadingAway.setKeyguardFadingAway(z, j);
+    /* access modifiers changed from: public */
+    private void setKeyguardFadingAway(boolean z, long j) {
+        for (ScrimState scrimState : ScrimState.values()) {
+            scrimState.setKeyguardFadingAway(z, j);
         }
     }
 
     public void setLaunchingAffordanceWithPreview(boolean z) {
-        for (ScrimState launchingAffordanceWithPreview : ScrimState.values()) {
-            launchingAffordanceWithPreview.setLaunchingAffordanceWithPreview(z);
+        for (ScrimState scrimState : ScrimState.values()) {
+            scrimState.setLaunchingAffordanceWithPreview(z);
         }
     }
 
-    private class KeyguardVisibilityCallback extends KeyguardUpdateMonitorCallback {
+    /* access modifiers changed from: private */
+    public class KeyguardVisibilityCallback extends KeyguardUpdateMonitorCallback {
         private KeyguardVisibilityCallback() {
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
-            boolean unused = ScrimController.this.mNeedsDrawableColorUpdate = true;
+            ScrimController.this.mNeedsDrawableColorUpdate = true;
             ScrimController.this.scheduleUpdate();
         }
     }

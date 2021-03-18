@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$K8LiTMkPknhhclqjA2eboLxaGEU implemen
     private /* synthetic */ $$Lambda$K8LiTMkPknhhclqjA2eboLxaGEU() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((ScreenLifecycle.Observer) obj).onScreenTurnedOff();
     }

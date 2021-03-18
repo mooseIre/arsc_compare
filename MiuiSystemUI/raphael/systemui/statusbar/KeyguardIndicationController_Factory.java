@@ -38,6 +38,7 @@ public final class KeyguardIndicationController_Factory implements Factory<Keygu
         this.userManagerProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardIndicationController get() {
         return provideInstance(this.contextProvider, this.wakeLockBuilderProvider, this.keyguardStateControllerProvider, this.statusBarStateControllerProvider, this.keyguardUpdateMonitorProvider, this.dockManagerProvider, this.broadcastDispatcherProvider, this.devicePolicyManagerProvider, this.iBatteryStatsProvider, this.userManagerProvider);
     }

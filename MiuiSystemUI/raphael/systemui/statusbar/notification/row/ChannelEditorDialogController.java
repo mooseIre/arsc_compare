@@ -24,8 +24,12 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import kotlin.collections.CollectionsKt__CollectionsKt;
+import kotlin.collections.CollectionsKt__MutableCollectionsKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,8 +56,7 @@ public final class ChannelEditorDialogController {
     @NotNull
     private final List<NotificationChannel> paddedChannels = new ArrayList();
     private boolean prepared;
-    /* access modifiers changed from: private */
-    public final List<NotificationChannel> providedChannels = new ArrayList();
+    private final List<NotificationChannel> providedChannels = new ArrayList();
     private final int wmFlags = -2130444288;
 
     @VisibleForTesting
@@ -113,12 +116,12 @@ public final class ChannelEditorDialogController {
     }
 
     private final void buildGroupNameLookup() {
-        for (NotificationChannelGroup notificationChannelGroup : this.channelGroupList) {
-            if (notificationChannelGroup.getId() != null) {
+        for (T t : this.channelGroupList) {
+            if (t.getId() != null) {
                 HashMap<String, CharSequence> hashMap = this.groupNameLookup;
-                String id = notificationChannelGroup.getId();
+                String id = t.getId();
                 Intrinsics.checkExpressionValueIsNotNull(id, "group.id");
-                CharSequence name = notificationChannelGroup.getName();
+                CharSequence name = t.getName();
                 Intrinsics.checkExpressionValueIsNotNull(name, "group.name");
                 hashMap.put(id, name);
             }
@@ -129,7 +132,7 @@ public final class ChannelEditorDialogController {
         this.paddedChannels.clear();
         boolean unused = CollectionsKt__MutableCollectionsKt.addAll(this.paddedChannels, SequencesKt___SequencesKt.take(CollectionsKt___CollectionsKt.asSequence(set), 4));
         boolean unused2 = CollectionsKt__MutableCollectionsKt.addAll(this.paddedChannels, SequencesKt___SequencesKt.take(SequencesKt___SequencesKt.distinct(SequencesKt___SequencesKt.filterNot(getDisplayableChannels(CollectionsKt___CollectionsKt.asSequence(this.channelGroupList)), new ChannelEditorDialogController$padToFourChannels$1(this))), 4 - this.paddedChannels.size()));
-        if (this.paddedChannels.size() == 1 && Intrinsics.areEqual((Object) "miscellaneous", (Object) this.paddedChannels.get(0).getId())) {
+        if (this.paddedChannels.size() == 1 && Intrinsics.areEqual("miscellaneous", this.paddedChannels.get(0).getId())) {
             this.paddedChannels.clear();
         }
     }
@@ -218,7 +221,7 @@ public final class ChannelEditorDialogController {
     }
 
     private final boolean hasChanges() {
-        return (this.edits.isEmpty() ^ true) || (Intrinsics.areEqual((Object) Boolean.valueOf(this.appNotificationsEnabled), (Object) this.appNotificationsCurrentlyEnabled) ^ true);
+        return (this.edits.isEmpty() ^ true) || (Intrinsics.areEqual(Boolean.valueOf(this.appNotificationsEnabled), this.appNotificationsCurrentlyEnabled) ^ true);
     }
 
     private final List<NotificationChannelGroup> fetchNotificationChannelGroups() {
@@ -316,14 +319,14 @@ public final class ChannelEditorDialogController {
 
     @VisibleForTesting
     public final void apply() {
-        for (Map.Entry next : this.edits.entrySet()) {
-            NotificationChannel notificationChannel = (NotificationChannel) next.getKey();
-            int intValue = ((Number) next.getValue()).intValue();
-            if (notificationChannel.getImportance() != intValue) {
-                setChannelImportance(notificationChannel, intValue);
+        for (Map.Entry<NotificationChannel, Integer> entry : this.edits.entrySet()) {
+            NotificationChannel key = entry.getKey();
+            int intValue = entry.getValue().intValue();
+            if (key.getImportance() != intValue) {
+                setChannelImportance(key, intValue);
             }
         }
-        if (!Intrinsics.areEqual((Object) Boolean.valueOf(this.appNotificationsEnabled), (Object) this.appNotificationsCurrentlyEnabled)) {
+        if (!Intrinsics.areEqual(Boolean.valueOf(this.appNotificationsEnabled), this.appNotificationsCurrentlyEnabled)) {
             applyAppNotificationsOn(this.appNotificationsEnabled);
         }
     }
@@ -335,7 +338,7 @@ public final class ChannelEditorDialogController {
         if (onSettingsClickListener2 != null) {
             Integer num = this.appUid;
             if (num != null) {
-                onSettingsClickListener2.onClick(view, (NotificationChannel) null, num.intValue());
+                onSettingsClickListener2.onClick(view, null, num.intValue());
             } else {
                 Intrinsics.throwNpe();
                 throw null;

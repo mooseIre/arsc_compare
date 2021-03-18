@@ -28,14 +28,13 @@ import com.android.systemui.C0021R$string;
 
 public class WifiDebuggingActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private CheckBox mAlwaysAllow;
-    /* access modifiers changed from: private */
-    public String mBssid;
+    private String mBssid;
     private boolean mClicked = false;
     private WifiChangeReceiver mWifiChangeReceiver;
-    /* access modifiers changed from: private */
-    public WifiManager mWifiManager;
+    private WifiManager mWifiManager;
 
-    /* JADX WARNING: type inference failed for: r6v0, types: [android.content.DialogInterface$OnClickListener, com.android.internal.app.AlertActivity, com.android.systemui.wifi.WifiDebuggingActivity, android.app.Activity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r6v0, resolved type: com.android.systemui.wifi.WifiDebuggingActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onCreate(Bundle bundle) {
         Window window = getWindow();
         window.addSystemFlags(524288);
@@ -51,7 +50,7 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
             finish();
             return;
         }
-        AlertController.AlertParams alertParams = this.mAlertParams;
+        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
         alertParams.mTitle = getString(C0021R$string.wifi_debugging_title);
         alertParams.mMessage = getString(C0021R$string.wifi_debugging_message, new Object[]{stringExtra, this.mBssid});
         alertParams.mPositiveButtonText = getString(C0021R$string.wifi_debugging_allow);
@@ -65,7 +64,7 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
         alertParams.mView = inflate;
         window.setCloseOnTouchOutside(false);
         setupAlert();
-        this.mAlert.getButton(-1).setOnTouchListener($$Lambda$WifiDebuggingActivity$l4yv2jJ1InA_zRAoj9L6yVjZM.INSTANCE);
+        ((AlertActivity) this).mAlert.getButton(-1).setOnTouchListener($$Lambda$WifiDebuggingActivity$l4yv2jJ1InA_zRAoj9L6yVjZM.INSTANCE);
     }
 
     static /* synthetic */ boolean lambda$onCreate$0(View view, MotionEvent motionEvent) {

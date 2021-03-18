@@ -17,6 +17,8 @@ public class GlobalActionsColumnLayout extends GlobalActionsLayout {
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         post(new Runnable() {
+            /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsColumnLayout$iug9piEkyt27o1Db7MoL30coo4 */
+
             public final void run() {
                 GlobalActionsColumnLayout.this.lambda$onLayout$0$GlobalActionsColumnLayout();
             }
@@ -24,11 +26,13 @@ public class GlobalActionsColumnLayout extends GlobalActionsLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout
     @VisibleForTesting
     public boolean shouldReverseListItems() {
         int currentRotation = getCurrentRotation();
@@ -47,6 +51,7 @@ public class GlobalActionsColumnLayout extends GlobalActionsLayout {
         }
     }
 
+    @Override // com.android.systemui.globalactions.GlobalActionsLayout, com.android.systemui.MultiListLayout
     public void onUpdateList() {
         super.onUpdateList();
         updateChildOrdering();
@@ -143,6 +148,7 @@ public class GlobalActionsColumnLayout extends GlobalActionsLayout {
         return getGridItemSize() / 2.0f;
     }
 
+    @Override // com.android.systemui.MultiListLayout
     public float getAnimationOffsetX() {
         if (getCurrentRotation() == 0) {
             return getAnimationDistance();

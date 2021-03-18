@@ -15,6 +15,7 @@ import miui.util.FeatureParser;
 public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements PaperModeController.PaperModeListener {
     private final PaperModeController mPaperModeController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -24,10 +25,12 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
         this.mPaperModeController = paperModeController;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         String str = this.TAG;
         StringBuilder sb = new StringBuilder();
@@ -41,10 +44,12 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
         this.mPaperModeController.setEnabled(z);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return longClickPaperModeIntent();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_papermode_label);
     }
@@ -54,7 +59,7 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
         booleanState.label = this.mContext.getString(C0021R$string.quick_settings_papermode_label);
         if (!this.mPaperModeController.isAvailable()) {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_paper_mode_off);
-            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(C0021R$string.switch_bar_off);
+            booleanState.contentDescription = ((Object) booleanState.label) + "," + this.mContext.getString(C0021R$string.switch_bar_off);
             booleanState.state = 0;
             return;
         }
@@ -76,7 +81,7 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
             booleanState.state = 1;
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
@@ -84,10 +89,12 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
         booleanState.activeBgColor = 1;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return FeatureParser.getBoolean("support_screen_paper_mode", false);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             this.mPaperModeController.addCallback(this);
@@ -107,10 +114,12 @@ public class PaperModeTile extends QSTileImpl<QSTile.BooleanState> implements Pa
         return intent;
     }
 
+    @Override // com.android.systemui.statusbar.policy.PaperModeController.PaperModeListener
     public void onPaperModeChanged(boolean z) {
         refreshState(Boolean.valueOf(z));
     }
 
+    @Override // com.android.systemui.statusbar.policy.PaperModeController.PaperModeListener
     public void onPaperModeAvailabilityChanged(boolean z) {
         refreshState();
     }

@@ -13,6 +13,7 @@ public final class StatusBarViewModule_GetNotificationPanelViewFactory implement
         this.notificationShadeWindowViewProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationPanelView get() {
         return provideInstance(this.notificationShadeWindowViewProvider);
     }

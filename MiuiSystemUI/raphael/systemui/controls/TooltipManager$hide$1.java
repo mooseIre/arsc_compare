@@ -2,8 +2,9 @@ package com.android.systemui.controls;
 
 import android.view.animation.AccelerateInterpolator;
 
+/* access modifiers changed from: package-private */
 /* compiled from: TooltipManager.kt */
-final class TooltipManager$hide$1 implements Runnable {
+public final class TooltipManager$hide$1 implements Runnable {
     final /* synthetic */ boolean $animate;
     final /* synthetic */ TooltipManager this$0;
 

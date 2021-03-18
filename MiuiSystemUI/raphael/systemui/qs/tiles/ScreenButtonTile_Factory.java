@@ -11,6 +11,7 @@ public final class ScreenButtonTile_Factory implements Factory<ScreenButtonTile>
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ScreenButtonTile get() {
         return provideInstance(this.hostProvider);
     }

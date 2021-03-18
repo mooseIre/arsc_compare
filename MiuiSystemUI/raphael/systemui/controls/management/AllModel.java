@@ -13,9 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import kotlin.collections.CollectionsKt__MutableCollectionsKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.collections.MapsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.markers.KMutableMap;
 import kotlin.sequences.Sequence;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,31 +44,34 @@ public final class AllModel implements ControlsModel {
         this.emptyZoneString = charSequence;
         this.controlsModelCallback = controlsModelCallback2;
         HashSet hashSet = new HashSet();
-        for (ControlStatus control : list) {
-            hashSet.add(control.getControl().getControlId());
+        Iterator<T> it = list.iterator();
+        while (it.hasNext()) {
+            hashSet.add(it.next().getControl().getControlId());
         }
         ArrayList arrayList = new ArrayList();
-        for (T next : list2) {
-            if (hashSet.contains((String) next)) {
-                arrayList.add(next);
+        for (T t : list2) {
+            if (hashSet.contains(t)) {
+                arrayList.add(t);
             }
         }
-        this.favoriteIds = CollectionsKt___CollectionsKt.toMutableList(arrayList);
+        this.favoriteIds = CollectionsKt___CollectionsKt.toMutableList((Collection) arrayList);
         this.elements = createWrappers(this.controls);
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     @Nullable
     public Void getMoveHelper() {
         return this.moveHelper;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     @NotNull
     public List<ControlInfo> getFavorites() {
         ControlInfo controlInfo;
         T t;
         List<String> list = this.favoriteIds;
         ArrayList arrayList = new ArrayList();
-        for (String str : list) {
+        for (T t2 : list) {
             Iterator<T> it = this.controls.iterator();
             while (true) {
                 controlInfo = null;
@@ -73,12 +80,12 @@ public final class AllModel implements ControlsModel {
                     break;
                 }
                 t = it.next();
-                if (Intrinsics.areEqual((Object) ((ControlStatus) t).getControl().getControlId(), (Object) str)) {
+                if (Intrinsics.areEqual(t.getControl().getControlId(), t2)) {
                     break;
                 }
             }
-            ControlStatus controlStatus = (ControlStatus) t;
-            Control control = controlStatus != null ? controlStatus.getControl() : null;
+            T t3 = t;
+            Control control = t3 != null ? t3.getControl() : null;
             if (control != null) {
                 controlInfo = ControlInfo.Companion.fromControl(control);
             }
@@ -89,11 +96,13 @@ public final class AllModel implements ControlsModel {
         return arrayList;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     @NotNull
     public List<ElementWrapper> getElements() {
         return this.elements;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     public void changeFavoriteStatus(@NotNull String str, boolean z) {
         T t;
         boolean z2;
@@ -107,8 +116,8 @@ public final class AllModel implements ControlsModel {
                 break;
             }
             t = it.next();
-            ElementWrapper elementWrapper = (ElementWrapper) t;
-            if (!(elementWrapper instanceof ControlStatusWrapper) || !Intrinsics.areEqual((Object) ((ControlStatusWrapper) elementWrapper).getControlStatus().getControl().getControlId(), (Object) str)) {
+            T t2 = t;
+            if (!(t2 instanceof ControlStatusWrapper) || !Intrinsics.areEqual(t2.getControlStatus().getControl().getControlId(), str)) {
                 z3 = false;
                 continue;
             } else {
@@ -119,8 +128,8 @@ public final class AllModel implements ControlsModel {
                 break;
             }
         }
-        ControlStatusWrapper controlStatusWrapper = (ControlStatusWrapper) t;
-        if (controlStatusWrapper == null || (controlStatus = controlStatusWrapper.getControlStatus()) == null || z != controlStatus.getFavorite()) {
+        T t3 = t;
+        if (t3 == null || (controlStatus = t3.getControlStatus()) == null || z != controlStatus.getFavorite()) {
             if (z) {
                 z2 = this.favoriteIds.add(str);
             } else {
@@ -130,16 +139,16 @@ public final class AllModel implements ControlsModel {
                 this.modified = true;
                 this.controlsModelCallback.onFirstChange();
             }
-            if (controlStatusWrapper != null) {
-                controlStatusWrapper.getControlStatus().setFavorite(z);
+            if (t3 != null) {
+                t3.getControlStatus().setFavorite(z);
             }
         }
     }
 
     private final List<ElementWrapper> createWrappers(List<ControlStatus> list) {
         OrderedMap orderedMap = new OrderedMap(new ArrayMap());
-        for (T next : list) {
-            Object zone = ((ControlStatus) next).getControl().getZone();
+        for (T t : list) {
+            Object zone = t.getControl().getZone();
             if (zone == null) {
                 zone = "";
             }
@@ -148,20 +157,20 @@ public final class AllModel implements ControlsModel {
                 obj = new ArrayList();
                 orderedMap.put(zone, obj);
             }
-            ((List) obj).add(next);
+            ((List) obj).add(t);
         }
         ArrayList arrayList = new ArrayList();
         Sequence sequence = null;
         for (CharSequence charSequence : orderedMap.getOrderedKeys()) {
-            Object value = MapsKt__MapsKt.getValue(orderedMap, charSequence);
+            Object value = MapsKt.getValue(orderedMap, charSequence);
             Intrinsics.checkExpressionValueIsNotNull(value, "map.getValue(zoneName)");
-            Sequence map = SequencesKt___SequencesKt.map(CollectionsKt___CollectionsKt.asSequence((Iterable) value), AllModel$createWrappers$values$1.INSTANCE);
+            Sequence sequence2 = SequencesKt___SequencesKt.map(CollectionsKt___CollectionsKt.asSequence((Iterable) value), AllModel$createWrappers$values$1.INSTANCE);
             if (TextUtils.isEmpty(charSequence)) {
-                sequence = map;
+                sequence = sequence2;
             } else {
                 Intrinsics.checkExpressionValueIsNotNull(charSequence, "zoneName");
                 arrayList.add(new ZoneNameWrapper(charSequence));
-                boolean unused = CollectionsKt__MutableCollectionsKt.addAll(arrayList, map);
+                boolean unused = CollectionsKt__MutableCollectionsKt.addAll(arrayList, sequence2);
             }
         }
         if (sequence != null) {
@@ -173,8 +182,9 @@ public final class AllModel implements ControlsModel {
         return arrayList;
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: AllModel.kt */
-    private static final class OrderedMap<K, V> implements Map<K, V>, KMutableMap {
+    public static final class OrderedMap<K, V> implements Map<K, V>, KMutableMap {
         private final Map<K, V> map;
         @NotNull
         private final List<K> orderedKeys = new ArrayList();
@@ -187,6 +197,7 @@ public final class AllModel implements ControlsModel {
             return this.map.containsValue(obj);
         }
 
+        @Override // java.util.Map
         @Nullable
         public V get(Object obj) {
             return this.map.get(obj);
@@ -215,6 +226,7 @@ public final class AllModel implements ControlsModel {
             return this.map.isEmpty();
         }
 
+        @Override // java.util.Map
         public void putAll(@NotNull Map<? extends K, ? extends V> map2) {
             Intrinsics.checkParameterIsNotNull(map2, "from");
             this.map.putAll(map2);
@@ -225,10 +237,12 @@ public final class AllModel implements ControlsModel {
             this.map = map2;
         }
 
+        @Override // java.util.Map
         public final /* bridge */ Set<Map.Entry<K, V>> entrySet() {
             return getEntries();
         }
 
+        @Override // java.util.Map
         public final /* bridge */ Set<K> keySet() {
             return getKeys();
         }
@@ -237,6 +251,7 @@ public final class AllModel implements ControlsModel {
             return getSize();
         }
 
+        @Override // java.util.Map
         public final /* bridge */ Collection<V> values() {
             return getValues();
         }
@@ -246,6 +261,7 @@ public final class AllModel implements ControlsModel {
             return this.orderedKeys;
         }
 
+        @Override // java.util.Map
         @Nullable
         public V put(K k, V v) {
             if (!this.map.containsKey(k)) {
@@ -259,6 +275,7 @@ public final class AllModel implements ControlsModel {
             this.map.clear();
         }
 
+        @Override // java.util.Map
         @Nullable
         public V remove(Object obj) {
             V remove = this.map.remove(obj);

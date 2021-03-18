@@ -10,8 +10,8 @@ public class StatusBarIconList {
     private ArrayList<Slot> mSlots = new ArrayList<>();
 
     public StatusBarIconList(String[] strArr) {
-        for (String slot : strArr) {
-            this.mSlots.add(new Slot(slot, (StatusBarIconHolder) null));
+        for (String str : strArr) {
+            this.mSlots.add(new Slot(str, null));
         }
     }
 
@@ -22,7 +22,7 @@ public class StatusBarIconList {
                 return i;
             }
         }
-        this.mSlots.add(0, new Slot(str, (StatusBarIconHolder) null));
+        this.mSlots.add(0, new Slot(str, null));
         return 0;
     }
 
@@ -68,7 +68,7 @@ public class StatusBarIconList {
         int size = this.mSlots.size();
         printWriter.println("  icon slots: " + size);
         for (int i = 0; i < size; i++) {
-            printWriter.printf("    %2d:%s\n", new Object[]{Integer.valueOf(i), this.mSlots.get(i).toString()});
+            printWriter.printf("    %2d:%s\n", Integer.valueOf(i), this.mSlots.get(i).toString());
         }
     }
 
@@ -215,7 +215,7 @@ public class StatusBarIconList {
         }
 
         public String toString() {
-            return String.format("(%s) %s", new Object[]{this.mName, subSlotsString()});
+            return String.format("(%s) %s", this.mName, subSlotsString());
         }
 
         private String subSlotsString() {

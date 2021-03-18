@@ -19,24 +19,29 @@ public final class NotificationSectionsManager$expandableViewHeaderState$1 imple
         this.$header = expandableView;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     @Nullable
     public Integer getCurrentPosition() {
         return this.currentPosition;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     public void setCurrentPosition(@Nullable Integer num) {
         this.currentPosition = num;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     @Nullable
     public Integer getTargetPosition() {
         return this.targetPosition;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     public void setTargetPosition(@Nullable Integer num) {
         this.targetPosition = num;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.SectionUpdateState
     public void adjustViewPosition() {
         Integer targetPosition2 = getTargetPosition();
         Integer currentPosition2 = getCurrentPosition();
@@ -49,7 +54,7 @@ public final class NotificationSectionsManager$expandableViewHeaderState$1 imple
             if (transientContainer != null) {
                 transientContainer.removeTransientView(this.$header);
             }
-            this.$header.setTransientContainer((ViewGroup) null);
+            this.$header.setTransientContainer(null);
             this.this$0.getParent().addView(this.$header, targetPosition2.intValue());
         } else {
             this.this$0.getParent().changeViewPosition(this.$header, targetPosition2.intValue());

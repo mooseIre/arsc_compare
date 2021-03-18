@@ -18,6 +18,8 @@ public class ActivityLaunchAnimator {
     private boolean mIsLaunchForActivity;
     private final NotificationShadeWindowViewController mNotificationShadeWindowViewController;
     private final Runnable mTimeoutRunnable = new Runnable() {
+        /* class com.android.systemui.statusbar.notification.$$Lambda$ActivityLaunchAnimator$l5Gj6YM2XO6z1WFQpGTriWePKVk */
+
         public final void run() {
             ActivityLaunchAnimator.this.lambda$new$0$ActivityLaunchAnimator();
         }

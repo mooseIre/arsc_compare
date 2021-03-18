@@ -22,16 +22,15 @@ import java.io.PrintWriter;
 public final class StatusBarTouchableRegionManager implements Dumpable {
     private final Context mContext;
     private int mDisplayCutoutTouchableRegionSize;
-    /* access modifiers changed from: private */
-    public boolean mForceCollapsedUntilLayout = false;
+    private boolean mForceCollapsedUntilLayout = false;
     private final HeadsUpManagerPhone mHeadsUpManager;
-    /* access modifiers changed from: private */
-    public boolean mIsStatusBarExpanded = false;
-    /* access modifiers changed from: private */
-    public View mNotificationPanelView;
+    private boolean mIsStatusBarExpanded = false;
+    private View mNotificationPanelView;
     private final NotificationShadeWindowController mNotificationShadeWindowController;
     private View mNotificationShadeWindowView;
     private final ViewTreeObserver.OnComputeInternalInsetsListener mOnComputeInternalInsetsListener = new ViewTreeObserver.OnComputeInternalInsetsListener() {
+        /* class com.android.systemui.statusbar.phone.StatusBarTouchableRegionManager.AnonymousClass5 */
+
         public void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
             if (!StatusBarTouchableRegionManager.this.mIsStatusBarExpanded && !StatusBarTouchableRegionManager.this.mStatusBar.isBouncerShowing()) {
                 internalInsetsInfo.setTouchableInsets(3);
@@ -40,8 +39,7 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
         }
     };
     private boolean mShouldAdjustInsets = false;
-    /* access modifiers changed from: private */
-    public StatusBar mStatusBar;
+    private StatusBar mStatusBar;
     private int mStatusBarHeight;
     private Region mTouchableRegion = new Region();
 
@@ -49,16 +47,23 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
         this.mContext = context;
         initResources();
         configurationController.addCallback(new ConfigurationController.ConfigurationListener() {
+            /* class com.android.systemui.statusbar.phone.StatusBarTouchableRegionManager.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
             public void onDensityOrFontScaleChanged() {
                 StatusBarTouchableRegionManager.this.initResources();
             }
 
+            @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
             public void onOverlayChanged() {
                 StatusBarTouchableRegionManager.this.initResources();
             }
         });
         this.mHeadsUpManager = headsUpManagerPhone;
         headsUpManagerPhone.addListener(new OnHeadsUpChangedListener() {
+            /* class com.android.systemui.statusbar.phone.StatusBarTouchableRegionManager.AnonymousClass2 */
+
+            @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
             public void onHeadsUpPinnedModeChanged(boolean z) {
                 if (Log.isLoggable("TouchableRegionManager", 5)) {
                     Log.w("TouchableRegionManager", "onHeadsUpPinnedModeChanged");
@@ -67,6 +72,9 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
             }
         });
         this.mHeadsUpManager.addHeadsUpPhoneListener(new HeadsUpManagerPhone.OnHeadsUpPhoneListenerChange() {
+            /* class com.android.systemui.statusbar.phone.StatusBarTouchableRegionManager.AnonymousClass3 */
+
+            @Override // com.android.systemui.statusbar.phone.HeadsUpManagerPhone.OnHeadsUpPhoneListenerChange
             public void onHeadsUpGoingAwayStateChanged(boolean z) {
                 if (!z) {
                     StatusBarTouchableRegionManager.this.updateTouchableRegionAfterLayout();
@@ -77,6 +85,9 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
         });
         this.mNotificationShadeWindowController = notificationShadeWindowController;
         notificationShadeWindowController.setForcePluginOpenListener(new NotificationShadeWindowController.ForcePluginOpenListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBarTouchableRegionManager$zqDZ6Pei5QdrwLKWlTK2XAXySs */
+
+            @Override // com.android.systemui.statusbar.phone.NotificationShadeWindowController.ForcePluginOpenListener
             public final void onChange(boolean z) {
                 StatusBarTouchableRegionManager.this.lambda$new$0$StatusBarTouchableRegionManager(z);
             }
@@ -96,6 +107,7 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
         this.mNotificationPanelView = view.findViewById(C0015R$id.notification_panel);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("StatusBarTouchableRegionManager state:");
         printWriter.print("  mTouchableRegion=");
@@ -126,14 +138,16 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void initResources() {
+    /* access modifiers changed from: public */
+    private void initResources() {
         Resources resources = this.mContext.getResources();
         this.mDisplayCutoutTouchableRegionSize = resources.getDimensionPixelSize(17105175);
         this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
     }
 
     /* access modifiers changed from: private */
-    public void updateTouchableRegion() {
+    /* access modifiers changed from: public */
+    private void updateTouchableRegion() {
         View view = this.mNotificationShadeWindowView;
         boolean z = true;
         boolean z2 = (view == null || view.getRootWindowInsets() == null || this.mNotificationShadeWindowView.getRootWindowInsets().getDisplayCutout() == null) ? false : true;
@@ -152,15 +166,18 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void updateTouchableRegionAfterLayout() {
+    /* access modifiers changed from: public */
+    private void updateTouchableRegionAfterLayout() {
         View view = this.mNotificationPanelView;
         if (view != null) {
             this.mForceCollapsedUntilLayout = true;
             view.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                /* class com.android.systemui.statusbar.phone.StatusBarTouchableRegionManager.AnonymousClass4 */
+
                 public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                     if (!StatusBarTouchableRegionManager.this.mNotificationPanelView.isVisibleToUser()) {
                         StatusBarTouchableRegionManager.this.mNotificationPanelView.removeOnLayoutChangeListener(this);
-                        boolean unused = StatusBarTouchableRegionManager.this.mForceCollapsedUntilLayout = false;
+                        StatusBarTouchableRegionManager.this.mForceCollapsedUntilLayout = false;
                         StatusBarTouchableRegionManager.this.updateTouchableRegion();
                     }
                 }

@@ -17,6 +17,7 @@ public final class ShortcutKeyDispatcher_Factory implements Factory<ShortcutKeyD
         this.recentsProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ShortcutKeyDispatcher get() {
         return provideInstance(this.contextProvider, this.dividerProvider, this.recentsProvider);
     }

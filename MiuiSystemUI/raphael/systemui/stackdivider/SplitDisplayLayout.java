@@ -72,10 +72,7 @@ public class SplitDisplayLayout {
         if (SplitDisplayLayoutInjector.canUpdatePrimarySplitSide(this.mContext)) {
             return SplitDisplayLayoutInjector.getPrimarySplitSide(this.mContext, this.mDisplayLayout.isLandscape());
         }
-        if (this.mDisplayLayout.isLandscape()) {
-            return 1;
-        }
-        return 2;
+        return this.mDisplayLayout.isLandscape() ? 1 : 2;
     }
 
     /* access modifiers changed from: package-private */
@@ -180,7 +177,6 @@ public class SplitDisplayLayout {
             rect2.intersect(rect5);
             i = Math.min(rect2.width(), i);
         }
-        DisplayLayout displayLayout3 = displayLayout;
         return (int) (((float) i) / displayLayout.density());
     }
 

@@ -11,6 +11,7 @@ public final class DemoModeController_Factory implements Factory<DemoModeControl
         this.broadcastDispatcherProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DemoModeController get() {
         return provideInstance(this.broadcastDispatcherProvider);
     }

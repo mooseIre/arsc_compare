@@ -34,6 +34,8 @@ import com.android.systemui.statusbar.phone.RegionSamplingHelper;
 
 public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPlugin {
     private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_ANGLE = new FloatPropertyCompat<NavigationBarEdgePanel>("currentAngle") {
+        /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass2 */
+
         public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
             navigationBarEdgePanel.setCurrentAngle(f);
         }
@@ -43,6 +45,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
     };
     private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_TRANSLATION = new FloatPropertyCompat<NavigationBarEdgePanel>("currentTranslation") {
+        /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass3 */
+
         public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
             navigationBarEdgePanel.setCurrentTranslation(f);
         }
@@ -52,6 +56,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         }
     };
     private static final FloatPropertyCompat<NavigationBarEdgePanel> CURRENT_VERTICAL_TRANSLATION = new FloatPropertyCompat<NavigationBarEdgePanel>("verticalTranslation") {
+        /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass4 */
+
         public void setValue(NavigationBarEdgePanel navigationBarEdgePanel, float f) {
             navigationBarEdgePanel.setVerticalTranslation(f);
         }
@@ -106,10 +112,12 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     private RegionSamplingHelper mRegionSamplingHelper;
     private final SpringForce mRegularTranslationSpring;
     private int mRightInset;
-    /* access modifiers changed from: private */
-    public final Rect mSamplingRect = new Rect();
+    private final Rect mSamplingRect = new Rect();
     private int mScreenSize;
     private DynamicAnimation.OnAnimationEndListener mSetGoneEndListener = new DynamicAnimation.OnAnimationEndListener() {
+        /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass1 */
+
+        @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
         public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
             dynamicAnimation.removeEndListener(this);
             if (!z) {
@@ -150,19 +158,23 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mPaint.setAntiAlias(true);
         this.mPaint.setStyle(Paint.Style.STROKE);
         this.mPaint.setStrokeJoin(Paint.Join.ROUND);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mArrowColorAnimator = ofFloat;
-        ofFloat.setDuration(120);
+        ofFloat.setDuration(120L);
         this.mArrowColorAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarEdgePanel$bOecFcR5bBF6RggHYoy3PBO7S7o */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 NavigationBarEdgePanel.this.lambda$new$0$NavigationBarEdgePanel(valueAnimator);
             }
         });
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mArrowDisappearAnimation = ofFloat2;
-        ofFloat2.setDuration(100);
+        ofFloat2.setDuration(100L);
         this.mArrowDisappearAnimation.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         this.mArrowDisappearAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarEdgePanel$dGzlaDOJBgEiptNKFEADYL6K5TY */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 NavigationBarEdgePanel.this.lambda$new$1$NavigationBarEdgePanel(valueAnimator);
             }
@@ -205,10 +217,14 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mSwipeThreshold = context.getResources().getDimension(C0012R$dimen.navigation_edge_action_drag_threshold);
         setVisibility(8);
         RegionSamplingHelper regionSamplingHelper = new RegionSamplingHelper(this, new RegionSamplingHelper.SamplingCallback() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass5 */
+
+            @Override // com.android.systemui.statusbar.phone.RegionSamplingHelper.SamplingCallback
             public void onRegionDarknessChanged(boolean z) {
                 NavigationBarEdgePanel.this.setIsDark(!z, true);
             }
 
+            @Override // com.android.systemui.statusbar.phone.RegionSamplingHelper.SamplingCallback
             public Rect getSampledRegion(View view) {
                 return NavigationBarEdgePanel.this.mSamplingRect;
             }
@@ -230,6 +246,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         invalidate();
     }
 
+    @Override // com.android.systemui.plugins.Plugin
     public void onDestroy() {
         this.mWindowManager.removeView(this);
         this.mRegionSamplingHelper.stop();
@@ -237,31 +254,37 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     /* access modifiers changed from: private */
-    public void setIsDark(boolean z, boolean z2) {
+    /* access modifiers changed from: public */
+    private void setIsDark(boolean z, boolean z2) {
         this.mIsDark = z;
         updateIsDark(z2);
     }
 
+    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setIsLeftPanel(boolean z) {
         this.mIsLeftPanel = z;
         this.mLayoutParams.gravity = z ? 51 : 53;
     }
 
+    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setInsets(int i, int i2) {
         this.mLeftInset = i;
         this.mRightInset = i2;
     }
 
+    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setDisplaySize(Point point) {
         this.mDisplaySize.set(point.x, point.y);
         Point point2 = this.mDisplaySize;
         this.mScreenSize = Math.min(point2.x, point2.y);
     }
 
+    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setBackCallback(NavigationEdgeBackPlugin.BackCallback backCallback) {
         this.mBackCallback = backCallback;
     }
 
+    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void setLayoutParams(WindowManager.LayoutParams layoutParams) {
         this.mLayoutParams = layoutParams;
         this.mWindowManager.addView(this, layoutParams);
@@ -292,6 +315,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mRegionSamplingHelper.updateSamplingRect();
     }
 
+    @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin
     public void onMotionEvent(MotionEvent motionEvent) {
         if (this.mVelocityTracker == null) {
             this.mVelocityTracker = VelocityTracker.obtain();
@@ -426,12 +450,14 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     /* access modifiers changed from: private */
-    public float getCurrentAngle() {
+    /* access modifiers changed from: public */
+    private float getCurrentAngle() {
         return this.mCurrentAngle;
     }
 
     /* access modifiers changed from: private */
-    public float getCurrentTranslation() {
+    /* access modifiers changed from: public */
+    private float getCurrentTranslation() {
         return this.mCurrentTranslation;
     }
 
@@ -450,12 +476,17 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
             updateAngle(true);
         }
         final $$Lambda$NavigationBarEdgePanel$8nVYqEm2UMLvGUzkKr5IU4GQaTc r0 = new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarEdgePanel$8nVYqEm2UMLvGUzkKr5IU4GQaTc */
+
             public final void run() {
                 NavigationBarEdgePanel.this.lambda$triggerBack$3$NavigationBarEdgePanel();
             }
         };
         if (this.mTranslationAnimation.isRunning()) {
             this.mTranslationAnimation.addEndListener(new DynamicAnimation.OnAnimationEndListener(this) {
+                /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass6 */
+
+                @Override // androidx.dynamicanimation.animation.DynamicAnimation.OnAnimationEndListener
                 public void onAnimationEnd(DynamicAnimation dynamicAnimation, boolean z, float f, float f2) {
                     dynamicAnimation.removeEndListener(this);
                     if (!z) {
@@ -476,6 +507,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         this.mTranslationAnimation.setSpring(this.mTriggerBackSpring);
         setDesiredTranslation(this.mDesiredTranslation - dp(32.0f), true);
         animate().alpha(0.0f).setDuration(80).withEndAction(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarEdgePanel$qL_Cvd7_6Xne4NYpi_Ofi326YV0 */
+
             public final void run() {
                 NavigationBarEdgePanel.this.lambda$triggerBack$2$NavigationBarEdgePanel();
             }
@@ -606,13 +639,15 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     /* access modifiers changed from: private */
-    public void setVerticalTranslation(float f) {
+    /* access modifiers changed from: public */
+    private void setVerticalTranslation(float f) {
         this.mVerticalTranslation = f;
         invalidate();
     }
 
     /* access modifiers changed from: private */
-    public float getVerticalTranslation() {
+    /* access modifiers changed from: public */
+    private float getVerticalTranslation() {
         return this.mVerticalTranslation;
     }
 
@@ -628,7 +663,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     /* access modifiers changed from: private */
-    public void setCurrentTranslation(float f) {
+    /* access modifiers changed from: public */
+    private void setCurrentTranslation(float f) {
         this.mCurrentTranslation = f;
         invalidate();
     }
@@ -656,7 +692,8 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     /* access modifiers changed from: private */
-    public void setCurrentAngle(float f) {
+    /* access modifiers changed from: public */
+    private void setCurrentAngle(float f) {
         this.mCurrentAngle = f;
         invalidate();
     }

@@ -12,9 +12,10 @@ public final class ControlsRequestDialog$currentUserTracker$1 extends CurrentUse
     ControlsRequestDialog$currentUserTracker$1(ControlsRequestDialog controlsRequestDialog, BroadcastDispatcher broadcastDispatcher) {
         super(broadcastDispatcher);
         this.this$0 = controlsRequestDialog;
-        this.startingUser = controlsRequestDialog.controller.getCurrentUserId();
+        this.startingUser = ControlsRequestDialog.access$getController$p(controlsRequestDialog).getCurrentUserId();
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(int i) {
         if (i != this.startingUser) {
             stopTracking();

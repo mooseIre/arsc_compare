@@ -8,13 +8,12 @@ import com.android.systemui.bubbles.storage.BubbleVolatileRepository;
 import java.util.ArrayList;
 import java.util.List;
 import kotlin.Unit;
-import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
+import kotlin.collections.CollectionsKt__CollectionsJVMKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
+import kotlinx.coroutines.BuildersKt__Builders_commonKt;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.CoroutineScopeKt;
-import kotlinx.coroutines.CoroutineStart;
 import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.Job;
 import org.jetbrains.annotations.NotNull;
@@ -23,14 +22,10 @@ import org.jetbrains.annotations.NotNull;
 public final class BubbleDataRepository {
     private final CoroutineScope ioScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getIO());
     private Job job;
-    /* access modifiers changed from: private */
-    public final LauncherApps launcherApps;
-    /* access modifiers changed from: private */
-    public final BubblePersistentRepository persistentRepository;
-    /* access modifiers changed from: private */
-    public final CoroutineScope uiScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getMain());
-    /* access modifiers changed from: private */
-    public final BubbleVolatileRepository volatileRepository;
+    private final LauncherApps launcherApps;
+    private final BubblePersistentRepository persistentRepository;
+    private final CoroutineScope uiScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getMain());
+    private final BubbleVolatileRepository volatileRepository;
 
     public BubbleDataRepository(@NotNull BubbleVolatileRepository bubbleVolatileRepository, @NotNull BubblePersistentRepository bubblePersistentRepository, @NotNull LauncherApps launcherApps2) {
         Intrinsics.checkParameterIsNotNull(bubbleVolatileRepository, "volatileRepository");
@@ -65,27 +60,27 @@ public final class BubbleDataRepository {
     }
 
     private final void persistToDisk() {
-        this.job = BuildersKt__Builders_commonKt.launch$default(this.ioScope, (CoroutineContext) null, (CoroutineStart) null, new BubbleDataRepository$persistToDisk$1(this, this.job, (Continuation) null), 3, (Object) null);
+        this.job = BuildersKt__Builders_commonKt.launch$default(this.ioScope, null, null, new BubbleDataRepository$persistToDisk$1(this, this.job, null), 3, null);
     }
 
-    @NotNull
     @SuppressLint({"WrongConstant"})
+    @NotNull
     public final Job loadBubbles(@NotNull Function1<? super List<? extends Bubble>, Unit> function1) {
         Intrinsics.checkParameterIsNotNull(function1, "cb");
-        return BuildersKt__Builders_commonKt.launch$default(this.ioScope, (CoroutineContext) null, (CoroutineStart) null, new BubbleDataRepository$loadBubbles$1(this, function1, (Continuation) null), 3, (Object) null);
+        return BuildersKt__Builders_commonKt.launch$default(this.ioScope, null, null, new BubbleDataRepository$loadBubbles$1(this, function1, null), 3, null);
     }
 
     private final List<BubbleEntity> transform(int i, List<? extends Bubble> list) {
         BubbleEntity bubbleEntity;
         ArrayList arrayList = new ArrayList();
-        for (Bubble bubble : list) {
-            String packageName = bubble.getPackageName();
+        for (T t : list) {
+            String packageName = t.getPackageName();
             Intrinsics.checkExpressionValueIsNotNull(packageName, "b.packageName");
-            String metadataShortcutId = bubble.getMetadataShortcutId();
+            String metadataShortcutId = t.getMetadataShortcutId();
             if (metadataShortcutId != null) {
-                String key = bubble.getKey();
+                String key = t.getKey();
                 Intrinsics.checkExpressionValueIsNotNull(key, "b.key");
-                bubbleEntity = new BubbleEntity(i, packageName, metadataShortcutId, key, bubble.getRawDesiredHeight(), bubble.getRawDesiredHeightResId(), bubble.getTitle());
+                bubbleEntity = new BubbleEntity(i, packageName, metadataShortcutId, key, t.getRawDesiredHeight(), t.getRawDesiredHeightResId(), t.getTitle());
             } else {
                 bubbleEntity = null;
             }

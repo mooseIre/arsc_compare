@@ -32,7 +32,7 @@ public class UserDetailView extends PseudoGridView {
     }
 
     public void createAndSetAdapter(UserSwitcherController userSwitcherController, UiEventLogger uiEventLogger) {
-        Adapter adapter = new Adapter(this.mContext, userSwitcherController, uiEventLogger);
+        Adapter adapter = new Adapter(((ViewGroup) this).mContext, userSwitcherController, uiEventLogger);
         this.mAdapter = adapter;
         PseudoGridView.ViewGroupAdapterBridge.link(this, adapter);
     }
@@ -64,7 +64,7 @@ public class UserDetailView extends PseudoGridView {
             if (!userRecord.isCurrent || userRecord.isGuest) {
                 convertOrInflate.setOnClickListener(this);
             } else {
-                convertOrInflate.setOnClickListener((View.OnClickListener) null);
+                convertOrInflate.setOnClickListener(null);
                 convertOrInflate.setClickable(false);
             }
             String name = getName(this.mContext, userRecord);

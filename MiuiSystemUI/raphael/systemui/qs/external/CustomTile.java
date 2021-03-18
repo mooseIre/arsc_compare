@@ -47,6 +47,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     private final Context mUserContext;
     private final IWindowManager mWindowManager = WindowManagerGlobal.getWindowManagerService();
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 268;
     }
@@ -68,6 +69,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public long getStaleTimeout() {
         return (((long) this.mHost.indexOf(getTileSpec())) * 60000) + 3600000;
     }
@@ -80,77 +82,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateDefaultTileAndIcon() {
         /*
-            r8 = this;
-            r0 = 0
-            android.content.Context r1 = r8.mUserContext     // Catch:{ NameNotFoundException -> 0x007b }
-            android.content.pm.PackageManager r1 = r1.getPackageManager()     // Catch:{ NameNotFoundException -> 0x007b }
-            r2 = 786432(0xc0000, float:1.102026E-39)
-            boolean r3 = r8.isSystemApp(r1)     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r3 == 0) goto L_0x0012
-            r2 = 786944(0xc0200, float:1.102743E-39)
-        L_0x0012:
-            android.content.ComponentName r3 = r8.mComponent     // Catch:{ NameNotFoundException -> 0x007b }
-            android.content.pm.ServiceInfo r2 = r1.getServiceInfo(r3, r2)     // Catch:{ NameNotFoundException -> 0x007b }
-            int r3 = r2.icon     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r3 == 0) goto L_0x001f
-            int r3 = r2.icon     // Catch:{ NameNotFoundException -> 0x007b }
-            goto L_0x0023
-        L_0x001f:
-            android.content.pm.ApplicationInfo r3 = r2.applicationInfo     // Catch:{ NameNotFoundException -> 0x007b }
-            int r3 = r3.icon     // Catch:{ NameNotFoundException -> 0x007b }
-        L_0x0023:
-            android.service.quicksettings.Tile r4 = r8.mTile     // Catch:{ NameNotFoundException -> 0x007b }
-            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ NameNotFoundException -> 0x007b }
-            r5 = 0
-            r6 = 1
-            if (r4 == 0) goto L_0x003e
-            android.service.quicksettings.Tile r4 = r8.mTile     // Catch:{ NameNotFoundException -> 0x007b }
-            android.graphics.drawable.Icon r4 = r4.getIcon()     // Catch:{ NameNotFoundException -> 0x007b }
-            android.graphics.drawable.Icon r7 = r8.mDefaultIcon     // Catch:{ NameNotFoundException -> 0x007b }
-            boolean r4 = r8.iconEquals(r4, r7)     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r4 == 0) goto L_0x003c
-            goto L_0x003e
-        L_0x003c:
-            r4 = r5
-            goto L_0x003f
-        L_0x003e:
-            r4 = r6
-        L_0x003f:
-            if (r3 == 0) goto L_0x004c
-            android.content.ComponentName r7 = r8.mComponent     // Catch:{ NameNotFoundException -> 0x007b }
-            java.lang.String r7 = r7.getPackageName()     // Catch:{ NameNotFoundException -> 0x007b }
-            android.graphics.drawable.Icon r3 = android.graphics.drawable.Icon.createWithResource(r7, r3)     // Catch:{ NameNotFoundException -> 0x007b }
-            goto L_0x004d
-        L_0x004c:
-            r3 = r0
-        L_0x004d:
-            r8.mDefaultIcon = r3     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r4 == 0) goto L_0x0056
-            android.service.quicksettings.Tile r4 = r8.mTile     // Catch:{ NameNotFoundException -> 0x007b }
-            r4.setIcon(r3)     // Catch:{ NameNotFoundException -> 0x007b }
-        L_0x0056:
-            android.service.quicksettings.Tile r3 = r8.mTile     // Catch:{ NameNotFoundException -> 0x007b }
-            java.lang.CharSequence r3 = r3.getLabel()     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r3 == 0) goto L_0x006c
-            android.service.quicksettings.Tile r3 = r8.mTile     // Catch:{ NameNotFoundException -> 0x007b }
-            java.lang.CharSequence r3 = r3.getLabel()     // Catch:{ NameNotFoundException -> 0x007b }
-            java.lang.CharSequence r4 = r8.mDefaultLabel     // Catch:{ NameNotFoundException -> 0x007b }
-            boolean r3 = android.text.TextUtils.equals(r3, r4)     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r3 == 0) goto L_0x006d
-        L_0x006c:
-            r5 = r6
-        L_0x006d:
-            java.lang.CharSequence r1 = r2.loadLabel(r1)     // Catch:{ NameNotFoundException -> 0x007b }
-            r8.mDefaultLabel = r1     // Catch:{ NameNotFoundException -> 0x007b }
-            if (r5 == 0) goto L_0x007f
-            android.service.quicksettings.Tile r2 = r8.mTile     // Catch:{ NameNotFoundException -> 0x007b }
-            r2.setLabel(r1)     // Catch:{ NameNotFoundException -> 0x007b }
-            goto L_0x007f
-        L_0x007b:
-            r8.mDefaultIcon = r0
-            r8.mDefaultLabel = r0
-        L_0x007f:
-            return
+        // Method dump skipped, instructions count: 128
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.CustomTile.updateDefaultTileAndIcon():void");
     }
@@ -166,10 +98,12 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return icon != null && icon2 != null && icon.getType() == 2 && icon2.getType() == 2 && icon.getResId() == icon2.getResId() && Objects.equals(icon.getResPackage(), icon2.getResPackage());
     }
 
+    @Override // com.android.systemui.qs.external.TileLifecycleManager.TileChangeListener
     public void onTileChanged(ComponentName componentName) {
         updateDefaultTileAndIcon();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mDefaultIcon != null;
     }
@@ -182,6 +116,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return this.mComponent;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public LogMaker populate(LogMaker logMaker) {
         return super.populate(logMaker).setComponentName(this.mComponent);
     }
@@ -212,54 +147,38 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         }
     }
 
-    /* JADX WARNING: Can't wrap try/catch for region: R(4:13|14|15|16) */
-    /* JADX WARNING: Missing exception handler attribute for start block: B:15:0x003b */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void handleSetListening(boolean r3) {
-        /*
-            r2 = this;
-            super.handleSetListening(r3)
-            boolean r0 = r2.mListening
-            if (r0 != r3) goto L_0x0008
-            return
-        L_0x0008:
-            r2.mListening = r3
-            if (r3 == 0) goto L_0x0026
-            r2.updateDefaultTileAndIcon()     // Catch:{ RemoteException -> 0x0044 }
-            r2.refreshState()     // Catch:{ RemoteException -> 0x0044 }
-            com.android.systemui.qs.external.TileServiceManager r3 = r2.mServiceManager     // Catch:{ RemoteException -> 0x0044 }
-            boolean r3 = r3.isActiveTile()     // Catch:{ RemoteException -> 0x0044 }
-            if (r3 != 0) goto L_0x0044
-            com.android.systemui.qs.external.TileServiceManager r3 = r2.mServiceManager     // Catch:{ RemoteException -> 0x0044 }
-            r0 = 1
-            r3.setBindRequested(r0)     // Catch:{ RemoteException -> 0x0044 }
-            android.service.quicksettings.IQSTileService r2 = r2.mService     // Catch:{ RemoteException -> 0x0044 }
-            r2.onStartListening()     // Catch:{ RemoteException -> 0x0044 }
-            goto L_0x0044
-        L_0x0026:
-            android.service.quicksettings.IQSTileService r3 = r2.mService     // Catch:{ RemoteException -> 0x0044 }
-            r3.onStopListening()     // Catch:{ RemoteException -> 0x0044 }
-            boolean r3 = r2.mIsTokenGranted     // Catch:{ RemoteException -> 0x0044 }
-            r0 = 0
-            if (r3 == 0) goto L_0x003d
-            boolean r3 = r2.mIsShowingDialog     // Catch:{ RemoteException -> 0x0044 }
-            if (r3 != 0) goto L_0x003d
-            android.view.IWindowManager r3 = r2.mWindowManager     // Catch:{ RemoteException -> 0x003b }
-            android.os.IBinder r1 = r2.mToken     // Catch:{ RemoteException -> 0x003b }
-            r3.removeWindowToken(r1, r0)     // Catch:{ RemoteException -> 0x003b }
-        L_0x003b:
-            r2.mIsTokenGranted = r0     // Catch:{ RemoteException -> 0x0044 }
-        L_0x003d:
-            r2.mIsShowingDialog = r0     // Catch:{ RemoteException -> 0x0044 }
-            com.android.systemui.qs.external.TileServiceManager r2 = r2.mServiceManager     // Catch:{ RemoteException -> 0x0044 }
-            r2.setBindRequested(r0)     // Catch:{ RemoteException -> 0x0044 }
-        L_0x0044:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.CustomTile.handleSetListening(boolean):void");
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
+    public void handleSetListening(boolean z) {
+        super.handleSetListening(z);
+        if (this.mListening != z) {
+            this.mListening = z;
+            if (z) {
+                try {
+                    updateDefaultTileAndIcon();
+                    refreshState();
+                    if (!this.mServiceManager.isActiveTile()) {
+                        this.mServiceManager.setBindRequested(true);
+                        this.mService.onStartListening();
+                    }
+                } catch (RemoteException unused) {
+                }
+            } else {
+                this.mService.onStopListening();
+                if (this.mIsTokenGranted && !this.mIsShowingDialog) {
+                    try {
+                        this.mWindowManager.removeWindowToken(this.mToken, 0);
+                    } catch (RemoteException unused2) {
+                    }
+                    this.mIsTokenGranted = false;
+                }
+                this.mIsShowingDialog = false;
+                this.mServiceManager.setBindRequested(false);
+            }
+        }
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
         if (this.mIsTokenGranted) {
@@ -271,6 +190,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         this.mHost.getTileServices().freeService(this, this.mServiceManager);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.State newTileState() {
         TileServiceManager tileServiceManager = this.mServiceManager;
         if (tileServiceManager == null || !tileServiceManager.isToggleableTile()) {
@@ -279,12 +199,13 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         Intent intent = new Intent("android.service.quicksettings.action.QS_TILE_PREFERENCES");
         intent.setPackage(this.mComponent.getPackageName());
         Intent resolveIntent = resolveIntent(intent);
         if (resolveIntent == null) {
-            return new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", this.mComponent.getPackageName(), (String) null));
+            return new Intent("android.settings.APPLICATION_DETAILS_SETTINGS").setData(Uri.fromParts("package", this.mComponent.getPackageName(), null));
         }
         resolveIntent.putExtra("android.intent.extra.COMPONENT_NAME", this.mComponent);
         resolveIntent.putExtra("state", this.mTile.getState());
@@ -302,14 +223,15 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
     }
 
     /* access modifiers changed from: protected */
-    /* JADX WARNING: Can't wrap try/catch for region: R(10:3|4|5|6|7|(1:9)|10|(2:12|13)|17|19) */
-    /* JADX WARNING: Code restructure failed: missing block: B:20:?, code lost:
+    /* JADX WARNING: Can't wrap try/catch for region: R(10:3|4|5|6|7|(1:9)|10|(2:12|13)|16|18) */
+    /* JADX WARNING: Code restructure failed: missing block: B:19:?, code lost:
         return;
      */
     /* JADX WARNING: Failed to process nested try/catch */
     /* JADX WARNING: Missing exception handler attribute for start block: B:6:0x0016 */
     /* JADX WARNING: Removed duplicated region for block: B:12:0x002c A[SYNTHETIC, Splitter:B:12:0x002c] */
     /* JADX WARNING: Removed duplicated region for block: B:9:0x001e A[Catch:{ RemoteException -> 0x0061 }] */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void handleClick() {
         /*
@@ -354,24 +276,26 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
             goto L_0x005a
         L_0x0052:
             r0 = move-exception
-            java.lang.String r1 = r7.TAG     // Catch:{ RemoteException -> 0x0061 }
+            java.lang.String r1 = r7.TAG
             java.lang.String r2 = "reflect exempt background start exception!"
-            android.util.Log.e(r1, r2, r0)     // Catch:{ RemoteException -> 0x0061 }
+            android.util.Log.e(r1, r2, r0)
         L_0x005a:
-            android.service.quicksettings.IQSTileService r0 = r7.mService     // Catch:{ RemoteException -> 0x0061 }
-            android.os.IBinder r7 = r7.mToken     // Catch:{ RemoteException -> 0x0061 }
-            r0.onClick(r7)     // Catch:{ RemoteException -> 0x0061 }
+            android.service.quicksettings.IQSTileService r0 = r7.mService
+            android.os.IBinder r7 = r7.mToken
+            r0.onClick(r7)
         L_0x0061:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.CustomTile.handleClick():void");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return getState().label;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUpdateState(QSTile.State state, Object obj) {
         Drawable drawable;
         int state2 = this.mTile.getState();
@@ -388,12 +312,14 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
             drawable = this.mDefaultIcon.loadDrawable(this.mUserContext);
         }
         state.iconSupplier = new Supplier(drawable) {
+            /* class com.android.systemui.qs.external.$$Lambda$CustomTile$OhNzDEMM2yCWnVYbU2_DKTzaqo */
             public final /* synthetic */ Drawable f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Supplier
             public final Object get() {
                 return CustomTile.lambda$handleUpdateState$0(this.f$0);
             }
@@ -433,6 +359,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return new QSTileImpl.DrawableIcon(constantState.newDrawable());
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public final String getMetricsSpec() {
         return this.mComponent.getPackageName();
     }
@@ -442,6 +369,8 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
             ((ControlPanelController) Dependency.get(ControlPanelController.class)).collapsePanel(true);
         }
         ((ActivityStarter) Dependency.get(ActivityStarter.class)).postQSRunnableDismissingKeyguard(new Runnable() {
+            /* class com.android.systemui.qs.external.$$Lambda$CustomTile$q1MKWZaaapZOjYFe9CyeyabLR0Q */
+
             public final void run() {
                 CustomTile.this.lambda$startUnlockAndRun$1$CustomTile();
             }
@@ -480,6 +409,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         throw new IllegalArgumentException("Empty custom tile spec action");
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public QSIconView createControlCenterTileView(Context context) {
         CCQSIconViewImpl cCQSIconViewImpl = new CCQSIconViewImpl(context);
         cCQSIconViewImpl.setIsCustomTile(true);

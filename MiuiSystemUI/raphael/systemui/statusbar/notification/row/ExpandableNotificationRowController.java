@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.FalsingManager;
+import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.shared.plugins.PluginManager;
@@ -26,9 +27,11 @@ public class ExpandableNotificationRowController {
     private final ActivatableNotificationViewController mActivatableNotificationViewController;
     private final boolean mAllowLongPress;
     private final String mAppName;
-    /* access modifiers changed from: private */
-    public final SystemClock mClock;
+    private final SystemClock mClock;
     private final ExpandableNotificationRow.ExpansionLogger mExpansionLogger = new ExpandableNotificationRow.ExpansionLogger() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$ExpandableNotificationRowController$7PRoCjf2CPB0eC3liBvfR80zWU */
+
+        @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.ExpansionLogger
         public final void logNotificationExpansion(String str, boolean z, boolean z2) {
             ExpandableNotificationRowController.this.logNotificationExpansion(str, z, z2);
         }
@@ -45,19 +48,16 @@ public class ExpandableNotificationRowController {
     private Runnable mOnDismissRunnable;
     private final ExpandableNotificationRow.OnExpandClickListener mOnExpandClickListener;
     private final PeopleNotificationIdentifier mPeopleNotificationIdentifier;
-    /* access modifiers changed from: private */
-    public final PluginManager mPluginManager;
+    private final PluginManager mPluginManager;
     private final RowContentBindStage mRowContentBindStage;
     private final StatusBarStateController mStatusBarStateController;
-    /* access modifiers changed from: private */
-    public final ExpandableNotificationRow mView;
+    private final ExpandableNotificationRow mView;
 
     static /* synthetic */ boolean lambda$init$0() {
         return false;
     }
 
     public ExpandableNotificationRowController(ExpandableNotificationRow expandableNotificationRow, ActivatableNotificationViewController activatableNotificationViewController, NotificationMediaManager notificationMediaManager, PluginManager pluginManager, SystemClock systemClock, String str, String str2, KeyguardBypassController keyguardBypassController, NotificationGroupManager notificationGroupManager, RowContentBindStage rowContentBindStage, NotificationLogger notificationLogger, HeadsUpManager headsUpManager, ExpandableNotificationRow.OnExpandClickListener onExpandClickListener, StatusBarStateController statusBarStateController, NotificationGutsManager notificationGutsManager, boolean z, Runnable runnable, FalsingManager falsingManager, PeopleNotificationIdentifier peopleNotificationIdentifier) {
-        NotificationGutsManager notificationGutsManager2 = notificationGutsManager;
         this.mView = expandableNotificationRow;
         this.mActivatableNotificationViewController = activatableNotificationViewController;
         this.mMediaManager = notificationMediaManager;
@@ -72,10 +72,13 @@ public class ExpandableNotificationRowController {
         this.mHeadsUpManager = headsUpManager;
         this.mOnExpandClickListener = onExpandClickListener;
         this.mStatusBarStateController = statusBarStateController;
-        this.mNotificationGutsManager = notificationGutsManager2;
+        this.mNotificationGutsManager = notificationGutsManager;
         this.mOnDismissRunnable = runnable;
         Objects.requireNonNull(notificationGutsManager);
         this.mOnAppOpsClickListener = new ExpandableNotificationRow.OnAppOpsClickListener() {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$oy9pBf4KjrW7ZRpgHkpOCIaDYlg */
+
+            @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.OnAppOpsClickListener
             public final boolean onClick(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
                 return NotificationGutsManager.this.openGuts(view, i, i2, menuItem);
             }
@@ -92,6 +95,9 @@ public class ExpandableNotificationRowController {
         this.mView.setDescendantFocusability(393216);
         if (this.mAllowLongPress) {
             this.mView.setLongPressListener(new ExpandableNotificationRow.LongPressListener() {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$ExpandableNotificationRowController$_ms1NM7u5Ae7j4XaboX7D03mges */
+
+                @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.LongPressListener
                 public final boolean onLongPress(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
                     return ExpandableNotificationRowController.this.lambda$init$1$ExpandableNotificationRowController(view, i, i2, menuItem);
                 }
@@ -101,9 +107,11 @@ public class ExpandableNotificationRowController {
             this.mView.setDescendantFocusability(131072);
         }
         this.mView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            /* class com.android.systemui.statusbar.notification.row.ExpandableNotificationRowController.AnonymousClass1 */
+
             public void onViewAttachedToWindow(View view) {
                 ExpandableNotificationRowController.this.mView.getEntry().setInitializationTime(ExpandableNotificationRowController.this.mClock.elapsedRealtime());
-                ExpandableNotificationRowController.this.mPluginManager.addPluginListener(ExpandableNotificationRowController.this.mView, (Class<?>) NotificationMenuRowPlugin.class, false);
+                ExpandableNotificationRowController.this.mPluginManager.addPluginListener((PluginListener) ExpandableNotificationRowController.this.mView, NotificationMenuRowPlugin.class, false);
             }
 
             public void onViewDetachedFromWindow(View view) {
@@ -122,7 +130,7 @@ public class ExpandableNotificationRowController {
         StatusBar statusBar = (StatusBar) Dependency.get(StatusBar.class);
         boolean z = false;
         if (statusBar.isKeyguardShowing()) {
-            statusBar.dismissKeyguardThenExecute($$Lambda$ExpandableNotificationRowController$A0pf9AyYTRXRQWgbW6MeQ5pFtak.INSTANCE, (Runnable) null, false);
+            statusBar.dismissKeyguardThenExecute($$Lambda$ExpandableNotificationRowController$A0pf9AyYTRXRQWgbW6MeQ5pFtak.INSTANCE, null, false);
             return true;
         }
         ExpandedNotification sbn = this.mView.getEntry().getSbn();

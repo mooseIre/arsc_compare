@@ -26,6 +26,7 @@ public final class LockscreenWallpaper_Factory implements Factory<LockscreenWall
         this.mainHandlerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public LockscreenWallpaper get() {
         return provideInstance(this.wallpaperManagerProvider, this.iWallpaperManagerProvider, this.keyguardUpdateMonitorProvider, this.dumpManagerProvider, this.mediaManagerProvider, this.mainHandlerProvider);
     }

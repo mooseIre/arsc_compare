@@ -13,6 +13,7 @@ public final class ExtensionsKt$addFloatListener$1 extends TransitionListener {
         this.$listener = function1;
     }
 
+    @Override // miuix.animation.listener.TransitionListener
     public void onUpdate(@Nullable Object obj, @Nullable FloatProperty<?> floatProperty, float f, float f2, boolean z) {
         this.$listener.invoke(Float.valueOf(f));
     }

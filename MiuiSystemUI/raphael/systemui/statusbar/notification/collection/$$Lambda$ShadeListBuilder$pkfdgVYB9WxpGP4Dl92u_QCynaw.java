@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$ShadeListBuilder$pkfdgVYB9WxpGP4Dl92
     private /* synthetic */ $$Lambda$ShadeListBuilder$pkfdgVYB9WxpGP4Dl92u_QCynaw() {
     }
 
+    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
         return ShadeListBuilder.lambda$freeEmptyGroups$1((GroupEntry) obj);
     }

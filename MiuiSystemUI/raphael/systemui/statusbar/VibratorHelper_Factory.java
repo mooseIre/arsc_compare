@@ -11,6 +11,7 @@ public final class VibratorHelper_Factory implements Factory<VibratorHelper> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public VibratorHelper get() {
         return provideInstance(this.contextProvider);
     }

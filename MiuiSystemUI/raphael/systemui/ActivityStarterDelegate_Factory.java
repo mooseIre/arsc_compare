@@ -13,6 +13,7 @@ public final class ActivityStarterDelegate_Factory implements Factory<ActivitySt
         this.statusBarProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ActivityStarterDelegate get() {
         return provideInstance(this.statusBarProvider);
     }

@@ -14,12 +14,16 @@ import com.android.systemui.tuner.TunerService;
 import com.android.systemui.util.Utils;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.Executor;
+import kotlin.collections.CollectionsKt__CollectionsKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.text.Regex;
+import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,18 +31,14 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaResumeListener implements MediaDataManager.Listener {
     private final Executor backgroundExecutor;
     private final BroadcastDispatcher broadcastDispatcher;
-    /* access modifiers changed from: private */
-    public final Context context;
-    /* access modifiers changed from: private */
-    public int currentUserId = this.context.getUserId();
-    /* access modifiers changed from: private */
-    public ResumeMediaBrowser mediaBrowser;
+    private final Context context;
+    private int currentUserId = this.context.getUserId();
+    private ResumeMediaBrowser mediaBrowser;
     private final MediaResumeListener$mediaBrowserCallback$1 mediaBrowserCallback = new MediaResumeListener$mediaBrowserCallback$1(this);
     private MediaDataManager mediaDataManager;
     private final ConcurrentLinkedQueue<ComponentName> resumeComponents = new ConcurrentLinkedQueue<>();
     private final TunerService tunerService;
-    /* access modifiers changed from: private */
-    public boolean useMediaResumption;
+    private boolean useMediaResumption;
     private final MediaResumeListener$userChangeReceiver$1 userChangeReceiver = new MediaResumeListener$userChangeReceiver$1(this);
 
     public MediaResumeListener(@NotNull Context context2, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull Executor executor, @NotNull TunerService tunerService2) {
@@ -59,7 +59,7 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
             MediaResumeListener$userChangeReceiver$1 mediaResumeListener$userChangeReceiver$1 = this.userChangeReceiver;
             UserHandle userHandle = UserHandle.ALL;
             Intrinsics.checkExpressionValueIsNotNull(userHandle, "UserHandle.ALL");
-            broadcastDispatcher3.registerReceiver(mediaResumeListener$userChangeReceiver$1, intentFilter, (Executor) null, userHandle);
+            broadcastDispatcher3.registerReceiver(mediaResumeListener$userChangeReceiver$1, intentFilter, null, userHandle);
             loadSavedComponents();
         }
     }
@@ -73,6 +73,7 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
         throw null;
     }
 
+    @Override // com.android.systemui.media.MediaDataManager.Listener
     public void onMediaDataRemoved(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "key");
         MediaDataManager.Listener.DefaultImpls.onMediaDataRemoved(this, str);
@@ -93,8 +94,8 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
         List<String> split;
         boolean z;
         this.resumeComponents.clear();
-        List<T> list = null;
-        String string = this.context.getSharedPreferences("media_control_prefs", 0).getString("browser_components_" + this.currentUserId, (String) null);
+        List<String> list = null;
+        String string = this.context.getSharedPreferences("media_control_prefs", 0).getString("browser_components_" + this.currentUserId, null);
         if (string != null && (split = new Regex(":").split(string, 0)) != null) {
             if (!split.isEmpty()) {
                 ListIterator<String> listIterator = split.listIterator(split.size());
@@ -118,9 +119,9 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
             list = CollectionsKt__CollectionsKt.emptyList();
         }
         if (list != null) {
-            for (T split$default : list) {
-                List split$default2 = StringsKt__StringsKt.split$default(split$default, new String[]{"/"}, false, 0, 6, (Object) null);
-                this.resumeComponents.add(new ComponentName((String) split$default2.get(0), (String) split$default2.get(1)));
+            for (String str : list) {
+                List list2 = StringsKt__StringsKt.split$default(str, new String[]{"/"}, false, 0, 6, null);
+                this.resumeComponents.add(new ComponentName((String) list2.get(0), (String) list2.get(1)));
             }
         }
         StringBuilder sb = new StringBuilder();
@@ -136,12 +137,14 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
     /* access modifiers changed from: private */
     public final void loadMediaResumptionControls() {
         if (this.useMediaResumption) {
-            for (ComponentName resumeMediaBrowser : this.resumeComponents) {
-                new ResumeMediaBrowser(this.context, this.mediaBrowserCallback, resumeMediaBrowser).findRecentMedia();
+            Iterator<T> it = this.resumeComponents.iterator();
+            while (it.hasNext()) {
+                new ResumeMediaBrowser(this.context, this.mediaBrowserCallback, it.next()).findRecentMedia();
             }
         }
     }
 
+    @Override // com.android.systemui.media.MediaDataManager.Listener
     public void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {
         ArrayList arrayList;
         Intrinsics.checkParameterIsNotNull(str, "key");
@@ -156,9 +159,9 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
                 List<ResolveInfo> queryIntentServices = this.context.getPackageManager().queryIntentServices(new Intent("android.media.browse.MediaBrowserService"), 0);
                 if (queryIntentServices != null) {
                     arrayList = new ArrayList();
-                    for (T next : queryIntentServices) {
-                        if (Intrinsics.areEqual((Object) ((ResolveInfo) next).serviceInfo.packageName, (Object) mediaData.getPackageName())) {
-                            arrayList.add(next);
+                    for (T t : queryIntentServices) {
+                        if (Intrinsics.areEqual(((ResolveInfo) t).serviceInfo.packageName, mediaData.getPackageName())) {
+                            arrayList.add(t);
                         }
                     }
                 } else {
@@ -167,7 +170,7 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
                 if (arrayList == null || arrayList.size() <= 0) {
                     MediaDataManager mediaDataManager2 = this.mediaDataManager;
                     if (mediaDataManager2 != null) {
-                        mediaDataManager2.setResumeAction(str, (Runnable) null);
+                        mediaDataManager2.setResumeAction(str, null);
                     } else {
                         Intrinsics.throwUninitializedPropertyAccessException("mediaDataManager");
                         throw null;
@@ -201,8 +204,9 @@ public final class MediaResumeListener implements MediaDataManager.Listener {
             this.resumeComponents.remove();
         }
         StringBuilder sb = new StringBuilder();
-        for (ComponentName flattenToString : this.resumeComponents) {
-            sb.append(flattenToString.flattenToString());
+        Iterator<T> it = this.resumeComponents.iterator();
+        while (it.hasNext()) {
+            sb.append(it.next().flattenToString());
             sb.append(":");
         }
         SharedPreferences.Editor edit = this.context.getSharedPreferences("media_control_prefs", 0).edit();

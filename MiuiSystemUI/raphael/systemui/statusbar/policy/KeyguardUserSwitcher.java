@@ -30,22 +30,20 @@ import com.android.systemui.statusbar.policy.UserSwitcherController;
 
 public class KeyguardUserSwitcher {
     private final Adapter mAdapter;
-    /* access modifiers changed from: private */
-    public boolean mAnimating;
+    private boolean mAnimating;
     private final AppearAnimationUtils mAppearAnimationUtils;
     private final KeyguardUserSwitcherScrim mBackground;
-    /* access modifiers changed from: private */
-    public ObjectAnimator mBgAnimator;
+    private ObjectAnimator mBgAnimator;
     public final DataSetObserver mDataSetObserver = new DataSetObserver() {
+        /* class com.android.systemui.statusbar.policy.KeyguardUserSwitcher.AnonymousClass4 */
+
         public void onChanged() {
             KeyguardUserSwitcher.this.refresh();
         }
     };
     private final KeyguardStatusBarView mStatusBarView;
-    /* access modifiers changed from: private */
-    public ViewGroup mUserSwitcher;
-    /* access modifiers changed from: private */
-    public final Container mUserSwitcherContainer;
+    private ViewGroup mUserSwitcher;
+    private final Container mUserSwitcherContainer;
     private UserSwitcherController mUserSwitcherController;
 
     public KeyguardUserSwitcher(Context context, ViewStub viewStub, KeyguardStatusBarView keyguardStatusBarView, NotificationPanelViewController notificationPanelViewController) {
@@ -76,7 +74,7 @@ public class KeyguardUserSwitcher {
     private void reinflateViews() {
         ViewGroup viewGroup = this.mUserSwitcher;
         if (viewGroup != null) {
-            viewGroup.setBackground((Drawable) null);
+            viewGroup.setBackground(null);
             this.mUserSwitcher.removeOnLayoutChangeListener(this.mBackground);
         }
         this.mUserSwitcherContainer.removeAllViews();
@@ -151,20 +149,24 @@ public class KeyguardUserSwitcher {
         this.mUserSwitcher.setClipChildren(false);
         this.mUserSwitcher.setClipToPadding(false);
         this.mAppearAnimationUtils.startAnimation(viewArr, new Runnable() {
+            /* class com.android.systemui.statusbar.policy.KeyguardUserSwitcher.AnonymousClass1 */
+
             public void run() {
                 KeyguardUserSwitcher.this.mUserSwitcher.setClipChildren(true);
                 KeyguardUserSwitcher.this.mUserSwitcher.setClipToPadding(true);
             }
         });
         this.mAnimating = true;
-        ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackground, "alpha", new int[]{0, 255});
+        ObjectAnimator ofInt = ObjectAnimator.ofInt(this.mBackground, "alpha", 0, 255);
         this.mBgAnimator = ofInt;
-        ofInt.setDuration(400);
+        ofInt.setDuration(400L);
         this.mBgAnimator.setInterpolator(Interpolators.ALPHA_IN);
         this.mBgAnimator.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.statusbar.policy.KeyguardUserSwitcher.AnonymousClass2 */
+
             public void onAnimationEnd(Animator animator) {
-                ObjectAnimator unused = KeyguardUserSwitcher.this.mBgAnimator = null;
-                boolean unused2 = KeyguardUserSwitcher.this.mAnimating = false;
+                KeyguardUserSwitcher.this.mBgAnimator = null;
+                KeyguardUserSwitcher.this.mAnimating = false;
             }
         });
         this.mBgAnimator.start();
@@ -173,16 +175,19 @@ public class KeyguardUserSwitcher {
     private void startDisappearAnimation() {
         this.mAnimating = true;
         this.mUserSwitcher.animate().alpha(0.0f).setDuration(300).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable() {
+            /* class com.android.systemui.statusbar.policy.KeyguardUserSwitcher.AnonymousClass3 */
+
             public void run() {
                 KeyguardUserSwitcher.this.mUserSwitcherContainer.setVisibility(8);
                 KeyguardUserSwitcher.this.mUserSwitcher.setAlpha(1.0f);
-                boolean unused = KeyguardUserSwitcher.this.mAnimating = false;
+                KeyguardUserSwitcher.this.mAnimating = false;
             }
         });
     }
 
     /* access modifiers changed from: private */
-    public void refresh() {
+    /* access modifiers changed from: public */
+    private void refresh() {
         int childCount = this.mUserSwitcher.getChildCount();
         int count = this.mAdapter.getCount();
         int max = Math.max(childCount, count);

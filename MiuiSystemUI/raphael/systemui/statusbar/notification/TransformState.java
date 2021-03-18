@@ -18,6 +18,8 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 
 public class TransformState {
     private static ViewClippingUtil.ClippingParameters CLIPPING_PARAMETERS = new ViewClippingUtil.ClippingParameters() {
+        /* class com.android.systemui.statusbar.notification.TransformState.AnonymousClass1 */
+
         public boolean shouldFinish(View view) {
             if (view instanceof ExpandableNotificationRow) {
                 return !((ExpandableNotificationRow) view).isChildInGroup();
@@ -76,7 +78,7 @@ public class TransformState {
     }
 
     public void transformViewFullyFrom(TransformState transformState, float f) {
-        transformViewFrom(transformState, 17, (ViewTransformationHelper.CustomTransformation) null, f);
+        transformViewFrom(transformState, 17, null, f);
     }
 
     public void transformViewFullyFrom(TransformState transformState, ViewTransformationHelper.CustomTransformation customTransformation, float f) {
@@ -88,7 +90,7 @@ public class TransformState {
     }
 
     public void transformViewVerticalFrom(TransformState transformState, float f) {
-        transformViewFrom(transformState, 16, (ViewTransformationHelper.CustomTransformation) null, f);
+        transformViewFrom(transformState, 16, null, f);
     }
 
     /* access modifiers changed from: protected */
@@ -98,204 +100,7 @@ public class TransformState {
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void transformViewFrom(com.android.systemui.statusbar.notification.TransformState r20, int r21, com.android.systemui.statusbar.ViewTransformationHelper.CustomTransformation r22, float r23) {
         /*
-            r19 = this;
-            r0 = r19
-            r1 = r22
-            r2 = r23
-            android.view.View r3 = r0.mTransformedView
-            r4 = r21 & 1
-            r5 = 0
-            r6 = 1
-            if (r4 == 0) goto L_0x0010
-            r4 = r6
-            goto L_0x0011
-        L_0x0010:
-            r4 = r5
-        L_0x0011:
-            r7 = 16
-            r8 = r21 & 16
-            if (r8 == 0) goto L_0x0019
-            r8 = r6
-            goto L_0x001a
-        L_0x0019:
-            r8 = r5
-        L_0x001a:
-            int r9 = r19.getViewHeight()
-            int r10 = r20.getViewHeight()
-            if (r10 == r9) goto L_0x002a
-            if (r10 == 0) goto L_0x002a
-            if (r9 == 0) goto L_0x002a
-            r11 = r6
-            goto L_0x002b
-        L_0x002a:
-            r11 = r5
-        L_0x002b:
-            int r12 = r19.getViewWidth()
-            int r13 = r20.getViewWidth()
-            if (r13 == r12) goto L_0x003b
-            if (r13 == 0) goto L_0x003b
-            if (r12 == 0) goto L_0x003b
-            r14 = r6
-            goto L_0x003c
-        L_0x003b:
-            r14 = r5
-        L_0x003c:
-            boolean r15 = r19.transformScale(r20)
-            if (r15 == 0) goto L_0x0048
-            if (r11 != 0) goto L_0x0046
-            if (r14 == 0) goto L_0x0048
-        L_0x0046:
-            r15 = r6
-            goto L_0x0049
-        L_0x0048:
-            r15 = r5
-        L_0x0049:
-            r7 = 0
-            int r16 = (r2 > r7 ? 1 : (r2 == r7 ? 0 : -1))
-            r7 = -1082130432(0xffffffffbf800000, float:-1.0)
-            if (r16 == 0) goto L_0x007c
-            if (r4 == 0) goto L_0x005a
-            float r17 = r19.getTransformationStartX()
-            int r17 = (r17 > r7 ? 1 : (r17 == r7 ? 0 : -1))
-            if (r17 == 0) goto L_0x007c
-        L_0x005a:
-            if (r8 == 0) goto L_0x0064
-            float r17 = r19.getTransformationStartY()
-            int r17 = (r17 > r7 ? 1 : (r17 == r7 ? 0 : -1))
-            if (r17 == 0) goto L_0x007c
-        L_0x0064:
-            if (r15 == 0) goto L_0x0070
-            float r17 = r19.getTransformationStartScaleX()
-            int r17 = (r17 > r7 ? 1 : (r17 == r7 ? 0 : -1))
-            if (r17 != 0) goto L_0x0070
-            if (r14 != 0) goto L_0x007c
-        L_0x0070:
-            if (r15 == 0) goto L_0x00fc
-            float r17 = r19.getTransformationStartScaleY()
-            int r17 = (r17 > r7 ? 1 : (r17 == r7 ? 0 : -1))
-            if (r17 != 0) goto L_0x00fc
-            if (r11 == 0) goto L_0x00fc
-        L_0x007c:
-            if (r16 == 0) goto L_0x0083
-            int[] r16 = r20.getLaidOutLocationOnScreen()
-            goto L_0x0087
-        L_0x0083:
-            int[] r16 = r20.getLocationOnScreen()
-        L_0x0087:
-            int[] r17 = r19.getLaidOutLocationOnScreen()
-            r7 = r20
-            if (r1 == 0) goto L_0x0099
-            boolean r18 = r1.initTransformation(r0, r7)
-            if (r18 != 0) goto L_0x0096
-            goto L_0x0099
-        L_0x0096:
-            r5 = -1082130432(0xffffffffbf800000, float:-1.0)
-            goto L_0x00e7
-        L_0x0099:
-            if (r4 == 0) goto L_0x00a5
-            r18 = r16[r5]
-            r5 = r17[r5]
-            int r5 = r18 - r5
-            float r5 = (float) r5
-            r0.setTransformationStartX(r5)
-        L_0x00a5:
-            if (r8 == 0) goto L_0x00b1
-            r5 = r16[r6]
-            r16 = r17[r6]
-            int r5 = r5 - r16
-            float r5 = (float) r5
-            r0.setTransformationStartY(r5)
-        L_0x00b1:
-            android.view.View r5 = r20.getTransformedView()
-            if (r15 == 0) goto L_0x00c9
-            if (r14 == 0) goto L_0x00c9
-            float r7 = (float) r13
-            float r13 = r5.getScaleX()
-            float r7 = r7 * r13
-            float r12 = (float) r12
-            float r7 = r7 / r12
-            r0.setTransformationStartScaleX(r7)
-            r7 = 0
-            r3.setPivotX(r7)
-            goto L_0x00ce
-        L_0x00c9:
-            r7 = -1082130432(0xffffffffbf800000, float:-1.0)
-            r0.setTransformationStartScaleX(r7)
-        L_0x00ce:
-            if (r15 == 0) goto L_0x00e2
-            if (r11 == 0) goto L_0x00e2
-            float r7 = (float) r10
-            float r5 = r5.getScaleY()
-            float r7 = r7 * r5
-            float r5 = (float) r9
-            float r7 = r7 / r5
-            r0.setTransformationStartScaleY(r7)
-            r5 = 0
-            r3.setPivotY(r5)
-            goto L_0x0096
-        L_0x00e2:
-            r5 = -1082130432(0xffffffffbf800000, float:-1.0)
-            r0.setTransformationStartScaleY(r5)
-        L_0x00e7:
-            if (r4 != 0) goto L_0x00ec
-            r0.setTransformationStartX(r5)
-        L_0x00ec:
-            if (r8 != 0) goto L_0x00f1
-            r0.setTransformationStartY(r5)
-        L_0x00f1:
-            if (r15 != 0) goto L_0x00f9
-            r0.setTransformationStartScaleX(r5)
-            r0.setTransformationStartScaleY(r5)
-        L_0x00f9:
-            r0.setClippingDeactivated(r3, r6)
-        L_0x00fc:
-            android.view.animation.Interpolator r5 = r0.mDefaultInterpolator
-            float r5 = r5.getInterpolation(r2)
-            if (r4 == 0) goto L_0x011e
-            if (r1 == 0) goto L_0x0111
-            android.view.animation.Interpolator r4 = r1.getCustomInterpolator(r6, r6)
-            if (r4 == 0) goto L_0x0111
-            float r4 = r4.getInterpolation(r2)
-            goto L_0x0112
-        L_0x0111:
-            r4 = r5
-        L_0x0112:
-            float r7 = r19.getTransformationStartX()
-            r9 = 0
-            float r4 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r7, r9, r4)
-            r3.setTranslationX(r4)
-        L_0x011e:
-            if (r8 == 0) goto L_0x013c
-            if (r1 == 0) goto L_0x012f
-            r4 = 16
-            android.view.animation.Interpolator r1 = r1.getCustomInterpolator(r4, r6)
-            if (r1 == 0) goto L_0x012f
-            float r1 = r1.getInterpolation(r2)
-            goto L_0x0130
-        L_0x012f:
-            r1 = r5
-        L_0x0130:
-            float r2 = r19.getTransformationStartY()
-            r4 = 0
-            float r1 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r2, r4, r1)
-            r3.setTranslationY(r1)
-        L_0x013c:
-            if (r15 == 0) goto L_0x0160
-            float r1 = r19.getTransformationStartScaleX()
-            r2 = -1082130432(0xffffffffbf800000, float:-1.0)
-            int r4 = (r1 > r2 ? 1 : (r1 == r2 ? 0 : -1))
-            r6 = 1065353216(0x3f800000, float:1.0)
-            if (r4 == 0) goto L_0x0151
-            float r1 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r1, r6, r5)
-            r3.setScaleX(r1)
-        L_0x0151:
-            float r0 = r19.getTransformationStartScaleY()
-            int r1 = (r0 > r2 ? 1 : (r0 == r2 ? 0 : -1))
-            if (r1 == 0) goto L_0x0160
-            float r0 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r0, r6, r5)
-            r3.setScaleY(r0)
-        L_0x0160:
-            return
+        // Method dump skipped, instructions count: 353
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.TransformState.transformViewFrom(com.android.systemui.statusbar.notification.TransformState, int, com.android.systemui.statusbar.ViewTransformationHelper$CustomTransformation, float):void");
     }
@@ -331,7 +136,7 @@ public class TransformState {
     }
 
     public void transformViewFullyTo(TransformState transformState, float f) {
-        transformViewTo(transformState, 17, (ViewTransformationHelper.CustomTransformation) null, f);
+        transformViewTo(transformState, 17, null, f);
     }
 
     public void transformViewFullyTo(TransformState transformState, ViewTransformationHelper.CustomTransformation customTransformation, float f) {
@@ -343,20 +148,17 @@ public class TransformState {
     }
 
     public void transformViewVerticalTo(TransformState transformState, float f) {
-        transformViewTo(transformState, 16, (ViewTransformationHelper.CustomTransformation) null, f);
+        transformViewTo(transformState, 16, null, f);
     }
 
     private void transformViewTo(TransformState transformState, int i, ViewTransformationHelper.CustomTransformation customTransformation, float f) {
         float f2;
         float f3;
-        TransformState transformState2 = transformState;
-        ViewTransformationHelper.CustomTransformation customTransformation2 = customTransformation;
-        float f4 = f;
         View view = this.mTransformedView;
         boolean z = (i & 1) != 0;
         boolean z2 = (i & 16) != 0;
         boolean transformScale = transformScale(transformState);
-        if (f4 == 0.0f) {
+        if (f == 0.0f) {
             if (z) {
                 float transformationStartX = getTransformationStartX();
                 if (transformationStartX == -1.0f) {
@@ -386,38 +188,38 @@ public class TransformState {
             }
             setClippingDeactivated(view, true);
         }
-        float interpolation = this.mDefaultInterpolator.getInterpolation(f4);
+        float interpolation = this.mDefaultInterpolator.getInterpolation(f);
         int[] laidOutLocationOnScreen = transformState.getLaidOutLocationOnScreen();
         int[] laidOutLocationOnScreen2 = getLaidOutLocationOnScreen();
         if (z) {
-            float f5 = (float) (laidOutLocationOnScreen[0] - laidOutLocationOnScreen2[0]);
-            if (customTransformation2 != null) {
-                if (customTransformation2.customTransformTarget(this, transformState2)) {
-                    f5 = this.mTransformationEndX;
+            float f4 = (float) (laidOutLocationOnScreen[0] - laidOutLocationOnScreen2[0]);
+            if (customTransformation != null) {
+                if (customTransformation.customTransformTarget(this, transformState)) {
+                    f4 = this.mTransformationEndX;
                 }
-                Interpolator customInterpolator = customTransformation2.getCustomInterpolator(1, false);
+                Interpolator customInterpolator = customTransformation.getCustomInterpolator(1, false);
                 if (customInterpolator != null) {
-                    f3 = customInterpolator.getInterpolation(f4);
-                    view.setTranslationX(NotificationUtils.interpolate(getTransformationStartX(), f5, f3));
+                    f3 = customInterpolator.getInterpolation(f);
+                    view.setTranslationX(NotificationUtils.interpolate(getTransformationStartX(), f4, f3));
                 }
             }
             f3 = interpolation;
-            view.setTranslationX(NotificationUtils.interpolate(getTransformationStartX(), f5, f3));
+            view.setTranslationX(NotificationUtils.interpolate(getTransformationStartX(), f4, f3));
         }
         if (z2) {
-            float f6 = (float) (laidOutLocationOnScreen[1] - laidOutLocationOnScreen2[1]);
-            if (customTransformation2 != null) {
-                if (customTransformation2.customTransformTarget(this, transformState2)) {
-                    f6 = this.mTransformationEndY;
+            float f5 = (float) (laidOutLocationOnScreen[1] - laidOutLocationOnScreen2[1]);
+            if (customTransformation != null) {
+                if (customTransformation.customTransformTarget(this, transformState)) {
+                    f5 = this.mTransformationEndY;
                 }
-                Interpolator customInterpolator2 = customTransformation2.getCustomInterpolator(16, false);
+                Interpolator customInterpolator2 = customTransformation.getCustomInterpolator(16, false);
                 if (customInterpolator2 != null) {
-                    f2 = customInterpolator2.getInterpolation(f4);
-                    view.setTranslationY(NotificationUtils.interpolate(getTransformationStartY(), f6, f2));
+                    f2 = customInterpolator2.getInterpolation(f);
+                    view.setTranslationY(NotificationUtils.interpolate(getTransformationStartY(), f5, f2));
                 }
             }
             f2 = interpolation;
-            view.setTranslationY(NotificationUtils.interpolate(getTransformationStartY(), f6, f2));
+            view.setTranslationY(NotificationUtils.interpolate(getTransformationStartY(), f5, f2));
         }
         if (transformScale) {
             transformState.getTransformedView();

@@ -21,6 +21,7 @@ public class GroupEntry extends ListEntry {
         this.mUnmodifiableChildren = Collections.unmodifiableList(arrayList);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.ListEntry
     public NotificationEntry getRepresentativeEntry() {
         return this.mSummary;
     }

@@ -26,6 +26,7 @@ public final class PipManager_Factory implements Factory<PipManager> {
         this.dividerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public PipManager get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.pipBoundsHandlerProvider, this.pipTaskOrganizerProvider, this.surfaceTransactionHelperProvider, this.dividerProvider);
     }

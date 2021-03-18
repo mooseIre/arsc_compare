@@ -10,6 +10,8 @@ import com.android.systemui.util.wakelock.WakeLock;
 public class DozeScreenState implements DozeMachine.Part {
     private static final boolean DEBUG = DozeService.DEBUG;
     private final Runnable mApplyPendingScreenState = new Runnable() {
+        /* class com.android.systemui.doze.$$Lambda$DozeScreenState$eRrLSFQgxPfG2I_jJDfdCLwKzVE */
+
         public final void run() {
             DozeScreenState.this.applyPendingScreenState();
         }
@@ -29,6 +31,7 @@ public class DozeScreenState implements DozeMachine.Part {
         this.mWakeLock = new SettableWakeLock(wakeLock, "DozeScreenState");
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         int screenState = state2.screenState(this.mParameters);
         this.mDozeHost.cancelGentleSleep();
@@ -75,6 +78,7 @@ public class DozeScreenState implements DozeMachine.Part {
                 }
             } else if (z4) {
                 this.mDozeHost.prepareForGentleSleep(new Runnable(screenState) {
+                    /* class com.android.systemui.doze.$$Lambda$DozeScreenState$Q7dH1ne3iIuPaAubBMflNieFfwI */
                     public final /* synthetic */ int f$1;
 
                     {

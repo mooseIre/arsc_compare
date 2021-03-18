@@ -13,25 +13,28 @@ import java.util.concurrent.ExecutionException;
 import java.util.function.Predicate;
 
 public class NotificationInlineImageCache implements NotificationInlineImageResolver.ImageCache {
-    /* access modifiers changed from: private */
-    public static final String TAG = "NotificationInlineImageCache";
+    private static final String TAG = "NotificationInlineImageCache";
     private final ConcurrentHashMap<Uri, PreloadImageTask> mCache = new ConcurrentHashMap<>();
     private NotificationInlineImageResolver mResolver;
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationInlineImageResolver.ImageCache
     public void setImageResolver(NotificationInlineImageResolver notificationInlineImageResolver) {
         this.mResolver = notificationInlineImageResolver;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationInlineImageResolver.ImageCache
     public boolean hasEntry(Uri uri) {
         return this.mCache.containsKey(uri);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationInlineImageResolver.ImageCache
     public void preload(Uri uri) {
         PreloadImageTask preloadImageTask = new PreloadImageTask(this.mResolver);
-        preloadImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Uri[]{uri});
+        preloadImageTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, uri);
         this.mCache.put(uri, preloadImageTask);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationInlineImageResolver.ImageCache
     public Drawable get(Uri uri) {
         try {
             return (Drawable) this.mCache.get(uri).get();
@@ -42,14 +45,17 @@ public class NotificationInlineImageCache implements NotificationInlineImageReso
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationInlineImageResolver.ImageCache
     public void purge() {
         this.mCache.entrySet().removeIf(new Predicate(this.mResolver.getWantedUriSet()) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInlineImageCache$W1d4bA0jU1G2gSKuFNWjVLFgYyA */
             public final /* synthetic */ Set f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return NotificationInlineImageCache.lambda$purge$0(this.f$0, (Map.Entry) obj);
             }
@@ -73,8 +79,8 @@ public class NotificationInlineImageCache implements NotificationInlineImageReso
             try {
                 return this.mResolver.resolveImage(uri);
             } catch (IOException | SecurityException e) {
-                String access$000 = NotificationInlineImageCache.TAG;
-                Log.d(access$000, "PreloadImageTask: Resolve failed from " + uri, e);
+                String str = NotificationInlineImageCache.TAG;
+                Log.d(str, "PreloadImageTask: Resolve failed from " + uri, e);
                 return null;
             }
         }

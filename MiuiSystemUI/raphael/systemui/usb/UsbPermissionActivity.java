@@ -2,6 +2,7 @@ package com.android.systemui.usb;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.PermissionChecker;
@@ -36,7 +37,8 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
     private boolean mPermissionGranted;
     private int mUid;
 
-    /* JADX WARNING: type inference failed for: r9v0, types: [android.content.DialogInterface$OnClickListener, android.content.Context, com.android.internal.app.AlertActivity, com.android.systemui.usb.UsbPermissionActivity, android.widget.CompoundButton$OnCheckedChangeListener, android.app.Activity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r9v0, resolved type: com.android.systemui.usb.UsbPermissionActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onCreate(Bundle bundle) {
         boolean z;
         int i;
@@ -52,7 +54,7 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
         try {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mPackageName, 0);
             String charSequence = applicationInfo.loadLabel(packageManager).toString();
-            AlertController.AlertParams alertParams = this.mAlertParams;
+            AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
             alertParams.mTitle = charSequence;
             if (this.mDevice == null) {
                 alertParams.mMessage = getString(C0021R$string.usb_accessory_permission_prompt, new Object[]{charSequence, this.mAccessory.getDescription()});
@@ -95,7 +97,8 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
         }
     }
 
-    /* JADX WARNING: type inference failed for: r6v0, types: [android.content.Context, com.android.internal.app.AlertActivity, com.android.systemui.usb.UsbPermissionActivity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r6v0, resolved type: com.android.systemui.usb.UsbPermissionActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onDestroy() {
         IUsbManager asInterface = IUsbManager.Stub.asInterface(ServiceManager.getService("usb"));
         Intent intent = new Intent();
@@ -119,7 +122,7 @@ public class UsbPermissionActivity extends AlertActivity implements DialogInterf
                 }
             }
             intent.putExtra("permission", this.mPermissionGranted);
-            this.mPendingIntent.send(this, 0, intent);
+            this.mPendingIntent.send((Context) this, 0, intent);
         } catch (PendingIntent.CanceledException unused) {
             Log.w("UsbPermissionActivity", "PendingIntent was cancelled");
         } catch (RemoteException e) {

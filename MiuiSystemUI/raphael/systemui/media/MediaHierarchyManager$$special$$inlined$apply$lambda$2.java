@@ -17,9 +17,9 @@ public final class MediaHierarchyManager$$special$$inlined$apply$lambda$2 extend
     public void onAnimationCancel(@Nullable Animator animator) {
         this.cancelled = true;
         this.this$0.animationPending = false;
-        View access$getRootView$p = this.this$0.rootView;
-        if (access$getRootView$p != null) {
-            access$getRootView$p.removeCallbacks(this.this$0.startAnimation);
+        View view = this.this$0.rootView;
+        if (view != null) {
+            view.removeCallbacks(this.this$0.startAnimation);
         }
     }
 

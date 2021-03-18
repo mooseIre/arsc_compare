@@ -6,7 +6,7 @@ import com.android.systemui.statusbar.notification.collection.listbuilder.plugga
 public interface Coordinator {
     void attach(NotifPipeline notifPipeline);
 
-    NotifSection getSection() {
+    default NotifSection getSection() {
         return null;
     }
 }

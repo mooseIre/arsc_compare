@@ -48,9 +48,9 @@ public class ExpandableIndicator extends ImageView {
 
     private String getContentDescription(boolean z) {
         if (z) {
-            return this.mContext.getString(C0021R$string.accessibility_quick_settings_collapse);
+            return ((ImageView) this).mContext.getString(C0021R$string.accessibility_quick_settings_collapse);
         }
-        return this.mContext.getString(C0021R$string.accessibility_quick_settings_expand);
+        return ((ImageView) this).mContext.getString(C0021R$string.accessibility_quick_settings_expand);
     }
 
     private void updateIndicatorDrawable() {

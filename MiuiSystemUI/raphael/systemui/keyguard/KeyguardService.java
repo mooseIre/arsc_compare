@@ -20,6 +20,8 @@ import com.android.systemui.SystemUIApplication;
 
 public class KeyguardService extends Service {
     private final IKeyguardService.Stub mBinder = new IKeyguardService.Stub() {
+        /* class com.android.systemui.keyguard.KeyguardService.AnonymousClass1 */
+
         public void OnDoubleClickHome() {
         }
 
@@ -173,10 +175,8 @@ public class KeyguardService extends Service {
             return true;
         }
     };
-    /* access modifiers changed from: private */
-    public final KeyguardLifecyclesDispatcher mKeyguardLifecyclesDispatcher;
-    /* access modifiers changed from: private */
-    public final KeyguardViewMediator mKeyguardViewMediator;
+    private final KeyguardLifecyclesDispatcher mKeyguardLifecyclesDispatcher;
+    private final KeyguardViewMediator mKeyguardViewMediator;
 
     public KeyguardService(KeyguardViewMediator keyguardViewMediator, KeyguardLifecyclesDispatcher keyguardLifecyclesDispatcher) {
         this.mKeyguardViewMediator = keyguardViewMediator;

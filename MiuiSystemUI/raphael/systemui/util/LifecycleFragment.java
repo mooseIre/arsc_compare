@@ -9,6 +9,7 @@ import androidx.lifecycle.LifecycleRegistry;
 public class LifecycleFragment extends Fragment implements LifecycleOwner {
     private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
 
+    @Override // androidx.lifecycle.LifecycleOwner
     public Lifecycle getLifecycle() {
         return this.mLifecycle;
     }

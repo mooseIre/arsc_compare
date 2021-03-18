@@ -14,6 +14,7 @@ public final class NotificationSensitiveController_Factory implements Factory<No
         this.userSwitcherControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationSensitiveController get() {
         return provideInstance(this.contextProvider, this.userSwitcherControllerProvider);
     }

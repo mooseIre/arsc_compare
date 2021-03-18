@@ -58,10 +58,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     private int mContentMarginEnd;
     private int mContentMarginStart;
     protected final Context mContext;
-    /* access modifiers changed from: private */
-    public MiuiQSCustomizer mCustomizePanel;
-    /* access modifiers changed from: private */
-    public Record mDetailRecord;
+    private MiuiQSCustomizer mCustomizePanel;
+    private Record mDetailRecord;
     protected View mDivider;
     private final DumpManager mDumpManager;
     private int mEditTopOffset;
@@ -70,8 +68,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     private int mFooterMarginStartHorizontal;
     private MiuiPageIndicator mFooterPageIndicator;
     private boolean mGridContentVisible = true;
-    /* access modifiers changed from: private */
-    public final H mHandler = new H();
+    private final H mHandler = new H();
     private ViewGroup mHeaderContainer;
     private LinearLayout mHorizontalContentContainer;
     private LinearLayout mHorizontalLinearLayout;
@@ -106,22 +103,22 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
 
         void removeTile(TileRecord tileRecord);
 
-        void restoreInstanceState(Bundle bundle) {
+        default void restoreInstanceState(Bundle bundle) {
         }
 
-        void saveInstanceState(Bundle bundle) {
+        default void saveInstanceState(Bundle bundle) {
         }
 
-        void setExpansion(float f) {
+        default void setExpansion(float f) {
         }
 
         void setListening(boolean z);
 
-        boolean setMaxColumns(int i) {
+        default boolean setMaxColumns(int i) {
             return false;
         }
 
-        boolean setMinRows(int i) {
+        default boolean setMinRows(int i) {
             return false;
         }
 
@@ -169,6 +166,9 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         super(context, attributeSet);
         this.mMediaHost = mediaHost;
         mediaHost.addVisibilityChangeListener(new Function1() {
+            /* class com.android.systemui.qs.$$Lambda$QSPanel$eQ8pVxxhUsNJKcJOLQN4uzlXkuA */
+
+            @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 return QSPanel.this.lambda$new$0$QSPanel((Boolean) obj);
             }
@@ -233,7 +233,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     /* access modifiers changed from: protected */
     public QSTileLayout createRegularTileLayout() {
         if (this.mRegularTileLayout == null) {
-            this.mRegularTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(C0017R$layout.qs_paged_tile_layout, this, false);
+            this.mRegularTileLayout = (QSTileLayout) LayoutInflater.from(this.mContext).inflate(C0017R$layout.qs_paged_tile_layout, (ViewGroup) this, false);
         }
         return this.mRegularTileLayout;
     }
@@ -344,10 +344,12 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         super.onDetachedFromWindow();
     }
 
+    @Override // com.android.systemui.qs.QSHost.Callback
     public void onTilesChanged() {
         setTiles(this.mHost.getTiles());
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         View view;
         if ("qs_show_brightness".equals(str) && (view = this.mBrightnessView) != null) {
@@ -375,6 +377,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         return this.mHost.createTile(str);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BrightnessMirrorController.BrightnessMirrorListener
     public void onBrightnessMirrorReinflated(View view) {
         updateBrightnessMirror();
     }
@@ -727,8 +730,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         }
         this.mRecords.clear();
         this.mCachedSpecs = "";
-        for (QSTile addTile : collection) {
-            addTile(addTile, z);
+        for (QSTile qSTile : collection) {
+            addTile(qSTile, z);
         }
     }
 
@@ -763,39 +766,48 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         tileRecord.tile = qSTile;
         tileRecord.tileView = createTileView(qSTile, z);
         AnonymousClass1 r2 = new QSTile.Callback() {
+            /* class com.android.systemui.qs.QSPanel.AnonymousClass1 */
+
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public int getCallbackType() {
                 return 1;
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onStateChanged(QSTile.State state) {
                 QSPanel.this.drawTile(tileRecord, state);
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onShowDetail(boolean z) {
                 if (QSPanel.this.shouldShowDetail()) {
                     QSPanel.this.showDetail(z, tileRecord);
                 }
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onShowEdit(boolean z) {
                 QSPanel.this.showEdit(z, tileRecord);
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onToggleStateChanged(boolean z) {
                 if (QSPanel.this.mDetailRecord == tileRecord) {
                     QSPanel.this.fireToggleStateChanged(z);
                 }
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onScanStateChanged(boolean z) {
                 tileRecord.scanState = z;
-                Record access$100 = QSPanel.this.mDetailRecord;
+                Record record = QSPanel.this.mDetailRecord;
                 TileRecord tileRecord = tileRecord;
-                if (access$100 == tileRecord) {
+                if (record == tileRecord) {
                     QSPanel.this.fireScanStateChanged(tileRecord.scanState);
                 }
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onAnnouncementRequested(CharSequence charSequence) {
                 if (charSequence != null) {
                     QSPanel.this.mHandler.obtainMessage(3, charSequence).sendToTarget();
@@ -817,6 +829,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
 
     public void showEdit(final View view) {
         view.post(new Runnable() {
+            /* class com.android.systemui.qs.QSPanel.AnonymousClass2 */
+
             public void run() {
                 if (QSPanel.this.mCustomizePanel != null && !QSPanel.this.mCustomizePanel.isCustomizing()) {
                     int[] locationOnScreen = view.getLocationOnScreen();
@@ -934,7 +948,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     }
 
     /* access modifiers changed from: private */
-    public void fireToggleStateChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void fireToggleStateChanged(boolean z) {
         MiuiQSDetail.Callback callback = this.mCallback;
         if (callback != null) {
             callback.onToggleStateChanged(z);
@@ -942,7 +957,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     }
 
     /* access modifiers changed from: private */
-    public void fireScanStateChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void fireScanStateChanged(boolean z) {
         MiuiQSDetail.Callback callback = this.mCallback;
         if (callback != null) {
             callback.onScanStateChanged(z);
@@ -1069,7 +1085,8 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         this.mMediaVisibilityChangedListener = consumer;
     }
 
-    private class H extends Handler {
+    /* access modifiers changed from: private */
+    public class H extends Handler {
         private H() {
         }
 
@@ -1096,6 +1113,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println(getClass().getSimpleName() + ":");
         printWriter.println("  Tile records:");

@@ -37,16 +37,21 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         super(context);
         this.mCommandQueue = commandQueue;
         activityManagerWrapper.registerTaskStackListener(new TaskStackChangeListener() {
+            /* class com.android.systemui.SizeCompatModeActivityController.AnonymousClass1 */
+
+            @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onSizeCompatModeActivityChanged(int i, IBinder iBinder) {
                 SizeCompatModeActivityController.this.updateRestartButton(i, iBinder);
             }
         });
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setImeWindowStatus(int i, IBinder iBinder, int i2, int i3, boolean z) {
         RestartActivityButton restartActivityButton = this.mActiveButtons.get(i);
         if (restartActivityButton != null) {
@@ -60,6 +65,7 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onDisplayRemoved(int i) {
         this.mDisplayContextCache.remove(i);
         removeRestartButton(i);
@@ -74,7 +80,8 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
     }
 
     /* access modifiers changed from: private */
-    public void updateRestartButton(int i, IBinder iBinder) {
+    /* access modifiers changed from: public */
+    private void updateRestartButton(int i, IBinder iBinder) {
         if (iBinder == null) {
             removeRestartButton(i);
             return;
@@ -112,20 +119,21 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             return this.mContext;
         }
         Context context = null;
-        WeakReference weakReference = this.mDisplayContextCache.get(i);
+        WeakReference<Context> weakReference = this.mDisplayContextCache.get(i);
         if (weakReference != null) {
-            context = (Context) weakReference.get();
+            context = weakReference.get();
         }
         if (context != null || (display = ((DisplayManager) this.mContext.getSystemService(DisplayManager.class)).getDisplay(i)) == null) {
             return context;
         }
         Context createDisplayContext = this.mContext.createDisplayContext(display);
-        this.mDisplayContextCache.put(i, new WeakReference(createDisplayContext));
+        this.mDisplayContextCache.put(i, new WeakReference<>(createDisplayContext));
         return createDisplayContext;
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    static class RestartActivityButton extends ImageButton implements View.OnClickListener, View.OnLongClickListener {
+    public static class RestartActivityButton extends ImageButton implements View.OnClickListener, View.OnLongClickListener {
         IBinder mLastActivityToken;
         final int mPopupOffsetX;
         final int mPopupOffsetY;
@@ -152,7 +160,7 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             GradientDrawable gradientDrawable = new GradientDrawable();
             gradientDrawable.setShape(1);
             gradientDrawable.setColor(valueOf);
-            setBackground(new RippleDrawable(valueOf, (Drawable) null, gradientDrawable));
+            setBackground(new RippleDrawable(valueOf, null, gradientDrawable));
             setOnClickListener(this);
             setOnLongClickListener(this);
             WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams();
@@ -239,14 +247,17 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
                 popupWindow.setAnimationStyle(16973910);
                 popupWindow.setClippingEnabled(false);
                 popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    /* class com.android.systemui.$$Lambda$SizeCompatModeActivityController$RestartActivityButton$rxc8GUe9hnz5kAfzl4xmCIiwi3Y */
+
                     public final void onDismiss() {
                         SizeCompatModeActivityController.RestartActivityButton.this.lambda$showHint$0$SizeCompatModeActivityController$RestartActivityButton();
                     }
                 });
                 this.mShowingHint = popupWindow;
                 Button button = (Button) inflate.findViewById(C0015R$id.got_it);
-                button.setBackground(new RippleDrawable(ColorStateList.valueOf(-3355444), (Drawable) null, (Drawable) null));
+                button.setBackground(new RippleDrawable(ColorStateList.valueOf(-3355444), null, null));
                 button.setOnClickListener(new View.OnClickListener(popupWindow) {
+                    /* class com.android.systemui.$$Lambda$SizeCompatModeActivityController$RestartActivityButton$tZJkvUnAETgfbkQvNUGL2mQWd9s */
                     public final /* synthetic */ PopupWindow f$0;
 
                     {
@@ -254,7 +265,7 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
                     }
 
                     public final void onClick(View view) {
-                        this.f$0.dismiss();
+                        SizeCompatModeActivityController.RestartActivityButton.lambda$showHint$1(this.f$0, view);
                     }
                 });
                 popupWindow.showAtLocation(this, this.mWinParams.gravity, this.mPopupOffsetX, this.mPopupOffsetY);

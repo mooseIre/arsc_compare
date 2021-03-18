@@ -29,14 +29,12 @@ import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import miui.app.AlertDialog;
 
 public class ControlPanelController implements CallbackController<UseControlPanelChangeListener>, SettingsObserver.Callback {
     private BroadcastDispatcher mBroadcastDispatcher;
     private Context mContext;
-    /* access modifiers changed from: private */
-    public ControlCenter mControlCenter;
+    private ControlCenter mControlCenter;
     private CurrentUserTracker mCurrentUserTracker;
     private AlertDialog mDialog;
     private boolean mExpandableInKeyguard;
@@ -46,6 +44,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
     private final List<UseControlPanelChangeListener> mListeners;
     private boolean mNcSwitchGuideShown;
     private BroadcastReceiver mRemoteOperationReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass3 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             String stringExtra = intent.getStringExtra("operation");
@@ -78,6 +78,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
     };
     protected BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(action) || "android.intent.action.SCREEN_OFF".equals(action)) {
@@ -85,15 +87,11 @@ public class ControlPanelController implements CallbackController<UseControlPane
             }
         }
     };
-    /* access modifiers changed from: private */
-    public SettingsObserver mSettingsObserver;
-    /* access modifiers changed from: private */
-    public StatusBar mStatusBar;
+    private SettingsObserver mSettingsObserver;
+    private StatusBar mStatusBar;
     private boolean mSuperPowerModeOn;
-    /* access modifiers changed from: private */
-    public boolean mUseControlPanel;
-    /* access modifiers changed from: private */
-    public int mUseControlPanelSettingDefault;
+    private boolean mUseControlPanel;
+    private int mUseControlPanelSettingDefault;
 
     public interface UseControlPanelChangeListener {
         void onUseControlPanelChange(boolean z);
@@ -108,6 +106,9 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mSettingsObserver = settingsObserver;
         this.mNcSwitchGuideShown = Settings.System.getIntForUser(this.mContext.getContentResolver(), "nc_switch_guide_shown", 0, 0) != 0;
         this.mCurrentUserTracker = new CurrentUserTracker(this.mBroadcastDispatcher) {
+            /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass1 */
+
+            @Override // com.android.systemui.settings.CurrentUserTracker
             public void onUserSwitched(int i) {
                 ControlPanelController controlPanelController = ControlPanelController.this;
                 controlPanelController.onContentChanged("use_control_panel", controlPanelController.mSettingsObserver.getValue("use_control_panel", 0, String.valueOf(ControlPanelController.this.mUseControlPanelSettingDefault)));
@@ -186,11 +187,11 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mSettingsObserver.addCallback(this, "expandable_under_lock_screen");
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("action_panels_operation");
-        this.mBroadcastDispatcher.registerReceiver(this.mRemoteOperationReceiver, intentFilter, (Executor) null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mRemoteOperationReceiver, intentFilter, null, UserHandle.ALL);
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
         intentFilter2.addAction("android.intent.action.SCREEN_OFF");
-        this.mBroadcastDispatcher.registerReceiver(this.mScreenOffReceiver, intentFilter2, (Executor) null, UserHandle.ALL);
+        this.mBroadcastDispatcher.registerReceiver(this.mScreenOffReceiver, intentFilter2, null, UserHandle.ALL);
     }
 
     private void unRegister() {
@@ -201,88 +202,27 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     /* access modifiers changed from: private */
-    public void notifyAllListeners() {
-        for (UseControlPanelChangeListener onUseControlPanelChange : this.mListeners) {
-            onUseControlPanelChange.onUseControlPanelChange(this.mUseControlPanel);
+    /* access modifiers changed from: public */
+    private void notifyAllListeners() {
+        for (UseControlPanelChangeListener useControlPanelChangeListener : this.mListeners) {
+            useControlPanelChangeListener.onUseControlPanelChange(this.mUseControlPanel);
         }
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:13:0x002a  */
     /* JADX WARNING: Removed duplicated region for block: B:21:0x0056  */
+    @Override // com.miui.systemui.SettingsObserver.Callback
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onContentChanged(@org.jetbrains.annotations.Nullable java.lang.String r5, @org.jetbrains.annotations.Nullable java.lang.String r6) {
         /*
-            r4 = this;
-            int r0 = r5.hashCode()
-            r1 = -1630983538(0xffffffff9ec92a8e, float:-2.1299303E-20)
-            r2 = 0
-            r3 = 1
-            if (r0 == r1) goto L_0x001b
-            r1 = -1074300950(0xffffffffbff777ea, float:-1.933347)
-            if (r0 == r1) goto L_0x0011
-            goto L_0x0025
-        L_0x0011:
-            java.lang.String r0 = "use_control_panel"
-            boolean r5 = r5.equals(r0)
-            if (r5 == 0) goto L_0x0025
-            r5 = r2
-            goto L_0x0026
-        L_0x001b:
-            java.lang.String r0 = "expandable_under_lock_screen"
-            boolean r5 = r5.equals(r0)
-            if (r5 == 0) goto L_0x0025
-            r5 = r3
-            goto L_0x0026
-        L_0x0025:
-            r5 = -1
-        L_0x0026:
-            java.lang.String r0 = "ControlPanelController"
-            if (r5 == 0) goto L_0x0056
-            if (r5 == r3) goto L_0x002d
-            goto L_0x007a
-        L_0x002d:
-            int r5 = com.miui.systemui.util.MiuiTextUtils.parseInt(r6, r3)
-            if (r5 == 0) goto L_0x0034
-            r2 = r3
-        L_0x0034:
-            r4.mExpandableInKeyguard = r2
-            boolean r5 = r4.isExpandable()
-            if (r5 != 0) goto L_0x003f
-            r4.collapsePanel(r3)
-        L_0x003f:
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            java.lang.String r6 = "onChange: mExpandableInKeyguard = "
-            r5.append(r6)
-            boolean r4 = r4.mExpandableInKeyguard
-            r5.append(r4)
-            java.lang.String r4 = r5.toString()
-            android.util.Log.d(r0, r4)
-            goto L_0x007a
-        L_0x0056:
-            int r5 = r4.mUseControlPanelSettingDefault
-            int r5 = com.miui.systemui.util.MiuiTextUtils.parseInt(r6, r5)
-            if (r5 == 0) goto L_0x005f
-            r2 = r3
-        L_0x005f:
-            r4.mUseControlPanel = r2
-            java.lang.StringBuilder r5 = new java.lang.StringBuilder
-            r5.<init>()
-            java.lang.String r6 = "onChange: mUseControlPanel = "
-            r5.append(r6)
-            boolean r6 = r4.mUseControlPanel
-            r5.append(r6)
-            java.lang.String r5 = r5.toString()
-            android.util.Log.d(r0, r5)
-            r4.notifyAllListeners()
-        L_0x007a:
-            return
+        // Method dump skipped, instructions count: 123
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.ControlPanelController.onContentChanged(java.lang.String, java.lang.String):void");
     }
 
     /* access modifiers changed from: private */
-    public void addCallbackLocked(UseControlPanelChangeListener useControlPanelChangeListener) {
+    /* access modifiers changed from: public */
+    private void addCallbackLocked(UseControlPanelChangeListener useControlPanelChangeListener) {
         if (this.mListeners.contains(useControlPanelChangeListener)) {
             useControlPanelChangeListener.onUseControlPanelChange(this.mUseControlPanel);
             return;
@@ -296,7 +236,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
     }
 
     /* access modifiers changed from: private */
-    public void removeCallbackLocked(UseControlPanelChangeListener useControlPanelChangeListener) {
+    /* access modifiers changed from: public */
+    private void removeCallbackLocked(UseControlPanelChangeListener useControlPanelChangeListener) {
         this.mListeners.remove(useControlPanelChangeListener);
         if (this.mListeners.size() == 0) {
             unRegister();
@@ -376,6 +317,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
             MiuiSystemUIDialog.setShowForAllUsers(this.mDialog, true);
             this.mDialog.show();
             this.mDialog.getButton(-1).setOnClickListener(new View.OnClickListener() {
+                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$IOJ5s7cyqd_OWb4X5hZeGy2s60 */
+
                 public final void onClick(View view) {
                     ControlPanelController.this.lambda$showDialog$0$ControlPanelController(view);
                 }
@@ -402,6 +345,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
                 frameLayout.removeView(findViewById);
             }
             frameLayout.postDelayed(new Runnable() {
+                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$B8VEa7KKUptKemobMxMsci49EGw */
+
                 public final void run() {
                     ControlPanelController.this.lambda$dismissDialog$1$ControlPanelController();
                 }

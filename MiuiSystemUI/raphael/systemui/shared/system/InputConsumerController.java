@@ -16,8 +16,7 @@ import java.io.PrintWriter;
 public class InputConsumerController {
     private static final String TAG = "InputConsumerController";
     private InputEventReceiver mInputEventReceiver;
-    /* access modifiers changed from: private */
-    public InputListener mListener;
+    private InputListener mListener;
     private final String mName;
     private RegistrationListener mRegistrationListener;
     private final IBinder mToken = new Binder();
@@ -31,7 +30,8 @@ public class InputConsumerController {
         void onRegistrationChanged(boolean z);
     }
 
-    private final class InputEventReceiver extends BatchedInputEventReceiver {
+    /* access modifiers changed from: private */
+    public final class InputEventReceiver extends BatchedInputEventReceiver {
         InputEventReceiver(InputChannel inputChannel, Looper looper, Choreographer choreographer) {
             super(inputChannel, looper, choreographer);
         }

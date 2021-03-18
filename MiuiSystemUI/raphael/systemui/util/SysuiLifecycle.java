@@ -20,6 +20,7 @@ public class SysuiLifecycle {
             }
         }
 
+        @Override // androidx.lifecycle.LifecycleOwner
         public Lifecycle getLifecycle() {
             return this.mLifecycle;
         }

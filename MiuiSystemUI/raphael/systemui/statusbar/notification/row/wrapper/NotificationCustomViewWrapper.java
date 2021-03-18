@@ -11,10 +11,12 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
     private int mLegacyColor;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public boolean shouldClearBackgroundOnReapply() {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public boolean shouldClipToRounding(boolean z, boolean z2) {
         return true;
     }
@@ -24,11 +26,13 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
         this.mLegacyColor = expandableNotificationRow.getContext().getColor(C0011R$color.notification_legacy_background_color);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         super.setVisible(z);
         this.mView.setAlpha(z ? 1.0f : 0.0f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         if (needsInversion(this.mBackgroundColor, this.mView)) {
@@ -42,11 +46,13 @@ public class NotificationCustomViewWrapper extends NotificationViewWrapper {
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public int getCustomBackgroundColor() {
         int customBackgroundColor = super.getCustomBackgroundColor();
         return (customBackgroundColor != 0 || !this.mIsLegacy) ? customBackgroundColor : this.mLegacyColor;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void setLegacy(boolean z) {
         super.setLegacy(z);
         this.mIsLegacy = z;

@@ -13,16 +13,11 @@ import org.jetbrains.annotations.NotNull;
 /* compiled from: StatefulControlSubscriber.kt */
 public final class StatefulControlSubscriber extends IControlsSubscriber.Stub {
     private final DelayableExecutor bgExecutor;
-    /* access modifiers changed from: private */
-    public final ControlsController controller;
-    /* access modifiers changed from: private */
-    public final ControlsProviderLifecycleManager provider;
-    /* access modifiers changed from: private */
-    public final long requestLimit;
-    /* access modifiers changed from: private */
-    public IControlsSubscription subscription;
-    /* access modifiers changed from: private */
-    public boolean subscriptionOpen;
+    private final ControlsController controller;
+    private final ControlsProviderLifecycleManager provider;
+    private final long requestLimit;
+    private IControlsSubscription subscription;
+    private boolean subscriptionOpen;
 
     public StatefulControlSubscriber(@NotNull ControlsController controlsController, @NotNull ControlsProviderLifecycleManager controlsProviderLifecycleManager, @NotNull DelayableExecutor delayableExecutor, long j) {
         Intrinsics.checkParameterIsNotNull(controlsController, "controller");
@@ -35,7 +30,7 @@ public final class StatefulControlSubscriber extends IControlsSubscriber.Stub {
     }
 
     private final void run(IBinder iBinder, Function0<Unit> function0) {
-        if (Intrinsics.areEqual((Object) this.provider.getToken(), (Object) iBinder)) {
+        if (Intrinsics.areEqual(this.provider.getToken(), iBinder)) {
             this.bgExecutor.execute(new StatefulControlSubscriber$run$1(function0));
         }
     }

@@ -57,12 +57,14 @@ public class MediaNotificationProcessor {
                 generateArtworkPaletteBuilder.setRegion((int) (((float) createBitmap.getWidth()) * 0.4f), 0, createBitmap.getWidth(), createBitmap.getHeight());
                 if (!isWhiteOrBlack(findBackgroundSwatch.getHsl())) {
                     generateArtworkPaletteBuilder.addFilter(new Palette.Filter(findBackgroundSwatch.getHsl()[0]) {
+                        /* class com.android.systemui.statusbar.notification.$$Lambda$MediaNotificationProcessor$jNuRDwOMbOj8fwROH917lxaryoM */
                         public final /* synthetic */ float f$0;
 
                         {
                             this.f$0 = r1;
                         }
 
+                        @Override // androidx.palette.graphics.Palette.Filter
                         public final boolean isAllowed(int i, float[] fArr) {
                             return MediaNotificationProcessor.lambda$processNotification$1(this.f$0, i, fArr);
                         }
@@ -158,10 +160,10 @@ public class MediaNotificationProcessor {
         }
         float f = -1.0f;
         Palette.Swatch swatch = null;
-        for (Palette.Swatch next : palette.getSwatches()) {
-            if (next != dominantSwatch && ((float) next.getPopulation()) > f && !isWhiteOrBlack(next.getHsl())) {
-                f = (float) next.getPopulation();
-                swatch = next;
+        for (Palette.Swatch swatch2 : palette.getSwatches()) {
+            if (swatch2 != dominantSwatch && ((float) swatch2.getPopulation()) > f && !isWhiteOrBlack(swatch2.getHsl())) {
+                f = (float) swatch2.getPopulation();
+                swatch = swatch2;
             }
         }
         return (swatch != null && ((float) dominantSwatch.getPopulation()) / f <= 2.5f) ? swatch : dominantSwatch;

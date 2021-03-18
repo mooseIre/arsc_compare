@@ -4,7 +4,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.hardware.biometrics.BiometricSourceType;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -29,6 +28,8 @@ import java.util.function.Consumer;
 public class LockscreenLockIconController {
     private final AccessibilityController mAccessibilityController;
     private final View.AccessibilityDelegate mAccessibilityDelegate = new View.AccessibilityDelegate() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass7 */
+
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
             super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
             boolean isFingerprintDetectionRunning = LockscreenLockIconController.this.mKeyguardUpdateMonitor.isFingerprintDetectionRunning();
@@ -42,24 +43,24 @@ public class LockscreenLockIconController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mBlockUpdates;
+    private boolean mBlockUpdates;
     private boolean mBouncerShowingScrimmed;
-    /* access modifiers changed from: private */
-    public final ConfigurationController mConfigurationController;
-    /* access modifiers changed from: private */
-    public final ConfigurationController.ConfigurationListener mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+    private final ConfigurationController mConfigurationController;
+    private final ConfigurationController.ConfigurationListener mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass3 */
         private int mDensity;
 
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onThemeChanged() {
             if (LockscreenLockIconController.this.mLockIcon != null) {
-                TypedArray obtainStyledAttributes = LockscreenLockIconController.this.mLockIcon.getContext().getTheme().obtainStyledAttributes((AttributeSet) null, new int[]{C0009R$attr.wallpaperTextColor}, 0, 0);
+                TypedArray obtainStyledAttributes = LockscreenLockIconController.this.mLockIcon.getContext().getTheme().obtainStyledAttributes(null, new int[]{C0009R$attr.wallpaperTextColor}, 0, 0);
                 int color = obtainStyledAttributes.getColor(0, -1);
                 obtainStyledAttributes.recycle();
                 LockscreenLockIconController.this.mLockIcon.onThemeChange(color);
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onDensityOrFontScaleChanged() {
             ViewGroup.LayoutParams layoutParams;
             if (LockscreenLockIconController.this.mLockIcon != null && (layoutParams = LockscreenLockIconController.this.mLockIcon.getLayoutParams()) != null) {
@@ -70,6 +71,7 @@ public class LockscreenLockIconController {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onLocaleListChanged() {
             if (LockscreenLockIconController.this.mLockIcon != null) {
                 LockscreenLockIconController.this.mLockIcon.setContentDescription(LockscreenLockIconController.this.mLockIcon.getResources().getText(C0021R$string.accessibility_unlock_button));
@@ -77,6 +79,7 @@ public class LockscreenLockIconController {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onConfigChanged(Configuration configuration) {
             int i = configuration.densityDpi;
             if (i != this.mDensity) {
@@ -85,60 +88,58 @@ public class LockscreenLockIconController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final DockManager.DockEventListener mDockEventListener = new DockManager.DockEventListener() {
+    private final DockManager.DockEventListener mDockEventListener = new DockManager.DockEventListener() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$LockscreenLockIconController$YwLkB4yDF5Gwcj5NX5hNSw8eA7E */
     };
-    /* access modifiers changed from: private */
-    public final Optional<DockManager> mDockManager;
+    private final Optional<DockManager> mDockManager;
     private boolean mDocked;
     private final HeadsUpManagerPhone mHeadsUpManagerPhone;
-    /* access modifiers changed from: private */
-    public final KeyguardBypassController mKeyguardBypassController;
+    private final KeyguardBypassController mKeyguardBypassController;
     private final KeyguardIndicationController mKeyguardIndicationController;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardJustShown;
-    /* access modifiers changed from: private */
-    public final KeyguardStateController.Callback mKeyguardMonitorCallback = new KeyguardStateController.Callback() {
+    private boolean mKeyguardJustShown;
+    private final KeyguardStateController.Callback mKeyguardMonitorCallback = new KeyguardStateController.Callback() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass6 */
+
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onKeyguardShowingChanged() {
-            boolean access$2100 = LockscreenLockIconController.this.mKeyguardShowing;
+            boolean z = LockscreenLockIconController.this.mKeyguardShowing;
             LockscreenLockIconController lockscreenLockIconController = LockscreenLockIconController.this;
-            boolean unused = lockscreenLockIconController.mKeyguardShowing = lockscreenLockIconController.mKeyguardStateController.isShowing();
-            boolean z = false;
-            if (!access$2100 && LockscreenLockIconController.this.mKeyguardShowing && LockscreenLockIconController.this.mBlockUpdates) {
-                boolean unused2 = LockscreenLockIconController.this.mBlockUpdates = false;
-                z = true;
+            lockscreenLockIconController.mKeyguardShowing = lockscreenLockIconController.mKeyguardStateController.isShowing();
+            boolean z2 = false;
+            if (!z && LockscreenLockIconController.this.mKeyguardShowing && LockscreenLockIconController.this.mBlockUpdates) {
+                LockscreenLockIconController.this.mBlockUpdates = false;
+                z2 = true;
             }
-            if (!access$2100 && LockscreenLockIconController.this.mKeyguardShowing) {
-                boolean unused3 = LockscreenLockIconController.this.mKeyguardJustShown = true;
+            if (!z && LockscreenLockIconController.this.mKeyguardShowing) {
+                LockscreenLockIconController.this.mKeyguardJustShown = true;
             }
-            LockscreenLockIconController.this.update(z);
+            LockscreenLockIconController.this.update(z2);
         }
 
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onKeyguardFadingAwayChanged() {
             if (!LockscreenLockIconController.this.mKeyguardStateController.isKeyguardFadingAway() && LockscreenLockIconController.this.mBlockUpdates) {
-                boolean unused = LockscreenLockIconController.this.mBlockUpdates = false;
+                LockscreenLockIconController.this.mBlockUpdates = false;
                 LockscreenLockIconController.this.update(true);
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onUnlockedChanged() {
             LockscreenLockIconController.this.update();
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mKeyguardShowing;
-    /* access modifiers changed from: private */
-    public final KeyguardStateController mKeyguardStateController;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private boolean mKeyguardShowing;
+    private final KeyguardStateController mKeyguardStateController;
+    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private int mLastState;
-    /* access modifiers changed from: private */
-    public LockIcon mLockIcon;
+    private LockIcon mLockIcon;
     private final LockPatternUtils mLockPatternUtils;
     private final LockscreenGestureLogger mLockscreenGestureLogger;
-    /* access modifiers changed from: private */
-    public final NotificationWakeUpCoordinator mNotificationWakeUpCoordinator;
+    private final NotificationWakeUpCoordinator mNotificationWakeUpCoordinator;
     private View.OnAttachStateChangeListener mOnAttachStateChangeListener = new View.OnAttachStateChangeListener() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass1 */
+
         public void onViewAttachedToWindow(View view) {
             LockscreenLockIconController.this.mStatusBarStateController.addCallback(LockscreenLockIconController.this.mSBStateListener);
             LockscreenLockIconController.this.mConfigurationController.addCallback(LockscreenLockIconController.this.mConfigurationListener);
@@ -146,12 +147,15 @@ public class LockscreenLockIconController {
             LockscreenLockIconController.this.mKeyguardUpdateMonitor.registerCallback(LockscreenLockIconController.this.mUpdateMonitorCallback);
             LockscreenLockIconController.this.mKeyguardStateController.addCallback(LockscreenLockIconController.this.mKeyguardMonitorCallback);
             LockscreenLockIconController.this.mDockManager.ifPresent(new Consumer() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$LockscreenLockIconController$1$lAN9mjl0bP11onyNXKoQAiuwbo4 */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     LockscreenLockIconController.AnonymousClass1.this.lambda$onViewAttachedToWindow$0$LockscreenLockIconController$1((DockManager) obj);
                 }
             });
             LockscreenLockIconController lockscreenLockIconController = LockscreenLockIconController.this;
-            boolean unused = lockscreenLockIconController.mSimLocked = lockscreenLockIconController.mKeyguardUpdateMonitor.isSimPinSecure();
+            lockscreenLockIconController.mSimLocked = lockscreenLockIconController.mKeyguardUpdateMonitor.isSimPinSecure();
             LockscreenLockIconController.this.mConfigurationListener.onThemeChanged();
             LockscreenLockIconController.this.update();
         }
@@ -169,6 +173,9 @@ public class LockscreenLockIconController {
             LockscreenLockIconController.this.mKeyguardUpdateMonitor.removeCallback(LockscreenLockIconController.this.mUpdateMonitorCallback);
             LockscreenLockIconController.this.mKeyguardStateController.removeCallback(LockscreenLockIconController.this.mKeyguardMonitorCallback);
             LockscreenLockIconController.this.mDockManager.ifPresent(new Consumer() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$LockscreenLockIconController$1$33uhHOghx_czm01x2awmcBSkdM */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     LockscreenLockIconController.AnonymousClass1.this.lambda$onViewDetachedFromWindow$1$LockscreenLockIconController$1((DockManager) obj);
                 }
@@ -181,62 +188,72 @@ public class LockscreenLockIconController {
             dockManager.removeListener(LockscreenLockIconController.this.mDockEventListener);
         }
     };
-    /* access modifiers changed from: private */
-    public final Resources mResources;
-    /* access modifiers changed from: private */
-    public final StatusBarStateController.StateListener mSBStateListener = new StatusBarStateController.StateListener() {
+    private final Resources mResources;
+    private final StatusBarStateController.StateListener mSBStateListener = new StatusBarStateController.StateListener() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass2 */
+
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onDozingChanged(boolean z) {
             LockscreenLockIconController.this.setDozing(z);
         }
 
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onPulsingChanged(boolean z) {
             LockscreenLockIconController.this.setPulsing(z);
         }
 
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onDozeAmountChanged(float f, float f2) {
             if (LockscreenLockIconController.this.mLockIcon != null) {
                 LockscreenLockIconController.this.mLockIcon.setDozeAmount(f2);
             }
         }
 
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onStateChanged(int i) {
             LockscreenLockIconController.this.setStatusBarState(i);
         }
     };
     private final ShadeController mShadeController;
     private boolean mShowingLaunchAffordance;
-    /* access modifiers changed from: private */
-    public boolean mSimLocked;
+    private boolean mSimLocked;
     private int mStatusBarState = 0;
-    /* access modifiers changed from: private */
-    public final StatusBarStateController mStatusBarStateController;
+    private final StatusBarStateController mStatusBarStateController;
     private boolean mTransientBiometricsError;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitorCallback mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+    private final KeyguardUpdateMonitorCallback mUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass5 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onSimStateChanged(int i, int i2, int i3) {
             LockscreenLockIconController lockscreenLockIconController = LockscreenLockIconController.this;
-            boolean unused = lockscreenLockIconController.mSimLocked = lockscreenLockIconController.mKeyguardUpdateMonitor.isSimPinSecure();
+            lockscreenLockIconController.mSimLocked = lockscreenLockIconController.mKeyguardUpdateMonitor.isSimPinSecure();
             LockscreenLockIconController.this.update();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             LockscreenLockIconController.this.update();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricRunningStateChanged(boolean z, BiometricSourceType biometricSourceType) {
             LockscreenLockIconController.this.update();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStrongAuthStateChanged(int i) {
             LockscreenLockIconController.this.update();
         }
     };
     private boolean mWakeAndUnlockRunning;
-    /* access modifiers changed from: private */
-    public final NotificationWakeUpCoordinator.WakeUpListener mWakeUpListener = new NotificationWakeUpCoordinator.WakeUpListener() {
+    private final NotificationWakeUpCoordinator.WakeUpListener mWakeUpListener = new NotificationWakeUpCoordinator.WakeUpListener() {
+        /* class com.android.systemui.statusbar.phone.LockscreenLockIconController.AnonymousClass4 */
+
+        @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
         public void onPulseExpansionChanged(boolean z) {
         }
 
+        @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
         public void onFullyHiddenChanged(boolean z) {
             if (LockscreenLockIconController.this.mKeyguardBypassController.getBypassEnabled() && LockscreenLockIconController.this.updateIconVisibility()) {
                 LockscreenLockIconController.this.update();
@@ -266,11 +283,15 @@ public class LockscreenLockIconController {
         this.mLockIcon = lockIcon;
         lockIcon.setVisibility(8);
         this.mLockIcon.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$LockscreenLockIconController$w6uFCwNQV4Mtc7oy2mEXXG52_I */
+
             public final void onClick(View view) {
                 LockscreenLockIconController.this.handleClick(view);
             }
         });
         this.mLockIcon.setOnLongClickListener(new View.OnLongClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$LockscreenLockIconController$LslFmHw3JlLgJluLcqL2mxJusEk */
+
             public final boolean onLongClick(View view) {
                 return LockscreenLockIconController.this.handleLongClick(view);
             }
@@ -291,7 +312,8 @@ public class LockscreenLockIconController {
     }
 
     /* access modifiers changed from: private */
-    public void setPulsing(boolean z) {
+    /* access modifiers changed from: public */
+    private void setPulsing(boolean z) {
         update();
     }
 
@@ -344,12 +366,14 @@ public class LockscreenLockIconController {
     }
 
     /* access modifiers changed from: private */
-    public void update() {
+    /* access modifiers changed from: public */
+    private void update() {
         update(false);
     }
 
     /* access modifiers changed from: private */
-    public void update(boolean z) {
+    /* access modifiers changed from: public */
+    private void update(boolean z) {
         LockIcon lockIcon;
         int state = getState();
         boolean z2 = this.mLastState != state || z;
@@ -366,7 +390,8 @@ public class LockscreenLockIconController {
     }
 
     /* access modifiers changed from: private */
-    public int getState() {
+    /* access modifiers changed from: public */
+    private int getState() {
         if ((this.mKeyguardStateController.canDismissLockScreen() || !this.mKeyguardStateController.isShowing() || this.mKeyguardStateController.isKeyguardGoingAway() || this.mKeyguardStateController.isKeyguardFadingAway()) && !this.mSimLocked) {
             return 1;
         }
@@ -381,18 +406,21 @@ public class LockscreenLockIconController {
     }
 
     /* access modifiers changed from: private */
-    public void setDozing(boolean z) {
+    /* access modifiers changed from: public */
+    private void setDozing(boolean z) {
         update();
     }
 
     /* access modifiers changed from: private */
-    public void setStatusBarState(int i) {
+    /* access modifiers changed from: public */
+    private void setStatusBarState(int i) {
         this.mStatusBarState = i;
         updateIconVisibility();
     }
 
     /* access modifiers changed from: private */
-    public boolean updateIconVisibility() {
+    /* access modifiers changed from: public */
+    private boolean updateIconVisibility() {
         boolean z = (this.mStatusBarStateController.isDozing() && (!this.mStatusBarStateController.isPulsing() || this.mDocked)) || this.mWakeAndUnlockRunning || this.mShowingLaunchAffordance;
         if (this.mKeyguardBypassController.getBypassEnabled() && !this.mBouncerShowingScrimmed && ((this.mHeadsUpManagerPhone.isHeadsUpGoingAway() || this.mHeadsUpManagerPhone.hasPinnedHeadsUp() || this.mStatusBarState == 1) && !this.mNotificationWakeUpCoordinator.getNotificationsFullyHidden())) {
             z = true;

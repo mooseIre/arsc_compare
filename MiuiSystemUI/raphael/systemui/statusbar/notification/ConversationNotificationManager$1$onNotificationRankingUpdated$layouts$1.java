@@ -17,14 +17,17 @@ final /* synthetic */ class ConversationNotificationManager$1$onNotificationRank
         super(1);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getName() {
         return "getLayouts";
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final KDeclarationContainer getOwner() {
         return null;
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getSignature() {
         return "invoke(Lcom/android/systemui/statusbar/notification/row/NotificationContentView;)Lkotlin/sequences/Sequence;";
     }

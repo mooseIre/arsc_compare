@@ -30,6 +30,7 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
     private final LightBarTransitionsController mTransitionsController;
     private boolean mUseTint;
 
+    @Override // com.android.systemui.statusbar.phone.LightBarTransitionsController.DarkIntensityApplier
     public int getTintAnimationDuration() {
         return R$styleable.AppCompatTheme_windowFixedHeightMajor;
     }
@@ -41,6 +42,9 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         this.mContext = context;
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         ((SettingsManager) Dependency.get(SettingsManager.class)).registerMiuiOptimizationListener(new DeveloperSettings.MiuiOptimizationListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$DarkIconDispatcherImpl$CkNTy0sYC2cDOG_6paOgVQFc7co */
+
+            @Override // com.miui.systemui.DeveloperSettings.MiuiOptimizationListener
             public final void onChanged(boolean z) {
                 DarkIconDispatcherImpl.this.lambda$new$0$DarkIconDispatcherImpl(z);
             }
@@ -54,6 +58,7 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         updateResource();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onMiuiThemeChanged(boolean z) {
         updateResource();
     }
@@ -72,39 +77,48 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         applyDarkIntensity(this.mDarkIntensity);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public boolean useTint() {
         return this.mUseTint;
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public int getLightModeIconColorSingleTone() {
         return this.mLightModeIconColorSingleTone;
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public int getDarkModeIconColorSingleTone() {
         return this.mDarkModeIconColorSingleTone;
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void reapply() {
         applyIconTint();
     }
 
+    @Override // com.android.systemui.statusbar.phone.SysuiDarkIconDispatcher
     public LightBarTransitionsController getTransitionsController() {
         return this.mTransitionsController;
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void addDarkReceiver(DarkIconDispatcher.DarkReceiver darkReceiver) {
         this.mReceivers.put(darkReceiver, darkReceiver);
         darkReceiver.onDarkChanged(this.mTintArea, this.mDarkIntensity, this.mIconTint, this.mLightModeIconColorSingleTone, this.mDarkModeIconColorSingleTone, this.mUseTint);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void addDarkReceiver(ImageView imageView) {
         $$Lambda$DarkIconDispatcherImpl$_IbDO1rXkRypT7Wkg2xIt52ZKDk r0 = new DarkIconDispatcher.DarkReceiver(imageView) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$DarkIconDispatcherImpl$_IbDO1rXkRypT7Wkg2xIt52ZKDk */
             public final /* synthetic */ ImageView f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
             public final void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
                 DarkIconDispatcherImpl.this.lambda$addDarkReceiver$1$DarkIconDispatcherImpl(this.f$1, rect, f, i, i2, i3, z);
             }
@@ -119,18 +133,22 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         imageView.setImageTintList(ColorStateList.valueOf(DarkIconDispatcher.getTint(this.mTintArea, imageView, this.mIconTint)));
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void removeDarkReceiver(DarkIconDispatcher.DarkReceiver darkReceiver) {
         this.mReceivers.remove(darkReceiver);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void removeDarkReceiver(ImageView imageView) {
         this.mReceivers.remove(imageView);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void applyDark(DarkIconDispatcher.DarkReceiver darkReceiver) {
         this.mReceivers.get(darkReceiver).onDarkChanged(this.mTintArea, this.mDarkIntensity, this.mIconTint, this.mLightModeIconColorSingleTone, this.mDarkModeIconColorSingleTone, this.mUseTint);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher
     public void setIconsDarkArea(Rect rect) {
         if (rect != null || !this.mTintArea.isEmpty()) {
             if (rect == null) {
@@ -142,6 +160,7 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.LightBarTransitionsController.DarkIntensityApplier
     public void applyDarkIntensity(float f) {
         this.mDarkIntensity = f;
         this.mIconTint = ((Integer) ArgbEvaluator.getInstance().evaluate(f, Integer.valueOf(this.mLightModeIconColorSingleTone), Integer.valueOf(this.mDarkModeIconColorSingleTone))).intValue();
@@ -154,6 +173,7 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("DarkIconDispatcher: ");
         printWriter.println("  mIconTint: 0x" + Integer.toHexString(this.mIconTint));

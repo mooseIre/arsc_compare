@@ -13,6 +13,7 @@ public final class StatusBarPhoneDependenciesModule_ProvideNotificationGroupAler
         this.bindStageProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationGroupAlertTransferHelper get() {
         return provideInstance(this.bindStageProvider);
     }

@@ -44,32 +44,24 @@ import com.android.systemui.recents.TriangleShape;
 import com.android.systemui.statusbar.AlphaOptimizedButton;
 
 public class BubbleExpandedView extends LinearLayout {
-    /* access modifiers changed from: private */
-    public ActivityManager mActivityManager;
+    private ActivityManager mActivityManager;
     private SurfaceView mActivitySurface;
-    /* access modifiers changed from: private */
-    public ActivityView mActivityView;
+    private ActivityView mActivityView;
     private FrameLayout mActivityViewContainer;
-    /* access modifiers changed from: private */
-    public ActivityViewStatus mActivityViewStatus;
-    /* access modifiers changed from: private */
-    public Bubble mBubble;
-    /* access modifiers changed from: private */
-    public BubbleController mBubbleController;
-    /* access modifiers changed from: private */
-    public float mCornerRadius;
+    private ActivityViewStatus mActivityViewStatus;
+    private Bubble mBubble;
+    private BubbleController mBubbleController;
+    private float mCornerRadius;
     private Point mDisplaySize;
     private int[] mExpandedViewContainerLocation;
     private int mExpandedViewPadding;
     private boolean mImeShowing;
-    /* access modifiers changed from: private */
-    public boolean mIsOverflow;
+    private boolean mIsOverflow;
     private boolean mKeyboardVisible;
     private int mMinHeight;
     private boolean mNeedsNewHeight;
     private int mOverflowHeight;
-    /* access modifiers changed from: private */
-    public PendingIntent mPendingIntent;
+    private PendingIntent mPendingIntent;
     private ShapeDrawable mPointerDrawable;
     private int mPointerHeight;
     private int mPointerMargin;
@@ -77,16 +69,15 @@ public class BubbleExpandedView extends LinearLayout {
     private int mPointerWidth;
     private AlphaOptimizedButton mSettingsIcon;
     private int mSettingsIconHeight;
-    /* access modifiers changed from: private */
-    public BubbleStackView mStackView;
+    private BubbleStackView mStackView;
     private ActivityView.StateCallback mStateCallback;
-    /* access modifiers changed from: private */
-    public int mTaskId;
+    private int mTaskId;
     private WindowManager mVirtualDisplayWindowManager;
     private View mVirtualImeView;
     private WindowManager mWindowManager;
 
-    private enum ActivityViewStatus {
+    /* access modifiers changed from: private */
+    public enum ActivityViewStatus {
         INITIALIZING,
         INITIALIZED,
         ACTIVITY_STARTED,
@@ -106,19 +97,19 @@ public class BubbleExpandedView extends LinearLayout {
                 com.android.systemui.bubbles.BubbleExpandedView$ActivityViewStatus[] r0 = com.android.systemui.bubbles.BubbleExpandedView.ActivityViewStatus.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                $SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus = r0
+                com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass4.$SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus = r0
                 com.android.systemui.bubbles.BubbleExpandedView$ActivityViewStatus r1 = com.android.systemui.bubbles.BubbleExpandedView.ActivityViewStatus.INITIALIZING     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = $SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass4.$SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.bubbles.BubbleExpandedView$ActivityViewStatus r1 = com.android.systemui.bubbles.BubbleExpandedView.ActivityViewStatus.INITIALIZED     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
             L_0x001d:
-                int[] r0 = $SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int[] r0 = com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass4.$SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus     // Catch:{ NoSuchFieldError -> 0x0028 }
                 com.android.systemui.bubbles.BubbleExpandedView$ActivityViewStatus r1 = com.android.systemui.bubbles.BubbleExpandedView.ActivityViewStatus.ACTIVITY_STARTED     // Catch:{ NoSuchFieldError -> 0x0028 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
                 r2 = 3
@@ -131,7 +122,7 @@ public class BubbleExpandedView extends LinearLayout {
     }
 
     public BubbleExpandedView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public BubbleExpandedView(Context context, AttributeSet attributeSet) {
@@ -151,6 +142,8 @@ public class BubbleExpandedView extends LinearLayout {
         this.mCornerRadius = 0.0f;
         this.mActivityViewContainer = new FrameLayout(getContext());
         this.mStateCallback = new ActivityView.StateCallback() {
+            /* class com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass1 */
+
             public void onActivityViewReady(ActivityView activityView) {
                 int i = AnonymousClass4.$SwitchMap$com$android$systemui$bubbles$BubbleExpandedView$ActivityViewStatus[BubbleExpandedView.this.mActivityViewStatus.ordinal()];
                 if (i == 1 || i == 2) {
@@ -158,6 +151,7 @@ public class BubbleExpandedView extends LinearLayout {
                     makeCustomAnimation.setTaskAlwaysOnTop(true);
                     makeCustomAnimation.setLaunchWindowingMode(6);
                     BubbleExpandedView.this.post(new Runnable(makeCustomAnimation) {
+                        /* class com.android.systemui.bubbles.$$Lambda$BubbleExpandedView$1$g0YjNvBWtSGWit8uywvLlkarcag */
                         public final /* synthetic */ ActivityOptions f$1;
 
                         {
@@ -168,9 +162,11 @@ public class BubbleExpandedView extends LinearLayout {
                             BubbleExpandedView.AnonymousClass1.this.lambda$onActivityViewReady$0$BubbleExpandedView$1(this.f$1);
                         }
                     });
-                    ActivityViewStatus unused = BubbleExpandedView.this.mActivityViewStatus = ActivityViewStatus.ACTIVITY_STARTED;
+                    BubbleExpandedView.this.mActivityViewStatus = ActivityViewStatus.ACTIVITY_STARTED;
                 } else if (i == 3) {
                     BubbleExpandedView.this.post(new Runnable() {
+                        /* class com.android.systemui.bubbles.$$Lambda$BubbleExpandedView$1$3ncDnIQQCskyrWWDiIMVoTXxvGg */
+
                         public final void run() {
                             BubbleExpandedView.AnonymousClass1.this.lambda$onActivityViewReady$1$BubbleExpandedView$1();
                         }
@@ -211,16 +207,18 @@ public class BubbleExpandedView extends LinearLayout {
             }
 
             public void onActivityViewDestroyed(ActivityView activityView) {
-                ActivityViewStatus unused = BubbleExpandedView.this.mActivityViewStatus = ActivityViewStatus.RELEASED;
+                BubbleExpandedView.this.mActivityViewStatus = ActivityViewStatus.RELEASED;
             }
 
             public void onTaskCreated(int i, ComponentName componentName) {
-                int unused = BubbleExpandedView.this.mTaskId = i;
+                BubbleExpandedView.this.mTaskId = i;
             }
 
             public void onTaskRemovalStarted(int i) {
                 if (BubbleExpandedView.this.mBubble != null) {
                     BubbleExpandedView.this.post(new Runnable() {
+                        /* class com.android.systemui.bubbles.$$Lambda$BubbleExpandedView$1$8DxRCXjWXDjbCBbQO_LWChzL0s */
+
                         public final void run() {
                             BubbleExpandedView.AnonymousClass1.this.lambda$onTaskRemovalStarted$2$BubbleExpandedView$1();
                         }
@@ -235,13 +233,13 @@ public class BubbleExpandedView extends LinearLayout {
             }
         };
         updateDimensions();
-        this.mActivityManager = (ActivityManager) this.mContext.getSystemService("activity");
+        this.mActivityManager = (ActivityManager) ((LinearLayout) this).mContext.getSystemService("activity");
     }
 
     /* access modifiers changed from: package-private */
     public void updateDimensions() {
         this.mDisplaySize = new Point();
-        WindowManager windowManager = (WindowManager) this.mContext.getSystemService("window");
+        WindowManager windowManager = (WindowManager) ((LinearLayout) this).mContext.getSystemService("window");
         this.mWindowManager = windowManager;
         windowManager.getDefaultDisplay().getRealSize(this.mDisplaySize);
         Resources resources = getResources();
@@ -262,10 +260,12 @@ public class BubbleExpandedView extends LinearLayout {
         this.mPointerView.setVisibility(4);
         this.mSettingsIconHeight = getContext().getResources().getDimensionPixelSize(C0012R$dimen.bubble_manage_button_height);
         this.mSettingsIcon = (AlphaOptimizedButton) findViewById(C0015R$id.settings_button);
-        this.mActivityView = new ActivityView(this.mContext, (AttributeSet) null, 0, true, false, true);
+        this.mActivityView = new ActivityView(((LinearLayout) this).mContext, (AttributeSet) null, 0, true, false, true);
         setContentVisibility(false);
         this.mActivityViewContainer.setBackgroundColor(-1);
         this.mActivityViewContainer.setOutlineProvider(new ViewOutlineProvider() {
+            /* class com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass2 */
+
             public void getOutline(View view, Outline outline) {
                 outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), BubbleExpandedView.this.mCornerRadius);
             }
@@ -282,6 +282,8 @@ public class BubbleExpandedView extends LinearLayout {
         bringChildToFront(this.mSettingsIcon);
         applyThemeAttrs();
         setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener() {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleExpandedView$BUIzmdcN6x4TJwxemNSjSITgNeY */
+
             public final WindowInsets onApplyWindowInsets(View view, WindowInsets windowInsets) {
                 return BubbleExpandedView.this.lambda$onFinishInflate$0$BubbleExpandedView(view, windowInsets);
             }
@@ -290,6 +292,8 @@ public class BubbleExpandedView extends LinearLayout {
         this.mExpandedViewPadding = dimensionPixelSize;
         setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
         setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleExpandedView$iXgIC2YqSeoFlnxX0VwZo_0Hqrs */
+
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 return BubbleExpandedView.this.lambda$onFinishInflate$1$BubbleExpandedView(view, motionEvent);
             }
@@ -323,7 +327,8 @@ public class BubbleExpandedView extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public String getBubbleKey() {
+    /* access modifiers changed from: public */
+    private String getBubbleKey() {
         Bubble bubble = this.mBubble;
         return bubble != null ? bubble.getKey() : "null";
     }
@@ -366,10 +371,10 @@ public class BubbleExpandedView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     public void applyThemeAttrs() {
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16844145});
+        TypedArray obtainStyledAttributes = ((LinearLayout) this).mContext.obtainStyledAttributes(new int[]{16844145});
         this.mCornerRadius = (float) obtainStyledAttributes.getDimensionPixelSize(0, 0);
         obtainStyledAttributes.recycle();
-        if (this.mActivityView != null && ScreenDecorationsUtils.supportsRoundedCornersOnWindows(this.mContext.getResources())) {
+        if (this.mActivityView != null && ScreenDecorationsUtils.supportsRoundedCornersOnWindows(((LinearLayout) this).mContext.getResources())) {
             this.mActivityView.setCornerRadius(this.mCornerRadius);
         }
         int i = getResources().getConfiguration().uiMode & 48;
@@ -433,7 +438,7 @@ public class BubbleExpandedView extends LinearLayout {
     private void setImeWindowToDisplay(int i, int i2) {
         if (getVirtualDisplayId() != -1) {
             if (i2 != 0 && i != 0) {
-                Context createDisplayContext = this.mContext.createDisplayContext(getVirtualDisplay().getDisplay());
+                Context createDisplayContext = ((LinearLayout) this).mContext.createDisplayContext(getVirtualDisplay().getDisplay());
                 if (this.mVirtualDisplayWindowManager == null) {
                     this.mVirtualDisplayWindowManager = (WindowManager) createDisplayContext.getSystemService("window");
                 }
@@ -472,7 +477,7 @@ public class BubbleExpandedView extends LinearLayout {
 
     public void setOverflow(boolean z) {
         this.mIsOverflow = z;
-        this.mPendingIntent = PendingIntent.getActivity(this.mContext, 0, new Intent(this.mContext, BubbleOverflowActivity.class), 134217728);
+        this.mPendingIntent = PendingIntent.getActivity(((LinearLayout) this).mContext, 0, new Intent(((LinearLayout) this).mContext, BubbleOverflowActivity.class), 134217728);
         this.mSettingsIcon.setVisibility(8);
     }
 
@@ -481,8 +486,10 @@ public class BubbleExpandedView extends LinearLayout {
         boolean z = this.mBubble == null || didBackingContentChange(bubble);
         if (z || (bubble != null && bubble.getKey().equals(this.mBubble.getKey()))) {
             this.mBubble = bubble;
-            this.mSettingsIcon.setContentDescription(getResources().getString(C0021R$string.bubbles_settings_button_description, new Object[]{bubble.getAppName()}));
+            this.mSettingsIcon.setContentDescription(getResources().getString(C0021R$string.bubbles_settings_button_description, bubble.getAppName()));
             this.mSettingsIcon.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+                /* class com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass3 */
+
                 public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                     super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                     BubbleExpandedView.this.mStackView.setupLocalMenu(accessibilityNodeInfo);
@@ -503,10 +510,7 @@ public class BubbleExpandedView extends LinearLayout {
     }
 
     private boolean didBackingContentChange(Bubble bubble) {
-        if (((this.mBubble == null || this.mPendingIntent == null) ? false : true) != (bubble.getBubbleIntent() != null)) {
-            return true;
-        }
-        return false;
+        return (this.mBubble != null && this.mPendingIntent != null) != (bubble.getBubbleIntent() != null);
     }
 
     /* access modifiers changed from: package-private */
@@ -532,7 +536,7 @@ public class BubbleExpandedView extends LinearLayout {
         if (this.mExpandedViewContainerLocation != null && usingActivityView()) {
             float f = (float) this.mOverflowHeight;
             if (!this.mIsOverflow) {
-                f = Math.max(this.mBubble.getDesiredHeight(this.mContext), (float) this.mMinHeight);
+                f = Math.max(this.mBubble.getDesiredHeight(((LinearLayout) this).mContext), (float) this.mMinHeight);
             }
             float max = Math.max(Math.min(f, (float) getMaxExpandedHeight()), (float) this.mMinHeight);
             ViewGroup.LayoutParams layoutParams = this.mActivityView.getLayoutParams();

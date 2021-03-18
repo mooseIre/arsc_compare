@@ -17,6 +17,7 @@ public final class BluetoothTile_Factory implements Factory<BluetoothTile> {
         this.activityStarterProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public BluetoothTile get() {
         return provideInstance(this.hostProvider, this.bluetoothControllerProvider, this.activityStarterProvider);
     }

@@ -12,6 +12,7 @@ public final class DelayedWakeLock_Builder_Factory implements Factory<DelayedWak
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DelayedWakeLock.Builder get() {
         return provideInstance(this.contextProvider);
     }

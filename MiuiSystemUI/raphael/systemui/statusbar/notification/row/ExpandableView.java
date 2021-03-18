@@ -57,6 +57,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         return false;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
     }
 
@@ -252,7 +253,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
     }
 
     public boolean pointInView(float f, float f2, float f3) {
-        return f >= (-f3) && f2 >= ((float) this.mClipTopAmount) - f3 && f < ((float) (this.mRight - this.mLeft)) + f3 && f2 < ((float) this.mActualHeight) + f3;
+        return f >= (-f3) && f2 >= ((float) this.mClipTopAmount) - f3 && f < ((float) (((FrameLayout) this).mRight - ((FrameLayout) this).mLeft)) + f3 && f2 < ((float) this.mActualHeight) + f3;
     }
 
     public void setActualHeight(int i, boolean z) {
@@ -359,7 +360,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
     /* access modifiers changed from: protected */
     public void updateClipping() {
         if (!this.mClipToActualHeight || !shouldClipToActualHeight()) {
-            setClipBounds((Rect) null);
+            setClipBounds(null);
             return;
         }
         int clipTopAmount = getClipTopAmount();
@@ -441,8 +442,8 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) this;
             List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow.getAttachedChildren();
             if (expandableNotificationRow.isSummaryWithChildren() && attachedChildren != null) {
-                for (ExpandableNotificationRow resetViewState : attachedChildren) {
-                    resetViewState.resetViewState();
+                for (ExpandableNotificationRow expandableNotificationRow2 : attachedChildren) {
+                    expandableNotificationRow2.resetViewState();
                 }
             }
         }

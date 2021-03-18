@@ -8,16 +8,15 @@ import androidx.constraintlayout.widget.R$styleable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import kotlin.TypeCastException;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: LogcatEchoTrackerDebug.kt */
 public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
-    public static final Factory Factory = new Factory((DefaultConstructorMarker) null);
-    /* access modifiers changed from: private */
-    public final Map<String, LogLevel> cachedBufferLevels;
-    /* access modifiers changed from: private */
-    public final Map<String, LogLevel> cachedTagLevels;
+    public static final Factory Factory = new Factory(null);
+    private final Map<String, LogLevel> cachedBufferLevels;
+    private final Map<String, LogLevel> cachedTagLevels;
     private final ContentResolver contentResolver;
 
     @NotNull
@@ -48,24 +47,27 @@ public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
         public final LogcatEchoTrackerDebug create(@NotNull ContentResolver contentResolver, @NotNull Looper looper) {
             Intrinsics.checkParameterIsNotNull(contentResolver, "contentResolver");
             Intrinsics.checkParameterIsNotNull(looper, "mainLooper");
-            LogcatEchoTrackerDebug logcatEchoTrackerDebug = new LogcatEchoTrackerDebug(contentResolver, (DefaultConstructorMarker) null);
+            LogcatEchoTrackerDebug logcatEchoTrackerDebug = new LogcatEchoTrackerDebug(contentResolver, null);
             logcatEchoTrackerDebug.attach(looper);
             return logcatEchoTrackerDebug;
         }
     }
 
     /* access modifiers changed from: private */
-    public final void attach(Looper looper) {
+    /* access modifiers changed from: public */
+    private final void attach(Looper looper) {
         this.contentResolver.registerContentObserver(Settings.Global.getUriFor("systemui/buffer"), true, new LogcatEchoTrackerDebug$attach$1(this, looper, new Handler(looper)));
         this.contentResolver.registerContentObserver(Settings.Global.getUriFor("systemui/tag"), true, new LogcatEchoTrackerDebug$attach$2(this, looper, new Handler(looper)));
     }
 
+    @Override // com.android.systemui.log.LogcatEchoTracker
     public synchronized boolean isBufferLoggable(@NotNull String str, @NotNull LogLevel logLevel) {
         Intrinsics.checkParameterIsNotNull(str, "bufferName");
         Intrinsics.checkParameterIsNotNull(logLevel, "level");
         return logLevel.ordinal() >= getLogLevel(str, "systemui/buffer", this.cachedBufferLevels).ordinal();
     }
 
+    @Override // com.android.systemui.log.LogcatEchoTracker
     public synchronized boolean isTagLoggable(@NotNull String str, @NotNull LogLevel logLevel) {
         Intrinsics.checkParameterIsNotNull(str, "tagName");
         Intrinsics.checkParameterIsNotNull(logLevel, "level");

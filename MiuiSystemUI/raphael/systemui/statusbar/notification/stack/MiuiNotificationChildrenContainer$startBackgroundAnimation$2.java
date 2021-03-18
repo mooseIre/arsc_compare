@@ -6,6 +6,7 @@ import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificatio
 import com.android.systemui.statusbar.notification.row.NotificationBackgroundView;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 
 /* compiled from: MiuiNotificationChildrenContainer.kt */
 final class MiuiNotificationChildrenContainer$startBackgroundAnimation$2 implements ValueAnimator.AnimatorUpdateListener {
@@ -32,9 +33,8 @@ final class MiuiNotificationChildrenContainer$startBackgroundAnimation$2 impleme
             this.$summaryBackground.setActualHeight((int) (f + ((this.$end - f) * floatValue)));
             this.$summaryBackground.setTranslationY(this.$firstChildState.yTranslation * floatValue);
             this.$summaryBackground.setAlpha(1.0f);
-            int coerceAtMost = RangesKt___RangesKt.coerceAtMost((this.this$0.getMaxAllowedVisibleChildren() - 1) + 1, this.this$0.mAttachedChildren.size() - 1);
-            while (coerceAtMost >= 1) {
-                ExpandableNotificationRow expandableNotificationRow = this.this$0.mAttachedChildren.get(coerceAtMost);
+            for (int i = RangesKt___RangesKt.coerceAtMost((this.this$0.getMaxAllowedVisibleChildren() - 1) + 1, this.this$0.mAttachedChildren.size() - 1); i >= 1; i--) {
+                ExpandableNotificationRow expandableNotificationRow = this.this$0.mAttachedChildren.get(i);
                 if (expandableNotificationRow != null) {
                     MiuiExpandableNotificationRow miuiExpandableNotificationRow = (MiuiExpandableNotificationRow) expandableNotificationRow;
                     NotificationBackgroundView animatedBackground = miuiExpandableNotificationRow.getAnimatedBackground();
@@ -42,7 +42,6 @@ final class MiuiNotificationChildrenContainer$startBackgroundAnimation$2 impleme
                     ExpandableViewState viewState = miuiExpandableNotificationRow.getViewState();
                     if (viewState != null) {
                         animatedBackground.setActualHeight(viewState.height);
-                        coerceAtMost--;
                     } else {
                         Intrinsics.throwNpe();
                         throw null;

@@ -5,8 +5,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final class ControlKey {
+public final class ControlKey {
     @NotNull
     private final ComponentName componentName;
     @NotNull
@@ -20,7 +21,7 @@ final class ControlKey {
             return false;
         }
         ControlKey controlKey = (ControlKey) obj;
-        return Intrinsics.areEqual((Object) this.componentName, (Object) controlKey.componentName) && Intrinsics.areEqual((Object) this.controlId, (Object) controlKey.controlId);
+        return Intrinsics.areEqual(this.componentName, controlKey.componentName) && Intrinsics.areEqual(this.controlId, controlKey.controlId);
     }
 
     public int hashCode() {

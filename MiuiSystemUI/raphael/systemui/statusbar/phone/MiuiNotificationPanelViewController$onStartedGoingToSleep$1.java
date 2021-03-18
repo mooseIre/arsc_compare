@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MiuiNotificationPanelViewController$onStartedGoingToSleep$1 extends AnimatorListenerAdapter {
     final /* synthetic */ MiuiNotificationPanelViewController this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MiuiNotificationPanelViewController$onStartedGoingToSleep$1(MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
         this.this$0 = miuiNotificationPanelViewController;
     }

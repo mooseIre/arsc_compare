@@ -6,12 +6,12 @@ import android.view.View;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 import java.util.TimeZone;
 
-@ProvidesInterface(action = "com.android.systemui.action.PLUGIN_CLOCK", version = 5)
+@ProvidesInterface(action = ClockPlugin.ACTION, version = 5)
 public interface ClockPlugin extends Plugin {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_CLOCK";
     public static final int VERSION = 5;
 
-    View getBigClockView() {
+    default View getBigClockView() {
         return null;
     }
 
@@ -29,23 +29,23 @@ public interface ClockPlugin extends Plugin {
 
     void onDestroyView();
 
-    void onTimeTick() {
+    default void onTimeTick() {
     }
 
-    void onTimeZoneChanged(TimeZone timeZone) {
+    default void onTimeZoneChanged(TimeZone timeZone) {
     }
 
-    void setColorPalette(boolean z, int[] iArr) {
+    default void setColorPalette(boolean z, int[] iArr) {
     }
 
-    void setDarkAmount(float f) {
+    default void setDarkAmount(float f) {
     }
 
     void setStyle(Paint.Style style);
 
     void setTextColor(int i);
 
-    boolean shouldShowStatusArea() {
+    default boolean shouldShowStatusArea() {
         return true;
     }
 }

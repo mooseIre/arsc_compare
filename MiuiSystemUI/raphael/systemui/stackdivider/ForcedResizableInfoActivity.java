@@ -13,6 +13,8 @@ import com.android.systemui.C0021R$string;
 
 public class ForcedResizableInfoActivity extends Activity implements View.OnTouchListener {
     private final Runnable mFinishRunnable = new Runnable() {
+        /* class com.android.systemui.stackdivider.ForcedResizableInfoActivity.AnonymousClass1 */
+
         public void run() {
             ForcedResizableInfoActivity.this.finish();
         }

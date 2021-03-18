@@ -11,11 +11,13 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: ForegroundServiceDungeonView.kt */
 public final class ForegroundServiceDungeonView extends StackScrollerDecorView {
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     @Nullable
     public View findSecondaryView() {
         return null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public void setVisible(boolean z, boolean z2) {
     }
 
@@ -27,6 +29,7 @@ public final class ForegroundServiceDungeonView extends StackScrollerDecorView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     @Nullable
     public View findContentView() {
         return findViewById(C0015R$id.foreground_service_dungeon);

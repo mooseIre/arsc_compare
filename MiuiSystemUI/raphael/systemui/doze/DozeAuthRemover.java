@@ -11,6 +11,7 @@ public class DozeAuthRemover implements DozeMachine.Part {
     public DozeAuthRemover(Context context) {
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         if (state2 == DozeMachine.State.DOZE || state2 == DozeMachine.State.DOZE_AOD) {
             if (this.mKeyguardUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {

@@ -24,7 +24,7 @@ public final class ControlsUiControllerImpl$createDropDown$3 implements View.OnC
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
         GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(this.this$0.popupThemedContext, true);
         globalActionsPopupMenu.setAnchorView(this.$anchor);
-        globalActionsPopupMenu.setAdapter((ItemAdapter) this.$adapter.element);
+        globalActionsPopupMenu.setAdapter(this.$adapter.element);
         globalActionsPopupMenu.setOnItemClickListener(new ControlsUiControllerImpl$createDropDown$3$onClick$$inlined$apply$lambda$1(globalActionsPopupMenu, this));
         globalActionsPopupMenu.show();
         controlsUiControllerImpl.popup = globalActionsPopupMenu;

@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideUserManagerFactory implements Fac
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public UserManager get() {
         return provideInstance(this.contextProvider);
     }

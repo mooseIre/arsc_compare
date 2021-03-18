@@ -24,6 +24,8 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
     private final Rect mTempBounds = new Rect();
     private boolean mUpdateOnNextDraw;
     private final Runnable mUpdateSamplingListener = new Runnable() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$PhoneStatusBarTintController$hVV5RULyY1yrjuLx9olLfRKQ9bM */
+
         public final void run() {
             PhoneStatusBarTintController.this.updateSamplingListener();
         }
@@ -32,6 +34,8 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
 
     public PhoneStatusBarTintController(PhoneStatusBarView phoneStatusBarView, MiuiLightBarController miuiLightBarController) {
         this.mSamplingListener = new CompositionSamplingListener(phoneStatusBarView.getContext().getMainExecutor()) {
+            /* class com.android.systemui.statusbar.phone.PhoneStatusBarTintController.AnonymousClass1 */
+
             public void onSampleCollected(float f) {
                 PhoneStatusBarTintController.this.updateTint(f);
             }
@@ -76,6 +80,7 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
         }
     }
 
+    @Override // com.miui.systemui.statusbar.phone.SmartDarkObserver.Callback
     public void onSmartDarkEnableChanged(boolean z) {
         this.mSmartDarkEnable = z;
         this.mLightBarController.setSmartDarkEnable(z);
@@ -105,7 +110,8 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
     }
 
     /* access modifiers changed from: private */
-    public void updateTint(float f) {
+    /* access modifiers changed from: public */
+    private void updateTint(float f) {
         Log.d("PhoneStatusBarTintController", "updateTint: medianLuma = " + f);
         if (Math.abs(this.mCurrentMedianLuma - f) > this.mLuminanceChangeThreshold) {
             this.mCurrentMedianLuma = f;

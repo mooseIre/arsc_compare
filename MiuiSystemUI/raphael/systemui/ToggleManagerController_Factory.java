@@ -17,6 +17,7 @@ public final class ToggleManagerController_Factory implements Factory<ToggleMana
         this.bgHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ToggleManagerController get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.bgHandlerProvider);
     }

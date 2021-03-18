@@ -21,8 +21,9 @@ final class StatefulControlSubscriber$onNext$1 extends Lambda implements Functio
         this.$control = control;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
-        if (!this.this$0.subscriptionOpen) {
+        if (!(this.this$0.subscriptionOpen)) {
             Log.w("StatefulControlSubscriber", "Refresh outside of window for token:" + this.$token);
             return;
         }

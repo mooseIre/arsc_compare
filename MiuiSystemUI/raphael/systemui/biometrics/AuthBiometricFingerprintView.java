@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimatedVectorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.LinearLayout;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
@@ -16,22 +17,25 @@ public class AuthBiometricFingerprintView extends AuthBiometricView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public int getDelayAfterAuthenticatedDurationMs() {
         return 0;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public int getStateForAfterError() {
         return 2;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public boolean supportsSmallDialog() {
         return false;
     }
 
     public AuthBiometricFingerprintView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AuthBiometricFingerprintView(Context context, AttributeSet attributeSet) {
@@ -39,21 +43,25 @@ public class AuthBiometricFingerprintView extends AuthBiometricView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void handleResetAfterError() {
         showTouchSensorString();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void handleResetAfterHelp() {
         showTouchSensorString();
     }
 
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void updateState(int i) {
         updateIcon(this.mState, i);
         super.updateState(i);
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void onAttachedToWindowInternal() {
         super.onAttachedToWindowInternal();
         showTouchSensorString();
@@ -95,6 +103,6 @@ public class AuthBiometricFingerprintView extends AuthBiometricView {
         } else {
             i3 = C0013R$drawable.fingerprint_dialog_fp_to_error;
         }
-        return this.mContext.getDrawable(i3);
+        return ((LinearLayout) this).mContext.getDrawable(i3);
     }
 }

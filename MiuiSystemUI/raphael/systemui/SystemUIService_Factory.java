@@ -20,6 +20,7 @@ public final class SystemUIService_Factory implements Factory<SystemUIService> {
         this.logBufferFreezerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public SystemUIService get() {
         return provideInstance(this.mainHandlerProvider, this.dumpHandlerProvider, this.broadcastDispatcherProvider, this.logBufferFreezerProvider);
     }

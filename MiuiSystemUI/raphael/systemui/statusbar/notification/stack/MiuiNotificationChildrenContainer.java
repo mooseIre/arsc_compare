@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.NotificationHeaderView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -39,6 +40,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     private int mMiuiAppIconSize;
     private int mOverflowNumberMarginEnd;
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void setShelfIconVisible(boolean z) {
     }
 
@@ -57,6 +59,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         if (this.mGroupHeader != null) {
@@ -96,6 +99,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         this.isGroupBackgroundAnimating = z;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void startAnimationToState(@Nullable AnimationProperties animationProperties) {
         ViewState viewState;
         ViewState viewState2;
@@ -144,7 +148,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                                 this.isGroupBackgroundAnimating = false;
                                 return;
                             }
-                            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+                            ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
                             Intrinsics.checkExpressionValueIsNotNull(ofFloat, "anim");
                             ofFloat.setInterpolator(new DecelerateInterpolator());
                             ofFloat.addListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$1(this, animatedBackground, firstChildBackground));
@@ -172,7 +176,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                             return;
                         }
                         float translationY = animatedBackground.getTranslationY();
-                        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+                        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
                         ofFloat2.addListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$3(this, animatedBackground, firstChildBackground));
                         ofFloat2.addUpdateListener(new MiuiNotificationChildrenContainer$startBackgroundAnimation$4(this, actualHeight2, f2, animatedBackground, translationY));
                         Intrinsics.checkExpressionValueIsNotNull(ofFloat2, "anim");
@@ -190,6 +194,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int measureHeaderView(int i, int i2) {
         View view = this.mGroupHeader;
         if (view == null) {
@@ -208,6 +213,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void updateChildrenHeaderAppearance() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             super.updateChildrenHeaderAppearance();
@@ -236,7 +242,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                 removeView(view2);
                 this.mGroupHeader = null;
             }
-            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_group_header, this, false);
+            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_group_header, (ViewGroup) this, false);
             this.mGroupHeader = inflate;
             if (inflate != null) {
                 this.mCollapsedButton = (ImageView) inflate.findViewById(C0015R$id.collapse_button);
@@ -280,6 +286,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void updateState(@NotNull ExpandableViewState expandableViewState, @NotNull AmbientState ambientState) {
         Intrinsics.checkParameterIsNotNull(expandableViewState, "parentState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
@@ -289,6 +296,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getGroupHeaderHeight() {
         View view;
         if (NotificationSettingsHelper.showGoogleStyle()) {
@@ -305,6 +313,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         throw null;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getIntrinsicHeight() {
         int intrinsicHeight = super.getIntrinsicHeight();
         if (!NotificationSettingsHelper.showMiuiStyle() || !this.mChildrenExpanded) {
@@ -367,75 +376,48 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:20:0x003a, code lost:
-        r1 = r1.getViewState();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateAppIconState() {
-        /*
-            r4 = this;
-            android.widget.ImageView r0 = r4.mAppIcon
-            if (r0 == 0) goto L_0x0060
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = r4.mAppIconViewState
-            if (r0 != 0) goto L_0x000f
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = new com.android.systemui.statusbar.notification.stack.ViewState
-            r0.<init>()
-            r4.mAppIconViewState = r0
-        L_0x000f:
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = r4.mAppIconViewState
-            if (r0 == 0) goto L_0x0018
-            android.widget.ImageView r1 = r4.mAppIcon
-            r0.initFrom(r1)
-        L_0x0018:
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = r4.mAppIconViewState
-            r1 = 0
-            if (r0 == 0) goto L_0x001f
-            r0.hidden = r1
-        L_0x001f:
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = r4.mAppIconViewState
-            if (r0 == 0) goto L_0x0027
-            r2 = -1082130432(0xffffffffbf800000, float:-1.0)
-            r0.zTranslation = r2
-        L_0x0027:
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = r4.mAppIconViewState
-            r2 = 0
-            if (r0 == 0) goto L_0x0053
-            boolean r3 = r4.mChildrenExpanded
-            if (r3 == 0) goto L_0x0049
-            java.util.List<com.android.systemui.statusbar.notification.row.ExpandableNotificationRow> r3 = r4.mAttachedChildren
-            java.lang.Object r1 = r3.get(r1)
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r1 = (com.android.systemui.statusbar.notification.row.ExpandableNotificationRow) r1
-            if (r1 == 0) goto L_0x0047
-            com.android.systemui.statusbar.notification.stack.ExpandableViewState r1 = r1.getViewState()
-            if (r1 == 0) goto L_0x0047
-            float r1 = r1.yTranslation
-            java.lang.Float r1 = java.lang.Float.valueOf(r1)
-            goto L_0x004d
-        L_0x0047:
-            r1 = 0
-            goto L_0x004d
-        L_0x0049:
-            java.lang.Float r1 = java.lang.Float.valueOf(r2)
-        L_0x004d:
-            float r1 = r1.floatValue()
-            r0.yTranslation = r1
-        L_0x0053:
-            com.android.systemui.statusbar.notification.stack.ViewState r0 = r4.mAppIconViewState
-            if (r0 == 0) goto L_0x0060
-            boolean r4 = r4.mChildrenExpanded
-            if (r4 == 0) goto L_0x005c
-            goto L_0x005e
-        L_0x005c:
-            r2 = 1065353216(0x3f800000, float:1.0)
-        L_0x005e:
-            r0.alpha = r2
-        L_0x0060:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.MiuiNotificationChildrenContainer.updateAppIconState():void");
+        Float f;
+        ExpandableViewState viewState;
+        if (this.mAppIcon != null) {
+            if (this.mAppIconViewState == null) {
+                this.mAppIconViewState = new ViewState();
+            }
+            ViewState viewState2 = this.mAppIconViewState;
+            if (viewState2 != null) {
+                viewState2.initFrom(this.mAppIcon);
+            }
+            ViewState viewState3 = this.mAppIconViewState;
+            if (viewState3 != null) {
+                viewState3.hidden = false;
+            }
+            ViewState viewState4 = this.mAppIconViewState;
+            if (viewState4 != null) {
+                viewState4.zTranslation = -1.0f;
+            }
+            ViewState viewState5 = this.mAppIconViewState;
+            float f2 = 0.0f;
+            if (viewState5 != null) {
+                if (this.mChildrenExpanded) {
+                    ExpandableNotificationRow expandableNotificationRow = this.mAttachedChildren.get(0);
+                    f = (expandableNotificationRow == null || (viewState = expandableNotificationRow.getViewState()) == null) ? null : Float.valueOf(viewState.yTranslation);
+                } else {
+                    f = Float.valueOf(0.0f);
+                }
+                viewState5.yTranslation = f.floatValue();
+            }
+            ViewState viewState6 = this.mAppIconViewState;
+            if (viewState6 != null) {
+                if (!this.mChildrenExpanded) {
+                    f2 = 1.0f;
+                }
+                viewState6.alpha = f2;
+            }
+        }
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getIncreasedYPosition(@NotNull ExpandableNotificationRow expandableNotificationRow, int i) {
         Intrinsics.checkParameterIsNotNull(expandableNotificationRow, "child");
         if (!NotificationSettingsHelper.showGoogleStyle()) {
@@ -446,6 +428,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getDividerHeight() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getDividerHeight();
@@ -454,6 +437,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getNotificationHeaderMargin() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getNotificationHeaderMargin();
@@ -462,6 +446,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getNotificationTopPadding() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getNotificationTopPadding();
@@ -469,6 +454,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         return getResources().getDimensionPixelSize(C0012R$dimen.notification_children_container_top_padding_miui);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void reInflateViews(@NotNull View.OnClickListener onClickListener, @NotNull StatusBarNotification statusBarNotification) {
         Intrinsics.checkParameterIsNotNull(onClickListener, "listener");
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "notification");
@@ -490,7 +476,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                 removeView(imageView2);
                 this.mAppIcon = null;
             }
-            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_template_part_app_icon, this, false);
+            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_template_part_app_icon, (ViewGroup) this, false);
             if (inflate != null) {
                 this.mAppIcon = (ImageView) inflate;
                 Context context = getContext();
@@ -513,6 +499,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void applyState() {
         ViewState viewState;
         ViewState viewState2;
@@ -570,6 +557,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         ImageView imageView = this.mAppIcon;
@@ -585,10 +573,12 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public int getOverflowNumberMarginEnd() {
         return this.mOverflowNumberMarginEnd;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
     public float getGroupExpandFraction() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getGroupExpandFraction();

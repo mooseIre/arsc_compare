@@ -21,7 +21,9 @@ public final class NavigationModeControllerExt$mHideGestureLineObserver$1 extend
         if (Settings.Global.getInt(NavigationModeControllerExt.access$getMContext$p(NavigationModeControllerExt.INSTANCE).getContentResolver(), "hide_gesture_line", 0) != 0) {
             z2 = true;
         }
+        NavigationModeControllerExt navigationModeControllerExt = NavigationModeControllerExt.INSTANCE;
         if (z2 != NavigationModeControllerExt.mHideGestureLine) {
+            NavigationModeControllerExt navigationModeControllerExt2 = NavigationModeControllerExt.INSTANCE;
             NavigationModeControllerExt.mHideGestureLine = z2;
             new Handler(Looper.getMainLooper()).post(NavigationModeControllerExt$mHideGestureLineObserver$1$onChange$1.INSTANCE);
         }

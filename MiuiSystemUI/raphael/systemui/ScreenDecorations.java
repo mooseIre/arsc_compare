@@ -46,66 +46,67 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     private final BroadcastDispatcher mBroadcastDispatcher;
     private CameraAvailabilityListener mCameraListener;
     private CameraAvailabilityListener.CameraTransitionCallback mCameraTransitionCallback = new CameraAvailabilityListener.CameraTransitionCallback(this) {
+        /* class com.android.systemui.ScreenDecorations.AnonymousClass1 */
+
+        @Override // com.android.systemui.CameraAvailabilityListener.CameraTransitionCallback
         public void onApplyCameraProtection(Path path, Rect rect) {
         }
 
+        @Override // com.android.systemui.CameraAvailabilityListener.CameraTransitionCallback
         public void onHideCameraProtection() {
         }
     };
-    /* access modifiers changed from: private */
-    public SecureSetting mColorInversionSetting;
+    private SecureSetting mColorInversionSetting;
     private CommandQueue mCommandQueue;
-    /* access modifiers changed from: private */
-    public int mCurrentUserId;
+    private int mCurrentUserId;
     private DisplayManager.DisplayListener mDisplayListener;
     private DisplayManager mDisplayManager;
     protected int[] mDripOverlayTopDrawables = {C0013R$drawable.overlay_screen_round_corner_top_rot90, C0013R$drawable.overlay_screen_round_corner_top, C0013R$drawable.overlay_screen_round_corner_top_rot270, C0013R$drawable.overlay_screen_round_corner_top_rot180};
     private volatile boolean mEnableForceBlack;
-    /* access modifiers changed from: private */
-    public boolean mForceBlack;
-    /* access modifiers changed from: private */
-    public ContentObserver mForceBlackObserver;
+    private boolean mForceBlack;
+    private ContentObserver mForceBlackObserver;
     protected int[] mForceBlackTopDrawables = {C0013R$drawable.force_black_screen_round_corner_top_rot90, C0013R$drawable.force_black_screen_round_corner_top, C0013R$drawable.force_black_screen_round_corner_top_rot270, C0013R$drawable.force_black_screen_round_corner_top_rot180};
     protected View mForceBlackTopOverlay;
     private boolean mForceBlackV2;
-    /* access modifiers changed from: private */
-    public ContentObserver mForceBlackV2Observer;
+    private ContentObserver mForceBlackV2Observer;
     protected int[] mForceBlackV2TopDrawables = {C0013R$drawable.force_black_top_corner_rot90, C0013R$drawable.force_black_top_corner, C0013R$drawable.force_black_top_corner_rot270, C0013R$drawable.force_black_top_corner_rot180};
     private Handler mHandler;
-    /* access modifiers changed from: private */
-    public boolean mHandyMode;
+    private boolean mHandyMode;
     protected boolean mIsRegistered;
     private final Handler mMainHandler;
     protected int[] mNormalBottomDrawables = {C0013R$drawable.screen_round_corner_bottom_rot270, C0013R$drawable.screen_round_corner_bottom_rot180, C0013R$drawable.screen_round_corner_bottom_rot90, C0013R$drawable.screen_round_corner_bottom};
     protected int[] mNormalTopDrawables = {C0013R$drawable.screen_round_corner_top_rot90, C0013R$drawable.screen_round_corner_top, C0013R$drawable.screen_round_corner_top_rot270, C0013R$drawable.screen_round_corner_top_rot180};
-    /* access modifiers changed from: private */
-    public boolean mOverlayDrip;
+    private boolean mOverlayDrip;
     private ContentObserver mOverlayDripObserver;
     private OverlayManagerWrapper mOverlayManager;
     protected View[] mOverlays;
-    /* access modifiers changed from: private */
-    public boolean mPendingRotationChange;
-    /* access modifiers changed from: private */
-    public int mRotation;
+    private boolean mPendingRotationChange;
+    private int mRotation;
     private boolean mSupportRoundCorner;
     protected int mTopCornerRadius;
     private final TunerService mTunerService;
     private Runnable mUpdateForceBlackTopOverlayVisibility = new Runnable() {
+        /* class com.android.systemui.ScreenDecorations.AnonymousClass6 */
+
         public void run() {
             ScreenDecorations.this.updateForceBlackTopOverlayVisibility();
         }
     };
     private Runnable mUpdateScreenDecorations = new Runnable() {
+        /* class com.android.systemui.ScreenDecorations.AnonymousClass10 */
+
         public void run() {
             ScreenDecorations.this.updateScreenDecorations();
         }
     };
     private final BroadcastReceiver mUserSwitchIntentReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.ScreenDecorations.AnonymousClass9 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             boolean z = false;
             if ("android.intent.action.USER_SWITCHED".equals(action)) {
-                int unused = ScreenDecorations.this.mCurrentUserId = intent.getIntExtra("android.intent.extra.user_handle", -1);
+                ScreenDecorations.this.mCurrentUserId = intent.getIntExtra("android.intent.extra.user_handle", -1);
                 if (ScreenDecorations.this.mForceBlackObserver != null) {
                     ScreenDecorations.this.mForceBlackObserver.onChange(false);
                 }
@@ -120,7 +121,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 if (intent.getIntExtra("handymode", 0) != 0) {
                     z = true;
                 }
-                boolean unused2 = screenDecorations2.mHandyMode = z;
+                screenDecorations2.mHandyMode = z;
                 ScreenDecorations.this.postUpdateScreenDecorationsFront();
             }
         }
@@ -136,6 +137,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return "RoundCorner";
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
     }
 
@@ -153,6 +155,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         this.mCommandQueue = commandQueue;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         if (CustomizeUtil.HAS_NOTCH) {
             this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
@@ -160,21 +163,22 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         Handler startHandlerThread = startHandlerThread();
         this.mHandler = startHandlerThread;
         startHandlerThread.post(new Runnable() {
+            /* class com.android.systemui.$$Lambda$ScreenDecorations$IfAux2ksmJXT9o9i38WaSEQXJTQ */
+
             public final void run() {
-                ScreenDecorations.this.startOnScreenDecorationsThread();
+                ScreenDecorations.lambda$IfAux2ksmJXT9o9i38WaSEQXJTQ(ScreenDecorations.this);
             }
         });
     }
 
-    /* access modifiers changed from: package-private */
     public Handler startHandlerThread() {
         HandlerThread handlerThread = new HandlerThread("ScreenDecorations");
         handlerThread.start();
         return handlerThread.getThreadHandler();
     }
 
-    /* access modifiers changed from: private */
-    public void startOnScreenDecorationsThread() {
+    /* access modifiers changed from: public */
+    private void startOnScreenDecorationsThread() {
         this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0010R$bool.support_round_corner);
         this.mRotation = this.mContext.getDisplay().getRotation();
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
@@ -184,6 +188,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         setupDecorations();
         setupCameraListener();
         AnonymousClass2 r0 = new DisplayManager.DisplayListener() {
+            /* class com.android.systemui.ScreenDecorations.AnonymousClass2 */
+
             public void onDisplayAdded(int i) {
             }
 
@@ -194,7 +200,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 int rotation = ScreenDecorations.this.mContext.getDisplay().getRotation();
                 ScreenDecorations screenDecorations = ScreenDecorations.this;
                 if (!(screenDecorations.mOverlays == null || screenDecorations.mRotation == rotation)) {
-                    boolean unused = ScreenDecorations.this.mPendingRotationChange = true;
+                    ScreenDecorations.this.mPendingRotationChange = true;
                     for (int i2 = 0; i2 < 4; i2++) {
                         View[] viewArr = ScreenDecorations.this.mOverlays;
                         if (viewArr[i2] != null) {
@@ -219,9 +225,11 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 this.mOverlayManager.setEnabled("com.android.systemui.notch.overlay", false, this.mCurrentUserId);
             }
             this.mForceBlackObserver = new ContentObserver(this.mHandler) {
+                /* class com.android.systemui.ScreenDecorations.AnonymousClass3 */
+
                 public void onChange(boolean z) {
                     ScreenDecorations screenDecorations = ScreenDecorations.this;
-                    boolean unused = screenDecorations.mForceBlack = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black");
+                    screenDecorations.mForceBlack = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black");
                     ScreenDecorations.this.postUpdateScreenDecorationsFront();
                 }
             };
@@ -230,13 +238,15 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
         if (supportOverlayRoundedCorner()) {
             this.mOverlayDripObserver = new ContentObserver(this.mHandler) {
+                /* class com.android.systemui.ScreenDecorations.AnonymousClass4 */
+
                 public void onChange(boolean z) {
                     ScreenDecorations screenDecorations = ScreenDecorations.this;
                     boolean z2 = true;
                     if (Settings.Global.getInt(screenDecorations.mContext.getContentResolver(), "overlay_drip", 1) != 1) {
                         z2 = false;
                     }
-                    boolean unused = screenDecorations.mOverlayDrip = z2;
+                    screenDecorations.mOverlayDrip = z2;
                     ScreenDecorations.this.postUpdateScreenDecorationsFront();
                 }
             };
@@ -265,6 +275,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         setupForceBlackTopView();
         if (!hasOverlays()) {
             this.mMainHandler.post(new Runnable() {
+                /* class com.android.systemui.$$Lambda$ScreenDecorations$CTk_RNSSvwUoNV8CfAa6W3y0c0A */
+
                 public final void run() {
                     ScreenDecorations.this.lambda$setupDecorations$1$ScreenDecorations();
                 }
@@ -278,13 +290,17 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         } else if (!this.mIsRegistered) {
             this.mDisplayManager.getDisplay(0).getMetrics(new DisplayMetrics());
             this.mMainHandler.post(new Runnable() {
+                /* class com.android.systemui.$$Lambda$ScreenDecorations$ItnW8ZEHeCqCHue6f8abcXewifU */
+
                 public final void run() {
                     ScreenDecorations.this.lambda$setupDecorations$0$ScreenDecorations();
                 }
             });
             if (this.mColorInversionSetting == null) {
                 AnonymousClass5 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
-                    /* access modifiers changed from: protected */
+                    /* class com.android.systemui.ScreenDecorations.AnonymousClass5 */
+
+                    @Override // com.android.systemui.qs.SecureSetting
                     public void handleValueChanged(int i, boolean z) {
                         ScreenDecorations.this.updateColorInversion(i);
                     }
@@ -301,18 +317,21 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$setupDecorations$0 */
     public /* synthetic */ void lambda$setupDecorations$0$ScreenDecorations() {
         this.mTunerService.addTunable(this, "sysui_rounded_size");
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$setupDecorations$1 */
     public /* synthetic */ void lambda$setupDecorations$1$ScreenDecorations() {
         this.mTunerService.removeTunable(this);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setStatus(int i, String str, Bundle bundle) {
         boolean z;
         if ("upate_specail_mode".equals(str) && this.mEnableForceBlack != (z = bundle.getBoolean("enable_config"))) {
@@ -322,12 +341,10 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
-    /* access modifiers changed from: package-private */
     public DisplayCutout getCutout() {
         return this.mContext.getDisplay().getCutout();
     }
 
-    /* access modifiers changed from: package-private */
     public boolean hasOverlays() {
         if (this.mOverlays == null) {
             return false;
@@ -376,6 +393,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             updateView(i);
             this.mWindowManager.addView(this.mOverlays[i], getWindowLayoutParams(i));
             this.mOverlays[i].addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                /* class com.android.systemui.ScreenDecorations.AnonymousClass7 */
+
                 public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                     ScreenDecorations.this.mOverlays[i].removeOnLayoutChangeListener(this);
                     ScreenDecorations.this.mOverlays[i].animate().alpha(1.0f).setDuration(1000).start();
@@ -397,6 +416,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             this.mWindowManager.addView(this.mForceBlackTopOverlay, getWindowLayoutParams(1, true));
             updateForceBlackTopOverlayVisibility();
             this.mForceBlackTopOverlay.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+                /* class com.android.systemui.ScreenDecorations.AnonymousClass8 */
+
                 public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                     ScreenDecorations.this.mForceBlackTopOverlay.removeOnLayoutChangeListener(this);
                     ScreenDecorations.this.mForceBlackTopOverlay.animate().alpha(1.0f).setDuration(1000).start();
@@ -424,8 +445,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateForceBlackTopOverlayVisibility() {
+    private void updateForceBlackTopOverlayVisibility() {
         View view = this.mForceBlackTopOverlay;
         if (view != null) {
             view.setVisibility(((this.mRotation == 0 || !this.mEnableForceBlack) && this.mForceBlack) ? 0 : 8);
@@ -443,7 +463,6 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
-    /* access modifiers changed from: protected */
     public Drawable getTopDrawableId(int i) {
         int[] iArr;
         if (this.mForceBlackV2) {
@@ -459,7 +478,6 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return getDrawableForDensity(iArr[i]);
     }
 
-    /* access modifiers changed from: protected */
     public Drawable getForceBlackTopDrawableId(int i) {
         if (i >= 0) {
             int[] iArr = this.mForceBlackTopDrawables;
@@ -470,7 +488,6 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return null;
     }
 
-    /* access modifiers changed from: protected */
     public Drawable getBottomDrawableId(int i) {
         if (i >= 0) {
             int[] iArr = this.mNormalBottomDrawables;
@@ -487,12 +504,10 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return this.mContext.getResources().getDrawableForDensity(i, typedValue.density);
     }
 
-    /* access modifiers changed from: package-private */
     public WindowManager.LayoutParams getWindowLayoutParams(int i) {
         return getWindowLayoutParams(i, false);
     }
 
-    /* access modifiers changed from: package-private */
     public WindowManager.LayoutParams getWindowLayoutParams(int i, boolean z) {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(getWidthLayoutParamByPos(i), getHeightLayoutParamByPos(i), z ? 2042 : 2024, 562037048, -3);
         int i2 = layoutParams.privateFlags | 80;
@@ -542,6 +557,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             Handler handler = this.mHandler;
             Objects.requireNonNull(handler);
             CameraAvailabilityListener build = factory.build(context, new Executor(handler) {
+                /* class com.android.systemui.$$Lambda$LfzJt661qZfn2w6SYHFbD3aMy0 */
                 public final /* synthetic */ Handler f$0;
 
                 {
@@ -558,8 +574,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
-    /* access modifiers changed from: private */
-    public void updateColorInversion(int i) {
+    private void updateColorInversion(int i) {
         int i2 = i != 0 ? -1 : -16777216;
         if (DEBUG_COLOR) {
             i2 = -65536;
@@ -578,15 +593,18 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
-    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.$$Lambda$ScreenDecorations$OAK9dGZ7oEZcFQ_E6ZLqmPf58XA */
+
             public final void run() {
                 ScreenDecorations.this.lambda$onConfigurationChanged$2$ScreenDecorations();
             }
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onConfigurationChanged$2 */
     public /* synthetic */ void lambda$onConfigurationChanged$2$ScreenDecorations() {
@@ -598,12 +616,12 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         postUpdateScreenDecorationsFront();
     }
 
-    /* access modifiers changed from: private */
-    public void updateOrientation() {
+    private void updateOrientation() {
         int rotation;
         boolean z = this.mHandler.getLooper().getThread() == Thread.currentThread();
         Preconditions.checkState(z, "must call on " + this.mHandler.getLooper().getThread() + ", but was " + Thread.currentThread());
@@ -624,14 +642,12 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return i == 1 || i == 3;
     }
 
-    /* access modifiers changed from: private */
-    public void postUpdateScreenDecorationsFront() {
+    private void postUpdateScreenDecorationsFront() {
         this.mHandler.removeCallbacks(this.mUpdateScreenDecorations);
         this.mHandler.postAtFrontOfQueue(this.mUpdateScreenDecorations);
     }
 
-    /* access modifiers changed from: private */
-    public void updateScreenDecorations() {
+    private void updateScreenDecorations() {
         updateLayoutParams();
         updateBackground();
         updateOverlayVisibility();
@@ -688,6 +704,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         private final View mView;
 
         private RestartingPreDrawListener(View view, int i, int i2) {
+            ScreenDecorations.this = r1;
             this.mView = view;
             this.mTargetRotation = i2;
         }
@@ -697,17 +714,18 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             if (this.mTargetRotation == ScreenDecorations.this.mRotation) {
                 return true;
             }
-            boolean unused = ScreenDecorations.this.mPendingRotationChange = false;
+            ScreenDecorations.this.mPendingRotationChange = false;
             ScreenDecorations.this.updateOrientation();
             this.mView.invalidate();
             return false;
         }
     }
 
-    private class ValidatingPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
+    public class ValidatingPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
         private final View mView;
 
         public ValidatingPreDrawListener(View view) {
+            ScreenDecorations.this = r1;
             this.mView = view;
         }
 

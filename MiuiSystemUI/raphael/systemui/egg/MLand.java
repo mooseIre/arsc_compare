@@ -45,8 +45,7 @@ public class MLand extends FrameLayout {
     static final int[] EYES = {C0013R$drawable.mm_eyes, C0013R$drawable.mm_eyes2};
     static final int[] MOUNTAINS = {C0013R$drawable.mountain1, C0013R$drawable.mountain2, C0013R$drawable.mountain3};
     static final int[] MOUTHS = {C0013R$drawable.mm_mouth1, C0013R$drawable.mm_mouth2, C0013R$drawable.mm_mouth3, C0013R$drawable.mm_mouth4};
-    /* access modifiers changed from: private */
-    public static Params PARAMS;
+    private static Params PARAMS;
     private static final int[][] SKIES = {new int[]{-4144897, -6250241}, new int[]{-16777200, -16777216}, new int[]{-16777152, -16777200}, new int[]{-6258656, -14663552}};
     private static float dp = 1.0f;
     private float dt;
@@ -54,16 +53,12 @@ public class MLand extends FrameLayout {
     private boolean mAnimating;
     private final AudioAttributes mAudioAttrs;
     private AudioManager mAudioManager;
-    /* access modifiers changed from: private */
-    public int mCountdown;
-    /* access modifiers changed from: private */
-    public int mCurrentPipeId;
+    private int mCountdown;
+    private int mCurrentPipeId;
     private boolean mFlipped;
-    /* access modifiers changed from: private */
-    public boolean mFrozen;
+    private boolean mFrozen;
     private ArrayList<Integer> mGameControllers;
-    /* access modifiers changed from: private */
-    public int mHeight;
+    private int mHeight;
     private float mLastPipeTime;
     private ArrayList<Obstacle> mObstaclesInPlay;
     private Paint mPlayerTracePaint;
@@ -71,8 +66,7 @@ public class MLand extends FrameLayout {
     private boolean mPlaying;
     private int mScene;
     private ViewGroup mScoreFields;
-    /* access modifiers changed from: private */
-    public View mSplash;
+    private View mSplash;
     private int mTaps;
     private int mTimeOfDay;
     private Paint mTouchPaint;
@@ -80,7 +74,8 @@ public class MLand extends FrameLayout {
     private int mWidth;
     private float t;
 
-    private interface GameView {
+    /* access modifiers changed from: private */
+    public interface GameView {
         void step(long j, long j2, float f, float f2);
     }
 
@@ -126,7 +121,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private static class Params {
+    /* access modifiers changed from: private */
+    public static class Params {
         public int BOOST_DV;
         public int BUILDING_HEIGHT_MIN;
         public int BUILDING_WIDTH_MAX;
@@ -184,7 +180,7 @@ public class MLand extends FrameLayout {
     }
 
     public MLand(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MLand(Context context, AttributeSet attributeSet) {
@@ -257,7 +253,8 @@ public class MLand extends FrameLayout {
 
     public ArrayList getGameControllers() {
         this.mGameControllers.clear();
-        for (int i : InputDevice.getDeviceIds()) {
+        int[] deviceIds = InputDevice.getDeviceIds();
+        for (int i : deviceIds) {
             if (isGamePad(InputDevice.getDevice(i)) && !this.mGameControllers.contains(Integer.valueOf(i))) {
                 this.mGameControllers.add(Integer.valueOf(i));
             }
@@ -361,7 +358,7 @@ public class MLand extends FrameLayout {
     public void reset() {
         Scenery scenery;
         L("reset", new Object[0]);
-        GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, SKIES[this.mTimeOfDay]);
+        Drawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP, SKIES[this.mTimeOfDay]);
         gradientDrawable.setDither(true);
         setBackground(gradientDrawable);
         boolean z = frand() > 0.5f;
@@ -481,6 +478,8 @@ public class MLand extends FrameLayout {
         TimeAnimator timeAnimator2 = new TimeAnimator();
         this.mAnim = timeAnimator2;
         timeAnimator2.setTimeListener(new TimeAnimator.TimeListener() {
+            /* class com.android.systemui.egg.MLand.AnonymousClass1 */
+
             public void onTimeUpdate(TimeAnimator timeAnimator, long j, long j2) {
                 MLand.this.step(j, j2);
             }
@@ -500,6 +499,8 @@ public class MLand extends FrameLayout {
             textView.animate().alpha(1.0f);
             this.mCountdown = 3;
             post(new Runnable() {
+                /* class com.android.systemui.egg.MLand.AnonymousClass2 */
+
                 public void run() {
                     if (MLand.this.mCountdown == 0) {
                         MLand.this.startPlaying();
@@ -526,6 +527,8 @@ public class MLand extends FrameLayout {
         if (view != null && view.getVisibility() == 0) {
             this.mSplash.setClickable(false);
             this.mSplash.animate().alpha(0.0f).translationZ(0.0f).setDuration(300).withEndAction(new Runnable() {
+                /* class com.android.systemui.egg.MLand.AnonymousClass3 */
+
                 public void run() {
                     MLand.this.mSplash.setVisibility(8);
                 }
@@ -580,8 +583,10 @@ public class MLand extends FrameLayout {
                 it.next().die();
             }
             postDelayed(new Runnable() {
+                /* class com.android.systemui.egg.MLand.AnonymousClass4 */
+
                 public void run() {
-                    boolean unused = MLand.this.mFrozen = false;
+                    MLand.this.mFrozen = false;
                 }
             }, 250);
         }
@@ -604,8 +609,8 @@ public class MLand extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void step(long j, long j2) {
-        int i;
+    /* access modifiers changed from: public */
+    private void step(long j, long j2) {
         float f = ((float) j) / 1000.0f;
         this.t = f;
         float f2 = ((float) j2) / 1000.0f;
@@ -615,16 +620,16 @@ public class MLand extends FrameLayout {
             this.dt = f2 * 0.5f;
         }
         int childCount = getChildCount();
-        int i2 = 0;
+        int i = 0;
         while (i < childCount) {
             View childAt = getChildAt(i);
             if (childAt instanceof GameView) {
                 ((GameView) childAt).step(j, j2, this.t, this.dt);
             }
-            i2 = i + 1;
+            i++;
         }
         if (this.mPlaying) {
-            int i3 = 0;
+            int i2 = 0;
             i = 0;
             while (i < this.mPlayers.size()) {
                 Player player = getPlayer(i);
@@ -640,56 +645,56 @@ public class MLand extends FrameLayout {
                         }
                     }
                     int size = this.mObstaclesInPlay.size();
-                    int i4 = 0;
+                    int i3 = 0;
                     while (true) {
-                        int i5 = size - 1;
+                        int i4 = size - 1;
                         if (size <= 0) {
                             break;
                         }
-                        Obstacle obstacle = this.mObstaclesInPlay.get(i5);
+                        Obstacle obstacle = this.mObstaclesInPlay.get(i4);
                         if (obstacle.intersects(player) && !DEBUG_IDDQD) {
                             L("player hit an obstacle", new Object[0]);
                             thump(i, 80);
                             player.die();
                         } else if (obstacle.cleared(player) && (obstacle instanceof Stem)) {
-                            i4 = Math.max(i4, ((Stem) obstacle).id);
+                            i3 = Math.max(i3, ((Stem) obstacle).id);
                         }
-                        size = i5;
+                        size = i4;
                     }
-                    if (i4 > player.mScore) {
+                    if (i3 > player.mScore) {
                         player.addScore(1);
                     }
                 }
                 if (player.mAlive) {
-                    i3++;
+                    i2++;
                 }
                 i++;
             }
-            if (i3 == 0) {
+            if (i2 == 0) {
                 stop();
                 MetricsLogger.count(getContext(), "egg_mland_taps", this.mTaps);
                 this.mTaps = 0;
                 int size2 = this.mPlayers.size();
-                for (int i6 = 0; i6 < size2; i6++) {
-                    MetricsLogger.histogram(getContext(), "egg_mland_score", this.mPlayers.get(i6).getScore());
+                for (int i5 = 0; i5 < size2; i5++) {
+                    MetricsLogger.histogram(getContext(), "egg_mland_score", this.mPlayers.get(i5).getScore());
                 }
             }
         }
         while (true) {
-            int i7 = i - 1;
+            int i6 = i - 1;
             if (i <= 0) {
                 break;
             }
-            View childAt2 = getChildAt(i7);
+            View childAt2 = getChildAt(i6);
             if (childAt2 instanceof Obstacle) {
                 if (childAt2.getTranslationX() + ((float) childAt2.getWidth()) < 0.0f) {
-                    removeViewAt(i7);
+                    removeViewAt(i6);
                     this.mObstaclesInPlay.remove(childAt2);
                 }
             } else if ((childAt2 instanceof Scenery) && childAt2.getTranslationX() + ((float) ((Scenery) childAt2).w) < 0.0f) {
                 childAt2.setTranslationX((float) getWidth());
             }
-            i = i7;
+            i = i6;
         }
         if (this.mPlaying) {
             float f3 = this.t;
@@ -697,45 +702,45 @@ public class MLand extends FrameLayout {
                 this.mLastPipeTime = f3;
                 this.mCurrentPipeId++;
                 float frand = frand();
-                int i8 = this.mHeight;
+                int i7 = this.mHeight;
                 Params params = PARAMS;
-                int i9 = params.OBSTACLE_MIN;
-                int i10 = ((int) (frand * ((float) ((i8 - (i9 * 2)) - params.OBSTACLE_GAP)))) + i9;
-                int i11 = params.OBSTACLE_WIDTH;
-                int i12 = (i11 - params.OBSTACLE_STEM_WIDTH) / 2;
-                int i13 = i11 / 2;
+                int i8 = params.OBSTACLE_MIN;
+                int i9 = ((int) (frand * ((float) ((i7 - (i8 * 2)) - params.OBSTACLE_GAP)))) + i8;
+                int i10 = params.OBSTACLE_WIDTH;
+                int i11 = (i10 - params.OBSTACLE_STEM_WIDTH) / 2;
+                int i12 = i10 / 2;
                 int irand = irand(0, 250);
-                Stem stem = new Stem(this, getContext(), (float) (i10 - i13), false);
+                Stem stem = new Stem(this, getContext(), (float) (i9 - i12), false);
                 addView(stem, new FrameLayout.LayoutParams(PARAMS.OBSTACLE_STEM_WIDTH, (int) stem.h, 51));
-                stem.setTranslationX((float) (this.mWidth + i12));
-                float f4 = (float) i13;
+                stem.setTranslationX((float) (this.mWidth + i11));
+                float f4 = (float) i12;
                 stem.setTranslationY((-stem.h) - f4);
                 stem.setTranslationZ(PARAMS.OBSTACLE_Z * 0.75f);
                 long j3 = (long) irand;
                 stem.animate().translationY(0.0f).setStartDelay(j3).setDuration(250);
                 this.mObstaclesInPlay.add(stem);
                 Pop pop = new Pop(this, getContext(), (float) PARAMS.OBSTACLE_WIDTH);
-                int i14 = PARAMS.OBSTACLE_WIDTH;
-                addView(pop, new FrameLayout.LayoutParams(i14, i14, 51));
+                int i13 = PARAMS.OBSTACLE_WIDTH;
+                addView(pop, new FrameLayout.LayoutParams(i13, i13, 51));
                 pop.setTranslationX((float) this.mWidth);
                 pop.setTranslationY((float) (-PARAMS.OBSTACLE_WIDTH));
                 pop.setTranslationZ(PARAMS.OBSTACLE_Z);
                 pop.setScaleX(0.25f);
                 pop.setScaleY(-0.25f);
-                pop.animate().translationY(stem.h - ((float) i12)).scaleX(1.0f).scaleY(-1.0f).setStartDelay(j3).setDuration(250);
+                pop.animate().translationY(stem.h - ((float) i11)).scaleX(1.0f).scaleY(-1.0f).setStartDelay(j3).setDuration(250);
                 this.mObstaclesInPlay.add(pop);
                 int irand2 = irand(0, 250);
-                Stem stem2 = new Stem(this, getContext(), (float) (((this.mHeight - i10) - PARAMS.OBSTACLE_GAP) - i13), true);
+                Stem stem2 = new Stem(this, getContext(), (float) (((this.mHeight - i9) - PARAMS.OBSTACLE_GAP) - i12), true);
                 addView(stem2, new FrameLayout.LayoutParams(PARAMS.OBSTACLE_STEM_WIDTH, (int) stem2.h, 51));
-                stem2.setTranslationX((float) (this.mWidth + i12));
-                stem2.setTranslationY((float) (this.mHeight + i13));
+                stem2.setTranslationX((float) (this.mWidth + i11));
+                stem2.setTranslationY((float) (this.mHeight + i12));
                 stem2.setTranslationZ(PARAMS.OBSTACLE_Z * 0.75f);
                 long j4 = (long) irand2;
                 stem2.animate().translationY(((float) this.mHeight) - stem2.h).setStartDelay(j4).setDuration(400);
                 this.mObstaclesInPlay.add(stem2);
                 Pop pop2 = new Pop(this, getContext(), (float) PARAMS.OBSTACLE_WIDTH);
-                int i15 = PARAMS.OBSTACLE_WIDTH;
-                addView(pop2, new FrameLayout.LayoutParams(i15, i15, 51));
+                int i14 = PARAMS.OBSTACLE_WIDTH;
+                addView(pop2, new FrameLayout.LayoutParams(i14, i14, 51));
                 pop2.setTranslationX((float) this.mWidth);
                 pop2.setTranslationY((float) this.mHeight);
                 pop2.setTranslationZ(PARAMS.OBSTACLE_Z);
@@ -852,34 +857,30 @@ public class MLand extends FrameLayout {
             if (next.mTouchX > 0.0f) {
                 this.mTouchPaint.setColor(next.color & -2130706433);
                 this.mPlayerTracePaint.setColor(next.color & -2130706433);
-                float access$800 = next.mTouchX;
-                float access$900 = next.mTouchY;
-                canvas.drawCircle(access$800, access$900, 100.0f, this.mTouchPaint);
+                float f = next.mTouchX;
+                float f2 = next.mTouchY;
+                canvas.drawCircle(f, f2, 100.0f, this.mTouchPaint);
                 float x = next.getX() + next.getPivotX();
                 float y = next.getY() + next.getPivotY();
-                double atan2 = (double) (1.5707964f - ((float) Math.atan2((double) (x - access$800), (double) (y - access$900))));
-                canvas.drawLine((float) (((double) access$800) + (Math.cos(atan2) * 100.0d)), (float) (((double) access$900) + (Math.sin(atan2) * 100.0d)), x, y, this.mPlayerTracePaint);
+                double atan2 = (double) (1.5707964f - ((float) Math.atan2((double) (x - f), (double) (y - f2))));
+                canvas.drawLine((float) (((double) f) + (Math.cos(atan2) * 100.0d)), (float) (((double) f2) + (Math.sin(atan2) * 100.0d)), x, y, this.mPlayerTracePaint);
             }
         }
     }
 
-    private static class Player extends ImageView implements GameView {
+    /* access modifiers changed from: private */
+    public static class Player extends ImageView implements GameView {
         static int sNextColor;
         public int color;
         public final float[] corners;
         public float dv;
-        /* access modifiers changed from: private */
-        public boolean mAlive;
+        private boolean mAlive;
         private boolean mBoosting;
         private MLand mLand;
-        /* access modifiers changed from: private */
-        public int mScore;
-        /* access modifiers changed from: private */
-        public TextView mScoreField;
-        /* access modifiers changed from: private */
-        public float mTouchX = -1.0f;
-        /* access modifiers changed from: private */
-        public float mTouchY = -1.0f;
+        private int mScore;
+        private TextView mScoreField;
+        private float mTouchX = -1.0f;
+        private float mTouchY = -1.0f;
         private final int[] sColors = {-2407369, -12879641, -740352, -15753896, -8710016, -6381922};
         private final float[] sHull;
 
@@ -905,7 +906,8 @@ public class MLand extends FrameLayout {
         }
 
         /* access modifiers changed from: private */
-        public void addScore(int i) {
+        /* access modifiers changed from: public */
+        private void addScore(int i) {
             setScore(this.mScore + i);
         }
 
@@ -939,6 +941,8 @@ public class MLand extends FrameLayout {
             this.color = iArr[i % iArr.length];
             getBackground().setTint(this.color);
             setOutlineProvider(new ViewOutlineProvider(this) {
+                /* class com.android.systemui.egg.MLand.Player.AnonymousClass1 */
+
                 public void getOutline(View view, Outline outline) {
                     int width = view.getWidth();
                     int height = view.getHeight();
@@ -976,6 +980,7 @@ public class MLand extends FrameLayout {
             return false;
         }
 
+        @Override // com.android.systemui.egg.MLand.GameView
         public void step(long j, long j2, float f, float f2) {
             if (!this.mAlive) {
                 setTranslationX(getTranslationX() - (MLand.PARAMS.TRANSLATION_PER_SEC * f2));
@@ -1032,7 +1037,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Obstacle extends View implements GameView {
+    /* access modifiers changed from: private */
+    public class Obstacle extends View implements GameView {
         public float h;
         public final Rect hitRect = new Rect();
 
@@ -1064,13 +1070,15 @@ public class MLand extends FrameLayout {
             return true;
         }
 
+        @Override // com.android.systemui.egg.MLand.GameView
         public void step(long j, long j2, float f, float f2) {
             setTranslationX(getTranslationX() - (MLand.PARAMS.TRANSLATION_PER_SEC * f2));
             getHitRect(this.hitRect);
         }
     }
 
-    private class Pop extends Obstacle {
+    /* access modifiers changed from: private */
+    public class Pop extends Obstacle {
         Drawable antenna;
         int cx;
         int cy;
@@ -1090,6 +1098,8 @@ public class MLand extends FrameLayout {
                 }
             }
             setOutlineProvider(new ViewOutlineProvider(mLand) {
+                /* class com.android.systemui.egg.MLand.Pop.AnonymousClass1 */
+
                 public void getOutline(View view, Outline outline) {
                     int width = (int) ((((float) Pop.this.getWidth()) * 1.0f) / 6.0f);
                     outline.setOval(width, width, Pop.this.getWidth() - width, Pop.this.getHeight() - width);
@@ -1097,6 +1107,7 @@ public class MLand extends FrameLayout {
             });
         }
 
+        @Override // com.android.systemui.egg.MLand.Obstacle
         public boolean intersects(Player player) {
             int length = player.corners.length / 2;
             for (int i = 0; i < length; i++) {
@@ -1109,6 +1120,7 @@ public class MLand extends FrameLayout {
             return false;
         }
 
+        @Override // com.android.systemui.egg.MLand.GameView, com.android.systemui.egg.MLand.Obstacle
         public void step(long j, long j2, float f, float f2) {
             super.step(j, j2, f, f2);
             if (this.mRotate != 0) {
@@ -1140,7 +1152,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Stem extends Obstacle {
+    /* access modifiers changed from: private */
+    public class Stem extends Obstacle {
         int id;
         boolean mDrawShadow;
         GradientDrawable mGradient = new GradientDrawable();
@@ -1153,7 +1166,7 @@ public class MLand extends FrameLayout {
             super(mLand, context, f);
             this.id = mLand.mCurrentPipeId;
             this.mDrawShadow = z;
-            setBackground((Drawable) null);
+            setBackground(null);
             this.mGradient.setOrientation(GradientDrawable.Orientation.LEFT_RIGHT);
             this.mPaint.setColor(-16777216);
             this.mPaint.setColorFilter(new PorterDuffColorFilter(570425344, PorterDuff.Mode.MULTIPLY));
@@ -1173,6 +1186,8 @@ public class MLand extends FrameLayout {
             super.onAttachedToWindow();
             setWillNotDraw(false);
             setOutlineProvider(new ViewOutlineProvider() {
+                /* class com.android.systemui.egg.MLand.Stem.AnonymousClass1 */
+
                 public void getOutline(View view, Outline outline) {
                     outline.setRect(0, 0, Stem.this.getWidth(), Stem.this.getHeight());
                 }
@@ -1214,7 +1229,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Scenery extends FrameLayout implements GameView {
+    /* access modifiers changed from: private */
+    public class Scenery extends FrameLayout implements GameView {
         public int h;
         public float v;
         public int w;
@@ -1224,12 +1240,14 @@ public class MLand extends FrameLayout {
             super(context);
         }
 
+        @Override // com.android.systemui.egg.MLand.GameView
         public void step(long j, long j2, float f, float f2) {
             setTranslationX(getTranslationX() - ((MLand.PARAMS.TRANSLATION_PER_SEC * f2) * this.v));
         }
     }
 
-    private class Building extends Scenery {
+    /* access modifiers changed from: private */
+    public class Building extends Scenery {
         public Building(MLand mLand, Context context) {
             super(mLand, context);
             this.w = MLand.irand(MLand.PARAMS.BUILDING_WIDTH_MIN, MLand.PARAMS.BUILDING_WIDTH_MAX);
@@ -1237,7 +1255,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Cactus extends Building {
+    /* access modifiers changed from: private */
+    public class Cactus extends Building {
         public Cactus(MLand mLand, Context context) {
             super(mLand, context);
             setBackgroundResource(MLand.pick(MLand.CACTI));
@@ -1247,7 +1266,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Mountain extends Building {
+    /* access modifiers changed from: private */
+    public class Mountain extends Building {
         public Mountain(MLand mLand, Context context) {
             super(mLand, context);
             setBackgroundResource(MLand.pick(MLand.MOUNTAINS));
@@ -1258,7 +1278,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Cloud extends Scenery {
+    /* access modifiers changed from: private */
+    public class Cloud extends Scenery {
         public Cloud(MLand mLand, Context context) {
             super(mLand, context);
             setBackgroundResource(MLand.frand() < 0.01f ? C0013R$drawable.cloud_off : C0013R$drawable.cloud);
@@ -1271,7 +1292,8 @@ public class MLand extends FrameLayout {
         }
     }
 
-    private class Star extends Scenery {
+    /* access modifiers changed from: private */
+    public class Star extends Scenery {
         public Star(MLand mLand, Context context) {
             super(mLand, context);
             setBackgroundResource(C0013R$drawable.star);

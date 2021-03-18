@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvideDevicePolicyManagerWrapperFactory i
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public DevicePolicyManagerWrapper get() {
         return provideInstance(this.module);
     }

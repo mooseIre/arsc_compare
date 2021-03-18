@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$dFYK0EjGBZUG5FTAJ9pyZPnsifY implemen
     private /* synthetic */ $$Lambda$dFYK0EjGBZUG5FTAJ9pyZPnsifY() {
     }
 
+    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
         return ((View) obj).isAttachedToWindow();
     }

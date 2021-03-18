@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowManager.kt */
-final class MiniWindowPolicy {
+public final class MiniWindowPolicy {
     public static final MiniWindowPolicy INSTANCE = new MiniWindowPolicy();
 
     private MiniWindowPolicy() {
@@ -16,7 +17,7 @@ final class MiniWindowPolicy {
     public final void initializeMiniWindowIntent(@NotNull String str, @NotNull Intent intent) {
         Intrinsics.checkParameterIsNotNull(str, "packageName");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
-        if (!Intrinsics.areEqual((Object) "com.tencent.tim", (Object) str)) {
+        if (!Intrinsics.areEqual("com.tencent.tim", str)) {
             intent.addFlags(134217728);
             intent.addFlags(268435456);
             intent.addFlags(8388608);
@@ -25,7 +26,7 @@ final class MiniWindowPolicy {
 
     public final boolean canSlidePackage(@Nullable String str, @Nullable Intent intent, @Nullable String str2, @Nullable ComponentName componentName, boolean z) {
         Object obj = null;
-        if (Intrinsics.areEqual((Object) "com.tencent.mm", (Object) str)) {
+        if (Intrinsics.areEqual("com.tencent.mm", str)) {
             if (intent != null) {
                 obj = intent.getComponent();
             }
@@ -36,13 +37,13 @@ final class MiniWindowPolicy {
                 return true;
             }
             return false;
-        } else if (Intrinsics.areEqual((Object) str, (Object) str2)) {
+        } else if (Intrinsics.areEqual(str, str2)) {
             return false;
         } else {
             if (componentName != null) {
                 obj = componentName.getPackageName();
             }
-            if (Intrinsics.areEqual((Object) str, obj)) {
+            if (Intrinsics.areEqual(str, obj)) {
                 return false;
             }
             return true;
@@ -55,7 +56,7 @@ final class MiniWindowPolicy {
         }
         ComponentName component = intent.getComponent();
         if (component != null) {
-            return Intrinsics.areEqual((Object) component.getClassName(), (Object) componentName.getClassName());
+            return Intrinsics.areEqual(component.getClassName(), componentName.getClassName());
         }
         Intrinsics.throwNpe();
         throw null;
@@ -67,7 +68,7 @@ final class MiniWindowPolicy {
         }
         ComponentName component = intent.getComponent();
         if (component != null) {
-            return Intrinsics.areEqual((Object) component.getPackageName(), (Object) componentName.getPackageName());
+            return Intrinsics.areEqual(component.getPackageName(), componentName.getPackageName());
         }
         Intrinsics.throwNpe();
         throw null;

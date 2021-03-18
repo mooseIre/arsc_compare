@@ -4,8 +4,9 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: PulseExpansionHandler.kt */
-final class PulseExpansionHandler$resetClock$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class PulseExpansionHandler$resetClock$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ PulseExpansionHandler this$0;
 
     PulseExpansionHandler$resetClock$1(PulseExpansionHandler pulseExpansionHandler) {

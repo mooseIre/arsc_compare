@@ -52,8 +52,7 @@ import java.util.Objects;
 import javax.inject.Provider;
 
 public class NotificationGutsManager implements Dumpable, NotificationLifetimeExtender {
-    /* access modifiers changed from: private */
-    public final AccessibilityManager mAccessibilityManager;
+    private final AccessibilityManager mAccessibilityManager;
     private final Handler mBgHandler;
     private final BubbleController mBubbleController;
     private final Provider<PriorityOnboardingDialogController.Builder> mBuilderProvider;
@@ -61,14 +60,12 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
     private final Context mContext;
     private final CurrentUserContextTracker mContextTracker;
     private final DeviceProvisionedController mDeviceProvisionedController = ((DeviceProvisionedController) Dependency.get(DeviceProvisionedController.class));
-    /* access modifiers changed from: private */
-    public NotificationMenuRowPlugin.MenuItem mGutsMenuItem;
+    private NotificationMenuRowPlugin.MenuItem mGutsMenuItem;
     private final HighPriorityProvider mHighPriorityProvider;
     @VisibleForTesting
     protected String mKeyToRemoveOnGutsClosed;
     private final LauncherApps mLauncherApps;
-    /* access modifiers changed from: private */
-    public NotificationListContainer mListContainer;
+    private NotificationListContainer mListContainer;
     private final NotificationLockscreenUserManager mLockscreenUserManager = ((NotificationLockscreenUserManager) Dependency.get(NotificationLockscreenUserManager.class));
     private final Handler mMainHandler;
     private final MetricsLogger mMetricsLogger = ((MetricsLogger) Dependency.get(MetricsLogger.class));
@@ -81,8 +78,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
     private NotificationPresenter mPresenter;
     private final ShortcutManager mShortcutManager;
     private final Lazy<StatusBar> mStatusBarLazy;
-    /* access modifiers changed from: private */
-    public final StatusBarStateController mStatusBarStateController = ((StatusBarStateController) Dependency.get(StatusBarStateController.class));
+    private final StatusBarStateController mStatusBarStateController = ((StatusBarStateController) Dependency.get(StatusBarStateController.class));
     private final UiEventLogger mUiEventLogger;
     private final VisualStabilityManager mVisualStabilityManager;
 
@@ -138,7 +134,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
 
     private void startAppDetailsSettingsActivity(String str, int i, NotificationChannel notificationChannel, ExpandableNotificationRow expandableNotificationRow) {
         Intent intent = new Intent("android.settings.APPLICATION_DETAILS_SETTINGS");
-        intent.setData(Uri.fromParts("package", str, (String) null));
+        intent.setData(Uri.fromParts("package", str, null));
         intent.putExtra("android.provider.extra.APP_PACKAGE", str);
         intent.putExtra("app_uid", i);
         if (notificationChannel != null) {
@@ -151,11 +147,11 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
     public void startAppOpsSettingsActivity(String str, int i, ArraySet<Integer> arraySet, ExpandableNotificationRow expandableNotificationRow) {
         if (arraySet.contains(24)) {
             if (arraySet.contains(26) || arraySet.contains(27)) {
-                startAppDetailsSettingsActivity(str, i, (NotificationChannel) null, expandableNotificationRow);
+                startAppDetailsSettingsActivity(str, i, null, expandableNotificationRow);
                 return;
             }
             Intent intent = new Intent("android.settings.MANAGE_APP_OVERLAY_PERMISSION");
-            intent.setData(Uri.fromParts("package", str, (String) null));
+            intent.setData(Uri.fromParts("package", str, null));
             this.mNotificationActivityStarter.startNotificationGutsIntent(intent, i, expandableNotificationRow);
         } else if (arraySet.contains(26) || arraySet.contains(27)) {
             Intent intent2 = new Intent("android.intent.action.MANAGE_APP_PERMISSIONS");
@@ -180,6 +176,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         expandableNotificationRow.setGutsView(menuItem);
         expandableNotificationRow.setTag(sbn.getPackageName());
         expandableNotificationRow.getGuts().setClosedListener(new NotificationGuts.OnGutsClosedListener(expandableNotificationRow, sbn) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$lbHSFb83h5SRmJTPUlzactX7_1Q */
             public final /* synthetic */ ExpandableNotificationRow f$1;
             public final /* synthetic */ StatusBarNotification f$2;
 
@@ -188,6 +185,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                 this.f$2 = r3;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.OnGutsClosedListener
             public final void onGutsClosed(NotificationGuts notificationGuts) {
                 NotificationGutsManager.this.lambda$bindGuts$0$NotificationGutsManager(this.f$1, this.f$2, notificationGuts);
             }
@@ -246,12 +244,14 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         notificationSnooze.setStatusBarNotification(sbn);
         notificationSnooze.setSnoozeOptions(expandableNotificationRow.getEntry().getSnoozeCriteria());
         guts.setHeightChangedListener(new NotificationGuts.OnHeightChangedListener(expandableNotificationRow) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$xtHxMW6jrIgJGugFgxSSg6aT080 */
             public final /* synthetic */ ExpandableNotificationRow f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.OnHeightChangedListener
             public final void onHeightChanged(NotificationGuts notificationGuts) {
                 NotificationGutsManager.this.lambda$initializeSnoozeView$1$NotificationGutsManager(this.f$1, notificationGuts);
             }
@@ -269,6 +269,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         ExpandedNotification sbn = expandableNotificationRow.getEntry().getSbn();
         PackageManager packageManagerForUser = StatusBar.getPackageManagerForUser(this.mContext, sbn.getUser().getIdentifier());
         $$Lambda$NotificationGutsManager$wyMAwZ08iUSa7KG3DScd2mF0ZVk r4 = new AppOpsInfo.OnSettingsClickListener(sbn, guts, expandableNotificationRow) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$wyMAwZ08iUSa7KG3DScd2mF0ZVk */
             public final /* synthetic */ StatusBarNotification f$1;
             public final /* synthetic */ NotificationGuts f$2;
             public final /* synthetic */ ExpandableNotificationRow f$3;
@@ -279,6 +280,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                 this.f$3 = r4;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.AppOpsInfo.OnSettingsClickListener
             public final void onClick(View view, String str, int i, ArraySet arraySet) {
                 NotificationGutsManager.this.lambda$initializeAppOpsInfo$2$NotificationGutsManager(this.f$1, this.f$2, this.f$3, view, str, i, arraySet);
             }
@@ -307,6 +309,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         UserHandle user = sbn.getUser();
         PackageManager packageManagerForUser = StatusBar.getPackageManagerForUser(this.mContext, user.getIdentifier());
         $$Lambda$NotificationGutsManager$5sbilrrQIt_lf8k9ZdwNLnjs r14 = new NotificationInfo.OnAppSettingsClickListener(guts, sbn, expandableNotificationRow) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$5sbilrrQIt_lf8k9ZdwNLnjs */
             public final /* synthetic */ NotificationGuts f$1;
             public final /* synthetic */ StatusBarNotification f$2;
             public final /* synthetic */ ExpandableNotificationRow f$3;
@@ -317,12 +320,14 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                 this.f$3 = r4;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotificationInfo.OnAppSettingsClickListener
             public final void onClick(View view, Intent intent) {
                 NotificationGutsManager.this.lambda$initializeNotificationInfo$3$NotificationGutsManager(this.f$1, this.f$2, this.f$3, view, intent);
             }
         };
         if (!user.equals(UserHandle.ALL) || this.mLockscreenUserManager.getCurrentUserId() == 0) {
             r13 = new NotificationInfo.OnSettingsClickListener(guts, sbn, packageName, expandableNotificationRow) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$Q50_8sHdIRaYdx4NmoW9bex_4o */
                 public final /* synthetic */ NotificationGuts f$1;
                 public final /* synthetic */ StatusBarNotification f$2;
                 public final /* synthetic */ String f$3;
@@ -335,6 +340,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                     this.f$4 = r5;
                 }
 
+                @Override // com.android.systemui.statusbar.notification.row.NotificationInfo.OnSettingsClickListener
                 public final void onClick(View view, NotificationChannel notificationChannel, int i) {
                     NotificationGutsManager.this.lambda$initializeNotificationInfo$4$NotificationGutsManager(this.f$1, this.f$2, this.f$3, this.f$4, view, notificationChannel, i);
                 }
@@ -373,6 +379,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         PackageManager packageManagerForUser = StatusBar.getPackageManagerForUser(this.mContext, user.getIdentifier());
         if (!user.equals(UserHandle.ALL) || this.mLockscreenUserManager.getCurrentUserId() == 0) {
             r12 = new NotificationInfo.OnSettingsClickListener(guts, sbn, packageName, expandableNotificationRow) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$_QQQs9zfP_ZSHrXlaEFU7rOxG50 */
                 public final /* synthetic */ NotificationGuts f$1;
                 public final /* synthetic */ StatusBarNotification f$2;
                 public final /* synthetic */ String f$3;
@@ -385,6 +392,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                     this.f$4 = r5;
                 }
 
+                @Override // com.android.systemui.statusbar.notification.row.NotificationInfo.OnSettingsClickListener
                 public final void onClick(View view, NotificationChannel notificationChannel, int i) {
                     NotificationGutsManager.this.lambda$initializePartialConversationNotificationInfo$5$NotificationGutsManager(this.f$1, this.f$2, this.f$3, this.f$4, view, notificationChannel, i);
                 }
@@ -415,6 +423,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         UserHandle user = sbn.getUser();
         PackageManager packageManagerForUser = StatusBar.getPackageManagerForUser(this.mContext, user.getIdentifier());
         $$Lambda$NotificationGutsManager$SxOqoV1fAYXT8YXSboDhbPUKcNY r7 = new NotificationConversationInfo.OnSnoozeClickListener(sbn) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$SxOqoV1fAYXT8YXSboDhbPUKcNY */
             public final /* synthetic */ StatusBarNotification f$1;
 
             {
@@ -422,6 +431,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
             }
         };
         $$Lambda$NotificationGutsManager$sCU8ga9RgRp89PSTE4vP2xOWPYM r15 = new NotificationConversationInfo.OnConversationSettingsClickListener(sbn, expandableNotificationRow) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$sCU8ga9RgRp89PSTE4vP2xOWPYM */
             public final /* synthetic */ StatusBarNotification f$1;
             public final /* synthetic */ ExpandableNotificationRow f$2;
 
@@ -430,12 +440,14 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                 this.f$2 = r3;
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotificationConversationInfo.OnConversationSettingsClickListener
             public final void onClick() {
                 NotificationGutsManager.this.lambda$initializeConversationNotificationInfo$8$NotificationGutsManager(this.f$1, this.f$2);
             }
         };
         if (!user.equals(UserHandle.ALL) || this.mLockscreenUserManager.getCurrentUserId() == 0) {
             r16 = new NotificationConversationInfo.OnSettingsClickListener(guts, sbn, packageName, expandableNotificationRow) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$l1uQ6jkAF_qnuYpLc8JtAuLHmo */
                 public final /* synthetic */ NotificationGuts f$1;
                 public final /* synthetic */ StatusBarNotification f$2;
                 public final /* synthetic */ String f$3;
@@ -448,6 +460,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
                     this.f$4 = r5;
                 }
 
+                @Override // com.android.systemui.statusbar.notification.row.NotificationConversationInfo.OnSettingsClickListener
                 public final void onClick(View view, NotificationChannel notificationChannel, int i) {
                     NotificationGutsManager.this.lambda$initializeConversationNotificationInfo$9$NotificationGutsManager(this.f$1, this.f$2, this.f$3, this.f$4, view, notificationChannel, i);
                 }
@@ -455,11 +468,8 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         } else {
             r16 = null;
         }
-        ConversationIconFactory conversationIconFactory = r19;
         Context context = this.mContext;
-        ConversationIconFactory conversationIconFactory2 = new ConversationIconFactory(context, this.mLauncherApps, packageManagerForUser, IconDrawableFactory.newInstance(context, false), this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_guts_conversation_icon_size));
-        $$Lambda$NotificationGutsManager$SxOqoV1fAYXT8YXSboDhbPUKcNY r0 = r7;
-        notificationConversationInfo.bindNotification(this.mShortcutManager, packageManagerForUser, this.mNotificationManager, this.mVisualStabilityManager, packageName, entry.getChannel(), entry, entry.getBubbleMetadata(), r16, r0, conversationIconFactory, this.mContextTracker.getCurrentUserContext(), this.mBuilderProvider, this.mDeviceProvisionedController.isDeviceProvisioned(), this.mMainHandler, this.mBgHandler, r15, this.mBubbleController);
+        notificationConversationInfo.bindNotification(this.mShortcutManager, packageManagerForUser, this.mNotificationManager, this.mVisualStabilityManager, packageName, entry.getChannel(), entry, entry.getBubbleMetadata(), r16, r7, new ConversationIconFactory(context, this.mLauncherApps, packageManagerForUser, IconDrawableFactory.newInstance(context, false), this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_guts_conversation_icon_size)), this.mContextTracker.getCurrentUserContext(), this.mBuilderProvider, this.mDeviceProvisionedController.isDeviceProvisioned(), this.mMainHandler, this.mBgHandler, r15, this.mBubbleController);
     }
 
     /* access modifiers changed from: private */
@@ -505,6 +515,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
             ((StatusBarStateControllerImpl) statusBarStateController).setLeaveOpenOnKeyguardHide(true);
         }
         this.mStatusBarLazy.get().executeRunnableDismissingKeyguard(new Runnable(view, i, i2, menuItem) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$FMcYcqx6JxHHSZHrMeuI2W1DjZY */
             public final /* synthetic */ View f$1;
             public final /* synthetic */ int f$2;
             public final /* synthetic */ int f$3;
@@ -520,7 +531,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
             public final void run() {
                 NotificationGutsManager.this.lambda$openGuts$11$NotificationGutsManager(this.f$1, this.f$2, this.f$3, this.f$4);
             }
-        }, (Runnable) null, false, true, true);
+        }, null, false, true, true);
         return true;
     }
 
@@ -528,6 +539,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
     /* renamed from: lambda$openGuts$11 */
     public /* synthetic */ void lambda$openGuts$11$NotificationGutsManager(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
         this.mMainHandler.post(new Runnable(view, i, i2, menuItem) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationGutsManager$PjWrLLW0p5MpvIfRIh3E86B4Vc */
             public final /* synthetic */ View f$1;
             public final /* synthetic */ int f$2;
             public final /* synthetic */ int f$3;
@@ -549,7 +561,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     /* renamed from: openGutsInternal */
-    public boolean lambda$openGuts$10(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
+    public boolean lambda$openGuts$10(View view, final int i, final int i2, final NotificationMenuRowPlugin.MenuItem menuItem) {
         if (!(view instanceof ExpandableNotificationRow)) {
             return false;
         }
@@ -564,53 +576,56 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
             return false;
         }
         expandableNotificationRow.ensureGutsInflated();
-        NotificationGuts guts = expandableNotificationRow.getGuts();
+        final NotificationGuts guts = expandableNotificationRow.getGuts();
         this.mNotificationGutsExposed = guts;
         if (!bindGuts(expandableNotificationRow, menuItem) || guts == null) {
             return false;
         }
         guts.setVisibility(4);
-        final NotificationGuts notificationGuts = guts;
-        final int i3 = i;
-        final int i4 = i2;
-        final NotificationMenuRowPlugin.MenuItem menuItem2 = menuItem;
-        AnonymousClass1 r0 = new Runnable() {
+        AnonymousClass1 r7 = new Runnable() {
+            /* class com.android.systemui.statusbar.notification.row.NotificationGutsManager.AnonymousClass1 */
+
             public void run() {
                 if (expandableNotificationRow.getWindowToken() == null) {
                     Log.e("NotificationGutsManager", "Trying to show notification guts in post(), but not attached to window");
                     return;
                 }
-                notificationGuts.setVisibility(0);
+                guts.setVisibility(0);
                 boolean z = NotificationGutsManager.this.mStatusBarStateController.getState() == 1 && !NotificationGutsManager.this.mAccessibilityManager.isTouchExplorationEnabled();
-                NotificationGuts notificationGuts = notificationGuts;
+                NotificationGuts notificationGuts = guts;
                 boolean z2 = !expandableNotificationRow.isBlockingHelperShowing();
-                int i = i3;
-                int i2 = i4;
+                int i = i;
+                int i2 = i2;
                 ExpandableNotificationRow expandableNotificationRow = expandableNotificationRow;
                 Objects.requireNonNull(expandableNotificationRow);
                 notificationGuts.openControls(z2, i, i2, z, new Runnable() {
+                    /* class com.android.systemui.statusbar.notification.row.$$Lambda$IONSGD9gxXDD_zwBcDGw5yfu2Rc */
+
                     public final void run() {
                         ExpandableNotificationRow.this.onGutsOpened();
                     }
                 });
                 expandableNotificationRow.closeRemoteInput();
                 NotificationGutsManager.this.mListContainer.onHeightChanged(expandableNotificationRow, true);
-                NotificationMenuRowPlugin.MenuItem unused = NotificationGutsManager.this.mGutsMenuItem = menuItem2;
+                NotificationGutsManager.this.mGutsMenuItem = menuItem;
             }
         };
-        this.mOpenRunnable = r0;
-        guts.post(r0);
+        this.mOpenRunnable = r7;
+        guts.post(r7);
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {
         this.mNotificationLifetimeFinishedCallback = notificationSafeToRemoveCallback;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
         return (notificationEntry == null || this.mNotificationGutsExposed == null || notificationEntry.getGuts() == null || this.mNotificationGutsExposed != notificationEntry.getGuts() || this.mNotificationGutsExposed.isLeavebehind()) ? false : true;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
         if (z) {
             this.mKeyToRemoveOnGutsClosed = notificationEntry.getKey();
@@ -629,6 +644,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("NotificationGutsManager state:");
         printWriter.print("  mKeyToRemoveOnGutsClosed: ");

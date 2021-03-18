@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$ThemeOverlayManager$tpreaivLMVK4R3Uf
     private /* synthetic */ $$Lambda$ThemeOverlayManager$tpreaivLMVK4R3Uf26BCg27Af8() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((OverlayInfo) obj).category;
     }

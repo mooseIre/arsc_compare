@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideContentResolverFactory implements
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ContentResolver get() {
         return provideInstance(this.contextProvider);
     }

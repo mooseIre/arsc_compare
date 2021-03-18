@@ -38,14 +38,17 @@ public class FloatingRotationButton implements RotationButton {
         this.mMargin = Math.max(resources.getDimensionPixelSize(C0012R$dimen.floating_rotation_button_min_margin), resources.getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding));
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public void setRotationButtonController(RotationButtonController rotationButtonController) {
         this.mRotationButtonController = rotationButtonController;
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public View getCurrentView() {
         return this.mKeyButtonView;
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public boolean show() {
         if (!this.mCanShow || this.mIsShowing) {
             return false;
@@ -77,6 +80,7 @@ public class FloatingRotationButton implements RotationButton {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public boolean hide() {
         if (!this.mIsShowing) {
             return false;
@@ -86,10 +90,12 @@ public class FloatingRotationButton implements RotationButton {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public boolean isVisible() {
         return this.mIsShowing;
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public void updateIcon() {
         if (this.mIsShowing) {
             KeyButtonDrawable imageDrawable = getImageDrawable();
@@ -104,14 +110,17 @@ public class FloatingRotationButton implements RotationButton {
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public void setOnClickListener(View.OnClickListener onClickListener) {
         this.mKeyButtonView.setOnClickListener(onClickListener);
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public void setOnHoverListener(View.OnHoverListener onHoverListener) {
         this.mKeyButtonView.setOnHoverListener(onHoverListener);
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public KeyButtonDrawable getImageDrawable() {
         ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mContext.getApplicationContext(), this.mRotationButtonController.getStyleRes());
         int themeAttr = Utils.getThemeAttr(contextThemeWrapper, C0009R$attr.darkIconTheme);
@@ -120,10 +129,12 @@ public class FloatingRotationButton implements RotationButton {
         return KeyButtonDrawable.create(contextThemeWrapper2, Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor), colorAttrDefaultColor, C0013R$drawable.ic_sysbar_rotate_button, false, Color.valueOf((float) Color.red(colorAttrDefaultColor), (float) Color.green(colorAttrDefaultColor), (float) Color.blue(colorAttrDefaultColor), 0.92f));
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public void setDarkIntensity(float f) {
         this.mKeyButtonView.setDarkIntensity(f);
     }
 
+    @Override // com.android.systemui.statusbar.phone.RotationButton
     public void setCanShowRotationButton(boolean z) {
         this.mCanShow = z;
         if (!z) {

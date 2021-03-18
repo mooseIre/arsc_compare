@@ -23,6 +23,7 @@ import com.miui.systemui.DebugConfig;
 import com.miui.systemui.events.ModalExitMode;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
+import java.util.Iterator;
 import kotlin.jvm.internal.Intrinsics;
 import miuix.view.animation.CubicEaseInOutInterpolator;
 import org.jetbrains.annotations.NotNull;
@@ -32,10 +33,8 @@ public final class ModalController {
     @NotNull
     private final Context context;
     private final long defaultDuration = 300;
-    /* access modifiers changed from: private */
-    public NotificationEntry entry;
-    /* access modifiers changed from: private */
-    public boolean isAnimating;
+    private NotificationEntry entry;
+    private boolean isAnimating;
     private boolean isModal;
     private boolean mDownEventInjected;
     @NotNull
@@ -45,8 +44,7 @@ public final class ModalController {
     public ModalRowInflater modalRowInflater;
     private ModalWindowManager modalWindowManager;
     private ModalWindowView modalWindowView;
-    /* access modifiers changed from: private */
-    public final ArrayList<OnModalChangeListener> onModalChangeListeners = new ArrayList<>();
+    private final ArrayList<OnModalChangeListener> onModalChangeListeners = new ArrayList<>();
     @NotNull
     private final StatusBar statusBar;
 
@@ -66,15 +64,18 @@ public final class ModalController {
         addModalWindow();
         ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).addNotificationLifetimeExtender(new ModalLifetimeExtender(this));
         this.mStatusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
+            /* class com.android.systemui.statusbar.notification.modal.ModalController.AnonymousClass1 */
             final /* synthetic */ ModalController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 if (i == 1) {
-                    ModalController.animExitModal$default(this.this$0, (String) null, 1, (Object) null);
+                    ModalController.animExitModal$default(this.this$0, null, 1, null);
                 }
             }
         });
@@ -127,7 +128,7 @@ public final class ModalController {
                     }
                     this.modalRow = expandableNotificationRow2;
                     enterModal();
-                    startAnimator$default(this, new ModalController$animEnterModal$updateListener$1(this), new ModalController$animEnterModal$animatorListener$1(this, expandableNotificationRow), 0, 4, (Object) null);
+                    startAnimator$default(this, new ModalController$animEnterModal$updateListener$1(this), new ModalController$animEnterModal$animatorListener$1(this, expandableNotificationRow), 0, 4, null);
                     return;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
@@ -229,8 +230,9 @@ public final class ModalController {
         this.modalWindowManager.hide();
         this.modalRow = null;
         this.entry = null;
-        for (OnModalChangeListener onChange : this.onModalChangeListeners) {
-            onChange.onChange(false);
+        Iterator<T> it = this.onModalChangeListeners.iterator();
+        while (it.hasNext()) {
+            it.next().onChange(false);
         }
     }
 
@@ -242,7 +244,7 @@ public final class ModalController {
     }
 
     private final void startAnimator(ValueAnimator.AnimatorUpdateListener animatorUpdateListener, Animator.AnimatorListener animatorListener, long j) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         Intrinsics.checkExpressionValueIsNotNull(ofFloat, "animator");
         ofFloat.setDuration(j);
         ofFloat.setInterpolator(new CubicEaseInOutInterpolator());
@@ -261,7 +263,7 @@ public final class ModalController {
     }
 
     private final boolean canEnterModal(ExpandableNotificationRow expandableNotificationRow) {
-        return !expandableNotificationRow.isPinned() && (Intrinsics.areEqual((Object) expandableNotificationRow.getShowingLayout(), (Object) expandableNotificationRow.getPublicLayout()) ^ true);
+        return !expandableNotificationRow.isPinned() && (Intrinsics.areEqual(expandableNotificationRow.getShowingLayout(), expandableNotificationRow.getPublicLayout()) ^ true);
     }
 
     static {
@@ -280,7 +282,7 @@ public final class ModalController {
 
     public final boolean shouldExtendLifetime(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
-        return this.isModal && Intrinsics.areEqual((Object) this.entry, (Object) notificationEntry);
+        return this.isModal && Intrinsics.areEqual(this.entry, notificationEntry);
     }
 
     public final boolean maybeDispatchMotionEvent(@NotNull MotionEvent motionEvent) {

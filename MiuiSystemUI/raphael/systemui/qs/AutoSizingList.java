@@ -13,17 +13,20 @@ import com.android.systemui.R$styleable;
 public class AutoSizingList extends LinearLayout {
     private ListAdapter mAdapter;
     private final Runnable mBindChildren = new Runnable() {
+        /* class com.android.systemui.qs.AutoSizingList.AnonymousClass1 */
+
         public void run() {
             AutoSizingList.this.rebindChildren();
         }
     };
-    /* access modifiers changed from: private */
-    public int mCount;
+    private int mCount;
     private final DataSetObserver mDataObserver = new DataSetObserver() {
+        /* class com.android.systemui.qs.AutoSizingList.AnonymousClass2 */
+
         public void onChanged() {
             if (AutoSizingList.this.mCount > AutoSizingList.this.getDesiredCount()) {
                 AutoSizingList autoSizingList = AutoSizingList.this;
-                int unused = autoSizingList.mCount = autoSizingList.getDesiredCount();
+                autoSizingList.mCount = autoSizingList.getDesiredCount();
             }
             AutoSizingList.this.postRebindChildren();
         }
@@ -72,7 +75,8 @@ public class AutoSizingList extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public int getDesiredCount() {
+    /* access modifiers changed from: public */
+    private int getDesiredCount() {
         ListAdapter listAdapter = this.mAdapter;
         if (listAdapter != null) {
             return listAdapter.getCount();
@@ -81,12 +85,14 @@ public class AutoSizingList extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void postRebindChildren() {
+    /* access modifiers changed from: public */
+    private void postRebindChildren() {
         this.mHandler.post(this.mBindChildren);
     }
 
     /* access modifiers changed from: private */
-    public void rebindChildren() {
+    /* access modifiers changed from: public */
+    private void rebindChildren() {
         if (this.mAdapter != null) {
             int i = 0;
             while (i < this.mCount) {

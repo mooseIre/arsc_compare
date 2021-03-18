@@ -61,24 +61,23 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     private float mBottomGestureHeight;
     private final Context mContext;
     private boolean mDisabledForQuickstep;
-    /* access modifiers changed from: private */
-    public final int mDisplayId;
+    private final int mDisplayId;
     private final Point mDisplaySize = new Point();
-    /* access modifiers changed from: private */
-    public final PointF mDownPoint = new PointF();
+    private final PointF mDownPoint = new PointF();
     private NavigationEdgeBackPlugin mEdgeBackPlugin;
     private int mEdgeWidthLeft;
     private int mEdgeWidthRight;
     private final PointF mEndPoint = new PointF();
-    /* access modifiers changed from: private */
-    public final Region mExcludeRegion = new Region();
+    private final Region mExcludeRegion = new Region();
     private final List<ComponentName> mGestureBlockingActivities = new ArrayList();
-    /* access modifiers changed from: private */
-    public boolean mGestureBlockingActivityRunning;
+    private boolean mGestureBlockingActivityRunning;
     private ISystemGestureExclusionListener mGestureExclusionListener = new ISystemGestureExclusionListener.Stub() {
+        /* class com.android.systemui.statusbar.phone.EdgeBackGestureHandler.AnonymousClass1 */
+
         public void onSystemGestureExclusionChanged(int i, Region region, Region region2) {
             if (i == EdgeBackGestureHandler.this.mDisplayId) {
                 EdgeBackGestureHandler.this.mMainExecutor.execute(new Runnable(region, region2) {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$EdgeBackGestureHandler$1$gxj4RNtkm_JZXkSr9gvVxA9V4Ew */
                     public final /* synthetic */ Region f$1;
                     public final /* synthetic */ Region f$2;
 
@@ -98,55 +97,54 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
         /* renamed from: lambda$onSystemGestureExclusionChanged$0 */
         public /* synthetic */ void lambda$onSystemGestureExclusionChanged$0$EdgeBackGestureHandler$1(Region region, Region region2) {
             EdgeBackGestureHandler.this.mExcludeRegion.set(region);
-            Region access$300 = EdgeBackGestureHandler.this.mUnrestrictedExcludeRegion;
+            Region region3 = EdgeBackGestureHandler.this.mUnrestrictedExcludeRegion;
             if (region2 != null) {
                 region = region2;
             }
-            access$300.set(region);
+            region3.set(region);
         }
     };
     private final GestureNavigationSettingsObserver mGestureNavigationSettingsObserver;
-    /* access modifiers changed from: private */
-    public boolean mInRejectedExclusion;
+    private boolean mInRejectedExclusion;
     private InputEventReceiver mInputEventReceiver;
     private InputMonitor mInputMonitor;
     private boolean mIsAttached;
     private boolean mIsBackGestureAllowed;
     private boolean mIsEnabled;
     private boolean mIsNavBarShownTransiently;
-    /* access modifiers changed from: private */
-    public boolean mIsOnLeftEdge;
+    private boolean mIsOnLeftEdge;
     private int mLeftInset;
     private boolean mLogGesture;
     private final int mLongPressTimeout;
-    /* access modifiers changed from: private */
-    public final Executor mMainExecutor;
-    /* access modifiers changed from: private */
-    public final OverviewProxyService mOverviewProxyService;
+    private final Executor mMainExecutor;
+    private final OverviewProxyService mOverviewProxyService;
     private final PluginManager mPluginManager;
     private OverviewProxyService.OverviewProxyListener mQuickSwitchListener = new OverviewProxyService.OverviewProxyListener() {
+        /* class com.android.systemui.statusbar.phone.EdgeBackGestureHandler.AnonymousClass2 */
+
+        @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
         public void onQuickSwitchToNewTask(int i) {
-            int unused = EdgeBackGestureHandler.this.mStartingQuickstepRotation = i;
+            EdgeBackGestureHandler.this.mStartingQuickstepRotation = i;
             EdgeBackGestureHandler.this.updateDisabledForQuickstep();
         }
     };
     private int mRightInset;
-    /* access modifiers changed from: private */
-    public int mStartingQuickstepRotation = -1;
+    private int mStartingQuickstepRotation = -1;
     private SysUiState.SysUiStateCallback mStateCallback;
     private final Runnable mStateChangeCallback;
-    /* access modifiers changed from: private */
-    public int mSysUiFlags;
+    private int mSysUiFlags;
     private TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
+        /* class com.android.systemui.statusbar.phone.EdgeBackGestureHandler.AnonymousClass3 */
+
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskStackChanged() {
             EdgeBackGestureHandler edgeBackGestureHandler = EdgeBackGestureHandler.this;
-            boolean unused = edgeBackGestureHandler.mGestureBlockingActivityRunning = edgeBackGestureHandler.isGestureBlockingActivityRunning();
+            edgeBackGestureHandler.mGestureBlockingActivityRunning = edgeBackGestureHandler.isGestureBlockingActivityRunning();
         }
     };
     private boolean mThresholdCrossed;
     private float mTouchSlop;
-    /* access modifiers changed from: private */
-    public final Region mUnrestrictedExcludeRegion = new Region();
+    private final Region mUnrestrictedExcludeRegion = new Region();
 
     public void onDisplayAdded(int i) {
     }
@@ -161,6 +159,9 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
         this.mLogGesture = false;
         this.mInRejectedExclusion = false;
         this.mBackCallback = new NavigationEdgeBackPlugin.BackCallback() {
+            /* class com.android.systemui.statusbar.phone.EdgeBackGestureHandler.AnonymousClass4 */
+
+            @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin.BackCallback
             public void triggerBack() {
                 EdgeBackGestureHandler.this.sendEvent(0, 4);
                 int i = 1;
@@ -173,14 +174,18 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
                 edgeBackGestureHandler.logGesture(i);
             }
 
+            @Override // com.android.systemui.plugins.NavigationEdgeBackPlugin.BackCallback
             public void cancelBack() {
                 EdgeBackGestureHandler.this.logGesture(4);
                 EdgeBackGestureHandler.this.mOverviewProxyService.notifyBackAction(false, (int) EdgeBackGestureHandler.this.mDownPoint.x, (int) EdgeBackGestureHandler.this.mDownPoint.y, false, !EdgeBackGestureHandler.this.mIsOnLeftEdge);
             }
         };
         this.mStateCallback = new SysUiState.SysUiStateCallback() {
+            /* class com.android.systemui.statusbar.phone.EdgeBackGestureHandler.AnonymousClass5 */
+
+            @Override // com.android.systemui.model.SysUiState.SysUiStateCallback
             public void onSystemUiStateChanged(int i) {
-                int unused = EdgeBackGestureHandler.this.mSysUiFlags = i;
+                EdgeBackGestureHandler.this.mSysUiFlags = i;
             }
         };
         this.mContext = context;
@@ -198,8 +203,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
                 if (identifier == 0) {
                     Log.e("EdgeBackGestureHandler", "No resource found for gesture-blocking activities");
                 } else {
-                    for (String unflattenFromString2 : resourcesForApplication.getStringArray(identifier)) {
-                        this.mGestureBlockingActivities.add(ComponentName.unflattenFromString(unflattenFromString2));
+                    for (String str : resourcesForApplication.getStringArray(identifier)) {
+                        this.mGestureBlockingActivities.add(ComponentName.unflattenFromString(str));
                     }
                 }
             } catch (PackageManager.NameNotFoundException e) {
@@ -209,8 +214,10 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
         ((ProtoTracer) Dependency.get(ProtoTracer.class)).add(this);
         this.mLongPressTimeout = Math.min(MAX_LONG_PRESS_TIMEOUT, ViewConfiguration.getLongPressTimeout());
         this.mGestureNavigationSettingsObserver = new GestureNavigationSettingsObserver(this.mContext.getMainThreadHandler(), this.mContext, new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$EdgeBackGestureHandler$_LuW15YEeoCQlkaEsBj7DgfSfSI */
+
             public final void run() {
-                EdgeBackGestureHandler.this.onNavigationSettingsChanged();
+                EdgeBackGestureHandler.lambda$_LuW15YEeoCQlkaEsBj7DgfSfSI(EdgeBackGestureHandler.this);
             }
         });
         updateCurrentUserResources();
@@ -236,6 +243,7 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
         }
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(int i) {
         updateIsEnabled();
         updateCurrentUserResources();
@@ -310,7 +318,7 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
                 this.mInputMonitor = InputManager.getInstance().monitorGestureInput("edge-swipe", this.mDisplayId);
                 this.mInputEventReceiver = new SysUiInputEventReceiver(this.mInputMonitor.getInputChannel(), Looper.getMainLooper());
                 setEdgeBackPlugin(new NavigationBarEdgePanel(this.mContext));
-                this.mPluginManager.addPluginListener(this, (Class<?>) NavigationEdgeBackPlugin.class, false);
+                this.mPluginManager.addPluginListener((PluginListener) this, NavigationEdgeBackPlugin.class, false);
             }
         }
     }
@@ -350,7 +358,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     }
 
     /* access modifiers changed from: private */
-    public void onInputEvent(InputEvent inputEvent) {
+    /* access modifiers changed from: public */
+    private void onInputEvent(InputEvent inputEvent) {
         if (inputEvent instanceof MotionEvent) {
             onMotionEvent((MotionEvent) inputEvent);
         }
@@ -396,16 +405,16 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     }
 
     /* access modifiers changed from: private */
-    public void logGesture(int i) {
+    /* access modifiers changed from: public */
+    private void logGesture(int i) {
         if (this.mLogGesture) {
             this.mLogGesture = false;
             int i2 = (int) this.mDownPoint.y;
             int i3 = this.mIsOnLeftEdge ? 1 : 2;
             PointF pointF = this.mDownPoint;
-            int i4 = (int) pointF.x;
-            int i5 = (int) pointF.y;
+            int i4 = (int) pointF.y;
             PointF pointF2 = this.mEndPoint;
-            SysUiStatsLog.write(224, i, i2, i3, i4, i5, (int) pointF2.x, (int) pointF2.y, this.mEdgeWidthLeft + this.mLeftInset, this.mDisplaySize.x - (this.mEdgeWidthRight + this.mRightInset));
+            SysUiStatsLog.write(224, i, i2, i3, (int) pointF.x, i4, (int) pointF2.x, (int) pointF2.y, this.mEdgeWidthLeft + this.mLeftInset, this.mDisplaySize.x - (this.mEdgeWidthRight + this.mRightInset));
         }
     }
 
@@ -476,7 +485,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     }
 
     /* access modifiers changed from: private */
-    public void updateDisabledForQuickstep() {
+    /* access modifiers changed from: public */
+    private void updateDisabledForQuickstep() {
         int rotation = this.mContext.getResources().getConfiguration().windowConfiguration.getRotation();
         int i = this.mStartingQuickstepRotation;
         this.mDisabledForQuickstep = i > -1 && i != rotation;
@@ -500,7 +510,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     }
 
     /* access modifiers changed from: private */
-    public void sendEvent(int i, int i2) {
+    /* access modifiers changed from: public */
+    private void sendEvent(int i, int i2) {
         long uptimeMillis = SystemClock.uptimeMillis();
         KeyEvent keyEvent = new KeyEvent(uptimeMillis, uptimeMillis, i, i2, 0, 0, -1, 0, 72, 257);
         int expandedDisplayId = ((BubbleController) Dependency.get(BubbleController.class)).getExpandedDisplayId(this.mContext);
@@ -535,7 +546,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     }
 
     /* access modifiers changed from: private */
-    public boolean isGestureBlockingActivityRunning() {
+    /* access modifiers changed from: public */
+    private boolean isGestureBlockingActivityRunning() {
         ComponentName componentName;
         ActivityManager.RunningTaskInfo runningTask = ActivityManagerWrapper.getInstance().getRunningTask();
         if (runningTask == null) {
@@ -553,7 +565,8 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
         systemUiTraceProto.edgeBackGestureHandler.allowGesture = this.mAllowGesture;
     }
 
-    class SysUiInputEventReceiver extends InputEventReceiver {
+    /* access modifiers changed from: package-private */
+    public class SysUiInputEventReceiver extends InputEventReceiver {
         SysUiInputEventReceiver(InputChannel inputChannel, Looper looper) {
             super(inputChannel, looper);
         }

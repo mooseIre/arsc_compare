@@ -15,8 +15,9 @@ final class ControlsBindingControllerImpl$LoadSubscriber$onSubscribe$1 extends L
         this.this$0 = loadSubscriber;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
-        ControlsProviderLifecycleManager access$getCurrentProvider$p = this.this$0.this$0.currentProvider;
+        ControlsProviderLifecycleManager access$getCurrentProvider$p = ControlsBindingControllerImpl.access$getCurrentProvider$p(this.this$0.this$0);
         if (access$getCurrentProvider$p != null) {
             access$getCurrentProvider$p.cancelSubscription(ControlsBindingControllerImpl.LoadSubscriber.access$getSubscription$p(this.this$0));
         }

@@ -15,20 +15,26 @@ final /* synthetic */ class ControlsProviderSelectorActivity$onStart$2 extends F
         super(1, controlsController);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getName() {
         return "countFavoritesForComponent";
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final KDeclarationContainer getOwner() {
         return Reflection.getOrCreateKotlinClass(ControlsController.class);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getSignature() {
         return "countFavoritesForComponent(Landroid/content/ComponentName;)I";
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        return Integer.valueOf(invoke((ComponentName) obj));
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Integer invoke(ComponentName componentName) {
+        return Integer.valueOf(invoke(componentName));
     }
 
     public final int invoke(@NotNull ComponentName componentName) {

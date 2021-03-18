@@ -11,6 +11,7 @@ public final class SystemActions_Factory implements Factory<SystemActions> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SystemActions get() {
         return provideInstance(this.contextProvider);
     }

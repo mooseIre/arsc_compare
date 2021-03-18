@@ -39,7 +39,7 @@ public class SlashImageView extends ImageView {
     public void setImageDrawable(Drawable drawable) {
         if (drawable == null) {
             this.mSlash = null;
-            super.setImageDrawable((Drawable) null);
+            super.setImageDrawable(null);
             return;
         }
         SlashDrawable slashDrawable = this.mSlash;

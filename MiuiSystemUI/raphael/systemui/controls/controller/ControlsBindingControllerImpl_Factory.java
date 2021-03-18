@@ -17,6 +17,7 @@ public final class ControlsBindingControllerImpl_Factory implements Factory<Cont
         this.controllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ControlsBindingControllerImpl get() {
         return provideInstance(this.contextProvider, this.backgroundExecutorProvider, this.controllerProvider);
     }

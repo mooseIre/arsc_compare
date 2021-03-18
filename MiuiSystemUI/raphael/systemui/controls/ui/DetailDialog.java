@@ -50,6 +50,7 @@ public final class DetailDialog extends Dialog {
         ImageView imageView = (ImageView) requireViewById(C0015R$id.control_detail_open_in_app);
         imageView.setOnClickListener(new DetailDialog$$special$$inlined$apply$lambda$2(imageView, this));
         getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener(this) {
+            /* class com.android.systemui.controls.ui.DetailDialog.AnonymousClass4 */
             final /* synthetic */ DetailDialog this$0;
 
             {

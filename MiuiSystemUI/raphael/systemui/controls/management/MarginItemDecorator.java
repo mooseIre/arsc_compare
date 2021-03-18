@@ -18,6 +18,7 @@ public final class MarginItemDecorator extends RecyclerView.ItemDecoration {
         this.sideMargins = i2;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration
     public void getItemOffsets(@NotNull Rect rect, @NotNull View view, @NotNull RecyclerView recyclerView, @NotNull RecyclerView.State state) {
         Intrinsics.checkParameterIsNotNull(rect, "outRect");
         Intrinsics.checkParameterIsNotNull(view, "view");

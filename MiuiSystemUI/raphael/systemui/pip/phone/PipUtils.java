@@ -17,7 +17,7 @@ public class PipUtils {
             if (!(stackInfo == null || stackInfo.taskIds == null || stackInfo.taskIds.length <= 0)) {
                 for (int length = stackInfo.taskNames.length - 1; length >= 0; length--) {
                     ComponentName unflattenFromString = ComponentName.unflattenFromString(stackInfo.taskNames[length]);
-                    if (unflattenFromString != null && !unflattenFromString.getPackageName().equals(packageName)) {
+                    if (!(unflattenFromString == null || unflattenFromString.getPackageName().equals(packageName))) {
                         return new Pair<>(unflattenFromString, Integer.valueOf(stackInfo.taskUserIds[length]));
                     }
                 }
@@ -25,6 +25,6 @@ public class PipUtils {
         } catch (RemoteException unused) {
             Log.w("PipUtils", "Unable to get pinned stack.");
         }
-        return new Pair<>((Object) null, 0);
+        return new Pair<>(null, 0);
     }
 }

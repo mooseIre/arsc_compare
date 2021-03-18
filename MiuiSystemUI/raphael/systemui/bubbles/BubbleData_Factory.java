@@ -11,6 +11,7 @@ public final class BubbleData_Factory implements Factory<BubbleData> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BubbleData get() {
         return provideInstance(this.contextProvider);
     }

@@ -65,6 +65,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
         }
     }
 
+    @Override // androidx.preference.PreferenceFragment.OnPreferenceStartFragmentCallback
     public boolean onPreferenceStartFragment(PreferenceFragment preferenceFragment, Preference preference) {
         try {
             Fragment fragment = (Fragment) Class.forName(preference.getFragment()).newInstance();
@@ -83,6 +84,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
         }
     }
 
+    @Override // androidx.preference.PreferenceFragment.OnPreferenceStartScreenCallback
     public boolean onPreferenceStartScreen(PreferenceFragment preferenceFragment, PreferenceScreen preferenceScreen) {
         FragmentTransaction beginTransaction = getFragmentManager().beginTransaction();
         SubSettingsFragment subSettingsFragment = new SubSettingsFragment();
@@ -99,6 +101,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
     public static class SubSettingsFragment extends PreferenceFragment {
         private PreferenceScreen mParentScreen;
 
+        @Override // androidx.preference.PreferenceFragment
         public void onCreatePreferences(Bundle bundle, String str) {
             this.mParentScreen = (PreferenceScreen) ((PreferenceFragment) getTargetFragment()).getPreferenceScreen().findPreference(str);
             PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(getPreferenceManager().getContext());

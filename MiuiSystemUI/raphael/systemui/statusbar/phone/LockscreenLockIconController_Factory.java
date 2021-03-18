@@ -46,6 +46,7 @@ public final class LockscreenLockIconController_Factory implements Factory<Locks
         this.headsUpManagerPhoneProvider = provider14;
     }
 
+    @Override // javax.inject.Provider
     public LockscreenLockIconController get() {
         return provideInstance(this.lockscreenGestureLoggerProvider, this.keyguardUpdateMonitorProvider, this.lockPatternUtilsProvider, this.shadeControllerProvider, this.accessibilityControllerProvider, this.keyguardIndicationControllerProvider, this.statusBarStateControllerProvider, this.configurationControllerProvider, this.notificationWakeUpCoordinatorProvider, this.keyguardBypassControllerProvider, this.dockManagerProvider, this.keyguardStateControllerProvider, this.resourcesProvider, this.headsUpManagerPhoneProvider);
     }

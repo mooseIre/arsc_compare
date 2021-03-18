@@ -32,6 +32,7 @@ public final class BypassHeadsUpNotifier_Factory implements Factory<BypassHeadsU
         this.tunerServiceProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public BypassHeadsUpNotifier get() {
         return provideInstance(this.contextProvider, this.bypassControllerProvider, this.statusBarStateControllerProvider, this.headsUpManagerProvider, this.notificationLockscreenUserManagerProvider, this.mediaManagerProvider, this.entryManagerProvider, this.tunerServiceProvider);
     }

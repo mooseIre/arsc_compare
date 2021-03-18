@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$0E0fwzH9SS6aB9lL5npMzupI4Q implement
     private /* synthetic */ $$Lambda$0E0fwzH9SS6aB9lL5npMzupI4Q() {
     }
 
+    @Override // com.android.systemui.bubbles.BubbleData.TimeSource
     public final long currentTimeMillis() {
         return System.currentTimeMillis();
     }

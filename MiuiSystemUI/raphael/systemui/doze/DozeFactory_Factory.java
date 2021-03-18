@@ -56,6 +56,7 @@ public final class DozeFactory_Factory implements Factory<DozeFactory> {
         this.dozeHostProvider = provider17;
     }
 
+    @Override // javax.inject.Provider
     public DozeFactory get() {
         return provideInstance(this.falsingManagerProvider, this.dozeLogProvider, this.dozeParametersProvider, this.batteryControllerProvider, this.asyncSensorManagerProvider, this.alarmManagerProvider, this.wakefulnessLifecycleProvider, this.keyguardUpdateMonitorProvider, this.dockManagerProvider, this.wallpaperManagerProvider, this.proximitySensorProvider, this.proximityCheckProvider, this.delayedWakeLockBuilderProvider, this.handlerProvider, this.biometricUnlockControllerProvider, this.broadcastDispatcherProvider, this.dozeHostProvider);
     }

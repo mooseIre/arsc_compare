@@ -2,8 +2,9 @@ package com.android.systemui.controls.controller;
 
 import android.util.Log;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsProviderLifecycleManager.kt */
-final class ControlsProviderLifecycleManager$bindService$1 implements Runnable {
+public final class ControlsProviderLifecycleManager$bindService$1 implements Runnable {
     final /* synthetic */ boolean $bind;
     final /* synthetic */ ControlsProviderLifecycleManager this$0;
 
@@ -15,16 +16,16 @@ final class ControlsProviderLifecycleManager$bindService$1 implements Runnable {
     public final void run() {
         this.this$0.requiresBound = this.$bind;
         if (!this.$bind) {
-            String access$getTAG$p = this.this$0.TAG;
-            Log.d(access$getTAG$p, "Unbinding service " + this.this$0.intent);
+            String str = this.this$0.TAG;
+            Log.d(str, "Unbinding service " + this.this$0.intent);
             this.this$0.bindTryCount = 0;
             if (this.this$0.wrapper != null) {
                 this.this$0.context.unbindService(this.this$0.serviceConnection);
             }
             this.this$0.wrapper = null;
         } else if (this.this$0.bindTryCount != 5) {
-            String access$getTAG$p2 = this.this$0.TAG;
-            Log.d(access$getTAG$p2, "Binding service " + this.this$0.intent);
+            String str2 = this.this$0.TAG;
+            Log.d(str2, "Binding service " + this.this$0.intent);
             ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0;
             controlsProviderLifecycleManager.bindTryCount = controlsProviderLifecycleManager.bindTryCount + 1;
             try {

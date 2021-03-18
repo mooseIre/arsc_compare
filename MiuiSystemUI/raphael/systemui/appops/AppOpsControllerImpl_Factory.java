@@ -17,6 +17,7 @@ public final class AppOpsControllerImpl_Factory implements Factory<AppOpsControl
         this.dumpManagerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public AppOpsControllerImpl get() {
         return provideInstance(this.contextProvider, this.bgLooperProvider, this.dumpManagerProvider);
     }

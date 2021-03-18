@@ -1,5 +1,6 @@
 package com.android.systemui.media;
 
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,7 +11,7 @@ final class CacheKey {
     private int widthMeasureSpec;
 
     public CacheKey() {
-        this(0, 0, 0.0f, 7, (DefaultConstructorMarker) null);
+        this(0, 0, 0.0f, 7, null);
     }
 
     public static /* synthetic */ CacheKey copy$default(CacheKey cacheKey, int i, int i2, float f, int i3, Object obj) {

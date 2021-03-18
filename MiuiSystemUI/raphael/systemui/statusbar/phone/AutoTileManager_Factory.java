@@ -34,6 +34,7 @@ public final class AutoTileManager_Factory implements Factory<AutoTileManager> {
         this.castControllerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public AutoTileManager get() {
         return provideInstance(this.contextProvider, this.autoAddTrackerBuilderProvider, this.hostProvider, this.handlerProvider, this.hotspotControllerProvider, this.dataSaverControllerProvider, this.managedProfileControllerProvider, this.nightDisplayListenerProvider, this.castControllerProvider);
     }

@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public final class ControlsControllerImpl$restoreFinishedReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ ControlsControllerImpl this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     ControlsControllerImpl$restoreFinishedReceiver$1(ControlsControllerImpl controlsControllerImpl) {
         this.this$0 = controlsControllerImpl;
     }
@@ -18,7 +19,7 @@ public final class ControlsControllerImpl$restoreFinishedReceiver$1 extends Broa
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
         if (intent.getIntExtra("android.intent.extra.USER_ID", -10000) == this.this$0.getCurrentUserId()) {
-            this.this$0.executor.execute(new ControlsControllerImpl$restoreFinishedReceiver$1$onReceive$1(this));
+            ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$restoreFinishedReceiver$1$onReceive$1(this));
         }
     }
 }

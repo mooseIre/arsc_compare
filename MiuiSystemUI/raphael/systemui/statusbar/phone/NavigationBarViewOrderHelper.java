@@ -6,13 +6,14 @@ import com.android.systemui.C0015R$id;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
+import kotlin.collections.SetsKt__SetsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: KeyOrderObserver.kt */
 public final class NavigationBarViewOrderHelper {
     public static final NavigationBarViewOrderHelper INSTANCE = new NavigationBarViewOrderHelper();
-    private static final Set<Integer> sKeyIdSet = SetsKt__SetsKt.setOf(Integer.valueOf(C0015R$id.menu), Integer.valueOf(C0015R$id.recent_apps), Integer.valueOf(C0015R$id.back));
+    private static final Set<Integer> sKeyIdSet = SetsKt__SetsKt.setOf((Object[]) new Integer[]{Integer.valueOf(C0015R$id.menu), Integer.valueOf(C0015R$id.recent_apps), Integer.valueOf(C0015R$id.back)});
 
     private NavigationBarViewOrderHelper() {
     }

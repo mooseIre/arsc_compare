@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -56,202 +57,98 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
         return new Intent(context, RecordingService.class).setAction("com.android.systemui.screenrecord.START").putExtra("extra_resultCode", i).putExtra("extra_useAudio", i2).putExtra("extra_showTaps", z);
     }
 
-    /* JADX WARNING: Can't fix incorrect switch cases order */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public int onStartCommand(android.content.Intent r11, int r12, int r13) {
-        /*
-            r10 = this;
-            r12 = 2
-            if (r11 != 0) goto L_0x0004
-            return r12
-        L_0x0004:
-            java.lang.String r13 = r11.getAction()
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder
-            r0.<init>()
-            java.lang.String r1 = "onStartCommand "
-            r0.append(r1)
-            r0.append(r13)
-            java.lang.String r0 = r0.toString()
-            java.lang.String r1 = "RecordingService"
-            android.util.Log.d(r1, r0)
-            com.android.systemui.settings.CurrentUserContextTracker r0 = r10.mUserContextTracker
-            android.content.Context r0 = r0.getCurrentUserContext()
-            int r0 = r0.getUserId()
-            android.os.UserHandle r2 = new android.os.UserHandle
-            r2.<init>(r0)
-            int r3 = r13.hashCode()
-            java.lang.String r4 = "com.android.systemui.screenrecord.STOP_FROM_NOTIF"
-            r5 = 4
-            r6 = 3
-            r7 = -1
-            r8 = 0
-            r9 = 1
-            switch(r3) {
-                case -1688140755: goto L_0x0062;
-                case -1687783248: goto L_0x0058;
-                case -1224647939: goto L_0x004e;
-                case -470086188: goto L_0x0044;
-                case -288359034: goto L_0x003c;
-                default: goto L_0x003b;
+    /* JADX INFO: Can't fix incorrect switch cases order, some code will duplicate */
+    public int onStartCommand(Intent intent, int i, int i2) {
+        boolean z;
+        if (intent == null) {
+            return 2;
+        }
+        String action = intent.getAction();
+        Log.d("RecordingService", "onStartCommand " + action);
+        int userId = this.mUserContextTracker.getCurrentUserContext().getUserId();
+        UserHandle userHandle = new UserHandle(userId);
+        boolean z2 = false;
+        switch (action.hashCode()) {
+            case -1688140755:
+                if (action.equals("com.android.systemui.screenrecord.SHARE")) {
+                    z = true;
+                    break;
+                }
+                z = true;
+                break;
+            case -1687783248:
+                if (action.equals("com.android.systemui.screenrecord.START")) {
+                    z = false;
+                    break;
+                }
+                z = true;
+                break;
+            case -1224647939:
+                if (action.equals("com.android.systemui.screenrecord.DELETE")) {
+                    z = true;
+                    break;
+                }
+                z = true;
+                break;
+            case -470086188:
+                if (action.equals("com.android.systemui.screenrecord.STOP")) {
+                    z = true;
+                    break;
+                }
+                z = true;
+                break;
+            case -288359034:
+                if (action.equals("com.android.systemui.screenrecord.STOP_FROM_NOTIF")) {
+                    z = true;
+                    break;
+                }
+                z = true;
+                break;
+            default:
+                z = true;
+                break;
+        }
+        if (!z) {
+            this.mAudioSource = ScreenRecordingAudioSource.values()[intent.getIntExtra("extra_useAudio", 0)];
+            Log.d("RecordingService", "recording with audio source" + this.mAudioSource);
+            this.mShowTaps = intent.getBooleanExtra("extra_showTaps", false);
+            if (Settings.System.getInt(getApplicationContext().getContentResolver(), "show_touches", 0) != 0) {
+                z2 = true;
             }
-        L_0x003b:
-            goto L_0x006c
-        L_0x003c:
-            boolean r3 = r13.equals(r4)
-            if (r3 == 0) goto L_0x006c
-            r3 = r9
-            goto L_0x006d
-        L_0x0044:
-            java.lang.String r3 = "com.android.systemui.screenrecord.STOP"
-            boolean r3 = r13.equals(r3)
-            if (r3 == 0) goto L_0x006c
-            r3 = r12
-            goto L_0x006d
-        L_0x004e:
-            java.lang.String r3 = "com.android.systemui.screenrecord.DELETE"
-            boolean r3 = r13.equals(r3)
-            if (r3 == 0) goto L_0x006c
-            r3 = r5
-            goto L_0x006d
-        L_0x0058:
-            java.lang.String r3 = "com.android.systemui.screenrecord.START"
-            boolean r3 = r13.equals(r3)
-            if (r3 == 0) goto L_0x006c
-            r3 = r8
-            goto L_0x006d
-        L_0x0062:
-            java.lang.String r3 = "com.android.systemui.screenrecord.SHARE"
-            boolean r3 = r13.equals(r3)
-            if (r3 == 0) goto L_0x006c
-            r3 = r6
-            goto L_0x006d
-        L_0x006c:
-            r3 = r7
-        L_0x006d:
-            if (r3 == 0) goto L_0x0145
-            if (r3 == r9) goto L_0x00fc
-            if (r3 == r12) goto L_0x00fc
-            r12 = 4273(0x10b1, float:5.988E-42)
-            java.lang.String r13 = "android.intent.action.CLOSE_SYSTEM_DIALOGS"
-            java.lang.String r0 = "extra_path"
-            r4 = 0
-            if (r3 == r6) goto L_0x00bb
-            if (r3 == r5) goto L_0x0080
-            goto L_0x019b
-        L_0x0080:
-            android.content.Intent r3 = new android.content.Intent
-            r3.<init>(r13)
-            r10.sendBroadcast(r3)
-            android.content.ContentResolver r13 = r10.getContentResolver()
-            java.lang.String r11 = r11.getStringExtra(r0)
-            android.net.Uri r11 = android.net.Uri.parse(r11)
-            r13.delete(r11, r4, r4)
-            int r13 = com.android.systemui.C0021R$string.screenrecord_delete_description
-            android.widget.Toast r13 = android.widget.Toast.makeText(r10, r13, r9)
-            r13.show()
-            android.app.NotificationManager r10 = r10.mNotificationManager
-            r10.cancelAsUser(r4, r12, r2)
-            java.lang.StringBuilder r10 = new java.lang.StringBuilder
-            r10.<init>()
-            java.lang.String r12 = "Deleted recording "
-            r10.append(r12)
-            r10.append(r11)
-            java.lang.String r10 = r10.toString()
-            android.util.Log.d(r1, r10)
-            goto L_0x019b
-        L_0x00bb:
-            java.lang.String r11 = r11.getStringExtra(r0)
-            android.net.Uri r11 = android.net.Uri.parse(r11)
-            android.content.Intent r0 = new android.content.Intent
-            java.lang.String r1 = "android.intent.action.SEND"
-            r0.<init>(r1)
-            java.lang.String r1 = "video/mp4"
-            android.content.Intent r0 = r0.setType(r1)
-            java.lang.String r1 = "android.intent.extra.STREAM"
-            android.content.Intent r11 = r0.putExtra(r1, r11)
-            android.content.res.Resources r0 = r10.getResources()
-            int r1 = com.android.systemui.C0021R$string.screenrecord_share_label
-            java.lang.String r0 = r0.getString(r1)
-            android.content.Intent r1 = new android.content.Intent
-            r1.<init>(r13)
-            r10.sendBroadcast(r1)
-            android.app.NotificationManager r13 = r10.mNotificationManager
-            r13.cancelAsUser(r4, r12, r2)
-            android.content.Intent r11 = android.content.Intent.createChooser(r11, r0)
-            r12 = 268435456(0x10000000, float:2.5243549E-29)
-            android.content.Intent r11 = r11.setFlags(r12)
-            r10.startActivity(r11)
-            goto L_0x019b
-        L_0x00fc:
-            boolean r12 = r4.equals(r13)
-            if (r12 == 0) goto L_0x010a
-            com.android.internal.logging.UiEventLogger r12 = r10.mUiEventLogger
-            com.android.systemui.screenrecord.Events$ScreenRecordEvent r13 = com.android.systemui.screenrecord.Events$ScreenRecordEvent.SCREEN_RECORD_END_NOTIFICATION
-            r12.log(r13)
-            goto L_0x0111
-        L_0x010a:
-            com.android.internal.logging.UiEventLogger r12 = r10.mUiEventLogger
-            com.android.systemui.screenrecord.Events$ScreenRecordEvent r13 = com.android.systemui.screenrecord.Events$ScreenRecordEvent.SCREEN_RECORD_END_QS_TILE
-            r12.log(r13)
-        L_0x0111:
-            java.lang.String r12 = "android.intent.extra.user_handle"
-            int r11 = r11.getIntExtra(r12, r7)
-            if (r11 != r7) goto L_0x0123
-            com.android.systemui.settings.CurrentUserContextTracker r11 = r10.mUserContextTracker
-            android.content.Context r11 = r11.getCurrentUserContext()
-            int r11 = r11.getUserId()
-        L_0x0123:
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder
-            r12.<init>()
-            java.lang.String r13 = "notifying for user "
-            r12.append(r13)
-            r12.append(r11)
-            java.lang.String r12 = r12.toString()
-            android.util.Log.d(r1, r12)
-            r10.stopRecording(r11)
-            android.app.NotificationManager r11 = r10.mNotificationManager
-            r12 = 4274(0x10b2, float:5.989E-42)
-            r11.cancel(r12)
-            r10.stopSelf()
-            goto L_0x019b
-        L_0x0145:
-            com.android.systemui.screenrecord.ScreenRecordingAudioSource[] r12 = com.android.systemui.screenrecord.ScreenRecordingAudioSource.values()
-            java.lang.String r13 = "extra_useAudio"
-            int r13 = r11.getIntExtra(r13, r8)
-            r12 = r12[r13]
-            r10.mAudioSource = r12
-            java.lang.StringBuilder r12 = new java.lang.StringBuilder
-            r12.<init>()
-            java.lang.String r13 = "recording with audio source"
-            r12.append(r13)
-            com.android.systemui.screenrecord.ScreenRecordingAudioSource r13 = r10.mAudioSource
-            r12.append(r13)
-            java.lang.String r12 = r12.toString()
-            android.util.Log.d(r1, r12)
-            java.lang.String r12 = "extra_showTaps"
-            boolean r11 = r11.getBooleanExtra(r12, r8)
-            r10.mShowTaps = r11
-            android.content.Context r11 = r10.getApplicationContext()
-            android.content.ContentResolver r11 = r11.getContentResolver()
-            java.lang.String r12 = "show_touches"
-            int r11 = android.provider.Settings.System.getInt(r11, r12, r8)
-            if (r11 == 0) goto L_0x0182
-            r8 = r9
-        L_0x0182:
-            r10.mOriginalShowTaps = r8
-            boolean r11 = r10.mShowTaps
-            r10.setTapsVisible(r11)
-            com.android.systemui.screenrecord.ScreenMediaRecorder r11 = new com.android.systemui.screenrecord.ScreenMediaRecorder
-            com.android.systemui.settings.CurrentUserContextTracker r12 = r10.mUserContextTracker
-            android.content.Context r12 = r12.getCurrentUserContext()
-            com.android.systemui.screenrecord.ScreenRecordingAudioSource r13 = r10.mAudioSource
-            r11.<init>(r12, r0, r13, r10)
-            r10.mRecorder = r11
-            r10.startRecording()
-        L_0x019b:
-            return r9
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenrecord.RecordingService.onStartCommand(android.content.Intent, int, int):int");
+            this.mOriginalShowTaps = z2;
+            setTapsVisible(this.mShowTaps);
+            this.mRecorder = new ScreenMediaRecorder(this.mUserContextTracker.getCurrentUserContext(), userId, this.mAudioSource, this);
+            startRecording();
+        } else if (z || z) {
+            if ("com.android.systemui.screenrecord.STOP_FROM_NOTIF".equals(action)) {
+                this.mUiEventLogger.log(Events$ScreenRecordEvent.SCREEN_RECORD_END_NOTIFICATION);
+            } else {
+                this.mUiEventLogger.log(Events$ScreenRecordEvent.SCREEN_RECORD_END_QS_TILE);
+            }
+            int intExtra = intent.getIntExtra("android.intent.extra.user_handle", -1);
+            if (intExtra == -1) {
+                intExtra = this.mUserContextTracker.getCurrentUserContext().getUserId();
+            }
+            Log.d("RecordingService", "notifying for user " + intExtra);
+            stopRecording(intExtra);
+            this.mNotificationManager.cancel(4274);
+            stopSelf();
+        } else if (z) {
+            Intent putExtra = new Intent("android.intent.action.SEND").setType("video/mp4").putExtra("android.intent.extra.STREAM", Uri.parse(intent.getStringExtra("extra_path")));
+            String string = getResources().getString(C0021R$string.screenrecord_share_label);
+            sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
+            this.mNotificationManager.cancelAsUser(null, 4273, userHandle);
+            startActivity(Intent.createChooser(putExtra, string).setFlags(268435456));
+        } else if (z) {
+            sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
+            ContentResolver contentResolver = getContentResolver();
+            Uri parse = Uri.parse(intent.getStringExtra("extra_path"));
+            contentResolver.delete(parse, null, null);
+            Toast.makeText(this, C0021R$string.screenrecord_delete_description, 1).show();
+            this.mNotificationManager.cancelAsUser(null, 4273, userHandle);
+            Log.d("RecordingService", "Deleted recording " + parse);
+        }
+        return 1;
     }
 
     public void onCreate() {
@@ -341,8 +238,9 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
 
     private void saveRecording(int i) {
         UserHandle userHandle = new UserHandle(i);
-        this.mNotificationManager.notifyAsUser((String) null, 4275, createProcessingNotification(), userHandle);
+        this.mNotificationManager.notifyAsUser(null, 4275, createProcessingNotification(), userHandle);
         this.mLongExecutor.execute(new Runnable(userHandle) {
+            /* class com.android.systemui.screenrecord.$$Lambda$RecordingService$VCwgNNzpq2HdyNZyJT8KtYGVm5w */
             public final /* synthetic */ UserHandle f$1;
 
             {
@@ -362,16 +260,16 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             Log.d("RecordingService", "saving recording");
             Notification createSaveNotification = createSaveNotification(getRecorder().save());
             if (!this.mController.isRecording()) {
-                this.mNotificationManager.notifyAsUser((String) null, 4273, createSaveNotification, userHandle);
+                this.mNotificationManager.notifyAsUser(null, 4273, createSaveNotification, userHandle);
             }
         } catch (IOException e) {
             Log.e("RecordingService", "Error saving screen recording: " + e.getMessage());
             Toast.makeText(this, C0021R$string.screenrecord_delete_error, 1).show();
         } catch (Throwable th) {
-            this.mNotificationManager.cancelAsUser((String) null, 4275, userHandle);
+            this.mNotificationManager.cancelAsUser(null, 4275, userHandle);
             throw th;
         }
-        this.mNotificationManager.cancelAsUser((String) null, 4275, userHandle);
+        this.mNotificationManager.cancelAsUser(null, 4275, userHandle);
     }
 
     private void setTapsVisible(boolean z) {

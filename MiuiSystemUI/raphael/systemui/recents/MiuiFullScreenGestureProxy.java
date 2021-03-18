@@ -16,18 +16,18 @@ import java.util.ArrayList;
 public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
     public static final ArrayList<String> sMiuiHomePkgNameList;
     private CommandQueue mCommandQueue;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private LauncherPackageMonitor mPackageMonitor;
-    /* access modifiers changed from: private */
-    public boolean mUseMiuiHomeAsDefaultHome;
+    private boolean mUseMiuiHomeAsDefaultHome;
     private final BroadcastReceiver mUserPreferenceChangeReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.recents.MiuiFullScreenGestureProxy.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             MiuiFullScreenGestureProxy miuiFullScreenGestureProxy = MiuiFullScreenGestureProxy.this;
-            boolean access$200 = miuiFullScreenGestureProxy.useMiuiHomeAsDefaultHome(miuiFullScreenGestureProxy.mContext);
-            Log.w("MiuiFullScreenGestureProxy", "mUserPreferenceChangeReceiver   useMiuiHomeAsDefaultHome=" + access$200);
-            if (MiuiFullScreenGestureProxy.this.mUseMiuiHomeAsDefaultHome != access$200) {
-                MiuiFullScreenGestureProxy.this.updateDefaultHome(access$200);
+            boolean useMiuiHomeAsDefaultHome = miuiFullScreenGestureProxy.useMiuiHomeAsDefaultHome(miuiFullScreenGestureProxy.mContext);
+            Log.w("MiuiFullScreenGestureProxy", "mUserPreferenceChangeReceiver   useMiuiHomeAsDefaultHome=" + useMiuiHomeAsDefaultHome);
+            if (MiuiFullScreenGestureProxy.this.mUseMiuiHomeAsDefaultHome != useMiuiHomeAsDefaultHome) {
+                MiuiFullScreenGestureProxy.this.updateDefaultHome(useMiuiHomeAsDefaultHome);
             }
         }
     };
@@ -55,7 +55,8 @@ public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
     }
 
     /* access modifiers changed from: private */
-    public boolean useMiuiHomeAsDefaultHome(Context context) {
+    /* access modifiers changed from: public */
+    private boolean useMiuiHomeAsDefaultHome(Context context) {
         ActivityInfo activityInfo;
         String str;
         ResolveInfo resolveActivity = context.getPackageManager().resolveActivity(new Intent("android.intent.action.MAIN").addCategory("android.intent.category.HOME"), 786432);
@@ -66,7 +67,8 @@ public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
     }
 
     /* access modifiers changed from: private */
-    public void updateDefaultHome(boolean z) {
+    /* access modifiers changed from: public */
+    private void updateDefaultHome(boolean z) {
         Log.w("MiuiFullScreenGestureProxy", "updateDefaultHome   useMiuiHomeAsDefaultHome=" + z);
         this.mUseMiuiHomeAsDefaultHome = z;
         boolean z2 = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
@@ -96,9 +98,9 @@ public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
             Log.w("MiuiFullScreenGestureProxy", "packageMonitor   onPackageModified  packageName=" + str);
             if (str != null && MiuiFullScreenGestureProxy.sMiuiHomePkgNameList.contains(str)) {
                 MiuiFullScreenGestureProxy miuiFullScreenGestureProxy = MiuiFullScreenGestureProxy.this;
-                boolean access$200 = miuiFullScreenGestureProxy.useMiuiHomeAsDefaultHome(miuiFullScreenGestureProxy.mContext);
-                if (MiuiFullScreenGestureProxy.this.mUseMiuiHomeAsDefaultHome != access$200) {
-                    MiuiFullScreenGestureProxy.this.updateDefaultHome(access$200);
+                boolean useMiuiHomeAsDefaultHome = miuiFullScreenGestureProxy.useMiuiHomeAsDefaultHome(miuiFullScreenGestureProxy.mContext);
+                if (MiuiFullScreenGestureProxy.this.mUseMiuiHomeAsDefaultHome != useMiuiHomeAsDefaultHome) {
+                    MiuiFullScreenGestureProxy.this.updateDefaultHome(useMiuiHomeAsDefaultHome);
                 }
             }
         }

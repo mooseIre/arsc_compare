@@ -8,12 +8,14 @@ import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -23,8 +25,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     private final BroadcastDispatcher broadcastDispatcher;
     private final MediaDataCombineLatest dataSource;
     private final NotificationEntryManager entryManager;
-    /* access modifiers changed from: private */
-    public final Executor executor;
+    private final Executor executor;
     private final Set<MediaDataManager.Listener> listeners = new LinkedHashSet();
     private final NotificationLockscreenUserManager lockscreenUserManager;
     private final MediaDataManager mediaDataManager;
@@ -48,12 +49,14 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
         this.executor = executor2;
         this.entryManager = notificationEntryManager;
         AnonymousClass1 r2 = new CurrentUserTracker(this, this.broadcastDispatcher) {
+            /* class com.android.systemui.media.MediaDataFilter.AnonymousClass1 */
             final /* synthetic */ MediaDataFilter this$0;
 
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.settings.CurrentUserTracker
             public void onUserSwitched(int i) {
                 this.this$0.executor.execute(new MediaDataFilter$1$onUserSwitched$1(this, i));
             }
@@ -63,6 +66,7 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
         this.dataSource.addListener(this);
     }
 
+    @Override // com.android.systemui.media.MediaDataManager.Listener
     public void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {
         Intrinsics.checkParameterIsNotNull(str, "key");
         Intrinsics.checkParameterIsNotNull(mediaData, "data");
@@ -71,43 +75,44 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
                 this.mediaEntries.remove(str2);
             }
             this.mediaEntries.put(str, mediaData);
-            for (T onMediaDataLoaded : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
-                onMediaDataLoaded.onMediaDataLoaded(str, str2, mediaData);
+            for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+                listener.onMediaDataLoaded(str, str2, mediaData);
             }
         }
     }
 
+    @Override // com.android.systemui.media.MediaDataManager.Listener
     public void onMediaDataRemoved(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "key");
-        if (((MediaData) this.mediaEntries.remove(str)) != null) {
-            for (T onMediaDataRemoved : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
-                onMediaDataRemoved.onMediaDataRemoved(str);
+        if (this.mediaEntries.remove(str) != null) {
+            for (MediaDataManager.Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+                listener.onMediaDataRemoved(str);
             }
         }
     }
 
     @VisibleForTesting
     public final void handleUserSwitched$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(int i) {
-        Set<T> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+        Set<MediaDataManager.Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
         Set<String> keySet = this.mediaEntries.keySet();
         Intrinsics.checkExpressionValueIsNotNull(keySet, "mediaEntries.keys");
-        List<T> mutableList = CollectionsKt___CollectionsKt.toMutableList(keySet);
+        List<String> list = CollectionsKt___CollectionsKt.toMutableList((Collection) keySet);
         this.mediaEntries.clear();
-        for (T t : mutableList) {
-            Log.d("MediaDataFilter", "Removing " + t + " after user change");
-            for (T onMediaDataRemoved : set) {
-                Intrinsics.checkExpressionValueIsNotNull(t, "it");
-                onMediaDataRemoved.onMediaDataRemoved(t);
+        for (String str : list) {
+            Log.d("MediaDataFilter", "Removing " + str + " after user change");
+            for (MediaDataManager.Listener listener : set) {
+                Intrinsics.checkExpressionValueIsNotNull(str, "it");
+                listener.onMediaDataRemoved(str);
             }
         }
-        for (Map.Entry next : this.dataSource.getData().entrySet()) {
-            String str = (String) next.getKey();
-            MediaData mediaData = (MediaData) next.getValue();
-            if (this.lockscreenUserManager.isCurrentProfile(mediaData.getUserId())) {
-                Log.d("MediaDataFilter", "Re-adding " + str + " after user change");
-                this.mediaEntries.put(str, mediaData);
-                for (T onMediaDataLoaded : set) {
-                    onMediaDataLoaded.onMediaDataLoaded(str, (String) null, mediaData);
+        for (Map.Entry<String, MediaData> entry : this.dataSource.getData().entrySet()) {
+            String key = entry.getKey();
+            MediaData value = entry.getValue();
+            if (this.lockscreenUserManager.isCurrentProfile(value.getUserId())) {
+                Log.d("MediaDataFilter", "Re-adding " + key + " after user change");
+                this.mediaEntries.put(key, value);
+                for (MediaDataManager.Listener listener2 : set) {
+                    listener2.onMediaDataLoaded(key, null, value);
                 }
             }
         }
@@ -116,11 +121,11 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
     public final void onSwipeToDismiss() {
         Set<String> keySet = this.mediaEntries.keySet();
         Intrinsics.checkExpressionValueIsNotNull(keySet, "mediaEntries.keys");
-        for (T t : CollectionsKt___CollectionsKt.toSet(keySet)) {
+        for (String str : CollectionsKt___CollectionsKt.toSet(keySet)) {
             MediaDataManager mediaDataManager2 = this.mediaDataManager;
-            Intrinsics.checkExpressionValueIsNotNull(t, "it");
-            mediaDataManager2.setTimedOut$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(t, true);
-            NotificationEntry activeNotificationUnfiltered = this.entryManager.getActiveNotificationUnfiltered(t);
+            Intrinsics.checkExpressionValueIsNotNull(str, "it");
+            mediaDataManager2.setTimedOut$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(str, true);
+            NotificationEntry activeNotificationUnfiltered = this.entryManager.getActiveNotificationUnfiltered(str);
             if (activeNotificationUnfiltered != null) {
                 this.entryManager.performRemoveNotification(activeNotificationUnfiltered.getSbn(), 2);
             }
@@ -132,8 +137,8 @@ public final class MediaDataFilter implements MediaDataManager.Listener {
         if (linkedHashMap.isEmpty()) {
             return false;
         }
-        for (Map.Entry<String, MediaData> value : linkedHashMap.entrySet()) {
-            if (((MediaData) value.getValue()).getActive()) {
+        for (Map.Entry<String, MediaData> entry : linkedHashMap.entrySet()) {
+            if (entry.getValue().getActive()) {
                 return true;
             }
         }

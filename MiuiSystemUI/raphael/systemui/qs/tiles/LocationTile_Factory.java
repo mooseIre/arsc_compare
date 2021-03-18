@@ -20,6 +20,7 @@ public final class LocationTile_Factory implements Factory<LocationTile> {
         this.activityStarterProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public LocationTile get() {
         return provideInstance(this.hostProvider, this.locationControllerProvider, this.keyguardStateControllerProvider, this.activityStarterProvider);
     }

@@ -20,6 +20,7 @@ public final class NavigationModeController_Factory implements Factory<Navigatio
         this.uiBgExecutorProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public NavigationModeController get() {
         return provideInstance(this.contextProvider, this.deviceProvisionedControllerProvider, this.configurationControllerProvider, this.uiBgExecutorProvider);
     }

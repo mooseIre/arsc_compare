@@ -13,6 +13,7 @@ public final class PipAnimationController_Factory implements Factory<PipAnimatio
         this.helperProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PipAnimationController get() {
         return provideInstance(this.contextProvider, this.helperProvider);
     }

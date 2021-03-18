@@ -17,9 +17,15 @@ import java.util.Objects;
 
 public class HeadsUpController {
     private NotifCollectionListener mCollectionListener = new NotifCollectionListener() {
+        /* class com.android.systemui.statusbar.notification.interruption.HeadsUpController.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
         public void onEntryAdded(NotificationEntry notificationEntry) {
             if (HeadsUpController.this.mInterruptStateProvider.shouldHeadsUp(notificationEntry)) {
                 HeadsUpController.this.mHeadsUpViewBinder.bindHeadsUpView(notificationEntry, new NotifBindPipeline.BindCallback() {
+                    /* class com.android.systemui.statusbar.notification.interruption.$$Lambda$HeadsUpController$1$KAqgh1j8KCQjqOCPlwm79iJxTXk */
+
+                    @Override // com.android.systemui.statusbar.notification.row.NotifBindPipeline.BindCallback
                     public final void onBindFinished(NotificationEntry notificationEntry) {
                         HeadsUpController.this.showAlertingView(notificationEntry);
                     }
@@ -27,25 +33,29 @@ public class HeadsUpController {
             }
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
         public void onEntryUpdated(NotificationEntry notificationEntry) {
             HeadsUpController.this.updateHunState(notificationEntry);
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
         public void onEntryRemoved(NotificationEntry notificationEntry, int i) {
             HeadsUpController.this.stopAlerting(notificationEntry);
         }
 
+        @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
         public void onEntryCleanUp(NotificationEntry notificationEntry) {
             HeadsUpController.this.mHeadsUpViewBinder.abortBindCallback(notificationEntry);
         }
     };
     private final HeadsUpManager mHeadsUpManager;
-    /* access modifiers changed from: private */
-    public final HeadsUpViewBinder mHeadsUpViewBinder;
-    /* access modifiers changed from: private */
-    public final NotificationInterruptStateProvider mInterruptStateProvider;
+    private final HeadsUpViewBinder mHeadsUpViewBinder;
+    private final NotificationInterruptStateProvider mInterruptStateProvider;
     private final NotificationListener mNotificationListener;
     private OnHeadsUpChangedListener mOnHeadsUpChangedListener = new OnHeadsUpChangedListener() {
+        /* class com.android.systemui.statusbar.notification.interruption.HeadsUpController.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
         public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
             if (!z && !notificationEntry.getRow().isRemoved()) {
                 HeadsUpController.this.mHeadsUpViewBinder.unbindHeadsUpView(notificationEntry);
@@ -72,6 +82,7 @@ public class HeadsUpController {
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     public void showAlertingView(NotificationEntry notificationEntry) {
         this.mHeadsUpManager.showNotification(notificationEntry);
         if (!this.mStatusBarStateController.isDozing()) {
@@ -80,7 +91,8 @@ public class HeadsUpController {
     }
 
     /* access modifiers changed from: private */
-    public void updateHunState(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void updateHunState(NotificationEntry notificationEntry) {
         boolean alertAgain = alertAgain(notificationEntry, notificationEntry.getSbn().getNotification());
         boolean shouldHeadsUp = this.mInterruptStateProvider.shouldHeadsUp(notificationEntry);
         if (this.mHeadsUpManager.isAlerting(notificationEntry.getKey())) {
@@ -94,6 +106,9 @@ public class HeadsUpController {
             HeadsUpManager headsUpManager = this.mHeadsUpManager;
             Objects.requireNonNull(headsUpManager);
             headsUpViewBinder.bindHeadsUpView(notificationEntry, new NotifBindPipeline.BindCallback() {
+                /* class com.android.systemui.statusbar.notification.interruption.$$Lambda$mD6sR9LpFDm1_8U141Um56czoN4 */
+
+                @Override // com.android.systemui.statusbar.notification.row.NotifBindPipeline.BindCallback
                 public final void onBindFinished(NotificationEntry notificationEntry) {
                     HeadsUpManager.this.showNotification(notificationEntry);
                 }
@@ -110,7 +125,8 @@ public class HeadsUpController {
     }
 
     /* access modifiers changed from: private */
-    public void stopAlerting(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void stopAlerting(NotificationEntry notificationEntry) {
         String key = notificationEntry.getKey();
         if (this.mHeadsUpManager.isAlerting(key)) {
             this.mHeadsUpManager.removeNotification(key, (this.mRemoteInputManager.getController().isSpinning(key) && !NotificationRemoteInputManager.FORCE_REMOTE_INPUT_HISTORY) || !this.mVisualStabilityManager.isReorderingAllowed());

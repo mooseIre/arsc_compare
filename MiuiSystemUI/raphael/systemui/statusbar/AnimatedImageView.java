@@ -20,7 +20,7 @@ public class AnimatedImageView extends ImageView {
     private final boolean mHasOverlappingRendering;
 
     public AnimatedImageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AnimatedImageView(Context context, AttributeSet attributeSet) {

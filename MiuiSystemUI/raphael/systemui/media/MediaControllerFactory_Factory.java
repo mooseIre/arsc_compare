@@ -11,6 +11,7 @@ public final class MediaControllerFactory_Factory implements Factory<MediaContro
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MediaControllerFactory get() {
         return provideInstance(this.contextProvider);
     }

@@ -1,11 +1,11 @@
 package com.android.systemui.globalactions;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0015R$id;
@@ -27,11 +27,11 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
     private void setBackgrounds() {
         HardwareBgDrawable backgroundDrawable;
         ViewGroup listView = getListView();
-        HardwareBgDrawable backgroundDrawable2 = getBackgroundDrawable(getResources().getColor(C0011R$color.global_actions_grid_background, (Resources.Theme) null));
+        HardwareBgDrawable backgroundDrawable2 = getBackgroundDrawable(getResources().getColor(C0011R$color.global_actions_grid_background, null));
         if (backgroundDrawable2 != null) {
             listView.setBackground(backgroundDrawable2);
         }
-        if (getSeparatedView() != null && (backgroundDrawable = getBackgroundDrawable(getResources().getColor(C0011R$color.global_actions_separated_background, (Resources.Theme) null))) != null) {
+        if (getSeparatedView() != null && (backgroundDrawable = getBackgroundDrawable(getResources().getColor(C0011R$color.global_actions_separated_background, null))) != null) {
             getSeparatedView().setBackground(backgroundDrawable);
         }
     }
@@ -82,9 +82,10 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public int getCurrentRotation() {
-        return RotationUtils.getRotation(this.mContext);
+        return RotationUtils.getRotation(((LinearLayout) this).mContext);
     }
 
+    @Override // com.android.systemui.MultiListLayout
     public void onUpdateList() {
         View view;
         super.onUpdateList();
@@ -93,9 +94,9 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
         for (int i = 0; i < this.mAdapter.getCount(); i++) {
             boolean shouldBeSeparated = this.mAdapter.shouldBeSeparated(i);
             if (shouldBeSeparated) {
-                view = this.mAdapter.getView(i, (View) null, separatedView);
+                view = this.mAdapter.getView(i, null, separatedView);
             } else {
-                view = this.mAdapter.getView(i, (View) null, listView);
+                view = this.mAdapter.getView(i, null, listView);
             }
             if (shouldBeSeparated) {
                 addToSeparatedView(view, false);
@@ -106,11 +107,13 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.MultiListLayout
     public ViewGroup getSeparatedView() {
         return (ViewGroup) findViewById(C0015R$id.separated_button);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.MultiListLayout
     public ViewGroup getListView() {
         return (ViewGroup) findViewById(16908298);
     }

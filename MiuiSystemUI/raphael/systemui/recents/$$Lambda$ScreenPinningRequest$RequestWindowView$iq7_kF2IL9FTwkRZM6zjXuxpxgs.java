@@ -12,6 +12,7 @@ public final /* synthetic */ class $$Lambda$ScreenPinningRequest$RequestWindowVi
     private /* synthetic */ $$Lambda$ScreenPinningRequest$RequestWindowView$iq7_kF2IL9FTwkRZM6zjXuxpxgs() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((StatusBar) ((Lazy) obj).get()).getNavigationBarView();
     }

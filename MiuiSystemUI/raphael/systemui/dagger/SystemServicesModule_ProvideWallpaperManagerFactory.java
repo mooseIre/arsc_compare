@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideWallpaperManagerFactory implement
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public WallpaperManager get() {
         return provideInstance(this.contextProvider);
     }

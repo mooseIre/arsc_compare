@@ -22,8 +22,8 @@ public class ActivityIntentHelper {
         ResolveInfo resolveActivityAsUser;
         PackageManager packageManager = this.mContext.getPackageManager();
         int i2 = !z ? 851968 : 65536;
-        List queryIntentActivitiesAsUser = packageManager.queryIntentActivitiesAsUser(intent, i2, i);
-        if (queryIntentActivitiesAsUser.size() == 0 || (resolveActivityAsUser = packageManager.resolveActivityAsUser(intent, i2 | 128, i)) == null || wouldLaunchResolverActivity(resolveActivityAsUser, (List<ResolveInfo>) queryIntentActivitiesAsUser)) {
+        List<ResolveInfo> queryIntentActivitiesAsUser = packageManager.queryIntentActivitiesAsUser(intent, i2, i);
+        if (queryIntentActivitiesAsUser.size() == 0 || (resolveActivityAsUser = packageManager.resolveActivityAsUser(intent, i2 | 128, i)) == null || wouldLaunchResolverActivity(resolveActivityAsUser, queryIntentActivitiesAsUser)) {
             return null;
         }
         return resolveActivityAsUser.activityInfo;

@@ -14,6 +14,7 @@ public final class DataSaverTile_Factory implements Factory<DataSaverTile> {
         this.networkControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DataSaverTile get() {
         return provideInstance(this.hostProvider, this.networkControllerProvider);
     }

@@ -15,8 +15,10 @@ import com.android.systemui.statusbar.phone.NavigationBarView;
 
 public class DeadZone {
     private final Runnable mDebugFlash = new Runnable() {
+        /* class com.android.systemui.statusbar.policy.DeadZone.AnonymousClass1 */
+
         public void run() {
-            ObjectAnimator.ofFloat(DeadZone.this, "flash", new float[]{1.0f, 0.0f}).setDuration(150).start();
+            ObjectAnimator.ofFloat(DeadZone.this, "flash", 1.0f, 0.0f).setDuration(150L).start();
         }
     };
     private int mDecay;

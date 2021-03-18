@@ -8,55 +8,51 @@ import androidx.appcompat.R$styleable;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
+import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.RotationLockController;
 
 public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     private final RotationLockController.RotationLockControllerCallback mCallback = new RotationLockController.RotationLockControllerCallback() {
+        /* class com.android.systemui.qs.tiles.RotationLockTile.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.RotationLockController.RotationLockControllerCallback
         public void onRotationLockStateChanged(boolean z, boolean z2) {
             RotationLockTile.this.refreshState(Boolean.valueOf(z));
         }
     };
     private final RotationLockController mController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowFixedWidthMinor;
     }
 
-    /* JADX WARNING: type inference failed for: r2v0, types: [com.android.systemui.statusbar.policy.CallbackController, com.android.systemui.statusbar.policy.RotationLockController] */
-    /* JADX WARNING: Unknown variable types count: 1 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public RotationLockTile(com.android.systemui.qs.QSHost r1, com.android.systemui.statusbar.policy.RotationLockController r2) {
-        /*
-            r0 = this;
-            r0.<init>(r1)
-            com.android.systemui.qs.tiles.RotationLockTile$1 r1 = new com.android.systemui.qs.tiles.RotationLockTile$1
-            r1.<init>()
-            r0.mCallback = r1
-            r0.mController = r2
-            androidx.lifecycle.Lifecycle r1 = r0.getLifecycle()
-            com.android.systemui.statusbar.policy.RotationLockController$RotationLockControllerCallback r0 = r0.mCallback
-            r2.observe((androidx.lifecycle.Lifecycle) r1, r0)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.tiles.RotationLockTile.<init>(com.android.systemui.qs.QSHost, com.android.systemui.statusbar.policy.RotationLockController):void");
+    public RotationLockTile(QSHost qSHost, RotationLockController rotationLockController) {
+        super(qSHost);
+        this.mController = rotationLockController;
+        rotationLockController.observe(getLifecycle(), this.mCallback);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.DISPLAY_SETTINGS");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         boolean z = !((QSTile.BooleanState) this.mState).value;
         this.mController.setRotationLockedAtAngle(z, -1);
         refreshState(Boolean.valueOf(z));
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return ((QSTile.BooleanState) getState()).label;
     }
@@ -80,16 +76,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
 
     public static boolean isCurrentOrientationLockPortrait(RotationLockController rotationLockController, Resources resources) {
         int rotationLockOrientation = rotationLockController.getRotationLockOrientation();
-        if (rotationLockOrientation == 0) {
-            if (resources.getConfiguration().orientation != 2) {
-                return true;
-            }
-            return false;
-        } else if (rotationLockOrientation != 2) {
-            return true;
-        } else {
-            return false;
-        }
+        return rotationLockOrientation == 0 ? resources.getConfiguration().orientation != 2 : rotationLockOrientation != 2;
     }
 
     private String getAccessibilityString(boolean z) {
@@ -114,6 +101,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         return getAccessibilityString(((QSTile.BooleanState) this.mState).value);
     }

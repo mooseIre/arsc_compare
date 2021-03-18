@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaHost$init$1 implements View.OnAttachStateChangeListener {
     final /* synthetic */ MediaHost this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaHost$init$1(MediaHost mediaHost) {
         this.this$0 = mediaHost;
     }

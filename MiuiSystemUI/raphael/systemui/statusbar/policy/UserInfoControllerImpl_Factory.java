@@ -11,6 +11,7 @@ public final class UserInfoControllerImpl_Factory implements Factory<UserInfoCon
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public UserInfoControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

@@ -16,6 +16,7 @@ import com.miui.systemui.util.CommonUtil;
 public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenModeController.Callback {
     private final ZenModeController mZenModeController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -27,14 +28,17 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenMode
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         Intent intent = new Intent("android.settings.SOUND_SETTINGS");
         intent.setPackage("com.android.settings");
@@ -43,6 +47,7 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenMode
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (this.mZenModeController.isRingerModeOn()) {
             Context context = this.mContext;
@@ -51,6 +56,7 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenMode
         this.mZenModeController.toggleSilent();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_mute_label);
     }
@@ -73,13 +79,14 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenMode
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_mute_off);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onZenOrRingerChanged(boolean z, boolean z2) {
         refreshState();
     }

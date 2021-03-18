@@ -17,17 +17,12 @@ import java.util.Iterator;
 
 public class PaperModeControllerImpl extends CurrentUserTracker implements PaperModeController {
     private Handler mBgHandler;
-    /* access modifiers changed from: private */
-    public final ContentObserver mGameModeObserver;
+    private final ContentObserver mGameModeObserver;
     private final ArrayList<PaperModeController.PaperModeListener> mListeners = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public boolean mPaperModeAvailable;
-    /* access modifiers changed from: private */
-    public boolean mPaperModeEnabled;
-    /* access modifiers changed from: private */
-    public final ContentObserver mPaperModeObserver;
-    /* access modifiers changed from: private */
-    public ContentResolver mResolver;
+    private boolean mPaperModeAvailable;
+    private boolean mPaperModeEnabled;
+    private final ContentObserver mPaperModeObserver;
+    private ContentResolver mResolver;
     private final ContentObserver mVideoModeObserver;
 
     static {
@@ -39,6 +34,8 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
         this.mBgHandler = new Handler(looper);
         this.mResolver = context.getContentResolver();
         this.mPaperModeObserver = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.statusbar.policy.PaperModeControllerImpl.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 boolean z2 = false;
                 int intForUser = Settings.System.getIntForUser(PaperModeControllerImpl.this.mResolver, "screen_paper_mode_enabled", 0, -2);
@@ -46,12 +43,14 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 if (intForUser != 0) {
                     z2 = true;
                 }
-                boolean unused = paperModeControllerImpl.mPaperModeEnabled = z2;
+                paperModeControllerImpl.mPaperModeEnabled = z2;
                 PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
                 paperModeControllerImpl2.dispatchModeChanged(paperModeControllerImpl2.mPaperModeEnabled);
             }
         };
         this.mVideoModeObserver = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.statusbar.policy.PaperModeControllerImpl.AnonymousClass2 */
+
             public void onChange(boolean z) {
                 boolean z2 = false;
                 int intForUser = Settings.Secure.getIntForUser(PaperModeControllerImpl.this.mResolver, "vtb_boosting", 0, -2);
@@ -59,13 +58,15 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 if (intForUser == 0) {
                     z2 = true;
                 }
-                boolean unused = paperModeControllerImpl.mPaperModeAvailable = z2;
+                paperModeControllerImpl.mPaperModeAvailable = z2;
                 PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
                 paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
             }
         };
         this.mResolver.registerContentObserver(Settings.System.getUriFor("screen_paper_mode_enabled"), false, this.mPaperModeObserver, -1);
         this.mGameModeObserver = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.statusbar.policy.PaperModeControllerImpl.AnonymousClass3 */
+
             public void onChange(boolean z) {
                 boolean z2 = false;
                 int intForUser = Settings.Secure.getIntForUser(PaperModeControllerImpl.this.mResolver, "gb_boosting", 0, -2);
@@ -73,7 +74,7 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
                 if ((intForUser & 1) == 0) {
                     z2 = true;
                 }
-                boolean unused = paperModeControllerImpl.mPaperModeAvailable = z2;
+                paperModeControllerImpl.mPaperModeAvailable = z2;
                 PaperModeControllerImpl paperModeControllerImpl2 = PaperModeControllerImpl.this;
                 paperModeControllerImpl2.dispatchAvailabilityChanged(paperModeControllerImpl2.mPaperModeAvailable);
             }
@@ -84,26 +85,32 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
         startTracking();
     }
 
+    @Override // com.android.systemui.statusbar.policy.PaperModeController
     public boolean isAvailable() {
         return this.mPaperModeAvailable;
     }
 
+    @Override // com.android.systemui.statusbar.policy.PaperModeController
     public boolean isEnabled() {
         return this.mPaperModeEnabled;
     }
 
+    @Override // com.android.systemui.statusbar.policy.PaperModeController
     public void setEnabled(boolean z) {
         if (this.mPaperModeEnabled != z && this.mPaperModeAvailable) {
             Settings.System.putIntForUser(this.mResolver, "screen_paper_mode_enabled", z ? 1 : 0, -2);
         }
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(int i) {
         postInitPaperModeState();
     }
 
     private void postInitPaperModeState() {
         this.mBgHandler.post(new Runnable() {
+            /* class com.android.systemui.statusbar.policy.PaperModeControllerImpl.AnonymousClass4 */
+
             public void run() {
                 PaperModeControllerImpl.this.mPaperModeObserver.onChange(false);
                 PaperModeControllerImpl.this.mGameModeObserver.onChange(false);
@@ -130,12 +137,14 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
     }
 
     /* access modifiers changed from: private */
-    public void dispatchModeChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void dispatchModeChanged(boolean z) {
         dispatchListeners(0, z);
     }
 
     /* access modifiers changed from: private */
-    public void dispatchAvailabilityChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void dispatchAvailabilityChanged(boolean z) {
         dispatchListeners(1, z);
     }
 
@@ -153,6 +162,7 @@ public class PaperModeControllerImpl extends CurrentUserTracker implements Paper
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("PaperModeController state:");
         printWriter.print("  mPaperModeEnabled=");

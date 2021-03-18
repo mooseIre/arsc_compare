@@ -52,11 +52,11 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void createInflaters() {
-        this.mLayoutInflater = LayoutInflater.from(this.mContext);
+        this.mLayoutInflater = LayoutInflater.from(((FrameLayout) this).mContext);
         Configuration configuration = new Configuration();
-        configuration.setTo(this.mContext.getResources().getConfiguration());
+        configuration.setTo(((FrameLayout) this).mContext.getResources().getConfiguration());
         configuration.orientation = 2;
-        this.mLandscapeInflater = LayoutInflater.from(this.mContext.createConfigurationContext(configuration));
+        this.mLandscapeInflater = LayoutInflater.from(((FrameLayout) this).mContext.createConfigurationContext(configuration));
     }
 
     /* access modifiers changed from: protected */
@@ -69,10 +69,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
 
     private void inflateChildren() {
         removeAllViews();
-        FrameLayout frameLayout = (FrameLayout) this.mLayoutInflater.inflate(C0017R$layout.navigation_layout, this, false);
+        FrameLayout frameLayout = (FrameLayout) this.mLayoutInflater.inflate(C0017R$layout.navigation_layout, (ViewGroup) this, false);
         this.mHorizontal = frameLayout;
         addView(frameLayout);
-        FrameLayout frameLayout2 = (FrameLayout) this.mLayoutInflater.inflate(C0017R$layout.navigation_layout_vertical, this, false);
+        FrameLayout frameLayout2 = (FrameLayout) this.mLayoutInflater.inflate(C0017R$layout.navigation_layout_vertical, (ViewGroup) this, false);
         this.mVertical = frameLayout2;
         addView(frameLayout2);
         updateAlternativeOrder();
@@ -86,11 +86,12 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
         } else if (this.mOverviewProxyService.shouldShowSwipeUpUI()) {
             i = C0021R$string.config_navBarLayoutQuickstep;
         } else {
-            i = KeyOrderObserver.Companion.getDefaultLayoutResource(this.mContext);
+            i = KeyOrderObserver.Companion.getDefaultLayoutResource(((FrameLayout) this).mContext);
         }
         return getContext().getString(i);
     }
 
+    @Override // com.android.systemui.statusbar.phone.NavigationModeController.ModeChangedListener
     public void onNavigationModeChanged(int i) {
         this.mNavBarMode = i;
     }
@@ -199,12 +200,12 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     }
 
     private void addGravitySpacer(LinearLayout linearLayout) {
-        linearLayout.addView(new Space(this.mContext), new LinearLayout.LayoutParams(0, 0, 1.0f));
+        linearLayout.addView(new Space(((FrameLayout) this).mContext), new LinearLayout.LayoutParams(0, 0, 1.0f));
     }
 
     private void inflateButtons(String[] strArr, ViewGroup viewGroup, boolean z, boolean z2) {
-        for (String inflateButton : strArr) {
-            inflateButton(inflateButton, viewGroup, z, z2);
+        for (String str : strArr) {
+            inflateButton(str, viewGroup, z, z2);
         }
     }
 
@@ -237,7 +238,7 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
             return view;
         }
         if (extractSize.contains("W") || extractSize.contains("A")) {
-            ReverseLinearLayout.ReverseRelativeLayout reverseRelativeLayout = new ReverseLinearLayout.ReverseRelativeLayout(this.mContext);
+            ReverseLinearLayout.ReverseRelativeLayout reverseRelativeLayout = new ReverseLinearLayout.ReverseRelativeLayout(((FrameLayout) this).mContext);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(view.getLayoutParams());
             int i = z ? z2 ? 48 : 80 : z2 ? 8388611 : 8388613;
             if (extractSize.endsWith("WC")) {
@@ -251,7 +252,7 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
             if (extractSize.contains("W")) {
                 reverseRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams(0, -1, Float.parseFloat(extractSize.substring(0, extractSize.indexOf("W")))));
             } else {
-                reverseRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams((int) convertDpToPx(this.mContext, Float.parseFloat(extractSize.substring(0, extractSize.indexOf("A")))), -1));
+                reverseRelativeLayout.setLayoutParams(new LinearLayout.LayoutParams((int) convertDpToPx(((FrameLayout) this).mContext, Float.parseFloat(extractSize.substring(0, extractSize.indexOf("A")))), -1));
             }
             reverseRelativeLayout.setClipChildren(false);
             reverseRelativeLayout.setClipToPadding(false);

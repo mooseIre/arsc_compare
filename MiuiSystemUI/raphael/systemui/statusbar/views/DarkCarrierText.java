@@ -17,17 +17,20 @@ public class DarkCarrierText extends CarrierText implements DarkIconDispatcher.D
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.CarrierText
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.CarrierText
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (!DarkIconDispatcher.isInArea(rect, this)) {
             setTextColor(i2);

@@ -38,8 +38,7 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
     private SurfaceView mMirrorSurfaceView;
     private View mMirrorView;
     private MirrorWindowControl mMirrorWindowControl;
-    /* access modifiers changed from: private */
-    public View mOverlayView;
+    private View mOverlayView;
     private View mRightDrag;
     private float mScale;
     private final Rect mTmpRect = new Rect();
@@ -84,6 +83,8 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
         View view = new View(this.mContext);
         this.mOverlayView = view;
         view.getViewTreeObserver().addOnWindowAttachListener(new ViewTreeObserver.OnWindowAttachListener() {
+            /* class com.android.systemui.accessibility.WindowMagnificationController.AnonymousClass1 */
+
             public void onWindowDetached() {
             }
 
@@ -131,7 +132,8 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
     }
 
     /* access modifiers changed from: private */
-    public void createMirrorWindow() {
+    /* access modifiers changed from: public */
+    private void createMirrorWindow() {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mMagnificationFrame.width() + (this.mBorderSize * 2), this.mMagnificationFrame.height() + ((int) this.mContext.getResources().getDimension(C0012R$dimen.magnification_drag_view_height)) + (this.mBorderSize * 2), 1000, 40, -2);
         layoutParams.gravity = 51;
         layoutParams.token = this.mOverlayView.getWindowToken();
@@ -154,7 +156,8 @@ public class WindowMagnificationController implements View.OnTouchListener, Surf
     }
 
     /* access modifiers changed from: private */
-    public void createControls() {
+    /* access modifiers changed from: public */
+    private void createControls() {
         MirrorWindowControl mirrorWindowControl = this.mMirrorWindowControl;
         if (mirrorWindowControl != null) {
             mirrorWindowControl.showControl(this.mOverlayView.getWindowToken());

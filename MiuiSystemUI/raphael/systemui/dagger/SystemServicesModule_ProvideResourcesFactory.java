@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideResourcesFactory implements Facto
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Resources get() {
         return provideInstance(this.contextProvider);
     }

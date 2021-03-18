@@ -8,6 +8,7 @@ import com.android.systemui.statusbar.notification.collection.listbuilder.plugga
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class NotifCoordinators implements Dumpable {
@@ -29,28 +30,31 @@ public class NotifCoordinators implements Dumpable {
             this.mCoordinators.add(preparationCoordinator);
         }
         this.mCoordinators.add(mediaCoordinator);
-        for (Coordinator next : this.mCoordinators) {
-            if (next.getSection() != null) {
-                this.mOrderedSections.add(next.getSection());
+        for (Coordinator coordinator : this.mCoordinators) {
+            if (coordinator.getSection() != null) {
+                this.mOrderedSections.add(coordinator.getSection());
             }
         }
     }
 
     public void attach(NotifPipeline notifPipeline) {
-        for (Coordinator attach : this.mCoordinators) {
-            attach.attach(notifPipeline);
+        for (Coordinator coordinator : this.mCoordinators) {
+            coordinator.attach(notifPipeline);
         }
         notifPipeline.setSections(this.mOrderedSections);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println();
         printWriter.println("NotifCoordinators:");
-        for (Coordinator coordinator : this.mCoordinators) {
-            printWriter.println("\t" + coordinator.getClass());
+        Iterator<Coordinator> it = this.mCoordinators.iterator();
+        while (it.hasNext()) {
+            printWriter.println("\t" + it.next().getClass());
         }
-        for (NotifSection name : this.mOrderedSections) {
-            printWriter.println("\t" + name.getName());
+        Iterator<NotifSection> it2 = this.mOrderedSections.iterator();
+        while (it2.hasNext()) {
+            printWriter.println("\t" + it2.next().getName());
         }
     }
 }

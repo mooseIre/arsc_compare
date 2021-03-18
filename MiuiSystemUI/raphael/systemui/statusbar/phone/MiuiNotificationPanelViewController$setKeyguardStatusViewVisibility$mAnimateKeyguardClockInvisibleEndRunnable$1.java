@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.phone;
 
-import com.android.keyguard.clock.KeyguardClockContainer;
 import kotlin.jvm.internal.Ref$ObjectRef;
 
 /* compiled from: MiuiNotificationPanelViewController.kt */
@@ -15,6 +14,6 @@ final class MiuiNotificationPanelViewController$setKeyguardStatusViewVisibility$
 
     public final void run() {
         this.this$0.mKeyguardStatusViewAnimating = false;
-        ((KeyguardClockContainer) this.$keyguardClockView.element).setVisibility(4);
+        this.$keyguardClockView.element.setVisibility(4);
     }
 }

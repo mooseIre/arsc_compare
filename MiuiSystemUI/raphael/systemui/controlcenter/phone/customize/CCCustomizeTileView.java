@@ -12,6 +12,7 @@ public class CCCustomizeTileView extends CCQSTileView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.controlcenter.qs.tileview.CCQSTileView
     public void handleStateChanged(QSTile.State state) {
         super.handleStateChanged(state);
     }

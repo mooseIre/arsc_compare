@@ -247,9 +247,9 @@ public class EglHelper {
         int[] config = getConfig();
         StringBuilder sb3 = new StringBuilder();
         sb3.append('{');
-        for (int hexString : config) {
+        for (int i : config) {
             sb3.append("0x");
-            sb3.append(Integer.toHexString(hexString));
+            sb3.append(Integer.toHexString(i));
             sb3.append(",");
         }
         sb3.setCharAt(sb3.length() - 1, '}');

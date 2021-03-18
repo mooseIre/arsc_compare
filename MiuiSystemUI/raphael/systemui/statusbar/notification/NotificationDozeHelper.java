@@ -13,8 +13,7 @@ import com.android.systemui.Interpolators;
 import java.util.function.Consumer;
 
 public class NotificationDozeHelper {
-    /* access modifiers changed from: private */
-    public static final int DOZE_ANIMATOR_TAG = C0015R$id.doze_intensity_tag;
+    private static final int DOZE_ANIMATOR_TAG = C0015R$id.doze_intensity_tag;
     private final ColorMatrix mGrayscaleColorMatrix = new ColorMatrix();
 
     public void updateGrayscale(ImageView imageView, float f) {
@@ -32,9 +31,9 @@ public class NotificationDozeHelper {
         if (z) {
             f = 1.0f;
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f2, f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f2, f);
         ofFloat.addUpdateListener(animatorUpdateListener);
-        ofFloat.setDuration(500);
+        ofFloat.setDuration(500L);
         ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
         ofFloat.setStartDelay(j);
         if (animatorListener != null) {
@@ -46,6 +45,7 @@ public class NotificationDozeHelper {
     public void setDozing(Consumer<Float> consumer, boolean z, boolean z2, long j, final View view) {
         if (z2) {
             startIntensityAnimation(new ValueAnimator.AnimatorUpdateListener(consumer) {
+                /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationDozeHelper$VENFYNxPWcqtSl2MMr8F4aMPH78 */
                 public final /* synthetic */ Consumer f$0;
 
                 {
@@ -56,8 +56,10 @@ public class NotificationDozeHelper {
                     this.f$0.accept((Float) valueAnimator.getAnimatedValue());
                 }
             }, z, j, new AnimatorListenerAdapter(this) {
+                /* class com.android.systemui.statusbar.notification.NotificationDozeHelper.AnonymousClass3 */
+
                 public void onAnimationEnd(Animator animator) {
-                    view.setTag(NotificationDozeHelper.DOZE_ANIMATOR_TAG, (Object) null);
+                    view.setTag(NotificationDozeHelper.DOZE_ANIMATOR_TAG, null);
                 }
 
                 public void onAnimationStart(Animator animator) {

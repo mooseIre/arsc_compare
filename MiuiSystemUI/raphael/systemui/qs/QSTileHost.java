@@ -74,36 +74,31 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     private final UiEventLogger mUiEventLogger;
     private Context mUserContext;
 
+    @Override // com.android.systemui.qs.QSHost
     public void warn(String str, Throwable th) {
     }
 
     public QSTileHost(Context context, StatusBarIconController statusBarIconController, QSFactory qSFactory, Handler handler, Looper looper, PluginManager pluginManager, TunerService tunerService, Provider<AutoTileManager> provider, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, Optional<StatusBar> optional, QSLogger qSLogger, UiEventLogger uiEventLogger, StatusBarStateController statusBarStateController, MiuiQSTileHostInjector miuiQSTileHostInjector, ControlPanelController controlPanelController) {
-        Context context2 = context;
-        MiuiQSTileHostInjector miuiQSTileHostInjector2 = miuiQSTileHostInjector;
         ArrayList<QSFactory> arrayList = new ArrayList<>();
         this.mQsFactories = arrayList;
         this.mIconController = statusBarIconController;
-        this.mContext = context2;
-        this.mUserContext = context2;
+        this.mContext = context;
+        this.mUserContext = context;
         this.mTunerService = tunerService;
         this.mDumpManager = dumpManager;
         this.mQSLogger = qSLogger;
         this.mUiEventLogger = uiEventLogger;
         this.mBroadcastDispatcher = broadcastDispatcher;
-        this.mMiuiHostInjector = miuiQSTileHostInjector2;
-        miuiQSTileHostInjector2.MiuiInit(this, arrayList, this.mTiles, this.mTileSpecs);
+        this.mMiuiHostInjector = miuiQSTileHostInjector;
+        miuiQSTileHostInjector.MiuiInit(this, arrayList, this.mTiles, this.mTileSpecs);
         this.mInstanceIdSequence = new InstanceIdSequence(1048576);
-        Looper looper2 = looper;
         this.mServices = new TileServices(this, looper, this.mBroadcastDispatcher);
         this.mStatusBarOptional = optional;
-        QSFactory qSFactory2 = qSFactory;
         this.mQsFactories.add(qSFactory);
-        PluginManager pluginManager2 = pluginManager;
-        pluginManager.addPluginListener(this, (Class<?>) QSFactory.class, true);
+        pluginManager.addPluginListener((PluginListener) this, QSFactory.class, true);
         this.mDumpManager.registerDumpable("QSTileHost", this);
-        Provider<AutoTileManager> provider2 = provider;
-        Handler handler2 = handler;
         handler.post(new Runnable(tunerService, provider) {
+            /* class com.android.systemui.qs.$$Lambda$QSTileHost$8OyZkY1GXlSGEY9CusSz83dAxOw */
             public final /* synthetic */ TunerService f$1;
             public final /* synthetic */ Provider f$2;
 
@@ -131,6 +126,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         return this.mIconController;
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public InstanceId getNewInstanceId() {
         return this.mInstanceIdSequence.newInstanceId();
     }
@@ -149,10 +145,12 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         onTuningChanged("sysui_qs_tiles", value);
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public QSLogger getQSLogger() {
         return this.mQSLogger;
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public UiEventLogger getUiEventLogger() {
         return this.mUiEventLogger;
     }
@@ -173,6 +171,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         return this.mTiles.get(str);
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public void collapsePanels() {
         this.mStatusBarOptional.ifPresent($$Lambda$4RRpk2g2DG1jxcebU4uq2xyjwbI.INSTANCE);
         this.mMiuiHostInjector.collapsePanels();
@@ -183,22 +182,27 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mMiuiHostInjector.collapsePanels();
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public Context getContext() {
         return this.mContext;
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public Context getUserContext() {
         return this.mUserContext;
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public TileServices getTileServices() {
         return this.mServices;
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public int indexOf(String str) {
         return this.mTileSpecs.indexOf(str);
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         boolean z;
         if ("sysui_qs_tiles".equals(str)) {
@@ -217,61 +221,66 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
             }
             if (!loadTileSpecs.equals(this.mTileSpecs) || currentUser != this.mCurrentUser) {
                 this.mTiles.entrySet().stream().filter(new Predicate(loadTileSpecs) {
+                    /* class com.android.systemui.qs.$$Lambda$QSTileHost$tL3GWCpuevDvXg1noj_yj7fk3Y */
                     public final /* synthetic */ List f$0;
 
                     {
                         this.f$0 = r1;
                     }
 
+                    @Override // java.util.function.Predicate
                     public final boolean test(Object obj) {
                         return QSTileHost.lambda$onTuningChanged$2(this.f$0, (Map.Entry) obj);
                     }
                 }).forEach(new Consumer() {
+                    /* class com.android.systemui.qs.$$Lambda$QSTileHost$nV3a9GzHlwmibkt4wOBaCI5DZk8 */
+
+                    @Override // java.util.function.Consumer
                     public final void accept(Object obj) {
                         QSTileHost.this.lambda$onTuningChanged$3$QSTileHost((Map.Entry) obj);
                     }
                 });
                 LinkedHashMap linkedHashMap = new LinkedHashMap();
-                for (String next : loadTileSpecs) {
-                    QSTile qSTile = this.mTiles.get(next);
-                    if (qSTile == null || (z && ((CustomTile) qSTile).getUser() != currentUser)) {
+                for (String str3 : loadTileSpecs) {
+                    QSTile qSTile = this.mTiles.get(str3);
+                    if (qSTile == null || (((z = qSTile instanceof CustomTile)) && ((CustomTile) qSTile).getUser() != currentUser)) {
                         if (qSTile != null) {
                             qSTile.destroy();
-                            Log.d("QSTileHost", "Destroying tile for wrong user: " + next);
-                            this.mQSLogger.logTileDestroyed(next, "Tile for wrong user");
+                            Log.d("QSTileHost", "Destroying tile for wrong user: " + str3);
+                            this.mQSLogger.logTileDestroyed(str3, "Tile for wrong user");
                         }
-                        Log.d("QSTileHost", "Creating tile: " + next);
+                        Log.d("QSTileHost", "Creating tile: " + str3);
                         try {
-                            QSTile createTile = createTile(next);
+                            QSTile createTile = createTile(str3);
                             if (createTile != null) {
-                                createTile.setTileSpec(next);
+                                createTile.setTileSpec(str3);
                                 Log.d("QSTileHost", "tile: " + createTile.getTileSpec());
                                 if (createTile.isAvailable()) {
-                                    linkedHashMap.put(next, createTile);
-                                    this.mQSLogger.logTileAdded(next);
+                                    linkedHashMap.put(str3, createTile);
+                                    this.mQSLogger.logTileAdded(str3);
                                 } else {
                                     createTile.destroy();
-                                    Log.d("QSTileHost", "Destroying not available tile: " + next);
-                                    this.mQSLogger.logTileDestroyed(next, "Tile not available");
+                                    Log.d("QSTileHost", "Destroying not available tile: " + str3);
+                                    this.mQSLogger.logTileDestroyed(str3, "Tile not available");
                                 }
                             }
                         } catch (Throwable th) {
-                            Log.w("QSTileHost", "Error creating tile for spec: " + next, th);
+                            Log.w("QSTileHost", "Error creating tile for spec: " + str3, th);
                         }
                     } else if (qSTile.isAvailable()) {
                         if (DEBUG) {
                             Log.d("QSTileHost", "Adding " + qSTile);
                         }
                         qSTile.removeCallbacks();
-                        if (!((z = qSTile instanceof CustomTile)) && this.mCurrentUser != currentUser) {
+                        if (!z && this.mCurrentUser != currentUser) {
                             qSTile.userSwitch(currentUser);
                         }
-                        linkedHashMap.put(next, qSTile);
-                        this.mQSLogger.logTileAdded(next);
+                        linkedHashMap.put(str3, qSTile);
+                        this.mQSLogger.logTileAdded(str3);
                     } else {
                         qSTile.destroy();
-                        Log.d("QSTileHost", "Destroying not available tile: " + next);
-                        this.mQSLogger.logTileDestroyed(next, "Tile not available");
+                        Log.d("QSTileHost", "Destroying not available tile: " + str3);
+                        this.mQSLogger.logTileDestroyed(str3, "Tile not available");
                     }
                 }
                 this.mCurrentUser = currentUser;
@@ -304,20 +313,24 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         ((QSTile) entry.getValue()).destroy();
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public void removeTile(String str) {
         changeTileSpecs(new Predicate(str) {
+            /* class com.android.systemui.qs.$$Lambda$QSTileHost$lvnGvThFo7HeGkbFqhwU9KCtaQ */
             public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return ((List) obj).remove(this.f$0);
             }
         });
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public void unmarkTileAsAutoAdded(String str) {
         AutoTileManager autoTileManager = this.mAutoTiles;
         if (autoTileManager != null) {
@@ -331,12 +344,14 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     public void addTile(String str) {
         changeTileSpecs(new Predicate(str) {
+            /* class com.android.systemui.qs.$$Lambda$QSTileHost$iiTl64od8Xx0qaz8exmdhzyHaWg */
             public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Predicate
             public final boolean test(Object obj) {
                 return QSTileHost.lambda$addTile$5(this.f$0, (List) obj);
             }
@@ -345,7 +360,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
 
     private void saveTilesToSettings(List<String> list) {
         if (!this.mMiuiHostInjector.isSuperSaveMode()) {
-            Settings.Secure.putStringForUser(this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", list), (String) null, false, this.mCurrentUser, true);
+            Settings.Secure.putStringForUser(this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", list), null, false, this.mCurrentUser, true);
         }
     }
 
@@ -431,26 +446,26 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         } else if (DEBUG) {
             Log.d("QSTileHost", "Loaded tile specs from setting: " + str);
         }
-        ArrayList arrayList = new ArrayList();
+        ArrayList<String> arrayList = new ArrayList<>();
         ArraySet arraySet = new ArraySet();
         boolean z = false;
-        for (String trim : str.split(",")) {
-            String trim2 = trim.trim();
-            if (!trim2.isEmpty()) {
-                if (trim2.equals("default")) {
+        for (String str2 : str.split(",")) {
+            String trim = str2.trim();
+            if (!trim.isEmpty()) {
+                if (trim.equals("default")) {
                     if (!z) {
-                        for (String next : this.mMiuiHostInjector.getMiuiDefaultTiles(context)) {
-                            Log.d("QSTileHost", "default" + next);
-                            if (!arraySet.contains(next)) {
-                                arrayList.add(next);
-                                arraySet.add(next);
+                        for (String str3 : this.mMiuiHostInjector.getMiuiDefaultTiles(context)) {
+                            Log.d("QSTileHost", "default" + str3);
+                            if (!arraySet.contains(str3)) {
+                                arrayList.add(str3);
+                                arraySet.add(str3);
                             }
                         }
                         z = true;
                     }
-                } else if (!arraySet.contains(trim2)) {
-                    arrayList.add(trim2);
-                    arraySet.add(trim2);
+                } else if (!arraySet.contains(trim)) {
+                    arrayList.add(trim);
+                    arraySet.add(trim);
                 }
             }
         }
@@ -458,9 +473,11 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         return arrayList;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("QSTileHost:");
         this.mTiles.values().stream().filter($$Lambda$QSTileHost$w0YHlhMwIm7qnoeEO7kRZCq47o8.INSTANCE).forEach(new Consumer(fileDescriptor, printWriter, strArr) {
+            /* class com.android.systemui.qs.$$Lambda$QSTileHost$8dGA3dPDXgH8kYhV5jUASLKyAo */
             public final /* synthetic */ FileDescriptor f$0;
             public final /* synthetic */ PrintWriter f$1;
             public final /* synthetic */ String[] f$2;
@@ -471,6 +488,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                 this.f$2 = r3;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ((Dumpable) ((QSTile) obj)).dump(this.f$0, this.f$1, this.f$2);
             }
@@ -485,14 +503,16 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         return this.mMiuiHostInjector;
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public int getBarState() {
         return this.mStatusBarStateController.getState();
     }
 
+    @Override // com.android.systemui.qs.QSHost
     public boolean isQSFullyCollapsed() {
         if (this.mControlPanelController.isUseControlCenter()) {
             return this.mControlPanelController.isCCFullyCollapsed();
         }
-        return ((Boolean) this.mStatusBarOptional.map($$Lambda$zJbATMYNuISzUFzW61OFGvW37bg.INSTANCE).orElse(Boolean.FALSE)).booleanValue();
+        return this.mStatusBarOptional.map($$Lambda$zJbATMYNuISzUFzW61OFGvW37bg.INSTANCE).orElse((U) Boolean.FALSE).booleanValue();
     }
 }

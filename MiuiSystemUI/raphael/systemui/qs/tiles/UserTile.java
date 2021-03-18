@@ -16,6 +16,7 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
     private final UserInfoController mUserInfoController;
     private final UserSwitcherController mUserSwitcherController;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 260;
     }
@@ -27,28 +28,34 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
         userInfoController.observe(getLifecycle(), this);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.State newTileState() {
         return new QSTile.State();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.USER_SETTINGS");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         showDetail(true);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public DetailAdapter getDetailAdapter() {
         return this.mUserSwitcherController.userDetailAdapter;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return getState().label;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUpdateState(QSTile.State state, Object obj) {
         final Pair<String, Drawable> pair = obj != null ? (Pair) obj : this.mLastUpdate;
         if (pair != null) {
@@ -56,6 +63,9 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
             state.label = (CharSequence) obj2;
             state.contentDescription = (CharSequence) obj2;
             state.icon = new QSTile.Icon(this) {
+                /* class com.android.systemui.qs.tiles.UserTile.AnonymousClass1 */
+
+                @Override // com.android.systemui.plugins.qs.QSTile.Icon
                 public Drawable getDrawable(Context context) {
                     return (Drawable) pair.second;
                 }
@@ -63,6 +73,7 @@ public class UserTile extends QSTileImpl<QSTile.State> implements UserInfoContro
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener
     public void onUserInfoChanged(String str, Drawable drawable, String str2) {
         Pair<String, Drawable> pair = new Pair<>(str, drawable);
         this.mLastUpdate = pair;

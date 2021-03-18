@@ -14,6 +14,7 @@ public final class LocalMediaManagerFactory_Factory implements Factory<LocalMedi
         this.localBluetoothManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public LocalMediaManagerFactory get() {
         return provideInstance(this.contextProvider, this.localBluetoothManagerProvider);
     }

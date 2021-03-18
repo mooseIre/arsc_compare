@@ -13,8 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public abstract class RelativeTouchListener implements View.OnTouchListener {
     private final Handler handler = new Handler();
     private boolean movedEnough;
-    /* access modifiers changed from: private */
-    public boolean performedLongClick;
+    private boolean performedLongClick;
     private final PointF touchDown = new PointF();
     private int touchSlop = -1;
     private final VelocityTracker velocityTracker = VelocityTracker.obtain();
@@ -49,14 +48,14 @@ public abstract class RelativeTouchListener implements View.OnTouchListener {
                 } else if (!this.performedLongClick) {
                     view.performClick();
                 } else {
-                    this.handler.removeCallbacksAndMessages((Object) null);
+                    this.handler.removeCallbacksAndMessages(null);
                 }
                 this.velocityTracker.clear();
                 this.movedEnough = false;
             } else if (action == 2) {
                 if (!this.movedEnough && ((float) Math.hypot((double) rawX, (double) rawY)) > ((float) this.touchSlop) && !this.performedLongClick) {
                     this.movedEnough = true;
-                    this.handler.removeCallbacksAndMessages((Object) null);
+                    this.handler.removeCallbacksAndMessages(null);
                 }
                 if (this.movedEnough) {
                     PointF pointF2 = this.viewPositionOnTouchDown;

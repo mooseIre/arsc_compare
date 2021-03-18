@@ -53,13 +53,10 @@ public class ResizingSpace extends View {
     private static int getDefaultSize2(int i, int i2) {
         int mode = View.MeasureSpec.getMode(i2);
         int size = View.MeasureSpec.getSize(i2);
-        if (mode == Integer.MIN_VALUE) {
-            return Math.min(i, size);
+        if (mode != Integer.MIN_VALUE) {
+            return mode != 1073741824 ? i : size;
         }
-        if (mode != 1073741824) {
-            return i;
-        }
-        return size;
+        return Math.min(i, size);
     }
 
     /* access modifiers changed from: protected */

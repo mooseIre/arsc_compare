@@ -21,6 +21,7 @@ public class MiuiAlarmControllerImpl implements CallbackController, Dumpable, Se
         settingsObserver.addCallback(this, "next_alarm_clock_formatted");
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("MiuiNextAlarmControllerImpl state:");
         printWriter.print("  mHasAlarm=");
@@ -43,6 +44,7 @@ public class MiuiAlarmControllerImpl implements CallbackController, Dumpable, Se
         }
     }
 
+    @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         if (str.equals("next_alarm_clock_formatted")) {
             this.mHasAlarm = !MiuiTextUtils.isEmpty(str2);

@@ -23,6 +23,7 @@ public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
         postInvalidateOnAnimation();
     }
 
+    @Override // com.miui.blur.sdk.backdrop.BlurDrawInfo
     public int getRequestedSamplingPeriodNs() {
         if (this.mHighSamplingFrequency) {
             return 0;

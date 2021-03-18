@@ -7,15 +7,14 @@ import com.android.systemui.log.LogBuffer;
 import com.android.systemui.log.LogLevel;
 import com.android.systemui.log.LogMessageImpl;
 import java.util.Iterator;
-import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.sequences.SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: BroadcastDispatcherLogger.kt */
 public final class BroadcastDispatcherLogger {
-    /* access modifiers changed from: private */
-    public final LogBuffer buffer;
+    private final LogBuffer buffer;
 
     public BroadcastDispatcherLogger(@NotNull LogBuffer logBuffer) {
         Intrinsics.checkParameterIsNotNull(logBuffer, "buffer");
@@ -28,13 +27,13 @@ public final class BroadcastDispatcherLogger {
         Intrinsics.checkExpressionValueIsNotNull(intent2, "intent.toString()");
         LogLevel logLevel = LogLevel.INFO;
         BroadcastDispatcherLogger$logBroadcastReceived$2 broadcastDispatcherLogger$logBroadcastReceived$2 = BroadcastDispatcherLogger$logBroadcastReceived$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logBroadcastReceived$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logBroadcastReceived$2);
             obtain.setInt1(i);
             obtain.setInt2(i2);
             obtain.setStr1(intent2);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -43,13 +42,13 @@ public final class BroadcastDispatcherLogger {
         String broadcastReceiver2 = broadcastReceiver.toString();
         LogLevel logLevel = LogLevel.DEBUG;
         BroadcastDispatcherLogger$logBroadcastDispatched$2 broadcastDispatcherLogger$logBroadcastDispatched$2 = BroadcastDispatcherLogger$logBroadcastDispatched$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logBroadcastDispatched$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logBroadcastDispatched$2);
             obtain.setInt1(i);
             obtain.setStr1(str);
             obtain.setStr2(broadcastReceiver2);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -58,12 +57,12 @@ public final class BroadcastDispatcherLogger {
         String broadcastReceiver2 = broadcastReceiver.toString();
         LogLevel logLevel = LogLevel.INFO;
         BroadcastDispatcherLogger$logReceiverRegistered$2 broadcastDispatcherLogger$logReceiverRegistered$2 = BroadcastDispatcherLogger$logReceiverRegistered$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logReceiverRegistered$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logReceiverRegistered$2);
             obtain.setInt1(i);
             obtain.setStr1(broadcastReceiver2);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -72,12 +71,12 @@ public final class BroadcastDispatcherLogger {
         String broadcastReceiver2 = broadcastReceiver.toString();
         LogLevel logLevel = LogLevel.INFO;
         BroadcastDispatcherLogger$logReceiverUnregistered$2 broadcastDispatcherLogger$logReceiverUnregistered$2 = BroadcastDispatcherLogger$logReceiverUnregistered$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logReceiverUnregistered$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logReceiverUnregistered$2);
             obtain.setInt1(i);
             obtain.setStr1(broadcastReceiver2);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -86,25 +85,25 @@ public final class BroadcastDispatcherLogger {
         Intrinsics.checkParameterIsNotNull(intentFilter, "filter");
         Iterator<String> actionsIterator = intentFilter.actionsIterator();
         Intrinsics.checkExpressionValueIsNotNull(actionsIterator, "filter.actionsIterator()");
-        String joinToString$default = SequencesKt___SequencesKt.joinToString$default(SequencesKt__SequencesKt.asSequence(actionsIterator), ",", "Actions(", ")", 0, (CharSequence) null, (Function1) null, 56, (Object) null);
+        String joinToString$default = SequencesKt.joinToString$default(SequencesKt.asSequence(actionsIterator), ",", "Actions(", ")", 0, null, null, 56, null);
         if (intentFilter.countCategories() != 0) {
             Iterator<String> categoriesIterator = intentFilter.categoriesIterator();
             Intrinsics.checkExpressionValueIsNotNull(categoriesIterator, "filter.categoriesIterator()");
-            str = SequencesKt___SequencesKt.joinToString$default(SequencesKt__SequencesKt.asSequence(categoriesIterator), ",", "Categories(", ")", 0, (CharSequence) null, (Function1) null, 56, (Object) null);
+            str = SequencesKt.joinToString$default(SequencesKt.asSequence(categoriesIterator), ",", "Categories(", ")", 0, null, null, 56, null);
         } else {
             str = "";
         }
         LogLevel logLevel = LogLevel.INFO;
         BroadcastDispatcherLogger$logContextReceiverRegistered$2 broadcastDispatcherLogger$logContextReceiverRegistered$2 = BroadcastDispatcherLogger$logContextReceiverRegistered$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logContextReceiverRegistered$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logContextReceiverRegistered$2);
             obtain.setInt1(i);
-            if (!Intrinsics.areEqual((Object) str, (Object) "")) {
-                joinToString$default = joinToString$default + 10 + str;
+            if (!Intrinsics.areEqual(str, "")) {
+                joinToString$default = joinToString$default + '\n' + str;
             }
             obtain.setStr1(joinToString$default);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 
@@ -112,12 +111,12 @@ public final class BroadcastDispatcherLogger {
         Intrinsics.checkParameterIsNotNull(str, "action");
         LogLevel logLevel = LogLevel.INFO;
         BroadcastDispatcherLogger$logContextReceiverUnregistered$2 broadcastDispatcherLogger$logContextReceiverUnregistered$2 = BroadcastDispatcherLogger$logContextReceiverUnregistered$2.INSTANCE;
-        LogBuffer access$getBuffer$p = this.buffer;
-        if (!access$getBuffer$p.getFrozen()) {
-            LogMessageImpl obtain = access$getBuffer$p.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logContextReceiverUnregistered$2);
+        LogBuffer logBuffer = this.buffer;
+        if (!logBuffer.getFrozen()) {
+            LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logContextReceiverUnregistered$2);
             obtain.setInt1(i);
             obtain.setStr1(str);
-            access$getBuffer$p.push(obtain);
+            logBuffer.push(obtain);
         }
     }
 }

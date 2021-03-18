@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$fHPOCVoTSvBox_jGWtU7jxIAav4 implemen
     private /* synthetic */ $$Lambda$fHPOCVoTSvBox_jGWtU7jxIAav4() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((Divider) obj).onDockedTopTask();
     }

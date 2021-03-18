@@ -12,15 +12,12 @@ import com.miui.systemui.util.MiuiInterpolators;
 public class QCBrightnessMirrorController {
     public long TRANSITION_DURATION_IN = 200;
     public long TRANSITION_DURATION_OUT = 150;
-    /* access modifiers changed from: private */
-    public View mBrightnessMirror;
+    private View mBrightnessMirror;
     private final View mContent;
-    /* access modifiers changed from: private */
-    public final ControlPanelContentView mControlPanelContentView;
+    private final ControlPanelContentView mControlPanelContentView;
     private final int[] mInt2Cache = new int[2];
     private FrameLayout mMirrorContent;
-    /* access modifiers changed from: private */
-    public View mQSBrightness;
+    private View mQSBrightness;
 
     public QCBrightnessMirrorController(ControlPanelContentView controlPanelContentView) {
         this.mControlPanelContentView = controlPanelContentView;
@@ -37,6 +34,8 @@ public class QCBrightnessMirrorController {
         this.mQSBrightness.setVisibility(4);
         this.mBrightnessMirror.setVisibility(0);
         outAnimation(this.mContent.animate()).withLayer().setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController.AnonymousClass1 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(1.0f - valueAnimator.getAnimatedFraction());
             }
@@ -46,16 +45,22 @@ public class QCBrightnessMirrorController {
 
     public void hideMirror() {
         inAnimation(this.mContent.animate()).withLayer().withStartAction(new Runnable() {
+            /* class com.android.systemui.controlcenter.qs.tileview.$$Lambda$QCBrightnessMirrorController$6x4k8CXt4z15SmXjJtzjW9FffXs */
+
             public final void run() {
                 QCBrightnessMirrorController.this.lambda$hideMirror$0$QCBrightnessMirrorController();
             }
         }).setUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(valueAnimator.getAnimatedFraction());
                 QCBrightnessMirrorController.this.mBrightnessMirror.setAlpha(1.0f - valueAnimator.getAnimatedFraction());
                 QCBrightnessMirrorController.this.mQSBrightness.setAlpha(valueAnimator.getAnimatedFraction());
             }
         }).withEndAction(new Runnable() {
+            /* class com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController.AnonymousClass2 */
+
             public void run() {
                 QCBrightnessMirrorController.this.mBrightnessMirror.setAlpha(1.0f);
                 QCBrightnessMirrorController.this.mBrightnessMirror.setVisibility(4);
@@ -71,7 +76,7 @@ public class QCBrightnessMirrorController {
     }
 
     private ViewPropertyAnimator outAnimation(ViewPropertyAnimator viewPropertyAnimator) {
-        return viewPropertyAnimator.alpha(0.0f).setDuration(this.TRANSITION_DURATION_OUT).setInterpolator(MiuiInterpolators.MIUI_ALPHA_OUT).withEndAction((Runnable) null);
+        return viewPropertyAnimator.alpha(0.0f).setDuration(this.TRANSITION_DURATION_OUT).setInterpolator(MiuiInterpolators.MIUI_ALPHA_OUT).withEndAction(null);
     }
 
     private ViewPropertyAnimator inAnimation(ViewPropertyAnimator viewPropertyAnimator) {

@@ -27,6 +27,6 @@ final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 imple
         }
         ControlsFavoritingActivity controlsFavoritingActivity = this.this$0;
         controlsFavoritingActivity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(controlsFavoritingActivity, new Pair[0]).toBundle());
-        this.this$0.animateExitAndFinish();
+        ControlsFavoritingActivity.access$animateExitAndFinish(this.this$0);
     }
 }

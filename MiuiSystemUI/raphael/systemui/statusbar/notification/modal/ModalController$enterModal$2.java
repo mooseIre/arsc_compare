@@ -5,8 +5,9 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.miui.systemui.events.ModalExitMode;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ModalController.kt */
-final class ModalController$enterModal$2 implements View.OnClickListener {
+public final class ModalController$enterModal$2 implements View.OnClickListener {
     final /* synthetic */ ModalController this$0;
 
     ModalController$enterModal$2(ModalController modalController) {
@@ -16,8 +17,8 @@ final class ModalController$enterModal$2 implements View.OnClickListener {
     public final void onClick(View view) {
         ExpandableNotificationRow row;
         this.this$0.animExitModal(ModalExitMode.MANUAL.name());
-        NotificationEntry access$getEntry$p = this.this$0.entry;
-        if (access$getEntry$p != null && (row = access$getEntry$p.getRow()) != null) {
+        NotificationEntry notificationEntry = this.this$0.entry;
+        if (notificationEntry != null && (row = notificationEntry.getRow()) != null) {
             row.performClick();
         }
     }

@@ -20,6 +20,7 @@ public final class StatusBarWindowController_Factory implements Factory<StatusBa
         this.resourcesProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarWindowController get() {
         return provideInstance(this.contextProvider, this.windowManagerProvider, this.superStatusBarViewFactoryProvider, this.resourcesProvider);
     }

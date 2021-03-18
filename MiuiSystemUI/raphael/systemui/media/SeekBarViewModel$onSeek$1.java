@@ -2,8 +2,9 @@ package com.android.systemui.media;
 
 import android.media.session.MediaController;
 
+/* access modifiers changed from: package-private */
 /* compiled from: SeekBarViewModel.kt */
-final class SeekBarViewModel$onSeek$1 implements Runnable {
+public final class SeekBarViewModel$onSeek$1 implements Runnable {
     final /* synthetic */ long $position;
     final /* synthetic */ SeekBarViewModel this$0;
 
@@ -19,8 +20,8 @@ final class SeekBarViewModel$onSeek$1 implements Runnable {
             this.this$0.checkPlaybackPosition();
             return;
         }
-        MediaController access$getController$p = this.this$0.controller;
-        if (!(access$getController$p == null || (transportControls = access$getController$p.getTransportControls()) == null)) {
+        MediaController mediaController = this.this$0.controller;
+        if (!(mediaController == null || (transportControls = mediaController.getTransportControls()) == null)) {
             transportControls.seekTo(this.$position);
         }
         this.this$0.playbackState = null;

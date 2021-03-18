@@ -90,7 +90,7 @@ public class PipAnimationController {
     private PipTransitionAnimator setupPipTransitionAnimator(PipTransitionAnimator pipTransitionAnimator) {
         pipTransitionAnimator.setSurfaceTransactionHelper(this.mSurfaceTransactionHelper);
         pipTransitionAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-        pipTransitionAnimator.setFloatValues(new float[]{0.0f, 1.0f});
+        pipTransitionAnimator.setFloatValues(0.0f, 1.0f);
         pipTransitionAnimator.setAnimationHandler(this.mSfAnimationHandlerThreadLocal.get());
         return pipTransitionAnimator;
     }
@@ -258,7 +258,12 @@ public class PipAnimationController {
 
         static PipTransitionAnimator<Float> ofAlpha(SurfaceControl surfaceControl, Rect rect, float f, float f2) {
             return new PipTransitionAnimator<Float>(surfaceControl, 1, rect, Float.valueOf(f), Float.valueOf(f2)) {
+                /* class com.android.systemui.pip.PipAnimationController.PipTransitionAnimator.AnonymousClass1 */
+
+                /* JADX DEBUG: Multi-variable search result rejected for r2v0, resolved type: com.android.systemui.pip.PipAnimationController$PipTransitionAnimator$1 */
+                /* JADX WARN: Multi-variable type inference failed */
                 /* access modifiers changed from: package-private */
+                @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void applySurfaceControlTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, float f) {
                     float floatValue = (((Float) getStartValue()).floatValue() * (1.0f - f)) + (((Float) getEndValue()).floatValue() * f);
                     setCurrentValue(Float.valueOf(floatValue));
@@ -267,6 +272,7 @@ public class PipAnimationController {
                 }
 
                 /* access modifiers changed from: package-private */
+                @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
                     surfaceTransactionHelper.resetScale(transaction, surfaceControl, getDestinationBounds());
@@ -278,7 +284,7 @@ public class PipAnimationController {
 
                 /* access modifiers changed from: package-private */
                 public void updateEndValue(Float f) {
-                    super.updateEndValue(f);
+                    super.updateEndValue((Object) f);
                     this.mStartValue = this.mCurrentValue;
                 }
             };
@@ -289,10 +295,14 @@ public class PipAnimationController {
             final Rect rect5 = rect3 != null ? new Rect(rect3.left - rect.left, rect3.top - rect.top, rect.right - rect3.right, rect.bottom - rect3.bottom) : null;
             final Rect rect6 = new Rect(0, 0, 0, 0);
             return new PipTransitionAnimator<Rect>(surfaceControl, 0, rect2, new Rect(rect), new Rect(rect2)) {
+                /* class com.android.systemui.pip.PipAnimationController.PipTransitionAnimator.AnonymousClass2 */
                 private final RectEvaluator mInsetsEvaluator = new RectEvaluator(new Rect());
                 private final RectEvaluator mRectEvaluator = new RectEvaluator(new Rect());
 
+                /* JADX DEBUG: Multi-variable search result rejected for r9v0, resolved type: com.android.systemui.pip.PipAnimationController$PipTransitionAnimator$2 */
+                /* JADX WARN: Multi-variable type inference failed */
                 /* access modifiers changed from: package-private */
+                @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void applySurfaceControlTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, float f) {
                     Rect rect = (Rect) getStartValue();
                     Rect rect2 = (Rect) getEndValue();
@@ -301,9 +311,7 @@ public class PipAnimationController {
                     if (!inScaleTransition()) {
                         Rect rect3 = rect5;
                         if (rect3 != null) {
-                            SurfaceControl.Transaction transaction2 = transaction;
-                            SurfaceControl surfaceControl2 = surfaceControl;
-                            getSurfaceTransactionHelper().scaleAndCrop(transaction2, surfaceControl2, rect4, evaluate, this.mInsetsEvaluator.evaluate(f, rect6, rect3));
+                            getSurfaceTransactionHelper().scaleAndCrop(transaction, surfaceControl, rect4, evaluate, this.mInsetsEvaluator.evaluate(f, rect6, rect3));
                         } else {
                             getSurfaceTransactionHelper().scale(transaction, surfaceControl, rect, evaluate);
                         }
@@ -316,6 +324,7 @@ public class PipAnimationController {
                 }
 
                 /* access modifiers changed from: package-private */
+                @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
                     surfaceTransactionHelper.alpha(transaction, surfaceControl, 1.0f);
@@ -325,6 +334,7 @@ public class PipAnimationController {
                 }
 
                 /* access modifiers changed from: package-private */
+                @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void onEndTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
                     surfaceTransactionHelper.resetScale(transaction, surfaceControl, getDestinationBounds());
@@ -334,10 +344,10 @@ public class PipAnimationController {
                 /* access modifiers changed from: package-private */
                 public void updateEndValue(Rect rect) {
                     T t;
-                    super.updateEndValue(rect);
+                    super.updateEndValue((Object) rect);
                     T t2 = this.mStartValue;
                     if (t2 != null && (t = this.mCurrentValue) != null) {
-                        ((Rect) t2).set((Rect) t);
+                        t2.set(t);
                     }
                 }
             };

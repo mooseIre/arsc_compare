@@ -13,6 +13,7 @@ public final class DetailDialog$stateCallback$1 extends ActivityView.StateCallba
         Intrinsics.checkParameterIsNotNull(activityView, "view");
     }
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     DetailDialog$stateCallback$1(DetailDialog detailDialog) {
         this.this$0 = detailDialog;
     }

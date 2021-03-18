@@ -24,7 +24,6 @@ import android.os.Message;
 import android.os.Messenger;
 import android.os.RemoteException;
 import android.os.UserHandle;
-import android.transition.Transition;
 import android.util.Log;
 import android.util.Pair;
 import android.view.KeyEvent;
@@ -52,18 +51,20 @@ public class PipMenuActivity extends Activity {
     private final List<RemoteAction> mActions = new ArrayList();
     private LinearLayout mActionsGroup;
     private boolean mAllowMenuTimeout = true;
-    /* access modifiers changed from: private */
-    public boolean mAllowTouches = true;
-    /* access modifiers changed from: private */
-    public Drawable mBackgroundDrawable;
+    private boolean mAllowTouches = true;
+    private Drawable mBackgroundDrawable;
     private int mBetweenActionPaddingLand;
     private View mDismissButton;
     private final Runnable mFinishRunnable = new Runnable() {
+        /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$on3_yLRCya18yWlE7CavD_fHImk */
+
         public final void run() {
             PipMenuActivity.this.hideMenu();
         }
     };
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        /* class com.android.systemui.pip.phone.PipMenuActivity.AnonymousClass2 */
+
         public void handleMessage(Message message) {
             switch (message.what) {
                 case 1:
@@ -85,7 +86,7 @@ public class PipMenuActivity extends Activity {
                     PipMenuActivity.this.updateDismissFraction(((Bundle) message.obj).getFloat("dismiss_fraction"));
                     return;
                 case 6:
-                    boolean unused = PipMenuActivity.this.mAllowTouches = true;
+                    PipMenuActivity.this.mAllowTouches = true;
                     return;
                 case 7:
                     PipMenuActivity.this.dispatchPointerEvent((MotionEvent) message.obj);
@@ -103,15 +104,15 @@ public class PipMenuActivity extends Activity {
         }
     };
     private ValueAnimator.AnimatorUpdateListener mMenuBgUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+        /* class com.android.systemui.pip.phone.PipMenuActivity.AnonymousClass1 */
+
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             PipMenuActivity.this.mBackgroundDrawable.setAlpha((int) (((Float) valueAnimator.getAnimatedValue()).floatValue() * 0.3f * 255.0f));
         }
     };
     private View mMenuContainer;
-    /* access modifiers changed from: private */
-    public AnimatorSet mMenuContainerAnimator;
-    /* access modifiers changed from: private */
-    public int mMenuState;
+    private AnimatorSet mMenuContainerAnimator;
+    private int mMenuState;
     private Messenger mMessenger = new Messenger(this.mHandler);
     private boolean mResize = true;
     private View mResizeHandle;
@@ -145,6 +146,8 @@ public class PipMenuActivity extends Activity {
         this.mSettingsButton = findViewById3;
         findViewById3.setAlpha(0.0f);
         this.mSettingsButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$4MVIZwVdJN3lkWpqrFrI53Q9bPQ */
+
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$0$PipMenuActivity(view);
             }
@@ -153,11 +156,15 @@ public class PipMenuActivity extends Activity {
         this.mDismissButton = findViewById4;
         findViewById4.setAlpha(0.0f);
         this.mDismissButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$lkNLpysIkUfrlXCWX9bvozrYe1U */
+
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$1$PipMenuActivity(view);
             }
         });
         findViewById(C0015R$id.expand_button).setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$70yHDyzrwE1GNEVEQrmSEL7H6fY */
+
             public final void onClick(View view) {
                 PipMenuActivity.this.lambda$onCreate$2$PipMenuActivity(view);
             }
@@ -170,7 +177,7 @@ public class PipMenuActivity extends Activity {
         updateFromIntent(getIntent());
         setTitle(C0021R$string.pip_menu_title);
         setDisablePreviewScreenshots(true);
-        getWindow().setExitTransition((Transition) null);
+        getWindow().setExitTransition(null);
         initAccessibility();
     }
 
@@ -198,6 +205,8 @@ public class PipMenuActivity extends Activity {
 
     private void initAccessibility() {
         getWindow().getDecorView().setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            /* class com.android.systemui.pip.phone.PipMenuActivity.AnonymousClass3 */
+
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, PipMenuActivity.this.getResources().getString(C0021R$string.pip_menu_title)));
@@ -257,7 +266,7 @@ public class PipMenuActivity extends Activity {
     /* access modifiers changed from: protected */
     public void onDestroy() {
         super.onDestroy();
-        notifyActivityCallback((Messenger) null);
+        notifyActivityCallback(null);
     }
 
     public void onPictureInPictureModeChanged(boolean z) {
@@ -267,7 +276,8 @@ public class PipMenuActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void dispatchPointerEvent(MotionEvent motionEvent) {
+    /* access modifiers changed from: public */
+    private void dispatchPointerEvent(MotionEvent motionEvent) {
         if (motionEvent.isTouchEvent()) {
             dispatchTouchEvent(motionEvent);
         } else {
@@ -287,12 +297,13 @@ public class PipMenuActivity extends Activity {
     }
 
     public void finish() {
-        notifyActivityCallback((Messenger) null);
+        notifyActivityCallback(null);
         super.finish();
     }
 
     /* access modifiers changed from: private */
-    public void showMenu(int i, Rect rect, boolean z, boolean z2, boolean z3, boolean z4) {
+    /* access modifiers changed from: public */
+    private void showMenu(int i, Rect rect, boolean z, boolean z2, boolean z3, boolean z4) {
         this.mAllowMenuTimeout = z;
         int i2 = this.mMenuState;
         if (i2 != i) {
@@ -305,23 +316,25 @@ public class PipMenuActivity extends Activity {
             }
             this.mMenuContainerAnimator = new AnimatorSet();
             View view = this.mMenuContainer;
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.ALPHA, new float[]{view.getAlpha(), 1.0f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.ALPHA, view.getAlpha(), 1.0f);
             ofFloat.addUpdateListener(this.mMenuBgUpdateListener);
             View view2 = this.mSettingsButton;
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view2, View.ALPHA, new float[]{view2.getAlpha(), 1.0f});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view2, View.ALPHA, view2.getAlpha(), 1.0f);
             View view3 = this.mDismissButton;
-            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(view3, View.ALPHA, new float[]{view3.getAlpha(), 1.0f});
+            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(view3, View.ALPHA, view3.getAlpha(), 1.0f);
             View view4 = this.mResizeHandle;
-            ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(view4, View.ALPHA, new float[]{view4.getAlpha(), 0.0f});
+            ObjectAnimator ofFloat4 = ObjectAnimator.ofFloat(view4, View.ALPHA, view4.getAlpha(), 0.0f);
             if (i == 2) {
-                this.mMenuContainerAnimator.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3, ofFloat4});
+                this.mMenuContainerAnimator.playTogether(ofFloat, ofFloat2, ofFloat3, ofFloat4);
             } else {
-                this.mMenuContainerAnimator.playTogether(new Animator[]{ofFloat3, ofFloat4});
+                this.mMenuContainerAnimator.playTogether(ofFloat3, ofFloat4);
             }
             this.mMenuContainerAnimator.setInterpolator(Interpolators.ALPHA_IN);
             this.mMenuContainerAnimator.setDuration(i == 1 ? 125 : 175);
             if (z) {
                 this.mMenuContainerAnimator.addListener(new AnimatorListenerAdapter() {
+                    /* class com.android.systemui.pip.phone.PipMenuActivity.AnonymousClass4 */
+
                     public void onAnimationEnd(Animator animator) {
                         PipMenuActivity.this.repostDelayedFinish(3500);
                     }
@@ -339,7 +352,8 @@ public class PipMenuActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void fadeOutMenu() {
+    /* access modifiers changed from: public */
+    private void fadeOutMenu() {
         this.mMenuContainer.setAlpha(0.0f);
         this.mSettingsButton.setAlpha(0.0f);
         this.mDismissButton.setAlpha(0.0f);
@@ -348,11 +362,12 @@ public class PipMenuActivity extends Activity {
 
     /* access modifiers changed from: private */
     public void hideMenu() {
-        hideMenu((Runnable) null);
+        hideMenu(null);
     }
 
     /* access modifiers changed from: private */
-    public void hideMenu(Runnable runnable) {
+    /* access modifiers changed from: public */
+    private void hideMenu(Runnable runnable) {
         hideMenu(runnable, true, false, true);
     }
 
@@ -364,17 +379,19 @@ public class PipMenuActivity extends Activity {
             }
             this.mMenuContainerAnimator = new AnimatorSet();
             View view = this.mMenuContainer;
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.ALPHA, new float[]{view.getAlpha(), 0.0f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, View.ALPHA, view.getAlpha(), 0.0f);
             ofFloat.addUpdateListener(this.mMenuBgUpdateListener);
             View view2 = this.mSettingsButton;
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view2, View.ALPHA, new float[]{view2.getAlpha(), 0.0f});
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view2, View.ALPHA, view2.getAlpha(), 0.0f);
             View view3 = this.mDismissButton;
-            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(view3, View.ALPHA, new float[]{view3.getAlpha(), 0.0f});
+            ObjectAnimator ofFloat3 = ObjectAnimator.ofFloat(view3, View.ALPHA, view3.getAlpha(), 0.0f);
             View view4 = this.mResizeHandle;
-            this.mMenuContainerAnimator.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3, ObjectAnimator.ofFloat(view4, View.ALPHA, new float[]{view4.getAlpha(), 0.0f})});
+            this.mMenuContainerAnimator.playTogether(ofFloat, ofFloat2, ofFloat3, ObjectAnimator.ofFloat(view4, View.ALPHA, view4.getAlpha(), 0.0f));
             this.mMenuContainerAnimator.setInterpolator(Interpolators.ALPHA_OUT);
             this.mMenuContainerAnimator.setDuration(z3 ? 125 : 0);
             this.mMenuContainerAnimator.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.pip.phone.PipMenuActivity.AnonymousClass5 */
+
                 public void onAnimationEnd(Animator animator) {
                     Runnable runnable = runnable;
                     if (runnable != null) {
@@ -412,7 +429,8 @@ public class PipMenuActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void setActions(Rect rect, List<RemoteAction> list) {
+    /* access modifiers changed from: public */
+    private void setActions(Rect rect, List<RemoteAction> list) {
         this.mActions.clear();
         this.mActions.addAll(list);
         updateActionViews(rect);
@@ -429,7 +447,7 @@ public class PipMenuActivity extends Activity {
                 if (this.mActionsGroup != null) {
                     LayoutInflater from = LayoutInflater.from(this);
                     while (this.mActionsGroup.getChildCount() < this.mActions.size()) {
-                        this.mActionsGroup.addView((ImageButton) from.inflate(C0017R$layout.pip_menu_action, this.mActionsGroup, false));
+                        this.mActionsGroup.addView((ImageButton) from.inflate(C0017R$layout.pip_menu_action, (ViewGroup) this.mActionsGroup, false));
                     }
                     int i = 0;
                     while (i < this.mActionsGroup.getChildCount()) {
@@ -444,6 +462,7 @@ public class PipMenuActivity extends Activity {
                         RemoteAction remoteAction = this.mActions.get(i2);
                         ImageButton imageButton = (ImageButton) this.mActionsGroup.getChildAt(i2);
                         remoteAction.getIcon().loadDrawableAsync(this, new Icon.OnDrawableLoadedListener(imageButton) {
+                            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$FgVNA6rqcnXmAeLQlbztL7Zw7mU */
                             public final /* synthetic */ ImageButton f$0;
 
                             {
@@ -457,6 +476,7 @@ public class PipMenuActivity extends Activity {
                         imageButton.setContentDescription(remoteAction.getContentDescription());
                         if (remoteAction.isEnabled()) {
                             imageButton.setOnClickListener(new View.OnClickListener(remoteAction) {
+                                /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$Ts5um0YR6IQ0YRdLS2dyHj4GSpg */
                                 public final /* synthetic */ RemoteAction f$1;
 
                                 {
@@ -493,6 +513,7 @@ public class PipMenuActivity extends Activity {
     /* renamed from: lambda$updateActionViews$6 */
     public /* synthetic */ void lambda$updateActionViews$6$PipMenuActivity(RemoteAction remoteAction, View view) {
         this.mHandler.post(new Runnable(remoteAction) {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$KxDwr2Rt3pvREKtFVSgFixejo */
             public final /* synthetic */ RemoteAction f$0;
 
             {
@@ -514,7 +535,8 @@ public class PipMenuActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void updateDismissFraction(float f) {
+    /* access modifiers changed from: public */
+    private void updateDismissFraction(float f) {
         int i;
         float f2 = 1.0f - f;
         int i2 = this.mMenuState;
@@ -550,6 +572,8 @@ public class PipMenuActivity extends Activity {
 
     private void expandPip() {
         hideMenu(new Runnable() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$gxeJOYpgn30UbyKen9nD4GpRdFQ */
+
             public final void run() {
                 PipMenuActivity.this.lambda$expandPip$7$PipMenuActivity();
             }
@@ -564,6 +588,8 @@ public class PipMenuActivity extends Activity {
 
     private void dismissPip() {
         hideMenu(new Runnable() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivity$guHLrBiStjvmB9r01MbFqRGaK3c */
+
             public final void run() {
                 PipMenuActivity.this.lambda$dismissPip$8$PipMenuActivity();
             }
@@ -580,7 +606,7 @@ public class PipMenuActivity extends Activity {
         Pair<ComponentName, Integer> topPipActivity = PipUtils.getTopPipActivity(this, ActivityManager.getService());
         if (topPipActivity.first != null) {
             UserHandle of = UserHandle.of(((Integer) topPipActivity.second).intValue());
-            Intent intent = new Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS", Uri.fromParts("package", ((ComponentName) topPipActivity.first).getPackageName(), (String) null));
+            Intent intent = new Intent("android.settings.PICTURE_IN_PICTURE_SETTINGS", Uri.fromParts("package", ((ComponentName) topPipActivity.first).getPackageName(), null));
             intent.putExtra("android.intent.extra.user_handle", of);
             intent.setFlags(268468224);
             startActivity(intent);
@@ -602,7 +628,8 @@ public class PipMenuActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void sendMessage(Message message, String str) {
+    /* access modifiers changed from: public */
+    private void sendMessage(Message message, String str) {
         Messenger messenger = this.mToControllerMessenger;
         if (messenger != null) {
             try {
@@ -614,12 +641,14 @@ public class PipMenuActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void cancelDelayedFinish() {
+    /* access modifiers changed from: public */
+    private void cancelDelayedFinish() {
         this.mHandler.removeCallbacks(this.mFinishRunnable);
     }
 
     /* access modifiers changed from: private */
-    public void repostDelayedFinish(int i) {
+    /* access modifiers changed from: public */
+    private void repostDelayedFinish(int i) {
         int recommendedTimeoutMillis = this.mAccessibilityManager.getRecommendedTimeoutMillis(i, 5);
         this.mHandler.removeCallbacks(this.mFinishRunnable);
         this.mHandler.postDelayed(this.mFinishRunnable, (long) recommendedTimeoutMillis);

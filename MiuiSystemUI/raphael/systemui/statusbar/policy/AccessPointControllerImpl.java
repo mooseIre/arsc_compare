@@ -16,11 +16,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class AccessPointControllerImpl implements NetworkController.AccessPointController, WifiTracker.WifiListener {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable("AccessPointController", 3);
+    private static final boolean DEBUG = Log.isLoggable("AccessPointController", 3);
     private static final int[] ICONS = MiuiWifiIcons.WIFI_FULL_ICONS;
     private final ArrayList<NetworkController.AccessPointController.AccessPointCallback> mCallbacks = new ArrayList<>();
     private final WifiManager.ActionListener mConnectListener = new WifiManager.ActionListener() {
+        /* class com.android.systemui.statusbar.policy.AccessPointControllerImpl.AnonymousClass1 */
+
         public void onSuccess() {
             if (AccessPointControllerImpl.DEBUG) {
                 Log.d("AccessPointController", "connect success");
@@ -38,6 +39,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
     private final UserManager mUserManager;
     private final WifiTracker mWifiTracker;
 
+    @Override // com.android.settingslib.wifi.WifiTracker.WifiListener
     public void onWifiStateChanged(int i) {
     }
 
@@ -54,6 +56,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         this.mWifiTracker.onDestroy();
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public boolean canConfigWifi() {
         return !this.mUserManager.hasUserRestriction("no_config_wifi", new UserHandle(this.mCurrentUser));
     }
@@ -62,6 +65,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         this.mCurrentUser = i;
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public void addAccessPointCallback(NetworkController.AccessPointController.AccessPointCallback accessPointCallback) {
         if (accessPointCallback != null && !this.mCallbacks.contains(accessPointCallback)) {
             if (DEBUG) {
@@ -74,6 +78,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public void removeAccessPointCallback(NetworkController.AccessPointController.AccessPointCallback accessPointCallback) {
         if (accessPointCallback != null) {
             if (DEBUG) {
@@ -86,10 +91,12 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public void scanForAccessPoints() {
         fireAcccessPointsCallback(this.mWifiTracker.getAccessPoints());
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public int getIcon(AccessPoint accessPoint) {
         int level = accessPoint.getLevel();
         int[] iArr = ICONS;
@@ -99,6 +106,7 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         return iArr[level];
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public boolean connect(AccessPoint accessPoint) {
         if (accessPoint == null) {
             return false;
@@ -139,10 +147,12 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
         this.mWifiTracker.dump(printWriter);
     }
 
+    @Override // com.android.settingslib.wifi.WifiTracker.WifiListener
     public void onConnectedChanged() {
         fireAcccessPointsCallback(this.mWifiTracker.getAccessPoints());
     }
 
+    @Override // com.android.settingslib.wifi.WifiTracker.WifiListener
     public void onAccessPointsChanged() {
         fireAcccessPointsCallback(this.mWifiTracker.getAccessPoints());
     }

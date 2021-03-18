@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import com.android.systemui.C0015R$id;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -17,15 +18,15 @@ public final class QSHeaderInfoLayout extends FrameLayout {
     private View statusSeparator;
 
     public QSHeaderInfoLayout(@NotNull Context context) {
-        this(context, (AttributeSet) null, 0, 0, 14, (DefaultConstructorMarker) null);
+        this(context, null, 0, 0, 14, null);
     }
 
     public QSHeaderInfoLayout(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 0, 12, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 0, 12, null);
     }
 
     public QSHeaderInfoLayout(@NotNull Context context, @Nullable AttributeSet attributeSet, int i) {
-        this(context, attributeSet, i, 0, 8, (DefaultConstructorMarker) null);
+        this(context, attributeSet, i, 0, 8, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -166,8 +167,9 @@ public final class QSHeaderInfoLayout extends FrameLayout {
         throw null;
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: QSHeaderInfoLayout.kt */
-    private static final class Location {
+    public static final class Location {
         private int left;
         private int right;
 

@@ -11,6 +11,7 @@ public final class GroupCoalescerLogger_Factory implements Factory<GroupCoalesce
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public GroupCoalescerLogger get() {
         return provideInstance(this.bufferProvider);
     }

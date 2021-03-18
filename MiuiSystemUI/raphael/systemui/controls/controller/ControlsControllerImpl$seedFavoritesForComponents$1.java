@@ -3,8 +3,9 @@ package com.android.systemui.controls.controller;
 import java.util.List;
 import java.util.function.Consumer;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsControllerImpl.kt */
-final class ControlsControllerImpl$seedFavoritesForComponents$1 implements Runnable {
+public final class ControlsControllerImpl$seedFavoritesForComponents$1 implements Runnable {
     final /* synthetic */ Consumer $callback;
     final /* synthetic */ List $componentNames;
     final /* synthetic */ ControlsControllerImpl this$0;

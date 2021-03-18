@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.Log;
@@ -18,6 +17,8 @@ public class UserInfoControllerImpl implements UserInfoController {
     private final ArrayList<UserInfoController.OnUserInfoChangedListener> mCallbacks = new ArrayList<>();
     private final Context mContext;
     private final BroadcastReceiver mProfileReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.UserInfoControllerImpl.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("android.provider.Contacts.PROFILE_CHANGED".equals(action) || "android.intent.action.USER_INFO_CHANGED".equals(action)) {
@@ -32,6 +33,8 @@ public class UserInfoControllerImpl implements UserInfoController {
         }
     };
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.UserInfoControllerImpl.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
                 UserInfoControllerImpl.this.reloadUserInfo();
@@ -51,7 +54,7 @@ public class UserInfoControllerImpl implements UserInfoController {
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction("android.provider.Contacts.PROFILE_CHANGED");
         intentFilter2.addAction("android.intent.action.USER_INFO_CHANGED");
-        this.mContext.registerReceiverAsUser(this.mProfileReceiver, UserHandle.ALL, intentFilter2, (String) null, (Handler) null);
+        this.mContext.registerReceiverAsUser(this.mProfileReceiver, UserHandle.ALL, intentFilter2, null, null);
     }
 
     public void addCallback(UserInfoController.OnUserInfoChangedListener onUserInfoChangedListener) {
@@ -63,6 +66,7 @@ public class UserInfoControllerImpl implements UserInfoController {
         this.mCallbacks.remove(onUserInfoChangedListener);
     }
 
+    @Override // com.android.systemui.statusbar.policy.UserInfoController
     public void reloadUserInfo() {
         AsyncTask<Void, Void, Object> asyncTask = this.mUserInfoTask;
         if (asyncTask != null) {

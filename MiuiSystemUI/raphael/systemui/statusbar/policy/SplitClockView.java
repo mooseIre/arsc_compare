@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.UserHandle;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
@@ -16,6 +15,8 @@ import com.android.systemui.C0015R$id;
 public class SplitClockView extends LinearLayout {
     private TextClock mAmPmView;
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.SplitClockView.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if ("android.intent.action.TIME_SET".equals(action) || "android.intent.action.TIMEZONE_CHANGED".equals(action) || "android.intent.action.LOCALE_CHANGED".equals(action) || "android.intent.action.CONFIGURATION_CHANGED".equals(action) || "android.intent.action.USER_SWITCHED".equals(action)) {
@@ -47,7 +48,7 @@ public class SplitClockView extends LinearLayout {
         intentFilter.addAction("android.intent.action.LOCALE_CHANGED");
         intentFilter.addAction("android.intent.action.CONFIGURATION_CHANGED");
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
-        getContext().registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        getContext().registerReceiverAsUser(this.mIntentReceiver, UserHandle.ALL, intentFilter, null, null);
         updatePatterns();
     }
 
@@ -58,7 +59,8 @@ public class SplitClockView extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updatePatterns() {
+    /* access modifiers changed from: public */
+    private void updatePatterns() {
         String str;
         String str2;
         String timeFormatString = DateFormat.getTimeFormatString(getContext(), ActivityManager.getCurrentUser());
@@ -80,26 +82,22 @@ public class SplitClockView extends LinearLayout {
 
     private static int getAmPmPartEndIndex(String str) {
         int length = str.length() - 1;
-        int i = length;
         boolean z = false;
-        while (i >= 0) {
+        for (int i = length; i >= 0; i--) {
             char charAt = str.charAt(i);
             boolean z2 = charAt == 'a';
             boolean isWhitespace = Character.isWhitespace(charAt);
             if (z2) {
                 z = true;
             }
-            if (z2 || isWhitespace) {
-                i--;
-            } else if (i != length && z) {
-                return i + 1;
-            } else {
-                return -1;
+            if (!z2 && !isWhitespace) {
+                if (i != length && z) {
+                    return i + 1;
+                } else {
+                    return -1;
+                }
             }
         }
-        if (z) {
-            return 0;
-        }
-        return -1;
+        return z ? 0 : -1;
     }
 }

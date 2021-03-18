@@ -14,6 +14,7 @@ public final class BlurUtils_Factory implements Factory<BlurUtils> {
         this.dumpManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public BlurUtils get() {
         return provideInstance(this.resourcesProvider, this.dumpManagerProvider);
     }

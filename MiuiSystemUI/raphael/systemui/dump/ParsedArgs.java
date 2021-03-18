@@ -5,8 +5,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: DumpHandler.kt */
-final class ParsedArgs {
+public final class ParsedArgs {
     @Nullable
     private String command;
     @Nullable

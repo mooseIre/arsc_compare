@@ -21,21 +21,25 @@ public class TunerSwitch extends SwitchPreference implements TunerService.Tunabl
         this.mAction = obtainStyledAttributes.getInt(R$styleable.TunerSwitch_metricsAction, -1);
     }
 
+    @Override // androidx.preference.Preference
     public void onAttached() {
         super.onAttached();
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, getKey().split(","));
     }
 
+    @Override // androidx.preference.Preference
     public void onDetached() {
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
         super.onDetached();
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         setChecked(TunerService.parseIntegerSwitch(str2, this.mDefault));
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.preference.TwoStatePreference, androidx.preference.Preference
     public void onClick() {
         super.onClick();
         if (this.mAction != -1) {
@@ -44,9 +48,10 @@ public class TunerSwitch extends SwitchPreference implements TunerService.Tunabl
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.preference.Preference
     public boolean persistBoolean(boolean z) {
-        for (String putString : getKey().split(",")) {
-            Settings.Secure.putString(getContext().getContentResolver(), putString, z ? "1" : "0");
+        for (String str : getKey().split(",")) {
+            Settings.Secure.putString(getContext().getContentResolver(), str, z ? "1" : "0");
         }
         return true;
     }

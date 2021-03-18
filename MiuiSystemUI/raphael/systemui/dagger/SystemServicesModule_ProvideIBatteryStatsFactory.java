@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemServicesModule_ProvideIBatteryStatsFactory implements Factory<IBatteryStats> {
     private static final SystemServicesModule_ProvideIBatteryStatsFactory INSTANCE = new SystemServicesModule_ProvideIBatteryStatsFactory();
 
+    @Override // javax.inject.Provider
     public IBatteryStats get() {
         return provideInstance();
     }

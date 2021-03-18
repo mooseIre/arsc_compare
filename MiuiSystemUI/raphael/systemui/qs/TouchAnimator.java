@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TouchAnimator {
-    /* access modifiers changed from: private */
-    public static final FloatProperty<TouchAnimator> POSITION = new FloatProperty<TouchAnimator>("position") {
+    private static final FloatProperty<TouchAnimator> POSITION = new FloatProperty<TouchAnimator>("position") {
+        /* class com.android.systemui.qs.TouchAnimator.AnonymousClass1 */
+
         public void setValue(TouchAnimator touchAnimator, float f) {
             touchAnimator.setPosition(f);
         }
@@ -23,8 +24,7 @@ public class TouchAnimator {
     private final float mEndDelay;
     private final Interpolator mInterpolator;
     private final KeyframeSet[] mKeyframeSets;
-    /* access modifiers changed from: private */
-    public float mLastT;
+    private float mLastT;
     private final Listener mListener;
     private final float mSpan;
     private final float mStartDelay;
@@ -39,6 +39,7 @@ public class TouchAnimator {
     }
 
     public static class ListenerAdapter implements Listener {
+        @Override // com.android.systemui.qs.TouchAnimator.Listener
         public void onAnimationAtStart() {
         }
     }
@@ -134,7 +135,7 @@ public class TouchAnimator {
                         break;
                     case -908189617:
                         if (str.equals("scaleY")) {
-                            c = 8;
+                            c = '\b';
                             break;
                         }
                         break;
@@ -180,7 +181,7 @@ public class TouchAnimator {
                         return View.Y;
                     case 7:
                         return View.SCALE_X;
-                    case 8:
+                    case '\b':
                         return View.SCALE_Y;
                 }
             }
@@ -213,7 +214,8 @@ public class TouchAnimator {
         }
     }
 
-    private static abstract class KeyframeSet {
+    /* access modifiers changed from: private */
+    public static abstract class KeyframeSet {
         private final float mFrameWidth;
         private final int mSize;
 
@@ -237,7 +239,8 @@ public class TouchAnimator {
         }
     }
 
-    private static class FloatKeyframeSet<T> extends KeyframeSet {
+    /* access modifiers changed from: private */
+    public static class FloatKeyframeSet<T> extends KeyframeSet {
         private final Property<T, Float> mProperty;
         private final float[] mValues;
 
@@ -248,6 +251,7 @@ public class TouchAnimator {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.qs.TouchAnimator.KeyframeSet
         public void interpolate(int i, float f, Object obj) {
             float[] fArr = this.mValues;
             float f2 = fArr[i - 1];

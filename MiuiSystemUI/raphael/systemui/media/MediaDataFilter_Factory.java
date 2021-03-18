@@ -26,6 +26,7 @@ public final class MediaDataFilter_Factory implements Factory<MediaDataFilter> {
         this.entryManagerProvider = provider7;
     }
 
+    @Override // javax.inject.Provider
     public MediaDataFilter get() {
         return provideInstance(this.dataSourceProvider, this.broadcastDispatcherProvider, this.mediaResumeListenerProvider, this.mediaDataManagerProvider, this.lockscreenUserManagerProvider, this.executorProvider, this.entryManagerProvider);
     }

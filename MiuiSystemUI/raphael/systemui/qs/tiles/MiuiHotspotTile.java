@@ -22,6 +22,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
     private boolean mIsAirplaneMode;
     private boolean mListening;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowFixedHeightMajor;
     }
@@ -31,26 +32,33 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
         this.mHotspotController = hotspotController;
         hotspotController.observe(getLifecycle(), this.mHotspotCallback);
         this.mAirplaneMode = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
+            /* class com.android.systemui.qs.tiles.MiuiHotspotTile.AnonymousClass1 */
+
             /* access modifiers changed from: protected */
+            @Override // com.android.systemui.qs.GlobalSetting
             public void handleValueChanged(int i) {
                 MiuiHotspotTile.this.refreshState();
             }
         };
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mHotspotController.isHotspotSupported() && CrossUserUtils.getCurrentUserId() == 0;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (this.mListening != z) {
             this.mListening = z;
@@ -58,11 +66,13 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent(TETHER_SETTINGS);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         Object obj;
         boolean z = ((QSTile.BooleanState) this.mState).value;
@@ -84,6 +94,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_hotspot_label);
     }
@@ -122,7 +133,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
         }
         booleanState.state = i;
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
@@ -130,6 +141,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_on);
@@ -141,6 +153,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
         private Callback() {
         }
 
+        @Override // com.android.systemui.statusbar.policy.HotspotController.Callback
         public void onHotspotChanged(boolean z, int i) {
             MiuiHotspotTile.this.refreshState(Boolean.valueOf(z));
         }

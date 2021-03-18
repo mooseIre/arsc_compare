@@ -41,6 +41,7 @@ public class ConfigurationControllerImpl implements ConfigurationController {
         return this.listeners;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController
     public void notifyThemeChanged() {
         for (ConfigurationController.ConfigurationListener configurationListener : new ArrayList(this.listeners)) {
             if (this.listeners.contains(configurationListener)) {
@@ -49,9 +50,10 @@ public class ConfigurationControllerImpl implements ConfigurationController {
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController
     public void onConfigurationChanged(@NotNull Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
-        ArrayList<ConfigurationController.ConfigurationListener> arrayList = new ArrayList<>(this.listeners);
+        ArrayList<ConfigurationController.ConfigurationListener> arrayList = new ArrayList(this.listeners);
         for (ConfigurationController.ConfigurationListener configurationListener : arrayList) {
             if (this.listeners.contains(configurationListener)) {
                 configurationListener.onConfigChanged(configuration);
@@ -61,7 +63,7 @@ public class ConfigurationControllerImpl implements ConfigurationController {
         int i = configuration.densityDpi;
         int i2 = configuration.uiMode & 48;
         boolean z = i2 != this.uiMode;
-        if (!(i == this.density && f == this.fontScale && (!this.inCarMode || !z))) {
+        if (!(i == this.density && f == this.fontScale && !(this.inCarMode && z))) {
             for (ConfigurationController.ConfigurationListener configurationListener2 : arrayList) {
                 if (this.listeners.contains(configurationListener2)) {
                     configurationListener2.onDensityOrFontScaleChanged();
@@ -71,7 +73,7 @@ public class ConfigurationControllerImpl implements ConfigurationController {
             this.fontScale = f;
         }
         LocaleList locales = configuration.getLocales();
-        if (!Intrinsics.areEqual((Object) locales, (Object) this.localeList)) {
+        if (!Intrinsics.areEqual(locales, this.localeList)) {
             this.localeList = locales;
             for (ConfigurationController.ConfigurationListener configurationListener3 : arrayList) {
                 if (this.listeners.contains(configurationListener3)) {

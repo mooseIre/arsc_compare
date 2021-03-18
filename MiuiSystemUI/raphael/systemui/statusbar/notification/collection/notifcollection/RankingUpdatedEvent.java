@@ -12,7 +12,7 @@ public final class RankingUpdatedEvent extends NotifEvent {
 
     public boolean equals(@Nullable Object obj) {
         if (this != obj) {
-            return (obj instanceof RankingUpdatedEvent) && Intrinsics.areEqual((Object) this.rankingMap, (Object) ((RankingUpdatedEvent) obj).rankingMap);
+            return (obj instanceof RankingUpdatedEvent) && Intrinsics.areEqual(this.rankingMap, ((RankingUpdatedEvent) obj).rankingMap);
         }
         return true;
     }
@@ -32,11 +32,12 @@ public final class RankingUpdatedEvent extends NotifEvent {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public RankingUpdatedEvent(@NotNull NotificationListenerService.RankingMap rankingMap2) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(rankingMap2, "rankingMap");
         this.rankingMap = rankingMap2;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifEvent
     public void dispatchToListener(@NotNull NotifCollectionListener notifCollectionListener) {
         Intrinsics.checkParameterIsNotNull(notifCollectionListener, "listener");
         notifCollectionListener.onRankingUpdate(this.rankingMap);

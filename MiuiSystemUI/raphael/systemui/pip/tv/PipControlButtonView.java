@@ -20,15 +20,14 @@ public class PipControlButtonView extends RelativeLayout {
     private Animator mButtonFocusLossAnimator;
     ImageView mButtonImageView;
     private TextView mDescriptionTextView;
-    /* access modifiers changed from: private */
-    public View.OnFocusChangeListener mFocusChangeListener;
+    private View.OnFocusChangeListener mFocusChangeListener;
     private ImageView mIconImageView;
     private final View.OnFocusChangeListener mInternalFocusChangeListener;
     private Animator mTextFocusGainAnimator;
     private Animator mTextFocusLossAnimator;
 
     public PipControlButtonView(Context context) {
-        this(context, (AttributeSet) null, 0, 0);
+        this(context, null, 0, 0);
     }
 
     public PipControlButtonView(Context context, AttributeSet attributeSet) {
@@ -42,6 +41,8 @@ public class PipControlButtonView extends RelativeLayout {
     public PipControlButtonView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mInternalFocusChangeListener = new View.OnFocusChangeListener() {
+            /* class com.android.systemui.pip.tv.PipControlButtonView.AnonymousClass1 */
+
             public void onFocusChange(View view, boolean z) {
                 if (z) {
                     PipControlButtonView.this.startFocusGainAnimation();

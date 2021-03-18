@@ -14,6 +14,8 @@ public class ButtonDispatcher {
     private View.AccessibilityDelegate mAccessibilityDelegate;
     private Float mAlpha;
     private final ValueAnimator.AnimatorUpdateListener mAlphaListener = new ValueAnimator.AnimatorUpdateListener() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$ButtonDispatcher$YQ5xchhAskLzgLUT3UrgvCxrRAQ */
+
         public final void onAnimationUpdate(ValueAnimator valueAnimator) {
             ButtonDispatcher.this.lambda$new$0$ButtonDispatcher(valueAnimator);
         }
@@ -23,11 +25,12 @@ public class ButtonDispatcher {
     private View mCurrentView;
     private Float mDarkIntensity;
     private Boolean mDelayTouchFeedback;
-    /* access modifiers changed from: private */
-    public ValueAnimator mFadeAnimator;
+    private ValueAnimator mFadeAnimator;
     private final AnimatorListenerAdapter mFadeListener = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.statusbar.phone.ButtonDispatcher.AnonymousClass1 */
+
         public void onAnimationEnd(Animator animator) {
-            ValueAnimator unused = ButtonDispatcher.this.mFadeAnimator = null;
+            ButtonDispatcher.this.mFadeAnimator = null;
             ButtonDispatcher buttonDispatcher = ButtonDispatcher.this;
             buttonDispatcher.setVisibility(buttonDispatcher.getAlpha() == 1.0f ? 0 : 4);
         }
@@ -186,7 +189,7 @@ public class ButtonDispatcher {
         }
         if (z) {
             setVisibility(0);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{getAlpha(), f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(getAlpha(), f);
             this.mFadeAnimator = ofFloat;
             ofFloat.setStartDelay(this.mAssistManager.getAssistHandleShowAndGoRemainingDurationMs());
             this.mFadeAnimator.setDuration(j);

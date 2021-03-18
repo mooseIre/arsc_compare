@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$ExpandableOutlineView$ZLqiUGCQzNj3P4
     private /* synthetic */ $$Lambda$ExpandableOutlineView$ZLqiUGCQzNj3P4m8kfbTwbzfyaI() {
     }
 
+    @Override // java.util.function.BiConsumer
     public final void accept(Object obj, Object obj2) {
         ((ExpandableOutlineView) obj).setBottomRoundnessInternal(((Float) obj2).floatValue());
     }

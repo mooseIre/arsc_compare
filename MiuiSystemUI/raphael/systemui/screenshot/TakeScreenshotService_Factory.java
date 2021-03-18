@@ -16,6 +16,7 @@ public final class TakeScreenshotService_Factory implements Factory<TakeScreensh
         this.uiEventLoggerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public TakeScreenshotService get() {
         return provideInstance(this.globalScreenshotProvider, this.userManagerProvider, this.uiEventLoggerProvider);
     }

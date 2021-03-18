@@ -25,6 +25,9 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
     private ArrayList<View> mDrawingOrderedChildren = new ArrayList<>();
     private boolean mHasViewsAboveShelf;
     private final Comparator<View> mIndexComparator = Comparator.comparingInt(new ToIntFunction() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$rYOLYKY9UUHboooVhy4ZToEslhI */
+
+        @Override // java.util.function.ToIntFunction
         public final int applyAsInt(Object obj) {
             return NotificationsQuickSettingsContainer.this.indexOfChild((View) obj);
         }
@@ -131,6 +134,7 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
         }
     }
 
+    @Override // com.android.systemui.fragments.FragmentHostManager.FragmentListener
     public void onFragmentViewCreated(String str, Fragment fragment) {
         ((QS) fragment).setContainer(this);
     }
@@ -166,6 +170,7 @@ public class NotificationsQuickSettingsContainer extends FrameLayout implements 
         view.setLayoutParams(layoutParams);
     }
 
+    @Override // com.android.systemui.statusbar.notification.AboveShelfObserver.HasViewAboveShelfChangedListener
     public void onHasViewsAboveShelfChanged(boolean z) {
         this.mHasViewsAboveShelf = z;
         invalidate();

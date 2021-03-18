@@ -9,15 +9,14 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: PeopleHubNotificationListener.kt */
 public final class NotificationPersonExtractorPluginBoundary implements NotificationPersonExtractor {
-    /* access modifiers changed from: private */
-    public NotificationPersonExtractorPlugin plugin;
+    private NotificationPersonExtractorPlugin plugin;
 
     public NotificationPersonExtractorPluginBoundary(@NotNull ExtensionController extensionController) {
-        Class<NotificationPersonExtractorPlugin> cls = NotificationPersonExtractorPlugin.class;
         Intrinsics.checkParameterIsNotNull(extensionController, "extensionController");
-        ExtensionController.ExtensionBuilder<NotificationPersonExtractorPlugin> newExtension = extensionController.newExtension(cls);
-        newExtension.withPlugin(cls);
+        ExtensionController.ExtensionBuilder newExtension = extensionController.newExtension(NotificationPersonExtractorPlugin.class);
+        newExtension.withPlugin(NotificationPersonExtractorPlugin.class);
         newExtension.withCallback(new Consumer<NotificationPersonExtractorPlugin>(this) {
+            /* class com.android.systemui.statusbar.notification.people.NotificationPersonExtractorPluginBoundary.AnonymousClass1 */
             final /* synthetic */ NotificationPersonExtractorPluginBoundary this$0;
 
             {
@@ -28,9 +27,10 @@ public final class NotificationPersonExtractorPluginBoundary implements Notifica
                 this.this$0.plugin = notificationPersonExtractorPlugin;
             }
         });
-        this.plugin = newExtension.build().get();
+        this.plugin = (NotificationPersonExtractorPlugin) newExtension.build().get();
     }
 
+    @Override // com.android.systemui.statusbar.notification.people.NotificationPersonExtractor
     public boolean isPersonNotification(@NotNull StatusBarNotification statusBarNotification) {
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
         NotificationPersonExtractorPlugin notificationPersonExtractorPlugin = this.plugin;

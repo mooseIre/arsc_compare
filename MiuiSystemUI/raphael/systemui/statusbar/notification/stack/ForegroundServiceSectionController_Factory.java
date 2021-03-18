@@ -14,6 +14,7 @@ public final class ForegroundServiceSectionController_Factory implements Factory
         this.featureControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ForegroundServiceSectionController get() {
         return provideInstance(this.entryManagerProvider, this.featureControllerProvider);
     }

@@ -40,13 +40,11 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
     protected boolean mIsExtremePowerSaveMode;
     protected boolean mIsPowerSaveMode;
     protected int mLevel;
-    /* access modifiers changed from: private */
-    public final Handler mMainHandler;
+    private final Handler mMainHandler;
     protected boolean mPluggedIn;
     private final PowerManager mPowerManager;
     protected boolean mPowerSave;
-    /* access modifiers changed from: private */
-    public boolean mTestmode = false;
+    private boolean mTestmode = false;
 
     /* access modifiers changed from: protected */
     public void updateSecondSpace() {
@@ -72,16 +70,18 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         this.mBroadcastDispatcher.registerReceiver(this, intentFilter);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController
     public void init() {
         Intent registerReceiver;
         registerReceiver();
-        if (!this.mHasReceivedBattery && (registerReceiver = this.mContext.registerReceiver((BroadcastReceiver) null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) != null && !this.mHasReceivedBattery) {
+        if (!this.mHasReceivedBattery && (registerReceiver = this.mContext.registerReceiver(null, new IntentFilter("android.intent.action.BATTERY_CHANGED"))) != null && !this.mHasReceivedBattery) {
             onReceive(this.mContext, registerReceiver);
         }
         updatePowerSave();
         updateEstimate();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("BatteryController state:");
         printWriter.print("  mLevel=");
@@ -96,6 +96,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         printWriter.println(this.mPowerSave);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController
     public void setPowerSaveMode(boolean z) {
         BatterySaverUtils.setPowerSaveMode(this.mContext, z, true);
     }
@@ -141,6 +142,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         } else if (action.equals("com.android.systemui.BATTERY_LEVEL_TEST")) {
             this.mTestmode = true;
             this.mMainHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.policy.BatteryControllerImpl.AnonymousClass1 */
                 int curLevel = 0;
                 Intent dummy;
                 int incr = 1;
@@ -158,7 +160,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
                     int i = this.curLevel;
                     int i2 = 0;
                     if (i < 0) {
-                        boolean unused = BatteryControllerImpl.this.mTestmode = false;
+                        BatteryControllerImpl.this.mTestmode = false;
                         this.dummy.putExtra("level", this.saveLevel);
                         this.dummy.putExtra("plugged", this.savePlugged);
                         this.dummy.putExtra("testmode", false);
@@ -189,14 +191,17 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController
     public boolean isPowerSave() {
         return this.mPowerSave;
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController
     public boolean isAodPowerSave() {
         return this.mAodPowerSave;
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController
     public void getEstimatedTimeRemainingString(BatteryController.EstimateFetchCompletion estimateFetchCompletion) {
         synchronized (this.mFetchCallbacks) {
             this.mFetchCallbacks.add(estimateFetchCompletion);
@@ -209,8 +214,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
             if (this.mEstimate == null) {
                 return null;
             }
-            String batteryRemainingShortStringFormatted = PowerUtil.getBatteryRemainingShortStringFormatted(this.mContext, this.mEstimate.getEstimateMillis());
-            return batteryRemainingShortStringFormatted;
+            return PowerUtil.getBatteryRemainingShortStringFormatted(this.mContext, this.mEstimate.getEstimateMillis());
         }
     }
 
@@ -218,6 +222,8 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         if (!this.mFetchingEstimate) {
             this.mFetchingEstimate = true;
             this.mBgHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$BatteryControllerImpl$Q2m5_jQFbUIrN5x5MkihyCoos8 */
+
                 public final void run() {
                     BatteryControllerImpl.this.lambda$updateEstimateInBackground$0$BatteryControllerImpl();
                 }
@@ -236,8 +242,10 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         }
         this.mFetchingEstimate = false;
         this.mMainHandler.post(new Runnable() {
+            /* class com.android.systemui.statusbar.policy.$$Lambda$BatteryControllerImpl$xVvPxv9usTpbGvWx3jH4_VH1nvI */
+
             public final void run() {
-                BatteryControllerImpl.this.notifyEstimateFetchCallbacks();
+                BatteryControllerImpl.lambda$xVvPxv9usTpbGvWx3jH4_VH1nvI(BatteryControllerImpl.this);
             }
         });
     }
@@ -301,6 +309,7 @@ public class BatteryControllerImpl extends BroadcastReceiver implements BatteryC
         }
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;

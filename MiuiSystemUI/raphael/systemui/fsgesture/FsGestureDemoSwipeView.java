@@ -20,17 +20,15 @@ import com.android.systemui.C0017R$layout;
 public class FsGestureDemoSwipeView extends FrameLayout {
     AnimatorSet finalAnimatorSet;
     ObjectAnimator hidingAnimator;
-    /* access modifiers changed from: private */
-    public int mDisplayHeight;
-    /* access modifiers changed from: private */
-    public int mDisplayWidth;
+    private int mDisplayHeight;
+    private int mDisplayWidth;
     private float mFinalTranslate;
     ObjectAnimator movingAnimator;
     ObjectAnimator scaleAnimator;
     ObjectAnimator showingAnimator;
 
     public FsGestureDemoSwipeView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public FsGestureDemoSwipeView(Context context, AttributeSet attributeSet) {
@@ -100,11 +98,13 @@ public class FsGestureDemoSwipeView extends FrameLayout {
             AnimatorSet animatorSet = new AnimatorSet();
             this.finalAnimatorSet = animatorSet;
             if (i != 4) {
-                animatorSet.playSequentially(new Animator[]{this.showingAnimator, this.movingAnimator, this.hidingAnimator});
+                animatorSet.playSequentially(this.showingAnimator, this.movingAnimator, this.hidingAnimator);
             } else {
-                animatorSet.playSequentially(new Animator[]{this.showingAnimator, this.movingAnimator, this.scaleAnimator, this.hidingAnimator});
+                animatorSet.playSequentially(this.showingAnimator, this.movingAnimator, this.scaleAnimator, this.hidingAnimator);
             }
             this.finalAnimatorSet.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.fsgesture.FsGestureDemoSwipeView.AnonymousClass1 */
+
                 public void onAnimationEnd(Animator animator) {
                     super.onAnimationEnd(animator);
                     switch (i) {
@@ -134,17 +134,17 @@ public class FsGestureDemoSwipeView extends FrameLayout {
 
     private void createScaleAnimator(int i) {
         if (this.scaleAnimator == null) {
-            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.0f, 1.2f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.0f, 1.2f})});
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat("scaleX", 1.0f, 1.2f), PropertyValuesHolder.ofFloat("scaleY", 1.0f, 1.2f));
             this.scaleAnimator = ofPropertyValuesHolder;
-            ofPropertyValuesHolder.setDuration(1000);
+            ofPropertyValuesHolder.setDuration(1000L);
         }
     }
 
     private void createShowingAnimator(int i) {
         if (this.showingAnimator == null) {
-            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.2f, 1.0f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.2f, 1.0f}), PropertyValuesHolder.ofFloat("alpha", new float[]{0.0f, 1.0f})});
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat("scaleX", 1.2f, 1.0f), PropertyValuesHolder.ofFloat("scaleY", 1.2f, 1.0f), PropertyValuesHolder.ofFloat("alpha", 0.0f, 1.0f));
             this.showingAnimator = ofPropertyValuesHolder;
-            ofPropertyValuesHolder.setDuration(200);
+            ofPropertyValuesHolder.setDuration(200L);
             this.showingAnimator.setStartDelay(300);
         }
     }
@@ -152,14 +152,14 @@ public class FsGestureDemoSwipeView extends FrameLayout {
     private void createHidingAnimator(int i) {
         if (this.hidingAnimator == null) {
             if (i != 4) {
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "alpha", new float[]{1.0f, 0.0f});
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "alpha", 1.0f, 0.0f);
                 this.hidingAnimator = ofFloat;
-                ofFloat.setDuration(300);
+                ofFloat.setDuration(300L);
                 return;
             }
-            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat("scaleX", new float[]{1.2f, 1.5f}), PropertyValuesHolder.ofFloat("scaleY", new float[]{1.2f, 1.5f}), PropertyValuesHolder.ofFloat("alpha", new float[]{1.0f, 0.0f})});
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat("scaleX", 1.2f, 1.5f), PropertyValuesHolder.ofFloat("scaleY", 1.2f, 1.5f), PropertyValuesHolder.ofFloat("alpha", 1.0f, 0.0f));
             this.hidingAnimator = ofPropertyValuesHolder;
-            ofPropertyValuesHolder.setDuration(100);
+            ofPropertyValuesHolder.setDuration(100L);
         }
     }
 
@@ -168,18 +168,18 @@ public class FsGestureDemoSwipeView extends FrameLayout {
             switch (i) {
                 case 0:
                 case 3:
-                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationX", new float[]{(float) ((-getWidth()) / 2), this.mFinalTranslate - ((float) (getWidth() / 2))});
+                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationX", (float) ((-getWidth()) / 2), this.mFinalTranslate - ((float) (getWidth() / 2)));
                     break;
                 case 1:
-                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationX", new float[]{(float) (this.mDisplayWidth - (getWidth() / 2)), ((float) this.mDisplayWidth) - this.mFinalTranslate});
+                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationX", (float) (this.mDisplayWidth - (getWidth() / 2)), ((float) this.mDisplayWidth) - this.mFinalTranslate);
                     break;
                 case 2:
                 case 4:
-                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationY", new float[]{(float) (this.mDisplayHeight - (getHeight() / 2)), (float) (this.mDisplayHeight - 1000)});
+                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationY", (float) (this.mDisplayHeight - (getHeight() / 2)), (float) (this.mDisplayHeight - 1000));
                     break;
                 case 5:
                     float left = (float) ((this.mDisplayWidth / 2) - ((getLeft() + getWidth()) / 2));
-                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationX", new float[]{left, this.mFinalTranslate + left});
+                    this.movingAnimator = ObjectAnimator.ofFloat(this, "translationX", left, this.mFinalTranslate + left);
                     break;
                 case 6:
                     int left2 = (this.mDisplayWidth / 2) - ((getLeft() + getWidth()) / 2);
@@ -196,11 +196,11 @@ public class FsGestureDemoSwipeView extends FrameLayout {
             this.movingAnimator.setStartDelay(1000);
             if (i == 6) {
                 this.movingAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
-                this.movingAnimator.setDuration(1000);
+                this.movingAnimator.setDuration(1000L);
                 return;
             }
             this.movingAnimator.setInterpolator(new DecelerateInterpolator(1.5f));
-            this.movingAnimator.setDuration(500);
+            this.movingAnimator.setDuration(500L);
         }
     }
 

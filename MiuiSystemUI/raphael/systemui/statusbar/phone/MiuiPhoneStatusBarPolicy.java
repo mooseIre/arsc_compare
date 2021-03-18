@@ -49,6 +49,8 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     protected Context mContext;
     private int mCurrentProfileId;
     private BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.media.extra.AUDIO_MIC_PLUG_STATE".equals(intent.getAction())) {
                 MiuiPhoneStatusBarPolicy.this.updateMicphonePlug(intent);
@@ -59,14 +61,15 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     private boolean mManagedProfileInQuietMode = false;
     private boolean mRingerVisible;
     private final ContentObserver mSecondSpaceStatusIconObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.statusbar.phone.MiuiPhoneStatusBarPolicy.AnonymousClass1 */
+
         public void onChange(boolean z) {
             MiuiPhoneStatusBarPolicy miuiPhoneStatusBarPolicy = MiuiPhoneStatusBarPolicy.this;
-            boolean unused = miuiPhoneStatusBarPolicy.mSecondSpaceStatusIconVisible = MiuiSettings.Global.isOpenSecondSpaceStatusIcon(miuiPhoneStatusBarPolicy.mContext.getContentResolver());
+            miuiPhoneStatusBarPolicy.mSecondSpaceStatusIconVisible = MiuiSettings.Global.isOpenSecondSpaceStatusIcon(miuiPhoneStatusBarPolicy.mContext.getContentResolver());
             MiuiPhoneStatusBarPolicy.this.updateManagedProfile();
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mSecondSpaceStatusIconVisible;
+    private boolean mSecondSpaceStatusIconVisible;
     protected final String mSlotBluetoothBattery;
     protected final String mSlotMicphone;
     protected final String mSlotSyncActive;
@@ -86,17 +89,18 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mStatusBarManager = (StatusBarManager) this.mContext.getSystemService("statusbar");
     }
 
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarPolicy
     public void miuiInit() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.media.extra.AUDIO_MIC_PLUG_STATE");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mIntentReceiver, intentFilter, this.mHandler);
-        this.mIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_quiet_mode, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_quiet_mode, null);
         this.mIconController.setIconVisibility(this.mSlotZen, false);
-        this.mIconController.setIcon(this.mSlotSyncActive, C0013R$drawable.stat_sys_sync, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotSyncActive, C0013R$drawable.stat_sys_sync, null);
         this.mIconController.setIconVisibility(this.mSlotSyncActive, false);
         this.mIconController.setIcon(this.mSlotLocation, C0013R$drawable.stat_sys_gps_on, this.mResources.getString(C0021R$string.accessibility_location_active));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
-        this.mIconController.setIcon(this.mSlotRotate, C0013R$drawable.stat_sys_rotate_portrait, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotRotate, C0013R$drawable.stat_sys_rotate_portrait, null);
         this.mIconController.setIconVisibility(this.mSlotRotate, false);
         this.mIconController.setIcon(this.mSlotHotspot, C0013R$drawable.stat_sys_wifi_ap_on, this.mResources.getString(C0021R$string.accessibility_status_bar_hotspot));
         this.mIconController.setIconVisibility(this.mSlotHotspot, false);
@@ -104,36 +108,39 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mIconController.setIconVisibility(this.mSlotVolume, false);
         this.mIconController.setIcon(this.mSlotHeadset, C0013R$drawable.stat_sys_headset, this.mResources.getString(C0021R$string.accessibility_status_bar_headset));
         this.mIconController.setIconVisibility(this.mSlotHeadset, false);
-        this.mIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, (CharSequence) null);
+        this.mIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, null);
         this.mIconController.setIconVisibility(this.mSlotMicphone, false);
         this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotVolume, C0013R$drawable.stat_sys_ringer_vibrate, this.mContext.getString(C0021R$string.accessibility_ringer_vibrate));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotVolume, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_quiet_mode, (CharSequence) null);
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_quiet_mode, null);
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotZen, false);
         initVloumeZen();
         this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotHeadset, C0013R$drawable.stat_sys_headset, this.mResources.getString(C0021R$string.accessibility_status_bar_headset));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotHeadset, false);
         this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotAlarmClock, C0013R$drawable.stat_sys_alarm, this.mResources.getString(C0021R$string.status_bar_alarm));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotAlarmClock, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, (CharSequence) null);
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, null);
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotMicphone, false);
-        this.mStatusBarManager.setIcon("mute", C0013R$drawable.stat_notify_call_mute, 0, (String) null);
+        this.mStatusBarManager.setIcon("mute", C0013R$drawable.stat_notify_call_mute, 0, null);
         this.mStatusBarManager.setIconVisibility("mute", false);
-        this.mStatusBarManager.setIcon("speakerphone", C0013R$drawable.stat_sys_speakerphone, 0, (String) null);
+        this.mStatusBarManager.setIcon("speakerphone", C0013R$drawable.stat_sys_speakerphone, 0, null);
         this.mStatusBarManager.setIconVisibility("speakerphone", false);
-        this.mStatusBarManager.setIcon("call_record", C0013R$drawable.stat_sys_call_record, 0, (String) null);
+        this.mStatusBarManager.setIcon("call_record", C0013R$drawable.stat_sys_call_record, 0, null);
         this.mStatusBarManager.setIconVisibility("call_record", false);
         ((MiuiAlarmControllerImpl) Dependency.get(MiuiAlarmControllerImpl.class)).addCallback((MiuiAlarmController$MiuiAlarmChangeCallback) this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BluetoothController.Callback
     public void onBluetoothInoutStateChange(String str) {
         updateBluetooth(str);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BluetoothController.Callback
     public void onBluetoothBatteryChange(Intent intent) {
         updateBluetoothHandsfreeBattery(intent);
     }
 
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarPolicy
     public void updateBluetooth(String str) {
         int i;
         Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: action = " + str);
@@ -169,11 +176,11 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
                 if (b == 3) {
                     i = C0013R$drawable.stat_sys_data_bluetooth_inout;
                 }
-                Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: BluetoothFlowState = " + this.mBluetoothFlowState);
+                Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: BluetoothFlowState = " + ((int) this.mBluetoothFlowState));
                 z = isBluetoothEnabled;
             }
             i2 = i;
-            Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: BluetoothFlowState = " + this.mBluetoothFlowState);
+            Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: BluetoothFlowState = " + ((int) this.mBluetoothFlowState));
             z = isBluetoothEnabled;
         }
         this.mIconController.setIcon(this.mSlotBluetooth, i2, string);
@@ -181,14 +188,18 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarPolicy
     public void profileChanged(int i) {
         this.mCurrentProfileId = i;
         updateManagedProfile();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarPolicy
     public void updateManagedProfile() {
         this.mUiBgExecutor.execute(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiPhoneStatusBarPolicy$YLvW0eaWPNgXkJGDF9CFm2822yk */
+
             public final void run() {
                 MiuiPhoneStatusBarPolicy.this.lambda$updateManagedProfile$1$MiuiPhoneStatusBarPolicy();
             }
@@ -207,6 +218,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             }
             Log.d("MiuiPhoneStatusBarPolicy", "updateManagedProfile: secondSpace = " + z2);
             this.mHandler.post(new Runnable(z, isManagedProfile, z2) {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiPhoneStatusBarPolicy$jlZWxWXhPRdh80FQ2dWSJJ1ZjU */
                 public final /* synthetic */ boolean f$1;
                 public final /* synthetic */ boolean f$2;
                 public final /* synthetic */ boolean f$3;
@@ -260,22 +272,22 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         switch (intExtra) {
             case 1:
             case 2:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_1, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, new Object[]{Integer.valueOf(intExtra * 10)}));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_1, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             case 3:
             case 4:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_2, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, new Object[]{Integer.valueOf(intExtra * 10)}));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_2, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             case 5:
             case 6:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_3, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, new Object[]{Integer.valueOf(intExtra * 10)}));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_3, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             case 7:
             case 8:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_4, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, new Object[]{Integer.valueOf(intExtra * 10)}));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_4, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             default:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_5, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, new Object[]{Integer.valueOf(intExtra * 10)}));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_5, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
         }
         this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, true);
@@ -294,11 +306,13 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotMicphone, false);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onVibrateChanged(boolean z) {
         updateVolumeZen();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarPolicy
     public void updateVolumeZen() {
         String str;
         int i;
@@ -328,6 +342,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotVolume, true);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
     public void onZenOrRingerChanged(boolean z, boolean z2) {
         this.mZenVisible = z;
         this.mRingerVisible = z2;
@@ -342,18 +357,19 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         int i = 0;
         boolean booleanExtra = intent.getBooleanExtra("enabled", false);
         if (!action.equals("android.location.GPS_FIX_CHANGE") || !booleanExtra) {
-            boolean equals = action.equals("android.location.GPS_ENABLED_CHANGE");
+            action.equals("android.location.GPS_ENABLED_CHANGE");
             z = false;
         } else {
             i = C0013R$drawable.stat_sys_gps_on;
             z = true;
         }
         if (i != 0) {
-            this.mIconController.setIcon(this.mSlotLocation, i, (CharSequence) null);
+            this.mIconController.setIcon(this.mSlotLocation, i, null);
         }
         this.mIconController.setIconVisibility(this.mSlotLocation, z);
     }
 
+    @Override // com.android.systemui.statusbar.policy.LocationController.LocationChangeCallback
     public void onLocationStatusChanged(Intent intent) {
         updateLocation(intent);
     }
@@ -367,6 +383,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarPolicy
     public void updateHeadsetPlug(Intent intent) {
         int i;
         int i2;
@@ -406,6 +423,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotHeadset, false);
     }
 
+    @Override // com.android.systemui.statusbar.policy.MiuiAlarmController$MiuiAlarmChangeCallback
     public void onNextAlarmChanged(boolean z) {
         this.mIconController.setIconVisibility(this.mSlotAlarmClock, z);
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotAlarmClock, z);

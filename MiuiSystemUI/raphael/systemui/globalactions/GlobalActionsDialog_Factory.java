@@ -104,6 +104,7 @@ public final class GlobalActionsDialog_Factory implements Factory<GlobalActionsD
         this.currentUserContextTrackerProvider = provider32;
     }
 
+    @Override // javax.inject.Provider
     public GlobalActionsDialog get() {
         return provideInstance(this.contextProvider, this.windowManagerFuncsProvider, this.audioManagerProvider, this.iDreamManagerProvider, this.devicePolicyManagerProvider, this.lockPatternUtilsProvider, this.broadcastDispatcherProvider, this.connectivityManagerProvider, this.telephonyManagerProvider, this.contentResolverProvider, this.vibratorProvider, this.resourcesProvider, this.configurationControllerProvider, this.activityStarterProvider, this.keyguardStateControllerProvider, this.userManagerProvider, this.trustManagerProvider, this.iActivityManagerProvider, this.telecomManagerProvider, this.metricsLoggerProvider, this.depthControllerProvider, this.colorExtractorProvider, this.statusBarServiceProvider, this.notificationShadeWindowControllerProvider, this.iWindowManagerProvider, this.backgroundExecutorProvider, this.uiEventLoggerProvider, this.ringerModeTrackerProvider, this.sysUiStateProvider, this.handlerProvider, this.controlsComponentProvider, this.currentUserContextTrackerProvider);
     }

@@ -53,19 +53,14 @@ import miuix.animation.utils.EaseManager;
 
 public class QSBigTileView extends QSTileView {
     private String mActiveString;
-    /* access modifiers changed from: private */
-    public BigQSTileAnimationController mAnimatorController;
+    private BigQSTileAnimationController mAnimatorController;
     private ObjectAnimator mBreathAnimator;
-    /* access modifiers changed from: private */
-    public boolean mClicked;
+    private boolean mClicked;
     private String mClosingString;
     private String mConnectedString;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public ControlCenterPanelView mControlCenterPanelView;
-    /* access modifiers changed from: private */
-    public ImageView mExpandIndicator;
+    private Context mContext;
+    private ControlCenterPanelView mControlCenterPanelView;
+    private ImageView mExpandIndicator;
     private final H mHandler;
     private QSTileHost mHost;
     private String mInActiveString;
@@ -79,30 +74,33 @@ public class QSBigTileView extends QSTileView {
     private TextView mStatusView;
     protected String mTag;
     private final QSTile.Callback mTileCallBack;
-    /* access modifiers changed from: private */
-    public MiuiQSPanel$MiuiTileRecord mTileRecord;
+    private MiuiQSPanel$MiuiTileRecord mTileRecord;
     private boolean mTileState;
     private TextView mTitleView;
     private String mUnavailableString;
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public int getDetailY() {
         return 0;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public QSIconView getIcon() {
         return null;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public View getIconWithBackground() {
         return null;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public View updateAccessibilityOrder(View view) {
         return null;
     }
 
     public QSBigTileView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public QSBigTileView(Context context, AttributeSet attributeSet) {
@@ -126,9 +124,9 @@ public class QSBigTileView extends QSTileView {
         this.mUnavailableString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_unavailable);
         this.mOpeningString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_opening);
         this.mClosingString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_closing);
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mStatusIconView, "alpha", new float[]{0.5f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mStatusIconView, "alpha", 0.5f);
         this.mBreathAnimator = ofFloat;
-        ofFloat.setDuration(400);
+        ofFloat.setDuration(400L);
         this.mBreathAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
         this.mBreathAnimator.setRepeatMode(2);
         this.mBreathAnimator.setRepeatCount(-1);
@@ -136,6 +134,8 @@ public class QSBigTileView extends QSTileView {
         setClipChildren(false);
         setClipToPadding(false);
         setOutlineProvider(new ViewOutlineProvider(this) {
+            /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass1 */
+
             public void getOutline(View view, Outline outline) {
                 outline.setAlpha(0.0f);
             }
@@ -169,6 +169,8 @@ public class QSBigTileView extends QSTileView {
 
     public void updateIndicatorTouch() {
         this.mExpandIndicator.post(new Runnable() {
+            /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass2 */
+
             public void run() {
                 int dimensionPixelSize = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_h);
                 int dimensionPixelSize2 = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_v);
@@ -303,13 +305,14 @@ public class QSBigTileView extends QSTileView {
         super.onDetachedFromWindow();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public void onStateChanged(QSTile.State state) {
         this.mHandler.obtainMessage(1, state).sendToTarget();
     }
 
     /* access modifiers changed from: protected */
     public void handleStateChanged(QSTile.State state) {
-        CharSequence charSequence;
+        SpannableStringBuilder spannableStringBuilder;
         int i;
         int i2;
         boolean z;
@@ -331,9 +334,9 @@ public class QSBigTileView extends QSTileView {
         }
         int i3 = state.state;
         if (i3 == 2) {
-            charSequence = this.mActiveString;
+            spannableStringBuilder = this.mActiveString;
         } else {
-            charSequence = i3 == 1 ? this.mInActiveString : this.mUnavailableString;
+            spannableStringBuilder = i3 == 1 ? this.mInActiveString : this.mUnavailableString;
         }
         this.mState = state.state;
         if (this.mTag.equals("wifi") || this.mTag.equals("bt")) {
@@ -341,22 +344,22 @@ public class QSBigTileView extends QSTileView {
             if (state.isTransient) {
                 int i4 = state.state;
                 if (i4 == 2) {
-                    charSequence = this.mOpeningString;
+                    spannableStringBuilder = this.mOpeningString;
                     this.mState = 2;
                 } else if (i4 == 1) {
-                    charSequence = this.mClosingString;
+                    spannableStringBuilder = this.mClosingString;
                     this.mState = 1;
                 }
             }
             if (state.state == 2 && isConnected) {
-                charSequence = this.mConnectedString;
+                spannableStringBuilder = this.mConnectedString;
             }
         }
         int i5 = this.mState;
         if (i5 == 0) {
             int color = getContext().getColor(C0011R$color.qs_control_tile_text_unavailable_color);
             state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(color), 18);
-            charSequence = new SpannableStringBuilder().append(charSequence, new ForegroundColorSpan(color), 18);
+            spannableStringBuilder = new SpannableStringBuilder().append(spannableStringBuilder, new ForegroundColorSpan(color), 18);
         } else {
             TextView textView = this.mTitleView;
             if (i5 == 2) {
@@ -375,18 +378,23 @@ public class QSBigTileView extends QSTileView {
         }
         this.mTitleView.setEnabled(true ^ state.disabledByPolicy);
         this.mTitleView.setText(state.label);
-        this.mStatusView.setText(charSequence);
+        this.mStatusView.setText(spannableStringBuilder);
         this.mQSTileState = state;
         updateBackground();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTileView
     public void init(final QSTile qSTile) {
         AnonymousClass3 r0 = new View.OnClickListener(this) {
+            /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass3 */
+
             public void onClick(View view) {
                 qSTile.click();
             }
         };
         AnonymousClass4 r1 = new View.OnClickListener() {
+            /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass4 */
+
             public void onClick(View view) {
                 Object obj;
                 if (QSBigTileView.this.mTag.equals("cell")) {
@@ -403,6 +411,8 @@ public class QSBigTileView extends QSTileView {
             }
         };
         AnonymousClass5 r2 = new View.OnLongClickListener(this) {
+            /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass5 */
+
             public boolean onLongClick(View view) {
                 qSTile.longClick();
                 return true;
@@ -413,17 +423,19 @@ public class QSBigTileView extends QSTileView {
         this.mExpandIndicator.setOnClickListener(r1);
         this.mAnimatorController = new BigQSTileAnimationController(this, this.mExpandIndicator, 0.7f, 1.0f);
         this.mExpandIndicator.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass6 */
+
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 int actionMasked = motionEvent.getActionMasked();
                 if (actionMasked == 0) {
-                    boolean unused = QSBigTileView.this.mClicked = true;
+                    QSBigTileView.this.mClicked = true;
                 }
                 QSBigTileView.this.mAnimatorController.onTouchEvent(motionEvent);
                 if (actionMasked == 1) {
                     view.callOnClick();
                 }
                 if (actionMasked == 3 || actionMasked == 1) {
-                    boolean unused2 = QSBigTileView.this.mClicked = false;
+                    QSBigTileView.this.mClicked = false;
                 }
                 return true;
             }
@@ -442,7 +454,8 @@ public class QSBigTileView extends QSTileView {
         return super.dispatchTouchEvent(motionEvent);
     }
 
-    private class H extends Handler {
+    /* access modifiers changed from: private */
+    public class H extends Handler {
         public H() {
             super(Looper.getMainLooper());
         }
@@ -547,24 +560,29 @@ public class QSBigTileView extends QSTileView {
     }
 
     private class QSTileCallback implements QSTile.Callback {
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onAnnouncementRequested(CharSequence charSequence) {
         }
 
         private QSTileCallback() {
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onStateChanged(QSTile.State state) {
             QSBigTileView.this.onStateChanged(state);
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onShowDetail(boolean z) {
             QSBigTileView.this.mControlCenterPanelView.showDetail(z, QSBigTileView.this.mTileRecord);
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onToggleStateChanged(boolean z) {
             QSBigTileView.this.mControlCenterPanelView.fireToggleStateChanged(z);
         }
 
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onScanStateChanged(boolean z) {
             QSBigTileView.this.mControlCenterPanelView.fireScanStateChanged(z);
         }

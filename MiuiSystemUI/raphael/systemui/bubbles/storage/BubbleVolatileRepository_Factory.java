@@ -11,6 +11,7 @@ public final class BubbleVolatileRepository_Factory implements Factory<BubbleVol
         this.launcherAppsProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public BubbleVolatileRepository get() {
         return provideInstance(this.launcherAppsProvider);
     }

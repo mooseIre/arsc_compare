@@ -7,8 +7,7 @@ import java.io.PrintWriter;
 
 public class DozeDockHandler implements DozeMachine.Part {
     private final DockEventListener mDockEventListener;
-    /* access modifiers changed from: private */
-    public final DockManager mDockManager;
+    private final DockManager mDockManager;
     private int mDockState = 0;
 
     static {
@@ -17,7 +16,7 @@ public class DozeDockHandler implements DozeMachine.Part {
 
     DozeDockHandler(AmbientDisplayConfiguration ambientDisplayConfiguration, DozeMachine dozeMachine, DockManager dockManager) {
         this.mDockManager = dockManager;
-        this.mDockEventListener = new DockEventListener(this, (AnonymousClass1) null);
+        this.mDockEventListener = new DockEventListener(this, null);
     }
 
     /* renamed from: com.android.systemui.doze.DozeDockHandler$1  reason: invalid class name */
@@ -35,13 +34,13 @@ public class DozeDockHandler implements DozeMachine.Part {
                 com.android.systemui.doze.DozeMachine$State[] r0 = com.android.systemui.doze.DozeMachine.State.values()
                 int r0 = r0.length
                 int[] r0 = new int[r0]
-                $SwitchMap$com$android$systemui$doze$DozeMachine$State = r0
+                com.android.systemui.doze.DozeDockHandler.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State = r0
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.INITIALIZED     // Catch:{ NoSuchFieldError -> 0x0012 }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
                 r2 = 1
                 r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
             L_0x0012:
-                int[] r0 = $SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x001d }
+                int[] r0 = com.android.systemui.doze.DozeDockHandler.AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State     // Catch:{ NoSuchFieldError -> 0x001d }
                 com.android.systemui.doze.DozeMachine$State r1 = com.android.systemui.doze.DozeMachine.State.FINISH     // Catch:{ NoSuchFieldError -> 0x001d }
                 int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
                 r2 = 2
@@ -53,6 +52,7 @@ public class DozeDockHandler implements DozeMachine.Part {
         }
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void transitionTo(DozeMachine.State state, DozeMachine.State state2) {
         int i = AnonymousClass1.$SwitchMap$com$android$systemui$doze$DozeMachine$State[state2.ordinal()];
         if (i == 1) {
@@ -62,6 +62,7 @@ public class DozeDockHandler implements DozeMachine.Part {
         }
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Part
     public void dump(PrintWriter printWriter) {
         printWriter.println("DozeDockHandler:");
         printWriter.println(" dockState=" + this.mDockState);

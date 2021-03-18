@@ -17,6 +17,7 @@ public final class HotspotTile_Factory implements Factory<HotspotTile> {
         this.dataSaverControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public HotspotTile get() {
         return provideInstance(this.hostProvider, this.hotspotControllerProvider, this.dataSaverControllerProvider);
     }

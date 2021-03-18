@@ -18,6 +18,7 @@ public final class DisplayImeController_Factory implements Factory<DisplayImeCon
         this.transactionPoolProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public DisplayImeController get() {
         return provideInstance(this.syswinProvider, this.displayControllerProvider, this.mainHandlerProvider, this.transactionPoolProvider);
     }

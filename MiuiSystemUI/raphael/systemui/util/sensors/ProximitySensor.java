@@ -12,7 +12,6 @@ import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.sensors.ProximitySensor;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -42,6 +41,8 @@ public class ProximitySensor {
         this.mSensorDelay = 3;
         this.mAlerting = new AtomicBoolean();
         this.mSensorEventListener = new SensorEventListener() {
+            /* class com.android.systemui.util.sensors.ProximitySensor.AnonymousClass1 */
+
             public void onAccuracyChanged(Sensor sensor, int i) {
             }
 
@@ -90,9 +91,9 @@ public class ProximitySensor {
         if (string.isEmpty()) {
             return null;
         }
-        for (Sensor next : this.mSensorManager.getSensorList(-1)) {
-            if (string.equals(next.getStringType())) {
-                return next;
+        for (Sensor sensor : this.mSensorManager.getSensorList(-1)) {
+            if (string.equals(sensor.getStringType())) {
+                return sensor;
             }
         }
         return null;
@@ -163,6 +164,9 @@ public class ProximitySensor {
     public void alertListeners() {
         if (!this.mAlerting.getAndSet(true)) {
             new ArrayList(this.mListeners).forEach(new Consumer() {
+                /* class com.android.systemui.util.sensors.$$Lambda$ProximitySensor$ghFL7mqmC5TPLUcAxsPYh6a_M */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ProximitySensor.this.lambda$alertListeners$0$ProximitySensor((ProximitySensor.ProximitySensorListener) obj);
                 }
@@ -178,7 +182,8 @@ public class ProximitySensor {
     }
 
     /* access modifiers changed from: private */
-    public void onSensorEvent(SensorEvent sensorEvent) {
+    /* access modifiers changed from: public */
+    private void onSensorEvent(SensorEvent sensorEvent) {
         boolean z = false;
         if (sensorEvent.values[0] < this.mThreshold) {
             z = true;
@@ -188,7 +193,7 @@ public class ProximitySensor {
     }
 
     public String toString() {
-        return String.format("{registered=%s, paused=%s, near=%s, sensor=%s}", new Object[]{Boolean.valueOf(isRegistered()), Boolean.valueOf(this.mPaused), isNear(), this.mSensor});
+        return String.format("{registered=%s, paused=%s, near=%s, sensor=%s}", Boolean.valueOf(isRegistered()), Boolean.valueOf(this.mPaused), isNear(), this.mSensor);
     }
 
     public static class ProximityCheck implements Runnable {
@@ -203,6 +208,9 @@ public class ProximitySensor {
             proximitySensor.setTag("prox_check");
             this.mDelayableExecutor = delayableExecutor;
             this.mListener = new ProximitySensorListener() {
+                /* class com.android.systemui.util.sensors.$$Lambda$ProximitySensor$ProximityCheck$VWMwluPHAE8LZl7uid6iAJaZ0zg */
+
+                @Override // com.android.systemui.util.sensors.ProximitySensor.ProximitySensorListener
                 public final void onSensorEvent(ProximitySensor.ProximityEvent proximityEvent) {
                     ProximitySensor.ProximityCheck.this.onProximityEvent(proximityEvent);
                 }
@@ -216,7 +224,7 @@ public class ProximitySensor {
 
         public void check(long j, Consumer<Boolean> consumer) {
             if (!this.mSensor.getSensorAvailable()) {
-                consumer.accept((Object) null);
+                consumer.accept(null);
             }
             this.mCallbacks.add(consumer);
             if (!this.mRegistered.getAndSet(true)) {
@@ -233,6 +241,9 @@ public class ProximitySensor {
         /* access modifiers changed from: private */
         public void onProximityEvent(ProximityEvent proximityEvent) {
             this.mCallbacks.forEach(new Consumer() {
+                /* class com.android.systemui.util.sensors.$$Lambda$ProximitySensor$ProximityCheck$ruTS1Tk02_hYvk7mh0KkebUZDkE */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ProximitySensor.ProximityCheck.lambda$onProximityEvent$0(ProximitySensor.ProximityEvent.this, (Consumer) obj);
                 }
@@ -265,7 +276,7 @@ public class ProximitySensor {
         }
 
         public String toString() {
-            return String.format((Locale) null, "{near=%s, timestamp_ns=%d}", new Object[]{Boolean.valueOf(this.mNear), Long.valueOf(this.mTimestampNs)});
+            return String.format(null, "{near=%s, timestamp_ns=%d}", Boolean.valueOf(this.mNear), Long.valueOf(this.mTimestampNs));
         }
     }
 

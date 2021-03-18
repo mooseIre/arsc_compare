@@ -8,6 +8,7 @@ public class DozeScreenStatePreventingAdapter extends DozeMachine.Service.Delega
         super(service);
     }
 
+    @Override // com.android.systemui.doze.DozeMachine.Service, com.android.systemui.doze.DozeMachine.Service.Delegate
     public void setDozeScreenState(int i) {
         if (i == 3) {
             i = 2;

@@ -39,8 +39,8 @@ public class QSCarrier extends LinearLayout {
         this.mMobileSignal = (ImageView) findViewById(C0015R$id.mobile_signal);
         ImageView imageView = (ImageView) findViewById(C0015R$id.mobile_roaming);
         TextView textView = (TextView) findViewById(C0015R$id.qs_carrier_text);
-        this.mMobileSignal.setImageDrawable(new SignalDrawable(this.mContext));
-        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, 16842800);
+        this.mMobileSignal.setImageDrawable(new SignalDrawable(((LinearLayout) this).mContext));
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(((LinearLayout) this).mContext, 16842800);
         ColorStateList.valueOf(colorAttrDefaultColor);
         QuickStatusBarHeader.getColorIntensity(colorAttrDefaultColor);
     }

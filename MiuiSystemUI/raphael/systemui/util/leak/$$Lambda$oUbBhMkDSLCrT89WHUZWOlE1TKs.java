@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$oUbBhMkDSLCrT89WHUZWOlE1TKs implemen
     private /* synthetic */ $$Lambda$oUbBhMkDSLCrT89WHUZWOlE1TKs() {
     }
 
+    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
         return TrackedObjects.isTrackedObject((Collection) obj);
     }

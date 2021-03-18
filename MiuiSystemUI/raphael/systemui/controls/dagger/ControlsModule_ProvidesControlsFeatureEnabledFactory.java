@@ -11,6 +11,7 @@ public final class ControlsModule_ProvidesControlsFeatureEnabledFactory implemen
         this.pmProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Boolean get() {
         return provideInstance(this.pmProvider);
     }

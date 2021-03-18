@@ -14,6 +14,7 @@ public final class MiuiNotificationSectionsFeatureManager_Factory implements Fac
         this.mContextProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiNotificationSectionsFeatureManager get() {
         return provideInstance(this.mProxyProvider, this.mContextProvider);
     }

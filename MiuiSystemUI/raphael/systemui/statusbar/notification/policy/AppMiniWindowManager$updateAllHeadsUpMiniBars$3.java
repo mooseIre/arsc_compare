@@ -8,8 +8,9 @@ import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowManager.kt */
-final class AppMiniWindowManager$updateAllHeadsUpMiniBars$3<T, R> implements Function<T, R> {
+public final class AppMiniWindowManager$updateAllHeadsUpMiniBars$3<T, R> implements Function<T, R> {
     public static final AppMiniWindowManager$updateAllHeadsUpMiniBars$3 INSTANCE = new AppMiniWindowManager$updateAllHeadsUpMiniBars$3();
 
     AppMiniWindowManager$updateAllHeadsUpMiniBars$3() {

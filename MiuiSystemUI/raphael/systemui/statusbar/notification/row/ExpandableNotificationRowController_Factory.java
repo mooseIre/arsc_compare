@@ -57,6 +57,7 @@ public final class ExpandableNotificationRowController_Factory implements Factor
         this.peopleNotificationIdentifierProvider = provider19;
     }
 
+    @Override // javax.inject.Provider
     public ExpandableNotificationRowController get() {
         return provideInstance(this.viewProvider, this.activatableNotificationViewControllerProvider, this.mediaManagerProvider, this.pluginManagerProvider, this.clockProvider, this.appNameProvider, this.notificationKeyProvider, this.keyguardBypassControllerProvider, this.notificationGroupManagerProvider, this.rowContentBindStageProvider, this.notificationLoggerProvider, this.headsUpManagerProvider, this.onExpandClickListenerProvider, this.statusBarStateControllerProvider, this.notificationGutsManagerProvider, this.allowLongPressProvider, this.onDismissRunnableProvider, this.falsingManagerProvider, this.peopleNotificationIdentifierProvider);
     }

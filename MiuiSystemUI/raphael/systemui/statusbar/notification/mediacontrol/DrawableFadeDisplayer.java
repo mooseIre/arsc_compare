@@ -6,12 +6,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.widget.ImageView;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: DrawableFadeDisplayer.kt */
 public final class DrawableFadeDisplayer {
-    public static final Companion Companion = new Companion((DefaultConstructorMarker) null);
+    public static final Companion Companion = new Companion(null);
 
     /* compiled from: DrawableFadeDisplayer.kt */
     public static final class Companion {

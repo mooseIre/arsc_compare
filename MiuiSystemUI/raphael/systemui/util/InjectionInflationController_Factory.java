@@ -11,6 +11,7 @@ public final class InjectionInflationController_Factory implements Factory<Injec
         this.rootComponentProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public InjectionInflationController get() {
         return provideInstance(this.rootComponentProvider);
     }

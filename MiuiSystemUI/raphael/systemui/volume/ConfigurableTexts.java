@@ -9,11 +9,11 @@ import com.android.settingslib.volume.Util;
 
 public class ConfigurableTexts {
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public final ArrayMap<TextView, Integer> mTextLabels = new ArrayMap<>();
-    /* access modifiers changed from: private */
-    public final ArrayMap<TextView, Integer> mTexts = new ArrayMap<>();
+    private final ArrayMap<TextView, Integer> mTextLabels = new ArrayMap<>();
+    private final ArrayMap<TextView, Integer> mTexts = new ArrayMap<>();
     private final Runnable mUpdateAll = new Runnable() {
+        /* class com.android.systemui.volume.ConfigurableTexts.AnonymousClass2 */
+
         public void run() {
             for (int i = 0; i < ConfigurableTexts.this.mTexts.size(); i++) {
                 ConfigurableTexts configurableTexts = ConfigurableTexts.this;
@@ -46,6 +46,8 @@ public class ConfigurableTexts {
         final int textSize = (int) ((textView.getTextSize() / f) / resources.getDisplayMetrics().density);
         this.mTexts.put(textView, Integer.valueOf(textSize));
         textView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            /* class com.android.systemui.volume.ConfigurableTexts.AnonymousClass1 */
+
             public void onViewDetachedFromWindow(View view) {
             }
 
@@ -69,12 +71,14 @@ public class ConfigurableTexts {
     }
 
     /* access modifiers changed from: private */
-    public void setTextSizeH(TextView textView, int i) {
+    /* access modifiers changed from: public */
+    private void setTextSizeH(TextView textView, int i) {
         textView.setTextSize(2, (float) i);
     }
 
     /* access modifiers changed from: private */
-    public void setTextLabelH(TextView textView, int i) {
+    /* access modifiers changed from: public */
+    private void setTextLabelH(TextView textView, int i) {
         if (i >= 0) {
             try {
                 Util.setText(textView, this.mContext.getString(i));

@@ -8,6 +8,7 @@ import com.android.systemui.controls.ControlsServiceInfo;
 import com.android.systemui.controls.management.ControlsListingController;
 import java.util.LinkedHashSet;
 import java.util.List;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 
 /* compiled from: ControlsListingControllerImpl.kt */
@@ -18,16 +19,18 @@ final class ControlsListingControllerImpl$serviceListingCallback$1 implements Se
         this.this$0 = controlsListingControllerImpl;
     }
 
+    @Override // com.android.settingslib.applications.ServiceListing.Callback
     public final void onServicesReloaded(List<ServiceInfo> list) {
         Intrinsics.checkExpressionValueIsNotNull(list, "it");
-        final List<T> list2 = CollectionsKt___CollectionsKt.toList(list);
+        final List<ServiceInfo> list2 = CollectionsKt___CollectionsKt.toList(list);
         final LinkedHashSet linkedHashSet = new LinkedHashSet();
-        for (T componentName : list2) {
-            ComponentName componentName2 = componentName.getComponentName();
-            Intrinsics.checkExpressionValueIsNotNull(componentName2, "s.getComponentName()");
-            linkedHashSet.add(componentName2);
+        for (ServiceInfo serviceInfo : list2) {
+            ComponentName componentName = serviceInfo.getComponentName();
+            Intrinsics.checkExpressionValueIsNotNull(componentName, "s.getComponentName()");
+            linkedHashSet.add(componentName);
         }
         this.this$0.backgroundExecutor.execute(new Runnable(this) {
+            /* class com.android.systemui.controls.management.ControlsListingControllerImpl$serviceListingCallback$1.AnonymousClass1 */
             final /* synthetic */ ControlsListingControllerImpl$serviceListingCallback$1 this$0;
 
             {
@@ -40,8 +43,8 @@ final class ControlsListingControllerImpl$serviceListingCallback$1 implements Se
                     this.this$0.this$0.availableComponents = linkedHashSet;
                     this.this$0.this$0.availableServices = list2;
                     List<ControlsServiceInfo> currentServices = this.this$0.this$0.getCurrentServices();
-                    for (ControlsListingController.ControlsListingCallback onServicesUpdated : this.this$0.this$0.callbacks) {
-                        onServicesUpdated.onServicesUpdated(currentServices);
+                    for (ControlsListingController.ControlsListingCallback controlsListingCallback : this.this$0.this$0.callbacks) {
+                        controlsListingCallback.onServicesUpdated(currentServices);
                     }
                 }
             }

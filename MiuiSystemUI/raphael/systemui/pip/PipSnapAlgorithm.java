@@ -65,9 +65,8 @@ public class PipSnapAlgorithm {
                 float length = PointF.length(f3 * f4, f4);
                 max = (int) Math.round(Math.sqrt((double) ((length * length) / ((f * f) + 1.0f))));
                 i4 = Math.round(((float) max) * f);
-                int i5 = max;
                 max = i4;
-                i3 = i5;
+                i3 = max;
                 return new Size(max, i3);
             }
         }
@@ -76,9 +75,8 @@ public class PipSnapAlgorithm {
             return new Size(max, i3);
         }
         i4 = Math.round(((float) max) * f);
-        int i52 = max;
         max = i4;
-        i3 = i52;
+        i3 = max;
         return new Size(max, i3);
     }
 

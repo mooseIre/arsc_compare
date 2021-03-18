@@ -15,43 +15,51 @@ public final class ControlStatusWrapper extends ElementWrapper implements Contro
 
     public boolean equals(@Nullable Object obj) {
         if (this != obj) {
-            return (obj instanceof ControlStatusWrapper) && Intrinsics.areEqual((Object) this.controlStatus, (Object) ((ControlStatusWrapper) obj).controlStatus);
+            return (obj instanceof ControlStatusWrapper) && Intrinsics.areEqual(this.controlStatus, ((ControlStatusWrapper) obj).controlStatus);
         }
         return true;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public ComponentName getComponent() {
         return this.controlStatus.getComponent();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public String getControlId() {
         return this.controlStatus.getControlId();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @Nullable
     public Icon getCustomIcon() {
         return this.controlStatus.getCustomIcon();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public int getDeviceType() {
         return this.controlStatus.getDeviceType();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public boolean getFavorite() {
         return this.controlStatus.getFavorite();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public boolean getRemoved() {
         return this.controlStatus.getRemoved();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public CharSequence getSubtitle() {
         return this.controlStatus.getSubtitle();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public CharSequence getTitle() {
         return this.controlStatus.getTitle();
@@ -77,7 +85,7 @@ public final class ControlStatusWrapper extends ElementWrapper implements Contro
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ControlStatusWrapper(@NotNull ControlStatus controlStatus2) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(controlStatus2, "controlStatus");
         this.controlStatus = controlStatus2;
     }

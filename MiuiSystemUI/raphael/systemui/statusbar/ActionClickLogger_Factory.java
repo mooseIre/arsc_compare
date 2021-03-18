@@ -11,6 +11,7 @@ public final class ActionClickLogger_Factory implements Factory<ActionClickLogge
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ActionClickLogger get() {
         return provideInstance(this.bufferProvider);
     }

@@ -3,7 +3,8 @@ package com.android.systemui.statusbar.phone;
 import android.view.View;
 import com.android.systemui.statusbar.policy.KeyButtonDrawable;
 
-interface RotationButton {
+/* access modifiers changed from: package-private */
+public interface RotationButton {
     View getCurrentView();
 
     KeyButtonDrawable getImageDrawable();
@@ -12,7 +13,7 @@ interface RotationButton {
 
     boolean isVisible();
 
-    void setCanShowRotationButton(boolean z) {
+    default void setCanShowRotationButton(boolean z) {
     }
 
     void setDarkIntensity(float f);
@@ -27,7 +28,7 @@ interface RotationButton {
 
     void updateIcon();
 
-    boolean acceptRotationProposal() {
+    default boolean acceptRotationProposal() {
         return getCurrentView() != null;
     }
 }

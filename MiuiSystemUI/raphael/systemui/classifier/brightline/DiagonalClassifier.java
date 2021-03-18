@@ -1,7 +1,6 @@
 package com.android.systemui.classifier.brightline;
 
 import com.android.systemui.util.DeviceConfigProxy;
-import java.util.Locale;
 
 class DiagonalClassifier extends FalsingClassifier {
     private final float mHorizontalAngleRange;
@@ -18,6 +17,7 @@ class DiagonalClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public boolean isFalseTouch() {
         float angle = getAngle();
         if (angle == Float.MAX_VALUE || getInteractionType() == 5 || getInteractionType() == 6) {
@@ -38,8 +38,9 @@ class DiagonalClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public String getReason() {
-        return String.format((Locale) null, "{angle=%f, vertical=%s}", new Object[]{Float.valueOf(getAngle()), Boolean.valueOf(isVertical())});
+        return String.format(null, "{angle=%f, vertical=%s}", Float.valueOf(getAngle()), Boolean.valueOf(isVertical()));
     }
 
     private boolean angleBetween(float f, float f2, float f3) {

@@ -1,7 +1,8 @@
 package com.android.systemui.media;
 
+/* access modifiers changed from: package-private */
 /* compiled from: SeekBarViewModel.kt */
-final class SeekBarViewModel$listening$1 implements Runnable {
+public final class SeekBarViewModel$listening$1 implements Runnable {
     final /* synthetic */ boolean $value;
     final /* synthetic */ SeekBarViewModel this$0;
 
@@ -11,10 +12,10 @@ final class SeekBarViewModel$listening$1 implements Runnable {
     }
 
     public final void run() {
-        boolean access$getListening$lp = this.this$0.listening;
-        boolean z = this.$value;
-        if (access$getListening$lp != z) {
-            this.this$0.listening = z;
+        boolean z = this.this$0.listening;
+        boolean z2 = this.$value;
+        if (z != z2) {
+            this.this$0.listening = z2;
             this.this$0.checkIfPollingNeeded();
         }
     }

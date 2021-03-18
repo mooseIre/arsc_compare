@@ -16,6 +16,7 @@ public final class StatusBarDependenciesModule_ProvideCommandQueueFactory implem
         this.protoTracerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public CommandQueue get() {
         return provideInstance(this.contextProvider, this.protoTracerProvider);
     }

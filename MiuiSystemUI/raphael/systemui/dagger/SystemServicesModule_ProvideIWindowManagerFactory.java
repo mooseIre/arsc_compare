@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemServicesModule_ProvideIWindowManagerFactory implements Factory<IWindowManager> {
     private static final SystemServicesModule_ProvideIWindowManagerFactory INSTANCE = new SystemServicesModule_ProvideIWindowManagerFactory();
 
+    @Override // javax.inject.Provider
     public IWindowManager get() {
         return provideInstance();
     }

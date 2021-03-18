@@ -21,7 +21,7 @@ public final class MediaDeviceData {
             return false;
         }
         MediaDeviceData mediaDeviceData = (MediaDeviceData) obj;
-        return this.enabled == mediaDeviceData.enabled && Intrinsics.areEqual((Object) this.icon, (Object) mediaDeviceData.icon) && Intrinsics.areEqual((Object) this.name, (Object) mediaDeviceData.name);
+        return this.enabled == mediaDeviceData.enabled && Intrinsics.areEqual(this.icon, mediaDeviceData.icon) && Intrinsics.areEqual(this.name, mediaDeviceData.name);
     }
 
     public int hashCode() {
@@ -29,15 +29,18 @@ public final class MediaDeviceData {
         if (z) {
             z = true;
         }
-        int i = (z ? 1 : 0) * true;
+        int i = z ? 1 : 0;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        int i4 = i * 31;
         Drawable drawable = this.icon;
-        int i2 = 0;
-        int hashCode = (i + (drawable != null ? drawable.hashCode() : 0)) * 31;
+        int i5 = 0;
+        int hashCode = (i4 + (drawable != null ? drawable.hashCode() : 0)) * 31;
         String str = this.name;
         if (str != null) {
-            i2 = str.hashCode();
+            i5 = str.hashCode();
         }
-        return hashCode + i2;
+        return hashCode + i5;
     }
 
     @NotNull

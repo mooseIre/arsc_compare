@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar.notification;
 
 import android.app.Notification;
-import android.os.SystemClock;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.View;
@@ -35,14 +34,16 @@ public final class NotificationClicker implements View.OnClickListener {
             return;
         }
         this.mStatusBar.ifPresent(new Consumer(view) {
+            /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationClicker$yfbp07NzZ_fwFSXR0B2xHX63zDM */
             public final /* synthetic */ View f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) obj).wakeUpIfDozing(SystemClock.uptimeMillis(), this.f$0, "NOTIFICATION_CLICK");
+                NotificationClicker.lambda$onClick$0(this.f$0, (StatusBar) obj);
             }
         });
         ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
@@ -61,8 +62,10 @@ public final class NotificationClicker implements View.OnClickListener {
         } else if (!NotificationClickerInjector.INSTANCE.onClick(expandableNotificationRow)) {
             expandableNotificationRow.setJustClicked(true);
             DejankUtils.postAfterTraversal(new Runnable() {
+                /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationClicker$CH899qDTz3sQ4q5eBHDPoFomAGA */
+
                 public final void run() {
-                    ExpandableNotificationRow.this.setJustClicked(false);
+                    NotificationClicker.lambda$onClick$1(ExpandableNotificationRow.this);
                 }
             });
             if (!expandableNotificationRow.getEntry().isBubble()) {
@@ -82,7 +85,7 @@ public final class NotificationClicker implements View.OnClickListener {
         if (notification.contentIntent != null || notification.fullScreenIntent != null || expandableNotificationRow.getEntry().isBubble() || statusBarNotification.isGroup()) {
             expandableNotificationRow.setOnClickListener(this);
         } else {
-            expandableNotificationRow.setOnClickListener((View.OnClickListener) null);
+            expandableNotificationRow.setOnClickListener(null);
         }
     }
 

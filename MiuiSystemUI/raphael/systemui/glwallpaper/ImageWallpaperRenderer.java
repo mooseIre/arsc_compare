@@ -14,13 +14,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 
 public class ImageWallpaperRenderer implements GLWallpaperRenderer {
-    /* access modifiers changed from: private */
-    public static final String TAG = "ImageWallpaperRenderer";
+    private static final String TAG = "ImageWallpaperRenderer";
     private final ImageGLProgram mProgram;
     private final Rect mSurfaceSize = new Rect();
     private final WallpaperTexture mTexture;
     private final ImageGLWallpaper mWallpaper;
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public void finish() {
     }
 
@@ -34,14 +34,19 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
         this.mWallpaper = new ImageGLWallpaper(this.mProgram);
     }
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public boolean isWcgContent() {
         return this.mTexture.isWcgContent();
     }
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public void onSurfaceCreated() {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         this.mProgram.useGLProgram(C0020R$raw.image_wallpaper_vertex_shader, C0020R$raw.image_wallpaper_fragment_shader);
         this.mTexture.use(new Consumer() {
+            /* class com.android.systemui.glwallpaper.$$Lambda$ImageWallpaperRenderer$tbObMkzj33QDR6llFkRAHA0TWow */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ImageWallpaperRenderer.this.lambda$onSurfaceCreated$0$ImageWallpaperRenderer((Bitmap) obj);
             }
@@ -57,10 +62,12 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
         this.mWallpaper.setup(bitmap);
     }
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public void onSurfaceChanged(int i, int i2) {
         GLES20.glViewport(0, 0, i, i2);
     }
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public void onDrawFrame() {
         GLES20.glClear(16384);
         GLES20.glViewport(0, 0, this.mSurfaceSize.width(), this.mSurfaceSize.height());
@@ -68,12 +75,14 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
         this.mWallpaper.draw();
     }
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public Size reportSurfaceSize() {
-        this.mTexture.use((Consumer<Bitmap>) null);
+        this.mTexture.use(null);
         this.mSurfaceSize.set(this.mTexture.getTextureDimensions());
         return new Size(this.mSurfaceSize.width(), this.mSurfaceSize.height());
     }
 
+    @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.print(str);
         printWriter.print("mSurfaceSize=");
@@ -84,7 +93,8 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
         this.mWallpaper.dump(str, fileDescriptor, printWriter, strArr);
     }
 
-    static class WallpaperTexture {
+    /* access modifiers changed from: package-private */
+    public static class WallpaperTexture {
         private Bitmap mBitmap;
         private final Rect mDimensions;
         private final AtomicInteger mRefCount;
@@ -123,7 +133,8 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
         }
 
         /* access modifiers changed from: private */
-        public boolean isWcgContent() {
+        /* access modifiers changed from: public */
+        private boolean isWcgContent() {
             return this.mWcgContent;
         }
 
@@ -133,7 +144,8 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
         }
 
         /* access modifiers changed from: private */
-        public Rect getTextureDimensions() {
+        /* access modifiers changed from: public */
+        private Rect getTextureDimensions() {
             return this.mDimensions;
         }
 

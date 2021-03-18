@@ -9,10 +9,12 @@ import org.jetbrains.annotations.NotNull;
 public final class TargetSdkResolver$initialize$1 implements NotifCollectionListener {
     final /* synthetic */ TargetSdkResolver this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     TargetSdkResolver$initialize$1(TargetSdkResolver targetSdkResolver) {
         this.this$0 = targetSdkResolver;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
     public void onEntryBind(@NotNull NotificationEntry notificationEntry, @NotNull StatusBarNotification statusBarNotification) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");

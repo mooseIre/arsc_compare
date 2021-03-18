@@ -13,12 +13,16 @@ import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class RegionController implements Dumpable {
-    /* access modifiers changed from: private */
-    public ArrayList<Callback> mCallbacks = new ArrayList<>();
+    private ArrayList<Callback> mCallbacks = new ArrayList<>();
     BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.RegionController.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             RegionController.this.updateRegion();
             RegionController.this.mCallbacks.forEach(new Consumer() {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$RegionController$1$pKDKZYiytMWAn2jImjmUQsiLb8E */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     RegionController.AnonymousClass1.this.lambda$onReceive$0$RegionController$1((RegionController.Callback) obj);
                 }
@@ -31,13 +35,13 @@ public class RegionController implements Dumpable {
             callback.onRegionChanged(RegionController.this.mRegion);
         }
     };
-    /* access modifiers changed from: private */
-    public String mRegion;
+    private String mRegion;
 
     public interface Callback {
         void onRegionChanged(String str);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
     }
 
@@ -49,7 +53,8 @@ public class RegionController implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void updateRegion() {
+    /* access modifiers changed from: public */
+    private void updateRegion() {
         this.mRegion = SystemProperties.get("ro.miui.region", "");
     }
 

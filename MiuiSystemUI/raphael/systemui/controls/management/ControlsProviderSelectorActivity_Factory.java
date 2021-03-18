@@ -24,6 +24,7 @@ public final class ControlsProviderSelectorActivity_Factory implements Factory<C
         this.broadcastDispatcherProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public ControlsProviderSelectorActivity get() {
         return provideInstance(this.executorProvider, this.backExecutorProvider, this.listingControllerProvider, this.controlsControllerProvider, this.globalActionsComponentProvider, this.broadcastDispatcherProvider);
     }

@@ -12,9 +12,10 @@ import kotlin.sequences.SequenceScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 @DebugMetadata(c = "com.android.systemui.util.ConvenienceExtensionsKt$children$1", f = "ConvenienceExtensions.kt", l = {26}, m = "invokeSuspend")
 /* compiled from: ConvenienceExtensions.kt */
-final class ConvenienceExtensionsKt$children$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super View>, Continuation<? super Unit>, Object> {
+public final class ConvenienceExtensionsKt$children$1 extends RestrictedSuspendLambda implements Function2<SequenceScope<? super View>, Continuation<? super Unit>, Object> {
     final /* synthetic */ ViewGroup $this_children;
     int I$0;
     int I$1;
@@ -28,6 +29,7 @@ final class ConvenienceExtensionsKt$children$1 extends RestrictedSuspendLambda i
         this.$this_children = viewGroup;
     }
 
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @NotNull
     public final Continuation<Unit> create(@Nullable Object obj, @NotNull Continuation<?> continuation) {
         Intrinsics.checkParameterIsNotNull(continuation, "completion");
@@ -36,17 +38,20 @@ final class ConvenienceExtensionsKt$children$1 extends RestrictedSuspendLambda i
         return convenienceExtensionsKt$children$1;
     }
 
-    public final Object invoke(Object obj, Object obj2) {
-        return ((ConvenienceExtensionsKt$children$1) create(obj, (Continuation) obj2)).invokeSuspend(Unit.INSTANCE);
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function2
+    public final Object invoke(SequenceScope<? super View> sequenceScope, Continuation<? super Unit> continuation) {
+        return ((ConvenienceExtensionsKt$children$1) create(sequenceScope, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:8:0x0031  */
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @org.jetbrains.annotations.Nullable
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public final java.lang.Object invokeSuspend(@org.jetbrains.annotations.NotNull java.lang.Object r7) {
         /*
             r6 = this;
-            java.lang.Object r0 = kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED()
+            java.lang.Object r0 = kotlin.coroutines.intrinsics.IntrinsicsKt.getCOROUTINE_SUSPENDED()
             int r1 = r6.label
             r2 = 1
             if (r1 == 0) goto L_0x001f

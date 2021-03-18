@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 public final class SeekBarViewModel$callback$1 extends MediaController.Callback {
     final /* synthetic */ SeekBarViewModel this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     SeekBarViewModel$callback$1(SeekBarViewModel seekBarViewModel) {
         this.this$0 = seekBarViewModel;
     }

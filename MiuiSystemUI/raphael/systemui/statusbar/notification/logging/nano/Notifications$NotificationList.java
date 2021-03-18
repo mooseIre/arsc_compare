@@ -17,6 +17,7 @@ public final class Notifications$NotificationList extends MessageNano {
         return this;
     }
 
+    @Override // com.google.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
         Notifications$Notification[] notifications$NotificationArr = this.notifications;
         if (notifications$NotificationArr != null && notifications$NotificationArr.length > 0) {
@@ -37,6 +38,7 @@ public final class Notifications$NotificationList extends MessageNano {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.google.protobuf.nano.MessageNano
     public int computeSerializedSize() {
         int computeSerializedSize = super.computeSerializedSize();
         Notifications$Notification[] notifications$NotificationArr = this.notifications;

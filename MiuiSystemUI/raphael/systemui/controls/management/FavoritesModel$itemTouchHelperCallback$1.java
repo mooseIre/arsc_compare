@@ -10,10 +10,12 @@ public final class FavoritesModel$itemTouchHelperCallback$1 extends ItemTouchHel
     private final int MOVEMENT = 15;
     final /* synthetic */ FavoritesModel this$0;
 
+    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public boolean isItemViewSwipeEnabled() {
         return false;
     }
 
+    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public void onSwiped(@NotNull RecyclerView.ViewHolder viewHolder, int i) {
         Intrinsics.checkParameterIsNotNull(viewHolder, "viewHolder");
     }
@@ -24,6 +26,7 @@ public final class FavoritesModel$itemTouchHelperCallback$1 extends ItemTouchHel
         this.this$0 = favoritesModel;
     }
 
+    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public boolean onMove(@NotNull RecyclerView recyclerView, @NotNull RecyclerView.ViewHolder viewHolder, @NotNull RecyclerView.ViewHolder viewHolder2) {
         Intrinsics.checkParameterIsNotNull(recyclerView, "recyclerView");
         Intrinsics.checkParameterIsNotNull(viewHolder, "viewHolder");
@@ -32,6 +35,7 @@ public final class FavoritesModel$itemTouchHelperCallback$1 extends ItemTouchHel
         return true;
     }
 
+    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public int getMovementFlags(@NotNull RecyclerView recyclerView, @NotNull RecyclerView.ViewHolder viewHolder) {
         Intrinsics.checkParameterIsNotNull(recyclerView, "recyclerView");
         Intrinsics.checkParameterIsNotNull(viewHolder, "viewHolder");
@@ -41,6 +45,7 @@ public final class FavoritesModel$itemTouchHelperCallback$1 extends ItemTouchHel
         return ItemTouchHelper.Callback.makeMovementFlags(0, 0);
     }
 
+    @Override // androidx.recyclerview.widget.ItemTouchHelper.Callback
     public boolean canDropOver(@NotNull RecyclerView recyclerView, @NotNull RecyclerView.ViewHolder viewHolder, @NotNull RecyclerView.ViewHolder viewHolder2) {
         Intrinsics.checkParameterIsNotNull(recyclerView, "recyclerView");
         Intrinsics.checkParameterIsNotNull(viewHolder, "current");

@@ -8,16 +8,13 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 
 public class AssistOrbContainer extends FrameLayout {
-    /* access modifiers changed from: private */
-    public boolean mAnimatingOut;
-    /* access modifiers changed from: private */
-    public View mNavbarScrim;
+    private boolean mAnimatingOut;
+    private View mNavbarScrim;
     private AssistOrbView mOrb;
-    /* access modifiers changed from: private */
-    public View mScrim;
+    private View mScrim;
 
     public AssistOrbContainer(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AssistOrbContainer(Context context, AttributeSet attributeSet) {
@@ -48,8 +45,10 @@ public class AssistOrbContainer extends FrameLayout {
             }
         } else if (z2) {
             startExitAnimation(new Runnable() {
+                /* class com.android.systemui.assist.AssistOrbContainer.AnonymousClass1 */
+
                 public void run() {
-                    boolean unused = AssistOrbContainer.this.mAnimatingOut = false;
+                    AssistOrbContainer.this.mAnimatingOut = false;
                     AssistOrbContainer.this.setVisibility(8);
                 }
             });
@@ -71,6 +70,8 @@ public class AssistOrbContainer extends FrameLayout {
             this.mScrim.setAlpha(0.0f);
             this.mNavbarScrim.setAlpha(0.0f);
             post(new Runnable() {
+                /* class com.android.systemui.assist.AssistOrbContainer.AnonymousClass2 */
+
                 public void run() {
                     AssistOrbContainer.this.mScrim.animate().alpha(1.0f).setDuration(300).setStartDelay(0).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
                     AssistOrbContainer.this.mNavbarScrim.animate().alpha(1.0f).setDuration(300).setStartDelay(0).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);

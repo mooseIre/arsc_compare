@@ -3,9 +3,9 @@ package com.android.systemui.classifier.brightline;
 import android.view.MotionEvent;
 import com.android.systemui.util.DeviceConfigProxy;
 import com.android.systemui.util.sensors.ProximitySensor;
-import java.util.Locale;
 
-class ProximityClassifier extends FalsingClassifier {
+/* access modifiers changed from: package-private */
+public class ProximityClassifier extends FalsingClassifier {
     private final DistanceClassifier mDistanceClassifier;
     private long mGestureStartTimeNs;
     private boolean mNear;
@@ -21,17 +21,20 @@ class ProximityClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public void onSessionStarted() {
         this.mPrevNearTimeNs = 0;
         this.mPercentNear = 0.0f;
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public void onSessionEnded() {
         this.mPrevNearTimeNs = 0;
         this.mPercentNear = 0.0f;
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public void onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
@@ -54,6 +57,7 @@ class ProximityClassifier extends FalsingClassifier {
         }
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public void onProximityEvent(ProximitySensor.ProximityEvent proximityEvent) {
         boolean near = proximityEvent.getNear();
         long timestampNs = proximityEvent.getTimestampNs();
@@ -61,6 +65,7 @@ class ProximityClassifier extends FalsingClassifier {
         update(near, timestampNs);
     }
 
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public boolean isFalseTouch() {
         if (getInteractionType() == 0) {
             return false;
@@ -73,8 +78,9 @@ class ProximityClassifier extends FalsingClassifier {
     }
 
     /* access modifiers changed from: package-private */
+    @Override // com.android.systemui.classifier.brightline.FalsingClassifier
     public String getReason() {
-        return String.format((Locale) null, "{percentInProximity=%f, threshold=%f, distanceClassifier=%s}", new Object[]{Float.valueOf(this.mPercentNear), Float.valueOf(this.mPercentCoveredThreshold), this.mDistanceClassifier.getReason()});
+        return String.format(null, "{percentInProximity=%f, threshold=%f, distanceClassifier=%s}", Float.valueOf(this.mPercentNear), Float.valueOf(this.mPercentCoveredThreshold), this.mDistanceClassifier.getReason());
     }
 
     private void update(boolean z, long j) {

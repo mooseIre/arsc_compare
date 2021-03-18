@@ -32,12 +32,14 @@ public class MiuiNotificationViewWrapper extends NotificationViewWrapper {
         NotificationUtil.applyAppIconAllowCustom(this.mContext, this.mRow.getEntry().getSbn(), this.mAppIcon);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         resolveViews();
         handleViews();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         if (z && this.mView.getAlpha() != 1.0f) {
             this.mView.setAlpha(1.0f);
@@ -75,6 +77,7 @@ public class MiuiNotificationViewWrapper extends NotificationViewWrapper {
         view.setLayoutParams(marginLayoutParams);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView) {
         this.mView.setAlpha(0.0f);
         super.transformFrom(transformableView);

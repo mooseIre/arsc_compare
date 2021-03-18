@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.Messenger;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.os.SystemClock;
 import android.os.UserHandle;
@@ -30,6 +31,8 @@ public class PipMenuActivityController {
     private ParceledListSlice mAppActions;
     private Context mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        /* class com.android.systemui.pip.phone.PipMenuActivityController.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             int i = message.what;
             boolean z = true;
@@ -45,17 +48,17 @@ public class PipMenuActivityController {
             } else if (i == 103) {
                 PipMenuActivityController.this.mListeners.forEach($$Lambda$zhx89MCRVbbUuwAz2vBzNfzR3hg.INSTANCE);
             } else if (i == 104) {
-                Messenger unused = PipMenuActivityController.this.mToActivityMessenger = message.replyTo;
+                PipMenuActivityController.this.mToActivityMessenger = message.replyTo;
                 PipMenuActivityController.this.setStartActivityRequested(false);
                 if (PipMenuActivityController.this.mOnAnimationEndRunnable != null) {
                     PipMenuActivityController.this.mOnAnimationEndRunnable.run();
-                    Runnable unused2 = PipMenuActivityController.this.mOnAnimationEndRunnable = null;
+                    PipMenuActivityController.this.mOnAnimationEndRunnable = null;
                 }
                 if (PipMenuActivityController.this.mToActivityMessenger == null) {
                     if (message.arg1 == 0) {
                         z = false;
                     }
-                    PipMenuActivityController.this.onMenuStateChanged(0, z, (Runnable) null);
+                    PipMenuActivityController.this.onMenuStateChanged(0, z, null);
                 }
             } else if (i == 107) {
                 PipMenuActivityController.this.mListeners.forEach($$Lambda$ab7bqy0BtiE8EwwZ2rb49JCCbFA.INSTANCE);
@@ -63,31 +66,32 @@ public class PipMenuActivityController {
         }
     };
     private InputConsumerController mInputConsumerController;
-    /* access modifiers changed from: private */
-    public ArrayList<Listener> mListeners = new ArrayList<>();
+    private ArrayList<Listener> mListeners = new ArrayList<>();
     private PipMediaController.ActionListener mMediaActionListener = new PipMediaController.ActionListener() {
+        /* class com.android.systemui.pip.phone.PipMenuActivityController.AnonymousClass2 */
+
+        @Override // com.android.systemui.pip.phone.PipMediaController.ActionListener
         public void onMediaActionsChanged(List<RemoteAction> list) {
-            ParceledListSlice unused = PipMenuActivityController.this.mMediaActions = new ParceledListSlice(list);
+            PipMenuActivityController.this.mMediaActions = new ParceledListSlice(list);
             PipMenuActivityController.this.updateMenuActions();
         }
     };
-    /* access modifiers changed from: private */
-    public ParceledListSlice mMediaActions;
+    private ParceledListSlice mMediaActions;
     private PipMediaController mMediaController;
     private int mMenuState;
     private Messenger mMessenger = new Messenger(this.mHandler);
-    /* access modifiers changed from: private */
-    public Runnable mOnAnimationEndRunnable;
+    private Runnable mOnAnimationEndRunnable;
     private boolean mStartActivityRequested;
     private long mStartActivityRequestedTime;
     private Runnable mStartActivityRequestedTimeoutRunnable = new Runnable() {
+        /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivityController$46Yr3xVHMZsGyZiGhSKF_IPBnzk */
+
         public final void run() {
             PipMenuActivityController.this.lambda$new$0$PipMenuActivityController();
         }
     };
     private Bundle mTmpDismissFractionData = new Bundle();
-    /* access modifiers changed from: private */
-    public Messenger mToActivityMessenger;
+    private Messenger mToActivityMessenger;
 
     public interface Listener {
         void onPipDismiss();
@@ -162,7 +166,7 @@ public class PipMenuActivityController {
                 Log.e("PipMenuActController", "Could not notify menu to update dismiss fraction", e);
             }
         } else if (!this.mStartActivityRequested || isStartActivityRequestedElapsed()) {
-            startMenuActivity(0, (Rect) null, false, false, false, false);
+            startMenuActivity(0, null, false, false, false, false);
         }
     }
 
@@ -176,11 +180,13 @@ public class PipMenuActivityController {
     }
 
     /* access modifiers changed from: private */
-    public Runnable getMenuStateChangeFinishedCallback(Messenger messenger, Bundle bundle) {
+    /* access modifiers changed from: public */
+    private Runnable getMenuStateChangeFinishedCallback(Messenger messenger, Bundle bundle) {
         if (messenger == null || bundle == null) {
             return null;
         }
         return new Runnable(bundle, messenger) {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivityController$_kNQCJDSdqogZpt_djM4gC8wQ7M */
             public final /* synthetic */ Bundle f$0;
             public final /* synthetic */ Messenger f$1;
 
@@ -265,7 +271,7 @@ public class PipMenuActivityController {
     }
 
     public void hideMenuWithoutResize() {
-        onMenuStateChanged(0, false, (Runnable) null);
+        onMenuStateChanged(0, false, null);
     }
 
     public void setAppActions(ParceledListSlice parceledListSlice) {
@@ -290,7 +296,7 @@ public class PipMenuActivityController {
             Intent intent = new Intent(this.mContext, PipMenuActivity.class);
             intent.setFlags(268435456);
             intent.putExtra("messenger", this.mMessenger);
-            intent.putExtra("actions", resolveMenuActions());
+            intent.putExtra("actions", (Parcelable) resolveMenuActions());
             if (rect != null) {
                 intent.putExtra("stack_bounds", rect);
             }
@@ -311,7 +317,8 @@ public class PipMenuActivityController {
     }
 
     /* access modifiers changed from: private */
-    public void updateMenuActions() {
+    /* access modifiers changed from: public */
+    private void updateMenuActions() {
         if (this.mToActivityMessenger != null) {
             Rect rect = null;
             try {
@@ -345,9 +352,11 @@ public class PipMenuActivityController {
     }
 
     /* access modifiers changed from: private */
-    public void onMenuStateChanged(int i, boolean z, Runnable runnable) {
+    /* access modifiers changed from: public */
+    private void onMenuStateChanged(int i, boolean z, Runnable runnable) {
         if (i != this.mMenuState) {
             this.mListeners.forEach(new Consumer(i, z, runnable) {
+                /* class com.android.systemui.pip.phone.$$Lambda$PipMenuActivityController$_vkUUS2B_ghvg2Kknl2htGLPiZU */
                 public final /* synthetic */ int f$0;
                 public final /* synthetic */ boolean f$1;
                 public final /* synthetic */ Runnable f$2;
@@ -358,6 +367,7 @@ public class PipMenuActivityController {
                     this.f$2 = r3;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     ((PipMenuActivityController.Listener) obj).onPipMenuStateChanged(this.f$0, this.f$1, this.f$2);
                 }
@@ -372,7 +382,8 @@ public class PipMenuActivityController {
     }
 
     /* access modifiers changed from: private */
-    public void setStartActivityRequested(boolean z) {
+    /* access modifiers changed from: public */
+    private void setStartActivityRequested(boolean z) {
         this.mHandler.removeCallbacks(this.mStartActivityRequestedTimeoutRunnable);
         this.mStartActivityRequested = z;
         this.mStartActivityRequestedTime = z ? SystemClock.uptimeMillis() : 0;

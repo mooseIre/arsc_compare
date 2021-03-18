@@ -33,6 +33,8 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
     private boolean mIsNonBlockable;
     private NotificationChannel mNotificationChannel;
     private View.OnClickListener mOnDone = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$PartialConversationInfo$nflnLN0fffGCKkiUNaYNxW2Ovc */
+
         public final void onClick(View view) {
             PartialConversationInfo.this.lambda$new$0$PartialConversationInfo(view);
         }
@@ -48,10 +50,12 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
     boolean mSkipPost = false;
     private Set<NotificationChannel> mUniqueChannelsInRow;
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public View getContentView() {
         return this;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean handleCloseControls(boolean z, boolean z2) {
         return false;
     }
@@ -61,13 +65,16 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean needsFalsingProtection() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void onFinishedClosing() {
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean willBeRemoved() {
         return false;
     }
@@ -113,7 +120,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         findViewById.setOnClickListener(settingsOnClickListener);
         findViewById.setVisibility(findViewById.hasOnClickListeners() ? 0 : 8);
         findViewById(C0015R$id.settings_link).setOnClickListener(settingsOnClickListener);
-        ((TextView) findViewById(C0015R$id.non_configurable_text)).setText(getResources().getString(C0021R$string.no_shortcut, new Object[]{this.mAppName}));
+        ((TextView) findViewById(C0015R$id.non_configurable_text)).setText(getResources().getString(C0021R$string.no_shortcut, this.mAppName));
     }
 
     private void bindHeader() {
@@ -127,6 +134,7 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
             return null;
         }
         return new View.OnClickListener(i) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$PartialConversationInfo$OYcvrnC5h5eirxa5ANc3qGWEO2w */
             public final /* synthetic */ int f$1;
 
             {
@@ -147,6 +155,8 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
 
     private View.OnClickListener getTurnOffNotificationsClickListener() {
         return new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$PartialConversationInfo$12HGV21n_Ekvi_xKHwNYt5E1xk */
+
             public final void onClick(View view) {
                 PartialConversationInfo.this.lambda$getTurnOffNotificationsClickListener$3$PartialConversationInfo(view);
             }
@@ -161,6 +171,9 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
             this.mPresentingChannelEditorDialog = true;
             channelEditorDialogController.prepareDialogForApp(this.mAppName, this.mPackageName, this.mAppUid, this.mUniqueChannelsInRow, this.mPkgIcon, this.mOnSettingsClickListener);
             this.mChannelEditorDialogController.setOnFinishListener(new OnChannelEditorDialogFinishedListener() {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$PartialConversationInfo$ybMQkDgz9yD0IGZqfIgwLQnlkXw */
+
+                @Override // com.android.systemui.statusbar.notification.row.OnChannelEditorDialogFinishedListener
                 public final void onChannelEditorDialogFinished() {
                     PartialConversationInfo.this.lambda$getTurnOffNotificationsClickListener$2$PartialConversationInfo();
                 }
@@ -216,21 +229,24 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void setGutsParent(NotificationGuts notificationGuts) {
         this.mGutsContainer = notificationGuts;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean shouldBeSaved() {
         return this.mPressedApply;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public int getActualHeight() {
         return getHeight();
     }

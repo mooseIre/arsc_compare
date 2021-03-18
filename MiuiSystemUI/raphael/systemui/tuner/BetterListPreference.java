@@ -11,11 +11,13 @@ public class BetterListPreference extends ListPreference {
         super(context, attributeSet);
     }
 
+    @Override // androidx.preference.ListPreference, androidx.preference.Preference
     public void setSummary(CharSequence charSequence) {
         super.setSummary(charSequence);
         this.mSummary = charSequence;
     }
 
+    @Override // androidx.preference.ListPreference, androidx.preference.Preference
     public CharSequence getSummary() {
         return this.mSummary;
     }

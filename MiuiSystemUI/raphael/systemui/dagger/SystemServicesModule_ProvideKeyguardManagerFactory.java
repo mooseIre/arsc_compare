@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideKeyguardManagerFactory implements
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardManager get() {
         return provideInstance(this.contextProvider);
     }

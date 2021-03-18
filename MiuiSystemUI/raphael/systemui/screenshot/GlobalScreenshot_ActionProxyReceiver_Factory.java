@@ -14,6 +14,7 @@ public final class GlobalScreenshot_ActionProxyReceiver_Factory implements Facto
         this.statusBarLazyProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public GlobalScreenshot.ActionProxyReceiver get() {
         return provideInstance(this.statusBarLazyProvider);
     }

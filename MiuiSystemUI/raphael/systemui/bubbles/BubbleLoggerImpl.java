@@ -5,12 +5,14 @@ import com.android.internal.logging.UiEventLoggerImpl;
 import com.android.systemui.bubbles.BubbleLogger;
 
 public class BubbleLoggerImpl extends UiEventLoggerImpl implements BubbleLogger {
+    @Override // com.android.systemui.bubbles.BubbleLogger
     public void log(Bubble bubble, UiEventLogger.UiEventEnum uiEventEnum) {
         if (bubble.getInstanceId() != null) {
             logWithInstanceId(uiEventEnum, bubble.getAppUid(), bubble.getPackageName(), bubble.getInstanceId());
         }
     }
 
+    @Override // com.android.systemui.bubbles.BubbleLogger
     public void logOverflowRemove(Bubble bubble, int i) {
         if (i == 5) {
             log(bubble, BubbleLogger.Event.BUBBLE_OVERFLOW_REMOVE_CANCEL);
@@ -23,6 +25,7 @@ public class BubbleLoggerImpl extends UiEventLoggerImpl implements BubbleLogger 
         }
     }
 
+    @Override // com.android.systemui.bubbles.BubbleLogger
     public void logOverflowAdd(Bubble bubble, int i) {
         if (i == 2) {
             log(bubble, BubbleLogger.Event.BUBBLE_OVERFLOW_ADD_AGED);

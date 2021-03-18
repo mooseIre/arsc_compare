@@ -42,38 +42,38 @@ import java.util.concurrent.Executor;
 import javax.inject.Provider;
 
 public interface NotificationsModule {
-    static NotificationEntryManager provideNotificationEntryManager(NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationGroupManager notificationGroupManager, NotificationRankingManager notificationRankingManager, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, FeatureFlags featureFlags, Lazy<NotificationRowBinder> lazy, Lazy<NotificationRemoteInputManager> lazy2, LeakDetector leakDetector, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
+    static default NotificationEntryManager provideNotificationEntryManager(NotificationEntryManagerLogger notificationEntryManagerLogger, NotificationGroupManager notificationGroupManager, NotificationRankingManager notificationRankingManager, NotificationEntryManager.KeyguardEnvironment keyguardEnvironment, FeatureFlags featureFlags, Lazy<NotificationRowBinder> lazy, Lazy<NotificationRemoteInputManager> lazy2, LeakDetector leakDetector, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
         return new NotificationEntryManager(notificationEntryManagerLogger, notificationGroupManager, notificationRankingManager, keyguardEnvironment, featureFlags, lazy, lazy2, leakDetector, foregroundServiceDismissalFeatureController);
     }
 
-    static NotificationGutsManager provideNotificationGutsManager(Context context, VisualStabilityManager visualStabilityManager, Lazy<StatusBar> lazy, Handler handler, Handler handler2, AccessibilityManager accessibilityManager, HighPriorityProvider highPriorityProvider, INotificationManager iNotificationManager, LauncherApps launcherApps, ShortcutManager shortcutManager, ChannelEditorDialogController channelEditorDialogController, CurrentUserContextTracker currentUserContextTracker, Provider<PriorityOnboardingDialogController.Builder> provider, BubbleController bubbleController, UiEventLogger uiEventLogger) {
+    static default NotificationGutsManager provideNotificationGutsManager(Context context, VisualStabilityManager visualStabilityManager, Lazy<StatusBar> lazy, Handler handler, Handler handler2, AccessibilityManager accessibilityManager, HighPriorityProvider highPriorityProvider, INotificationManager iNotificationManager, LauncherApps launcherApps, ShortcutManager shortcutManager, ChannelEditorDialogController channelEditorDialogController, CurrentUserContextTracker currentUserContextTracker, Provider<PriorityOnboardingDialogController.Builder> provider, BubbleController bubbleController, UiEventLogger uiEventLogger) {
         return new NotificationGutsManager(context, visualStabilityManager, lazy, handler, handler2, accessibilityManager, highPriorityProvider, iNotificationManager, launcherApps, shortcutManager, channelEditorDialogController, currentUserContextTracker, provider, bubbleController, uiEventLogger);
     }
 
-    static VisualStabilityManager provideVisualStabilityManager(NotificationEntryManager notificationEntryManager, Handler handler) {
+    static default VisualStabilityManager provideVisualStabilityManager(NotificationEntryManager notificationEntryManager, Handler handler) {
         return new VisualStabilityManager(notificationEntryManager, handler);
     }
 
-    static NotificationLogger provideNotificationLogger(NotificationListener notificationListener, Executor executor, NotificationEntryManager notificationEntryManager, StatusBarStateController statusBarStateController, NotificationLogger.ExpansionStateLogger expansionStateLogger, NotificationPanelLogger notificationPanelLogger) {
+    static default NotificationLogger provideNotificationLogger(NotificationListener notificationListener, Executor executor, NotificationEntryManager notificationEntryManager, StatusBarStateController statusBarStateController, NotificationLogger.ExpansionStateLogger expansionStateLogger, NotificationPanelLogger notificationPanelLogger) {
         return new NotificationLogger(notificationListener, executor, notificationEntryManager, statusBarStateController, expansionStateLogger, notificationPanelLogger);
     }
 
-    static NotificationPanelLogger provideNotificationPanelLogger() {
+    static default NotificationPanelLogger provideNotificationPanelLogger() {
         return new NotificationPanelLoggerImpl();
     }
 
-    static NotificationBlockingHelperManager provideNotificationBlockingHelperManager(Context context, NotificationGutsManager notificationGutsManager, NotificationEntryManager notificationEntryManager, MetricsLogger metricsLogger) {
+    static default NotificationBlockingHelperManager provideNotificationBlockingHelperManager(Context context, NotificationGutsManager notificationGutsManager, NotificationEntryManager notificationEntryManager, MetricsLogger metricsLogger) {
         return new NotificationBlockingHelperManager(context, notificationGutsManager, notificationEntryManager, metricsLogger);
     }
 
-    static NotificationsController provideNotificationsController(Context context, Lazy<NotificationsControllerImpl> lazy, Lazy<NotificationsControllerStub> lazy2) {
+    static default NotificationsController provideNotificationsController(Context context, Lazy<NotificationsControllerImpl> lazy, Lazy<NotificationsControllerStub> lazy2) {
         if (context.getResources().getBoolean(C0010R$bool.config_renderNotifications)) {
             return lazy.get();
         }
         return lazy2.get();
     }
 
-    static CommonNotifCollection provideCommonNotifCollection(FeatureFlags featureFlags, Lazy<NotifPipeline> lazy, NotificationEntryManager notificationEntryManager) {
+    static default CommonNotifCollection provideCommonNotifCollection(FeatureFlags featureFlags, Lazy<NotifPipeline> lazy, NotificationEntryManager notificationEntryManager) {
         return featureFlags.isNewNotifPipelineRenderingEnabled() ? lazy.get() : notificationEntryManager;
     }
 }

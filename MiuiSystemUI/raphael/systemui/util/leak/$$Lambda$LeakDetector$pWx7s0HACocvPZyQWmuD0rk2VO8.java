@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$LeakDetector$pWx7s0HACocvPZyQWmuD0rk
     private /* synthetic */ $$Lambda$LeakDetector$pWx7s0HACocvPZyQWmuD0rk2VO8() {
     }
 
+    @Override // java.util.function.Predicate
     public final boolean test(Object obj) {
         return LeakDetector.lambda$dump$0((Collection) obj);
     }

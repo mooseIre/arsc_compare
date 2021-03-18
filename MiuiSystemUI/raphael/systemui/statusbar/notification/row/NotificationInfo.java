@@ -1,7 +1,9 @@
 package com.android.systemui.statusbar.notification.row;
 
+import android.animation.TimeInterpolator;
 import android.app.INotificationManager;
 import android.app.NotificationChannel;
+import android.app.NotificationChannelGroup;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -55,17 +57,23 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
     private MetricsLogger mMetricsLogger;
     private int mNumUniqueChannelsInRow;
     private View.OnClickListener mOnAlert = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$lxdNUTZhRsTq1qLdFuCftTaKsI */
+
         public final void onClick(View view) {
             NotificationInfo.this.lambda$new$0$NotificationInfo(view);
         }
     };
     private View.OnClickListener mOnDismissSettings = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$p3qjyEUB89vA_NRs8XRVogtSM4k */
+
         public final void onClick(View view) {
             NotificationInfo.this.lambda$new$2$NotificationInfo(view);
         }
     };
     private OnSettingsClickListener mOnSettingsClickListener;
     private View.OnClickListener mOnSilent = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$x1Q8n0IIdzsrzqhyaxjftYvWg5M */
+
         public final void onClick(View view) {
             NotificationInfo.this.lambda$new$1$NotificationInfo(view);
         }
@@ -98,6 +106,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         void onClick(View view, NotificationChannel notificationChannel, int i);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public View getContentView() {
         return this;
     }
@@ -107,10 +116,12 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean needsFalsingProtection() {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean willBeRemoved() {
         return false;
     }
@@ -216,7 +227,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         View findViewById4 = findViewById(C0015R$id.alert);
         findViewById3.setOnClickListener(this.mOnSilent);
         findViewById4.setOnClickListener(this.mOnAlert);
-        applyAlertingBehavior(this.mWasShownHighPriority ^ true ? 1 : 0, false);
+        applyAlertingBehavior(!this.mWasShownHighPriority ? 1 : 0, false);
     }
 
     private void bindHeader() {
@@ -241,6 +252,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         } else {
             findViewById.setVisibility(0);
             findViewById.setOnClickListener(new View.OnClickListener(appSettingsIntent) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$1n0u5clDG1rrcb2QJPV4T7x9OY0 */
                 public final /* synthetic */ Intent f$1;
 
                 {
@@ -272,6 +284,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             return null;
         }
         return new View.OnClickListener(i) {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$hxpyY8vJ1JgmBKZbtsmY4xt8GSo */
             public final /* synthetic */ int f$1;
 
             {
@@ -292,6 +305,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
 
     private View.OnClickListener getTurnOffNotificationsClickListener() {
         return new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$qmudzW8HIf3NdQ5m_rRVs99Xwo */
+
             public final void onClick(View view) {
                 NotificationInfo.this.lambda$getTurnOffNotificationsClickListener$6$NotificationInfo(view);
             }
@@ -306,6 +321,9 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             this.mPresentingChannelEditorDialog = true;
             channelEditorDialogController.prepareDialogForApp(this.mAppName, this.mPackageName, this.mAppUid, this.mUniqueChannelsInRow, this.mPkgIcon, this.mOnSettingsClickListener);
             this.mChannelEditorDialogController.setOnFinishListener(new OnChannelEditorDialogFinishedListener() {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$qDAhbvIGRRm3TXYceFiIFzSgIH0 */
+
+                @Override // com.android.systemui.statusbar.notification.row.OnChannelEditorDialogFinishedListener
                 public final void onChannelEditorDialogFinished() {
                     NotificationInfo.this.lambda$getTurnOffNotificationsClickListener$5$NotificationInfo();
                 }
@@ -344,44 +362,17 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:4:0x000a, code lost:
-        r0 = r4.mINotificationManager.getNotificationChannelGroupForPackage(r4.mSingleNotificationChannel.getGroup(), r4.mPackageName, r4.mAppUid);
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private void bindGroup() throws android.os.RemoteException {
-        /*
-            r4 = this;
-            android.app.NotificationChannel r0 = r4.mSingleNotificationChannel
-            if (r0 == 0) goto L_0x0021
-            java.lang.String r0 = r0.getGroup()
-            if (r0 == 0) goto L_0x0021
-            android.app.INotificationManager r0 = r4.mINotificationManager
-            android.app.NotificationChannel r1 = r4.mSingleNotificationChannel
-            java.lang.String r1 = r1.getGroup()
-            java.lang.String r2 = r4.mPackageName
-            int r3 = r4.mAppUid
-            android.app.NotificationChannelGroup r0 = r0.getNotificationChannelGroupForPackage(r1, r2, r3)
-            if (r0 == 0) goto L_0x0021
-            java.lang.CharSequence r0 = r0.getName()
-            goto L_0x0022
-        L_0x0021:
-            r0 = 0
-        L_0x0022:
-            int r1 = com.android.systemui.C0015R$id.group_name
-            android.view.View r4 = r4.findViewById(r1)
-            android.widget.TextView r4 = (android.widget.TextView) r4
-            if (r0 == 0) goto L_0x0034
-            r4.setText(r0)
-            r0 = 0
-            r4.setVisibility(r0)
-            goto L_0x0039
-        L_0x0034:
-            r0 = 8
-            r4.setVisibility(r0)
-        L_0x0039:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.row.NotificationInfo.bindGroup():void");
+    private void bindGroup() throws RemoteException {
+        NotificationChannelGroup notificationChannelGroupForPackage;
+        NotificationChannel notificationChannel = this.mSingleNotificationChannel;
+        CharSequence name = (notificationChannel == null || notificationChannel.getGroup() == null || (notificationChannelGroupForPackage = this.mINotificationManager.getNotificationChannelGroupForPackage(this.mSingleNotificationChannel.getGroup(), this.mPackageName, this.mAppUid)) == null) ? null : notificationChannelGroupForPackage.getName();
+        TextView textView = (TextView) findViewById(C0015R$id.group_name);
+        if (name != null) {
+            textView.setText(name);
+            textView.setVisibility(0);
+            return;
+        }
+        textView.setVisibility(8);
     }
 
     private void saveImportance() {
@@ -421,8 +412,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             TransitionSet transitionSet = new TransitionSet();
             transitionSet.setOrdering(0);
             transitionSet.addTransition(new Fade(2)).addTransition(new ChangeBounds()).addTransition(new Fade(1).setStartDelay(150).setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN));
-            transitionSet.setDuration(350);
-            transitionSet.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
+            transitionSet.setDuration(350L);
+            transitionSet.setInterpolator((TimeInterpolator) Interpolators.FAST_OUT_SLOW_IN);
             TransitionManager.beginDelayedTransition(this, transitionSet);
         }
         View findViewById = findViewById(C0015R$id.alert);
@@ -431,6 +422,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             this.mPriorityDescriptionView.setVisibility(0);
             this.mSilentDescriptionView.setVisibility(8);
             post(new Runnable(findViewById, findViewById2) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$1cdINfsJSKDrnEWwLGSoTsBTKw */
                 public final /* synthetic */ View f$0;
                 public final /* synthetic */ View f$1;
 
@@ -447,6 +439,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
             this.mSilentDescriptionView.setVisibility(0);
             this.mPriorityDescriptionView.setVisibility(8);
             post(new Runnable(findViewById, findViewById2) {
+                /* class com.android.systemui.statusbar.notification.row.$$Lambda$NotificationInfo$dODWYeWO6slLdAhUkqkR2B6YC2k */
                 public final /* synthetic */ View f$0;
                 public final /* synthetic */ View f$1;
 
@@ -484,6 +477,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         view2.setSelected(true);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void onFinishedClosing() {
         Integer num = this.mChosenImportance;
         if (num != null) {
@@ -498,10 +492,10 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 
@@ -521,19 +515,22 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         return intent;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void setGutsParent(NotificationGuts notificationGuts) {
         this.mGutsContainer = notificationGuts;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean shouldBeSaved() {
         return this.mPressedApply;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean handleCloseControls(boolean z, boolean z2) {
         ChannelEditorDialogController channelEditorDialogController;
         if (this.mPresentingChannelEditorDialog && (channelEditorDialogController = this.mChannelEditorDialogController) != null) {
             this.mPresentingChannelEditorDialog = false;
-            channelEditorDialogController.setOnFinishListener((OnChannelEditorDialogFinishedListener) null);
+            channelEditorDialogController.setOnFinishListener(null);
             this.mChannelEditorDialogController.close();
         }
         if (z) {
@@ -542,6 +539,7 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public int getActualHeight() {
         return this.mActualHeight;
     }
@@ -552,7 +550,8 @@ public class NotificationInfo extends LinearLayout implements NotificationGuts.G
         this.mActualHeight = getHeight();
     }
 
-    private static class UpdateImportanceRunnable implements Runnable {
+    /* access modifiers changed from: private */
+    public static class UpdateImportanceRunnable implements Runnable {
         private final int mAppUid;
         private final NotificationChannel mChannelToUpdate;
         private final int mCurrentImportance;

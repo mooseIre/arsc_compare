@@ -21,6 +21,7 @@ public final class PowerUI_Factory implements Factory<PowerUI> {
         this.statusBarLazyProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public PowerUI get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.commandQueueProvider, this.statusBarLazyProvider);
     }

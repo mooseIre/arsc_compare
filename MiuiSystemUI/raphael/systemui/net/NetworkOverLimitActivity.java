@@ -20,6 +20,8 @@ public class NetworkOverLimitActivity extends Activity {
         builder.setMessage(C0021R$string.data_usage_disabled_dialog);
         builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
         builder.setNegativeButton(C0021R$string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
+            /* class com.android.systemui.net.NetworkOverLimitActivity.AnonymousClass1 */
+
             public void onClick(DialogInterface dialogInterface, int i) {
                 NetworkOverLimitActivity.this.snoozePolicy(parcelableExtra);
             }
@@ -27,6 +29,8 @@ public class NetworkOverLimitActivity extends Activity {
         AlertDialog create = builder.create();
         create.getWindow().setType(2003);
         create.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            /* class com.android.systemui.net.NetworkOverLimitActivity.AnonymousClass2 */
+
             public void onDismiss(DialogInterface dialogInterface) {
                 NetworkOverLimitActivity.this.finish();
             }
@@ -35,7 +39,8 @@ public class NetworkOverLimitActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void snoozePolicy(NetworkTemplate networkTemplate) {
+    /* access modifiers changed from: public */
+    private void snoozePolicy(NetworkTemplate networkTemplate) {
         try {
             INetworkPolicyManager.Stub.asInterface(ServiceManager.getService("netpolicy")).snoozeLimit(networkTemplate);
         } catch (RemoteException e) {

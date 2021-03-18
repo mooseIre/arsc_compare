@@ -29,7 +29,7 @@ public interface VolumeDialogController {
 
         void onLayoutDirectionChanged(int i);
 
-        void onPerformHapticFeedback(int i) {
+        default void onPerformHapticFeedback(int i) {
         }
 
         void onScreenOff();
@@ -211,7 +211,7 @@ public interface VolumeDialogController {
 
         private static void sep(StringBuilder sb, int i) {
             if (i > 0) {
-                sb.append(10);
+                sb.append('\n');
                 for (int i2 = 0; i2 < i; i2++) {
                     sb.append(' ');
                 }

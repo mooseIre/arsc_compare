@@ -20,6 +20,7 @@ public final class MediaResumeListener_Factory implements Factory<MediaResumeLis
         this.tunerServiceProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public MediaResumeListener get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.backgroundExecutorProvider, this.tunerServiceProvider);
     }

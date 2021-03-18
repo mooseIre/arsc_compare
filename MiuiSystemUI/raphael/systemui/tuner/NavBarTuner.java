@@ -26,6 +26,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     private Handler mHandler;
     private final ArrayList<TunerService.Tunable> mTunables = new ArrayList<>();
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreate(Bundle bundle) {
         this.mHandler = new Handler();
         super.onCreate(bundle);
@@ -36,6 +37,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         addPreferencesFromResource(C0023R$xml.nav_bar_tuner);
         bindLayout((ListPreference) findPreference("layout"));
@@ -55,12 +57,14 @@ public class NavBarTuner extends TunerPreferenceFragment {
 
     private void bindLayout(ListPreference listPreference) {
         addTunable(new TunerService.Tunable(listPreference) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$nx5Q7aHowvZ9Bevy96_zeYYIxAY */
             public final /* synthetic */ ListPreference f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // com.android.systemui.tuner.TunerService.Tunable
             public final void onTuningChanged(String str, String str2) {
                 NavBarTuner.this.lambda$bindLayout$2$NavBarTuner(this.f$1, str, str2);
             }
@@ -72,6 +76,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     /* renamed from: lambda$bindLayout$2 */
     public /* synthetic */ void lambda$bindLayout$2$NavBarTuner(ListPreference listPreference, String str, String str2) {
         this.mHandler.post(new Runnable(str2, listPreference) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$RQUqCpCXtFwKbIxFJ1AuU4K69W4 */
             public final /* synthetic */ String f$0;
             public final /* synthetic */ ListPreference f$1;
 
@@ -107,8 +112,8 @@ public class NavBarTuner extends TunerPreferenceFragment {
         Preference findPreference = findPreference("keycode_" + str3);
         ListPreference listPreference2 = (ListPreference) findPreference("icon_" + str3);
         setupIcons(listPreference2);
-        ListPreference listPreference3 = listPreference;
-        addTunable(new TunerService.Tunable(str2, listPreference3, listPreference2, findPreference) {
+        addTunable(new TunerService.Tunable(str2, listPreference, listPreference2, findPreference) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$AtqwC3eDMLXM8PvQu0SrBbBcxZQ */
             public final /* synthetic */ String f$1;
             public final /* synthetic */ ListPreference f$2;
             public final /* synthetic */ ListPreference f$3;
@@ -121,12 +126,13 @@ public class NavBarTuner extends TunerPreferenceFragment {
                 this.f$4 = r5;
             }
 
+            @Override // com.android.systemui.tuner.TunerService.Tunable
             public final void onTuningChanged(String str, String str2) {
                 NavBarTuner.this.lambda$bindButton$5$NavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, str, str2);
             }
         }, str);
-        ListPreference listPreference4 = listPreference2;
-        $$Lambda$NavBarTuner$5vkJoJwaFUhdGZ7Fp4qtkLVqooo r1 = new Preference.OnPreferenceChangeListener(str, listPreference3, findPreference, listPreference4) {
+        $$Lambda$NavBarTuner$5vkJoJwaFUhdGZ7Fp4qtkLVqooo r11 = new Preference.OnPreferenceChangeListener(str, listPreference, findPreference, listPreference2) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$5vkJoJwaFUhdGZ7Fp4qtkLVqooo */
             public final /* synthetic */ String f$1;
             public final /* synthetic */ ListPreference f$2;
             public final /* synthetic */ Preference f$3;
@@ -139,13 +145,15 @@ public class NavBarTuner extends TunerPreferenceFragment {
                 this.f$4 = r5;
             }
 
+            @Override // androidx.preference.Preference.OnPreferenceChangeListener
             public final boolean onPreferenceChange(Preference preference, Object obj) {
                 return NavBarTuner.this.lambda$bindButton$7$NavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, preference, obj);
             }
         };
-        listPreference.setOnPreferenceChangeListener(r1);
-        listPreference2.setOnPreferenceChangeListener(r1);
-        findPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(findPreference, str, listPreference, listPreference4) {
+        listPreference.setOnPreferenceChangeListener(r11);
+        listPreference2.setOnPreferenceChangeListener(r11);
+        findPreference.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener(findPreference, str, listPreference, listPreference2) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$VEefG8gxDDp8OSjE4w47bWNl4eQ */
             public final /* synthetic */ Preference f$1;
             public final /* synthetic */ String f$2;
             public final /* synthetic */ ListPreference f$3;
@@ -158,6 +166,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
                 this.f$4 = r5;
             }
 
+            @Override // androidx.preference.Preference.OnPreferenceClickListener
             public final boolean onPreferenceClick(Preference preference) {
                 return NavBarTuner.this.lambda$bindButton$9$NavBarTuner(this.f$1, this.f$2, this.f$3, this.f$4, preference);
             }
@@ -168,6 +177,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     /* renamed from: lambda$bindButton$5 */
     public /* synthetic */ void lambda$bindButton$5$NavBarTuner(String str, ListPreference listPreference, ListPreference listPreference2, Preference preference, String str2, String str3) {
         this.mHandler.post(new Runnable(str3, str, listPreference, listPreference2, preference) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$sQQgaEvmFdhni6jwm3oIAJf94Eo */
             public final /* synthetic */ String f$1;
             public final /* synthetic */ String f$2;
             public final /* synthetic */ ListPreference f$3;
@@ -201,7 +211,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
             int extractKeycode = NavigationBarInflaterView.extractKeycode(extractButton);
             listPreference2.setValue(extractImage);
             updateSummary(listPreference2);
-            preference.setSummary((CharSequence) extractKeycode + "");
+            preference.setSummary(extractKeycode + "");
             preference.setVisible(true);
             listPreference2.setVisible(true);
             return;
@@ -215,6 +225,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     /* renamed from: lambda$bindButton$7 */
     public /* synthetic */ boolean lambda$bindButton$7$NavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2, Preference preference2, Object obj) {
         this.mHandler.post(new Runnable(str, listPreference, preference, listPreference2) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$Q4QuzL1NB7uGZ3GCFspFwSEMA8g */
             public final /* synthetic */ String f$1;
             public final /* synthetic */ ListPreference f$2;
             public final /* synthetic */ Preference f$3;
@@ -246,6 +257,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
     public /* synthetic */ boolean lambda$bindButton$9$NavBarTuner(Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, Preference preference2) {
         EditText editText = new EditText(getContext());
         new AlertDialog.Builder(getContext()).setTitle(preference2.getTitle()).setView(editText).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039370, new DialogInterface.OnClickListener(editText, preference, str, listPreference, listPreference2) {
+            /* class com.android.systemui.tuner.$$Lambda$NavBarTuner$oFwpdLrZA2BGC8nFWvjJ8NeCnQE */
             public final /* synthetic */ EditText f$1;
             public final /* synthetic */ Preference f$2;
             public final /* synthetic */ String f$3;
@@ -276,7 +288,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         } catch (Exception unused) {
             i2 = 66;
         }
-        preference.setSummary((CharSequence) i2 + "");
+        preference.setSummary(i2 + "");
         setValue(str, listPreference, preference, listPreference2);
     }
 
@@ -291,10 +303,10 @@ public class NavBarTuner extends TunerPreferenceFragment {
             loadDrawable.setTint(-16777216);
             loadDrawable.setBounds(0, 0, applyDimension, applyDimension);
             spannableStringBuilder.append("  ", new ImageSpan(loadDrawable, 1), 0);
-            spannableStringBuilder.append(" ");
+            spannableStringBuilder.append((CharSequence) " ");
             for (int i = 0; i < iArr.length; i++) {
                 if (iArr[i][0] == parseInt) {
-                    spannableStringBuilder.append(getString(iArr[i][1]));
+                    spannableStringBuilder.append((CharSequence) getString(iArr[i][1]));
                 }
             }
             listPreference.setSummary(spannableStringBuilder);
@@ -329,8 +341,8 @@ public class NavBarTuner extends TunerPreferenceFragment {
             loadDrawable.setTint(-16777216);
             loadDrawable.setBounds(0, 0, applyDimension, applyDimension);
             spannableStringBuilder.append("  ", new ImageSpan(loadDrawable, 1), 0);
-            spannableStringBuilder.append(" ");
-            spannableStringBuilder.append(getString(iArr[i][1]));
+            spannableStringBuilder.append((CharSequence) " ");
+            spannableStringBuilder.append((CharSequence) getString(iArr[i][1]));
             charSequenceArr[i] = spannableStringBuilder;
             charSequenceArr2[i] = getContext().getPackageName() + "/" + iArr[i][0];
         }

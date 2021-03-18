@@ -12,8 +12,9 @@ import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final class ItemAdapter extends ArrayAdapter<SelectionItem> {
+public final class ItemAdapter extends ArrayAdapter<SelectionItem> {
     private final LayoutInflater layoutInflater = LayoutInflater.from(getContext());
     private final int resource;
 

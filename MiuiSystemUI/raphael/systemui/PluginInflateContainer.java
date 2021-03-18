@@ -24,6 +24,7 @@ public class PluginInflateContainer extends AutoReinflateContainer implements Pl
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.AutoReinflateContainer
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         if (this.mClass != null) {
@@ -32,6 +33,7 @@ public class PluginInflateContainer extends AutoReinflateContainer implements Pl
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.AutoReinflateContainer
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         if (this.mClass != null) {
@@ -40,6 +42,7 @@ public class PluginInflateContainer extends AutoReinflateContainer implements Pl
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.AutoReinflateContainer
     public void inflateLayoutImpl() {
         View view = this.mPluginView;
         if (view != null) {

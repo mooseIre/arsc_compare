@@ -12,6 +12,7 @@ public final class MediaDataCombineLatest_Factory implements Factory<MediaDataCo
         this.deviceSourceProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MediaDataCombineLatest get() {
         return provideInstance(this.dataSourceProvider, this.deviceSourceProvider);
     }

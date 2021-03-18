@@ -112,9 +112,9 @@ public class ShortcutParser {
         public static Shortcut create(Context context, String str) {
             String[] split = str.split("::");
             try {
-                for (Shortcut next : new ShortcutParser(context, new ComponentName(split[0], split[1])).getShortcuts()) {
-                    if (next.id.equals(split[2])) {
-                        return next;
+                for (Shortcut shortcut : new ShortcutParser(context, new ComponentName(split[0], split[1])).getShortcuts()) {
+                    if (shortcut.id.equals(split[2])) {
+                        return shortcut;
                     }
                 }
                 return null;

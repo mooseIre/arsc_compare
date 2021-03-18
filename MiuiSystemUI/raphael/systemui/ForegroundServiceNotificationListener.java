@@ -18,36 +18,45 @@ import com.android.systemui.util.time.SystemClock;
 public class ForegroundServiceNotificationListener {
     private final Context mContext;
     private final NotificationEntryManager mEntryManager;
-    /* access modifiers changed from: private */
-    public final ForegroundServiceController mForegroundServiceController;
+    private final ForegroundServiceController mForegroundServiceController;
 
     public ForegroundServiceNotificationListener(Context context, ForegroundServiceController foregroundServiceController, NotificationEntryManager notificationEntryManager, NotifPipeline notifPipeline, ForegroundServiceLifetimeExtender foregroundServiceLifetimeExtender, SystemClock systemClock) {
         this.mContext = context;
         this.mForegroundServiceController = foregroundServiceController;
         this.mEntryManager = notificationEntryManager;
         notificationEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+            /* class com.android.systemui.ForegroundServiceNotificationListener.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPendingEntryAdded(NotificationEntry notificationEntry) {
                 ForegroundServiceNotificationListener.this.addNotification(notificationEntry, notificationEntry.getImportance());
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                 ForegroundServiceNotificationListener.this.updateNotification(notificationEntry, notificationEntry.getImportance());
             }
 
+            @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
                 ForegroundServiceNotificationListener.this.removeNotification(notificationEntry.getSbn());
             }
         });
         this.mEntryManager.addNotificationLifetimeExtender(foregroundServiceLifetimeExtender);
         notifPipeline.addCollectionListener(new NotifCollectionListener() {
+            /* class com.android.systemui.ForegroundServiceNotificationListener.AnonymousClass2 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryAdded(NotificationEntry notificationEntry) {
                 ForegroundServiceNotificationListener.this.addNotification(notificationEntry, notificationEntry.getImportance());
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryUpdated(NotificationEntry notificationEntry) {
                 ForegroundServiceNotificationListener.this.updateNotification(notificationEntry, notificationEntry.getImportance());
             }
 
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryRemoved(NotificationEntry notificationEntry, int i) {
                 ForegroundServiceNotificationListener.this.removeNotification(notificationEntry.getSbn());
             }
@@ -55,27 +64,34 @@ public class ForegroundServiceNotificationListener {
     }
 
     /* access modifiers changed from: private */
-    public void addNotification(NotificationEntry notificationEntry, int i) {
+    /* access modifiers changed from: public */
+    private void addNotification(NotificationEntry notificationEntry, int i) {
         updateNotification(notificationEntry, i);
     }
 
     /* access modifiers changed from: private */
-    public void removeNotification(final StatusBarNotification statusBarNotification) {
+    /* access modifiers changed from: public */
+    private void removeNotification(final StatusBarNotification statusBarNotification) {
         this.mForegroundServiceController.updateUserState(statusBarNotification.getUserId(), new ForegroundServiceController.UserStateUpdateCallback() {
+            /* class com.android.systemui.ForegroundServiceNotificationListener.AnonymousClass3 */
+
+            @Override // com.android.systemui.ForegroundServiceController.UserStateUpdateCallback
             public boolean updateUserState(ForegroundServicesUserState foregroundServicesUserState) {
                 if (!ForegroundServiceNotificationListener.this.mForegroundServiceController.isDisclosureNotification(statusBarNotification)) {
                     return foregroundServicesUserState.removeNotification(statusBarNotification.getPackageName(), statusBarNotification.getKey());
                 }
-                foregroundServicesUserState.setRunningServices((String[]) null, 0);
+                foregroundServicesUserState.setRunningServices(null, 0);
                 return true;
             }
         }, false);
     }
 
     /* access modifiers changed from: private */
-    public void updateNotification(NotificationEntry notificationEntry, int i) {
+    /* access modifiers changed from: public */
+    private void updateNotification(NotificationEntry notificationEntry, int i) {
         ExpandedNotification sbn = notificationEntry.getSbn();
         this.mForegroundServiceController.updateUserState(sbn.getUserId(), new ForegroundServiceController.UserStateUpdateCallback(sbn, i, notificationEntry) {
+            /* class com.android.systemui.$$Lambda$ForegroundServiceNotificationListener$bKAGLLFV59EYZBLeV36rpndtUhU */
             public final /* synthetic */ StatusBarNotification f$1;
             public final /* synthetic */ int f$2;
             public final /* synthetic */ NotificationEntry f$3;
@@ -86,6 +102,7 @@ public class ForegroundServiceNotificationListener {
                 this.f$3 = r4;
             }
 
+            @Override // com.android.systemui.ForegroundServiceController.UserStateUpdateCallback
             public final boolean updateUserState(ForegroundServicesUserState foregroundServicesUserState) {
                 return ForegroundServiceNotificationListener.this.lambda$updateNotification$0$ForegroundServiceNotificationListener(this.f$1, this.f$2, this.f$3, foregroundServicesUserState);
             }
@@ -119,7 +136,7 @@ public class ForegroundServiceNotificationListener {
         synchronized (notificationEntry.mActiveAppOps) {
             notificationEntry.mActiveAppOps.clear();
             if (appOps != null) {
-                notificationEntry.mActiveAppOps.addAll(appOps);
+                notificationEntry.mActiveAppOps.addAll((ArraySet<? extends Integer>) appOps);
             }
         }
     }

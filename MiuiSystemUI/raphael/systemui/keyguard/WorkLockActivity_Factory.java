@@ -11,6 +11,7 @@ public final class WorkLockActivity_Factory implements Factory<WorkLockActivity>
         this.broadcastDispatcherProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public WorkLockActivity get() {
         return provideInstance(this.broadcastDispatcherProvider);
     }

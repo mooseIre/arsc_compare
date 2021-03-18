@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class AssistModule_ProvideSystemClockFactory implements Factory<Clock> {
     private static final AssistModule_ProvideSystemClockFactory INSTANCE = new AssistModule_ProvideSystemClockFactory();
 
+    @Override // javax.inject.Provider
     public Clock get() {
         return provideInstance();
     }

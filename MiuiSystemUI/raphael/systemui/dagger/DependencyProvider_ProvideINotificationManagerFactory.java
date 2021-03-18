@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvideINotificationManagerFactory impleme
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public INotificationManager get() {
         return provideInstance(this.module);
     }

@@ -21,12 +21,15 @@ import miui.util.FeatureParser;
 public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
     private static final boolean SUPPORT_EXTREME_BATTERY_SAVER = FeatureParser.getBoolean("support_extreme_battery_saver", false);
     private final ContentObserver mObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.qs.tiles.PowerSaverExtremeTile.AnonymousClass1 */
+
         public void onChange(boolean z) {
             PowerSaverExtremeTile.this.refreshState();
         }
     };
     private ContentResolver mResolver = this.mContext.getContentResolver();
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -35,10 +38,12 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
         super(qSHost);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             this.mResolver.registerContentObserver(Settings.Secure.getUriFor("EXTREME_POWER_MODE_ENABLE"), false, this.mObserver, -1);
@@ -47,6 +52,7 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         Intent intent = new Intent("miui.intent.action.EXTREME_POWER_ENTRY_ACTIVITY");
         intent.setFlags(335544320);
@@ -54,6 +60,7 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         boolean z = false;
         if (Settings.Secure.getIntForUser(this.mResolver, "EXTREME_POWER_MODE_ENABLE", 0, -2) != 0) {
@@ -65,6 +72,7 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
         this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powerkeeper.configure"), ActivityManager.getCurrentUser()), "changeExtremePowerMode", (String) null, bundle);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_extreme_batterysaver_label);
     }
@@ -85,13 +93,14 @@ public class PowerSaverExtremeTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_extreme_battery_saver_off);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return Build.IS_INTERNATIONAL_BUILD && SUPPORT_EXTREME_BATTERY_SAVER && !Build.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }

@@ -100,8 +100,8 @@ public class NotificationSettingsHelper {
         if (stringArray == null || stringArray.length <= 0) {
             return true;
         }
-        for (String equals : stringArray) {
-            if (str.equals(equals)) {
+        for (String str2 : stringArray) {
+            if (str.equals(str2)) {
                 return false;
             }
         }
@@ -246,10 +246,7 @@ public class NotificationSettingsHelper {
         }
     }
 
-    /* JADX WARNING: Can't wrap try/catch for region: R(2:5|6) */
-    /* JADX WARNING: Code restructure failed: missing block: B:6:?, code lost:
-        r4 = sINM.getNotificationChannel(r0.getPackageName(), r0.getUserId(), r7.getPackageName(), r1);
-     */
+    /* JADX WARNING: Can't wrap try/catch for region: R(6:3|4|5|6|7|9) */
     /* JADX WARNING: Failed to process nested try/catch */
     /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x0037 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -269,14 +266,14 @@ public class NotificationSettingsHelper {
             if (r2 == 0) goto L_0x0024
             goto L_0x0052
         L_0x0024:
-            android.app.INotificationManager r2 = sINM     // Catch:{ Exception -> 0x0037 }
+            android.app.INotificationManager r2 = com.android.systemui.statusbar.notification.NotificationSettingsHelper.sINM     // Catch:{ Exception -> 0x0037 }
             java.lang.String r3 = r0.getPackageName()     // Catch:{ Exception -> 0x0037 }
             int r5 = r0.getUserId()     // Catch:{ Exception -> 0x0037 }
             java.lang.String r6 = r7.getOpPkg()     // Catch:{ Exception -> 0x0037 }
             android.app.NotificationChannel r4 = r2.getNotificationChannel(r3, r5, r6, r1)     // Catch:{ Exception -> 0x0037 }
             goto L_0x0049
         L_0x0037:
-            android.app.INotificationManager r2 = sINM     // Catch:{ Exception -> 0x0049 }
+            android.app.INotificationManager r2 = com.android.systemui.statusbar.notification.NotificationSettingsHelper.sINM     // Catch:{ Exception -> 0x0049 }
             java.lang.String r3 = r0.getPackageName()     // Catch:{ Exception -> 0x0049 }
             int r0 = r0.getUserId()     // Catch:{ Exception -> 0x0049 }
             java.lang.String r5 = r7.getPackageName()     // Catch:{ Exception -> 0x0049 }
@@ -338,7 +335,7 @@ public class NotificationSettingsHelper {
 
     public static void startAppNotificationSettings(Context context, String str, String str2, int i, String str3) {
         if (DEBUG) {
-            Log.d("NotifiSettingsHelper", String.format("startAppNotificationSettings pkg=%s label=%s uid=%s", new Object[]{str, str2, Integer.valueOf(i)}));
+            Log.d("NotifiSettingsHelper", String.format("startAppNotificationSettings pkg=%s label=%s uid=%s", str, str2, Integer.valueOf(i)));
         }
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addFlags(32768);

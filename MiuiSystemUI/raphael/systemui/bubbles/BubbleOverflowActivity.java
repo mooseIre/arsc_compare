@@ -27,8 +27,7 @@ import java.util.function.Consumer;
 
 public class BubbleOverflowActivity extends Activity {
     private BubbleOverflowAdapter mAdapter;
-    /* access modifiers changed from: private */
-    public BubbleController mBubbleController;
+    private BubbleController mBubbleController;
     private LinearLayout mEmptyState;
     private ImageView mEmptyStateImage;
     private TextView mEmptyStateSubtitle;
@@ -36,11 +35,13 @@ public class BubbleOverflowActivity extends Activity {
     private List<Bubble> mOverflowBubbles = new ArrayList();
     private RecyclerView mRecyclerView;
 
-    private class NoScrollGridLayoutManager extends GridLayoutManager {
+    /* access modifiers changed from: private */
+    public class NoScrollGridLayoutManager extends GridLayoutManager {
         NoScrollGridLayoutManager(Context context, int i) {
             super(context, i);
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.LayoutManager, androidx.recyclerview.widget.LinearLayoutManager
         public boolean canScrollVertically() {
             if (BubbleOverflowActivity.this.mBubbleController.inLandscape()) {
                 return super.canScrollVertically();
@@ -48,6 +49,7 @@ public class BubbleOverflowActivity extends Activity {
             return false;
         }
 
+        @Override // androidx.recyclerview.widget.GridLayoutManager, androidx.recyclerview.widget.RecyclerView.LayoutManager
         public int getColumnCountForAccessibility(RecyclerView.Recycler recycler, RecyclerView.State state) {
             int itemCount = state.getItemCount();
             int columnCountForAccessibility = super.getColumnCountForAccessibility(recycler, state);
@@ -70,6 +72,8 @@ public class BubbleOverflowActivity extends Activity {
         updateDimensions();
         onDataChanged(this.mBubbleController.getOverflowBubbles());
         this.mBubbleController.setOverflowCallback(new Runnable() {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleOverflowActivity$bBXw1pgL9xyN0c4JMlrR5U428HM */
+
             public final void run() {
                 BubbleOverflowActivity.this.lambda$onCreate$0$BubbleOverflowActivity();
             }
@@ -96,6 +100,9 @@ public class BubbleOverflowActivity extends Activity {
         BubbleController bubbleController = this.mBubbleController;
         Objects.requireNonNull(bubbleController);
         BubbleOverflowAdapter bubbleOverflowAdapter = new BubbleOverflowAdapter(applicationContext, list, new Consumer() {
+            /* class com.android.systemui.bubbles.$$Lambda$HcbZA8v8RHJPrNTsZB0H54PCimo */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 BubbleController.this.promoteBubbleFromOverflow((Bubble) obj);
             }

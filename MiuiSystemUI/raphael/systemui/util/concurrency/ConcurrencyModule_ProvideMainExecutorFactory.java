@@ -13,6 +13,7 @@ public final class ConcurrencyModule_ProvideMainExecutorFactory implements Facto
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public Executor get() {
         return provideInstance(this.contextProvider);
     }

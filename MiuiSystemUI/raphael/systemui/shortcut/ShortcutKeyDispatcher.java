@@ -1,7 +1,6 @@
 package com.android.systemui.shortcut;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.RemoteException;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
@@ -31,6 +30,7 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
         }
     }
 
+    @Override // com.android.systemui.shortcut.ShortcutKeyServiceProxy.Callbacks
     public void onShortcutKeyPressed(long j) {
         int i = this.mContext.getResources().getConfiguration().orientation;
         if ((j == 281474976710727L || j == 281474976710728L) && i == 2) {
@@ -38,6 +38,7 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
         }
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         registerShortcutKey(281474976710727L);
         registerShortcutKey(281474976710728L);
@@ -52,7 +53,7 @@ public class ShortcutKeyDispatcher extends SystemUI implements ShortcutKeyServic
             if (j != 281474976710727L) {
                 i = 1;
             }
-            recents.splitPrimaryTask(i, (Rect) null, -1);
+            recents.splitPrimaryTask(i, null, -1);
             return;
         }
         DividerView view = this.mDivider.getView();

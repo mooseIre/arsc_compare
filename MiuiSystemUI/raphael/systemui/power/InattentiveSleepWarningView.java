@@ -9,16 +9,16 @@ import android.os.IBinder;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import com.android.systemui.C0017R$layout;
 import java.util.Objects;
 
 public class InattentiveSleepWarningView extends FrameLayout {
-    /* access modifiers changed from: private */
-    public boolean mDismissing;
+    private boolean mDismissing;
     private Animator mFadeOutAnimator;
-    private final WindowManager mWindowManager = ((WindowManager) this.mContext.getSystemService(WindowManager.class));
+    private final WindowManager mWindowManager = ((WindowManager) ((FrameLayout) this).mContext.getSystemService(WindowManager.class));
     private final IBinder mWindowToken = new Binder();
 
     static /* synthetic */ boolean lambda$new$0(View view, int i, KeyEvent keyEvent) {
@@ -27,19 +27,21 @@ public class InattentiveSleepWarningView extends FrameLayout {
 
     InattentiveSleepWarningView(Context context) {
         super(context);
-        LayoutInflater.from(this.mContext).inflate(C0017R$layout.inattentive_sleep_warning, this, true);
+        LayoutInflater.from(((FrameLayout) this).mContext).inflate(C0017R$layout.inattentive_sleep_warning, (ViewGroup) this, true);
         setFocusable(true);
         setOnKeyListener($$Lambda$InattentiveSleepWarningView$TZ7t_oJYmI3UsEhfACXbN6lQYjI.INSTANCE);
         Animator loadAnimator = AnimatorInflater.loadAnimator(getContext(), 17498113);
         this.mFadeOutAnimator = loadAnimator;
         loadAnimator.setTarget(this);
         this.mFadeOutAnimator.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.power.InattentiveSleepWarningView.AnonymousClass1 */
+
             public void onAnimationEnd(Animator animator) {
                 InattentiveSleepWarningView.this.removeView();
             }
 
             public void onAnimationCancel(Animator animator) {
-                boolean unused = InattentiveSleepWarningView.this.mDismissing = false;
+                InattentiveSleepWarningView.this.mDismissing = false;
                 InattentiveSleepWarningView.this.setAlpha(1.0f);
                 InattentiveSleepWarningView.this.setVisibility(0);
             }
@@ -47,7 +49,8 @@ public class InattentiveSleepWarningView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void removeView() {
+    /* access modifiers changed from: public */
+    private void removeView() {
         if (this.mDismissing) {
             setVisibility(4);
             this.mWindowManager.removeView(this);
@@ -71,6 +74,7 @@ public class InattentiveSleepWarningView extends FrameLayout {
                 Animator animator = this.mFadeOutAnimator;
                 Objects.requireNonNull(animator);
                 postOnAnimation(new Runnable(animator) {
+                    /* class com.android.systemui.power.$$Lambda$VKaan4AksvR9EA2Slt2S3X5pVOI */
                     public final /* synthetic */ Animator f$0;
 
                     {

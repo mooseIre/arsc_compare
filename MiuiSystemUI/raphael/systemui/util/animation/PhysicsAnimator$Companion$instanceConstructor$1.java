@@ -15,21 +15,25 @@ final /* synthetic */ class PhysicsAnimator$Companion$instanceConstructor$1 exte
         super(1);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getName() {
         return "<init>";
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final KDeclarationContainer getOwner() {
         return Reflection.getOrCreateKotlinClass(PhysicsAnimator.class);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getSignature() {
         return "<init>(Ljava/lang/Object;)V";
     }
 
+    @Override // kotlin.jvm.functions.Function1
     @NotNull
     public final PhysicsAnimator<Object> invoke(@NotNull Object obj) {
         Intrinsics.checkParameterIsNotNull(obj, "p1");
-        return new PhysicsAnimator<>(obj, (DefaultConstructorMarker) null);
+        return new PhysicsAnimator<>(obj, null);
     }
 }

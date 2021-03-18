@@ -27,7 +27,7 @@ final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClick
             if (((AlertDialog) dialogInterface).isChecked()) {
                 PreferenceManager.getDefaultSharedPreferences(this.$context).edit().putBoolean("dual_wifi_switching_not_remind", true).commit();
             }
-            this.this$0.slaveWifiUtils.disconnectSlaveWifi();
+            SlaveWifiHelper.access$getSlaveWifiUtils$p(this.this$0).disconnectSlaveWifi();
             this.$accessPointController.connect(this.$ap);
             dialogInterface.dismiss();
             return;

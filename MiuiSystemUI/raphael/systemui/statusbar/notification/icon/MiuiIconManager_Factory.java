@@ -16,6 +16,7 @@ public final class MiuiIconManager_Factory implements Factory<MiuiIconManager> {
         this.iconBuilderProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public MiuiIconManager get() {
         return provideInstance(this.notifCollectionProvider, this.launcherAppsProvider, this.iconBuilderProvider);
     }

@@ -23,6 +23,7 @@ import com.android.systemui.Interpolators;
 import java.util.ArrayList;
 import java.util.HashSet;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,8 +69,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     private final ArrayList<Animator> mTmpArray;
     private CanvasProperty<Float> mTopProp;
     private Type mType;
-    /* access modifiers changed from: private */
-    public boolean mVisible;
+    private boolean mVisible;
 
     /* compiled from: MiuiKeyButtonRipple.kt */
     public enum Type {
@@ -193,9 +193,9 @@ public final class MiuiKeyButtonRipple extends Drawable {
             }
             canvas.save();
             canvas.translate(f, f2);
-            float coerceAtMost = RangesKt___RangesKt.coerceAtMost(f3, rippleSize);
-            float f5 = -coerceAtMost;
-            canvas.drawOval(f5, f5, coerceAtMost, coerceAtMost, ripplePaint);
+            float f5 = RangesKt___RangesKt.coerceAtMost(f3, rippleSize);
+            float f6 = -f5;
+            canvas.drawOval(f6, f6, f5, f5, ripplePaint);
             canvas.restore();
         }
     }
@@ -325,7 +325,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     }
 
     public final void abortDelayedRipple() {
-        this.mHandler.removeCallbacksAndMessages((Object) null);
+        this.mHandler.removeCallbacksAndMessages(null);
     }
 
     private final void endAnimations(String str, boolean z) {
@@ -346,7 +346,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         }
         this.mTmpArray.clear();
         this.mRunningAnimations.clear();
-        this.mHandler.removeCallbacksAndMessages((Object) null);
+        this.mHandler.removeCallbacksAndMessages(null);
     }
 
     private final void setPressedSoftware(boolean z) {
@@ -355,7 +355,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         } else if (!this.mDelayTouchFeedback) {
             enterSoftware();
         } else if (this.mRunningAnimations.isEmpty()) {
-            this.mHandler.removeCallbacksAndMessages((Object) null);
+            this.mHandler.removeCallbacksAndMessages(null);
             this.mHandler.postDelayed(new MiuiKeyButtonRipple$setPressedSoftware$1(this), (long) ViewConfiguration.getTapTimeout());
         } else if (this.mVisible) {
             enterSoftware();
@@ -367,7 +367,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         endAnimations("enterSoftware", true);
         this.mVisible = true;
         this.mGlowAlpha = getMaxGlowAlpha();
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowScale", new float[]{0.0f, 1.35f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowScale", 0.0f, 1.35f);
         Intrinsics.checkExpressionValueIsNotNull(ofFloat, "scaleAnimator");
         ofFloat.setInterpolator(this.mInterpolator);
         ofFloat.setDuration((long) 350);
@@ -380,7 +380,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     }
 
     private final void exitSoftware() {
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowAlpha", new float[]{this.mGlowAlpha, 0.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "glowAlpha", this.mGlowAlpha, 0.0f);
         Intrinsics.checkExpressionValueIsNotNull(ofFloat, "alphaAnimator");
         ofFloat.setInterpolator(Interpolators.ALPHA_OUT);
         ofFloat.setDuration((long) 450);
@@ -395,7 +395,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         } else if (!this.mDelayTouchFeedback) {
             enterHardware();
         } else if (this.mRunningAnimations.isEmpty()) {
-            this.mHandler.removeCallbacksAndMessages((Object) null);
+            this.mHandler.removeCallbacksAndMessages(null);
             this.mHandler.postDelayed(new MiuiKeyButtonRipple$setPressedHardware$1(this), (long) ViewConfiguration.getTapTimeout());
         } else if (this.mVisible) {
             enterHardware();
@@ -470,19 +470,19 @@ public final class MiuiKeyButtonRipple extends Drawable {
         this.mVisible = true;
         this.mDrawingHardwareGlow = true;
         float f = (float) 2;
-        CanvasProperty createFloat = CanvasProperty.createFloat(((float) getExtendSize()) / f);
+        CanvasProperty<Float> createFloat = CanvasProperty.createFloat(((float) getExtendSize()) / f);
         Intrinsics.checkExpressionValueIsNotNull(createFloat, "CanvasProperty.createFlo…tendSize() / 2.toFloat())");
         setExtendStart(createFloat);
-        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), ((float) (getExtendSize() / 2)) - ((((float) getRippleSize()) * 1.35f) / f));
+        Animator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), ((float) (getExtendSize() / 2)) - ((((float) getRippleSize()) * 1.35f) / f));
         long j = (long) 350;
         renderNodeAnimator.setDuration(j);
         renderNodeAnimator.setInterpolator(this.mInterpolator);
         renderNodeAnimator.addListener(this.mAnimatorListener);
         renderNodeAnimator.setTarget(this.mTargetView);
-        CanvasProperty createFloat2 = CanvasProperty.createFloat(((float) getExtendSize()) / f);
+        CanvasProperty<Float> createFloat2 = CanvasProperty.createFloat(((float) getExtendSize()) / f);
         Intrinsics.checkExpressionValueIsNotNull(createFloat2, "CanvasProperty.createFlo…tendSize() / 2.toFloat())");
         setExtendEnd(createFloat2);
-        RenderNodeAnimator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), ((float) (getExtendSize() / 2)) + ((((float) getRippleSize()) * 1.35f) / f));
+        Animator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), ((float) (getExtendSize() / 2)) + ((((float) getRippleSize()) * 1.35f) / f));
         renderNodeAnimator2.setDuration(j);
         renderNodeAnimator2.setInterpolator(this.mInterpolator);
         renderNodeAnimator2.addListener(this.mAnimatorListener);
@@ -545,7 +545,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         this.mPaintProp = createPaint;
         CanvasProperty<Paint> canvasProperty = this.mPaintProp;
         if (canvasProperty != null) {
-            RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(canvasProperty, 1, 0.0f);
+            Animator renderNodeAnimator = new RenderNodeAnimator(canvasProperty, 1, 0.0f);
             renderNodeAnimator.setDuration((long) 450);
             renderNodeAnimator.setInterpolator(Interpolators.ALPHA_OUT);
             renderNodeAnimator.addListener(this.mAnimatorListener);
@@ -750,19 +750,19 @@ public final class MiuiKeyButtonRipple extends Drawable {
     private final void sildeFirstPart() {
         cancelAnimations();
         this.mDrawingHardwareGlow = true;
-        CanvasProperty createFloat = CanvasProperty.createFloat(this.mFirstLeftStart);
+        CanvasProperty<Float> createFloat = CanvasProperty.createFloat(this.mFirstLeftStart);
         Intrinsics.checkExpressionValueIsNotNull(createFloat, "CanvasProperty.createFloat(mFirstLeftStart)");
         setExtendStart(createFloat);
-        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), this.mFirstLeftEnd);
+        Animator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), this.mFirstLeftEnd);
         long j = (long) 250;
         renderNodeAnimator.setDuration(j);
         renderNodeAnimator.setInterpolator(this.mSineInterpolator);
         renderNodeAnimator.addListener(this.mSlideToRight ? this.mAnimatorListener : this.mSlideAnimatorListener);
         renderNodeAnimator.setTarget(this.mTargetView);
-        CanvasProperty createFloat2 = CanvasProperty.createFloat(this.mFirstRightStart);
+        CanvasProperty<Float> createFloat2 = CanvasProperty.createFloat(this.mFirstRightStart);
         Intrinsics.checkExpressionValueIsNotNull(createFloat2, "CanvasProperty.createFloat(mFirstRightStart)");
         setExtendEnd(createFloat2);
-        RenderNodeAnimator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), this.mFirstRightEnd);
+        Animator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), this.mFirstRightEnd);
         renderNodeAnimator2.setDuration(j);
         renderNodeAnimator2.setInterpolator(this.mSineInterpolator);
         renderNodeAnimator2.addListener(this.mSlideToRight ? this.mSlideAnimatorListener : this.mAnimatorListener);
@@ -819,19 +819,19 @@ public final class MiuiKeyButtonRipple extends Drawable {
     public final void sildeSecondPart() {
         cancelAnimations();
         this.mDrawingHardwareGlow = true;
-        CanvasProperty createFloat = CanvasProperty.createFloat(this.mSecondLeftStart);
+        CanvasProperty<Float> createFloat = CanvasProperty.createFloat(this.mSecondLeftStart);
         Intrinsics.checkExpressionValueIsNotNull(createFloat, "CanvasProperty.createFloat(mSecondLeftStart)");
         setExtendStart(createFloat);
-        RenderNodeAnimator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), this.mSecondLeftEnd);
+        Animator renderNodeAnimator = new RenderNodeAnimator(getExtendStart(), this.mSecondLeftEnd);
         long j = (long) 250;
         renderNodeAnimator.setDuration(j);
         renderNodeAnimator.setInterpolator(this.mSineInterpolator);
         renderNodeAnimator.addListener(this.mAnimatorListener);
         renderNodeAnimator.setTarget(this.mTargetView);
-        CanvasProperty createFloat2 = CanvasProperty.createFloat(this.mSecondRightStart);
+        CanvasProperty<Float> createFloat2 = CanvasProperty.createFloat(this.mSecondRightStart);
         Intrinsics.checkExpressionValueIsNotNull(createFloat2, "CanvasProperty.createFloat(mSecondRightStart)");
         setExtendEnd(createFloat2);
-        RenderNodeAnimator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), this.mSecondRightEnd);
+        Animator renderNodeAnimator2 = new RenderNodeAnimator(getExtendEnd(), this.mSecondRightEnd);
         renderNodeAnimator2.setDuration(j);
         renderNodeAnimator2.setInterpolator(this.mSineInterpolator);
         renderNodeAnimator2.addListener(this.mAnimatorListener);

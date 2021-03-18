@@ -38,22 +38,22 @@ public class MiuiViewStateBase {
     private final void animateSpringYOffset(View view, AnimationProperties animationProperties) {
         AnimationFilter animationFilter;
         if (view instanceof ExpandableView) {
-            AnimatableProperty access$getPROPERTY_SPRING_Y_OFFSET$p = MiuiNotificationAnimationExtensionsKt.PROPERTY_SPRING_Y_OFFSET;
+            AnimatableProperty access$getPROPERTY_SPRING_Y_OFFSET$p = MiuiNotificationAnimationExtensionsKt.access$getPROPERTY_SPRING_Y_OFFSET$p();
             Intrinsics.checkExpressionValueIsNotNull(access$getPROPERTY_SPRING_Y_OFFSET$p, "PROPERTY_SPRING_Y_OFFSET");
             if ((access$getPROPERTY_SPRING_Y_OFFSET$p.getProperty() instanceof FloatProperty) && animationProperties != null && (animationFilter = animationProperties.getAnimationFilter()) != null) {
-                AnimatableProperty access$getPROPERTY_SPRING_Y_OFFSET$p2 = MiuiNotificationAnimationExtensionsKt.PROPERTY_SPRING_Y_OFFSET;
+                AnimatableProperty access$getPROPERTY_SPRING_Y_OFFSET$p2 = MiuiNotificationAnimationExtensionsKt.access$getPROPERTY_SPRING_Y_OFFSET$p();
                 Intrinsics.checkExpressionValueIsNotNull(access$getPROPERTY_SPRING_Y_OFFSET$p2, "PROPERTY_SPRING_Y_OFFSET");
                 if (animationFilter.shouldAnimateProperty(access$getPROPERTY_SPRING_Y_OFFSET$p2.getProperty())) {
                     ExpandableViewState viewState = ((ExpandableView) view).getViewState();
                     int i = 0;
-                    if (!Intrinsics.areEqual(viewState != null ? Float.valueOf((float) viewState.getSpringYOffset()) : 0, (Object) Float.valueOf(0.0f))) {
+                    if (!Intrinsics.areEqual(viewState != null ? Float.valueOf((float) viewState.getSpringYOffset()) : 0, Float.valueOf(0.0f))) {
                         Object tag = view.getTag(C0015R$id.miui_child_index_hint);
                         if (tag instanceof Integer) {
                             i = ((Number) tag).intValue();
                         }
                         long j = animationProperties.duration;
                         animationProperties.duration = SpringAnimationEvent.Companion.getDurationForIndex$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(i);
-                        PropertyAnimator.startAnimation(view, MiuiNotificationAnimationExtensionsKt.PROPERTY_SPRING_Y_OFFSET, 0.0f, animationProperties);
+                        PropertyAnimator.startAnimation(view, MiuiNotificationAnimationExtensionsKt.access$getPROPERTY_SPRING_Y_OFFSET$p(), 0.0f, animationProperties);
                         animationProperties.duration = j;
                     }
                 }

@@ -10,7 +10,6 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public abstract class CurrentUserTracker {
@@ -26,6 +25,9 @@ public abstract class CurrentUserTracker {
     @VisibleForTesting
     CurrentUserTracker(UserReceiver userReceiver) {
         this.mCallback = new Consumer() {
+            /* class com.android.systemui.settings.$$Lambda$JYv4q5Exc5xk6WCK6WtC6eC0sA8 */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 CurrentUserTracker.this.onUserSwitched(((Integer) obj).intValue());
             }
@@ -45,8 +47,9 @@ public abstract class CurrentUserTracker {
         this.mUserReceiver.removeTracker(this.mCallback);
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    static class UserReceiver extends BroadcastReceiver {
+    public static class UserReceiver extends BroadcastReceiver {
         private static UserReceiver sInstance;
         private final BroadcastDispatcher mBroadcastDispatcher;
         private List<Consumer<Integer>> mCallbacks = new ArrayList();
@@ -76,19 +79,21 @@ public abstract class CurrentUserTracker {
         }
 
         /* access modifiers changed from: private */
-        public void addTracker(Consumer<Integer> consumer) {
+        /* access modifiers changed from: public */
+        private void addTracker(Consumer<Integer> consumer) {
             if (!this.mCallbacks.contains(consumer)) {
                 this.mCallbacks.add(consumer);
             }
             if (!this.mReceiverRegistered) {
                 this.mCurrentUserId = ActivityManager.getCurrentUser();
-                this.mBroadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), (Executor) null, UserHandle.ALL);
+                this.mBroadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), null, UserHandle.ALL);
                 this.mReceiverRegistered = true;
             }
         }
 
         /* access modifiers changed from: private */
-        public void removeTracker(Consumer<Integer> consumer) {
+        /* access modifiers changed from: public */
+        private void removeTracker(Consumer<Integer> consumer) {
             if (this.mCallbacks.contains(consumer)) {
                 this.mCallbacks.remove(consumer);
                 if (this.mCallbacks.size() == 0 && this.mReceiverRegistered) {

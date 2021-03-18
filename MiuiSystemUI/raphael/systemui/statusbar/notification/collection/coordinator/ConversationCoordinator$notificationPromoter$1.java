@@ -12,6 +12,7 @@ public final class ConversationCoordinator$notificationPromoter$1 extends NotifP
         super(str);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifPromoter
     public boolean shouldPromoteToTopLevel(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         NotificationChannel channel = notificationEntry.getChannel();

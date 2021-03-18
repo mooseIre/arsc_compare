@@ -69,6 +69,7 @@ public class ScreenInternalAudioRecorder {
         createAudioFormat.setInteger("pcm-encoding", this.mConfig.encoding);
         this.mCodec.configure(createAudioFormat, (Surface) null, (MediaCrypto) null, 1);
         this.mThread = new Thread(new Runnable(minBufferSize) {
+            /* class com.android.systemui.screenrecord.$$Lambda$ScreenInternalAudioRecorder$FTFstmjlXd36MWRTIZuGd5VznkI */
             public final /* synthetic */ int f$1;
 
             {
@@ -106,10 +107,9 @@ public class ScreenInternalAudioRecorder {
                 scaleValues(sArr, read2, 1.4f);
                 i3 = Math.min(read, read2) * 2;
                 byte[] addAndConvertBuffers = addAndConvertBuffers(sArr2, read, sArr, read2);
-                int i6 = read2;
                 i5 = read;
                 bArr = addAndConvertBuffers;
-                i2 = i6;
+                i2 = read2;
             } else {
                 i3 = this.mAudioRecord.read(bArr, 0, bArr.length);
                 i2 = 0;
@@ -137,64 +137,32 @@ public class ScreenInternalAudioRecorder {
         return sArr;
     }
 
-    /* JADX WARNING: type inference failed for: r6v0, types: [short[]] */
-    /* JADX WARNING: type inference failed for: r8v0, types: [short[]] */
-    /* JADX WARNING: type inference failed for: r2v8, types: [int, short] */
-    /* JADX WARNING: type inference failed for: r3v4, types: [int, short] */
-    /* JADX WARNING: type inference failed for: r2v10, types: [short] */
-    /* JADX WARNING: type inference failed for: r2v11, types: [short] */
-    /* JADX WARNING: Incorrect type for immutable var: ssa=short, code=int, for r2v10, types: [short] */
-    /* JADX WARNING: Incorrect type for immutable var: ssa=short, code=int, for r2v11, types: [short] */
-    /* JADX WARNING: Unknown variable types count: 2 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private byte[] addAndConvertBuffers(short[] r6, int r7, short[] r8, int r9) {
-        /*
-            r5 = this;
-            int r5 = java.lang.Math.max(r7, r9)
-            r0 = 0
-            if (r5 >= 0) goto L_0x000a
-            byte[] r5 = new byte[r0]
-            return r5
-        L_0x000a:
-            int r1 = r5 * 2
-            byte[] r1 = new byte[r1]
-        L_0x000e:
-            if (r0 >= r5) goto L_0x003c
-            if (r0 <= r7) goto L_0x0015
-            short r2 = r8[r0]
-            goto L_0x001f
-        L_0x0015:
-            if (r0 <= r9) goto L_0x001a
-            short r2 = r6[r0]
-            goto L_0x001f
-        L_0x001a:
-            short r2 = r6[r0]
-            short r3 = r8[r0]
-            int r2 = r2 + r3
-        L_0x001f:
-            r3 = 32767(0x7fff, float:4.5916E-41)
-            if (r2 <= r3) goto L_0x0024
-            r2 = r3
-        L_0x0024:
-            r3 = -32768(0xffffffffffff8000, float:NaN)
-            if (r2 >= r3) goto L_0x0029
-            r2 = r3
-        L_0x0029:
-            int r3 = r0 * 2
-            r4 = r2 & 255(0xff, float:3.57E-43)
-            byte r4 = (byte) r4
-            r1[r3] = r4
-            int r3 = r3 + 1
-            int r2 = r2 >> 8
-            r2 = r2 & 255(0xff, float:3.57E-43)
-            byte r2 = (byte) r2
-            r1[r3] = r2
-            int r0 = r0 + 1
-            goto L_0x000e
-        L_0x003c:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.screenrecord.ScreenInternalAudioRecorder.addAndConvertBuffers(short[], int, short[], int):byte[]");
+    private byte[] addAndConvertBuffers(short[] sArr, int i, short[] sArr2, int i2) {
+        int i3;
+        int max = Math.max(i, i2);
+        if (max < 0) {
+            return new byte[0];
+        }
+        byte[] bArr = new byte[(max * 2)];
+        for (int i4 = 0; i4 < max; i4++) {
+            if (i4 > i) {
+                i3 = sArr2[i4];
+            } else if (i4 > i2) {
+                i3 = sArr[i4];
+            } else {
+                i3 = sArr[i4] + sArr2[i4];
+            }
+            if (i3 > 32767) {
+                i3 = 32767;
+            }
+            if (i3 < -32768) {
+                i3 = -32768;
+            }
+            int i5 = i4 * 2;
+            bArr[i5] = (byte) (i3 & 255);
+            bArr[i5 + 1] = (byte) ((i3 >> 8) & 255);
+        }
+        return bArr;
     }
 
     private void encode(byte[] bArr, int i) {

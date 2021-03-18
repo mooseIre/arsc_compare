@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$POlPJz26zF5Nt5Z2kVGSqFxN8Co implemen
     private /* synthetic */ $$Lambda$POlPJz26zF5Nt5Z2kVGSqFxN8Co() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((CancellationSignal) obj).cancel();
     }

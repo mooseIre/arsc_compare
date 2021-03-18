@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Animatable2;
 import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
@@ -41,10 +42,12 @@ public class QSIconViewImpl extends QSIconView {
         addView(createIcon);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setAnimationEnabled(boolean z) {
         this.mAnimationEnabled = z;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public View getIconView() {
         return this.mIcon;
     }
@@ -83,7 +86,7 @@ public class QSIconViewImpl extends QSIconView {
             boolean z2 = z && shouldAnimate(imageView);
             this.mLastIcon = icon;
             if (icon != null) {
-                drawable = z2 ? icon.getDrawable(this.mContext) : icon.getInvisibleDrawable(this.mContext);
+                drawable = z2 ? icon.getDrawable(((ViewGroup) this).mContext) : icon.getInvisibleDrawable(((ViewGroup) this).mContext);
             } else {
                 drawable = null;
             }
@@ -95,7 +98,7 @@ public class QSIconViewImpl extends QSIconView {
             if (imageView instanceof SlashImageView) {
                 SlashImageView slashImageView = (SlashImageView) imageView;
                 slashImageView.setAnimationEnabled(z2);
-                slashImageView.setState((QSTile.SlashState) null, drawable);
+                slashImageView.setState(null, drawable);
             } else {
                 imageView.setImageDrawable(drawable);
             }
@@ -107,6 +110,8 @@ public class QSIconViewImpl extends QSIconView {
                 animatable2.start();
                 if (state.isTransient) {
                     animatable2.registerAnimationCallback(new Animatable2.AnimationCallback(this) {
+                        /* class com.android.systemui.qs.tileimpl.QSIconViewImpl.AnonymousClass1 */
+
                         public void onAnimationEnd(Drawable drawable) {
                             animatable2.start();
                         }
@@ -142,6 +147,7 @@ public class QSIconViewImpl extends QSIconView {
                 return;
             }
             animateGrayScale(this.mTint, color, imageView, new Runnable(imageView, state, z) {
+                /* class com.android.systemui.qs.tileimpl.$$Lambda$QSIconViewImpl$xTIBDrD33UKSYZv6_hT3f3X3znk */
                 public final /* synthetic */ ImageView f$1;
                 public final /* synthetic */ QSTile.State f$2;
                 public final /* synthetic */ boolean f$3;
@@ -178,9 +184,10 @@ public class QSIconViewImpl extends QSIconView {
         }
         float red = (float) Color.red(i);
         float red2 = (float) Color.red(i2);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        ofFloat.setDuration(350);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
+        ofFloat.setDuration(350L);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener((float) Color.alpha(i), (float) Color.alpha(i2), red, red2, imageView) {
+            /* class com.android.systemui.qs.tileimpl.$$Lambda$QSIconViewImpl$CeqSBPdIhNYTow_6QM6a9ZwQyb8 */
             public final /* synthetic */ float f$0;
             public final /* synthetic */ float f$1;
             public final /* synthetic */ float f$2;
@@ -200,6 +207,8 @@ public class QSIconViewImpl extends QSIconView {
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter(this) {
+            /* class com.android.systemui.qs.tileimpl.QSIconViewImpl.AnonymousClass2 */
+
             public void onAnimationEnd(Animator animator) {
                 runnable.run();
             }

@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvideMetricsLoggerFactory implements Fac
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public MetricsLogger get() {
         return provideInstance(this.module);
     }

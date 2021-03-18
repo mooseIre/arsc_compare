@@ -14,6 +14,7 @@ public final class FlashlightTile_Factory implements Factory<FlashlightTile> {
         this.flashlightControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public FlashlightTile get() {
         return provideInstance(this.hostProvider, this.flashlightControllerProvider);
     }

@@ -22,8 +22,9 @@ final class TouchBehavior$initialize$1 implements View.OnClickListener {
         controlActionCoordinator.touch(controlViewHolder, templateId, this.this$0.getControl());
         if (this.this$0.getTemplate() instanceof StatelessTemplate) {
             this.this$0.statelessTouch = true;
-            ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(this.$cvh, this.this$0.getEnabled(), this.this$0.lastColorOffset, false, 4, (Object) null);
+            ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(this.$cvh, this.this$0.getEnabled(), this.this$0.lastColorOffset, false, 4, null);
             this.$cvh.getUiExecutor().executeDelayed(new Runnable(this) {
+                /* class com.android.systemui.controls.ui.TouchBehavior$initialize$1.AnonymousClass1 */
                 final /* synthetic */ TouchBehavior$initialize$1 this$0;
 
                 {
@@ -33,7 +34,7 @@ final class TouchBehavior$initialize$1 implements View.OnClickListener {
                 public final void run() {
                     this.this$0.this$0.statelessTouch = false;
                     TouchBehavior$initialize$1 touchBehavior$initialize$1 = this.this$0;
-                    ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(touchBehavior$initialize$1.$cvh, touchBehavior$initialize$1.this$0.getEnabled(), this.this$0.this$0.lastColorOffset, false, 4, (Object) null);
+                    ControlViewHolder.applyRenderInfo$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(touchBehavior$initialize$1.$cvh, touchBehavior$initialize$1.this$0.getEnabled(), this.this$0.this$0.lastColorOffset, false, 4, null);
                 }
             }, 3000);
         }

@@ -21,13 +21,16 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
     private ConfirmedTapListener mConfirmedTapListener;
     private GestureDetector mGestureDetector;
     private GestureDetector.SimpleOnGestureListener mGestureListener = new GestureDetector.SimpleOnGestureListener() {
+        /* class com.android.systemui.volume.CaptionsToggleImageButton.AnonymousClass1 */
+
         public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
             return CaptionsToggleImageButton.this.tryToSendTapConfirmedEvent();
         }
     };
     private boolean mOptedOut = false;
 
-    interface ConfirmedTapListener {
+    /* access modifiers changed from: package-private */
+    public interface ConfirmedTapListener {
         void onConfirmedTap();
     }
 
@@ -64,6 +67,9 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
             str = getContext().getString(C0021R$string.volume_odi_captions_hint_enable);
         }
         ViewCompat.replaceAccessibilityAction(this, accessibilityActionCompat, str, new AccessibilityViewCommand() {
+            /* class com.android.systemui.volume.$$Lambda$CaptionsToggleImageButton$G1CrD3iT19JR_3drnIgC4b3Mg */
+
+            @Override // androidx.core.view.accessibility.AccessibilityViewCommand
             public final boolean perform(View view, AccessibilityViewCommand.CommandArguments commandArguments) {
                 return CaptionsToggleImageButton.this.lambda$setCaptionsEnabled$0$CaptionsToggleImageButton(view, commandArguments);
             }
@@ -83,7 +89,8 @@ public class CaptionsToggleImageButton extends AlphaOptimizedImageButton {
     }
 
     /* access modifiers changed from: private */
-    public boolean tryToSendTapConfirmedEvent() {
+    /* access modifiers changed from: public */
+    private boolean tryToSendTapConfirmedEvent() {
         ConfirmedTapListener confirmedTapListener = this.mConfirmedTapListener;
         if (confirmedTapListener == null) {
             return false;

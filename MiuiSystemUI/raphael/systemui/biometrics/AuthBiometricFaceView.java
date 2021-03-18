@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0011R$color;
@@ -20,16 +21,19 @@ public class AuthBiometricFaceView extends AuthBiometricView {
     IconController mIconController;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public int getDelayAfterAuthenticatedDurationMs() {
         return 500;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public int getStateForAfterError() {
         return 0;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public boolean supportsSmallDialog() {
         return true;
     }
@@ -129,7 +133,7 @@ public class AuthBiometricFaceView extends AuthBiometricView {
     }
 
     public AuthBiometricFaceView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AuthBiometricFaceView(Context context, AttributeSet attributeSet) {
@@ -137,29 +141,34 @@ public class AuthBiometricFaceView extends AuthBiometricView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void handleResetAfterError() {
-        resetErrorView(this.mContext, this.mIndicatorView);
+        resetErrorView(((LinearLayout) this).mContext, this.mIndicatorView);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void handleResetAfterHelp() {
-        resetErrorView(this.mContext, this.mIndicatorView);
+        resetErrorView(((LinearLayout) this).mContext, this.mIndicatorView);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mIconController = new IconController(this.mContext, this.mIconView, this.mIndicatorView);
+        this.mIconController = new IconController(((LinearLayout) this).mContext, this.mIconView, this.mIndicatorView);
     }
 
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void updateState(int i) {
         this.mIconController.updateState(this.mState, i);
         if (i == 1 || (i == 2 && this.mSize == 2)) {
-            resetErrorView(this.mContext, this.mIndicatorView);
+            resetErrorView(((LinearLayout) this).mContext, this.mIndicatorView);
         }
         super.updateState(i);
     }
 
+    @Override // com.android.systemui.biometrics.AuthBiometricView
     public void onAuthenticationFailed(String str) {
         if (this.mSize == 2) {
             this.mTryAgainButton.setVisibility(0);

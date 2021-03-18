@@ -63,7 +63,7 @@ public class SlicePermissionActivity extends Activity implements DialogInterface
     private void verifyCallingPkg() {
         String stringExtra = getIntent().getStringExtra("provider_pkg");
         if (stringExtra != null && !this.mProviderPkg.equals(stringExtra)) {
-            EventLog.writeEvent(1397638484, new Object[]{"159145361", Integer.valueOf(getUid(getCallingPkg()))});
+            EventLog.writeEvent(1397638484, "159145361", Integer.valueOf(getUid(getCallingPkg())));
         }
     }
 

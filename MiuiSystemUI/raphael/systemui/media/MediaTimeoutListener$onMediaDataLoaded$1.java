@@ -16,7 +16,7 @@ final class MediaTimeoutListener$onMediaDataLoaded$1 implements Runnable {
 
     public final void run() {
         MediaTimeoutListener.PlaybackStateListener playbackStateListener = (MediaTimeoutListener.PlaybackStateListener) this.this$0.mediaListeners.get(this.$key);
-        if (Intrinsics.areEqual((Object) playbackStateListener != null ? playbackStateListener.getPlaying() : null, (Object) Boolean.TRUE)) {
+        if (Intrinsics.areEqual(playbackStateListener != null ? playbackStateListener.getPlaying() : null, Boolean.TRUE)) {
             Log.d("MediaTimeout", "deliver delayed playback state for " + this.$key);
             this.this$0.getTimeoutCallback().invoke(this.$key, Boolean.FALSE);
         }

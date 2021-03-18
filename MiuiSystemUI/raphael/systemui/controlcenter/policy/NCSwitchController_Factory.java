@@ -26,6 +26,7 @@ public final class NCSwitchController_Factory implements Factory<NCSwitchControl
         this.systemUIStatProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public NCSwitchController get() {
         return provideInstance(this.mContextProvider, this.mStatusBarStateControllerProvider, this.mControlPanelControllerProvider, this.shadeCollerProvider, this.mHeadsUpManagerProvider, this.systemUIStatProvider);
     }

@@ -24,30 +24,21 @@ public class AssistOrbView extends FrameLayout {
     private final Paint mBackgroundPaint;
     private final int mBaseMargin;
     private float mCircleAnimationEndValue;
-    /* access modifiers changed from: private */
-    public ValueAnimator mCircleAnimator;
-    /* access modifiers changed from: private */
-    public final int mCircleMinSize;
-    /* access modifiers changed from: private */
-    public final Rect mCircleRect;
-    /* access modifiers changed from: private */
-    public float mCircleSize;
+    private ValueAnimator mCircleAnimator;
+    private final int mCircleMinSize;
+    private final Rect mCircleRect;
+    private float mCircleSize;
     private ValueAnimator.AnimatorUpdateListener mCircleUpdateListener;
     private AnimatorListenerAdapter mClearAnimatorListener;
     private boolean mClipToOutline;
     private ImageView mLogo;
     private final int mMaxElevation;
-    /* access modifiers changed from: private */
-    public float mOffset;
-    /* access modifiers changed from: private */
-    public ValueAnimator mOffsetAnimator;
+    private float mOffset;
+    private ValueAnimator mOffsetAnimator;
     private ValueAnimator.AnimatorUpdateListener mOffsetUpdateListener;
-    /* access modifiers changed from: private */
-    public float mOutlineAlpha;
-    /* access modifiers changed from: private */
-    public final Interpolator mOvershootInterpolator;
-    /* access modifiers changed from: private */
-    public final int mStaticOffset;
+    private float mOutlineAlpha;
+    private final Interpolator mOvershootInterpolator;
+    private final int mStaticOffset;
     private final Rect mStaticRect;
 
     public boolean hasOverlappingRendering() {
@@ -55,7 +46,7 @@ public class AssistOrbView extends FrameLayout {
     }
 
     public AssistOrbView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AssistOrbView(Context context, AttributeSet attributeSet) {
@@ -73,23 +64,31 @@ public class AssistOrbView extends FrameLayout {
         this.mStaticRect = new Rect();
         this.mOvershootInterpolator = new OvershootInterpolator();
         this.mCircleUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.assist.AssistOrbView.AnonymousClass1 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 AssistOrbView.this.applyCircleSize(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 AssistOrbView.this.updateElevation();
             }
         };
         this.mClearAnimatorListener = new AnimatorListenerAdapter() {
+            /* class com.android.systemui.assist.AssistOrbView.AnonymousClass2 */
+
             public void onAnimationEnd(Animator animator) {
-                ValueAnimator unused = AssistOrbView.this.mCircleAnimator = null;
+                AssistOrbView.this.mCircleAnimator = null;
             }
         };
         this.mOffsetUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.assist.AssistOrbView.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = AssistOrbView.this.mOffset = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                AssistOrbView.this.mOffset = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 AssistOrbView.this.updateLayout();
             }
         };
         setOutlineProvider(new ViewOutlineProvider() {
+            /* class com.android.systemui.assist.AssistOrbView.AnonymousClass4 */
+
             public void getOutline(View view, Outline outline) {
                 if (AssistOrbView.this.mCircleSize > 0.0f) {
                     outline.setOval(AssistOrbView.this.mCircleRect);
@@ -143,7 +142,7 @@ public class AssistOrbView extends FrameLayout {
             if (valueAnimator != null) {
                 valueAnimator.cancel();
             }
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mCircleSize, f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mCircleSize, f);
             this.mCircleAnimator = ofFloat;
             ofFloat.addUpdateListener(this.mCircleUpdateListener);
             this.mCircleAnimator.addListener(this.mClearAnimatorListener);
@@ -156,30 +155,35 @@ public class AssistOrbView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void applyCircleSize(float f) {
+    /* access modifiers changed from: public */
+    private void applyCircleSize(float f) {
         this.mCircleSize = f;
         updateLayout();
     }
 
     /* access modifiers changed from: private */
-    public void updateElevation() {
+    /* access modifiers changed from: public */
+    private void updateElevation() {
         int i = this.mStaticOffset;
         setElevation((1.0f - Math.max((((float) i) - this.mOffset) / ((float) i), 0.0f)) * ((float) this.mMaxElevation));
     }
 
     /* access modifiers changed from: private */
-    public void animateOffset(float f, long j, long j2, Interpolator interpolator) {
+    /* access modifiers changed from: public */
+    private void animateOffset(float f, long j, long j2, Interpolator interpolator) {
         ValueAnimator valueAnimator = this.mOffsetAnimator;
         if (valueAnimator != null) {
             valueAnimator.removeAllListeners();
             this.mOffsetAnimator.cancel();
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mOffset, f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mOffset, f);
         this.mOffsetAnimator = ofFloat;
         ofFloat.addUpdateListener(this.mOffsetUpdateListener);
         this.mOffsetAnimator.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.systemui.assist.AssistOrbView.AnonymousClass5 */
+
             public void onAnimationEnd(Animator animator) {
-                ValueAnimator unused = AssistOrbView.this.mOffsetAnimator = null;
+                AssistOrbView.this.mOffsetAnimator = null;
             }
         });
         this.mOffsetAnimator.setInterpolator(interpolator);
@@ -189,7 +193,8 @@ public class AssistOrbView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateLayout() {
+    /* access modifiers changed from: public */
+    private void updateLayout() {
         updateCircleRect();
         updateLogo();
         invalidateOutline();
@@ -236,6 +241,8 @@ public class AssistOrbView extends FrameLayout {
     public void startEnterAnimation() {
         applyCircleSize(0.0f);
         post(new Runnable() {
+            /* class com.android.systemui.assist.AssistOrbView.AnonymousClass6 */
+
             public void run() {
                 AssistOrbView assistOrbView = AssistOrbView.this;
                 assistOrbView.animateCircleSize((float) assistOrbView.mCircleMinSize, 300, 0, AssistOrbView.this.mOvershootInterpolator);

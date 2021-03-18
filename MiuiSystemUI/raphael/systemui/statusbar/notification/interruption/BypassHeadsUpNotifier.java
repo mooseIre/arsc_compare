@@ -19,11 +19,9 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: BypassHeadsUpNotifier.kt */
 public final class BypassHeadsUpNotifier implements StatusBarStateController.StateListener, NotificationMediaManager.MediaListener {
     private final KeyguardBypassController bypassController;
-    /* access modifiers changed from: private */
-    public final Context context;
+    private final Context context;
     private NotificationEntry currentMediaEntry;
-    /* access modifiers changed from: private */
-    public boolean enabled = true;
+    private boolean enabled = true;
     private final NotificationEntryManager entryManager;
     private boolean fullyAwake;
     private final HeadsUpManagerPhone headsUpManager;
@@ -49,12 +47,14 @@ public final class BypassHeadsUpNotifier implements StatusBarStateController.Sta
         this.entryManager = notificationEntryManager;
         statusBarStateController2.addCallback(this);
         tunerService.addTunable(new TunerService.Tunable(this) {
+            /* class com.android.systemui.statusbar.notification.interruption.BypassHeadsUpNotifier.AnonymousClass1 */
             final /* synthetic */ BypassHeadsUpNotifier this$0;
 
             {
                 this.this$0 = r1;
             }
 
+            @Override // com.android.systemui.tuner.TunerService.Tunable
             public final void onTuningChanged(String str, String str2) {
                 BypassHeadsUpNotifier bypassHeadsUpNotifier = this.this$0;
                 boolean z = false;
@@ -77,6 +77,7 @@ public final class BypassHeadsUpNotifier implements StatusBarStateController.Sta
         this.mediaManager.addCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.NotificationMediaManager.MediaListener
     public void onPrimaryMetadataOrStateChanged(@Nullable MediaMetadata mediaMetadata, int i) {
         NotificationEntry notificationEntry = this.currentMediaEntry;
         NotificationEntry activeNotificationUnfiltered = this.entryManager.getActiveNotificationUnfiltered(this.mediaManager.getMediaNotificationKey());
@@ -90,7 +91,7 @@ public final class BypassHeadsUpNotifier implements StatusBarStateController.Sta
 
     private final void updateAutoHeadsUp(NotificationEntry notificationEntry) {
         if (notificationEntry != null) {
-            boolean z = Intrinsics.areEqual((Object) notificationEntry, (Object) this.currentMediaEntry) && canAutoHeadsUp(notificationEntry);
+            boolean z = Intrinsics.areEqual(notificationEntry, this.currentMediaEntry) && canAutoHeadsUp(notificationEntry);
             notificationEntry.setAutoHeadsUp(z);
             if (z) {
                 this.headsUpManager.showNotification(notificationEntry);
@@ -105,6 +106,7 @@ public final class BypassHeadsUpNotifier implements StatusBarStateController.Sta
         return false;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStatePostChange() {
         updateAutoHeadsUp(this.currentMediaEntry);
     }

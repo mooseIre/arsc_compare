@@ -26,6 +26,7 @@ public final class KeyguardBypassController_Factory implements Factory<KeyguardB
         this.dumpManagerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardBypassController get() {
         return provideInstance(this.contextProvider, this.tunerServiceProvider, this.statusBarStateControllerProvider, this.lockscreenUserManagerProvider, this.keyguardStateControllerProvider, this.dumpManagerProvider);
     }

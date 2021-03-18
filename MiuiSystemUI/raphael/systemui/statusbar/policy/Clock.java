@@ -42,27 +42,21 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
     private boolean mAttached;
     private final BroadcastDispatcher mBroadcastDispatcher;
     protected Calendar mCalendar;
-    /* access modifiers changed from: private */
-    public SimpleDateFormat mClockFormat;
-    /* access modifiers changed from: private */
-    public String mClockFormatString;
+    private SimpleDateFormat mClockFormat;
+    private String mClockFormatString;
     private boolean mClockVisibleByPolicy;
     private boolean mClockVisibleByUser;
     private final CommandQueue mCommandQueue;
     private SimpleDateFormat mContentDescriptionFormat;
-    /* access modifiers changed from: private */
-    public int mCurrentUserId;
+    private int mCurrentUserId;
     private final CurrentUserTracker mCurrentUserTracker;
     private boolean mDemoMode;
     private final BroadcastReceiver mIntentReceiver;
-    /* access modifiers changed from: private */
-    public Locale mLocale;
+    private Locale mLocale;
     private int mNonAdaptedColor;
     private final BroadcastReceiver mScreenReceiver;
-    /* access modifiers changed from: private */
-    public final Runnable mSecondTick;
-    /* access modifiers changed from: private */
-    public Handler mSecondsHandler;
+    private final Runnable mSecondTick;
+    private Handler mSecondsHandler;
     private final boolean mShowDark;
     private boolean mShowSeconds;
     private boolean mUseWallpaperTextColor;
@@ -77,12 +71,15 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
         this.mClockVisibleByPolicy = true;
         this.mClockVisibleByUser = true;
         this.mIntentReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.statusbar.policy.Clock.AnonymousClass2 */
+
             public void onReceive(Context context, Intent intent) {
                 Handler handler = Clock.this.getHandler();
                 if (handler != null) {
                     String action = intent.getAction();
                     if (action.equals("android.intent.action.TIMEZONE_CHANGED")) {
                         handler.post(new Runnable(intent.getStringExtra("time-zone")) {
+                            /* class com.android.systemui.statusbar.policy.$$Lambda$Clock$2$NVwlBsd8V0hLupY9sb0smFA7zNw */
                             public final /* synthetic */ String f$1;
 
                             {
@@ -95,6 +92,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
                         });
                     } else if (action.equals("android.intent.action.CONFIGURATION_CHANGED")) {
                         handler.post(new Runnable(Clock.this.getResources().getConfiguration().locale) {
+                            /* class com.android.systemui.statusbar.policy.$$Lambda$Clock$2$BzKxslldgL1SP5a4jbR8GDSq90w */
                             public final /* synthetic */ Locale f$1;
 
                             {
@@ -107,6 +105,8 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
                         });
                     }
                     handler.post(new Runnable() {
+                        /* class com.android.systemui.statusbar.policy.$$Lambda$Clock$2$mOTwR4Tu5xrxBBIUbNE9701lx4 */
+
                         public final void run() {
                             Clock.AnonymousClass2.this.lambda$onReceive$2$Clock$2();
                         }
@@ -127,8 +127,8 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             /* renamed from: lambda$onReceive$1 */
             public /* synthetic */ void lambda$onReceive$1$Clock$2(Locale locale) {
                 if (!locale.equals(Clock.this.mLocale)) {
-                    Locale unused = Clock.this.mLocale = locale;
-                    String unused2 = Clock.this.mClockFormatString = "";
+                    Clock.this.mLocale = locale;
+                    Clock.this.mClockFormatString = "";
                 }
             }
 
@@ -139,6 +139,8 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             }
         };
         this.mScreenReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.statusbar.policy.Clock.AnonymousClass3 */
+
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if ("android.intent.action.SCREEN_OFF".equals(action)) {
@@ -151,6 +153,8 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             }
         };
         this.mSecondTick = new Runnable() {
+            /* class com.android.systemui.statusbar.policy.Clock.AnonymousClass4 */
+
             public void run() {
                 Clock clock = Clock.this;
                 if (clock.mCalendar != null) {
@@ -169,8 +173,11 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             BroadcastDispatcher broadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
             this.mBroadcastDispatcher = broadcastDispatcher;
             this.mCurrentUserTracker = new CurrentUserTracker(broadcastDispatcher) {
+                /* class com.android.systemui.statusbar.policy.Clock.AnonymousClass1 */
+
+                @Override // com.android.systemui.settings.CurrentUserTracker
                 public void onUserSwitched(int i) {
-                    int unused = Clock.this.mCurrentUserId = i;
+                    Clock.this.mCurrentUserId = i;
                 }
             };
         } catch (Throwable th) {
@@ -223,7 +230,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "clock_seconds", "icon_blacklist");
             this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
             if (this.mShowDark) {
-                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this);
             }
             this.mCurrentUserTracker.startTracking();
             this.mCurrentUserId = this.mCurrentUserTracker.getCurrentUserId();
@@ -244,7 +251,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
             this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
             if (this.mShowDark) {
-                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+                ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this);
             }
             this.mCurrentUserTracker.stopTracking();
         }
@@ -283,6 +290,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
         }
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if ("clock_seconds".equals(str)) {
             this.mShowSeconds = TunerService.parseIntegerSwitch(str2, false);
@@ -293,6 +301,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
         updateClockVisibility();
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         if (i == getDisplay().getDisplayId()) {
             boolean z2 = (8388608 & i2) == 0;
@@ -302,6 +311,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
         }
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         int tint = DarkIconDispatcher.getTint(rect, this, i);
         this.mNonAdaptedColor = tint;
@@ -310,16 +320,17 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         FontSizeUtils.updateFontSize(this, C0012R$dimen.status_bar_clock_size);
-        setPaddingRelative(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_starting_padding), 0, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_end_padding), 0);
+        setPaddingRelative(((TextView) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_starting_padding), 0, ((TextView) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_end_padding), 0);
     }
 
     public void useWallpaperTextColor(boolean z) {
         if (z != this.mUseWallpaperTextColor) {
             this.mUseWallpaperTextColor = z;
             if (z) {
-                setTextColor(Utils.getColorAttr(this.mContext, C0009R$attr.wallpaperTextColor));
+                setTextColor(Utils.getColorAttr(((TextView) this).mContext, C0009R$attr.wallpaperTextColor));
             } else {
                 setTextColor(this.mNonAdaptedColor);
             }
@@ -380,7 +391,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
                     while (i2 > 0 && Character.isWhitespace(str.charAt(i2 - 1))) {
                         i2--;
                     }
-                    str = str.substring(0, i2) + 61184 + str.substring(i2, i) + "a" + 61185 + str.substring(i + 1);
+                    str = str.substring(0, i2) + (char) 61184 + str.substring(i2, i) + "a" + (char) 61185 + str.substring(i + 1);
                 }
             }
             simpleDateFormat = new SimpleDateFormat(str);
@@ -411,6 +422,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
         return format;
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;

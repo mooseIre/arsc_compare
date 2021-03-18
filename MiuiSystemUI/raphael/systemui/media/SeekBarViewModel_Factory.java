@@ -11,6 +11,7 @@ public final class SeekBarViewModel_Factory implements Factory<SeekBarViewModel>
         this.bgExecutorProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SeekBarViewModel get() {
         return provideInstance(this.bgExecutorProvider);
     }

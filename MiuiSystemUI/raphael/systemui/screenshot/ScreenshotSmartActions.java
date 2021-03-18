@@ -29,7 +29,7 @@ public class ScreenshotSmartActions {
             Slog.i("ScreenshotSmartActions", "Screenshot Intelligence not enabled, returning empty list.");
             return CompletableFuture.completedFuture(Collections.emptyList());
         } else if (bitmap.getConfig() != Bitmap.Config.HARDWARE) {
-            Slog.w("ScreenshotSmartActions", String.format("Bitmap expected: Hardware, Bitmap found: %s. Returning empty list.", new Object[]{bitmap.getConfig()}));
+            Slog.w("ScreenshotSmartActions", String.format("Bitmap expected: Hardware, Bitmap found: %s. Returning empty list.", bitmap.getConfig()));
             return CompletableFuture.completedFuture(Collections.emptyList());
         } else {
             Slog.d("ScreenshotSmartActions", "Screenshot from user profile: " + userHandle.getIdentifier());
@@ -45,9 +45,7 @@ public class ScreenshotSmartActions {
             } catch (Throwable th) {
                 CompletableFuture<List<Notification.Action>> completedFuture = CompletableFuture.completedFuture(Collections.emptyList());
                 Slog.e("ScreenshotSmartActions", "Failed to get future for screenshot notification smart actions.", th);
-                String str2 = str;
-                ScreenshotNotificationSmartActionsProvider screenshotNotificationSmartActionsProvider2 = screenshotNotificationSmartActionsProvider;
-                notifyScreenshotOp(str2, screenshotNotificationSmartActionsProvider2, ScreenshotNotificationSmartActionsProvider.ScreenshotOp.REQUEST_SMART_ACTIONS, ScreenshotNotificationSmartActionsProvider.ScreenshotOpStatus.ERROR, SystemClock.uptimeMillis() - uptimeMillis);
+                notifyScreenshotOp(str, screenshotNotificationSmartActionsProvider, ScreenshotNotificationSmartActionsProvider.ScreenshotOp.REQUEST_SMART_ACTIONS, ScreenshotNotificationSmartActionsProvider.ScreenshotOpStatus.ERROR, SystemClock.uptimeMillis() - uptimeMillis);
                 return completedFuture;
             }
         }
@@ -60,20 +58,18 @@ public class ScreenshotSmartActions {
         try {
             List<Notification.Action> list = completableFuture.get((long) i, TimeUnit.MILLISECONDS);
             long uptimeMillis2 = SystemClock.uptimeMillis() - uptimeMillis;
-            Slog.d("ScreenshotSmartActions", String.format("Got %d smart actions. Wait time: %d ms", new Object[]{Integer.valueOf(list.size()), Long.valueOf(uptimeMillis2)}));
+            Slog.d("ScreenshotSmartActions", String.format("Got %d smart actions. Wait time: %d ms", Integer.valueOf(list.size()), Long.valueOf(uptimeMillis2)));
             notifyScreenshotOp(str, screenshotNotificationSmartActionsProvider, ScreenshotNotificationSmartActionsProvider.ScreenshotOp.WAIT_FOR_SMART_ACTIONS, ScreenshotNotificationSmartActionsProvider.ScreenshotOpStatus.SUCCESS, uptimeMillis2);
             return list;
         } catch (Throwable th) {
             long uptimeMillis3 = SystemClock.uptimeMillis() - uptimeMillis;
-            Slog.e("ScreenshotSmartActions", String.format("Error getting smart actions. Wait time: %d ms", new Object[]{Long.valueOf(uptimeMillis3)}), th);
+            Slog.e("ScreenshotSmartActions", String.format("Error getting smart actions. Wait time: %d ms", Long.valueOf(uptimeMillis3)), th);
             if (th instanceof TimeoutException) {
                 screenshotOpStatus = ScreenshotNotificationSmartActionsProvider.ScreenshotOpStatus.TIMEOUT;
             } else {
                 screenshotOpStatus = ScreenshotNotificationSmartActionsProvider.ScreenshotOpStatus.ERROR;
             }
-            String str2 = str;
-            ScreenshotNotificationSmartActionsProvider screenshotNotificationSmartActionsProvider2 = screenshotNotificationSmartActionsProvider;
-            notifyScreenshotOp(str2, screenshotNotificationSmartActionsProvider2, ScreenshotNotificationSmartActionsProvider.ScreenshotOp.WAIT_FOR_SMART_ACTIONS, screenshotOpStatus, uptimeMillis3);
+            notifyScreenshotOp(str, screenshotNotificationSmartActionsProvider, ScreenshotNotificationSmartActionsProvider.ScreenshotOp.WAIT_FOR_SMART_ACTIONS, screenshotOpStatus, uptimeMillis3);
             return Collections.emptyList();
         }
     }

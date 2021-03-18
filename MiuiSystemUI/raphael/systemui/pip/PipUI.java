@@ -19,6 +19,7 @@ public class PipUI extends SystemUI implements CommandQueue.Callbacks {
         this.mPipManager = basePipManager;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         if (this.mContext.getPackageManager().hasSystemFeature("android.software.picture_in_picture")) {
             if (UserManager.get(this.mContext).getUserHandle() == 0) {
@@ -29,11 +30,13 @@ public class PipUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showPictureInPictureMenu() {
         this.mPipManager.showPictureInPictureMenu();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         BasePipManager basePipManager = this.mPipManager;
@@ -63,6 +66,7 @@ public class PipUI extends SystemUI implements CommandQueue.Callbacks {
         }
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         BasePipManager basePipManager = this.mPipManager;
         if (basePipManager != null) {

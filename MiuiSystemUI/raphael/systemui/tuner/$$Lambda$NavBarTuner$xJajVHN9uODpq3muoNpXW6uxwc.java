@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$NavBarTuner$xJajVHN9uODpq3muoNpXW6ux
     private /* synthetic */ $$Lambda$NavBarTuner$xJajVHN9uODpq3muoNpXW6uxwc() {
     }
 
+    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public final boolean onPreferenceChange(Preference preference, Object obj) {
         return NavBarTuner.lambda$bindLayout$3(preference, obj);
     }

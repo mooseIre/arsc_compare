@@ -14,6 +14,7 @@ public final class SysuiColorExtractor_Factory implements Factory<SysuiColorExtr
         this.configurationControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public SysuiColorExtractor get() {
         return provideInstance(this.contextProvider, this.configurationControllerProvider);
     }

@@ -25,10 +25,11 @@ public final class MiuiConfigurationControllerImpl extends ConfigurationControll
         this.themeChanged = resources.getConfiguration().extraConfig.themeChanged;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController, com.android.systemui.statusbar.phone.ConfigurationControllerImpl
     public void onConfigurationChanged(@NotNull Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         super.onConfigurationChanged(configuration);
-        ArrayList<ConfigurationController.ConfigurationListener> arrayList = new ArrayList<>(getListeners());
+        ArrayList<ConfigurationController.ConfigurationListener> arrayList = new ArrayList(getListeners());
         int i = configuration.extraConfig.themeChanged;
         if (i != this.themeChanged) {
             this.themeChanged = i;

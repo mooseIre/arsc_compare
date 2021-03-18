@@ -31,6 +31,9 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
     public OperatorNameView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mCallback = new KeyguardUpdateMonitorCallback() {
+            /* class com.android.systemui.statusbar.OperatorNameView.AnonymousClass1 */
+
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onRefreshCarrierInfo() {
                 OperatorNameView.this.updateText();
             }
@@ -43,8 +46,8 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
         KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
         keyguardUpdateMonitor.registerCallback(this.mCallback);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
-        ((NetworkController) Dependency.get(NetworkController.class)).addCallback(this);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this);
+        ((NetworkController) Dependency.get(NetworkController.class)).addCallback((NetworkController.SignalCallback) this);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "show_operator_name");
     }
 
@@ -52,11 +55,12 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mKeyguardUpdateMonitor.removeCallback(this.mCallback);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
-        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback(this);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this);
+        ((NetworkController) Dependency.get(NetworkController.class)).removeCallback((NetworkController.SignalCallback) this);
         ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (z) {
             setTextColor(DarkIconDispatcher.getTint(rect, this, i));
@@ -68,14 +72,17 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
         setTextColor(i2);
     }
 
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setIsAirplaneMode(NetworkController.IconState iconState) {
         update();
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         update();
     }
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
         if (!this.mDemoMode && str.equals("enter")) {
             this.mDemoMode = true;
@@ -93,8 +100,8 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
             z = false;
         }
         setVisibility(z ? 0 : 8);
-        boolean isNetworkSupported = ConnectivityManager.from(this.mContext).isNetworkSupported(0);
-        boolean isAirplaneModeOn = WirelessUtils.isAirplaneModeOn(this.mContext);
+        boolean isNetworkSupported = ConnectivityManager.from(((TextView) this).mContext).isNetworkSupported(0);
+        boolean isAirplaneModeOn = WirelessUtils.isAirplaneModeOn(((TextView) this).mContext);
         if (!isNetworkSupported || isAirplaneModeOn) {
             setText((CharSequence) null);
             setVisibility(8);
@@ -104,7 +111,8 @@ public class OperatorNameView extends TextView implements DemoMode, DarkIconDisp
     }
 
     /* access modifiers changed from: private */
-    public void updateText() {
+    /* access modifiers changed from: public */
+    private void updateText() {
         CharSequence charSequence;
         ServiceState serviceState;
         int i = 0;

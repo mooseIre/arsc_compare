@@ -55,9 +55,13 @@ public class CornerVideoView extends VideoView {
             this.mUri = parse;
             setVideoURI(parse);
             setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                /* class com.android.systemui.controlcenter.phone.widget.CornerVideoView.AnonymousClass1 */
+
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     mediaPlayer.setLooping(true);
                     mediaPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                        /* class com.android.systemui.controlcenter.phone.widget.CornerVideoView.AnonymousClass1.AnonymousClass1 */
+
                         public boolean onInfo(MediaPlayer mediaPlayer, int i, int i2) {
                             if (i != 3) {
                                 return true;
@@ -73,7 +77,8 @@ public class CornerVideoView extends VideoView {
         }
     }
 
-    private class VideoViewOutlineProvider extends ViewOutlineProvider {
+    /* access modifiers changed from: private */
+    public class VideoViewOutlineProvider extends ViewOutlineProvider {
         private float mRadius;
 
         public VideoViewOutlineProvider(CornerVideoView cornerVideoView, float f) {

@@ -23,20 +23,16 @@ import java.util.HashMap;
 import java.util.function.Consumer;
 
 public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ADD_ICON_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties DOT_ANIMATION_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ICON_ANIMATION_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties UNISOLATION_PROPERTY;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties UNISOLATION_PROPERTY_OTHERS;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties sTempProperties = new AnimationProperties() {
+    private static final AnimationProperties ADD_ICON_PROPERTIES;
+    private static final AnimationProperties DOT_ANIMATION_PROPERTIES;
+    private static final AnimationProperties ICON_ANIMATION_PROPERTIES;
+    private static final AnimationProperties UNISOLATION_PROPERTY;
+    private static final AnimationProperties UNISOLATION_PROPERTY_OTHERS;
+    private static final AnimationProperties sTempProperties = new AnimationProperties() {
+        /* class com.android.systemui.statusbar.phone.NotificationIconContainer.AnonymousClass3 */
         private AnimationFilter mAnimationFilter = new AnimationFilter();
 
+        @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
         public AnimationFilter getAnimationFilter() {
             return this.mAnimationFilter;
         }
@@ -48,24 +44,19 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     private int mActualLayoutWidth = Integer.MIN_VALUE;
     private float mActualPaddingEnd = -2.14748365E9f;
     private float mActualPaddingStart = -2.14748365E9f;
-    /* access modifiers changed from: private */
-    public int mAddAnimationStartIndex = -1;
+    private int mAddAnimationStartIndex = -1;
     private boolean mAnimationsEnabled = true;
-    /* access modifiers changed from: private */
-    public int mCannedAnimationStartIndex = -1;
+    private int mCannedAnimationStartIndex = -1;
     private boolean mChangingViewPositions;
-    /* access modifiers changed from: private */
-    public boolean mDisallowNextAnimation;
+    private boolean mDisallowNextAnimation;
     private int mDotPadding;
     private boolean mDozing;
     private IconState mFirstVisibleIconState;
     private int mIconSize;
     private final HashMap<View, IconState> mIconStates = new HashMap<>();
     private boolean mIsStaticLayout = true;
-    /* access modifiers changed from: private */
-    public StatusBarIconView mIsolatedIcon;
-    /* access modifiers changed from: private */
-    public View mIsolatedIconForAnimation;
+    private StatusBarIconView mIsolatedIcon;
+    private View mIsolatedIconForAnimation;
     private IconState mLastVisibleIconState;
     private int mNumDots;
     private boolean mOnLockScreen;
@@ -79,6 +70,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
 
     static {
         AnonymousClass1 r0 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.NotificationIconContainer.AnonymousClass1 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -87,6 +79,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -94,6 +87,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         r0.setDuration(200);
         DOT_ANIMATION_PROPERTIES = r0;
         AnonymousClass2 r02 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.NotificationIconContainer.AnonymousClass2 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -105,6 +99,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -112,6 +107,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         r02.setDuration(100);
         ICON_ANIMATION_PROPERTIES = r02;
         AnonymousClass4 r03 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.NotificationIconContainer.AnonymousClass4 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -120,6 +116,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -128,6 +125,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         r03.setDelay(50);
         ADD_ICON_PROPERTIES = r03;
         AnonymousClass5 r04 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.NotificationIconContainer.AnonymousClass5 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -136,6 +134,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -143,6 +142,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         r04.setDuration(110);
         UNISOLATION_PROPERTY_OTHERS = r04;
         AnonymousClass6 r05 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.NotificationIconContainer.AnonymousClass6 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -151,6 +151,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -221,9 +222,9 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     public void applyIconStates() {
         for (int i = 0; i < getChildCount(); i++) {
             View childAt = getChildAt(i);
-            ViewState viewState = this.mIconStates.get(childAt);
-            if (viewState != null) {
-                viewState.applyToView(childAt);
+            IconState iconState = this.mIconStates.get(childAt);
+            if (iconState != null) {
+                iconState.applyToView(childAt);
             }
         }
         this.mAddAnimationStartIndex = -1;
@@ -239,7 +240,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
             IconState iconState = new IconState(view);
             if (isReplacingIcon) {
                 iconState.justAdded = false;
-                boolean unused = iconState.justReplaced = true;
+                iconState.justReplaced = true;
             }
             this.mIconStates.put(view, iconState);
         }
@@ -263,8 +264,8 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         }
         StatusBarIconView statusBarIconView = (StatusBarIconView) view;
         Icon sourceIcon = statusBarIconView.getSourceIcon();
-        ArrayList arrayList = this.mReplacingIcons.get(statusBarIconView.getNotification().getGroupKey());
-        if (arrayList == null || !sourceIcon.sameAs(((StatusBarIcon) arrayList.get(0)).icon)) {
+        ArrayList<StatusBarIcon> arrayList = this.mReplacingIcons.get(statusBarIconView.getNotification().getGroupKey());
+        if (arrayList == null || !sourceIcon.sameAs(arrayList.get(0).icon)) {
             return false;
         }
         return true;
@@ -293,6 +294,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
                         z = true;
                     }
                     statusBarIconView.setVisibleState(2, true, new Runnable(statusBarIconView) {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationIconContainer$sYOppFQ4vSNRi0SYdFbv716CxNY */
                         public final /* synthetic */ StatusBarIconView f$1;
 
                         {
@@ -315,7 +317,8 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public boolean areAnimationsEnabled(StatusBarIconView statusBarIconView) {
+    /* access modifiers changed from: public */
+    private boolean areAnimationsEnabled(StatusBarIconView statusBarIconView) {
         return this.mAnimationsEnabled || statusBarIconView == this.mIsolatedIcon;
     }
 
@@ -331,10 +334,10 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     public void resetViewStates() {
         for (int i = 0; i < getChildCount(); i++) {
             View childAt = getChildAt(i);
-            ViewState viewState = this.mIconStates.get(childAt);
-            viewState.initFrom(childAt);
-            viewState.alpha = 1.0f;
-            viewState.hidden = false;
+            IconState iconState = this.mIconStates.get(childAt);
+            iconState.initFrom(childAt);
+            iconState.alpha = 1.0f;
+            iconState.hidden = false;
         }
     }
 
@@ -540,10 +543,10 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         if (!z && this.mAnimationsEnabled) {
             for (int i = 0; i < getChildCount(); i++) {
                 View childAt = getChildAt(i);
-                ViewState viewState = this.mIconStates.get(childAt);
-                if (viewState != null) {
-                    viewState.cancelAnimations(childAt);
-                    viewState.applyToView(childAt);
+                IconState iconState = this.mIconStates.get(childAt);
+                if (iconState != null) {
+                    iconState.cancelAnimations(childAt);
+                    iconState.applyToView(childAt);
                 }
             }
         }
@@ -579,8 +582,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         public int iconColor = 0;
         public boolean isLastExpandIcon;
         public boolean justAdded = true;
-        /* access modifiers changed from: private */
-        public boolean justReplaced;
+        private boolean justReplaced;
         private final Consumer<Property> mCannedAnimationEndListener;
         private final View mView;
         public boolean needsCannedAnimation;
@@ -593,6 +595,9 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         public IconState(View view) {
             this.mView = view;
             this.mCannedAnimationEndListener = new Consumer() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationIconContainer$IconState$017TXxTv7ZZuJUNhHxPGZnMwVo */
+
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     NotificationIconContainer.IconState.this.lambda$new$0$NotificationIconContainer$IconState((Property) obj);
                 }
@@ -609,206 +614,11 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
 
         /* JADX WARNING: Removed duplicated region for block: B:37:0x0082  */
         /* JADX WARNING: Removed duplicated region for block: B:57:0x012f  */
+        @Override // com.android.systemui.statusbar.notification.stack.ViewState
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void applyToView(android.view.View r13) {
             /*
-                r12 = this;
-                boolean r0 = r13 instanceof com.android.systemui.statusbar.StatusBarIconView
-                r1 = 0
-                if (r0 == 0) goto L_0x0188
-                r0 = r13
-                com.android.systemui.statusbar.StatusBarIconView r0 = (com.android.systemui.statusbar.StatusBarIconView) r0
-                r2 = 0
-                com.android.systemui.statusbar.phone.NotificationIconContainer r3 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                boolean r3 = r3.areAnimationsEnabled(r0)
-                r4 = 1
-                if (r3 == 0) goto L_0x0020
-                com.android.systemui.statusbar.phone.NotificationIconContainer r3 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                boolean r3 = r3.mDisallowNextAnimation
-                if (r3 != 0) goto L_0x0020
-                boolean r3 = r12.noAnimations
-                if (r3 != 0) goto L_0x0020
-                r3 = r4
-                goto L_0x0021
-            L_0x0020:
-                r3 = r1
-            L_0x0021:
-                if (r3 == 0) goto L_0x015e
-                boolean r5 = r12.justAdded
-                r6 = 2
-                if (r5 != 0) goto L_0x003a
-                boolean r5 = r12.justReplaced
-                if (r5 == 0) goto L_0x002d
-                goto L_0x003a
-            L_0x002d:
-                int r5 = r12.visibleState
-                int r7 = r0.getVisibleState()
-                if (r5 == r7) goto L_0x0054
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.DOT_ANIMATION_PROPERTIES
-                goto L_0x0052
-            L_0x003a:
-                super.applyToView(r0)
-                boolean r5 = r12.justAdded
-                if (r5 == 0) goto L_0x0054
-                float r5 = r12.iconAppearAmount
-                r7 = 0
-                int r5 = (r5 > r7 ? 1 : (r5 == r7 ? 0 : -1))
-                if (r5 == 0) goto L_0x0054
-                r0.setAlpha(r7)
-                r0.setVisibleState(r6, r1)
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.ADD_ICON_PROPERTIES
-            L_0x0052:
-                r5 = r4
-                goto L_0x0055
-            L_0x0054:
-                r5 = r1
-            L_0x0055:
-                if (r5 != 0) goto L_0x007c
-                com.android.systemui.statusbar.phone.NotificationIconContainer r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r7 = r7.mAddAnimationStartIndex
-                if (r7 < 0) goto L_0x007c
-                com.android.systemui.statusbar.phone.NotificationIconContainer r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r7 = r7.indexOfChild(r13)
-                com.android.systemui.statusbar.phone.NotificationIconContainer r8 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r8 = r8.mAddAnimationStartIndex
-                if (r7 < r8) goto L_0x007c
-                int r7 = r0.getVisibleState()
-                if (r7 != r6) goto L_0x0077
-                int r7 = r12.visibleState
-                if (r7 == r6) goto L_0x007c
-            L_0x0077:
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.DOT_ANIMATION_PROPERTIES
-                r5 = r4
-            L_0x007c:
-                boolean r7 = r12.needsCannedAnimation
-                r8 = 100
-                if (r7 == 0) goto L_0x00e8
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r5 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                com.android.systemui.statusbar.notification.stack.AnimationFilter r5 = r5.getAnimationFilter()
-                r5.reset()
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.ICON_ANIMATION_PROPERTIES
-                com.android.systemui.statusbar.notification.stack.AnimationFilter r7 = r7.getAnimationFilter()
-                r5.combineFilter(r7)
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                r7.resetCustomInterpolators()
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r10 = com.android.systemui.statusbar.phone.NotificationIconContainer.ICON_ANIMATION_PROPERTIES
-                r7.combineCustomInterpolators(r10)
-                boolean r7 = r0.showsConversation()
-                if (r7 == 0) goto L_0x00b3
-                android.view.animation.Interpolator r7 = com.android.systemui.Interpolators.ICON_OVERSHOT_LESS
-                goto L_0x00b5
-            L_0x00b3:
-                android.view.animation.Interpolator r7 = com.android.systemui.Interpolators.ICON_OVERSHOT
-            L_0x00b5:
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r10 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                android.util.Property r11 = android.view.View.TRANSLATION_Y
-                r10.setCustomInterpolator(r11, r7)
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                java.util.function.Consumer<android.util.Property> r10 = r12.mCannedAnimationEndListener
-                r7.setAnimationEndAction(r10)
-                if (r2 == 0) goto L_0x00d7
-                com.android.systemui.statusbar.notification.stack.AnimationFilter r7 = r2.getAnimationFilter()
-                r5.combineFilter(r7)
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r5 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                r5.combineCustomInterpolators(r2)
-            L_0x00d7:
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                r2.setDuration(r8)
-                com.android.systemui.statusbar.phone.NotificationIconContainer r5 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r7 = r5.indexOfChild(r13)
-                int unused = r5.mCannedAnimationStartIndex = r7
-                r5 = r4
-            L_0x00e8:
-                if (r5 != 0) goto L_0x0127
-                com.android.systemui.statusbar.phone.NotificationIconContainer r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r7 = r7.mCannedAnimationStartIndex
-                if (r7 < 0) goto L_0x0127
-                com.android.systemui.statusbar.phone.NotificationIconContainer r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r7 = r7.indexOfChild(r13)
-                com.android.systemui.statusbar.phone.NotificationIconContainer r10 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                int r10 = r10.mCannedAnimationStartIndex
-                if (r7 <= r10) goto L_0x0127
-                int r7 = r0.getVisibleState()
-                if (r7 != r6) goto L_0x010a
-                int r7 = r12.visibleState
-                if (r7 == r6) goto L_0x0127
-            L_0x010a:
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                com.android.systemui.statusbar.notification.stack.AnimationFilter r2 = r2.getAnimationFilter()
-                r2.reset()
-                r2.animateX()
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                r2.resetCustomInterpolators()
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.sTempProperties
-                r2.setDuration(r8)
-                r5 = r4
-            L_0x0127:
-                com.android.systemui.statusbar.phone.NotificationIconContainer r6 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                android.view.View r6 = r6.mIsolatedIconForAnimation
-                if (r6 == 0) goto L_0x015f
-                com.android.systemui.statusbar.phone.NotificationIconContainer r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                android.view.View r2 = r2.mIsolatedIconForAnimation
-                r5 = 0
-                if (r13 != r2) goto L_0x014b
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.UNISOLATION_PROPERTY
-                com.android.systemui.statusbar.phone.NotificationIconContainer r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                com.android.systemui.statusbar.StatusBarIconView r7 = r7.mIsolatedIcon
-                if (r7 == 0) goto L_0x0146
-                goto L_0x0147
-            L_0x0146:
-                r8 = r5
-            L_0x0147:
-                r2.setDelay(r8)
-                goto L_0x015c
-            L_0x014b:
-                com.android.systemui.statusbar.notification.stack.AnimationProperties r2 = com.android.systemui.statusbar.phone.NotificationIconContainer.UNISOLATION_PROPERTY_OTHERS
-                com.android.systemui.statusbar.phone.NotificationIconContainer r7 = com.android.systemui.statusbar.phone.NotificationIconContainer.this
-                com.android.systemui.statusbar.StatusBarIconView r7 = r7.mIsolatedIcon
-                if (r7 != 0) goto L_0x0158
-                goto L_0x0159
-            L_0x0158:
-                r8 = r5
-            L_0x0159:
-                r2.setDelay(r8)
-            L_0x015c:
-                r5 = r4
-                goto L_0x015f
-            L_0x015e:
-                r5 = r1
-            L_0x015f:
-                int r6 = r12.visibleState
-                r0.setVisibleState(r6, r3)
-                int r6 = r12.iconColor
-                boolean r7 = r12.needsCannedAnimation
-                if (r7 == 0) goto L_0x016e
-                if (r3 == 0) goto L_0x016e
-                r3 = r4
-                goto L_0x016f
-            L_0x016e:
-                r3 = r1
-            L_0x016f:
-                r0.setIconColor(r6, r3)
-                if (r5 == 0) goto L_0x0178
-                r12.animateTo(r0, r2)
-                goto L_0x017b
-            L_0x0178:
-                super.applyToView(r13)
-            L_0x017b:
-                float r13 = r12.iconAppearAmount
-                r2 = 1065353216(0x3f800000, float:1.0)
-                int r13 = (r13 > r2 ? 1 : (r13 == r2 ? 0 : -1))
-                if (r13 != 0) goto L_0x0184
-                goto L_0x0185
-            L_0x0184:
-                r4 = r1
-            L_0x0185:
-                r0.setIsInShelf(r4)
-            L_0x0188:
-                r12.justAdded = r1
-                r12.justReplaced = r1
-                r12.needsCannedAnimation = r1
-                return
+            // Method dump skipped, instructions count: 399
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NotificationIconContainer.IconState.applyToView(android.view.View):void");
         }
@@ -817,6 +627,7 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
             return this.isLastExpandIcon && this.customTransformHeight != Integer.MIN_VALUE;
         }
 
+        @Override // com.android.systemui.statusbar.notification.stack.ViewState
         public void initFrom(View view) {
             super.initFrom(view);
             if (view instanceof StatusBarIconView) {

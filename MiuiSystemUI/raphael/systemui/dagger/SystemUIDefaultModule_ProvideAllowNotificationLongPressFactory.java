@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class SystemUIDefaultModule_ProvideAllowNotificationLongPressFactory implements Factory<Boolean> {
     private static final SystemUIDefaultModule_ProvideAllowNotificationLongPressFactory INSTANCE = new SystemUIDefaultModule_ProvideAllowNotificationLongPressFactory();
 
+    @Override // javax.inject.Provider
     public Boolean get() {
         return provideInstance();
     }

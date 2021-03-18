@@ -35,10 +35,10 @@ public class DataUsageGraph extends View {
     }
 
     public void setLevels(long j, long j2, long j3) {
-        this.mLimitLevel = Math.max(0, j);
-        this.mWarningLevel = Math.max(0, j2);
-        this.mUsageLevel = Math.max(0, j3);
-        this.mMaxLevel = Math.max(Math.max(Math.max(this.mLimitLevel, this.mWarningLevel), this.mUsageLevel), 1);
+        this.mLimitLevel = Math.max(0L, j);
+        this.mWarningLevel = Math.max(0L, j2);
+        this.mUsageLevel = Math.max(0L, j3);
+        this.mMaxLevel = Math.max(Math.max(Math.max(this.mLimitLevel, this.mWarningLevel), this.mUsageLevel), 1L);
         postInvalidate();
     }
 

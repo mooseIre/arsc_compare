@@ -22,6 +22,7 @@ public final class SlaveWifiSignalController_Factory implements Factory<SlaveWif
         this.broadcastDispatcherProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public SlaveWifiSignalController get() {
         return provideInstance(this.contextProvider, this.backgroundHandlerProvider, this.statusBarIconControllerProvider, this.mainHandlerProvider, this.broadcastDispatcherProvider);
     }

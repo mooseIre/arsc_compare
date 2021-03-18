@@ -14,12 +14,15 @@ final class KeyguardMediaController$attach$1 extends Lambda implements Function1
         this.this$0 = keyguardMediaController;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke(((Boolean) obj).booleanValue());
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(Boolean bool) {
+        invoke(bool.booleanValue());
         return Unit.INSTANCE;
     }
 
     public final void invoke(boolean z) {
-        this.this$0.updateVisibility();
+        KeyguardMediaController.access$updateVisibility(this.this$0);
     }
 }

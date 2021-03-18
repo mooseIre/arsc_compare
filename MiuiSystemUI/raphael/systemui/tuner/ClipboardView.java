@@ -76,7 +76,7 @@ public class ClipboardView extends ImageView implements ClipboardManager.OnPrima
     }
 
     public void startPocketDrag() {
-        startDragAndDrop(this.mCurrentClip, new View.DragShadowBuilder(this), (Object) null, 256);
+        startDragAndDrop(this.mCurrentClip, new View.DragShadowBuilder(this), null, 256);
     }
 
     public void startListening() {

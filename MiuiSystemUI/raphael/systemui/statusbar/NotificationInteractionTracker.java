@@ -32,6 +32,7 @@ public final class NotificationInteractionTracker implements NotifCollectionList
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
     public void onEntryAdded(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         Map<String, Boolean> map = this.interactions;
@@ -40,11 +41,13 @@ public final class NotificationInteractionTracker implements NotifCollectionList
         map.put(key, Boolean.FALSE);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
     public void onEntryCleanUp(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         this.interactions.remove(notificationEntry.getKey());
     }
 
+    @Override // com.android.systemui.statusbar.NotificationInteractionListener
     public void onNotificationInteraction(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "key");
         this.interactions.put(str, Boolean.TRUE);

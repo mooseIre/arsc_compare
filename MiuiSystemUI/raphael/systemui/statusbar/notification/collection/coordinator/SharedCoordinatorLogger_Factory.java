@@ -11,6 +11,7 @@ public final class SharedCoordinatorLogger_Factory implements Factory<SharedCoor
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SharedCoordinatorLogger get() {
         return provideInstance(this.bufferProvider);
     }

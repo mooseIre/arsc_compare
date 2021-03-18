@@ -40,11 +40,10 @@ public class TrackedGarbage {
         }
     }
 
-    private static class LeakReference extends WeakReference<Object> {
-        /* access modifiers changed from: private */
-        public final Class<?> clazz;
-        /* access modifiers changed from: private */
-        public final long createdUptimeMillis = SystemClock.uptimeMillis();
+    /* access modifiers changed from: private */
+    public static class LeakReference extends WeakReference<Object> {
+        private final Class<?> clazz;
+        private final long createdUptimeMillis = SystemClock.uptimeMillis();
 
         LeakReference(Object obj, ReferenceQueue<Object> referenceQueue) {
             super(obj, referenceQueue);

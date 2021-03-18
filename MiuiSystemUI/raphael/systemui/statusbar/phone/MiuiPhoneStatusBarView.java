@@ -48,6 +48,8 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         this.mGestureDetector = new GestureDetectorCompat(context, new MyGestureListener(this));
         this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
         addOnLayoutChangeListener(new View.OnLayoutChangeListener(this) {
+            /* class com.android.systemui.statusbar.phone.MiuiPhoneStatusBarView.AnonymousClass1 */
+
             public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 if (i3 - i != i7 - i5) {
                     ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).reapply();
@@ -56,6 +58,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         });
     }
 
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView, com.android.systemui.statusbar.phone.PanelBar
     public void onFinishInflate() {
         this.mStatusBarLeftContainer = findViewById(C0015R$id.phone_status_bar_left_container);
         this.mDripStatusBarNotificationIconArea = findViewById(C0015R$id.drip_notification_icon_area);
@@ -73,22 +76,22 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView
     public void onAttachedToWindow() {
-        Class cls = DarkIconDispatcher.class;
-        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedView);
-        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedSplitter);
-        ((DarkIconDispatcher) Dependency.get(cls)).addDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mFullScreenNetworkSpeedView);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mDripNetworkSpeedView);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mDripNetworkSpeedSplitter);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mFullScreenNetworkSpeedView);
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer((FrameLayout) findViewById(C0015R$id.prompt_container), 0);
         super.onAttachedToWindow();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView
     public void onDetachedFromWindow() {
-        Class cls = DarkIconDispatcher.class;
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer((FrameLayout) findViewById(C0015R$id.prompt_container));
-        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedView);
-        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mDripNetworkSpeedSplitter);
-        ((DarkIconDispatcher) Dependency.get(cls)).removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mFullScreenNetworkSpeedView);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mDripNetworkSpeedView);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mDripNetworkSpeedSplitter);
+        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mFullScreenNetworkSpeedView);
         super.onDetachedFromWindow();
     }
 
@@ -109,6 +112,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView
     public void updateCutoutLocation(Pair<Integer, Integer> pair) {
         if (this.mCutoutSpace != null) {
             DisplayCutout displayCutout = this.mDisplayCutout;
@@ -179,6 +183,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView
     public boolean handleEvent(MotionEvent motionEvent) {
         boolean z = motionEvent.getActionMasked() == 0;
         boolean z2 = motionEvent.getAction() == 2;
@@ -208,10 +213,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
                 this.mDown = null;
             }
         }
-        if ((!this.mIsGiveAllEvent || !this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) && !this.mGestureDetector.onTouchEvent(motionEvent) && panelEnabled()) {
-            return false;
-        }
-        return true;
+        return (this.mIsGiveAllEvent && this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) || this.mGestureDetector.onTouchEvent(motionEvent) || !panelEnabled();
     }
 
     static class MyGestureListener extends GestureDetector.SimpleOnGestureListener {

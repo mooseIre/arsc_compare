@@ -3,8 +3,9 @@ package com.android.systemui.dump;
 import java.io.PrintWriter;
 import java.util.function.Consumer;
 
+/* access modifiers changed from: package-private */
 /* compiled from: LogBufferEulogizer.kt */
-final class LogBufferEulogizer$readEulogyIfPresent$$inlined$use$lambda$1<T> implements Consumer<String> {
+public final class LogBufferEulogizer$readEulogyIfPresent$$inlined$use$lambda$1<T> implements Consumer<String> {
     final /* synthetic */ PrintWriter $pw$inlined;
 
     LogBufferEulogizer$readEulogyIfPresent$$inlined$use$lambda$1(PrintWriter printWriter) {

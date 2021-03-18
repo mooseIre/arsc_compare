@@ -107,6 +107,7 @@ public class BlurUtils implements Dumpable {
         return this.blurSupportedSysProp && !this.blurDisabledSysProp && ActivityManager.isHighEndGfx();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");

@@ -20,6 +20,7 @@ public final class WifiTile_Factory implements Factory<WifiTile> {
         this.slaveWifiHelperProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public WifiTile get() {
         return provideInstance(this.hostProvider, this.networkControllerProvider, this.activityStarterProvider, this.slaveWifiHelperProvider);
     }

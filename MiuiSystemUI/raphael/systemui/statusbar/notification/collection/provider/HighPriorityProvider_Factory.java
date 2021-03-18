@@ -14,6 +14,7 @@ public final class HighPriorityProvider_Factory implements Factory<HighPriorityP
         this.groupManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public HighPriorityProvider get() {
         return provideInstance(this.peopleNotificationIdentifierProvider, this.groupManagerProvider);
     }

@@ -20,6 +20,7 @@ public final class ControlsComponent_Factory implements Factory<ControlsComponen
         this.controlsListingControllerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ControlsComponent get() {
         return provideInstance(this.featureEnabledProvider, this.controlsControllerProvider, this.controlsUiControllerProvider, this.controlsListingControllerProvider);
     }

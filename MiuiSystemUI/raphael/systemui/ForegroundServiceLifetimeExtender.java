@@ -23,10 +23,12 @@ public class ForegroundServiceLifetimeExtender implements NotificationLifetimeEx
         this.mInteractionTracker = notificationInteractionTracker;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setCallback(NotificationLifetimeExtender.NotificationSafeToRemoveCallback notificationSafeToRemoveCallback) {
         this.mNotificationSafeToRemoveCallback = notificationSafeToRemoveCallback;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public boolean shouldExtendLifetime(NotificationEntry notificationEntry) {
         if ((notificationEntry.getSbn().getNotification().flags & 64) == 0 || notificationEntry.hasInterrupted()) {
             return false;
@@ -38,10 +40,12 @@ public class ForegroundServiceLifetimeExtender implements NotificationLifetimeEx
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public boolean shouldExtendLifetimeForPendingNotification(NotificationEntry notificationEntry) {
         return shouldExtendLifetime(notificationEntry);
     }
 
+    @Override // com.android.systemui.statusbar.NotificationLifetimeExtender
     public void setShouldManageLifetime(NotificationEntry notificationEntry, boolean z) {
         if (!z) {
             this.mManagedEntries.remove(notificationEntry);
@@ -49,6 +53,7 @@ public class ForegroundServiceLifetimeExtender implements NotificationLifetimeEx
         }
         this.mManagedEntries.add(notificationEntry);
         this.mHandler.postDelayed(new Runnable(notificationEntry) {
+            /* class com.android.systemui.$$Lambda$ForegroundServiceLifetimeExtender$eZMtetouaKnxc7j2jqc6zpz_AA */
             public final /* synthetic */ NotificationEntry f$1;
 
             {

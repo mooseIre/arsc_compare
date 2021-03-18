@@ -8,7 +8,8 @@ import java.util.Map;
 public abstract class BindStage<Params> extends BindRequester {
     private Map<NotificationEntry, Params> mContentParams = new ArrayMap();
 
-    interface StageCallback {
+    /* access modifiers changed from: package-private */
+    public interface StageCallback {
         void onStageFinished(NotificationEntry notificationEntry);
     }
 
@@ -26,7 +27,7 @@ public abstract class BindStage<Params> extends BindRequester {
         if (params != null) {
             return params;
         }
-        Log.wtf("BindStage", String.format("Entry does not have any stage parameters. key: %s", new Object[]{notificationEntry.getKey()}));
+        Log.wtf("BindStage", String.format("Entry does not have any stage parameters. key: %s", notificationEntry.getKey()));
         return newStageParams();
     }
 

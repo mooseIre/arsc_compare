@@ -21,7 +21,7 @@ public final class BindEntryEvent extends NotifEvent {
             return false;
         }
         BindEntryEvent bindEntryEvent = (BindEntryEvent) obj;
-        return Intrinsics.areEqual((Object) this.entry, (Object) bindEntryEvent.entry) && Intrinsics.areEqual((Object) this.sbn, (Object) bindEntryEvent.sbn);
+        return Intrinsics.areEqual(this.entry, bindEntryEvent.entry) && Intrinsics.areEqual(this.sbn, bindEntryEvent.sbn);
     }
 
     public int hashCode() {
@@ -42,13 +42,14 @@ public final class BindEntryEvent extends NotifEvent {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public BindEntryEvent(@NotNull NotificationEntry notificationEntry, @NotNull StatusBarNotification statusBarNotification) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
         this.entry = notificationEntry;
         this.sbn = statusBarNotification;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifEvent
     public void dispatchToListener(@NotNull NotifCollectionListener notifCollectionListener) {
         Intrinsics.checkParameterIsNotNull(notifCollectionListener, "listener");
         notifCollectionListener.onEntryBind(this.entry, this.sbn);

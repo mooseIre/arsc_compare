@@ -47,14 +47,12 @@ public final class BroadcastDispatcher$handler$1 extends Handler {
             }
             throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.broadcast.ReceiverData");
         } else if (i2 == 1) {
-            int i3 = 0;
             int size = this.this$0.receiversByUser.size();
-            while (i3 < size) {
+            for (int i3 = 0; i3 < size; i3++) {
                 UserBroadcastDispatcher userBroadcastDispatcher2 = (UserBroadcastDispatcher) this.this$0.receiversByUser.valueAt(i3);
                 Object obj2 = message.obj;
                 if (obj2 != null) {
                     userBroadcastDispatcher2.unregisterReceiver((BroadcastReceiver) obj2);
-                    i3++;
                 } else {
                     throw new TypeCastException("null cannot be cast to non-null type android.content.BroadcastReceiver");
                 }

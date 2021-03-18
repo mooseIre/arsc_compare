@@ -14,6 +14,7 @@ public final class ScreenshotNotificationsController_Factory implements Factory<
         this.windowManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ScreenshotNotificationsController get() {
         return provideInstance(this.contextProvider, this.windowManagerProvider);
     }

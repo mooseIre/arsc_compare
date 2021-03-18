@@ -49,6 +49,7 @@ public class MiuiVendorServices extends SystemUI {
         super(context);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         setSettingsDefault();
         this.mWallpaperZoomOutService.start();
@@ -69,6 +70,9 @@ public class MiuiVendorServices extends SystemUI {
         this.mMiuiChargeManager.start();
         this.mMiuiStatusBarConfigurationListener.start();
         this.mNotificationEntryManager.addCollectionListener(new NotifCollectionListener(this) {
+            /* class com.android.systemui.MiuiVendorServices.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
                 statusBarNotification.getNotification().extras.putBoolean("android.colorized", false);
             }

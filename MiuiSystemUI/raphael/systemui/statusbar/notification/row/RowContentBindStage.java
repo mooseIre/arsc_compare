@@ -7,8 +7,7 @@ import com.android.systemui.statusbar.notification.row.NotificationRowContentBin
 public class RowContentBindStage extends BindStage<RowContentBindParams> {
     private final NotificationRowContentBinder mBinder;
     private final RowContentBindStageLogger mLogger;
-    /* access modifiers changed from: private */
-    public final NotifInflationErrorManager mNotifInflationErrorManager;
+    private final NotifInflationErrorManager mNotifInflationErrorManager;
 
     RowContentBindStage(NotificationRowContentBinder notificationRowContentBinder, NotifInflationErrorManager notifInflationErrorManager, RowContentBindStageLogger rowContentBindStageLogger) {
         this.mBinder = notificationRowContentBinder;
@@ -17,6 +16,7 @@ public class RowContentBindStage extends BindStage<RowContentBindParams> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.BindStage
     public void executeStage(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow, final BindStage.StageCallback stageCallback) {
         RowContentBindParams rowContentBindParams = (RowContentBindParams) getStageParams(notificationEntry);
         this.mLogger.logStageParams(notificationEntry.getKey(), rowContentBindParams.toString());
@@ -29,10 +29,14 @@ public class RowContentBindStage extends BindStage<RowContentBindParams> {
         bindParams.usesIncreasedHeadsUpHeight = rowContentBindParams.useIncreasedHeadsUpHeight();
         boolean needsReinflation = rowContentBindParams.needsReinflation();
         AnonymousClass1 r9 = new NotificationRowContentBinder.InflationCallback() {
+            /* class com.android.systemui.statusbar.notification.row.RowContentBindStage.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback
             public void handleInflationException(NotificationEntry notificationEntry, Exception exc) {
                 RowContentBindStage.this.mNotifInflationErrorManager.setInflationError(notificationEntry, exc);
             }
 
+            @Override // com.android.systemui.statusbar.notification.row.NotificationRowContentBinder.InflationCallback
             public void onAsyncInflationFinished(NotificationEntry notificationEntry) {
                 RowContentBindStage.this.mNotifInflationErrorManager.clearInflationError(notificationEntry);
                 ((RowContentBindParams) RowContentBindStage.this.getStageParams(notificationEntry)).clearDirtyContentViews();
@@ -44,11 +48,13 @@ public class RowContentBindStage extends BindStage<RowContentBindParams> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.BindStage
     public void abortStage(NotificationEntry notificationEntry, ExpandableNotificationRow expandableNotificationRow) {
         this.mBinder.cancelBind(notificationEntry, expandableNotificationRow);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.BindStage
     public RowContentBindParams newStageParams() {
         return new RowContentBindParams();
     }

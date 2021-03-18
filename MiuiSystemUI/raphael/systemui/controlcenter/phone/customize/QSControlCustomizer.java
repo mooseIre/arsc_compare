@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,10 +44,11 @@ import miuix.animation.utils.EaseManager;
 import miuix.recyclerview.widget.MiuiDefaultItemAnimator;
 
 public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.TileStateListener, QSTile.Callback {
-    /* access modifiers changed from: private */
-    public boolean isShown = false;
+    private boolean isShown = false;
     private IStateStyle mAnim;
     private final Animator.AnimatorListener mCollapseAnimationListener = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass7 */
+
         public void onAnimationEnd(Animator animator) {
             if (!QSControlCustomizer.this.isShown) {
                 QSControlCustomizer.this.setVisibility(8);
@@ -65,32 +65,33 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             QSControlCustomizer.this.setCustomizerAnimating(false);
         }
     };
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private boolean mCustomizerAnimating;
     protected TextView mDoneButton;
-    /* access modifiers changed from: private */
-    public boolean mDonedClicked;
+    private boolean mDonedClicked;
     private final Animator.AnimatorListener mExpandAnimationListener = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass6 */
+
         public void onAnimationEnd(Animator animator) {
             if (QSControlCustomizer.this.isShown) {
                 QSControlCustomizer.this.setCustomizing(true);
             }
-            boolean unused = QSControlCustomizer.this.mOpening = false;
+            QSControlCustomizer.this.mOpening = false;
             QSControlCustomizer.this.setCustomizerAnimating(false);
         }
 
         public void onAnimationCancel(Animator animator) {
-            boolean unused = QSControlCustomizer.this.mOpening = false;
+            QSControlCustomizer.this.mOpening = false;
             QSControlCustomizer.this.setCustomizerAnimating(false);
         }
     };
     protected LinearLayout mHeader;
     private AnimState mHideAnim;
-    /* access modifiers changed from: private */
-    public QSTileHost mHost;
-    /* access modifiers changed from: private */
-    public final MiuiKeyguardUpdateMonitorCallback mKeyguardCallback = new MiuiKeyguardUpdateMonitorCallback() {
+    private QSTileHost mHost;
+    private final MiuiKeyguardUpdateMonitorCallback mKeyguardCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass5 */
+
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onKeyguardShowingChanged(boolean z) {
             if (QSControlCustomizer.this.isAttachedToWindow() && z && !QSControlCustomizer.this.mOpening) {
                 QSControlCustomizer.this.mQsPanelCallback.hide();
@@ -98,20 +99,20 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         }
     };
     private boolean mLayoutParamsInited;
-    /* access modifiers changed from: private */
-    public boolean mOpening;
-    /* access modifiers changed from: private */
-    public CCTileAdapter mOtherTilesAdapter;
-    /* access modifiers changed from: private */
-    public RecyclerView mOthersRecyclerView;
+    private boolean mOpening;
+    private CCTileAdapter mOtherTilesAdapter;
+    private RecyclerView mOthersRecyclerView;
     protected ControlCenterPanelView mQSCenterPanel;
     protected QSControlPanelCallback mQsPanelCallback = new QSControlPanelCallback() {
+        /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass4 */
+
+        @Override // com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.QSControlPanelCallback
         public void show() {
             if (!QSControlCustomizer.this.isShown) {
                 MetricsLogger.visible(QSControlCustomizer.this.getContext(), 358);
-                boolean unused = QSControlCustomizer.this.isShown = true;
-                boolean unused2 = QSControlCustomizer.this.mShownRequested = true;
-                boolean unused3 = QSControlCustomizer.this.mOpening = true;
+                QSControlCustomizer.this.isShown = true;
+                QSControlCustomizer.this.mShownRequested = true;
+                QSControlCustomizer.this.mOpening = true;
                 QSControlCustomizer.this.setTileSpecs();
                 QSControlCustomizer.this.queryTiles();
                 QSControlCustomizer.this.setCustomizerAnimating(true);
@@ -121,17 +122,18 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             }
         }
 
+        @Override // com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.QSControlPanelCallback
         public void hide() {
             if (QSControlCustomizer.this.isShown) {
                 if (QSControlCustomizer.this.mTileAdapter != null) {
                     QSControlCustomizer.this.mTileAdapter.isTileMoved();
                     QSControlCustomizer.this.mTileAdapter.resetTileMoved();
                 }
-                boolean access$000 = QSControlCustomizer.this.mDonedClicked;
+                boolean z = QSControlCustomizer.this.mDonedClicked;
                 QSControlCustomizer.this.resetDataTrackStates();
                 MetricsLogger.hidden(QSControlCustomizer.this.getContext(), 358);
-                boolean unused = QSControlCustomizer.this.isShown = false;
-                boolean unused2 = QSControlCustomizer.this.mShownRequested = false;
+                QSControlCustomizer.this.isShown = false;
+                QSControlCustomizer.this.mShownRequested = false;
                 QSControlCustomizer.this.setCustomizing(false);
                 QSControlCustomizer.this.mUnAddedTilesLayout.resetMargin();
                 QSControlCustomizer.this.startAnimation(false);
@@ -143,21 +145,17 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             }
         }
     };
-    /* access modifiers changed from: private */
-    public RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private AnimState mShowAnim;
-    /* access modifiers changed from: private */
-    public boolean mShownRequested;
+    private boolean mShownRequested;
     private int mSpanCount;
     private List<String> mSpecs = new ArrayList();
     protected TextView mSubTitle;
-    /* access modifiers changed from: private */
-    public CCTileAdapter mTileAdapter;
+    private CCTileAdapter mTileAdapter;
     private final CCTileQueryHelper mTileQueryHelper;
     private int mTileVerticalIntervel;
     protected TextView mTitle;
-    /* access modifiers changed from: private */
-    public UnAddedTilesLayout mUnAddedTilesLayout;
+    private UnAddedTilesLayout mUnAddedTilesLayout;
 
     public interface QSControlPanelCallback {
         void hide();
@@ -166,21 +164,27 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void setCustomizing(boolean z) {
+    /* access modifiers changed from: public */
+    private void setCustomizing(boolean z) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onAnnouncementRequested(CharSequence charSequence) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onScanStateChanged(boolean z) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onShowDetail(boolean z) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onStateChanged(QSTile.State state) {
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onToggleStateChanged(boolean z) {
     }
 
@@ -216,8 +220,10 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         this.mDoneButton = textView;
         ControlCenterUtils.createButtonFolmeTouchStyle(textView);
         this.mDoneButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass1 */
+
             public void onClick(View view) {
-                boolean unused = QSControlCustomizer.this.mDonedClicked = true;
+                QSControlCustomizer.this.mDonedClicked = true;
                 QSControlCustomizer.this.mQsPanelCallback.hide();
                 QSControlCustomizer.this.mHost.getHostInjector().setMiuiQSTilesEdited();
             }
@@ -317,7 +323,8 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void queryTiles() {
+    /* access modifiers changed from: public */
+    private void queryTiles() {
         this.mTileQueryHelper.queryTiles(this.mHost);
     }
 
@@ -336,31 +343,37 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void releaseTiles() {
+    /* access modifiers changed from: public */
+    private void releaseTiles() {
         this.mTileQueryHelper.releaseTiles();
     }
 
+    @Override // com.android.systemui.qs.customize.TileQueryHelper.TileStateListener
     public void onTilesChanged(List<TileQueryHelper.TileInfo> list, Map<String, QSTile> map) {
-        for (QSTile next : map.values()) {
-            next.removeCallback(this);
-            next.addCallback(this);
+        for (QSTile qSTile : map.values()) {
+            qSTile.removeCallback(this);
+            qSTile.addCallback(this);
         }
         this.mTileAdapter.onTilesChanged(list, map);
         this.mOtherTilesAdapter.onTilesChanged(list, map);
         post(new Runnable() {
+            /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass3 */
+
             public void run() {
                 QSControlCustomizer.this.handleShowAnimation();
             }
         });
     }
 
+    @Override // com.android.systemui.qs.customize.TileQueryHelper.TileStateListener
     public void onTileChanged(TileQueryHelper.TileInfo tileInfo) {
         this.mTileAdapter.onTileChanged(tileInfo);
         this.mOtherTilesAdapter.onTileChanged(tileInfo);
     }
 
     /* access modifiers changed from: private */
-    public void handleShowAnimation() {
+    /* access modifiers changed from: public */
+    private void handleShowAnimation() {
         if (this.isShown && this.mShownRequested) {
             startAnimation(true);
             this.mShownRequested = false;
@@ -368,7 +381,8 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void resetDataTrackStates() {
+    /* access modifiers changed from: public */
+    private void resetDataTrackStates() {
         this.mDonedClicked = false;
     }
 
@@ -382,15 +396,16 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void setTileSpecs() {
+    /* access modifiers changed from: public */
+    private void setTileSpecs() {
         ArrayList arrayList = new ArrayList();
         Collection<QSTile> tiles = this.mHost.getTiles();
         if (tiles != null) {
             tiles.size();
         }
-        for (QSTile next : tiles) {
-            if (!"edit".equals(next.getTileSpec())) {
-                arrayList.add(next.getTileSpec());
+        for (QSTile qSTile : tiles) {
+            if (!"edit".equals(qSTile.getTileSpec())) {
+                arrayList.add(qSTile.getTileSpec());
             }
         }
         this.mSpecs.addAll(arrayList);
@@ -399,14 +414,16 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
     }
 
     /* access modifiers changed from: private */
-    public void setCustomizerAnimating(boolean z) {
+    /* access modifiers changed from: public */
+    private void setCustomizerAnimating(boolean z) {
         if (this.mCustomizerAnimating != z) {
             this.mCustomizerAnimating = z;
         }
     }
 
     /* access modifiers changed from: private */
-    public void startAnimation(boolean z) {
+    /* access modifiers changed from: public */
+    private void startAnimation(boolean z) {
         this.mUnAddedTilesLayout.init();
         this.mAnim.cancel();
         if (z) {
@@ -417,15 +434,19 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
             animConfig.setEase(EaseManager.getStyle(-2, 0.8f, 0.5f));
             animConfig.setDelay(60);
             animConfig.addListeners(new TransitionListener() {
+                /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass8 */
+
+                @Override // miuix.animation.listener.TransitionListener
                 public void onBegin(Object obj) {
                     super.onBegin(obj);
-                    QSControlCustomizer.this.setLayerType(2, (Paint) null);
+                    QSControlCustomizer.this.setLayerType(2, null);
                     QSControlCustomizer.this.mRecyclerView.suppressLayout(true);
                     QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(true);
-                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, (Paint) null);
+                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, null);
                     QSControlCustomizer.this.setVisibility(0);
                 }
 
+                @Override // miuix.animation.listener.TransitionListener
                 public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                     super.onUpdate(obj, floatProperty, f, f2, z);
                     if (floatProperty == ViewProperty.ALPHA) {
@@ -433,10 +454,11 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                     }
                 }
 
+                @Override // miuix.animation.listener.TransitionListener
                 public void onComplete(Object obj) {
                     super.onComplete(obj);
-                    QSControlCustomizer.this.setLayerType(0, (Paint) null);
-                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, (Paint) null);
+                    QSControlCustomizer.this.setLayerType(0, null);
+                    QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, null);
                     QSControlCustomizer.this.mRecyclerView.suppressLayout(false);
                     QSControlCustomizer.this.mOthersRecyclerView.suppressLayout(false);
                     QSControlCustomizer.this.mQSCenterPanel.setVisibility(8);
@@ -451,13 +473,17 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         AnimConfig animConfig2 = new AnimConfig();
         animConfig2.setDelay(60);
         animConfig2.addListeners(new TransitionListener() {
+            /* class com.android.systemui.controlcenter.phone.customize.QSControlCustomizer.AnonymousClass9 */
+
+            @Override // miuix.animation.listener.TransitionListener
             public void onBegin(Object obj) {
                 super.onBegin(obj);
                 QSControlCustomizer.this.mQSCenterPanel.setVisibility(0);
-                QSControlCustomizer.this.setLayerType(2, (Paint) null);
-                QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, (Paint) null);
+                QSControlCustomizer.this.setLayerType(2, null);
+                QSControlCustomizer.this.mQSCenterPanel.setLayerType(2, null);
             }
 
+            @Override // miuix.animation.listener.TransitionListener
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
                 super.onUpdate(obj, floatProperty, f, f2, z);
                 if (floatProperty == ViewProperty.ALPHA) {
@@ -465,18 +491,21 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                 }
             }
 
+            @Override // miuix.animation.listener.TransitionListener
             public void onComplete(Object obj) {
                 super.onComplete(obj);
                 QSControlCustomizer.this.setVisibility(8);
-                QSControlCustomizer.this.setLayerType(0, (Paint) null);
-                QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, (Paint) null);
+                QSControlCustomizer.this.setLayerType(0, null);
+                QSControlCustomizer.this.mQSCenterPanel.setLayerType(0, null);
             }
         });
         iStateStyle2.fromTo(animState3, animState4, animConfig2);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile.Callback
     public void onShowEdit(boolean z) {
         post(new Runnable(z) {
+            /* class com.android.systemui.controlcenter.phone.customize.$$Lambda$QSControlCustomizer$8grG4DGXcV3oPaUp4sSDxk9Aa3k */
             public final /* synthetic */ boolean f$1;
 
             {

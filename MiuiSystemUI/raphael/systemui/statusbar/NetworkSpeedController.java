@@ -24,10 +24,11 @@ import java.util.Iterator;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NetworkSpeedController implements DriveModeObserver.Callback {
-    /* access modifiers changed from: private */
-    public Handler mBgHandler;
+    private Handler mBgHandler;
     private ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mConnectivityReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.net.conn.CONNECTIVITY_CHANGE".equals(intent.getAction())) {
                 NetworkSpeedController.this.mBgHandler.removeMessages(R$styleable.Constraint_layout_goneMarginTop);
@@ -40,11 +41,12 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private boolean mDisabled;
     protected boolean mDriveMode;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
+        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass3 */
+
         public void handleMessage(Message message) {
             if (message.what == 200000) {
                 boolean z = message.arg1 != 0;
@@ -60,6 +62,8 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     private boolean mIsNetworkConnected;
     private long mLastTime;
     private ContentObserver mNetworkSpeedObserver = new ContentObserver(new Handler()) {
+        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass1 */
+
         public void onChange(boolean z) {
             NetworkSpeedController.this.mBgHandler.removeMessages(R$styleable.Constraint_layout_goneMarginRight);
             NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R$styleable.Constraint_layout_goneMarginRight);
@@ -77,7 +81,7 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
-        this.mContext.registerReceiverAsUser(this.mConnectivityReceiver, UserHandle.CURRENT, intentFilter, (String) null, this.mBgHandler);
+        this.mContext.registerReceiverAsUser(this.mConnectivityReceiver, UserHandle.CURRENT, intentFilter, null, this.mBgHandler);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_network_speed"), true, this.mNetworkSpeedObserver, -1);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_network_speed_interval"), true, this.mNetworkSpeedObserver, -1);
         this.mNetworkSpeedObserver.onChange(true);
@@ -95,7 +99,8 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void setTextToViewList(CharSequence charSequence) {
+    /* access modifiers changed from: public */
+    private void setTextToViewList(CharSequence charSequence) {
         CopyOnWriteArrayList<NetworkSpeedView> copyOnWriteArrayList = this.mViewList;
         if (copyOnWriteArrayList != null) {
             Iterator<NetworkSpeedView> it = copyOnWriteArrayList.iterator();
@@ -106,7 +111,8 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void setVisibilityToViewList(boolean z) {
+    /* access modifiers changed from: public */
+    private void setVisibilityToViewList(boolean z) {
         CopyOnWriteArrayList<NetworkSpeedView> copyOnWriteArrayList = this.mViewList;
         if (copyOnWriteArrayList != null) {
             Iterator<NetworkSpeedView> it = copyOnWriteArrayList.iterator();
@@ -132,12 +138,14 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void updateSwitchState() {
+    /* access modifiers changed from: public */
+    private void updateSwitchState() {
         this.mDisabled = !MiuiStatusBarManager.isShowNetworkSpeedForUser(this.mContext, -2);
     }
 
     /* access modifiers changed from: private */
-    public void updateInterval() {
+    /* access modifiers changed from: public */
+    private void updateInterval() {
         this.mNetworkUpdateInterval = Settings.System.getInt(this.mContext.getContentResolver(), "status_bar_network_speed_interval", 4000);
     }
 
@@ -146,7 +154,8 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void updateNetworkSpeed() {
+    /* access modifiers changed from: public */
+    private void updateNetworkSpeed() {
         Message obtain = Message.obtain();
         obtain.what = 200000;
         long j = 0;
@@ -182,7 +191,8 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void updateConnectedState() {
+    /* access modifiers changed from: public */
+    private void updateConnectedState() {
         NetworkInfo activeNetworkInfo = this.mConnectivityManager.getActiveNetworkInfo();
         this.mIsNetworkConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
@@ -197,13 +207,14 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
             f /= 1024.0f;
         }
         if (f < 100.0f) {
-            str = String.format("%.1f", new Object[]{Float.valueOf(f)});
+            str = String.format("%.1f", Float.valueOf(f));
         } else {
-            str = String.format("%.0f", new Object[]{Float.valueOf(f)});
+            str = String.format("%.0f", Float.valueOf(f));
         }
-        return context.getResources().getString(C0021R$string.network_speed_suffix, new Object[]{str, context.getString(i)});
+        return context.getResources().getString(C0021R$string.network_speed_suffix, str, context.getString(i));
     }
 
+    @Override // com.miui.systemui.statusbar.phone.DriveModeObserver.Callback
     public void onDriveModeChanged(boolean z) {
         this.mDriveMode = z;
         postUpdateNetworkSpeed();

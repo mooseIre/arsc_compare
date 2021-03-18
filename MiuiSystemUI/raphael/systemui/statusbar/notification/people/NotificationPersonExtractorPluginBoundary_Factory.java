@@ -11,6 +11,7 @@ public final class NotificationPersonExtractorPluginBoundary_Factory implements 
         this.extensionControllerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationPersonExtractorPluginBoundary get() {
         return provideInstance(this.extensionControllerProvider);
     }

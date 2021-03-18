@@ -19,8 +19,7 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
     private final Uri mDeviceProvisionedUri;
     protected final ArrayList<DeviceProvisionedController.DeviceProvisionedListener> mListeners = new ArrayList<>();
     protected final ContentObserver mSettingsObserver;
-    /* access modifiers changed from: private */
-    public final Uri mUserSetupUri;
+    private final Uri mUserSetupUri;
 
     public DeviceProvisionedControllerImpl(Context context, Handler handler, BroadcastDispatcher broadcastDispatcher) {
         super(broadcastDispatcher);
@@ -28,6 +27,8 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
         this.mDeviceProvisionedUri = Settings.Global.getUriFor("device_provisioned");
         this.mUserSetupUri = Settings.Secure.getUriFor("user_setup_complete");
         this.mSettingsObserver = new ContentObserver(handler) {
+            /* class com.android.systemui.statusbar.policy.DeviceProvisionedControllerImpl.AnonymousClass1 */
+
             public void onChange(boolean z, Uri uri, int i) {
                 String str = DeviceProvisionedControllerImpl.TAG;
                 Log.d(str, "Setting change: " + uri);
@@ -40,14 +41,17 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
         };
     }
 
+    @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController
     public boolean isDeviceProvisioned() {
         return Settings.Global.getInt(this.mContentResolver, "device_provisioned", 0) != 0;
     }
 
+    @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController
     public boolean isUserSetup(int i) {
         return Settings.Secure.getIntForUser(this.mContentResolver, "user_setup_complete", 0, i) != 0;
     }
 
+    @Override // com.android.systemui.statusbar.policy.DeviceProvisionedController
     public int getCurrentUser() {
         return ActivityManager.getCurrentUser();
     }
@@ -81,6 +85,7 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
         this.mContentResolver.unregisterContentObserver(this.mSettingsObserver);
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(int i) {
         this.mContentResolver.unregisterContentObserver(this.mSettingsObserver);
         this.mContentResolver.registerContentObserver(this.mDeviceProvisionedUri, true, this.mSettingsObserver, 0);
@@ -95,14 +100,16 @@ public class DeviceProvisionedControllerImpl extends CurrentUserTracker implemen
     }
 
     /* access modifiers changed from: private */
-    public void notifySetupChanged() {
+    /* access modifiers changed from: public */
+    private void notifySetupChanged() {
         for (int size = this.mListeners.size() - 1; size >= 0; size--) {
             this.mListeners.get(size).onUserSetupChanged();
         }
     }
 
     /* access modifiers changed from: private */
-    public void notifyProvisionedChanged() {
+    /* access modifiers changed from: public */
+    private void notifyProvisionedChanged() {
         for (int size = this.mListeners.size() - 1; size >= 0; size--) {
             this.mListeners.get(size).onDeviceProvisionedChanged();
         }

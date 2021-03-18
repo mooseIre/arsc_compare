@@ -13,6 +13,7 @@ public final class ConversationNotificationProcessor_Factory implements Factory<
         this.conversationNotificationManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ConversationNotificationProcessor get() {
         return provideInstance(this.launcherAppsProvider, this.conversationNotificationManagerProvider);
     }

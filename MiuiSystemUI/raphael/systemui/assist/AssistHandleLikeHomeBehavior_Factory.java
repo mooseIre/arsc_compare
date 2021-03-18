@@ -18,6 +18,7 @@ public final class AssistHandleLikeHomeBehavior_Factory implements Factory<Assis
         this.sysUiFlagContainerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public AssistHandleLikeHomeBehavior get() {
         return provideInstance(this.statusBarStateControllerProvider, this.wakefulnessLifecycleProvider, this.sysUiFlagContainerProvider);
     }

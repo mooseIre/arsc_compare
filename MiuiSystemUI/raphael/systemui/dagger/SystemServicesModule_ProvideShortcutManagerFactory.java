@@ -13,6 +13,7 @@ public final class SystemServicesModule_ProvideShortcutManagerFactory implements
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ShortcutManager get() {
         return provideInstance(this.contextProvider);
     }

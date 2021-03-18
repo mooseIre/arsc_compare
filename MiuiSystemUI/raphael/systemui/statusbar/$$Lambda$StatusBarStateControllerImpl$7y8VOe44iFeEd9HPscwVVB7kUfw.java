@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$StatusBarStateControllerImpl$7y8VOe4
     private /* synthetic */ $$Lambda$StatusBarStateControllerImpl$7y8VOe44iFeEd9HPscwVVB7kUfw() {
     }
 
+    @Override // java.util.function.ToIntFunction
     public final int applyAsInt(Object obj) {
         return ((SysuiStatusBarStateController.RankedListener) obj).mRank;
     }

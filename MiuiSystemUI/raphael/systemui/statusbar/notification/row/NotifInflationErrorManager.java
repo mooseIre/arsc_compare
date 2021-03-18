@@ -13,7 +13,7 @@ public class NotifInflationErrorManager {
     public interface NotifInflationErrorListener {
         void onNotifInflationError(NotificationEntry notificationEntry, Exception exc);
 
-        void onNotifInflationErrorCleared(NotificationEntry notificationEntry) {
+        default void onNotifInflationErrorCleared(NotificationEntry notificationEntry) {
         }
     }
 

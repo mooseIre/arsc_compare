@@ -1,7 +1,8 @@
 package com.android.systemui.statusbar.notification.row;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiExpandableNotificationRow.kt */
-final class MiuiExpandableNotificationRow$startTouchAnimateIfNeed$1 implements Runnable {
+public final class MiuiExpandableNotificationRow$startTouchAnimateIfNeed$1 implements Runnable {
     final /* synthetic */ MiuiExpandableNotificationRow this$0;
 
     MiuiExpandableNotificationRow$startTouchAnimateIfNeed$1(MiuiExpandableNotificationRow miuiExpandableNotificationRow) {

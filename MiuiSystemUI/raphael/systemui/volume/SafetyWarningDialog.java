@@ -12,13 +12,14 @@ import android.view.KeyEvent;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 
 public abstract class SafetyWarningDialog extends SystemUIDialog implements DialogInterface.OnDismissListener, DialogInterface.OnClickListener {
-    /* access modifiers changed from: private */
-    public static final String TAG = Util.logTag(SafetyWarningDialog.class);
+    private static final String TAG = Util.logTag(SafetyWarningDialog.class);
     private final AudioManager mAudioManager;
     private final Context mContext;
     private boolean mDisableOnVolumeUp;
     private boolean mNewVolumeUp;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.volume.SafetyWarningDialog.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             if ("android.intent.action.CLOSE_SYSTEM_DIALOGS".equals(intent.getAction())) {
                 if (D.BUG) {
@@ -75,6 +76,7 @@ public abstract class SafetyWarningDialog extends SystemUIDialog implements Dial
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.SystemUIDialog
     public void onStart() {
         super.onStart();
         this.mShowTime = System.currentTimeMillis();

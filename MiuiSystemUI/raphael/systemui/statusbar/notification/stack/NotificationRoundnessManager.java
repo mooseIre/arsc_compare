@@ -30,10 +30,12 @@ public class NotificationRoundnessManager implements OnHeadsUpChangedListener {
         this.mBypassController = keyguardBypassController;
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpPinned(NotificationEntry notificationEntry) {
         updateView(notificationEntry.getRow(), false);
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
         updateView(notificationEntry.getRow(), true);
     }
@@ -42,6 +44,7 @@ public class NotificationRoundnessManager implements OnHeadsUpChangedListener {
         updateView(expandableNotificationRow, false);
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
         updateView(notificationEntry.getRow(), false);
     }
@@ -61,10 +64,7 @@ public class NotificationRoundnessManager implements OnHeadsUpChangedListener {
         boolean isLastInSection = isLastInSection(expandableView, false);
         expandableView.setFirstInSection(isFirstInSection);
         expandableView.setLastInSection(isLastInSection);
-        if ((isFirstInSection || isLastInSection) && (topRoundness || bottomRoundness)) {
-            return true;
-        }
-        return false;
+        return (isFirstInSection || isLastInSection) && (topRoundness || bottomRoundness);
     }
 
     private boolean isFirstInSection(ExpandableView expandableView, boolean z) {
@@ -89,19 +89,14 @@ public class NotificationRoundnessManager implements OnHeadsUpChangedListener {
     }
 
     private boolean isLastInSection(ExpandableView expandableView, boolean z) {
-        int length = this.mLastInSectionViews.length - 1;
         int i = 0;
-        while (length >= 0) {
+        for (int length = this.mLastInSectionViews.length - 1; length >= 0; length--) {
             ExpandableView[] expandableViewArr = this.mLastInSectionViews;
-            if (expandableView != expandableViewArr[length]) {
-                if (expandableViewArr[length] != null) {
-                    i++;
-                }
-                length--;
-            } else if (z || i > 0) {
-                return true;
-            } else {
-                return false;
+            if (expandableView == expandableViewArr[length]) {
+                return z || i > 0;
+            }
+            if (expandableViewArr[length] != null) {
+                i++;
             }
         }
         return false;
@@ -136,6 +131,7 @@ public class NotificationRoundnessManager implements OnHeadsUpChangedListener {
     }
 
     public void updateRoundedChildren(NotificationSection[] notificationSectionArr) {
+        boolean handleRemovedOldViews;
         for (int i = 0; i < notificationSectionArr.length; i++) {
             ExpandableView[] expandableViewArr = this.mTmpFirstInSectionViews;
             ExpandableView[] expandableViewArr2 = this.mFirstInSectionViews;
@@ -144,7 +140,7 @@ public class NotificationRoundnessManager implements OnHeadsUpChangedListener {
             expandableViewArr2[i] = notificationSectionArr[i].getFirstVisibleChild();
             this.mLastInSectionViews[i] = notificationSectionArr[i].getLastVisibleChild();
         }
-        if (handleAddedNewViews(notificationSectionArr, this.mTmpLastInSectionViews, false) || (((handleRemovedOldViews(notificationSectionArr, this.mTmpFirstInSectionViews, true) | false) | handleRemovedOldViews(notificationSectionArr, this.mTmpLastInSectionViews, false)) | handleAddedNewViews(notificationSectionArr, this.mTmpFirstInSectionViews, true))) {
+        if (handleAddedNewViews(notificationSectionArr, this.mTmpLastInSectionViews, false) || (((handleRemovedOldViews(notificationSectionArr, this.mTmpFirstInSectionViews, true) | false) | handleRemovedOldViews(notificationSectionArr, this.mTmpLastInSectionViews, false)) || handleAddedNewViews(notificationSectionArr, this.mTmpFirstInSectionViews, true))) {
             this.mRoundingChangedCallback.run();
         }
     }

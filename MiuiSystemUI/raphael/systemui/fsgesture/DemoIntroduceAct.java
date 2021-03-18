@@ -14,6 +14,7 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     TextView nextBtn;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(C0017R$layout.demo_intro_layout);
@@ -21,6 +22,8 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
         TextView textView = (TextView) findViewById(C0015R$id.btn_back);
         this.backBtn = textView;
         textView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.fsgesture.DemoIntroduceAct.AnonymousClass1 */
+
             public void onClick(View view) {
                 DemoIntroduceAct.this.finish();
             }
@@ -28,6 +31,8 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
         TextView textView2 = (TextView) findViewById(C0015R$id.btn_next);
         this.nextBtn = textView2;
         textView2.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.fsgesture.DemoIntroduceAct.AnonymousClass2 */
+
             public void onClick(View view) {
                 Intent intent = new Intent();
                 intent.setClass(DemoIntroduceAct.this, HomeDemoAct.class);

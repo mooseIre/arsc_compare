@@ -13,6 +13,7 @@ public final class DozeScrimController_Factory implements Factory<DozeScrimContr
         this.dozeLogProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DozeScrimController get() {
         return provideInstance(this.dozeParametersProvider, this.dozeLogProvider);
     }

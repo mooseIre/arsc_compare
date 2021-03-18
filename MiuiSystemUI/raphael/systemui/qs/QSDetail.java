@@ -23,34 +23,29 @@ import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.statusbar.phone.StatusBarWindowView;
 
 public class QSDetail extends LinearLayout {
-    /* access modifiers changed from: private */
-    public boolean mAnimatingOpen;
-    /* access modifiers changed from: private */
-    public boolean mClosingDetail;
-    /* access modifiers changed from: private */
-    public DetailAdapter mDetailAdapter;
-    /* access modifiers changed from: private */
-    public ViewGroup mDetailContent;
+    private boolean mAnimatingOpen;
+    private boolean mClosingDetail;
+    private DetailAdapter mDetailAdapter;
+    private ViewGroup mDetailContent;
     protected TextView mDetailDoneButton;
     protected TextView mDetailSettingsButton;
     private final SparseArray<View> mDetailViews = new SparseArray<>();
-    /* access modifiers changed from: private */
-    public View mFooter;
-    /* access modifiers changed from: private */
-    public QuickStatusBarHeader mHeader;
+    private View mFooter;
+    private QuickStatusBarHeader mHeader;
     protected View mQsDetailHeader;
     private Switch mQsDetailHeaderSwitch;
-    /* access modifiers changed from: private */
-    public QSPanel mQsPanel;
+    private QSPanel mQsPanel;
     private boolean mSwitchState;
 
     public QSDetail(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         QSEvents.INSTANCE.getQsUiEventsLogger();
         new AnimatorListenerAdapter() {
+            /* class com.android.systemui.qs.QSDetail.AnonymousClass4 */
+
             public void onAnimationCancel(Animator animator) {
                 animator.removeListener(this);
-                boolean unused = QSDetail.this.mAnimatingOpen = false;
+                QSDetail.this.mAnimatingOpen = false;
                 QSDetail.this.checkPendingAnimations();
             }
 
@@ -60,15 +55,17 @@ public class QSDetail extends LinearLayout {
                     QSDetail.this.mHeader.setVisibility(4);
                     QSDetail.this.mFooter.setVisibility(4);
                 }
-                boolean unused = QSDetail.this.mAnimatingOpen = false;
+                QSDetail.this.mAnimatingOpen = false;
                 QSDetail.this.checkPendingAnimations();
             }
         };
         new AnimatorListenerAdapter() {
+            /* class com.android.systemui.qs.QSDetail.AnonymousClass5 */
+
             public void onAnimationEnd(Animator animator) {
                 QSDetail.this.mDetailContent.removeAllViews();
                 QSDetail.this.setVisibility(4);
-                boolean unused = QSDetail.this.mClosingDetail = false;
+                QSDetail.this.mClosingDetail = false;
             }
         };
     }
@@ -97,9 +94,11 @@ public class QSDetail extends LinearLayout {
         updateDetailText();
         new QSDetailClipper(this);
         this.mDetailDoneButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.qs.QSDetail.AnonymousClass1 */
+
             public void onClick(View view) {
                 QSDetail qSDetail = QSDetail.this;
-                qSDetail.announceForAccessibility(qSDetail.mContext.getString(C0021R$string.accessibility_desc_quick_settings));
+                qSDetail.announceForAccessibility(((LinearLayout) qSDetail).mContext.getString(C0021R$string.accessibility_desc_quick_settings));
                 QSDetail.this.mQsPanel.closeDetail();
             }
         });
@@ -123,20 +122,21 @@ public class QSDetail extends LinearLayout {
     private void handleToggleStateChanged(boolean z, boolean z2) {
         this.mSwitchState = z;
         if (!this.mAnimatingOpen) {
-            Switch switchR = this.mQsDetailHeaderSwitch;
-            if (switchR != null) {
-                switchR.setChecked(z);
+            Switch r0 = this.mQsDetailHeaderSwitch;
+            if (r0 != null) {
+                r0.setChecked(z);
             }
             this.mQsDetailHeader.setEnabled(z2);
-            Switch switchR2 = this.mQsDetailHeaderSwitch;
-            if (switchR2 != null) {
-                switchR2.setEnabled(z2);
+            Switch r1 = this.mQsDetailHeaderSwitch;
+            if (r1 != null) {
+                r1.setEnabled(z2);
             }
         }
     }
 
     /* access modifiers changed from: private */
-    public void checkPendingAnimations() {
+    /* access modifiers changed from: public */
+    private void checkPendingAnimations() {
         boolean z = this.mSwitchState;
         DetailAdapter detailAdapter = this.mDetailAdapter;
         handleToggleStateChanged(z, detailAdapter != null && detailAdapter.getToggleEnabled());

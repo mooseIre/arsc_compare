@@ -50,7 +50,7 @@ public class InflatedSmartReplies {
     public static InflatedSmartReplies inflate(Context context, Context context2, NotificationEntry notificationEntry, SmartReplyConstants smartReplyConstants, SmartReplyController smartReplyController, HeadsUpManager headsUpManager, SmartRepliesAndActions smartRepliesAndActions) {
         SmartRepliesAndActions chooseSmartRepliesAndActions = chooseSmartRepliesAndActions(smartReplyConstants, notificationEntry);
         if (!shouldShowSmartReplyView(notificationEntry, chooseSmartRepliesAndActions)) {
-            return new InflatedSmartReplies((SmartReplyView) null, (List<Button>) null, chooseSmartRepliesAndActions);
+            return new InflatedSmartReplies(null, null, chooseSmartRepliesAndActions);
         }
         boolean z = !areSuggestionsSimilar(smartRepliesAndActions, chooseSmartRepliesAndActions);
         SmartReplyView inflate = SmartReplyView.inflate(context);
@@ -94,7 +94,7 @@ public class InflatedSmartReplies {
             if (DEBUG) {
                 Log.d("InflatedSmartReplies", "Smart suggestions not enabled, not adding suggestions for " + notificationEntry.getSbn().getKey());
             }
-            return new SmartRepliesAndActions((SmartReplyView.SmartReplies) null, (SmartReplyView.SmartActions) null);
+            return new SmartRepliesAndActions(null, null);
         }
         boolean z2 = (!smartReplyConstants.requiresTargetingP() || notificationEntry.targetSdk >= 28) && findRemoteInputActionPair != null && !ArrayUtils.isEmpty(((RemoteInput) findRemoteInputActionPair.first).getChoices()) && ((Notification.Action) findRemoteInputActionPair.second).actionIntent != null;
         List contextualActions = notification.getContextualActions();
@@ -126,10 +126,10 @@ public class InflatedSmartReplies {
         PackageManagerWrapper packageManagerWrapper = (PackageManagerWrapper) Dependency.get(PackageManagerWrapper.class);
         DevicePolicyManagerWrapper devicePolicyManagerWrapper = (DevicePolicyManagerWrapper) Dependency.get(DevicePolicyManagerWrapper.class);
         ArrayList arrayList = new ArrayList();
-        for (Notification.Action next : list) {
-            PendingIntent pendingIntent = next.actionIntent;
+        for (Notification.Action action : list) {
+            PendingIntent pendingIntent = action.actionIntent;
             if (!(pendingIntent == null || (resolveActivity = packageManagerWrapper.resolveActivity(pendingIntent.getIntent(), 0)) == null || !devicePolicyManagerWrapper.isLockTaskPermitted(resolveActivity.activityInfo.packageName))) {
-                arrayList.add(next);
+                arrayList.add(action);
             }
         }
         return arrayList;

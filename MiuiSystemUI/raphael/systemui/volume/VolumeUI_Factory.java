@@ -13,6 +13,7 @@ public final class VolumeUI_Factory implements Factory<VolumeUI> {
         this.volumeDialogComponentProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public VolumeUI get() {
         return provideInstance(this.contextProvider, this.volumeDialogComponentProvider);
     }

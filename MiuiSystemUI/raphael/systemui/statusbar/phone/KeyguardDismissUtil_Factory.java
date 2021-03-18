@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class KeyguardDismissUtil_Factory implements Factory<KeyguardDismissUtil> {
     private static final KeyguardDismissUtil_Factory INSTANCE = new KeyguardDismissUtil_Factory();
 
+    @Override // javax.inject.Provider
     public KeyguardDismissUtil get() {
         return provideInstance();
     }

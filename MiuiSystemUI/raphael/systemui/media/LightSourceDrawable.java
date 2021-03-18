@@ -31,10 +31,8 @@ public final class LightSourceDrawable extends Drawable {
     private int highlightColor = -1;
     private Paint paint = new Paint();
     private boolean pressed;
-    /* access modifiers changed from: private */
-    public Animator rippleAnimation;
-    /* access modifiers changed from: private */
-    public final RippleData rippleData = new RippleData(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+    private Animator rippleAnimation;
+    private final RippleData rippleData = new RippleData(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     private int[] themeAttrs;
 
     public int getOpacity() {
@@ -83,8 +81,8 @@ public final class LightSourceDrawable extends Drawable {
                 if (animator2 != null) {
                     animator2.cancel();
                 }
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.rippleData.getAlpha(), 0.0f});
-                ofFloat.setDuration(200);
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(this.rippleData.getAlpha(), 0.0f);
+                ofFloat.setDuration(200L);
                 ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
                 ofFloat.addUpdateListener(new LightSourceDrawable$active$$inlined$apply$lambda$1(this));
                 ofFloat.addListener(new LightSourceDrawable$active$$inlined$apply$lambda$2(this));
@@ -99,20 +97,20 @@ public final class LightSourceDrawable extends Drawable {
         Intrinsics.checkParameterIsNotNull(canvas, "canvas");
         float lerp = MathUtils.lerp(this.rippleData.getMinSize(), this.rippleData.getMaxSize(), this.rippleData.getProgress());
         int alphaComponent = ColorUtils.setAlphaComponent(this.highlightColor, (int) (this.rippleData.getAlpha() * ((float) 255)));
-        float f = lerp;
-        this.paint.setShader(new RadialGradient(this.rippleData.getX(), this.rippleData.getY(), f, new int[]{alphaComponent, 0}, LightSourceDrawableKt.GRADIENT_STOPS, Shader.TileMode.CLAMP));
+        this.paint.setShader(new RadialGradient(this.rippleData.getX(), this.rippleData.getY(), lerp, new int[]{alphaComponent, 0}, LightSourceDrawableKt.access$getGRADIENT_STOPS$p(), Shader.TileMode.CLAMP));
         canvas.drawCircle(this.rippleData.getX(), this.rippleData.getY(), lerp, this.paint);
     }
 
+    @Override // android.graphics.drawable.Drawable
     public void inflate(@NotNull Resources resources, @NotNull XmlPullParser xmlPullParser, @NotNull AttributeSet attributeSet, @Nullable Resources.Theme theme) {
         Intrinsics.checkParameterIsNotNull(resources, "r");
         Intrinsics.checkParameterIsNotNull(xmlPullParser, "parser");
         Intrinsics.checkParameterIsNotNull(attributeSet, "attrs");
-        TypedArray r2 = Drawable.obtainAttributes(resources, theme, attributeSet, R$styleable.IlluminationDrawable);
-        this.themeAttrs = r2.extractThemeAttrs();
-        Intrinsics.checkExpressionValueIsNotNull(r2, "a");
-        updateStateFromTypedArray(r2);
-        r2.recycle();
+        TypedArray obtainAttributes = Drawable.obtainAttributes(resources, theme, attributeSet, R$styleable.IlluminationDrawable);
+        this.themeAttrs = obtainAttributes.extractThemeAttrs();
+        Intrinsics.checkExpressionValueIsNotNull(obtainAttributes, "a");
+        updateStateFromTypedArray(obtainAttributes);
+        obtainAttributes.recycle();
     }
 
     private final void updateStateFromTypedArray(TypedArray typedArray) {
@@ -186,16 +184,16 @@ public final class LightSourceDrawable extends Drawable {
             animator.cancel();
         }
         AnimatorSet animatorSet = new AnimatorSet();
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
         ofFloat.setStartDelay(133);
         ofFloat.setDuration(800 - ofFloat.getStartDelay());
         ofFloat.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
         ofFloat.addUpdateListener(new LightSourceDrawable$illuminate$$inlined$apply$lambda$1(this));
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{this.rippleData.getProgress(), 1.0f});
-        ofFloat2.setDuration(800);
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(this.rippleData.getProgress(), 1.0f);
+        ofFloat2.setDuration(800L);
         ofFloat2.setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN);
         ofFloat2.addUpdateListener(new LightSourceDrawable$illuminate$$inlined$apply$lambda$2(this));
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
+        animatorSet.playTogether(ofFloat, ofFloat2);
         animatorSet.addListener(new LightSourceDrawable$illuminate$$inlined$apply$lambda$3(this));
         animatorSet.start();
         this.rippleAnimation = animatorSet;

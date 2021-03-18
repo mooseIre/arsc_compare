@@ -33,6 +33,7 @@ public class RemoteInputQuickSettingsDisabler implements ConfigurationController
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         int i = configuration.orientation;
         if (i != this.mLastOrientation) {

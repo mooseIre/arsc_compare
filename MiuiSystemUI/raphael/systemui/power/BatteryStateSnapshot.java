@@ -34,26 +34,35 @@ public final class BatteryStateSnapshot {
     public int hashCode() {
         int hashCode = Integer.hashCode(this.batteryLevel) * 31;
         boolean z = this.isPowerSaver;
-        boolean z2 = true;
+        int i = 1;
         if (z) {
             z = true;
         }
-        int i = (hashCode + (z ? 1 : 0)) * 31;
-        boolean z3 = this.plugged;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        int i4 = z ? 1 : 0;
+        int i5 = (hashCode + i2) * 31;
+        boolean z2 = this.plugged;
+        if (z2) {
+            z2 = true;
+        }
+        int i6 = z2 ? 1 : 0;
+        int i7 = z2 ? 1 : 0;
+        int i8 = z2 ? 1 : 0;
+        int hashCode2 = (((((((((((((((((i5 + i6) * 31) + Integer.hashCode(this.bucket)) * 31) + Integer.hashCode(this.batteryStatus)) * 31) + Integer.hashCode(this.severeLevelThreshold)) * 31) + Integer.hashCode(this.lowLevelThreshold)) * 31) + Long.hashCode(this.timeRemainingMillis)) * 31) + Long.hashCode(this.averageTimeToDischargeMillis)) * 31) + Long.hashCode(this.severeThresholdMillis)) * 31) + Long.hashCode(this.lowThresholdMillis)) * 31;
+        boolean z3 = this.isBasedOnUsage;
         if (z3) {
             z3 = true;
         }
-        int hashCode2 = (((((((((((((((((i + (z3 ? 1 : 0)) * 31) + Integer.hashCode(this.bucket)) * 31) + Integer.hashCode(this.batteryStatus)) * 31) + Integer.hashCode(this.severeLevelThreshold)) * 31) + Integer.hashCode(this.lowLevelThreshold)) * 31) + Long.hashCode(this.timeRemainingMillis)) * 31) + Long.hashCode(this.averageTimeToDischargeMillis)) * 31) + Long.hashCode(this.severeThresholdMillis)) * 31) + Long.hashCode(this.lowThresholdMillis)) * 31;
-        boolean z4 = this.isBasedOnUsage;
-        if (z4) {
-            z4 = true;
+        int i9 = z3 ? 1 : 0;
+        int i10 = z3 ? 1 : 0;
+        int i11 = z3 ? 1 : 0;
+        int i12 = (hashCode2 + i9) * 31;
+        boolean z4 = this.isLowWarningEnabled;
+        if (!z4) {
+            i = z4 ? 1 : 0;
         }
-        int i2 = (hashCode2 + (z4 ? 1 : 0)) * 31;
-        boolean z5 = this.isLowWarningEnabled;
-        if (!z5) {
-            z2 = z5;
-        }
-        return i2 + (z2 ? 1 : 0);
+        return i12 + i;
     }
 
     @NotNull

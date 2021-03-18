@@ -29,6 +29,7 @@ public final class PulseExpansionHandler_Factory implements Factory<PulseExpansi
         this.falsingManagerProvider = provider7;
     }
 
+    @Override // javax.inject.Provider
     public PulseExpansionHandler get() {
         return provideInstance(this.contextProvider, this.wakeUpCoordinatorProvider, this.bypassControllerProvider, this.headsUpManagerProvider, this.roundnessManagerProvider, this.statusBarStateControllerProvider, this.falsingManagerProvider);
     }

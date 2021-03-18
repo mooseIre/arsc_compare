@@ -2,7 +2,6 @@ package com.android.systemui.tuner;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.Checkable;
@@ -19,6 +18,8 @@ public class TunerZenModePanel extends LinearLayout implements View.OnClickListe
     private View mHeaderSwitch;
     private View mMoreSettings;
     private final Runnable mUpdate = new Runnable() {
+        /* class com.android.systemui.tuner.TunerZenModePanel.AnonymousClass1 */
+
         public void run() {
             TunerZenModePanel.this.updatePanel();
         }
@@ -38,14 +39,14 @@ public class TunerZenModePanel extends LinearLayout implements View.OnClickListe
     public void onClick(View view) {
         if (view == this.mHeaderSwitch) {
             if (this.mZenMode == 0) {
-                int i = Prefs.getInt(this.mContext, "DndFavoriteZen", 3);
+                int i = Prefs.getInt(((LinearLayout) this).mContext, "DndFavoriteZen", 3);
                 this.mZenMode = i;
-                this.mController.setZen(i, (Uri) null, "TunerZenModePanel");
+                this.mController.setZen(i, null, "TunerZenModePanel");
                 postUpdatePanel();
                 return;
             }
             this.mZenMode = 0;
-            this.mController.setZen(0, (Uri) null, "TunerZenModePanel");
+            this.mController.setZen(0, null, "TunerZenModePanel");
             postUpdatePanel();
         } else if (view == this.mMoreSettings) {
             Intent intent = new Intent("android.settings.ZEN_MODE_SETTINGS");
@@ -63,7 +64,8 @@ public class TunerZenModePanel extends LinearLayout implements View.OnClickListe
     }
 
     /* access modifiers changed from: private */
-    public void updatePanel() {
+    /* access modifiers changed from: public */
+    private void updatePanel() {
         int i = 0;
         boolean z = this.mZenMode != 0;
         ((Checkable) this.mHeaderSwitch.findViewById(16908311)).setChecked(z);

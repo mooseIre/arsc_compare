@@ -11,6 +11,7 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
     public static final boolean VERBOSE = SystemProperties.getBoolean("debug.falsing_log.spd_ang", Build.IS_DEBUGGABLE);
     private HashMap<Stroke, Data> mStrokeMap = new HashMap<>();
 
+    @Override // com.android.systemui.classifier.Classifier
     public String getTag() {
         return "SPD_ANG";
     }
@@ -19,6 +20,7 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
         this.mClassifierData = classifierData;
     }
 
+    @Override // com.android.systemui.classifier.Classifier
     public void onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if (actionMasked == 0) {
@@ -35,6 +37,7 @@ public class SpeedAnglesClassifier extends StrokeClassifier {
         }
     }
 
+    @Override // com.android.systemui.classifier.StrokeClassifier
     public float getFalseTouchEvaluation(int i, Stroke stroke) {
         Data data = this.mStrokeMap.get(stroke);
         return SpeedVarianceEvaluator.evaluate(data.getAnglesVariance()) + SpeedAnglesPercentageEvaluator.evaluate(data.getAnglesPercentage());

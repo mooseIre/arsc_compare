@@ -6,6 +6,7 @@ import androidx.preference.PreferenceFragment;
 import com.android.systemui.tuner.CustomListPreference;
 
 public abstract class TunerPreferenceFragment extends PreferenceFragment {
+    @Override // androidx.preference.PreferenceManager.OnDisplayPreferenceDialogListener, androidx.preference.PreferenceFragment
     public void onDisplayPreferenceDialog(Preference preference) {
         ListPreferenceDialogFragment listPreferenceDialogFragment;
         if (preference instanceof CustomListPreference) {

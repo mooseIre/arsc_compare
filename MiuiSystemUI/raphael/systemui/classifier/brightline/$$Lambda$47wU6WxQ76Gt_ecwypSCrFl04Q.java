@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$47wU6WxQ76Gt_ecwypSCrFl04Q implement
     private /* synthetic */ $$Lambda$47wU6WxQ76Gt_ecwypSCrFl04Q() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((FalsingClassifier) obj).onSessionEnded();
     }

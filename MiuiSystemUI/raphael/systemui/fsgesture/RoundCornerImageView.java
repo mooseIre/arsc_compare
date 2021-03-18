@@ -11,7 +11,7 @@ public class RoundCornerImageView extends ImageView {
     private float mRadius;
 
     public RoundCornerImageView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public RoundCornerImageView(Context context, AttributeSet attributeSet) {

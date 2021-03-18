@@ -33,7 +33,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
     }
 
     public AsyncSensorManager(Context context, PluginManager pluginManager) {
-        this((SensorManager) context.getSystemService(SensorManager.class), pluginManager, (Handler) null);
+        this((SensorManager) context.getSystemService(SensorManager.class), pluginManager, null);
     }
 
     @VisibleForTesting
@@ -49,7 +49,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
         this.mSensorCache = this.mInner.getSensorList(-1);
         this.mPlugins = new ArrayList();
         if (pluginManager != null) {
-            pluginManager.addPluginListener(this, (Class<?>) SensorManagerPlugin.class, true);
+            pluginManager.addPluginListener((PluginListener) this, SensorManagerPlugin.class, true);
         }
     }
 
@@ -70,6 +70,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
             return false;
         }
         this.mHandler.post(new Runnable(sensor, sensorEventListener, i, i2, handler) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$l441pTGMx1gou2inAUrhn1G5pgI */
             public final /* synthetic */ Sensor f$1;
             public final /* synthetic */ SensorEventListener f$2;
             public final /* synthetic */ int f$3;
@@ -131,6 +132,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
     /* access modifiers changed from: protected */
     public void registerDynamicSensorCallbackImpl(SensorManager.DynamicSensorCallback dynamicSensorCallback, Handler handler) {
         this.mHandler.post(new Runnable(dynamicSensorCallback, handler) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$F0WdeYeejMV4rm6D4L93BEBFpEM */
             public final /* synthetic */ SensorManager.DynamicSensorCallback f$1;
             public final /* synthetic */ Handler f$2;
 
@@ -154,6 +156,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
     /* access modifiers changed from: protected */
     public void unregisterDynamicSensorCallbackImpl(SensorManager.DynamicSensorCallback dynamicSensorCallback) {
         this.mHandler.post(new Runnable(dynamicSensorCallback) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$jlPEINewb64o1tvevL779Llyz9o */
             public final /* synthetic */ SensorManager.DynamicSensorCallback f$1;
 
             {
@@ -172,6 +175,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
             throw new IllegalArgumentException("listener cannot be null");
         } else if (sensor != null) {
             this.mHandler.post(new Runnable(sensor, triggerEventListener) {
+                /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$3wS3f7_WzpwBtp5OJ_snyLIVx0A */
                 public final /* synthetic */ Sensor f$1;
                 public final /* synthetic */ TriggerEventListener f$2;
 
@@ -205,6 +209,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
     public boolean cancelTriggerSensorImpl(TriggerEventListener triggerEventListener, Sensor sensor, boolean z) {
         Preconditions.checkArgument(z);
         this.mHandler.post(new Runnable(triggerEventListener, sensor) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$rUtRem6mSTBr22Jz6SCHZv3qC7c */
             public final /* synthetic */ TriggerEventListener f$1;
             public final /* synthetic */ Sensor f$2;
 
@@ -234,6 +239,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
             return false;
         }
         this.mHandler.post(new Runnable(sensor, sensorEventListener) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$aB8h3ftRLBeKmBma753sk37oSSM */
             public final /* synthetic */ SensorManagerPlugin.Sensor f$1;
             public final /* synthetic */ SensorManagerPlugin.SensorEventListener f$2;
 
@@ -259,6 +265,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
 
     public void unregisterPluginListener(SensorManagerPlugin.Sensor sensor, SensorManagerPlugin.SensorEventListener sensorEventListener) {
         this.mHandler.post(new Runnable(sensor, sensorEventListener) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$BRp9Isao7Fg71C6pjzafSkiRQo */
             public final /* synthetic */ SensorManagerPlugin.Sensor f$1;
             public final /* synthetic */ SensorManagerPlugin.SensorEventListener f$2;
 
@@ -300,6 +307,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
     /* access modifiers changed from: protected */
     public boolean setOperationParameterImpl(SensorAdditionalInfo sensorAdditionalInfo) {
         this.mHandler.post(new Runnable(sensorAdditionalInfo) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$I0ubq9rKvgslyfuYRTkWnHfBQA */
             public final /* synthetic */ SensorAdditionalInfo f$1;
 
             {
@@ -316,6 +324,7 @@ public class AsyncSensorManager extends SensorManager implements PluginListener<
     /* access modifiers changed from: protected */
     public void unregisterListenerImpl(SensorEventListener sensorEventListener, Sensor sensor) {
         this.mHandler.post(new Runnable(sensor, sensorEventListener) {
+            /* class com.android.systemui.util.sensors.$$Lambda$AsyncSensorManager$hqcwBQ7SIv_uRvhgQvDc2LVBJ_U */
             public final /* synthetic */ Sensor f$1;
             public final /* synthetic */ SensorEventListener f$2;
 

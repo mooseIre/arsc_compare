@@ -14,6 +14,7 @@ public final class ManagedProfileControllerImpl_Factory implements Factory<Manag
         this.broadcastDispatcherProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ManagedProfileControllerImpl get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider);
     }

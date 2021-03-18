@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$LO8p3lRLZXpohPDzojcJ_BVuMnk implemen
     private /* synthetic */ $$Lambda$LO8p3lRLZXpohPDzojcJ_BVuMnk() {
     }
 
+    @Override // java.util.function.ToIntFunction
     public final int applyAsInt(Object obj) {
         return ((ExtensionControllerImpl.Item) obj).sortOrder();
     }

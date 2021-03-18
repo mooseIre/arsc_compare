@@ -19,6 +19,7 @@ public final class GlobalScreenshot_Factory implements Factory<GlobalScreenshot>
         this.uiEventLoggerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public GlobalScreenshot get() {
         return provideInstance(this.contextProvider, this.resourcesProvider, this.screenshotNotificationsControllerProvider, this.uiEventLoggerProvider);
     }

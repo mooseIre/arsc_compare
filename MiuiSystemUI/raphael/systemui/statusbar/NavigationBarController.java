@@ -42,16 +42,19 @@ public class NavigationBarController implements CommandQueue.Callbacks {
         commandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onDisplayRemoved(int i) {
         removeNavigationBar(i);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onDisplayReady(int i) {
-        createNavigationBar(this.mDisplayManager.getDisplay(i), (RegisterStatusBarResult) null);
+        createNavigationBar(this.mDisplayManager.getDisplay(i), null);
     }
 
     public void createNavigationBars(boolean z, RegisterStatusBarResult registerStatusBarResult) {
-        for (Display display : this.mDisplayManager.getDisplays()) {
+        Display[] displays = this.mDisplayManager.getDisplays();
+        for (Display display : displays) {
             if (z || display.getDisplayId() != 0) {
                 createNavigationBar(display, registerStatusBarResult);
             }
@@ -72,8 +75,8 @@ public class NavigationBarController implements CommandQueue.Callbacks {
                     } else {
                         context = this.mContext.createDisplayContext(display);
                     }
-                    Context context2 = context;
-                    NavigationBarFragment.create(context2, new FragmentHostManager.FragmentListener(z, context2, displayId, registerStatusBarResult, display) {
+                    NavigationBarFragment.create(context, new FragmentHostManager.FragmentListener(z, context, displayId, registerStatusBarResult, display) {
+                        /* class com.android.systemui.statusbar.$$Lambda$NavigationBarController$oyTONslWMHHQSXiga3Vs0njIek8 */
                         public final /* synthetic */ boolean f$1;
                         public final /* synthetic */ Context f$2;
                         public final /* synthetic */ int f$3;
@@ -88,6 +91,7 @@ public class NavigationBarController implements CommandQueue.Callbacks {
                             this.f$5 = r6;
                         }
 
+                        @Override // com.android.systemui.fragments.FragmentHostManager.FragmentListener
                         public final void onFragmentViewCreated(String str, Fragment fragment) {
                             NavigationBarController.this.lambda$createNavigationBar$0$NavigationBarController(this.f$1, this.f$2, this.f$3, this.f$4, this.f$5, str, fragment);
                         }
@@ -130,7 +134,7 @@ public class NavigationBarController implements CommandQueue.Callbacks {
     private void removeNavigationBar(int i) {
         NavigationBarFragment navigationBarFragment = this.mNavigationBars.get(i);
         if (navigationBarFragment != null) {
-            navigationBarFragment.setAutoHideController((AutoHideController) null);
+            navigationBarFragment.setAutoHideController(null);
             View rootView = navigationBarFragment.getView().getRootView();
             WindowManagerGlobal.getInstance().removeView(rootView, true);
             FragmentHostManager.removeAndDestroy(rootView);
@@ -199,7 +203,7 @@ public class NavigationBarController implements CommandQueue.Callbacks {
 
     public void addDefaultNavigationBar() {
         if (this.mNavigationBars.get(0) == null) {
-            createNavigationBar(this.mDisplayManager.getDisplay(0), (RegisterStatusBarResult) null);
+            createNavigationBar(this.mDisplayManager.getDisplay(0), null);
         }
     }
 

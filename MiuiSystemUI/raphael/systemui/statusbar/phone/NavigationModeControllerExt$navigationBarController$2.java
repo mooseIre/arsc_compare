@@ -13,6 +13,7 @@ final class NavigationModeControllerExt$navigationBarController$2 extends Lambda
         super(0);
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final NavigationBarController invoke() {
         return (NavigationBarController) Dependency.get(NavigationBarController.class);
     }

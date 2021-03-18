@@ -26,13 +26,11 @@ import com.android.systemui.C0021R$string;
 import java.util.ArrayList;
 
 public abstract class AuthBiometricView extends LinearLayout {
-    /* access modifiers changed from: private */
-    public final AccessibilityManager mAccessibilityManager;
+    private final AccessibilityManager mAccessibilityManager;
     private final View.OnClickListener mBackgroundClickListener;
     private Bundle mBiometricPromptBundle;
     private Callback mCallback;
-    /* access modifiers changed from: private */
-    public TextView mDescriptionView;
+    private TextView mDescriptionView;
     protected boolean mDialogSizeAnimating;
     private int mEffectiveUserId;
     private final Handler mHandler;
@@ -54,16 +52,15 @@ public abstract class AuthBiometricView extends LinearLayout {
     protected Bundle mSavedState;
     int mSize;
     protected int mState;
-    /* access modifiers changed from: private */
-    public TextView mSubtitleView;
+    private TextView mSubtitleView;
     private final int mTextColorError;
     private final int mTextColorHint;
-    /* access modifiers changed from: private */
-    public TextView mTitleView;
+    private TextView mTitleView;
     @VisibleForTesting
     Button mTryAgainButton;
 
-    interface Callback {
+    /* access modifiers changed from: package-private */
+    public interface Callback {
         void onAction(int i);
     }
 
@@ -85,8 +82,9 @@ public abstract class AuthBiometricView extends LinearLayout {
     /* access modifiers changed from: protected */
     public abstract boolean supportsSmallDialog();
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    static class Injector {
+    public static class Injector {
         AuthBiometricView mBiometricView;
 
         public int getDelayAfterError() {
@@ -151,7 +149,7 @@ public abstract class AuthBiometricView extends LinearLayout {
     }
 
     public AuthBiometricView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AuthBiometricView(Context context, AttributeSet attributeSet) {
@@ -163,6 +161,8 @@ public abstract class AuthBiometricView extends LinearLayout {
         super(context, attributeSet);
         this.mSize = 0;
         this.mBackgroundClickListener = new View.OnClickListener() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$74Oxj14CYJ3ddBOXoxeIwTUBk */
+
             public final void onClick(View view) {
                 AuthBiometricView.this.lambda$new$0$AuthBiometricView(view);
             }
@@ -174,11 +174,15 @@ public abstract class AuthBiometricView extends LinearLayout {
         injector.mBiometricView = this;
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mResetErrorRunnable = new Runnable() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$2drOaNVaSONPnaFzaOUoYjj85g */
+
             public final void run() {
                 AuthBiometricView.this.lambda$new$1$AuthBiometricView();
             }
         };
         this.mResetHelpRunnable = new Runnable() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$h7WED3KSGw20PO7Z91wwxRtsrCg */
+
             public final void run() {
                 AuthBiometricView.this.lambda$new$2$AuthBiometricView();
             }
@@ -242,21 +246,27 @@ public abstract class AuthBiometricView extends LinearLayout {
         } else if (this.mSize == 1 && i == 2) {
             if (!this.mDialogSizeAnimating) {
                 this.mDialogSizeAnimating = true;
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mIconView.getY(), this.mIconOriginalY});
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mIconView.getY(), this.mIconOriginalY);
                 ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$Wj3pIUGv2yvV3z4ykqi4KllVNJU */
+
                     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                         AuthBiometricView.this.lambda$updateSize$3$AuthBiometricView(valueAnimator);
                     }
                 });
-                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
                 ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$wnwcoDTpdgktx5JVpsJj4HSA0jk */
+
                     public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                         AuthBiometricView.this.lambda$updateSize$4$AuthBiometricView(valueAnimator);
                     }
                 });
                 AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.setDuration(150);
+                animatorSet.setDuration(150L);
                 animatorSet.addListener(new AnimatorListenerAdapter() {
+                    /* class com.android.systemui.biometrics.AuthBiometricView.AnonymousClass1 */
+
                     public void onAnimationStart(Animator animator) {
                         super.onAnimationStart(animator);
                         AuthBiometricView.this.mTitleView.setVisibility(0);
@@ -289,14 +299,18 @@ public abstract class AuthBiometricView extends LinearLayout {
             this.mPanelController.updateForContentDimensions(this.mMediumWidth, this.mMediumHeight, 0);
             this.mSize = i;
         } else if (i == 3) {
-            ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{getY(), getY() - getResources().getDimension(C0012R$dimen.biometric_dialog_medium_to_large_translation_offset)});
+            ValueAnimator ofFloat3 = ValueAnimator.ofFloat(getY(), getY() - getResources().getDimension(C0012R$dimen.biometric_dialog_medium_to_large_translation_offset));
             ofFloat3.setDuration((long) this.mInjector.getMediumToLargeAnimationDurationMs());
             ofFloat3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$DNZGqOzv_lXEbjrYTngC9OQfLl4 */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     AuthBiometricView.this.setTranslationY(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }
             });
             ofFloat3.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.biometrics.AuthBiometricView.AnonymousClass2 */
+
                 public void onAnimationEnd(Animator animator) {
                     super.onAnimationEnd(animator);
                     if (this.getParent() != null) {
@@ -305,9 +319,11 @@ public abstract class AuthBiometricView extends LinearLayout {
                     AuthBiometricView.this.mSize = i;
                 }
             });
-            ValueAnimator ofFloat4 = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+            ValueAnimator ofFloat4 = ValueAnimator.ofFloat(1.0f, 0.0f);
             ofFloat4.setDuration((long) (this.mInjector.getMediumToLargeAnimationDurationMs() / 2));
             ofFloat4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$NITDpz2CemnJIsSGRaKPYHZqW4 */
+
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                     AuthBiometricView.this.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
                 }
@@ -379,6 +395,8 @@ public abstract class AuthBiometricView extends LinearLayout {
                 }
                 announceForAccessibility(getResources().getString(C0021R$string.biometric_dialog_authenticated));
                 this.mHandler.postDelayed(new Runnable() {
+                    /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$A6c9EVpo4leekZpDntHzHp57vns */
+
                     public final void run() {
                         AuthBiometricView.this.lambda$updateState$7$AuthBiometricView();
                     }
@@ -420,6 +438,8 @@ public abstract class AuthBiometricView extends LinearLayout {
         showTemporaryMessage(str, this.mResetErrorRunnable);
         updateState(4);
         this.mHandler.postDelayed(new Runnable() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$IjJmXNzRMZpZA04YZLx9v3gpf7E */
+
             public final void run() {
                 AuthBiometricView.this.lambda$onError$8$AuthBiometricView();
             }
@@ -499,16 +519,22 @@ public abstract class AuthBiometricView extends LinearLayout {
         this.mPositiveButton = this.mInjector.getPositiveButton();
         this.mTryAgainButton = this.mInjector.getTryAgainButton();
         this.mNegativeButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$qlVsSDplrDVUHj3VMy1YMdB9Z2Q */
+
             public final void onClick(View view) {
                 AuthBiometricView.this.lambda$onFinishInflateInternal$9$AuthBiometricView(view);
             }
         });
         this.mPositiveButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$qLp3TPGAuJEy2AApoHqHuLR3prY */
+
             public final void onClick(View view) {
                 AuthBiometricView.this.lambda$onFinishInflateInternal$10$AuthBiometricView(view);
             }
         });
         this.mTryAgainButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthBiometricView$qQg25Tq_M8BNbfsrx1MChyC8F0 */
+
             public final void onClick(View view) {
                 AuthBiometricView.this.lambda$onFinishInflateInternal$11$AuthBiometricView(view);
             }
@@ -560,7 +586,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         String str;
         setText(this.mTitleView, this.mBiometricPromptBundle.getString("title"));
         if (isDeviceCredentialAllowed()) {
-            int credentialType = Utils.getCredentialType(this.mContext, this.mEffectiveUserId);
+            int credentialType = Utils.getCredentialType(((LinearLayout) this).mContext, this.mEffectiveUserId);
             str = credentialType != 1 ? credentialType != 2 ? credentialType != 3 ? getResources().getString(C0021R$string.biometric_dialog_use_password) : getResources().getString(C0021R$string.biometric_dialog_use_password) : getResources().getString(C0021R$string.biometric_dialog_use_pattern) : getResources().getString(C0021R$string.biometric_dialog_use_pin);
         } else {
             str = this.mBiometricPromptBundle.getString("negative_text");
@@ -580,7 +606,7 @@ public abstract class AuthBiometricView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mHandler.removeCallbacksAndMessages((Object) null);
+        this.mHandler.removeCallbacksAndMessages(null);
     }
 
     /* access modifiers changed from: protected */

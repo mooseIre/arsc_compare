@@ -11,6 +11,7 @@ public final class EditTile_Factory implements Factory<EditTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public EditTile get() {
         return provideInstance(this.hostProvider);
     }

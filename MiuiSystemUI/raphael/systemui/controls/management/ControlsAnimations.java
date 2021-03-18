@@ -17,8 +17,7 @@ import org.jetbrains.annotations.Nullable;
 /* compiled from: ControlsAnimations.kt */
 public final class ControlsAnimations {
     public static final ControlsAnimations INSTANCE = new ControlsAnimations();
-    /* access modifiers changed from: private */
-    public static float translationY = -1.0f;
+    private static float translationY = -1.0f;
 
     private ControlsAnimations() {
     }
@@ -38,16 +37,16 @@ public final class ControlsAnimations {
         view.setTransitionAlpha(0.0f);
         view.setAlpha(1.0f);
         view.setTranslationY(translationY);
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, "transitionAlpha", new float[]{0.0f, 1.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, "transitionAlpha", 0.0f, 1.0f);
         ofFloat.setInterpolator(Interpolators.DECELERATE_QUINT);
         ofFloat.setStartDelay(167);
-        ofFloat.setDuration(183);
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view, "translationY", new float[]{0.0f});
+        ofFloat.setDuration(183L);
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view, "translationY", 0.0f);
         ofFloat2.setInterpolator(Interpolators.DECELERATE_QUINT);
         ofFloat2.setStartDelay(217);
-        ofFloat2.setDuration(217);
+        ofFloat2.setDuration(217L);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
+        animatorSet.playTogether(ofFloat, ofFloat2);
         return animatorSet;
     }
 
@@ -62,15 +61,15 @@ public final class ControlsAnimations {
     public static final Animator exitAnimation(@NotNull View view, @Nullable Runnable runnable) {
         Intrinsics.checkParameterIsNotNull(view, "view");
         Log.d("ControlsUiController", "Exit animation for " + view);
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, "transitionAlpha", new float[]{0.0f});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, "transitionAlpha", 0.0f);
         ofFloat.setInterpolator(Interpolators.ACCELERATE);
-        ofFloat.setDuration(167);
+        ofFloat.setDuration(167L);
         view.setTranslationY(0.0f);
-        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view, "translationY", new float[]{-translationY});
+        ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(view, "translationY", -translationY);
         ofFloat2.setInterpolator(Interpolators.ACCELERATE);
-        ofFloat2.setDuration(183);
+        ofFloat2.setDuration(183L);
         AnimatorSet animatorSet = new AnimatorSet();
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
+        animatorSet.playTogether(ofFloat, ofFloat2);
         if (runnable != null) {
             animatorSet.addListener(new ControlsAnimations$exitAnimation$1$1$1(runnable));
         }

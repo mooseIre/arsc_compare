@@ -1,7 +1,8 @@
 package com.android.systemui.media;
 
+/* access modifiers changed from: package-private */
 /* compiled from: SeekBarViewModel.kt */
-final class SeekBarViewModel$onSeekStarting$1 implements Runnable {
+public final class SeekBarViewModel$onSeekStarting$1 implements Runnable {
     final /* synthetic */ SeekBarViewModel this$0;
 
     SeekBarViewModel$onSeekStarting$1(SeekBarViewModel seekBarViewModel) {

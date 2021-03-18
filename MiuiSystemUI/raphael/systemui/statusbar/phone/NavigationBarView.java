@@ -4,6 +4,7 @@ import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.TimeInterpolator;
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -42,8 +44,10 @@ import com.android.systemui.shared.system.QuickStepContract;
 import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.shared.system.WindowManagerWrapper;
 import com.android.systemui.stackdivider.Divider;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.NavigationBarController;
 import com.android.systemui.statusbar.phone.NavigationModeController;
+import com.android.systemui.statusbar.phone.RegionSamplingHelper;
 import com.android.systemui.statusbar.policy.DeadZone;
 import com.android.systemui.statusbar.policy.KeyButtonDrawable;
 import com.android.systemui.util.Utils;
@@ -67,6 +71,9 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     int mDisabledFlags = 0;
     private KeyButtonDrawable mDockedIcon;
     private final Consumer<Boolean> mDockedListener = new Consumer() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarView$3_rm_LYAhHXvCBhrsX10ry5w8OA */
+
+        @Override // java.util.function.Consumer
         public final void accept(Object obj) {
             NavigationBarView.this.lambda$new$2$NavigationBarView((Boolean) obj);
         }
@@ -78,31 +85,34 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     private KeyButtonDrawable mHomeDefaultIcon;
     private View mHorizontal;
     private final View.OnClickListener mImeSwitcherClickListener = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.phone.NavigationBarView.AnonymousClass1 */
+
         public void onClick(View view) {
-            ((InputMethodManager) NavigationBarView.this.mContext.getSystemService(InputMethodManager.class)).showInputMethodPickerFromSystem(true, NavigationBarView.this.getContext().getDisplayId());
+            ((InputMethodManager) ((FrameLayout) NavigationBarView.this).mContext.getSystemService(InputMethodManager.class)).showInputMethodPickerFromSystem(true, NavigationBarView.this.getContext().getDisplayId());
         }
     };
     private boolean mImeVisible;
     private boolean mInCarMode = false;
     private boolean mIsVertical = false;
     private boolean mLayoutTransitionsEnabled = true;
-    /* access modifiers changed from: private */
-    public int mNavBarMode;
+    private int mNavBarMode;
     private final int mNavColorSampleMargin;
     int mNavigationIconHints = 0;
     private NavigationBarInflaterView mNavigationInflaterView;
     private final ViewTreeObserver.OnComputeInternalInsetsListener mOnComputeInternalInsetsListener = new ViewTreeObserver.OnComputeInternalInsetsListener() {
+        /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarView$khIxhJwBd7pJnFFXnq8zupcHrv8 */
+
         public final void onComputeInternalInsets(ViewTreeObserver.InternalInsetsInfo internalInsetsInfo) {
             NavigationBarView.this.lambda$new$0$NavigationBarView(internalInsetsInfo);
         }
     };
     private OnVerticalChangedListener mOnVerticalChangedListener;
-    /* access modifiers changed from: private */
-    public Rect mOrientedHandleSamplingRegion;
+    private Rect mOrientedHandleSamplingRegion;
     private final OverviewProxyService mOverviewProxyService;
     private NotificationPanelViewController mPanelView;
     private final PluginManager mPluginManager;
     private final View.AccessibilityDelegate mQuickStepAccessibilityDelegate = new View.AccessibilityDelegate() {
+        /* class com.android.systemui.statusbar.phone.NavigationBarView.AnonymousClass2 */
         private AccessibilityNodeInfo.AccessibilityAction mToggleOverviewAction;
 
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
@@ -127,8 +137,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     private final RegionSamplingHelper mRegionSamplingHelper;
     private Rect mRotationButtonBounds = new Rect();
     private RotationButtonController mRotationButtonController;
-    /* access modifiers changed from: private */
-    public Rect mSamplingBounds = new Rect();
+    private Rect mSamplingBounds = new Rect();
     private boolean mScreenOn = true;
     private ScreenPinningNotify mScreenPinningNotify;
     private final SysUiState mSysUiFlagContainer;
@@ -148,7 +157,8 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         return i != 4 ? i != 8 ? "VISIBLE" : "GONE" : "INVISIBLE";
     }
 
-    private class NavTransitionListener implements LayoutTransition.TransitionListener {
+    /* access modifiers changed from: private */
+    public class NavTransitionListener implements LayoutTransition.TransitionListener {
         private boolean mBackTransitioning;
         private long mDuration;
         private boolean mHomeAppearing;
@@ -181,7 +191,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
             ButtonDispatcher backButton = NavigationBarView.this.getBackButton();
             if (!this.mBackTransitioning && backButton.getVisibility() == 0 && this.mHomeAppearing && NavigationBarView.this.getHomeButton().getAlpha() == 0.0f) {
                 NavigationBarView.this.getBackButton().setAlpha(0.0f);
-                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(backButton, "alpha", new float[]{0.0f, 1.0f});
+                ObjectAnimator ofFloat = ObjectAnimator.ofFloat(backButton, "alpha", 0.0f, 1.0f);
                 ofFloat.setStartDelay(this.mStartDelay);
                 ofFloat.setDuration(this.mDuration);
                 ofFloat.setInterpolator(this.mInterpolator);
@@ -209,207 +219,83 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         internalInsetsInfo.touchableRegion.setEmpty();
     }
 
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v7, resolved type: com.android.systemui.statusbar.phone.FloatingRotationButton} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v8, resolved type: com.android.systemui.statusbar.phone.RotationContextButton} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v21, resolved type: com.android.systemui.statusbar.phone.RotationContextButton} */
-    /* JADX DEBUG: Multi-variable search result rejected for TypeSearchVarInfo{r3v23, resolved type: com.android.systemui.statusbar.phone.RotationContextButton} */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public NavigationBarView(android.content.Context r7, android.util.AttributeSet r8) {
-        /*
-            r6 = this;
-            r6.<init>(r7, r8)
-            r8 = 0
-            r6.mCurrentView = r8
-            r0 = -1
-            r6.mCurrentRotation = r0
-            r0 = 0
-            r6.mDisabledFlags = r0
-            r6.mNavigationIconHints = r0
-            android.graphics.Rect r1 = new android.graphics.Rect
-            r1.<init>()
-            r6.mHomeButtonBounds = r1
-            android.graphics.Rect r1 = new android.graphics.Rect
-            r1.<init>()
-            r6.mBackButtonBounds = r1
-            android.graphics.Rect r1 = new android.graphics.Rect
-            r1.<init>()
-            r6.mRecentsButtonBounds = r1
-            android.graphics.Rect r1 = new android.graphics.Rect
-            r1.<init>()
-            r6.mRotationButtonBounds = r1
-            android.graphics.Region r1 = new android.graphics.Region
-            r1.<init>()
-            r6.mActiveRegion = r1
-            r1 = 2
-            int[] r1 = new int[r1]
-            r6.mTmpPosition = r1
-            r6.mDeadZoneConsuming = r0
-            com.android.systemui.statusbar.phone.NavigationBarView$NavTransitionListener r1 = new com.android.systemui.statusbar.phone.NavigationBarView$NavTransitionListener
-            r1.<init>()
-            r6.mTransitionListener = r1
-            r8 = 1
-            r6.mLayoutTransitionsEnabled = r8
-            r6.mUseCarModeUi = r0
-            r6.mInCarMode = r0
-            r6.mScreenOn = r8
-            android.util.SparseArray r8 = new android.util.SparseArray
-            r8.<init>()
-            r6.mButtonDispatchers = r8
-            android.graphics.Rect r8 = new android.graphics.Rect
-            r8.<init>()
-            r6.mSamplingBounds = r8
-            com.android.systemui.statusbar.phone.NavigationBarView$1 r8 = new com.android.systemui.statusbar.phone.NavigationBarView$1
-            r8.<init>()
-            r6.mImeSwitcherClickListener = r8
-            com.android.systemui.statusbar.phone.NavigationBarView$2 r8 = new com.android.systemui.statusbar.phone.NavigationBarView$2
-            r8.<init>()
-            r6.mQuickStepAccessibilityDelegate = r8
-            com.android.systemui.statusbar.phone.-$$Lambda$NavigationBarView$khIxhJwBd7pJnFFXnq8zupcHrv8 r8 = new com.android.systemui.statusbar.phone.-$$Lambda$NavigationBarView$khIxhJwBd7pJnFFXnq8zupcHrv8
-            r8.<init>()
-            r6.mOnComputeInternalInsetsListener = r8
-            com.android.systemui.statusbar.phone.-$$Lambda$NavigationBarView$3_rm_LYAhHXvCBhrsX10ry5w8OA r8 = new com.android.systemui.statusbar.phone.-$$Lambda$NavigationBarView$3_rm_LYAhHXvCBhrsX10ry5w8OA
-            r8.<init>()
-            r6.mDockedListener = r8
-            r6.mIsVertical = r0
-            java.lang.Class<com.android.systemui.statusbar.phone.NavigationModeController> r8 = com.android.systemui.statusbar.phone.NavigationModeController.class
-            java.lang.Object r8 = com.android.systemui.Dependency.get(r8)
-            com.android.systemui.statusbar.phone.NavigationModeController r8 = (com.android.systemui.statusbar.phone.NavigationModeController) r8
-            int r8 = r8.addListener(r6)
-            r6.mNavBarMode = r8
-            boolean r8 = com.android.systemui.shared.system.QuickStepContract.isGesturalMode(r8)
-            java.lang.Class<com.android.systemui.model.SysUiState> r0 = com.android.systemui.model.SysUiState.class
-            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
-            com.android.systemui.model.SysUiState r0 = (com.android.systemui.model.SysUiState) r0
-            r6.mSysUiFlagContainer = r0
-            java.lang.Class<com.android.systemui.shared.plugins.PluginManager> r0 = com.android.systemui.shared.plugins.PluginManager.class
-            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
-            com.android.systemui.shared.plugins.PluginManager r0 = (com.android.systemui.shared.plugins.PluginManager) r0
-            r6.mPluginManager = r0
-            com.android.systemui.statusbar.phone.ContextualButtonGroup r0 = new com.android.systemui.statusbar.phone.ContextualButtonGroup
-            int r1 = com.android.systemui.C0015R$id.menu_container
-            r0.<init>(r1)
-            r6.mContextualButtonGroup = r0
-            com.android.systemui.statusbar.phone.ContextualButton r0 = new com.android.systemui.statusbar.phone.ContextualButton
-            int r1 = com.android.systemui.C0015R$id.ime_switcher
-            int r2 = com.android.systemui.C0013R$drawable.ic_ime_switcher_default
-            r0.<init>(r1, r2)
-            com.android.systemui.statusbar.phone.RotationContextButton r1 = new com.android.systemui.statusbar.phone.RotationContextButton
-            int r2 = com.android.systemui.C0015R$id.rotate_suggestion
-            int r3 = com.android.systemui.C0013R$drawable.ic_sysbar_rotate_button
-            r1.<init>(r2, r3)
-            com.android.systemui.statusbar.phone.ContextualButton r2 = new com.android.systemui.statusbar.phone.ContextualButton
-            int r3 = com.android.systemui.C0015R$id.accessibility_button
-            int r4 = com.android.systemui.C0013R$drawable.ic_sysbar_accessibility_button
-            r2.<init>(r3, r4)
-            com.android.systemui.statusbar.phone.ContextualButtonGroup r3 = r6.mContextualButtonGroup
-            r3.addButton(r0)
-            if (r8 != 0) goto L_0x00ca
-            com.android.systemui.statusbar.phone.ContextualButtonGroup r3 = r6.mContextualButtonGroup
-            r3.addButton(r1)
-        L_0x00ca:
-            com.android.systemui.statusbar.phone.ContextualButtonGroup r3 = r6.mContextualButtonGroup
-            r3.addButton(r2)
-            java.lang.Class<com.android.systemui.recents.OverviewProxyService> r3 = com.android.systemui.recents.OverviewProxyService.class
-            java.lang.Object r3 = com.android.systemui.Dependency.get(r3)
-            com.android.systemui.recents.OverviewProxyService r3 = (com.android.systemui.recents.OverviewProxyService) r3
-            r6.mOverviewProxyService = r3
-            com.android.systemui.recents.RecentsOnboarding r4 = new com.android.systemui.recents.RecentsOnboarding
-            r4.<init>(r7, r3)
-            r6.mRecentsOnboarding = r4
-            com.android.systemui.statusbar.phone.FloatingRotationButton r3 = new com.android.systemui.statusbar.phone.FloatingRotationButton
-            r3.<init>(r7)
-            r6.mFloatingRotationButton = r3
-            com.android.systemui.statusbar.phone.RotationButtonController r4 = new com.android.systemui.statusbar.phone.RotationButtonController
-            int r5 = com.android.systemui.C0022R$style.RotateButtonCCWStart90
-            if (r8 == 0) goto L_0x00ee
-            goto L_0x00ef
-        L_0x00ee:
-            r3 = r1
-        L_0x00ef:
-            r4.<init>(r7, r5, r3)
-            r6.mRotationButtonController = r4
-            android.content.res.Configuration r8 = new android.content.res.Configuration
-            r8.<init>()
-            r6.mConfiguration = r8
-            android.content.res.Configuration r8 = new android.content.res.Configuration
-            r8.<init>()
-            r6.mTmpLastConfiguration = r8
-            android.content.res.Configuration r8 = r6.mConfiguration
-            android.content.res.Resources r3 = r7.getResources()
-            android.content.res.Configuration r3 = r3.getConfiguration()
-            r8.updateFrom(r3)
-            com.android.systemui.statusbar.phone.ScreenPinningNotify r8 = new com.android.systemui.statusbar.phone.ScreenPinningNotify
-            android.content.Context r3 = r6.mContext
-            r8.<init>(r3)
-            r6.mScreenPinningNotify = r8
-            com.android.systemui.statusbar.phone.NavigationBarTransitions r8 = new com.android.systemui.statusbar.phone.NavigationBarTransitions
-            java.lang.Class<com.android.systemui.statusbar.CommandQueue> r3 = com.android.systemui.statusbar.CommandQueue.class
-            java.lang.Object r3 = com.android.systemui.Dependency.get(r3)
-            com.android.systemui.statusbar.CommandQueue r3 = (com.android.systemui.statusbar.CommandQueue) r3
-            r8.<init>(r6, r3)
-            r6.mBarTransitions = r8
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r3 = com.android.systemui.C0015R$id.back
-            com.android.systemui.statusbar.phone.ButtonDispatcher r4 = new com.android.systemui.statusbar.phone.ButtonDispatcher
-            r4.<init>(r3)
-            r8.put(r3, r4)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r3 = com.android.systemui.C0015R$id.home
-            com.android.systemui.statusbar.phone.ButtonDispatcher r4 = new com.android.systemui.statusbar.phone.ButtonDispatcher
-            r4.<init>(r3)
-            r8.put(r3, r4)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r3 = com.android.systemui.C0015R$id.home_handle
-            com.android.systemui.statusbar.phone.ButtonDispatcher r4 = new com.android.systemui.statusbar.phone.ButtonDispatcher
-            r4.<init>(r3)
-            r8.put(r3, r4)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r3 = com.android.systemui.C0015R$id.recent_apps
-            com.android.systemui.statusbar.phone.ButtonDispatcher r4 = new com.android.systemui.statusbar.phone.ButtonDispatcher
-            r4.<init>(r3)
-            r8.put(r3, r4)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r3 = com.android.systemui.C0015R$id.ime_switcher
-            r8.put(r3, r0)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r0 = com.android.systemui.C0015R$id.accessibility_button
-            r8.put(r0, r2)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r0 = com.android.systemui.C0015R$id.rotate_suggestion
-            r8.put(r0, r1)
-            android.util.SparseArray<com.android.systemui.statusbar.phone.ButtonDispatcher> r8 = r6.mButtonDispatchers
-            int r0 = com.android.systemui.C0015R$id.menu_container
-            com.android.systemui.statusbar.phone.ContextualButtonGroup r1 = r6.mContextualButtonGroup
-            r8.put(r0, r1)
-            com.android.systemui.statusbar.policy.DeadZone r8 = new com.android.systemui.statusbar.policy.DeadZone
-            r8.<init>(r6)
-            r6.mDeadZone = r8
-            com.android.systemui.statusbar.phone.NavigationBarViewTaskSwitchHelper r8 = new com.android.systemui.statusbar.phone.NavigationBarViewTaskSwitchHelper
-            r8.<init>(r7, r6)
-            r6.mTaskSwitchHelper = r8
-            android.content.res.Resources r8 = r6.getResources()
-            int r0 = com.android.systemui.C0012R$dimen.navigation_handle_sample_horizontal_margin
-            int r8 = r8.getDimensionPixelSize(r0)
-            r6.mNavColorSampleMargin = r8
-            com.android.systemui.statusbar.phone.EdgeBackGestureHandler r8 = new com.android.systemui.statusbar.phone.EdgeBackGestureHandler
-            com.android.systemui.recents.OverviewProxyService r2 = r6.mOverviewProxyService
-            com.android.systemui.model.SysUiState r3 = r6.mSysUiFlagContainer
-            com.android.systemui.shared.plugins.PluginManager r4 = r6.mPluginManager
-            com.android.systemui.statusbar.phone.-$$Lambda$WrUd8iBVzCnkNGlDjVh6Yvbf6CM r5 = new com.android.systemui.statusbar.phone.-$$Lambda$WrUd8iBVzCnkNGlDjVh6Yvbf6CM
-            r5.<init>()
-            r0 = r8
-            r1 = r7
-            r0.<init>(r1, r2, r3, r4, r5)
-            r6.mEdgeBackGestureHandler = r8
-            com.android.systemui.statusbar.phone.RegionSamplingHelper r7 = new com.android.systemui.statusbar.phone.RegionSamplingHelper
-            com.android.systemui.statusbar.phone.NavigationBarView$3 r8 = new com.android.systemui.statusbar.phone.NavigationBarView$3
-            r8.<init>()
-            r7.<init>(r6, r8)
-            r6.mRegionSamplingHelper = r7
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NavigationBarView.<init>(android.content.Context, android.util.AttributeSet):void");
+    /* JADX DEBUG: Multi-variable search result rejected for r3v7, resolved type: com.android.systemui.statusbar.phone.FloatingRotationButton */
+    /* JADX WARN: Multi-variable type inference failed */
+    public NavigationBarView(Context context, AttributeSet attributeSet) {
+        super(context, attributeSet);
+        int addListener = ((NavigationModeController) Dependency.get(NavigationModeController.class)).addListener(this);
+        this.mNavBarMode = addListener;
+        boolean isGesturalMode = QuickStepContract.isGesturalMode(addListener);
+        this.mSysUiFlagContainer = (SysUiState) Dependency.get(SysUiState.class);
+        this.mPluginManager = (PluginManager) Dependency.get(PluginManager.class);
+        this.mContextualButtonGroup = new ContextualButtonGroup(C0015R$id.menu_container);
+        ContextualButton contextualButton = new ContextualButton(C0015R$id.ime_switcher, C0013R$drawable.ic_ime_switcher_default);
+        RotationContextButton rotationContextButton = new RotationContextButton(C0015R$id.rotate_suggestion, C0013R$drawable.ic_sysbar_rotate_button);
+        ContextualButton contextualButton2 = new ContextualButton(C0015R$id.accessibility_button, C0013R$drawable.ic_sysbar_accessibility_button);
+        this.mContextualButtonGroup.addButton(contextualButton);
+        if (!isGesturalMode) {
+            this.mContextualButtonGroup.addButton(rotationContextButton);
+        }
+        this.mContextualButtonGroup.addButton(contextualButton2);
+        OverviewProxyService overviewProxyService = (OverviewProxyService) Dependency.get(OverviewProxyService.class);
+        this.mOverviewProxyService = overviewProxyService;
+        this.mRecentsOnboarding = new RecentsOnboarding(context, overviewProxyService);
+        FloatingRotationButton floatingRotationButton = new FloatingRotationButton(context);
+        this.mFloatingRotationButton = floatingRotationButton;
+        this.mRotationButtonController = new RotationButtonController(context, C0022R$style.RotateButtonCCWStart90, !isGesturalMode ? rotationContextButton : floatingRotationButton);
+        this.mConfiguration = new Configuration();
+        this.mTmpLastConfiguration = new Configuration();
+        this.mConfiguration.updateFrom(context.getResources().getConfiguration());
+        this.mScreenPinningNotify = new ScreenPinningNotify(((FrameLayout) this).mContext);
+        this.mBarTransitions = new NavigationBarTransitions(this, (CommandQueue) Dependency.get(CommandQueue.class));
+        SparseArray<ButtonDispatcher> sparseArray = this.mButtonDispatchers;
+        int i = C0015R$id.back;
+        sparseArray.put(i, new ButtonDispatcher(i));
+        SparseArray<ButtonDispatcher> sparseArray2 = this.mButtonDispatchers;
+        int i2 = C0015R$id.home;
+        sparseArray2.put(i2, new ButtonDispatcher(i2));
+        SparseArray<ButtonDispatcher> sparseArray3 = this.mButtonDispatchers;
+        int i3 = C0015R$id.home_handle;
+        sparseArray3.put(i3, new ButtonDispatcher(i3));
+        SparseArray<ButtonDispatcher> sparseArray4 = this.mButtonDispatchers;
+        int i4 = C0015R$id.recent_apps;
+        sparseArray4.put(i4, new ButtonDispatcher(i4));
+        this.mButtonDispatchers.put(C0015R$id.ime_switcher, contextualButton);
+        this.mButtonDispatchers.put(C0015R$id.accessibility_button, contextualButton2);
+        this.mButtonDispatchers.put(C0015R$id.rotate_suggestion, rotationContextButton);
+        this.mButtonDispatchers.put(C0015R$id.menu_container, this.mContextualButtonGroup);
+        this.mDeadZone = new DeadZone(this);
+        this.mTaskSwitchHelper = new NavigationBarViewTaskSwitchHelper(context, this);
+        this.mNavColorSampleMargin = getResources().getDimensionPixelSize(C0012R$dimen.navigation_handle_sample_horizontal_margin);
+        this.mEdgeBackGestureHandler = new EdgeBackGestureHandler(context, this.mOverviewProxyService, this.mSysUiFlagContainer, this.mPluginManager, new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$WrUd8iBVzCnkNGlDjVh6Yvbf6CM */
+
+            public final void run() {
+                NavigationBarView.this.updateStates();
+            }
+        });
+        this.mRegionSamplingHelper = new RegionSamplingHelper(this, new RegionSamplingHelper.SamplingCallback() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarView.AnonymousClass3 */
+
+            @Override // com.android.systemui.statusbar.phone.RegionSamplingHelper.SamplingCallback
+            public void onRegionDarknessChanged(boolean z) {
+                NavigationBarView.this.getLightTransitionsController().setIconsDark(!z, true);
+            }
+
+            @Override // com.android.systemui.statusbar.phone.RegionSamplingHelper.SamplingCallback
+            public Rect getSampledRegion(View view) {
+                if (NavigationBarView.this.mOrientedHandleSamplingRegion != null) {
+                    return NavigationBarView.this.mOrientedHandleSamplingRegion;
+                }
+                NavigationBarView.this.updateSamplingRect();
+                return NavigationBarView.this.mSamplingBounds;
+            }
+
+            @Override // com.android.systemui.statusbar.phone.RegionSamplingHelper.SamplingCallback
+            public boolean isSamplingEnabled() {
+                return Utils.isGesturalModeOnDefaultDisplay(NavigationBarView.this.getContext(), NavigationBarView.this.mNavBarMode);
+            }
+        });
     }
 
     public NavigationBarTransitions getBarTransitions() {
@@ -600,9 +486,9 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
             if (!this.mOverviewProxyService.shouldShowSwipeUpUI() && !this.mIsVertical && z) {
                 f2 = -getResources().getDimension(C0012R$dimen.navbar_back_button_ime_offset);
             }
-            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(keyButtonDrawable, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_ROTATE, new float[]{f}), PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_TRANSLATE_Y, new float[]{f2})});
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(keyButtonDrawable, PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_ROTATE, f), PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_TRANSLATE_Y, f2));
             ofPropertyValuesHolder.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
-            ofPropertyValuesHolder.setDuration(200);
+            ofPropertyValuesHolder.setDuration(200L);
             ofPropertyValuesHolder.start();
         }
     }
@@ -616,7 +502,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     private KeyButtonDrawable getDrawable(int i) {
-        return KeyButtonDrawable.create(this.mContext, i, true);
+        return KeyButtonDrawable.create(((FrameLayout) this).mContext, i, true);
     }
 
     public void onScreenStateChanged(boolean z) {
@@ -780,7 +666,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     public void updateDisabledSystemUiStateFlags() {
-        int displayId = this.mContext.getDisplayId();
+        int displayId = ((FrameLayout) this).mContext.getDisplayId();
         SysUiState sysUiState = this.mSysUiFlagContainer;
         boolean z = true;
         sysUiState.setFlag(1, ActivityManagerWrapper.getInstance().isScreenPinningActive());
@@ -794,7 +680,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     public void updatePanelSystemUiStateFlags() {
-        int displayId = this.mContext.getDisplayId();
+        int displayId = ((FrameLayout) this).mContext.getDisplayId();
         NotificationPanelViewController notificationPanelViewController = this.mPanelView;
         if (notificationPanelViewController != null) {
             SysUiState sysUiState = this.mSysUiFlagContainer;
@@ -818,41 +704,10 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         getHomeButton().setAccessibilityDelegate(shouldShowSwipeUpUI ? this.mQuickStepAccessibilityDelegate : null);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0006, code lost:
-        r0 = r1.mPanelView;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:8:0x0018, code lost:
-        r0 = r1.mControlPanelWindowManager;
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateSlippery() {
-        /*
-            r1 = this;
-            boolean r0 = r1.isQuickStepSwipeUpEnabled()
-            if (r0 == 0) goto L_0x0025
-            com.android.systemui.statusbar.phone.NotificationPanelViewController r0 = r1.mPanelView
-            if (r0 == 0) goto L_0x0018
-            boolean r0 = r0.isFullyExpanded()
-            if (r0 == 0) goto L_0x0018
-            com.android.systemui.statusbar.phone.NotificationPanelViewController r0 = r1.mPanelView
-            boolean r0 = r0.isCollapsing()
-            if (r0 == 0) goto L_0x0025
-        L_0x0018:
-            com.android.systemui.controlcenter.phone.ControlPanelWindowManager r0 = r1.mControlPanelWindowManager
-            if (r0 == 0) goto L_0x0023
-            boolean r0 = r0.isPanelExpanded()
-            if (r0 == 0) goto L_0x0023
-            goto L_0x0025
-        L_0x0023:
-            r0 = 0
-            goto L_0x0026
-        L_0x0025:
-            r0 = 1
-        L_0x0026:
-            r1.setSlippery(r0)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NavigationBarView.updateSlippery():void");
+        NotificationPanelViewController notificationPanelViewController;
+        ControlPanelWindowManager controlPanelWindowManager;
+        setSlippery(!isQuickStepSwipeUpEnabled() || ((notificationPanelViewController = this.mPanelView) != null && notificationPanelViewController.isFullyExpanded() && !this.mPanelView.isCollapsing()) || ((controlPanelWindowManager = this.mControlPanelWindowManager) != null && controlPanelWindowManager.isPanelExpanded()));
     }
 
     private void setSlippery(boolean z) {
@@ -874,6 +729,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.NavigationModeController.ModeChangedListener
     public void onNavigationModeChanged(int i) {
         this.mNavBarMode = i;
         this.mBarTransitions.onNavigationModeChanged(i);
@@ -916,7 +772,8 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     /* access modifiers changed from: private */
-    public void updateSamplingRect() {
+    /* access modifiers changed from: public */
+    private void updateSamplingRect() {
         this.mSamplingBounds.setEmpty();
         View currentView = getHomeHandle().getCurrentView();
         if (currentView != null) {
@@ -1188,7 +1045,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         sb.append(visibilityToString(getWindowVisibility()));
         sb.append(z ? " OFFSCREEN!" : "");
         printWriter.println(sb.toString());
-        printWriter.println(String.format("      mCurrentView: id=%s (%dx%d) %s %f", new Object[]{getResourceName(getCurrentView().getId()), Integer.valueOf(getCurrentView().getWidth()), Integer.valueOf(getCurrentView().getHeight()), visibilityToString(getCurrentView().getVisibility()), Float.valueOf(getCurrentView().getAlpha())}));
+        printWriter.println(String.format("      mCurrentView: id=%s (%dx%d) %s %f", getResourceName(getCurrentView().getId()), Integer.valueOf(getCurrentView().getWidth()), Integer.valueOf(getCurrentView().getHeight()), visibilityToString(getCurrentView().getVisibility()), Float.valueOf(getCurrentView().getAlpha())));
         Object[] objArr = new Object[3];
         objArr[0] = Integer.valueOf(this.mDisabledFlags);
         objArr[1] = this.mIsVertical ? "true" : "false";
@@ -1247,6 +1104,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     /* renamed from: lambda$new$2 */
     public /* synthetic */ void lambda$new$2$NavigationBarView(Boolean bool) {
         post(new Runnable(bool) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarView$seINE1MF9Wb6jBs3U7jhkEzAV4 */
             public final /* synthetic */ Boolean f$1;
 
             {

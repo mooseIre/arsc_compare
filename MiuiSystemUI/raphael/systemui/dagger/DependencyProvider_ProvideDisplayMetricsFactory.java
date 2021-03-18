@@ -18,6 +18,7 @@ public final class DependencyProvider_ProvideDisplayMetricsFactory implements Fa
         this.windowManagerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public DisplayMetrics get() {
         return provideInstance(this.module, this.contextProvider, this.windowManagerProvider);
     }

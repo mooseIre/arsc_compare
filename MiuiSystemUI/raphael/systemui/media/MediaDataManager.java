@@ -28,6 +28,7 @@ import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.notification.MediaNotificationProcessor;
 import com.android.systemui.statusbar.notification.row.HybridGroupManager;
 import com.android.systemui.util.Assert;
+import com.android.systemui.util.Utils;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +40,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import kotlin.Unit;
+import kotlin.collections.ArraysKt___ArraysKt;
+import kotlin.collections.CollectionsKt__CollectionsJVMKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$ObjectRef;
@@ -54,8 +58,7 @@ public final class MediaDataManager implements Dumpable {
     private final Executor foregroundExecutor;
     private final Set<Listener> listeners;
     private final MediaControllerFactory mediaControllerFactory;
-    /* access modifiers changed from: private */
-    public final LinkedHashMap<String, MediaData> mediaEntries;
+    private final LinkedHashMap<String, MediaData> mediaEntries;
     private boolean useMediaResumption;
     private final boolean useQsMediaPlayer;
 
@@ -95,14 +98,18 @@ public final class MediaDataManager implements Dumpable {
         this.appChangeReceiver = new MediaDataManager$appChangeReceiver$1(this);
         dumpManager.registerDumpable("MediaDataManager", this);
         mediaTimeoutListener.setTimeoutCallback(new Function2<String, Boolean, Unit>(this) {
+            /* class com.android.systemui.media.MediaDataManager.AnonymousClass1 */
             final /* synthetic */ MediaDataManager this$0;
 
             {
                 this.this$0 = r1;
             }
 
-            public /* bridge */ /* synthetic */ Object invoke(Object obj, Object obj2) {
-                invoke((String) obj, ((Boolean) obj2).booleanValue());
+            /* Return type fixed from 'java.lang.Object' to match base method */
+            /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+            @Override // kotlin.jvm.functions.Function2
+            public /* bridge */ /* synthetic */ Unit invoke(String str, Boolean bool) {
+                invoke(str, bool.booleanValue());
                 return Unit.INSTANCE;
             }
 
@@ -119,7 +126,7 @@ public final class MediaDataManager implements Dumpable {
         MediaDataManager$appChangeReceiver$1 mediaDataManager$appChangeReceiver$1 = this.appChangeReceiver;
         UserHandle userHandle = UserHandle.ALL;
         Intrinsics.checkExpressionValueIsNotNull(userHandle, "UserHandle.ALL");
-        broadcastDispatcher3.registerReceiver(mediaDataManager$appChangeReceiver$1, intentFilter, (Executor) null, userHandle);
+        broadcastDispatcher3.registerReceiver(mediaDataManager$appChangeReceiver$1, intentFilter, null, userHandle);
         IntentFilter intentFilter2 = new IntentFilter();
         intentFilter2.addAction("android.intent.action.PACKAGE_REMOVED");
         intentFilter2.addAction("android.intent.action.PACKAGE_RESTARTED");
@@ -127,49 +134,22 @@ public final class MediaDataManager implements Dumpable {
         this.context.registerReceiver(this.appChangeReceiver, intentFilter2);
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public MediaDataManager(@org.jetbrains.annotations.NotNull android.content.Context r13, @org.jetbrains.annotations.NotNull java.util.concurrent.Executor r14, @org.jetbrains.annotations.NotNull java.util.concurrent.Executor r15, @org.jetbrains.annotations.NotNull com.android.systemui.media.MediaControllerFactory r16, @org.jetbrains.annotations.NotNull com.android.systemui.dump.DumpManager r17, @org.jetbrains.annotations.NotNull com.android.systemui.broadcast.BroadcastDispatcher r18, @org.jetbrains.annotations.NotNull com.android.systemui.media.MediaTimeoutListener r19, @org.jetbrains.annotations.NotNull com.android.systemui.media.MediaResumeListener r20) {
-        /*
-            r12 = this;
-            java.lang.String r0 = "context"
-            r2 = r13
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r13, r0)
-            java.lang.String r0 = "backgroundExecutor"
-            r3 = r14
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r14, r0)
-            java.lang.String r0 = "foregroundExecutor"
-            r4 = r15
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r15, r0)
-            java.lang.String r0 = "mediaControllerFactory"
-            r5 = r16
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r5, r0)
-            java.lang.String r0 = "dumpManager"
-            r7 = r17
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r7, r0)
-            java.lang.String r0 = "broadcastDispatcher"
-            r6 = r18
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r6, r0)
-            java.lang.String r0 = "mediaTimeoutListener"
-            r8 = r19
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r8, r0)
-            java.lang.String r0 = "mediaResumeListener"
-            r9 = r20
-            kotlin.jvm.internal.Intrinsics.checkParameterIsNotNull(r9, r0)
-            boolean r10 = com.android.systemui.util.Utils.useMediaResumption(r13)
-            boolean r11 = com.android.systemui.util.Utils.useQsMediaPlayer(r13)
-            r1 = r12
-            r1.<init>(r2, r3, r4, r5, r6, r7, r8, r9, r10, r11)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.media.MediaDataManager.<init>(android.content.Context, java.util.concurrent.Executor, java.util.concurrent.Executor, com.android.systemui.media.MediaControllerFactory, com.android.systemui.dump.DumpManager, com.android.systemui.broadcast.BroadcastDispatcher, com.android.systemui.media.MediaTimeoutListener, com.android.systemui.media.MediaResumeListener):void");
+    /* JADX INFO: this call moved to the top of the method (can break code semantics) */
+    public MediaDataManager(@NotNull Context context2, @NotNull Executor executor, @NotNull Executor executor2, @NotNull MediaControllerFactory mediaControllerFactory2, @NotNull DumpManager dumpManager, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull MediaTimeoutListener mediaTimeoutListener, @NotNull MediaResumeListener mediaResumeListener) {
+        this(context2, executor, executor2, mediaControllerFactory2, broadcastDispatcher2, dumpManager, mediaTimeoutListener, mediaResumeListener, Utils.useMediaResumption(context2), Utils.useQsMediaPlayer(context2));
+        Intrinsics.checkParameterIsNotNull(context2, "context");
+        Intrinsics.checkParameterIsNotNull(executor, "backgroundExecutor");
+        Intrinsics.checkParameterIsNotNull(executor2, "foregroundExecutor");
+        Intrinsics.checkParameterIsNotNull(mediaControllerFactory2, "mediaControllerFactory");
+        Intrinsics.checkParameterIsNotNull(dumpManager, "dumpManager");
+        Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
+        Intrinsics.checkParameterIsNotNull(mediaTimeoutListener, "mediaTimeoutListener");
+        Intrinsics.checkParameterIsNotNull(mediaResumeListener, "mediaResumeListener");
     }
 
     public final void onNotificationAdded(@NotNull String str, @NotNull StatusBarNotification statusBarNotification) {
-        String str2 = str;
-        StatusBarNotification statusBarNotification2 = statusBarNotification;
-        Intrinsics.checkParameterIsNotNull(str2, "key");
-        Intrinsics.checkParameterIsNotNull(statusBarNotification2, "sbn");
+        Intrinsics.checkParameterIsNotNull(str, "key");
+        Intrinsics.checkParameterIsNotNull(statusBarNotification, "sbn");
         if (!this.useQsMediaPlayer || !MediaDataManagerKt.isMediaNotification(statusBarNotification)) {
             onNotificationRemoved(str);
             return;
@@ -177,40 +157,40 @@ public final class MediaDataManager implements Dumpable {
         Assert.isMainThread();
         String packageName = statusBarNotification.getPackageName();
         Intrinsics.checkExpressionValueIsNotNull(packageName, "sbn.packageName");
-        String findExistingEntry = findExistingEntry(str2, packageName);
+        String findExistingEntry = findExistingEntry(str, packageName);
         if (findExistingEntry == null) {
-            MediaData access$getLOADING$p = MediaDataManagerKt.LOADING;
+            MediaData access$getLOADING$p = MediaDataManagerKt.access$getLOADING$p();
             String packageName2 = statusBarNotification.getPackageName();
             Intrinsics.checkExpressionValueIsNotNull(packageName2, "sbn.packageName");
-            this.mediaEntries.put(str2, MediaData.copy$default(access$getLOADING$p, 0, false, 0, (String) null, (Drawable) null, (CharSequence) null, (CharSequence) null, (Icon) null, (List) null, (List) null, packageName2, (MediaSession.Token) null, (PendingIntent) null, (MediaDeviceData) null, false, (Runnable) null, false, (String) null, false, 523263, (Object) null));
-        } else if (!Intrinsics.areEqual((Object) findExistingEntry, (Object) str2)) {
-            Object remove = this.mediaEntries.remove(findExistingEntry);
+            this.mediaEntries.put(str, MediaData.copy$default(access$getLOADING$p, 0, false, 0, null, null, null, null, null, null, null, packageName2, null, null, null, false, null, false, null, false, 523263, null));
+        } else if (!Intrinsics.areEqual(findExistingEntry, str)) {
+            MediaData remove = this.mediaEntries.remove(findExistingEntry);
             if (remove != null) {
                 Intrinsics.checkExpressionValueIsNotNull(remove, "mediaEntries.remove(oldKey)!!");
-                this.mediaEntries.put(str2, (MediaData) remove);
+                this.mediaEntries.put(str, remove);
             } else {
                 Intrinsics.throwNpe();
                 throw null;
             }
         }
-        loadMediaData(str2, statusBarNotification2, findExistingEntry);
+        loadMediaData(str, statusBarNotification, findExistingEntry);
     }
 
     /* access modifiers changed from: private */
     public final void removeAllForPackage(String str) {
         Assert.isMainThread();
-        Set<T> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+        Set<Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
         LinkedHashMap<String, MediaData> linkedHashMap = this.mediaEntries;
         LinkedHashMap linkedHashMap2 = new LinkedHashMap();
-        for (Map.Entry next : linkedHashMap.entrySet()) {
-            if (Intrinsics.areEqual((Object) ((MediaData) next.getValue()).getPackageName(), (Object) str)) {
-                linkedHashMap2.put(next.getKey(), next.getValue());
+        for (Map.Entry<String, MediaData> entry : linkedHashMap.entrySet()) {
+            if (Intrinsics.areEqual(entry.getValue().getPackageName(), str)) {
+                linkedHashMap2.put(entry.getKey(), entry.getValue());
             }
         }
-        for (Map.Entry entry : linkedHashMap2.entrySet()) {
-            this.mediaEntries.remove(entry.getKey());
-            for (T onMediaDataRemoved : set) {
-                onMediaDataRemoved.onMediaDataRemoved((String) entry.getKey());
+        for (Map.Entry entry2 : linkedHashMap2.entrySet()) {
+            this.mediaEntries.remove(entry2.getKey());
+            for (Listener listener : set) {
+                listener.onMediaDataRemoved((String) entry2.getKey());
             }
         }
     }
@@ -225,15 +205,14 @@ public final class MediaDataManager implements Dumpable {
     }
 
     public final void addResumptionControls(int i, @NotNull MediaDescription mediaDescription, @NotNull Runnable runnable, @NotNull MediaSession.Token token, @NotNull String str, @NotNull PendingIntent pendingIntent, @NotNull String str2) {
-        String str3 = str2;
         Intrinsics.checkParameterIsNotNull(mediaDescription, "desc");
         Intrinsics.checkParameterIsNotNull(runnable, "action");
         Intrinsics.checkParameterIsNotNull(token, "token");
         Intrinsics.checkParameterIsNotNull(str, "appName");
         Intrinsics.checkParameterIsNotNull(pendingIntent, "appIntent");
-        Intrinsics.checkParameterIsNotNull(str3, "packageName");
-        if (!this.mediaEntries.containsKey(str3)) {
-            this.mediaEntries.put(str3, MediaData.copy$default(MediaDataManagerKt.LOADING, 0, false, 0, (String) null, (Drawable) null, (CharSequence) null, (CharSequence) null, (Icon) null, (List) null, (List) null, str2, (MediaSession.Token) null, (PendingIntent) null, (MediaDeviceData) null, false, runnable, false, (String) null, true, 228351, (Object) null));
+        Intrinsics.checkParameterIsNotNull(str2, "packageName");
+        if (!this.mediaEntries.containsKey(str2)) {
+            this.mediaEntries.put(str2, MediaData.copy$default(MediaDataManagerKt.access$getLOADING$p(), 0, false, 0, null, null, null, null, null, null, null, str2, null, null, null, false, runnable, false, null, true, 228351, null));
         }
         this.backgroundExecutor.execute(new MediaDataManager$addResumptionControls$1(this, i, mediaDescription, runnable, token, str, pendingIntent, str2));
     }
@@ -274,14 +253,7 @@ public final class MediaDataManager implements Dumpable {
             this.mediaEntries.remove(str2);
             return;
         }
-        String str3 = str2;
-        StringBuilder sb = new StringBuilder();
-        sb.append("adding track for ");
-        int i2 = i;
-        sb.append(i);
-        sb.append(" from browser: ");
-        sb.append(mediaDescription);
-        Log.d("MediaDataManager", sb.toString());
+        Log.d("MediaDataManager", "adding track for " + i + " from browser: " + mediaDescription);
         Bitmap iconBitmap = mediaDescription.getIconBitmap();
         Icon icon = null;
         if (iconBitmap == null && mediaDescription.getIconUri() != null) {
@@ -296,8 +268,7 @@ public final class MediaDataManager implements Dumpable {
         if (iconBitmap != null) {
             icon = Icon.createWithBitmap(iconBitmap);
         }
-        Icon icon2 = icon;
-        this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBgForResumption$1(this, str2, i, iconBitmap != null ? computeBackgroundColor(iconBitmap) : -12303292, str, mediaDescription, icon2, getResumeMediaAction(runnable), token, pendingIntent, runnable));
+        this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBgForResumption$1(this, str2, i, iconBitmap != null ? computeBackgroundColor(iconBitmap) : -12303292, str, mediaDescription, icon, getResumeMediaAction(runnable), token, pendingIntent, runnable));
     }
 
     /* access modifiers changed from: private */
@@ -326,13 +297,12 @@ public final class MediaDataManager implements Dumpable {
             } else {
                 icon = Icon.createWithBitmap(bitmap);
             }
-            Icon icon2 = icon;
             int i = 0;
-            if (icon2 != null && bitmap == null) {
-                if (icon2.getType() == 1 || icon2.getType() == 5) {
-                    bitmap = icon2.getBitmap();
+            if (icon != null && bitmap == null) {
+                if (icon.getType() == 1 || icon.getType() == 5) {
+                    bitmap = icon.getBitmap();
                 } else {
-                    Drawable loadDrawable = icon2.loadDrawable(this.context);
+                    Drawable loadDrawable = icon.loadDrawable(this.context);
                     Intrinsics.checkExpressionValueIsNotNull(loadDrawable, "artWorkIcon.loadDrawable(context)");
                     Bitmap createBitmap = Bitmap.createBitmap(loadDrawable.getIntrinsicWidth(), loadDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
                     Canvas canvas = new Canvas(createBitmap);
@@ -348,19 +318,19 @@ public final class MediaDataManager implements Dumpable {
             Drawable loadDrawable2 = notification3.getSmallIcon().loadDrawable(this.context);
             Intrinsics.checkExpressionValueIsNotNull(loadDrawable2, "sbn.notification.smallIcon.loadDrawable(context)");
             Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
-            T string = metadata.getString("android.media.metadata.DISPLAY_TITLE");
-            ref$ObjectRef.element = string;
-            if (((CharSequence) string) == null) {
-                ref$ObjectRef.element = metadata.getString("android.media.metadata.TITLE");
+            T t = (T) metadata.getString("android.media.metadata.DISPLAY_TITLE");
+            ref$ObjectRef.element = t;
+            if (t == null) {
+                ref$ObjectRef.element = (T) metadata.getString("android.media.metadata.TITLE");
             }
-            if (((CharSequence) ref$ObjectRef.element) == null) {
-                ref$ObjectRef.element = HybridGroupManager.resolveTitle(notification2);
+            if (ref$ObjectRef.element == null) {
+                ref$ObjectRef.element = (T) HybridGroupManager.resolveTitle(notification2);
             }
             Ref$ObjectRef ref$ObjectRef2 = new Ref$ObjectRef();
-            T string2 = metadata.getString("android.media.metadata.ARTIST");
-            ref$ObjectRef2.element = string2;
-            if (((CharSequence) string2) == null) {
-                ref$ObjectRef2.element = HybridGroupManager.resolveText(notification2);
+            T t2 = (T) metadata.getString("android.media.metadata.ARTIST");
+            ref$ObjectRef2.element = t2;
+            if (t2 == null) {
+                ref$ObjectRef2.element = (T) HybridGroupManager.resolveText(notification2);
             }
             ArrayList arrayList = new ArrayList();
             Notification.Action[] actionArr2 = notification2.actions;
@@ -368,18 +338,16 @@ public final class MediaDataManager implements Dumpable {
             if (intArray == null || (list = ArraysKt___ArraysKt.toMutableList(intArray)) == null) {
                 list = new ArrayList();
             }
-            List list2 = list;
             Context packageContext = statusBarNotification.getPackageContext(this.context);
             Intrinsics.checkExpressionValueIsNotNull(packageContext, "sbn.getPackageContext(context)");
             if (actionArr2 != null) {
                 int length = actionArr2.length;
                 while (i < length) {
-                    int i2 = length;
                     Notification.Action action = actionArr2[i];
                     if (action.getIcon() == null) {
                         actionArr = actionArr2;
                         Log.i("MediaDataManager", "No icon for action " + i + ' ' + action.title);
-                        list2.remove(Integer.valueOf(i));
+                        list.remove(Integer.valueOf(i));
                         context2 = packageContext;
                         notification = notification2;
                     } else {
@@ -389,22 +357,19 @@ public final class MediaDataManager implements Dumpable {
                         arrayList.add(new MediaAction(action.getIcon().loadDrawable(packageContext), action.actionIntent != null ? new MediaDataManager$loadMediaDataInBg$runnable$1(action) : null, action.title, action));
                     }
                     i++;
-                    StatusBarNotification statusBarNotification2 = statusBarNotification;
-                    length = i2;
+                    length = length;
                     actionArr2 = actionArr;
                     notification2 = notification;
                     packageContext = context2;
                 }
             }
-            Executor executor = this.foregroundExecutor;
-            MediaDataManager$loadMediaDataInBg$1 mediaDataManager$loadMediaDataInBg$1 = r0;
-            MediaDataManager$loadMediaDataInBg$1 mediaDataManager$loadMediaDataInBg$12 = new MediaDataManager$loadMediaDataInBg$1(this, str, str2, statusBarNotification, computeBackgroundColor, loadHeaderAppName, loadDrawable2, ref$ObjectRef2, ref$ObjectRef, icon2, arrayList, list2, token, notification2);
-            executor.execute(mediaDataManager$loadMediaDataInBg$1);
+            this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBg$1(this, str, str2, statusBarNotification, computeBackgroundColor, loadHeaderAppName, loadDrawable2, ref$ObjectRef2, ref$ObjectRef, icon, arrayList, list, token, notification2));
         }
     }
 
     private final Bitmap loadBitmapFromUri(MediaMetadata mediaMetadata) {
-        for (String str : MediaDataManagerKt.ART_URIS) {
+        String[] access$getART_URIS$p = MediaDataManagerKt.access$getART_URIS$p();
+        for (String str : access$getART_URIS$p) {
             String string = mediaMetadata.getString(str);
             if (!TextUtils.isEmpty(string)) {
                 Uri parse = Uri.parse(string);
@@ -457,7 +422,7 @@ public final class MediaDataManager implements Dumpable {
     }
 
     private final MediaAction getResumeMediaAction(Runnable runnable) {
-        return new MediaAction(this.context.getDrawable(C0013R$drawable.lb_ic_play), runnable, this.context.getString(C0021R$string.controls_media_resume), (Notification.Action) null, 8, (DefaultConstructorMarker) null);
+        return new MediaAction(this.context.getDrawable(C0013R$drawable.lb_ic_play), runnable, this.context.getString(C0021R$string.controls_media_resume), null, 8, null);
     }
 
     public final void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {
@@ -466,44 +431,42 @@ public final class MediaDataManager implements Dumpable {
         Assert.isMainThread();
         if (this.mediaEntries.containsKey(str)) {
             this.mediaEntries.put(str, mediaData);
-            for (T onMediaDataLoaded : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
-                onMediaDataLoaded.onMediaDataLoaded(str, str2, mediaData);
+            for (Listener listener : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+                listener.onMediaDataLoaded(str, str2, mediaData);
             }
         }
     }
 
     public final void onNotificationRemoved(@NotNull String str) {
-        String str2 = str;
-        Intrinsics.checkParameterIsNotNull(str2, "key");
+        Intrinsics.checkParameterIsNotNull(str, "key");
         Assert.isMainThread();
-        MediaData mediaData = (MediaData) this.mediaEntries.remove(str2);
+        MediaData remove = this.mediaEntries.remove(str);
         if (this.useMediaResumption) {
-            String str3 = null;
-            if ((mediaData != null ? mediaData.getResumeAction() : null) != null) {
-                Log.d("MediaDataManager", "Not removing " + str2 + " because resumable");
-                Runnable resumeAction = mediaData.getResumeAction();
+            String str2 = null;
+            if ((remove != null ? remove.getResumeAction() : null) != null) {
+                Log.d("MediaDataManager", "Not removing " + str + " because resumable");
+                Runnable resumeAction = remove.getResumeAction();
                 if (resumeAction != null) {
                     boolean z = false;
-                    MediaData copy$default = MediaData.copy$default(mediaData, 0, false, 0, (String) null, (Drawable) null, (CharSequence) null, (CharSequence) null, (Icon) null, CollectionsKt__CollectionsJVMKt.listOf(getResumeMediaAction(resumeAction)), CollectionsKt__CollectionsJVMKt.listOf(0), (String) null, (MediaSession.Token) null, (PendingIntent) null, (MediaDeviceData) null, false, (Runnable) null, true, (String) null, false, 439551, (Object) null);
-                    if (mediaData != null) {
-                        str3 = mediaData.getPackageName();
+                    MediaData copy$default = MediaData.copy$default(remove, 0, false, 0, null, null, null, null, null, CollectionsKt__CollectionsJVMKt.listOf(getResumeMediaAction(resumeAction)), CollectionsKt__CollectionsJVMKt.listOf(0), null, null, null, null, false, null, true, null, false, 439551, null);
+                    if (remove != null) {
+                        str2 = remove.getPackageName();
                     }
-                    String str4 = str3;
-                    if (this.mediaEntries.put(str4, copy$default) == null) {
+                    if (this.mediaEntries.put(str2, copy$default) == null) {
                         z = true;
                     }
-                    Set<T> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+                    Set<Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
                     if (z) {
-                        for (T onMediaDataLoaded : set) {
-                            onMediaDataLoaded.onMediaDataLoaded(str4, str2, copy$default);
+                        for (Listener listener : set) {
+                            listener.onMediaDataLoaded(str2, str, copy$default);
                         }
                         return;
                     }
-                    for (T onMediaDataRemoved : set) {
-                        onMediaDataRemoved.onMediaDataRemoved(str2);
+                    for (Listener listener2 : set) {
+                        listener2.onMediaDataRemoved(str);
                     }
-                    for (T onMediaDataLoaded2 : set) {
-                        onMediaDataLoaded2.onMediaDataLoaded(str4, str4, copy$default);
+                    for (Listener listener3 : set) {
+                        listener3.onMediaDataLoaded(str2, str2, copy$default);
                     }
                     return;
                 }
@@ -511,9 +474,9 @@ public final class MediaDataManager implements Dumpable {
                 throw null;
             }
         }
-        if (mediaData != null) {
-            for (T onMediaDataRemoved2 : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
-                onMediaDataRemoved2.onMediaDataRemoved(str2);
+        if (remove != null) {
+            for (Listener listener4 : CollectionsKt___CollectionsKt.toSet(this.listeners)) {
+                listener4.onMediaDataRemoved(str);
             }
         }
     }
@@ -522,24 +485,25 @@ public final class MediaDataManager implements Dumpable {
         if (this.useMediaResumption != z) {
             this.useMediaResumption = z;
             if (!z) {
-                Set<T> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
+                Set<Listener> set = CollectionsKt___CollectionsKt.toSet(this.listeners);
                 LinkedHashMap<String, MediaData> linkedHashMap = this.mediaEntries;
                 LinkedHashMap linkedHashMap2 = new LinkedHashMap();
-                for (Map.Entry next : linkedHashMap.entrySet()) {
-                    if (!((MediaData) next.getValue()).getActive()) {
-                        linkedHashMap2.put(next.getKey(), next.getValue());
+                for (Map.Entry<String, MediaData> entry : linkedHashMap.entrySet()) {
+                    if (!entry.getValue().getActive()) {
+                        linkedHashMap2.put(entry.getKey(), entry.getValue());
                     }
                 }
-                for (Map.Entry entry : linkedHashMap2.entrySet()) {
-                    this.mediaEntries.remove(entry.getKey());
-                    for (T onMediaDataRemoved : set) {
-                        onMediaDataRemoved.onMediaDataRemoved((String) entry.getKey());
+                for (Map.Entry entry2 : linkedHashMap2.entrySet()) {
+                    this.mediaEntries.remove(entry2.getKey());
+                    for (Listener listener : set) {
+                        listener.onMediaDataRemoved((String) entry2.getKey());
                     }
                 }
             }
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");

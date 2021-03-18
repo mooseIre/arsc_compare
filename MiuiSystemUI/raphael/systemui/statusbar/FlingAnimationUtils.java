@@ -138,7 +138,8 @@ public class FlingAnimationUtils {
         return this.mMinVelocityPxPerSecond;
     }
 
-    private static final class InterpolatorInterpolator implements Interpolator {
+    /* access modifiers changed from: private */
+    public static final class InterpolatorInterpolator implements Interpolator {
         private Interpolator mCrossfader;
         private Interpolator mInterpolator1;
         private Interpolator mInterpolator2;
@@ -155,7 +156,8 @@ public class FlingAnimationUtils {
         }
     }
 
-    private static final class VelocityInterpolator implements Interpolator {
+    /* access modifiers changed from: private */
+    public static final class VelocityInterpolator implements Interpolator {
         private float mDiff;
         private float mDurationSeconds;
         private float mVelocity;
@@ -171,7 +173,8 @@ public class FlingAnimationUtils {
         }
     }
 
-    private static class AnimatorProperties {
+    /* access modifiers changed from: private */
+    public static class AnimatorProperties {
         long duration;
         Interpolator interpolator;
 

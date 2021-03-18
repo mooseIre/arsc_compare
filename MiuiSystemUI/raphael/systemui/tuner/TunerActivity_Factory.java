@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class TunerActivity_Factory implements Factory<TunerActivity> {
     private static final TunerActivity_Factory INSTANCE = new TunerActivity_Factory();
 
+    @Override // javax.inject.Provider
     public TunerActivity get() {
         return provideInstance();
     }

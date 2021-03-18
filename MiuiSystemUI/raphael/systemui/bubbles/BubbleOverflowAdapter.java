@@ -17,11 +17,11 @@ import com.android.systemui.bubbles.BadgedImageView;
 import java.util.List;
 import java.util.function.Consumer;
 
+/* access modifiers changed from: package-private */
 /* compiled from: BubbleOverflowActivity */
-class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
     private List<Bubble> mBubbles;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private int mHeight;
     private Consumer<Bubble> mPromoteBubbleFromOverflow;
     private int mWidth;
@@ -34,6 +34,7 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.mHeight = i2;
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
         LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(viewGroup.getContext()).inflate(C0017R$layout.bubble_overflow_view, viewGroup, false);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, -2);
@@ -53,6 +54,7 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
         viewHolder.iconView.setRenderedBubble(bubble);
         viewHolder.iconView.removeDotSuppressionFlag(BadgedImageView.SuppressionFlag.FLYOUT_VISIBLE);
         viewHolder.iconView.setOnClickListener(new View.OnClickListener(bubble) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleOverflowAdapter$MgnimWNCDitXqbPJN2vzJpXXigU */
             public final /* synthetic */ Bubble f$1;
 
             {
@@ -67,8 +69,10 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (title == null) {
             title = this.mContext.getResources().getString(C0021R$string.notification_bubble_title);
         }
-        viewHolder.iconView.setContentDescription(this.mContext.getResources().getString(C0021R$string.bubble_content_description_single, new Object[]{title, bubble.getAppName()}));
+        viewHolder.iconView.setContentDescription(this.mContext.getResources().getString(C0021R$string.bubble_content_description_single, title, bubble.getAppName()));
         viewHolder.iconView.setAccessibilityDelegate(new View.AccessibilityDelegate() {
+            /* class com.android.systemui.bubbles.BubbleOverflowAdapter.AnonymousClass1 */
+
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
                 accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, BubbleOverflowAdapter.this.mContext.getResources().getString(C0021R$string.bubble_accessibility_action_add_back)));
@@ -90,6 +94,7 @@ class BubbleOverflowAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.mPromoteBubbleFromOverflow.accept(bubble);
     }
 
+    @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public int getItemCount() {
         return this.mBubbles.size();
     }

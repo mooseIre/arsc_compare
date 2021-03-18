@@ -17,6 +17,7 @@ public final class DeviceProvisionedControllerImpl_Factory implements Factory<De
         this.broadcastDispatcherProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public DeviceProvisionedControllerImpl get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.broadcastDispatcherProvider);
     }

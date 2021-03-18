@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RemoteViews;
@@ -30,6 +29,7 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
         ((CommandQueue) Dependency.get(CommandQueue.class)).addCallback((CommandQueue.Callbacks) this);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setStatus(int i, String str, Bundle bundle) {
         String string;
         if (str == null) {
@@ -55,7 +55,7 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
                     if (i2 >= 0) {
                         RemoteViews remoteViews = (RemoteViews) bundle.getParcelable("key_status_bar_mini_state");
                         if (remoteViews != null) {
-                            addMiuiStatusBarState(string, new SystemUIPromptState(string, (RemoteViews) null, remoteViews, i2));
+                            addMiuiStatusBarState(string, new SystemUIPromptState(string, null, remoteViews, i2));
                         }
                     }
                 } catch (Exception e) {
@@ -68,7 +68,7 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
     public void addPromptContainer(FrameLayout frameLayout, int i) {
         if (frameLayout != null) {
             frameLayout.removeAllViews();
-            LayoutInflater.from(this.mContext).inflate(C0017R$layout.miui_status_bar_prompt, frameLayout, true);
+            LayoutInflater.from(this.mContext).inflate(C0017R$layout.miui_status_bar_prompt, (ViewGroup) frameLayout, true);
             this.mPromptContainers.put(frameLayout, Integer.valueOf(i));
             updateMiuiStatusBarPrompt(frameLayout, i);
         }
@@ -96,16 +96,16 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
     /* access modifiers changed from: protected */
     public void updateMiuiStatusBarPrompt() {
         SystemUIPromptState systemUIPromptState = null;
-        for (Map.Entry<String, SystemUIPromptState> value : this.mMiuiStatusBarStates.entrySet()) {
-            SystemUIPromptState systemUIPromptState2 = (SystemUIPromptState) value.getValue();
-            if (systemUIPromptState2.mPriority >= 0) {
-                systemUIPromptState = systemUIPromptState2;
+        for (Map.Entry<String, SystemUIPromptState> entry : this.mMiuiStatusBarStates.entrySet()) {
+            SystemUIPromptState value = entry.getValue();
+            if (value.mPriority >= 0) {
+                systemUIPromptState = value;
             }
         }
         if (this.mCurrentPromptState != systemUIPromptState) {
             this.mCurrentPromptState = systemUIPromptState;
-            for (Map.Entry next : this.mPromptContainers.entrySet()) {
-                updateMiuiStatusBarPrompt((FrameLayout) next.getKey(), ((Integer) next.getValue()).intValue());
+            for (Map.Entry<FrameLayout, Integer> entry2 : this.mPromptContainers.entrySet()) {
+                updateMiuiStatusBarPrompt(entry2.getKey(), entry2.getValue().intValue());
             }
         }
     }
@@ -136,7 +136,7 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
             }
             return;
         }
-        frameLayout.setOnClickListener((View.OnClickListener) null);
+        frameLayout.setOnClickListener(null);
         frameLayout2.setVisibility(8);
     }
 }

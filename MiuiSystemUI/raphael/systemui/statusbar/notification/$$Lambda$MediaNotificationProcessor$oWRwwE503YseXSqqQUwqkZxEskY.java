@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$MediaNotificationProcessor$oWRwwE503
     private /* synthetic */ $$Lambda$MediaNotificationProcessor$oWRwwE503YseXSqqQUwqkZxEskY() {
     }
 
+    @Override // androidx.palette.graphics.Palette.Filter
     public final boolean isAllowed(int i, float[] fArr) {
         return MediaNotificationProcessor.lambda$new$0(i, fArr);
     }

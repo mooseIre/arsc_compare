@@ -15,6 +15,7 @@ public final class ControlsFavoritingActivity$currentUserTracker$1 extends Curre
         this.startingUser = controlsFavoritingActivity.controller.getCurrentUserId();
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(int i) {
         if (i != this.startingUser) {
             stopTracking();

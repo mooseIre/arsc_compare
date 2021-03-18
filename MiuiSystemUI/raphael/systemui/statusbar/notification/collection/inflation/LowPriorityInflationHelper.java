@@ -26,12 +26,14 @@ public class LowPriorityInflationHelper {
         if (!expandableNotificationRow.isRemoved() && expandableNotificationRow.isLowPriority() != shouldUseLowPriorityView) {
             rowContentBindParams.setUseLowPriority(shouldUseLowPriorityView);
             this.mRowContentBindStage.requestRebind(notificationEntry, new NotifBindPipeline.BindCallback(shouldUseLowPriorityView) {
+                /* class com.android.systemui.statusbar.notification.collection.inflation.$$Lambda$LowPriorityInflationHelper$n1ql9BIAz5q3RsKneWWcajpBNlc */
                 public final /* synthetic */ boolean f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
+                @Override // com.android.systemui.statusbar.notification.row.NotifBindPipeline.BindCallback
                 public final void onBindFinished(NotificationEntry notificationEntry) {
                     ExpandableNotificationRow.this.setIsLowPriority(this.f$1);
                 }
@@ -46,9 +48,6 @@ public class LowPriorityInflationHelper {
         } else {
             z = this.mGroupManager.isChildInGroupWithSummary(notificationEntry.getSbn());
         }
-        if (!notificationEntry.isAmbient() || z) {
-            return false;
-        }
-        return true;
+        return notificationEntry.isAmbient() && !z;
     }
 }

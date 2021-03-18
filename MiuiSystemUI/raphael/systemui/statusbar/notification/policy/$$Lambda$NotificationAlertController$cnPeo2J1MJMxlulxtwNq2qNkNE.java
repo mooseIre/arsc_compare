@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$NotificationAlertController$cnPeo2J1
     private /* synthetic */ $$Lambda$NotificationAlertController$cnPeo2J1MJMxlulxtwNq2qNkNE() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((NotificationEntry) obj).getSbn().setHasShownAfterUnlock(true);
     }

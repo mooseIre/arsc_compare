@@ -11,6 +11,7 @@ public final class SensorPrivacyControllerImpl_Factory implements Factory<Sensor
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SensorPrivacyControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

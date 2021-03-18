@@ -15,6 +15,7 @@ public final class NotificationGroupManager_Factory implements Factory<Notificat
         this.peopleNotificationIdentifierProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationGroupManager get() {
         return provideInstance(this.statusBarStateControllerProvider, this.peopleNotificationIdentifierProvider);
     }

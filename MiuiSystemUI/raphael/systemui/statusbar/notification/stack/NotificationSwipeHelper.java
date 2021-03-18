@@ -16,12 +16,15 @@ import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 
-class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeActionHelper {
+/* access modifiers changed from: package-private */
+public class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeActionHelper {
     @VisibleForTesting
     protected static final long COVER_MENU_DELAY = 4000;
     private final NotificationCallback mCallback;
     private NotificationMenuRowPlugin mCurrMenuRow;
     private final Runnable mFalsingCheck = new Runnable() {
+        /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationSwipeHelper$C9LXWH0up2brEDre5OaSo4akO38 */
+
         public final void run() {
             NotificationSwipeHelper.this.lambda$new$0$NotificationSwipeHelper();
         }
@@ -61,7 +64,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
     }
 
     public void clearTranslatingParentView() {
-        setTranslatingParentView((View) null);
+        setTranslatingParentView(null);
     }
 
     /* access modifiers changed from: protected */
@@ -75,11 +78,11 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
     }
 
     public void clearExposedMenuView() {
-        setExposedMenuView((View) null);
+        setExposedMenuView(null);
     }
 
     public void clearCurrentMenuRow() {
-        setCurrentMenuRow((NotificationMenuRowPlugin) null);
+        setCurrentMenuRow(null);
     }
 
     public View getExposedMenuView() {
@@ -111,6 +114,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SwipeHelper
     public void onChildSnappedBack(View view, float f) {
         NotificationMenuRowPlugin notificationMenuRowPlugin = this.mCurrMenuRow;
         if (notificationMenuRowPlugin != null && f == 0.0f) {
@@ -119,6 +123,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         }
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public void onDownUpdate(View view, MotionEvent motionEvent) {
         this.mTranslatingParentView = view;
         NotificationMenuRowPlugin currentMenuRow = getCurrentMenuRow();
@@ -150,6 +155,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         return !swipedFarEnough() && notificationMenuRowPlugin.isSwipedEnoughToShowMenu();
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public void onMoveUpdate(View view, MotionEvent motionEvent, float f, float f2) {
         getHandler().removeCallbacks(getFalsingCheck());
         NotificationMenuRowPlugin currentMenuRow = getCurrentMenuRow();
@@ -158,6 +164,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         }
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public boolean handleUpEvent(MotionEvent motionEvent, View view, float f, float f2) {
         NotificationMenuRowPlugin currentMenuRow = getCurrentMenuRow();
         if (currentMenuRow == null) {
@@ -223,6 +230,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         }
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public void dismissChild(View view, float f, boolean z) {
         superDismissChild(view, f, z);
         if (this.mCallback.shouldDismissQuickly()) {
@@ -244,6 +252,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         super.snapChild(view, f, f2);
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public void snapChild(View view, float f, float f2) {
         superSnapChild(view, f, f2);
         this.mCallback.onDragCancelled(view);
@@ -252,10 +261,12 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public void snooze(StatusBarNotification statusBarNotification, NotificationSwipeActionHelper.SnoozeOption snoozeOption) {
         this.mCallback.onSnooze(statusBarNotification, snoozeOption);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public void snooze(StatusBarNotification statusBarNotification, int i) {
         this.mCallback.onSnooze(statusBarNotification, i);
     }
@@ -275,6 +286,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         return super.getViewTranslationAnimator(view, f, animatorUpdateListener);
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public Animator getViewTranslationAnimator(View view, float f, ValueAnimator.AnimatorUpdateListener animatorUpdateListener) {
         if (view instanceof ExpandableNotificationRow) {
             return ((ExpandableNotificationRow) view).getTranslateViewAnimator(f, animatorUpdateListener);
@@ -282,12 +294,14 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         return superGetViewTranslationAnimator(view, f, animatorUpdateListener);
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public void setTranslation(View view, float f) {
         if (view instanceof SwipeableView) {
             ((SwipeableView) view).setTranslation(f);
         }
     }
 
+    @Override // com.android.systemui.SwipeHelper
     public float getTranslation(View view) {
         if (view instanceof SwipeableView) {
             return ((SwipeableView) view).getTranslation();
@@ -295,30 +309,36 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         return 0.0f;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public boolean swipedFastEnough(float f, float f2) {
         return swipedFastEnough();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SwipeHelper
     @VisibleForTesting
     public boolean swipedFastEnough() {
         return super.swipedFastEnough();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public boolean swipedFarEnough(float f, float f2) {
         return swipedFarEnough();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SwipeHelper
     @VisibleForTesting
     public boolean swipedFarEnough() {
         return super.swipedFarEnough();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public void dismiss(View view, float f) {
         dismissChild(view, f, !swipedFastEnough());
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public void snapOpen(View view, int i, float f) {
         snapChild(view, (float) i, f);
     }
@@ -330,11 +350,13 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SwipeHelper
     @VisibleForTesting
     public float getEscapeVelocity() {
         return super.getEscapeVelocity();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper
     public float getMinDismissVelocity() {
         return getEscapeVelocity();
     }
@@ -363,7 +385,7 @@ class NotificationSwipeHelper extends SwipeHelper implements NotificationSwipeAc
         if (shouldResetMenu(z2)) {
             View exposedMenuView = getExposedMenuView();
             if (z) {
-                Animator viewTranslationAnimator = getViewTranslationAnimator(exposedMenuView, 0.0f, (ValueAnimator.AnimatorUpdateListener) null);
+                Animator viewTranslationAnimator = getViewTranslationAnimator(exposedMenuView, 0.0f, null);
                 if (viewTranslationAnimator != null) {
                     viewTranslationAnimator.start();
                 }

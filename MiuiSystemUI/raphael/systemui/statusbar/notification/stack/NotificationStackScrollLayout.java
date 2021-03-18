@@ -17,7 +17,6 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.ServiceManager;
 import android.provider.Settings;
-import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -150,8 +149,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private int mActivePointerId = -1;
     private ArrayList<View> mAddedHeadsUpChildren = new ArrayList<>();
     private final boolean mAllowLongPress;
-    /* access modifiers changed from: private */
-    public final AmbientState mAmbientState;
+    private final AmbientState mAmbientState;
     private boolean mAnimateBottomOnLayout;
     private boolean mAnimateNextBackgroundBottom;
     private boolean mAnimateNextBackgroundTop;
@@ -159,18 +157,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private ArrayList<AnimationEvent> mAnimationEvents = new ArrayList<>();
     private HashSet<Runnable> mAnimationFinishedRunnables = new HashSet<>();
     private boolean mAnimationRunning;
-    /* access modifiers changed from: private */
-    public boolean mAnimationsEnabled;
-    /* access modifiers changed from: private */
-    public final Rect mBackgroundAnimationRect;
+    private boolean mAnimationsEnabled;
+    private final Rect mBackgroundAnimationRect;
     private final Paint mBackgroundPaint = new Paint();
     private ViewTreeObserver.OnPreDrawListener mBackgroundUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Q8bAVckgKDEBbXIsfAy3cWAYiM */
+
         public final boolean onPreDraw() {
             return NotificationStackScrollLayout.this.lambda$new$0$NotificationStackScrollLayout();
         }
     };
-    /* access modifiers changed from: private */
-    public float mBackgroundXFactor;
+    private float mBackgroundXFactor;
     private boolean mBackwardScrollable;
     private final IStatusBarService mBarService;
     private int mBgColor;
@@ -183,13 +180,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private ArrayList<ExpandableView> mChildrenChangingPositions = new ArrayList<>();
     private HashSet<ExpandableView> mChildrenToAddAnimated = new HashSet<>();
     private ArrayList<ExpandableView> mChildrenToRemoveAnimated = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public boolean mChildrenUpdateRequested;
+    private boolean mChildrenUpdateRequested;
     private ViewTreeObserver.OnPreDrawListener mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass1 */
+
         public boolean onPreDraw() {
             NotificationStackScrollLayout.this.updateForcedScroll();
             NotificationStackScrollLayout.this.updateChildren();
-            boolean unused = NotificationStackScrollLayout.this.mChildrenUpdateRequested = false;
+            NotificationStackScrollLayout.this.mChildrenUpdateRequested = false;
             NotificationStackScrollLayout.this.getViewTreeObserver().removeOnPreDrawListener(this);
             return true;
         }
@@ -202,18 +200,20 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private int mContentHeight;
     private boolean mContinuousBackgroundUpdate;
     private boolean mContinuousShadowUpdate;
-    /* access modifiers changed from: private */
-    public int mCornerRadius;
+    private int mCornerRadius;
     private int mCurrentStackHeight = Integer.MAX_VALUE;
     private float mDimAmount;
-    /* access modifiers changed from: private */
-    public ValueAnimator mDimAnimator;
+    private ValueAnimator mDimAnimator;
     private final Animator.AnimatorListener mDimEndListener = new AnimatorListenerAdapter() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass4 */
+
         public void onAnimationEnd(Animator animator) {
-            ValueAnimator unused = NotificationStackScrollLayout.this.mDimAnimator = null;
+            NotificationStackScrollLayout.this.mDimAnimator = null;
         }
     };
     private ValueAnimator.AnimatorUpdateListener mDimUpdateListener = new ValueAnimator.AnimatorUpdateListener() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass5 */
+
         public void onAnimationUpdate(ValueAnimator valueAnimator) {
             NotificationStackScrollLayout.this.setDimAmount(((Float) valueAnimator.getAnimatedValue()).floatValue());
         }
@@ -221,36 +221,26 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private boolean mDimmedNeedsAnimation;
     private boolean mDisallowDismissInThisMotion;
     private boolean mDisallowScrollingInThisMotion;
-    /* access modifiers changed from: private */
-    public boolean mDismissAllInProgress;
+    private boolean mDismissAllInProgress;
     private boolean mDismissRtl;
-    /* access modifiers changed from: private */
-    public final DisplayMetrics mDisplayMetrics;
-    /* access modifiers changed from: private */
-    public boolean mDontClampNextScroll;
-    /* access modifiers changed from: private */
-    public boolean mDontReportNextOverScroll;
+    private final DisplayMetrics mDisplayMetrics;
+    private boolean mDontClampNextScroll;
+    private boolean mDontReportNextOverScroll;
     private int mDownX;
     private final DragDownHelper.DragDownCallback mDragDownCallback;
-    /* access modifiers changed from: private */
-    public final DynamicPrivacyController mDynamicPrivacyController;
+    private final DynamicPrivacyController mDynamicPrivacyController;
     protected EmptyShadeView mEmptyShadeView;
     private final NotificationEntryManager mEntryManager;
     private boolean mEverythingNeedsAnimation;
     private ExpandHelper mExpandHelper;
     private ExpandHelper.Callback mExpandHelperCallback;
-    /* access modifiers changed from: private */
-    public ExpandableView mExpandedGroupView;
+    private ExpandableView mExpandedGroupView;
     private float mExpandedHeight;
     private ArrayList<BiConsumer<Float, Float>> mExpandedHeightListeners;
-    /* access modifiers changed from: private */
-    public boolean mExpandedInThisMotion;
-    /* access modifiers changed from: private */
-    public boolean mExpandingNotification;
-    /* access modifiers changed from: private */
-    public boolean mFadeNotificationsOnDismiss;
-    /* access modifiers changed from: private */
-    public FalsingManager mFalsingManager;
+    private boolean mExpandedInThisMotion;
+    private boolean mExpandingNotification;
+    private boolean mFadeNotificationsOnDismiss;
+    private FalsingManager mFalsingManager;
     private final FeatureFlags mFeatureFlags;
     private final ForegroundServiceSectionController mFgsSectionController;
     private ForegroundServiceDungeonView mFgsSectionView;
@@ -264,10 +254,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private boolean mGenerateChildOrderChangedEvent;
     private long mGoToFullShadeDelay;
     private boolean mGoToFullShadeNeedsAnimation;
-    /* access modifiers changed from: private */
-    public boolean mGroupExpanded;
-    /* access modifiers changed from: private */
-    public boolean mGroupExpandedForMeasure;
+    private boolean mGroupExpanded;
+    private boolean mGroupExpandedForMeasure;
     private NotificationGroupManager mGroupManager;
     private boolean mHeadsUpAnimatingAway;
     private HeadsUpAppearanceController mHeadsUpAppearanceController;
@@ -275,11 +263,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private HashSet<Pair<ExpandableNotificationRow, Boolean>> mHeadsUpChangeAnimations = new HashSet<>();
     private boolean mHeadsUpGoingAwayAnimationsAllowed;
     private int mHeadsUpInset;
-    /* access modifiers changed from: private */
-    public HeadsUpManagerPhone mHeadsUpManager;
+    private HeadsUpManagerPhone mHeadsUpManager;
     private boolean mHideSensitiveNeedsAnimation;
-    /* access modifiers changed from: private */
-    public Interpolator mHideXInterpolator;
+    private Interpolator mHideXInterpolator;
     private boolean mHighPriorityBeforeSpeedBump;
     private NotificationIconAreaController mIconAreaController;
     private boolean mInHeadsUpPinnedMode;
@@ -291,35 +277,31 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private int mIntrinsicPadding;
     private boolean mIsBeingDragged;
     private boolean mIsClipped;
-    /* access modifiers changed from: private */
-    public boolean mIsExpanded = true;
+    private boolean mIsExpanded = true;
     private boolean mIsExpansionChanging;
     private boolean mIsTrackingSliding;
-    /* access modifiers changed from: private */
-    public final KeyguardBypassController mKeyguardBypassController;
-    /* access modifiers changed from: private */
-    public final KeyguardMediaController mKeyguardMediaController;
+    private final KeyguardBypassController mKeyguardBypassController;
+    private final KeyguardMediaController mKeyguardMediaController;
     private int mLastMotionY;
     private float mLastSentAppear;
     private float mLastSentExpandedHeight;
-    /* access modifiers changed from: private */
-    public float mLinearHideAmount;
+    private float mLinearHideAmount;
     private NotificationLogger.OnChildLocationsChangedListener mListener;
-    /* access modifiers changed from: private */
-    public final LockscreenGestureLogger mLockscreenGestureLogger;
+    private final LockscreenGestureLogger mLockscreenGestureLogger;
     private final NotificationLockscreenUserManager.UserChangedListener mLockscreenUserChangeListener = new NotificationLockscreenUserManager.UserChangedListener() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.NotificationLockscreenUserManager.UserChangedListener
         public void onUserChanged(int i) {
             NotificationStackScrollLayout.this.updateSensitiveness(false);
         }
     };
     private final NotificationLockscreenUserManager mLockscreenUserManager;
-    /* access modifiers changed from: private */
-    public ExpandableNotificationRow.LongPressListener mLongPressListener;
+    private ExpandableNotificationRow.LongPressListener mLongPressListener;
     private int mMaxDisplayedNotifications;
     private int mMaxLayoutHeight;
     private float mMaxOverScroll;
-    /* access modifiers changed from: private */
-    public int mMaxScrollAfterExpand;
+    private int mMaxScrollAfterExpand;
     private int mMaxTopPadding;
     private int mMaximumVelocity;
     @VisibleForTesting
@@ -330,16 +312,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private float mMinTopOverScrollToEscape;
     private int mMinimumVelocity;
     private boolean mNeedViewResizeAnimation;
-    /* access modifiers changed from: private */
-    public boolean mNeedsAnimation;
+    private boolean mNeedsAnimation;
     private final NotifCollection mNotifCollection;
     private final NotifPipeline mNotifPipeline;
     private NotificationActivityStarter mNotificationActivityStarter;
     private final NotificationSwipeHelper.NotificationCallback mNotificationCallback;
-    /* access modifiers changed from: private */
-    public final NotificationGutsManager mNotificationGutsManager;
-    /* access modifiers changed from: private */
-    public NotificationPanelViewController mNotificationPanelController;
+    private final NotificationGutsManager mNotificationGutsManager;
+    private NotificationPanelViewController mNotificationPanelController;
     private OnChildLocationsChangedListener mOnChildLocationsChangedListener;
     private ColorExtractor.OnColorsChangedListener mOnColorsChangedListener;
     private OnEmptySpaceClickListener mOnEmptySpaceClickListener;
@@ -347,6 +326,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private ExpandableView.OnHeightChangedListener mOnHeightChangedListener;
     private boolean mOnlyScrollingInThisMotion;
     private final ViewOutlineProvider mOutlineProvider = new ViewOutlineProvider() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass8 */
+
         public void getOutline(View view, Outline outline) {
             if (NotificationStackScrollLayout.this.mAmbientState.isHiddenAtAll()) {
                 outline.setRoundRect(NotificationStackScrollLayout.this.mBackgroundAnimationRect, MathUtils.lerp(((float) NotificationStackScrollLayout.this.mCornerRadius) / 2.0f, (float) NotificationStackScrollLayout.this.mCornerRadius, NotificationStackScrollLayout.this.mHideXInterpolator.getInterpolation((1.0f - NotificationStackScrollLayout.this.mLinearHideAmount) * NotificationStackScrollLayout.this.mBackgroundXFactor)));
@@ -360,8 +341,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private float mOverScrolledTopPixels;
     private int mOverflingDistance;
     private OnOverscrollTopChangedListener mOverscrollTopChangedListener;
-    /* access modifiers changed from: private */
-    public int mOwnScrollY;
+    private int mOwnScrollY;
     private int mPaddingBetweenElements;
     private boolean mPanelTracking;
     private boolean mPulsing;
@@ -374,6 +354,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private Rect mRequestedClipBounds;
     private final NotificationRoundnessManager mRoundnessManager;
     private ViewTreeObserver.OnPreDrawListener mRunningAnimationUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass3 */
+
         public boolean onPreDraw() {
             NotificationStackScrollLayout.this.onPreDrawDuringAnimation();
             return true;
@@ -382,13 +364,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private ScrimController mScrimController;
     private boolean mScrollable;
     private boolean mScrolledToTopOnFirstDown;
-    /* access modifiers changed from: private */
-    public OverScroller mScroller;
+    private OverScroller mScroller;
     protected boolean mScrollingEnabled;
     private NotificationSection[] mSections;
-    /* access modifiers changed from: private */
-    public final MiuiNotificationSectionsManager mSectionsManager;
+    private final MiuiNotificationSectionsManager mSectionsManager;
     private ViewTreeObserver.OnPreDrawListener mShadowUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass6 */
+
         public boolean onPreDraw() {
             NotificationStackScrollLayout.this.updateViewShadows();
             return true;
@@ -403,17 +385,12 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private float mStackTranslation;
     private final StackStateAnimator mStateAnimator = new MiuiStackStateAnimator(this);
     private final StatusBarStateController.StateListener mStateListener;
-    /* access modifiers changed from: private */
-    public StatusBar mStatusBar;
+    private StatusBar mStatusBar;
     private int mStatusBarHeight;
-    /* access modifiers changed from: private */
-    public int mStatusBarState;
-    /* access modifiers changed from: private */
-    public final SysuiStatusBarStateController mStatusbarStateController;
-    /* access modifiers changed from: private */
-    public final NotificationSwipeHelper mSwipeHelper;
-    /* access modifiers changed from: private */
-    public ArrayList<View> mSwipedOutViews = new ArrayList<>();
+    private int mStatusBarState;
+    private final SysuiStatusBarStateController mStatusbarStateController;
+    private final NotificationSwipeHelper mSwipeHelper;
+    private ArrayList<View> mSwipedOutViews = new ArrayList<>();
     private boolean mSwipingInProgress;
     private int[] mTempInt2 = new int[2];
     private final ArrayList<Pair<ExpandableNotificationRow, Boolean>> mTmpList = new ArrayList<>();
@@ -428,6 +405,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private boolean mUsingLightTheme;
     private VelocityTracker mVelocityTracker;
     private Comparator<ExpandableView> mViewPositionComparator = new Comparator<ExpandableView>(this) {
+        /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass7 */
+
         public int compare(ExpandableView expandableView, ExpandableView expandableView2) {
             float translationY = expandableView.getTranslationY() + ((float) expandableView.getActualHeight());
             float translationY2 = expandableView2.getTranslationY() + ((float) expandableView2.getActualHeight());
@@ -452,20 +431,18 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         void onOverscrollTopChanged(float f, boolean z);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ScrollAdapter
     public View getHostView() {
         return this;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public ViewGroup getViewParentForNotification(NotificationEntry notificationEntry) {
         return this;
     }
 
     public boolean shouldDelayChildPressedState() {
         return true;
-    }
-
-    static {
-        Class<NotificationStackScrollLayout> cls = NotificationStackScrollLayout.class;
     }
 
     /* access modifiers changed from: private */
@@ -484,13 +461,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public NotificationStackScrollLayout(Context context, AttributeSet attributeSet, boolean z, NotificationRoundnessManager notificationRoundnessManager, DynamicPrivacyController dynamicPrivacyController, SysuiStatusBarStateController sysuiStatusBarStateController, HeadsUpManagerPhone headsUpManagerPhone, KeyguardBypassController keyguardBypassController, MiuiKeyguardMediaController miuiKeyguardMediaController, ZenModeViewController zenModeViewController, FalsingManager falsingManager, NotificationLockscreenUserManager notificationLockscreenUserManager, NotificationGutsManager notificationGutsManager, ZenModeController zenModeController, MiuiNotificationSectionsManager miuiNotificationSectionsManager, ForegroundServiceSectionController foregroundServiceSectionController, ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController, FeatureFlags featureFlags, NotifPipeline notifPipeline, NotificationEntryManager notificationEntryManager, NotifCollection notifCollection, UiEventLogger uiEventLogger, MediaTimeoutListener mediaTimeoutListener, MediaDataFilter mediaDataFilter) {
         super(context, attributeSet, 0, 0);
-        Context context2 = context;
-        NotificationRoundnessManager notificationRoundnessManager2 = notificationRoundnessManager;
-        DynamicPrivacyController dynamicPrivacyController2 = dynamicPrivacyController;
-        HeadsUpManagerPhone headsUpManagerPhone2 = headsUpManagerPhone;
-        MiuiKeyguardMediaController miuiKeyguardMediaController2 = miuiKeyguardMediaController;
-        ZenModeViewController zenModeViewController2 = zenModeViewController;
-        MiuiNotificationSectionsManager miuiNotificationSectionsManager2 = miuiNotificationSectionsManager;
         boolean z2 = false;
         new PorterDuffXfermode(PorterDuff.Mode.SRC);
         this.mInterpolatedHideAmount = 0.0f;
@@ -500,6 +470,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mClipRect = new Rect();
         this.mHeadsUpGoingAwayAnimationsAllowed = true;
         this.mReflingAndAnimateScroll = new Runnable() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Dpz6Zg1EwqGyFLQ68KdTUD2Xag */
+
             public final void run() {
                 NotificationStackScrollLayout.this.lambda$new$1$NotificationStackScrollLayout();
             }
@@ -516,35 +488,47 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mVisualStabilityManager = (VisualStabilityManager) Dependency.get(VisualStabilityManager.class);
         this.mHideXInterpolator = Interpolators.FAST_OUT_SLOW_IN;
         this.mOnColorsChangedListener = new ColorExtractor.OnColorsChangedListener() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$76prqFuo9J9YXd5uaycSxZOCMM */
+
             public final void onColorsChanged(ColorExtractor colorExtractor, int i) {
                 NotificationStackScrollLayout.this.lambda$new$2$NotificationStackScrollLayout(colorExtractor, i);
             }
         };
         this.mIsTrackingSliding = false;
         this.mReclamp = new Runnable() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass12 */
+
             public void run() {
-                NotificationStackScrollLayout.this.mScroller.startScroll(NotificationStackScrollLayout.this.mScrollX, NotificationStackScrollLayout.this.mOwnScrollY, 0, NotificationStackScrollLayout.this.getScrollRange() - NotificationStackScrollLayout.this.mOwnScrollY);
-                boolean unused = NotificationStackScrollLayout.this.mDontReportNextOverScroll = true;
-                boolean unused2 = NotificationStackScrollLayout.this.mDontClampNextScroll = true;
+                NotificationStackScrollLayout.this.mScroller.startScroll(((ViewGroup) NotificationStackScrollLayout.this).mScrollX, NotificationStackScrollLayout.this.mOwnScrollY, 0, NotificationStackScrollLayout.this.getScrollRange() - NotificationStackScrollLayout.this.mOwnScrollY);
+                NotificationStackScrollLayout.this.mDontReportNextOverScroll = true;
+                NotificationStackScrollLayout.this.mDontClampNextScroll = true;
                 NotificationStackScrollLayout.this.lambda$new$1();
             }
         };
         this.mStateListener = new StatusBarStateController.StateListener() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass13 */
+
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStatePreChange(int i, int i2) {
                 if (i == 2 && i2 == 1) {
                     NotificationStackScrollLayout.this.requestAnimateEverything();
                 }
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
                 NotificationStackScrollLayout.this.setStatusBarState(i);
             }
 
+            @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStatePostChange() {
                 NotificationStackScrollLayout.this.onStatePostChange();
             }
         };
         this.mMenuEventListener = new NotificationMenuRowPlugin.OnMenuEventListener() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass14 */
+
+            @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.OnMenuEventListener
             public void onMenuClicked(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
                 if (NotificationStackScrollLayout.this.mLongPressListener != null) {
                     if (view instanceof ExpandableNotificationRow) {
@@ -554,6 +538,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
 
+            @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.OnMenuEventListener
             public void onMenuReset(View view) {
                 View translatingParentView = NotificationStackScrollLayout.this.mSwipeHelper.getTranslatingParentView();
                 if (translatingParentView != null && view == translatingParentView) {
@@ -565,6 +550,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
 
+            @Override // com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin.OnMenuEventListener
             public void onMenuShown(View view) {
                 if (view instanceof ExpandableNotificationRow) {
                     ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
@@ -587,27 +573,35 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             }
         };
         this.mNotificationCallback = new NotificationSwipeHelper.NotificationCallback() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass15 */
+
+            @Override // com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper.NotificationCallback
             public void onDismiss() {
                 NotificationStackScrollLayout.this.mNotificationGutsManager.closeAndSaveGuts(true, false, false, -1, -1, false);
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper.NotificationCallback
             public void onSnooze(StatusBarNotification statusBarNotification, NotificationSwipeActionHelper.SnoozeOption snoozeOption) {
                 NotificationStackScrollLayout.this.mStatusBar.setNotificationSnoozed(statusBarNotification, snoozeOption);
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper.NotificationCallback
             public void onSnooze(StatusBarNotification statusBarNotification, int i) {
                 NotificationStackScrollLayout.this.mStatusBar.setNotificationSnoozed(statusBarNotification, i);
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper.NotificationCallback
             public boolean shouldDismissQuickly() {
                 return NotificationStackScrollLayout.this.isExpanded() && NotificationStackScrollLayout.this.mAmbientState.isFullyAwake();
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public void onDragCancelled(View view) {
                 NotificationStackScrollLayout.this.setSwipingInProgress(false);
                 NotificationStackScrollLayout.this.mFalsingManager.onNotificationStopDismissing();
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public void onChildDismissed(View view) {
                 if (view instanceof ActivatableNotificationView) {
                     ActivatableNotificationView activatableNotificationView = (ActivatableNotificationView) view;
@@ -621,6 +615,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper.NotificationCallback
             public void handleChildViewDismissed(View view) {
                 boolean z = false;
                 NotificationStackScrollLayout.this.setSwipingInProgress(false);
@@ -642,24 +637,27 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                     }
                     NotificationStackScrollLayout.this.mFalsingManager.onNotificationDismissed();
                     if (NotificationStackScrollLayout.this.mFalsingManager.shouldEnforceBouncer()) {
-                        NotificationStackScrollLayout.this.mStatusBar.executeRunnableDismissingKeyguard((Runnable) null, (Runnable) null, false, true, false);
+                        NotificationStackScrollLayout.this.mStatusBar.executeRunnableDismissingKeyguard(null, null, false, true, false);
                     }
                 }
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public boolean isAntiFalsingNeeded() {
                 return NotificationStackScrollLayout.this.onKeyguard();
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public View getChildAtPosition(MotionEvent motionEvent) {
                 ExpandableNotificationRow notificationParent;
-                ExpandableView access$3500 = NotificationStackScrollLayout.this.getChildAtPosition(motionEvent.getX(), motionEvent.getY(), true, false);
-                if (!(access$3500 instanceof ExpandableNotificationRow) || (notificationParent = ((ExpandableNotificationRow) access$3500).getNotificationParent()) == null || !notificationParent.areChildrenExpanded()) {
-                    return access$3500;
+                ExpandableView childAtPosition = NotificationStackScrollLayout.this.getChildAtPosition(motionEvent.getX(), motionEvent.getY(), true, false);
+                if (!(childAtPosition instanceof ExpandableNotificationRow) || (notificationParent = ((ExpandableNotificationRow) childAtPosition).getNotificationParent()) == null || !notificationParent.areChildrenExpanded()) {
+                    return childAtPosition;
                 }
-                return (notificationParent.areGutsExposed() || NotificationStackScrollLayout.this.mSwipeHelper.getExposedMenuView() == notificationParent || (notificationParent.getAttachedChildren().size() == 1 && notificationParent.getEntry().isClearable())) ? notificationParent : access$3500;
+                return (notificationParent.areGutsExposed() || NotificationStackScrollLayout.this.mSwipeHelper.getExposedMenuView() == notificationParent || (notificationParent.getAttachedChildren().size() == 1 && notificationParent.getEntry().isClearable())) ? notificationParent : childAtPosition;
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public void onBeginDrag(View view) {
                 NotificationStackScrollLayout.this.mFalsingManager.onNotificationStartDismissing();
                 NotificationStackScrollLayout.this.setSwipingInProgress(true);
@@ -669,6 +667,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 NotificationStackScrollLayout.this.requestChildrenUpdate();
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public void onChildSnappedBack(View view, float f) {
                 NotificationStackScrollLayout.this.mAmbientState.onDragFinished(view);
                 NotificationStackScrollLayout.this.updateContinuousShadowDrawing();
@@ -681,14 +680,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public boolean updateSwipeProgress(View view, boolean z, float f) {
                 return !NotificationStackScrollLayout.this.mFadeNotificationsOnDismiss;
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public float getFalsingThresholdFactor() {
                 return NotificationStackScrollLayout.this.mStatusBar.isWakeUpComingFromTouch() ? 1.5f : 1.0f;
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public int getConstrainSwipeStartPosition() {
                 NotificationMenuRowPlugin currentMenuRow = NotificationStackScrollLayout.this.mSwipeHelper.getCurrentMenuRow();
                 if (currentMenuRow != null) {
@@ -697,19 +699,24 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 return 0;
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public boolean canChildBeDismissed(View view) {
                 return NotificationStackScrollLayout.canChildBeDismissed(view);
             }
 
+            @Override // com.android.systemui.SwipeHelper.Callback
             public boolean canChildBeDismissedInDirection(View view, boolean z) {
                 return canChildBeDismissed(view);
             }
         };
         this.mDragDownCallback = new DragDownHelper.DragDownCallback() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass16 */
+
             static /* synthetic */ boolean lambda$onDraggedDown$0() {
                 return false;
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public boolean onDraggedDown(View view, int i) {
                 boolean z = NotificationStackScrollLayout.this.hasActiveNotifications() || NotificationStackScrollLayout.this.mKeyguardMediaController.getView().getVisibility() == 0;
                 if (NotificationStackScrollLayout.this.mStatusBarState == 1 && z) {
@@ -726,34 +733,40 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                     return false;
                 } else {
                     NotificationStackScrollLayout.this.mStatusbarStateController.setLeaveOpenOnKeyguardHide(true);
-                    NotificationStackScrollLayout.this.mStatusBar.dismissKeyguardThenExecute($$Lambda$NotificationStackScrollLayout$16$4jJHIvYLz4tPygD0Enr8OUidlx4.INSTANCE, (Runnable) null, false);
+                    NotificationStackScrollLayout.this.mStatusBar.dismissKeyguardThenExecute($$Lambda$NotificationStackScrollLayout$16$4jJHIvYLz4tPygD0Enr8OUidlx4.INSTANCE, null, false);
                     return true;
                 }
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public void onDragDownReset() {
                 NotificationStackScrollLayout.this.setDimmed(true, true);
                 NotificationStackScrollLayout.this.resetScrollPosition();
                 NotificationStackScrollLayout.this.resetCheckSnoozeLeavebehind();
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public void onCrossedThreshold(boolean z) {
                 NotificationStackScrollLayout.this.setDimmed(!z, true);
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public void onTouchSlopExceeded() {
                 NotificationStackScrollLayout.this.cancelLongPress();
                 NotificationStackScrollLayout.this.checkSnoozeLeavebehind();
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public void setEmptyDragAmount(float f) {
                 NotificationStackScrollLayout.this.mNotificationPanelController.setEmptyDragAmount(f);
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public boolean isFalsingCheckNeeded() {
                 return NotificationStackScrollLayout.this.mStatusBarState == 1;
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public boolean isDragDownEnabledForView(ExpandableView expandableView) {
                 if (isDragDownAnywhereEnabled()) {
                     return true;
@@ -770,6 +783,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 return false;
             }
 
+            @Override // com.android.systemui.statusbar.DragDownHelper.DragDownCallback
             public boolean isDragDownAnywhereEnabled() {
                 if (NotificationStackScrollLayout.this.mStatusbarStateController.getState() != 1 || NotificationStackScrollLayout.this.mKeyguardBypassController.getBypassEnabled() || !MiuiKeyguardUtils.isDefaultLockScreenTheme()) {
                     return false;
@@ -778,54 +792,71 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             }
         };
         this.mHeadsUpCallback = new HeadsUpTouchHelper.Callback() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass17 */
+
+            @Override // com.android.systemui.statusbar.phone.HeadsUpTouchHelper.Callback
             public ExpandableView getChildAtRawPosition(float f, float f2) {
                 return NotificationStackScrollLayout.this.getChildAtRawPosition(f, f2);
             }
 
+            @Override // com.android.systemui.statusbar.phone.HeadsUpTouchHelper.Callback
             public boolean isExpanded() {
                 return NotificationStackScrollLayout.this.mIsExpanded;
             }
 
+            @Override // com.android.systemui.statusbar.phone.HeadsUpTouchHelper.Callback
             public Context getContext() {
-                return NotificationStackScrollLayout.this.mContext;
+                return ((ViewGroup) NotificationStackScrollLayout.this).mContext;
             }
         };
         this.mOnGroupChangeListener = new NotificationGroupManager.OnGroupChangeListener() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass18 */
+
+            @Override // com.android.systemui.statusbar.phone.NotificationGroupManager.OnGroupChangeListener
             public void onGroupExpansionChanged(final ExpandableNotificationRow expandableNotificationRow, boolean z) {
                 boolean z2 = !NotificationStackScrollLayout.this.mGroupExpandedForMeasure && NotificationStackScrollLayout.this.mAnimationsEnabled && (NotificationStackScrollLayout.this.mIsExpanded || expandableNotificationRow.isPinned());
                 if (z2) {
-                    ExpandableView unused = NotificationStackScrollLayout.this.mExpandedGroupView = expandableNotificationRow;
-                    boolean unused2 = NotificationStackScrollLayout.this.mGroupExpanded = z;
-                    boolean unused3 = NotificationStackScrollLayout.this.mNeedsAnimation = true;
+                    NotificationStackScrollLayout.this.mExpandedGroupView = expandableNotificationRow;
+                    NotificationStackScrollLayout.this.mGroupExpanded = z;
+                    NotificationStackScrollLayout.this.mNeedsAnimation = true;
                 }
                 expandableNotificationRow.setChildrenExpanded(z, z2);
                 if (!NotificationStackScrollLayout.this.mGroupExpandedForMeasure) {
                     NotificationStackScrollLayout.this.onHeightChanged(expandableNotificationRow, false);
                 }
                 NotificationStackScrollLayout.this.runAfterAnimationFinished(new Runnable(this) {
+                    /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass18.AnonymousClass1 */
+
                     public void run() {
                         expandableNotificationRow.onFinishedExpansionChange();
                     }
                 });
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationGroupManager.OnGroupChangeListener
             public void onGroupCreatedFromChildren(NotificationGroupManager.NotificationGroup notificationGroup) {
                 NotificationStackScrollLayout.this.mStatusBar.requestNotificationUpdate("onGroupCreatedFromChildren");
             }
 
+            @Override // com.android.systemui.statusbar.phone.NotificationGroupManager.OnGroupChangeListener
             public void onGroupsChanged() {
                 NotificationStackScrollLayout.this.mStatusBar.requestNotificationUpdate("onGroupsChanged");
             }
         };
         this.mExpandHelperCallback = new ExpandHelper.Callback() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass19 */
+
+            @Override // com.android.systemui.ExpandHelper.Callback
             public ExpandableView getChildAtPosition(float f, float f2) {
                 return NotificationStackScrollLayout.this.getChildAtPosition(f, f2);
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public ExpandableView getChildAtRawPosition(float f, float f2) {
                 return NotificationStackScrollLayout.this.getChildAtRawPosition(f, f2);
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public boolean canChildBeExpanded(View view) {
                 if (view instanceof ExpandableNotificationRow) {
                     ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
@@ -833,6 +864,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public void setUserExpandedChild(View view, boolean z) {
                 if (view instanceof ExpandableNotificationRow) {
                     ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
@@ -847,12 +879,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public void setExpansionCancelled(View view) {
                 if (view instanceof ExpandableNotificationRow) {
                     ((ExpandableNotificationRow) view).setGroupExpansionChanging(false);
                 }
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public void setUserLockedChild(View view, boolean z) {
                 if (view instanceof ExpandableNotificationRow) {
                     ((ExpandableNotificationRow) view).setUserLocked(z);
@@ -861,27 +895,32 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 NotificationStackScrollLayout.this.requestDisallowInterceptTouchEvent(true);
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public void expansionStateChanged(boolean z) {
-                boolean unused = NotificationStackScrollLayout.this.mExpandingNotification = z;
+                NotificationStackScrollLayout.this.mExpandingNotification = z;
                 if (!NotificationStackScrollLayout.this.mExpandedInThisMotion) {
                     NotificationStackScrollLayout notificationStackScrollLayout = NotificationStackScrollLayout.this;
-                    int unused2 = notificationStackScrollLayout.mMaxScrollAfterExpand = notificationStackScrollLayout.mOwnScrollY;
-                    boolean unused3 = NotificationStackScrollLayout.this.mExpandedInThisMotion = true;
+                    notificationStackScrollLayout.mMaxScrollAfterExpand = notificationStackScrollLayout.mOwnScrollY;
+                    NotificationStackScrollLayout.this.mExpandedInThisMotion = true;
                 }
             }
 
+            @Override // com.android.systemui.ExpandHelper.Callback
             public int getMaxExpandHeight(ExpandableView expandableView) {
                 return expandableView.getMaxContentHeight();
             }
         };
         Resources resources = getResources();
         this.mAllowLongPress = z;
-        this.mRoundnessManager = notificationRoundnessManager2;
+        this.mRoundnessManager = notificationRoundnessManager;
         this.mLockscreenUserManager = notificationLockscreenUserManager;
         this.mNotificationGutsManager = notificationGutsManager;
-        this.mHeadsUpManager = headsUpManagerPhone2;
-        headsUpManagerPhone2.addListener(notificationRoundnessManager2);
+        this.mHeadsUpManager = headsUpManagerPhone;
+        headsUpManagerPhone.addListener(notificationRoundnessManager);
         this.mHeadsUpManager.setAnimationStateHandler(new HeadsUpManagerPhone.AnimationStateHandler() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$2kmwH5TzrEUhlI4yYwStAmSu1DU */
+
+            @Override // com.android.systemui.statusbar.phone.HeadsUpManagerPhone.AnimationStateHandler
             public final void setHeadsUpGoingAwayAnimationsAllowed(boolean z) {
                 NotificationStackScrollLayout.this.setHeadsUpGoingAwayAnimationsAllowed(z);
             }
@@ -890,9 +929,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mFalsingManager = falsingManager;
         this.mZenController = zenModeController;
         this.mFgsSectionController = foregroundServiceSectionController;
-        this.mSectionsManager = miuiNotificationSectionsManager2;
-        miuiNotificationSectionsManager2.initialize(this, LayoutInflater.from(context));
+        this.mSectionsManager = miuiNotificationSectionsManager;
+        miuiNotificationSectionsManager.initialize(this, LayoutInflater.from(context));
         this.mSectionsManager.setOnClearSilentNotifsClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$XmSQLyF8x0Au5zc1KRRUiRzAE9w */
+
             public final void onClick(View view) {
                 NotificationStackScrollLayout.this.lambda$new$3$NotificationStackScrollLayout(view);
             }
@@ -904,20 +945,25 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mExpandHelper = expandHelper;
         expandHelper.setEventSource(this);
         this.mExpandHelper.setScrollAdapter(this);
-        this.mSwipeHelper = new NotificationSwipeHelper(0, new MiuiNotificationSwipeCallback(this.mNotificationCallback, mediaTimeoutListener, mediaDataFilter, zenModeViewController2), getContext(), this.mMenuEventListener, this.mFalsingManager);
+        this.mSwipeHelper = new NotificationSwipeHelper(0, new MiuiNotificationSwipeCallback(this.mNotificationCallback, mediaTimeoutListener, mediaDataFilter, zenModeViewController), getContext(), this.mMenuEventListener, this.mFalsingManager);
         this.mStackScrollAlgorithm = createStackScrollAlgorithm(context);
         initView(context);
         this.mShouldDrawNotificationBackground = resources.getBoolean(C0010R$bool.config_drawNotificationBackground);
         this.mFadeNotificationsOnDismiss = resources.getBoolean(C0010R$bool.config_fadeNotificationsOnDismiss);
         this.mRoundnessManager.setAnimatedChildren(this.mChildrenToAddAnimated);
         this.mRoundnessManager.setOnRoundingChangedCallback(new Runnable() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$ZNzbjhiYOpIhFG8SoCZYGISAg68 */
+
             public final void run() {
                 NotificationStackScrollLayout.this.invalidate();
             }
         });
-        NotificationRoundnessManager notificationRoundnessManager3 = this.mRoundnessManager;
-        Objects.requireNonNull(notificationRoundnessManager3);
+        NotificationRoundnessManager notificationRoundnessManager2 = this.mRoundnessManager;
+        Objects.requireNonNull(notificationRoundnessManager2);
         addOnExpandedHeightChangedListener(new BiConsumer() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$7_f8XxLoO1HD4OWprUeIqEzesjU */
+
+            @Override // java.util.function.BiConsumer
             public final void accept(Object obj, Object obj2) {
                 NotificationRoundnessManager.this.setExpanded(((Float) obj).floatValue(), ((Float) obj2).floatValue());
             }
@@ -925,7 +971,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mLockscreenUserManager.addUserChangedListener(this.mLockscreenUserChangeListener);
         setOutlineProvider(this.mOutlineProvider);
         addOnExpandedHeightChangedListener(new BiConsumer() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$EOvrpynV_4_HqkQZPqElzpbHsN4 */
+
+            @Override // java.util.function.BiConsumer
             public final void accept(Object obj, Object obj2) {
+                Float f = (Float) obj2;
                 NotificationBlockingHelperManager.this.setNotificationShadeExpanded(((Float) obj).floatValue());
             }
         });
@@ -933,6 +983,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mBackgroundPaint.setAntiAlias(true);
         this.mClearAllEnabled = resources.getBoolean(C0010R$bool.config_enableNotificationsClearAll);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(new TunerService.Tunable() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Jw0uVZk_QqBt9QukDWfY9zQ7BQU */
+
+            @Override // com.android.systemui.tuner.TunerService.Tunable
             public final void onTuningChanged(String str, String str2) {
                 NotificationStackScrollLayout.this.lambda$new$5$NotificationStackScrollLayout(str, str2);
             }
@@ -943,42 +996,52 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mNotifCollection = notifCollection;
         if (featureFlags.isNewNotifPipelineRenderingEnabled()) {
             this.mNotifPipeline.addCollectionListener(new NotifCollectionListener() {
+                /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass9 */
+
+                @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
                 public void onEntryUpdated(NotificationEntry notificationEntry) {
                     NotificationStackScrollLayout.this.onEntryUpdated(notificationEntry);
                 }
             });
         } else {
             this.mEntryManager.addNotificationEntryListener(new NotificationEntryListener() {
+                /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass10 */
+
+                @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
                 public void onPreEntryUpdated(NotificationEntry notificationEntry) {
                     NotificationStackScrollLayout.this.onEntryUpdated(notificationEntry);
                 }
             });
         }
-        dynamicPrivacyController2.addListener(this);
-        this.mDynamicPrivacyController = dynamicPrivacyController2;
+        dynamicPrivacyController.addListener(this);
+        this.mDynamicPrivacyController = dynamicPrivacyController;
         this.mStatusbarStateController = sysuiStatusBarStateController;
         initializeForegroundServiceSection(foregroundServiceDismissalFeatureController);
         this.mUiEventLogger = uiEventLogger;
         this.mColorExtractor.addOnColorsChangedListener(this.mOnColorsChangedListener);
-        this.mKeyguardMediaController = miuiKeyguardMediaController2;
-        miuiKeyguardMediaController2.setVisibilityChangedListener(new Function1(miuiKeyguardMediaController2) {
+        this.mKeyguardMediaController = miuiKeyguardMediaController;
+        miuiKeyguardMediaController.setVisibilityChangedListener(new Function1(miuiKeyguardMediaController) {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$YKigXFrCTlL9_LHDl6k5qMtmuY */
             public final /* synthetic */ MiuiKeyguardMediaController f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // kotlin.jvm.functions.Function1
             public final Object invoke(Object obj) {
                 return NotificationStackScrollLayout.this.lambda$new$6$NotificationStackScrollLayout(this.f$1, (Boolean) obj);
             }
         });
-        zenModeViewController2.setVisibilityChangedListener(new Function2(zenModeViewController2) {
+        zenModeViewController.setVisibilityChangedListener(new Function2(zenModeViewController) {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$S8KZ998NAdgqcywoW1IIdxmOe0 */
             public final /* synthetic */ ZenModeViewController f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // kotlin.jvm.functions.Function2
             public final Object invoke(Object obj, Object obj2) {
                 return NotificationStackScrollLayout.this.lambda$new$7$NotificationStackScrollLayout(this.f$1, (Boolean) obj, (Boolean) obj2);
             }
@@ -1029,7 +1092,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     private void initializeForegroundServiceSection(ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {
         if (foregroundServiceDismissalFeatureController.isForegroundServiceDismissalEnabled()) {
-            ForegroundServiceDungeonView foregroundServiceDungeonView = (ForegroundServiceDungeonView) this.mFgsSectionController.createView(LayoutInflater.from(this.mContext));
+            ForegroundServiceDungeonView foregroundServiceDungeonView = (ForegroundServiceDungeonView) this.mFgsSectionController.createView(LayoutInflater.from(((ViewGroup) this).mContext));
             this.mFgsSectionView = foregroundServiceDungeonView;
             addView(foregroundServiceDungeonView, -1);
         }
@@ -1051,6 +1114,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         inflateEmptyShadeView();
         inflateFooterView();
         this.mVisualStabilityManager.setVisibilityLocationProvider(new VisibilityLocationProvider() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$U5xT0qKII52vil_DFEsN5YX5CE0 */
+
+            @Override // com.android.systemui.statusbar.notification.VisibilityLocationProvider
             public final boolean isInVisibleLocation(NotificationEntry notificationEntry) {
                 return NotificationStackScrollLayout.this.isInVisibleLocation(notificationEntry);
             }
@@ -1059,6 +1125,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             NotificationGutsManager notificationGutsManager = this.mNotificationGutsManager;
             Objects.requireNonNull(notificationGutsManager);
             setLongPressListener(new ExpandableNotificationRow.LongPressListener() {
+                /* class com.android.systemui.statusbar.notification.stack.$$Lambda$0lGYUT66Z7cr4TZs4rdZ8M7DQkw */
+
+                @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.LongPressListener
                 public final boolean onLongPress(View view, int i, int i2, NotificationMenuRowPlugin.MenuItem menuItem) {
                     return NotificationGutsManager.this.openGuts(view, i, i2, menuItem);
                 }
@@ -1080,6 +1149,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return (float) collapsedHeight;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         reinflateViews();
     }
@@ -1088,15 +1158,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         inflateFooterView();
         inflateEmptyShadeView();
         updateFooter();
-        this.mSectionsManager.reinflateViews(LayoutInflater.from(this.mContext));
+        this.mSectionsManager.reinflateViews(LayoutInflater.from(((ViewGroup) this).mContext));
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onThemeChanged() {
         updateFooter();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onOverlayChanged() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(Utils.getThemeAttr(this.mContext, 16844145));
+        int dimensionPixelSize = ((ViewGroup) this).mContext.getResources().getDimensionPixelSize(Utils.getThemeAttr(((ViewGroup) this).mContext, 16844145));
         if (this.mCornerRadius != dimensionPixelSize) {
             this.mCornerRadius = dimensionPixelSize;
             invalidate();
@@ -1108,9 +1180,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public void updateFooter() {
         if (this.mFooterView != null) {
             if (((this.mClearAllEnabled && hasActiveClearableNotifications(0)) || hasActiveNotifications()) && this.mStatusBarState != 1) {
-                boolean isRemoteInputActive = this.mRemoteInputManager.getController().isRemoteInputActive();
+                this.mRemoteInputManager.getController().isRemoteInputActive();
             }
-            int intForUser = Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "notification_history_enabled", 0, -2);
+            Settings.Secure.getIntForUser(((ViewGroup) this).mContext.getContentResolver(), "notification_history_enabled", 0, -2);
             updateFooterView(false, false, false);
         }
     }
@@ -1134,16 +1206,21 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     public RemoteInputController.Delegate createDelegate() {
         return new RemoteInputController.Delegate() {
+            /* class com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.AnonymousClass11 */
+
+            @Override // com.android.systemui.statusbar.RemoteInputController.Delegate
             public void setRemoteInputActive(NotificationEntry notificationEntry, boolean z) {
                 NotificationStackScrollLayout.this.mHeadsUpManager.setRemoteInputActive(notificationEntry, z);
                 notificationEntry.notifyHeightChanged(true);
                 NotificationStackScrollLayout.this.updateFooter();
             }
 
+            @Override // com.android.systemui.statusbar.RemoteInputController.Delegate
             public void lockScrollTo(NotificationEntry notificationEntry) {
                 NotificationStackScrollLayout.this.lockScrollTo(notificationEntry.getRow());
             }
 
+            @Override // com.android.systemui.statusbar.RemoteInputController.Delegate
             public void requestDisallowLongPressAndDismiss() {
                 NotificationStackScrollLayout.this.requestDisallowLongPress();
                 NotificationStackScrollLayout.this.requestDisallowDismiss();
@@ -1165,12 +1242,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public NotificationSwipeActionHelper getSwipeActionHelper() {
         return this.mSwipeHelper;
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
-        this.mBgColor = this.mContext.getColor(C0011R$color.notification_shade_background_color);
+        this.mBgColor = ((ViewGroup) this).mContext.getColor(C0011R$color.notification_shade_background_color);
         updateBackgroundDimming();
         this.mShelf.onUiModeChanged();
     }
@@ -1254,18 +1333,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int i11 = i3;
         while (i10 < length) {
             NotificationSection notificationSection = notificationSectionArr[i10];
-            if (!notificationSection.needsBackground()) {
-                int i12 = i;
-            } else {
-                int i13 = notificationSection.getCurrentBounds().top + i4;
+            if (notificationSection.needsBackground()) {
+                int i12 = notificationSection.getCurrentBounds().top + i4;
                 int min = Math.min(Math.max(i, notificationSection.getCurrentBounds().left), i5);
                 int max = Math.max(Math.min(i5, notificationSection.getCurrentBounds().right), min);
-                if (i13 - i9 > i6 || (!(i7 == min && i8 == max) && !z)) {
-                    float f = (float) i7;
-                    float f2 = (float) i8;
-                    int i14 = this.mCornerRadius;
-                    canvas.drawRoundRect(f, (float) i11, f2, (float) i9, (float) i14, (float) i14, this.mBackgroundPaint);
-                    i11 = i13;
+                if (i12 - i9 > i6 || (!(i7 == min && i8 == max) && !z)) {
+                    int i13 = this.mCornerRadius;
+                    canvas.drawRoundRect((float) i7, (float) i11, (float) i8, (float) i9, (float) i13, (float) i13, this.mBackgroundPaint);
+                    i11 = i12;
                 }
                 i9 = notificationSection.getCurrentBounds().bottom + i4;
                 i8 = max;
@@ -1276,8 +1351,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             i5 = i2;
             i6 = 1;
         }
-        int i15 = this.mCornerRadius;
-        canvas.drawRoundRect((float) i7, (float) i11, (float) i8, (float) i9, (float) i15, (float) i15, this.mBackgroundPaint);
+        int i14 = this.mCornerRadius;
+        canvas.drawRoundRect((float) i7, (float) i11, (float) i8, (float) i9, (float) i14, (float) i14, this.mBackgroundPaint);
     }
 
     private void drawHeadsUpBackground(Canvas canvas) {
@@ -1335,12 +1410,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mBottomMargin = resources.getDimensionPixelSize(C0012R$dimen.notification_panel_margin_bottom);
         this.mSidePaddings = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
         this.mMinInteractionHeight = resources.getDimensionPixelSize(C0012R$dimen.notification_min_interaction_height);
-        this.mCornerRadius = resources.getDimensionPixelSize(Utils.getThemeAttr(this.mContext, 16844145));
+        this.mCornerRadius = resources.getDimensionPixelSize(Utils.getThemeAttr(((ViewGroup) this).mContext, 16844145));
         this.mHeadsUpInset = this.mStatusBarHeight + resources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: private */
-    public void notifyHeightChangeListener(ExpandableView expandableView) {
+    /* access modifiers changed from: public */
+    private void notifyHeightChangeListener(ExpandableView expandableView) {
         notifyHeightChangeListener(expandableView, false);
     }
 
@@ -1397,10 +1473,12 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mAmbientState.setSpeedBumpIndex(i);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void setChildLocationsChangedListener(NotificationLogger.OnChildLocationsChangedListener onChildLocationsChangedListener) {
         this.mListener = onChildLocationsChangedListener;
     }
 
+    @Override // com.android.systemui.statusbar.notification.VisibilityLocationProvider
     public boolean isInVisibleLocation(NotificationEntry notificationEntry) {
         ExpandableNotificationRow row = notificationEntry.getRow();
         ExpandableViewState viewState = row.getViewState();
@@ -1434,7 +1512,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void updateChildren() {
+    /* access modifiers changed from: public */
+    private void updateChildren() {
         float f;
         updateScrollStateForAddedChildren();
         AmbientState ambientState = this.mAmbientState;
@@ -1463,7 +1542,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void onPreDrawDuringAnimation() {
+    /* access modifiers changed from: public */
+    private void onPreDrawDuringAnimation() {
         this.mShelf.updateAppearance();
         updateClippingToTopRoundedCorner();
         if (!this.mNeedsAnimation && !this.mChildrenUpdateRequested) {
@@ -1505,7 +1585,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void updateForcedScroll() {
+    /* access modifiers changed from: public */
+    private void updateForcedScroll() {
         View view = this.mForcedScroll;
         if (view != null && (!view.hasFocus() || !this.mForcedScroll.isAttachedToWindow())) {
             this.mForcedScroll = null;
@@ -1569,7 +1650,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 this.mNeedsAnimation = true;
             }
             requestChildrenUpdate();
-            notifyHeightChangeListener((ExpandableView) null, z);
+            notifyHeightChangeListener(null, z);
         }
     }
 
@@ -1591,7 +1672,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             setRequestedClipBounds(rect2);
             f = minExpansionHeight;
         } else {
-            setRequestedClipBounds((Rect) null);
+            setRequestedClipBounds(null);
         }
         float appearEndPosition = getAppearEndPosition();
         float appearStartPosition = getAppearStartPosition();
@@ -1647,7 +1728,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             f2 = calculateAppearFractionBypass();
             f = getPulseHeight();
         }
-        if (f2 != this.mLastSentAppear || f != this.mLastSentExpandedHeight) {
+        if (!(f2 == this.mLastSentAppear && f == this.mLastSentExpandedHeight)) {
             this.mLastSentAppear = f2;
             this.mLastSentExpandedHeight = f;
             for (int i = 0; i < this.mExpandedHeightListeners.size(); i++) {
@@ -1674,13 +1755,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         if (this.mAmbientState.isHiddenAtAll()) {
             invalidateOutline();
             if (isFullyHidden()) {
-                setClipBounds((Rect) null);
+                setClipBounds(null);
             }
         } else {
             if (z2) {
                 setClipBounds(this.mRequestedClipBounds);
             } else {
-                setClipBounds((Rect) null);
+                setClipBounds(null);
             }
             z = false;
         }
@@ -1712,7 +1793,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return 0;
         }
         ExpandableNotificationRow row = topEntry.getRow();
-        if (row.isChildInGroup() && (groupSummary = this.mGroupManager.getGroupSummary((StatusBarNotification) row.getEntry().getSbn())) != null) {
+        if (row.isChildInGroup() && (groupSummary = this.mGroupManager.getGroupSummary(row.getEntry().getSbn())) != null) {
             row = groupSummary.getRow();
         }
         return row.getPinnedHeadsUpHeight();
@@ -1790,12 +1871,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public ExpandableView getChildAtPosition(float f, float f2) {
+    /* access modifiers changed from: public */
+    private ExpandableView getChildAtPosition(float f, float f2) {
         return getChildAtPosition(f, f2, true, true);
     }
 
     /* access modifiers changed from: private */
-    public ExpandableView getChildAtPosition(float f, float f2, boolean z, boolean z2) {
+    /* access modifiers changed from: public */
+    private ExpandableView getChildAtPosition(float f, float f2, boolean z, boolean z2) {
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             ExpandableView expandableView = (ExpandableView) getChildAt(i);
@@ -1810,7 +1893,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                     }
                     ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) expandableView;
                     NotificationEntry entry = expandableNotificationRow.getEntry();
-                    if (this.mIsExpanded || !expandableNotificationRow.isHeadsUp() || !expandableNotificationRow.isPinned() || this.mHeadsUpManager.getTopEntry().getRow() == expandableNotificationRow || this.mGroupManager.getGroupSummary((StatusBarNotification) this.mHeadsUpManager.getTopEntry().getSbn()) == entry) {
+                    if (this.mIsExpanded || !expandableNotificationRow.isHeadsUp() || !expandableNotificationRow.isPinned() || this.mHeadsUpManager.getTopEntry().getRow() == expandableNotificationRow || this.mGroupManager.getGroupSummary(this.mHeadsUpManager.getTopEntry().getSbn()) == entry) {
                         return expandableNotificationRow.getViewAtPosition(f2 - translationY);
                     }
                 }
@@ -1846,7 +1929,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return false;
         }
         OverScroller overScroller = this.mScroller;
-        int i2 = this.mScrollX;
+        int i2 = ((ViewGroup) this).mScrollX;
         int i3 = this.mOwnScrollY;
         overScroller.startScroll(i2, i3, 0, targetScrollForView - i3);
         this.mDontReportNextOverScroll = true;
@@ -1886,7 +1969,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public boolean onKeyguard() {
+    /* access modifiers changed from: public */
+    private boolean onKeyguard() {
         return this.mStatusBarState == 1;
     }
 
@@ -1978,6 +2062,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* renamed from: animateScroll */
     public void lambda$new$1() {
         if (this.mScroller.computeScrollOffset()) {
@@ -2133,7 +2218,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public int getScrollRange() {
+    /* access modifiers changed from: public */
+    private int getScrollRange() {
         int i = this.mContentHeight;
         if (!isExpanded() && this.mHeadsUpManager.hasPinnedHeadsUp()) {
             i = this.mHeadsUpInset + getTopHeadsUpPinnedHeight();
@@ -2151,7 +2237,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = getChildAt(i);
-            if (childAt.getVisibility() != 8 && childAt != this.mShelf) {
+            if (!(childAt.getVisibility() == 8 || childAt == this.mShelf)) {
                 return (ExpandableView) childAt;
             }
         }
@@ -2188,7 +2274,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public ExpandableView getLastChildNotGone() {
         for (int childCount = getChildCount() - 1; childCount >= 0; childCount--) {
             View childAt = getChildAt(childCount);
-            if (childAt.getVisibility() != 8 && childAt != this.mShelf) {
+            if (!(childAt.getVisibility() == 8 || childAt == this.mShelf)) {
                 return (ExpandableView) childAt;
             }
         }
@@ -2208,7 +2294,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void updateContentHeight() {
+    /* access modifiers changed from: public */
+    private void updateContentHeight() {
         float f;
         float f2;
         float f3;
@@ -2263,6 +2350,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return this.mStackScrollAlgorithm.getGapHeightForChild(this.mSectionsManager, this.mAmbientState.getAnchorViewIndex(), i, expandableView2, expandableView);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public boolean hasPulsingNotifications() {
         return this.mPulsing;
     }
@@ -2303,8 +2391,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 if (z) {
                     startBackgroundAnimation();
                 } else {
-                    for (NotificationSection resetCurrentBounds : this.mSections) {
-                        resetCurrentBounds.resetCurrentBounds();
+                    for (NotificationSection notificationSection : this.mSections) {
+                        notificationSection.resetCurrentBounds();
                     }
                     invalidate();
                 }
@@ -2318,14 +2406,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private void abortBackgroundAnimators() {
-        for (NotificationSection cancelAnimators : this.mSections) {
-            cancelAnimators.cancelAnimators();
+        for (NotificationSection notificationSection : this.mSections) {
+            notificationSection.cancelAnimators();
         }
     }
 
     private boolean didSectionBoundsChange() {
-        for (NotificationSection didBoundsChange : this.mSections) {
-            if (didBoundsChange.didBoundsChange()) {
+        for (NotificationSection notificationSection : this.mSections) {
+            if (notificationSection.didBoundsChange()) {
                 return true;
             }
         }
@@ -2333,8 +2421,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private boolean areSectionBoundsAnimating() {
-        for (NotificationSection areBoundsAnimating : this.mSections) {
-            if (areBoundsAnimating.areBoundsAnimating()) {
+        for (NotificationSection notificationSection : this.mSections) {
+            if (notificationSection.areBoundsAnimating()) {
                 return true;
             }
         }
@@ -2346,7 +2434,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         boolean z2;
         NotificationSection firstVisibleSection = getFirstVisibleSection();
         NotificationSection lastVisibleSection = getLastVisibleSection();
-        for (NotificationSection notificationSection : this.mSections) {
+        NotificationSection[] notificationSectionArr = this.mSections;
+        for (NotificationSection notificationSection : notificationSectionArr) {
             if (notificationSection == firstVisibleSection) {
                 z = this.mAnimateNextBackgroundTop;
             } else {
@@ -2365,12 +2454,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int i;
         int i2 = this.mSidePaddings;
         int width = getWidth() - this.mSidePaddings;
-        for (NotificationSection notificationSection : this.mSections) {
+        NotificationSection[] notificationSectionArr = this.mSections;
+        for (NotificationSection notificationSection : notificationSectionArr) {
             notificationSection.getBounds().left = i2;
             notificationSection.getBounds().right = width;
         }
         if (!this.mIsExpanded) {
-            for (NotificationSection notificationSection2 : this.mSections) {
+            NotificationSection[] notificationSectionArr2 = this.mSections;
+            for (NotificationSection notificationSection2 : notificationSectionArr2) {
                 notificationSection2.getBounds().top = 0;
                 notificationSection2.getBounds().bottom = 0;
             }
@@ -2391,11 +2482,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         if (this.mHeadsUpManager.getAllEntries().count() > 1 || (!this.mAmbientState.isDozing() && (!this.mKeyguardBypassController.getBypassEnabled() || !z2))) {
             z = false;
         }
-        NotificationSection[] notificationSectionArr = this.mSections;
-        int length = notificationSectionArr.length;
+        NotificationSection[] notificationSectionArr3 = this.mSections;
+        int length = notificationSectionArr3.length;
         int i3 = 0;
         while (i3 < length) {
-            NotificationSection notificationSection3 = notificationSectionArr[i3];
+            NotificationSection notificationSection3 = notificationSectionArr3[i3];
             i = notificationSection3.updateBounds(i, notificationSection3 == lastVisibleSection ? (int) (ViewState.getFinalTranslationY(this.mShelf) + ((float) this.mShelf.getIntrinsicHeight())) : i, z);
             i3++;
             z = false;
@@ -2403,7 +2494,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private NotificationSection getFirstVisibleSection() {
-        for (NotificationSection notificationSection : this.mSections) {
+        NotificationSection[] notificationSectionArr = this.mSections;
+        for (NotificationSection notificationSection : notificationSectionArr) {
             if (notificationSection.getFirstVisibleChild() != null) {
                 return notificationSection;
             }
@@ -2424,7 +2516,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private ExpandableView getLastChildWithBackground() {
         for (int childCount = getChildCount() - 1; childCount >= 0; childCount--) {
             ExpandableView expandableView = (ExpandableView) getChildAt(childCount);
-            if (expandableView.getVisibility() != 8 && !(expandableView instanceof StackScrollerDecorView) && expandableView != this.mShelf) {
+            if (!(expandableView.getVisibility() == 8 || (expandableView instanceof StackScrollerDecorView) || expandableView == this.mShelf)) {
                 return expandableView;
             }
         }
@@ -2435,7 +2527,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         int childCount = getChildCount();
         for (int i = 0; i < childCount; i++) {
             ExpandableView expandableView = (ExpandableView) getChildAt(i);
-            if (expandableView.getVisibility() != 8 && !(expandableView instanceof StackScrollerDecorView) && expandableView != this.mShelf) {
+            if (!(expandableView.getVisibility() == 8 || (expandableView instanceof StackScrollerDecorView) || expandableView == this.mShelf)) {
                 return expandableView;
             }
         }
@@ -2476,14 +2568,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             if (this.mExpandedInThisMotion) {
                 max = Math.min(max, this.mMaxScrollAfterExpand);
             }
-            int i3 = max;
             OverScroller overScroller = this.mScroller;
-            int i4 = this.mScrollX;
-            int i5 = this.mOwnScrollY;
-            if (!this.mExpandedInThisMotion || i5 < 0) {
+            int i3 = ((ViewGroup) this).mScrollX;
+            int i4 = this.mOwnScrollY;
+            if (!this.mExpandedInThisMotion || i4 < 0) {
                 i2 = 1073741823;
             }
-            overScroller.fling(i4, i5, 1, i, 0, 0, 0, i3, 0, i2);
+            overScroller.fling(i3, i4, 1, i, 0, 0, 0, max, 0, i2);
             lambda$new$1();
         }
     }
@@ -2565,6 +2656,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return !z || this.mExpandedInThisMotion || this.mIsExpansionChanging || this.mPanelTracking || !this.mScrolledToTopOnFirstDown;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer, com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public void setChildTransferInProgress(boolean z) {
         Assert.isMainThread();
         this.mChildTransferInProgress = z;
@@ -2584,6 +2676,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         super.removeView(view);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void cleanUpViewStateForEntry(NotificationEntry notificationEntry) {
         if (notificationEntry.getRow() == this.mSwipeHelper.getTranslatingParentView()) {
             this.mSwipeHelper.clearTranslatingParentView();
@@ -2592,7 +2685,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     private void onViewRemovedInternal(ExpandableView expandableView, ViewGroup viewGroup) {
         if (!this.mChangePositionInProgress) {
-            expandableView.setOnHeightChangedListener((ExpandableView.OnHeightChangedListener) null);
+            expandableView.setOnHeightChangedListener(null);
             updateScrollStateForRemovedChild(expandableView);
             if (!generateRemoveAnimation(expandableView)) {
                 this.mSwipedOutViews.remove(expandableView);
@@ -2660,7 +2753,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         Iterator<Pair<ExpandableNotificationRow, Boolean>> it = this.mHeadsUpChangeAnimations.iterator();
         boolean z = false;
         while (it.hasNext()) {
-            Pair next = it.next();
+            Pair<ExpandableNotificationRow, Boolean> next = it.next();
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) next.first;
             boolean booleanValue = ((Boolean) next.second).booleanValue();
             if (view == expandableNotificationRow) {
@@ -2681,7 +2774,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return false;
         }
         ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
-        NotificationEntry groupSummary = this.mGroupManager.getGroupSummary((StatusBarNotification) expandableNotificationRow.getEntry().getSbn());
+        NotificationEntry groupSummary = this.mGroupManager.getGroupSummary(expandableNotificationRow.getEntry().getSbn());
         if (groupSummary == null || groupSummary.getRow() == expandableNotificationRow || expandableNotificationRow.getVisibility() != 4) {
             return false;
         }
@@ -2714,113 +2807,16 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return view.getHeight();
     }
 
-    /* JADX WARNING: type inference failed for: r0v1, types: [com.android.systemui.statusbar.notification.row.ExpandableNotificationRow] */
-    /* JADX WARNING: type inference failed for: r0v2 */
-    /* JADX WARNING: type inference failed for: r0v3 */
-    /* JADX WARNING: Multi-variable type inference failed */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r14v0, types: [com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout, android.view.ViewGroup] */
+    /* JADX WARN: Type inference failed for: r0v1, types: [com.android.systemui.statusbar.notification.row.ExpandableNotificationRow] */
+    /* JADX WARN: Type inference failed for: r0v2 */
+    /* JADX WARN: Type inference failed for: r0v3 */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public int getPositionInLinearLayout(android.view.View r15) {
         /*
-            r14 = this;
-            boolean r0 = r14.isChildInGroup(r15)
-            r1 = 0
-            if (r0 == 0) goto L_0x0010
-            r1 = r15
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r1 = (com.android.systemui.statusbar.notification.row.ExpandableNotificationRow) r1
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r15 = r1.getNotificationParent()
-            r0 = r15
-            goto L_0x0011
-        L_0x0010:
-            r0 = r1
-        L_0x0011:
-            int r2 = r14.mPaddingBetweenElements
-            float r2 = (float) r2
-            r3 = 0
-            r4 = 0
-            r6 = r3
-            r5 = r4
-            r7 = r5
-        L_0x0019:
-            int r8 = r14.getChildCount()
-            if (r5 >= r8) goto L_0x0091
-            android.view.View r8 = r14.getChildAt(r5)
-            com.android.systemui.statusbar.notification.row.ExpandableView r8 = (com.android.systemui.statusbar.notification.row.ExpandableView) r8
-            int r9 = r8.getVisibility()
-            r10 = 8
-            if (r9 == r10) goto L_0x002f
-            r9 = 1
-            goto L_0x0030
-        L_0x002f:
-            r9 = r4
-        L_0x0030:
-            if (r9 == 0) goto L_0x007d
-            boolean r10 = r8.hasNoContentHeight()
-            if (r10 != 0) goto L_0x007d
-            float r10 = r8.getIncreasedPaddingAmount()
-            int r11 = (r10 > r3 ? 1 : (r10 == r3 ? 0 : -1))
-            if (r11 < 0) goto L_0x0056
-            int r6 = r14.mIncreasedPaddingBetweenElements
-            float r6 = (float) r6
-            float r2 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r2, r6, r10)
-            int r2 = (int) r2
-            float r2 = (float) r2
-            int r6 = r14.mPaddingBetweenElements
-            float r6 = (float) r6
-            int r11 = r14.mIncreasedPaddingBetweenElements
-            float r11 = (float) r11
-            float r6 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r6, r11, r10)
-            int r6 = (int) r6
-            float r6 = (float) r6
-            goto L_0x0075
-        L_0x0056:
-            int r2 = r14.mPaddingBetweenElements
-            float r2 = (float) r2
-            r11 = 1065353216(0x3f800000, float:1.0)
-            float r11 = r11 + r10
-            float r2 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r3, r2, r11)
-            int r2 = (int) r2
-            int r11 = (r6 > r3 ? 1 : (r6 == r3 ? 0 : -1))
-            if (r11 <= 0) goto L_0x0070
-            float r11 = (float) r2
-            int r12 = r14.mIncreasedPaddingBetweenElements
-            float r12 = (float) r12
-            float r6 = com.android.systemui.statusbar.notification.NotificationUtils.interpolate(r11, r12, r6)
-            int r6 = (int) r6
-            float r6 = (float) r6
-            goto L_0x0071
-        L_0x0070:
-            float r6 = (float) r2
-        L_0x0071:
-            float r2 = (float) r2
-            r13 = r6
-            r6 = r2
-            r2 = r13
-        L_0x0075:
-            if (r7 == 0) goto L_0x007b
-            float r7 = (float) r7
-            float r7 = r7 + r2
-            int r2 = (int) r7
-            r7 = r2
-        L_0x007b:
-            r2 = r6
-            r6 = r10
-        L_0x007d:
-            if (r8 != r15) goto L_0x0087
-            if (r0 == 0) goto L_0x0086
-            int r14 = r0.getPositionOfChild(r1)
-            int r7 = r7 + r14
-        L_0x0086:
-            return r7
-        L_0x0087:
-            if (r9 == 0) goto L_0x008e
-            int r8 = r14.getIntrinsicHeight(r8)
-            int r7 = r7 + r8
-        L_0x008e:
-            int r5 = r5 + 1
-            goto L_0x0019
-        L_0x0091:
-            return r4
+        // Method dump skipped, instructions count: 146
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.getPositionInLinearLayout(android.view.View):int");
     }
@@ -2884,18 +2880,22 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void notifyGroupChildRemoved(ExpandableView expandableView, ViewGroup viewGroup) {
         onViewRemovedInternal(expandableView, viewGroup);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public void notifyGroupChildRemoved(View view, ViewGroup viewGroup) {
         notifyGroupChildRemoved((ExpandableView) view, viewGroup);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void notifyGroupChildAdded(ExpandableView expandableView) {
         onViewAddedInternal(expandableView);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public void notifyGroupChildAdded(View view) {
         notifyGroupChildAdded((ExpandableView) view);
     }
@@ -2925,19 +2925,23 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         updateAnimationState((this.mAnimationsEnabled || hasPulsingNotifications()) && (this.mIsExpanded || isPinnedHeadsUp(view)), view);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void setExpandingNotification(ExpandableNotificationRow expandableNotificationRow) {
         this.mAmbientState.setExpandingNotification(expandableNotificationRow);
         requestChildrenUpdate();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void bindRow(ExpandableNotificationRow expandableNotificationRow) {
         expandableNotificationRow.setHeadsUpAnimatingAwayListener(new Consumer(expandableNotificationRow) {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$IXSbC_TGjFKfhLk45pHR07QQ7PA */
             public final /* synthetic */ ExpandableNotificationRow f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 NotificationStackScrollLayout.this.lambda$bindRow$8$NotificationStackScrollLayout(this.f$1, (Boolean) obj);
             }
@@ -2951,10 +2955,12 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mHeadsUpAppearanceController.lambda$updateHeadsUpHeaders$3(expandableNotificationRow.getEntry());
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public boolean containsView(View view) {
         return view.getParent() == this;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void applyExpandAnimationParams(ActivityLaunchAnimator.ExpandAnimationParameters expandAnimationParameters) {
         this.mAmbientState.setExpandAnimationTopChange(expandAnimationParameters == null ? 0 : expandAnimationParameters.getTopChange());
         requestChildrenUpdate();
@@ -2970,6 +2976,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return this.mNeedsAnimation && (!this.mChildrenToAddAnimated.isEmpty() || !this.mChildrenToRemoveAnimated.isEmpty());
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void generateAddAnimation(ExpandableView expandableView, boolean z) {
         if (this.mIsExpanded && this.mAnimationsEnabled && !this.mChangePositionInProgress && !isFullyHidden()) {
             this.mChildrenToAddAnimated.add(expandableView);
@@ -2984,6 +2991,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void changeViewPosition(ExpandableView expandableView, int i) {
         Assert.isMainThread();
         if (!this.mChangePositionInProgress) {
@@ -3053,7 +3061,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private void generateHeadsUpAnimationEvents() {
         Iterator<Pair<ExpandableNotificationRow, Boolean>> it = this.mHeadsUpChangeAnimations.iterator();
         while (it.hasNext()) {
-            Pair next = it.next();
+            Pair<ExpandableNotificationRow, Boolean> next = it.next();
             ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) next.first;
             boolean booleanValue = ((Boolean) next.second).booleanValue();
             if (booleanValue == expandableNotificationRow.isHeadsUp()) {
@@ -3216,7 +3224,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
         this.mChildrenChangingPositions.clear();
         if (this.mGenerateChildOrderChangedEvent) {
-            this.mAnimationEvents.add(new AnimationEvent((ExpandableView) null, 6));
+            this.mAnimationEvents.add(new AnimationEvent(null, 6));
             this.mGenerateChildOrderChangedEvent = false;
         }
     }
@@ -3239,9 +3247,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         AnimationEvent animationEvent;
         if (this.mTopPaddingNeedsAnimation) {
             if (this.mAmbientState.isDozing()) {
-                animationEvent = new AnimationEvent((ExpandableView) null, 3, 550);
+                animationEvent = new AnimationEvent(null, 3, 550);
             } else {
-                animationEvent = new AnimationEvent((ExpandableView) null, 3);
+                animationEvent = new AnimationEvent(null, 3);
             }
             this.mAnimationEvents.add(animationEvent);
         }
@@ -3250,35 +3258,35 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     private void generateActivateEvent() {
         if (this.mActivateNeedsAnimation) {
-            this.mAnimationEvents.add(new AnimationEvent((ExpandableView) null, 4));
+            this.mAnimationEvents.add(new AnimationEvent(null, 4));
         }
         this.mActivateNeedsAnimation = false;
     }
 
     private void generateAnimateEverythingEvent() {
         if (this.mEverythingNeedsAnimation) {
-            this.mAnimationEvents.add(new AnimationEvent((ExpandableView) null, 15));
+            this.mAnimationEvents.add(new AnimationEvent(null, 15));
         }
         this.mEverythingNeedsAnimation = false;
     }
 
     private void generateDimmedEvent() {
         if (this.mDimmedNeedsAnimation) {
-            this.mAnimationEvents.add(new AnimationEvent((ExpandableView) null, 5));
+            this.mAnimationEvents.add(new AnimationEvent(null, 5));
         }
         this.mDimmedNeedsAnimation = false;
     }
 
     private void generateHideSensitiveEvent() {
         if (this.mHideSensitiveNeedsAnimation) {
-            this.mAnimationEvents.add(new AnimationEvent((ExpandableView) null, 8));
+            this.mAnimationEvents.add(new AnimationEvent(null, 8));
         }
         this.mHideSensitiveNeedsAnimation = false;
     }
 
     private void generateGoToFullShadeEvent() {
         if (this.mGoToFullShadeNeedsAnimation) {
-            this.mAnimationEvents.add(new AnimationEvent((ExpandableView) null, 7));
+            this.mAnimationEvents.add(new AnimationEvent(null, 7));
         }
         this.mGoToFullShadeNeedsAnimation = false;
     }
@@ -3329,10 +3337,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         if (motionEvent.getActionMasked() == 1) {
             this.mCheckForLeavebehind = true;
         }
-        if (onTouchEvent || onScrollTouch || z || super.onTouchEvent(motionEvent)) {
-            return true;
-        }
-        return false;
+        return onTouchEvent || onScrollTouch || z || super.onTouchEvent(motionEvent);
     }
 
     private void dispatchDownEventToScroller(MotionEvent motionEvent) {
@@ -3430,7 +3435,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                             this.mDownX = (int) motionEvent.getX(motionEvent.findPointerIndex(this.mActivePointerId));
                         }
                     } else if (this.mIsBeingDragged && getChildCount() > 0) {
-                        if (this.mScroller.springBack(this.mScrollX, this.mOwnScrollY, 0, 0, 0, getScrollRange())) {
+                        if (this.mScroller.springBack(((ViewGroup) this).mScrollX, this.mOwnScrollY, 0, 0, 0, getScrollRange())) {
                             lambda$new$1();
                         }
                         this.mActivePointerId = -1;
@@ -3449,7 +3454,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                             } else {
                                 onOverScrollFling(false, yVelocity);
                             }
-                        } else if (this.mScroller.springBack(this.mScrollX, this.mOwnScrollY, 0, 0, 0, getScrollRange())) {
+                        } else if (this.mScroller.springBack(((ViewGroup) this).mScrollX, this.mOwnScrollY, 0, 0, 0, getScrollRange())) {
                             lambda$new$1();
                         }
                     }
@@ -3622,7 +3627,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             setIsBeingDragged(false);
             this.mActivePointerId = -1;
             recycleVelocityTracker();
-            if (this.mScroller.springBack(this.mScrollX, this.mOwnScrollY, 0, 0, 0, getScrollRange())) {
+            if (this.mScroller.springBack(((ViewGroup) this).mScrollX, this.mOwnScrollY, 0, 0, 0, getScrollRange())) {
                 lambda$new$1();
             }
         } else {
@@ -3737,55 +3742,22 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.performAccessibilityActionInternal(int, android.os.Bundle):boolean");
     }
 
-    /* JADX WARNING: type inference failed for: r2v1, types: [android.view.View] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Unknown variable types count: 1 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void closeControlsIfOutsideTouch(android.view.MotionEvent r8) {
-        /*
-            r7 = this;
-            com.android.systemui.statusbar.notification.row.NotificationGutsManager r0 = r7.mNotificationGutsManager
-            com.android.systemui.statusbar.notification.row.NotificationGuts r0 = r0.getExposedGuts()
-            com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper r1 = r7.mSwipeHelper
-            com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin r1 = r1.getCurrentMenuRow()
-            com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper r2 = r7.mSwipeHelper
-            android.view.View r2 = r2.getTranslatingParentView()
-            if (r0 == 0) goto L_0x001f
-            com.android.systemui.statusbar.notification.row.NotificationGuts$GutsContent r3 = r0.getGutsContent()
-            boolean r3 = r3.isLeavebehind()
-            if (r3 != 0) goto L_0x001f
-            goto L_0x002c
-        L_0x001f:
-            if (r1 == 0) goto L_0x002b
-            boolean r0 = r1.isMenuVisible()
-            if (r0 == 0) goto L_0x002b
-            if (r2 == 0) goto L_0x002b
-            r0 = r2
-            goto L_0x002c
-        L_0x002b:
-            r0 = 0
-        L_0x002c:
-            if (r0 == 0) goto L_0x0043
-            boolean r8 = com.android.systemui.statusbar.notification.stack.NotificationSwipeHelper.isTouchInView(r8, r0)
-            if (r8 != 0) goto L_0x0043
-            com.android.systemui.statusbar.notification.row.NotificationGutsManager r0 = r7.mNotificationGutsManager
-            r1 = 0
-            r2 = 0
-            r3 = 1
-            r4 = -1
-            r5 = -1
-            r6 = 0
-            r0.closeAndSaveGuts(r1, r2, r3, r4, r5, r6)
-            r8 = 1
-            r7.resetExposedMenuView(r8, r8)
-        L_0x0043:
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.closeControlsIfOutsideTouch(android.view.MotionEvent):void");
+    public void closeControlsIfOutsideTouch(MotionEvent motionEvent) {
+        NotificationGuts exposedGuts = this.mNotificationGutsManager.getExposedGuts();
+        NotificationMenuRowPlugin currentMenuRow = this.mSwipeHelper.getCurrentMenuRow();
+        View translatingParentView = this.mSwipeHelper.getTranslatingParentView();
+        if (exposedGuts == null || exposedGuts.getGutsContent().isLeavebehind()) {
+            exposedGuts = (currentMenuRow == null || !currentMenuRow.isMenuVisible() || translatingParentView == null) ? null : translatingParentView;
+        }
+        if (exposedGuts != null && !NotificationSwipeHelper.isTouchInView(motionEvent, exposedGuts)) {
+            this.mNotificationGutsManager.closeAndSaveGuts(false, false, true, -1, -1, false);
+            resetExposedMenuView(true, true);
+        }
     }
 
     /* access modifiers changed from: private */
-    public void setSwipingInProgress(boolean z) {
+    /* access modifiers changed from: public */
+    private void setSwipingInProgress(boolean z) {
         this.mSwipingInProgress = z;
         if (z) {
             requestDisallowInterceptTouchEvent(true);
@@ -3806,6 +3778,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ScrollAdapter
     public boolean isScrolledToTop() {
         return this.mOwnScrollY == 0;
     }
@@ -3925,6 +3898,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView.OnHeightChangedListener
     public void onHeightChanged(ExpandableView expandableView, boolean z) {
         updateContentHeight();
         updateScrollPositionOnExpandInBottom(expandableView);
@@ -3945,6 +3919,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         requestChildrenUpdate();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView.OnHeightChangedListener
     public void onReset(ExpandableView expandableView) {
         updateAnimationState(expandableView);
         updateChronometerForChild(expandableView);
@@ -3997,8 +3972,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) childAt;
                 expandableNotificationRow.setHeadsUpAnimatingAway(false);
                 if (expandableNotificationRow.isSummaryWithChildren()) {
-                    for (ExpandableNotificationRow headsUpAnimatingAway : expandableNotificationRow.getAttachedChildren()) {
-                        headsUpAnimatingAway.setHeadsUpAnimatingAway(false);
+                    for (ExpandableNotificationRow expandableNotificationRow2 : expandableNotificationRow.getAttachedChildren()) {
+                        expandableNotificationRow2.setHeadsUpAnimatingAway(false);
                     }
                 }
             }
@@ -4041,7 +4016,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void setDimAmount(float f) {
+    /* access modifiers changed from: public */
+    private void setDimAmount(float f) {
         this.mDimAmount = f;
         updateBackgroundDimming();
     }
@@ -4054,9 +4030,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         float f = z ? 1.0f : 0.0f;
         float f2 = this.mDimAmount;
         if (f != f2) {
-            ValueAnimator ofFloat = TimeAnimator.ofFloat(new float[]{f2, f});
+            ValueAnimator ofFloat = TimeAnimator.ofFloat(f2, f);
             this.mDimAnimator = ofFloat;
-            ofFloat.setDuration(220);
+            ofFloat.setDuration(220L);
             this.mDimAnimator.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
             this.mDimAnimator.addListener(this.mDimEndListener);
             this.mDimAnimator.addUpdateListener(this.mDimUpdateListener);
@@ -4111,7 +4087,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void updateViewShadows() {
+    /* access modifiers changed from: public */
+    private void updateViewShadows() {
         float f;
         for (int i = 0; i < getChildCount(); i++) {
             ExpandableView expandableView = (ExpandableView) getChildAt(i);
@@ -4145,7 +4122,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public void updateDecorViews(boolean z) {
         if (z != this.mUsingLightTheme) {
             this.mUsingLightTheme = z;
-            int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(new ContextThemeWrapper(this.mContext, z ? C0022R$style.Theme_SystemUI_Light : C0022R$style.Theme_SystemUI), C0009R$attr.wallpaperTextColor);
+            int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(new ContextThemeWrapper(((ViewGroup) this).mContext, z ? C0022R$style.Theme_SystemUI_Light : C0022R$style.Theme_SystemUI), C0009R$attr.wallpaperTextColor);
             this.mSectionsManager.setHeaderForegroundColor(colorAttrDefaultColor);
             this.mFooterView.setTextColor(colorAttrDefaultColor);
         }
@@ -4202,32 +4179,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         updateOwnTranslationZ();
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:4:0x0010, code lost:
-        r0 = getFirstChildNotGone();
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateOwnTranslationZ() {
-        /*
-            r2 = this;
-            com.android.systemui.statusbar.phone.KeyguardBypassController r0 = r2.mKeyguardBypassController
-            boolean r0 = r0.getBypassEnabled()
-            if (r0 == 0) goto L_0x0021
-            com.android.systemui.statusbar.notification.stack.AmbientState r0 = r2.mAmbientState
-            boolean r0 = r0.isHiddenAtAll()
-            if (r0 == 0) goto L_0x0021
-            com.android.systemui.statusbar.notification.row.ExpandableView r0 = r2.getFirstChildNotGone()
-            if (r0 == 0) goto L_0x0021
-            boolean r1 = r0.showingPulsing()
-            if (r1 == 0) goto L_0x0021
-            float r0 = r0.getTranslationZ()
-            goto L_0x0022
-        L_0x0021:
-            r0 = 0
-        L_0x0022:
-            r2.setTranslationZ(r0)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.updateOwnTranslationZ():void");
+        ExpandableView firstChildNotGone;
+        setTranslationZ((!this.mKeyguardBypassController.getBypassEnabled() || !this.mAmbientState.isHiddenAtAll() || (firstChildNotGone = getFirstChildNotGone()) == null || !firstChildNotGone.showingPulsing()) ? 0.0f : firstChildNotGone.getTranslationZ());
     }
 
     private void updateVisibility() {
@@ -4365,7 +4319,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void requestAnimateEverything() {
+    /* access modifiers changed from: public */
+    private void requestAnimateEverything() {
         if (this.mIsExpanded && this.mAnimationsEnabled) {
             this.mEverythingNeedsAnimation = true;
             this.mNeedsAnimation = true;
@@ -4396,16 +4351,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
             }
         }
-        if (f2 > ((float) this.mTopPadding) + this.mStackTranslation) {
-            return true;
-        }
-        return false;
+        return f2 > ((float) this.mTopPadding) + this.mStackTranslation;
     }
 
     public void onInitializeAccessibilityEventInternal(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEventInternal(accessibilityEvent);
         accessibilityEvent.setScrollable(this.mScrollable);
-        accessibilityEvent.setMaxScrollX(this.mScrollX);
+        accessibilityEvent.setMaxScrollX(((ViewGroup) this).mScrollX);
         accessibilityEvent.setScrollY(this.mOwnScrollY);
         accessibilityEvent.setMaxScrollY(getScrollRange());
     }
@@ -4426,6 +4378,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         accessibilityNodeInfo.setClassName(ScrollView.class.getName());
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer, com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public void generateChildOrderChangedEvent() {
         if (this.mIsExpanded && this.mAnimationsEnabled) {
             this.mGenerateChildOrderChangedEvent = true;
@@ -4434,28 +4387,34 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer, com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public int getContainerChildCount() {
         return getChildCount();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer, com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public View getContainerChildAt(int i) {
         return getChildAt(i);
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void removeContainerView(View view) {
         Assert.isMainThread();
         removeView(view);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public void removeListItem(NotificationListItem notificationListItem) {
         removeContainerView(notificationListItem.getView());
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void addContainerView(View view) {
         Assert.isMainThread();
         addView(view);
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.SimpleNotificationListContainer
     public void addListItem(NotificationListItem notificationListItem) {
         addContainerView(notificationListItem.getView());
     }
@@ -4473,7 +4432,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return;
         }
         if (z || this.mHeadsUpGoingAwayAnimationsAllowed) {
-            this.mHeadsUpChangeAnimations.add(new Pair(expandableNotificationRow, Boolean.valueOf(z)));
+            this.mHeadsUpChangeAnimations.add(new Pair<>(expandableNotificationRow, Boolean.valueOf(z)));
             this.mNeedsAnimation = true;
             if (!this.mIsExpanded && !this.mWillExpand && !z) {
                 expandableNotificationRow.setHeadsUpAnimatingAway(true);
@@ -4488,6 +4447,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         requestChildrenUpdate();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void setWillExpand(boolean z) {
         this.mWillExpand = z;
     }
@@ -4500,6 +4460,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public void setScrimController(ScrimController scrimController) {
         this.mScrimController = scrimController;
         scrimController.setScrimBehindChangeRunnable(new Runnable() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$EebmavE8B0v9pYEId75j8vvZNvI */
+
             public final void run() {
                 NotificationStackScrollLayout.this.updateBackgroundDimming();
             }
@@ -4539,7 +4501,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             updateAlgorithmHeightAndPadding();
             updateContentHeight();
             requestChildrenUpdate();
-            notifyHeightChangeListener((ExpandableView) null, z2);
+            notifyHeightChangeListener(null, z2);
         }
     }
 
@@ -4556,7 +4518,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private void setOwnScrollY(int i) {
         int i2 = this.mOwnScrollY;
         if (i != i2) {
-            int i3 = this.mScrollX;
+            int i3 = ((ViewGroup) this).mScrollX;
             onScrollChanged(i3, i, i3, i2);
             this.mOwnScrollY = i;
             updateOnScrollChange();
@@ -4588,6 +4550,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return this.mShelf;
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void setMaxDisplayedNotifications(int i) {
         if (this.mMaxDisplayedNotifications != i) {
             this.mMaxDisplayedNotifications = i;
@@ -4625,7 +4588,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void onStatePostChange() {
+    /* access modifiers changed from: public */
+    private void onStatePostChange() {
         boolean onKeyguard = onKeyguard();
         HeadsUpAppearanceController headsUpAppearanceController = this.mHeadsUpAppearanceController;
         if (headsUpAppearanceController != null) {
@@ -4636,7 +4600,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         setDimmed(onKeyguard, sysuiStatusBarStateController.fromShadeLocked());
         setExpandingEnabled(NotificationUtil.hasExpandingFeature() && !onKeyguard);
         ActivatableNotificationView activatedChild = getActivatedChild();
-        setActivatedChild((ActivatableNotificationView) null);
+        setActivatedChild(null);
         if (activatedChild != null) {
             activatedChild.makeInactive(false);
         }
@@ -4675,6 +4639,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mHeadsUpGoingAwayAnimationsAllowed = z;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         String str;
         String str2;
@@ -4765,93 +4730,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void clearNotifications(int r12, boolean r13) {
         /*
-            r11 = this;
-            int r0 = r11.getChildCount()
-            java.util.ArrayList r1 = new java.util.ArrayList
-            r1.<init>(r0)
-            java.util.ArrayList r2 = new java.util.ArrayList
-            r2.<init>(r0)
-            r3 = 0
-            r4 = r3
-        L_0x0010:
-            if (r4 >= r0) goto L_0x0098
-            android.view.View r5 = r11.getChildAt(r4)
-            boolean r6 = r5 instanceof com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
-            if (r6 == 0) goto L_0x0094
-            r6 = r5
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r6 = (com.android.systemui.statusbar.notification.row.ExpandableNotificationRow) r6
-            android.graphics.Rect r7 = r11.mTmpRect
-            boolean r7 = r5.getClipBounds(r7)
-            boolean r8 = r11.includeChildInDismissAll(r6, r12)
-            r9 = 1
-            if (r8 == 0) goto L_0x0041
-            r2.add(r6)
-            int r8 = r5.getVisibility()
-            if (r8 != 0) goto L_0x0052
-            if (r7 == 0) goto L_0x003d
-            android.graphics.Rect r7 = r11.mTmpRect
-            int r7 = r7.height()
-            if (r7 <= 0) goto L_0x0052
-        L_0x003d:
-            r1.add(r5)
-            goto L_0x0053
-        L_0x0041:
-            int r5 = r5.getVisibility()
-            if (r5 != 0) goto L_0x0052
-            if (r7 == 0) goto L_0x0053
-            android.graphics.Rect r5 = r11.mTmpRect
-            int r5 = r5.height()
-            if (r5 <= 0) goto L_0x0052
-            goto L_0x0053
-        L_0x0052:
-            r9 = r3
-        L_0x0053:
-            java.util.List r5 = r6.getAttachedChildren()
-            if (r5 == 0) goto L_0x0094
-            java.util.Iterator r5 = r5.iterator()
-        L_0x005d:
-            boolean r7 = r5.hasNext()
-            if (r7 == 0) goto L_0x0094
-            java.lang.Object r7 = r5.next()
-            com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r7 = (com.android.systemui.statusbar.notification.row.ExpandableNotificationRow) r7
-            boolean r8 = r11.includeChildInDismissAll(r6, r12)
-            if (r8 == 0) goto L_0x005d
-            r2.add(r7)
-            if (r9 == 0) goto L_0x005d
-            boolean r8 = r6.areChildrenExpanded()
-            if (r8 == 0) goto L_0x005d
-            android.graphics.Rect r8 = r11.mTmpRect
-            boolean r8 = r7.getClipBounds(r8)
-            int r10 = r7.getVisibility()
-            if (r10 != 0) goto L_0x005d
-            if (r8 == 0) goto L_0x0090
-            android.graphics.Rect r8 = r11.mTmpRect
-            int r8 = r8.height()
-            if (r8 <= 0) goto L_0x005d
-        L_0x0090:
-            r1.add(r7)
-            goto L_0x005d
-        L_0x0094:
-            int r4 = r4 + 1
-            goto L_0x0010
-        L_0x0098:
-            com.android.internal.logging.UiEventLogger r0 = r11.mUiEventLogger
-            com.android.internal.logging.UiEventLogger$UiEventEnum r4 = com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.NotificationPanelEvent.fromSelection(r12)
-            r0.log(r4)
-            boolean r0 = r2.isEmpty()
-            if (r0 == 0) goto L_0x00b5
-            if (r13 == 0) goto L_0x00b4
-            java.lang.Class<com.android.systemui.statusbar.phone.ShadeController> r11 = com.android.systemui.statusbar.phone.ShadeController.class
-            java.lang.Object r11 = com.android.systemui.Dependency.get(r11)
-            com.android.systemui.statusbar.phone.ShadeController r11 = (com.android.systemui.statusbar.phone.ShadeController) r11
-            r11.animateCollapsePanels(r3)
-        L_0x00b4:
-            return
-        L_0x00b5:
-            com.android.systemui.statusbar.notification.stack.-$$Lambda$NotificationStackScrollLayout$zlAMjWL_SCOXxqekdJNTgIiHNdc r0 = new com.android.systemui.statusbar.notification.stack.-$$Lambda$NotificationStackScrollLayout$zlAMjWL_SCOXxqekdJNTgIiHNdc
-            r0.<init>(r2, r12)
-            r11.performDismissAllAnimations(r1, r13, r0)
-            return
+        // Method dump skipped, instructions count: 190
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout.clearNotifications(int, boolean):void");
     }
@@ -4862,6 +4741,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     private void performDismissAllAnimations(ArrayList<View> arrayList, boolean z, Runnable runnable) {
         $$Lambda$NotificationStackScrollLayout$Pgdm3okNKpoXRCoL8Bp8PnrMtvc r0 = new Runnable(z, runnable) {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Pgdm3okNKpoXRCoL8Bp8PnrMtvc */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ Runnable f$2;
 
@@ -4893,9 +4773,9 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* access modifiers changed from: private */
     /* renamed from: lambda$performDismissAllAnimations$11 */
     public /* synthetic */ void lambda$performDismissAllAnimations$11$NotificationStackScrollLayout(boolean z, Runnable runnable) {
-        Class cls = ShadeController.class;
         if (z) {
-            ((ShadeController) Dependency.get(cls)).addPostCollapseAction(new Runnable(runnable) {
+            ((ShadeController) Dependency.get(ShadeController.class)).addPostCollapseAction(new Runnable(runnable) {
+                /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$p9KMzxFV7tJKwl7CiA60zeih78 */
                 public final /* synthetic */ Runnable f$1;
 
                 {
@@ -4906,7 +4786,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                     NotificationStackScrollLayout.this.lambda$performDismissAllAnimations$10$NotificationStackScrollLayout(this.f$1);
                 }
             });
-            ((ShadeController) Dependency.get(cls)).animateCollapsePanels(0);
+            ((ShadeController) Dependency.get(ShadeController.class)).animateCollapsePanels(0);
             return;
         }
         setDismissAllInProgress(false);
@@ -4920,6 +4800,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         runnable.run();
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void setNotificationActivityStarter(NotificationActivityStarter notificationActivityStarter) {
         this.mNotificationActivityStarter = notificationActivityStarter;
     }
@@ -4927,13 +4808,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public void inflateFooterView() {
-        FooterView footerView = (FooterView) LayoutInflater.from(this.mContext).inflate(C0017R$layout.status_bar_notification_footer, this, false);
+        FooterView footerView = (FooterView) LayoutInflater.from(((ViewGroup) this).mContext).inflate(C0017R$layout.status_bar_notification_footer, (ViewGroup) this, false);
         footerView.setDismissButtonClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$tCwjRwJ30PZe98oBqPRQvVRpRU */
+
             public final void onClick(View view) {
                 NotificationStackScrollLayout.this.lambda$inflateFooterView$12$NotificationStackScrollLayout(view);
             }
         });
         footerView.setManageButtonClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$oroTKggruvrHfYyaidLgs91S838 */
+
             public final void onClick(View view) {
                 NotificationStackScrollLayout.this.lambda$inflateFooterView$13$NotificationStackScrollLayout(view);
             }
@@ -4955,9 +4840,11 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private void inflateEmptyShadeView() {
-        EmptyShadeView emptyShadeView = (EmptyShadeView) LayoutInflater.from(this.mContext).inflate(C0017R$layout.status_bar_no_notifications, this, false);
+        EmptyShadeView emptyShadeView = (EmptyShadeView) LayoutInflater.from(((ViewGroup) this).mContext).inflate(C0017R$layout.status_bar_no_notifications, (ViewGroup) this, false);
         emptyShadeView.setText(C0021R$string.empty_shade_text);
         emptyShadeView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$aYoS3zV7WlRKm89tA3jUB5k2PaQ */
+
             public final void onClick(View view) {
                 NotificationStackScrollLayout.this.lambda$inflateEmptyShadeView$14$NotificationStackScrollLayout(view);
             }
@@ -5035,11 +4922,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mDimmedNeedsAnimation = true;
     }
 
+    @Override // com.android.systemui.statusbar.notification.DynamicPrivacyController.Listener
     public void onDynamicPrivacyChanged() {
         if (this.mIsExpanded) {
             this.mAnimateBottomOnLayout = true;
         }
         post(new Runnable() {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$CjO1PNXyUMIULI5IqCNFlCnRYU */
+
             public final void run() {
                 NotificationStackScrollLayout.this.lambda$onDynamicPrivacyChanged$15$NotificationStackScrollLayout();
             }
@@ -5098,7 +4988,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void updateContinuousBackgroundDrawing() {
+    /* access modifiers changed from: public */
+    private void updateContinuousBackgroundDrawing() {
         boolean z = !this.mAmbientState.isFullyAwake() && !this.mAmbientState.getDraggedViews().isEmpty();
         if (z != this.mContinuousBackgroundUpdate) {
             this.mContinuousBackgroundUpdate = z;
@@ -5111,7 +5002,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void updateContinuousShadowDrawing() {
+    /* access modifiers changed from: public */
+    private void updateContinuousShadowDrawing() {
         boolean z = this.mAnimationRunning || !this.mAmbientState.getDraggedViews().isEmpty();
         if (z != this.mContinuousShadowUpdate) {
             if (z) {
@@ -5123,6 +5015,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.stack.NotificationListContainer
     public void resetExposedMenuView(boolean z, boolean z2) {
         this.mSwipeHelper.resetExposedMenuView(z, z2);
     }
@@ -5131,19 +5024,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         if (i == 0) {
             return true;
         }
-        if (i != 1) {
-            if (i == 2) {
-                return expandableNotificationRow.getEntry().getBucket() == 6;
-            }
-            throw new IllegalArgumentException("Unknown selection: " + i);
-        } else if (expandableNotificationRow.getEntry().getBucket() < 6) {
-            return true;
-        } else {
-            return false;
+        if (i == 1) {
+            return expandableNotificationRow.getEntry().getBucket() < 6;
         }
+        if (i == 2) {
+            return expandableNotificationRow.getEntry().getBucket() == 6;
+        }
+        throw new IllegalArgumentException("Unknown selection: " + i);
     }
 
-    static class AnimationEvent {
+    /* access modifiers changed from: package-private */
+    public static class AnimationEvent {
         static AnimationFilter[] FILTERS;
         static int[] LENGTHS = {300, 300, 300, 300, 220, 220, 300, 448, 300, 300, 300, 550, 300, 300, 300, 300};
         final int animationType;
@@ -5292,7 +5183,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public void onEntryUpdated(NotificationEntry notificationEntry) {
+    /* access modifiers changed from: public */
+    private void onEntryUpdated(NotificationEntry notificationEntry) {
         if (notificationEntry.rowExists() && !notificationEntry.getSbn().isClearable()) {
             snapViewIfNeeded(notificationEntry);
         }
@@ -5302,7 +5194,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     /* access modifiers changed from: private */
-    public boolean hasActiveNotifications() {
+    /* access modifiers changed from: public */
+    private boolean hasActiveNotifications() {
         if (this.mFeatureFlags.isNewNotifPipelineRenderingEnabled()) {
             return !this.mNotifPipeline.getShadeList().isEmpty();
         }
@@ -5313,13 +5206,13 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* renamed from: onDismissAllAnimationsEnd */
     public void lambda$clearNotifications$9(List<ExpandableNotificationRow> list, int i) {
         if (!this.mFeatureFlags.isNewNotifPipelineRenderingEnabled()) {
-            for (ExpandableNotificationRow next : list) {
-                if (!canChildBeDismissed(next)) {
-                    next.resetTranslation();
+            for (ExpandableNotificationRow expandableNotificationRow : list) {
+                if (!canChildBeDismissed(expandableNotificationRow)) {
+                    expandableNotificationRow.resetTranslation();
                 } else if (i == 0) {
-                    this.mEntryManager.removeNotification(next.getEntry().getKey(), (NotificationListenerService.RankingMap) null, 3);
+                    this.mEntryManager.removeNotification(expandableNotificationRow.getEntry().getKey(), null, 3);
                 } else {
-                    this.mEntryManager.performRemoveNotification(next.getEntry().getSbn(), 3);
+                    this.mEntryManager.performRemoveNotification(expandableNotificationRow.getEntry().getSbn(), 3);
                 }
             }
             if (i == 0) {
@@ -5355,7 +5248,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         return this.mExpandHelperCallback;
     }
 
-    enum NotificationPanelEvent implements UiEventLogger.UiEventEnum {
+    /* access modifiers changed from: package-private */
+    public enum NotificationPanelEvent implements UiEventLogger.UiEventEnum {
         INVALID(0),
         DISMISS_ALL_NOTIFICATIONS_PANEL(312),
         DISMISS_SILENT_NOTIFICATIONS_PANEL(314);

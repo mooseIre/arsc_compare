@@ -20,6 +20,8 @@ import com.android.systemui.C0021R$string;
 public class DemoModeFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
     private static final String[] STATUS_ICONS = {"volume", "bluetooth", "location", "alarm", "zen", "sync", "tty", "eri", "mute", "speakerphone", "managed_profile"};
     private final ContentObserver mDemoModeObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+        /* class com.android.systemui.tuner.DemoModeFragment.AnonymousClass1 */
+
         public void onChange(boolean z) {
             DemoModeFragment.this.updateDemoModeEnabled();
             DemoModeFragment.this.updateDemoModeOn();
@@ -28,6 +30,7 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
     private SwitchPreference mEnabledSwitch;
     private SwitchPreference mOnSwitch;
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         Context context = getContext();
         SwitchPreference switchPreference = new SwitchPreference(context);
@@ -74,7 +77,8 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
     }
 
     /* access modifiers changed from: private */
-    public void updateDemoModeEnabled() {
+    /* access modifiers changed from: public */
+    private void updateDemoModeEnabled() {
         boolean z = false;
         if (Settings.Global.getInt(getContext().getContentResolver(), "sysui_demo_allowed", 0) != 0) {
             z = true;
@@ -84,7 +88,8 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
     }
 
     /* access modifiers changed from: private */
-    public void updateDemoModeOn() {
+    /* access modifiers changed from: public */
+    private void updateDemoModeOn() {
         boolean z = false;
         if (Settings.Global.getInt(getContext().getContentResolver(), "sysui_tuner_demo_on", 0) != 0) {
             z = true;
@@ -92,6 +97,7 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         this.mOnSwitch.setChecked(z);
     }
 
+    @Override // androidx.preference.Preference.OnPreferenceChangeListener
     public boolean onPreferenceChange(Preference preference, Object obj) {
         boolean z = obj == Boolean.TRUE;
         if (preference == this.mEnabledSwitch) {
@@ -100,7 +106,10 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
                 stopDemoMode();
             }
             MetricsLogger.action(getContext(), 235, z);
-            setGlobal("sysui_demo_allowed", z ? 1 : 0);
+            int i = z ? 1 : 0;
+            int i2 = z ? 1 : 0;
+            int i3 = z ? 1 : 0;
+            setGlobal("sysui_demo_allowed", i);
         } else if (preference != this.mOnSwitch) {
             return false;
         } else {
@@ -121,7 +130,7 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         getContext().sendBroadcast(intent);
         intent.putExtra("command", "clock");
         try {
-            str = String.format("%02d00", new Object[]{Integer.valueOf(Integer.valueOf(Build.VERSION.RELEASE_OR_CODENAME.split("\\.")[0]).intValue() % 24)});
+            str = String.format("%02d00", Integer.valueOf(Integer.valueOf(Build.VERSION.RELEASE_OR_CODENAME.split("\\.")[0]).intValue() % 24));
         } catch (IllegalArgumentException unused) {
             str = "1010";
         }
@@ -142,8 +151,8 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         intent.putExtra("plugged", "false");
         getContext().sendBroadcast(intent);
         intent.putExtra("command", "status");
-        for (String putExtra : STATUS_ICONS) {
-            intent.putExtra(putExtra, "hide");
+        for (String str2 : STATUS_ICONS) {
+            intent.putExtra(str2, "hide");
         }
         getContext().sendBroadcast(intent);
         intent.putExtra("command", "notifications");

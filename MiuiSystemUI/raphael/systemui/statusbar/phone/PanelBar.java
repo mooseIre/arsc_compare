@@ -108,14 +108,14 @@ public abstract class PanelBar extends FrameLayout {
     public boolean onTouchEvent(MotionEvent motionEvent) {
         if (!panelEnabled()) {
             if (motionEvent.getAction() == 0) {
-                Log.v(TAG, String.format("onTouch: all panels disabled, ignoring touch at (%d,%d)", new Object[]{Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
+                Log.v(TAG, String.format("onTouch: all panels disabled, ignoring touch at (%d,%d)", Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())));
             }
             return false;
         }
         if (motionEvent.getAction() == 0) {
             PanelViewController panelViewController = this.mPanel;
             if (panelViewController == null) {
-                Log.v(TAG, String.format("onTouch: no panel for touch at (%d,%d)", new Object[]{Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
+                Log.v(TAG, String.format("onTouch: no panel for touch at (%d,%d)", Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())));
                 return true;
             }
             boolean isEnabled = panelViewController.isEnabled();
@@ -127,15 +127,12 @@ public abstract class PanelBar extends FrameLayout {
                 LOG("PanelBar.onTouch: state=%d ACTION_DOWN: panel %s %s", objArr);
             }
             if (!isEnabled) {
-                Log.v(TAG, String.format("onTouch: panel (%s) is disabled, ignoring touch at (%d,%d)", new Object[]{panelViewController, Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())}));
+                Log.v(TAG, String.format("onTouch: panel (%s) is disabled, ignoring touch at (%d,%d)", panelViewController, Integer.valueOf((int) motionEvent.getX()), Integer.valueOf((int) motionEvent.getY())));
                 return true;
             }
         }
         PanelViewController panelViewController2 = this.mPanel;
-        if (panelViewController2 == null || panelViewController2.getView().dispatchTouchEvent(motionEvent)) {
-            return true;
-        }
-        return false;
+        return panelViewController2 == null || panelViewController2.getView().dispatchTouchEvent(motionEvent);
     }
 
     public void panelExpansionChanged(float f, boolean z) {

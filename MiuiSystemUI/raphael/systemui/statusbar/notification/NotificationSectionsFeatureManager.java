@@ -27,7 +27,7 @@ public class NotificationSectionsFeatureManager {
     }
 
     public final boolean isFilteringEnabled() {
-        return NotificationSectionsFeatureManagerKt.usePeopleFiltering(this.proxy);
+        return NotificationSectionsFeatureManagerKt.access$usePeopleFiltering(this.proxy);
     }
 
     public final boolean isMediaControlsEnabled() {
@@ -57,6 +57,6 @@ public class NotificationSectionsFeatureManager {
 
     @VisibleForTesting
     public final void clearCache() {
-        NotificationSectionsFeatureManagerKt.sUsePeopleFiltering = null;
+        NotificationSectionsFeatureManagerKt.access$setSUsePeopleFiltering$p(null);
     }
 }

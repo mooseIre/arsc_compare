@@ -27,6 +27,7 @@ public final class SystemUIDefaultModule_ProvideBatteryControllerFactory impleme
         this.bgHandlerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public BatteryController get() {
         return provideInstance(this.contextProvider, this.enhancedEstimatesProvider, this.powerManagerProvider, this.broadcastDispatcherProvider, this.mainHandlerProvider, this.bgHandlerProvider);
     }

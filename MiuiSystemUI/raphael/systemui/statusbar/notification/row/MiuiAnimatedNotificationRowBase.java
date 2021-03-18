@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import com.miui.systemui.animation.AnimationListenerFolmeConverter;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KProperty;
@@ -54,6 +55,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
         STATE_VISIBLE = animState2;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView, com.android.systemui.statusbar.notification.row.ExpandableView
     public void performAddAnimation(long j, long j2, boolean z) {
         if (z) {
             super.performAddAnimation(j, j2, z);
@@ -63,6 +65,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
         getMFolme().fromTo(STATE_HIDDEN, STATE_VISIBLE, this.mAnimConfig);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow, com.android.systemui.statusbar.notification.row.ActivatableNotificationView, com.android.systemui.statusbar.notification.row.ExpandableView
     public long performRemoveAnimation(long j, long j2, float f, boolean z, float f2, @Nullable Runnable runnable, @Nullable AnimatorListenerAdapter animatorListenerAdapter) {
         if (z) {
             return super.performRemoveAnimation(j, j2, f, z, f2, runnable, animatorListenerAdapter);
@@ -80,6 +83,7 @@ public class MiuiAnimatedNotificationRowBase extends ExpandableNotificationRow {
         return 0;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void cancelAppearDrawing() {
         super.cancelAppearDrawing();
         getMFolme().cancel();

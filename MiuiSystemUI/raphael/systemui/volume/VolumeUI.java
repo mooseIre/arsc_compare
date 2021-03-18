@@ -21,6 +21,7 @@ public class VolumeUI extends SystemUI {
         this.mVolumeComponent = volumeDialogComponent;
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         boolean z = this.mContext.getResources().getBoolean(C0010R$bool.enable_volume_ui);
         boolean z2 = this.mContext.getResources().getBoolean(C0010R$bool.enable_safety_warning);
@@ -33,6 +34,7 @@ public class VolumeUI extends SystemUI {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         if (this.mEnabled) {
@@ -40,6 +42,7 @@ public class VolumeUI extends SystemUI {
         }
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.print("mEnabled=");
         printWriter.println(this.mEnabled);

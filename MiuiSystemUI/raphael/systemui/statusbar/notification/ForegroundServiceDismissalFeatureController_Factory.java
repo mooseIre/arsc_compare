@@ -14,6 +14,7 @@ public final class ForegroundServiceDismissalFeatureController_Factory implement
         this.contextProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ForegroundServiceDismissalFeatureController get() {
         return provideInstance(this.proxyProvider, this.contextProvider);
     }

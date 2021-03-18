@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.om.IOverlayManager;
 import android.content.om.OverlayInfo;
-import android.os.Handler;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.NavigationBarController;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
@@ -24,11 +24,10 @@ public final class NavigationModeControllerExt {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
     public static final NavigationModeControllerExt INSTANCE = new NavigationModeControllerExt();
     private static Context mContext;
-    private static NavigationModeControllerExt$mElderlyModeObserver$1 mElderlyModeObserver = new NavigationModeControllerExt$mElderlyModeObserver$1((Handler) null);
-    private static final NavigationModeControllerExt$mFullScreenGestureListener$1 mFullScreenGestureListener = new NavigationModeControllerExt$mFullScreenGestureListener$1((Handler) null);
-    /* access modifiers changed from: private */
-    public static boolean mHideGestureLine;
-    private static NavigationModeControllerExt$mHideGestureLineObserver$1 mHideGestureLineObserver = new NavigationModeControllerExt$mHideGestureLineObserver$1((Handler) null);
+    private static NavigationModeControllerExt$mElderlyModeObserver$1 mElderlyModeObserver = new NavigationModeControllerExt$mElderlyModeObserver$1(null);
+    private static final NavigationModeControllerExt$mFullScreenGestureListener$1 mFullScreenGestureListener = new NavigationModeControllerExt$mFullScreenGestureListener$1(null);
+    private static boolean mHideGestureLine;
+    private static NavigationModeControllerExt$mHideGestureLineObserver$1 mHideGestureLineObserver = new NavigationModeControllerExt$mHideGestureLineObserver$1(null);
     private static boolean mIsFsgMode;
     private static final Lazy mOverlayManager$delegate = LazyKt__LazyJVMKt.lazy(NavigationModeControllerExt$mOverlayManager$2.INSTANCE);
     private static final Lazy navigationBarController$delegate = LazyKt__LazyJVMKt.lazy(NavigationModeControllerExt$navigationBarController$2.INSTANCE);
@@ -46,10 +45,9 @@ public final class NavigationModeControllerExt {
     }
 
     static {
-        Class<NavigationModeControllerExt> cls = NavigationModeControllerExt.class;
-        PropertyReference1Impl propertyReference1Impl = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(cls), "navigationBarController", "getNavigationBarController()Lcom/android/systemui/statusbar/NavigationBarController;");
+        PropertyReference1Impl propertyReference1Impl = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(NavigationModeControllerExt.class), "navigationBarController", "getNavigationBarController()Lcom/android/systemui/statusbar/NavigationBarController;");
         Reflection.property1(propertyReference1Impl);
-        PropertyReference1Impl propertyReference1Impl2 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(cls), "mOverlayManager", "getMOverlayManager()Landroid/content/om/IOverlayManager;");
+        PropertyReference1Impl propertyReference1Impl2 = new PropertyReference1Impl(Reflection.getOrCreateKotlinClass(NavigationModeControllerExt.class), "mOverlayManager", "getMOverlayManager()Landroid/content/om/IOverlayManager;");
         Reflection.property1(propertyReference1Impl2);
         $$delegatedProperties = new KProperty[]{propertyReference1Impl, propertyReference1Impl2};
     }

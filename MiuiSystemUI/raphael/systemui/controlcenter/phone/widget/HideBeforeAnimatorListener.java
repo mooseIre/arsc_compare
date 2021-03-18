@@ -22,8 +22,8 @@ public class HideBeforeAnimatorListener extends AnimatorListenerAdapter {
 
     public void onAnimationStart(Animator animator) {
         super.onAnimationStart(animator);
-        for (View apply : this.mViews) {
-            apply(apply);
+        for (View view : this.mViews) {
+            apply(view);
         }
     }
 

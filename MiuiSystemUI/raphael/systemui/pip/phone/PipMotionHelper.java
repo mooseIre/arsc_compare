@@ -35,8 +35,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
     private final Rect mMovementBounds = new Rect();
     private final PipTaskOrganizer mPipTaskOrganizer;
     private final PipTaskOrganizer.PipTransitionCallback mPipTransitionCallback;
-    /* access modifiers changed from: private */
-    public Runnable mPostPipTransitionCallback;
+    private Runnable mPostPipTransitionCallback;
     private final PhysicsAnimator.UpdateListener<Rect> mResizePipUpdateListener;
     private final Choreographer.FrameCallback mResizePipVsyncCallback;
     private final SfVsyncFrameCallbackProvider mSfVsyncFrameProvider = new SfVsyncFrameCallbackProvider();
@@ -51,12 +50,14 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         Rect rect = this.mBounds;
         Objects.requireNonNull(rect);
         this.mUpdateBoundsCallback = new Consumer(rect) {
+            /* class com.android.systemui.pip.phone.$$Lambda$9ryw0tgRGCMDitW4U_PfPc0I9v4 */
             public final /* synthetic */ Rect f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 this.f$0.set((Rect) obj);
             }
@@ -64,16 +65,21 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         this.mSpringingToTouch = false;
         this.mDismissalPending = false;
         AnonymousClass1 r0 = new PipTaskOrganizer.PipTransitionCallback() {
+            /* class com.android.systemui.pip.phone.PipMotionHelper.AnonymousClass1 */
+
+            @Override // com.android.systemui.pip.PipTaskOrganizer.PipTransitionCallback
             public void onPipTransitionCanceled(ComponentName componentName, int i) {
             }
 
+            @Override // com.android.systemui.pip.PipTaskOrganizer.PipTransitionCallback
             public void onPipTransitionStarted(ComponentName componentName, int i) {
             }
 
+            @Override // com.android.systemui.pip.PipTaskOrganizer.PipTransitionCallback
             public void onPipTransitionFinished(ComponentName componentName, int i) {
                 if (PipMotionHelper.this.mPostPipTransitionCallback != null) {
                     PipMotionHelper.this.mPostPipTransitionCallback.run();
-                    Runnable unused = PipMotionHelper.this.mPostPipTransitionCallback = null;
+                    PipMotionHelper.this.mPostPipTransitionCallback = null;
                 }
             }
         };
@@ -85,11 +91,16 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         this.mFloatingContentCoordinator = floatingContentCoordinator;
         pipTaskOrganizer.registerPipTransitionCallback(r0);
         this.mResizePipVsyncCallback = new Choreographer.FrameCallback() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMotionHelper$C_POQP400vMSArwTIak6Td06o */
+
             public final void doFrame(long j) {
                 PipMotionHelper.this.lambda$new$0$PipMotionHelper(j);
             }
         };
         this.mResizePipUpdateListener = new PhysicsAnimator.UpdateListener() {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMotionHelper$i9NRbFmJlv_VucqYs_q6_ejqw */
+
+            @Override // com.android.systemui.util.animation.PhysicsAnimator.UpdateListener
             public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
                 PipMotionHelper.this.lambda$new$1$PipMotionHelper((Rect) obj, arrayMap);
             }
@@ -100,7 +111,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$PipMotionHelper(long j) {
         if (!this.mTemporaryBounds.isEmpty()) {
-            this.mPipTaskOrganizer.scheduleUserResizePip(this.mBounds, this.mTemporaryBounds, (Consumer<Rect>) null);
+            this.mPipTaskOrganizer.scheduleUserResizePip(this.mBounds, this.mTemporaryBounds, null);
         }
     }
 
@@ -110,14 +121,17 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         this.mSfVsyncFrameProvider.postFrameCallback(this.mResizePipVsyncCallback);
     }
 
+    @Override // com.android.systemui.util.FloatingContentCoordinator.FloatingContent
     public Rect getFloatingBoundsOnScreen() {
         return !this.mAnimatingToBounds.isEmpty() ? this.mAnimatingToBounds : this.mBounds;
     }
 
+    @Override // com.android.systemui.util.FloatingContentCoordinator.FloatingContent
     public Rect getAllowedFloatingBoundsRegion() {
         return this.mFloatingAllowedArea;
     }
 
+    @Override // com.android.systemui.util.FloatingContentCoordinator.FloatingContent
     public void moveToBounds(Rect rect) {
         animateToBounds(rect, this.mConflictResolutionSpringConfig);
     }
@@ -150,7 +164,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
                 return;
             }
             this.mTemporaryBounds.set(rect);
-            this.mPipTaskOrganizer.scheduleUserResizePip(this.mBounds, this.mTemporaryBounds, (Consumer<Rect>) null);
+            this.mPipTaskOrganizer.scheduleUserResizePip(this.mBounds, this.mTemporaryBounds, null);
             return;
         }
         PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
@@ -176,7 +190,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         physicsAnimator.spring(FloatProperties.RECT_Y, f4, f2, this.mSpringConfig);
         physicsAnimator.spring(FloatProperties.RECT_WIDTH, width, this.mSpringConfig);
         physicsAnimator.spring(FloatProperties.RECT_HEIGHT, height, this.mSpringConfig);
-        physicsAnimator.withEndActions((Function0<Unit>[]) new Function0[]{function0});
+        physicsAnimator.withEndActions(function0);
         startBoundsAnimator(f3, f4, false);
     }
 
@@ -195,6 +209,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         cancelAnimations();
         this.mMenuController.hideMenuWithoutResize();
         this.mPipTaskOrganizer.getUpdateHandler().post(new Runnable(z) {
+            /* class com.android.systemui.pip.phone.$$Lambda$PipMotionHelper$Wmfum8DiHO44sGCBrLFpc_A8U44 */
             public final /* synthetic */ boolean f$1;
 
             {
@@ -213,6 +228,7 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         this.mPipTaskOrganizer.exitPip(z ? 0 : 300);
     }
 
+    @Override // com.android.systemui.pip.phone.PipAppOpsListener.Callback
     public void dismissPip() {
         cancelAnimations();
         this.mMenuController.hideMenuWithoutResize();
@@ -249,13 +265,16 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         physicsAnimator.withEndActions(runnable2);
         if (runnable != null) {
             this.mTemporaryBoundsPhysicsAnimator.addUpdateListener(new PhysicsAnimator.UpdateListener(runnable) {
+                /* class com.android.systemui.pip.phone.$$Lambda$PipMotionHelper$AiW2VQGjSOah3v_re0mTkvmkPLc */
                 public final /* synthetic */ Runnable f$0;
 
                 {
                     this.f$0 = r1;
                 }
 
+                @Override // com.android.systemui.util.animation.PhysicsAnimator.UpdateListener
                 public final void onAnimationUpdateForProperty(Object obj, ArrayMap arrayMap) {
+                    Rect rect = (Rect) obj;
                     this.f$0.run();
                 }
             });
@@ -279,6 +298,8 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
         PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
         physicsAnimator.spring(FloatProperties.RECT_Y, (float) (this.mMovementBounds.bottom + (this.mBounds.height() * 2)), 0.0f, this.mSpringConfig);
         physicsAnimator.withEndActions(new Runnable() {
+            /* class com.android.systemui.pip.phone.$$Lambda$kQFaBNknFROC8D1C4ywIb9w3JTU */
+
             public final void run() {
                 PipMotionHelper.this.dismissPip();
             }
@@ -341,6 +362,8 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
             PhysicsAnimator<Rect> physicsAnimator = this.mTemporaryBoundsPhysicsAnimator;
             physicsAnimator.addUpdateListener(this.mResizePipUpdateListener);
             physicsAnimator.withEndActions(new Runnable() {
+                /* class com.android.systemui.pip.phone.$$Lambda$PipMotionHelper$D4DUlGhMZMGgehn4agfdjwJxbmQ */
+
                 public final void run() {
                     PipMotionHelper.this.onBoundsAnimationEnd();
                 }
@@ -388,6 +411,8 @@ public class PipMotionHelper implements PipAppOpsListener.Callback, FloatingCont
     public MagnetizedObject<Rect> getMagnetizedPip() {
         if (this.mMagnetizedPip == null) {
             this.mMagnetizedPip = new MagnetizedObject<Rect>(this, this.mContext, this.mTemporaryBounds, FloatProperties.RECT_X, FloatProperties.RECT_Y) {
+                /* class com.android.systemui.pip.phone.PipMotionHelper.AnonymousClass2 */
+
                 public float getWidth(Rect rect) {
                     return (float) rect.width();
                 }

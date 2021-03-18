@@ -6,11 +6,13 @@ import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.HeadsUpStatusBarView;
+import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -29,8 +31,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     @VisibleForTesting
     float mExpandedHeight;
     private final HeadsUpManagerPhone mHeadsUpManager;
-    /* access modifiers changed from: private */
-    public final HeadsUpStatusBarView mHeadsUpStatusBarView;
+    private final HeadsUpStatusBarView mHeadsUpStatusBarView;
     @VisibleForTesting
     boolean mIsExpanded;
     private KeyguardStateController mKeyguardStateController;
@@ -41,8 +42,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     private final Consumer<ExpandableNotificationRow> mSetTrackingHeadsUp;
     private boolean mShown;
     private final View.OnLayoutChangeListener mStackScrollLayoutChangeListener;
-    /* access modifiers changed from: private */
-    public final NotificationStackScrollLayout mStackScroller;
+    private final NotificationStackScrollLayout mStackScroller;
     private final StatusBarStateController mStatusBarStateController;
     private ExpandableNotificationRow mTrackedChild;
     private final Runnable mUpdatePanelTranslation;
@@ -59,60 +59,38 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         updatePanelTranslation();
     }
 
-    /* JADX WARNING: Illegal instructions before constructor call */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public HeadsUpAppearanceController(com.android.systemui.statusbar.phone.NotificationIconAreaController r17, com.android.systemui.statusbar.phone.HeadsUpManagerPhone r18, android.view.View r19, com.android.systemui.statusbar.SysuiStatusBarStateController r20, com.android.systemui.statusbar.phone.KeyguardBypassController r21, com.android.systemui.statusbar.policy.KeyguardStateController r22, com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator r23, com.android.systemui.statusbar.CommandQueue r24, com.android.systemui.statusbar.phone.NotificationPanelViewController r25, android.view.View r26) {
-        /*
-            r16 = this;
-            r0 = r26
-            int r1 = com.android.systemui.C0015R$id.heads_up_status_bar_view
-            android.view.View r1 = r0.findViewById(r1)
-            r10 = r1
-            com.android.systemui.statusbar.HeadsUpStatusBarView r10 = (com.android.systemui.statusbar.HeadsUpStatusBarView) r10
-            int r1 = com.android.systemui.C0015R$id.notification_stack_scroller
-            r2 = r19
-            android.view.View r1 = r2.findViewById(r1)
-            r11 = r1
-            com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout r11 = (com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout) r11
-            int r1 = com.android.systemui.C0015R$id.clock
-            android.view.View r13 = r0.findViewById(r1)
-            int r1 = com.android.systemui.C0015R$id.operator_name_frame
-            android.view.View r14 = r0.findViewById(r1)
-            int r1 = com.android.systemui.C0015R$id.centered_icon_area
-            android.view.View r15 = r0.findViewById(r1)
-            r2 = r16
-            r3 = r17
-            r4 = r18
-            r5 = r20
-            r6 = r21
-            r7 = r23
-            r8 = r22
-            r9 = r24
-            r12 = r25
-            r2.<init>(r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, r13, r14, r15)
-            return
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.HeadsUpAppearanceController.<init>(com.android.systemui.statusbar.phone.NotificationIconAreaController, com.android.systemui.statusbar.phone.HeadsUpManagerPhone, android.view.View, com.android.systemui.statusbar.SysuiStatusBarStateController, com.android.systemui.statusbar.phone.KeyguardBypassController, com.android.systemui.statusbar.policy.KeyguardStateController, com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator, com.android.systemui.statusbar.CommandQueue, com.android.systemui.statusbar.phone.NotificationPanelViewController, android.view.View):void");
+    public HeadsUpAppearanceController(NotificationIconAreaController notificationIconAreaController, HeadsUpManagerPhone headsUpManagerPhone, View view, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardBypassController keyguardBypassController, KeyguardStateController keyguardStateController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, CommandQueue commandQueue, NotificationPanelViewController notificationPanelViewController, View view2) {
+        this(notificationIconAreaController, headsUpManagerPhone, sysuiStatusBarStateController, keyguardBypassController, notificationWakeUpCoordinator, keyguardStateController, commandQueue, (HeadsUpStatusBarView) view2.findViewById(C0015R$id.heads_up_status_bar_view), (NotificationStackScrollLayout) view.findViewById(C0015R$id.notification_stack_scroller), notificationPanelViewController, view2.findViewById(C0015R$id.clock), view2.findViewById(C0015R$id.operator_name_frame), view2.findViewById(C0015R$id.centered_icon_area));
     }
 
     @VisibleForTesting
     public HeadsUpAppearanceController(NotificationIconAreaController notificationIconAreaController, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardBypassController keyguardBypassController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardStateController keyguardStateController, CommandQueue commandQueue, HeadsUpStatusBarView headsUpStatusBarView, NotificationStackScrollLayout notificationStackScrollLayout, NotificationPanelViewController notificationPanelViewController, View view, View view2, View view3) {
         this.mSetTrackingHeadsUp = new Consumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$u27UVgFXO2FqgY8QI0m_qAQyl8 */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 HeadsUpAppearanceController.this.setTrackingHeadsUp((ExpandableNotificationRow) obj);
             }
         };
         this.mUpdatePanelTranslation = new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$22QZFjoGlQJQoKOrFebHbZltB4 */
+
             public final void run() {
                 HeadsUpAppearanceController.this.updatePanelTranslation();
             }
         };
         this.mSetExpandedHeight = new BiConsumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$bcWIlLYHGuPtIh99P0bExeXSsMQ */
+
+            @Override // java.util.function.BiConsumer
             public final void accept(Object obj, Object obj2) {
                 HeadsUpAppearanceController.this.setAppearFraction(((Float) obj).floatValue(), ((Float) obj2).floatValue());
             }
         };
         this.mStackScrollLayoutChangeListener = new View.OnLayoutChangeListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$HeadsUpAppearanceController$hwNOwOgXItDjQM7QwL00pigpnrk */
+
             public final void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 HeadsUpAppearanceController.this.lambda$new$0$HeadsUpAppearanceController(view, i, i2, i3, i4, i5, i6, i7, i8);
             }
@@ -122,6 +100,8 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         headsUpManagerPhone.addListener(this);
         this.mHeadsUpStatusBarView = headsUpStatusBarView;
         headsUpStatusBarView.setOnDrawingRectChangedListener(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$HeadsUpAppearanceController$1d3l5klDiH8maZOdHwrJBKgigPE */
+
             public final void run() {
                 HeadsUpAppearanceController.this.lambda$new$1$HeadsUpAppearanceController();
             }
@@ -136,8 +116,10 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         this.mStackScroller.setHeadsUpAppearanceController(this);
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
         this.mDarkIconDispatcher = darkIconDispatcher;
-        darkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+        darkIconDispatcher.addDarkReceiver(this);
         this.mHeadsUpStatusBarView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            /* class com.android.systemui.statusbar.phone.HeadsUpAppearanceController.AnonymousClass2 */
+
             public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 if (HeadsUpAppearanceController.this.shouldBeVisible()) {
                     HeadsUpAppearanceController.this.updateTopEntry();
@@ -162,20 +144,21 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
 
     public void destroy() {
         this.mHeadsUpManager.removeListener(this);
-        this.mHeadsUpStatusBarView.setOnDrawingRectChangedListener((Runnable) null);
+        this.mHeadsUpStatusBarView.setOnDrawingRectChangedListener(null);
         this.mWakeUpCoordinator.removeListener(this);
         this.mNotificationPanelViewController.removeTrackingHeadsUpListener(this.mSetTrackingHeadsUp);
         this.mNotificationPanelViewController.removeVerticalTranslationListener(this.mUpdatePanelTranslation);
-        this.mNotificationPanelViewController.setHeadsUpAppearanceController((HeadsUpAppearanceController) null);
+        this.mNotificationPanelViewController.setHeadsUpAppearanceController(null);
         this.mStackScroller.removeOnExpandedHeightChangedListener(this.mSetExpandedHeight);
         this.mStackScroller.removeOnLayoutChangeListener(this.mStackScrollLayoutChangeListener);
-        this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this);
+        this.mDarkIconDispatcher.removeDarkReceiver(this);
     }
 
     private void updateIsolatedIconLocation(boolean z) {
         this.mNotificationIconAreaController.setIsolatedIconLocation(this.mHeadsUpStatusBarView.getIconDrawingRect(), z);
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpPinned(NotificationEntry notificationEntry) {
         updateTopEntry();
         lambda$updateHeadsUpHeaders$3(notificationEntry);
@@ -215,9 +198,10 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* JADX WARNING: Removed duplicated region for block: B:15:0x0038  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void updateTopEntry() {
+    private void updateTopEntry() {
         /*
             r5 = this;
             boolean r0 = r5.shouldBeVisible()
@@ -288,6 +272,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpUnPinned(NotificationEntry notificationEntry) {
         updateTopEntry();
         lambda$updateHeadsUpHeaders$3(notificationEntry);
@@ -320,6 +305,9 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
 
     private void updateHeadsUpHeaders() {
         this.mHeadsUpManager.getAllEntries().forEach(new Consumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$HeadsUpAppearanceController$UoqlBKl4WkI5lx_o_D7VqchxTuM */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 HeadsUpAppearanceController.this.lambda$updateHeadsUpHeaders$3$HeadsUpAppearanceController((NotificationEntry) obj);
             }
@@ -338,6 +326,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         row.setHeaderVisibleAmount(f);
     }
 
+    @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         this.mHeadsUpStatusBarView.onDarkChanged(rect, f, i, i2, i3, z);
     }
@@ -356,6 +345,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
     public void onFullyHiddenChanged(boolean z) {
         updateTopEntry();
     }

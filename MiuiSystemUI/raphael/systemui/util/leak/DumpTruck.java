@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Debug;
+import android.os.Parcelable;
 import android.os.Process;
 import android.util.Log;
 import androidx.core.content.FileProvider;
@@ -46,12 +47,12 @@ public class DumpTruck {
         sb.append("\n\nProcesses:\n");
         ArrayList arrayList = new ArrayList();
         int myPid = Process.myPid();
-        for (Long intValue : list) {
-            int intValue2 = intValue.intValue();
+        for (Long l : list) {
+            int intValue = l.intValue();
             StringBuilder sb2 = this.body;
             sb2.append("  pid ");
-            sb2.append(intValue2);
-            if (!(garbageMonitor == null || (memInfo = garbageMonitor.getMemInfo(intValue2)) == null)) {
+            sb2.append(intValue);
+            if (!(garbageMonitor == null || (memInfo = garbageMonitor.getMemInfo(intValue)) == null)) {
                 StringBuilder sb3 = this.body;
                 sb3.append(":");
                 sb3.append(" up=");
@@ -60,9 +61,9 @@ public class DumpTruck {
                 sb3.append(memInfo.currentRss);
                 this.rss = memInfo.currentRss;
             }
-            if (intValue2 == myPid) {
-                String path = new File(file, String.format("heap-%d.ahprof", new Object[]{Integer.valueOf(intValue2)})).getPath();
-                Log.v("DumpTruck", "Dumping memory info for process " + intValue2 + " to " + path);
+            if (intValue == myPid) {
+                String path = new File(file, String.format("heap-%d.ahprof", Integer.valueOf(intValue))).getPath();
+                Log.v("DumpTruck", "Dumping memory info for process " + intValue + " to " + path);
                 try {
                     Debug.dumpHprofData(path);
                     arrayList.add(path);
@@ -78,7 +79,7 @@ public class DumpTruck {
             this.body.append("\n");
         }
         try {
-            String canonicalPath = new File(file, String.format("hprof-%d.zip", new Object[]{Long.valueOf(System.currentTimeMillis())})).getCanonicalPath();
+            String canonicalPath = new File(file, String.format("hprof-%d.zip", Long.valueOf(System.currentTimeMillis()))).getCanonicalPath();
             if (zipUp(canonicalPath, arrayList)) {
                 this.hprofUri = FileProvider.getUriForFile(this.context, "com.android.systemui.fileprovider", new File(canonicalPath));
                 Log.v("DumpTruck", "Heap dump accessible at URI: " + this.hprofUri);
@@ -97,10 +98,10 @@ public class DumpTruck {
         Intent intent = new Intent("android.intent.action.SEND_MULTIPLE");
         intent.addFlags(268435456);
         intent.addFlags(1);
-        intent.putExtra("android.intent.extra.SUBJECT", String.format("SystemUI memory dump (rss=%dM)", new Object[]{Long.valueOf(this.rss / 1024)}));
+        intent.putExtra("android.intent.extra.SUBJECT", String.format("SystemUI memory dump (rss=%dM)", Long.valueOf(this.rss / 1024)));
         intent.putExtra("android.intent.extra.TEXT", this.body.toString());
         if (this.hprofUri != null) {
-            ArrayList arrayList = new ArrayList();
+            ArrayList<? extends Parcelable> arrayList = new ArrayList<>();
             arrayList.add(this.hprofUri);
             intent.setType("application/zip");
             intent.putParcelableArrayListExtra("android.intent.extra.STREAM", arrayList);
@@ -111,7 +112,6 @@ public class DumpTruck {
     }
 
     private static boolean zipUp(String str, ArrayList<String> arrayList) {
-        BufferedInputStream bufferedInputStream;
         try {
             ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(str));
             try {
@@ -119,30 +119,32 @@ public class DumpTruck {
                 Iterator<String> it = arrayList.iterator();
                 while (it.hasNext()) {
                     String next = it.next();
-                    bufferedInputStream = new BufferedInputStream(new FileInputStream(next));
-                    zipOutputStream.putNextEntry(new ZipEntry(next));
-                    while (true) {
-                        int read = bufferedInputStream.read(bArr, 0, 1048576);
-                        if (read <= 0) {
-                            break;
+                    BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(next));
+                    try {
+                        zipOutputStream.putNextEntry(new ZipEntry(next));
+                        while (true) {
+                            int read = bufferedInputStream.read(bArr, 0, 1048576);
+                            if (read <= 0) {
+                                break;
+                            }
+                            zipOutputStream.write(bArr, 0, read);
                         }
-                        zipOutputStream.write(bArr, 0, read);
+                        zipOutputStream.closeEntry();
+                        bufferedInputStream.close();
+                    } catch (Throwable th) {
+                        th.addSuppressed(th);
                     }
-                    zipOutputStream.closeEntry();
-                    bufferedInputStream.close();
                 }
                 zipOutputStream.close();
                 return true;
-            } catch (Throwable th) {
-                zipOutputStream.close();
                 throw th;
+                throw th;
+            } catch (Throwable th2) {
+                th.addSuppressed(th2);
             }
-            throw th;
         } catch (IOException e) {
             Log.e("DumpTruck", "error zipping up profile data", e);
             return false;
-        } catch (Throwable th2) {
-            th.addSuppressed(th2);
         }
     }
 }

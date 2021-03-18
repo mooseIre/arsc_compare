@@ -27,10 +27,8 @@ import java.lang.reflect.Method;
 
 public class InjectionInflationController {
     private final LayoutInflater.Factory2 mFactory = new InjectionFactory();
-    /* access modifiers changed from: private */
-    public final ArrayMap<String, Method> mInjectionMap = new ArrayMap<>();
-    /* access modifiers changed from: private */
-    public final ViewCreator mViewCreator;
+    private final ArrayMap<String, Method> mInjectionMap = new ArrayMap<>();
+    private final ViewCreator mViewCreator;
 
     public interface ViewCreator {
         ViewInstanceCreator createInstanceCreator(ViewAttributeProvider viewAttributeProvider);
@@ -80,7 +78,8 @@ public class InjectionInflationController {
     }
 
     private void initInjectionMap() {
-        for (Method method : ViewInstanceCreator.class.getDeclaredMethods()) {
+        Method[] declaredMethods = ViewInstanceCreator.class.getDeclaredMethods();
+        for (Method method : declaredMethods) {
             if (View.class.isAssignableFrom(method.getReturnType()) && (method.getModifiers() & 1) != 0) {
                 this.mInjectionMap.put(method.getReturnType().getName(), method);
             }

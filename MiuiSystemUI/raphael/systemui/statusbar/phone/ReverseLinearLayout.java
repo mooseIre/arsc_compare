@@ -35,6 +35,7 @@ public class ReverseLinearLayout extends LinearLayout {
         }
     }
 
+    @Override // android.view.ViewGroup
     public void addView(View view, ViewGroup.LayoutParams layoutParams) {
         reverseParams(layoutParams, view, this.mIsLayoutReverse);
         if (this.mIsLayoutReverse) {
@@ -91,6 +92,7 @@ public class ReverseLinearLayout extends LinearLayout {
             super(context);
         }
 
+        @Override // com.android.systemui.statusbar.phone.ReverseLinearLayout.Reversable
         public void reverse(boolean z) {
             updateGravity(z);
             ReverseLinearLayout.reverseGroup(this, z);

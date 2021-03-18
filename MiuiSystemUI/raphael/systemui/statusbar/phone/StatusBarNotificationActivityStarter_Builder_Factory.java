@@ -90,6 +90,7 @@ public final class StatusBarNotificationActivityStarter_Builder_Factory implemen
         this.loggerProvider = provider29;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarNotificationActivityStarter.Builder get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.mainThreadHandlerProvider, this.backgroundHandlerProvider, this.uiBgExecutorProvider, this.entryManagerProvider, this.notifPipelineProvider, this.notifCollectionProvider, this.headsUpManagerProvider, this.activityStarterProvider, this.clickNotifierProvider, this.statusBarStateControllerProvider, this.statusBarKeyguardViewManagerProvider, this.keyguardManagerProvider, this.dreamManagerProvider, this.bubbleControllerProvider, this.assistManagerLazyProvider, this.remoteInputManagerProvider, this.groupManagerProvider, this.lockscreenUserManagerProvider, this.shadeControllerProvider, this.keyguardStateControllerProvider, this.notificationInterruptStateProvider, this.lockPatternUtilsProvider, this.remoteInputCallbackProvider, this.activityIntentHelperProvider, this.featureFlagsProvider, this.metricsLoggerProvider, this.loggerProvider);
     }

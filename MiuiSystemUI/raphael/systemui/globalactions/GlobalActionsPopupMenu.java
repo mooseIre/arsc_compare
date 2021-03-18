@@ -54,7 +54,7 @@ public class GlobalActionsPopupMenu extends ListPopupWindow {
             int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec((int) (0.9d * d), Integer.MIN_VALUE);
             int i = 0;
             for (int i2 = 0; i2 < this.mAdapter.getCount(); i2++) {
-                View view = this.mAdapter.getView(i2, (View) null, listView);
+                View view = this.mAdapter.getView(i2, null, listView);
                 view.measure(makeMeasureSpec, 0);
                 i = Math.max(view.getMeasuredWidth(), i);
             }

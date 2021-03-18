@@ -21,202 +21,38 @@ import java.util.Locale;
 
 public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     private static Handler sHandler = new Handler();
-    /* access modifiers changed from: private */
-    public String demoType;
-    /* access modifiers changed from: private */
-    public boolean isFromPro;
-    /* access modifiers changed from: private */
-    public GestureBackArrowView mBackArrowView;
+    private String demoType;
+    private boolean isFromPro;
+    private GestureBackArrowView mBackArrowView;
     private View mBgView;
     private View.OnTouchListener mDemoActivityTouchListener = new View.OnTouchListener() {
+        /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass1 */
+
         /* JADX WARNING: Code restructure failed: missing block: B:5:0x0015, code lost:
             if (r6 != 3) goto L_0x0144;
          */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public boolean onTouch(android.view.View r6, android.view.MotionEvent r7) {
             /*
-                r5 = this;
-                int r6 = r7.getActionMasked()
-                float r0 = r7.getX()
-                float r1 = r7.getY()
-                r2 = 2
-                r3 = 1
-                if (r6 == 0) goto L_0x00d9
-                if (r6 == r3) goto L_0x0088
-                if (r6 == r2) goto L_0x0019
-                r1 = 3
-                if (r6 == r1) goto L_0x0088
-                goto L_0x0144
-            L_0x0019:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mGestureStatus
-                if (r6 != 0) goto L_0x0023
-                goto L_0x0144
-            L_0x0023:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r4 = r6.mStatus
-                if (r4 != r3) goto L_0x0033
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r4 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r4 = r4.mDownX
-                float r0 = r0 - r4
-                goto L_0x003b
-            L_0x0033:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r4 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r4 = r4.mDownX
-                float r0 = r4 - r0
-            L_0x003b:
-                float unused = r6.mOffsetX = r0
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r6 = r6.mDownY
-                float r1 = r1 - r6
-                java.lang.Math.abs(r1)
-                r6 = 1101004800(0x41a00000, float:20.0)
-                int r6 = (r0 > r6 ? 1 : (r0 == r6 ? 0 : -1))
-                if (r6 < 0) goto L_0x0144
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mGestureStatus
-                if (r6 != r3) goto L_0x005b
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int unused = r6.mGestureStatus = r2
-            L_0x005b:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                com.android.systemui.fsgesture.GestureBackArrowView r6 = r6.mBackArrowView
-                r6.onActionMove(r0)
-                long r1 = r7.getEventTime()
-                long r6 = r7.getDownTime()
-                long r1 = r1 - r6
-                int r6 = (int) r1
-                float r6 = (float) r6
-                float r6 = r0 / r6
-                int r6 = (int) r6
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r5 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                com.android.systemui.fsgesture.GestureBackArrowView r5 = r5.mBackArrowView
-                boolean r6 = com.android.systemui.fsgesture.GesturesBackController.isFinished(r0, r6)
-                if (r6 == 0) goto L_0x0081
-                com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r6 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_BACK
-                goto L_0x0083
-            L_0x0081:
-                com.android.systemui.fsgesture.GestureBackArrowView$ReadyState r6 = com.android.systemui.fsgesture.GestureBackArrowView.ReadyState.READY_STATE_NONE
-            L_0x0083:
-                r5.setReadyFinish(r6)
-                goto L_0x0144
-            L_0x0088:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mGestureStatus
-                if (r6 != 0) goto L_0x0092
-                goto L_0x0144
-            L_0x0092:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mStatus
-                if (r6 != r3) goto L_0x00a2
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r6 = r6.mDownX
-                float r0 = r0 - r6
-                goto L_0x00aa
-            L_0x00a2:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r6 = r6.mDownX
-                float r0 = r6 - r0
-            L_0x00aa:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                com.android.systemui.fsgesture.GestureBackArrowView r6 = r6.mBackArrowView
-                float r0 = com.android.systemui.fsgesture.GesturesBackController.convertOffset(r0)
-                r1 = 0
-                r6.onActionUp(r0, r1)
-                long r0 = r7.getEventTime()
-                long r6 = r7.getDownTime()
-                long r0 = r0 - r6
-                int r6 = (int) r0
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r7 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r7 = r7.mOffsetX
-                float r6 = (float) r6
-                float r7 = r7 / r6
-                int r6 = (int) r7
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r5 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r7 = r5.mOffsetX
-                boolean r6 = com.android.systemui.fsgesture.GesturesBackController.isFinished(r7, r6)
-                r5.finishGesture(r6)
-                goto L_0x0144
-            L_0x00d9:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mGestureStatus
-                r7 = 0
-                if (r6 != r2) goto L_0x00e3
-                return r7
-            L_0x00e3:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float unused = r6.mDownX = r0
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float unused = r6.mDownY = r1
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mStatus
-                if (r6 != r3) goto L_0x00fb
-                r6 = 1116471296(0x428c0000, float:70.0)
-                int r6 = (r0 > r6 ? 1 : (r0 == r6 ? 0 : -1))
-                if (r6 < 0) goto L_0x0110
-            L_0x00fb:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mStatus
-                if (r6 != r2) goto L_0x013f
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mDisplayWidth
-                int r6 = r6 + -70
-                float r6 = (float) r6
-                int r6 = (r0 > r6 ? 1 : (r0 == r6 ? 0 : -1))
-                if (r6 <= 0) goto L_0x013f
-            L_0x0110:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int r6 = r6.mDisplayHeight
-                int r6 = r6 / 5
-                int r6 = r6 * r2
-                float r6 = (float) r6
-                int r6 = (r1 > r6 ? 1 : (r1 == r6 ? 0 : -1))
-                if (r6 <= 0) goto L_0x013f
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int unused = r6.mGestureStatus = r3
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r6 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                com.android.systemui.fsgesture.GestureBackArrowView r6 = r6.mBackArrowView
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r7 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                float r7 = r7.mDownY
-                r0 = 0
-                r1 = -1082130432(0xffffffffbf800000, float:-1.0)
-                r6.onActionDown(r7, r0, r1)
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r5 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                com.android.systemui.fsgesture.FsGestureDemoSwipeView r5 = r5.mFsGestureDemoSwipeView
-                r5.cancelAnimation()
-                goto L_0x0144
-            L_0x013f:
-                com.android.systemui.fsgesture.FsGestureBackDemoActivity r5 = com.android.systemui.fsgesture.FsGestureBackDemoActivity.this
-                int unused = r5.mGestureStatus = r7
-            L_0x0144:
-                return r3
+            // Method dump skipped, instructions count: 325
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass1.onTouch(android.view.View, android.view.MotionEvent):boolean");
         }
     };
-    /* access modifiers changed from: private */
-    public View mDemoActivityView;
-    /* access modifiers changed from: private */
-    public Matrix mDemoActivityViewMatrix = new Matrix();
-    /* access modifiers changed from: private */
-    public int mDisplayHeight;
-    /* access modifiers changed from: private */
-    public int mDisplayWidth;
-    /* access modifiers changed from: private */
-    public float mDownX;
-    /* access modifiers changed from: private */
-    public float mDownY;
-    /* access modifiers changed from: private */
-    public FsGestureDemoSwipeView mFsGestureDemoSwipeView;
+    private View mDemoActivityView;
+    private Matrix mDemoActivityViewMatrix = new Matrix();
+    private int mDisplayHeight;
+    private int mDisplayWidth;
+    private float mDownX;
+    private float mDownY;
+    private FsGestureDemoSwipeView mFsGestureDemoSwipeView;
     private FsGestureDemoTitleView mFsGestureDemoTitleView;
-    /* access modifiers changed from: private */
-    public int mGestureStatus;
-    /* access modifiers changed from: private */
-    public float mOffsetX;
-    /* access modifiers changed from: private */
-    public int mStatus = 0;
+    private int mGestureStatus;
+    private float mOffsetX;
+    private int mStatus = 0;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         setContentView(C0017R$layout.fs_gesture_back_demo);
@@ -254,6 +90,8 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
             this.mFsGestureDemoTitleView.prepareTitleView(1);
         }
         this.mFsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
+            /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass2 */
+
             public void onClick(View view) {
                 FsGestureBackDemoActivity.this.finish();
             }
@@ -279,8 +117,11 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     /* access modifiers changed from: private */
-    public void startSwipeViewAnimation(final int i) {
+    /* access modifiers changed from: public */
+    private void startSwipeViewAnimation(final int i) {
         sHandler.postDelayed(new Runnable() {
+            /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass3 */
+
             public void run() {
                 FsGestureBackDemoActivity.this.mFsGestureDemoSwipeView.prepare(i);
                 FsGestureBackDemoActivity.this.mFsGestureDemoSwipeView.startAnimation(i);
@@ -289,11 +130,14 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     /* access modifiers changed from: private */
-    public void finishGesture(final boolean z) {
+    /* access modifiers changed from: public */
+    private void finishGesture(final boolean z) {
         if (this.mDemoActivityView != null) {
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-            ofFloat.setDuration(200);
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ofFloat.setDuration(200L);
             ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass4 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     float animatedFraction = valueAnimator.getAnimatedFraction();
                     float[] fArr = new float[9];
@@ -309,6 +153,8 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
                 }
             });
             ofFloat.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass5 */
+
                 public void onAnimationEnd(Animator animator) {
                     if (z) {
                         FsGestureBackDemoActivity.this.showBackAnimation();
@@ -319,7 +165,7 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
                     } else if (FsGestureBackDemoActivity.this.mStatus == 2) {
                         FsGestureBackDemoActivity.this.startSwipeViewAnimation(1);
                     }
-                    int unused = FsGestureBackDemoActivity.this.mGestureStatus = 3;
+                    FsGestureBackDemoActivity.this.mGestureStatus = 3;
                 }
             });
             ofFloat.start();
@@ -327,11 +173,14 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     /* access modifiers changed from: private */
-    public void showBackAnimation() {
+    /* access modifiers changed from: public */
+    private void showBackAnimation() {
         this.mBgView.setVisibility(0);
         Animation loadAnimation = AnimationUtils.loadAnimation(this, C0007R$anim.activity_close_enter);
         Animation loadAnimation2 = AnimationUtils.loadAnimation(this, C0007R$anim.activity_close_exit);
         loadAnimation.setAnimationListener(new Animation.AnimationListener() {
+            /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass6 */
+
             public void onAnimationRepeat(Animation animation) {
             }
 
@@ -347,7 +196,8 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     /* access modifiers changed from: private */
-    public void onGestureFinish() {
+    /* access modifiers changed from: public */
+    private void onGestureFinish() {
         this.mFsGestureDemoTitleView.notifyFinish();
         this.mDemoActivityView.setVisibility(8);
         finishGestureBack();
@@ -355,6 +205,8 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
 
     private void finishGestureBack() {
         sHandler.postDelayed(new Runnable() {
+            /* class com.android.systemui.fsgesture.FsGestureBackDemoActivity.AnonymousClass7 */
+
             public void run() {
                 if (FsGestureBackDemoActivity.this.mStatus == 1) {
                     Intent intent = new Intent(FsGestureBackDemoActivity.this, FsGestureBackDemoActivity.class);

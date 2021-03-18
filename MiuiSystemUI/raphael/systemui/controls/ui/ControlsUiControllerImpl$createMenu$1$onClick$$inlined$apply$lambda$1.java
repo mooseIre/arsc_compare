@@ -17,6 +17,7 @@ public final class ControlsUiControllerImpl$createMenu$1$onClick$$inlined$apply$
         this.this$0 = controlsUiControllerImpl$createMenu$1;
     }
 
+    @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(@NotNull AdapterView<?> adapterView, @NotNull View view, int i, long j) {
         Intrinsics.checkParameterIsNotNull(adapterView, "parent");
         Intrinsics.checkParameterIsNotNull(view, "view");

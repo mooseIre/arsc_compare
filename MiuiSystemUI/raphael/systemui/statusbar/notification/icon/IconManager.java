@@ -29,10 +29,8 @@ public class IconManager {
     private final IconManager$entryListener$1 entryListener = new IconManager$entryListener$1(this);
     private final IconBuilder iconBuilder;
     private final LauncherApps launcherApps;
-    /* access modifiers changed from: private */
-    public final CommonNotifCollection notifCollection;
-    /* access modifiers changed from: private */
-    public final NotificationEntry.OnSensitivityChangedListener sensitivityListener = new IconManager$sensitivityListener$1(this);
+    private final CommonNotifCollection notifCollection;
+    private final NotificationEntry.OnSensitivityChangedListener sensitivityListener = new IconManager$sensitivityListener$1(this);
 
     public IconManager(@NotNull CommonNotifCollection commonNotifCollection, @NotNull LauncherApps launcherApps2, @NotNull IconBuilder iconBuilder2) {
         Intrinsics.checkParameterIsNotNull(commonNotifCollection, "notifCollection");
@@ -93,10 +91,10 @@ public class IconManager {
         if (icons.getAreIconsAvailable()) {
             IconPack icons2 = notificationEntry.getIcons();
             Intrinsics.checkExpressionValueIsNotNull(icons2, "entry.icons");
-            icons2.setSmallIconDescriptor((StatusBarIcon) null);
+            icons2.setSmallIconDescriptor(null);
             IconPack icons3 = notificationEntry.getIcons();
             Intrinsics.checkExpressionValueIsNotNull(icons3, "entry.icons");
-            icons3.setPeopleAvatarDescriptor((StatusBarIcon) null);
+            icons3.setPeopleAvatarDescriptor(null);
             Pair<StatusBarIcon, StatusBarIcon> iconDescriptors = getIconDescriptors(notificationEntry);
             StatusBarIcon component1 = iconDescriptors.component1();
             StatusBarIcon component2 = iconDescriptors.component2();
@@ -172,8 +170,7 @@ public class IconManager {
         } else {
             icon = NotificationUtil.getSmallIcon(notificationEntry.getSbn());
         }
-        Icon icon2 = icon;
-        if (icon2 != null) {
+        if (icon != null) {
             ExpandedNotification sbn2 = notificationEntry.getSbn();
             Intrinsics.checkExpressionValueIsNotNull(sbn2, "entry.sbn");
             UserHandle user = sbn2.getUser();
@@ -184,7 +181,7 @@ public class IconManager {
             int i2 = notification.number;
             IconBuilder iconBuilder2 = this.iconBuilder;
             Intrinsics.checkExpressionValueIsNotNull(notification, "n");
-            StatusBarIcon statusBarIcon = new StatusBarIcon(user, packageName, icon2, i, i2, iconBuilder2.getIconContentDescription(notification));
+            StatusBarIcon statusBarIcon = new StatusBarIcon(user, packageName, icon, i, i2, iconBuilder2.getIconContentDescription(notification));
             if (isImportantConversation(notificationEntry)) {
                 if (z2) {
                     IconPack icons3 = notificationEntry.getIcons();
@@ -286,10 +283,7 @@ public class IconManager {
                 Intrinsics.checkExpressionValueIsNotNull(notification, "entry.sbn.notification");
                 boolean equals = icon.equals(notification.getSmallIcon());
                 if (!isImportantConversation(notificationEntry) && !equals) {
-                    if (!z || !notificationEntry.isSensitive()) {
-                        return true;
-                    }
-                    return false;
+                    return !z || !notificationEntry.isSensitive();
                 }
             }
         }

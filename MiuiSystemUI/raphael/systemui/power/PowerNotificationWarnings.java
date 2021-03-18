@@ -53,23 +53,19 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     private ActivityStarter mActivityStarter;
     private int mBatteryLevel;
     private int mBucket;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private final Context mContext;
     private BatteryStateSnapshot mCurrentBatterySnapshot;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private SystemUIDialog mHighTempDialog;
     private boolean mHighTempWarning;
     private boolean mInvalidCharger;
     private final KeyguardManager mKeyguard;
     private final NotificationManager mNoMan;
-    /* access modifiers changed from: private */
-    public final Intent mOpenBatterySettings = settings("android.intent.action.POWER_USAGE_SUMMARY");
+    private final Intent mOpenBatterySettings = settings("android.intent.action.POWER_USAGE_SUMMARY");
     private boolean mPlaySound;
     private final PowerManager mPowerMan;
     private final Receiver mReceiver = new Receiver();
-    /* access modifiers changed from: private */
-    public SystemUIDialog mSaverConfirmation;
+    private SystemUIDialog mSaverConfirmation;
     private boolean mShowAutoSaverSuggestion;
     private int mShowing;
     private SystemUIDialog mThermalShutdownDialog;
@@ -90,6 +86,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         this.mActivityStarter = activityStarter;
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void dump(PrintWriter printWriter) {
         printWriter.print("mWarning=");
         printWriter.println(this.mWarning);
@@ -116,6 +113,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         printWriter.println(str);
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void update(int i, int i2, long j) {
         this.mBatteryLevel = i;
         if (i2 >= 0) {
@@ -126,6 +124,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         this.mBucket = i2;
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void updateSnapshot(BatteryStateSnapshot batteryStateSnapshot) {
         this.mCurrentBatterySnapshot = batteryStateSnapshot;
     }
@@ -169,7 +168,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         if (this.mCurrentBatterySnapshot.isHybrid()) {
             str = getHybridContentString(format);
         } else {
-            str = this.mContext.getString(C0021R$string.battery_low_percent_format, new Object[]{format});
+            str = this.mContext.getString(C0021R$string.battery_low_percent_format, format);
         }
         Notification.Builder visibility = new Notification.Builder(this.mContext, NotificationChannels.BATTERY).setSmallIcon(C0013R$drawable.ic_power_low).setWhen(this.mWarningTriggerTimeMs).setShowWhen(false).setContentText(str).setContentTitle(string).setOnlyAlertOnce(true).setDeleteIntent(pendingBroadcast("PNW.dismissedWarning")).setStyle(new Notification.BigTextStyle().bigText(str)).setVisibility(1);
         if (hasBatterySettings()) {
@@ -211,10 +210,12 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         return new Intent(str).setFlags(1551892480);
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public boolean isInvalidChargerWarningShowing() {
         return this.mInvalidCharger;
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void dismissHighTemperatureWarning() {
         if (this.mHighTempWarning) {
             dismissHighTemperatureWarningInternal();
@@ -222,11 +223,13 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     /* access modifiers changed from: private */
-    public void dismissHighTemperatureWarningInternal() {
+    /* access modifiers changed from: public */
+    private void dismissHighTemperatureWarningInternal() {
         this.mNoMan.cancelAsUser("high_temp", 4, UserHandle.ALL);
         this.mHighTempWarning = false;
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void showHighTemperatureWarning() {
         if (!this.mHighTempWarning) {
             this.mHighTempWarning = true;
@@ -237,15 +240,18 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     /* access modifiers changed from: private */
-    public void showHighTemperatureDialog() {
+    /* access modifiers changed from: public */
+    private void showHighTemperatureDialog() {
         if (this.mHighTempDialog == null) {
             SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
             systemUIDialog.setIconAttribute(16843605);
             systemUIDialog.setTitle(C0021R$string.high_temp_title);
             systemUIDialog.setMessage(C0021R$string.high_temp_dialog_message);
-            systemUIDialog.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
+            systemUIDialog.setPositiveButton(17039370, null);
             systemUIDialog.setShowForAllUsers(true);
             systemUIDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$PU_JpsxNcz7jXGNa_DRkuMbEWwU */
+
                 public final void onDismiss(DialogInterface dialogInterface) {
                     PowerNotificationWarnings.this.lambda$showHighTemperatureDialog$0$PowerNotificationWarnings(dialogInterface);
                 }
@@ -267,15 +273,18 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     /* access modifiers changed from: private */
-    public void showThermalShutdownDialog() {
+    /* access modifiers changed from: public */
+    private void showThermalShutdownDialog() {
         if (this.mThermalShutdownDialog == null) {
             SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
             systemUIDialog.setIconAttribute(16843605);
             systemUIDialog.setTitle(C0021R$string.thermal_shutdown_title);
             systemUIDialog.setMessage(C0021R$string.thermal_shutdown_dialog_message);
-            systemUIDialog.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
+            systemUIDialog.setPositiveButton(17039370, null);
             systemUIDialog.setShowForAllUsers(true);
             systemUIDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$O5nkGS5PG2ihQrXqunpOO_aZDms */
+
                 public final void onDismiss(DialogInterface dialogInterface) {
                     PowerNotificationWarnings.this.lambda$showThermalShutdownDialog$1$PowerNotificationWarnings(dialogInterface);
                 }
@@ -291,14 +300,18 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         this.mThermalShutdownDialog = null;
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void showThermalShutdownWarning() {
         Notification.Builder color = new Notification.Builder(this.mContext, NotificationChannels.ALERTS).setSmallIcon(C0013R$drawable.ic_device_thermostat_24).setWhen(0).setShowWhen(false).setContentTitle(this.mContext.getString(C0021R$string.thermal_shutdown_title)).setContentText(this.mContext.getString(C0021R$string.thermal_shutdown_message)).setVisibility(1).setContentIntent(pendingBroadcast("PNW.clickedThermalShutdownWarning")).setDeleteIntent(pendingBroadcast("PNW.dismissedThermalShutdownWarning")).setColor(Utils.getColorAttrDefaultColor(this.mContext, 16844099));
         SystemUI.overrideNotificationAppName(this.mContext, color, false);
         this.mNoMan.notifyAsUser("high_temp", 39, color.build(), UserHandle.ALL);
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void showUsbHighTemperatureAlarm() {
         this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$BgW0sVGH4tN6GoBK_M1noXhk8wA */
+
             public final void run() {
                 PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarm$2$PowerNotificationWarnings();
             }
@@ -314,18 +327,24 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
             systemUIDialog.setIconAttribute(16843605);
             systemUIDialog.setTitle(C0021R$string.high_temp_alarm_title);
             systemUIDialog.setShowForAllUsers(true);
-            systemUIDialog.setMessage(this.mContext.getString(C0021R$string.high_temp_alarm_notify_message, new Object[]{""}));
+            systemUIDialog.setMessage(this.mContext.getString(C0021R$string.high_temp_alarm_notify_message, ""));
             systemUIDialog.setPositiveButton(17039370, new DialogInterface.OnClickListener() {
+                /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$wL6F1WmvK9p9dyYXQnu9ScZBxSA */
+
                 public final void onClick(DialogInterface dialogInterface, int i) {
                     PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarmInternal$3$PowerNotificationWarnings(dialogInterface, i);
                 }
             });
             systemUIDialog.setNegativeButton(C0021R$string.high_temp_alarm_help_care_steps, new DialogInterface.OnClickListener() {
+                /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$dkzsXROJlAvy2zSj_OYfkxpKFc */
+
                 public final void onClick(DialogInterface dialogInterface, int i) {
                     PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarmInternal$5$PowerNotificationWarnings(dialogInterface, i);
                 }
             });
             systemUIDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$_C7Tc72CcSASuMrkeFnJC4Oj07o */
+
                 public final void onDismiss(DialogInterface dialogInterface) {
                     PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarmInternal$6$PowerNotificationWarnings(dialogInterface);
                 }
@@ -351,6 +370,9 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         intent.setClassName("com.android.settings", "com.android.settings.HelpTrampoline");
         intent.putExtra("android.intent.extra.TEXT", string);
         ((ActivityStarter) Dependency.get(ActivityStarter.class)).startActivity(intent, true, (ActivityStarter.Callback) new ActivityStarter.Callback() {
+            /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$aDUeHG2fyaQA2OArgzN2VFmIKQ */
+
+            @Override // com.android.systemui.plugins.ActivityStarter.Callback
             public final void onActivityStarted(int i) {
                 PowerNotificationWarnings.this.lambda$showUsbHighTemperatureAlarmInternal$4$PowerNotificationWarnings(i);
             }
@@ -370,10 +392,12 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         Events.writeEvent(20, 9, Boolean.valueOf(this.mKeyguard.isKeyguardLocked()));
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void updateLowBatteryWarning() {
         updateNotification();
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void dismissLowBatteryWarning() {
         if (DEBUG) {
             Slog.d("PowerUI.Notification", "dismissing low battery warning: level=" + this.mBatteryLevel);
@@ -382,7 +406,8 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     /* access modifiers changed from: private */
-    public void dismissLowBatteryNotification() {
+    /* access modifiers changed from: public */
+    private void dismissLowBatteryNotification() {
         if (this.mWarning) {
             Slog.i("PowerUI.Notification", "dismissing low battery notification");
         }
@@ -394,6 +419,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         return this.mOpenBatterySettings.resolveActivity(this.mContext.getPackageManager()) != null;
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void showLowBatteryWarning(boolean z) {
         Slog.i("PowerUI.Notification", "show low battery warning: level=" + this.mBatteryLevel + " [" + this.mBucket + "] playSound=" + z);
         this.mPlaySound = z;
@@ -401,6 +427,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         updateNotification();
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void dismissInvalidChargerWarning() {
         dismissInvalidChargerNotification();
     }
@@ -413,29 +440,34 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         updateNotification();
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void showInvalidChargerWarning() {
         this.mInvalidCharger = true;
         updateNotification();
     }
 
     /* access modifiers changed from: private */
-    public void showAutoSaverSuggestion() {
+    /* access modifiers changed from: public */
+    private void showAutoSaverSuggestion() {
         this.mShowAutoSaverSuggestion = true;
         updateNotification();
     }
 
     /* access modifiers changed from: private */
-    public void dismissAutoSaverSuggestion() {
+    /* access modifiers changed from: public */
+    private void dismissAutoSaverSuggestion() {
         this.mShowAutoSaverSuggestion = false;
         updateNotification();
     }
 
+    @Override // com.android.systemui.power.PowerUI.WarningsUI
     public void userSwitched() {
         updateNotification();
     }
 
     /* access modifiers changed from: private */
-    public void showStartSaverConfirmation(Bundle bundle) {
+    /* access modifiers changed from: public */
+    private void showStartSaverConfirmation(Bundle bundle) {
         if (this.mSaverConfirmation == null) {
             SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
             boolean z = bundle.getBoolean("extra_confirm_only");
@@ -449,6 +481,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
             if (z) {
                 systemUIDialog.setTitle(C0021R$string.battery_saver_confirmation_title_generic);
                 systemUIDialog.setPositiveButton(17040005, new DialogInterface.OnClickListener(i, i2) {
+                    /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$i9YMNbne4kaewl8DwiUWlEIhHLU */
                     public final /* synthetic */ int f$1;
                     public final /* synthetic */ int f$2;
 
@@ -464,14 +497,18 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
             } else {
                 systemUIDialog.setTitle(C0021R$string.battery_saver_confirmation_title);
                 systemUIDialog.setPositiveButton(C0021R$string.battery_saver_confirmation_ok, new DialogInterface.OnClickListener() {
+                    /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$UffCz3D5JaMRKgj_soLcPpUL04 */
+
                     public final void onClick(DialogInterface dialogInterface, int i) {
                         PowerNotificationWarnings.this.lambda$showStartSaverConfirmation$8$PowerNotificationWarnings(dialogInterface, i);
                     }
                 });
-                systemUIDialog.setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
+                systemUIDialog.setNegativeButton(17039360, null);
             }
             systemUIDialog.setShowForAllUsers(true);
             systemUIDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$AE5LLn9E8Dx1b7_xgN4SxgDN7R4 */
+
                 public final void onDismiss(DialogInterface dialogInterface) {
                     PowerNotificationWarnings.this.lambda$showStartSaverConfirmation$9$PowerNotificationWarnings(dialogInterface);
                 }
@@ -513,11 +550,14 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
         }
         SpannableString spannableString = new SpannableString(this.mContext.getText(17039771));
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(spannableString);
-        for (Annotation annotation : (Annotation[]) spannableString.getSpans(0, spannableString.length(), Annotation.class)) {
+        Annotation[] annotationArr = (Annotation[]) spannableString.getSpans(0, spannableString.length(), Annotation.class);
+        for (Annotation annotation : annotationArr) {
             if ("url".equals(annotation.getValue())) {
                 int spanStart = spannableString.getSpanStart(annotation);
                 int spanEnd = spannableString.getSpanEnd(annotation);
                 AnonymousClass1 r8 = new URLSpan(charSequence) {
+                    /* class com.android.systemui.power.PowerNotificationWarnings.AnonymousClass1 */
+
                     public void updateDrawState(TextPaint textPaint) {
                         super.updateDrawState(textPaint);
                         textPaint.setUnderlineText(false);
@@ -545,12 +585,14 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
     }
 
     /* access modifiers changed from: private */
-    public void setSaverMode(boolean z, boolean z2) {
+    /* access modifiers changed from: public */
+    private void setSaverMode(boolean z, boolean z2) {
         BatterySaverUtils.setPowerSaveMode(this.mContext, z, z2);
     }
 
     /* access modifiers changed from: private */
-    public void startBatterySaverSchedulePage() {
+    /* access modifiers changed from: public */
+    private void startBatterySaverSchedulePage() {
         Intent intent = new Intent("com.android.settings.BATTERY_SAVER_SCHEDULE_SETTINGS");
         intent.setFlags(268468224);
         this.mActivityStarter.startActivity(intent, true);

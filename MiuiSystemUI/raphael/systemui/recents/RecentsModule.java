@@ -8,7 +8,7 @@ public abstract class RecentsModule {
     public static RecentsImplementation provideRecentsImpl(Context context, ContextComponentHelper contextComponentHelper) {
         String string = context.getString(C0021R$string.config_recentsComponent);
         if (string == null || string.length() == 0) {
-            throw new RuntimeException("No recents component configured", (Throwable) null);
+            throw new RuntimeException("No recents component configured", null);
         }
         RecentsImplementation resolveRecents = contextComponentHelper.resolveRecents(string);
         if (resolveRecents != null) {

@@ -32,22 +32,22 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
     private final Lazy<PeopleNotificationIdentifier> mPeopleNotificationIdentifier;
 
     public interface OnGroupChangeListener {
-        void onGroupCreated(NotificationGroup notificationGroup, String str) {
+        default void onGroupCreated(NotificationGroup notificationGroup, String str) {
         }
 
-        void onGroupCreatedFromChildren(NotificationGroup notificationGroup) {
+        default void onGroupCreatedFromChildren(NotificationGroup notificationGroup) {
         }
 
-        void onGroupExpansionChanged(ExpandableNotificationRow expandableNotificationRow, boolean z) {
+        default void onGroupExpansionChanged(ExpandableNotificationRow expandableNotificationRow, boolean z) {
         }
 
-        void onGroupRemoved(NotificationGroup notificationGroup, String str) {
+        default void onGroupRemoved(NotificationGroup notificationGroup, String str) {
         }
 
-        void onGroupSuppressionChanged(NotificationGroup notificationGroup, boolean z) {
+        default void onGroupSuppressionChanged(NotificationGroup notificationGroup, boolean z) {
         }
 
-        void onGroupsChanged() {
+        default void onGroupsChanged() {
         }
     }
 
@@ -198,16 +198,16 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
             boolean z = false;
             int i = 0;
             boolean z2 = false;
-            for (NotificationEntry isBubbleNotificationSuppressedFromShade : notificationGroup.children.values()) {
-                if (!getBubbleController().isBubbleNotificationSuppressedFromShade(isBubbleNotificationSuppressedFromShade)) {
+            for (NotificationEntry notificationEntry : notificationGroup.children.values()) {
+                if (!getBubbleController().isBubbleNotificationSuppressedFromShade(notificationEntry)) {
                     i++;
                 } else {
                     z2 = true;
                 }
             }
             boolean z3 = notificationGroup.suppressed;
-            NotificationEntry notificationEntry = notificationGroup.summary;
-            if (notificationEntry != null && !notificationGroup.expanded && (i == 1 || (i == 0 && notificationEntry.getSbn().getNotification().isGroupSummary() && (hasIsolatedChildren(notificationGroup) || z2)))) {
+            NotificationEntry notificationEntry2 = notificationGroup.summary;
+            if (notificationEntry2 != null && !notificationGroup.expanded && (i == 1 || (i == 0 && notificationEntry2.getSbn().getNotification().isGroupSummary() && (hasIsolatedChildren(notificationGroup) || z2)))) {
                 z = true;
             }
             notificationGroup.suppressed = z;
@@ -232,8 +232,8 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
 
     private int getNumberOfIsolatedChildren(String str) {
         int i = 0;
-        for (StatusBarNotification next : this.mIsolatedEntries.values()) {
-            if (next.getGroupKey().equals(str) && isIsolated(next.getKey())) {
+        for (StatusBarNotification statusBarNotification : this.mIsolatedEntries.values()) {
+            if (statusBarNotification.getGroupKey().equals(str) && isIsolated(statusBarNotification.getKey())) {
                 i++;
             }
         }
@@ -357,9 +357,9 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
             return null;
         }
         ArrayList<NotificationEntry> arrayList = new ArrayList<>(notificationGroup.children.values());
-        for (StatusBarNotification next : this.mIsolatedEntries.values()) {
-            if (next.getGroupKey().equals(statusBarNotification.getGroupKey())) {
-                arrayList.add(this.mGroupMap.get(next.getKey()).summary);
+        for (StatusBarNotification statusBarNotification2 : this.mIsolatedEntries.values()) {
+            if (statusBarNotification2.getGroupKey().equals(statusBarNotification.getGroupKey())) {
+                arrayList.add(this.mGroupMap.get(statusBarNotification2.getKey()).summary);
             }
         }
         return arrayList;
@@ -416,6 +416,7 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
         return !isIsolated(str) && z && !z2;
     }
 
+    @Override // com.android.systemui.statusbar.policy.OnHeadsUpChangedListener
     public void onHeadsUpStateChanged(NotificationEntry notificationEntry, boolean z) {
         updateIsolation(notificationEntry);
     }
@@ -487,19 +488,20 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("GroupManager state:");
         printWriter.println("  number of groups: " + this.mGroupMap.size());
-        for (Map.Entry next : this.mGroupMap.entrySet()) {
-            printWriter.println("\n    key: " + ((String) next.getKey()));
-            printWriter.println(next.getValue());
+        for (Map.Entry<String, NotificationGroup> entry : this.mGroupMap.entrySet()) {
+            printWriter.println("\n    key: " + entry.getKey());
+            printWriter.println(entry.getValue());
         }
         printWriter.println("\n    isolated entries: " + this.mIsolatedEntries.size());
-        for (Map.Entry next2 : this.mIsolatedEntries.entrySet()) {
+        for (Map.Entry<String, StatusBarNotification> entry2 : this.mIsolatedEntries.entrySet()) {
             printWriter.print("      ");
-            printWriter.print((String) next2.getKey());
+            printWriter.print(entry2.getKey());
             printWriter.print(", ");
-            printWriter.println(next2.getValue());
+            printWriter.println(entry2.getValue());
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onStateChanged(int i) {
         setStatusBarState(i);
     }
@@ -525,13 +527,13 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
             }
             sb.append(str);
             String str3 = sb.toString() + "\n    children size: " + this.children.size();
-            for (NotificationEntry next : this.children.values()) {
+            for (NotificationEntry notificationEntry3 : this.children.values()) {
                 StringBuilder sb2 = new StringBuilder();
                 sb2.append(str3);
                 sb2.append("\n      ");
-                sb2.append(next.getSbn());
-                if (next.getDebugThrowable() != null) {
-                    str2 = Log.getStackTraceString(next.getDebugThrowable());
+                sb2.append(notificationEntry3.getSbn());
+                if (notificationEntry3.getDebugThrowable() != null) {
+                    str2 = Log.getStackTraceString(notificationEntry3.getDebugThrowable());
                 } else {
                     str2 = "";
                 }

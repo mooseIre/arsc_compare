@@ -30,6 +30,7 @@ public final class ShadeControllerImpl_Factory implements Factory<ShadeControlle
         this.bubbleControllerLazyProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public ShadeControllerImpl get() {
         return provideInstance(this.commandQueueProvider, this.statusBarStateControllerProvider, this.notificationShadeWindowControllerProvider, this.statusBarKeyguardViewManagerProvider, this.windowManagerProvider, this.statusBarLazyProvider, this.assistManagerLazyProvider, this.bubbleControllerLazyProvider);
     }

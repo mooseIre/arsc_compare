@@ -17,6 +17,7 @@ public final class MiuiRecentProxy_Factory implements Factory<MiuiRecentProxy> {
         this.handlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public MiuiRecentProxy get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.handlerProvider);
     }

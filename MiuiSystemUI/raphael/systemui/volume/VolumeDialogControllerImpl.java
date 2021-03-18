@@ -45,6 +45,7 @@ import com.android.systemui.qs.tiles.DndTile;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.util.RingerModeLiveData;
 import com.android.systemui.util.RingerModeTracker;
+import com.android.systemui.volume.VolumeDialogControllerImpl;
 import com.miui.systemui.volume.VolumeDialogTransformHelper;
 import dagger.Lazy;
 import java.io.FileDescriptor;
@@ -59,42 +60,34 @@ import java.util.function.Function;
 public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpable {
     private static final AudioAttributes SONIFICIATION_VIBRATION_ATTRIBUTES = new AudioAttributes.Builder().setContentType(4).setUsage(13).build();
     static final ArrayMap<Integer, Integer> STREAMS;
-    /* access modifiers changed from: private */
-    public static final String TAG = Util.logTag(VolumeDialogControllerImpl.class);
+    private static final String TAG = Util.logTag(VolumeDialogControllerImpl.class);
     private AudioManager mAudio;
     private IAudioService mAudioService;
     protected final BroadcastDispatcher mBroadcastDispatcher;
     protected C mCallbacks = new C(this);
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public boolean mDestroyed;
+    private final Context mContext;
+    private boolean mDestroyed;
     private final boolean mHasVibrator;
     private long mLastToggledRingerOn;
-    /* access modifiers changed from: private */
-    public final MediaSessions mMediaSessions;
+    private final MediaSessions mMediaSessions;
     protected final MediaSessionsCallbacks mMediaSessionsCallbacksW = new MediaSessionsCallbacks();
-    /* access modifiers changed from: private */
-    public final NotificationManager mNoMan;
+    private final NotificationManager mNoMan;
     private final NotificationManager mNotificationManager;
     private final SettingObserver mObserver;
     private final Receiver mReceiver = new Receiver();
     private final RingerModeObservers mRingerModeObservers;
-    /* access modifiers changed from: private */
-    public boolean mShowA11yStream;
+    private boolean mShowA11yStream;
     private boolean mShowDndTile;
     private boolean mShowSafetyWarning;
     private boolean mShowVolumeDialog;
-    /* access modifiers changed from: private */
-    public final VolumeDialogController.State mState = new VolumeDialogController.State();
+    private final VolumeDialogController.State mState = new VolumeDialogController.State();
     private final Optional<Lazy<StatusBar>> mStatusBarOptionalLazy;
     @GuardedBy({"this"})
     private UserActivityListener mUserActivityListener;
     private final Vibrator mVibrator;
     protected final VC mVolumeController;
     private VolumePolicy mVolumePolicy;
-    /* access modifiers changed from: private */
-    public final W mWorker;
+    private final W mWorker;
     private final HandlerThread mWorkerThread;
 
     public interface UserActivityListener {
@@ -109,6 +102,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         return i == 2 || i == 5;
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public boolean isCaptionStreamOptedOut() {
         return false;
     }
@@ -163,6 +157,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         this.mVolumeController.setA11yMode(((AccessibilityManager) context.getSystemService(AccessibilityManager.class)).isAccessibilityVolumeStreamActive() ? 1 : 0);
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public AudioManager getAudioManager() {
         return this.mAudio;
     }
@@ -227,6 +222,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         return new MediaSessions(context, looper, callbacks);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println(VolumeDialogControllerImpl.class.getSimpleName() + " state:");
         printWriter.print("  mDestroyed: ");
@@ -249,6 +245,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         this.mMediaSessions.dump(printWriter);
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void addCallback(VolumeDialogController.Callbacks callbacks, Handler handler) {
         this.mCallbacks.add(callbacks, handler);
         callbacks.onAccessibilityModeChanged(Boolean.valueOf(this.mShowA11yStream));
@@ -262,36 +259,43 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void removeCallback(VolumeDialogController.Callbacks callbacks) {
         this.mCallbacks.remove(callbacks);
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void getState() {
         if (!this.mDestroyed) {
             this.mWorker.sendEmptyMessage(3);
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public boolean areCaptionsEnabled() {
         return Settings.Secure.getIntForUser(this.mContext.getContentResolver(), "odi_captions_enabled", 0, -2) == 1;
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void setCaptionsEnabled(boolean z) {
         Settings.Secure.putIntForUser(this.mContext.getContentResolver(), "odi_captions_enabled", z ? 1 : 0, -2);
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void getCaptionsComponentState(boolean z) {
         if (!this.mDestroyed) {
             this.mWorker.obtainMessage(16, Boolean.valueOf(z)).sendToTarget();
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void notifyVisible(boolean z) {
         if (!this.mDestroyed) {
             this.mWorker.obtainMessage(12, z ? 1 : 0, 0).sendToTarget();
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void userActivity() {
         if (!this.mDestroyed) {
             this.mWorker.removeMessages(13);
@@ -299,18 +303,21 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void setRingerMode(int i, boolean z) {
         if (!this.mDestroyed) {
             this.mWorker.obtainMessage(4, i, z ? 1 : 0).sendToTarget();
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void setStreamVolume(int i, int i2) {
         if (!this.mDestroyed) {
             this.mWorker.obtainMessage(10, i, i2).sendToTarget();
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void setActiveStream(int i) {
         if (!this.mDestroyed) {
             this.mWorker.obtainMessage(11, i, 0).sendToTarget();
@@ -322,6 +329,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         this.mShowSafetyWarning = z2;
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void scheduleTouchFeedback() {
         this.mLastToggledRingerOn = System.currentTimeMillis();
     }
@@ -335,18 +343,21 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public void vibrate(VibrationEffect vibrationEffect) {
         if (this.mHasVibrator) {
             this.mVibrator.vibrate(vibrationEffect, SONIFICIATION_VIBRATION_ATTRIBUTES);
         }
     }
 
+    @Override // com.android.systemui.plugins.VolumeDialogController
     public boolean hasVibrator() {
         return this.mHasVibrator;
     }
 
     /* access modifiers changed from: private */
-    public void onNotifyVisibleW(boolean z) {
+    /* access modifiers changed from: public */
+    private void onNotifyVisibleW(boolean z) {
         if (!this.mDestroyed) {
             this.mAudio.notifyVolumeControllerVisible(this.mVolumeController, z);
             if (!z && updateActiveStreamW(-1)) {
@@ -356,7 +367,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onUserActivityW() {
+    /* access modifiers changed from: public */
+    private void onUserActivityW() {
         synchronized (this) {
             if (this.mUserActivityListener != null) {
                 this.mUserActivityListener.onUserActivity();
@@ -365,14 +377,16 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onShowSafetyWarningW(int i) {
+    /* access modifiers changed from: public */
+    private void onShowSafetyWarningW(int i) {
         if (this.mShowSafetyWarning) {
             this.mCallbacks.onShowSafetyWarning(i);
         }
     }
 
     /* access modifiers changed from: private */
-    public void onGetCaptionsComponentStateW(boolean z) {
+    /* access modifiers changed from: public */
+    private void onGetCaptionsComponentStateW(boolean z) {
         Boolean bool = Boolean.FALSE;
         try {
             String string = this.mContext.getString(17039897);
@@ -382,7 +396,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             }
             boolean z2 = false;
             if (D.BUG) {
-                Log.i(TAG, String.format("isCaptionsServiceEnabled componentNameString=%s", new Object[]{string}));
+                Log.i(TAG, String.format("isCaptionsServiceEnabled componentNameString=%s", string));
             }
             ComponentName unflattenFromString = ComponentName.unflattenFromString(string);
             if (unflattenFromString == null) {
@@ -402,12 +416,14 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onAccessibilityModeChanged(Boolean bool) {
+    /* access modifiers changed from: public */
+    private void onAccessibilityModeChanged(Boolean bool) {
         this.mCallbacks.onAccessibilityModeChanged(bool);
     }
 
     /* access modifiers changed from: private */
-    public boolean checkRoutedToBluetoothW(int i) {
+    /* access modifiers changed from: public */
+    private boolean checkRoutedToBluetoothW(int i) {
         if (i != 3) {
             return false;
         }
@@ -415,14 +431,17 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean shouldShowUI(int i) {
+    /* access modifiers changed from: public */
+    private boolean shouldShowUI(int i) {
         Optional<U> map = this.mStatusBarOptionalLazy.map(new Function(i) {
+            /* class com.android.systemui.volume.$$Lambda$VolumeDialogControllerImpl$ZC0tNHMtDXeMl4n7hjZubonHuc */
             public final /* synthetic */ int f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Function
             public final Object apply(Object obj) {
                 return VolumeDialogControllerImpl.this.lambda$shouldShowUI$0$VolumeDialogControllerImpl(this.f$1, (Lazy) obj);
             }
@@ -431,7 +450,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         if (!this.mShowVolumeDialog || (i & 1) == 0) {
             z = false;
         }
-        return ((Boolean) map.orElse(Boolean.valueOf(z))).booleanValue();
+        return map.orElse((U) Boolean.valueOf(z)).booleanValue();
     }
 
     /* access modifiers changed from: private */
@@ -474,7 +493,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateActiveStreamW(int i) {
+    /* access modifiers changed from: public */
+    private boolean updateActiveStreamW(int i) {
         VolumeDialogController.State state = this.mState;
         if (i == state.activeStream) {
             return false;
@@ -497,7 +517,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public VolumeDialogController.StreamState streamStateW(int i) {
+    /* access modifiers changed from: public */
+    private VolumeDialogController.StreamState streamStateW(int i) {
         VolumeDialogController.StreamState streamState = this.mState.states.get(i);
         if (streamState != null) {
             return streamState;
@@ -508,17 +529,18 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onGetStateW() {
-        for (Integer intValue : STREAMS.keySet()) {
-            int intValue2 = intValue.intValue();
-            updateStreamLevelW(intValue2, getAudioManagerStreamVolume(intValue2));
-            streamStateW(intValue2).levelMin = getAudioManagerStreamMinVolume(intValue2);
-            streamStateW(intValue2).levelMax = Math.max(1, getAudioManagerStreamMaxVolume(intValue2));
-            updateStreamMuteW(intValue2, this.mAudio.isStreamMute(intValue2));
-            VolumeDialogController.StreamState streamStateW = streamStateW(intValue2);
-            streamStateW.muteSupported = this.mAudio.isStreamAffectedByMute(intValue2);
-            streamStateW.name = STREAMS.get(Integer.valueOf(intValue2)).intValue();
-            checkRoutedToBluetoothW(intValue2);
+    /* access modifiers changed from: public */
+    private void onGetStateW() {
+        for (Integer num : STREAMS.keySet()) {
+            int intValue = num.intValue();
+            updateStreamLevelW(intValue, getAudioManagerStreamVolume(intValue));
+            streamStateW(intValue).levelMin = getAudioManagerStreamMinVolume(intValue);
+            streamStateW(intValue).levelMax = Math.max(1, getAudioManagerStreamMaxVolume(intValue));
+            updateStreamMuteW(intValue, this.mAudio.isStreamMute(intValue));
+            VolumeDialogController.StreamState streamStateW = streamStateW(intValue);
+            streamStateW.muteSupported = this.mAudio.isStreamAffectedByMute(intValue);
+            streamStateW.name = STREAMS.get(Integer.valueOf(intValue)).intValue();
+            checkRoutedToBluetoothW(intValue);
         }
         updateRingerModeExternalW(this.mRingerModeObservers.mRingerMode.getValue().intValue());
         updateZenModeW();
@@ -542,7 +564,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateStreamLevelW(int i, int i2) {
+    /* access modifiers changed from: public */
+    private boolean updateStreamLevelW(int i, int i2) {
         VolumeDialogController.StreamState streamStateW = streamStateW(i);
         if (streamStateW.level == i2) {
             return false;
@@ -555,7 +578,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateStreamMuteW(int i, boolean z) {
+    /* access modifiers changed from: public */
+    private boolean updateStreamMuteW(int i, boolean z) {
         VolumeDialogController.StreamState streamStateW = streamStateW(i);
         if (streamStateW.muted == z) {
             return false;
@@ -571,7 +595,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateEffectsSuppressorW(ComponentName componentName) {
+    /* access modifiers changed from: public */
+    private boolean updateEffectsSuppressorW(ComponentName componentName) {
         if (Objects.equals(this.mState.effectsSuppressor, componentName)) {
             return false;
         }
@@ -597,7 +622,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateZenModeW() {
+    /* access modifiers changed from: public */
+    private boolean updateZenModeW() {
         int i = Settings.Global.getInt(this.mContext.getContentResolver(), "zen_mode", 0);
         VolumeDialogController.State state = this.mState;
         if (state.zenMode == i) {
@@ -609,7 +635,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateZenConfig() {
+    /* access modifiers changed from: public */
+    private boolean updateZenConfig() {
         NotificationManager.Policy consolidatedNotificationPolicy = this.mNotificationManager.getConsolidatedNotificationPolicy();
         boolean z = (consolidatedNotificationPolicy.priorityCategories & 32) == 0;
         boolean z2 = (consolidatedNotificationPolicy.priorityCategories & 64) == 0;
@@ -629,7 +656,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateRingerModeExternalW(int i) {
+    /* access modifiers changed from: public */
+    private boolean updateRingerModeExternalW(int i) {
         VolumeDialogController.State state = this.mState;
         if (i == state.ringerModeExternal) {
             return false;
@@ -640,7 +668,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public boolean updateRingerModeInternalW(int i) {
+    /* access modifiers changed from: public */
+    private boolean updateRingerModeInternalW(int i) {
         VolumeDialogController.State state = this.mState;
         if (i == state.ringerModeInternal) {
             return false;
@@ -654,7 +683,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onSetRingerModeW(int i, boolean z) {
+    /* access modifiers changed from: public */
+    private void onSetRingerModeW(int i, boolean z) {
         if (z) {
             this.mAudio.setRingerMode(i);
         } else {
@@ -663,12 +693,14 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onSetStreamMuteW(int i, boolean z) {
+    /* access modifiers changed from: public */
+    private void onSetStreamMuteW(int i, boolean z) {
         this.mAudio.adjustStreamVolume(i, z ? -100 : 100, 0);
     }
 
     /* access modifiers changed from: private */
-    public void onSetStreamVolumeW(int i, int i2) {
+    /* access modifiers changed from: public */
+    private void onSetStreamVolumeW(int i, int i2) {
         if (D.BUG) {
             String str = TAG;
             Log.d(str, "onSetStreamVolume " + i + " level=" + i2);
@@ -681,28 +713,32 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     }
 
     /* access modifiers changed from: private */
-    public void onSetActiveStreamW(int i) {
+    /* access modifiers changed from: public */
+    private void onSetActiveStreamW(int i) {
         if (updateActiveStreamW(i)) {
             this.mCallbacks.onStateChanged(this.mState);
         }
     }
 
     /* access modifiers changed from: private */
-    public void onSetExitConditionW(Condition condition) {
+    /* access modifiers changed from: public */
+    private void onSetExitConditionW(Condition condition) {
         this.mNoMan.setZenMode(this.mState.zenMode, condition != null ? condition.id : null, TAG);
     }
 
     /* access modifiers changed from: private */
-    public void onSetZenModeW(int i) {
+    /* access modifiers changed from: public */
+    private void onSetZenModeW(int i) {
         if (D.BUG) {
             String str = TAG;
             Log.d(str, "onSetZenModeW " + i);
         }
-        this.mNoMan.setZenMode(i, (Uri) null, TAG);
+        this.mNoMan.setZenMode(i, null, TAG);
     }
 
     /* access modifiers changed from: private */
-    public void onDismissRequestedW(int i) {
+    /* access modifiers changed from: public */
+    private void onDismissRequestedW(int i) {
         this.mCallbacks.onDismissRequested(i);
     }
 
@@ -713,7 +749,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         DndTile.setVisible(this.mContext, z);
     }
 
-    private final class VC extends IVolumeController.Stub {
+    /* access modifiers changed from: private */
+    public final class VC extends IVolumeController.Stub {
         private final String TAG;
 
         private VC() {
@@ -772,19 +809,20 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             }
             if (!VolumeDialogControllerImpl.this.mDestroyed) {
                 if (i == 0) {
-                    boolean unused = VolumeDialogControllerImpl.this.mShowA11yStream = false;
+                    VolumeDialogControllerImpl.this.mShowA11yStream = false;
                 } else if (i != 1) {
                     String str2 = this.TAG;
                     Log.e(str2, "Invalid accessibility mode " + i);
                 } else {
-                    boolean unused2 = VolumeDialogControllerImpl.this.mShowA11yStream = true;
+                    VolumeDialogControllerImpl.this.mShowA11yStream = true;
                 }
                 VolumeDialogControllerImpl.this.mWorker.obtainMessage(15, Boolean.valueOf(VolumeDialogControllerImpl.this.mShowA11yStream)).sendToTarget();
             }
         }
     }
 
-    private final class W extends Handler {
+    /* access modifiers changed from: private */
+    public final class W extends Handler {
         W(Looper looper) {
             super(looper);
         }
@@ -860,7 +898,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
     }
 
-    class C implements VolumeDialogController.Callbacks {
+    /* access modifiers changed from: package-private */
+    public class C implements VolumeDialogController.Callbacks {
         private final Map<VolumeDialogController.Callbacks, Handler> mCallbackMap = new ConcurrentHashMap();
 
         C(VolumeDialogControllerImpl volumeDialogControllerImpl) {
@@ -877,114 +916,146 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             this.mCallbackMap.remove(callbacks);
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onShowRequested(final int i) {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass1 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onShowRequested(i);
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onShowRequested(i);
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onDismissRequested(final int i) {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass2 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onDismissRequested(i);
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onDismissRequested(i);
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onStateChanged(VolumeDialogController.State state) {
             long currentTimeMillis = System.currentTimeMillis();
             final VolumeDialogController.State copy = state.copy();
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass3 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onStateChanged(copy);
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onStateChanged(copy);
                     }
                 });
             }
             Events.writeState(currentTimeMillis, copy);
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onLayoutDirectionChanged(final int i) {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass4 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onLayoutDirectionChanged(i);
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onLayoutDirectionChanged(i);
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onConfigurationChanged() {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass5 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onConfigurationChanged();
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onConfigurationChanged();
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onShowVibrateHint() {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass6 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onShowVibrateHint();
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onShowVibrateHint();
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onShowSilentHint() {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass7 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onShowSilentHint();
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onShowSilentHint();
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onScreenOff() {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass8 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onScreenOff();
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onScreenOff();
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onShowSafetyWarning(final int i) {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass9 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onShowSafetyWarning(i);
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onShowSafetyWarning(i);
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onAccessibilityModeChanged(Boolean bool) {
             final boolean booleanValue = bool == null ? false : bool.booleanValue();
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass10 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onAccessibilityModeChanged(Boolean.valueOf(booleanValue));
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onAccessibilityModeChanged(Boolean.valueOf(booleanValue));
                     }
                 });
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onCaptionComponentStateChanged(Boolean bool, Boolean bool2) {
             boolean booleanValue = bool == null ? false : bool.booleanValue();
-            for (Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(next, booleanValue, bool2) {
+            for (Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(entry, booleanValue, bool2) {
+                    /* class com.android.systemui.volume.$$Lambda$VolumeDialogControllerImpl$C$Q4oXmUMuqtOXvcXaIdydaXsm_80 */
                     public final /* synthetic */ Map.Entry f$0;
                     public final /* synthetic */ boolean f$1;
                     public final /* synthetic */ Boolean f$2;
@@ -1002,127 +1073,40 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             }
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialogController.Callbacks
         public void onPerformHapticFeedback(final int i) {
-            for (final Map.Entry next : this.mCallbackMap.entrySet()) {
-                ((Handler) next.getValue()).post(new Runnable(this) {
+            for (final Map.Entry<VolumeDialogController.Callbacks, Handler> entry : this.mCallbackMap.entrySet()) {
+                entry.getValue().post(new Runnable(this) {
+                    /* class com.android.systemui.volume.VolumeDialogControllerImpl.C.AnonymousClass11 */
+
                     public void run() {
-                        ((VolumeDialogController.Callbacks) next.getKey()).onPerformHapticFeedback(i);
+                        ((VolumeDialogController.Callbacks) entry.getKey()).onPerformHapticFeedback(i);
                     }
                 });
             }
         }
     }
 
-    private final class RingerModeObservers {
-        /* access modifiers changed from: private */
-        public final RingerModeLiveData mRingerMode;
-        /* access modifiers changed from: private */
-        public final RingerModeLiveData mRingerModeInternal;
+    /* access modifiers changed from: private */
+    public final class RingerModeObservers {
+        private final RingerModeLiveData mRingerMode;
+        private final RingerModeLiveData mRingerModeInternal;
         private final Observer<Integer> mRingerModeInternalObserver = new Observer<Integer>() {
+            /* class com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.AnonymousClass2 */
+
             public void onChanged(Integer num) {
-                VolumeDialogControllerImpl.this.mWorker.post(
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000d: INVOKE  
-                      (wrap: com.android.systemui.volume.VolumeDialogControllerImpl$W : 0x0004: INVOKE  (r0v2 com.android.systemui.volume.VolumeDialogControllerImpl$W) = 
-                      (wrap: com.android.systemui.volume.VolumeDialogControllerImpl : 0x0002: IGET  (r0v1 com.android.systemui.volume.VolumeDialogControllerImpl) = 
-                      (wrap: com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers : 0x0000: IGET  (r0v0 com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers) = 
-                      (r2v0 'this' com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$2 A[THIS])
-                     com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.2.this$1 com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers)
-                     com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.this$0 com.android.systemui.volume.VolumeDialogControllerImpl)
-                     com.android.systemui.volume.VolumeDialogControllerImpl.access$700(com.android.systemui.volume.VolumeDialogControllerImpl):com.android.systemui.volume.VolumeDialogControllerImpl$W type: STATIC)
-                      (wrap: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo : 0x000a: CONSTRUCTOR  (r1v0 com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo) = 
-                      (r2v0 'this' com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$2 A[THIS])
-                      (r3v0 'num' java.lang.Integer)
-                     call: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo.<init>(com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$2, java.lang.Integer):void type: CONSTRUCTOR)
-                     android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.2.onChanged(java.lang.Integer):void, dex: classes2.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:98)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:480)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.ClassGen.addInsnBody(ClassGen.java:437)
-                    	at jadx.core.codegen.ClassGen.addField(ClassGen.java:378)
-                    	at jadx.core.codegen.ClassGen.addFields(ClassGen.java:348)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:226)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000a: CONSTRUCTOR  (r1v0 com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo) = 
-                      (r2v0 'this' com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$2 A[THIS])
-                      (r3v0 'num' java.lang.Integer)
-                     call: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo.<init>(com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$2, java.lang.Integer):void type: CONSTRUCTOR in method: com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.2.onChanged(java.lang.Integer):void, dex: classes2.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 57 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 63 more
-                    */
-                /*
-                    this = this;
-                    com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers r0 = com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.this
-                    com.android.systemui.volume.VolumeDialogControllerImpl r0 = com.android.systemui.volume.VolumeDialogControllerImpl.this
-                    com.android.systemui.volume.VolumeDialogControllerImpl$W r0 = r0.mWorker
-                    com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo r1 = new com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJf-BaPo
-                    r1.<init>(r2, r3)
-                    r0.post(r1)
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.AnonymousClass2.onChanged(java.lang.Integer):void");
+                VolumeDialogControllerImpl.this.mWorker.post(new Runnable(num) {
+                    /* class com.android.systemui.volume.$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$2$2YUQzphxT5pK7JvSmIyMJfBaPo */
+                    public final /* synthetic */ Integer f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        VolumeDialogControllerImpl.RingerModeObservers.AnonymousClass2.this.lambda$onChanged$0$VolumeDialogControllerImpl$RingerModeObservers$2(this.f$1);
+                    }
+                });
             }
 
             /* access modifiers changed from: private */
@@ -1133,8 +1117,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                     VolumeDialogControllerImpl.this.mState.ringerModeInternal = intValue;
                 }
                 if (D.BUG) {
-                    String access$500 = VolumeDialogControllerImpl.TAG;
-                    Log.d(access$500, "onChange internal_ringer_mode rm=" + Util.ringerModeToString(intValue));
+                    String str = VolumeDialogControllerImpl.TAG;
+                    Log.d(str, "onChange internal_ringer_mode rm=" + Util.ringerModeToString(intValue));
                 }
                 if (VolumeDialogControllerImpl.this.updateRingerModeInternalW(intValue)) {
                     VolumeDialogControllerImpl volumeDialogControllerImpl = VolumeDialogControllerImpl.this;
@@ -1143,110 +1127,21 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             }
         };
         private final Observer<Integer> mRingerModeObserver = new Observer<Integer>() {
+            /* class com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.AnonymousClass1 */
+
             public void onChanged(Integer num) {
-                VolumeDialogControllerImpl.this.mWorker.post(
-                /*  JADX ERROR: Method code generation error
-                    jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000d: INVOKE  
-                      (wrap: com.android.systemui.volume.VolumeDialogControllerImpl$W : 0x0004: INVOKE  (r0v2 com.android.systemui.volume.VolumeDialogControllerImpl$W) = 
-                      (wrap: com.android.systemui.volume.VolumeDialogControllerImpl : 0x0002: IGET  (r0v1 com.android.systemui.volume.VolumeDialogControllerImpl) = 
-                      (wrap: com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers : 0x0000: IGET  (r0v0 com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers) = 
-                      (r2v0 'this' com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$1 A[THIS])
-                     com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.1.this$1 com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers)
-                     com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.this$0 com.android.systemui.volume.VolumeDialogControllerImpl)
-                     com.android.systemui.volume.VolumeDialogControllerImpl.access$700(com.android.systemui.volume.VolumeDialogControllerImpl):com.android.systemui.volume.VolumeDialogControllerImpl$W type: STATIC)
-                      (wrap: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc : 0x000a: CONSTRUCTOR  (r1v0 com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc) = 
-                      (r2v0 'this' com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$1 A[THIS])
-                      (r3v0 'num' java.lang.Integer)
-                     call: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc.<init>(com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$1, java.lang.Integer):void type: CONSTRUCTOR)
-                     android.os.Handler.post(java.lang.Runnable):boolean type: VIRTUAL in method: com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.1.onChanged(java.lang.Integer):void, dex: classes2.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:221)
-                    	at jadx.core.codegen.RegionGen.makeSimpleBlock(RegionGen.java:109)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:55)
-                    	at jadx.core.codegen.RegionGen.makeSimpleRegion(RegionGen.java:92)
-                    	at jadx.core.codegen.RegionGen.makeRegion(RegionGen.java:58)
-                    	at jadx.core.codegen.MethodGen.addRegionInsns(MethodGen.java:211)
-                    	at jadx.core.codegen.MethodGen.addInstructions(MethodGen.java:204)
-                    	at jadx.core.codegen.ClassGen.addMethodCode(ClassGen.java:318)
-                    	at jadx.core.codegen.ClassGen.addMethod(ClassGen.java:271)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:240)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.InsnGen.inlineAnonymousConstructor(InsnGen.java:676)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:607)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:98)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:480)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	at jadx.core.codegen.ClassGen.addInsnBody(ClassGen.java:437)
-                    	at jadx.core.codegen.ClassGen.addField(ClassGen.java:378)
-                    	at jadx.core.codegen.ClassGen.addFields(ClassGen.java:348)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:226)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.addInnerClass(ClassGen.java:249)
-                    	at jadx.core.codegen.ClassGen.lambda$addInnerClsAndMethods$2(ClassGen.java:238)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183)
-                    	at java.base/java.util.ArrayList.forEach(ArrayList.java:1541)
-                    	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
-                    	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:258)
-                    	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:485)
-                    	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150)
-                    	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173)
-                    	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
-                    	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497)
-                    	at jadx.core.codegen.ClassGen.addInnerClsAndMethods(ClassGen.java:236)
-                    	at jadx.core.codegen.ClassGen.addClassBody(ClassGen.java:227)
-                    	at jadx.core.codegen.ClassGen.addClassCode(ClassGen.java:112)
-                    	at jadx.core.codegen.ClassGen.makeClass(ClassGen.java:78)
-                    	at jadx.core.codegen.CodeGen.wrapCodeGen(CodeGen.java:44)
-                    	at jadx.core.codegen.CodeGen.generateJavaCode(CodeGen.java:33)
-                    	at jadx.core.codegen.CodeGen.generate(CodeGen.java:21)
-                    	at jadx.core.ProcessClass.generateCode(ProcessClass.java:61)
-                    	at jadx.core.dex.nodes.ClassNode.decompile(ClassNode.java:273)
-                    Caused by: jadx.core.utils.exceptions.CodegenException: Error generate insn: 0x000a: CONSTRUCTOR  (r1v0 com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc) = 
-                      (r2v0 'this' com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$1 A[THIS])
-                      (r3v0 'num' java.lang.Integer)
-                     call: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc.<init>(com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers$1, java.lang.Integer):void type: CONSTRUCTOR in method: com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.1.onChanged(java.lang.Integer):void, dex: classes2.dex
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:256)
-                    	at jadx.core.codegen.InsnGen.addWrappedArg(InsnGen.java:123)
-                    	at jadx.core.codegen.InsnGen.addArg(InsnGen.java:107)
-                    	at jadx.core.codegen.InsnGen.generateMethodArguments(InsnGen.java:787)
-                    	at jadx.core.codegen.InsnGen.makeInvoke(InsnGen.java:728)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:368)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:250)
-                    	... 57 more
-                    Caused by: jadx.core.utils.exceptions.JadxRuntimeException: Expected class to be processed at this point, class: com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc, state: NOT_LOADED
-                    	at jadx.core.dex.nodes.ClassNode.ensureProcessed(ClassNode.java:260)
-                    	at jadx.core.codegen.InsnGen.makeConstructor(InsnGen.java:606)
-                    	at jadx.core.codegen.InsnGen.makeInsnBody(InsnGen.java:364)
-                    	at jadx.core.codegen.InsnGen.makeInsn(InsnGen.java:231)
-                    	... 63 more
-                    */
-                /*
-                    this = this;
-                    com.android.systemui.volume.VolumeDialogControllerImpl$RingerModeObservers r0 = com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.this
-                    com.android.systemui.volume.VolumeDialogControllerImpl r0 = com.android.systemui.volume.VolumeDialogControllerImpl.this
-                    com.android.systemui.volume.VolumeDialogControllerImpl$W r0 = r0.mWorker
-                    com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc r1 = new com.android.systemui.volume.-$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc
-                    r1.<init>(r2, r3)
-                    r0.post(r1)
-                    return
-                */
-                throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.VolumeDialogControllerImpl.RingerModeObservers.AnonymousClass1.onChanged(java.lang.Integer):void");
+                VolumeDialogControllerImpl.this.mWorker.post(new Runnable(num) {
+                    /* class com.android.systemui.volume.$$Lambda$VolumeDialogControllerImpl$RingerModeObservers$1$CmgEGLTOVVQV5yIb7ebHF_uhtJc */
+                    public final /* synthetic */ Integer f$1;
+
+                    {
+                        this.f$1 = r2;
+                    }
+
+                    public final void run() {
+                        VolumeDialogControllerImpl.RingerModeObservers.AnonymousClass1.this.lambda$onChanged$0$VolumeDialogControllerImpl$RingerModeObservers$1(this.f$1);
+                    }
+                });
             }
 
             /* access modifiers changed from: private */
@@ -1257,8 +1152,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                     VolumeDialogControllerImpl.this.mState.ringerModeExternal = intValue;
                 }
                 if (D.BUG) {
-                    String access$500 = VolumeDialogControllerImpl.TAG;
-                    Log.d(access$500, "onChange ringer_mode rm=" + Util.ringerModeToString(intValue));
+                    String str = VolumeDialogControllerImpl.TAG;
+                    Log.d(str, "onChange ringer_mode rm=" + Util.ringerModeToString(intValue));
                 }
                 if (VolumeDialogControllerImpl.this.updateRingerModeExternalW(intValue)) {
                     VolumeDialogControllerImpl volumeDialogControllerImpl = VolumeDialogControllerImpl.this;
@@ -1300,11 +1195,11 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
 
         public void onChange(boolean z, Uri uri) {
-            boolean access$2600 = this.ZEN_MODE_URI.equals(uri) ? VolumeDialogControllerImpl.this.updateZenModeW() : false;
+            boolean updateZenModeW = this.ZEN_MODE_URI.equals(uri) ? VolumeDialogControllerImpl.this.updateZenModeW() : false;
             if (this.ZEN_MODE_CONFIG_URI.equals(uri)) {
-                access$2600 |= VolumeDialogControllerImpl.this.updateZenConfig();
+                updateZenModeW |= VolumeDialogControllerImpl.this.updateZenConfig();
             }
-            if (access$2600) {
+            if (updateZenModeW) {
                 VolumeDialogControllerImpl volumeDialogControllerImpl = VolumeDialogControllerImpl.this;
                 volumeDialogControllerImpl.mCallbacks.onStateChanged(volumeDialogControllerImpl.mState);
             }
@@ -1336,8 +1231,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 int intExtra2 = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_VALUE", -1);
                 int intExtra3 = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_VALUE", -1);
                 if (D.BUG) {
-                    String access$500 = VolumeDialogControllerImpl.TAG;
-                    Log.d(access$500, "onReceive VOLUME_CHANGED_ACTION stream=" + intExtra + " level=" + intExtra2 + " oldLevel=" + intExtra3);
+                    String str = VolumeDialogControllerImpl.TAG;
+                    Log.d(str, "onReceive VOLUME_CHANGED_ACTION stream=" + intExtra + " level=" + intExtra2 + " oldLevel=" + intExtra3);
                 }
                 z = VolumeDialogControllerImpl.this.updateStreamLevelW(intExtra, intExtra2);
             } else if (action.equals("android.media.STREAM_DEVICES_CHANGED_ACTION")) {
@@ -1345,16 +1240,16 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 int intExtra5 = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_DEVICES", -1);
                 int intExtra6 = intent.getIntExtra("android.media.EXTRA_PREV_VOLUME_STREAM_DEVICES", -1);
                 if (D.BUG) {
-                    String access$5002 = VolumeDialogControllerImpl.TAG;
-                    Log.d(access$5002, "onReceive STREAM_DEVICES_CHANGED_ACTION stream=" + intExtra4 + " devices=" + intExtra5 + " oldDevices=" + intExtra6);
+                    String str2 = VolumeDialogControllerImpl.TAG;
+                    Log.d(str2, "onReceive STREAM_DEVICES_CHANGED_ACTION stream=" + intExtra4 + " devices=" + intExtra5 + " oldDevices=" + intExtra6);
                 }
                 z = VolumeDialogControllerImpl.this.checkRoutedToBluetoothW(intExtra4) | VolumeDialogControllerImpl.this.onVolumeChangedW(intExtra4, 0);
             } else if (action.equals("android.media.STREAM_MUTE_CHANGED_ACTION")) {
                 int intExtra7 = intent.getIntExtra("android.media.EXTRA_VOLUME_STREAM_TYPE", -1);
                 boolean booleanExtra = intent.getBooleanExtra("android.media.EXTRA_STREAM_VOLUME_MUTED", false);
                 if (D.BUG) {
-                    String access$5003 = VolumeDialogControllerImpl.TAG;
-                    Log.d(access$5003, "onReceive STREAM_MUTE_CHANGED_ACTION stream=" + intExtra7 + " muted=" + booleanExtra);
+                    String str3 = VolumeDialogControllerImpl.TAG;
+                    Log.d(str3, "onReceive STREAM_MUTE_CHANGED_ACTION stream=" + intExtra7 + " muted=" + booleanExtra);
                 }
                 z = VolumeDialogControllerImpl.this.updateStreamMuteW(intExtra7, booleanExtra);
             } else if (action.equals("android.os.action.ACTION_EFFECTS_SUPPRESSOR_CHANGED")) {
@@ -1386,14 +1281,15 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         }
     }
 
-    protected final class MediaSessionsCallbacks implements MediaSessions.Callbacks {
+    /* access modifiers changed from: protected */
+    public final class MediaSessionsCallbacks implements MediaSessions.Callbacks {
         private int mNextStream = 100;
-        /* access modifiers changed from: private */
-        public final HashMap<MediaSession.Token, Integer> mRemoteStreams = new HashMap<>();
+        private final HashMap<MediaSession.Token, Integer> mRemoteStreams = new HashMap<>();
 
         protected MediaSessionsCallbacks() {
         }
 
+        @Override // com.android.settingslib.volume.MediaSessions.Callbacks
         public void onRemoteUpdate(MediaSession.Token token, String str, MediaController.PlaybackInfo playbackInfo) {
             int intValue;
             addStream(token, "onRemoteUpdate");
@@ -1403,66 +1299,68 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             Slog.d(VolumeDialogControllerImpl.TAG, "onRemoteUpdate: stream: " + intValue + " volume: " + playbackInfo.getCurrentVolume());
             boolean z = true;
             boolean z2 = VolumeDialogControllerImpl.this.mState.states.indexOfKey(intValue) < 0;
-            VolumeDialogController.StreamState access$3300 = VolumeDialogControllerImpl.this.streamStateW(intValue);
-            access$3300.dynamic = true;
-            access$3300.levelMin = 0;
-            access$3300.levelMax = playbackInfo.getMaxVolume();
-            if (access$3300.level != playbackInfo.getCurrentVolume()) {
-                access$3300.level = playbackInfo.getCurrentVolume();
+            VolumeDialogController.StreamState streamStateW = VolumeDialogControllerImpl.this.streamStateW(intValue);
+            streamStateW.dynamic = true;
+            streamStateW.levelMin = 0;
+            streamStateW.levelMax = playbackInfo.getMaxVolume();
+            if (streamStateW.level != playbackInfo.getCurrentVolume()) {
+                streamStateW.level = playbackInfo.getCurrentVolume();
                 z2 = true;
             }
-            if (!Objects.equals(access$3300.remoteLabel, str)) {
-                access$3300.name = -1;
-                access$3300.remoteLabel = str;
+            if (!Objects.equals(streamStateW.remoteLabel, str)) {
+                streamStateW.name = -1;
+                streamStateW.remoteLabel = str;
             } else {
                 z = z2;
             }
             if (z) {
-                Log.d(VolumeDialogControllerImpl.TAG, "onRemoteUpdate: " + str + ": " + access$3300.level + " of " + access$3300.levelMax);
+                Log.d(VolumeDialogControllerImpl.TAG, "onRemoteUpdate: " + str + ": " + streamStateW.level + " of " + streamStateW.levelMax);
                 VolumeDialogControllerImpl volumeDialogControllerImpl = VolumeDialogControllerImpl.this;
                 volumeDialogControllerImpl.mCallbacks.onStateChanged(volumeDialogControllerImpl.mState);
             }
         }
 
+        @Override // com.android.settingslib.volume.MediaSessions.Callbacks
         public void onRemoteVolumeChanged(MediaSession.Token token, int i) {
             int intValue;
             addStream(token, "onRemoteVolumeChanged");
             synchronized (this.mRemoteStreams) {
                 intValue = this.mRemoteStreams.get(token).intValue();
             }
-            boolean access$3400 = VolumeDialogControllerImpl.this.shouldShowUI(i);
-            String access$500 = VolumeDialogControllerImpl.TAG;
-            Slog.d(access$500, "onRemoteVolumeChanged: stream: " + intValue + " showui? " + access$3400);
-            boolean access$3500 = VolumeDialogControllerImpl.this.updateActiveStreamW(intValue);
-            if (access$3400) {
-                access$3500 |= VolumeDialogControllerImpl.this.checkRoutedToBluetoothW(3);
+            boolean shouldShowUI = VolumeDialogControllerImpl.this.shouldShowUI(i);
+            String str = VolumeDialogControllerImpl.TAG;
+            Slog.d(str, "onRemoteVolumeChanged: stream: " + intValue + " showui? " + shouldShowUI);
+            boolean updateActiveStreamW = VolumeDialogControllerImpl.this.updateActiveStreamW(intValue);
+            if (shouldShowUI) {
+                updateActiveStreamW |= VolumeDialogControllerImpl.this.checkRoutedToBluetoothW(3);
             }
-            if (access$3500) {
+            if (updateActiveStreamW) {
                 Slog.d(VolumeDialogControllerImpl.TAG, "onRemoteChanged: updatingState");
                 VolumeDialogControllerImpl volumeDialogControllerImpl = VolumeDialogControllerImpl.this;
                 volumeDialogControllerImpl.mCallbacks.onStateChanged(volumeDialogControllerImpl.mState);
             }
-            if (access$3400) {
+            if (shouldShowUI) {
                 VolumeDialogControllerImpl.this.mCallbacks.onShowRequested(2);
             }
         }
 
         /* JADX WARNING: Code restructure failed: missing block: B:10:0x0036, code lost:
-            com.android.systemui.volume.VolumeDialogControllerImpl.access$2200(r3.this$0).states.remove(r4);
+            r3.this$0.mState.states.remove(r4);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:11:0x0049, code lost:
-            if (com.android.systemui.volume.VolumeDialogControllerImpl.access$2200(r3.this$0).activeStream != r4) goto L_0x0051;
+            if (r3.this$0.mState.activeStream != r4) goto L_0x0051;
          */
         /* JADX WARNING: Code restructure failed: missing block: B:12:0x004b, code lost:
-            com.android.systemui.volume.VolumeDialogControllerImpl.access$3500(r3.this$0, -1);
+            r0 = r3.this$0.updateActiveStreamW(-1);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:13:0x0051, code lost:
             r3 = r3.this$0;
-            r3.mCallbacks.onStateChanged(com.android.systemui.volume.VolumeDialogControllerImpl.access$2200(r3));
+            r3.mCallbacks.onStateChanged(r3.mState);
          */
         /* JADX WARNING: Code restructure failed: missing block: B:14:0x005c, code lost:
             return;
          */
+        @Override // com.android.settingslib.volume.MediaSessions.Callbacks
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public void onRemoteRemoved(android.media.session.MediaSession.Token r4) {
             /*
@@ -1472,7 +1370,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 java.util.HashMap<android.media.session.MediaSession$Token, java.lang.Integer> r1 = r3.mRemoteStreams     // Catch:{ all -> 0x005d }
                 boolean r1 = r1.containsKey(r4)     // Catch:{ all -> 0x005d }
                 if (r1 != 0) goto L_0x0029
-                java.lang.String r3 = com.android.systemui.volume.VolumeDialogControllerImpl.TAG     // Catch:{ all -> 0x005d }
+                java.lang.String r3 = com.android.systemui.volume.VolumeDialogControllerImpl.access$500()     // Catch:{ all -> 0x005d }
                 java.lang.StringBuilder r1 = new java.lang.StringBuilder     // Catch:{ all -> 0x005d }
                 r1.<init>()     // Catch:{ all -> 0x005d }
                 java.lang.String r2 = "onRemoteRemoved: stream doesn't exist, aborting remote removed for token:"
@@ -1490,25 +1388,25 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
                 int r4 = r4.intValue()     // Catch:{ all -> 0x005d }
                 monitor-exit(r0)     // Catch:{ all -> 0x005d }
                 com.android.systemui.volume.VolumeDialogControllerImpl r0 = com.android.systemui.volume.VolumeDialogControllerImpl.this
-                com.android.systemui.plugins.VolumeDialogController$State r0 = r0.mState
+                com.android.systemui.plugins.VolumeDialogController$State r0 = com.android.systemui.volume.VolumeDialogControllerImpl.access$2200(r0)
                 android.util.SparseArray<com.android.systemui.plugins.VolumeDialogController$StreamState> r0 = r0.states
                 r0.remove(r4)
                 com.android.systemui.volume.VolumeDialogControllerImpl r0 = com.android.systemui.volume.VolumeDialogControllerImpl.this
-                com.android.systemui.plugins.VolumeDialogController$State r0 = r0.mState
+                com.android.systemui.plugins.VolumeDialogController$State r0 = com.android.systemui.volume.VolumeDialogControllerImpl.access$2200(r0)
                 int r0 = r0.activeStream
                 if (r0 != r4) goto L_0x0051
                 com.android.systemui.volume.VolumeDialogControllerImpl r4 = com.android.systemui.volume.VolumeDialogControllerImpl.this
                 r0 = -1
-                boolean unused = r4.updateActiveStreamW(r0)
+                com.android.systemui.volume.VolumeDialogControllerImpl.access$3500(r4, r0)
             L_0x0051:
                 com.android.systemui.volume.VolumeDialogControllerImpl r3 = com.android.systemui.volume.VolumeDialogControllerImpl.this
                 com.android.systemui.volume.VolumeDialogControllerImpl$C r4 = r3.mCallbacks
-                com.android.systemui.plugins.VolumeDialogController$State r3 = r3.mState
+                com.android.systemui.plugins.VolumeDialogController$State r3 = com.android.systemui.volume.VolumeDialogControllerImpl.access$2200(r3)
                 r4.onStateChanged(r3)
                 return
             L_0x005d:
                 r3 = move-exception
-                monitor-exit(r0)     // Catch:{ all -> 0x005d }
+                monitor-exit(r0)
                 throw r3
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.volume.VolumeDialogControllerImpl.MediaSessionsCallbacks.onRemoteRemoved(android.media.session.MediaSession$Token):void");
@@ -1517,8 +1415,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         public void setStreamVolume(int i, int i2) {
             MediaSession.Token findToken = findToken(i);
             if (findToken == null) {
-                String access$500 = VolumeDialogControllerImpl.TAG;
-                Log.w(access$500, "setStreamVolume: No token found for stream: " + i);
+                String str = VolumeDialogControllerImpl.TAG;
+                Log.w(str, "setStreamVolume: No token found for stream: " + i);
                 return;
             }
             VolumeDialogControllerImpl.this.mMediaSessions.setVolume(findToken, i2);
@@ -1526,10 +1424,9 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
 
         private MediaSession.Token findToken(int i) {
             synchronized (this.mRemoteStreams) {
-                for (Map.Entry next : this.mRemoteStreams.entrySet()) {
-                    if (((Integer) next.getValue()).equals(Integer.valueOf(i))) {
-                        MediaSession.Token token = (MediaSession.Token) next.getKey();
-                        return token;
+                for (Map.Entry<MediaSession.Token, Integer> entry : this.mRemoteStreams.entrySet()) {
+                    if (entry.getValue().equals(Integer.valueOf(i))) {
+                        return entry.getKey();
                     }
                 }
                 return null;
@@ -1540,8 +1437,8 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
             synchronized (this.mRemoteStreams) {
                 if (!this.mRemoteStreams.containsKey(token)) {
                     this.mRemoteStreams.put(token, Integer.valueOf(this.mNextStream));
-                    String access$500 = VolumeDialogControllerImpl.TAG;
-                    Log.d(access$500, str + ": added stream " + this.mNextStream + " from token + " + token.toString());
+                    String str2 = VolumeDialogControllerImpl.TAG;
+                    Log.d(str2, str + ": added stream " + this.mNextStream + " from token + " + token.toString());
                     this.mNextStream = this.mNextStream + 1;
                 }
             }

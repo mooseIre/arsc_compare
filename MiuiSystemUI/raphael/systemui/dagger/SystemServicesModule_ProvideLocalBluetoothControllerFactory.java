@@ -15,6 +15,7 @@ public final class SystemServicesModule_ProvideLocalBluetoothControllerFactory i
         this.bgHandlerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public LocalBluetoothManager get() {
         return provideInstance(this.contextProvider, this.bgHandlerProvider);
     }

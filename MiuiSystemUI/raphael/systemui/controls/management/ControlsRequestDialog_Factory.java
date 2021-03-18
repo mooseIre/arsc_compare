@@ -16,6 +16,7 @@ public final class ControlsRequestDialog_Factory implements Factory<ControlsRequ
         this.controlsListingControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ControlsRequestDialog get() {
         return provideInstance(this.controllerProvider, this.broadcastDispatcherProvider, this.controlsListingControllerProvider);
     }

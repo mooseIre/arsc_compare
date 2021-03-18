@@ -73,7 +73,8 @@ public class StatusBarWindowController {
         }
     }
 
-    private static class State {
+    /* access modifiers changed from: private */
+    public static class State {
         boolean mForceStatusBarVisible;
 
         private State() {

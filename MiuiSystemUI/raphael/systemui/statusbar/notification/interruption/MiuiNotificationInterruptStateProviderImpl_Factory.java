@@ -53,6 +53,7 @@ public final class MiuiNotificationInterruptStateProviderImpl_Factory implements
         this.deviceProvisionedControllerProvider = provider15;
     }
 
+    @Override // javax.inject.Provider
     public MiuiNotificationInterruptStateProviderImpl get() {
         return provideInstance(this.ctxProvider, this.contentResolverProvider, this.powerManagerProvider, this.dreamManagerProvider, this.ambientDisplayConfigurationProvider, this.notificationFilterProvider, this.batteryControllerProvider, this.statusBarStateControllerProvider, this.headsUpManagerProvider, this.mainHandlerProvider, this.zenModeControllerProvider, this.settingsManagerProvider, this.commandQueueProvider, this.statusBarKeyguardViewManagerProvider, this.deviceProvisionedControllerProvider);
     }

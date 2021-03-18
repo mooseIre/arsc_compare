@@ -20,8 +20,7 @@ import com.android.systemui.controlcenter.phone.detail.ExpandDetailItems;
 import com.android.systemui.qs.MiuiQSDetailItems;
 
 public class ExpandDetailItems extends MiuiQSDetailItems {
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private int mOrientation;
 
     public ExpandDetailItems(Context context, AttributeSet attributeSet) {
@@ -55,7 +54,8 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
         }
     }
 
-    protected static class CompleteItemHolder extends MiuiQSDetailItems.ItemHolder {
+    /* access modifiers changed from: protected */
+    public static class CompleteItemHolder extends MiuiQSDetailItems.ItemHolder {
         protected ImageView icon;
         protected ImageView icon2;
         protected TextView summary;
@@ -70,11 +70,13 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
         }
     }
 
-    private class ExpandAdapter extends MiuiQSDetailItems.Adapter {
+    /* access modifiers changed from: private */
+    public class ExpandAdapter extends MiuiQSDetailItems.Adapter {
         private ExpandAdapter() {
             super();
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.Adapter, com.android.systemui.qs.MiuiQSDetailItems.Adapter, com.android.systemui.qs.MiuiQSDetailItems.Adapter
         public MiuiQSDetailItems.ItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             if (i != 2) {
                 return new CompleteItemHolder(LayoutInflater.from(ExpandDetailItems.this.mContext).inflate(C0017R$layout.qs_control_expand_detail_item, viewGroup, false));
@@ -82,9 +84,10 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
             return new MiuiQSDetailItems.LineItemHolder(LayoutInflater.from(ExpandDetailItems.this.mContext).inflate(C0017R$layout.qs_detail_line_item, viewGroup, false));
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Adapter
         public void onBindViewHolder(MiuiQSDetailItems.ItemHolder itemHolder, int i) {
-            if (ExpandDetailItems.this.mItems[i].type == 1) {
-                MiuiQSDetailItems.Item item = ExpandDetailItems.this.mItems[i];
+            if (((MiuiQSDetailItems) ExpandDetailItems.this).mItems[i].type == 1) {
+                MiuiQSDetailItems.Item item = ((MiuiQSDetailItems) ExpandDetailItems.this).mItems[i];
                 CompleteItemHolder completeItemHolder = (CompleteItemHolder) itemHolder;
                 completeItemHolder.itemView.setVisibility(item.activated ? 0 : 4);
                 completeItemHolder.itemView.setBackgroundColor(item.selected ? ExpandDetailItems.this.mContext.getColor(C0011R$color.qs_control_detail_selected_color) : 0);
@@ -95,7 +98,7 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
                 completeItemHolder.title.setMaxLines(1);
                 completeItemHolder.summary.setVisibility(0);
                 completeItemHolder.icon2.setVisibility(item.selected ? 0 : 8);
-                SpannableString spannableString = new SpannableString(item.line2 + " " + item.unit);
+                SpannableString spannableString = new SpannableString(((Object) item.line2) + " " + ((Object) item.unit));
                 if (item.selected) {
                     completeItemHolder.title.setTextAppearance(C0022R$style.TextAppearance_QSControl_ExpandItemTitleSelect);
                 } else {
@@ -113,6 +116,7 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
                 }
                 if (item.activated) {
                     completeItemHolder.itemView.setOnClickListener(new View.OnClickListener(item) {
+                        /* class com.android.systemui.controlcenter.phone.detail.$$Lambda$ExpandDetailItems$ExpandAdapter$iGWD5y3EPkf1UnBwzBMJPrnJaE0 */
                         public final /* synthetic */ MiuiQSDetailItems.Item f$1;
 
                         {
@@ -124,7 +128,7 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
                         }
                     });
                 } else {
-                    completeItemHolder.itemView.setOnClickListener((View.OnClickListener) null);
+                    completeItemHolder.itemView.setOnClickListener(null);
                 }
             }
         }
@@ -132,8 +136,8 @@ public class ExpandDetailItems extends MiuiQSDetailItems {
         /* access modifiers changed from: private */
         /* renamed from: lambda$onBindViewHolder$0 */
         public /* synthetic */ void lambda$onBindViewHolder$0$ExpandDetailItems$ExpandAdapter(MiuiQSDetailItems.Item item, View view) {
-            if (ExpandDetailItems.this.mCallback != null) {
-                ExpandDetailItems.this.mCallback.onDetailItemClick(item);
+            if (((MiuiQSDetailItems) ExpandDetailItems.this).mCallback != null) {
+                ((MiuiQSDetailItems) ExpandDetailItems.this).mCallback.onDetailItemClick(item);
             }
         }
     }

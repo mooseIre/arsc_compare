@@ -25,34 +25,27 @@ import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.FloatProperty;
 
 public class ControlPanelWindowView extends FrameLayout {
-    /* access modifiers changed from: private */
-    public boolean mAnimating;
+    private boolean mAnimating;
     private boolean mAttached;
     private IStateStyle mBlurAmin;
-    /* access modifiers changed from: private */
-    public float mBlurRatio;
+    private float mBlurRatio;
     private TransitionListener mBlurRatioListener;
     private View mBottomArea;
     private AnimatorListenerAdapter mCollapseListener;
-    /* access modifiers changed from: private */
-    public boolean mCollapsingAnim;
+    private boolean mCollapsingAnim;
     private ControlPanelContentView mContent;
     private boolean mContentShowing;
     private ControlCenter mControlCenter;
-    /* access modifiers changed from: private */
-    public ControlCenterPanelView mControlCenterPanel;
+    private ControlCenterPanelView mControlCenterPanel;
     private QSControlCenterTileLayout mControlCenterTileLayout;
-    /* access modifiers changed from: private */
-    public ControlPanelController mControlPanelController;
-    /* access modifiers changed from: private */
-    public ControlPanelWindowManager mControlPanelWindowManager;
+    private ControlPanelController mControlPanelController;
+    private ControlPanelWindowManager mControlPanelWindowManager;
     private float mDownExpandHeight;
     private float mDownX;
     private float mDownY;
     private float mExpandHeight;
     private AnimatorListenerAdapter mExpandListener;
-    /* access modifiers changed from: private */
-    public int mExpandState;
+    private int mExpandState;
     private ValueAnimator mHeightChangeAnimator;
     private boolean mInterceptTouchEvent;
     private boolean mIsCancel;
@@ -67,7 +60,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private boolean mNCBlurSwitched;
 
     public ControlPanelWindowView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public ControlPanelWindowView(Context context, AttributeSet attributeSet) {
@@ -88,14 +81,18 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mNCBlurSwitched = false;
         this.mNCAnimSwitched = false;
         this.mBlurRatioListener = new TransitionListener() {
+            /* class com.android.systemui.controlcenter.phone.ControlPanelWindowView.AnonymousClass1 */
+
+            @Override // miuix.animation.listener.TransitionListener
             public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
-                float unused = ControlPanelWindowView.this.mBlurRatio = f;
+                ControlPanelWindowView.this.mBlurRatio = f;
                 ControlPanelWindowView.this.setAlpha(f);
                 if (ControlPanelWindowView.this.mControlPanelWindowManager != null && !ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
                     ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio);
                 }
             }
 
+            @Override // miuix.animation.listener.TransitionListener
             public void onComplete(Object obj) {
                 super.onComplete(obj);
                 if (ControlCenter.DEBUG) {
@@ -107,15 +104,17 @@ public class ControlPanelWindowView extends FrameLayout {
             }
         };
         this.mCollapseListener = new AnimatorListenerAdapter() {
+            /* class com.android.systemui.controlcenter.phone.ControlPanelWindowView.AnonymousClass3 */
+
             public void onAnimationStart(Animator animator) {
                 super.onAnimationStart(animator);
-                boolean unused = ControlPanelWindowView.this.mCollapsingAnim = true;
+                ControlPanelWindowView.this.mCollapsingAnim = true;
             }
 
             public void onAnimationCancel(Animator animator) {
                 super.onAnimationCancel(animator);
-                boolean unused = ControlPanelWindowView.this.mAnimating = false;
-                boolean unused2 = ControlPanelWindowView.this.mCollapsingAnim = false;
+                ControlPanelWindowView.this.mAnimating = false;
+                ControlPanelWindowView.this.mCollapsingAnim = false;
                 Log.d("ControllerPanelWindowView", "onAnimationCancel");
                 ControlPanelWindowView.this.hideControlCenterWindow();
                 ControlPanelWindowView.this.mControlCenterPanel.finishCollapse();
@@ -124,18 +123,20 @@ public class ControlPanelWindowView extends FrameLayout {
 
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
-                boolean unused = ControlPanelWindowView.this.mAnimating = false;
+                ControlPanelWindowView.this.mAnimating = false;
                 ControlPanelWindowView.this.hideControlCenterWindow();
                 ControlPanelWindowView.this.mControlCenterPanel.finishCollapse();
                 ControlPanelWindowView.this.mControlPanelWindowManager.trimMemory();
                 ControlPanelWindowView.this.onControlPanelHide();
-                boolean unused2 = ControlPanelWindowView.this.mCollapsingAnim = false;
+                ControlPanelWindowView.this.mCollapsingAnim = false;
             }
         };
         this.mExpandListener = new AnimatorListenerAdapter() {
+            /* class com.android.systemui.controlcenter.phone.ControlPanelWindowView.AnonymousClass4 */
+
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
-                boolean unused = ControlPanelWindowView.this.mAnimating = false;
+                ControlPanelWindowView.this.mAnimating = false;
             }
         };
     }
@@ -331,7 +332,8 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateExpandHeight(float f) {
+    /* access modifiers changed from: public */
+    private void updateExpandHeight(float f) {
         if (!this.mAttached) {
             Log.d("ControllerPanelWindowView", "updateExpandHeight: not attached");
         } else if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
@@ -370,8 +372,8 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void handleSwitchNotification(ValueAnimator valueAnimator, int i) {
-        Class cls = NCSwitchController.class;
+    /* access modifiers changed from: public */
+    private void handleSwitchNotification(ValueAnimator valueAnimator, int i) {
         if (!this.mNCAnimSwitched && valueAnimator.getAnimatedFraction() > 0.3f) {
             if (i == 0) {
                 if (ControlCenter.DEBUG) {
@@ -386,20 +388,22 @@ public class ControlPanelWindowView extends FrameLayout {
                 if (ControlCenter.DEBUG) {
                     Log.d("ControllerPanelWindowView", "switch blur to notification");
                 }
-                ((NCSwitchController) Dependency.get(cls)).switchBlur(false);
+                ((NCSwitchController) Dependency.get(NCSwitchController.class)).switchBlur(false);
             } else if (((float) i) == 80.0f) {
-                ((NCSwitchController) Dependency.get(cls)).switchBlur(true);
+                ((NCSwitchController) Dependency.get(NCSwitchController.class)).switchBlur(true);
             }
             this.mNCBlurSwitched = true;
         }
     }
 
     private void createHeightChangeAnimator(final int i, AnimatorListenerAdapter animatorListenerAdapter) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mExpandHeight, (float) i});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mExpandHeight, (float) i);
         this.mHeightChangeAnimator = ofFloat;
         this.mNCBlurSwitched = false;
         this.mNCAnimSwitched = false;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.systemui.controlcenter.phone.ControlPanelWindowView.AnonymousClass2 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 if (ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
                     ControlPanelWindowView.this.handleSwitchNotification(valueAnimator, i);
@@ -410,7 +414,7 @@ public class ControlPanelWindowView extends FrameLayout {
         if (animatorListenerAdapter != null) {
             this.mHeightChangeAnimator.addListener(animatorListenerAdapter);
         }
-        this.mHeightChangeAnimator.setDuration(250);
+        this.mHeightChangeAnimator.setDuration(250L);
     }
 
     private void updateTransHeight(float f) {
@@ -497,7 +501,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private void collapsePanelImmediately() {
         updateTransHeight(0.0f);
         updateExpandHeight(0.0f);
-        this.mCollapseListener.onAnimationEnd((Animator) null);
+        this.mCollapseListener.onAnimationEnd(null);
         onControlPanelHide();
     }
 

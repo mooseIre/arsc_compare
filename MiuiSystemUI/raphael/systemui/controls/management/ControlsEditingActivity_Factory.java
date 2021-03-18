@@ -17,6 +17,7 @@ public final class ControlsEditingActivity_Factory implements Factory<ControlsEd
         this.globalActionsComponentProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ControlsEditingActivity get() {
         return provideInstance(this.controllerProvider, this.broadcastDispatcherProvider, this.globalActionsComponentProvider);
     }

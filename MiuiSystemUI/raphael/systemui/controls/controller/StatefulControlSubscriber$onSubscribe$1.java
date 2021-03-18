@@ -17,6 +17,7 @@ final class StatefulControlSubscriber$onSubscribe$1 extends Lambda implements Fu
         this.$subs = iControlsSubscription;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         this.this$0.subscriptionOpen = true;
         this.this$0.subscription = this.$subs;

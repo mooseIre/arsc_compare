@@ -45,55 +45,43 @@ public class SmoothPathProvider {
     }
 
     public void buildSmoothData(int i, int i2, float[] fArr, double d) {
-        int i3 = i;
-        int i4 = i2;
-        float[] fArr2 = fArr;
-        this.mAllData = new SmoothData(i3, i4, d);
-        if (fArr2 != null) {
-            float[] fArr3 = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-            for (int i5 = 0; i5 < Math.min(8, fArr2.length); i5++) {
-                fArr3[i5] = fArr2[i5];
+        this.mAllData = new SmoothData(i, i2, d);
+        if (fArr != null) {
+            float[] fArr2 = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+            for (int i3 = 0; i3 < Math.min(8, fArr.length); i3++) {
+                fArr2[i3] = fArr[i3];
             }
-            float f = fArr3[0];
-            float f2 = fArr3[1];
-            float f3 = fArr3[2];
-            float f4 = fArr3[3];
-            float f5 = fArr3[4];
-            float f6 = fArr3[5];
-            float f7 = fArr3[6];
-            float f8 = fArr3[7];
-            float f9 = (float) i3;
+            float f = fArr2[0];
+            float f2 = fArr2[1];
+            float f3 = fArr2[2];
+            float f4 = fArr2[3];
+            float f5 = fArr2[4];
+            float f6 = fArr2[5];
+            float f7 = fArr2[6];
+            float f8 = fArr2[7];
+            float f9 = (float) i;
             if (f + f3 > f9) {
-                f = (fArr3[0] * f9) / (fArr3[0] + fArr3[2]);
-                f3 = (fArr3[2] * f9) / (fArr3[0] + fArr3[2]);
+                f = (fArr2[0] * f9) / (fArr2[0] + fArr2[2]);
+                f3 = (fArr2[2] * f9) / (fArr2[0] + fArr2[2]);
             }
-            float f10 = (float) i4;
+            float f10 = (float) i2;
             if (f4 + f6 > f10) {
-                f4 = (fArr3[3] * f10) / (fArr3[3] + fArr3[5]);
-                f6 = (fArr3[5] * f10) / (fArr3[3] + fArr3[5]);
+                f4 = (fArr2[3] * f10) / (fArr2[3] + fArr2[5]);
+                f6 = (fArr2[5] * f10) / (fArr2[3] + fArr2[5]);
             }
-            float f11 = f6;
             if (f5 + f7 > f9) {
-                f5 = (fArr3[4] * f9) / (fArr3[4] + fArr3[6]);
-                f7 = (f9 * fArr3[6]) / (fArr3[4] + fArr3[6]);
+                f5 = (fArr2[4] * f9) / (fArr2[4] + fArr2[6]);
+                f7 = (f9 * fArr2[6]) / (fArr2[4] + fArr2[6]);
             }
-            float f12 = f7;
             if (f8 + f2 > f10) {
-                f8 = (fArr3[7] * f10) / (fArr3[7] + fArr3[1]);
-                f2 = (f10 * fArr3[1]) / (fArr3[7] + fArr3[1]);
+                f8 = (fArr2[7] * f10) / (fArr2[7] + fArr2[1]);
+                f2 = (f10 * fArr2[1]) / (fArr2[7] + fArr2[1]);
             }
             ensureFourCornerData();
-            CornerData cornerData = this.mAllData.topLeft;
-            float min = Math.min(f, f2);
-            CornerData cornerData2 = cornerData;
-            float f13 = min;
-            int i6 = i;
-            int i7 = i2;
-            double d2 = d;
-            cornerData2.build(f13, i6, i7, d2, 0);
-            this.mAllData.topRight.build(Math.min(f3, f4), i6, i7, d2, 1);
-            this.mAllData.bottomRight.build(Math.min(f5, f11), i6, i7, d2, 2);
-            this.mAllData.bottomLeft.build(Math.min(f12, f8), i, i2, d, 3);
+            this.mAllData.topLeft.build(Math.min(f, f2), i, i2, d, 0);
+            this.mAllData.topRight.build(Math.min(f3, f4), i, i2, d, 1);
+            this.mAllData.bottomRight.build(Math.min(f5, f6), i, i2, d, 2);
+            this.mAllData.bottomLeft.build(Math.min(f7, f8), i, i2, d, 3);
         }
     }
 
@@ -282,120 +270,89 @@ public class SmoothPathProvider {
         public double thetaForVertical;
 
         public void build(float f, int i, int i2, double d, int i3) {
-            float f2 = f;
-            double d2 = d;
-            int i4 = i3;
-            this.radius = f2;
-            this.smoothForHorizontal = SmoothPathProvider.smoothForWidth(i, f2, d2);
-            this.smoothForVertical = SmoothPathProvider.smoothForHeight(i2, this.radius, d2);
+            this.radius = f;
+            this.smoothForHorizontal = SmoothPathProvider.smoothForWidth(i, f, d);
+            this.smoothForVertical = SmoothPathProvider.smoothForHeight(i2, this.radius, d);
             this.thetaForHorizontal = SmoothPathProvider.thetaForWidth(this.smoothForHorizontal);
-            double access$300 = SmoothPathProvider.thetaForHeight(this.smoothForVertical);
-            this.thetaForVertical = access$300;
-            this.swapAngle = (float) SmoothPathProvider.radToAngle((1.5707963267948966d - access$300) - this.thetaForHorizontal);
-            double access$500 = SmoothPathProvider.kForWidth(this.smoothForHorizontal, this.thetaForHorizontal);
-            double access$600 = SmoothPathProvider.mForWidth(this.radius, this.thetaForHorizontal);
-            double access$700 = SmoothPathProvider.nForWidth(this.radius, this.thetaForHorizontal);
-            double access$800 = SmoothPathProvider.pForWidth(this.radius, this.thetaForHorizontal);
-            double access$900 = SmoothPathProvider.xForWidth(this.radius, this.thetaForHorizontal);
-            double access$1000 = SmoothPathProvider.yForWidth(access$500, access$900);
-            double access$1100 = SmoothPathProvider.kForHeight(this.smoothForVertical, this.thetaForVertical);
-            double access$1200 = SmoothPathProvider.mForHeight(this.radius, this.thetaForVertical);
-            double access$1300 = SmoothPathProvider.nForHeight(this.radius, this.thetaForVertical);
-            double access$1400 = SmoothPathProvider.pForHeight(this.radius, this.thetaForVertical);
-            double access$1500 = SmoothPathProvider.xForHeight(this.radius, this.thetaForVertical);
-            double access$1600 = SmoothPathProvider.yForHeight(access$1100, access$1500);
-            if (i4 == 0) {
-                float f3 = this.radius;
-                this.rect = new RectF(0.0f, 0.0f, f3 * 2.0f, f3 * 2.0f);
-                this.bezierAnchorHorizontal[0] = new PointF((float) access$600, (float) access$700);
-                this.bezierAnchorHorizontal[1] = new PointF((float) access$800, 0.0f);
-                double d3 = access$800 + access$900;
-                this.bezierAnchorHorizontal[2] = new PointF((float) d3, 0.0f);
-                this.bezierAnchorHorizontal[3] = new PointF((float) (d3 + access$1000), 0.0f);
-                double d4 = access$1400 + access$1500;
-                this.bezierAnchorVertical[0] = new PointF(0.0f, (float) (d4 + access$1600));
-                this.bezierAnchorVertical[1] = new PointF(0.0f, (float) d4);
-                this.bezierAnchorVertical[2] = new PointF(0.0f, (float) access$1400);
-                this.bezierAnchorVertical[3] = new PointF((float) access$1200, (float) access$1300);
-                return;
-            }
-            double d5 = access$1600;
-            double d6 = access$1200;
-            double d7 = access$1400;
-            double d8 = access$1500;
-            double d9 = access$1300;
-            if (i4 == 1) {
-                int i5 = i;
-                double d10 = d8;
-                float f4 = (float) i5;
-                double d11 = d9;
-                float f5 = this.radius;
-                this.rect = new RectF(f4 - (f5 * 2.0f), 0.0f, f4, f5 * 2.0f);
-                double d12 = (double) i5;
-                double d13 = d12 - access$800;
-                double d14 = d13 - access$900;
-                this.bezierAnchorHorizontal[0] = new PointF((float) (d14 - access$1000), 0.0f);
-                this.bezierAnchorHorizontal[1] = new PointF((float) d14, 0.0f);
-                this.bezierAnchorHorizontal[2] = new PointF((float) d13, 0.0f);
-                this.bezierAnchorHorizontal[3] = new PointF((float) (d12 - access$600), (float) access$700);
-                this.bezierAnchorVertical[0] = new PointF((float) (d12 - d6), (float) d11);
-                double d15 = d7;
-                this.bezierAnchorVertical[1] = new PointF(f4, (float) d15);
-                double d16 = d15 + d10;
-                this.bezierAnchorVertical[2] = new PointF(f4, (float) d16);
-                this.bezierAnchorVertical[3] = new PointF(f4, (float) (d16 + d5));
-                return;
-            }
-            double d17 = d6;
-            double d18 = d9;
-            double d19 = d8;
-            double d20 = d7;
-            int i6 = i;
-            if (i4 == 2) {
-                float f6 = (float) i6;
-                double d21 = d18;
-                float f7 = this.radius;
-                double d22 = d20;
-                int i7 = i2;
-                float f8 = (float) i7;
-                this.rect = new RectF(f6 - (f7 * 2.0f), f8 - (f7 * 2.0f), f6, f8);
-                double d23 = access$900;
-                double d24 = (double) i6;
-                double d25 = (double) i7;
-                this.bezierAnchorHorizontal[0] = new PointF((float) (d24 - access$600), (float) (d25 - access$700));
-                double d26 = d24 - access$800;
-                this.bezierAnchorHorizontal[1] = new PointF((float) d26, f8);
-                double d27 = d26 - d23;
-                this.bezierAnchorHorizontal[2] = new PointF((float) d27, f8);
-                this.bezierAnchorHorizontal[3] = new PointF((float) (d27 - access$1000), f8);
-                double d28 = d25 - d22;
-                double d29 = d28 - d19;
-                this.bezierAnchorVertical[0] = new PointF(f6, (float) (d29 - d5));
-                this.bezierAnchorVertical[1] = new PointF(f6, (float) d29);
-                this.bezierAnchorVertical[2] = new PointF(f6, (float) d28);
-                this.bezierAnchorVertical[3] = new PointF((float) (d24 - d17), (float) (d25 - d21));
-                return;
-            }
-            double d30 = d20;
-            double d31 = d18;
-            double d32 = access$900;
-            int i8 = i2;
-            if (i4 == 3) {
-                float f9 = (float) i8;
-                float f10 = this.radius;
-                this.rect = new RectF(0.0f, f9 - (f10 * 2.0f), f10 * 2.0f, f9);
-                double d33 = access$800 + d32;
-                this.bezierAnchorHorizontal[0] = new PointF((float) (d33 + access$1000), f9);
-                this.bezierAnchorHorizontal[1] = new PointF((float) d33, f9);
-                this.bezierAnchorHorizontal[2] = new PointF((float) access$800, f9);
-                double d34 = (double) i8;
-                this.bezierAnchorHorizontal[3] = new PointF((float) access$600, (float) (d34 - access$700));
-                this.bezierAnchorVertical[0] = new PointF((float) d17, (float) (d34 - d31));
-                double d35 = d34 - d30;
-                this.bezierAnchorVertical[1] = new PointF(0.0f, (float) d35);
-                double d36 = d35 - d19;
-                this.bezierAnchorVertical[2] = new PointF(0.0f, (float) d36);
-                this.bezierAnchorVertical[3] = new PointF(0.0f, (float) (d36 - d5));
+            double thetaForHeight = SmoothPathProvider.thetaForHeight(this.smoothForVertical);
+            this.thetaForVertical = thetaForHeight;
+            this.swapAngle = (float) SmoothPathProvider.radToAngle((1.5707963267948966d - thetaForHeight) - this.thetaForHorizontal);
+            double kForWidth = SmoothPathProvider.kForWidth(this.smoothForHorizontal, this.thetaForHorizontal);
+            double mForWidth = SmoothPathProvider.mForWidth(this.radius, this.thetaForHorizontal);
+            double nForWidth = SmoothPathProvider.nForWidth(this.radius, this.thetaForHorizontal);
+            double pForWidth = SmoothPathProvider.pForWidth(this.radius, this.thetaForHorizontal);
+            double xForWidth = SmoothPathProvider.xForWidth(this.radius, this.thetaForHorizontal);
+            double yForWidth = SmoothPathProvider.yForWidth(kForWidth, xForWidth);
+            double kForHeight = SmoothPathProvider.kForHeight(this.smoothForVertical, this.thetaForVertical);
+            double mForHeight = SmoothPathProvider.mForHeight(this.radius, this.thetaForVertical);
+            double nForHeight = SmoothPathProvider.nForHeight(this.radius, this.thetaForVertical);
+            double pForHeight = SmoothPathProvider.pForHeight(this.radius, this.thetaForVertical);
+            double xForHeight = SmoothPathProvider.xForHeight(this.radius, this.thetaForVertical);
+            double yForHeight = SmoothPathProvider.yForHeight(kForHeight, xForHeight);
+            if (i3 == 0) {
+                float f2 = this.radius;
+                this.rect = new RectF(0.0f, 0.0f, f2 * 2.0f, f2 * 2.0f);
+                this.bezierAnchorHorizontal[0] = new PointF((float) mForWidth, (float) nForWidth);
+                this.bezierAnchorHorizontal[1] = new PointF((float) pForWidth, 0.0f);
+                double d2 = pForWidth + xForWidth;
+                this.bezierAnchorHorizontal[2] = new PointF((float) d2, 0.0f);
+                this.bezierAnchorHorizontal[3] = new PointF((float) (d2 + yForWidth), 0.0f);
+                double d3 = pForHeight + xForHeight;
+                this.bezierAnchorVertical[0] = new PointF(0.0f, (float) (d3 + yForHeight));
+                this.bezierAnchorVertical[1] = new PointF(0.0f, (float) d3);
+                this.bezierAnchorVertical[2] = new PointF(0.0f, (float) pForHeight);
+                this.bezierAnchorVertical[3] = new PointF((float) mForHeight, (float) nForHeight);
+            } else if (i3 == 1) {
+                float f3 = (float) i;
+                float f4 = this.radius;
+                this.rect = new RectF(f3 - (f4 * 2.0f), 0.0f, f3, f4 * 2.0f);
+                double d4 = (double) i;
+                double d5 = d4 - pForWidth;
+                double d6 = d5 - xForWidth;
+                this.bezierAnchorHorizontal[0] = new PointF((float) (d6 - yForWidth), 0.0f);
+                this.bezierAnchorHorizontal[1] = new PointF((float) d6, 0.0f);
+                this.bezierAnchorHorizontal[2] = new PointF((float) d5, 0.0f);
+                this.bezierAnchorHorizontal[3] = new PointF((float) (d4 - mForWidth), (float) nForWidth);
+                this.bezierAnchorVertical[0] = new PointF((float) (d4 - mForHeight), (float) nForHeight);
+                this.bezierAnchorVertical[1] = new PointF(f3, (float) pForHeight);
+                double d7 = pForHeight + xForHeight;
+                this.bezierAnchorVertical[2] = new PointF(f3, (float) d7);
+                this.bezierAnchorVertical[3] = new PointF(f3, (float) (d7 + yForHeight));
+            } else if (i3 == 2) {
+                float f5 = (float) i;
+                float f6 = this.radius;
+                float f7 = (float) i2;
+                this.rect = new RectF(f5 - (f6 * 2.0f), f7 - (f6 * 2.0f), f5, f7);
+                double d8 = (double) i;
+                double d9 = (double) i2;
+                this.bezierAnchorHorizontal[0] = new PointF((float) (d8 - mForWidth), (float) (d9 - nForWidth));
+                double d10 = d8 - pForWidth;
+                this.bezierAnchorHorizontal[1] = new PointF((float) d10, f7);
+                double d11 = d10 - xForWidth;
+                this.bezierAnchorHorizontal[2] = new PointF((float) d11, f7);
+                this.bezierAnchorHorizontal[3] = new PointF((float) (d11 - yForWidth), f7);
+                double d12 = d9 - pForHeight;
+                double d13 = d12 - xForHeight;
+                this.bezierAnchorVertical[0] = new PointF(f5, (float) (d13 - yForHeight));
+                this.bezierAnchorVertical[1] = new PointF(f5, (float) d13);
+                this.bezierAnchorVertical[2] = new PointF(f5, (float) d12);
+                this.bezierAnchorVertical[3] = new PointF((float) (d8 - mForHeight), (float) (d9 - nForHeight));
+            } else if (i3 == 3) {
+                float f8 = (float) i2;
+                float f9 = this.radius;
+                this.rect = new RectF(0.0f, f8 - (f9 * 2.0f), f9 * 2.0f, f8);
+                double d14 = pForWidth + xForWidth;
+                this.bezierAnchorHorizontal[0] = new PointF((float) (d14 + yForWidth), f8);
+                this.bezierAnchorHorizontal[1] = new PointF((float) d14, f8);
+                this.bezierAnchorHorizontal[2] = new PointF((float) pForWidth, f8);
+                double d15 = (double) i2;
+                this.bezierAnchorHorizontal[3] = new PointF((float) mForWidth, (float) (d15 - nForWidth));
+                this.bezierAnchorVertical[0] = new PointF((float) mForHeight, (float) (d15 - nForHeight));
+                double d16 = d15 - pForHeight;
+                this.bezierAnchorVertical[1] = new PointF(0.0f, (float) d16);
+                double d17 = d16 - xForHeight;
+                this.bezierAnchorVertical[2] = new PointF(0.0f, (float) d17);
+                this.bezierAnchorVertical[3] = new PointF(0.0f, (float) (d17 - yForHeight));
             }
         }
     }

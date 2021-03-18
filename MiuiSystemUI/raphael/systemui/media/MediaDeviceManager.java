@@ -13,6 +13,7 @@ import com.android.systemui.dump.DumpManager;
 import com.android.systemui.media.MediaDataManager;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -28,13 +29,11 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
     private final Context context;
     private final DumpManager dumpManager;
     private final Map<String, Token> entries = new LinkedHashMap();
-    /* access modifiers changed from: private */
-    public final Executor fgExecutor;
+    private final Executor fgExecutor;
     private final Set<Listener> listeners = new LinkedHashSet();
     private final LocalMediaManagerFactory localMediaManagerFactory;
     private final MediaDataManager mediaDataManager;
-    /* access modifiers changed from: private */
-    public final MediaRouter2Manager mr2manager;
+    private final MediaRouter2Manager mr2manager;
 
     /* compiled from: MediaDeviceManager.kt */
     public interface Listener {
@@ -68,15 +67,16 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
         return this.listeners.add(listener);
     }
 
+    @Override // com.android.systemui.media.MediaDataManager.Listener
     public void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {
         Token remove;
         Intrinsics.checkParameterIsNotNull(str, "key");
         Intrinsics.checkParameterIsNotNull(mediaData, "data");
-        if (!(str2 == null || !(!Intrinsics.areEqual((Object) str2, (Object) str)) || (remove = this.entries.remove(str2)) == null)) {
+        if (!(str2 == null || !(!Intrinsics.areEqual(str2, str)) || (remove = this.entries.remove(str2)) == null)) {
             remove.stop();
         }
         Token token = this.entries.get(str);
-        if (token == null || (!Intrinsics.areEqual((Object) token.getToken(), (Object) mediaData.getToken()))) {
+        if (token == null || (!Intrinsics.areEqual(token.getToken(), mediaData.getToken()))) {
             if (token != null) {
                 token.stop();
             }
@@ -87,6 +87,7 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
         }
     }
 
+    @Override // com.android.systemui.media.MediaDataManager.Listener
     public void onMediaDataRemoved(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "key");
         Token remove = this.entries.remove(str);
@@ -94,12 +95,14 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
             remove.stop();
         }
         if (remove != null) {
-            for (Listener onKeyRemoved : this.listeners) {
-                onKeyRemoved.onKeyRemoved(str);
+            Iterator<T> it = this.listeners.iterator();
+            while (it.hasNext()) {
+                it.next().onKeyRemoved(str);
             }
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
@@ -109,7 +112,8 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
     }
 
     /* access modifiers changed from: private */
-    public final void processDevice(String str, MediaDevice mediaDevice) {
+    /* access modifiers changed from: public */
+    private final void processDevice(String str, MediaDevice mediaDevice) {
         boolean z = mediaDevice != null;
         String str2 = null;
         Drawable iconWithoutBackground = mediaDevice != null ? mediaDevice.getIconWithoutBackground() : null;
@@ -117,13 +121,15 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
             str2 = mediaDevice.getName();
         }
         MediaDeviceData mediaDeviceData = new MediaDeviceData(z, iconWithoutBackground, str2);
-        for (Listener onMediaDeviceChanged : this.listeners) {
-            onMediaDeviceChanged.onMediaDeviceChanged(str, mediaDeviceData);
+        Iterator<T> it = this.listeners.iterator();
+        while (it.hasNext()) {
+            it.next().onMediaDeviceChanged(str, mediaDeviceData);
         }
     }
 
+    /* access modifiers changed from: private */
     /* compiled from: MediaDeviceManager.kt */
-    private final class Token implements LocalMediaManager.DeviceCallback {
+    public final class Token implements LocalMediaManager.DeviceCallback {
         @Nullable
         private final MediaController controller;
         private MediaDevice current;
@@ -153,7 +159,7 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
         }
 
         private final void setCurrent(MediaDevice mediaDevice) {
-            if (!this.started || (!Intrinsics.areEqual((Object) mediaDevice, (Object) this.current))) {
+            if (!this.started || (!Intrinsics.areEqual(mediaDevice, this.current))) {
                 this.current = mediaDevice;
                 this.this$0.processDevice(this.key, mediaDevice);
             }
@@ -196,10 +202,12 @@ public final class MediaDeviceManager implements MediaDataManager.Listener, Dump
             printWriter.println(sb2.toString());
         }
 
+        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onDeviceListUpdate(@Nullable List<? extends MediaDevice> list) {
             this.this$0.fgExecutor.execute(new MediaDeviceManager$Token$onDeviceListUpdate$1(this));
         }
 
+        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onSelectedDeviceStateChanged(@NotNull MediaDevice mediaDevice, int i) {
             Intrinsics.checkParameterIsNotNull(mediaDevice, "device");
             this.this$0.fgExecutor.execute(new MediaDeviceManager$Token$onSelectedDeviceStateChanged$1(this));

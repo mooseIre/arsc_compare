@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemServicesModule_ProvidePackageManagerWrapperFactory implements Factory<PackageManagerWrapper> {
     private static final SystemServicesModule_ProvidePackageManagerWrapperFactory INSTANCE = new SystemServicesModule_ProvidePackageManagerWrapperFactory();
 
+    @Override // javax.inject.Provider
     public PackageManagerWrapper get() {
         return provideInstance();
     }

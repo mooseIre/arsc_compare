@@ -32,6 +32,7 @@ public class MiuiNotificationBigTextViewWrapper extends MiuiNotificationViewWrap
         int lineCount = this.mBigText.getLineCount();
         if (lineCount <= 1) {
             this.mBigText.post(new Runnable(lineCount) {
+                /* class com.android.systemui.statusbar.notification.row.wrapper.$$Lambda$MiuiNotificationBigTextViewWrapper$UclYt6BQf_JW_5YeD9FEq57lMA */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -92,6 +93,7 @@ public class MiuiNotificationBigTextViewWrapper extends MiuiNotificationViewWrap
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         resolveBigTextViews();
@@ -99,6 +101,7 @@ public class MiuiNotificationBigTextViewWrapper extends MiuiNotificationViewWrap
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationViewWrapper
     public boolean showTimeChronometer() {
         if (showProgressBar()) {
             return false;

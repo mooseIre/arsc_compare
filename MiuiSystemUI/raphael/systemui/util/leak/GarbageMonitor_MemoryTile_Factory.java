@@ -17,6 +17,7 @@ public final class GarbageMonitor_MemoryTile_Factory implements Factory<GarbageM
         this.starterProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public GarbageMonitor.MemoryTile get() {
         return provideInstance(this.hostProvider, this.monitorProvider, this.starterProvider);
     }

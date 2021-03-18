@@ -29,6 +29,8 @@ public class CustomCarrierObserver {
         this.mPhoneCount = TelephonyManager.getDefault().getPhoneCount();
         this.mCustomCarrier = new String[this.mPhoneCount];
         final AnonymousClass1 r8 = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.statusbar.policy.CustomCarrierObserver.AnonymousClass1 */
+
             public void onChange(boolean z) {
                 final String[] strArr = new String[CustomCarrierObserver.this.mPhoneCount];
                 int i = CustomCarrierObserver.this.mPhoneCount;
@@ -37,6 +39,8 @@ public class CustomCarrierObserver {
                     strArr[i2] = MiuiSettings.System.getStringForUser(contentResolver, "status_bar_custom_carrier" + i2, -2);
                 }
                 CustomCarrierObserver.this.mMainHandler.post(new Runnable() {
+                    /* class com.android.systemui.statusbar.policy.CustomCarrierObserver.AnonymousClass1.AnonymousClass1 */
+
                     public void run() {
                         CustomCarrierObserver.this.fireCustomCarrierTextChanged(strArr);
                     }
@@ -48,6 +52,8 @@ public class CustomCarrierObserver {
             context.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_custom_carrier" + i), false, r8, -1);
         }
         this.mBgHandler.post(new Runnable(this) {
+            /* class com.android.systemui.statusbar.policy.CustomCarrierObserver.AnonymousClass2 */
+
             public void run() {
                 r8.onChange(false);
             }
@@ -56,7 +62,7 @@ public class CustomCarrierObserver {
 
     public void addCallback(Callback callback) {
         if (callback != null) {
-            this.mCallbacks.add(new WeakReference(callback));
+            this.mCallbacks.add(new WeakReference<>(callback));
             callback.onCustomCarrierChanged(this.mCustomCarrier);
         }
     }
@@ -66,7 +72,7 @@ public class CustomCarrierObserver {
         this.mCustomCarrier = strArr;
         synchronized (this.mCallbacks) {
             for (int size = this.mCallbacks.size() - 1; size >= 0; size--) {
-                Callback callback = (Callback) this.mCallbacks.get(size).get();
+                Callback callback = this.mCallbacks.get(size).get();
                 if (callback != null) {
                     callback.onCustomCarrierChanged(strArr);
                 }

@@ -26,6 +26,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
     private final ArrayList<SelectablePreference> mSelectablePreferences = new ArrayList<>();
     private TunerService mTunerService;
 
+    @Override // androidx.preference.PreferenceFragment
     public void onCreatePreferences(Bundle bundle, String str) {
         Context context = getPreferenceManager().getContext();
         PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(context);
@@ -38,9 +39,10 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         this.mNonePreference.setTitle(C0021R$string.lockscreen_none);
         this.mNonePreference.setIcon(C0013R$drawable.ic_remove_circle);
         createPreferenceScreen.addPreference(this.mNonePreference);
-        List<LauncherActivityInfo> activityList = ((LauncherApps) getContext().getSystemService(LauncherApps.class)).getActivityList((String) null, Process.myUserHandle());
+        List<LauncherActivityInfo> activityList = ((LauncherApps) getContext().getSystemService(LauncherApps.class)).getActivityList(null, Process.myUserHandle());
         createPreferenceScreen.addPreference(preferenceCategory);
         activityList.forEach(new Consumer(context, createPreferenceScreen, preferenceCategory) {
+            /* class com.android.systemui.tuner.$$Lambda$ShortcutPicker$S1ImsFAQfzG0QWSEvA0DqvnEIeY */
             public final /* synthetic */ Context f$1;
             public final /* synthetic */ PreferenceScreen f$2;
             public final /* synthetic */ PreferenceCategory f$3;
@@ -51,6 +53,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
                 this.f$3 = r4;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 ShortcutPicker.this.lambda$onCreatePreferences$1$ShortcutPicker(this.f$1, this.f$2, this.f$3, (LauncherActivityInfo) obj);
             }
@@ -79,6 +82,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
             if (shortcuts.size() != 0) {
                 preferenceScreen.addPreference(appPreference);
                 shortcuts.forEach(new Consumer(context, launcherActivityInfo, preferenceScreen) {
+                    /* class com.android.systemui.tuner.$$Lambda$ShortcutPicker$UYdUITYIUaxXrzDZbzfvlRGD9eA */
                     public final /* synthetic */ Context f$1;
                     public final /* synthetic */ LauncherActivityInfo f$2;
                     public final /* synthetic */ PreferenceScreen f$3;
@@ -89,6 +93,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
                         this.f$3 = r4;
                     }
 
+                    @Override // java.util.function.Consumer
                     public final void accept(Object obj) {
                         ShortcutPicker.this.lambda$onCreatePreferences$0$ShortcutPicker(this.f$1, this.f$2, this.f$3, (ShortcutParser.Shortcut) obj);
                     }
@@ -108,6 +113,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         preferenceScreen.addPreference(shortcutPreference);
     }
 
+    @Override // androidx.preference.PreferenceManager.OnPreferenceTreeClickListener, androidx.preference.PreferenceFragment
     public boolean onPreferenceTreeClick(Preference preference) {
         this.mTunerService.setValue(this.mKey, preference.toString());
         getActivity().onBackPressed();
@@ -128,34 +134,39 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         this.mTunerService.removeTunable(this);
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if (str2 == null) {
             str2 = "";
         }
         this.mSelectablePreferences.forEach(new Consumer(str2) {
+            /* class com.android.systemui.tuner.$$Lambda$ShortcutPicker$i1fIZ726bNySXwulncRN12T1Qg */
             public final /* synthetic */ String f$0;
 
             {
                 this.f$0 = r1;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((SelectablePreference) obj).setChecked(this.f$0.equals(((SelectablePreference) obj).toString()));
+                ShortcutPicker.lambda$onTuningChanged$2(this.f$0, (SelectablePreference) obj);
             }
         });
     }
 
-    private static class AppPreference extends SelectablePreference {
+    /* access modifiers changed from: private */
+    public static class AppPreference extends SelectablePreference {
         private boolean mBinding;
         private final LauncherActivityInfo mInfo;
 
         public AppPreference(Context context, LauncherActivityInfo launcherActivityInfo) {
             super(context);
             this.mInfo = launcherActivityInfo;
-            setTitle((CharSequence) context.getString(C0021R$string.tuner_launch_app, new Object[]{launcherActivityInfo.getLabel()}));
-            setSummary((CharSequence) context.getString(C0021R$string.tuner_app, new Object[]{launcherActivityInfo.getLabel()}));
+            setTitle(context.getString(C0021R$string.tuner_launch_app, launcherActivityInfo.getLabel()));
+            setSummary(context.getString(C0021R$string.tuner_app, launcherActivityInfo.getLabel()));
         }
 
+        @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             this.mBinding = true;
             if (getIcon() == null) {
@@ -166,28 +177,32 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         }
 
         /* access modifiers changed from: protected */
+        @Override // androidx.preference.Preference
         public void notifyChanged() {
             if (!this.mBinding) {
                 super.notifyChanged();
             }
         }
 
+        @Override // com.android.systemui.tuner.SelectablePreference, androidx.preference.Preference
         public String toString() {
             return this.mInfo.getComponentName().flattenToString();
         }
     }
 
-    private static class ShortcutPreference extends SelectablePreference {
+    /* access modifiers changed from: private */
+    public static class ShortcutPreference extends SelectablePreference {
         private boolean mBinding;
         private final ShortcutParser.Shortcut mShortcut;
 
         public ShortcutPreference(Context context, ShortcutParser.Shortcut shortcut, CharSequence charSequence) {
             super(context);
             this.mShortcut = shortcut;
-            setTitle((CharSequence) shortcut.label);
-            setSummary((CharSequence) context.getString(C0021R$string.tuner_app, new Object[]{charSequence}));
+            setTitle(shortcut.label);
+            setSummary(context.getString(C0021R$string.tuner_app, charSequence));
         }
 
+        @Override // androidx.preference.CheckBoxPreference, androidx.preference.Preference
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             this.mBinding = true;
             if (getIcon() == null) {
@@ -198,12 +213,14 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
         }
 
         /* access modifiers changed from: protected */
+        @Override // androidx.preference.Preference
         public void notifyChanged() {
             if (!this.mBinding) {
                 super.notifyChanged();
             }
         }
 
+        @Override // com.android.systemui.tuner.SelectablePreference, androidx.preference.Preference
         public String toString() {
             return this.mShortcut.toString();
         }

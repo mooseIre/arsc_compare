@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class DualClockObserver_Factory implements Factory<DualClockObserver> {
     private static final DualClockObserver_Factory INSTANCE = new DualClockObserver_Factory();
 
+    @Override // javax.inject.Provider
     public DualClockObserver get() {
         return provideInstance();
     }

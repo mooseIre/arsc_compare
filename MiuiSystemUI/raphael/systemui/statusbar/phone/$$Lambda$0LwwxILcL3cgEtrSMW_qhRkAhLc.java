@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$0LwwxILcL3cgEtrSMW_qhRkAhLc implemen
     private /* synthetic */ $$Lambda$0LwwxILcL3cgEtrSMW_qhRkAhLc() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((Divider) obj).onAppTransitionFinished();
     }

@@ -30,15 +30,14 @@ public class BroadcastDispatcher extends BroadcastReceiver implements Dumpable {
     private final DumpManager dumpManager;
     private final BroadcastDispatcher$handler$1 handler = new BroadcastDispatcher$handler$1(this, this.bgLooper);
     private final BroadcastDispatcherLogger logger;
-    /* access modifiers changed from: private */
-    public final SparseArray<UserBroadcastDispatcher> receiversByUser = new SparseArray<>(20);
+    private final SparseArray<UserBroadcastDispatcher> receiversByUser = new SparseArray<>(20);
 
     public void registerReceiver(@NotNull BroadcastReceiver broadcastReceiver, @NotNull IntentFilter intentFilter) {
-        registerReceiver$default(this, broadcastReceiver, intentFilter, (Executor) null, (UserHandle) null, 12, (Object) null);
+        registerReceiver$default(this, broadcastReceiver, intentFilter, null, null, 12, null);
     }
 
     public void registerReceiverWithHandler(@NotNull BroadcastReceiver broadcastReceiver, @NotNull IntentFilter intentFilter, @NotNull Handler handler2) {
-        registerReceiverWithHandler$default(this, broadcastReceiver, intentFilter, handler2, (UserHandle) null, 8, (Object) null);
+        registerReceiverWithHandler$default(this, broadcastReceiver, intentFilter, handler2, null, 8, null);
     }
 
     public BroadcastDispatcher(@NotNull Context context2, @NotNull Looper looper, @NotNull Executor executor, @NotNull DumpManager dumpManager2, @NotNull BroadcastDispatcherLogger broadcastDispatcherLogger) {
@@ -63,13 +62,13 @@ public class BroadcastDispatcher extends BroadcastReceiver implements Dumpable {
         IntentFilter intentFilter = new IntentFilter("android.intent.action.USER_SWITCHED");
         UserHandle userHandle = UserHandle.ALL;
         Intrinsics.checkExpressionValueIsNotNull(userHandle, "UserHandle.ALL");
-        registerReceiver(this, intentFilter, (Executor) null, userHandle);
+        registerReceiver(this, intentFilter, null, userHandle);
     }
 
     public void onReceive(@NotNull Context context2, @NotNull Intent intent) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
-        if (Intrinsics.areEqual((Object) intent.getAction(), (Object) "android.intent.action.USER_SWITCHED")) {
+        if (Intrinsics.areEqual(intent.getAction(), "android.intent.action.USER_SWITCHED")) {
             this.handler.obtainMessage(3, intent.getIntExtra("android.intent.extra.user_handle", -10000), 0).sendToTarget();
         }
     }
@@ -153,18 +152,19 @@ public class BroadcastDispatcher extends BroadcastReceiver implements Dumpable {
     }
 
     /* access modifiers changed from: protected */
-    @NotNull
     @VisibleForTesting
+    @NotNull
     public UserBroadcastDispatcher createUBRForUser(int i) {
         return new UserBroadcastDispatcher(this.context, i, this.bgLooper, this.bgExecutor, this.logger);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
         printWriter.println("Broadcast dispatcher:");
-        IndentingPrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter, "  ");
+        PrintWriter indentingPrintWriter = new IndentingPrintWriter(printWriter, "  ");
         indentingPrintWriter.increaseIndent();
         indentingPrintWriter.println("Current user: " + this.handler.getCurrentUser());
         int size = this.receiversByUser.size();

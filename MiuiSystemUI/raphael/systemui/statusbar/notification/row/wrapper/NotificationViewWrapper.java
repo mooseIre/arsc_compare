@@ -34,6 +34,7 @@ public abstract class NotificationViewWrapper implements TransformableView {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public TransformState getCurrentState(int i) {
         return null;
     }
@@ -240,22 +241,27 @@ public abstract class NotificationViewWrapper implements TransformableView {
         view.setLayerType(2, paint);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, Runnable runnable) {
         CrossFadeHelper.fadeOut(this.mView, runnable);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformTo(TransformableView transformableView, float f) {
         CrossFadeHelper.fadeOut(this.mView, f);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView) {
         CrossFadeHelper.fadeIn(this.mView);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void transformFrom(TransformableView transformableView, float f) {
         CrossFadeHelper.fadeIn(this.mView, f, true);
     }
 
+    @Override // com.android.systemui.statusbar.TransformableView
     public void setVisible(boolean z) {
         this.mView.animate().cancel();
         this.mView.setVisibility(z ? 0 : 4);

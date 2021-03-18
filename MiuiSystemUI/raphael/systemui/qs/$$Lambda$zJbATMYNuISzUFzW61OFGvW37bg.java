@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$zJbATMYNuISzUFzW61OFGvW37bg implemen
     private /* synthetic */ $$Lambda$zJbATMYNuISzUFzW61OFGvW37bg() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return Boolean.valueOf(((StatusBar) obj).isQSFullyCollapsed());
     }

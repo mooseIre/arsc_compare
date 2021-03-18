@@ -35,8 +35,8 @@ public final class NotificationClickNotifier {
 
     /* access modifiers changed from: private */
     public final void notifyListenersAboutInteraction(String str) {
-        for (NotificationInteractionListener onNotificationInteraction : this.listeners) {
-            onNotificationInteraction.onNotificationInteraction(str);
+        for (NotificationInteractionListener notificationInteractionListener : this.listeners) {
+            notificationInteractionListener.onNotificationInteraction(str);
         }
     }
 

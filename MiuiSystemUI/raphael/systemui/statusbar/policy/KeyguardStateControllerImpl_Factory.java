@@ -17,6 +17,7 @@ public final class KeyguardStateControllerImpl_Factory implements Factory<Keygua
         this.lockPatternUtilsProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardStateControllerImpl get() {
         return provideInstance(this.contextProvider, this.keyguardUpdateMonitorProvider, this.lockPatternUtilsProvider);
     }

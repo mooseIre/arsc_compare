@@ -9,7 +9,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.provider.Settings;
 import android.service.notification.ZenModeConfig;
 import android.text.TextUtils;
@@ -37,19 +36,16 @@ import com.android.systemui.statusbar.policy.ZenModeController;
 import com.android.systemui.volume.ZenModePanel;
 
 public class DndTile extends QSTileImpl<QSTile.BooleanState> {
-    /* access modifiers changed from: private */
-    public static final Intent ZEN_PRIORITY_SETTINGS = new Intent("android.settings.ZEN_MODE_PRIORITY_SETTINGS");
-    /* access modifiers changed from: private */
-    public static final Intent ZEN_SETTINGS = new Intent("android.settings.ZEN_MODE_SETTINGS");
-    /* access modifiers changed from: private */
-    public final ActivityStarter mActivityStarter;
+    private static final Intent ZEN_PRIORITY_SETTINGS = new Intent("android.settings.ZEN_MODE_PRIORITY_SETTINGS");
+    private static final Intent ZEN_SETTINGS = new Intent("android.settings.ZEN_MODE_SETTINGS");
+    private final ActivityStarter mActivityStarter;
     private final BroadcastDispatcher mBroadcastDispatcher;
-    /* access modifiers changed from: private */
-    public final ZenModeController mController;
-    /* access modifiers changed from: private */
-    public final DndDetailAdapter mDetailAdapter;
+    private final ZenModeController mController;
+    private final DndDetailAdapter mDetailAdapter;
     private boolean mListening;
     private final SharedPreferences.OnSharedPreferenceChangeListener mPrefListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        /* class com.android.systemui.qs.tiles.DndTile.AnonymousClass2 */
+
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String str) {
             if ("DndTileCombinedIcon".equals(str) || "DndTileVisible".equals(str)) {
                 DndTile.this.refreshState();
@@ -57,35 +53,44 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         }
     };
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.qs.tiles.DndTile.AnonymousClass4 */
+
         public void onReceive(Context context, Intent intent) {
-            DndTile.setVisible(DndTile.this.mContext, intent.getBooleanExtra("visible", false));
+            DndTile.setVisible(((QSTileImpl) DndTile.this).mContext, intent.getBooleanExtra("visible", false));
             DndTile.this.refreshState();
         }
     };
     private boolean mReceiverRegistered;
     private final SharedPreferences mSharedPreferences;
-    /* access modifiers changed from: private */
-    public boolean mShowingDetail;
+    private boolean mShowingDetail;
     private final ZenModeController.Callback mZenCallback = new ZenModeController.Callback() {
+        /* class com.android.systemui.qs.tiles.DndTile.AnonymousClass3 */
+
+        @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback
         public void onConfigChanged(ZenModeConfig zenModeConfig) {
             if (DndTile.this.isShowingDetail()) {
                 DndTile.this.mDetailAdapter.updatePanel();
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final ZenModePanel.Callback mZenModePanelCallback = new ZenModePanel.Callback() {
+    private final ZenModePanel.Callback mZenModePanelCallback = new ZenModePanel.Callback() {
+        /* class com.android.systemui.qs.tiles.DndTile.AnonymousClass5 */
+
+        @Override // com.android.systemui.volume.ZenModePanel.Callback
         public void onExpanded(boolean z) {
         }
 
+        @Override // com.android.systemui.volume.ZenModePanel.Callback
         public void onInteraction() {
         }
 
+        @Override // com.android.systemui.volume.ZenModePanel.Callback
         public void onPrioritySettings() {
             DndTile.this.mActivityStarter.postStartActivityDismissingKeyguard(DndTile.ZEN_PRIORITY_SETTINGS, 0);
         }
     };
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowActionBarOverlay;
     }
@@ -103,6 +108,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
         if (this.mReceiverRegistered) {
@@ -123,37 +129,44 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         Prefs.putBoolean(context, "DndTileCombinedIcon", z);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public DetailAdapter getDetailAdapter() {
         return this.mDetailAdapter;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return ZEN_SETTINGS;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (((QSTile.BooleanState) this.mState).value) {
-            this.mController.setZen(0, (Uri) null, this.TAG);
+            this.mController.setZen(0, null, this.TAG);
         } else {
             showDetail(true);
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void showDetail(boolean z) {
         int i = Settings.Secure.getInt(this.mContext.getContentResolver(), "zen_duration", 0);
         if ((Settings.Secure.getInt(this.mContext.getContentResolver(), "show_zen_upgrade_notification", 0) == 0 || Settings.Secure.getInt(this.mContext.getContentResolver(), "zen_settings_updated", 0) == 1) ? false : true) {
             Settings.Secure.putInt(this.mContext.getContentResolver(), "show_zen_upgrade_notification", 0);
-            this.mController.setZen(1, (Uri) null, this.TAG);
+            this.mController.setZen(1, null, this.TAG);
             Intent intent = new Intent("android.settings.ZEN_MODE_ONBOARDING");
             intent.addFlags(268468224);
             this.mActivityStarter.postStartActivityDismissingKeyguard(intent, 0);
         } else if (i == -1) {
             this.mUiHandler.post(new Runnable() {
+                /* class com.android.systemui.qs.tiles.$$Lambda$DndTile$fMf3Tdb9veQ9DG26bABcK78yOSM */
+
                 public final void run() {
                     DndTile.this.lambda$showDetail$1$DndTile();
                 }
@@ -161,7 +174,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         } else if (i != 0) {
             this.mController.setZen(1, ZenModeConfig.toTimeCondition(this.mContext, i, ActivityManager.getCurrentUser(), true).id, this.TAG);
         } else {
-            this.mController.setZen(1, (Uri) null, this.TAG);
+            this.mController.setZen(1, null, this.TAG);
         }
     }
 
@@ -174,6 +187,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         SystemUIDialog.registerDismissListener(createDialog);
         SystemUIDialog.setWindowOnTop(createDialog);
         this.mUiHandler.post(new Runnable(createDialog) {
+            /* class com.android.systemui.qs.tiles.$$Lambda$DndTile$hlFpQiq6o9qG86my4CxMaeI_o */
             public final /* synthetic */ Dialog f$0;
 
             {
@@ -188,20 +202,23 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSecondaryClick() {
         if (this.mController.isVolumeRestricted()) {
             this.mHost.collapsePanels();
             Context context = this.mContext;
-            SysUIToast.makeText(context, (CharSequence) context.getString(17040143), 1).show();
+            SysUIToast.makeText(context, context.getString(17040143), 1).show();
         } else if (!((QSTile.BooleanState) this.mState).value) {
             this.mController.addCallback(new ZenModeController.Callback(this) {
+                /* class com.android.systemui.qs.tiles.DndTile.AnonymousClass1 */
             });
-            this.mController.setZen(1, (Uri) null, this.TAG);
+            this.mController.setZen(1, null, this.TAG);
         } else {
             showDetail(true);
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_dnd_label);
     }
@@ -225,23 +242,24 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(17302822);
             checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_adjust_volume");
             if (intValue == 1) {
-                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + booleanState.secondaryLabel;
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + ((Object) booleanState.secondaryLabel);
             } else if (intValue == 2) {
-                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_none_on) + ", " + booleanState.secondaryLabel;
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_none_on) + ", " + ((Object) booleanState.secondaryLabel);
             } else if (intValue != 3) {
                 booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd);
             } else {
-                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_alarms_on) + ", " + booleanState.secondaryLabel;
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_alarms_on) + ", " + ((Object) booleanState.secondaryLabel);
             }
             if (z2) {
                 fireToggleStateChanged(booleanState.value);
             }
-            booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C0021R$string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
+            booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C0021R$string.accessibility_quick_settings_open_settings, getTileLabel());
             booleanState.expandedAccessibilityClassName = Switch.class.getName();
         }
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_changed_on);
@@ -249,6 +267,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         return this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_changed_off);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         if (this.mListening != z) {
@@ -261,13 +280,16 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return isVisible(this.mSharedPreferences);
     }
 
-    private final class DndDetailAdapter implements DetailAdapter, View.OnAttachStateChangeListener {
+    /* access modifiers changed from: private */
+    public final class DndDetailAdapter implements DetailAdapter, View.OnAttachStateChangeListener {
         private ZenModePanel mZenPanel;
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getMetricsCategory() {
             return 149;
         }
@@ -275,27 +297,32 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         private DndDetailAdapter() {
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return DndTile.this.mContext.getString(C0021R$string.quick_settings_dnd_label);
+            return ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.quick_settings_dnd_label);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Boolean getToggleState() {
-            return Boolean.valueOf(((QSTile.BooleanState) DndTile.this.mState).value);
+            return Boolean.valueOf(((QSTile.BooleanState) ((QSTileImpl) DndTile.this).mState).value);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Intent getSettingsIntent() {
             return DndTile.ZEN_SETTINGS;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public void setToggleState(boolean z) {
-            MetricsLogger.action(DndTile.this.mContext, 166, z);
+            MetricsLogger.action(((QSTileImpl) DndTile.this).mContext, 166, z);
             if (!z) {
-                DndTile.this.mController.setZen(0, (Uri) null, DndTile.this.TAG);
+                DndTile.this.mController.setZen(0, null, ((QSTileImpl) DndTile.this).TAG);
             } else {
-                DndTile.this.mController.setZen(1, (Uri) null, DndTile.this.TAG);
+                DndTile.this.mController.setZen(1, null, ((QSTileImpl) DndTile.this).TAG);
             }
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             ZenModePanel zenModePanel;
             if (view != null) {
@@ -315,105 +342,56 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         /* access modifiers changed from: private */
-        /* JADX WARNING: Code restructure failed: missing block: B:8:0x0027, code lost:
-            r1 = r1.enabler;
-         */
-        /* Code decompiled incorrectly, please refer to instructions dump. */
-        public void updatePanel() {
-            /*
-                r6 = this;
-                com.android.systemui.volume.ZenModePanel r0 = r6.mZenPanel
-                if (r0 != 0) goto L_0x0005
-                return
-            L_0x0005:
-                com.android.systemui.qs.tiles.DndTile r0 = com.android.systemui.qs.tiles.DndTile.this
-                com.android.systemui.statusbar.policy.ZenModeController r0 = r0.mController
-                int r0 = r0.getZen()
-                if (r0 != 0) goto L_0x0019
-                com.android.systemui.volume.ZenModePanel r6 = r6.mZenPanel
-                r0 = 2
-                r6.setState(r0)
-                goto L_0x008c
-            L_0x0019:
-                com.android.systemui.qs.tiles.DndTile r0 = com.android.systemui.qs.tiles.DndTile.this
-                com.android.systemui.statusbar.policy.ZenModeController r0 = r0.mController
-                android.service.notification.ZenModeConfig r0 = r0.getConfig()
-                android.service.notification.ZenModeConfig$ZenRule r1 = r0.manualRule
-                if (r1 == 0) goto L_0x0030
-                java.lang.String r1 = r1.enabler
-                if (r1 == 0) goto L_0x0030
-                java.lang.String r1 = r6.getOwnerCaption(r1)
-                goto L_0x0032
-            L_0x0030:
-                java.lang.String r1 = ""
-            L_0x0032:
-                android.util.ArrayMap r0 = r0.automaticRules
-                java.util.Collection r0 = r0.values()
-                java.util.Iterator r0 = r0.iterator()
-            L_0x003c:
-                boolean r2 = r0.hasNext()
-                r3 = 0
-                r4 = 1
-                if (r2 == 0) goto L_0x0076
-                java.lang.Object r2 = r0.next()
-                android.service.notification.ZenModeConfig$ZenRule r2 = (android.service.notification.ZenModeConfig.ZenRule) r2
-                boolean r5 = r2.isAutomaticActive()
-                if (r5 == 0) goto L_0x003c
-                boolean r1 = r1.isEmpty()
-                if (r1 == 0) goto L_0x0069
-                com.android.systemui.qs.tiles.DndTile r1 = com.android.systemui.qs.tiles.DndTile.this
-                android.content.Context r1 = r1.mContext
-                int r5 = com.android.systemui.C0021R$string.qs_dnd_prompt_auto_rule
-                java.lang.Object[] r4 = new java.lang.Object[r4]
-                java.lang.String r2 = r2.name
-                r4[r3] = r2
-                java.lang.String r1 = r1.getString(r5, r4)
-                goto L_0x003c
-            L_0x0069:
-                com.android.systemui.qs.tiles.DndTile r1 = com.android.systemui.qs.tiles.DndTile.this
-                android.content.Context r1 = r1.mContext
-                int r2 = com.android.systemui.C0021R$string.qs_dnd_prompt_auto_rule_app
-                java.lang.String r1 = r1.getString(r2)
-                goto L_0x003c
-            L_0x0076:
-                boolean r0 = r1.isEmpty()
-                if (r0 == 0) goto L_0x0082
-                com.android.systemui.volume.ZenModePanel r6 = r6.mZenPanel
-                r6.setState(r3)
-                goto L_0x008c
-            L_0x0082:
-                com.android.systemui.volume.ZenModePanel r0 = r6.mZenPanel
-                r0.setState(r4)
-                com.android.systemui.volume.ZenModePanel r6 = r6.mZenPanel
-                r6.setAutoText(r1)
-            L_0x008c:
-                return
-            */
-            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.tiles.DndTile.DndDetailAdapter.updatePanel():void");
+        /* access modifiers changed from: public */
+        private void updatePanel() {
+            String str;
+            if (this.mZenPanel != null) {
+                if (DndTile.this.mController.getZen() == 0) {
+                    this.mZenPanel.setState(2);
+                    return;
+                }
+                ZenModeConfig config = DndTile.this.mController.getConfig();
+                ZenModeConfig.ZenRule zenRule = config.manualRule;
+                String ownerCaption = (zenRule == null || (str = zenRule.enabler) == null) ? "" : getOwnerCaption(str);
+                for (ZenModeConfig.ZenRule zenRule2 : config.automaticRules.values()) {
+                    if (zenRule2.isAutomaticActive()) {
+                        if (ownerCaption.isEmpty()) {
+                            ownerCaption = ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_auto_rule, zenRule2.name);
+                        } else {
+                            ownerCaption = ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_auto_rule_app);
+                        }
+                    }
+                }
+                if (ownerCaption.isEmpty()) {
+                    this.mZenPanel.setState(0);
+                    return;
+                }
+                this.mZenPanel.setState(1);
+                this.mZenPanel.setAutoText(ownerCaption);
+            }
         }
 
         private String getOwnerCaption(String str) {
             CharSequence loadLabel;
-            PackageManager packageManager = DndTile.this.mContext.getPackageManager();
+            PackageManager packageManager = ((QSTileImpl) DndTile.this).mContext.getPackageManager();
             try {
                 ApplicationInfo applicationInfo = packageManager.getApplicationInfo(str, 0);
                 if (applicationInfo == null || (loadLabel = applicationInfo.loadLabel(packageManager)) == null) {
                     return "";
                 }
-                String trim = loadLabel.toString().trim();
-                return DndTile.this.mContext.getString(C0021R$string.qs_dnd_prompt_app, new Object[]{trim});
+                return ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_app, loadLabel.toString().trim());
             } catch (Throwable th) {
-                Slog.w(DndTile.this.TAG, "Error loading owner caption", th);
+                Slog.w(((QSTileImpl) DndTile.this).TAG, "Error loading owner caption", th);
                 return "";
             }
         }
 
         public void onViewAttachedToWindow(View view) {
-            boolean unused = DndTile.this.mShowingDetail = true;
+            DndTile.this.mShowingDetail = true;
         }
 
         public void onViewDetachedFromWindow(View view) {
-            boolean unused = DndTile.this.mShowingDetail = false;
+            DndTile.this.mShowingDetail = false;
             this.mZenPanel = null;
         }
     }

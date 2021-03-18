@@ -11,6 +11,7 @@ public final class DependencyProvider_ProvidesChoreographerFactory implements Fa
         this.module = dependencyProvider;
     }
 
+    @Override // javax.inject.Provider
     public Choreographer get() {
         return provideInstance(this.module);
     }

@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
@@ -32,7 +33,7 @@ public class CCQSIconViewImpl extends QSIconView {
     private int mTileSize;
 
     public CCQSIconViewImpl(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public CCQSIconViewImpl(Context context, AttributeSet attributeSet) {
@@ -51,10 +52,12 @@ public class CCQSIconViewImpl extends QSIconView {
         updateResources();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setAnimationEnabled(boolean z) {
         this.mAnimationEnabled = z;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public View getIconView() {
         return this.mIcon;
     }
@@ -69,6 +72,7 @@ public class CCQSIconViewImpl extends QSIconView {
         this.mIcon.layout(0, 0, i3 - i, i4 - i2);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void updateResources() {
         this.mIconColor = getResources().getColor(C0011R$color.cc_qs_tile_icon_color);
         this.mIconColorOff = getResources().getColor(C0011R$color.cc_qs_tile_icon_color_off);
@@ -77,6 +81,7 @@ public class CCQSIconViewImpl extends QSIconView {
         updateIcon((ImageView) this.mIcon, this.mState, true);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIcon(QSTile.State state, boolean z) {
         setIcon((ImageView) this.mIcon, state);
     }
@@ -98,7 +103,7 @@ public class CCQSIconViewImpl extends QSIconView {
         int i2;
         Supplier<QSTile.Icon> supplier = state.iconSupplier;
         QSTile.Icon icon = supplier != null ? supplier.get() : state.icon;
-        Drawable drawable2 = icon != null ? icon.getDrawable(this.mContext) : null;
+        Drawable drawable2 = icon != null ? icon.getDrawable(((ViewGroup) this).mContext) : null;
         if (drawable2 != null) {
             Integer num = (Integer) imageView.getTag(C0015R$id.qs_icon_state_tag);
             if (z || num == null || num.intValue() != state.state || !Objects.equals(icon, imageView.getTag(C0015R$id.qs_icon_tag))) {
@@ -175,7 +180,7 @@ public class CCQSIconViewImpl extends QSIconView {
             this.mAnimator.removeAllUpdateListeners();
             this.mAnimator = null;
         }
-        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", new int[]{255 - i, i}).setDuration(300);
+        ObjectAnimator duration = ObjectAnimator.ofInt(drawable, "alpha", 255 - i, i).setDuration(300L);
         this.mAnimator = duration;
         duration.setInterpolator(MiuiInterpolators.CUBIC_EASE_OUT);
         this.mAnimator.start();
@@ -199,13 +204,14 @@ public class CCQSIconViewImpl extends QSIconView {
         return drawable instanceof AnimatedVectorDrawable ? this.mTileSize : this.mCustomTileSize;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSIconView
     public void setIsCustomTile(boolean z) {
         this.mIsCustomTile = z;
     }
 
     /* access modifiers changed from: protected */
     public View createIcon() {
-        ImageView imageView = new ImageView(this.mContext);
+        ImageView imageView = new ImageView(((ViewGroup) this).mContext);
         imageView.setId(16908294);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         return imageView;

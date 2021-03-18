@@ -23,10 +23,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
-    /* access modifiers changed from: private */
-    public static final Intent BLUETOOTH_SETTINGS = new Intent("android.settings.BLUETOOTH_SETTINGS");
+    private static final Intent BLUETOOTH_SETTINGS = new Intent("android.settings.BLUETOOTH_SETTINGS");
     private final ActivityStarter mActivityStarter;
     private final BluetoothController.Callback mCallback = new BluetoothController.Callback() {
+        /* class com.android.systemui.qs.tiles.BluetoothTile.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.BluetoothController.Callback
         public void onBluetoothStateChange(boolean z) {
             BluetoothTile.this.refreshState();
             if (BluetoothTile.this.isShowingDetail()) {
@@ -36,6 +38,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.statusbar.policy.BluetoothController.Callback
         public void onBluetoothDevicesChanged() {
             BluetoothTile.this.refreshState();
             if (BluetoothTile.this.isShowingDetail()) {
@@ -43,11 +46,10 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final BluetoothController mController;
-    /* access modifiers changed from: private */
-    public final BluetoothDetailAdapter mDetailAdapter;
+    private final BluetoothController mController;
+    private final BluetoothDetailAdapter mDetailAdapter;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 113;
     }
@@ -60,15 +62,18 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         this.mController.observe(getLifecycle(), this.mCallback);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public DetailAdapter getDetailAdapter() {
         return this.mDetailAdapter;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         Object obj;
         if (this.mController.isBluetoothReady()) {
@@ -88,11 +93,13 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         Log.d(this.TAG, "handleClick: bluetooth not ready");
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.BLUETOOTH_SETTINGS");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSecondaryClick() {
         if (!this.mController.canConfigBluetooth()) {
             this.mActivityStarter.postStartActivityDismissingKeyguard(new Intent("android.settings.BLUETOOTH_SETTINGS"), 0);
@@ -104,6 +111,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_bluetooth_label);
     }
@@ -127,14 +135,14 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             this.mDetailAdapter.setToggleState(true);
         }
         if (!z2) {
-            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(C0021R$string.switch_bar_off);
+            booleanState.contentDescription = ((Object) booleanState.label) + "," + this.mContext.getString(C0021R$string.switch_bar_off);
         } else if (isBluetoothConnected) {
-            booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_bluetooth_name, new Object[]{booleanState.label});
+            booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_bluetooth_name, booleanState.label);
             booleanState.label = this.mController.getLastDeviceName();
         } else if (booleanState.isTransient) {
             booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_connecting);
         } else {
-            booleanState.contentDescription = booleanState.label + "," + this.mContext.getString(C0021R$string.switch_bar_on) + "," + this.mContext.getString(C0021R$string.accessibility_not_connected);
+            booleanState.contentDescription = ((Object) booleanState.label) + "," + this.mContext.getString(C0021R$string.switch_bar_on) + "," + this.mContext.getString(C0021R$string.accessibility_not_connected);
         }
         booleanState.state = booleanState.value ? 2 : 1;
         if (booleanState.value) {
@@ -143,11 +151,12 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             i = C0013R$drawable.ic_qs_bluetooth_off;
         }
         booleanState.icon = QSTileImpl.ResourceIcon.get(i);
-        booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C0021R$string.accessibility_quick_settings_open_settings, new Object[]{getTileLabel()});
+        booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C0021R$string.accessibility_quick_settings_open_settings, getTileLabel());
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_changed_on);
@@ -155,6 +164,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         return this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_changed_off);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return this.mController.isBluetoothSupported();
     }
@@ -164,9 +174,11 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         return new BluetoothDetailAdapter();
     }
 
-    protected class BluetoothDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
+    /* access modifiers changed from: protected */
+    public class BluetoothDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
         private MiuiQSDetailItems mItems;
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getMetricsCategory() {
             return 150;
         }
@@ -174,27 +186,33 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         protected BluetoothDetailAdapter() {
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return BluetoothTile.this.mContext.getString(C0021R$string.quick_settings_bluetooth_label);
+            return ((QSTileImpl) BluetoothTile.this).mContext.getString(C0021R$string.quick_settings_bluetooth_label);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Boolean getToggleState() {
-            return Boolean.valueOf(((QSTile.BooleanState) BluetoothTile.this.mState).value);
+            return Boolean.valueOf(((QSTile.BooleanState) ((QSTileImpl) BluetoothTile.this).mState).value);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public boolean getToggleEnabled() {
             return BluetoothTile.this.mController.getBluetoothState() == 10 || BluetoothTile.this.mController.getBluetoothState() == 12;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Intent getSettingsIntent() {
             return BluetoothTile.BLUETOOTH_SETTINGS;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public void setToggleState(boolean z) {
-            MetricsLogger.action(BluetoothTile.this.mContext, 154, z);
+            MetricsLogger.action(((QSTileImpl) BluetoothTile.this).mContext, 154, z);
             BluetoothTile.this.mController.setBluetoothEnabled(z);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             MiuiQSDetailItems convertOrInflate = MiuiQSDetailItems.convertOrInflate(context, view, viewGroup);
             this.mItems = convertOrInflate;
@@ -207,7 +225,8 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         /* access modifiers changed from: private */
-        public void updateItems() {
+        /* access modifiers changed from: public */
+        private void updateItems() {
             if (this.mItems != null) {
                 if (BluetoothTile.this.mController.isBluetoothEnabled()) {
                     ArrayList arrayList = new ArrayList();
@@ -215,14 +234,14 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
                     if (devices != null) {
                         int i = 0;
                         int i2 = 0;
-                        for (CachedBluetoothDevice next : devices) {
-                            if (BluetoothTile.this.mController.getBondState(next) != 10 && !BluetoothTile.this.mController.isBleAudioDevice(BluetoothTile.this.mContext, next)) {
+                        for (CachedBluetoothDevice cachedBluetoothDevice : devices) {
+                            if (BluetoothTile.this.mController.getBondState(cachedBluetoothDevice) != 10 && !BluetoothTile.this.mController.isBleAudioDevice(((QSTileImpl) BluetoothTile.this).mContext, cachedBluetoothDevice)) {
                                 MiuiQSDetailItems.Item item = new MiuiQSDetailItems.Item();
                                 item.icon = C0013R$drawable.ic_qs_bluetooth_on;
-                                item.line1 = next.getName();
-                                item.line2 = next.getConnectionSummary();
-                                item.tag = next;
-                                BluetoothClass btClass = next.getBtClass();
+                                item.line1 = cachedBluetoothDevice.getName();
+                                item.line2 = cachedBluetoothDevice.getConnectionSummary();
+                                item.tag = cachedBluetoothDevice;
+                                BluetoothClass btClass = cachedBluetoothDevice.getBtClass();
                                 if (btClass != null) {
                                     if (btClass.doesClassMatch(0) || btClass.doesClassMatch(1)) {
                                         item.icon = C0013R$drawable.ic_qs_bluetooth_device_headset;
@@ -243,7 +262,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
                                         }
                                     }
                                 }
-                                int maxConnectionState = BluetoothTile.this.mController.getMaxConnectionState(next);
+                                int maxConnectionState = BluetoothTile.this.mController.getMaxConnectionState(cachedBluetoothDevice);
                                 if (maxConnectionState == 2) {
                                     item.icon2 = C0013R$drawable.ic_qs_detail_item_selected;
                                     item.canDisconnect = true;
@@ -270,10 +289,11 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
                     return;
                 }
                 this.mItems.setEmptyState(C0013R$drawable.ic_miui_qs_bluetooth_detail_empty, C0021R$string.bt_is_off);
-                this.mItems.setItems((MiuiQSDetailItems.Item[]) null);
+                this.mItems.setItems(null);
             }
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
             Object obj;
             CachedBluetoothDevice cachedBluetoothDevice;
@@ -294,6 +314,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             return cachedBluetoothDevice.setActive();
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemDisconnect(MiuiQSDetailItems.Item item) {
             Object obj;
             CachedBluetoothDevice cachedBluetoothDevice;
@@ -302,9 +323,10 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getContainerHeight() {
-            if (BluetoothTile.this.mContext.getResources().getConfiguration().orientation == 1) {
-                return BluetoothTile.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_bluetooth_detail_height);
+            if (((QSTileImpl) BluetoothTile.this).mContext.getResources().getConfiguration().orientation == 1) {
+                return ((QSTileImpl) BluetoothTile.this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_bluetooth_detail_height);
             }
             return -1;
         }

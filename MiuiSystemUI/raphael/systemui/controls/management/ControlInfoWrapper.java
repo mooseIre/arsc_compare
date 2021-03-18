@@ -24,9 +24,10 @@ public final class ControlInfoWrapper extends ElementWrapper implements ControlI
             return false;
         }
         ControlInfoWrapper controlInfoWrapper = (ControlInfoWrapper) obj;
-        return Intrinsics.areEqual((Object) getComponent(), (Object) controlInfoWrapper.getComponent()) && Intrinsics.areEqual((Object) this.controlInfo, (Object) controlInfoWrapper.controlInfo) && getFavorite() == controlInfoWrapper.getFavorite();
+        return Intrinsics.areEqual(getComponent(), controlInfoWrapper.getComponent()) && Intrinsics.areEqual(this.controlInfo, controlInfoWrapper.controlInfo) && getFavorite() == controlInfoWrapper.getFavorite();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @Nullable
     public Icon getCustomIcon() {
         return null;
@@ -45,7 +46,10 @@ public final class ControlInfoWrapper extends ElementWrapper implements ControlI
         if (favorite2) {
             favorite2 = true;
         }
-        return i2 + (favorite2 ? 1 : 0);
+        int i3 = favorite2 ? 1 : 0;
+        int i4 = favorite2 ? 1 : 0;
+        int i5 = favorite2 ? 1 : 0;
+        return i2 + i3;
     }
 
     @NotNull
@@ -53,10 +57,12 @@ public final class ControlInfoWrapper extends ElementWrapper implements ControlI
         return "ControlInfoWrapper(component=" + getComponent() + ", controlInfo=" + this.controlInfo + ", favorite=" + getFavorite() + ")";
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public boolean getRemoved() {
         return ControlInterface.DefaultImpls.getRemoved(this);
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public ComponentName getComponent() {
         return this.component;
@@ -67,6 +73,7 @@ public final class ControlInfoWrapper extends ElementWrapper implements ControlI
         return this.controlInfo;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public boolean getFavorite() {
         return this.favorite;
     }
@@ -77,7 +84,7 @@ public final class ControlInfoWrapper extends ElementWrapper implements ControlI
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public ControlInfoWrapper(@NotNull ComponentName componentName, @NotNull ControlInfo controlInfo2, boolean z) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         Intrinsics.checkParameterIsNotNull(componentName, "component");
         Intrinsics.checkParameterIsNotNull(controlInfo2, "controlInfo");
         this.component = componentName;
@@ -85,21 +92,25 @@ public final class ControlInfoWrapper extends ElementWrapper implements ControlI
         this.favorite = z;
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public String getControlId() {
         return this.controlInfo.getControlId();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public CharSequence getTitle() {
         return this.controlInfo.getControlTitle();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     @NotNull
     public CharSequence getSubtitle() {
         return this.controlInfo.getControlSubtitle();
     }
 
+    @Override // com.android.systemui.controls.ControlInterface
     public int getDeviceType() {
         return this.controlInfo.getDeviceType();
     }

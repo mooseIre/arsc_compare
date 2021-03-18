@@ -35,11 +35,12 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         return false;
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
     }
 
     public MiuiQSHeaderView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiQSHeaderView(Context context, AttributeSet attributeSet) {
@@ -51,6 +52,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mCarrierText = (CarrierText) findViewById(C0015R$id.notification_shade_carrier);
@@ -148,9 +150,10 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         if (Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CM_CUSTOMIZATION_TEST || "TW".equalsIgnoreCase(SystemProperties.get("ro.miui.region", ""))) {
             return true;
         }
-        return this.mContext.getResources().getBoolean(C0010R$bool.show_carrier_in_status_bar_header);
+        return ((RelativeLayout) this).mContext.getResources().getBoolean(C0010R$bool.show_carrier_in_status_bar_header);
     }
 
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void themeChanged() {
         boolean z = getResources().getBoolean(C0010R$bool.expanded_status_bar_darkmode);
         Rect rect = new Rect(0, 0, 0, 0);
@@ -185,6 +188,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         }
     }
 
+    @Override // com.android.systemui.qs.MiuiHeaderView
     public void regionChanged() {
         updateLayout();
     }
@@ -203,6 +207,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         this.mDateView.setEnabled(z);
     }
 
+    @Override // com.android.systemui.controlcenter.policy.SuperSaveModeController.SuperSaveModeChangeListener
     public void onSuperSaveModeChange(boolean z) {
         this.mSuperSave = z;
         updateShortCutVisibility();

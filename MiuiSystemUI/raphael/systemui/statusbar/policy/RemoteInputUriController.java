@@ -12,6 +12,9 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 
 public class RemoteInputUriController {
     private final NotificationEntryListener mInlineUriListener = new NotificationEntryListener() {
+        /* class com.android.systemui.statusbar.policy.RemoteInputUriController.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
         public void onEntryRemoved(NotificationEntry notificationEntry, NotificationVisibility notificationVisibility, boolean z, int i) {
             try {
                 RemoteInputUriController.this.mStatusBarManagerService.clearInlineReplyUriPermissions(notificationEntry.getKey());
@@ -20,8 +23,7 @@ public class RemoteInputUriController {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public final IStatusBarService mStatusBarManagerService;
+    private final IStatusBarService mStatusBarManagerService;
 
     public RemoteInputUriController(IStatusBarService iStatusBarService) {
         this.mStatusBarManagerService = iStatusBarService;

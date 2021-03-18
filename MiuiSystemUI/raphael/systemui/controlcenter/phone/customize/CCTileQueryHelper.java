@@ -6,6 +6,7 @@ import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.qs.customize.TileQueryHelper;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -21,17 +22,19 @@ public class CCTileQueryHelper extends TileQueryHelper {
         } else {
             arrayList.addAll(Arrays.asList(context.getResources().getStringArray(C0008R$array.qs_control_independent_tiles)));
         }
-        for (String str : this.mControlIndependentTiles) {
-            String str2 = this.mTilesStock;
-            this.mTilesStock = str2.replace(str + ",", "");
+        Iterator<String> it = this.mControlIndependentTiles.iterator();
+        while (it.hasNext()) {
+            String str = this.mTilesStock;
+            this.mTilesStock = str.replace(it.next() + ",", "");
         }
     }
 
+    @Override // com.android.systemui.qs.customize.TileQueryHelper
     public void filterBigTile(ArrayList<String> arrayList) {
         super.filterBigTile(arrayList);
         if (arrayList != null) {
-            for (String remove : this.mControlIndependentTiles) {
-                arrayList.remove(remove);
+            for (String str : this.mControlIndependentTiles) {
+                arrayList.remove(str);
             }
         }
     }

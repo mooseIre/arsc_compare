@@ -9,16 +9,16 @@ public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpabl
     private int mWakefulness = 0;
 
     public interface Observer {
-        void onFinishedGoingToSleep() {
+        default void onFinishedGoingToSleep() {
         }
 
-        void onFinishedWakingUp() {
+        default void onFinishedWakingUp() {
         }
 
-        void onStartedGoingToSleep() {
+        default void onStartedGoingToSleep() {
         }
 
-        void onStartedWakingUp() {
+        default void onStartedWakingUp() {
         }
     }
 
@@ -54,6 +54,7 @@ public class WakefulnessLifecycle extends Lifecycle<Observer> implements Dumpabl
         }
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("WakefulnessLifecycle:");
         printWriter.println("  mWakefulness=" + this.mWakefulness);

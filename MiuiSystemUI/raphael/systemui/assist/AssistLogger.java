@@ -11,13 +11,15 @@ import com.android.internal.logging.UiEventLogger;
 import com.android.internal.util.FrameworkStatsLog;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import java.util.Set;
+import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.collections.SetsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: AssistLogger.kt */
 public class AssistLogger {
-    private static final Set<AssistantSessionEvent> SESSION_END_EVENTS = SetsKt__SetsKt.setOf(AssistantSessionEvent.ASSISTANT_SESSION_INVOCATION_CANCELLED, AssistantSessionEvent.ASSISTANT_SESSION_CLOSE);
+    private static final Set<AssistantSessionEvent> SESSION_END_EVENTS = SetsKt.setOf((Object[]) new AssistantSessionEvent[]{AssistantSessionEvent.ASSISTANT_SESSION_INVOCATION_CANCELLED, AssistantSessionEvent.ASSISTANT_SESSION_CLOSE});
     private final AssistHandleBehaviorController assistHandleBehaviorController;
     private final AssistUtils assistUtils;
     @NotNull

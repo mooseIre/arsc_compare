@@ -23,14 +23,16 @@ import miui.util.ResourceMapper;
 public class UsbNotificationController {
     public static final boolean SUPPORT_DISABLE_USB_BY_SIM = (BuildConfig.IS_CM_CUSTOMIZATION_TEST || BuildConfig.IS_CM_CUSTOMIZATION);
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.notification.policy.UsbNotificationController.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             boolean z = false;
             if ("android.intent.action.BATTERY_CHANGED".equals(action)) {
-                int access$400 = UsbNotificationController.this.mPlugType;
-                int unused = UsbNotificationController.this.mPlugType = intent.getIntExtra("plugged", 0);
+                int i = UsbNotificationController.this.mPlugType;
+                UsbNotificationController.this.mPlugType = intent.getIntExtra("plugged", 0);
                 boolean z2 = UsbNotificationController.this.mPlugType == 2;
-                if (access$400 == 2) {
+                if (i == 2) {
                     z = true;
                 }
                 if (z2 != z) {
@@ -40,13 +42,13 @@ public class UsbNotificationController {
                 UsbNotificationController.this.refreshWhenUsbConnectChanged(intent.getBooleanExtra("connected", false));
             } else if ("android.intent.action.SIM_STATE_CHANGED".equals(action) && UsbNotificationController.SUPPORT_DISABLE_USB_BY_SIM) {
                 int phoneCount = TelephonyManager.getDefault().getPhoneCount();
-                int i = 0;
-                for (int i2 = 0; i2 < phoneCount; i2++) {
-                    if (TelephonyManager.getDefault().hasIccCard(i2)) {
-                        i++;
+                int i2 = 0;
+                for (int i3 = 0; i3 < phoneCount; i3++) {
+                    if (TelephonyManager.getDefault().hasIccCard(i3)) {
+                        i2++;
                     }
                 }
-                if (i > 0) {
+                if (i2 > 0) {
                     Log.d("UsbNotificationController", "has sim");
                     Settings.System.putInt(UsbNotificationController.this.mContext.getContentResolver(), "disable_usb_by_sim", 0);
                 }
@@ -55,19 +57,19 @@ public class UsbNotificationController {
     };
     private int mCdInstallNotificationId;
     private int mChargingNotificationId;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public boolean mDisableUsbBySim;
+    private Context mContext;
+    private boolean mDisableUsbBySim;
     private final ContentObserver mDisableUsbObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.statusbar.notification.policy.UsbNotificationController.AnonymousClass1 */
+
         public void onChange(boolean z) {
             boolean z2 = UsbNotificationController.SUPPORT_DISABLE_USB_BY_SIM;
             UsbNotificationController usbNotificationController = UsbNotificationController.this;
             boolean z3 = true;
-            boolean unused = usbNotificationController.mDisableUsbBySim = Settings.System.getInt(usbNotificationController.mContext.getContentResolver(), "disable_usb_by_sim", z2 ? 1 : 0) != 0;
+            usbNotificationController.mDisableUsbBySim = Settings.System.getInt(usbNotificationController.mContext.getContentResolver(), "disable_usb_by_sim", z2 ? 1 : 0) != 0;
             if (!UsbNotificationController.SUPPORT_DISABLE_USB_BY_SIM && UsbNotificationController.this.mDisableUsbBySim) {
                 Log.d("UsbNotificationController", "not support disable usb by sim!");
-                boolean unused2 = UsbNotificationController.this.mDisableUsbBySim = false;
+                UsbNotificationController.this.mDisableUsbBySim = false;
                 Settings.System.putInt(UsbNotificationController.this.mContext.getContentResolver(), "disable_usb_by_sim", 0);
             }
             if (!UsbNotificationController.this.mDisableUsbBySim) {
@@ -84,15 +86,12 @@ public class UsbNotificationController {
     };
     private boolean mEnableUsbModeSelection;
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    /* access modifiers changed from: private */
-    public boolean mIsDialogShowing;
+    private boolean mIsDialogShowing;
     private boolean mIsScreenshotMode;
     private int mMtpNotificationId;
-    /* access modifiers changed from: private */
-    public int mPlugType = 0;
+    private int mPlugType = 0;
     private int mPtpNotificationId;
-    /* access modifiers changed from: private */
-    public AlertDialog mUsbAlert;
+    private AlertDialog mUsbAlert;
     private UsbManager mUsbManager;
 
     public UsbNotificationController(Context context) {
@@ -120,7 +119,8 @@ public class UsbNotificationController {
     }
 
     /* access modifiers changed from: private */
-    public void refreshWhenUsbConnectChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void refreshWhenUsbConnectChanged(boolean z) {
         if (SUPPORT_DISABLE_USB_BY_SIM && z && this.mDisableUsbBySim && !this.mIsDialogShowing) {
             this.mIsDialogShowing = true;
             AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0022R$style.Theme_Dialog_Alert);
@@ -133,8 +133,10 @@ public class UsbNotificationController {
             this.mUsbAlert = create;
             create.getWindow().setType(2003);
             this.mUsbAlert.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                /* class com.android.systemui.statusbar.notification.policy.UsbNotificationController.AnonymousClass3 */
+
                 public void onDismiss(DialogInterface dialogInterface) {
-                    boolean unused = UsbNotificationController.this.mIsDialogShowing = false;
+                    UsbNotificationController.this.mIsDialogShowing = false;
                 }
             });
             this.mUsbAlert.show();

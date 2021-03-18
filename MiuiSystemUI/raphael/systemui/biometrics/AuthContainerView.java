@@ -19,7 +19,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
@@ -31,39 +30,29 @@ import com.android.systemui.biometrics.AuthCredentialView;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 
 public class AuthContainerView extends LinearLayout implements AuthDialog, WakefulnessLifecycle.Observer {
-    @VisibleForTesting
     final ImageView mBackgroundView;
-    @VisibleForTesting
     final BiometricCallback mBiometricCallback;
-    @VisibleForTesting
     final ScrollView mBiometricScrollView;
-    @VisibleForTesting
     AuthBiometricView mBiometricView;
     final Config mConfig;
-    /* access modifiers changed from: private */
-    public int mContainerState = 0;
+    private int mContainerState = 0;
     byte[] mCredentialAttestation;
     private final CredentialCallback mCredentialCallback;
-    @VisibleForTesting
     AuthCredentialView mCredentialView;
     final int mEffectiveUserId;
-    @VisibleForTesting
     final FrameLayout mFrameLayout;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
-    /* access modifiers changed from: private */
-    public final Injector mInjector;
+    private final Handler mHandler;
+    private final Injector mInjector;
     private final Interpolator mLinearOutSlowIn;
     private final AuthPanelController mPanelController;
     private final View mPanelView;
     Integer mPendingCallbackReason;
     private final float mTranslationY;
-    @VisibleForTesting
     final WakefulnessLifecycle mWakefulnessLifecycle;
     private final WindowManager mWindowManager;
     private final IBinder mWindowToken = new Binder();
 
-    static class Config {
+    public static class Config {
         Bundle mBiometricPromptBundle;
         AuthDialogCallback mCallback;
         Context mContext;
@@ -135,52 +124,45 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
     }
 
     public static class Injector {
-        /* access modifiers changed from: package-private */
         public int getAnimateCredentialStartDelayMs() {
             return 300;
         }
 
-        /* access modifiers changed from: package-private */
         public ScrollView getBiometricScrollView(FrameLayout frameLayout) {
             return (ScrollView) frameLayout.findViewById(C0015R$id.biometric_scrollview);
         }
 
-        /* access modifiers changed from: package-private */
         public FrameLayout inflateContainerView(LayoutInflater layoutInflater, ViewGroup viewGroup) {
             return (FrameLayout) layoutInflater.inflate(C0017R$layout.auth_container_view, viewGroup, false);
         }
 
-        /* access modifiers changed from: package-private */
         public AuthPanelController getPanelController(Context context, View view) {
             return new AuthPanelController(context, view);
         }
 
-        /* access modifiers changed from: package-private */
         public ImageView getBackgroundView(FrameLayout frameLayout) {
             return (ImageView) frameLayout.findViewById(C0015R$id.background);
         }
 
-        /* access modifiers changed from: package-private */
         public View getPanelView(FrameLayout frameLayout) {
             return frameLayout.findViewById(C0015R$id.panel);
         }
 
-        /* access modifiers changed from: package-private */
         public UserManager getUserManager(Context context) {
             return UserManager.get(context);
         }
 
-        /* access modifiers changed from: package-private */
         public int getCredentialType(Context context, int i) {
             return Utils.getCredentialType(context, i);
         }
     }
 
-    @VisibleForTesting
-    final class BiometricCallback implements AuthBiometricView.Callback {
+    public final class BiometricCallback implements AuthBiometricView.Callback {
         BiometricCallback() {
+            AuthContainerView.this = r1;
         }
 
+        @Override // com.android.systemui.biometrics.AuthBiometricView.Callback
         public void onAction(int i) {
             Log.d("BiometricPrompt/AuthContainerView", "onAction: " + i + ", sysUiSessionId: " + AuthContainerView.this.mConfig.mSysUiSessionId + ", state: " + AuthContainerView.this.mContainerState);
             switch (i) {
@@ -203,6 +185,8 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
                 case 6:
                     AuthContainerView.this.mConfig.mCallback.onDeviceCredentialPressed();
                     AuthContainerView.this.mHandler.postDelayed(new Runnable() {
+                        /* class com.android.systemui.biometrics.$$Lambda$AuthContainerView$BiometricCallback$_PVe7wil4E5Jd70vq9AnXnFCWJk */
+
                         public final void run() {
                             AuthContainerView.BiometricCallback.this.lambda$onAction$0$AuthContainerView$BiometricCallback();
                         }
@@ -214,6 +198,7 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onAction$0 */
         public /* synthetic */ void lambda$onAction$0$AuthContainerView$BiometricCallback() {
@@ -221,10 +206,12 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         }
     }
 
-    final class CredentialCallback implements AuthCredentialView.Callback {
+    public final class CredentialCallback implements AuthCredentialView.Callback {
         CredentialCallback() {
+            AuthContainerView.this = r1;
         }
 
+        @Override // com.android.systemui.biometrics.AuthCredentialView.Callback
         public void onCredentialMatched(byte[] bArr) {
             AuthContainerView authContainerView = AuthContainerView.this;
             authContainerView.mCredentialAttestation = bArr;
@@ -232,25 +219,24 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         }
     }
 
-    @VisibleForTesting
     AuthContainerView(Config config, Injector injector) {
         super(config.mContext);
         this.mConfig = config;
         this.mInjector = injector;
-        this.mEffectiveUserId = injector.getUserManager(this.mContext).getCredentialOwnerProfile(this.mConfig.mUserId);
+        this.mEffectiveUserId = injector.getUserManager(((LinearLayout) this).mContext).getCredentialOwnerProfile(this.mConfig.mUserId);
         this.mHandler = new Handler(Looper.getMainLooper());
-        this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
+        this.mWindowManager = (WindowManager) ((LinearLayout) this).mContext.getSystemService(WindowManager.class);
         this.mWakefulnessLifecycle = (WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class);
         this.mTranslationY = getResources().getDimension(C0012R$dimen.biometric_dialog_animation_translation_offset);
         this.mLinearOutSlowIn = Interpolators.LINEAR_OUT_SLOW_IN;
         this.mBiometricCallback = new BiometricCallback();
         this.mCredentialCallback = new CredentialCallback();
-        LayoutInflater from = LayoutInflater.from(this.mContext);
+        LayoutInflater from = LayoutInflater.from(((LinearLayout) this).mContext);
         FrameLayout inflateContainerView = this.mInjector.inflateContainerView(from, this);
         this.mFrameLayout = inflateContainerView;
         View panelView = this.mInjector.getPanelView(inflateContainerView);
         this.mPanelView = panelView;
-        this.mPanelController = this.mInjector.getPanelController(this.mContext, panelView);
+        this.mPanelController = this.mInjector.getPanelController(((LinearLayout) this).mContext, panelView);
         if (Utils.isBiometricAllowed(this.mConfig.mBiometricPromptBundle)) {
             int i = config.mModalityMask;
             if (i == 2) {
@@ -269,6 +255,8 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         this.mBackgroundView = this.mInjector.getBackgroundView(this.mFrameLayout);
         addView(this.mFrameLayout);
         setOnKeyListener(new View.OnKeyListener() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthContainerView$DgtzYoQDVOv5iHGCr90WcpJUnck */
+
             public final boolean onKey(View view, int i, KeyEvent keyEvent) {
                 return AuthContainerView.this.lambda$new$0$AuthContainerView(view, i, keyEvent);
             }
@@ -278,6 +266,7 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         requestFocus();
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ boolean lambda$new$0$AuthContainerView(View view, int i, KeyEvent keyEvent) {
@@ -291,11 +280,11 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         return true;
     }
 
-    /* access modifiers changed from: package-private */
     public void sendEarlyUserCanceled() {
         this.mConfig.mCallback.onSystemEvent(1);
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public boolean isAllowDeviceCredentials() {
         return Utils.isDeviceCredentialAllowed(this.mConfig.mBiometricPromptBundle);
     }
@@ -311,14 +300,13 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         this.mBiometricScrollView.addView(this.mBiometricView);
     }
 
-    /* access modifiers changed from: private */
-    public void addCredentialView(boolean z, boolean z2) {
-        LayoutInflater from = LayoutInflater.from(this.mContext);
-        int credentialType = this.mInjector.getCredentialType(this.mContext, this.mEffectiveUserId);
+    private void addCredentialView(boolean z, boolean z2) {
+        LayoutInflater from = LayoutInflater.from(((LinearLayout) this).mContext);
+        int credentialType = this.mInjector.getCredentialType(((LinearLayout) this).mContext, this.mEffectiveUserId);
         if (credentialType != 1) {
             if (credentialType == 2) {
                 this.mCredentialView = (AuthCredentialView) from.inflate(C0017R$layout.auth_credential_pattern_view, (ViewGroup) null, false);
-                this.mBackgroundView.setOnClickListener((View.OnClickListener) null);
+                this.mBackgroundView.setOnClickListener(null);
                 this.mBackgroundView.setImportantForAccessibility(2);
                 this.mCredentialView.setContainerView(this);
                 this.mCredentialView.setUserId(this.mConfig.mUserId);
@@ -335,7 +323,7 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
             }
         }
         this.mCredentialView = (AuthCredentialView) from.inflate(C0017R$layout.auth_credential_password_view, (ViewGroup) null, false);
-        this.mBackgroundView.setOnClickListener((View.OnClickListener) null);
+        this.mBackgroundView.setOnClickListener(null);
         this.mBackgroundView.setImportantForAccessibility(2);
         this.mCredentialView.setContainerView(this);
         this.mCredentialView.setUserId(this.mConfig.mUserId);
@@ -349,7 +337,6 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         this.mFrameLayout.addView(this.mCredentialView);
     }
 
-    /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         super.onMeasure(i, i2);
         this.mPanelController.setContainerDimensions(getMeasuredWidth(), getMeasuredHeight());
@@ -360,8 +347,6 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         onAttachedToWindowInternal();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void onAttachedToWindowInternal() {
         this.mWakefulnessLifecycle.addObserver(this);
         if (Utils.isBiometricAllowed(this.mConfig.mBiometricPromptBundle)) {
@@ -380,18 +365,23 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         this.mBiometricScrollView.setY(this.mTranslationY);
         setAlpha(0.0f);
         postOnAnimation(new Runnable() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthContainerView$9SlioxBspj7c8LZaxiUDurCbgao */
+
             public final void run() {
                 AuthContainerView.this.lambda$onAttachedToWindowInternal$1$AuthContainerView();
             }
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onAttachedToWindowInternal$1 */
     public /* synthetic */ void lambda$onAttachedToWindowInternal$1$AuthContainerView() {
         this.mPanelView.animate().translationY(0.0f).setDuration(250).setInterpolator(this.mLinearOutSlowIn).withLayer().withEndAction(new Runnable() {
+            /* class com.android.systemui.biometrics.$$Lambda$AuthContainerView$1mKgWyZEd46UtqNrM99ex3KJvfw */
+
             public final void run() {
-                AuthContainerView.this.onDialogAnimatedIn();
+                AuthContainerView.lambda$1mKgWyZEd46UtqNrM99ex3KJvfw(AuthContainerView.this);
             }
         }).start();
         this.mBiometricScrollView.animate().translationY(0.0f).setDuration(250).setInterpolator(this.mLinearOutSlowIn).withLayer().start();
@@ -408,10 +398,12 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         this.mWakefulnessLifecycle.removeObserver(this);
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedGoingToSleep() {
         animateAway(1);
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void show(WindowManager windowManager, Bundle bundle) {
         AuthBiometricView authBiometricView = this.mBiometricView;
         if (authBiometricView != null) {
@@ -420,6 +412,7 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         windowManager.addView(this, getLayoutParams(this.mWindowToken));
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void dismissWithoutCallback(boolean z) {
         if (z) {
             animateAway(false, 0);
@@ -428,26 +421,32 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         }
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void dismissFromSystemServer() {
         removeWindowIfAttached(true);
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void onAuthenticationSucceeded() {
         this.mBiometricView.onAuthenticationSucceeded();
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void onAuthenticationFailed(String str) {
         this.mBiometricView.onAuthenticationFailed(str);
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void onHelp(String str) {
         this.mBiometricView.onHelp(str);
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void onError(String str) {
         this.mBiometricView.onError(str);
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void onSaveState(Bundle bundle) {
         bundle.putInt("container_state", this.mContainerState);
         boolean z = true;
@@ -462,16 +461,16 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         }
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public String getOpPackageName() {
         return this.mConfig.mOpPackageName;
     }
 
+    @Override // com.android.systemui.biometrics.AuthDialog
     public void animateToCredentialUI() {
         this.mBiometricView.startTransitionToCredentialUI();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void animateAway(int i) {
         animateAway(true, i);
     }
@@ -491,10 +490,13 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
                 this.mPendingCallbackReason = null;
             }
             postOnAnimation(new Runnable(new Runnable() {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthContainerView$vtbE2wtRO04iHv7UirSn4_zgk0 */
+
                 public final void run() {
                     AuthContainerView.this.lambda$animateAway$2$AuthContainerView();
                 }
             }) {
+                /* class com.android.systemui.biometrics.$$Lambda$AuthContainerView$hmGjJ8kJosRRIFfZpgTQM0R9XiM */
                 public final /* synthetic */ Runnable f$1;
 
                 {
@@ -508,6 +510,7 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$animateAway$2 */
     public /* synthetic */ void lambda$animateAway$2$AuthContainerView() {
@@ -515,6 +518,7 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         removeWindowIfAttached(true);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$animateAway$3 */
     public /* synthetic */ void lambda$animateAway$3$AuthContainerView(Runnable runnable) {
@@ -549,8 +553,8 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
         this.mWindowManager.removeView(this);
     }
 
-    /* access modifiers changed from: private */
-    public void onDialogAnimatedIn() {
+    /* access modifiers changed from: public */
+    private void onDialogAnimatedIn() {
         if (this.mContainerState == 2) {
             Log.d("BiometricPrompt/AuthContainerView", "onDialogAnimatedIn(): mPendingDismissDialog=true, dismissing now");
             animateAway(false, 0);

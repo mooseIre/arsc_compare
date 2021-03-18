@@ -58,6 +58,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
     private int mTouchDownY;
     private final UiEventLogger mUiEventLogger;
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setVertical(boolean z) {
     }
 
@@ -97,6 +98,8 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         this.mOvalBgPaint = new Paint(3);
         this.mHasOvalBg = false;
         this.mCheckLongPress = new Runnable() {
+            /* class com.android.systemui.statusbar.policy.KeyButtonView.AnonymousClass1 */
+
             public void run() {
                 if (!KeyButtonView.this.isPressed()) {
                     return;
@@ -145,16 +148,18 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
 
     public void loadAsync(Icon icon) {
         new AsyncTask<Icon, Void, Drawable>() {
+            /* class com.android.systemui.statusbar.policy.KeyButtonView.AnonymousClass2 */
+
             /* access modifiers changed from: protected */
             public Drawable doInBackground(Icon... iconArr) {
-                return iconArr[0].loadDrawable(KeyButtonView.this.mContext);
+                return iconArr[0].loadDrawable(((ImageView) KeyButtonView.this).mContext);
             }
 
             /* access modifiers changed from: protected */
             public void onPostExecute(Drawable drawable) {
                 KeyButtonView.this.setImageDrawable(drawable);
             }
-        }.execute(new Icon[]{icon});
+        }.execute(icon);
     }
 
     /* access modifiers changed from: protected */
@@ -162,16 +167,16 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         super.onConfigurationChanged(configuration);
         int i = this.mContentDescriptionRes;
         if (i != 0) {
-            setContentDescription(this.mContext.getString(i));
+            setContentDescription(((ImageView) this).mContext.getString(i));
         }
     }
 
     public void onInitializeAccessibilityNodeInfo(AccessibilityNodeInfo accessibilityNodeInfo) {
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         if (this.mCode != 0) {
-            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, (CharSequence) null));
+            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, null));
             if (isLongClickable()) {
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(32, (CharSequence) null));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(32, null));
             }
         }
     }
@@ -269,6 +274,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setImageDrawable(Drawable drawable) {
         MiuiKeyButtonRipple.Type type;
         super.setImageDrawable(drawable);
@@ -373,21 +379,18 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
     }
 
     private void sendEvent(int i, int i2, long j) {
-        int i3 = i2;
         this.mMetricsLogger.write(new LogMaker(931).setType(4).setSubtype(this.mCode).addTaggedData(933, Integer.valueOf(i)).addTaggedData(932, Integer.valueOf(i2)));
         logSomePresses(i, i2);
-        if (this.mCode != 4 || i3 == 128) {
-            int i4 = i;
-        } else {
+        if (this.mCode == 4 && i2 != 128) {
             String str = TAG;
             Log.i(str, "Back button event: " + KeyEvent.actionToString(i));
             if (i == 1) {
-                this.mOverviewProxyService.notifyBackAction((i3 & 32) == 0, -1, -1, true, false);
+                this.mOverviewProxyService.notifyBackAction((i2 & 32) == 0, -1, -1, true, false);
             }
         }
-        KeyEvent keyEvent = new KeyEvent(this.mDownTime, j, i, this.mCode, (i3 & 128) != 0 ? 1 : 0, 0, -1, 0, i3 | 8 | 64, 257);
+        KeyEvent keyEvent = new KeyEvent(this.mDownTime, j, i, this.mCode, (i2 & 128) != 0 ? 1 : 0, 0, -1, 0, i2 | 8 | 64, 257);
         int displayId = getDisplay() != null ? getDisplay().getDisplayId() : -1;
-        int expandedDisplayId = ((BubbleController) Dependency.get(BubbleController.class)).getExpandedDisplayId(this.mContext);
+        int expandedDisplayId = ((BubbleController) Dependency.get(BubbleController.class)).getExpandedDisplayId(((ImageView) this).mContext);
         if (this.mCode == 4 && expandedDisplayId != -1) {
             displayId = expandedDisplayId;
         }
@@ -397,6 +400,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         this.mInputManager.injectInputEvent(keyEvent, 0);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void abortCurrentGesture() {
         Log.d("b/63783866", "KeyButtonView.abortCurrentGesture");
         setPressed(false);
@@ -404,6 +408,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         this.mGestureAborted = true;
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setDarkIntensity(float f) {
         this.mDarkIntensity = f;
         Drawable drawable = getDrawable();
@@ -414,6 +419,7 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
         this.mRipple.setDarkIntensity(f);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setDelayTouchFeedback(boolean z) {
         this.mRipple.setDelayTouchFeedback(z);
     }

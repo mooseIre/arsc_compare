@@ -10,6 +10,7 @@ public class MiuiCustomizeTileView extends MiuiQSTileView {
     private boolean mShowAppLabel;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.MiuiQSTileBaseView
     public boolean animationsEnabled() {
         return false;
     }
@@ -29,6 +30,7 @@ public class MiuiCustomizeTileView extends MiuiQSTileView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.MiuiQSTileBaseView, com.android.systemui.qs.tileimpl.MiuiQSTileView
     public void handleStateChanged(QSTile.State state) {
         super.handleStateChanged(state);
         this.mSecondLine.setVisibility(this.mShowAppLabel ? 0 : 8);

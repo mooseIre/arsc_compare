@@ -61,11 +61,13 @@ public final class NotificationPanelNavigationBarCoordinator implements CommandQ
         this.commandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(@Nullable Configuration configuration) {
         super.onConfigChanged(configuration);
         this.orientation = configuration != null ? configuration.orientation : this.orientation;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         super.disable(i, i2, i3, z);
         this.disable1 = i2;

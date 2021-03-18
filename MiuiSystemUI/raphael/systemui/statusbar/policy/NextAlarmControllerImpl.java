@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.Handler;
 import android.os.UserHandle;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import java.io.FileDescriptor;
@@ -22,10 +21,11 @@ public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAl
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
         intentFilter.addAction("android.app.action.NEXT_ALARM_CLOCK_CHANGED");
-        context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, (String) null, (Handler) null);
+        context.registerReceiverAsUser(this, UserHandle.ALL, intentFilter, null, null);
         updateNextAlarm();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("NextAlarmController state:");
         printWriter.print("  mNextAlarm=");
@@ -60,6 +60,7 @@ public class NextAlarmControllerImpl extends BroadcastReceiver implements NextAl
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.NextAlarmController
     public boolean hasAlarm() {
         return this.mNextAlarm != null;
     }

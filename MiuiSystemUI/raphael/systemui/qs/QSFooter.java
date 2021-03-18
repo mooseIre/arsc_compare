@@ -3,7 +3,7 @@ package com.android.systemui.qs;
 import android.view.View;
 
 public interface QSFooter {
-    void disable(int i, int i2, boolean z) {
+    default void disable(int i, int i2, boolean z) {
     }
 
     void setExpandClickListener(View.OnClickListener onClickListener);

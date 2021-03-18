@@ -39,6 +39,7 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
         int textLineCount = getTextLineCount();
         if (textLineCount <= 1) {
             this.mText.post(new Runnable(textLineCount) {
+                /* class com.android.systemui.statusbar.notification.row.wrapper.$$Lambda$MiuiNotificationTemplateViewWrapper$Ci9gNfbFsvzimgRnTKgJurl7z7c */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -70,6 +71,8 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
     private void handleMainColumn() {
         if (showMiuiAction()) {
             this.mMiuiAction.post(new Runnable() {
+                /* class com.android.systemui.statusbar.notification.row.wrapper.$$Lambda$MiuiNotificationTemplateViewWrapper$GpO3urcxvnEYqEBC8Ickwsck */
+
                 public final void run() {
                     MiuiNotificationTemplateViewWrapper.this.lambda$handleMainColumn$1$MiuiNotificationTemplateViewWrapper();
                 }
@@ -126,6 +129,7 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper, com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationViewWrapper
     public void onContentUpdated(ExpandableNotificationRow expandableNotificationRow) {
         super.onContentUpdated(expandableNotificationRow);
         resolveTemplateViews();
@@ -139,6 +143,7 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationViewWrapper
     public boolean showRightIcon() {
         if (showMiuiAction()) {
             return false;
@@ -147,12 +152,14 @@ public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWra
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationViewWrapper
     public boolean showProgressBar() {
         View view = this.mProgressBar;
         return (view instanceof ProgressBar) && view.getVisibility() == 0;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationViewWrapper
     public boolean showTimeChronometer() {
         if (showMiuiAction() || showProgressBar()) {
             return false;

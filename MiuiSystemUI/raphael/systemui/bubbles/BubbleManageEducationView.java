@@ -16,7 +16,7 @@ public class BubbleManageEducationView extends LinearLayout {
     private TextView mTitleTextView;
 
     public BubbleManageEducationView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public BubbleManageEducationView(Context context, AttributeSet attributeSet) {
@@ -37,7 +37,7 @@ public class BubbleManageEducationView extends LinearLayout {
         this.mManageView = findViewById(C0015R$id.manage_education_view);
         this.mTitleTextView = (TextView) findViewById(C0015R$id.user_education_title);
         this.mDescTextView = (TextView) findViewById(C0015R$id.user_education_description);
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16843829, 16842809});
+        TypedArray obtainStyledAttributes = ((LinearLayout) this).mContext.obtainStyledAttributes(new int[]{16843829, 16842809});
         int color = obtainStyledAttributes.getColor(0, -16777216);
         int color2 = obtainStyledAttributes.getColor(1, -1);
         obtainStyledAttributes.recycle();

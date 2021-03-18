@@ -15,15 +15,18 @@ final class ControlsFavoritingActivity$bindViews$$inlined$apply$lambda$1 extends
         this.this$0 = controlsFavoritingActivity;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke(((Number) obj).intValue());
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(Integer num) {
+        invoke(num.intValue());
         return Unit.INSTANCE;
     }
 
     public final void invoke(int i) {
-        TooltipManager access$getMTooltipManager$p;
-        if (i != 0 && (access$getMTooltipManager$p = this.this$0.mTooltipManager) != null) {
-            access$getMTooltipManager$p.hide(true);
+        TooltipManager tooltipManager;
+        if (i != 0 && (tooltipManager = this.this$0.mTooltipManager) != null) {
+            tooltipManager.hide(true);
         }
     }
 }

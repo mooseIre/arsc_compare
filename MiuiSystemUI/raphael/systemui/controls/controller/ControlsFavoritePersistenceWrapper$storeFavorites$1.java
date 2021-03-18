@@ -11,8 +11,9 @@ import java.util.List;
 import libcore.io.IoUtils;
 import org.xmlpull.v1.XmlSerializer;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritePersistenceWrapper.kt */
-final class ControlsFavoritePersistenceWrapper$storeFavorites$1 implements Runnable {
+public final class ControlsFavoritePersistenceWrapper$storeFavorites$1 implements Runnable {
     final /* synthetic */ List $structures;
     final /* synthetic */ ControlsFavoritePersistenceWrapper this$0;
 
@@ -23,7 +24,7 @@ final class ControlsFavoritePersistenceWrapper$storeFavorites$1 implements Runna
 
     public final void run() {
         boolean z;
-        BackupManager access$getBackupManager$p;
+        BackupManager backupManager;
         Log.d("ControlsFavoritePersistenceWrapper", "Saving data to file: " + this.this$0.file);
         AtomicFile atomicFile = new AtomicFile(this.this$0.file);
         synchronized (BackupHelper.Companion.getControlsDataLock()) {
@@ -34,28 +35,28 @@ final class ControlsFavoritePersistenceWrapper$storeFavorites$1 implements Runna
                     XmlSerializer newSerializer = Xml.newSerializer();
                     newSerializer.setOutput(startWrite, "utf-8");
                     newSerializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
-                    newSerializer.startDocument((String) null, Boolean.TRUE);
-                    newSerializer.startTag((String) null, "version");
+                    newSerializer.startDocument(null, Boolean.TRUE);
+                    newSerializer.startTag(null, "version");
                     newSerializer.text("1");
-                    newSerializer.endTag((String) null, "version");
-                    newSerializer.startTag((String) null, "structures");
+                    newSerializer.endTag(null, "version");
+                    newSerializer.startTag(null, "structures");
                     for (StructureInfo structureInfo : this.$structures) {
-                        newSerializer.startTag((String) null, "structure");
-                        newSerializer.attribute((String) null, "component", structureInfo.getComponentName().flattenToString());
-                        newSerializer.attribute((String) null, "structure", structureInfo.getStructure().toString());
-                        newSerializer.startTag((String) null, "controls");
-                        for (ControlInfo controlInfo : structureInfo.getControls()) {
-                            newSerializer.startTag((String) null, "control");
-                            newSerializer.attribute((String) null, "id", controlInfo.getControlId());
-                            newSerializer.attribute((String) null, "title", controlInfo.getControlTitle().toString());
-                            newSerializer.attribute((String) null, "subtitle", controlInfo.getControlSubtitle().toString());
-                            newSerializer.attribute((String) null, "type", String.valueOf(controlInfo.getDeviceType()));
-                            newSerializer.endTag((String) null, "control");
+                        newSerializer.startTag(null, "structure");
+                        newSerializer.attribute(null, "component", structureInfo.getComponentName().flattenToString());
+                        newSerializer.attribute(null, "structure", structureInfo.getStructure().toString());
+                        newSerializer.startTag(null, "controls");
+                        for (T t : structureInfo.getControls()) {
+                            newSerializer.startTag(null, "control");
+                            newSerializer.attribute(null, "id", t.getControlId());
+                            newSerializer.attribute(null, "title", t.getControlTitle().toString());
+                            newSerializer.attribute(null, "subtitle", t.getControlSubtitle().toString());
+                            newSerializer.attribute(null, "type", String.valueOf(t.getDeviceType()));
+                            newSerializer.endTag(null, "control");
                         }
-                        newSerializer.endTag((String) null, "controls");
-                        newSerializer.endTag((String) null, "structure");
+                        newSerializer.endTag(null, "controls");
+                        newSerializer.endTag(null, "structure");
                     }
-                    newSerializer.endTag((String) null, "structures");
+                    newSerializer.endTag(null, "structures");
                     newSerializer.endDocument();
                     atomicFile.finishWrite(startWrite);
                 } catch (Throwable th) {
@@ -66,12 +67,10 @@ final class ControlsFavoritePersistenceWrapper$storeFavorites$1 implements Runna
             } catch (IOException e) {
                 Log.e("ControlsFavoritePersistenceWrapper", "Failed to start write file", e);
                 return;
-            } catch (Throwable th2) {
-                throw th2;
             }
         }
-        if (z && (access$getBackupManager$p = this.this$0.backupManager) != null) {
-            access$getBackupManager$p.dataChanged();
+        if (z && (backupManager = this.this$0.backupManager) != null) {
+            backupManager.dataChanged();
         }
     }
 }

@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.accessibilityservice.AccessibilityServiceInfo;
 import android.app.ActivityManager;
 import android.app.ActivityTaskManager;
+import android.app.IActivityTaskManager;
 import android.app.StatusBarManager;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
@@ -66,6 +67,7 @@ import com.android.systemui.statusbar.phone.NavigationBarView;
 import com.android.systemui.statusbar.phone.NavigationModeController;
 import com.android.systemui.statusbar.policy.AccessibilityManagerWrapper;
 import com.android.systemui.statusbar.policy.DeviceProvisionedController;
+import com.android.systemui.statusbar.policy.KeyButtonView;
 import com.android.systemui.util.LifecycleFragment;
 import dagger.Lazy;
 import java.io.FileDescriptor;
@@ -81,15 +83,13 @@ import kotlin.jvm.functions.Function0;
 
 public class NavigationBarFragment extends LifecycleFragment implements CommandQueue.Callbacks, NavigationModeController.ModeChangedListener, DisplayManager.DisplayListener {
     private final AccessibilityManager.AccessibilityServicesStateChangeListener mAccessibilityListener;
-    /* access modifiers changed from: private */
-    public AccessibilityManager mAccessibilityManager;
+    private AccessibilityManager mAccessibilityManager;
     private final AccessibilityManagerWrapper mAccessibilityManagerWrapper;
     private int mAppearance;
     private final ContentObserver mAssistContentObserver;
     private AssistHandleViewController mAssistHandlerViewController;
     protected final AssistManager mAssistManager;
-    /* access modifiers changed from: private */
-    public boolean mAssistantAvailable;
+    private boolean mAssistantAvailable;
     private final Runnable mAutoDim;
     private AutoHideController mAutoHideController;
     private final AutoHideUiElement mAutoHideUiElement;
@@ -103,8 +103,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     private int mDisabledFlags2;
     public int mDisplayId;
     private final Divider mDivider;
-    /* access modifiers changed from: private */
-    public boolean mForceNavBarHandleOpaque;
+    private boolean mForceNavBarHandleOpaque;
     private final Handler mHandler;
     public boolean mHomeBlockedThisTouch;
     private boolean mIsOnDefaultDisplay;
@@ -114,18 +113,15 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     private LightBarController mLightBarController;
     private Locale mLocale;
     private final MetricsLogger mMetricsLogger;
-    /* access modifiers changed from: private */
-    public int mNavBarMode;
+    private int mNavBarMode;
     private int mNavigationBarMode;
     protected NavigationBarView mNavigationBarView = null;
     private int mNavigationBarWindowState;
     private int mNavigationIconHints;
     private final NavigationModeController mNavigationModeController;
-    /* access modifiers changed from: private */
-    public final NotificationRemoteInputManager mNotificationRemoteInputManager;
+    private final NotificationRemoteInputManager mNotificationRemoteInputManager;
     private final DeviceConfig.OnPropertiesChangedListener mOnPropertiesChangedListener;
-    /* access modifiers changed from: private */
-    public QuickswitchOrientedNavHandle mOrientationHandle;
+    private QuickswitchOrientedNavHandle mOrientationHandle;
     private ViewTreeObserver.OnGlobalLayoutListener mOrientationHandleGlobalLayoutListener;
     private NavigationBarTransitions.DarkIntensityListener mOrientationHandleIntensityListener;
     private WindowManager.LayoutParams mOrientationParams;
@@ -134,10 +130,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     private final Optional<Recents> mRecentsOptional;
     private final ContextualButton.ContextButtonListener mRotationButtonListener;
     private final Consumer<Integer> mRotationWatcher;
-    /* access modifiers changed from: private */
-    public boolean mShowOrientedHandleForImmersiveMode;
-    /* access modifiers changed from: private */
-    public int mStartingQuickSwitchRotation;
+    private boolean mShowOrientedHandleForImmersiveMode;
+    private int mStartingQuickSwitchRotation;
     private final Lazy<StatusBar> mStatusBarLazy;
     private final StatusBarStateController mStatusBarStateController;
     private SysUiState mSysUiFlagsContainer;
@@ -167,9 +161,11 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     public void onDisplayAdded(int i) {
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onDisplayRemoved(int i) {
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setImeWindowStatus(int i, IBinder iBinder, int i2, int i3, boolean z) {
     }
 
@@ -203,7 +199,6 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     public NavigationBarFragment(AccessibilityManagerWrapper accessibilityManagerWrapper, DeviceProvisionedController deviceProvisionedController, MetricsLogger metricsLogger, AssistManager assistManager, OverviewProxyService overviewProxyService, NavigationModeController navigationModeController, StatusBarStateController statusBarStateController, SysUiState sysUiState, BroadcastDispatcher broadcastDispatcher, CommandQueue commandQueue, Divider divider, Optional<Recents> optional, Lazy<StatusBar> lazy, ShadeController shadeController, NotificationRemoteInputManager notificationRemoteInputManager, SystemActions systemActions, Handler handler, UiEventLogger uiEventLogger) {
-        NavigationModeController navigationModeController2 = navigationModeController;
         boolean z = false;
         this.mNavigationBarWindowState = 0;
         this.mNavigationIconHints = 0;
@@ -211,23 +206,32 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mKeyOrderObserver = new KeyOrderObserver();
         this.mStartingQuickSwitchRotation = -1;
         this.mAutoHideUiElement = new AutoHideUiElement() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass1 */
+
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public void synchronizeState() {
                 NavigationBarFragment.this.checkNavBarModes();
             }
 
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public boolean shouldHideOnTouch() {
                 return !NavigationBarFragment.this.mNotificationRemoteInputManager.getController().isRemoteInputActive();
             }
 
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public boolean isVisible() {
                 return NavigationBarFragment.this.isTransientShown();
             }
 
+            @Override // com.android.systemui.statusbar.AutoHideUiElement
             public void hide() {
                 NavigationBarFragment.this.clearTransient();
             }
         };
         this.mOverviewProxyListener = new OverviewProxyService.OverviewProxyListener() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass2 */
+
+            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
             public void onConnectionChanged(boolean z) {
                 NavigationBarFragment.this.mNavigationBarView.updateStates();
                 NavigationBarFragment.this.updateScreenPinningGestures();
@@ -237,26 +241,29 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
                 }
             }
 
+            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
             public void onQuickSwitchToNewTask(int i) {
-                int unused = NavigationBarFragment.this.mStartingQuickSwitchRotation = i;
+                NavigationBarFragment.this.mStartingQuickSwitchRotation = i;
                 if (i == -1) {
-                    boolean unused2 = NavigationBarFragment.this.mShowOrientedHandleForImmersiveMode = false;
+                    NavigationBarFragment.this.mShowOrientedHandleForImmersiveMode = false;
                 }
                 NavigationBarFragment.this.orientSecondaryHomeHandle();
             }
 
+            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
             public void startAssistant(Bundle bundle) {
                 NavigationBarFragment.this.mAssistManager.startAssist(bundle);
             }
 
             /* JADX WARNING: Removed duplicated region for block: B:18:? A[RETURN, SYNTHETIC] */
             /* JADX WARNING: Removed duplicated region for block: B:9:0x0035 A[ADDED_TO_REGION] */
+            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
             /* Code decompiled incorrectly, please refer to instructions dump. */
             public void onNavBarButtonAlphaChanged(float r4, boolean r5) {
                 /*
                     r3 = this;
                     com.android.systemui.statusbar.phone.NavigationBarFragment r0 = com.android.systemui.statusbar.phone.NavigationBarFragment.this
-                    int r0 = r0.mNavBarMode
+                    int r0 = com.android.systemui.statusbar.phone.NavigationBarFragment.access$1000(r0)
                     boolean r0 = com.android.systemui.shared.system.QuickStepContract.isSwipeUpMode(r0)
                     r1 = 0
                     if (r0 == 0) goto L_0x0016
@@ -266,11 +273,11 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
                     goto L_0x0032
                 L_0x0016:
                     com.android.systemui.statusbar.phone.NavigationBarFragment r0 = com.android.systemui.statusbar.phone.NavigationBarFragment.this
-                    int r0 = r0.mNavBarMode
+                    int r0 = com.android.systemui.statusbar.phone.NavigationBarFragment.access$1000(r0)
                     boolean r0 = com.android.systemui.shared.system.QuickStepContract.isGesturalMode(r0)
                     if (r0 == 0) goto L_0x0031
                     com.android.systemui.statusbar.phone.NavigationBarFragment r0 = com.android.systemui.statusbar.phone.NavigationBarFragment.this
-                    boolean r0 = r0.mForceNavBarHandleOpaque
+                    boolean r0 = com.android.systemui.statusbar.phone.NavigationBarFragment.access$1100(r0)
                     com.android.systemui.statusbar.phone.NavigationBarFragment r3 = com.android.systemui.statusbar.phone.NavigationBarFragment.this
                     com.android.systemui.statusbar.phone.NavigationBarView r3 = r3.mNavigationBarView
                     com.android.systemui.statusbar.phone.ButtonDispatcher r3 = r3.getHomeHandle()
@@ -300,56 +307,77 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
                 throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass2.onNavBarButtonAlphaChanged(float, boolean):void");
             }
 
+            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
             public void onOverviewShown(boolean z) {
                 NavigationBarFragment.this.mNavigationBarView.getRotationButtonController().setSkipOverrideUserLockPrefsOnce();
             }
 
+            @Override // com.android.systemui.recents.OverviewProxyService.OverviewProxyListener
             public void onToggleRecentApps() {
                 NavigationBarFragment.this.mNavigationBarView.getRotationButtonController().setSkipOverrideUserLockPrefsOnce();
             }
         };
         this.mOrientationHandleIntensityListener = new NavigationBarTransitions.DarkIntensityListener() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass3 */
+
+            @Override // com.android.systemui.statusbar.phone.NavigationBarTransitions.DarkIntensityListener
             public void onDarkIntensity(float f) {
                 NavigationBarFragment.this.mOrientationHandle.setDarkIntensity(f);
             }
         };
         this.mRotationButtonListener = new ContextualButton.ContextButtonListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$xnm4oWC06iZWqzBbKv8ubGVFU */
+
+            @Override // com.android.systemui.statusbar.phone.ContextualButton.ContextButtonListener
             public final void onVisibilityChanged(ContextualButton contextualButton, boolean z) {
                 NavigationBarFragment.this.lambda$new$0$NavigationBarFragment(contextualButton, z);
             }
         };
         this.mAutoDim = new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$Wf_FUQzkbSdMD9hXKJaXOD_rVSY */
+
             public final void run() {
                 NavigationBarFragment.this.lambda$new$1$NavigationBarFragment();
             }
         };
         this.mAssistContentObserver = new ContentObserver(new Handler(Looper.getMainLooper())) {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass4 */
+
             public void onChange(boolean z, Uri uri) {
                 boolean z2 = NavigationBarFragment.this.mAssistManager.getAssistInfoForUser(-2) != null;
                 if (NavigationBarFragment.this.mAssistantAvailable != z2) {
                     NavigationBarFragment.this.sendAssistantAvailability(z2);
-                    boolean unused = NavigationBarFragment.this.mAssistantAvailable = z2;
+                    NavigationBarFragment.this.mAssistantAvailable = z2;
                 }
             }
         };
         this.mOnPropertiesChangedListener = new DeviceConfig.OnPropertiesChangedListener() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass5 */
+
             public void onPropertiesChanged(DeviceConfig.Properties properties) {
                 if (properties.getKeyset().contains("nav_bar_handle_force_opaque")) {
-                    boolean unused = NavigationBarFragment.this.mForceNavBarHandleOpaque = properties.getBoolean("nav_bar_handle_force_opaque", true);
+                    NavigationBarFragment.this.mForceNavBarHandleOpaque = properties.getBoolean("nav_bar_handle_force_opaque", true);
                 }
             }
         };
         this.mAccessibilityListener = new AccessibilityManager.AccessibilityServicesStateChangeListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$dxES00kAyC8r2RmY9FwTYgUhoj8 */
+
             public final void onAccessibilityServicesStateChanged(AccessibilityManager accessibilityManager) {
                 NavigationBarFragment.this.updateAccessibilityServicesState(accessibilityManager);
             }
         };
         this.mRotationWatcher = new Consumer() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$ivU7sfkPnx7kuUAYwcAC75X5OE */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 NavigationBarFragment.this.lambda$new$5$NavigationBarFragment((Integer) obj);
             }
         };
         this.mBroadcastReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass6 */
+
             public void onReceive(Context context, Intent intent) {
                 String action = intent.getAction();
                 if ("android.intent.action.SCREEN_OFF".equals(action) || "android.intent.action.SCREEN_ON".equals(action)) {
@@ -372,7 +400,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mNotificationRemoteInputManager = notificationRemoteInputManager;
         this.mAssistantAvailable = assistManager.getAssistInfoForUser(-2) != null ? true : z;
         this.mOverviewProxyService = overviewProxyService;
-        this.mNavigationModeController = navigationModeController2;
+        this.mNavigationModeController = navigationModeController;
         this.mNavBarMode = navigationModeController.addListener(this);
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mCommandQueue = commandQueue;
@@ -383,6 +411,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mUiEventLogger = uiEventLogger;
     }
 
+    @Override // com.android.systemui.util.LifecycleFragment
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         this.mCommandQueue.observe(getLifecycle(), this);
@@ -403,6 +432,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         Handler handler = this.mHandler;
         Objects.requireNonNull(handler);
         DeviceConfig.addOnPropertiesChangedListener("systemui", new Executor(handler) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$LfzJt661qZfn2w6SYHFbD3aMy0 */
             public final /* synthetic */ Handler f$0;
 
             {
@@ -415,6 +445,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }, this.mOnPropertiesChangedListener);
     }
 
+    @Override // com.android.systemui.util.LifecycleFragment
     public void onDestroy() {
         super.onDestroy();
         this.mNavigationModeController.removeListener(this);
@@ -439,11 +470,16 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mNavigationBarView.setComponents(this.mStatusBarLazy.get().getPanelController());
         this.mNavigationBarView.setDisabledFlags(this.mDisabledFlags1);
         this.mNavigationBarView.setOnVerticalChangedListener(new NavigationBarView.OnVerticalChangedListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$eFJm5m1txtISSi8Cx3m3pc8Nvjw */
+
+            @Override // com.android.systemui.statusbar.phone.NavigationBarView.OnVerticalChangedListener
             public final void onVerticalChanged(boolean z) {
                 NavigationBarFragment.this.onVerticalChanged(z);
             }
         });
         this.mNavigationBarView.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$X9JO9eLzlFoQkYf8XrZGl2EMsk */
+
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 return NavigationBarFragment.this.onNavigationTouch(view, motionEvent);
             }
@@ -479,6 +515,9 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }
         initSecondaryHomeHandleForRotation();
         this.mKeyOrderObserver.register(this.mContentResolver, new Function0() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$S4iNug6JoJ5hSF76R3aOJlWU4g */
+
+            @Override // kotlin.jvm.functions.Function0
             public final Object invoke() {
                 return NavigationBarFragment.this.reversetKeyOrder();
             }
@@ -560,6 +599,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
             this.mOrientationHandle.setVisibility(8);
             this.mOrientationParams.setFitInsetsTypes(0);
             this.mOrientationHandleGlobalLayoutListener = new ViewTreeObserver.OnGlobalLayoutListener() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$Q9R6TLtnrREWz6y8b5TLw_HN9LI */
+
                 public final void onGlobalLayout() {
                     NavigationBarFragment.this.lambda$initSecondaryHomeHandleForRotation$2$NavigationBarFragment();
                 }
@@ -581,106 +622,13 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* JADX WARNING: Removed duplicated region for block: B:26:0x008d  */
     /* JADX WARNING: Removed duplicated region for block: B:27:0x0090  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void orientSecondaryHomeHandle() {
+    private void orientSecondaryHomeHandle() {
         /*
-            r7 = this;
-            boolean r0 = r7.canShowSecondaryHandle()
-            if (r0 != 0) goto L_0x0007
-            return
-        L_0x0007:
-            int r0 = r7.mStartingQuickSwitchRotation
-            r1 = -1
-            if (r0 == r1) goto L_0x00b0
-            com.android.systemui.stackdivider.Divider r0 = r7.mDivider
-            boolean r0 = r0.isDividerVisible()
-            if (r0 == 0) goto L_0x0016
-            goto L_0x00b0
-        L_0x0016:
-            int r0 = r7.mCurrentRotation
-            int r2 = r7.mStartingQuickSwitchRotation
-            int r0 = r7.deltaRotation(r0, r2)
-            int r2 = r7.mStartingQuickSwitchRotation
-            if (r2 == r1) goto L_0x0024
-            if (r0 != r1) goto L_0x004e
-        L_0x0024:
-            java.lang.StringBuilder r1 = new java.lang.StringBuilder
-            r1.<init>()
-            java.lang.String r2 = "secondary nav delta rotation: "
-            r1.append(r2)
-            r1.append(r0)
-            java.lang.String r2 = " current: "
-            r1.append(r2)
-            int r2 = r7.mCurrentRotation
-            r1.append(r2)
-            java.lang.String r2 = " starting: "
-            r1.append(r2)
-            int r2 = r7.mStartingQuickSwitchRotation
-            r1.append(r2)
-            java.lang.String r1 = r1.toString()
-            java.lang.String r2 = "NavigationBar"
-            android.util.Log.d(r2, r1)
-        L_0x004e:
-            android.view.WindowManager r1 = r7.mWindowManager
-            android.view.WindowMetrics r1 = r1.getCurrentWindowMetrics()
-            android.graphics.Rect r1 = r1.getBounds()
-            com.android.systemui.statusbar.phone.QuickswitchOrientedNavHandle r2 = r7.mOrientationHandle
-            r2.setDeltaRotation(r0)
-            r2 = 3
-            r3 = 1
-            r4 = 0
-            if (r0 == 0) goto L_0x0077
-            if (r0 == r3) goto L_0x006c
-            r5 = 2
-            if (r0 == r5) goto L_0x0077
-            if (r0 == r2) goto L_0x006c
-            r1 = r4
-            r5 = r1
-            goto L_0x0089
-        L_0x006c:
-            int r1 = r1.height()
-            com.android.systemui.statusbar.phone.NavigationBarView r5 = r7.mNavigationBarView
-            int r5 = r5.getHeight()
-            goto L_0x0089
-        L_0x0077:
-            boolean r5 = r7.mShowOrientedHandleForImmersiveMode
-            if (r5 != 0) goto L_0x007f
-            r7.resetSecondaryHandle()
-            return
-        L_0x007f:
-            int r5 = r1.width()
-            com.android.systemui.statusbar.phone.NavigationBarView r1 = r7.mNavigationBarView
-            int r1 = r1.getHeight()
-        L_0x0089:
-            android.view.WindowManager$LayoutParams r6 = r7.mOrientationParams
-            if (r0 != 0) goto L_0x0090
-            r2 = 80
-            goto L_0x0094
-        L_0x0090:
-            if (r0 != r3) goto L_0x0093
-            goto L_0x0094
-        L_0x0093:
-            r2 = 5
-        L_0x0094:
-            r6.gravity = r2
-            android.view.WindowManager$LayoutParams r0 = r7.mOrientationParams
-            r0.height = r1
-            r0.width = r5
-            android.view.WindowManager r1 = r7.mWindowManager
-            com.android.systemui.statusbar.phone.QuickswitchOrientedNavHandle r2 = r7.mOrientationHandle
-            r1.updateViewLayout(r2, r0)
-            com.android.systemui.statusbar.phone.NavigationBarView r0 = r7.mNavigationBarView
-            r1 = 8
-            r0.setVisibility(r1)
-            com.android.systemui.statusbar.phone.QuickswitchOrientedNavHandle r7 = r7.mOrientationHandle
-            r7.setVisibility(r4)
-            goto L_0x00b3
-        L_0x00b0:
-            r7.resetSecondaryHandle()
-        L_0x00b3:
-            return
+        // Method dump skipped, instructions count: 180
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NavigationBarFragment.orientSecondaryHomeHandle():void");
     }
@@ -693,7 +641,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         NavigationBarView navigationBarView = this.mNavigationBarView;
         if (navigationBarView != null) {
             navigationBarView.setVisibility(0);
-            this.mNavigationBarView.setOrientedHandleSamplingRegion((Rect) null);
+            this.mNavigationBarView.setOrientedHandleSamplingRegion(null);
         }
     }
 
@@ -716,6 +664,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void setWindowState(int i, int i2, int i3) {
         if (i == this.mDisplayId && i2 == 2 && this.mNavigationBarWindowState != i3) {
             this.mNavigationBarWindowState = i3;
@@ -731,6 +680,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onRotationProposal(int i, boolean z) {
         int rotation = this.mNavigationBarView.getDisplay().getRotation();
         boolean hasDisable2RotateSuggestionFlag = RotationButtonController.hasDisable2RotateSuggestionFlag(this.mDisabledFlags2);
@@ -749,6 +699,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mLightBarController.onNavigationBarAppearanceChanged(this.mAppearance, true, barMode, false);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void onSystemBarAppearanceChanged(int i, int i2, AppearanceRegion[] appearanceRegionArr, boolean z) {
         if (i == this.mDisplayId) {
             boolean z2 = false;
@@ -764,6 +715,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showTransient(int i, int[] iArr) {
         if (i == this.mDisplayId && InsetsState.containsType(iArr, 1) && !this.mTransientShown) {
             this.mTransientShown = true;
@@ -771,6 +723,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void abortTransient(int i, int[] iArr) {
         if (i == this.mDisplayId && InsetsState.containsType(iArr, 1)) {
             clearTransient();
@@ -778,7 +731,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
-    public void clearTransient() {
+    /* access modifiers changed from: public */
+    private void clearTransient() {
         if (this.mTransientShown) {
             this.mTransientShown = false;
             handleTransientChanged();
@@ -812,6 +766,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void disable(int i, int i2, int i3, boolean z) {
         int i4;
         if (i == this.mDisplayId) {
@@ -859,19 +814,24 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
-    public void updateScreenPinningGestures() {
+    /* access modifiers changed from: public */
+    private void updateScreenPinningGestures() {
         NavigationBarView navigationBarView = this.mNavigationBarView;
         if (navigationBarView != null) {
             boolean isRecentsButtonVisible = navigationBarView.isRecentsButtonVisible();
             ButtonDispatcher backButton = this.mNavigationBarView.getBackButton();
             if (isRecentsButtonVisible) {
                 backButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$dtGeJfWz2E4_XAoQgX8peIw4kU8 */
+
                     public final boolean onLongClick(View view) {
                         return NavigationBarFragment.this.onLongPressBackRecents(view);
                     }
                 });
             } else {
                 backButton.setOnLongClickListener(new View.OnLongClickListener() {
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$oZtQ9jE1OTI8AtitIxsN6ETT4sc */
+
                     public final boolean onLongClick(View view) {
                         return NavigationBarFragment.this.onLongPressBackHome(view);
                     }
@@ -881,7 +841,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
-    public void notifyNavigationBarScreenOn() {
+    /* access modifiers changed from: public */
+    private void notifyNavigationBarScreenOn() {
         this.mNavigationBarView.updateNavButtonIcons();
     }
 
@@ -889,34 +850,46 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mNavigationBarView.reorient();
         ButtonDispatcher recentsButton = this.mNavigationBarView.getRecentsButton();
         recentsButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$0mmLLxBq7RxotphHQB_RtYb4SpQ */
+
             public final void onClick(View view) {
                 NavigationBarFragment.this.onRecentsClick(view);
             }
         });
         recentsButton.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$VEqqEZFjg0f3lWOW2BJ66Oo_2aE */
+
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 return NavigationBarFragment.this.onRecentsTouch(view, motionEvent);
             }
         });
         recentsButton.setLongClickable(true);
         recentsButton.setOnLongClickListener(new View.OnLongClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$dtGeJfWz2E4_XAoQgX8peIw4kU8 */
+
             public final boolean onLongClick(View view) {
                 return NavigationBarFragment.this.onLongPressBackRecents(view);
             }
         });
         this.mNavigationBarView.getBackButton().setLongClickable(true);
         this.mNavigationBarView.getHomeButton().setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$y_1OHmWTpLl8uCcO3A0Am620g94 */
+
             public final boolean onTouch(View view, MotionEvent motionEvent) {
                 return NavigationBarFragment.this.onHomeTouch(view, motionEvent);
             }
         });
         ButtonDispatcher accessibilityButton = this.mNavigationBarView.getAccessibilityButton();
         accessibilityButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$Ylizyb5K7ZQr77j1Ehc8SUjcI6E */
+
             public final void onClick(View view) {
                 NavigationBarFragment.this.onAccessibilityClick(view);
             }
         });
         accessibilityButton.setOnLongClickListener(new View.OnLongClickListener() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$RtBTLxltRKo37YrTKiaCXCxwRDg */
+
             public final boolean onLongClick(View view) {
                 return NavigationBarFragment.this.onAccessibilityLongClick(view);
             }
@@ -1014,105 +987,56 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         return onLongPressNavigationButtons(view, C0015R$id.back, C0015R$id.recent_apps);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:47:0x0096, code lost:
-        r9 = move-exception;
-     */
-    /* JADX WARNING: Code restructure failed: missing block: B:48:0x0097, code lost:
-        android.util.Log.d("NavigationBar", "Unable to reach activity manager", r9);
-     */
-    /* JADX WARNING: Exception block dominator not found, dom blocks: [] */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean onLongPressNavigationButtons(android.view.View r10, int r11, int r12) {
-        /*
-            r9 = this;
-            r0 = 0
-            android.app.IActivityTaskManager r1 = android.app.ActivityTaskManager.getService()     // Catch:{ RemoteException -> 0x0096 }
-            android.view.accessibility.AccessibilityManager r2 = r9.mAccessibilityManager     // Catch:{ RemoteException -> 0x0096 }
-            boolean r2 = r2.isTouchExplorationEnabled()     // Catch:{ RemoteException -> 0x0096 }
-            boolean r3 = r1.isInLockTaskMode()     // Catch:{ RemoteException -> 0x0096 }
-            r4 = 1
-            if (r3 == 0) goto L_0x0052
-            if (r2 != 0) goto L_0x0052
-            long r2 = java.lang.System.currentTimeMillis()     // Catch:{ all -> 0x0094 }
-            long r5 = r9.mLastLockToAppLongPress     // Catch:{ all -> 0x0094 }
-            long r5 = r2 - r5
-            r7 = 200(0xc8, double:9.9E-322)
-            int r5 = (r5 > r7 ? 1 : (r5 == r7 ? 0 : -1))
-            if (r5 >= 0) goto L_0x002b
-            r1.stopSystemLockTaskMode()     // Catch:{ RemoteException -> 0x0096 }
-            com.android.systemui.statusbar.phone.NavigationBarView r9 = r9.mNavigationBarView     // Catch:{ RemoteException -> 0x0096 }
-            r9.updateNavButtonIcons()     // Catch:{ RemoteException -> 0x0096 }
-            return r4
-        L_0x002b:
-            int r1 = r10.getId()     // Catch:{ all -> 0x0094 }
-            if (r1 != r11) goto L_0x004e
-            int r11 = com.android.systemui.C0015R$id.recent_apps     // Catch:{ all -> 0x0094 }
-            if (r12 != r11) goto L_0x003c
-            com.android.systemui.statusbar.phone.NavigationBarView r11 = r9.mNavigationBarView     // Catch:{ all -> 0x0094 }
-            com.android.systemui.statusbar.phone.ButtonDispatcher r11 = r11.getRecentsButton()     // Catch:{ all -> 0x0094 }
-            goto L_0x0042
-        L_0x003c:
-            com.android.systemui.statusbar.phone.NavigationBarView r11 = r9.mNavigationBarView     // Catch:{ all -> 0x0094 }
-            com.android.systemui.statusbar.phone.ButtonDispatcher r11 = r11.getHomeButton()     // Catch:{ all -> 0x0094 }
-        L_0x0042:
-            android.view.View r11 = r11.getCurrentView()     // Catch:{ all -> 0x0094 }
-            boolean r11 = r11.isPressed()     // Catch:{ all -> 0x0094 }
-            if (r11 != 0) goto L_0x004e
-            r11 = r4
-            goto L_0x004f
-        L_0x004e:
-            r11 = r0
-        L_0x004f:
-            r9.mLastLockToAppLongPress = r2     // Catch:{ all -> 0x0094 }
-            goto L_0x0086
-        L_0x0052:
-            int r5 = r10.getId()     // Catch:{ all -> 0x0094 }
-            if (r5 != r11) goto L_0x005a
-            r11 = r4
-            goto L_0x0086
-        L_0x005a:
-            if (r2 == 0) goto L_0x0067
-            if (r3 == 0) goto L_0x0067
-            r1.stopSystemLockTaskMode()     // Catch:{ RemoteException -> 0x0096 }
-            com.android.systemui.statusbar.phone.NavigationBarView r9 = r9.mNavigationBarView     // Catch:{ RemoteException -> 0x0096 }
-            r9.updateNavButtonIcons()     // Catch:{ RemoteException -> 0x0096 }
-            return r4
-        L_0x0067:
-            int r11 = r10.getId()     // Catch:{ all -> 0x0094 }
-            if (r11 != r12) goto L_0x0085
-            int r10 = com.android.systemui.C0015R$id.recent_apps     // Catch:{ all -> 0x0094 }
-            if (r12 != r10) goto L_0x0076
-            boolean r9 = r9.onLongPressRecents()     // Catch:{ all -> 0x0094 }
-            goto L_0x0084
-        L_0x0076:
-            com.android.systemui.statusbar.phone.NavigationBarView r10 = r9.mNavigationBarView     // Catch:{ all -> 0x0094 }
-            com.android.systemui.statusbar.phone.ButtonDispatcher r10 = r10.getHomeButton()     // Catch:{ all -> 0x0094 }
-            android.view.View r10 = r10.getCurrentView()     // Catch:{ all -> 0x0094 }
-            boolean r9 = r9.onHomeLongClick(r10)     // Catch:{ all -> 0x0094 }
-        L_0x0084:
-            return r9
-        L_0x0085:
-            r11 = r0
-        L_0x0086:
-            if (r11 == 0) goto L_0x009e
-            com.android.systemui.statusbar.policy.KeyButtonView r10 = (com.android.systemui.statusbar.policy.KeyButtonView) r10     // Catch:{ RemoteException -> 0x0096 }
-            r9 = 128(0x80, float:1.794E-43)
-            r10.sendEvent(r0, r9)     // Catch:{ RemoteException -> 0x0096 }
-            r9 = 2
-            r10.sendAccessibilityEvent(r9)     // Catch:{ RemoteException -> 0x0096 }
-            return r4
-        L_0x0094:
-            r9 = move-exception
-            throw r9     // Catch:{ RemoteException -> 0x0096 }
-        L_0x0096:
-            r9 = move-exception
-            java.lang.String r10 = "NavigationBar"
-            java.lang.String r11 = "Unable to reach activity manager"
-            android.util.Log.d(r10, r11, r9)
-        L_0x009e:
-            return r0
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.NavigationBarFragment.onLongPressNavigationButtons(android.view.View, int, int):boolean");
+    private boolean onLongPressNavigationButtons(View view, int i, int i2) {
+        boolean z;
+        ButtonDispatcher buttonDispatcher;
+        try {
+            IActivityTaskManager service = ActivityTaskManager.getService();
+            boolean isTouchExplorationEnabled = this.mAccessibilityManager.isTouchExplorationEnabled();
+            boolean isInLockTaskMode = service.isInLockTaskMode();
+            if (isInLockTaskMode && !isTouchExplorationEnabled) {
+                long currentTimeMillis = System.currentTimeMillis();
+                if (currentTimeMillis - this.mLastLockToAppLongPress < 200) {
+                    service.stopSystemLockTaskMode();
+                    this.mNavigationBarView.updateNavButtonIcons();
+                    return true;
+                }
+                if (view.getId() == i) {
+                    if (i2 == C0015R$id.recent_apps) {
+                        buttonDispatcher = this.mNavigationBarView.getRecentsButton();
+                    } else {
+                        buttonDispatcher = this.mNavigationBarView.getHomeButton();
+                    }
+                    if (!buttonDispatcher.getCurrentView().isPressed()) {
+                        z = true;
+                        this.mLastLockToAppLongPress = currentTimeMillis;
+                    }
+                }
+                z = false;
+                this.mLastLockToAppLongPress = currentTimeMillis;
+            } else if (view.getId() == i) {
+                z = true;
+            } else if (isTouchExplorationEnabled && isInLockTaskMode) {
+                service.stopSystemLockTaskMode();
+                this.mNavigationBarView.updateNavButtonIcons();
+                return true;
+            } else if (view.getId() != i2) {
+                z = false;
+            } else if (i2 == C0015R$id.recent_apps) {
+                return onLongPressRecents();
+            } else {
+                return onHomeLongClick(this.mNavigationBarView.getHomeButton().getCurrentView());
+            }
+            if (z) {
+                KeyButtonView keyButtonView = (KeyButtonView) view;
+                keyButtonView.sendEvent(0, 128);
+                keyButtonView.sendAccessibilityEvent(2);
+                return true;
+            }
+        } catch (RemoteException e) {
+            Log.d("NavigationBar", "Unable to reach activity manager", e);
+        }
+        return false;
     }
 
     private boolean onLongPressRecents() {
@@ -1138,6 +1062,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     public void updateAccessibilityServicesState(AccessibilityManager accessibilityManager) {
         boolean z = true;
         int a11yButtonState = getA11yButtonState(new boolean[1]);
@@ -1151,7 +1076,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
 
     public void updateSystemUiStateFlags(int i) {
         if (i < 0) {
-            i = getA11yButtonState((boolean[]) null);
+            i = getA11yButtonState(null);
         }
         boolean z = false;
         boolean z2 = (i & 16) != 0;
@@ -1206,7 +1131,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
-    public void sendAssistantAvailability(boolean z) {
+    /* access modifiers changed from: public */
+    private void sendAssistantAvailability(boolean z) {
         if (this.mOverviewProxyService.getProxy() != null) {
             try {
                 this.mOverviewProxyService.getProxy().onAssistantAvailable(z && QuickStepContract.isGesturalMode(this.mNavBarMode));
@@ -1238,7 +1164,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     /* access modifiers changed from: private */
-    public boolean isTransientShown() {
+    /* access modifiers changed from: public */
+    private boolean isTransientShown() {
         return this.mTransientShown;
     }
 
@@ -1250,6 +1177,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mNavigationBarView.getBarTransitions().transitionTo(this.mNavigationBarMode, this.mStatusBarLazy.get().isDeviceInteractive() && this.mNavigationBarWindowState != 2);
     }
 
+    @Override // com.android.systemui.statusbar.phone.NavigationModeController.ModeChangedListener
     public void onNavigationModeChanged(int i) {
         this.mNavBarMode = i;
         updateScreenPinningGestures();
@@ -1258,6 +1186,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         }
         if (ActivityManagerWrapper.getInstance().getCurrentUserId() != 0) {
             this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$nsAI5AC9ZGrYUeFXDe0isYp7EU */
+
                 public final void run() {
                     NavigationBarFragment.this.lambda$onNavigationModeChanged$3$NavigationBarFragment();
                 }
@@ -1274,6 +1204,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     public void disableAnimationsDuringHide(long j) {
         this.mNavigationBarView.setLayoutTransitionsEnabled(false);
         this.mNavigationBarView.postDelayed(new Runnable() {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NavigationBarFragment$AE0O6kF8ojkF6VqrpuJnRwniTec */
+
             public final void run() {
                 NavigationBarFragment.this.lambda$disableAnimationsDuringHide$4$NavigationBarFragment();
             }
@@ -1335,6 +1267,8 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
             return null;
         }
         inflate.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass7 */
+
             public void onViewAttachedToWindow(View view) {
                 FragmentHostManager fragmentHostManager = FragmentHostManager.get(view);
                 fragmentHostManager.getFragmentManager().beginTransaction().replace(C0015R$id.navigation_bar_frame, NavigationBarFragment.this, "NavigationBar").commit();

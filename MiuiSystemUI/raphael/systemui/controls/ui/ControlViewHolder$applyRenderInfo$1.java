@@ -8,8 +8,9 @@ import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlViewHolder.kt */
-final class ControlViewHolder$applyRenderInfo$1 extends Lambda implements Function0<Unit> {
+public final class ControlViewHolder$applyRenderInfo$1 extends Lambda implements Function0<Unit> {
     final /* synthetic */ Control $control;
     final /* synthetic */ boolean $enabled;
     final /* synthetic */ ColorStateList $fg;
@@ -28,6 +29,7 @@ final class ControlViewHolder$applyRenderInfo$1 extends Lambda implements Functi
         this.$control = control;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         ControlViewHolder controlViewHolder = this.this$0;
         boolean z = this.$enabled;

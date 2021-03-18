@@ -21,6 +21,7 @@ public final class DependencyProvider_ProvideAutoHideControllerFactory implement
         this.iWindowManagerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public AutoHideController get() {
         return provideInstance(this.module, this.contextProvider, this.mainHandlerProvider, this.iWindowManagerProvider);
     }

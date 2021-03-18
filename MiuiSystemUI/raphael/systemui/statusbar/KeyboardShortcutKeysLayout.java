@@ -65,6 +65,7 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
     }
 
     /* access modifiers changed from: protected */
+    @Override // android.view.ViewGroup
     public LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         int horizontalVerticalSpacing = getHorizontalVerticalSpacing();
         return new LayoutParams(horizontalVerticalSpacing, horizontalVerticalSpacing, layoutParams);
@@ -137,13 +138,13 @@ public final class KeyboardShortcutKeysLayout extends ViewGroup {
             int measuredWidth = childAt.getMeasuredWidth();
             LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
             if (isRTL() && i7 == i) {
-                r9 = (((i3 - r9) - getPaddingRight()) - measuredWidth) - layoutParams.mHorizontalSpacing;
+                i4 = (((i3 - i4) - getPaddingRight()) - measuredWidth) - layoutParams.mHorizontalSpacing;
             }
-            childAt.layout(r9, i5, r9 + measuredWidth, childAt.getMeasuredHeight() + i5);
+            childAt.layout(i4, i5, i4 + measuredWidth, childAt.getMeasuredHeight() + i5);
             if (isRTL()) {
-                r9 -= (i7 < i2 + -1 ? getChildAt(i7 + 1).getMeasuredWidth() : 0) + layoutParams.mHorizontalSpacing;
+                i4 -= (i7 < i2 + -1 ? getChildAt(i7 + 1).getMeasuredWidth() : 0) + layoutParams.mHorizontalSpacing;
             } else {
-                r9 += measuredWidth + layoutParams.mHorizontalSpacing;
+                i4 += measuredWidth + layoutParams.mHorizontalSpacing;
             }
             i7++;
         }

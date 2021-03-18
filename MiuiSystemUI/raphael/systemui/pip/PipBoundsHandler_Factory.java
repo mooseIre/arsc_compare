@@ -16,6 +16,7 @@ public final class PipBoundsHandler_Factory implements Factory<PipBoundsHandler>
         this.displayControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public PipBoundsHandler get() {
         return provideInstance(this.contextProvider, this.pipSnapAlgorithmProvider, this.displayControllerProvider);
     }

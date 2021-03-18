@@ -1,13 +1,14 @@
 package com.android.systemui.log;
 
 import kotlin.jvm.functions.Function1;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: LogMessageImpl.kt */
 public final class LogMessageImpl implements LogMessage {
-    public static final Factory Factory = new Factory((DefaultConstructorMarker) null);
+    public static final Factory Factory = new Factory(null);
     private boolean bool1;
     private boolean bool2;
     private boolean bool3;
@@ -39,7 +40,7 @@ public final class LogMessageImpl implements LogMessage {
             return false;
         }
         LogMessageImpl logMessageImpl = (LogMessageImpl) obj;
-        return Intrinsics.areEqual((Object) getLevel(), (Object) logMessageImpl.getLevel()) && Intrinsics.areEqual((Object) getTag(), (Object) logMessageImpl.getTag()) && getTimestamp() == logMessageImpl.getTimestamp() && Intrinsics.areEqual((Object) getPrinter(), (Object) logMessageImpl.getPrinter()) && Intrinsics.areEqual((Object) getStr1(), (Object) logMessageImpl.getStr1()) && Intrinsics.areEqual((Object) getStr2(), (Object) logMessageImpl.getStr2()) && Intrinsics.areEqual((Object) getStr3(), (Object) logMessageImpl.getStr3()) && getInt1() == logMessageImpl.getInt1() && getInt2() == logMessageImpl.getInt2() && getLong1() == logMessageImpl.getLong1() && getLong2() == logMessageImpl.getLong2() && Double.compare(getDouble1(), logMessageImpl.getDouble1()) == 0 && getBool1() == logMessageImpl.getBool1() && getBool2() == logMessageImpl.getBool2() && getBool3() == logMessageImpl.getBool3() && getBool4() == logMessageImpl.getBool4();
+        return Intrinsics.areEqual(getLevel(), logMessageImpl.getLevel()) && Intrinsics.areEqual(getTag(), logMessageImpl.getTag()) && getTimestamp() == logMessageImpl.getTimestamp() && Intrinsics.areEqual(getPrinter(), logMessageImpl.getPrinter()) && Intrinsics.areEqual(getStr1(), logMessageImpl.getStr1()) && Intrinsics.areEqual(getStr2(), logMessageImpl.getStr2()) && Intrinsics.areEqual(getStr3(), logMessageImpl.getStr3()) && getInt1() == logMessageImpl.getInt1() && getInt2() == logMessageImpl.getInt2() && getLong1() == logMessageImpl.getLong1() && getLong2() == logMessageImpl.getLong2() && Double.compare(getDouble1(), logMessageImpl.getDouble1()) == 0 && getBool1() == logMessageImpl.getBool1() && getBool2() == logMessageImpl.getBool2() && getBool3() == logMessageImpl.getBool3() && getBool4() == logMessageImpl.getBool4();
     }
 
     public int hashCode() {
@@ -60,26 +61,35 @@ public final class LogMessageImpl implements LogMessage {
         }
         int hashCode6 = (((((((((((hashCode5 + i) * 31) + Integer.hashCode(getInt1())) * 31) + Integer.hashCode(getInt2())) * 31) + Long.hashCode(getLong1())) * 31) + Long.hashCode(getLong2())) * 31) + Double.hashCode(getDouble1())) * 31;
         boolean bool12 = getBool1();
-        boolean z = true;
+        int i2 = 1;
         if (bool12) {
             bool12 = true;
         }
-        int i2 = (hashCode6 + (bool12 ? 1 : 0)) * 31;
+        int i3 = bool12 ? 1 : 0;
+        int i4 = bool12 ? 1 : 0;
+        int i5 = bool12 ? 1 : 0;
+        int i6 = (hashCode6 + i3) * 31;
         boolean bool22 = getBool2();
         if (bool22) {
             bool22 = true;
         }
-        int i3 = (i2 + (bool22 ? 1 : 0)) * 31;
+        int i7 = bool22 ? 1 : 0;
+        int i8 = bool22 ? 1 : 0;
+        int i9 = bool22 ? 1 : 0;
+        int i10 = (i6 + i7) * 31;
         boolean bool32 = getBool3();
         if (bool32) {
             bool32 = true;
         }
-        int i4 = (i3 + (bool32 ? 1 : 0)) * 31;
+        int i11 = bool32 ? 1 : 0;
+        int i12 = bool32 ? 1 : 0;
+        int i13 = bool32 ? 1 : 0;
+        int i14 = (i10 + i11) * 31;
         boolean bool42 = getBool4();
         if (!bool42) {
-            z = bool42;
+            i2 = bool42;
         }
-        return i4 + (z ? 1 : 0);
+        return i14 + i2;
     }
 
     @NotNull
@@ -109,6 +119,7 @@ public final class LogMessageImpl implements LogMessage {
         this.bool4 = z4;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     @NotNull
     public LogLevel getLevel() {
         return this.level;
@@ -119,6 +130,7 @@ public final class LogMessageImpl implements LogMessage {
         this.level = logLevel;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     @NotNull
     public String getTag() {
         return this.tag;
@@ -129,6 +141,7 @@ public final class LogMessageImpl implements LogMessage {
         this.tag = str;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public long getTimestamp() {
         return this.timestamp;
     }
@@ -137,6 +150,8 @@ public final class LogMessageImpl implements LogMessage {
         this.timestamp = j;
     }
 
+    /* JADX DEBUG: Type inference failed for r0v1. Raw type applied. Possible types: kotlin.jvm.functions.Function1<? super com.android.systemui.log.LogMessage, java.lang.String>, kotlin.jvm.functions.Function1<com.android.systemui.log.LogMessage, java.lang.String> */
+    @Override // com.android.systemui.log.LogMessage
     @NotNull
     public Function1<LogMessage, String> getPrinter() {
         return this.printer;
@@ -147,61 +162,75 @@ public final class LogMessageImpl implements LogMessage {
         this.printer = function1;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     @Nullable
     public String getStr1() {
         return this.str1;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setStr1(@Nullable String str) {
         this.str1 = str;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     @Nullable
     public String getStr2() {
         return this.str2;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setStr2(@Nullable String str) {
         this.str2 = str;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     @Nullable
     public String getStr3() {
         return this.str3;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setStr3(@Nullable String str) {
         this.str3 = str;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public int getInt1() {
         return this.int1;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setInt1(int i) {
         this.int1 = i;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public int getInt2() {
         return this.int2;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setInt2(int i) {
         this.int2 = i;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public long getLong1() {
         return this.long1;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setLong1(long j) {
         this.long1 = j;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public long getLong2() {
         return this.long2;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setLong2(long j) {
         this.long2 = j;
     }
@@ -214,34 +243,42 @@ public final class LogMessageImpl implements LogMessage {
         this.double1 = d;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public boolean getBool1() {
         return this.bool1;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setBool1(boolean z) {
         this.bool1 = z;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public boolean getBool2() {
         return this.bool2;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setBool2(boolean z) {
         this.bool2 = z;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public boolean getBool3() {
         return this.bool3;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setBool3(boolean z) {
         this.bool3 = z;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public boolean getBool4() {
         return this.bool4;
     }
 
+    @Override // com.android.systemui.log.LogMessage
     public void setBool4(boolean z) {
         this.bool4 = z;
     }
@@ -254,9 +291,9 @@ public final class LogMessageImpl implements LogMessage {
         setTag(str);
         setTimestamp(j);
         setPrinter(function1);
-        setStr1((String) null);
-        setStr2((String) null);
-        setStr3((String) null);
+        setStr1(null);
+        setStr2(null);
+        setStr3(null);
         setInt1(0);
         setInt2(0);
         setLong1(0);
@@ -279,7 +316,7 @@ public final class LogMessageImpl implements LogMessage {
 
         @NotNull
         public final LogMessageImpl create() {
-            return new LogMessageImpl(LogLevel.DEBUG, "UnknownTag", 0, LogMessageImplKt.DEFAULT_RENDERER, (String) null, (String) null, (String) null, 0, 0, 0, 0, 0.0d, false, false, false, false);
+            return new LogMessageImpl(LogLevel.DEBUG, "UnknownTag", 0, LogMessageImplKt.access$getDEFAULT_RENDERER$p(), null, null, null, 0, 0, 0, 0, 0.0d, false, false, false, false);
         }
     }
 }

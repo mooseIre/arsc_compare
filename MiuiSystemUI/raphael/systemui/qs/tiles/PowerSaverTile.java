@@ -19,12 +19,15 @@ import miui.os.Build;
 
 public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
     private final ContentObserver mBatterySaverObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.qs.tiles.PowerSaverTile.AnonymousClass1 */
+
         public void onChange(boolean z) {
             PowerSaverTile.this.refreshState();
         }
     };
     private ContentResolver mResolver = this.mContext.getContentResolver();
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
@@ -33,10 +36,12 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
         super(qSHost);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             this.mResolver.registerContentObserver(Settings.System.getUriFor("POWER_SAVE_MODE_OPEN"), false, this.mBatterySaverObserver, -1);
@@ -45,11 +50,13 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
         }
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return longClickBatterySaverIntent();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         boolean z = false;
         if (Settings.System.getIntForUser(this.mResolver, "POWER_SAVE_MODE_OPEN", 0, -2) != 0) {
@@ -61,6 +68,7 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
         this.mResolver.call(maybeAddUserId(Uri.parse("content://com.miui.powercenter.powersaver"), ActivityManager.getCurrentUser()), "changePowerMode", (String) null, bundle);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_batterysaver_label);
     }
@@ -81,7 +89,7 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_battery_saver_off);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
@@ -89,6 +97,7 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
         booleanState.activeBgColor = 1;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return !Build.IS_TABLET;
     }

@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$HclOlu42IVtKALxwbwHP3Y1rdRk implemen
     private /* synthetic */ $$Lambda$HclOlu42IVtKALxwbwHP3Y1rdRk() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((FalsingClassifier) obj).onSessionStarted();
     }

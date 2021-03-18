@@ -12,6 +12,7 @@ final class ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1 
         super(0);
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
     }
 }

@@ -15,7 +15,7 @@ final class ChallengeDialogs$createConfirmationDialog$$inlined$apply$lambda$1 im
     }
 
     public final void onClick(DialogInterface dialogInterface, int i) {
-        this.$cvh$inlined.action(ChallengeDialogs.INSTANCE.addChallengeValue(this.$lastAction$inlined, "true"));
+        this.$cvh$inlined.action(ChallengeDialogs.access$addChallengeValue(ChallengeDialogs.INSTANCE, this.$lastAction$inlined, "true"));
         dialogInterface.dismiss();
     }
 }

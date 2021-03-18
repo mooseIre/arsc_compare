@@ -28,6 +28,7 @@ public final class MiuiNotificationSwipeCallback extends NotificationCallbackWra
         this.zenModeViewController = zenModeViewController2;
     }
 
+    @Override // com.android.systemui.SwipeHelper.Callback, com.android.systemui.statusbar.notification.stack.NotificationCallbackWrapper
     public boolean canChildBeDragged(@NotNull View view, int i) {
         Intrinsics.checkParameterIsNotNull(view, "animView");
         if (MiuiNotificationSwipeCallbackKt.isPersistentNotificationRow(view)) {
@@ -42,10 +43,12 @@ public final class MiuiNotificationSwipeCallback extends NotificationCallbackWra
         return false;
     }
 
+    @Override // com.android.systemui.SwipeHelper.Callback
     public boolean canChildBeDismissedInDirection(@Nullable View view, boolean z) {
         return canChildBeDismissed(view);
     }
 
+    @Override // com.android.systemui.SwipeHelper.Callback, com.android.systemui.statusbar.notification.stack.NotificationCallbackWrapper
     public boolean canChildBeDismissed(@Nullable View view) {
         if (view instanceof MiuiMediaHeaderView) {
             return !this.mediaTimeoutListener.hasPlayingMedia();
@@ -56,6 +59,7 @@ public final class MiuiNotificationSwipeCallback extends NotificationCallbackWra
         return super.canChildBeDismissed(view);
     }
 
+    @Override // com.android.systemui.SwipeHelper.Callback, com.android.systemui.statusbar.notification.stack.NotificationCallbackWrapper
     public void onChildDismissed(@Nullable View view) {
         super.onChildDismissed(view);
         if (view instanceof MiuiMediaHeaderView) {

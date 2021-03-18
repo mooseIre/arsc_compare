@@ -19,6 +19,6 @@ public class Files {
     }
 
     public <A extends BasicFileAttributes> A readAttributes(Path path, Class<A> cls, LinkOption... linkOptionArr) throws IOException {
-        return java.nio.file.Files.readAttributes(path, cls, linkOptionArr);
+        return (A) java.nio.file.Files.readAttributes(path, cls, linkOptionArr);
     }
 }

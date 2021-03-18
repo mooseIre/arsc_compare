@@ -17,6 +17,7 @@ final class StatefulControlSubscriber$onError$1 extends Lambda implements Functi
         this.$error = str;
     }
 
+    @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
         if (this.this$0.subscriptionOpen) {
             this.this$0.subscriptionOpen = false;

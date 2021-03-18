@@ -33,6 +33,7 @@ public final class NotificationRankingManager_Factory implements Factory<Notific
         this.highPriorityProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public NotificationRankingManager get() {
         return provideInstance(this.mediaManagerLazyProvider, this.groupManagerProvider, this.headsUpManagerProvider, this.notifFilterProvider, this.loggerProvider, this.sectionsFeatureManagerProvider, this.peopleNotificationIdentifierProvider, this.highPriorityProvider);
     }

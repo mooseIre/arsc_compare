@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public final class RingerModeLiveData$receiver$1 extends BroadcastReceiver {
     final /* synthetic */ RingerModeLiveData this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     RingerModeLiveData$receiver$1(RingerModeLiveData ringerModeLiveData) {
         this.this$0 = ringerModeLiveData;
     }

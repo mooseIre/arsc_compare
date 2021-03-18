@@ -10,8 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 public class WirelessChargingAnimation {
-    /* access modifiers changed from: private */
-    public static final boolean DEBUG = Log.isLoggable("WirelessChargingView", 3);
+    private static final boolean DEBUG = Log.isLoggable("WirelessChargingView", 3);
     private static WirelessChargingView mPreviousWirelessChargingView;
     private final WirelessChargingView mCurrentWirelessChargingView;
 
@@ -44,11 +43,11 @@ public class WirelessChargingAnimation {
         this.mCurrentWirelessChargingView.hide(1133);
     }
 
-    private static class WirelessChargingView {
+    /* access modifiers changed from: private */
+    public static class WirelessChargingView {
         private Callback mCallback;
         private final Handler mHandler;
-        /* access modifiers changed from: private */
-        public View mNextView;
+        private View mNextView;
         private final WindowManager.LayoutParams mParams = new WindowManager.LayoutParams();
         private View mView;
         private WindowManager mWM;
@@ -67,14 +66,16 @@ public class WirelessChargingAnimation {
             if (looper == null && (looper = Looper.myLooper()) == null) {
                 throw new RuntimeException("Can't display wireless animation on a thread that has not called Looper.prepare()");
             }
-            this.mHandler = new Handler(looper, (Handler.Callback) null) {
+            this.mHandler = new Handler(looper, null) {
+                /* class com.android.systemui.charging.WirelessChargingAnimation.WirelessChargingView.AnonymousClass1 */
+
                 public void handleMessage(Message message) {
                     int i = message.what;
                     if (i == 0) {
                         WirelessChargingView.this.handleShow();
                     } else if (i == 1) {
                         WirelessChargingView.this.handleHide();
-                        View unused = WirelessChargingView.this.mNextView = null;
+                        WirelessChargingView.this.mNextView = null;
                     }
                 }
             };
@@ -97,7 +98,8 @@ public class WirelessChargingAnimation {
         }
 
         /* access modifiers changed from: private */
-        public void handleShow() {
+        /* access modifiers changed from: public */
+        private void handleShow() {
             if (WirelessChargingAnimation.DEBUG) {
                 Slog.d("WirelessChargingView", "HANDLE SHOW: " + this + " mView=" + this.mView + " mNextView=" + this.mNextView);
             }
@@ -135,7 +137,8 @@ public class WirelessChargingAnimation {
         }
 
         /* access modifiers changed from: private */
-        public void handleHide() {
+        /* access modifiers changed from: public */
+        private void handleHide() {
             if (WirelessChargingAnimation.DEBUG) {
                 Slog.d("WirelessChargingView", "HANDLE HIDE: " + this + " mView=" + this.mView);
             }

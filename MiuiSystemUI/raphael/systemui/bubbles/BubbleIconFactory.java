@@ -3,7 +3,6 @@ package com.android.systemui.bubbles;
 import android.content.Context;
 import android.content.pm.LauncherApps;
 import android.content.pm.ShortcutInfo;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -11,7 +10,6 @@ import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
-import android.os.UserHandle;
 import com.android.launcher3.icons.BaseIconFactory;
 import com.android.launcher3.icons.BitmapInfo;
 import com.android.launcher3.icons.R$dimen;
@@ -54,7 +52,7 @@ public class BubbleIconFactory extends BaseIconFactory {
             return createIconBitmap(createIconBitmap);
         }
         float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(17105236);
-        int color = this.mContext.getResources().getColor(R$color.important_conversation, (Resources.Theme) null);
+        int color = this.mContext.getResources().getColor(R$color.important_conversation, null);
         Bitmap createBitmap = Bitmap.createBitmap(createIconBitmap.getWidth(), createIconBitmap.getHeight(), createIconBitmap.getConfig());
         Canvas canvas2 = new Canvas(createBitmap);
         int i = (int) dimensionPixelSize;
@@ -71,8 +69,8 @@ public class BubbleIconFactory extends BaseIconFactory {
 
     /* access modifiers changed from: package-private */
     public BitmapInfo getBubbleBitmap(Drawable drawable, BitmapInfo bitmapInfo) {
-        BitmapInfo createBadgedIconBitmap = createBadgedIconBitmap(drawable, (UserHandle) null, true);
-        badgeWithDrawable(createBadgedIconBitmap.icon, (Drawable) new BitmapDrawable(this.mContext.getResources(), bitmapInfo.icon));
+        BitmapInfo createBadgedIconBitmap = createBadgedIconBitmap(drawable, null, true);
+        badgeWithDrawable(createBadgedIconBitmap.icon, new BitmapDrawable(this.mContext.getResources(), bitmapInfo.icon));
         return createBadgedIconBitmap;
     }
 }

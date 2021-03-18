@@ -13,6 +13,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,15 +28,14 @@ public final class TransitionLayout extends ConstraintLayout {
     private final Set<Integer> originalGoneChildrenSet;
     private final Map<Integer, Float> originalViewAlphas;
     private final TransitionLayout$preDrawApplicator$1 preDrawApplicator;
-    /* access modifiers changed from: private */
-    public boolean updateScheduled;
+    private boolean updateScheduled;
 
     public TransitionLayout(@NotNull Context context) {
-        this(context, (AttributeSet) null, 0, 6, (DefaultConstructorMarker) null);
+        this(context, null, 0, 6, null);
     }
 
     public TransitionLayout(@NotNull Context context, @Nullable AttributeSet attributeSet) {
-        this(context, attributeSet, 0, 4, (DefaultConstructorMarker) null);
+        this(context, attributeSet, 0, 4, null);
     }
 
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
@@ -89,7 +89,6 @@ public final class TransitionLayout extends ConstraintLayout {
 
     /* access modifiers changed from: private */
     public final void applyCurrentState() {
-        Integer num;
         int childCount = getChildCount();
         int i = (int) this.currentState.getContentTranslation().x;
         int i2 = (int) this.currentState.getContentTranslation().y;
@@ -99,19 +98,15 @@ public final class TransitionLayout extends ConstraintLayout {
             Intrinsics.checkExpressionValueIsNotNull(childAt, "child");
             WidgetState widgetState = widgetStates.get(Integer.valueOf(childAt.getId()));
             if (widgetState != null) {
-                if (!(childAt instanceof TextView) || widgetState.getWidth() >= widgetState.getMeasureWidth()) {
-                    num = null;
-                } else {
-                    num = Integer.valueOf(((TextView) childAt).getLayout().getParagraphDirection(0) == -1 ? widgetState.getMeasureWidth() - widgetState.getWidth() : 0);
-                }
+                Integer valueOf = (!(childAt instanceof TextView) || widgetState.getWidth() >= widgetState.getMeasureWidth()) ? null : Integer.valueOf(((TextView) childAt).getLayout().getParagraphDirection(0) == -1 ? widgetState.getMeasureWidth() - widgetState.getWidth() : 0);
                 if (!(childAt.getMeasuredWidth() == widgetState.getMeasureWidth() && childAt.getMeasuredHeight() == widgetState.getMeasureHeight())) {
                     childAt.measure(View.MeasureSpec.makeMeasureSpec(widgetState.getMeasureWidth(), 1073741824), View.MeasureSpec.makeMeasureSpec(widgetState.getMeasureHeight(), 1073741824));
                     childAt.layout(0, 0, childAt.getMeasuredWidth(), childAt.getMeasuredHeight());
                 }
-                int intValue = num != null ? num.intValue() : 0;
+                int intValue = valueOf != null ? valueOf.intValue() : 0;
                 int x = (((int) widgetState.getX()) + i) - intValue;
                 int y = ((int) widgetState.getY()) + i2;
-                boolean z = num != null;
+                boolean z = valueOf != null;
                 childAt.setLeftTopRightBottom(x, y, (z ? widgetState.getMeasureWidth() : widgetState.getWidth()) + x, (z ? widgetState.getMeasureHeight() : widgetState.getHeight()) + y);
                 childAt.setScaleX(widgetState.getScale());
                 childAt.setScaleY(widgetState.getScale());
@@ -139,6 +134,7 @@ public final class TransitionLayout extends ConstraintLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.constraintlayout.widget.ConstraintLayout
     public void onMeasure(int i, int i2) {
         if (this.measureAsConstraint) {
             super.onMeasure(i, i2);
@@ -158,6 +154,7 @@ public final class TransitionLayout extends ConstraintLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.constraintlayout.widget.ConstraintLayout
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         if (this.measureAsConstraint) {
             super.onLayout(z, getLeft(), getTop(), getRight(), getBottom());
@@ -173,6 +170,7 @@ public final class TransitionLayout extends ConstraintLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.constraintlayout.widget.ConstraintLayout
     public void dispatchDraw(@Nullable Canvas canvas) {
         if (canvas != null) {
             canvas.save();

@@ -6,6 +6,7 @@ import java.util.HashMap;
 public class AccelerationClassifier extends StrokeClassifier {
     private final HashMap<Stroke, Data> mStrokeMap = new HashMap<>();
 
+    @Override // com.android.systemui.classifier.Classifier
     public String getTag() {
         return "ACC";
     }
@@ -14,6 +15,7 @@ public class AccelerationClassifier extends StrokeClassifier {
         this.mClassifierData = classifierData;
     }
 
+    @Override // com.android.systemui.classifier.Classifier
     public void onTouchEvent(MotionEvent motionEvent) {
         if (motionEvent.getActionMasked() == 0) {
             this.mStrokeMap.clear();
@@ -29,6 +31,7 @@ public class AccelerationClassifier extends StrokeClassifier {
         }
     }
 
+    @Override // com.android.systemui.classifier.StrokeClassifier
     public float getFalseTouchEvaluation(int i, Stroke stroke) {
         return SpeedRatioEvaluator.evaluate(this.mStrokeMap.get(stroke).maxSpeedRatio) * 2.0f;
     }

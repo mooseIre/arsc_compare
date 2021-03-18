@@ -4,12 +4,9 @@ import android.app.Notification;
 import android.service.notification.StatusBarNotification;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: NotificationRankingManager.kt */
 public final class NotificationRankingManagerKt {
-    /* access modifiers changed from: private */
-    public static final boolean isSystemMax(@NotNull NotificationEntry notificationEntry) {
+    public static final boolean isSystemMax(NotificationEntry notificationEntry) {
         if (notificationEntry.getImportance() >= 4) {
             ExpandedNotification sbn = notificationEntry.getSbn();
             Intrinsics.checkExpressionValueIsNotNull(sbn, "sbn");
@@ -20,12 +17,11 @@ public final class NotificationRankingManagerKt {
         return false;
     }
 
-    private static final boolean isSystemNotification(@NotNull StatusBarNotification statusBarNotification) {
-        return Intrinsics.areEqual((Object) "android", (Object) statusBarNotification.getPackageName()) || Intrinsics.areEqual((Object) "com.android.systemui", (Object) statusBarNotification.getPackageName());
+    private static final boolean isSystemNotification(StatusBarNotification statusBarNotification) {
+        return Intrinsics.areEqual("android", statusBarNotification.getPackageName()) || Intrinsics.areEqual("com.android.systemui", statusBarNotification.getPackageName());
     }
 
-    /* access modifiers changed from: private */
-    public static final boolean isColorizedForegroundService(@NotNull NotificationEntry notificationEntry) {
+    public static final boolean isColorizedForegroundService(NotificationEntry notificationEntry) {
         ExpandedNotification sbn = notificationEntry.getSbn();
         Intrinsics.checkExpressionValueIsNotNull(sbn, "sbn");
         Notification notification = sbn.getNotification();

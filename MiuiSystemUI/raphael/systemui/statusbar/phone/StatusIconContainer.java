@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -14,12 +15,9 @@ import com.android.systemui.statusbar.notification.stack.ViewState;
 import java.util.ArrayList;
 
 public class StatusIconContainer extends AlphaOptimizedLinearLayout {
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ADD_ICON_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties ANIMATE_ALL_PROPERTIES;
-    /* access modifiers changed from: private */
-    public static final AnimationProperties X_ANIMATION_PROPERTIES;
+    private static final AnimationProperties ADD_ICON_PROPERTIES;
+    private static final AnimationProperties ANIMATE_ALL_PROPERTIES;
+    private static final AnimationProperties X_ANIMATION_PROPERTIES;
     private int mDotPadding;
     private int mIconDotFrameWidth;
     private int mIconSpacing;
@@ -33,7 +31,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
     private int mUnderflowWidth;
 
     public StatusIconContainer(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public StatusIconContainer(Context context, AttributeSet attributeSet) {
@@ -84,52 +82,47 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         int i3;
-        int i4;
         this.mMeasureViews.clear();
         int mode = View.MeasureSpec.getMode(i);
         int size = View.MeasureSpec.getSize(i);
         int childCount = getChildCount();
-        for (int i5 = 0; i5 < childCount; i5++) {
-            StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) getChildAt(i5);
+        for (int i4 = 0; i4 < childCount; i4++) {
+            StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) getChildAt(i4);
             if (statusIconDisplayable.isIconVisible() && !statusIconDisplayable.isIconBlocked() && !this.mIgnoredSlots.contains(statusIconDisplayable.getSlot())) {
                 this.mMeasureViews.add((View) statusIconDisplayable);
             }
         }
         int size2 = this.mMeasureViews.size();
-        int i6 = size2 <= 7 ? 7 : 6;
-        int i7 = this.mPaddingLeft + this.mPaddingRight;
+        int i5 = size2 <= 7 ? 7 : 6;
+        int i6 = ((LinearLayout) this).mPaddingLeft + ((LinearLayout) this).mPaddingRight;
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size, 0);
         this.mNeedsUnderflow = this.mShouldRestrictIcons && size2 > 7;
         boolean z = true;
-        for (int i8 = 0; i8 < size2; i8++) {
-            View view = this.mMeasureViews.get((size2 - i8) - 1);
+        for (int i7 = 0; i7 < size2; i7++) {
+            View view = this.mMeasureViews.get((size2 - i7) - 1);
             measureChild(view, makeMeasureSpec, i2);
-            if (i8 == size2 - 1) {
-                i3 = 0;
-            } else {
-                i3 = this.mIconSpacing;
-            }
+            int i8 = i7 == size2 - 1 ? 0 : this.mIconSpacing;
             if (!this.mShouldRestrictIcons) {
-                i4 = getViewTotalMeasuredWidth(view);
-            } else if (i8 >= i6 || !z) {
+                i3 = getViewTotalMeasuredWidth(view);
+            } else if (i7 >= i5 || !z) {
                 if (z) {
-                    i7 += this.mUnderflowWidth;
+                    i6 += this.mUnderflowWidth;
                     z = false;
                 }
             } else {
-                i4 = getViewTotalMeasuredWidth(view);
+                i3 = getViewTotalMeasuredWidth(view);
             }
-            i7 += i4 + i3;
+            i6 += i3 + i8;
         }
         if (mode == 1073741824) {
-            if (!this.mNeedsUnderflow && i7 > size) {
+            if (!this.mNeedsUnderflow && i6 > size) {
                 this.mNeedsUnderflow = true;
             }
             setMeasuredDimension(size, View.MeasureSpec.getSize(i2));
             return;
         }
-        if (mode != Integer.MIN_VALUE || i7 <= size) {
-            size = i7;
+        if (mode != Integer.MIN_VALUE || i6 <= size) {
+            size = i6;
         } else {
             this.mNeedsUnderflow = true;
         }
@@ -145,7 +138,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
 
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
-        view.setTag(C0015R$id.status_bar_view_state_tag, (Object) null);
+        view.setTag(C0015R$id.status_bar_view_state_tag, null);
     }
 
     private void calculateIconTranslations() {
@@ -260,6 +253,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
         public boolean justAdded = true;
         public int visibleState = 0;
 
+        @Override // com.android.systemui.statusbar.notification.stack.ViewState
         public void applyToView(View view) {
             float width = (view.getParent() instanceof View ? (float) ((View) view.getParent()).getWidth() : 0.0f) - this.xTranslation;
             if (view instanceof StatusIconDisplayable) {
@@ -298,6 +292,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
 
     static {
         AnonymousClass1 r0 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.StatusIconContainer.AnonymousClass1 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -306,6 +301,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -314,6 +310,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
         r0.setDelay(50);
         ADD_ICON_PROPERTIES = r0;
         AnonymousClass2 r02 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.StatusIconContainer.AnonymousClass2 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -322,6 +319,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -329,6 +327,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
         r02.setDuration(200);
         X_ANIMATION_PROPERTIES = r02;
         AnonymousClass3 r03 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.StatusIconContainer.AnonymousClass3 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -340,6 +339,7 @@ public class StatusIconContainer extends AlphaOptimizedLinearLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }

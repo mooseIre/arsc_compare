@@ -22,6 +22,7 @@ public final class NotificationsModule_ProvideNotificationBlockingHelperManagerF
         this.metricsLoggerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public NotificationBlockingHelperManager get() {
         return provideInstance(this.contextProvider, this.notificationGutsManagerProvider, this.notificationEntryManagerProvider, this.metricsLoggerProvider);
     }

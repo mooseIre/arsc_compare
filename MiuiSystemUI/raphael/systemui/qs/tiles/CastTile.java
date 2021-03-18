@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import androidx.lifecycle.LifecycleOwner;
 import com.android.internal.app.MediaRouteDialogPresenter;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.C0013R$drawable;
@@ -30,17 +29,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class CastTile extends QSTileImpl<QSTile.BooleanState> {
-    /* access modifiers changed from: private */
-    public static final Intent CAST_SETTINGS = new Intent("android.settings.CAST_SETTINGS");
+    private static final Intent CAST_SETTINGS = new Intent("android.settings.CAST_SETTINGS");
     private final ActivityStarter mActivityStarter;
     private final Callback mCallback = new Callback();
-    /* access modifiers changed from: private */
-    public final CastController mController;
+    private final CastController mController;
     private final CastDetailAdapter mDetailAdapter;
     private Dialog mDialog;
     private final KeyguardStateController mKeyguard;
     private final NetworkController mNetworkController;
     private final NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback() {
+        /* class com.android.systemui.qs.tiles.CastTile.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setWifiIndicators(boolean z, NetworkController.IconState iconState, NetworkController.IconState iconState2, boolean z2, boolean z3, String str, boolean z4, String str2) {
             boolean z5 = false;
             if (!SystemProperties.getBoolean("persist.debug.wfd.enable", false)) {
@@ -48,22 +48,23 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
                     z5 = true;
                 }
                 if (z5 != CastTile.this.mWifiConnected) {
-                    boolean unused = CastTile.this.mWifiConnected = z5;
+                    CastTile.this.mWifiConnected = z5;
                     CastTile.this.refreshState();
                 }
             } else if (z != CastTile.this.mWifiConnected) {
-                boolean unused2 = CastTile.this.mWifiConnected = z;
+                CastTile.this.mWifiConnected = z;
                 CastTile.this.refreshState();
             }
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mWifiConnected;
+    private boolean mWifiConnected;
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 114;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return false;
     }
@@ -75,21 +76,24 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         this.mKeyguard = keyguardStateController;
         this.mNetworkController = networkController;
         this.mActivityStarter = activityStarter;
-        this.mController.observe((LifecycleOwner) this, this.mCallback);
-        this.mKeyguard.observe((LifecycleOwner) this, this.mCallback);
-        this.mNetworkController.observe((LifecycleOwner) this, this.mSignalCallback);
+        this.mController.observe(this, this.mCallback);
+        this.mKeyguard.observe(this, this.mCallback);
+        this.mNetworkController.observe(this, this.mSignalCallback);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public DetailAdapter getDetailAdapter() {
         return this.mDetailAdapter;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         QSTile.BooleanState booleanState = new QSTile.BooleanState();
         booleanState.handlesLongClick = false;
         return booleanState;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         if (QSTileImpl.DEBUG) {
@@ -102,31 +106,38 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
         super.handleUserSwitch(i);
         this.mController.setCurrentUserId(i);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.CAST_SETTINGS");
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSecondaryClick() {
         handleClick();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleLongClick() {
         handleClick();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if (((QSTile.BooleanState) getState()).state != 0) {
             List<CastController.CastDevice> activeDevices = getActiveDevices();
             if (activeDevices.isEmpty() || (activeDevices.get(0).tag instanceof MediaRouter.RouteInfo)) {
                 this.mActivityStarter.postQSRunnableDismissingKeyguard(new Runnable() {
+                    /* class com.android.systemui.qs.tiles.$$Lambda$CastTile$0TU5SvbFGUs5F0udF1tvlhHVObs */
+
                     public final void run() {
                         CastTile.this.lambda$handleClick$0$CastTile();
                     }
@@ -145,17 +156,20 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
     private List<CastController.CastDevice> getActiveDevices() {
         ArrayList arrayList = new ArrayList();
-        for (CastController.CastDevice next : this.mController.getCastDevices()) {
-            int i = next.state;
+        for (CastController.CastDevice castDevice : this.mController.getCastDevices()) {
+            int i = castDevice.state;
             if (i == 2 || i == 1) {
-                arrayList.add(next);
+                arrayList.add(castDevice);
             }
         }
         return arrayList;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void showDetail(boolean z) {
         this.mUiHandler.post(new Runnable() {
+            /* class com.android.systemui.qs.tiles.$$Lambda$CastTile$WPXsuhhRJ1umwt53q0kaFd3rzI */
+
             public final void run() {
                 CastTile.this.lambda$showDetail$3$CastTile();
             }
@@ -166,6 +180,8 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
     /* renamed from: lambda$showDetail$3 */
     public /* synthetic */ void lambda$showDetail$3$CastTile() {
         Dialog createDialog = MediaRouteDialogPresenter.createDialog(this.mContext, 4, new View.OnClickListener() {
+            /* class com.android.systemui.qs.tiles.$$Lambda$CastTile$4kXW6ECEqBpSUmuEtdBz8p9QY1w */
+
             public final void onClick(View view) {
                 CastTile.this.lambda$showDetail$1$CastTile(view);
             }
@@ -176,6 +192,8 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         SystemUIDialog.registerDismissListener(this.mDialog);
         SystemUIDialog.setWindowOnTop(this.mDialog);
         this.mUiHandler.post(new Runnable() {
+            /* class com.android.systemui.qs.tiles.$$Lambda$CastTile$MhJepZXXVH2Vaj80AOmfpppL58s */
+
             public final void run() {
                 CastTile.this.lambda$showDetail$2$CastTile();
             }
@@ -196,6 +214,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         this.mDialog.show();
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_cast_title);
     }
@@ -222,7 +241,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             if (i3 == 2) {
                 booleanState.value = true;
                 booleanState.secondaryLabel = getDeviceName(next);
-                booleanState.stateDescription += "," + this.mContext.getString(C0021R$string.accessibility_cast_name, new Object[]{booleanState.label});
+                booleanState.stateDescription = ((Object) booleanState.stateDescription) + "," + this.mContext.getString(C0021R$string.accessibility_cast_name, booleanState.label);
                 z = false;
                 break;
             } else if (i3 == 1) {
@@ -246,17 +265,18 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             if (!booleanState.value) {
                 booleanState.secondaryLabel = "";
             }
-            booleanState.contentDescription += "," + this.mContext.getString(C0021R$string.accessibility_quick_settings_open_details);
+            booleanState.contentDescription = ((Object) booleanState.contentDescription) + "," + this.mContext.getString(C0021R$string.accessibility_quick_settings_open_details);
             booleanState.expandedAccessibilityClassName = Button.class.getName();
         } else {
             booleanState.state = 0;
             booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_cast_no_wifi);
         }
-        booleanState.stateDescription += ", " + booleanState.secondaryLabel;
+        booleanState.stateDescription = ((Object) booleanState.stateDescription) + ", " + ((Object) booleanState.secondaryLabel);
         this.mDetailAdapter.updateItems(castDevices);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (!((QSTile.BooleanState) this.mState).value) {
             return this.mContext.getString(C0021R$string.accessibility_casting_turned_off);
@@ -265,7 +285,8 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: private */
-    public String getDeviceName(CastController.CastDevice castDevice) {
+    /* access modifiers changed from: public */
+    private String getDeviceName(CastController.CastDevice castDevice) {
         String str = castDevice.name;
         return str != null ? str : this.mContext.getString(C0021R$string.quick_settings_cast_device_default_name);
     }
@@ -274,28 +295,33 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         private Callback() {
         }
 
+        @Override // com.android.systemui.statusbar.policy.CastController.Callback
         public void onCastDevicesChanged() {
             CastTile.this.refreshState();
         }
 
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onKeyguardShowingChanged() {
             CastTile.this.refreshState();
         }
     }
 
-    private final class CastDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
+    /* access modifiers changed from: private */
+    public final class CastDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
         private MiuiQSDetailItems mItems;
-        /* access modifiers changed from: private */
-        public final LinkedHashMap<String, CastController.CastDevice> mVisibleOrder;
+        private final LinkedHashMap<String, CastController.CastDevice> mVisibleOrder;
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public int getMetricsCategory() {
             return 151;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Boolean getToggleState() {
             return null;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public void setToggleState(boolean z) {
         }
 
@@ -303,32 +329,37 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             this.mVisibleOrder = new LinkedHashMap<>();
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return CastTile.this.mContext.getString(C0021R$string.quick_settings_cast_title);
+            return ((QSTileImpl) CastTile.this).mContext.getString(C0021R$string.quick_settings_cast_title);
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public Intent getSettingsIntent() {
             return CastTile.CAST_SETTINGS;
         }
 
+        @Override // com.android.systemui.plugins.qs.DetailAdapter
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             MiuiQSDetailItems convertOrInflate = MiuiQSDetailItems.convertOrInflate(context, view, viewGroup);
             this.mItems = convertOrInflate;
             convertOrInflate.setTagSuffix("Cast");
             if (view == null) {
                 if (QSTileImpl.DEBUG) {
-                    Log.d(CastTile.this.TAG, "addOnAttachStateChangeListener");
+                    Log.d(((QSTileImpl) CastTile.this).TAG, "addOnAttachStateChangeListener");
                 }
                 this.mItems.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+                    /* class com.android.systemui.qs.tiles.CastTile.CastDetailAdapter.AnonymousClass1 */
+
                     public void onViewAttachedToWindow(View view) {
                         if (QSTileImpl.DEBUG) {
-                            Log.d(CastTile.this.TAG, "onViewAttachedToWindow");
+                            Log.d(((QSTileImpl) CastTile.this).TAG, "onViewAttachedToWindow");
                         }
                     }
 
                     public void onViewDetachedFromWindow(View view) {
                         if (QSTileImpl.DEBUG) {
-                            Log.d(CastTile.this.TAG, "onViewDetachedFromWindow");
+                            Log.d(((QSTileImpl) CastTile.this).TAG, "onViewDetachedFromWindow");
                         }
                         CastDetailAdapter.this.mVisibleOrder.clear();
                     }
@@ -342,7 +373,8 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         /* access modifiers changed from: private */
-        public void updateItems(List<CastController.CastDevice> list) {
+        /* access modifiers changed from: public */
+        private void updateItems(List<CastController.CastDevice> list) {
             int i;
             if (this.mItems != null) {
                 MiuiQSDetailItems.Item[] itemArr = null;
@@ -358,7 +390,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
                             MiuiQSDetailItems.Item item = new MiuiQSDetailItems.Item();
                             item.icon = C0013R$drawable.ic_cast_connected;
                             item.line1 = CastTile.this.getDeviceName(next);
-                            item.line2 = CastTile.this.mContext.getString(C0021R$string.quick_settings_connected);
+                            item.line2 = ((QSTileImpl) CastTile.this).mContext.getString(C0021R$string.quick_settings_connected);
                             item.tag = next;
                             item.canDisconnect = true;
                             itemArr = new MiuiQSDetailItems.Item[]{item};
@@ -366,20 +398,20 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
                         }
                     }
                     if (itemArr == null) {
-                        for (CastController.CastDevice next2 : list) {
-                            this.mVisibleOrder.put(next2.id, next2);
+                        for (CastController.CastDevice castDevice : list) {
+                            this.mVisibleOrder.put(castDevice.id, castDevice);
                         }
                         itemArr = new MiuiQSDetailItems.Item[list.size()];
                         for (String str : this.mVisibleOrder.keySet()) {
-                            CastController.CastDevice castDevice = this.mVisibleOrder.get(str);
-                            if (list.contains(castDevice)) {
+                            CastController.CastDevice castDevice2 = this.mVisibleOrder.get(str);
+                            if (list.contains(castDevice2)) {
                                 MiuiQSDetailItems.Item item2 = new MiuiQSDetailItems.Item();
                                 item2.icon = C0013R$drawable.ic_cast;
-                                item2.line1 = CastTile.this.getDeviceName(castDevice);
-                                if (castDevice.state == 1) {
-                                    item2.line2 = CastTile.this.mContext.getString(C0021R$string.quick_settings_connecting);
+                                item2.line1 = CastTile.this.getDeviceName(castDevice2);
+                                if (castDevice2.state == 1) {
+                                    item2.line2 = ((QSTileImpl) CastTile.this).mContext.getString(C0021R$string.quick_settings_connecting);
                                 }
-                                item2.tag = castDevice;
+                                item2.tag = castDevice2;
                                 itemArr[i] = item2;
                                 i++;
                             }
@@ -390,16 +422,18 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
             if (item != null && item.tag != null) {
-                MetricsLogger.action(CastTile.this.mContext, 157);
+                MetricsLogger.action(((QSTileImpl) CastTile.this).mContext, 157);
                 CastTile.this.mController.startCasting((CastController.CastDevice) item.tag);
             }
         }
 
+        @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemDisconnect(MiuiQSDetailItems.Item item) {
             if (item != null && item.tag != null) {
-                MetricsLogger.action(CastTile.this.mContext, 158);
+                MetricsLogger.action(((QSTileImpl) CastTile.this).mContext, 158);
                 CastTile.this.mController.stopCasting((CastController.CastDevice) item.tag);
             }
         }

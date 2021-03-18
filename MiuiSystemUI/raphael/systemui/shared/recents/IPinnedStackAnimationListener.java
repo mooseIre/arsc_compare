@@ -21,7 +21,8 @@ public interface IPinnedStackAnimationListener extends IInterface {
             return (IPinnedStackAnimationListener) queryLocalInterface;
         }
 
-        private static class Proxy implements IPinnedStackAnimationListener {
+        /* access modifiers changed from: private */
+        public static class Proxy implements IPinnedStackAnimationListener {
             public static IPinnedStackAnimationListener sDefaultImpl;
             private IBinder mRemote;
 
@@ -33,11 +34,12 @@ public interface IPinnedStackAnimationListener extends IInterface {
                 return this.mRemote;
             }
 
+            @Override // com.android.systemui.shared.recents.IPinnedStackAnimationListener
             public void onPinnedStackAnimationStarted() throws RemoteException {
                 Parcel obtain = Parcel.obtain();
                 try {
                     obtain.writeInterfaceToken("com.android.systemui.shared.recents.IPinnedStackAnimationListener");
-                    if (this.mRemote.transact(1, obtain, (Parcel) null, 1) || Stub.getDefaultImpl() == null) {
+                    if (this.mRemote.transact(1, obtain, null, 1) || Stub.getDefaultImpl() == null) {
                         obtain.recycle();
                     } else {
                         Stub.getDefaultImpl().onPinnedStackAnimationStarted();

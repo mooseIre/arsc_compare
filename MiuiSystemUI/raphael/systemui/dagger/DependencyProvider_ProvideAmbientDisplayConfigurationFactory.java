@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvideAmbientDisplayConfigurationFactory 
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AmbientDisplayConfiguration get() {
         return provideInstance(this.module, this.contextProvider);
     }

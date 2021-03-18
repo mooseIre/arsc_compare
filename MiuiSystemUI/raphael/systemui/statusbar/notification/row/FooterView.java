@@ -4,14 +4,14 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 
 public class FooterView extends StackScrollerDecorView {
-    /* access modifiers changed from: private */
-    public final int mClearAllTopPadding;
+    private final int mClearAllTopPadding;
     private FooterViewButton mDismissButton;
     private FooterViewButton mManageButton;
     private boolean mShowHistory;
@@ -22,16 +22,19 @@ public class FooterView extends StackScrollerDecorView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public View findContentView() {
         return findViewById(C0015R$id.content);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public View findSecondaryView() {
         return findViewById(C0015R$id.dismiss_text);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mDismissButton = (FooterViewButton) findSecondaryView();
@@ -59,11 +62,11 @@ public class FooterView extends StackScrollerDecorView {
         this.mShowHistory = z;
         if (z) {
             this.mManageButton.setText(C0021R$string.manage_notifications_history_text);
-            this.mManageButton.setContentDescription(this.mContext.getString(C0021R$string.manage_notifications_history_text));
+            this.mManageButton.setContentDescription(((FrameLayout) this).mContext.getString(C0021R$string.manage_notifications_history_text));
             return;
         }
         this.mManageButton.setText(C0021R$string.manage_notifications_text);
-        this.mManageButton.setContentDescription(this.mContext.getString(C0021R$string.manage_notifications_text));
+        this.mManageButton.setContentDescription(((FrameLayout) this).mContext.getString(C0021R$string.manage_notifications_text));
     }
 
     public boolean isHistoryShown() {
@@ -71,13 +74,15 @@ public class FooterView extends StackScrollerDecorView {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         this.mDismissButton.setText(C0021R$string.clear_all_notifications_text);
-        this.mDismissButton.setContentDescription(this.mContext.getString(C0021R$string.accessibility_clear_all));
+        this.mDismissButton.setContentDescription(((FrameLayout) this).mContext.getString(C0021R$string.accessibility_clear_all));
         showHistory(this.mShowHistory);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public ExpandableViewState createExpandableViewState() {
         return new FooterViewState();
     }
@@ -86,6 +91,7 @@ public class FooterView extends StackScrollerDecorView {
         public FooterViewState() {
         }
 
+        @Override // com.android.systemui.statusbar.notification.stack.ViewState, com.android.systemui.statusbar.notification.stack.ExpandableViewState
         public void applyToView(View view) {
             super.applyToView(view);
             if (view instanceof FooterView) {

@@ -18,6 +18,8 @@ public class ToggleManagerController extends CurrentUserTracker implements Flash
     protected Handler mBgHandler;
     protected BroadcastDispatcher mBroadcastDispatcher;
     protected BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.ToggleManagerController.AnonymousClass1 */
+
         public void onReceive(Context context, Intent intent) {
             String sender = intent.getSender();
             if (("com.miui.home".equals(sender) || "android".equals(sender) || "com.mi.android.globallauncher".equals(sender)) && "com.miui.app.ExtraStatusBarManager.action_TRIGGER_TOGGLE".equals(intent.getAction())) {
@@ -29,9 +31,11 @@ public class ToggleManagerController extends CurrentUserTracker implements Flash
     protected FlashlightController mFlashlightController;
     protected ToggleManager mToggleManager;
 
+    @Override // com.android.systemui.statusbar.policy.FlashlightController.FlashlightListener
     public void onFlashlightAvailabilityChanged(boolean z) {
     }
 
+    @Override // com.android.systemui.statusbar.policy.FlashlightController.FlashlightListener
     public void onFlashlightError() {
     }
 
@@ -47,6 +51,8 @@ public class ToggleManagerController extends CurrentUserTracker implements Flash
         startTracking();
         this.mFlashlightController.addCallback(this);
         this.mBgHandler.post(new Runnable() {
+            /* class com.android.systemui.ToggleManagerController.AnonymousClass2 */
+
             public void run() {
                 ToggleManagerController toggleManagerController = ToggleManagerController.this;
                 toggleManagerController.mToggleManager = ToggleManager.createInstance(toggleManagerController.mContext, KeyguardUpdateMonitor.getCurrentUser());
@@ -59,14 +65,18 @@ public class ToggleManagerController extends CurrentUserTracker implements Flash
         });
     }
 
+    @Override // com.android.systemui.settings.CurrentUserTracker
     public void onUserSwitched(final int i) {
         this.mBgHandler.post(new Runnable() {
+            /* class com.android.systemui.ToggleManagerController.AnonymousClass3 */
+
             public void run() {
                 ToggleManagerController.this.mToggleManager.updateAllToggles(i);
             }
         });
     }
 
+    @Override // com.android.systemui.statusbar.policy.FlashlightController.FlashlightListener
     public void onFlashlightChanged(boolean z) {
         Log.d("ToggleManagerController", "setTorchState: enabled: " + z);
         Settings.Global.putInt(this.mContext.getContentResolver(), "torch_state", z ? 1 : 0);

@@ -23,6 +23,7 @@ public final class GlobalActionsComponent_Factory implements Factory<GlobalActio
         this.statusBarKeyguardViewManagerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public GlobalActionsComponent get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider, this.extensionControllerProvider, this.globalActionsProvider, this.statusBarKeyguardViewManagerProvider);
     }

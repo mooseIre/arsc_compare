@@ -5,8 +5,9 @@ import com.android.systemui.controls.ControlsServiceInfo;
 import com.android.systemui.controls.management.ControlsListingController;
 import java.util.List;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsListingControllerImpl.kt */
-final class ControlsListingControllerImpl$addCallback$1 implements Runnable {
+public final class ControlsListingControllerImpl$addCallback$1 implements Runnable {
     final /* synthetic */ ControlsListingController.ControlsListingCallback $listener;
     final /* synthetic */ ControlsListingControllerImpl this$0;
 
@@ -16,13 +17,13 @@ final class ControlsListingControllerImpl$addCallback$1 implements Runnable {
     }
 
     public final void run() {
-        if (this.this$0.userChangeInProgress.get() > 0) {
+        if (ControlsListingControllerImpl.access$getUserChangeInProgress$p(this.this$0).get() > 0) {
             this.this$0.addCallback(this.$listener);
             return;
         }
         List<ControlsServiceInfo> currentServices = this.this$0.getCurrentServices();
         Log.d("ControlsListingControllerImpl", "Subscribing callback, service count: " + currentServices.size());
-        this.this$0.callbacks.add(this.$listener);
+        ControlsListingControllerImpl.access$getCallbacks$p(this.this$0).add(this.$listener);
         this.$listener.onServicesUpdated(currentServices);
     }
 }

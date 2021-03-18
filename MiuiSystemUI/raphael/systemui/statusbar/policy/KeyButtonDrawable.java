@@ -8,7 +8,6 @@ import android.graphics.BlurMaskFilter;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
-import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
@@ -26,6 +25,8 @@ import com.miui.systemui.SettingsManager;
 
 public class KeyButtonDrawable extends Drawable {
     public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_ROTATE = new FloatProperty<KeyButtonDrawable>("KeyButtonRotation") {
+        /* class com.android.systemui.statusbar.policy.KeyButtonDrawable.AnonymousClass1 */
+
         public void setValue(KeyButtonDrawable keyButtonDrawable, float f) {
             keyButtonDrawable.setRotation(f);
         }
@@ -35,6 +36,8 @@ public class KeyButtonDrawable extends Drawable {
         }
     };
     public static final FloatProperty<KeyButtonDrawable> KEY_DRAWABLE_TRANSLATE_Y = new FloatProperty<KeyButtonDrawable>("KeyButtonTranslateY") {
+        /* class com.android.systemui.statusbar.policy.KeyButtonDrawable.AnonymousClass2 */
+
         public void setValue(KeyButtonDrawable keyButtonDrawable, float f) {
             keyButtonDrawable.setTranslationY(f);
         }
@@ -61,6 +64,8 @@ public class KeyButtonDrawable extends Drawable {
         this.mIconPaint = new Paint(3);
         this.mShadowPaint = new Paint(3);
         this.mAnimatedDrawableCallback = new Drawable.Callback() {
+            /* class com.android.systemui.statusbar.policy.KeyButtonDrawable.AnonymousClass3 */
+
             public void invalidateDrawable(Drawable drawable) {
                 KeyButtonDrawable.this.invalidateSelf();
             }
@@ -299,7 +304,7 @@ public class KeyButtonDrawable extends Drawable {
         paint.setMaskFilter(new BlurMaskFilter((float) this.mState.mShadowSize, BlurMaskFilter.Blur.NORMAL));
         int[] iArr = new int[2];
         Bitmap extractAlpha = createBitmap.extractAlpha(paint, iArr);
-        paint.setMaskFilter((MaskFilter) null);
+        paint.setMaskFilter(null);
         createBitmap.eraseColor(0);
         canvas.drawBitmap(extractAlpha, (float) iArr[0], (float) iArr[1], paint);
         if (this.mState.mIsHardwareBitmap) {
@@ -323,7 +328,8 @@ public class KeyButtonDrawable extends Drawable {
         drawable.setBounds(abs, abs2, getIntrinsicWidth() - abs, getIntrinsicHeight() - abs2);
     }
 
-    private static class ShadowDrawableState extends Drawable.ConstantState {
+    /* access modifiers changed from: private */
+    public static class ShadowDrawableState extends Drawable.ConstantState {
         int mAlpha = 255;
         int mBaseHeight;
         int mBaseWidth;
@@ -359,7 +365,7 @@ public class KeyButtonDrawable extends Drawable {
         }
 
         public Drawable newDrawable() {
-            return new KeyButtonDrawable((Drawable) null, this);
+            return new KeyButtonDrawable(null, this);
         }
 
         public int getChangingConfigurations() {
@@ -372,7 +378,7 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public static KeyButtonDrawable create(Context context, int i, boolean z) {
-        return create(context, i, z, (Color) null);
+        return create(context, i, z, null);
     }
 
     public static KeyButtonDrawable create(Context context, Context context2, int i, boolean z, Color color) {

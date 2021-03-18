@@ -24,6 +24,7 @@ public class MiuiClipEdgeViewConstraintLayout extends ConstraintLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.constraintlayout.widget.ConstraintLayout
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         if (getParent() instanceof View) {
             View view = (View) getParent();
@@ -76,6 +77,7 @@ public class MiuiClipEdgeViewConstraintLayout extends ConstraintLayout {
     }
 
     /* access modifiers changed from: protected */
+    @Override // androidx.constraintlayout.widget.ConstraintLayout
     public void dispatchDraw(Canvas canvas) {
         Rect rect = this.mClipRect;
         boolean z = rect.right - rect.left > 0;

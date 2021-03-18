@@ -65,8 +65,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     private boolean mKeyguardUserSwitcherShowing;
     private int mLayoutState = 0;
     private ImageView mMultiUserAvatar;
-    /* access modifiers changed from: private */
-    public MultiUserSwitch mMultiUserSwitch;
+    private MultiUserSwitch mMultiUserSwitch;
     protected NetworkSpeedView mNetworkSpeedView;
     private Pair<Integer, Integer> mPadding = new Pair<>(0, 0);
     private int mRoundedCornerPadding = 0;
@@ -74,8 +73,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     protected ViewGroup mStatusIconArea;
     private MiuiStatusIconContainer mStatusIconContainer;
     private int mSystemIconsBaseMargin;
-    /* access modifiers changed from: private */
-    public View mSystemIconsContainer;
+    private View mSystemIconsContainer;
     private int mSystemIconsSwitcherHiddenExpandedMargin;
     private UserSwitcherController mUserSwitcherController;
 
@@ -90,6 +88,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
     }
 
@@ -286,7 +285,6 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
 
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
-        Class cls = StatusBarIconController.class;
         super.onAttachedToWindow();
         UserInfoController userInfoController = (UserInfoController) Dependency.get(UserInfoController.class);
         userInfoController.addCallback(this);
@@ -297,12 +295,12 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         int lightModeIconColorSingleTone = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone();
         this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0015R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
-        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mIconManager);
+        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mIconManager);
         ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons)));
         StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripRightStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
         this.mDripRightIconManager = miuiLightDarkIconManager;
         miuiLightDarkIconManager.setDrip(true);
-        ((StatusBarIconController) Dependency.get(cls)).addIconGroup(this.mDripRightIconManager, arrayList);
+        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightIconManager, arrayList);
         this.mDripLeftIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripLeftStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftIconManager);
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer(this.mStatusBarPromptContainer, 0);
@@ -311,16 +309,16 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
 
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
-        Class cls = StatusBarIconController.class;
         super.onDetachedFromWindow();
         ((UserInfoController) Dependency.get(UserInfoController.class)).removeCallback(this);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftIconManager);
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer(this.mStatusBarPromptContainer);
-        ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mDripRightIconManager);
-        ((StatusBarIconController) Dependency.get(cls)).removeIconGroup(this.mIconManager);
+        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightIconManager);
+        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mIconManager);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
+    @Override // com.android.systemui.statusbar.policy.UserInfoController.OnUserInfoChangedListener
     public void onUserInfoChanged(String str, Drawable drawable, String str2) {
         this.mMultiUserAvatar.setImageDrawable(drawable);
     }
@@ -329,6 +327,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         this.mMultiUserSwitch.setQsPanel(qSPanel);
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onBatteryLevelChanged(int i, boolean z, boolean z2) {
         if (this.mBatteryCharging != z2) {
             this.mBatteryCharging = z2;
@@ -356,6 +355,8 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         final int left = this.mSystemIconsContainer.getLeft();
         final boolean z = this.mMultiUserSwitch.getParent() == this.mStatusIconArea;
         getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            /* class com.android.systemui.statusbar.phone.KeyguardStatusBarView.AnonymousClass1 */
+
             public boolean onPreDraw() {
                 KeyguardStatusBarView.this.getViewTreeObserver().removeOnPreDrawListener(this);
                 boolean z = z && KeyguardStatusBarView.this.mMultiUserSwitch.getParent() != KeyguardStatusBarView.this.mStatusIconArea;
@@ -364,6 +365,8 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
                 if (z) {
                     KeyguardStatusBarView.this.getOverlay().add(KeyguardStatusBarView.this.mMultiUserSwitch);
                     KeyguardStatusBarView.this.mMultiUserSwitch.animate().alpha(0.0f).setDuration(300).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable() {
+                        /* class com.android.systemui.statusbar.phone.$$Lambda$KeyguardStatusBarView$1$DyabYtIeJMptnepd5jqXSnZ7UZ0 */
+
                         public final void run() {
                             KeyguardStatusBarView.AnonymousClass1.this.lambda$onPreDraw$0$KeyguardStatusBarView$1();
                         }
@@ -397,15 +400,18 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         updateSystemIconsLayoutParams();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onThemeChanged() {
         updateIconsAndTextColors();
         ((UserInfoControllerImpl) Dependency.get(UserInfoController.class)).onDensityOrFontScaleChanged();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         loadDimens();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onOverlayChanged() {
         onThemeChanged();
     }

@@ -20,13 +20,20 @@ public final class ControlsControllerImpl$loadForComponent$2 implements Controls
         this.$dataCallback = consumer;
     }
 
-    public void accept(@NotNull List<Control> list) {
-        Intrinsics.checkParameterIsNotNull(list, "controls");
-        this.this$0.executor.execute(new ControlsControllerImpl$loadForComponent$2$accept$1(this, list));
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // java.util.function.Consumer
+    public /* bridge */ /* synthetic */ void accept(List<? extends Control> list) {
+        accept((List<Control>) list);
     }
 
+    public void accept(@NotNull List<Control> list) {
+        Intrinsics.checkParameterIsNotNull(list, "controls");
+        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$loadForComponent$2$accept$1(this, list));
+    }
+
+    @Override // com.android.systemui.controls.controller.ControlsBindingController.LoadCallback
     public void error(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "message");
-        this.this$0.executor.execute(new ControlsControllerImpl$loadForComponent$2$error$1(this));
+        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$loadForComponent$2$error$1(this));
     }
 }

@@ -11,6 +11,7 @@ public final class IconBuilder_Factory implements Factory<IconBuilder> {
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public IconBuilder get() {
         return provideInstance(this.contextProvider);
     }

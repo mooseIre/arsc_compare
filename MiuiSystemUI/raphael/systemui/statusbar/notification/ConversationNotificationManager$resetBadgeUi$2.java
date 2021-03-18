@@ -6,8 +6,9 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ConversationNotifications.kt */
-final class ConversationNotificationManager$resetBadgeUi$2 extends Lambda implements Function1<View, ConversationLayout> {
+public final class ConversationNotificationManager$resetBadgeUi$2 extends Lambda implements Function1<View, ConversationLayout> {
     public static final ConversationNotificationManager$resetBadgeUi$2 INSTANCE = new ConversationNotificationManager$resetBadgeUi$2();
 
     ConversationNotificationManager$resetBadgeUi$2() {

@@ -14,8 +14,11 @@ final class ViewGroupFadeHelper$Companion$visibilityIncluder$1 extends Lambda im
         super(1);
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        return Boolean.valueOf(invoke((View) obj));
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Boolean invoke(View view) {
+        return Boolean.valueOf(invoke(view));
     }
 
     public final boolean invoke(@NotNull View view) {

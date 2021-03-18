@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -29,7 +30,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
     private int mUnderflowWidth;
 
     public MiuiStatusIconContainer(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiStatusIconContainer(Context context, AttributeSet attributeSet) {
@@ -83,40 +84,35 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
-        int i3;
         this.mMeasureViews.clear();
         int mode = View.MeasureSpec.getMode(i);
         int size = View.MeasureSpec.getSize(i);
         int childCount = getChildCount();
-        for (int i4 = 0; i4 < childCount; i4++) {
-            StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) getChildAt(i4);
+        for (int i3 = 0; i3 < childCount; i3++) {
+            StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) getChildAt(i3);
             if (statusIconDisplayable.isIconVisible() && !statusIconDisplayable.isIconBlocked() && !this.mIgnoredSlots.contains(statusIconDisplayable.getSlot())) {
                 this.mMeasureViews.add((View) statusIconDisplayable);
             }
         }
         int size2 = this.mMeasureViews.size();
-        int i5 = this.mPaddingLeft + this.mPaddingRight;
+        int i4 = ((LinearLayout) this).mPaddingLeft + ((LinearLayout) this).mPaddingRight;
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(size, 0);
         if (!(mode == 1073741824 || mode == Integer.MIN_VALUE)) {
             size = 1073741823;
         }
         boolean z = true;
-        for (int i6 = 0; i6 < size2; i6++) {
-            View view = this.mMeasureViews.get((size2 - i6) - 1);
+        for (int i5 = 0; i5 < size2; i5++) {
+            View view = this.mMeasureViews.get((size2 - i5) - 1);
             measureChild(view, makeMeasureSpec, i2);
-            if (i6 == size2 - 1) {
-                i3 = 0;
-            } else {
-                i3 = this.mIconSpacing;
-            }
+            int i6 = i5 == size2 - 1 ? 0 : this.mIconSpacing;
             boolean z2 = (view instanceof StatusBarMobileView) || (view instanceof StatusBarWifiView);
-            if ((!z || getViewTotalMeasuredWidth(view) + i5 + i3 > size) && !z2) {
+            if ((!z || getViewTotalMeasuredWidth(view) + i4 + i6 > size) && !z2) {
                 z = false;
             } else {
-                i5 += getViewTotalMeasuredWidth(view) + i3;
+                i4 += getViewTotalMeasuredWidth(view) + i6;
             }
         }
-        setMeasuredDimension(i5, View.MeasureSpec.getSize(i2));
+        setMeasuredDimension(i4, View.MeasureSpec.getSize(i2));
     }
 
     public void onViewAdded(View view) {
@@ -126,12 +122,12 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
-        view.setTag(C0015R$id.status_bar_view_state_tag, (Object) null);
+        view.setTag(C0015R$id.status_bar_view_state_tag, null);
     }
 
     public void addIgnoredSlots(List<String> list) {
-        for (String addIgnoredSlotInternal : list) {
-            addIgnoredSlotInternal(addIgnoredSlotInternal);
+        for (String str : list) {
+            addIgnoredSlotInternal(str);
         }
         requestLayout();
     }
@@ -249,6 +245,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
         public boolean signalView;
         public int visibleState = 0;
 
+        @Override // com.android.systemui.statusbar.notification.stack.ViewState
         public void applyToView(View view) {
             if (view instanceof StatusIconDisplayable) {
                 ((StatusIconDisplayable) view).setVisibleState(this.visibleState, false);
@@ -259,6 +256,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     static {
         AnonymousClass1 r0 = new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.MiuiStatusIconContainer.AnonymousClass1 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -267,6 +265,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
@@ -274,6 +273,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
         r0.setDuration(200);
         r0.setDelay(50);
         new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.MiuiStatusIconContainer.AnonymousClass2 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -282,11 +282,13 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }
         }.setDuration(200);
         new AnimationProperties() {
+            /* class com.android.systemui.statusbar.phone.MiuiStatusIconContainer.AnonymousClass3 */
             private AnimationFilter mAnimationFilter;
 
             {
@@ -298,6 +300,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
                 this.mAnimationFilter = animationFilter;
             }
 
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
             public AnimationFilter getAnimationFilter() {
                 return this.mAnimationFilter;
             }

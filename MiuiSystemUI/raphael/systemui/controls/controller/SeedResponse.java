@@ -18,7 +18,7 @@ public final class SeedResponse {
             return false;
         }
         SeedResponse seedResponse = (SeedResponse) obj;
-        return Intrinsics.areEqual((Object) this.packageName, (Object) seedResponse.packageName) && this.accepted == seedResponse.accepted;
+        return Intrinsics.areEqual(this.packageName, seedResponse.packageName) && this.accepted == seedResponse.accepted;
     }
 
     public int hashCode() {
@@ -28,7 +28,10 @@ public final class SeedResponse {
         if (z) {
             z = true;
         }
-        return hashCode + (z ? 1 : 0);
+        int i = z ? 1 : 0;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        return hashCode + i;
     }
 
     @NotNull

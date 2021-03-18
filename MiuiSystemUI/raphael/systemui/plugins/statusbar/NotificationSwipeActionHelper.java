@@ -8,8 +8,8 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import com.android.systemui.plugins.annotations.DependsOn;
 import com.android.systemui.plugins.annotations.ProvidesInterface;
 
-@DependsOn(target = SnoozeOption.class)
 @ProvidesInterface(version = 1)
+@DependsOn(target = SnoozeOption.class)
 public interface NotificationSwipeActionHelper {
     public static final String ACTION = "com.android.systemui.action.PLUGIN_NOTIFICATION_SWIPE_ACTION";
     public static final int VERSION = 1;

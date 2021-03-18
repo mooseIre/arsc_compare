@@ -73,37 +73,36 @@ public class PseudoGridView extends ViewGroup {
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        int i5;
         boolean isLayoutRtl = isLayoutRtl();
         int childCount = getChildCount();
-        int i6 = this.mNumColumns;
-        int i7 = ((childCount + i6) - 1) / i6;
-        int i8 = 0;
-        for (int i9 = 0; i9 < i7; i9++) {
+        int i5 = this.mNumColumns;
+        int i6 = ((childCount + i5) - 1) / i5;
+        int i7 = 0;
+        for (int i8 = 0; i8 < i6; i8++) {
             int width = isLayoutRtl ? getWidth() : 0;
-            int i10 = this.mNumColumns;
-            int i11 = i9 * i10;
-            int min = Math.min(i10 + i11, childCount);
-            int i12 = 0;
-            while (i11 < min) {
-                View childAt = getChildAt(i11);
+            int i9 = this.mNumColumns;
+            int i10 = i8 * i9;
+            int min = Math.min(i9 + i10, childCount);
+            int i11 = 0;
+            while (i10 < min) {
+                View childAt = getChildAt(i10);
                 int measuredWidth = childAt.getMeasuredWidth();
                 int measuredHeight = childAt.getMeasuredHeight();
                 if (isLayoutRtl) {
                     width -= measuredWidth;
                 }
-                childAt.layout(width, i8, width + measuredWidth, i8 + measuredHeight);
-                i12 = Math.max(i12, measuredHeight);
+                childAt.layout(width, i7, width + measuredWidth, i7 + measuredHeight);
+                i11 = Math.max(i11, measuredHeight);
                 if (isLayoutRtl) {
-                    i5 = width - this.mHorizontalSpacing;
+                    width -= this.mHorizontalSpacing;
                 } else {
-                    i5 = width + measuredWidth + this.mHorizontalSpacing;
+                    width += measuredWidth + this.mHorizontalSpacing;
                 }
-                i11++;
+                i10++;
             }
-            i8 += i12;
-            if (i9 > 0) {
-                i8 += this.mVerticalSpacing;
+            i7 += i11;
+            if (i8 > 0) {
+                i7 += this.mVerticalSpacing;
             }
         }
     }
@@ -126,7 +125,7 @@ public class PseudoGridView extends ViewGroup {
 
         private void refresh() {
             if (!this.mReleased) {
-                ViewGroup viewGroup = (ViewGroup) this.mViewGroup.get();
+                ViewGroup viewGroup = this.mViewGroup.get();
                 if (viewGroup == null) {
                     release();
                     return;

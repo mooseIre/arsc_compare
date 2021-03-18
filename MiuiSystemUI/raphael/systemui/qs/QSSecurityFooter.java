@@ -35,31 +35,24 @@ import com.android.systemui.statusbar.policy.SecurityController;
 import com.miui.systemui.analytics.SystemUIStat;
 
 public class QSSecurityFooter implements View.OnClickListener, DialogInterface.OnClickListener {
-    /* access modifiers changed from: private */
-    public final ActivityStarter mActivityStarter;
+    private final ActivityStarter mActivityStarter;
     private final Callback mCallback = new Callback();
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public AlertDialog mDialog;
-    /* access modifiers changed from: private */
-    public final ImageView mFooterIcon;
-    /* access modifiers changed from: private */
-    public int mFooterIconId;
-    /* access modifiers changed from: private */
-    public final TextView mFooterText;
-    /* access modifiers changed from: private */
-    public CharSequence mFooterTextContent = null;
+    private AlertDialog mDialog;
+    private final ImageView mFooterIcon;
+    private int mFooterIconId;
+    private final TextView mFooterText;
+    private CharSequence mFooterTextContent = null;
     protected H mHandler;
-    /* access modifiers changed from: private */
-    public QSTileHost mHost;
-    /* access modifiers changed from: private */
-    public boolean mIsVisible;
+    private QSTileHost mHost;
+    private boolean mIsVisible;
     private final Handler mMainHandler;
-    /* access modifiers changed from: private */
-    public final View mRootView;
+    private final View mRootView;
     private final SecurityController mSecurityController;
     private final UserManager mUm;
     private final Runnable mUpdateDisplayState = new Runnable() {
+        /* class com.android.systemui.qs.QSSecurityFooter.AnonymousClass2 */
+
         public void run() {
             if (QSSecurityFooter.this.mFooterTextContent != null) {
                 QSSecurityFooter.this.mFooterText.setText(QSSecurityFooter.this.mFooterTextContent);
@@ -68,6 +61,8 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         }
     };
     private final Runnable mUpdateIcon = new Runnable() {
+        /* class com.android.systemui.qs.QSSecurityFooter.AnonymousClass1 */
+
         public void run() {
             QSSecurityFooter.this.mFooterIcon.setImageResource(QSSecurityFooter.this.mFooterIconId);
         }
@@ -78,7 +73,7 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     }
 
     public QSSecurityFooter(QSPanel qSPanel, Context context) {
-        View inflate = LayoutInflater.from(context).inflate(C0017R$layout.quick_settings_footer, qSPanel, false);
+        View inflate = LayoutInflater.from(context).inflate(C0017R$layout.quick_settings_footer, (ViewGroup) qSPanel, false);
         this.mRootView = inflate;
         inflate.setOnClickListener(this);
         this.mFooterText = (TextView) this.mRootView.findViewById(C0015R$id.footer_text);
@@ -124,7 +119,8 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     }
 
     /* access modifiers changed from: private */
-    public void handleClick() {
+    /* access modifiers changed from: public */
+    private void handleClick() {
         showDeviceMonitoringDialog();
         DevicePolicyEventLogger.createEvent(57).write();
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleClickShortcutEvent("security_footer");
@@ -140,7 +136,8 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
     }
 
     /* access modifiers changed from: private */
-    public void handleRefreshState() {
+    /* access modifiers changed from: public */
+    private void handleRefreshState() {
         boolean isDeviceManaged = this.mSecurityController.isDeviceManaged();
         UserInfo userInfo = this.mUm.getUserInfo(ActivityManager.getCurrentUser());
         boolean z = true;
@@ -181,7 +178,7 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
                 if (charSequence2 == null) {
                     return this.mContext.getString(C0021R$string.quick_settings_disclosure_managed_profile_monitoring);
                 }
-                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_managed_profile_monitoring, new Object[]{charSequence2});
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_managed_profile_monitoring, charSequence2);
             } else if (z3) {
                 return this.mContext.getString(C0021R$string.quick_settings_disclosure_monitoring);
             } else {
@@ -189,32 +186,32 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
                     return this.mContext.getString(C0021R$string.quick_settings_disclosure_vpns);
                 }
                 if (str2 != null) {
-                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_managed_profile_named_vpn, new Object[]{str2});
+                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_managed_profile_named_vpn, str2);
                 } else if (str != null) {
                     if (z2) {
-                        return this.mContext.getString(C0021R$string.quick_settings_disclosure_personal_profile_named_vpn, new Object[]{str});
+                        return this.mContext.getString(C0021R$string.quick_settings_disclosure_personal_profile_named_vpn, str);
                     }
-                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_vpn, new Object[]{str});
+                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_vpn, str);
                 } else if (!z6) {
                     return null;
                 } else {
                     if (charSequence2 == null) {
                         return this.mContext.getString(C0021R$string.quick_settings_disclosure_management);
                     }
-                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management, new Object[]{charSequence2});
+                    return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management, charSequence2);
                 }
             }
         } else if (z3 || z4 || z5) {
             if (charSequence == null) {
                 return this.mContext.getString(C0021R$string.quick_settings_disclosure_management_monitoring);
             }
-            return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management_monitoring, new Object[]{charSequence});
+            return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management_monitoring, charSequence);
         } else if (str == null || str2 == null) {
             if (str == null && str2 == null) {
                 if (charSequence == null) {
                     return this.mContext.getString(C0021R$string.quick_settings_disclosure_management);
                 }
-                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management, new Object[]{charSequence});
+                return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management, charSequence);
             } else if (charSequence == null) {
                 Context context = this.mContext;
                 int i = C0021R$string.quick_settings_disclosure_management_named_vpn;
@@ -238,7 +235,7 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         } else if (charSequence == null) {
             return this.mContext.getString(C0021R$string.quick_settings_disclosure_management_vpns);
         } else {
-            return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management_vpns, new Object[]{charSequence});
+            return this.mContext.getString(C0021R$string.quick_settings_disclosure_named_management_vpns, charSequence);
         }
     }
 
@@ -355,11 +352,11 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
             return null;
         }
         if (z && charSequence != null) {
-            return this.mContext.getString(C0021R$string.monitoring_description_named_management, new Object[]{charSequence});
+            return this.mContext.getString(C0021R$string.monitoring_description_named_management, charSequence);
         } else if (!z2 || charSequence2 == null) {
             return this.mContext.getString(C0021R$string.monitoring_description_management);
         } else {
-            return this.mContext.getString(C0021R$string.monitoring_description_named_management, new Object[]{charSequence2});
+            return this.mContext.getString(C0021R$string.monitoring_description_named_management, charSequence2);
         }
     }
 
@@ -400,34 +397,37 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
                     str = str2;
                 }
                 objArr[0] = str;
-                spannableStringBuilder.append(context.getString(i, objArr));
+                spannableStringBuilder.append((CharSequence) context.getString(i, objArr));
             } else {
-                spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
+                spannableStringBuilder.append((CharSequence) this.mContext.getString(C0021R$string.monitoring_description_two_named_vpns, str, str2));
             }
         } else if (str != null && str2 != null) {
-            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_two_named_vpns, new Object[]{str, str2}));
+            spannableStringBuilder.append((CharSequence) this.mContext.getString(C0021R$string.monitoring_description_two_named_vpns, str, str2));
         } else if (str2 != null) {
-            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_managed_profile_named_vpn, new Object[]{str2}));
+            spannableStringBuilder.append((CharSequence) this.mContext.getString(C0021R$string.monitoring_description_managed_profile_named_vpn, str2));
         } else if (z2) {
-            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_personal_profile_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append((CharSequence) this.mContext.getString(C0021R$string.monitoring_description_personal_profile_named_vpn, str));
         } else {
-            spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_named_vpn, new Object[]{str}));
+            spannableStringBuilder.append((CharSequence) this.mContext.getString(C0021R$string.monitoring_description_named_vpn, str));
         }
-        spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_vpn_settings_separator));
+        spannableStringBuilder.append((CharSequence) this.mContext.getString(C0021R$string.monitoring_description_vpn_settings_separator));
         spannableStringBuilder.append(this.mContext.getString(C0021R$string.monitoring_description_vpn_settings), new VpnSpan(), 0);
         return spannableStringBuilder;
     }
 
-    private class Callback implements SecurityController.SecurityControllerCallback {
+    /* access modifiers changed from: private */
+    public class Callback implements SecurityController.SecurityControllerCallback {
         private Callback() {
         }
 
+        @Override // com.android.systemui.statusbar.policy.SecurityController.SecurityControllerCallback
         public void onStateChanged() {
             QSSecurityFooter.this.refreshState();
         }
     }
 
-    private class H extends Handler {
+    /* access modifiers changed from: private */
+    public class H extends Handler {
         private H(Looper looper) {
             super(looper);
         }
@@ -440,14 +440,15 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
                     QSSecurityFooter.this.handleClick();
                 }
             } catch (Throwable th) {
-                String str = "Error in " + null;
+                String str = "Error in " + ((String) null);
                 Log.w("QSSecurityFooter", str, th);
                 QSSecurityFooter.this.mHost.warn(str, th);
             }
         }
     }
 
-    protected class VpnSpan extends ClickableSpan {
+    /* access modifiers changed from: protected */
+    public class VpnSpan extends ClickableSpan {
         public int hashCode() {
             return 314159257;
         }

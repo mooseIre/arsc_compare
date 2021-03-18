@@ -21,20 +21,24 @@ public class NavigationHandle extends View implements ButtonInterface {
     protected final int mRadius;
     private boolean mRequiresInvalidate;
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void abortCurrentGesture() {
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setDelayTouchFeedback(boolean z) {
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setImageDrawable(Drawable drawable) {
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setVertical(boolean z) {
     }
 
     public NavigationHandle(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public NavigationHandle(Context context, AttributeSet attributeSet) {
@@ -72,6 +76,7 @@ public class NavigationHandle extends View implements ButtonInterface {
         canvas.drawRoundRect(0.0f, (float) i2, (float) width, f, (float) i3, (float) i3, this.mPaint);
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonInterface
     public void setDarkIntensity(float f) {
         int intValue = ((Integer) ArgbEvaluator.getInstance().evaluate(f, Integer.valueOf(this.mLightColor), Integer.valueOf(this.mDarkColor))).intValue();
         if (this.mPaint.getColor() != intValue) {

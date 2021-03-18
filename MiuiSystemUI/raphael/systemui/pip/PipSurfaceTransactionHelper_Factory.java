@@ -14,6 +14,7 @@ public final class PipSurfaceTransactionHelper_Factory implements Factory<PipSur
         this.configControllerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public PipSurfaceTransactionHelper get() {
         return provideInstance(this.contextProvider, this.configControllerProvider);
     }

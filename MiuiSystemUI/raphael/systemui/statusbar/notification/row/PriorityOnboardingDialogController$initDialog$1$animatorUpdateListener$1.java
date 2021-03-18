@@ -6,8 +6,9 @@ import android.widget.ImageView;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: PriorityOnboardingDialogController.kt */
-final class PriorityOnboardingDialogController$initDialog$1$animatorUpdateListener$1 implements ValueAnimator.AnimatorUpdateListener {
+public final class PriorityOnboardingDialogController$initDialog$1$animatorUpdateListener$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ int $baseSize;
     final /* synthetic */ ImageView $mImportanceRingView;
     final /* synthetic */ GradientDrawable $ring;

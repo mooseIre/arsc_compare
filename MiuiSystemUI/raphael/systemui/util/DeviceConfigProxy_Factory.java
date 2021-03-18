@@ -5,6 +5,7 @@ import dagger.internal.Factory;
 public final class DeviceConfigProxy_Factory implements Factory<DeviceConfigProxy> {
     private static final DeviceConfigProxy_Factory INSTANCE = new DeviceConfigProxy_Factory();
 
+    @Override // javax.inject.Provider
     public DeviceConfigProxy get() {
         return provideInstance();
     }

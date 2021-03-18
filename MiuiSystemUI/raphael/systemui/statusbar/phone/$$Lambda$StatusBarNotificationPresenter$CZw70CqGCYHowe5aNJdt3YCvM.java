@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$StatusBarNotificationPresenter$CZw70
     private /* synthetic */ $$Lambda$StatusBarNotificationPresenter$CZw70CqGCYHowe5aNJdt3YCvM() {
     }
 
+    @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
     public final boolean onDismiss() {
         return StatusBarNotificationPresenter.lambda$onExpandClicked$5();
     }

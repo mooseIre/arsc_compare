@@ -12,6 +12,7 @@ public final class NotifPipeline_Factory implements Factory<NotifPipeline> {
         this.shadeListBuilderProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotifPipeline get() {
         return provideInstance(this.notifCollectionProvider, this.shadeListBuilderProvider);
     }

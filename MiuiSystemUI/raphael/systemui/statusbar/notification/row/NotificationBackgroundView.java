@@ -11,6 +11,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.graphics.drawable.RippleDrawable;
 import android.util.AttributeSet;
+import android.view.View;
 import com.android.internal.util.ArrayUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.Interpolators;
@@ -106,7 +107,7 @@ public class NotificationBackgroundView extends BaseMiuiNotificationBackgroundVi
     public void setCustomBackground(Drawable drawable) {
         Drawable drawable2 = this.mBackground;
         if (drawable2 != null) {
-            drawable2.setCallback((Drawable.Callback) null);
+            drawable2.setCallback(null);
             unscheduleDrawable(this.mBackground);
         }
         this.mBackground = drawable;
@@ -125,7 +126,7 @@ public class NotificationBackgroundView extends BaseMiuiNotificationBackgroundVi
     }
 
     public void setCustomBackground(int i) {
-        setCustomBackground(this.mContext.getDrawable(i));
+        setCustomBackground(((View) this).mContext.getDrawable(i));
     }
 
     public void setTint(int i) {
@@ -264,6 +265,7 @@ public class NotificationBackgroundView extends BaseMiuiNotificationBackgroundVi
         this.mIsPressedAllowed = z;
     }
 
+    @Override // com.miui.blur.sdk.backdrop.ViewBlurDrawInfo, com.miui.blur.sdk.backdrop.BlurDrawInfo
     public void getBlurOutline(Outline outline) {
         Drawable drawable = this.mBackground;
         if (drawable != null) {

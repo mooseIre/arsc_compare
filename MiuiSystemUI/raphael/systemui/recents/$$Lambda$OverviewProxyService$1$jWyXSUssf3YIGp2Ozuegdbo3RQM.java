@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$OverviewProxyService$1$jWyXSUssf3YIG
     private /* synthetic */ $$Lambda$OverviewProxyService$1$jWyXSUssf3YIGp2Ozuegdbo3RQM() {
     }
 
+    @Override // java.util.function.Function
     public final Object apply(Object obj) {
         return ((Divider) obj).getView().getNonMinimizedSplitScreenSecondaryBounds();
     }

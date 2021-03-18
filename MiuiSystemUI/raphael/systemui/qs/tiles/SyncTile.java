@@ -19,15 +19,19 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
     private int mCurrentUserId = 0;
     private Object mStatusChangeListenerHandle;
     private SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
+        /* class com.android.systemui.qs.tiles.$$Lambda$SyncTile$Mq7aSAdFJyMzn6kU6KbMoUjE6sM */
+
         public final void onStatusChanged(int i) {
             SyncTile.this.lambda$new$0$SyncTile(i);
         }
     };
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return -1;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return false;
     }
@@ -38,14 +42,17 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleDestroy() {
         super.handleDestroy();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         if (z) {
             this.mStatusChangeListenerHandle = ContentResolver.addStatusChangeListener(Integer.MAX_VALUE, this.mSyncStatusObserver);
@@ -55,22 +62,25 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
         this.mCurrentUserId = i;
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return longClickVibrateIntent();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         try {
-            Method method = ContentResolver.class.getMethod("setMasterSyncAutomaticallyAsUser", new Class[]{Boolean.TYPE, Integer.TYPE});
+            Method method = ContentResolver.class.getMethod("setMasterSyncAutomaticallyAsUser", Boolean.TYPE, Integer.TYPE);
             Object[] objArr = new Object[2];
             objArr[0] = Boolean.valueOf(!isSyncOn());
             objArr[1] = Integer.valueOf(this.mCurrentUserId);
-            method.invoke((Object) null, objArr);
+            method.invoke(null, objArr);
         } catch (Exception unused) {
             Log.i(this.TAG, "setMasterSyncAutomaticallyAsUser not found.");
             ContentResolver.setMasterSyncAutomatically(!ContentResolver.getMasterSyncAutomatically());
@@ -78,15 +88,15 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
     }
 
     private boolean isSyncOn() {
-        Class<ContentResolver> cls = ContentResolver.class;
         try {
-            return ((Boolean) cls.getMethod("getMasterSyncAutomaticallyAsUser", new Class[]{Integer.TYPE}).invoke((Object) null, new Object[]{Integer.valueOf(this.mCurrentUserId)})).booleanValue();
+            return ((Boolean) ContentResolver.class.getMethod("getMasterSyncAutomaticallyAsUser", Integer.TYPE).invoke(null, Integer.valueOf(this.mCurrentUserId))).booleanValue();
         } catch (Exception unused) {
             Log.i(this.TAG, "getMasterSyncAutomaticallyAsUser not found.");
             return ContentResolver.getMasterSyncAutomatically();
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_sync_label);
     }
@@ -103,7 +113,7 @@ public class SyncTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_sync_off);
         }
         StringBuilder sb = new StringBuilder();
-        sb.append(booleanState.label);
+        sb.append((Object) booleanState.label);
         sb.append(",");
         sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();

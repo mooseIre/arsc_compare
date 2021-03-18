@@ -1,7 +1,8 @@
 package com.android.systemui.statusbar;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationClickNotifier.kt */
-final class NotificationClickNotifier$onNotificationClick$1 implements Runnable {
+public final class NotificationClickNotifier$onNotificationClick$1 implements Runnable {
     final /* synthetic */ String $key;
     final /* synthetic */ NotificationClickNotifier this$0;
 

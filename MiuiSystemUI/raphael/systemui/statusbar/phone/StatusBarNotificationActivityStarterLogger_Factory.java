@@ -11,6 +11,7 @@ public final class StatusBarNotificationActivityStarterLogger_Factory implements
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public StatusBarNotificationActivityStarterLogger get() {
         return provideInstance(this.bufferProvider);
     }

@@ -4,7 +4,6 @@ import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.app.PendingIntent;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
@@ -28,6 +27,7 @@ import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.CommonExtensionsKt;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
@@ -108,27 +108,32 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow, com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mLayoutInflated = true;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void initBackground() {
         super.initBackground();
         updateBackgroundBg();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void updateBackground() {
         super.updateBackground();
         updateBackgroundBg();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public void setHeadsUp(boolean z) {
         super.setHeadsUp(z);
         updateBackgroundBg();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public void setHeadsUpAnimatingAway(boolean z) {
         super.setHeadsUpAnimatingAway(z);
         updateBackgroundBg();
@@ -152,7 +157,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
                 Intrinsics.checkExpressionValueIsNotNull(mMiniBar2, "mMiniBar");
                 Drawable background = mMiniBar2.getBackground();
                 if (background != null) {
-                    ((GradientDrawable) background).setColor(getResources().getColor(i, (Resources.Theme) null));
+                    ((GradientDrawable) background).setColor(getResources().getColor(i, null));
                 } else {
                     throw new TypeCastException("null cannot be cast to non-null type android.graphics.drawable.GradientDrawable");
                 }
@@ -163,6 +168,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         this.mBackgroundNormal.setBlurDisable(!NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState()));
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public void setIsChildInGroup(boolean z, @Nullable ExpandableNotificationRow expandableNotificationRow) {
         if (z) {
             ExpandableViewState viewState = getViewState();
@@ -247,6 +253,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         setTranslationX(f);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow, com.android.systemui.statusbar.notification.row.ActivatableNotificationView, com.android.systemui.statusbar.notification.row.ExpandableView
     public void setActualHeight(int i, boolean z) {
         super.setActualHeight(i, z);
         updateMiniBarTranslation();
@@ -260,6 +267,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         mMiniBar.setTranslationY((((float) getActualHeight()) - getMMiniBarMarginBottom()) - ((float) mMiniBar2.getMeasuredHeight()));
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public void setPinned(boolean z) {
         super.setPinned(z);
         updateMiniWindowBar();
@@ -324,7 +332,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         Intrinsics.checkExpressionValueIsNotNull(entry, "entry");
         ExpandedNotification sbn = entry.getSbn();
         Intrinsics.checkExpressionValueIsNotNull(sbn, "entry.sbn");
-        return MiuiExpandableNotificationRowKt.getPendingIntent(sbn.getNotification());
+        return MiuiExpandableNotificationRowKt.access$getPendingIntent(sbn.getNotification());
     }
 
     @Nullable
@@ -344,6 +352,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public boolean showSummaryBackground() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.showSummaryBackground();
@@ -352,6 +361,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public boolean showChildBackground() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.showChildBackground();
@@ -366,6 +376,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         return onClickListener;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public boolean isBackgroundAnimating() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.isBackgroundAnimating();
@@ -373,6 +384,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         return isSummaryWithChildren() && (isGroupExpanded() || isGroupExpansionChanging());
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     @Nullable
     public ExpandableViewState resetViewState() {
         ExpandableViewState resetViewState = super.resetViewState();
@@ -388,6 +400,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView
     public boolean needsOutline() {
         if (isSummaryWithChildren()) {
             return false;
@@ -419,6 +432,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
     public boolean onTouchEvent(@Nullable MotionEvent motionEvent) {
         startTouchAnimateIfNeed(motionEvent);
         if (needInterceptTouch()) {
@@ -469,12 +483,13 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void startActivateAnimation(boolean z) {
         Interpolator interpolator;
         if (isAttachedToWindow() && isDimmable()) {
             float f = z ? 1.0f : 1.05f;
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "scaleX", new float[]{f});
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, "scaleY", new float[]{f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, "scaleX", f);
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this, "scaleY", f);
             AnimatorSet animatorSet = new AnimatorSet();
             animatorSet.play(ofFloat).with(ofFloat2);
             if (!z) {
@@ -496,6 +511,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void makeInactive(boolean z) {
         if (isActive() && !z) {
             resetActivateAnimationIfNeed();

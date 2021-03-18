@@ -38,6 +38,7 @@ public final class NotificationsModule_ProvideNotificationEntryManagerFactory im
         this.fgsFeatureControllerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public NotificationEntryManager get() {
         return provideInstance(this.loggerProvider, this.groupManagerProvider, this.rankingManagerProvider, this.keyguardEnvironmentProvider, this.featureFlagsProvider, this.notificationRowBinderLazyProvider, this.notificationRemoteInputManagerLazyProvider, this.leakDetectorProvider, this.fgsFeatureControllerProvider);
     }

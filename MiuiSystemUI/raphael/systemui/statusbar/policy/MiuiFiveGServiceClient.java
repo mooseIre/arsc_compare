@@ -10,9 +10,14 @@ import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.os.PersistableBundle;
 import android.os.RemoteException;
 import android.provider.Settings;
+import android.telephony.CarrierConfigManager;
+import android.telephony.CellIdentity;
 import android.telephony.CellIdentityLte;
+import android.telephony.NetworkRegistrationInfo;
+import android.telephony.ServiceState;
 import android.util.LocalLog;
 import android.util.Log;
 import android.util.SparseArray;
@@ -22,6 +27,7 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import miui.os.Build;
 import miui.os.SystemProperties;
@@ -46,16 +52,18 @@ public class MiuiFiveGServiceClient {
     public static final int[] RSRP_THRESH_LENIENT = {-140, -125, -115, -110, -102};
     private static final HashMap<String, LocalLog> sLocalLogs = new HashMap<>();
     ContentObserver m5gEnabledObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass6 */
+
         public void onChange(boolean z) {
             MiuiFiveGServiceClient.this.update5GIcon();
         }
     };
-    /* access modifiers changed from: private */
-    public boolean[] m5gIconCarrierOptimization = new boolean[TelephonyManager.getDefault().getPhoneCount()];
-    /* access modifiers changed from: private */
-    public int mBindRetryTimes = 0;
+    private boolean[] m5gIconCarrierOptimization = new boolean[TelephonyManager.getDefault().getPhoneCount()];
+    private int mBindRetryTimes = 0;
     @VisibleForTesting
     INetworkCallback mCallback = new NetworkCallbackBase() {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass4 */
+
         public void on5gStatus(int i, Token token, Status status, boolean z) throws RemoteException {
             MiuiFiveGServiceClient.localLog("on5gStatus", "on5gStatus: slotId= " + i + " token=" + token + " status=" + status + " enableStatus=" + z);
         }
@@ -64,7 +72,7 @@ public class MiuiFiveGServiceClient {
             MiuiFiveGServiceClient.localLog("onNrDcParam", "onNrDcParam: slotId=" + i + " token=" + token + " status=" + status + " dcParam=" + dcParam);
             if (status.get() == 1) {
                 FiveGServiceState currentServiceState = MiuiFiveGServiceClient.this.getCurrentServiceState(i);
-                int unused = currentServiceState.mDcnr = dcParam.getDcnr();
+                currentServiceState.mDcnr = dcParam.getDcnr();
                 MiuiFiveGServiceClient.this.update5GIcon(currentServiceState, i);
                 MiuiFiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
@@ -73,7 +81,7 @@ public class MiuiFiveGServiceClient {
         public void onSignalStrength(int i, Token token, Status status, SignalStrength signalStrength) throws RemoteException {
             MiuiFiveGServiceClient.localLog("onSignalStrength", "onSignalStrength: slotId=" + i + " token=" + token + " status=" + status + " signalStrength=" + signalStrength + " mIsCustForJpKd=" + MiuiFiveGServiceClient.this.mIsCustForJpKd);
             if (status.get() == 1 && signalStrength != null && !MiuiFiveGServiceClient.this.mIsCustForJpKd) {
-                int unused = MiuiFiveGServiceClient.this.getCurrentServiceState(i).mLevel = MiuiFiveGServiceClient.this.getRsrpLevel(signalStrength.getRsrp());
+                MiuiFiveGServiceClient.this.getCurrentServiceState(i).mLevel = MiuiFiveGServiceClient.this.getRsrpLevel(signalStrength.getRsrp());
                 MiuiFiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
         }
@@ -82,7 +90,7 @@ public class MiuiFiveGServiceClient {
             MiuiFiveGServiceClient.localLog("onAnyNrBearerAllocation", "onAnyNrBearerAllocation: slotId=" + i + " token=" + token + " status=" + status + " bearerStatus=" + bearerAllocationStatus.get());
             if (status.get() == 1) {
                 FiveGServiceState currentServiceState = MiuiFiveGServiceClient.this.getCurrentServiceState(i);
-                int unused = currentServiceState.mBearerAllocationStatus = bearerAllocationStatus.get();
+                currentServiceState.mBearerAllocationStatus = bearerAllocationStatus.get();
                 MiuiFiveGServiceClient.this.update5GIcon(currentServiceState, i);
                 MiuiFiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
@@ -92,8 +100,8 @@ public class MiuiFiveGServiceClient {
             MiuiFiveGServiceClient.localLog("onUpperLayerIndInfo", "onUpperLayerIndInfo: slotId=" + i + " token=" + token + " status=" + status + " plmn=" + upperLayerIndInfo.getPlmnInfoListAvailable() + " upperLayerIndInfo=" + upperLayerIndInfo.getUpperLayerIndInfoAvailable());
             if (status.get() == 1) {
                 FiveGServiceState currentServiceState = MiuiFiveGServiceClient.this.getCurrentServiceState(i);
-                int unused = currentServiceState.mPlmn = upperLayerIndInfo.getPlmnInfoListAvailable();
-                int unused2 = currentServiceState.mUpperLayerInd = upperLayerIndInfo.getUpperLayerIndInfoAvailable();
+                currentServiceState.mPlmn = upperLayerIndInfo.getPlmnInfoListAvailable();
+                currentServiceState.mUpperLayerInd = upperLayerIndInfo.getUpperLayerIndInfoAvailable();
                 MiuiFiveGServiceClient.this.update5GIcon(currentServiceState, i);
                 MiuiFiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
@@ -103,7 +111,7 @@ public class MiuiFiveGServiceClient {
             MiuiFiveGServiceClient.localLog("on5gConfigInfo", "on5gConfigInfo: slotId = " + i + " token = " + token + " status" + status + " NrConfigType = " + nrConfigType);
             if (status.get() == 1) {
                 FiveGServiceState currentServiceState = MiuiFiveGServiceClient.this.getCurrentServiceState(i);
-                int unused = currentServiceState.mNrConfigType = nrConfigType.get();
+                currentServiceState.mNrConfigType = nrConfigType.get();
                 MiuiFiveGServiceClient.this.update5GIcon(currentServiceState, i);
                 MiuiFiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
@@ -113,35 +121,36 @@ public class MiuiFiveGServiceClient {
             MiuiFiveGServiceClient.localLog("onNrIconType", "onNrIconType: slotId = " + i + " token = " + token + " status" + status + " NrIconType = " + nrIconType);
             if (status.get() == 1) {
                 FiveGServiceState currentServiceState = MiuiFiveGServiceClient.this.getCurrentServiceState(i);
-                int unused = currentServiceState.mNrIconType = nrIconType.get();
+                currentServiceState.mNrIconType = nrIconType.get();
                 MiuiFiveGServiceClient.this.update5GIcon(currentServiceState, i);
                 MiuiFiveGServiceClient.this.notifyListenersIfNecessary(i);
             }
         }
     };
-    /* access modifiers changed from: private */
-    public Client mClient;
+    private Client mClient;
     private Context mContext;
     private final SparseArray<FiveGServiceState> mCurrentServiceStates = new SparseArray<>();
-    /* access modifiers changed from: private */
-    public IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+    private IBinder.DeathRecipient mDeathRecipient = new IBinder.DeathRecipient() {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass3 */
+
         public void binderDied() {
             if (MiuiFiveGServiceClient.this.mNetworkService != null) {
                 MiuiFiveGServiceClient.this.mNetworkService.asBinder().unlinkToDeath(MiuiFiveGServiceClient.this.mDeathRecipient, 0);
             }
-            boolean unused = MiuiFiveGServiceClient.this.mServiceConnected = false;
-            IExtTelephony unused2 = MiuiFiveGServiceClient.this.mNetworkService = null;
-            Client unused3 = MiuiFiveGServiceClient.this.mClient = null;
+            MiuiFiveGServiceClient.this.mServiceConnected = false;
+            MiuiFiveGServiceClient.this.mNetworkService = null;
+            MiuiFiveGServiceClient.this.mClient = null;
             MiuiFiveGServiceClient.this.mHandler.removeMessages(1024);
-            int unused4 = MiuiFiveGServiceClient.this.mBindRetryTimes = 0;
+            MiuiFiveGServiceClient.this.mBindRetryTimes = 0;
             MiuiFiveGServiceClient.localLog("binderDied", "unlinkToDeath  has been completed, binderService is going");
             MiuiFiveGServiceClient.this.binderService();
         }
     };
     private int mDefaultDataSlotId;
     private Method mGetCustomedRsrpThresholdsMethod;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler() {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             switch (message.what) {
                 case 1024:
@@ -161,6 +170,8 @@ public class MiuiFiveGServiceClient {
     };
     private int mInitRetryTimes = 0;
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass8 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             if (action != null) {
@@ -177,34 +188,33 @@ public class MiuiFiveGServiceClient {
             }
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mIsCustForJpKd;
+    private boolean mIsCustForJpKd;
     private boolean mIsCustForKrOps;
-    /* access modifiers changed from: private */
-    public boolean[] mIsDelayUpdate5GIcon = null;
+    private boolean[] mIsDelayUpdate5GIcon = null;
     private boolean mIsDualNrEnabled = false;
     private boolean mIsUserFiveGEnabled = true;
     private int[] mLastBearerAllocationStatus = null;
     private final SparseArray<FiveGServiceState> mLastServiceStates = new SparseArray<>();
     private final SparseArray<MobileSignalController> mMobileSignalControllers = new SparseArray<>();
     ContentObserver mNetworkDisplayObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass7 */
+
         public void onChange(boolean z) {
             MiuiFiveGServiceClient.this.update5GIcon();
         }
     };
-    /* access modifiers changed from: private */
-    public IExtTelephony mNetworkService;
-    /* access modifiers changed from: private */
-    public String mPackageName;
-    /* access modifiers changed from: private */
-    public boolean mServiceConnected;
+    private IExtTelephony mNetworkService;
+    private String mPackageName;
+    private boolean mServiceConnected;
     private ServiceConnection mServiceConnection = new ServiceConnection() {
+        /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass2 */
+
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             MiuiFiveGServiceClient.localLog("onServiceConnected", "onServiceConnected name=" + componentName + ", service=" + iBinder);
             try {
-                IExtTelephony unused = MiuiFiveGServiceClient.this.mNetworkService = IExtTelephony.Stub.asInterface(iBinder);
-                Client unused2 = MiuiFiveGServiceClient.this.mClient = MiuiFiveGServiceClient.this.mNetworkService.registerCallback(MiuiFiveGServiceClient.this.mPackageName, MiuiFiveGServiceClient.this.mCallback);
-                boolean unused3 = MiuiFiveGServiceClient.this.mServiceConnected = true;
+                MiuiFiveGServiceClient.this.mNetworkService = IExtTelephony.Stub.asInterface(iBinder);
+                MiuiFiveGServiceClient.this.mClient = MiuiFiveGServiceClient.this.mNetworkService.registerCallback(MiuiFiveGServiceClient.this.mPackageName, MiuiFiveGServiceClient.this.mCallback);
+                MiuiFiveGServiceClient.this.mServiceConnected = true;
                 MiuiFiveGServiceClient.this.initFiveGServiceState();
                 iBinder.linkToDeath(MiuiFiveGServiceClient.this.mDeathRecipient, 0);
                 Log.d("FiveGServiceClient", "Client = " + MiuiFiveGServiceClient.this.mClient);
@@ -229,9 +239,9 @@ public class MiuiFiveGServiceClient {
 
         private void cleanup() {
             Log.d("FiveGServiceClient", "cleanup");
-            boolean unused = MiuiFiveGServiceClient.this.mServiceConnected = false;
-            IExtTelephony unused2 = MiuiFiveGServiceClient.this.mNetworkService = null;
-            Client unused3 = MiuiFiveGServiceClient.this.mClient = null;
+            MiuiFiveGServiceClient.this.mServiceConnected = false;
+            MiuiFiveGServiceClient.this.mNetworkService = null;
+            MiuiFiveGServiceClient.this.mClient = null;
         }
     };
     @VisibleForTesting
@@ -246,22 +256,14 @@ public class MiuiFiveGServiceClient {
     }
 
     public static class FiveGServiceState {
-        /* access modifiers changed from: private */
-        public int mBearerAllocationStatus = 0;
-        /* access modifiers changed from: private */
-        public int mDcnr = 0;
-        /* access modifiers changed from: private */
-        public MobileSignalController.MobileIconGroup mIconGroup = TelephonyIcons.UNKNOWN;
-        /* access modifiers changed from: private */
-        public int mLevel = 0;
-        /* access modifiers changed from: private */
-        public int mNrConfigType = 0;
-        /* access modifiers changed from: private */
-        public int mNrIconType = -1;
-        /* access modifiers changed from: private */
-        public int mPlmn = 0;
-        /* access modifiers changed from: private */
-        public int mUpperLayerInd = 0;
+        private int mBearerAllocationStatus = 0;
+        private int mDcnr = 0;
+        private MobileSignalController.MobileIconGroup mIconGroup = TelephonyIcons.UNKNOWN;
+        private int mLevel = 0;
+        private int mNrConfigType = 0;
+        private int mNrIconType = -1;
+        private int mPlmn = 0;
+        private int mUpperLayerInd = 0;
 
         public boolean isConnectedOnSaMode() {
             return this.mNrConfigType == 1 && this.mIconGroup != TelephonyIcons.UNKNOWN;
@@ -362,8 +364,8 @@ public class MiuiFiveGServiceClient {
         this.mContext = context;
         this.mPackageName = context.getPackageName();
         try {
-            this.mIsCustForKrOps = ((Boolean) TelephonyManager.class.getMethod("isCustForKrOps", (Class[]) null).invoke((Object) null, new Object[0])).booleanValue();
-            this.mIsCustForJpKd = ((Boolean) TelephonyManager.class.getMethod("isCustForJpKd", (Class[]) null).invoke((Object) null, new Object[0])).booleanValue();
+            this.mIsCustForKrOps = ((Boolean) TelephonyManager.class.getMethod("isCustForKrOps", null).invoke(null, new Object[0])).booleanValue();
+            this.mIsCustForJpKd = ((Boolean) TelephonyManager.class.getMethod("isCustForJpKd", null).invoke(null, new Object[0])).booleanValue();
         } catch (Exception e) {
             Log.e("FiveGServiceClient", "isCustForKrOps or mIsCustForJpKd Exception" + e);
         }
@@ -413,7 +415,8 @@ public class MiuiFiveGServiceClient {
     }
 
     /* access modifiers changed from: private */
-    public void binderService() {
+    /* access modifiers changed from: public */
+    private void binderService() {
         boolean bindService = ServiceUtil.bindService(this.mContext, this.mServiceConnection);
         localLog("binderService", "binderService success=" + bindService + " bindRetryTimes=" + this.mBindRetryTimes + " maxRetryTimes=" + 4);
         if (!bindService && this.mBindRetryTimes < 4 && !this.mHandler.hasMessages(1024)) {
@@ -448,7 +451,8 @@ public class MiuiFiveGServiceClient {
     }
 
     /* access modifiers changed from: private */
-    public int getRsrpLevel(int i) {
+    /* access modifiers changed from: public */
+    private int getRsrpLevel(int i) {
         return getLevel(i, getCustomedRsrpThresholds());
     }
 
@@ -469,7 +473,8 @@ public class MiuiFiveGServiceClient {
     }
 
     /* access modifiers changed from: private */
-    public void notifyListenersIfNecessary(int i) {
+    /* access modifiers changed from: public */
+    private void notifyListenersIfNecessary(int i) {
         FiveGServiceState currentServiceState = getCurrentServiceState(i);
         FiveGServiceState lastServiceState = getLastServiceState(i);
         if (!currentServiceState.equals(lastServiceState)) {
@@ -485,7 +490,8 @@ public class MiuiFiveGServiceClient {
     }
 
     /* access modifiers changed from: private */
-    public void initFiveGServiceState() {
+    /* access modifiers changed from: public */
+    private void initFiveGServiceState() {
         Log.d("FiveGServiceClient", "initFiveGServiceState size=" + this.mStatesListeners.size());
         for (int i = 0; i < this.mStatesListeners.size(); i++) {
             initFiveGServiceState(this.mStatesListeners.keyAt(i));
@@ -517,14 +523,14 @@ public class MiuiFiveGServiceClient {
     @VisibleForTesting
     public void update5GIcon(FiveGServiceState fiveGServiceState, int i) {
         if (!this.mIsUserFiveGEnabled || (i != this.mDefaultDataSlotId && !this.mIsDualNrEnabled)) {
-            MobileSignalController.MobileIconGroup unused = fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
+            fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
         } else if (fiveGServiceState.mNrConfigType == 1) {
-            MobileSignalController.MobileIconGroup unused2 = fiveGServiceState.mIconGroup = getSaIcon(fiveGServiceState);
+            fiveGServiceState.mIconGroup = getSaIcon(fiveGServiceState);
         } else if (fiveGServiceState.mNrConfigType == 0) {
-            MobileSignalController.MobileIconGroup unused3 = fiveGServiceState.mIconGroup = getNrIconGroup(fiveGServiceState, i);
+            fiveGServiceState.mIconGroup = getNrIconGroup(fiveGServiceState, i);
             dualNrIconGroupOptimization();
         } else {
-            MobileSignalController.MobileIconGroup unused4 = fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
+            fiveGServiceState.mIconGroup = TelephonyIcons.UNKNOWN;
         }
         setFiveGIndicatorProperties(fiveGServiceState.mIconGroup, i);
         localLog("update5GIcon slotId=" + i, "update5GIcon FiveGServiceState: " + fiveGServiceState + ", mIsUserFiveGEnabled=" + this.mIsUserFiveGEnabled + ", mIsDualNrEnabled=" + this.mIsDualNrEnabled + ", cmccSim=" + isCmccSimCard(i));
@@ -574,7 +580,7 @@ public class MiuiFiveGServiceClient {
                 boolean isSameOperatorCard = isSameOperatorCard(this.mDefaultDataSlotId, otherSlotId);
                 boolean isSameCell = isSameCell(this.mDefaultDataSlotId, otherSlotId);
                 if (isSameOperatorCard && isSameCell) {
-                    MobileSignalController.MobileIconGroup unused = currentServiceState2.mIconGroup = TelephonyIcons.FIVE_G_BASIC;
+                    currentServiceState2.mIconGroup = TelephonyIcons.FIVE_G_BASIC;
                     notifyListenersIfNecessary(otherSlotId);
                 }
                 localLog("dualNrIconGroupOptimization", "isSameOperatorCard = " + isSameOperatorCard + ", isSameCell = " + isSameCell + ", dataSlotIdState = " + currentServiceState + ", viceSlotIdState = " + currentServiceState2 + ", mIsDualNrEnabled = " + this.mIsDualNrEnabled + ", mDefaultDataSlotId = " + this.mDefaultDataSlotId);
@@ -591,60 +597,21 @@ public class MiuiFiveGServiceClient {
         return cellIdentityLte.equals(cellIdentityLte2);
     }
 
-    /* JADX WARNING: type inference failed for: r3v8, types: [android.telephony.CellIdentity, java.lang.Object] */
-    /* JADX WARNING: Multi-variable type inference failed */
-    /* JADX WARNING: Unknown variable types count: 1 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private android.telephony.CellIdentityLte getCellIdentityLte(int r4) {
-        /*
-            r3 = this;
-            android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r0 = r3.mMobileSignalControllers
-            java.lang.Object r0 = r0.get(r4)
-            r1 = 0
-            if (r0 != 0) goto L_0x000a
-            return r1
-        L_0x000a:
-            android.util.SparseArray<com.android.systemui.statusbar.policy.MobileSignalController> r3 = r3.mMobileSignalControllers
-            java.lang.Object r3 = r3.get(r4)
-            com.android.systemui.statusbar.policy.MobileSignalController r3 = (com.android.systemui.statusbar.policy.MobileSignalController) r3
-            android.telephony.ServiceState r3 = r3.getServiceState()
-            if (r3 != 0) goto L_0x0019
-            return r1
-        L_0x0019:
-            r0 = 1
-            java.util.List r3 = r3.getNetworkRegistrationInfoListForTransportType(r0)
-            if (r3 == 0) goto L_0x005f
-            r0 = 0
-            java.lang.Object r2 = r3.get(r0)
-            if (r2 != 0) goto L_0x0028
-            goto L_0x005f
-        L_0x0028:
-            java.lang.Object r3 = r3.get(r0)
-            android.telephony.NetworkRegistrationInfo r3 = (android.telephony.NetworkRegistrationInfo) r3
-            android.telephony.CellIdentity r3 = r3.getCellIdentity()
-            boolean r0 = r3 instanceof android.telephony.CellIdentityLte
-            if (r0 == 0) goto L_0x0039
-            r1 = r3
-            android.telephony.CellIdentityLte r1 = (android.telephony.CellIdentityLte) r1
-        L_0x0039:
-            java.lang.StringBuilder r0 = new java.lang.StringBuilder
-            r0.<init>()
-            java.lang.String r2 = "cellIdentity = "
-            r0.append(r2)
-            r0.append(r3)
-            java.lang.String r3 = "cellIdentityLte = "
-            r0.append(r3)
-            r0.append(r1)
-            java.lang.String r3 = ", slotId = "
-            r0.append(r3)
-            r0.append(r4)
-            java.lang.String r3 = r0.toString()
-            java.lang.String r4 = "getCellIdentityLte"
-            localLog(r4, r3)
-        L_0x005f:
-            return r1
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.getCellIdentityLte(int):android.telephony.CellIdentityLte");
+    private CellIdentityLte getCellIdentityLte(int i) {
+        ServiceState serviceState;
+        CellIdentityLte cellIdentityLte = null;
+        if (this.mMobileSignalControllers.get(i) == null || (serviceState = this.mMobileSignalControllers.get(i).getServiceState()) == null) {
+            return null;
+        }
+        List networkRegistrationInfoListForTransportType = serviceState.getNetworkRegistrationInfoListForTransportType(1);
+        if (!(networkRegistrationInfoListForTransportType == null || networkRegistrationInfoListForTransportType.get(0) == null)) {
+            CellIdentity cellIdentity = ((NetworkRegistrationInfo) networkRegistrationInfoListForTransportType.get(0)).getCellIdentity();
+            if (cellIdentity instanceof CellIdentityLte) {
+                cellIdentityLte = (CellIdentityLte) cellIdentity;
+            }
+            localLog("getCellIdentityLte", "cellIdentity = " + cellIdentity + "cellIdentityLte = " + cellIdentityLte + ", slotId = " + i);
+        }
+        return cellIdentityLte;
     }
 
     private boolean isSameOperatorCard(int i, int i2) {
@@ -662,11 +629,11 @@ public class MiuiFiveGServiceClient {
 
     private MobileSignalController.MobileIconGroup getNrIconTypeIconGroup(FiveGServiceState fiveGServiceState) {
         MobileSignalController.MobileIconGroup mobileIconGroup = TelephonyIcons.UNKNOWN;
-        int access$300 = fiveGServiceState.mNrIconType;
-        if (access$300 == 1) {
+        int i = fiveGServiceState.mNrIconType;
+        if (i == 1) {
             return TelephonyIcons.FIVE_G_BASIC;
         }
-        if (access$300 != 2) {
+        if (i != 2) {
             return mobileIconGroup;
         }
         return TelephonyIcons.FIVE_G_UWB;
@@ -769,9 +736,9 @@ public class MiuiFiveGServiceClient {
             printWriter.println(this.mNetworkService);
             printWriter.print("  mClient=");
             printWriter.println(this.mClient);
-            for (Map.Entry next : sLocalLogs.entrySet()) {
-                printWriter.println((String) next.getKey());
-                ((LocalLog) next.getValue()).dump((FileDescriptor) null, printWriter, (String[]) null);
+            for (Map.Entry<String, LocalLog> entry : sLocalLogs.entrySet()) {
+                printWriter.println(entry.getKey());
+                entry.getValue().dump((FileDescriptor) null, printWriter, (String[]) null);
             }
             printWriter.println("FiveGServiceClient dump end.");
             printWriter.flush();
@@ -781,6 +748,8 @@ public class MiuiFiveGServiceClient {
     private void registerFivegEvents() {
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, this.m5gEnabledObserver);
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("dual_nr_enabled"), false, new ContentObserver(this.mHandler) {
+            /* class com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.AnonymousClass5 */
+
             public void onChange(boolean z) {
                 MiuiFiveGServiceClient.this.update5GIcon();
             }
@@ -797,7 +766,8 @@ public class MiuiFiveGServiceClient {
     }
 
     /* access modifiers changed from: private */
-    public void update5GIcon() {
+    /* access modifiers changed from: public */
+    private void update5GIcon() {
         boolean z = true;
         if (Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) != 1) {
             z = false;
@@ -818,7 +788,7 @@ public class MiuiFiveGServiceClient {
             return RSRP_THRESH_LENIENT;
         }
         try {
-            return (int[]) method.invoke((Object) null, new Object[0]);
+            return (int[]) method.invoke(null, new Object[0]);
         } catch (Exception e) {
             Log.e("FiveGServiceClient", "invoke getCustomedRsrpThresholds fail.\n", e);
             return RSRP_THRESH_LENIENT;
@@ -826,7 +796,8 @@ public class MiuiFiveGServiceClient {
     }
 
     /* access modifiers changed from: private */
-    public void update5gIconCarrierOptimization(int i) {
+    /* access modifiers changed from: public */
+    private void update5gIconCarrierOptimization(int i) {
         int subscriptionIdForSlot = SubscriptionManager.getDefault().getSubscriptionIdForSlot(i);
         if (i >= 0) {
             boolean[] zArr = this.m5gIconCarrierOptimization;
@@ -837,25 +808,9 @@ public class MiuiFiveGServiceClient {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x000c, code lost:
-        r1 = r1.getConfigForSubId(r2);
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean getCarrierConfigIconForSubId(int r2, java.lang.String r3, boolean r4) {
-        /*
-            r1 = this;
-            android.content.Context r1 = r1.mContext
-            java.lang.String r0 = "carrier_config"
-            java.lang.Object r1 = r1.getSystemService(r0)
-            android.telephony.CarrierConfigManager r1 = (android.telephony.CarrierConfigManager) r1
-            if (r1 == 0) goto L_0x0017
-            android.os.PersistableBundle r1 = r1.getConfigForSubId(r2)
-            if (r1 == 0) goto L_0x0017
-            boolean r1 = r1.getBoolean(r3, r4)
-            return r1
-        L_0x0017:
-            return r4
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.policy.MiuiFiveGServiceClient.getCarrierConfigIconForSubId(int, java.lang.String, boolean):boolean");
+    private boolean getCarrierConfigIconForSubId(int i, String str, boolean z) {
+        PersistableBundle configForSubId;
+        CarrierConfigManager carrierConfigManager = (CarrierConfigManager) this.mContext.getSystemService("carrier_config");
+        return (carrierConfigManager == null || (configForSubId = carrierConfigManager.getConfigForSubId(i)) == null) ? z : configForSubId.getBoolean(str, z);
     }
 }

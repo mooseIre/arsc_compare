@@ -17,6 +17,7 @@ public final class AssistModule_ProvideAssistHandleBehaviorControllerMapFactory 
         this.reminderExpBehaviorProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public Map<AssistHandleBehavior, AssistHandleBehaviorController.BehaviorController> get() {
         return provideInstance(this.offBehaviorProvider, this.likeHomeBehaviorProvider, this.reminderExpBehaviorProvider);
     }

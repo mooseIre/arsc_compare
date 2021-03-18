@@ -13,6 +13,8 @@ public final class FavoritesRenderer {
     private final Function1<ComponentName, Integer> favoriteFunction;
     private final Resources resources;
 
+    /* JADX DEBUG: Multi-variable search result rejected for r3v0, resolved type: kotlin.jvm.functions.Function1<? super android.content.ComponentName, java.lang.Integer> */
+    /* JADX WARN: Multi-variable type inference failed */
     public FavoritesRenderer(@NotNull Resources resources2, @NotNull Function1<? super ComponentName, Integer> function1) {
         Intrinsics.checkParameterIsNotNull(resources2, "resources");
         Intrinsics.checkParameterIsNotNull(function1, "favoriteFunction");
@@ -27,6 +29,6 @@ public final class FavoritesRenderer {
         if (intValue == 0) {
             return null;
         }
-        return this.resources.getQuantityString(C0019R$plurals.controls_number_of_favorites, intValue, new Object[]{Integer.valueOf(intValue)});
+        return this.resources.getQuantityString(C0019R$plurals.controls_number_of_favorites, intValue, Integer.valueOf(intValue));
     }
 }

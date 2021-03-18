@@ -12,13 +12,12 @@ import com.android.systemui.qs.tiles.AutoBrightnessTile;
 
 public class AutoBrightnessView extends FrameLayout {
     private AutoBrightnessTile mAutoBrightnessTile;
-    /* access modifiers changed from: private */
-    public QSTileView mAutoBrightnessView;
+    private QSTileView mAutoBrightnessView;
     private QSTileHost mHost;
     private boolean mListening;
 
     public AutoBrightnessView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public AutoBrightnessView(Context context, AttributeSet attributeSet) {
@@ -42,18 +41,25 @@ public class AutoBrightnessView extends FrameLayout {
         this.mAutoBrightnessView = createControlCenterTileView;
         addView(createControlCenterTileView);
         this.mAutoBrightnessTile.addCallback(new QSTile.Callback() {
+            /* class com.android.systemui.controlcenter.phone.widget.AutoBrightnessView.AnonymousClass1 */
+
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onAnnouncementRequested(CharSequence charSequence) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onScanStateChanged(boolean z) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onShowDetail(boolean z) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onToggleStateChanged(boolean z) {
             }
 
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onStateChanged(QSTile.State state) {
                 AutoBrightnessView.this.mAutoBrightnessView.onStateChanged(state);
             }

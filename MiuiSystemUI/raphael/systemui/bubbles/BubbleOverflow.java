@@ -5,11 +5,9 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.graphics.Path;
-import android.graphics.RectF;
 import android.graphics.drawable.AdaptiveIconDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.InsetDrawable;
-import android.os.UserHandle;
 import android.util.PathParser;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -31,13 +29,16 @@ public class BubbleOverflow implements BubbleViewProvider {
     private BadgedImageView mOverflowBtn;
     private Path mPath;
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public String getKey() {
         return "Overflow";
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public void logUIEvent(int i, int i2, float f, float f2, int i3) {
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public boolean showDot() {
         return false;
     }
@@ -88,8 +89,8 @@ public class BubbleOverflow implements BubbleViewProvider {
         }
         AdaptiveIconDrawable adaptiveIconDrawable = new AdaptiveIconDrawable(colorDrawable, new InsetDrawable(this.mOverflowBtn.getDrawable(), this.mBitmapSize - this.mIconBitmapSize));
         BubbleIconFactory bubbleIconFactory = new BubbleIconFactory(this.mContext);
-        this.mIcon = bubbleIconFactory.createBadgedIconBitmap(adaptiveIconDrawable, (UserHandle) null, true).icon;
-        float scale = bubbleIconFactory.getNormalizer().getScale(this.mOverflowBtn.getDrawable(), (RectF) null, (Path) null, (boolean[]) null);
+        this.mIcon = bubbleIconFactory.createBadgedIconBitmap(adaptiveIconDrawable, null, true).icon;
+        float scale = bubbleIconFactory.getNormalizer().getScale(this.mOverflowBtn.getDrawable(), null, null, null);
         this.mPath = PathParser.createPathFromPathData(this.mContext.getResources().getString(17039929));
         Matrix matrix = new Matrix();
         matrix.setScale(scale, scale, 50.0f, 50.0f);
@@ -102,30 +103,37 @@ public class BubbleOverflow implements BubbleViewProvider {
         this.mOverflowBtn.setVisibility(i);
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public BubbleExpandedView getExpandedView() {
         return this.mExpandedView;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public int getDotColor() {
         return this.mDotColor;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public Bitmap getBadgedImage() {
         return this.mIcon;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public Path getDotPath() {
         return this.mPath;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public void setContentVisibility(boolean z) {
         this.mExpandedView.setContentVisibility(z);
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public View getIconView() {
         return this.mOverflowBtn;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public int getDisplayId() {
         BubbleExpandedView bubbleExpandedView = this.mExpandedView;
         if (bubbleExpandedView != null) {

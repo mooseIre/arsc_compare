@@ -14,6 +14,7 @@ public final class ToastUI_Factory implements Factory<ToastUI> {
         this.commandQueueProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public ToastUI get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider);
     }

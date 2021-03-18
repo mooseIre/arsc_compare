@@ -9,8 +9,9 @@ import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: NotificationSectionsManager.kt */
-final class NotificationSectionsManager$updateSectionBoundaries$1 extends Lambda implements Function1<View, NotificationSectionsManager.SectionUpdateState<? extends ExpandableView>> {
+public final class NotificationSectionsManager$updateSectionBoundaries$1 extends Lambda implements Function1<View, NotificationSectionsManager.SectionUpdateState<? extends ExpandableView>> {
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $alertingState;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $gentleState;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $incomingState;

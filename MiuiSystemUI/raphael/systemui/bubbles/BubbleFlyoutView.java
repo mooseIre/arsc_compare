@@ -67,7 +67,7 @@ public class BubbleFlyoutView extends FrameLayout {
 
     public BubbleFlyoutView(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(C0017R$layout.bubble_flyout, this, true);
+        LayoutInflater.from(context).inflate(C0017R$layout.bubble_flyout, (ViewGroup) this, true);
         this.mFlyoutTextContainer = (ViewGroup) findViewById(C0015R$id.bubble_flyout_text_container);
         this.mSenderText = (TextView) findViewById(C0015R$id.bubble_flyout_name);
         this.mSenderAvatar = (ImageView) findViewById(C0015R$id.bubble_flyout_avatar);
@@ -87,7 +87,7 @@ public class BubbleFlyoutView extends FrameLayout {
         float f2 = (f * 1.0f) / 2.0f;
         this.mNewDotRadius = f2;
         this.mNewDotSize = f2 * 2.0f;
-        TypedArray obtainStyledAttributes = this.mContext.obtainStyledAttributes(new int[]{16844002, 16844145});
+        TypedArray obtainStyledAttributes = ((FrameLayout) this).mContext.obtainStyledAttributes(new int[]{16844002, 16844145});
         this.mFloatingBackgroundColor = obtainStyledAttributes.getColor(0, -1);
         this.mCornerRadius = (float) obtainStyledAttributes.getDimensionPixelSize(1, 0);
         obtainStyledAttributes.recycle();
@@ -97,6 +97,8 @@ public class BubbleFlyoutView extends FrameLayout {
         setClipChildren(false);
         setTranslationZ((float) this.mFlyoutElevation);
         setOutlineProvider(new ViewOutlineProvider() {
+            /* class com.android.systemui.bubbles.BubbleFlyoutView.AnonymousClass1 */
+
             public void getOutline(View view, Outline outline) {
                 BubbleFlyoutView.this.getOutline(outline);
             }
@@ -152,6 +154,7 @@ public class BubbleFlyoutView extends FrameLayout {
         this.mMessageText.setMaxWidth(i2);
         this.mMessageText.setText(flyoutMessage.message);
         post(new Runnable(pointF, z2, runnable) {
+            /* class com.android.systemui.bubbles.$$Lambda$BubbleFlyoutView$MmTh2kLTzOgAqdKgn0YGS6zixjU */
             public final /* synthetic */ PointF f$1;
             public final /* synthetic */ boolean f$2;
             public final /* synthetic */ Runnable f$3;
@@ -291,7 +294,8 @@ public class BubbleFlyoutView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void getOutline(Outline outline) {
+    /* access modifiers changed from: public */
+    private void getOutline(Outline outline) {
         if (!this.mTriangleOutline.isEmpty()) {
             Path path = new Path();
             float interpolatedRadius = getInterpolatedRadius();

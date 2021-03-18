@@ -20,23 +20,18 @@ import java.util.Objects;
 public class TileServiceManager {
     static final String PREFS_FILE = "CustomTileModes";
     private boolean mBindAllowed;
-    /* access modifiers changed from: private */
-    public boolean mBindRequested;
-    /* access modifiers changed from: private */
-    public boolean mBound;
+    private boolean mBindRequested;
+    private boolean mBound;
     private final Handler mHandler;
-    /* access modifiers changed from: private */
-    public boolean mJustBound;
+    private boolean mJustBound;
     final Runnable mJustBoundOver;
     private long mLastUpdate;
     private boolean mPendingBind;
     private int mPriority;
-    /* access modifiers changed from: private */
-    public final TileServices mServices;
+    private final TileServices mServices;
     private boolean mShowingDialog;
     private boolean mStarted;
-    /* access modifiers changed from: private */
-    public final TileLifecycleManager mStateManager;
+    private final TileLifecycleManager mStateManager;
     private final Runnable mUnbind;
     private final BroadcastReceiver mUninstallReceiver;
 
@@ -48,6 +43,8 @@ public class TileServiceManager {
         this.mPendingBind = true;
         this.mStarted = false;
         this.mUnbind = new Runnable() {
+            /* class com.android.systemui.qs.external.TileServiceManager.AnonymousClass1 */
+
             public void run() {
                 if (TileServiceManager.this.mBound && !TileServiceManager.this.mBindRequested) {
                     TileServiceManager.this.unbindService();
@@ -55,12 +52,16 @@ public class TileServiceManager {
             }
         };
         this.mJustBoundOver = new Runnable() {
+            /* class com.android.systemui.qs.external.TileServiceManager.AnonymousClass2 */
+
             public void run() {
-                boolean unused = TileServiceManager.this.mJustBound = false;
+                TileServiceManager.this.mJustBound = false;
                 TileServiceManager.this.mServices.recalculateBindAllowance();
             }
         };
         this.mUninstallReceiver = new BroadcastReceiver() {
+            /* class com.android.systemui.qs.external.TileServiceManager.AnonymousClass3 */
+
             public void onReceive(Context context, Intent intent) {
                 if ("android.intent.action.PACKAGE_REMOVED".equals(intent.getAction())) {
                     String encodedSchemeSpecificPart = intent.getData().getEncodedSchemeSpecificPart();
@@ -86,7 +87,7 @@ public class TileServiceManager {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.PACKAGE_REMOVED");
         intentFilter.addDataScheme("package");
-        this.mServices.getContext().registerReceiverAsUser(this.mUninstallReceiver, new UserHandle(ActivityManager.getCurrentUser()), intentFilter, (String) null, this.mHandler);
+        this.mServices.getContext().registerReceiverAsUser(this.mUninstallReceiver, new UserHandle(ActivityManager.getCurrentUser()), intentFilter, null, this.mHandler);
     }
 
     /* access modifiers changed from: package-private */
@@ -192,7 +193,8 @@ public class TileServiceManager {
     }
 
     /* access modifiers changed from: private */
-    public void unbindService() {
+    /* access modifiers changed from: public */
+    private void unbindService() {
         if (!this.mBound) {
             Log.e("TileServiceManager", "Service not bound");
             return;

@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$SmartReplyView$UA3QkbRzztEFRlbb86djK
     private /* synthetic */ $$Lambda$SmartReplyView$UA3QkbRzztEFRlbb86djKcGIV5E() {
     }
 
+    @Override // java.util.Comparator
     public final int compare(Object obj, Object obj2) {
         return SmartReplyView.lambda$static$0((View) obj, (View) obj2);
     }

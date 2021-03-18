@@ -15,6 +15,7 @@ public final class DependencyProvider_ProviderLayoutInflaterFactory implements F
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public LayoutInflater get() {
         return provideInstance(this.module, this.contextProvider);
     }

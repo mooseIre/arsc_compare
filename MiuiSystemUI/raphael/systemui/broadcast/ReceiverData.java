@@ -27,7 +27,7 @@ public final class ReceiverData {
             return false;
         }
         ReceiverData receiverData = (ReceiverData) obj;
-        return Intrinsics.areEqual((Object) this.receiver, (Object) receiverData.receiver) && Intrinsics.areEqual((Object) this.filter, (Object) receiverData.filter) && Intrinsics.areEqual((Object) this.executor, (Object) receiverData.executor) && Intrinsics.areEqual((Object) this.user, (Object) receiverData.user);
+        return Intrinsics.areEqual(this.receiver, receiverData.receiver) && Intrinsics.areEqual(this.filter, receiverData.filter) && Intrinsics.areEqual(this.executor, receiverData.executor) && Intrinsics.areEqual(this.user, receiverData.user);
     }
 
     public int hashCode() {

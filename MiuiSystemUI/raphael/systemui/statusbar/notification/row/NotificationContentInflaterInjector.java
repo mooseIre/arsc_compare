@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.os.Parcel;
@@ -184,7 +183,7 @@ public class NotificationContentInflaterInjector {
             handleLargeIcon(builderRemoteViews, notification);
         }
         boolean handleProgressBar = handleProgressBar(builderRemoteViews, notification);
-        handleTitle((RemoteViews) builderRemoteViews, notification, handleProgressBar, context);
+        handleTitle(builderRemoteViews, notification, handleProgressBar, context);
         handleText(builderRemoteViews, notification, handleProgressBar, context);
         if (!handleMiuiAction && !handleProgressBar) {
             handleChronometerAndTime(builderRemoteViews, notification);
@@ -200,7 +199,7 @@ public class NotificationContentInflaterInjector {
         if (!handleProgressBar) {
             handleChronometerAndTime(builderRemoteViews, notification);
         }
-        handleTitle((RemoteViews) builderRemoteViews, notification, handleProgressBar, context);
+        handleTitle(builderRemoteViews, notification, handleProgressBar, context);
         handleText(builderRemoteViews, notification, handleProgressBar, context);
         handleActions(builderRemoteViews, notification, context);
         return builderRemoteViews;
@@ -290,33 +289,33 @@ public class NotificationContentInflaterInjector {
     }
 
     private static void resetStandardTemplate(RemoteViews remoteViews) {
-        remoteViews.setImageViewBitmap(C0015R$id.app_icon, (Bitmap) null);
+        remoteViews.setImageViewBitmap(C0015R$id.app_icon, null);
         remoteViews.setViewVisibility(C0015R$id.time_line_1, 8);
         remoteViews.setViewVisibility(C0015R$id.chronometer, 8);
         remoteViews.setViewVisibility(C0015R$id.time, 8);
         remoteViews.setViewVisibility(C0015R$id.right_icon, 8);
         remoteViews.setViewVisibility(C0015R$id.title, 8);
-        remoteViews.setTextViewText(C0015R$id.title, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.title, null);
         remoteViews.setViewVisibility(C0015R$id.text, 8);
-        remoteViews.setTextViewText(C0015R$id.text, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.text, null);
         remoteViews.setViewVisibility(C0015R$id.text_line_1, 8);
-        remoteViews.setTextViewText(C0015R$id.text_line_1, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.text_line_1, null);
         remoteViews.setViewVisibility(C0015R$id.miui_action, 8);
-        remoteViews.setTextViewText(C0015R$id.miui_action, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.miui_action, null);
     }
 
     private static void resetStandardTemplateWithActions(RemoteViews remoteViews) {
-        remoteViews.setImageViewBitmap(C0015R$id.app_icon, (Bitmap) null);
+        remoteViews.setImageViewBitmap(C0015R$id.app_icon, null);
         remoteViews.setViewVisibility(C0015R$id.time_line_1, 8);
         remoteViews.setViewVisibility(C0015R$id.chronometer, 8);
         remoteViews.setViewVisibility(C0015R$id.time, 8);
         remoteViews.setViewVisibility(C0015R$id.right_icon, 8);
         remoteViews.setViewVisibility(C0015R$id.title, 8);
-        remoteViews.setTextViewText(C0015R$id.title, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.title, null);
         remoteViews.setViewVisibility(C0015R$id.text, 8);
-        remoteViews.setTextViewText(C0015R$id.text, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.text, null);
         remoteViews.setViewVisibility(C0015R$id.text_line_1, 8);
-        remoteViews.setTextViewText(C0015R$id.text_line_1, (CharSequence) null);
+        remoteViews.setTextViewText(C0015R$id.text_line_1, null);
         remoteViews.setViewVisibility(C0015R$id.actions, 8);
         remoteViews.removeAllViews(C0015R$id.actions);
     }
@@ -343,8 +342,8 @@ public class NotificationContentInflaterInjector {
         if (z2) {
             remoteViews.setViewVisibility(C0015R$id.progress, 0);
             remoteViews.setProgressBar(C0015R$id.progress, i, i2, z);
-            remoteViews.setProgressTintList(C0015R$id.progress, (ColorStateList) null);
-            remoteViews.setProgressIndeterminateTintList(C0015R$id.progress, (ColorStateList) null);
+            remoteViews.setProgressTintList(C0015R$id.progress, null);
+            remoteViews.setProgressIndeterminateTintList(C0015R$id.progress, null);
         } else {
             remoteViews.setViewVisibility(C0015R$id.progress, 8);
         }
@@ -458,7 +457,8 @@ public class NotificationContentInflaterInjector {
         boolean z = actionArr != null && actionArr.length > 0;
         if (z) {
             remoteViews.setViewVisibility(C0015R$id.actions, 0);
-            for (Notification.Action action : notification.actions) {
+            Notification.Action[] actionArr2 = notification.actions;
+            for (Notification.Action action : actionArr2) {
                 BuilderRemoteViews builderRemoteViews = new BuilderRemoteViews(context.getApplicationInfo(), C0017R$layout.notification_material_action);
                 builderRemoteViews.setOnClickPendingIntent(C0015R$id.action0, action.actionIntent);
                 builderRemoteViews.setContentDescription(C0015R$id.action0, action.title);
@@ -476,7 +476,8 @@ public class NotificationContentInflaterInjector {
         return NotificationUtil.isNightMode(context) ? ContrastColorUtil.clearColorSpans(charSequence) : charSequence;
     }
 
-    private static class BuilderRemoteViews extends RemoteViews {
+    /* access modifiers changed from: private */
+    public static class BuilderRemoteViews extends RemoteViews {
         /* access modifiers changed from: protected */
         public boolean shouldUseStaticFilter() {
             return true;
@@ -490,6 +491,7 @@ public class NotificationContentInflaterInjector {
             super(applicationInfo, i);
         }
 
+        @Override // android.widget.RemoteViews, android.widget.RemoteViews, java.lang.Object
         public BuilderRemoteViews clone() {
             Parcel obtain = Parcel.obtain();
             writeToParcel(obtain, 0);

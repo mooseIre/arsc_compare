@@ -25,6 +25,8 @@ import java.util.function.Predicate;
 
 public class StatusBarStateControllerImpl implements SysuiStatusBarStateController, CallbackController<StatusBarStateController.StateListener>, Dumpable {
     private static final FloatProperty<StatusBarStateControllerImpl> SET_DARK_AMOUNT_PROPERTY = new FloatProperty<StatusBarStateControllerImpl>("mDozeAmount") {
+        /* class com.android.systemui.statusbar.StatusBarStateControllerImpl.AnonymousClass1 */
+
         public void setValue(StatusBarStateControllerImpl statusBarStateControllerImpl, float f) {
             statusBarStateControllerImpl.setDozeAmountInternal(f);
         }
@@ -35,8 +37,7 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
     };
     private static final Comparator<SysuiStatusBarStateController.RankedListener> sComparator = Comparator.comparingInt($$Lambda$StatusBarStateControllerImpl$7y8VOe44iFeEd9HPscwVVB7kUfw.INSTANCE);
     private ValueAnimator mDarkAnimator;
-    /* access modifiers changed from: private */
-    public float mDozeAmount;
+    private float mDozeAmount;
     private float mDozeAmountTarget;
     private Interpolator mDozeInterpolator;
     private HistoricalState[] mHistoricalRecords;
@@ -64,10 +65,12 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         }
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public int getState() {
         return this.mState;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean setState(int i) {
         if (i > 3 || i < 0) {
             throw new IllegalArgumentException("Invalid state " + i);
@@ -103,22 +106,27 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         return true;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public boolean isDozing() {
         return this.mIsDozing;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public boolean isPulsing() {
         return this.mPulsing;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public float getDozeAmount() {
         return this.mDozeAmount;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public float getInterpolatedDozeAmount() {
         return this.mDozeInterpolator.getInterpolation(this.mDozeAmount);
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean setIsDozing(boolean z) {
         if (this.mIsDozing == z) {
             return false;
@@ -137,6 +145,7 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         return true;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setDozeAmount(float f, boolean z) {
         ValueAnimator valueAnimator = this.mDarkAnimator;
         if (valueAnimator != null && valueAnimator.isRunning()) {
@@ -165,15 +174,16 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
             }
             this.mDozeInterpolator = interpolator;
         }
-        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, SET_DARK_AMOUNT_PROPERTY, new float[]{this.mDozeAmountTarget});
+        ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this, SET_DARK_AMOUNT_PROPERTY, this.mDozeAmountTarget);
         this.mDarkAnimator = ofFloat;
         ofFloat.setInterpolator(Interpolators.LINEAR);
-        this.mDarkAnimator.setDuration(500);
+        this.mDarkAnimator.setDuration(500L);
         this.mDarkAnimator.start();
     }
 
     /* access modifiers changed from: private */
-    public void setDozeAmountInternal(float f) {
+    /* access modifiers changed from: public */
+    private void setDozeAmountInternal(float f) {
         this.mDozeAmount = f;
         float interpolation = this.mDozeInterpolator.getInterpolation(f);
         synchronized (this.mListeners) {
@@ -187,28 +197,34 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         }
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean goingToFullShade() {
         return this.mState == 0 && this.mLeaveOpenOnKeyguardHide;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setLeaveOpenOnKeyguardHide(boolean z) {
         this.mLeaveOpenOnKeyguardHide = z;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean leaveOpenOnKeyguardHide() {
         return this.mLeaveOpenOnKeyguardHide;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean fromShadeLocked() {
         return this.mLastState == 2;
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public void addCallback(StatusBarStateController.StateListener stateListener) {
         synchronized (this.mListeners) {
             addListenerInternalLocked(stateListener, Integer.MAX_VALUE);
         }
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     @Deprecated
     public void addCallback(StatusBarStateController.StateListener stateListener, int i) {
         synchronized (this.mListeners) {
@@ -228,9 +244,13 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         this.mListeners.sort(sComparator);
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController
     public void removeCallback(StatusBarStateController.StateListener stateListener) {
         synchronized (this.mListeners) {
             this.mListeners.removeIf(new Predicate() {
+                /* class com.android.systemui.statusbar.$$Lambda$StatusBarStateControllerImpl$TAyHbKlLKq3j8NJBke8nEPo5OK4 */
+
+                @Override // java.util.function.Predicate
                 public final boolean test(Object obj) {
                     return ((SysuiStatusBarStateController.RankedListener) obj).mListener.equals(StatusBarStateController.StateListener.this);
                 }
@@ -238,14 +258,17 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         }
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setKeyguardRequested(boolean z) {
         this.mKeyguardRequested = z;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public boolean isKeyguardRequested() {
         return this.mKeyguardRequested;
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setFullscreenState(boolean z, boolean z2) {
         if (this.mIsFullscreen != z || this.mIsImmersive != z2) {
             this.mIsFullscreen = z;
@@ -259,6 +282,7 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         }
     }
 
+    @Override // com.android.systemui.statusbar.SysuiStatusBarStateController
     public void setPulsing(boolean z) {
         if (this.mPulsing != z) {
             this.mPulsing = z;
@@ -275,6 +299,7 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         return StatusBarState.toShortString(i);
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("StatusBarStateController: ");
         printWriter.println(" mState=" + this.mState + " (" + describe(this.mState) + ")");
@@ -306,7 +331,8 @@ public class StatusBarStateControllerImpl implements SysuiStatusBarStateControll
         historicalState.mTimestamp = System.currentTimeMillis();
     }
 
-    private static class HistoricalState {
+    /* access modifiers changed from: private */
+    public static class HistoricalState {
         int mLastState;
         int mState;
         long mTimestamp;

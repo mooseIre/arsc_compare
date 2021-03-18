@@ -26,6 +26,7 @@ public final class NotifCollection_Factory implements Factory<NotifCollection> {
         this.dumpManagerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public NotifCollection get() {
         return provideInstance(this.statusBarServiceProvider, this.clockProvider, this.featureFlagsProvider, this.loggerProvider, this.logBufferEulogizerProvider, this.dumpManagerProvider);
     }

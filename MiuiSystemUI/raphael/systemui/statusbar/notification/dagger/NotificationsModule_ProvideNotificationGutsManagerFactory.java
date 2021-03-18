@@ -56,6 +56,7 @@ public final class NotificationsModule_ProvideNotificationGutsManagerFactory imp
         this.uiEventLoggerProvider = provider15;
     }
 
+    @Override // javax.inject.Provider
     public NotificationGutsManager get() {
         return provideInstance(this.contextProvider, this.visualStabilityManagerProvider, this.statusBarLazyProvider, this.mainHandlerProvider, this.bgHandlerProvider, this.accessibilityManagerProvider, this.highPriorityProvider, this.notificationManagerProvider, this.launcherAppsProvider, this.shortcutManagerProvider, this.channelEditorDialogControllerProvider, this.contextTrackerProvider, this.builderProvider, this.bubbleControllerProvider, this.uiEventLoggerProvider);
     }

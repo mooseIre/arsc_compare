@@ -12,10 +12,8 @@ import com.android.systemui.C0008R$array;
 
 public class AlwaysOnDisplayPolicy {
     public int[] dimmingScrimArray;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public final KeyValueListParser mParser = new KeyValueListParser(',');
+    private final Context mContext;
+    private final KeyValueListParser mParser = new KeyValueListParser(',');
     private SettingsObserver mSettingsObserver;
     public long proxCooldownPeriodMs;
     public long proxCooldownTriggerMs;
@@ -42,7 +40,7 @@ public class AlwaysOnDisplayPolicy {
         /* access modifiers changed from: package-private */
         public void observe() {
             AlwaysOnDisplayPolicy.this.mContext.getContentResolver().registerContentObserver(this.ALWAYS_ON_DISPLAY_CONSTANTS_URI, false, this, -1);
-            update((Uri) null);
+            update(null);
         }
 
         public void onChange(boolean z, Uri uri) {

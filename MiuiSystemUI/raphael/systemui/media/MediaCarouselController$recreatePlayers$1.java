@@ -4,8 +4,9 @@ import java.util.function.BiConsumer;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaCarouselController.kt */
-final class MediaCarouselController$recreatePlayers$1<T, U> implements BiConsumer<String, MediaData> {
+public final class MediaCarouselController$recreatePlayers$1<T, U> implements BiConsumer<String, MediaData> {
     final /* synthetic */ MediaCarouselController this$0;
 
     MediaCarouselController$recreatePlayers$1(MediaCarouselController mediaCarouselController) {
@@ -16,6 +17,6 @@ final class MediaCarouselController$recreatePlayers$1<T, U> implements BiConsume
         Intrinsics.checkParameterIsNotNull(str, "key");
         Intrinsics.checkParameterIsNotNull(mediaData, "data");
         this.this$0.removePlayer(str);
-        this.this$0.addOrUpdatePlayer(str, (String) null, mediaData);
+        this.this$0.addOrUpdatePlayer(str, null, mediaData);
     }
 }

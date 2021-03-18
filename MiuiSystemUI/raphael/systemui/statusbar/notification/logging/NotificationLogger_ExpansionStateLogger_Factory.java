@@ -12,6 +12,7 @@ public final class NotificationLogger_ExpansionStateLogger_Factory implements Fa
         this.uiBgExecutorProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationLogger.ExpansionStateLogger get() {
         return provideInstance(this.uiBgExecutorProvider);
     }

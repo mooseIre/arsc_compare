@@ -10,6 +10,7 @@ public final /* synthetic */ class $$Lambda$GroupCoalescer$M7iIsbJ8YQ8wPCcv2h3sq
     private /* synthetic */ $$Lambda$GroupCoalescer$M7iIsbJ8YQ8wPCcv2h3sqACpyk() {
     }
 
+    @Override // java.util.Comparator
     public final int compare(Object obj, Object obj2) {
         return GroupCoalescer.lambda$new$1((CoalescedEvent) obj, (CoalescedEvent) obj2);
     }

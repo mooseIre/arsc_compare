@@ -74,6 +74,8 @@ public class ActivityManagerWrapper {
 
     public Future<?> closeSystemWindows(final String str) {
         return this.mBackgroundExecutor.submit(new Runnable(this) {
+            /* class com.android.systemui.shared.system.ActivityManagerWrapper.AnonymousClass7 */
+
             public void run() {
                 try {
                     ActivityManager.getService().closeSystemDialogs(str);

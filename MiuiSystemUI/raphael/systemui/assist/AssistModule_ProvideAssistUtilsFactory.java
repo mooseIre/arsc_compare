@@ -13,6 +13,7 @@ public final class AssistModule_ProvideAssistUtilsFactory implements Factory<Ass
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public AssistUtils get() {
         return provideInstance(this.contextProvider);
     }

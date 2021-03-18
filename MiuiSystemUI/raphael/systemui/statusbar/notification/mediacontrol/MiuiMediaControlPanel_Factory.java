@@ -25,6 +25,7 @@ public final class MiuiMediaControlPanel_Factory implements Factory<MiuiMediaCon
         this.mediaTransferManagerProvider = provider6;
     }
 
+    @Override // javax.inject.Provider
     public MiuiMediaControlPanel get() {
         return provideInstance(this.contextProvider, this.backgroundExecutorProvider, this.activityStarterProvider, this.mediaViewControllerProvider, this.seekBarViewModelProvider, this.mediaTransferManagerProvider);
     }

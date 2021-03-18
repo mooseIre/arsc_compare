@@ -1,5 +1,6 @@
 package com.android.systemui.controls.management;
 
+import kotlin.jvm.internal.DefaultConstructorMarker;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,7 +10,7 @@ public final class DividerWrapper extends ElementWrapper {
     private boolean showNone;
 
     public DividerWrapper() {
-        this(false, false, 3, (DefaultConstructorMarker) null);
+        this(false, false, 3, null);
     }
 
     public boolean equals(@Nullable Object obj) {
@@ -25,16 +26,19 @@ public final class DividerWrapper extends ElementWrapper {
 
     public int hashCode() {
         boolean z = this.showNone;
-        boolean z2 = true;
+        int i = 1;
         if (z) {
             z = true;
         }
-        int i = (z ? 1 : 0) * true;
-        boolean z3 = this.showDivider;
-        if (!z3) {
-            z2 = z3;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        int i4 = z ? 1 : 0;
+        int i5 = i2 * 31;
+        boolean z2 = this.showDivider;
+        if (!z2) {
+            i = z2 ? 1 : 0;
         }
-        return i + (z2 ? 1 : 0);
+        return i5 + i;
     }
 
     @NotNull
@@ -64,7 +68,7 @@ public final class DividerWrapper extends ElementWrapper {
     }
 
     public DividerWrapper(boolean z, boolean z2) {
-        super((DefaultConstructorMarker) null);
+        super(null);
         this.showNone = z;
         this.showDivider = z2;
     }

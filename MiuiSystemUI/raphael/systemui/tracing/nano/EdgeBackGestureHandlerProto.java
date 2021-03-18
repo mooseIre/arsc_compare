@@ -17,6 +17,7 @@ public final class EdgeBackGestureHandlerProto extends MessageNano {
         return this;
     }
 
+    @Override // com.google.protobuf.nano.MessageNano
     public void writeTo(CodedOutputByteBufferNano codedOutputByteBufferNano) throws IOException {
         boolean z = this.allowGesture;
         if (z) {
@@ -26,6 +27,7 @@ public final class EdgeBackGestureHandlerProto extends MessageNano {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.google.protobuf.nano.MessageNano
     public int computeSerializedSize() {
         int computeSerializedSize = super.computeSerializedSize();
         boolean z = this.allowGesture;

@@ -7,8 +7,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiWallpaperZoomOutService.kt */
-final class MiuiWallpaperZoomOutService$onLauncherSupportsZoomChanged$1 extends Lambda implements Function1<View, Unit> {
+public final class MiuiWallpaperZoomOutService$onLauncherSupportsZoomChanged$1 extends Lambda implements Function1<View, Unit> {
     final /* synthetic */ boolean $launcherSupportsZoom;
     final /* synthetic */ MiuiWallpaperZoomOutService this$0;
 
@@ -19,8 +20,11 @@ final class MiuiWallpaperZoomOutService$onLauncherSupportsZoomChanged$1 extends 
         this.$launcherSupportsZoom = z;
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke((View) obj);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(View view) {
+        invoke(view);
         return Unit.INSTANCE;
     }
 

@@ -8,10 +8,12 @@ import com.android.systemui.statusbar.ScrimView;
 public enum ScrimState {
     UNINITIALIZED,
     OFF {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public boolean isLowPowerState() {
             return true;
         }
 
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mFrontTint = -16777216;
             this.mBehindTint = -16777216;
@@ -23,6 +25,7 @@ public enum ScrimState {
         }
     },
     KEYGUARD {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mBlankScreen = false;
             if (scrimState == ScrimState.AOD) {
@@ -44,6 +47,7 @@ public enum ScrimState {
         }
     },
     BOUNCER {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = 0.5f;
             this.mFrontAlpha = 0.0f;
@@ -51,6 +55,7 @@ public enum ScrimState {
         }
     },
     BOUNCER_SCRIMMED {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = 0.5f;
             this.mBubbleAlpha = 0.0f;
@@ -58,6 +63,7 @@ public enum ScrimState {
         }
     },
     BRIGHTNESS_MIRROR {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = 0.0f;
             this.mFrontAlpha = 0.0f;
@@ -65,10 +71,12 @@ public enum ScrimState {
         }
     },
     AOD {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public boolean isLowPowerState() {
             return true;
         }
 
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             float f;
             boolean alwaysOn = this.mDozeParameters.getAlwaysOn();
@@ -89,11 +97,13 @@ public enum ScrimState {
             this.mAnimateChange = this.mDozeParameters.shouldControlScreenOff();
         }
 
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public float getBehindAlpha() {
             return (!this.mWallpaperSupportsAmbientMode || this.mHasBackdrop) ? 1.0f : 0.0f;
         }
     },
     PULSING {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mFrontAlpha = this.mAodFrontScrimAlpha;
             this.mBubbleAlpha = 0.0f;
@@ -106,6 +116,7 @@ public enum ScrimState {
             }
         }
 
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public float getBehindAlpha() {
             if (this.mWakeLockScreenSensorActive) {
                 return 0.6f;
@@ -114,6 +125,7 @@ public enum ScrimState {
         }
     },
     UNLOCKED {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mBehindAlpha = 0.0f;
             this.mFrontAlpha = 0.0f;
@@ -136,6 +148,7 @@ public enum ScrimState {
         }
     },
     BUBBLE_EXPANDED {
+        @Override // com.android.systemui.statusbar.phone.ScrimState
         public void prepare(ScrimState scrimState) {
             this.mFrontTint = 0;
             this.mBehindTint = 0;
@@ -178,6 +191,15 @@ public enum ScrimState {
     }
 
     public void prepare(ScrimState scrimState) {
+    }
+
+    private ScrimState() {
+        this.mBlankScreen = false;
+        this.mAnimationDuration = 220;
+        this.mFrontTint = 0;
+        this.mBehindTint = 0;
+        this.mBubbleTint = 0;
+        this.mAnimateChange = true;
     }
 
     public void init(ScrimView scrimView, ScrimView scrimView2, ScrimView scrimView3, DozeParameters dozeParameters, DockManager dockManager) {

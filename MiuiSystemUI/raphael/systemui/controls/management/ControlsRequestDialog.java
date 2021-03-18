@@ -34,8 +34,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     private final ControlsRequestDialog$callback$1 callback = new ControlsRequestDialog$callback$1();
     private Control control;
     private ComponentName controlComponent;
-    /* access modifiers changed from: private */
-    public final ControlsController controller;
+    private final ControlsController controller;
     private final ControlsListingController controlsListingController;
     private final ControlsRequestDialog$currentUserTracker$1 currentUserTracker = new ControlsRequestDialog$currentUserTracker$1(this, this.broadcastDispatcher);
     private Dialog dialog;
@@ -50,6 +49,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
         if (!this.controller.getAvailable()) {
@@ -81,6 +81,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onResume() {
         super.onResume();
         CharSequence verifyComponentAndGetLabel = verifyComponentAndGetLabel();
@@ -121,6 +122,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         Dialog dialog2 = this.dialog;
         if (dialog2 != null) {
@@ -145,63 +147,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final boolean isCurrentFavorite() {
         /*
-            r7 = this;
-            com.android.systemui.controls.controller.ControlsController r0 = r7.controller
-            android.content.ComponentName r1 = r7.controlComponent
-            r2 = 0
-            if (r1 == 0) goto L_0x0066
-            java.util.List r0 = r0.getFavoritesForComponent(r1)
-            boolean r1 = r0 instanceof java.util.Collection
-            r3 = 1
-            r4 = 0
-            if (r1 == 0) goto L_0x0019
-            boolean r1 = r0.isEmpty()
-            if (r1 == 0) goto L_0x0019
-        L_0x0017:
-            r3 = r4
-            goto L_0x0065
-        L_0x0019:
-            java.util.Iterator r0 = r0.iterator()
-        L_0x001d:
-            boolean r1 = r0.hasNext()
-            if (r1 == 0) goto L_0x0017
-            java.lang.Object r1 = r0.next()
-            com.android.systemui.controls.controller.StructureInfo r1 = (com.android.systemui.controls.controller.StructureInfo) r1
-            java.util.List r1 = r1.getControls()
-            boolean r5 = r1 instanceof java.util.Collection
-            if (r5 == 0) goto L_0x0039
-            boolean r5 = r1.isEmpty()
-            if (r5 == 0) goto L_0x0039
-        L_0x0037:
-            r1 = r4
-            goto L_0x0063
-        L_0x0039:
-            java.util.Iterator r1 = r1.iterator()
-        L_0x003d:
-            boolean r5 = r1.hasNext()
-            if (r5 == 0) goto L_0x0037
-            java.lang.Object r5 = r1.next()
-            com.android.systemui.controls.controller.ControlInfo r5 = (com.android.systemui.controls.controller.ControlInfo) r5
-            java.lang.String r5 = r5.getControlId()
-            android.service.controls.Control r6 = r7.control
-            if (r6 == 0) goto L_0x005d
-            java.lang.String r6 = r6.getControlId()
-            boolean r5 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r5, (java.lang.Object) r6)
-            if (r5 == 0) goto L_0x003d
-            r1 = r3
-            goto L_0x0063
-        L_0x005d:
-            java.lang.String r7 = "control"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r7)
-            throw r2
-        L_0x0063:
-            if (r1 == 0) goto L_0x001d
-        L_0x0065:
-            return r3
-        L_0x0066:
-            java.lang.String r7 = "controlComponent"
-            kotlin.jvm.internal.Intrinsics.throwUninitializedPropertyAccessException(r7)
-            throw r2
+        // Method dump skipped, instructions count: 108
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controls.management.ControlsRequestDialog.isCurrentFavorite():boolean");
     }
@@ -214,7 +160,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         if (componentName != null) {
             Control control2 = this.control;
             if (control2 != null) {
-                RenderInfo lookup$default = RenderInfo.Companion.lookup$default(companion, this, componentName, control2.getDeviceType(), 0, 8, (Object) null);
+                RenderInfo lookup$default = RenderInfo.Companion.lookup$default(companion, this, componentName, control2.getDeviceType(), 0, 8, null);
                 View inflate = LayoutInflater.from(this).inflate(C0017R$layout.controls_dialog, (ViewGroup) null);
                 ImageView imageView = (ImageView) inflate.requireViewById(C0015R$id.icon);
                 imageView.setImageDrawable(lookup$default.getIcon());

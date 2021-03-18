@@ -16,6 +16,7 @@ public final class NotificationsModule_ProvideVisualStabilityManagerFactory impl
         this.handlerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public VisualStabilityManager get() {
         return provideInstance(this.notificationEntryManagerProvider, this.handlerProvider);
     }

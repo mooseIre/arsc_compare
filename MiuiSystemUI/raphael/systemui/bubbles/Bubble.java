@@ -23,7 +23,8 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.Objects;
 
-class Bubble implements BubbleViewProvider {
+/* access modifiers changed from: package-private */
+public class Bubble implements BubbleViewProvider {
     private String mAppName;
     private int mAppUid = -1;
     private Drawable mBadgedAppIcon;
@@ -96,6 +97,7 @@ class Bubble implements BubbleViewProvider {
         this.mKey = notificationEntry.getKey();
         this.mSuppressionListener = notificationSuppressionChangedListener;
         this.mIntentCancelListener = new PendingIntent.CancelListener(pendingIntentCanceledListener) {
+            /* class com.android.systemui.bubbles.$$Lambda$Bubble$Ycd3LZAa6VyWLbOckhAm9_pvjnE */
             public final /* synthetic */ BubbleController.PendingIntentCanceledListener f$1;
 
             {
@@ -119,6 +121,7 @@ class Bubble implements BubbleViewProvider {
         pendingIntentCanceledListener.onPendingIntentCanceled(this);
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public String getKey() {
         return this.mKey;
     }
@@ -131,6 +134,7 @@ class Bubble implements BubbleViewProvider {
         return this.mPackageName;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public Bitmap getBadgedImage() {
         return this.mBadgedImage;
     }
@@ -139,10 +143,12 @@ class Bubble implements BubbleViewProvider {
         return this.mBadgedAppIcon;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public int getDotColor() {
         return this.mDotColor;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public Path getDotPath() {
         return this.mDotPath;
     }
@@ -155,10 +161,12 @@ class Bubble implements BubbleViewProvider {
         return this.mShortcutInfo;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public BadgedImageView getIconView() {
         return this.mIconView;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public BubbleExpandedView getExpandedView() {
         return this.mExpandedView;
     }
@@ -265,6 +273,7 @@ class Bubble implements BubbleViewProvider {
         }
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public void setContentVisibility(boolean z) {
         BubbleExpandedView bubbleExpandedView = this.mExpandedView;
         if (bubbleExpandedView != null) {
@@ -345,6 +354,7 @@ class Bubble implements BubbleViewProvider {
         return this.mIntentActive;
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public int getDisplayId() {
         BubbleExpandedView bubbleExpandedView = this.mExpandedView;
         if (bubbleExpandedView != null) {
@@ -397,6 +407,7 @@ class Bubble implements BubbleViewProvider {
         }
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public boolean showDot() {
         return this.mShowBubbleUpdateDot && !this.mShouldSuppressNotificationDot && !shouldSuppressNotification();
     }
@@ -572,9 +583,10 @@ class Bubble implements BubbleViewProvider {
     }
 
     public int hashCode() {
-        return Objects.hash(new Object[]{this.mKey});
+        return Objects.hash(this.mKey);
     }
 
+    @Override // com.android.systemui.bubbles.BubbleViewProvider
     public void logUIEvent(int i, int i2, float f, float f2, int i3) {
         SysUiStatsLog.write(149, this.mPackageName, this.mChannelId, this.mNotificationId, i3, i, i2, f, f2, showInShade(), false, false);
     }

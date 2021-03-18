@@ -14,6 +14,7 @@ public final class RowContentBindStage_Factory implements Factory<RowContentBind
         this.loggerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public RowContentBindStage get() {
         return provideInstance(this.binderProvider, this.errorManagerProvider, this.loggerProvider);
     }

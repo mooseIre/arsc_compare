@@ -16,11 +16,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import kotlin.Lazy;
+import kotlin.LazyKt__LazyJVMKt;
 import kotlin.Unit;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KProperty;
+import kotlin.sequences.SequencesKt___SequencesKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,16 +31,13 @@ import org.jetbrains.annotations.Nullable;
 public class NotificationRankingManager {
     static final /* synthetic */ KProperty[] $$delegatedProperties;
     private final NotificationGroupManager groupManager;
-    /* access modifiers changed from: private */
-    public final HeadsUpManager headsUpManager;
+    private final HeadsUpManager headsUpManager;
     private final HighPriorityProvider highPriorityProvider;
     private final NotificationEntryManagerLogger logger;
     private final Lazy mediaManager$delegate = LazyKt__LazyJVMKt.lazy(new NotificationRankingManager$mediaManager$2(this));
-    /* access modifiers changed from: private */
-    public final dagger.Lazy<NotificationMediaManager> mediaManagerLazy;
+    private final dagger.Lazy<NotificationMediaManager> mediaManagerLazy;
     private final NotificationFilter notifFilter;
-    /* access modifiers changed from: private */
-    public final PeopleNotificationIdentifier peopleNotificationIdentifier;
+    private final PeopleNotificationIdentifier peopleNotificationIdentifier;
     private final Comparator<NotificationEntry> rankingComparator = new NotificationRankingManager$rankingComparator$1(this);
     @Nullable
     private NotificationListenerService.RankingMap rankingMap;
@@ -102,8 +102,8 @@ public class NotificationRankingManager {
     private final List<NotificationEntry> filterAndSortLocked(Collection<NotificationEntry> collection, String str) {
         this.logger.logFilterAndSort(str);
         List<NotificationEntry> list = SequencesKt___SequencesKt.toList(SequencesKt___SequencesKt.sortedWith(SequencesKt___SequencesKt.sortedWith(SequencesKt___SequencesKt.filterNot(CollectionsKt___CollectionsKt.asSequence(collection), new NotificationRankingManager$filterAndSortLocked$filtered$1(this)), this.rankingComparator), NotificationRankingManagerExKt.getMiuiRankingComparator()));
-        for (NotificationEntry notificationEntry : collection) {
-            notificationEntry.setBucket(getBucketForEntry(notificationEntry));
+        for (T t : collection) {
+            t.setBucket(getBucketForEntry(t));
         }
         return list;
     }
@@ -123,8 +123,8 @@ public class NotificationRankingManager {
     private final int getBucketForEntry(NotificationEntry notificationEntry) {
         boolean isRowHeadsUp = notificationEntry.isRowHeadsUp();
         boolean isImportantMedia = isImportantMedia(notificationEntry);
-        boolean access$isSystemMax = NotificationRankingManagerKt.isSystemMax(notificationEntry);
-        if (NotificationRankingManagerKt.isColorizedForegroundService(notificationEntry)) {
+        boolean access$isSystemMax = NotificationRankingManagerKt.access$isSystemMax(notificationEntry);
+        if (NotificationRankingManagerKt.access$isColorizedForegroundService(notificationEntry)) {
             return 3;
         }
         if (getUsePeopleFiltering() && isConversation(notificationEntry)) {
@@ -133,7 +133,7 @@ public class NotificationRankingManager {
         if (isRowHeadsUp || isImportantMedia || access$isSystemMax) {
             return 5;
         }
-        boolean isHighPriority = isHighPriority(notificationEntry);
+        isHighPriority(notificationEntry);
         return 5;
     }
 
@@ -141,29 +141,29 @@ public class NotificationRankingManager {
         NotificationListenerService.RankingMap rankingMap2 = this.rankingMap;
         if (rankingMap2 != null) {
             synchronized (iterable) {
-                for (NotificationEntry next : iterable) {
+                for (NotificationEntry notificationEntry : iterable) {
                     NotificationListenerService.Ranking ranking = new NotificationListenerService.Ranking();
-                    if (rankingMap2.getRanking(next.getKey(), ranking)) {
-                        next.setRanking(ranking);
+                    if (rankingMap2.getRanking(notificationEntry.getKey(), ranking)) {
+                        notificationEntry.setRanking(ranking);
                         String overrideGroupKey = ranking.getOverrideGroupKey();
-                        ExpandedNotification sbn = next.getSbn();
+                        ExpandedNotification sbn = notificationEntry.getSbn();
                         Intrinsics.checkExpressionValueIsNotNull(sbn, "entry.sbn");
                         if (!Objects.equals(sbn.getOverrideGroupKey(), overrideGroupKey)) {
-                            ExpandedNotification sbn2 = next.getSbn();
+                            ExpandedNotification sbn2 = notificationEntry.getSbn();
                             Intrinsics.checkExpressionValueIsNotNull(sbn2, "entry.sbn");
                             String groupKey = sbn2.getGroupKey();
-                            ExpandedNotification sbn3 = next.getSbn();
+                            ExpandedNotification sbn3 = notificationEntry.getSbn();
                             Intrinsics.checkExpressionValueIsNotNull(sbn3, "entry.sbn");
                             boolean isGroup = sbn3.isGroup();
-                            ExpandedNotification sbn4 = next.getSbn();
+                            ExpandedNotification sbn4 = notificationEntry.getSbn();
                             Intrinsics.checkExpressionValueIsNotNull(sbn4, "entry.sbn");
                             Notification notification = sbn4.getNotification();
                             Intrinsics.checkExpressionValueIsNotNull(notification, "entry.sbn.notification");
                             boolean isGroupSummary = notification.isGroupSummary();
-                            ExpandedNotification sbn5 = next.getSbn();
+                            ExpandedNotification sbn5 = notificationEntry.getSbn();
                             Intrinsics.checkExpressionValueIsNotNull(sbn5, "entry.sbn");
                             sbn5.setOverrideGroupKey(overrideGroupKey);
-                            this.groupManager.onEntryUpdated(next, groupKey, isGroup, isGroupSummary);
+                            this.groupManager.onEntryUpdated(notificationEntry, groupKey, isGroup, isGroupSummary);
                         }
                     }
                 }
@@ -177,7 +177,7 @@ public class NotificationRankingManager {
         String key = notificationEntry.getKey();
         NotificationMediaManager mediaManager = getMediaManager();
         Intrinsics.checkExpressionValueIsNotNull(mediaManager, "mediaManager");
-        if (Intrinsics.areEqual((Object) key, (Object) mediaManager.getMediaNotificationKey())) {
+        if (Intrinsics.areEqual(key, mediaManager.getMediaNotificationKey())) {
             NotificationListenerService.Ranking ranking = notificationEntry.getRanking();
             Intrinsics.checkExpressionValueIsNotNull(ranking, "ranking");
             if (ranking.getImportance() > 1) {

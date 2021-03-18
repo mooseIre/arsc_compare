@@ -13,6 +13,7 @@ public final class ControlCenterDependenciesModule_ProvideExpandInfoControllerFa
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ExpandInfoController get() {
         return provideInstance(this.contextProvider);
     }

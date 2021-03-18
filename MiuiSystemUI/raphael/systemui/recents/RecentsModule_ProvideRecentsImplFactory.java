@@ -15,6 +15,7 @@ public final class RecentsModule_ProvideRecentsImplFactory implements Factory<Re
         this.componentHelperProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public RecentsImplementation get() {
         return provideInstance(this.contextProvider, this.componentHelperProvider);
     }

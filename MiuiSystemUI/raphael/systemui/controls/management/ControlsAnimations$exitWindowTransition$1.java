@@ -18,6 +18,6 @@ final class ControlsAnimations$exitWindowTransition$1 extends Lambda implements 
     @NotNull
     public final Animator invoke(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "view");
-        return ControlsAnimations.exitAnimation$default(view, (Runnable) null, 2, (Object) null);
+        return ControlsAnimations.exitAnimation$default(view, null, 2, null);
     }
 }

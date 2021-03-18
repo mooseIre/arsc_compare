@@ -9,26 +9,33 @@ import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KDeclarationContainer;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final /* synthetic */ class ControlsUiControllerImpl$show$2 extends FunctionReference implements Function1<List<? extends SelectionItem>, Unit> {
+public final /* synthetic */ class ControlsUiControllerImpl$show$2 extends FunctionReference implements Function1<List<? extends SelectionItem>, Unit> {
     ControlsUiControllerImpl$show$2(ControlsUiControllerImpl controlsUiControllerImpl) {
         super(1, controlsUiControllerImpl);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getName() {
         return "showInitialSetupView";
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final KDeclarationContainer getOwner() {
         return Reflection.getOrCreateKotlinClass(ControlsUiControllerImpl.class);
     }
 
+    @Override // kotlin.jvm.internal.CallableReference
     public final String getSignature() {
         return "showInitialSetupView(Ljava/util/List;)V";
     }
 
-    public /* bridge */ /* synthetic */ Object invoke(Object obj) {
-        invoke((List<SelectionItem>) (List) obj);
+    /* Return type fixed from 'java.lang.Object' to match base method */
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function1
+    public /* bridge */ /* synthetic */ Unit invoke(List<? extends SelectionItem> list) {
+        invoke((List<SelectionItem>) list);
         return Unit.INSTANCE;
     }
 

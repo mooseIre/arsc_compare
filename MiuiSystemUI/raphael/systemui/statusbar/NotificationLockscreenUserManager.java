@@ -7,10 +7,10 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 public interface NotificationLockscreenUserManager {
 
     public interface UserChangedListener {
-        void onCurrentProfilesChanged(SparseArray<UserInfo> sparseArray) {
+        default void onCurrentProfilesChanged(SparseArray<UserInfo> sparseArray) {
         }
 
-        void onUserChanged(int i) {
+        default void onUserChanged(int i) {
         }
     }
 
@@ -26,7 +26,7 @@ public interface NotificationLockscreenUserManager {
 
     boolean needsRedaction(NotificationEntry notificationEntry);
 
-    boolean needsSeparateWorkChallenge(int i) {
+    default boolean needsSeparateWorkChallenge(int i) {
         return false;
     }
 

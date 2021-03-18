@@ -38,8 +38,8 @@ public class HighPriorityProvider {
         if (list == null) {
             return false;
         }
-        for (NotificationEntry isHighPriority : list) {
-            if (isHighPriority(isHighPriority)) {
+        for (NotificationEntry notificationEntry : list) {
+            if (isHighPriority(notificationEntry)) {
                 return true;
             }
         }

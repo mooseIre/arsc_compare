@@ -11,6 +11,7 @@ public final /* synthetic */ class $$Lambda$xuXEcdh0HmTmuN4e7qU9mBkM36M implemen
     private /* synthetic */ $$Lambda$xuXEcdh0HmTmuN4e7qU9mBkM36M() {
     }
 
+    @Override // java.util.function.Consumer
     public final void accept(Object obj) {
         ((Divider) obj).onDockedFirstAnimationFrame();
     }

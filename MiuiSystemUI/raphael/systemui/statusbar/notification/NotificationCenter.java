@@ -18,27 +18,22 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 public class NotificationCenter extends SystemUI {
-    /* access modifiers changed from: private */
-    public static int DEFAULT_DELAY = 5000;
+    private static int DEFAULT_DELAY = 5000;
     private static int DEFAULT_INTERVAL = 60000;
-    /* access modifiers changed from: private */
-    public static String TAG = "NcSystem";
+    private static String TAG = "NcSystem";
     public static boolean sSupportAggregate;
     private int mBindTimes = 0;
-    /* access modifiers changed from: private */
-    public Handler mHandler;
-    /* access modifiers changed from: private */
-    public volatile boolean mHasBind;
-    /* access modifiers changed from: private */
-    public Messenger mNcClient;
+    private Handler mHandler;
+    private volatile boolean mHasBind;
+    private Messenger mNcClient;
     private ServiceConnection mNcConn;
-    /* access modifiers changed from: private */
-    public volatile Messenger mNcService;
+    private volatile Messenger mNcService;
 
     public NotificationCenter(Context context) {
         super(context);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         HandlerThread handlerThread = new HandlerThread(TAG);
         handlerThread.start();
@@ -48,6 +43,7 @@ public class NotificationCenter extends SystemUI {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.SystemUI
     public void onBootCompleted() {
         this.mHandler.sendEmptyMessage(10001);
     }
@@ -58,7 +54,7 @@ public class NotificationCenter extends SystemUI {
 
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             Log.i(NotificationCenter.TAG, "NcService connected");
-            Messenger unused = NotificationCenter.this.mNcService = new Messenger(iBinder);
+            NotificationCenter.this.mNcService = new Messenger(iBinder);
             Message obtain = Message.obtain();
             obtain.what = 1;
             obtain.replyTo = NotificationCenter.this.mNcClient;
@@ -71,16 +67,16 @@ public class NotificationCenter extends SystemUI {
 
         public void onServiceDisconnected(ComponentName componentName) {
             Log.e(NotificationCenter.TAG, "NcService disconnected");
-            Messenger unused = NotificationCenter.this.mNcService = null;
-            boolean unused2 = NotificationCenter.this.mHasBind = false;
+            NotificationCenter.this.mNcService = null;
+            NotificationCenter.this.mHasBind = false;
             NotificationCenter.this.mHandler.removeMessages(10001);
             NotificationCenter.this.mHandler.sendEmptyMessageDelayed(10001, (long) NotificationCenter.DEFAULT_DELAY);
         }
 
         public void onBindingDied(ComponentName componentName) {
             Log.e(NotificationCenter.TAG, "NcService died");
-            Messenger unused = NotificationCenter.this.mNcService = null;
-            boolean unused2 = NotificationCenter.this.mHasBind = false;
+            NotificationCenter.this.mNcService = null;
+            NotificationCenter.this.mHasBind = false;
             NotificationCenter.this.mHandler.removeMessages(10001);
             NotificationCenter.this.mHandler.sendEmptyMessageDelayed(10001, (long) NotificationCenter.DEFAULT_DELAY);
         }
@@ -102,7 +98,8 @@ public class NotificationCenter extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void initSupportAggregate() {
+    /* access modifiers changed from: public */
+    private void initSupportAggregate() {
         Intent intent = new Intent();
         intent.setClassName("com.miui.notification", "miui.notification.aggregation.NotificationListActivity");
         boolean z = this.mContext.getPackageManager().resolveActivity(intent, 0) != null;
@@ -118,7 +115,8 @@ public class NotificationCenter extends SystemUI {
     }
 
     /* access modifiers changed from: private */
-    public void bindNcService() {
+    /* access modifiers changed from: public */
+    private void bindNcService() {
         Intent intent = new Intent("com.miui.notification.NOTIFICATION_CENTER");
         intent.setPackage("com.miui.notification");
         this.mHasBind = this.mContext.bindServiceAsUser(intent, this.mNcConn, 1, UserHandle.CURRENT);
@@ -131,6 +129,7 @@ public class NotificationCenter extends SystemUI {
         }
     }
 
+    @Override // com.android.systemui.SystemUI, com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         super.dump(fileDescriptor, printWriter, strArr);
         printWriter.println("sSupportAggregate:" + sSupportAggregate);

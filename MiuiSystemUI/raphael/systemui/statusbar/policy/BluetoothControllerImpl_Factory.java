@@ -19,6 +19,7 @@ public final class BluetoothControllerImpl_Factory implements Factory<BluetoothC
         this.localBluetoothManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public BluetoothControllerImpl get() {
         return provideInstance(this.contextProvider, this.bgLooperProvider, this.mainLooperProvider, this.localBluetoothManagerProvider);
     }

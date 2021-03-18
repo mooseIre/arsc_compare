@@ -15,6 +15,7 @@ public final class DependencyProvider_ProvidePluginManagerFactory implements Fac
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PluginManager get() {
         return provideInstance(this.module, this.contextProvider);
     }

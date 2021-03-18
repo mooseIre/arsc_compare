@@ -22,6 +22,7 @@ public final class VolumeDialogControllerImpl_Factory implements Factory<VolumeD
         this.ringerModeTrackerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public VolumeDialogControllerImpl get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.statusBarOptionalLazyProvider, this.ringerModeTrackerProvider);
     }

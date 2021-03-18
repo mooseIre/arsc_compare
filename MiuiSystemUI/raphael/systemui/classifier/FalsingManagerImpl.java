@@ -1,6 +1,5 @@
 package com.android.systemui.classifier;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.database.ContentObserver;
 import android.hardware.Sensor;
@@ -34,20 +33,20 @@ public class FalsingManagerImpl implements FalsingManager {
     private boolean mBouncerOffOnDown = false;
     private boolean mBouncerOn = false;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public final DataCollector mDataCollector;
+    private final DataCollector mDataCollector;
     private boolean mEnforceBouncer = false;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    /* access modifiers changed from: private */
-    public final HumanInteractionClassifier mHumanInteractionClassifier;
+    private final HumanInteractionClassifier mHumanInteractionClassifier;
     private int mIsFalseTouchCalls;
     private boolean mIsTouchScreen = true;
-    /* access modifiers changed from: private */
-    public boolean mJustUnlockedWithFace = false;
+    private boolean mJustUnlockedWithFace = false;
     private final KeyguardUpdateMonitorCallback mKeyguardUpdateCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.classifier.FalsingManagerImpl.AnonymousClass4 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
             if (i == KeyguardUpdateMonitor.getCurrentUser() && biometricSourceType == BiometricSourceType.FACE) {
-                boolean unused = FalsingManagerImpl.this.mJustUnlockedWithFace = true;
+                FalsingManagerImpl.this.mJustUnlockedWithFace = true;
             }
         }
     };
@@ -55,6 +54,8 @@ public class FalsingManagerImpl implements FalsingManager {
     private Runnable mPendingWtf;
     private boolean mScreenOn;
     private SensorEventListener mSensorEventListener = new SensorEventListener() {
+        /* class com.android.systemui.classifier.FalsingManagerImpl.AnonymousClass1 */
+
         public synchronized void onSensorChanged(SensorEvent sensorEvent) {
             FalsingManagerImpl.this.mDataCollector.onSensorChanged(sensorEvent);
             FalsingManagerImpl.this.mHumanInteractionClassifier.onSensorChanged(sensorEvent);
@@ -67,19 +68,23 @@ public class FalsingManagerImpl implements FalsingManager {
     private final SensorManager mSensorManager;
     private boolean mSessionActive = false;
     protected final ContentObserver mSettingsObserver = new ContentObserver(this.mHandler) {
+        /* class com.android.systemui.classifier.FalsingManagerImpl.AnonymousClass3 */
+
         public void onChange(boolean z) {
             FalsingManagerImpl.this.updateConfiguration();
         }
     };
     private boolean mShowingAod;
-    /* access modifiers changed from: private */
-    public int mState = 0;
+    private int mState = 0;
     public StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() {
+        /* class com.android.systemui.classifier.FalsingManagerImpl.AnonymousClass2 */
+
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onStateChanged(int i) {
             if (FalsingLog.ENABLED) {
                 FalsingLog.i("setStatusBarState", "from=" + StatusBarState.toShortString(FalsingManagerImpl.this.mState) + " to=" + StatusBarState.toShortString(i));
             }
-            int unused = FalsingManagerImpl.this.mState = i;
+            FalsingManagerImpl.this.mState = i;
             FalsingManagerImpl.this.updateSessionActive();
         }
     };
@@ -101,7 +106,8 @@ public class FalsingManagerImpl implements FalsingManager {
     }
 
     /* access modifiers changed from: private */
-    public void updateConfiguration() {
+    /* access modifiers changed from: public */
+    private void updateConfiguration() {
         boolean z = false;
         if (Settings.Secure.getInt(this.mContext.getContentResolver(), "falsing_manager_enforce_bouncer", 0) != 0) {
             z = true;
@@ -136,6 +142,8 @@ public class FalsingManagerImpl implements FalsingManager {
                 this.mIsFalseTouchCalls = 0;
             }
             this.mUiBgExecutor.execute(new Runnable() {
+                /* class com.android.systemui.classifier.$$Lambda$FalsingManagerImpl$8SXkW2Wsm8XWKvooYKTPgEEzXnU */
+
                 public final void run() {
                     FalsingManagerImpl.this.lambda$sessionExitpoint$0$FalsingManagerImpl();
                 }
@@ -178,10 +186,11 @@ public class FalsingManagerImpl implements FalsingManager {
     }
 
     private void registerSensors(int[] iArr) {
-        for (int defaultSensor : iArr) {
-            Sensor defaultSensor2 = this.mSensorManager.getDefaultSensor(defaultSensor);
-            if (defaultSensor2 != null) {
-                this.mUiBgExecutor.execute(new Runnable(defaultSensor2) {
+        for (int i : iArr) {
+            Sensor defaultSensor = this.mSensorManager.getDefaultSensor(i);
+            if (defaultSensor != null) {
+                this.mUiBgExecutor.execute(new Runnable(defaultSensor) {
+                    /* class com.android.systemui.classifier.$$Lambda$FalsingManagerImpl$VJW_VOVtQGpUmd7AtKlCfAEhBZE */
                     public final /* synthetic */ Sensor f$1;
 
                     {
@@ -202,6 +211,7 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mSensorManager.registerListener(this.mSensorEventListener, sensor, 1);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isClassifierEnabled() {
         return this.mHumanInteractionClassifier.isEnabled();
     }
@@ -210,50 +220,21 @@ public class FalsingManagerImpl implements FalsingManager {
         return this.mHumanInteractionClassifier.isEnabled() || this.mDataCollector.isEnabled();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isUnlockingDisabled() {
         return this.mDataCollector.isUnlockingDisabled();
     }
 
+    /* JADX WARN: Type inference failed for: r3v4, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r4v1, types: [int, boolean] */
+    /* JADX WARNING: Unknown variable types count: 2 */
+    @Override // com.android.systemui.plugins.FalsingManager
+    /* Code decompiled incorrectly, please refer to instructions dump. */
     public boolean isFalseTouch() {
-        if (FalsingLog.ENABLED && !this.mSessionActive && ((PowerManager) this.mContext.getSystemService(PowerManager.class)).isInteractive() && this.mPendingWtf == null) {
-            boolean isEnabled = isEnabled();
-            boolean z = this.mScreenOn;
-            String shortString = StatusBarState.toShortString(this.mState);
-            Throwable th = new Throwable("here");
-            FalsingLog.wLogcat("isFalseTouch", "Session is not active, yet there's a query for a false touch." + " enabled=" + (isEnabled ? 1 : 0) + " mScreenOn=" + (z ? 1 : 0) + " mState=" + shortString + ". Escalating to WTF if screen does not turn on soon.");
-            $$Lambda$FalsingManagerImpl$v5ZFPRlWWHHEjWpilJxodWNKMI r1 = new Runnable(isEnabled, z, shortString, th) {
-                public final /* synthetic */ int f$1;
-                public final /* synthetic */ int f$2;
-                public final /* synthetic */ String f$3;
-                public final /* synthetic */ Throwable f$4;
-
-                {
-                    this.f$1 = r2;
-                    this.f$2 = r3;
-                    this.f$3 = r4;
-                    this.f$4 = r5;
-                }
-
-                public final void run() {
-                    FalsingManagerImpl.this.lambda$isFalseTouch$2$FalsingManagerImpl(this.f$1, this.f$2, this.f$3, this.f$4);
-                }
-            };
-            this.mPendingWtf = r1;
-            this.mHandler.postDelayed(r1, 1000);
-        }
-        if (ActivityManager.isRunningInUserTestHarness() || this.mAccessibilityManager.isTouchExplorationEnabled() || !this.mIsTouchScreen || this.mJustUnlockedWithFace) {
-            return false;
-        }
-        this.mIsFalseTouchCalls++;
-        boolean isFalseTouch = this.mHumanInteractionClassifier.isFalseTouch();
-        if (!isFalseTouch) {
-            if (FalsingLog.ENABLED) {
-                FalsingLog.i("isFalseTouchCalls", "Calls before success: " + this.mIsFalseTouchCalls);
-            }
-            this.mMetricsLogger.histogram("falsing_success_after_attempts", this.mIsFalseTouchCalls);
-            this.mIsFalseTouchCalls = 0;
-        }
-        return isFalseTouch;
+        /*
+        // Method dump skipped, instructions count: 192
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.classifier.FalsingManagerImpl.isFalseTouch():boolean");
     }
 
     /* access modifiers changed from: private */
@@ -270,15 +251,18 @@ public class FalsingManagerImpl implements FalsingManager {
         }
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean shouldEnforceBouncer() {
         return this.mEnforceBouncer;
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void setShowingAod(boolean z) {
         this.mShowingAod = z;
         updateSessionActive();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onScreenTurningOn() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onScreenTurningOn", "from=" + (this.mScreenOn ? 1 : 0));
@@ -290,6 +274,7 @@ public class FalsingManagerImpl implements FalsingManager {
         }
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onScreenOnFromTouch() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onScreenOnFromTouch", "from=" + (this.mScreenOn ? 1 : 0));
@@ -300,6 +285,7 @@ public class FalsingManagerImpl implements FalsingManager {
         }
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onScreenOff() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onScreenOff", "from=" + (this.mScreenOn ? 1 : 0));
@@ -309,6 +295,7 @@ public class FalsingManagerImpl implements FalsingManager {
         sessionExitpoint(false);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onSuccessfulUnlock() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onSucccessfulUnlock", "");
@@ -316,6 +303,7 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onSucccessfulUnlock();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onBouncerShown() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onBouncerShown", "from=" + (this.mBouncerOn ? 1 : 0));
@@ -326,6 +314,7 @@ public class FalsingManagerImpl implements FalsingManager {
         }
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onBouncerHidden() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onBouncerHidden", "from=" + (this.mBouncerOn ? 1 : 0));
@@ -336,6 +325,7 @@ public class FalsingManagerImpl implements FalsingManager {
         }
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onQsDown() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onQsDown", "");
@@ -344,10 +334,12 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onQsDown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void setQsExpanded(boolean z) {
         this.mDataCollector.setQsExpanded(z);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onTrackingStarted(boolean z) {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onTrackingStarted", "");
@@ -356,14 +348,17 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onTrackingStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onTrackingStopped() {
         this.mDataCollector.onTrackingStopped();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationActive() {
         this.mDataCollector.onNotificationActive();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationDoubleTap(boolean z, float f, float f2) {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onNotificationDoubleTap", "accepted=" + z + " dx=" + f + " dy=" + f2 + " (px)");
@@ -371,10 +366,12 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onNotificationDoubleTap();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void setNotificationExpanded() {
         this.mDataCollector.setNotificationExpanded();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificatonStartDraggingDown() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onNotificatonStartDraggingDown", "");
@@ -383,6 +380,7 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onNotificatonStartDraggingDown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onStartExpandingFromPulse() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onStartExpandingFromPulse", "");
@@ -391,18 +389,22 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onStartExpandingFromPulse();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificatonStopDraggingDown() {
         this.mDataCollector.onNotificatonStopDraggingDown();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onExpansionFromPulseStopped() {
         this.mDataCollector.onExpansionFromPulseStopped();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationDismissed() {
         this.mDataCollector.onNotificationDismissed();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationStartDismissing() {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onNotificationStartDismissing", "");
@@ -411,18 +413,22 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onNotificatonStartDismissing();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationStopDismissing() {
         this.mDataCollector.onNotificatonStopDismissing();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onCameraOn() {
         this.mDataCollector.onCameraOn();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onLeftAffordanceOn() {
         this.mDataCollector.onLeftAffordanceOn();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onAffordanceSwipingStarted(boolean z) {
         if (FalsingLog.ENABLED) {
             FalsingLog.i("onAffordanceSwipingStarted", "");
@@ -435,22 +441,27 @@ public class FalsingManagerImpl implements FalsingManager {
         this.mDataCollector.onAffordanceSwipingStarted(z);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onAffordanceSwipingAborted() {
         this.mDataCollector.onAffordanceSwipingAborted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onUnlockHintStarted() {
         this.mDataCollector.onUnlockHintStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onCameraHintStarted() {
         this.mDataCollector.onCameraHintStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onLeftAffordanceHintStarted() {
         this.mDataCollector.onLeftAffordanceHintStarted();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void onTouchEvent(MotionEvent motionEvent, int i, int i2) {
         if (motionEvent.getAction() == 0) {
             this.mIsTouchScreen = motionEvent.isFromSource(4098);
@@ -466,6 +477,7 @@ public class FalsingManagerImpl implements FalsingManager {
         }
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void dump(PrintWriter printWriter) {
         printWriter.println("FALSING MANAGER");
         printWriter.print("classifierEnabled=");
@@ -481,6 +493,7 @@ public class FalsingManagerImpl implements FalsingManager {
         printWriter.println();
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public void cleanup() {
         this.mSensorManager.unregisterListener(this.mSensorEventListener);
         this.mContext.getContentResolver().unregisterContentObserver(this.mSettingsObserver);
@@ -488,6 +501,7 @@ public class FalsingManagerImpl implements FalsingManager {
         ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this.mKeyguardUpdateCallback);
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public Uri reportRejectedTouch() {
         if (this.mDataCollector.isEnabled()) {
             return this.mDataCollector.reportRejectedTouch();
@@ -495,6 +509,7 @@ public class FalsingManagerImpl implements FalsingManager {
         return null;
     }
 
+    @Override // com.android.systemui.plugins.FalsingManager
     public boolean isReportingEnabled() {
         return this.mDataCollector.isReportingEnabled();
     }

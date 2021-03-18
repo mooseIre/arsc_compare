@@ -43,6 +43,8 @@ public class SystemUIService extends Service {
                 BinderInternal.nSetBinderProxyCountEnabled(true);
                 BinderInternal.nSetBinderProxyCountWatermarks(1000, 900);
                 BinderInternal.setBinderProxyCountCallback(new BinderInternal.BinderProxyLimitListener(this) {
+                    /* class com.android.systemui.SystemUIService.AnonymousClass1 */
+
                     public void onLimitReached(int i) {
                         Slog.w("SystemUIService", "uid " + i + " sent too many Binder proxies to uid " + Process.myUid());
                     }

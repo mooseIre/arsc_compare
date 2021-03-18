@@ -37,6 +37,7 @@ public final class NotificationLockscreenUserManagerImpl_Factory implements Fact
         this.keyguardStateControllerProvider = provider10;
     }
 
+    @Override // javax.inject.Provider
     public NotificationLockscreenUserManagerImpl get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.devicePolicyManagerProvider, this.userManagerProvider, this.clickNotifierProvider, this.keyguardManagerProvider, this.statusBarStateControllerProvider, this.mainHandlerProvider, this.deviceProvisionedControllerProvider, this.keyguardStateControllerProvider);
     }

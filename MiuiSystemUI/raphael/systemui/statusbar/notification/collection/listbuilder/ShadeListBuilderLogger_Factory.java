@@ -11,6 +11,7 @@ public final class ShadeListBuilderLogger_Factory implements Factory<ShadeListBu
         this.bufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public ShadeListBuilderLogger get() {
         return provideInstance(this.bufferProvider);
     }

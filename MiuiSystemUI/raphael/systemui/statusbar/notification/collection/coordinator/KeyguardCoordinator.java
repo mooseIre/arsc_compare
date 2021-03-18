@@ -27,27 +27,34 @@ public class KeyguardCoordinator implements Coordinator {
     private final Context mContext;
     private final HighPriorityProvider mHighPriorityProvider;
     private final KeyguardStateController.Callback mKeyguardCallback = new KeyguardStateController.Callback() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.KeyguardCoordinator.AnonymousClass4 */
+
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onUnlockedChanged() {
             KeyguardCoordinator.this.invalidateListFromFilter("onUnlockedChanged");
         }
 
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
         public void onKeyguardShowingChanged() {
             KeyguardCoordinator.this.invalidateListFromFilter("onKeyguardShowingChanged");
         }
     };
-    /* access modifiers changed from: private */
-    public final KeyguardStateController mKeyguardStateController;
+    private final KeyguardStateController mKeyguardStateController;
     private final KeyguardUpdateMonitorCallback mKeyguardUpdateCallback = new KeyguardUpdateMonitorCallback() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.KeyguardCoordinator.AnonymousClass6 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStrongAuthStateChanged(int i) {
             KeyguardCoordinator.this.invalidateListFromFilter("onStrongAuthStateChanged");
         }
     };
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
-    /* access modifiers changed from: private */
-    public final NotificationLockscreenUserManager mLockscreenUserManager;
+    private final KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private final NotificationLockscreenUserManager mLockscreenUserManager;
     private final Handler mMainHandler;
     private final NotifFilter mNotifFilter = new NotifFilter("KeyguardCoordinator") {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.KeyguardCoordinator.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter
         public boolean shouldFilterOut(NotificationEntry notificationEntry, long j) {
             int i;
             ExpandedNotification sbn = notificationEntry.getSbn();
@@ -76,6 +83,9 @@ public class KeyguardCoordinator implements Coordinator {
     };
     private final StatusBarStateController mStatusBarStateController;
     private final StatusBarStateController.StateListener mStatusBarStateListener = new StatusBarStateController.StateListener() {
+        /* class com.android.systemui.statusbar.notification.collection.coordinator.KeyguardCoordinator.AnonymousClass5 */
+
+        @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
         public void onStateChanged(int i) {
             KeyguardCoordinator.this.invalidateListFromFilter("onStatusBarStateChanged");
         }
@@ -92,13 +102,15 @@ public class KeyguardCoordinator implements Coordinator {
         this.mHighPriorityProvider = highPriorityProvider;
     }
 
+    @Override // com.android.systemui.statusbar.notification.collection.coordinator.Coordinator
     public void attach(NotifPipeline notifPipeline) {
         setupInvalidateNotifListCallbacks();
         notifPipeline.addFinalizeFilter(this.mNotifFilter);
     }
 
     /* access modifiers changed from: private */
-    public boolean priorityExceedsLockscreenShowingThreshold(ListEntry listEntry) {
+    /* access modifiers changed from: public */
+    private boolean priorityExceedsLockscreenShowingThreshold(ListEntry listEntry) {
         if (listEntry == null) {
             return false;
         }
@@ -119,6 +131,8 @@ public class KeyguardCoordinator implements Coordinator {
         this.mKeyguardStateController.addCallback(this.mKeyguardCallback);
         this.mKeyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateCallback);
         AnonymousClass2 r0 = new ContentObserver(this.mMainHandler) {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.KeyguardCoordinator.AnonymousClass2 */
+
             public void onChange(boolean z, Uri uri) {
                 if (KeyguardCoordinator.this.mKeyguardStateController.isShowing()) {
                     KeyguardCoordinator keyguardCoordinator = KeyguardCoordinator.this;
@@ -131,6 +145,8 @@ public class KeyguardCoordinator implements Coordinator {
         this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("zen_mode"), false, r0);
         this.mStatusBarStateController.addCallback(this.mStatusBarStateListener);
         this.mBroadcastDispatcher.registerReceiver(new BroadcastReceiver() {
+            /* class com.android.systemui.statusbar.notification.collection.coordinator.KeyguardCoordinator.AnonymousClass3 */
+
             public void onReceive(Context context, Intent intent) {
                 if (KeyguardCoordinator.this.mKeyguardStateController.isShowing()) {
                     KeyguardCoordinator.this.invalidateListFromFilter(intent.getAction());
@@ -140,7 +156,8 @@ public class KeyguardCoordinator implements Coordinator {
     }
 
     /* access modifiers changed from: private */
-    public void invalidateListFromFilter(String str) {
+    /* access modifiers changed from: public */
+    private void invalidateListFromFilter(String str) {
         this.mNotifFilter.invalidateList();
     }
 }

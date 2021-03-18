@@ -28,6 +28,7 @@ public class ContextualButton extends ButtonDispatcher {
         }
     }
 
+    @Override // com.android.systemui.statusbar.phone.ButtonDispatcher
     public void setVisibility(int i) {
         super.setVisibility(i);
         KeyButtonDrawable imageDrawable = getImageDrawable();
@@ -47,14 +48,11 @@ public class ContextualButton extends ButtonDispatcher {
 
     public boolean show() {
         ContextualButtonGroup contextualButtonGroup = this.mGroup;
-        if (contextualButtonGroup == null) {
-            setVisibility(0);
-            return true;
-        } else if (contextualButtonGroup.setButtonVisibility(getId(), true) == 0) {
-            return true;
-        } else {
-            return false;
+        if (contextualButtonGroup != null) {
+            return contextualButtonGroup.setButtonVisibility(getId(), true) == 0;
         }
+        setVisibility(0);
+        return true;
     }
 
     public boolean hide() {

@@ -41,14 +41,15 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
         this.mY = resources.getDimensionPixelSize(17105547);
     }
 
+    @Override // com.android.systemui.SystemUI
     public void start() {
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void showToast(int i, String str, IBinder iBinder, CharSequence charSequence, IBinder iBinder2, int i2, ITransientNotificationCallback iTransientNotificationCallback) {
         Context context;
         IBinder iBinder3;
-        String str2 = str;
         if (this.mPresenter != null) {
             hideCurrentToast();
         }
@@ -59,8 +60,8 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
         }
         View textToastView = ToastPresenter.getTextToastView(context, charSequence);
         this.mCallback = iTransientNotificationCallback;
-        this.mPresenter = new ToastPresenter(context, this.mAccessibilityManager, this.mNotificationManager, str2);
-        if (str2.equals("com.android.systemui")) {
+        this.mPresenter = new ToastPresenter(context, this.mAccessibilityManager, this.mNotificationManager, str);
+        if (str.equals("com.android.systemui")) {
             this.mPresenter.getLayoutParams().type = 2006;
             iBinder3 = null;
         } else {
@@ -69,6 +70,7 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
         this.mPresenter.show(textToastView, iBinder, iBinder3, i2, this.mGravity, 0, this.mY, 0.0f, 0.0f, this.mCallback);
     }
 
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void hideToast(String str, IBinder iBinder) {
         ToastPresenter toastPresenter = this.mPresenter;
         if (toastPresenter == null || !Objects.equals(toastPresenter.getPackageName(), str) || !Objects.equals(this.mPresenter.getToken(), iBinder)) {

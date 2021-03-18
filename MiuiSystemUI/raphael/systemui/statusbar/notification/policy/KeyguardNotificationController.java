@@ -4,7 +4,6 @@ import android.app.Notification;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -12,7 +11,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.os.SystemClock;
-import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.DateTimeView;
@@ -53,6 +51,8 @@ public class KeyguardNotificationController {
 
     private void initBgHandler() {
         this.mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER)) {
+            /* class com.android.systemui.statusbar.notification.policy.KeyguardNotificationController.AnonymousClass1 */
+
             public void handleMessage(Message message) {
                 super.handleMessage(message);
                 switch (message.what) {
@@ -95,7 +95,7 @@ public class KeyguardNotificationController {
 
     public void add(NotificationEntry notificationEntry) {
         if (!notificationEntry.getSbn().getNotification().isGroupSummary()) {
-            NotificationEntry groupSummary = this.mGroupManager.getGroupSummary((StatusBarNotification) notificationEntry.getSbn());
+            NotificationEntry groupSummary = this.mGroupManager.getGroupSummary(notificationEntry.getSbn());
             if (!(groupSummary == null || groupSummary.getRow() == null)) {
                 remove(groupSummary.getRow().getEntry().getKey().hashCode());
             }
@@ -130,15 +130,17 @@ public class KeyguardNotificationController {
 
     public void clear() {
         ArrayList arrayList = new ArrayList(this.mSortedKeys);
-        updateSortedKeys(3003, (String) null);
+        updateSortedKeys(3003, null);
         this.mBgHandler.obtainMessage(3003).sendToTarget();
         this.mEntryManager.getVisibleNotifications().forEach(new Consumer(arrayList) {
+            /* class com.android.systemui.statusbar.notification.policy.$$Lambda$KeyguardNotificationController$Na2b_4U1h0L_f2rlRPW0xKjNbIY */
             public final /* synthetic */ ArrayList f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 KeyguardNotificationController.this.lambda$clear$0$KeyguardNotificationController(this.f$1, (NotificationEntry) obj);
             }
@@ -182,12 +184,14 @@ public class KeyguardNotificationController {
         this.mSortedKeys.clear();
         if (!hashSet.isEmpty()) {
             this.mEntryManager.getVisibleNotifications().forEach(new Consumer(hashSet) {
+                /* class com.android.systemui.statusbar.notification.policy.$$Lambda$KeyguardNotificationController$GuZXS6bJBjs3ceHXMFgWBJ2pts */
                 public final /* synthetic */ Set f$1;
 
                 {
                     this.f$1 = r2;
                 }
 
+                @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
                     KeyguardNotificationController.this.lambda$updateSortedKeys$1$KeyguardNotificationController(this.f$1, (NotificationEntry) obj);
                 }
@@ -204,23 +208,25 @@ public class KeyguardNotificationController {
     }
 
     /* access modifiers changed from: private */
-    public void handleInsertDB(ContentValues contentValues) {
+    /* access modifiers changed from: public */
+    private void handleInsertDB(ContentValues contentValues) {
         try {
             ContentResolver contentResolver = this.mContext.getContentResolver();
             contentResolver.insert(KeyguardNotification.URI, contentValues);
-            contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+            contentResolver.notifyChange(KeyguardNotification.URI, null);
         } catch (Exception e) {
             Log.e("KeyguardNotifHelper", "handleInsertDB", e);
         }
     }
 
     /* access modifiers changed from: private */
-    public void handleUpdateDB(ContentValues contentValues) {
+    /* access modifiers changed from: public */
+    private void handleUpdateDB(ContentValues contentValues) {
         int intValue = contentValues.getAsInteger("key").intValue();
         try {
             ContentResolver contentResolver = this.mContext.getContentResolver();
-            if (contentResolver.update(KeyguardNotification.URI, contentValues, "key" + "=" + intValue, (String[]) null) > 0) {
-                contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+            if (contentResolver.update(KeyguardNotification.URI, contentValues, "key" + "=" + intValue, null) > 0) {
+                contentResolver.notifyChange(KeyguardNotification.URI, null);
             } else {
                 handleInsertDB(contentValues);
             }
@@ -230,11 +236,12 @@ public class KeyguardNotificationController {
     }
 
     /* access modifiers changed from: private */
-    public void handleDeleteDB(int i) {
+    /* access modifiers changed from: public */
+    private void handleDeleteDB(int i) {
         try {
             ContentResolver contentResolver = this.mContext.getContentResolver();
-            if (contentResolver.delete(KeyguardNotification.URI, "key" + "=" + i, (String[]) null) > 0) {
-                contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+            if (contentResolver.delete(KeyguardNotification.URI, "key" + "=" + i, null) > 0) {
+                contentResolver.notifyChange(KeyguardNotification.URI, null);
             }
         } catch (Exception e) {
             Log.e("KeyguardNotifHelper", "handleDeleteDB", e);
@@ -242,11 +249,12 @@ public class KeyguardNotificationController {
     }
 
     /* access modifiers changed from: private */
-    public void handleClearDB() {
+    /* access modifiers changed from: public */
+    private void handleClearDB() {
         try {
             ContentResolver contentResolver = this.mContext.getContentResolver();
-            contentResolver.delete(KeyguardNotification.URI, (String) null, (String[]) null);
-            contentResolver.notifyChange(KeyguardNotification.URI, (ContentObserver) null);
+            contentResolver.delete(KeyguardNotification.URI, null, null);
+            contentResolver.notifyChange(KeyguardNotification.URI, null);
         } catch (Exception e) {
             Log.e("KeyguardNotifHelper", "handleClearDB", e);
         }

@@ -34,7 +34,7 @@ public class InvocationLightsView extends View implements NavigationBarTransitio
     private final int mViewHeight;
 
     public InvocationLightsView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public InvocationLightsView(Context context, AttributeSet attributeSet) {
@@ -61,9 +61,9 @@ public class InvocationLightsView extends View implements NavigationBarTransitio
         this.mPaint.setAntiAlias(true);
         this.mGuide = new PerimeterPathGuide(context, createCornerPathRenderer(context), this.mStrokeWidth / 2, DisplayUtils.getWidth(context), DisplayUtils.getHeight(context));
         this.mViewHeight = Math.max(Math.max(DisplayUtils.getCornerRadiusBottom(context), DisplayUtils.getCornerRadiusTop(context)), DisplayUtils.convertDpToPx(3.0f, context));
-        int themeAttr = Utils.getThemeAttr(this.mContext, C0009R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(this.mContext, Utils.getThemeAttr(this.mContext, C0009R$attr.lightIconTheme));
-        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(this.mContext, themeAttr);
+        int themeAttr = Utils.getThemeAttr(((View) this).mContext, C0009R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(((View) this).mContext, Utils.getThemeAttr(((View) this).mContext, C0009R$attr.lightIconTheme));
+        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(((View) this).mContext, themeAttr);
         this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.singleToneColor);
         this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor);
         for (int i3 = 0; i3 < 4; i3++) {
@@ -112,6 +112,7 @@ public class InvocationLightsView extends View implements NavigationBarTransitio
         this.mAssistInvocationLights.get(3).setColor(i4);
     }
 
+    @Override // com.android.systemui.statusbar.phone.NavigationBarTransitions.DarkIntensityListener
     public void onDarkIntensity(float f) {
         updateDarkness(f);
     }

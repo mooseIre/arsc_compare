@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class ConcurrencyModule_ProvideHandlerFactory implements Factory<Handler> {
     private static final ConcurrencyModule_ProvideHandlerFactory INSTANCE = new ConcurrencyModule_ProvideHandlerFactory();
 
+    @Override // javax.inject.Provider
     public Handler get() {
         return provideInstance();
     }

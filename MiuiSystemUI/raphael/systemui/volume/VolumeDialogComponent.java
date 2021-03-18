@@ -28,16 +28,21 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     private VolumeDialog mDialog;
     private final KeyguardViewMediator mKeyguardViewMediator;
     private final VolumeDialog.Callback mVolumeDialogCallback = new VolumeDialog.Callback() {
+        /* class com.android.systemui.volume.VolumeDialogComponent.AnonymousClass1 */
+
+        @Override // com.android.systemui.plugins.VolumeDialog.Callback
         public void onZenSettingsClicked() {
             VolumeDialogComponent.this.startSettings(ZenModePanel.ZEN_SETTINGS);
         }
 
+        @Override // com.android.systemui.plugins.VolumeDialog.Callback
         public void onZenPrioritySettingsClicked() {
             VolumeDialogComponent.this.startSettings(ZenModePanel.ZEN_PRIORITY_SETTINGS);
         }
     };
     private VolumePolicy mVolumePolicy = new VolumePolicy(false, false, false, 400);
 
+    @Override // com.android.systemui.DemoMode
     public void dispatchDemoCommand(String str, Bundle bundle) {
     }
 
@@ -45,20 +50,25 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     }
 
     public VolumeDialogComponent(Context context, KeyguardViewMediator keyguardViewMediator, VolumeDialogControllerImpl volumeDialogControllerImpl) {
-        Class<VolumeDialog> cls = VolumeDialog.class;
         this.mContext = context;
         this.mKeyguardViewMediator = keyguardViewMediator;
         this.mController = volumeDialogControllerImpl;
         volumeDialogControllerImpl.setUserActivityListener(this);
         ((PluginDependencyProvider) Dependency.get(PluginDependencyProvider.class)).allowPluginDependency(VolumeDialogController.class);
-        ExtensionController.ExtensionBuilder<VolumeDialog> newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(cls);
-        newExtension.withPlugin(cls);
+        ExtensionController.ExtensionBuilder newExtension = ((ExtensionController) Dependency.get(ExtensionController.class)).newExtension(VolumeDialog.class);
+        newExtension.withPlugin(VolumeDialog.class);
         newExtension.withDefault(new Supplier() {
+            /* class com.android.systemui.volume.$$Lambda$5eQ6FmuY0CORdNfZebXQAtrsfI4 */
+
+            @Override // java.util.function.Supplier
             public final Object get() {
                 return VolumeDialogComponent.this.createDefault();
             }
         });
         newExtension.withCallback(new Consumer() {
+            /* class com.android.systemui.volume.$$Lambda$VolumeDialogComponent$vZvGMkdhFGTZ9hLE1BnozIW6Wb0 */
+
+            @Override // java.util.function.Consumer
             public final void accept(Object obj) {
                 VolumeDialogComponent.this.lambda$new$0$VolumeDialogComponent((VolumeDialog) obj);
             }
@@ -88,6 +98,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         return volumeDialogImpl;
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         VolumePolicy volumePolicy = this.mVolumePolicy;
         boolean z = volumePolicy.volumeDownToEnterSilent;
@@ -114,6 +125,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         this.mController.setEnableDialogs(z, z2);
     }
 
+    @Override // com.android.systemui.volume.VolumeDialogControllerImpl.UserActivityListener
     public void onUserActivity() {
         this.mKeyguardViewMediator.userActivity();
     }
@@ -129,6 +141,7 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
         }
     }
 
+    @Override // com.android.systemui.volume.VolumeComponent
     public void dismissNow() {
         this.mController.dismiss();
     }
@@ -139,7 +152,8 @@ public class VolumeDialogComponent implements VolumeComponent, TunerService.Tuna
     }
 
     /* access modifiers changed from: private */
-    public void startSettings(Intent intent) {
+    /* access modifiers changed from: public */
+    private void startSettings(Intent intent) {
         ((ActivityStarter) Dependency.get(ActivityStarter.class)).startActivity(intent, true, true);
     }
 }

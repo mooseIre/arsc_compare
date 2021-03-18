@@ -11,6 +11,7 @@ public final class NotificationSectionsLogger_Factory implements Factory<Notific
         this.logBufferProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NotificationSectionsLogger get() {
         return provideInstance(this.logBufferProvider);
     }

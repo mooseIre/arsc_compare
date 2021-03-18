@@ -14,6 +14,7 @@ public final class OldModeController_Factory implements Factory<OldModeControlle
         this.mSettingsObserverProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public OldModeController get() {
         return provideInstance(this.mBroadcastDispatcherProvider, this.mSettingsObserverProvider);
     }

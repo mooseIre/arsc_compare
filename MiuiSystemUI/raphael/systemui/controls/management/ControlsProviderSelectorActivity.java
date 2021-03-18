@@ -33,8 +33,7 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     private final ControlsProviderSelectorActivity$currentUserTracker$1 currentUserTracker;
     private final Executor executor;
     private final GlobalActionsComponent globalActionsComponent;
-    /* access modifiers changed from: private */
-    public final ControlsListingController listingController;
+    private final ControlsListingController listingController;
     private RecyclerView recyclerView;
 
     public static final /* synthetic */ RecyclerView access$getRecyclerView$p(ControlsProviderSelectorActivity controlsProviderSelectorActivity) {
@@ -62,6 +61,7 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
         setContentView(C0017R$layout.controls_management);
@@ -104,6 +104,7 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onStart() {
         super.onStart();
         this.currentUserTracker.startTracking();
@@ -137,6 +138,7 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onStop() {
         super.onStop();
         this.currentUserTracker.stopTracking();
@@ -147,6 +149,7 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         this.currentUserTracker.stopTracking();
         super.onDestroy();

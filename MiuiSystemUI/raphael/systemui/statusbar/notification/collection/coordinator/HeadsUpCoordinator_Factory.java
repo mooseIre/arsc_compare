@@ -20,6 +20,7 @@ public final class HeadsUpCoordinator_Factory implements Factory<HeadsUpCoordina
         this.remoteInputManagerProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public HeadsUpCoordinator get() {
         return provideInstance(this.headsUpManagerProvider, this.headsUpViewBinderProvider, this.notificationInterruptStateProvider, this.remoteInputManagerProvider);
     }

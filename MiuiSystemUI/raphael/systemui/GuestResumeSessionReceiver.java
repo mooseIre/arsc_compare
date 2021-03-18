@@ -18,13 +18,12 @@ import android.util.Log;
 import android.view.WindowManagerGlobal;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
-import java.util.concurrent.Executor;
 
 public class GuestResumeSessionReceiver extends BroadcastReceiver {
     private Dialog mNewSessionDialog;
 
     public void register(BroadcastDispatcher broadcastDispatcher) {
-        broadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), (Executor) null, UserHandle.SYSTEM);
+        broadcastDispatcher.registerReceiver(this, new IntentFilter("android.intent.action.USER_SWITCHED"), null, UserHandle.SYSTEM);
     }
 
     public void onReceive(Context context, Intent intent) {

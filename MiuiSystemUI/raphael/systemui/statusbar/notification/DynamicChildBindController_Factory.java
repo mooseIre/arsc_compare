@@ -11,6 +11,7 @@ public final class DynamicChildBindController_Factory implements Factory<Dynamic
         this.stageProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public DynamicChildBindController get() {
         return provideInstance(this.stageProvider);
     }

@@ -5,8 +5,9 @@ import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificatio
 import java.util.function.Predicate;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowManager.kt */
-final class AppMiniWindowManager$updateAllHeadsUpMiniBars$2<T> implements Predicate<NotificationEntry> {
+public final class AppMiniWindowManager$updateAllHeadsUpMiniBars$2<T> implements Predicate<NotificationEntry> {
     public static final AppMiniWindowManager$updateAllHeadsUpMiniBars$2 INSTANCE = new AppMiniWindowManager$updateAllHeadsUpMiniBars$2();
 
     AppMiniWindowManager$updateAllHeadsUpMiniBars$2() {

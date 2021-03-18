@@ -11,7 +11,7 @@ public class LimitedSizeFrameLayout extends FrameLayout {
     protected int mMaxWidth;
 
     public LimitedSizeFrameLayout(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public LimitedSizeFrameLayout(Context context, AttributeSet attributeSet) {

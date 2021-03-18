@@ -23,6 +23,7 @@ public final class CastTile_Factory implements Factory<CastTile> {
         this.activityStarterProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public CastTile get() {
         return provideInstance(this.hostProvider, this.castControllerProvider, this.keyguardStateControllerProvider, this.networkControllerProvider, this.activityStarterProvider);
     }

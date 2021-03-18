@@ -37,8 +37,8 @@ public final class MiuiMediaCarouselScrollHandler extends MediaCarouselScrollHan
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.media.MediaCarouselScrollHandler
     public void startScroll(int i, int i2, float f) {
-        Class cls = NotificationStat.class;
         getScrollView().cancelCurrentScroll();
         int mSidePaddings = (i - MiuiMediaHeaderView.Companion.getMSidePaddings()) + (getPlayerWidthPlusPadding() / 3);
         int playerWidthPlusPadding = mSidePaddings - (mSidePaddings % getPlayerWidthPlusPadding());
@@ -51,18 +51,18 @@ public final class MiuiMediaCarouselScrollHandler extends MediaCarouselScrollHan
         Folme.useAt(getScrollView()).state().fromTo(animState, animState2, animConfig);
         int playerWidthPlusPadding2 = playerWidthPlusPadding / getPlayerWidthPlusPadding();
         if (this.curIndex > playerWidthPlusPadding2) {
-            ((NotificationStat) Dependency.get(cls)).onMediaStroke(MediaPanelScroll.RIGHT.name());
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onMediaStroke(MediaPanelScroll.RIGHT.name());
         } else {
-            ((NotificationStat) Dependency.get(cls)).onMediaStroke(MediaPanelScroll.LEFT.name());
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onMediaStroke(MediaPanelScroll.LEFT.name());
         }
         this.curIndex = playerWidthPlusPadding2;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.media.MediaCarouselScrollHandler
     public void updateMediaPaddings() {
         int childCount = getMediaContent().getChildCount();
-        int i = 0;
-        while (i < childCount) {
+        for (int i = 0; i < childCount; i++) {
             View childAt = getMediaContent().getChildAt(i);
             Intrinsics.checkExpressionValueIsNotNull(childAt, "mediaView");
             ViewGroup.LayoutParams layoutParams = childAt.getLayoutParams();
@@ -75,7 +75,6 @@ public final class MiuiMediaCarouselScrollHandler extends MediaCarouselScrollHan
                 }
                 marginLayoutParams.setMarginEnd(MiuiMediaHeaderView.Companion.getMSidePaddings());
                 childAt.setLayoutParams(marginLayoutParams);
-                i++;
             } else {
                 throw new TypeCastException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
             }

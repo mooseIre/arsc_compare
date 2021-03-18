@@ -28,6 +28,7 @@ public final class MediaDataManager_Factory implements Factory<MediaDataManager>
         this.mediaResumeListenerProvider = provider8;
     }
 
+    @Override // javax.inject.Provider
     public MediaDataManager get() {
         return provideInstance(this.contextProvider, this.backgroundExecutorProvider, this.foregroundExecutorProvider, this.mediaControllerFactoryProvider, this.dumpManagerProvider, this.broadcastDispatcherProvider, this.mediaTimeoutListenerProvider, this.mediaResumeListenerProvider);
     }

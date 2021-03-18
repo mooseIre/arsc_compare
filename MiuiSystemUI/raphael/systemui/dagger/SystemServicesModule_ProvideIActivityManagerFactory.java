@@ -7,6 +7,7 @@ import dagger.internal.Preconditions;
 public final class SystemServicesModule_ProvideIActivityManagerFactory implements Factory<IActivityManager> {
     private static final SystemServicesModule_ProvideIActivityManagerFactory INSTANCE = new SystemServicesModule_ProvideIActivityManagerFactory();
 
+    @Override // javax.inject.Provider
     public IActivityManager get() {
         return provideInstance();
     }

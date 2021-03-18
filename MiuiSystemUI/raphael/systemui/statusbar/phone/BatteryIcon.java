@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ColorFilter;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -80,7 +79,7 @@ public class BatteryIcon {
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             this.mGraphicIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
-            this.mGraphicIconDarkMode.setColorFilter((ColorFilter) null);
+            this.mGraphicIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicIconDarkMode;
     }
@@ -103,7 +102,7 @@ public class BatteryIcon {
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             this.mGraphicDigitalIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
-            this.mGraphicDigitalIconDarkMode.setColorFilter((ColorFilter) null);
+            this.mGraphicDigitalIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicDigitalIconDarkMode;
     }
@@ -126,7 +125,7 @@ public class BatteryIcon {
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             this.mGraphicChargeIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
-            this.mGraphicChargeIconDarkMode.setColorFilter((ColorFilter) null);
+            this.mGraphicChargeIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicChargeIconDarkMode;
     }
@@ -149,7 +148,7 @@ public class BatteryIcon {
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             this.mGraphicChargeDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
-            this.mGraphicChargeDigitIconDarkMode.setColorFilter((ColorFilter) null);
+            this.mGraphicChargeDigitIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicChargeDigitIconDarkMode;
     }
@@ -172,7 +171,7 @@ public class BatteryIcon {
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             this.mGraphicPowerSaveIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
-            this.mGraphicPowerSaveIconDarkMode.setColorFilter((ColorFilter) null);
+            this.mGraphicPowerSaveIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicPowerSaveIconDarkMode;
     }
@@ -195,7 +194,7 @@ public class BatteryIcon {
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter(this.mContext.getResources().getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts), PorterDuff.Mode.SRC_IN);
         } else {
-            this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter((ColorFilter) null);
+            this.mGraphicPowerSaveDigitIconDarkMode.setColorFilter(null);
         }
         return this.mGraphicPowerSaveDigitIconDarkMode;
     }
@@ -224,7 +223,7 @@ public class BatteryIcon {
                 f += f2;
                 int i6 = (int) f;
                 if (i6 < i3 || i5 > i2) {
-                    levelListDrawable.addLevel(i5, i6, (Drawable) null);
+                    levelListDrawable.addLevel(i5, i6, null);
                 } else {
                     levelListDrawable.addLevel(i5, i6, extractDrawable.get(i4));
                 }
@@ -235,7 +234,7 @@ public class BatteryIcon {
     }
 
     private ArrayList<Drawable> extractDrawable(int i) {
-        ArrayList<Drawable> arrayList = this.mGraphicRes2Drawables.get(i, (Object) null);
+        ArrayList<Drawable> arrayList = this.mGraphicRes2Drawables.get(i, null);
         if (arrayList != null) {
             return arrayList;
         }
@@ -268,17 +267,14 @@ public class BatteryIcon {
         while (i3 < height) {
             int i4 = 0;
             while (i4 < width2) {
-                int i5 = width;
-                int[] iArr2 = iArr;
-                decodeStream.getPixels(iArr, 0, i5, i4 * width, i3 * i2, width, i2);
-                Bitmap createBitmap = Bitmap.createBitmap(iArr2, 0, width, i5, i2, Bitmap.Config.ARGB_8888);
+                decodeStream.getPixels(iArr, 0, width, i4 * width, i3 * i2, width, i2);
+                Bitmap createBitmap = Bitmap.createBitmap(iArr, 0, width, width, i2, Bitmap.Config.ARGB_8888);
                 createBitmap.setDensity(max);
                 arrayList.add(new BitmapDrawable(resources, createBitmap));
                 i4++;
                 i3 = i3;
-                iArr = iArr2;
+                iArr = iArr;
             }
-            int[] iArr3 = iArr;
             i3++;
         }
         decodeStream.recycle();

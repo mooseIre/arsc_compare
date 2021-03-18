@@ -34,6 +34,7 @@ public final class NotificationShadeDepthController_Factory implements Factory<N
         this.dumpManagerProvider = provider9;
     }
 
+    @Override // javax.inject.Provider
     public NotificationShadeDepthController get() {
         return provideInstance(this.statusBarStateControllerProvider, this.blurUtilsProvider, this.biometricUnlockControllerProvider, this.keyguardStateControllerProvider, this.choreographerProvider, this.wallpaperManagerProvider, this.notificationShadeWindowControllerProvider, this.dozeParametersProvider, this.dumpManagerProvider);
     }

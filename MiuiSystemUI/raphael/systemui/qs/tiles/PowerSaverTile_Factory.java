@@ -11,6 +11,7 @@ public final class PowerSaverTile_Factory implements Factory<PowerSaverTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PowerSaverTile get() {
         return provideInstance(this.hostProvider);
     }

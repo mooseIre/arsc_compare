@@ -22,11 +22,13 @@ public final class RingerModeTrackerImpl implements RingerModeTracker {
         this.ringerModeInternal = new RingerModeLiveData(broadcastDispatcher, executor, "android.media.INTERNAL_RINGER_MODE_CHANGED_ACTION", new RingerModeTrackerImpl$ringerModeInternal$1(audioManager));
     }
 
+    @Override // com.android.systemui.util.RingerModeTracker
     @NotNull
     public LiveData<Integer> getRingerMode() {
         return this.ringerMode;
     }
 
+    @Override // com.android.systemui.util.RingerModeTracker
     @NotNull
     public LiveData<Integer> getRingerModeInternal() {
         return this.ringerModeInternal;

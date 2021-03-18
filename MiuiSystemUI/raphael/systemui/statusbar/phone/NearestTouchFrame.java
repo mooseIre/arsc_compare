@@ -75,16 +75,18 @@ public class NearestTouchFrame extends FrameLayout {
             return null;
         }
         return (View) this.mClickableChildren.stream().filter($$Lambda$dFYK0EjGBZUG5FTAJ9pyZPnsifY.INSTANCE).map(new Function(motionEvent) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$NearestTouchFrame$c68uozdLu3LZYhrzFrFQdtMIM */
             public final /* synthetic */ MotionEvent f$1;
 
             {
                 this.f$1 = r2;
             }
 
+            @Override // java.util.function.Function
             public final Object apply(Object obj) {
                 return NearestTouchFrame.this.lambda$findNearestChild$0$NearestTouchFrame(this.f$1, (View) obj);
             }
-        }).min(Comparator.comparingInt($$Lambda$NearestTouchFrame$NP6mvtRuXVTLLChUNbbl4JUIMyU.INSTANCE)).map($$Lambda$NearestTouchFrame$KtkvB6kuUFBlaLB_chuEtrCrZqA.INSTANCE).orElse((Object) null);
+        }).min(Comparator.comparingInt($$Lambda$NearestTouchFrame$NP6mvtRuXVTLLChUNbbl4JUIMyU.INSTANCE)).map($$Lambda$NearestTouchFrame$KtkvB6kuUFBlaLB_chuEtrCrZqA.INSTANCE).orElse(null);
     }
 
     /* access modifiers changed from: private */

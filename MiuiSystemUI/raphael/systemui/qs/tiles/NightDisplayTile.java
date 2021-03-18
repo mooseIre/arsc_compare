@@ -26,6 +26,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
     private final LocationController mLocationController;
     private final ColorDisplayManager mManager = ((ColorDisplayManager) this.mContext.getSystemService(ColorDisplayManager.class));
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 491;
     }
@@ -35,15 +36,18 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
         this.mLocationController = locationController;
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
         return ColorDisplayManager.isNightDisplayAvailable(this.mContext);
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public QSTile.BooleanState newTileState() {
         return new QSTile.BooleanState();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
         if ("1".equals(Settings.Global.getString(this.mContext.getContentResolver(), "night_display_forced_auto_mode_available")) && this.mManager.getNightDisplayAutoModeRaw() == -1) {
             this.mManager.setNightDisplayAutoMode(1);
@@ -53,6 +57,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleUserSwitch(int i) {
         if (this.mIsListening) {
             this.mListener.setCallback((NightDisplayListener.Callback) null);
@@ -78,7 +83,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
         if (TextUtils.isEmpty(secondaryLabel)) {
             charSequence = booleanState.label;
         } else {
-            charSequence = TextUtils.concat(new CharSequence[]{booleanState.label, ", ", booleanState.secondaryLabel});
+            charSequence = TextUtils.concat(booleanState.label, ", ", booleanState.secondaryLabel);
         }
         booleanState.contentDescription = charSequence;
     }
@@ -103,7 +108,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
             instance.set(12, localTime.getMinute());
             instance.set(13, 0);
             instance.set(14, 0);
-            return this.mContext.getString(i, new Object[]{timeFormat.format(instance.getTime())});
+            return this.mContext.getString(i, timeFormat.format(instance.getTime()));
         } else if (nightDisplayAutoMode != 2 || !this.mLocationController.isLocationEnabled()) {
             return null;
         } else {
@@ -114,14 +119,17 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
         }
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public LogMaker populate(LogMaker logMaker) {
         return super.populate(logMaker).addTaggedData(1311, Integer.valueOf(this.mManager.getNightDisplayAutoModeRaw()));
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public Intent getLongClickIntent() {
         return new Intent("android.settings.NIGHT_DISPLAY_SETTINGS");
     }
 
+    @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleSetListening(boolean z) {
         super.handleSetListening(z);
         this.mIsListening = z;
@@ -133,6 +141,7 @@ public class NightDisplayTile extends QSTileImpl<QSTile.BooleanState> implements
         this.mListener.setCallback((NightDisplayListener.Callback) null);
     }
 
+    @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
         return this.mContext.getString(C0021R$string.quick_settings_night_display_label);
     }

@@ -14,6 +14,7 @@ public final class MiuiFullScreenGestureProxy_Factory implements Factory<MiuiFul
         this.commandQueueProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public MiuiFullScreenGestureProxy get() {
         return provideInstance(this.contextProvider, this.commandQueueProvider);
     }

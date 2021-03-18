@@ -20,7 +20,6 @@ import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.StatusBarMobileView;
 import com.android.systemui.statusbar.StatusBarWifiView;
 import com.android.systemui.statusbar.StatusIconDisplayable;
-import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
 import com.android.systemui.util.Utils;
 import java.util.List;
@@ -28,7 +27,7 @@ import java.util.List;
 public interface StatusBarIconController {
     void addIconGroup(IconManager iconManager);
 
-    void addIconGroup(IconManager iconManager, List<String> list) {
+    default void addIconGroup(IconManager iconManager, List<String> list) {
     }
 
     void removeAllIconsForSlot(String str);
@@ -49,7 +48,7 @@ public interface StatusBarIconController {
 
     void setSignalIcon(String str, StatusBarSignalPolicy.WifiIconState wifiIconState);
 
-    static ArraySet<String> getIconBlacklist(Context context, String str) {
+    static default ArraySet<String> getIconBlacklist(Context context, String str) {
         String[] strArr;
         ArraySet<String> arraySet = new ArraySet<>();
         if (str == null) {
@@ -74,11 +73,13 @@ public interface StatusBarIconController {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
-            this.mDarkIconDispatcher.addDarkReceiver((DarkIconDispatcher.DarkReceiver) addHolder(i, str, z, statusBarIconHolder));
+            this.mDarkIconDispatcher.addDarkReceiver(addHolder(i, str, z, statusBarIconHolder));
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public LinearLayout.LayoutParams onCreateLayoutParams() {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(-2, this.mIconSize);
             int i = this.mIconHPadding;
@@ -87,6 +88,7 @@ public interface StatusBarIconController {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void destroy() {
             for (int i = 0; i < this.mGroup.getChildCount(); i++) {
                 this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
@@ -95,11 +97,13 @@ public interface StatusBarIconController {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void onRemoveIcon(int i) {
             this.mDarkIconDispatcher.removeDarkReceiver((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
             super.onRemoveIcon(i);
         }
 
+        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void onSetIcon(int i, StatusBarIcon statusBarIcon) {
             super.onSetIcon(i, statusBarIcon);
             this.mDarkIconDispatcher.applyDark((DarkIconDispatcher.DarkReceiver) this.mGroup.getChildAt(i));
@@ -117,6 +121,7 @@ public interface StatusBarIconController {
         }
 
         /* access modifiers changed from: protected */
+        @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
             StatusIconDisplayable addHolder = addHolder(i, str, z, statusBarIconHolder);
             Rect rect = new Rect();
@@ -148,6 +153,7 @@ public interface StatusBarIconController {
         private boolean mIsInDemoMode;
         protected boolean mShouldLog = false;
 
+        @Override // com.android.systemui.DemoMode
         public void dispatchDemoCommand(String str, Bundle bundle) {
         }
 
@@ -227,7 +233,7 @@ public interface StatusBarIconController {
         }
 
         private StatusBarIconView onCreateStatusBarIconView(String str, boolean z) {
-            return new StatusBarIconView(this.mContext, str, (ExpandedNotification) null, z);
+            return new StatusBarIconView(this.mContext, str, null, z);
         }
 
         private StatusBarWifiView onCreateStatusBarWifiView(String str) {

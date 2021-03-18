@@ -7,10 +7,13 @@ import com.android.systemui.controls.ControlInterface;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.management.ControlsModel;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import kotlin.TypeCastException;
+import kotlin.collections.CollectionsKt__IterablesKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -18,8 +21,7 @@ import org.jetbrains.annotations.NotNull;
 public final class FavoritesModel implements ControlsModel {
     private RecyclerView.Adapter<?> adapter;
     private final ComponentName componentName;
-    /* access modifiers changed from: private */
-    public int dividerPosition;
+    private int dividerPosition;
     @NotNull
     private final List<ElementWrapper> elements;
     private final FavoritesModelCallback favoritesModelCallback;
@@ -41,14 +43,16 @@ public final class FavoritesModel implements ControlsModel {
         this.componentName = componentName2;
         this.favoritesModelCallback = favoritesModelCallback2;
         ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
-        for (ControlInfo controlInfoWrapper : list) {
-            arrayList.add(new ControlInfoWrapper(this.componentName, controlInfoWrapper, true));
+        Iterator<T> it = list.iterator();
+        while (it.hasNext()) {
+            arrayList.add(new ControlInfoWrapper(this.componentName, it.next(), true));
         }
-        this.elements = CollectionsKt___CollectionsKt.plus(arrayList, new DividerWrapper(false, false, 3, (DefaultConstructorMarker) null));
+        this.elements = CollectionsKt___CollectionsKt.plus((Collection) arrayList, (Object) new DividerWrapper(false, false, 3, null));
         this.dividerPosition = getElements().size() - 1;
         this.itemTouchHelperCallback = new FavoritesModel$itemTouchHelperCallback$1(this, 0, 0);
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     @NotNull
     public ControlsModel.MoveHelper getMoveHelper() {
         return this.moveHelper;
@@ -59,13 +63,14 @@ public final class FavoritesModel implements ControlsModel {
         this.adapter = adapter2;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     @NotNull
     public List<ControlInfo> getFavorites() {
-        List<T> take = CollectionsKt___CollectionsKt.take(getElements(), this.dividerPosition);
-        ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(take, 10));
-        for (T t : take) {
-            if (t != null) {
-                arrayList.add(((ControlInfoWrapper) t).getControlInfo());
+        List<ElementWrapper> list = CollectionsKt___CollectionsKt.take(getElements(), this.dividerPosition);
+        ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(list, 10));
+        for (ElementWrapper elementWrapper : list) {
+            if (elementWrapper != null) {
+                arrayList.add(((ControlInfoWrapper) elementWrapper).getControlInfo());
             } else {
                 throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.controls.management.ControlInfoWrapper");
             }
@@ -73,11 +78,13 @@ public final class FavoritesModel implements ControlsModel {
         return arrayList;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     @NotNull
     public List<ElementWrapper> getElements() {
         return this.elements;
     }
 
+    @Override // com.android.systemui.controls.management.ControlsModel
     public void changeFavoriteStatus(@NotNull String str, boolean z) {
         Intrinsics.checkParameterIsNotNull(str, "controlId");
         Iterator<ElementWrapper> it = getElements().iterator();
@@ -88,7 +95,7 @@ public final class FavoritesModel implements ControlsModel {
                 break;
             }
             ElementWrapper next = it.next();
-            if ((next instanceof ControlInterface) && Intrinsics.areEqual((Object) ((ControlInterface) next).getControlId(), (Object) str)) {
+            if ((next instanceof ControlInterface) && Intrinsics.areEqual(((ControlInterface) next).getControlId(), str)) {
                 break;
             }
             i++;
@@ -175,8 +182,8 @@ public final class FavoritesModel implements ControlsModel {
         }
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:24:0x004e  */
-    /* JADX WARNING: Removed duplicated region for block: B:27:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:22:0x004a  */
+    /* JADX WARNING: Removed duplicated region for block: B:26:? A[ADDED_TO_REGION, RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void updateDivider(int r5, int r6) {
         /*

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public final class MediaDataManager$appChangeReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ MediaDataManager this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaDataManager$appChangeReceiver$1(MediaDataManager mediaDataManager) {
         this.this$0 = mediaDataManager;
     }
@@ -32,7 +33,7 @@ public final class MediaDataManager$appChangeReceiver$1 extends BroadcastReceive
                     return;
                 }
                 Uri data = intent.getData();
-                if (data != null && (encodedSchemeSpecificPart = data.getEncodedSchemeSpecificPart()) != null) {
+                if (!(data == null || (encodedSchemeSpecificPart = data.getEncodedSchemeSpecificPart()) == null)) {
                     this.this$0.removeAllForPackage(encodedSchemeSpecificPart);
                 }
             } else if (action.equals("android.intent.action.PACKAGES_SUSPENDED") && (stringArrayExtra = intent.getStringArrayExtra("android.intent.extra.changed_package_list")) != null) {

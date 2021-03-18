@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MediaCarouselScrollHandler$gestureListener$1 extends GestureDetector.SimpleOnGestureListener {
     final /* synthetic */ MediaCarouselScrollHandler this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     MediaCarouselScrollHandler$gestureListener$1(MediaCarouselScrollHandler mediaCarouselScrollHandler) {
         this.this$0 = mediaCarouselScrollHandler;
     }

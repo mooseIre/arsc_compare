@@ -14,6 +14,7 @@ public final class NotificationPanelStat_Factory implements Factory<Notification
         this.eventTrackerProvider = provider2;
     }
 
+    @Override // javax.inject.Provider
     public NotificationPanelStat get() {
         return provideInstance(this.contextProvider, this.eventTrackerProvider);
     }

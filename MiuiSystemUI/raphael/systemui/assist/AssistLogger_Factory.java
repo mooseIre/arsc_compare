@@ -21,6 +21,7 @@ public final class AssistLogger_Factory implements Factory<AssistLogger> {
         this.assistHandleBehaviorControllerProvider = provider5;
     }
 
+    @Override // javax.inject.Provider
     public AssistLogger get() {
         return provideInstance(this.contextProvider, this.uiEventLoggerProvider, this.assistUtilsProvider, this.phoneStateMonitorProvider, this.assistHandleBehaviorControllerProvider);
     }

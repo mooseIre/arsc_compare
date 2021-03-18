@@ -12,12 +12,9 @@ import java.util.Iterator;
 
 public class DisplayChangeController {
     private final IDisplayWindowRotationController mDisplayRotationController;
-    /* access modifiers changed from: private */
-    public final Handler mHandler;
-    /* access modifiers changed from: private */
-    public final ArrayList<OnDisplayChangingListener> mRotationListener = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public final ArrayList<OnDisplayChangingListener> mTmpListeners = new ArrayList<>();
+    private final Handler mHandler;
+    private final ArrayList<OnDisplayChangingListener> mRotationListener = new ArrayList<>();
+    private final ArrayList<OnDisplayChangingListener> mTmpListeners = new ArrayList<>();
     private final IWindowManager mWmService;
 
     public interface OnDisplayChangingListener {
@@ -26,8 +23,11 @@ public class DisplayChangeController {
 
     public DisplayChangeController(Handler handler, IWindowManager iWindowManager) {
         AnonymousClass1 r0 = new IDisplayWindowRotationController.Stub() {
+            /* class com.android.systemui.wm.DisplayChangeController.AnonymousClass1 */
+
             public void onRotateDisplay(int i, int i2, int i3, IDisplayWindowRotationCallback iDisplayWindowRotationCallback) {
                 DisplayChangeController.this.mHandler.post(new Runnable(i, i2, i3, iDisplayWindowRotationCallback) {
+                    /* class com.android.systemui.wm.$$Lambda$DisplayChangeController$1$cr2NyoFjnt2r0DMHwy9cOe5oGO4 */
                     public final /* synthetic */ int f$1;
                     public final /* synthetic */ int f$2;
                     public final /* synthetic */ int f$3;

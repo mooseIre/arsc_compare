@@ -11,6 +11,7 @@ public final class SyncTile_Factory implements Factory<SyncTile> {
         this.hostProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public SyncTile get() {
         return provideInstance(this.hostProvider);
     }

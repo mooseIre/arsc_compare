@@ -32,7 +32,9 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.R$styleable;
 
 public class NotificationShadeWindowView extends FrameLayout {
-    private Window mFakeWindow = new Window(this.mContext) {
+    private Window mFakeWindow = new Window(((FrameLayout) this).mContext) {
+        /* class com.android.systemui.statusbar.phone.NotificationShadeWindowView.AnonymousClass2 */
+
         public void addContentView(View view, ViewGroup.LayoutParams layoutParams) {
         }
 
@@ -134,9 +136,11 @@ public class NotificationShadeWindowView extends FrameLayout {
         public void setChildInt(int i, int i2) {
         }
 
+        @Override // android.view.Window
         public void setContentView(int i) {
         }
 
+        @Override // android.view.Window
         public void setContentView(View view) {
         }
 
@@ -215,8 +219,7 @@ public class NotificationShadeWindowView extends FrameLayout {
             return NotificationShadeWindowView.this;
         }
     };
-    /* access modifiers changed from: private */
-    public ActionMode mFloatingActionMode;
+    private ActionMode mFloatingActionMode;
     private View mFloatingActionModeOriginatingView;
     private FloatingToolbar mFloatingToolbar;
     private ViewTreeObserver.OnPreDrawListener mFloatingToolbarPreDrawListener;
@@ -224,7 +227,8 @@ public class NotificationShadeWindowView extends FrameLayout {
     private int mLeftInset = 0;
     private int mRightInset = 0;
 
-    interface InteractionEventHandler {
+    /* access modifiers changed from: package-private */
+    public interface InteractionEventHandler {
         void didIntercept(MotionEvent motionEvent);
 
         void didNotHandleTouchEvent(MotionEvent motionEvent);
@@ -286,20 +290,22 @@ public class NotificationShadeWindowView extends FrameLayout {
             View childAt = getChildAt(i);
             if (childAt.getLayoutParams() instanceof LayoutParams) {
                 LayoutParams layoutParams = (LayoutParams) childAt.getLayoutParams();
-                if (!layoutParams.ignoreRightInset && !(layoutParams.rightMargin == this.mRightInset && layoutParams.leftMargin == this.mLeftInset)) {
-                    layoutParams.rightMargin = this.mRightInset;
-                    layoutParams.leftMargin = this.mLeftInset;
+                if (!layoutParams.ignoreRightInset && !(((FrameLayout.LayoutParams) layoutParams).rightMargin == this.mRightInset && ((FrameLayout.LayoutParams) layoutParams).leftMargin == this.mLeftInset)) {
+                    ((FrameLayout.LayoutParams) layoutParams).rightMargin = this.mRightInset;
+                    ((FrameLayout.LayoutParams) layoutParams).leftMargin = this.mLeftInset;
                     childAt.requestLayout();
                 }
             }
         }
     }
 
+    @Override // android.widget.FrameLayout, android.widget.FrameLayout, android.view.ViewGroup
     public FrameLayout.LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new LayoutParams(this, getContext(), attributeSet);
     }
 
     /* access modifiers changed from: protected */
+    @Override // android.widget.FrameLayout, android.widget.FrameLayout
     public FrameLayout.LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(this, -1, -1);
     }
@@ -353,7 +359,8 @@ public class NotificationShadeWindowView extends FrameLayout {
         super.onDraw(canvas);
     }
 
-    class LayoutParams extends FrameLayout.LayoutParams {
+    /* access modifiers changed from: package-private */
+    public class LayoutParams extends FrameLayout.LayoutParams {
         public boolean ignoreRightInset;
 
         LayoutParams(NotificationShadeWindowView notificationShadeWindowView, int i, int i2) {
@@ -382,9 +389,11 @@ public class NotificationShadeWindowView extends FrameLayout {
         }
         cleanupFloatingActionModeViews();
         this.mFloatingToolbar = new FloatingToolbar(this.mFakeWindow);
-        final FloatingActionMode floatingActionMode = new FloatingActionMode(this.mContext, callback2, view, this.mFloatingToolbar);
+        final FloatingActionMode floatingActionMode = new FloatingActionMode(((FrameLayout) this).mContext, callback2, view, this.mFloatingToolbar);
         this.mFloatingActionModeOriginatingView = view;
         this.mFloatingToolbarPreDrawListener = new ViewTreeObserver.OnPreDrawListener(this) {
+            /* class com.android.systemui.statusbar.phone.NotificationShadeWindowView.AnonymousClass1 */
+
             public boolean onPreDraw() {
                 floatingActionMode.updateViewLocationInWindow();
                 return true;
@@ -400,7 +409,8 @@ public class NotificationShadeWindowView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void cleanupFloatingActionModeViews() {
+    /* access modifiers changed from: public */
+    private void cleanupFloatingActionModeViews() {
         FloatingToolbar floatingToolbar = this.mFloatingToolbar;
         if (floatingToolbar != null) {
             floatingToolbar.dismiss();
@@ -426,7 +436,8 @@ public class NotificationShadeWindowView extends FrameLayout {
         return createFloatingActionMode;
     }
 
-    private class ActionModeCallback2Wrapper extends ActionMode.Callback2 {
+    /* access modifiers changed from: private */
+    public class ActionModeCallback2Wrapper extends ActionMode.Callback2 {
         private final ActionMode.Callback mWrapped;
 
         ActionModeCallback2Wrapper(ActionMode.Callback callback) {
@@ -450,7 +461,7 @@ public class NotificationShadeWindowView extends FrameLayout {
             this.mWrapped.onDestroyActionMode(actionMode);
             if (actionMode == NotificationShadeWindowView.this.mFloatingActionMode) {
                 NotificationShadeWindowView.this.cleanupFloatingActionModeViews();
-                ActionMode unused = NotificationShadeWindowView.this.mFloatingActionMode = null;
+                NotificationShadeWindowView.this.mFloatingActionMode = null;
             }
             NotificationShadeWindowView.this.requestFitSystemWindows();
         }

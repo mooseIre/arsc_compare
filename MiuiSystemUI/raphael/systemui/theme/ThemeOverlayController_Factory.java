@@ -17,6 +17,7 @@ public final class ThemeOverlayController_Factory implements Factory<ThemeOverla
         this.bgHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public ThemeOverlayController get() {
         return provideInstance(this.contextProvider, this.broadcastDispatcherProvider, this.bgHandlerProvider);
     }

@@ -49,6 +49,7 @@ public final class StatusBarDependenciesModule_ProvideNotificationViewHierarchyM
         this.lowPriorityInflationHelperProvider = provider13;
     }
 
+    @Override // javax.inject.Provider
     public NotificationViewHierarchyManager get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.notificationLockscreenUserManagerProvider, this.groupManagerProvider, this.visualStabilityManagerProvider, this.statusBarStateControllerProvider, this.notificationEntryManagerProvider, this.bypassControllerProvider, this.bubbleControllerProvider, this.privacyControllerProvider, this.fgsSectionControllerProvider, this.dynamicChildBindControllerProvider, this.lowPriorityInflationHelperProvider);
     }

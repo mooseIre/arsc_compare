@@ -25,6 +25,8 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
     private NotificationGuts mGutsContainer;
     private MetricsLogger mMetricsLogger;
     private View.OnClickListener mOnOk = new View.OnClickListener() {
+        /* class com.android.systemui.statusbar.notification.row.$$Lambda$AppOpsInfo$zS48CwL7b6UcUOuxgx7Zkw4dC1A */
+
         public final void onClick(View view) {
             AppOpsInfo.this.lambda$new$0$AppOpsInfo(view);
         }
@@ -39,18 +41,22 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         void onClick(View view, String str, int i, ArraySet<Integer> arraySet);
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public View getContentView() {
         return this;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean needsFalsingProtection() {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean shouldBeSaved() {
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean willBeRemoved() {
         return false;
     }
@@ -107,6 +113,8 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
 
     private void bindButtons() {
         findViewById(C0015R$id.settings).setOnClickListener(new View.OnClickListener() {
+            /* class com.android.systemui.statusbar.notification.row.$$Lambda$AppOpsInfo$MC_PUe5w52BX3b0kt9URHDzbSUA */
+
             public final void onClick(View view) {
                 AppOpsInfo.this.lambda$bindButtons$1$AppOpsInfo(view);
             }
@@ -129,22 +137,22 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         }
         if (this.mAppOps.size() == 1) {
             if (this.mAppOps.contains(26)) {
-                return this.mContext.getString(C0021R$string.appops_camera);
+                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera);
             }
             if (this.mAppOps.contains(27)) {
-                return this.mContext.getString(C0021R$string.appops_microphone);
+                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_microphone);
             }
-            return this.mContext.getString(C0021R$string.appops_overlay);
+            return ((LinearLayout) this).mContext.getString(C0021R$string.appops_overlay);
         } else if (this.mAppOps.size() != 2) {
-            return this.mContext.getString(C0021R$string.appops_camera_mic_overlay);
+            return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera_mic_overlay);
         } else {
             if (!this.mAppOps.contains(26)) {
-                return this.mContext.getString(C0021R$string.appops_mic_overlay);
+                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_mic_overlay);
             }
             if (this.mAppOps.contains(27)) {
-                return this.mContext.getString(C0021R$string.appops_camera_mic);
+                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera_mic);
             }
-            return this.mContext.getString(C0021R$string.appops_camera_overlay);
+            return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera_overlay);
         }
     }
 
@@ -152,17 +160,19 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, new Object[]{this.mAppName}));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(this.mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, new Object[]{this.mAppName}));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public void setGutsParent(NotificationGuts notificationGuts) {
         this.mGutsContainer = notificationGuts;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public boolean handleCloseControls(boolean z, boolean z2) {
         logUiEvent(NotificationAppOpsEvent.NOTIFICATION_APP_OPS_CLOSE);
         MetricsLogger metricsLogger = this.mMetricsLogger;
@@ -172,6 +182,7 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         return false;
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.NotificationGuts.GutsContent
     public int getActualHeight() {
         return getHeight();
     }

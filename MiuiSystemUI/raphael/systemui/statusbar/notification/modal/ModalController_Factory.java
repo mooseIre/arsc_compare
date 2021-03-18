@@ -19,6 +19,7 @@ public final class ModalController_Factory implements Factory<ModalController> {
         this.modalRowInflaterProvider = provider4;
     }
 
+    @Override // javax.inject.Provider
     public ModalController get() {
         return provideInstance(this.contextProvider, this.statusBarProvider, this.mStatusBarStateControllerProvider, this.modalRowInflaterProvider);
     }

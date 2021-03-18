@@ -11,6 +11,7 @@ public final class NextAlarmControllerImpl_Factory implements Factory<NextAlarmC
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public NextAlarmControllerImpl get() {
         return provideInstance(this.contextProvider);
     }

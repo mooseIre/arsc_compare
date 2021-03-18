@@ -22,10 +22,11 @@ public final class PhysicsAnimator$startInternal$3 implements PhysicsAnimator.En
         this.$springConfig = springConfig;
     }
 
+    @Override // com.android.systemui.util.animation.PhysicsAnimator.EndListener
     public void onAnimationEnd(T t, @NotNull FloatPropertyCompat<? super T> floatPropertyCompat, boolean z, boolean z2, float f, float f2, boolean z3) {
         Intrinsics.checkParameterIsNotNull(floatPropertyCompat, "property");
         boolean z4 = true;
-        if (!(!Intrinsics.areEqual((Object) floatPropertyCompat, (Object) this.$animatedProperty)) && z && !z2) {
+        if (!(!Intrinsics.areEqual(floatPropertyCompat, this.$animatedProperty)) && z && !z2) {
             float f3 = (float) 0;
             boolean z5 = Math.abs(f2) > f3;
             if (f >= this.$flingMin && f <= this.$flingMax) {
@@ -45,9 +46,9 @@ public final class PhysicsAnimator$startInternal$3 implements PhysicsAnimator.En
                         springConfig.setFinalPosition$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(f4);
                     }
                 }
-                SpringAnimation access$getSpringAnimation = this.this$0.getSpringAnimation(this.$animatedProperty, t);
-                this.$springConfig.applyToAnimation$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(access$getSpringAnimation);
-                access$getSpringAnimation.start();
+                SpringAnimation springAnimation = this.this$0.getSpringAnimation(this.$animatedProperty, t);
+                this.$springConfig.applyToAnimation$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(springAnimation);
+                springAnimation.start();
             }
         }
     }

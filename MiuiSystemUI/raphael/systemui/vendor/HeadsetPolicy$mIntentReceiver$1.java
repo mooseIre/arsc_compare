@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 public final class HeadsetPolicy$mIntentReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ HeadsetPolicy this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     HeadsetPolicy$mIntentReceiver$1(HeadsetPolicy headsetPolicy) {
         this.this$0 = headsetPolicy;
     }

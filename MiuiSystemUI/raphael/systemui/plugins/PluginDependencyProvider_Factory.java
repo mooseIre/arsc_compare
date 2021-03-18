@@ -11,6 +11,7 @@ public final class PluginDependencyProvider_Factory implements Factory<PluginDep
         this.managerProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public PluginDependencyProvider get() {
         return provideInstance(this.managerProvider);
     }

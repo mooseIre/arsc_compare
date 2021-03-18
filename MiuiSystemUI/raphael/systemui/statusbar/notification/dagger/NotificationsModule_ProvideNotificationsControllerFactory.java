@@ -21,6 +21,7 @@ public final class NotificationsModule_ProvideNotificationsControllerFactory imp
         this.stubControllerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public NotificationsController get() {
         return provideInstance(this.contextProvider, this.realControllerProvider, this.stubControllerProvider);
     }

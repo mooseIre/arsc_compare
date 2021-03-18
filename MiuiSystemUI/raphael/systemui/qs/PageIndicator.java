@@ -15,11 +15,12 @@ import com.android.systemui.C0021R$string;
 import java.util.ArrayList;
 
 public class PageIndicator extends ViewGroup {
-    /* access modifiers changed from: private */
-    public boolean mAnimating;
+    private boolean mAnimating;
     private final Runnable mAnimationDone = new Runnable() {
+        /* class com.android.systemui.qs.PageIndicator.AnonymousClass1 */
+
         public void run() {
-            boolean unused = PageIndicator.this.mAnimating = false;
+            PageIndicator.this.mAnimating = false;
             if (PageIndicator.this.mQueuedPositions.size() != 0) {
                 PageIndicator pageIndicator = PageIndicator.this;
                 pageIndicator.setPosition(((Integer) pageIndicator.mQueuedPositions.remove(0)).intValue());
@@ -27,11 +28,10 @@ public class PageIndicator extends ViewGroup {
         }
     };
     private final int mPageDotWidth = ((int) (((float) this.mPageIndicatorWidth) * 0.4f));
-    private final int mPageIndicatorHeight = ((int) this.mContext.getResources().getDimension(C0012R$dimen.qs_page_indicator_height));
-    private final int mPageIndicatorWidth = ((int) this.mContext.getResources().getDimension(C0012R$dimen.qs_page_indicator_width));
+    private final int mPageIndicatorHeight = ((int) ((ViewGroup) this).mContext.getResources().getDimension(C0012R$dimen.qs_page_indicator_height));
+    private final int mPageIndicatorWidth = ((int) ((ViewGroup) this).mContext.getResources().getDimension(C0012R$dimen.qs_page_indicator_width));
     private int mPosition = -1;
-    /* access modifiers changed from: private */
-    public final ArrayList<Integer> mQueuedPositions = new ArrayList<>();
+    private final ArrayList<Integer> mQueuedPositions = new ArrayList<>();
 
     private float getAlpha(boolean z) {
         return z ? 1.0f : 0.42f;
@@ -58,7 +58,7 @@ public class PageIndicator extends ViewGroup {
                 removeViewAt(getChildCount() - 1);
             }
             while (i > getChildCount()) {
-                ImageView imageView = new ImageView(this.mContext);
+                ImageView imageView = new ImageView(((ViewGroup) this).mContext);
                 imageView.setImageResource(C0013R$drawable.minor_a_b);
                 imageView.setImageTintList(ColorStateList.valueOf(i2));
                 addView(imageView, new ViewGroup.LayoutParams(this.mPageIndicatorWidth, this.mPageIndicatorHeight));
@@ -70,7 +70,7 @@ public class PageIndicator extends ViewGroup {
     public void setLocation(float f) {
         int i = (int) f;
         int i2 = 0;
-        setContentDescription(getContext().getString(C0021R$string.accessibility_quick_settings_page, new Object[]{Integer.valueOf(i + 1), Integer.valueOf(getChildCount())}));
+        setContentDescription(getContext().getString(C0021R$string.accessibility_quick_settings_page, Integer.valueOf(i + 1), Integer.valueOf(getChildCount())));
         int i3 = i << 1;
         if (f != ((float) i)) {
             i2 = 1;
@@ -91,7 +91,8 @@ public class PageIndicator extends ViewGroup {
     }
 
     /* access modifiers changed from: private */
-    public void setPosition(int i) {
+    /* access modifiers changed from: public */
+    private void setPosition(int i) {
         if (!isVisibleToUser() || Math.abs(this.mPosition - i) != 1) {
             setIndex(i >> 1);
         } else {

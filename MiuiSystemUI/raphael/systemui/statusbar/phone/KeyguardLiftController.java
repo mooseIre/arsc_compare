@@ -17,10 +17,8 @@ import org.jetbrains.annotations.NotNull;
 public final class KeyguardLiftController extends KeyguardUpdateMonitorCallback implements StatusBarStateController.StateListener, Dumpable {
     private final AsyncSensorManager asyncSensorManager;
     private boolean bouncerVisible;
-    /* access modifiers changed from: private */
-    public boolean isListening;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor keyguardUpdateMonitor;
+    private boolean isListening;
+    private final KeyguardUpdateMonitor keyguardUpdateMonitor;
     private final TriggerEventListener listener = new KeyguardLiftController$listener$1(this);
     private final Sensor pickupSensor;
     private final StatusBarStateController statusBarStateController;
@@ -42,19 +40,23 @@ public final class KeyguardLiftController extends KeyguardUpdateMonitorCallback 
         updateListeningState();
     }
 
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozingChanged(boolean z) {
         updateListeningState();
     }
 
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onKeyguardBouncerChanged(boolean z) {
         this.bouncerVisible = z;
         updateListeningState();
     }
 
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onKeyguardVisibilityChanged(boolean z) {
         updateListeningState();
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");

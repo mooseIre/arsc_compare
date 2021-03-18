@@ -12,13 +12,13 @@ public interface DetailAdapter {
     public static final UiEventLogger.UiEventEnum INVALID = $$Lambda$DetailAdapter$MIOR0XPfHL3Q0lRMWDu_BAc5K4g.INSTANCE;
     public static final int VERSION = 1;
 
-    static /* synthetic */ int lambda$static$0() {
+    static /* synthetic */ default int lambda$static$0() {
         return 0;
     }
 
     View createDetailView(Context context, View view, ViewGroup viewGroup);
 
-    int getContainerHeight() {
+    default int getContainerHeight() {
         return -1;
     }
 
@@ -28,27 +28,27 @@ public interface DetailAdapter {
 
     CharSequence getTitle();
 
-    boolean getToggleEnabled() {
+    default boolean getToggleEnabled() {
         return true;
     }
 
     Boolean getToggleState();
 
-    boolean hasHeader() {
+    default boolean hasHeader() {
         return true;
     }
 
     void setToggleState(boolean z);
 
-    UiEventLogger.UiEventEnum openDetailEvent() {
+    default UiEventLogger.UiEventEnum openDetailEvent() {
         return INVALID;
     }
 
-    UiEventLogger.UiEventEnum closeDetailEvent() {
+    default UiEventLogger.UiEventEnum closeDetailEvent() {
         return INVALID;
     }
 
-    UiEventLogger.UiEventEnum moreSettingsEvent() {
+    default UiEventLogger.UiEventEnum moreSettingsEvent() {
         return INVALID;
     }
 }

@@ -25,13 +25,14 @@ public class UsbDebuggingSecondaryUserActivity extends AlertActivity implements 
         this.mBroadcastDispatcher = broadcastDispatcher;
     }
 
-    /* JADX WARNING: type inference failed for: r1v0, types: [android.content.DialogInterface$OnClickListener, com.android.systemui.usb.UsbDebuggingSecondaryUserActivity, com.android.internal.app.AlertActivity, android.app.Activity] */
+    /* JADX DEBUG: Multi-variable search result rejected for r1v0, resolved type: com.android.systemui.usb.UsbDebuggingSecondaryUserActivity */
+    /* JADX WARN: Multi-variable type inference failed */
     public void onCreate(Bundle bundle) {
         UsbDebuggingSecondaryUserActivity.super.onCreate(bundle);
         if (SystemProperties.getInt("service.adb.tcp.port", 0) == 0) {
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver(this, this);
         }
-        AlertController.AlertParams alertParams = this.mAlertParams;
+        AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
         alertParams.mTitle = getString(C0021R$string.usb_debugging_secondary_user_title);
         alertParams.mMessage = getString(C0021R$string.usb_debugging_secondary_user_message);
         alertParams.mPositiveButtonText = getString(17039370);

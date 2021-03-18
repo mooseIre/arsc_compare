@@ -69,6 +69,7 @@ public final class QSFactoryInjectorImpl_Factory implements Factory<QSFactoryInj
         this.gpsTileProvider = provider20;
     }
 
+    @Override // javax.inject.Provider
     public QSFactoryInjectorImpl get() {
         return provideInstance(this.qsHostLazyProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, this.airplaneModeTileProvider, this.gpsTileProvider);
     }

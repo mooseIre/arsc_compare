@@ -8,7 +8,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-class ImageGLProgram {
+/* access modifiers changed from: package-private */
+public class ImageGLProgram {
     private static final String TAG = "ImageGLProgram";
     private Context mContext;
     private int mProgramHandle;
@@ -22,26 +23,28 @@ class ImageGLProgram {
     }
 
     private String getShaderResource(int i) {
-        BufferedReader bufferedReader;
         Resources resources = this.mContext.getResources();
         StringBuilder sb = new StringBuilder();
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(resources.openRawResource(i)));
-            while (true) {
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(resources.openRawResource(i)));
+        while (true) {
+            try {
                 String readLine = bufferedReader.readLine();
-                if (readLine == null) {
-                    break;
+                if (readLine != null) {
+                    sb.append(readLine);
+                    sb.append("\n");
+                } else {
+                    try {
+                        break;
+                    } catch (Resources.NotFoundException | IOException e) {
+                        Log.d(TAG, "Can not read the shader source", e);
+                        sb = null;
+                    }
                 }
-                sb.append(readLine);
-                sb.append("\n");
+            } catch (Throwable th) {
+                th.addSuppressed(th);
             }
-            bufferedReader.close();
-        } catch (Resources.NotFoundException | IOException e) {
-            Log.d(TAG, "Can not read the shader source", e);
-            sb = null;
-        } catch (Throwable th) {
-            th.addSuppressed(th);
         }
+        bufferedReader.close();
         if (sb == null) {
             return "";
         }
