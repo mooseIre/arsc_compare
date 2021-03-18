@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import kotlin.TypeCastException;
-import kotlin.collections.CollectionsKt___CollectionsKt;
+import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.math.MathKt__MathJVMKt;
+import kotlin.math.MathKt;
 import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,8 +51,8 @@ public final class CameraAvailabilityListener {
         this.executor = executor2;
         RectF rectF = new RectF();
         this.cutoutProtectionPath.computeBounds(rectF, false);
-        this.cutoutBounds.set(MathKt__MathJVMKt.roundToInt(rectF.left), MathKt__MathJVMKt.roundToInt(rectF.top), MathKt__MathJVMKt.roundToInt(rectF.right), MathKt__MathJVMKt.roundToInt(rectF.bottom));
-        this.excludedPackageIds = CollectionsKt___CollectionsKt.toSet(StringsKt__StringsKt.split$default(str2, new String[]{","}, false, 0, 6, null));
+        this.cutoutBounds.set(MathKt.roundToInt(rectF.left), MathKt.roundToInt(rectF.top), MathKt.roundToInt(rectF.right), MathKt.roundToInt(rectF.bottom));
+        this.excludedPackageIds = CollectionsKt.toSet(StringsKt__StringsKt.split$default(str2, new String[]{","}, false, 0, 6, null));
     }
 
     public final void startListening() {
@@ -65,7 +65,8 @@ public final class CameraAvailabilityListener {
     }
 
     /* access modifiers changed from: private */
-    public final boolean isExcluded(String str) {
+    /* access modifiers changed from: public */
+    private final boolean isExcluded(String str) {
         return this.excludedPackageIds.contains(str);
     }
 
@@ -74,7 +75,8 @@ public final class CameraAvailabilityListener {
     }
 
     /* access modifiers changed from: private */
-    public final void notifyCameraActive() {
+    /* access modifiers changed from: public */
+    private final void notifyCameraActive() {
         Iterator<T> it = this.listeners.iterator();
         while (it.hasNext()) {
             it.next().onApplyCameraProtection(this.cutoutProtectionPath, this.cutoutBounds);
@@ -82,7 +84,8 @@ public final class CameraAvailabilityListener {
     }
 
     /* access modifiers changed from: private */
-    public final void notifyCameraInactive() {
+    /* access modifiers changed from: public */
+    private final void notifyCameraInactive() {
         Iterator<T> it = this.listeners.iterator();
         while (it.hasNext()) {
             it.next().onHideCameraProtection();

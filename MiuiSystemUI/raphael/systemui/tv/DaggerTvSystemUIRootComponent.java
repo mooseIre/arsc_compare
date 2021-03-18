@@ -203,8 +203,6 @@ import com.android.systemui.controlcenter.phone.customize.QSControlCustomizer;
 import com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter_Factory;
-import com.android.systemui.controlcenter.policy.MiuiFlashlightHelper;
-import com.android.systemui.controlcenter.policy.MiuiFlashlightHelper_Factory;
 import com.android.systemui.controlcenter.policy.NCSwitchController;
 import com.android.systemui.controlcenter.policy.NCSwitchController_Factory;
 import com.android.systemui.controlcenter.policy.OldModeController;
@@ -838,8 +836,6 @@ import com.android.systemui.statusbar.policy.ExtensionControllerImpl;
 import com.android.systemui.statusbar.policy.ExtensionControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl;
 import com.android.systemui.statusbar.policy.FiveGControllerImpl_Factory;
-import com.android.systemui.statusbar.policy.FlashlightControllerImpl;
-import com.android.systemui.statusbar.policy.FlashlightControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.HotspotControllerImpl;
 import com.android.systemui.statusbar.policy.HotspotControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
@@ -849,6 +845,8 @@ import com.android.systemui.statusbar.policy.LocationControllerImpl;
 import com.android.systemui.statusbar.policy.LocationControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.MiuiAlarmControllerImpl;
 import com.android.systemui.statusbar.policy.MiuiAlarmControllerImpl_Factory;
+import com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl;
+import com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl_Factory;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy;
 import com.android.systemui.statusbar.policy.MiuiHeadsUpPolicy_Factory;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
@@ -1119,7 +1117,6 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<FeatureFlags> featureFlagsProvider;
     private Provider<Files> filesProvider;
     private Provider<FiveGControllerImpl> fiveGControllerImplProvider;
-    private Provider<FlashlightControllerImpl> flashlightControllerImplProvider;
     private FlashlightTile_Factory flashlightTileProvider;
     private Provider<FloatingContentCoordinator> floatingContentCoordinatorProvider;
     private Provider<ForceBlackObserver> forceBlackObserverProvider;
@@ -1214,7 +1211,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private Provider<MiuiDripLeftStatusBarIconControllerImpl> miuiDripLeftStatusBarIconControllerImplProvider;
     private Provider<MiuiFaceUnlockManager> miuiFaceUnlockManagerProvider;
     private Provider<MiuiFastUnlockController> miuiFastUnlockControllerProvider;
-    private Provider<MiuiFlashlightHelper> miuiFlashlightHelperProvider;
+    private Provider<MiuiFlashlightControllerImpl> miuiFlashlightControllerImplProvider;
     private Provider<MiuiFullScreenGestureProxy> miuiFullScreenGestureProxyProvider;
     private Provider<MiuiGxzwManager> miuiGxzwManagerProvider;
     private Provider<MiuiGxzwPolicy> miuiGxzwPolicyProvider;
@@ -2174,11 +2171,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.managedProfileControllerImplProvider = provider16;
         this.workModeTileProvider = WorkModeTile_Factory.create(this.qSTileHostProvider, provider16);
         this.rotationLockTileProvider = RotationLockTile_Factory.create(this.qSTileHostProvider, this.rotationLockControllerImplProvider);
-        Provider<MiuiFlashlightHelper> provider17 = DoubleCheck.provider(MiuiFlashlightHelper_Factory.create(this.contextProvider));
-        this.miuiFlashlightHelperProvider = provider17;
-        Provider<FlashlightControllerImpl> provider18 = DoubleCheck.provider(FlashlightControllerImpl_Factory.create(this.contextProvider, provider17));
-        this.flashlightControllerImplProvider = provider18;
-        this.flashlightTileProvider = FlashlightTile_Factory.create(this.qSTileHostProvider, provider18);
+        Provider<MiuiFlashlightControllerImpl> provider17 = DoubleCheck.provider(MiuiFlashlightControllerImpl_Factory.create(this.contextProvider));
+        this.miuiFlashlightControllerImplProvider = provider17;
+        this.flashlightTileProvider = FlashlightTile_Factory.create(this.qSTileHostProvider, provider17);
         this.locationTileProvider = LocationTile_Factory.create(this.qSTileHostProvider, this.locationControllerImplProvider, this.keyguardStateControllerImplProvider, this.activityStarterDelegateProvider);
         this.castTileProvider = CastTile_Factory.create(this.qSTileHostProvider, this.castControllerImplProvider, this.keyguardStateControllerImplProvider, this.networkControllerImplProvider, this.activityStarterDelegateProvider);
         this.hotspotTileProvider = HotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider, this.provideDataSaverControllerProvider);
@@ -2199,12 +2194,11 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.miuiHotspotTileProvider = MiuiHotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider);
         this.muteTileProvider = MuteTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
         this.nightModeTileProvider = NightModeTile_Factory.create(this.qSTileHostProvider);
+        this.paperModeControllerImplProvider = PaperModeControllerImpl_Factory.create(this.contextProvider, this.provideBgLooperProvider, this.providesBroadcastDispatcherProvider);
     }
 
     private void initialize5(Builder builder) {
-        PaperModeControllerImpl_Factory create = PaperModeControllerImpl_Factory.create(this.contextProvider, this.provideBgLooperProvider, this.providesBroadcastDispatcherProvider);
-        this.paperModeControllerImplProvider = create;
-        this.paperModeTileProvider = PaperModeTile_Factory.create(this.qSTileHostProvider, create);
+        this.paperModeTileProvider = PaperModeTile_Factory.create(this.qSTileHostProvider, this.paperModeControllerImplProvider);
         this.powerModeTileProvider = PowerModeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverExtremeTileProvider = PowerSaverExtremeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverTileProvider = PowerSaverTile_Factory.create(this.qSTileHostProvider);
@@ -2214,9 +2208,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.screenShotTileProvider = ScreenShotTile_Factory.create(this.qSTileHostProvider);
         this.syncTileProvider = SyncTile_Factory.create(this.qSTileHostProvider);
         this.vibrateTileProvider = VibrateTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
-        MiuiAirplaneModeTile_Factory create2 = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider);
-        this.miuiAirplaneModeTileProvider = create2;
-        Provider<QSFactoryInjectorImpl> provider = DoubleCheck.provider(QSFactoryInjectorImpl_Factory.create(this.qSTileHostProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, create2, this.locationTileProvider));
+        MiuiAirplaneModeTile_Factory create = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider);
+        this.miuiAirplaneModeTileProvider = create;
+        Provider<QSFactoryInjectorImpl> provider = DoubleCheck.provider(QSFactoryInjectorImpl_Factory.create(this.qSTileHostProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, create, this.locationTileProvider));
         this.qSFactoryInjectorImplProvider = provider;
         this.qSFactoryImplProvider = DoubleCheck.provider(QSFactoryImpl_Factory.create(this.qSTileHostProvider, this.wifiTileProvider, this.bluetoothTileProvider, this.cellularTileProvider, this.dndTileProvider, this.colorInversionTileProvider, this.airplaneModeTileProvider, this.workModeTileProvider, this.rotationLockTileProvider, this.flashlightTileProvider, this.locationTileProvider, this.castTileProvider, this.hotspotTileProvider, this.userTileProvider, this.batterySaverTileProvider, this.dataSaverTileProvider, this.nightDisplayTileProvider, this.nfcTileProvider, this.memoryTileProvider, this.uiModeNightTileProvider, this.screenRecordTileProvider, provider));
         this.builderProvider5 = AutoAddTracker_Builder_Factory.create(this.contextProvider);
@@ -2318,9 +2312,9 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.powerNotificationWarningsProvider = DoubleCheck.provider(PowerNotificationWarnings_Factory.create(this.contextProvider, this.activityStarterDelegateProvider));
         this.provideNotificationBlockingHelperManagerProvider = DoubleCheck.provider(NotificationsModule_ProvideNotificationBlockingHelperManagerFactory.create(this.contextProvider, this.provideNotificationGutsManagerProvider, this.provideNotificationEntryManagerProvider, this.provideMetricsLoggerProvider));
         this.provideSensorPrivacyManagerProvider = DoubleCheck.provider(SystemServicesModule_ProvideSensorPrivacyManagerFactory.create(this.contextProvider));
-        ForegroundServiceLifetimeExtender_Factory create3 = ForegroundServiceLifetimeExtender_Factory.create(this.notificationInteractionTrackerProvider, this.bindSystemClockProvider);
-        this.foregroundServiceLifetimeExtenderProvider = create3;
-        this.foregroundServiceNotificationListenerProvider = DoubleCheck.provider(ForegroundServiceNotificationListener_Factory.create(this.contextProvider, this.foregroundServiceControllerProvider, this.provideNotificationEntryManagerProvider, this.notifPipelineProvider, create3, this.bindSystemClockProvider));
+        ForegroundServiceLifetimeExtender_Factory create2 = ForegroundServiceLifetimeExtender_Factory.create(this.notificationInteractionTrackerProvider, this.bindSystemClockProvider);
+        this.foregroundServiceLifetimeExtenderProvider = create2;
+        this.foregroundServiceNotificationListenerProvider = DoubleCheck.provider(ForegroundServiceNotificationListener_Factory.create(this.contextProvider, this.foregroundServiceControllerProvider, this.provideNotificationEntryManagerProvider, this.notifPipelineProvider, create2, this.bindSystemClockProvider));
         this.clockManagerProvider = DoubleCheck.provider(ClockManager_Factory.create(this.contextProvider, this.injectionInflationControllerProvider, this.providePluginManagerProvider, this.sysuiColorExtractorProvider, this.dockManagerImplProvider, this.providesBroadcastDispatcherProvider));
         this.provideDevicePolicyManagerWrapperProvider = DoubleCheck.provider(DependencyProvider_ProvideDevicePolicyManagerWrapperFactory.create(builder.dependencyProvider));
         this.keyguardSecurityModelProvider = DoubleCheck.provider(KeyguardSecurityModel_Factory.create(this.contextProvider));
@@ -2353,10 +2347,10 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.miuiDripLeftStatusBarIconControllerImplProvider = DoubleCheck.provider(MiuiDripLeftStatusBarIconControllerImpl_Factory.create(this.contextProvider));
         this.miuiKeyguardWallpaperControllerImplProvider = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
         this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
+        this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
     }
 
     private void initialize6(Builder builder) {
-        this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
         Provider<ModalRowInflater> provider = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
         this.modalRowInflaterProvider = provider;
         Provider<ModalController> provider2 = DoubleCheck.provider(ModalController_Factory.create(this.contextProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, provider));
@@ -2586,7 +2580,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             Dependency_MembersInjector.injectMZenModeController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.zenModeControllerImplProvider));
             Dependency_MembersInjector.injectMHotspotController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.hotspotControllerImplProvider));
             Dependency_MembersInjector.injectMCastController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.castControllerImplProvider));
-            Dependency_MembersInjector.injectMFlashlightController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.flashlightControllerImplProvider));
+            Dependency_MembersInjector.injectMFlashlightController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.miuiFlashlightControllerImplProvider));
             Dependency_MembersInjector.injectMUserSwitcherController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.userSwitcherControllerProvider));
             Dependency_MembersInjector.injectMUserInfoController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.userInfoControllerImplProvider));
             Dependency_MembersInjector.injectMKeyguardMonitor(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.keyguardStateControllerImplProvider));
