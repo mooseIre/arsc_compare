@@ -39,31 +39,31 @@ import miui.view.animation.CubicEaseOutInterpolator;
 
 public class KeyguardMoveHelper {
     private Runnable mAnimationEndRunnable = new Runnable() {
+        /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass4 */
+
         public void run() {
             KeyguardMoveHelper.this.mCallback.onAnimationToSideEnded();
         }
     };
-    /* access modifiers changed from: private */
-    public KeyguardBottomAreaView mBottomAreaView;
-    /* access modifiers changed from: private */
-    public final Callback mCallback;
+    private KeyguardBottomAreaView mBottomAreaView;
+    private final Callback mCallback;
     private float mCenterScreenTouchSlopTranslation;
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public int mCurrentScreen = 1;
+    private int mCurrentScreen = 1;
     private MiuiKeyguardFaceUnlockView mFaceUnlockView;
     private FalsingManager mFalsingManager;
     private AnimatorListenerAdapter mFlingEndListener = new AnimatorListenerAdapter() {
+        /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass1 */
+
         public void onAnimationEnd(Animator animator) {
-            Animator unused = KeyguardMoveHelper.this.mSwipeAnimator = null;
-            boolean unused2 = KeyguardMoveHelper.this.mSwipingInProgress = false;
+            KeyguardMoveHelper.this.mSwipeAnimator = null;
+            KeyguardMoveHelper.this.mSwipingInProgress = false;
         }
     };
     private float mInitialTouchX;
     private float mInitialTouchY;
     private boolean mIsCameraPreviewMoving;
-    /* access modifiers changed from: private */
-    public boolean mIsRightMove;
+    private boolean mIsRightMove;
     private boolean mIsTouchRightIcon;
     private int mKeyguardHorizontalGestureSlop;
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
@@ -72,39 +72,47 @@ public class KeyguardMoveHelper {
     private int mMinFlingVelocity;
     private boolean mMotionCancelled;
     private BaseKeyguardMoveController.CallBack mMoveViewCallBack = new BaseKeyguardMoveController.CallBack() {
+        /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass2 */
+
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public void onCompletedAnimationEnd(boolean z) {
             if (z) {
                 KeyguardMoveHelper.this.mCallback.onHorizontalMove(0.0f, true);
-                boolean unused = KeyguardMoveHelper.this.mSwipingInProgress = false;
+                KeyguardMoveHelper.this.mSwipingInProgress = false;
             }
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public void onCancelAnimationEnd(boolean z, boolean z2) {
             if (z) {
                 KeyguardMoveHelper.this.mCallback.onHorizontalMove(0.0f, true);
                 if (z2) {
-                    boolean unused = KeyguardMoveHelper.this.mSwipingInProgress = false;
+                    KeyguardMoveHelper.this.mSwipingInProgress = false;
                 } else {
                     KeyguardMoveHelper.this.mBottomAreaView.startButtonLayoutAnimate(false, true);
                 }
             }
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public void onBackAnimationEnd(boolean z) {
             if (z) {
                 KeyguardMoveHelper.this.mCallback.onHorizontalMove(0.0f, true);
-                boolean unused = KeyguardMoveHelper.this.mSwipingInProgress = false;
+                KeyguardMoveHelper.this.mSwipingInProgress = false;
             }
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public void onAnimUpdate(float f) {
             KeyguardMoveHelper.this.mCallback.onHorizontalMove(f, true);
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public IntentButtonProvider.IntentButton.IconState getMoveIconState(boolean z) {
             return KeyguardMoveHelper.this.mBottomAreaView.getIconState(z);
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public ViewGroup getMoveIconLayout(boolean z) {
             if (z) {
                 return KeyguardMoveHelper.this.mRightIconLayout;
@@ -112,33 +120,33 @@ public class KeyguardMoveHelper {
             return null;
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public boolean isMoveInCenterScreen() {
             return KeyguardMoveHelper.this.isInCenterScreen();
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public boolean isRightMove() {
             return KeyguardMoveHelper.this.mIsRightMove;
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public void updateSwipingInProgress(boolean z) {
-            boolean unused = KeyguardMoveHelper.this.mSwipingInProgress = z;
+            KeyguardMoveHelper.this.mSwipingInProgress = z;
         }
 
+        @Override // com.android.keyguard.BaseKeyguardMoveController.CallBack
         public void updateCanShowGxzw(boolean z) {
             MiuiGxzwManager.getInstance().setCanShowGxzw(z);
         }
     };
     private Animator mResetAnimator;
     private KeyguardAffordanceView mRightIcon;
-    /* access modifiers changed from: private */
-    public ViewGroup mRightIconLayout;
+    private ViewGroup mRightIconLayout;
     private KeyguardMoveRightController mRightMoveController;
-    /* access modifiers changed from: private */
-    public Animator mSwipeAnimator;
-    /* access modifiers changed from: private */
-    public boolean mSwipingInProgress;
-    /* access modifiers changed from: private */
-    public float mTranslation;
+    private Animator mSwipeAnimator;
+    private boolean mSwipingInProgress;
+    private float mTranslation;
     private VelocityTracker mVelocityTracker;
 
     public interface Callback {
@@ -197,9 +205,8 @@ public class KeyguardMoveHelper {
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        Class cls = LockScreenMagazineController.class;
         int actionMasked = motionEvent.getActionMasked();
-        if ((!this.mMotionCancelled || actionMasked == 0) && !((LockScreenMagazineController) Dependency.get(cls)).isPreViewVisible()) {
+        if ((!this.mMotionCancelled || actionMasked == 0) && !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isPreViewVisible()) {
             float y = motionEvent.getY();
             float x = motionEvent.getX();
             if (actionMasked != 0) {
@@ -221,7 +228,7 @@ public class KeyguardMoveHelper {
                             KeyguardMoveRightController keyguardMoveRightController2 = this.mRightMoveController;
                             float f4 = this.mCenterScreenTouchSlopTranslation;
                             this.mIsCameraPreviewMoving = keyguardMoveRightController2.onTouchMove(x + f4, y + f4);
-                        } else if (((LockScreenMagazineController) Dependency.get(cls)).isLockScreenLeftOverlayAvailable()) {
+                        } else if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
                             KeyguardMoveLeftController keyguardMoveLeftController = this.mLeftMoveController;
                             float f5 = this.mCenterScreenTouchSlopTranslation;
                             keyguardMoveLeftController.onTouchMove(x + f5, y + f5);
@@ -264,7 +271,7 @@ public class KeyguardMoveHelper {
             return false;
         }
         if (DebugConfig.DEBUG_KEYGUARD) {
-            Log.d("KeyguardMoveHelper", " horizontalMoveEvent is discarded Cancelled：" + this.mMotionCancelled + " isMagazinePreview:" + ((LockScreenMagazineController) Dependency.get(cls)).isPreViewVisible());
+            Log.d("KeyguardMoveHelper", " horizontalMoveEvent is discarded Cancelled：" + this.mMotionCancelled + " isMagazinePreview:" + ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isPreViewVisible());
         }
         if (actionMasked == 3 || actionMasked == 1) {
             this.mMotionCancelled = false;
@@ -288,10 +295,7 @@ public class KeyguardMoveHelper {
     }
 
     private boolean isValidHorizontalTouchDown(float f, float f2) {
-        if ((!(Math.abs(f) > Math.abs(f2)) || (isInCenterScreen() && !canCenter2RightMove() && !canCenter2LeftMove())) && !rightIconPressedAndCanCenter2Left()) {
-            return false;
-        }
-        return true;
+        return (((Math.abs(f) > Math.abs(f2) ? 1 : (Math.abs(f) == Math.abs(f2) ? 0 : -1)) > 0) && (!isInCenterScreen() || canCenter2RightMove() || canCenter2LeftMove())) || rightIconPressedAndCanCenter2Left();
     }
 
     private boolean isValidMovingStart(float f, float f2) {
@@ -398,8 +402,9 @@ public class KeyguardMoveHelper {
         if (z) {
             screenWidth = 0.0f;
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mTranslation, screenWidth});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mTranslation, screenWidth);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener(z) {
+            /* class com.android.keyguard.$$Lambda$KeyguardMoveHelper$AuenGdoQb_1OkQlFltpB0dJKfRw */
             public final /* synthetic */ boolean f$1;
 
             {
@@ -412,6 +417,8 @@ public class KeyguardMoveHelper {
         });
         ofFloat.addListener(this.mFlingEndListener);
         ofFloat.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass3 */
+
             public void onAnimationEnd(Animator animator) {
                 if (!z && KeyguardMoveHelper.this.mCurrentScreen == 0 && !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
                     KeyguardMoveHelper.this.mCallback.triggerAction(z2, KeyguardMoveHelper.this.mTranslation, f);
@@ -421,7 +428,7 @@ public class KeyguardMoveHelper {
         if (z) {
             reset(true);
         }
-        ofFloat.setDuration(100);
+        ofFloat.setDuration(100L);
         ofFloat.setInterpolator(new CubicEaseOutInterpolator());
         ofFloat.start();
         this.mSwipeAnimator = ofFloat;
@@ -456,11 +463,8 @@ public class KeyguardMoveHelper {
     private void setTranslation(float f, boolean z, boolean z2, boolean z3, boolean z4) {
         float f2;
         float f3;
-        float f4 = f;
-        Class cls = KeyguardNegative1PageInjector.class;
-        Class cls2 = LockScreenMagazineController.class;
-        MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(cls)).getLeftView();
-        ImageView leftBackgroundView = ((KeyguardNegative1PageInjector) Dependency.get(cls)).getLeftBackgroundView();
+        MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
+        ImageView leftBackgroundView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftBackgroundView();
         if (z4) {
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
             this.mFaceUnlockView.setTranslationX(0.0f);
@@ -469,17 +473,17 @@ public class KeyguardMoveHelper {
             leftView.setTranslationX(-getScreenWidth());
             leftBackgroundView.setVisibility(4);
             animateShowLeftRightIcon();
-            for (View next : this.mCallback.getMobileView()) {
-                next.setTranslationX(0.0f);
-                next.setAlpha(1.0f);
+            for (View view : this.mCallback.getMobileView()) {
+                view.setTranslationX(0.0f);
+                view.setAlpha(1.0f);
             }
             return;
         }
-        if (this.mCurrentScreen != 1 || f4 <= 0.0f) {
-            f2 = this.mCurrentScreen == 0 ? (f4 / getScreenWidth()) + 1.0f : 0.0f;
+        if (this.mCurrentScreen != 1 || f <= 0.0f) {
+            f2 = this.mCurrentScreen == 0 ? (f / getScreenWidth()) + 1.0f : 0.0f;
         } else {
             leftBackgroundView.setVisibility(0);
-            f2 = f4 / getScreenWidth();
+            f2 = f / getScreenWidth();
         }
         if (f2 < 0.0f) {
             f2 = 0.0f;
@@ -487,36 +491,37 @@ public class KeyguardMoveHelper {
             f2 = 1.0f;
         }
         if (this.mCurrentScreen != 0) {
-            f3 = f4;
-        } else if (f4 <= 0.0f) {
-            f3 = getScreenWidth() + f4;
+            f3 = f;
+        } else if (f <= 0.0f) {
+            f3 = getScreenWidth() + f;
         } else {
             return;
         }
-        if (f4 != this.mTranslation || z || z3) {
+        if (f != this.mTranslation || z || z3) {
             if (!z2) {
                 leftView.setTranslationX(f3 - getScreenWidth());
                 leftBackgroundView.setAlpha(f2);
-                leftView.setAlpha(((LockScreenMagazineController) Dependency.get(cls2)).isSupportLockScreenMagazineLeft() ? f2 : 1.0f);
-                for (View next2 : this.mCallback.getMobileView()) {
-                    next2.setTranslationX(f3);
-                    next2.setAlpha(1.0f - f2);
+                leftView.setAlpha(((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft() ? f2 : 1.0f);
+                for (View view2 : this.mCallback.getMobileView()) {
+                    view2.setTranslationX(f3);
+                    view2.setAlpha(1.0f - f2);
                 }
                 this.mFaceUnlockView.setTranslationX(f3);
                 this.mFaceUnlockView.setAlpha(1.0f - f2);
             } else {
                 AnimatorSet animatorSet = new AnimatorSet();
                 ArrayList arrayList = new ArrayList();
-                arrayList.add(ObjectAnimator.ofFloat(leftView, View.TRANSLATION_X, new float[]{leftView.getTranslationX(), f3 - getScreenWidth()}));
+                arrayList.add(ObjectAnimator.ofFloat(leftView, View.TRANSLATION_X, leftView.getTranslationX(), f3 - getScreenWidth()));
                 MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mFaceUnlockView;
-                arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardFaceUnlockView, View.TRANSLATION_X, new float[]{miuiKeyguardFaceUnlockView.getTranslationX(), f3}));
-                arrayList.add(ObjectAnimator.ofFloat(leftBackgroundView, "alpha", new float[]{leftBackgroundView.getAlpha(), f2}));
+                arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardFaceUnlockView, View.TRANSLATION_X, miuiKeyguardFaceUnlockView.getTranslationX(), f3));
+                arrayList.add(ObjectAnimator.ofFloat(leftBackgroundView, "alpha", leftBackgroundView.getAlpha(), f2));
                 MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView2 = this.mFaceUnlockView;
-                arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardFaceUnlockView2, "alpha", new float[]{miuiKeyguardFaceUnlockView2.getAlpha(), 1.0f - f2}));
-                if (((LockScreenMagazineController) Dependency.get(cls2)).isSupportLockScreenMagazineLeft()) {
-                    arrayList.add(ObjectAnimator.ofFloat(leftView, "alpha", new float[]{leftView.getAlpha(), f2}));
+                arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardFaceUnlockView2, "alpha", miuiKeyguardFaceUnlockView2.getAlpha(), 1.0f - f2));
+                if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
+                    arrayList.add(ObjectAnimator.ofFloat(leftView, "alpha", leftView.getAlpha(), f2));
                 }
                 this.mCallback.getMobileView().forEach(new Consumer(arrayList, f3, f2) {
+                    /* class com.android.keyguard.$$Lambda$KeyguardMoveHelper$I1gNRBK41CZEZCnSsORQ0z0Bk */
                     public final /* synthetic */ List f$1;
                     public final /* synthetic */ float f$2;
                     public final /* synthetic */ float f$3;
@@ -527,40 +532,41 @@ public class KeyguardMoveHelper {
                         this.f$3 = r4;
                     }
 
+                    @Override // java.util.function.Consumer
                     public final void accept(Object obj) {
                         KeyguardMoveHelper.this.lambda$setTranslation$1$KeyguardMoveHelper(this.f$1, this.f$2, this.f$3, (View) obj);
                     }
                 });
                 animatorSet.playTogether(arrayList);
-                animatorSet.setDuration(300);
+                animatorSet.setDuration(300L);
                 animatorSet.setInterpolator(new CubicEaseOutInterpolator());
                 animatorSet.start();
                 this.mResetAnimator = animatorSet;
             }
-            this.mTranslation = f4;
+            this.mTranslation = f;
         }
-        if (this.mCurrentScreen == 0 && f4 == (-getScreenWidth())) {
+        if (this.mCurrentScreen == 0 && f == (-getScreenWidth())) {
             this.mCurrentScreen = 1;
             leftBackgroundView.setVisibility(4);
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
             this.mKeyguardUpdateMonitor.requestFaceAuth();
             AnalyticsHelper.getInstance(this.mContext).trackPageStart("keyguard_view_main_lock_screen");
             LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(this.mContext, "Wallpaper_Uncovered");
-        } else if (this.mCurrentScreen == 1 && f4 == (-getScreenWidth())) {
+        } else if (this.mCurrentScreen == 1 && f == (-getScreenWidth())) {
             this.mCurrentScreen = 2;
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
             AnalyticsHelper.getInstance(this.mContext).trackPageEnd("keyguard_view_main_lock_screen", "enter_right_view");
-        } else if (this.mCurrentScreen == 1 && f4 == getScreenWidth()) {
+        } else if (this.mCurrentScreen == 1 && f == getScreenWidth()) {
             this.mCurrentScreen = 0;
             MiuiGxzwManager.getInstance().setCanShowGxzw(false);
             this.mKeyguardUpdateMonitor.cancelFaceAuth();
             AnalyticsHelper.getInstance(this.mContext).trackPageEnd("keyguard_view_main_lock_screen", "enter_left_view");
             AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_left_view");
             AnalyticsHelper.getInstance(this.mContext).recordNegativeStatus();
-            if (!((LockScreenMagazineController) Dependency.get(cls2)).isSupportLockScreenMagazineLeft()) {
+            if (!((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
                 LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(this.mContext, "Wallpaper_Covered");
             }
-        } else if (this.mCurrentScreen == 1 && f4 == 0.0f) {
+        } else if (this.mCurrentScreen == 1 && f == 0.0f) {
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
         } else {
             MiuiGxzwManager.getInstance().setCanShowGxzw(false);
@@ -570,9 +576,9 @@ public class KeyguardMoveHelper {
     /* access modifiers changed from: private */
     /* renamed from: lambda$setTranslation$1 */
     public /* synthetic */ void lambda$setTranslation$1$KeyguardMoveHelper(List list, float f, float f2, View view) {
-        list.add(ObjectAnimator.ofFloat(view, View.TRANSLATION_X, new float[]{view.getTranslationX(), f}));
+        list.add(ObjectAnimator.ofFloat(view, View.TRANSLATION_X, view.getTranslationX(), f));
         if ((!(view instanceof LockScreenMagazinePreView) && !(view instanceof MiuiKeyguardBaseClock)) || !this.mCallback.isKeyguardWallpaperCarouselSwitchAnimating()) {
-            list.add(ObjectAnimator.ofFloat(view, "alpha", new float[]{view.getAlpha(), 1.0f - f2}));
+            list.add(ObjectAnimator.ofFloat(view, "alpha", view.getAlpha(), 1.0f - f2));
         }
     }
 
@@ -675,7 +681,7 @@ public class KeyguardMoveHelper {
             this.mTranslation = this.mCallback.getMaxTranslationDistance();
             updateIcon(keyguardAffordanceView2, 0.0f, false, true);
             keyguardAffordanceView.instantFinishAnimation();
-            this.mFlingEndListener.onAnimationEnd((Animator) null);
+            this.mFlingEndListener.onAnimationEnd(null);
             this.mAnimationEndRunnable.run();
         }
     }

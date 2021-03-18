@@ -12,12 +12,13 @@ import miui.system.R;
 public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
     private MiuiBaseClock mMiuiNoticationStateClock;
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public boolean hasOverlappingRendering() {
         return false;
     }
 
     public MiuiKeyguardLeftTopLargeClock(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiKeyguardLeftTopLargeClock(Context context, AttributeSet attributeSet) {
@@ -43,6 +44,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNotificationStateAnimOutEnd() {
         this.mMiuiBaseClock.setVisibility(8);
         this.mMiuiNoticationStateClock.setAlpha(0.0f);
@@ -50,16 +52,19 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNotificationStateAnimOutUpdate(float f) {
         this.mMiuiBaseClock.setClockAlpha(f);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNotificationStateAnimInUpdate(float f) {
         this.mMiuiNoticationStateClock.setAlpha(f);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNormalStateAnimOutEnd() {
         this.mMiuiNoticationStateClock.setVisibility(8);
         this.mMiuiBaseClock.setAlpha(0.0f);
@@ -67,15 +72,18 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNormalStateAnimOutUpdate(float f) {
         this.mMiuiNoticationStateClock.setClockAlpha(f);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock
     public void toNormalStateAnimInUpdate(float f) {
         this.mMiuiBaseClock.setAlpha(f);
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock, com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void setDarkStyle(boolean z) {
         if (z != this.mDarkStyle) {
             super.setDarkStyle(z);
@@ -87,6 +95,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock, com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateHourFormat() {
         super.updateHourFormat();
         MiuiBaseClock miuiBaseClock = this.mMiuiNoticationStateClock;
@@ -95,6 +104,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock, com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateTimeZone(String str) {
         super.updateTimeZone(str);
         MiuiBaseClock miuiBaseClock = this.mMiuiNoticationStateClock;
@@ -103,6 +113,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardSingleClock, com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateTime() {
         super.updateTime();
         MiuiBaseClock miuiBaseClock = this.mMiuiNoticationStateClock;

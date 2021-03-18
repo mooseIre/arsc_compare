@@ -6,6 +6,7 @@ import com.android.systemui.Dependency;
 import kotlin.ResultKt;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
+import kotlin.coroutines.intrinsics.IntrinsicsKt__IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
@@ -29,6 +30,7 @@ final class MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1$onRemo
         this.$fullScreenRemoteView = remoteViews2;
     }
 
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @NotNull
     public final Continuation<Unit> create(@Nullable Object obj, @NotNull Continuation<?> continuation) {
         Intrinsics.checkParameterIsNotNull(continuation, "completion");
@@ -37,10 +39,13 @@ final class MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1$onRemo
         return miuiWallpaperClient$mServiceConnection$1$onServiceConnected$1$onRemoteViewChange$1;
     }
 
-    public final Object invoke(Object obj, Object obj2) {
-        return ((MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1$onRemoteViewChange$1) create(obj, (Continuation) obj2)).invokeSuspend(Unit.INSTANCE);
+    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+    @Override // kotlin.jvm.functions.Function2
+    public final Object invoke(CoroutineScope coroutineScope, Continuation<? super Unit> continuation) {
+        return ((MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1$onRemoteViewChange$1) create(coroutineScope, continuation)).invokeSuspend(Unit.INSTANCE);
     }
 
+    @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
     @Nullable
     public final Object invokeSuspend(@NotNull Object obj) {
         Object unused = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();

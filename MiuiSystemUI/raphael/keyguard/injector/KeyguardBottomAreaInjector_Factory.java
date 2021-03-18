@@ -11,6 +11,7 @@ public final class KeyguardBottomAreaInjector_Factory implements Factory<Keyguar
         this.mContextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardBottomAreaInjector get() {
         return provideInstance(this.mContextProvider);
     }

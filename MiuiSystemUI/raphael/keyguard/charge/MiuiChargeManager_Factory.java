@@ -11,6 +11,7 @@ public final class MiuiChargeManager_Factory implements Factory<MiuiChargeManage
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public MiuiChargeManager get() {
         return provideInstance(this.contextProvider);
     }

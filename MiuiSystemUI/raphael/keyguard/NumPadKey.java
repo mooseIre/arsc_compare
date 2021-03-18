@@ -23,17 +23,14 @@ import com.android.systemui.R$styleable;
 
 public class NumPadKey extends ViewGroup {
     static String[] sKlondike;
-    /* access modifiers changed from: private */
-    public int mDigit;
+    private int mDigit;
     private final TextView mDigitText;
     private final TextView mKlondikeText;
     private View.OnClickListener mListener;
     private final LockPatternUtils mLockPatternUtils;
     private final PowerManager mPM;
-    /* access modifiers changed from: private */
-    public PasswordTextView mTextView;
-    /* access modifiers changed from: private */
-    public int mTextViewResId;
+    private PasswordTextView mTextView;
+    private int mTextViewResId;
 
     public boolean hasOverlappingRendering() {
         return false;
@@ -44,7 +41,7 @@ public class NumPadKey extends ViewGroup {
     }
 
     public NumPadKey(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public NumPadKey(Context context, AttributeSet attributeSet) {
@@ -61,10 +58,12 @@ public class NumPadKey extends ViewGroup {
         int i3;
         this.mDigit = -1;
         this.mListener = new View.OnClickListener() {
+            /* class com.android.keyguard.NumPadKey.AnonymousClass1 */
+
             public void onClick(View view) {
                 View findViewById;
                 if (NumPadKey.this.mTextView == null && NumPadKey.this.mTextViewResId > 0 && (findViewById = NumPadKey.this.getRootView().findViewById(NumPadKey.this.mTextViewResId)) != null && (findViewById instanceof PasswordTextView)) {
-                    PasswordTextView unused = NumPadKey.this.mTextView = (PasswordTextView) findViewById;
+                    NumPadKey.this.mTextView = (PasswordTextView) findViewById;
                 }
                 if (NumPadKey.this.mTextView != null && NumPadKey.this.mTextView.isEnabled()) {
                     NumPadKey.this.mTextView.append(Character.forDigit(NumPadKey.this.mDigit, 10));
@@ -81,8 +80,8 @@ public class NumPadKey extends ViewGroup {
             setOnClickListener(this.mListener);
             setOnHoverListener(new LiftToActivateListener(context));
             this.mLockPatternUtils = new LockPatternUtils(context);
-            this.mPM = (PowerManager) this.mContext.getSystemService("power");
-            ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, this, true);
+            this.mPM = (PowerManager) ((ViewGroup) this).mContext.getSystemService("power");
+            ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(i2, (ViewGroup) this, true);
             TextView textView = (TextView) findViewById(C0015R$id.digit_text);
             this.mDigitText = textView;
             textView.setText(Integer.toString(this.mDigit));
@@ -114,7 +113,7 @@ public class NumPadKey extends ViewGroup {
             }
             TypedArray obtainStyledAttributes2 = context.obtainStyledAttributes(attributeSet, R.styleable.View);
             if (!obtainStyledAttributes2.hasValueOrEmpty(13)) {
-                setBackground(this.mContext.getDrawable(C0013R$drawable.ripple_drawable_pin));
+                setBackground(((ViewGroup) this).mContext.getDrawable(C0013R$drawable.ripple_drawable_pin));
             }
             obtainStyledAttributes2.recycle();
             setContentDescription(this.mDigitText.getText().toString());

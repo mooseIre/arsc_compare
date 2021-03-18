@@ -14,10 +14,12 @@ public class XiaoaiItem extends IQuickOpenItem {
     private static int sTitleCount;
     private final ImageView mView;
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTag() {
         return "Mi AI";
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public boolean startActionByService() {
         return true;
     }
@@ -30,10 +32,12 @@ public class XiaoaiItem extends IQuickOpenItem {
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public View getView() {
         return this.mView;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public Intent getIntent() {
         Intent intent = new Intent("android.intent.action.ASSIST");
         intent.setPackage("com.miui.voiceassist");
@@ -42,10 +46,12 @@ public class XiaoaiItem extends IQuickOpenItem {
         return intent;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
         return this.mContext.getString(getStringRes());
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_xiaoai_sub);
     }

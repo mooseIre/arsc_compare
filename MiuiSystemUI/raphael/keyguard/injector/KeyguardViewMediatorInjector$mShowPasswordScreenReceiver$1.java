@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 public final class KeyguardViewMediatorInjector$mShowPasswordScreenReceiver$1 extends BroadcastReceiver {
     final /* synthetic */ KeyguardViewMediatorInjector this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     KeyguardViewMediatorInjector$mShowPasswordScreenReceiver$1(KeyguardViewMediatorInjector keyguardViewMediatorInjector) {
         this.this$0 = keyguardViewMediatorInjector;
     }
@@ -19,7 +20,7 @@ public final class KeyguardViewMediatorInjector$mShowPasswordScreenReceiver$1 ex
     public void onReceive(@NotNull Context context, @NotNull Intent intent) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
-        if (Intrinsics.areEqual((Object) "xiaomi.intent.action.SHOW_SECURE_KEYGUARD", (Object) intent.getAction()) && this.this$0.getMStatusBarKeyguardViewManager() != null && this.this$0.getMStatusBarKeyguardViewManager().isShowing()) {
+        if (Intrinsics.areEqual("xiaomi.intent.action.SHOW_SECURE_KEYGUARD", intent.getAction()) && this.this$0.getMStatusBarKeyguardViewManager() != null && this.this$0.getMStatusBarKeyguardViewManager().isShowing()) {
             new Handler(Looper.getMainLooper()).post(new KeyguardViewMediatorInjector$mShowPasswordScreenReceiver$1$onReceive$1(this));
         }
     }

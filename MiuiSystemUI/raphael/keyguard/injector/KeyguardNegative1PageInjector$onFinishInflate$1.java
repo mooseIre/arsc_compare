@@ -8,20 +8,22 @@ import kotlin.jvm.internal.Intrinsics;
 public final class KeyguardNegative1PageInjector$onFinishInflate$1 extends MiuiKeyguardUpdateMonitorCallback {
     final /* synthetic */ KeyguardNegative1PageInjector this$0;
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     KeyguardNegative1PageInjector$onFinishInflate$1(KeyguardNegative1PageInjector keyguardNegative1PageInjector) {
         this.this$0 = keyguardNegative1PageInjector;
     }
 
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onUserUnlocked() {
-        MiuiKeyguardMoveLeftViewContainer access$getMKeyguardLeftView$p = this.this$0.mKeyguardLeftView;
-        if (access$getMKeyguardLeftView$p != null) {
-            access$getMKeyguardLeftView$p.setCustomBackground();
-            MiuiKeyguardMoveLeftViewContainer access$getMKeyguardLeftView$p2 = this.this$0.mKeyguardLeftView;
-            if (access$getMKeyguardLeftView$p2 != null) {
-                access$getMKeyguardLeftView$p2.initLeftView();
-                MiuiKeyguardMoveLeftViewContainer access$getMKeyguardLeftView$p3 = this.this$0.mKeyguardLeftView;
-                if (access$getMKeyguardLeftView$p3 != null) {
-                    access$getMKeyguardLeftView$p3.uploadData();
+        MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.this$0.mKeyguardLeftView;
+        if (miuiKeyguardMoveLeftViewContainer != null) {
+            miuiKeyguardMoveLeftViewContainer.setCustomBackground();
+            MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer2 = this.this$0.mKeyguardLeftView;
+            if (miuiKeyguardMoveLeftViewContainer2 != null) {
+                miuiKeyguardMoveLeftViewContainer2.initLeftView();
+                MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer3 = this.this$0.mKeyguardLeftView;
+                if (miuiKeyguardMoveLeftViewContainer3 != null) {
+                    miuiKeyguardMoveLeftViewContainer3.uploadData();
                 } else {
                     Intrinsics.throwNpe();
                     throw null;

@@ -19,16 +19,15 @@ public final class WallpaperCommandSender implements BatteryController.BatterySt
     @NotNull
     private final String TAG = "UpdateWallpaperCommand";
     private boolean mIsPowerSave;
-    /* access modifiers changed from: private */
-    public NotificationShadeWindowView mNotificationShadeWindowView;
+    private NotificationShadeWindowView mNotificationShadeWindowView;
     private final UiOffloadThread mUiOffloadThread = ((UiOffloadThread) Dependency.get(UiOffloadThread.class));
-    /* access modifiers changed from: private */
-    public final WallpaperManager mWallpaperManager = ((WallpaperManager) SystemUIApplication.getContext().getSystemService(WallpaperManager.class));
+    private final WallpaperManager mWallpaperManager = ((WallpaperManager) SystemUIApplication.getContext().getSystemService(WallpaperManager.class));
 
     public final void setWindowView(@Nullable NotificationShadeWindowView notificationShadeWindowView) {
         this.mNotificationShadeWindowView = notificationShadeWindowView;
     }
 
+    @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onPowerSaveChanged(boolean z) {
         if (this.mIsPowerSave != z) {
             this.mIsPowerSave = z;

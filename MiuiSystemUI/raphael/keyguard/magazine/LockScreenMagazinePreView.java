@@ -45,33 +45,27 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     private LinearLayout mFullScreenLayout;
     private ImageView mFullScreenLinkButton;
     private TextView mFullScreenProvider;
-    /* access modifiers changed from: private */
-    public RemoteViews mFullScreenRemoteView;
+    private RemoteViews mFullScreenRemoteView;
     private boolean mFullScreenRemoteViewApplyed;
     private ImageView mFullScreenSettingButton;
     private TextView mFullScreenSource;
     private TextView mFullScreenTitle;
-    /* access modifiers changed from: private */
-    public RelativeLayout mFullScreenTitleLayout;
-    /* access modifiers changed from: private */
-    public float mFullScreenTitleLayoutWidth;
+    private RelativeLayout mFullScreenTitleLayout;
+    private float mFullScreenTitleLayoutWidth;
     private Object mLocaleList;
     protected LockScreenMagazineWallpaperInfo mLockScreenMagazineWallpaperInfo;
     private LinearLayout mMainLayout;
     private TextView mMainProvider;
-    /* access modifiers changed from: private */
-    public RemoteViews mMainRemoteView;
+    private RemoteViews mMainRemoteView;
     private boolean mMainRemoteViewApplyed;
     private TextView mMainSource;
     private TextView mMainTitle;
-    /* access modifiers changed from: private */
-    public OnPreViewClickListener mPreViewClickListener;
+    private OnPreViewClickListener mPreViewClickListener;
     private LinearLayout mRemoteFullScreenLayout;
     private View mRemoteFullScreenView;
     private LinearLayout mRemoteMainLayout;
     private View mRemoteMainView;
-    /* access modifiers changed from: private */
-    public String mRemotePackageName;
+    private String mRemotePackageName;
     private Resources mResources;
 
     public interface OnPreViewClickListener {
@@ -119,9 +113,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private void initData() {
-        Class cls = LockScreenMagazineController.class;
-        this.mLockScreenMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(cls)).getLockScreenMagazineWallpaperInfo();
-        ((LockScreenMagazineController) Dependency.get(cls)).setView(this);
+        this.mLockScreenMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getLockScreenMagazineWallpaperInfo();
+        ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).setView(this);
     }
 
     /* access modifiers changed from: protected */
@@ -160,12 +153,14 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     public void initSettingButton() {
-        if (MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext)) {
+        if (MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(((RelativeLayout) this).mContext)) {
             new AsyncTask<Void, Void, Intent>() {
+                /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass1 */
+
                 /* access modifiers changed from: protected */
                 public Intent doInBackground(Void... voidArr) {
                     Intent intent;
-                    String lockScreenMagazineSettingsDeepLink = LockScreenMagazineUtils.getLockScreenMagazineSettingsDeepLink(LockScreenMagazinePreView.this.mContext);
+                    String lockScreenMagazineSettingsDeepLink = LockScreenMagazineUtils.getLockScreenMagazineSettingsDeepLink(((RelativeLayout) LockScreenMagazinePreView.this).mContext);
                     if (!TextUtils.isEmpty(lockScreenMagazineSettingsDeepLink)) {
                         intent = new Intent("android.intent.action.VIEW");
                         intent.putExtra("from", "lks_preview");
@@ -175,7 +170,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                     } else {
                         intent = null;
                     }
-                    if (PackageUtils.resolveIntent(LockScreenMagazinePreView.this.mContext, intent) != null) {
+                    if (PackageUtils.resolveIntent(((RelativeLayout) LockScreenMagazinePreView.this).mContext, intent) != null) {
                         return intent;
                     }
                     return null;
@@ -191,10 +186,12 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void initFullScreenTitleLayout() {
         this.mFullScreenTitleLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass2 */
+
             public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
                 if (i3 - i != i7 - i5) {
                     LockScreenMagazinePreView lockScreenMagazinePreView = LockScreenMagazinePreView.this;
-                    float unused = lockScreenMagazinePreView.mFullScreenTitleLayoutWidth = (float) lockScreenMagazinePreView.mFullScreenTitleLayout.getWidth();
+                    lockScreenMagazinePreView.mFullScreenTitleLayoutWidth = (float) lockScreenMagazinePreView.mFullScreenTitleLayout.getWidth();
                     LockScreenMagazinePreView.this.updateLinkButton();
                 }
             }
@@ -215,6 +212,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void initLinkButton() {
         this.mFullScreenLinkButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass3 */
+
             public void onClick(View view) {
                 if (LockScreenMagazinePreView.this.mPreViewClickListener != null) {
                     LockScreenMagazinePreView.this.mPreViewClickListener.onLinkButtonClick(view);
@@ -222,6 +221,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
             }
         });
         this.mFullScreenLinkButton.setOnLongClickListener(new View.OnLongClickListener(this) {
+            /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass4 */
+
             public boolean onLongClick(View view) {
                 return true;
             }
@@ -248,6 +249,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     private void initFullScreenButton() {
         this.mEnterButton.setContentDescription(this.mResources.getText(C0021R$string.accessibility_enter_lock_wallpaper));
         this.mEnterButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass5 */
+
             public void onClick(View view) {
                 if (LockScreenMagazinePreView.this.mPreViewClickListener != null) {
                     LockScreenMagazinePreView.this.mPreViewClickListener.onPreButtonClick(view);
@@ -255,6 +258,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
             }
         });
         this.mEnterButton.setOnLongClickListener(new View.OnLongClickListener(this) {
+            /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass6 */
+
             public boolean onLongClick(View view) {
                 return true;
             }
@@ -334,11 +339,14 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateSettingButton(final Intent intent) {
+    /* access modifiers changed from: public */
+    private void updateSettingButton(final Intent intent) {
         if (intent != null) {
             this.mFullScreenSettingButton.setVisibility(0);
             this.mFullScreenSettingButton.setContentDescription(this.mResources.getText(C0021R$string.accessibility_enter_lock_setting));
             this.mFullScreenSettingButton.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass7 */
+
                 public void onClick(View view) {
                     if (LockScreenMagazinePreView.this.mPreViewClickListener != null) {
                         LockScreenMagazinePreView.this.mPreViewClickListener.onSettingButtonClick(view, intent);
@@ -346,6 +354,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                 }
             });
             this.mFullScreenSettingButton.setOnLongClickListener(new View.OnLongClickListener(this) {
+                /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass8 */
+
                 public boolean onLongClick(View view) {
                     return true;
                 }
@@ -364,16 +374,15 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     private void updateFontScale() {
         int i;
         int i2;
-        Class cls = LockScreenMagazineController.class;
         if (!isDefaultMainLayout()) {
             updateRemoteTextView(this.mRemoteMainView, true);
-        } else if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
+        } else if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             this.mMainTitle.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_main_title_text_size));
             this.mMainProvider.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_main_content_text_size));
             this.mMainSource.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_main_content_text_size));
         }
         if (isDefaultFullScreenLayout()) {
-            if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
+            if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
                 this.mFullScreenProvider.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_provider_text_size));
                 this.mFullScreenSource.setTextSize(0, (float) this.mResources.getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_preview_fullscreen_bottom_source_text_size));
             }
@@ -435,8 +444,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     private void updateViewsLayoutParams() {
-        Class cls = LockScreenMagazineController.class;
-        if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
+        if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             if (isDefaultMainLayout()) {
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mMainLayout.getLayoutParams();
                 layoutParams.setMargins(0, 0, 0, this.mResources.getDimensionPixelOffset(C0012R$dimen.keyguard_affordance_height));
@@ -452,7 +460,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
             }
         }
         if (isDefaultFullScreenLayout()) {
-            if (((LockScreenMagazineController) Dependency.get(cls)).isSupportLockScreenMagazineLeft()) {
+            if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
                 LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) this.mFullScreenSettingButton.getLayoutParams();
                 layoutParams4.setMargins(0, this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_setting_margin_top), this.mResources.getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_preview_fullscreen_setting_margin_end), 0);
                 this.mFullScreenSettingButton.setLayoutParams(layoutParams4);
@@ -492,13 +500,15 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     public void updateViews() {
         post(new Runnable() {
+            /* class com.android.keyguard.magazine.LockScreenMagazinePreView.AnonymousClass9 */
+
             public void run() {
                 if (LockScreenMagazinePreView.this.mMainRemoteView == null) {
-                    String unused = LockScreenMagazinePreView.this.mRemotePackageName = null;
+                    LockScreenMagazinePreView.this.mRemotePackageName = null;
                     LockScreenMagazinePreView.this.updateMainView();
                 } else {
                     LockScreenMagazinePreView lockScreenMagazinePreView = LockScreenMagazinePreView.this;
-                    String unused2 = lockScreenMagazinePreView.mRemotePackageName = lockScreenMagazinePreView.mMainRemoteView.getPackage();
+                    lockScreenMagazinePreView.mRemotePackageName = lockScreenMagazinePreView.mMainRemoteView.getPackage();
                     try {
                         LockScreenMagazinePreView.this.updateRemoteMainView();
                     } catch (Exception e) {
@@ -507,11 +517,11 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                     }
                 }
                 if (LockScreenMagazinePreView.this.mFullScreenRemoteView == null) {
-                    String unused3 = LockScreenMagazinePreView.this.mRemotePackageName = null;
+                    LockScreenMagazinePreView.this.mRemotePackageName = null;
                     LockScreenMagazinePreView.this.updateFullScreenView();
                 } else {
                     LockScreenMagazinePreView lockScreenMagazinePreView2 = LockScreenMagazinePreView.this;
-                    String unused4 = lockScreenMagazinePreView2.mRemotePackageName = lockScreenMagazinePreView2.mFullScreenRemoteView.getPackage();
+                    lockScreenMagazinePreView2.mRemotePackageName = lockScreenMagazinePreView2.mFullScreenRemoteView.getPackage();
                     try {
                         LockScreenMagazinePreView.this.updateRemoteFullScreenView();
                     } catch (Exception e2) {
@@ -525,7 +535,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateMainView() {
+    /* access modifiers changed from: public */
+    private void updateMainView() {
         if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             updateMainTitle();
             updateMainProviderText();
@@ -534,7 +545,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateFullScreenView() {
+    /* access modifiers changed from: public */
+    private void updateFullScreenView() {
         if (Build.IS_INTERNATIONAL_BUILD && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             updateFullScreenProviderText();
             updateFullScreenSourceText();
@@ -545,7 +557,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateRemoteMainView() {
+    /* access modifiers changed from: public */
+    private void updateRemoteMainView() {
         if (!this.mMainRemoteViewApplyed) {
             this.mMainRemoteViewApplyed = true;
             applyMainRemoteView();
@@ -569,7 +582,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateRemoteFullScreenView() {
+    /* access modifiers changed from: public */
+    private void updateRemoteFullScreenView() {
         if (!this.mFullScreenRemoteViewApplyed) {
             this.mFullScreenRemoteViewApplyed = true;
             applyFullScreenRemoteView();
@@ -668,7 +682,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     private void updateFullScreenButtonText() {
         int i;
         if (this.mLockScreenMagazineWallpaperInfo != null) {
-            Resources resources = this.mContext.getResources();
+            Resources resources = ((RelativeLayout) this).mContext.getResources();
             if (Build.IS_INTERNATIONAL_BUILD) {
                 i = C0021R$string.lock_screen_magazine_preview_fullscreen_bottom_button_global_text;
             } else {
@@ -683,7 +697,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                     string = this.mLockScreenMagazineWallpaperInfo.globalBtnText;
                 }
             } else {
-                string = this.mContext.getResources().getString(C0021R$string.download_lock_wallpaper);
+                string = ((RelativeLayout) this).mContext.getResources().getString(C0021R$string.download_lock_wallpaper);
             }
             this.mEnterButton.setText(string);
         }
@@ -701,7 +715,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateLinkButton() {
+    /* access modifiers changed from: public */
+    private void updateLinkButton() {
         if (isDefaultFullScreenLayout()) {
             LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = this.mLockScreenMagazineWallpaperInfo;
             if (lockScreenMagazineWallpaperInfo == null || TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.landingPageUrl)) {
@@ -875,7 +890,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     public void setMainLayoutVisible(int i) {
         getMainLayout().setVisibility(i);
-        AnalyticsHelper.getInstance(this.mContext).setLockScreenMagazineMainPreShow(i == 0);
+        AnalyticsHelper.getInstance(((RelativeLayout) this).mContext).setLockScreenMagazineMainPreShow(i == 0);
     }
 
     public void setMainLayoutAlpha(float f) {

@@ -2,8 +2,9 @@ package com.android.keyguard.injector;
 
 import android.view.View;
 
+/* access modifiers changed from: package-private */
 /* compiled from: KeyguardPanelViewInjector.kt */
-final class KeyguardPanelViewInjector$showSimLockedTipsDialog$2 implements View.OnSystemUiVisibilityChangeListener {
+public final class KeyguardPanelViewInjector$showSimLockedTipsDialog$2 implements View.OnSystemUiVisibilityChangeListener {
     final /* synthetic */ KeyguardPanelViewInjector this$0;
 
     KeyguardPanelViewInjector$showSimLockedTipsDialog$2(KeyguardPanelViewInjector keyguardPanelViewInjector) {

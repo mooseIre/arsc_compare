@@ -21,8 +21,7 @@ public class HeiHeiGestureView extends FrameLayout {
     private int mCurrentPicture;
     private String mCurrentSound;
     private float mFirstY;
-    /* access modifiers changed from: private */
-    public ImageView mImageView;
+    private ImageView mImageView;
     private long mLastMatchTime;
     private long mLastTiggerTime;
     private OnTriggerListener mListener;
@@ -32,7 +31,8 @@ public class HeiHeiGestureView extends FrameLayout {
     private DetectingStage mStage;
     private float mTopY;
 
-    enum DetectingStage {
+    /* access modifiers changed from: package-private */
+    public enum DetectingStage {
         STOP,
         WAITING,
         MOVE_DOWN,
@@ -69,7 +69,7 @@ public class HeiHeiGestureView extends FrameLayout {
             if (onTriggerListener != null) {
                 onTriggerListener.onTrigger();
             }
-            if (1 == Settings.System.getIntForUser(this.mContext.getContentResolver(), "lockscreen_sounds_enabled", 1, KeyguardUpdateMonitor.getCurrentUser())) {
+            if (1 == Settings.System.getIntForUser(((FrameLayout) this).mContext.getContentResolver(), "lockscreen_sounds_enabled", 1, KeyguardUpdateMonitor.getCurrentUser())) {
                 playSound();
                 return;
             }
@@ -79,6 +79,8 @@ public class HeiHeiGestureView extends FrameLayout {
         this.mImageView.setVisibility(0);
         this.mImageView.setImageResource(this.mCurrentPicture);
         postDelayed(new Runnable() {
+            /* class com.android.keyguard.HeiHeiGestureView.AnonymousClass1 */
+
             public void run() {
                 HeiHeiGestureView.this.mImageView.setVisibility(8);
             }

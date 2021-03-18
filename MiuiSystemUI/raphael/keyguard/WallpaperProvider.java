@@ -98,6 +98,7 @@ public class WallpaperProvider extends ContentProvider {
                     StatusBar statusBar = (StatusBar) Dependency.get(StatusBar.class);
                     if (statusBar != null) {
                         this.mHandler.post(new Runnable(intent) {
+                            /* class com.android.keyguard.$$Lambda$WallpaperProvider$JpV_wqCsi6DqWAHoUV3crosEfIk */
                             public final /* synthetic */ Intent f$1;
 
                             {

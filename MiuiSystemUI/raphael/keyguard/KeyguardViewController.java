@@ -20,19 +20,19 @@ public interface KeyguardViewController {
 
     void notifyKeyguardAuthenticated(boolean z);
 
-    void onFinishedGoingToSleep() {
+    default void onFinishedGoingToSleep() {
     }
 
-    void onScreenTurnedOn() {
+    default void onScreenTurnedOn() {
     }
 
-    void onScreenTurningOn() {
+    default void onScreenTurningOn() {
     }
 
-    void onStartedGoingToSleep() {
+    default void onStartedGoingToSleep() {
     }
 
-    void onStartedWakingUp() {
+    default void onStartedWakingUp() {
     }
 
     void reset(boolean z);

@@ -23,16 +23,13 @@ import com.miui.systemui.anim.PhysicBasedInterpolator;
 import miui.view.animation.SineEaseInOutInterpolator;
 
 public class KeyguardPINView extends KeyguardPinBasedInputView implements PasswordTextView.TextChangeListener {
-    /* access modifiers changed from: private */
-    public boolean mAppearAnimating;
+    private boolean mAppearAnimating;
     private final AppearAnimationUtils mAppearAnimationUtils;
     private ViewGroup mContainer;
-    /* access modifiers changed from: private */
-    public boolean mDisappearAnimatePending;
+    private boolean mDisappearAnimatePending;
     private final DisappearAnimationUtils mDisappearAnimationUtils;
     private final DisappearAnimationUtils mDisappearAnimationUtilsLocked;
-    /* access modifiers changed from: private */
-    public Runnable mDisappearFinishRunnable;
+    private Runnable mDisappearFinishRunnable;
     private int mDisappearYTranslation;
     private int mPasswordLength;
     private ViewGroup mRow0;
@@ -41,6 +38,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     private View[][] mViews;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleWrongPassword() {
     }
 
@@ -49,15 +47,14 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     }
 
     public KeyguardPINView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardPINView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mAppearAnimationUtils = new AppearAnimationUtils(context);
-        Context context2 = context;
-        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context2, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
-        this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context2, 187, 0.6f, 0.45f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
+        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
+        this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context, 187, 0.6f, 0.45f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
         this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0012R$dimen.miui_disappear_y_translation);
         this.mScreenHeight = context.getResources().getConfiguration().screenHeightDp;
         int lockPasswordLength = (int) new MiuiLockPatternUtils(context).getLockPasswordLength(KeyguardUpdateMonitor.getCurrentUser());
@@ -69,11 +66,13 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView, com.android.keyguard.KeyguardPinBasedInputView
     public void resetState() {
         super.resetState();
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public int getPasswordTextViewId() {
         return C0015R$id.pinEntry;
     }
@@ -85,6 +84,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView, com.android.keyguard.KeyguardPinBasedInputView, com.android.keyguard.MiuiKeyguardPasswordView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mPasswordEntry.addTextChangedListener(this);
@@ -98,6 +98,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
         setPositionForFod();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void startAppearAnimation() {
         this.mKeyguardBouncerMessageView.setVisibility(0);
         setAlpha(1.0f);
@@ -106,10 +107,12 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
         setTranslationY((float) (this.mScreenHeight / 2));
         AppearAnimationUtils.startTranslationYAnimation(this, 0, 500, 0.0f, new PhysicBasedInterpolator(0.99f, 0.3f));
         this.mAppearAnimationUtils.startAnimation2d(this.mViews, new Runnable() {
+            /* class com.android.keyguard.KeyguardPINView.AnonymousClass1 */
+
             public void run() {
-                boolean unused = KeyguardPINView.this.mAppearAnimating = false;
+                KeyguardPINView.this.mAppearAnimating = false;
                 if (KeyguardPINView.this.mDisappearAnimatePending) {
-                    boolean unused2 = KeyguardPINView.this.mDisappearAnimatePending = false;
+                    KeyguardPINView.this.mDisappearAnimatePending = false;
                     KeyguardPINView keyguardPINView = KeyguardPINView.this;
                     keyguardPINView.startDisappearAnimation(keyguardPINView.mDisappearFinishRunnable);
                 }
@@ -117,6 +120,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
         });
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public boolean startDisappearAnimation(final Runnable runnable) {
         DisappearAnimationUtils disappearAnimationUtils;
         if (this.mAppearAnimating) {
@@ -132,6 +136,8 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
             disappearAnimationUtils = this.mDisappearAnimationUtils;
         }
         disappearAnimationUtils.startAnimation2d(this.mViews, new Runnable(this) {
+            /* class com.android.keyguard.KeyguardPINView.AnonymousClass2 */
+
             public void run() {
                 Log.d("KeyguardPINView", "startDisappearAnimation finish");
                 Runnable runnable = runnable;
@@ -144,6 +150,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
         return true;
     }
 
+    @Override // com.android.keyguard.PasswordTextView.TextChangeListener
     public void onTextChanged(int i) {
         if (i == this.mPasswordLength) {
             verifyPasswordAndUnlock();
@@ -158,6 +165,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationFontScaleChanged() {
         float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.miui_keyguard_view_eca_text_size);
         this.mEmergencyButton.setTextSize(0, dimensionPixelSize);
@@ -166,6 +174,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationOrientationChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
         layoutParams.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_rows_layout_height);
@@ -177,6 +186,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationSmallWidthChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
         layoutParams.width = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_rows_layout_width);

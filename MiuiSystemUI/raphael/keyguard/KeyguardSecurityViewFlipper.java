@@ -19,7 +19,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
     private Rect mTempRect;
 
     public KeyguardSecurityViewFlipper(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardSecurityViewFlipper(Context context, AttributeSet attributeSet) {
@@ -53,6 +53,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         return null;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void setKeyguardCallback(KeyguardSecurityCallback keyguardSecurityCallback) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -60,6 +61,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void setLockPatternUtils(LockPatternUtils lockPatternUtils) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -67,6 +69,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void reset() {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -74,6 +77,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void onPause() {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -81,6 +85,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void onResume(int i) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -88,6 +93,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public boolean needsInput() {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -96,6 +102,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         return false;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void showPromptReason(int i) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -103,6 +110,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void showMessage(String str, String str2, int i) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -110,6 +118,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void applyHintAnimation(long j) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -117,6 +126,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void startAppearAnimation() {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -124,6 +134,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public boolean startDisappearAnimation(Runnable runnable) {
         KeyguardSecurityView securityView = getSecurityView();
         if (securityView != null) {
@@ -138,10 +149,12 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
     }
 
     /* access modifiers changed from: protected */
+    @Override // android.widget.FrameLayout, android.view.ViewGroup
     public ViewGroup.LayoutParams generateLayoutParams(ViewGroup.LayoutParams layoutParams) {
         return layoutParams instanceof LayoutParams ? new LayoutParams((LayoutParams) layoutParams) : new LayoutParams(layoutParams);
     }
 
+    @Override // android.widget.FrameLayout, android.widget.FrameLayout, android.view.ViewGroup
     public LayoutParams generateLayoutParams(AttributeSet attributeSet) {
         return new LayoutParams(getContext(), attributeSet);
     }
@@ -181,7 +194,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         for (int i10 = 0; i10 < childCount; i10++) {
             View childAt = getChildAt(i10);
             LayoutParams layoutParams2 = (LayoutParams) childAt.getLayoutParams();
-            childAt.measure(makeChildMeasureSpec(max, layoutParams2.width), makeChildMeasureSpec(max2, layoutParams2.height));
+            childAt.measure(makeChildMeasureSpec(max, ((FrameLayout.LayoutParams) layoutParams2).width), makeChildMeasureSpec(max2, ((FrameLayout.LayoutParams) layoutParams2).height));
             i8 = Math.max(i8, Math.min(childAt.getMeasuredWidth(), size - paddingLeft));
             i9 = Math.max(i9, Math.min(childAt.getMeasuredHeight(), size2 - paddingTop));
         }
@@ -209,7 +222,7 @@ public class KeyguardSecurityViewFlipper extends ViewFlipper implements Keyguard
         }
 
         public LayoutParams(LayoutParams layoutParams) {
-            super(layoutParams);
+            super((FrameLayout.LayoutParams) layoutParams);
             this.maxWidth = layoutParams.maxWidth;
             this.maxHeight = layoutParams.maxHeight;
         }

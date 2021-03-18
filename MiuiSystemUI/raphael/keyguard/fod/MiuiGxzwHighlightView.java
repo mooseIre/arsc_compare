@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
@@ -114,7 +113,7 @@ class MiuiGxzwHighlightView extends ImageView {
         if (healthAppAuthen) {
             setImageResource(MiuiGxzwUtils.getHealthHaloRes());
         } else if ((this.mSupportHalo && z) || this.mGreenCircle) {
-            setImageDrawable((Drawable) null);
+            setImageDrawable(null);
         } else if (this.mSupportHalo) {
             setImageResource(MiuiGxzwUtils.getHaloRes());
         }

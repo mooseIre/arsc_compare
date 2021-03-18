@@ -10,12 +10,10 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.SystemClock;
-import android.util.AttributeSet;
 import android.util.IntArray;
 import android.util.Log;
 import android.view.DisplayListCanvas;
@@ -25,14 +23,11 @@ import android.view.View;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
-import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import com.android.internal.widget.ExploreByTouchHelper;
 import com.android.internal.widget.LockPatternView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0011R$color;
 import com.android.systemui.C0021R$string;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -40,20 +35,15 @@ import java.util.List;
 public class MiuiLockPatternView extends View {
     private long mAnimatingPeriodStart;
     private int mAspect;
-    /* access modifiers changed from: private */
-    public final CellState[][] mCellStates;
+    private final CellState[][] mCellStates;
     private final Path mCurrentPath;
-    /* access modifiers changed from: private */
-    public final int mDotSize;
-    /* access modifiers changed from: private */
-    public final int mDotSizeActivated;
+    private final int mDotSize;
+    private final int mDotSizeActivated;
     private boolean mEnableHapticFeedback;
     private int mErrorColor;
     private PatternExploreByTouchHelper mExploreByTouchHelper;
-    /* access modifiers changed from: private */
-    public final Interpolator mFastOutSlowInInterpolator;
-    /* access modifiers changed from: private */
-    public float mHitFactor;
+    private final Interpolator mFastOutSlowInInterpolator;
+    private float mHitFactor;
     private float mInProgressX;
     private float mInProgressY;
     private boolean mInStealthMode;
@@ -67,16 +57,12 @@ public class MiuiLockPatternView extends View {
     private final int mPathWidth;
     private final ArrayList<LockPatternView.Cell> mPattern;
     private DisplayMode mPatternDisplayMode;
-    /* access modifiers changed from: private */
-    public final boolean[][] mPatternDrawLookup;
-    /* access modifiers changed from: private */
-    public boolean mPatternInProgress;
+    private final boolean[][] mPatternDrawLookup;
+    private boolean mPatternInProgress;
     private int mRegularColor;
     private Drawable mSelectedDrawable;
-    /* access modifiers changed from: private */
-    public float mSquareHeight;
-    /* access modifiers changed from: private */
-    public float mSquareWidth;
+    private float mSquareHeight;
+    private float mSquareWidth;
     private int mSuccessColor;
     private final Rect mTmpInvalidateRect;
     private boolean mUseLockPatternDrawable;
@@ -114,60 +100,19 @@ public class MiuiLockPatternView extends View {
     }
 
     public MiuiLockPatternView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
-    /* JADX WARNING: type inference failed for: r8v2, types: [com.android.keyguard.MiuiLockPatternView$PatternExploreByTouchHelper, android.view.View$AccessibilityDelegate] */
-    public MiuiLockPatternView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
-        this.mPaint = new Paint();
-        this.mPathPaint = new Paint();
-        this.mPattern = new ArrayList<>(9);
-        this.mPatternDrawLookup = (boolean[][]) Array.newInstance(boolean.class, new int[]{3, 3});
-        this.mInProgressX = -1.0f;
-        this.mInProgressY = -1.0f;
-        this.mPatternDisplayMode = DisplayMode.CORRECT;
-        this.mInputEnabled = true;
-        this.mInStealthMode = false;
-        this.mEnableHapticFeedback = true;
-        this.mPatternInProgress = false;
-        this.mHitFactor = 0.4f;
-        this.mCurrentPath = new Path();
-        this.mInvalidate = new Rect();
-        this.mTmpInvalidateRect = new Rect();
-        this.mAspect = 0;
-        setClickable(true);
-        this.mPathPaint.setAntiAlias(true);
-        this.mPathPaint.setDither(true);
-        this.mRegularColor = getResources().getColor(C0011R$color.miui_pattern_lockscreen_paint_color);
-        this.mErrorColor = getResources().getColor(C0011R$color.pattern_lockscreen_paint_error_color);
-        this.mSuccessColor = getResources().getColor(C0011R$color.miui_pattern_lockscreen_heavy_paint_color);
-        this.mPathPaint.setColor(this.mRegularColor);
-        this.mPathPaint.setAntiAlias(true);
-        this.mPathPaint.setDither(true);
-        this.mPathPaint.setStyle(Paint.Style.STROKE);
-        this.mPathPaint.setStrokeJoin(Paint.Join.ROUND);
-        this.mPathPaint.setStrokeCap(Paint.Cap.ROUND);
-        this.mPathWidth = 7;
-        this.mPathPaint.setStrokeWidth((float) 7);
-        this.mDotSize = 18;
-        this.mDotSizeActivated = 27;
-        this.mCellStates = (CellState[][]) Array.newInstance(CellState.class, new int[]{3, 3});
-        for (int i = 0; i < 3; i++) {
-            for (int i2 = 0; i2 < 3; i2++) {
-                this.mCellStates[i][i2] = new CellState();
-                CellState[][] cellStateArr = this.mCellStates;
-                cellStateArr[i][i2].radius = (float) (this.mDotSize / 2);
-                cellStateArr[i][i2].row = i;
-                cellStateArr[i][i2].col = i2;
-            }
-        }
-        this.mFastOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563661);
-        this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
-        ? patternExploreByTouchHelper = new PatternExploreByTouchHelper(this);
-        this.mExploreByTouchHelper = patternExploreByTouchHelper;
-        setAccessibilityDelegate(patternExploreByTouchHelper);
-        AudioManager audioManager = (AudioManager) this.mContext.getSystemService("audio");
+    /* JADX DEBUG: Multi-variable search result rejected for r7v0, resolved type: com.android.keyguard.MiuiLockPatternView */
+    /* JADX WARN: Multi-variable type inference failed */
+    /* JADX WARN: Type inference failed for: r8v2, types: [com.android.keyguard.MiuiLockPatternView$PatternExploreByTouchHelper, android.view.View$AccessibilityDelegate] */
+    /* JADX WARNING: Unknown variable types count: 1 */
+    /* Code decompiled incorrectly, please refer to instructions dump. */
+    public MiuiLockPatternView(android.content.Context r8, android.util.AttributeSet r9) {
+        /*
+        // Method dump skipped, instructions count: 312
+        */
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.MiuiLockPatternView.<init>(android.content.Context, android.util.AttributeSet):void");
     }
 
     public CellState[][] getCellStates() {
@@ -210,36 +155,32 @@ public class MiuiLockPatternView extends View {
         }
     }
 
-    private void startCellStateAnimationSw(CellState cellState, float f, float f2, float f3, float f4, float f5, float f6, long j, long j2, Interpolator interpolator, Runnable runnable) {
-        final CellState cellState2 = cellState;
-        final float f7 = f;
-        cellState2.alpha = f7;
-        final float f8 = f3;
-        cellState2.translationY = f8;
-        cellState2.radius = ((float) (this.mDotSize / 2)) * f5;
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+    private void startCellStateAnimationSw(final CellState cellState, final float f, final float f2, final float f3, final float f4, final float f5, final float f6, long j, long j2, Interpolator interpolator, final Runnable runnable) {
+        cellState.alpha = f;
+        cellState.translationY = f3;
+        cellState.radius = ((float) (this.mDotSize / 2)) * f5;
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         ofFloat.setDuration(j2);
         ofFloat.setStartDelay(j);
         ofFloat.setInterpolator(interpolator);
-        final float f9 = f2;
-        final float f10 = f4;
-        final float f11 = f5;
-        final float f12 = f6;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass1 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = Float.valueOf(valueAnimator.getAnimatedValue().toString()).floatValue();
-                CellState cellState = cellState2;
+                CellState cellState = cellState;
                 float f = 1.0f - floatValue;
-                cellState.alpha = (f7 * f) + (f9 * floatValue);
-                cellState.translationY = (f8 * f) + (f10 * floatValue);
-                cellState.radius = ((float) (MiuiLockPatternView.this.mDotSize / 2)) * ((f * f11) + (floatValue * f12));
+                cellState.alpha = (f * f) + (f2 * floatValue);
+                cellState.translationY = (f3 * f) + (f4 * floatValue);
+                cellState.radius = ((float) (MiuiLockPatternView.this.mDotSize / 2)) * ((f * f5) + (floatValue * f6));
                 MiuiLockPatternView.this.invalidate();
             }
         });
-        final Runnable runnable2 = runnable;
         ofFloat.addListener(new AnimatorListenerAdapter(this) {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass2 */
+
             public void onAnimationEnd(Animator animator) {
-                Runnable runnable = runnable2;
+                Runnable runnable = runnable;
                 if (runnable != null) {
                     runnable.run();
                 }
@@ -248,29 +189,25 @@ public class MiuiLockPatternView extends View {
         ofFloat.start();
     }
 
-    private void startCellStateAnimationHw(final CellState cellState, float f, float f2, float f3, float f4, float f5, float f6, long j, long j2, Interpolator interpolator, Runnable runnable) {
-        CellState cellState2 = cellState;
-        float f7 = f4;
-        cellState2.alpha = f2;
-        cellState2.translationY = f7;
-        cellState2.radius = ((float) (this.mDotSize / 2)) * f6;
-        cellState2.hwAnimating = true;
-        cellState2.hwCenterY = CanvasProperty.createFloat(getCenterYForRow(cellState2.row) + f3);
-        cellState2.hwCenterX = CanvasProperty.createFloat(getCenterXForColumn(cellState2.col));
-        cellState2.hwRadius = CanvasProperty.createFloat(((float) (this.mDotSize / 2)) * f5);
+    private void startCellStateAnimationHw(final CellState cellState, float f, float f2, float f3, float f4, float f5, float f6, long j, long j2, Interpolator interpolator, final Runnable runnable) {
+        cellState.alpha = f2;
+        cellState.translationY = f4;
+        cellState.radius = ((float) (this.mDotSize / 2)) * f6;
+        cellState.hwAnimating = true;
+        cellState.hwCenterY = CanvasProperty.createFloat(getCenterYForRow(cellState.row) + f3);
+        cellState.hwCenterX = CanvasProperty.createFloat(getCenterXForColumn(cellState.col));
+        cellState.hwRadius = CanvasProperty.createFloat(((float) (this.mDotSize / 2)) * f5);
         this.mPaint.setColor(getCurrentColor(false));
         this.mPaint.setAlpha((int) (255.0f * f));
-        cellState2.hwPaint = CanvasProperty.createPaint(new Paint(this.mPaint));
-        long j3 = j;
-        long j4 = j2;
-        Interpolator interpolator2 = interpolator;
-        startRtFloatAnimation(cellState2.hwCenterY, getCenterYForRow(cellState2.row) + f7, j3, j4, interpolator2);
-        startRtFloatAnimation(cellState2.hwRadius, ((float) (this.mDotSize / 2)) * f6, j3, j4, interpolator2);
-        final Runnable runnable2 = runnable;
-        startRtAlphaAnimation(cellState, f2, j3, j4, interpolator2, new AnimatorListenerAdapter(this) {
+        cellState.hwPaint = CanvasProperty.createPaint(new Paint(this.mPaint));
+        startRtFloatAnimation(cellState.hwCenterY, getCenterYForRow(cellState.row) + f4, j, j2, interpolator);
+        startRtFloatAnimation(cellState.hwRadius, ((float) (this.mDotSize / 2)) * f6, j, j2, interpolator);
+        startRtAlphaAnimation(cellState, f2, j, j2, interpolator, new AnimatorListenerAdapter(this) {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass3 */
+
             public void onAnimationEnd(Animator animator) {
                 cellState.hwAnimating = false;
-                Runnable runnable = runnable2;
+                Runnable runnable = runnable;
                 if (runnable != null) {
                     runnable.run();
                 }
@@ -364,27 +301,24 @@ public class MiuiLockPatternView extends View {
 
     /* access modifiers changed from: protected */
     public void onSizeChanged(int i, int i2, int i3, int i4) {
-        int i5 = (i - this.mPaddingLeft) - this.mPaddingRight;
+        int i5 = (i - ((View) this).mPaddingLeft) - ((View) this).mPaddingRight;
         this.mSquareWidth = ((float) i5) / 3.0f;
-        int i6 = (i2 - this.mPaddingTop) - this.mPaddingBottom;
+        int i6 = (i2 - ((View) this).mPaddingTop) - ((View) this).mPaddingBottom;
         this.mSquareHeight = ((float) i6) / 3.0f;
         this.mExploreByTouchHelper.invalidateRoot();
         if (this.mUseLockPatternDrawable) {
-            this.mNotSelectedDrawable.setBounds(this.mPaddingLeft, this.mPaddingTop, i5, i6);
-            this.mSelectedDrawable.setBounds(this.mPaddingLeft, this.mPaddingTop, i5, i6);
+            this.mNotSelectedDrawable.setBounds(((View) this).mPaddingLeft, ((View) this).mPaddingTop, i5, i6);
+            this.mSelectedDrawable.setBounds(((View) this).mPaddingLeft, ((View) this).mPaddingTop, i5, i6);
         }
     }
 
     private int resolveMeasured(int i, int i2) {
         int size = View.MeasureSpec.getSize(i);
         int mode = View.MeasureSpec.getMode(i);
-        if (mode == Integer.MIN_VALUE) {
-            return Math.max(size, i2);
+        if (mode != Integer.MIN_VALUE) {
+            return mode != 0 ? size : i2;
         }
-        if (mode != 0) {
-            return size;
-        }
-        return i2;
+        return Math.max(size, i2);
     }
 
     /* access modifiers changed from: protected */
@@ -458,46 +392,50 @@ public class MiuiLockPatternView extends View {
     private void startCellActivatedAnimation(LockPatternView.Cell cell) {
         final CellState cellState = this.mCellStates[cell.getRow()][cell.getColumn()];
         startRadiusAnimation((float) (this.mDotSize / 2), (float) (this.mDotSizeActivated / 2), 96, this.mLinearOutSlowInInterpolator, cellState, new Runnable() {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass4 */
+
             public void run() {
                 MiuiLockPatternView miuiLockPatternView = MiuiLockPatternView.this;
-                miuiLockPatternView.startRadiusAnimation((float) (miuiLockPatternView.mDotSizeActivated / 2), (float) (MiuiLockPatternView.this.mDotSize / 2), 192, MiuiLockPatternView.this.mFastOutSlowInInterpolator, cellState, (Runnable) null);
+                miuiLockPatternView.startRadiusAnimation((float) (miuiLockPatternView.mDotSizeActivated / 2), (float) (MiuiLockPatternView.this.mDotSize / 2), 192, MiuiLockPatternView.this.mFastOutSlowInInterpolator, cellState, null);
             }
         });
         startLineEndAnimation(cellState, this.mInProgressX, this.mInProgressY, getCenterXForColumn(cell.getColumn()), getCenterYForRow(cell.getRow()));
     }
 
-    private void startLineEndAnimation(final CellState cellState, float f, float f2, float f3, float f4) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
-        final CellState cellState2 = cellState;
-        final float f5 = f;
-        final float f6 = f3;
-        final float f7 = f2;
-        final float f8 = f4;
+    private void startLineEndAnimation(final CellState cellState, final float f, final float f2, final float f3, final float f4) {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass5 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float floatValue = Float.valueOf(valueAnimator.getAnimatedValue().toString()).floatValue();
-                CellState cellState = cellState2;
+                CellState cellState = cellState;
                 float f = 1.0f - floatValue;
-                cellState.lineEndX = (f5 * f) + (f6 * floatValue);
-                cellState.lineEndY = (f * f7) + (floatValue * f8);
+                cellState.lineEndX = (f * f) + (f3 * floatValue);
+                cellState.lineEndY = (f * f2) + (floatValue * f4);
                 MiuiLockPatternView.this.invalidate();
             }
         });
         ofFloat.addListener(new AnimatorListenerAdapter(this) {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass6 */
+
             public void onAnimationEnd(Animator animator) {
                 cellState.lineAnimator = null;
             }
         });
         ofFloat.setInterpolator(this.mFastOutSlowInInterpolator);
-        ofFloat.setDuration(100);
+        ofFloat.setDuration(100L);
         ofFloat.start();
         cellState.lineAnimator = ofFloat;
     }
 
     /* access modifiers changed from: private */
-    public void startRadiusAnimation(float f, float f2, long j, Interpolator interpolator, final CellState cellState, final Runnable runnable) {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, f2});
+    /* access modifiers changed from: public */
+    private void startRadiusAnimation(float f, float f2, long j, Interpolator interpolator, final CellState cellState, final Runnable runnable) {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f, f2);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass7 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 cellState.radius = Float.valueOf(valueAnimator.getAnimatedValue().toString()).floatValue();
                 MiuiLockPatternView.this.invalidate();
@@ -505,6 +443,8 @@ public class MiuiLockPatternView extends View {
         });
         if (runnable != null) {
             ofFloat.addListener(new AnimatorListenerAdapter(this) {
+                /* class com.android.keyguard.MiuiLockPatternView.AnonymousClass8 */
+
                 public void onAnimationEnd(Animator animator) {
                     runnable.run();
                 }
@@ -525,10 +465,11 @@ public class MiuiLockPatternView extends View {
     }
 
     /* access modifiers changed from: private */
-    public int getRowHit(float f) {
+    /* access modifiers changed from: public */
+    private int getRowHit(float f) {
         float f2 = this.mSquareHeight;
         float f3 = this.mHitFactor * f2;
-        float f4 = ((float) this.mPaddingTop) + ((f2 - f3) / 2.0f);
+        float f4 = ((float) ((View) this).mPaddingTop) + ((f2 - f3) / 2.0f);
         for (int i = 0; i < 3; i++) {
             float f5 = (((float) i) * f2) + f4;
             if (f >= f5 && f <= f5 + f3) {
@@ -539,10 +480,11 @@ public class MiuiLockPatternView extends View {
     }
 
     /* access modifiers changed from: private */
-    public int getColumnHit(float f) {
+    /* access modifiers changed from: public */
+    private int getColumnHit(float f) {
         float f2 = this.mSquareWidth;
         float f3 = this.mHitFactor * f2;
-        float f4 = ((float) this.mPaddingLeft) + ((f2 - f3) / 2.0f);
+        float f4 = ((float) ((View) this).mPaddingLeft) + ((f2 - f3) / 2.0f);
         for (int i = 0; i < 3; i++) {
             float f5 = (((float) i) * f2) + f4;
             if (f >= f5 && f <= f5 + f3) {
@@ -553,7 +495,7 @@ public class MiuiLockPatternView extends View {
     }
 
     public boolean onHoverEvent(MotionEvent motionEvent) {
-        if (AccessibilityManager.getInstance(this.mContext).isTouchExplorationEnabled()) {
+        if (AccessibilityManager.getInstance(((View) this).mContext).isTouchExplorationEnabled()) {
             int action = motionEvent.getAction();
             if (action == 7) {
                 motionEvent.setAction(2);
@@ -651,7 +593,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void sendAccessEvent(int i) {
-        announceForAccessibility(this.mContext.getString(i));
+        announceForAccessibility(((View) this).mContext.getString(i));
     }
 
     private void handleActionUp() {
@@ -702,15 +644,17 @@ public class MiuiLockPatternView extends View {
     }
 
     /* access modifiers changed from: private */
-    public float getCenterXForColumn(int i) {
+    /* access modifiers changed from: public */
+    private float getCenterXForColumn(int i) {
         float f = this.mSquareWidth;
-        return ((float) this.mPaddingLeft) + (((float) i) * f) + (f / 2.0f);
+        return ((float) ((View) this).mPaddingLeft) + (((float) i) * f) + (f / 2.0f);
     }
 
     /* access modifiers changed from: private */
-    public float getCenterYForRow(int i) {
+    /* access modifiers changed from: public */
+    private float getCenterYForRow(int i) {
         float f = this.mSquareHeight;
-        return ((float) this.mPaddingTop) + (((float) i) * f) + (f / 2.0f);
+        return ((float) ((View) this).mPaddingTop) + (((float) i) * f) + (f / 2.0f);
     }
 
     /* access modifiers changed from: protected */
@@ -718,7 +662,6 @@ public class MiuiLockPatternView extends View {
         int i;
         int i2;
         float f;
-        Canvas canvas2 = canvas;
         ArrayList<LockPatternView.Cell> arrayList = this.mPattern;
         int size = arrayList.size();
         boolean[][] zArr = this.mPatternDrawLookup;
@@ -763,18 +706,13 @@ public class MiuiLockPatternView extends View {
                     i = i7;
                     f = centerYForRow2;
                     if (!isHardwareAccelerated() || !cellState.hwAnimating) {
-                        float f4 = ((float) ((int) f)) + f3;
-                        float f5 = cellState.radius;
-                        float f6 = f4;
-                        float f7 = f5;
-                        boolean z = zArr[i5][i];
                         i2 = i6;
-                        drawCircle(canvas, (float) ((int) centerXForColumn2), f6, f7, z, cellState.alpha);
+                        drawCircle(canvas, (float) ((int) centerXForColumn2), ((float) ((int) f)) + f3, cellState.radius, zArr[i5][i], cellState.alpha);
                         i7 = i + 1;
                         centerYForRow2 = f;
                         i6 = i2;
                     } else {
-                        ((DisplayListCanvas) canvas2).drawCircle(cellState.hwCenterX, cellState.hwCenterY, cellState.hwRadius, cellState.hwPaint);
+                        ((DisplayListCanvas) canvas).drawCircle(cellState.hwCenterX, cellState.hwCenterY, cellState.hwRadius, cellState.hwPaint);
                     }
                 }
                 i2 = i6;
@@ -786,10 +724,10 @@ public class MiuiLockPatternView extends View {
         }
         if (!this.mInStealthMode) {
             this.mPathPaint.setColor(getCurrentColor(true));
-            float f8 = 0.0f;
-            float f9 = 0.0f;
+            float f4 = 0.0f;
+            float f5 = 0.0f;
             int i8 = 0;
-            boolean z2 = false;
+            boolean z = false;
             while (i8 < size) {
                 LockPatternView.Cell cell4 = arrayList.get(i8);
                 if (!zArr[cell4.getRow()][cell4.getColumn()]) {
@@ -800,29 +738,29 @@ public class MiuiLockPatternView extends View {
                 if (i8 != 0) {
                     CellState cellState2 = this.mCellStates[cell4.getRow()][cell4.getColumn()];
                     path.rewind();
-                    path.moveTo(f8, f9);
-                    float f10 = cellState2.lineEndX;
-                    if (f10 != Float.MIN_VALUE) {
-                        float f11 = cellState2.lineEndY;
-                        if (f11 != Float.MIN_VALUE) {
-                            path.lineTo(f10, f11);
-                            canvas2.drawPath(path, this.mPathPaint);
+                    path.moveTo(f4, f5);
+                    float f6 = cellState2.lineEndX;
+                    if (f6 != Float.MIN_VALUE) {
+                        float f7 = cellState2.lineEndY;
+                        if (f7 != Float.MIN_VALUE) {
+                            path.lineTo(f6, f7);
+                            canvas.drawPath(path, this.mPathPaint);
                         }
                     }
                     path.lineTo(centerXForColumn3, centerYForRow3);
-                    canvas2.drawPath(path, this.mPathPaint);
+                    canvas.drawPath(path, this.mPathPaint);
                 }
                 i8++;
-                f8 = centerXForColumn3;
-                f9 = centerYForRow3;
-                z2 = true;
+                f4 = centerXForColumn3;
+                f5 = centerYForRow3;
+                z = true;
             }
-            if ((this.mPatternInProgress || this.mPatternDisplayMode == DisplayMode.ANIMATE) && z2) {
+            if ((this.mPatternInProgress || this.mPatternDisplayMode == DisplayMode.ANIMATE) && z) {
                 path.rewind();
-                path.moveTo(f8, f9);
+                path.moveTo(f4, f5);
                 path.lineTo(this.mInProgressX, this.mInProgressY);
-                this.mPathPaint.setAlpha((int) (calculateLastSegmentAlpha(this.mInProgressX, this.mInProgressY, f8, f9) * 255.0f));
-                canvas2.drawPath(path, this.mPathPaint);
+                this.mPathPaint.setAlpha((int) (calculateLastSegmentAlpha(this.mInProgressX, this.mInProgressY, f4, f5) * 255.0f));
+                canvas.drawPath(path, this.mPathPaint);
             }
         }
     }
@@ -854,9 +792,9 @@ public class MiuiLockPatternView extends View {
     }
 
     private void drawCellDrawable(Canvas canvas, int i, int i2, float f, boolean z) {
-        int i3 = this.mPaddingLeft;
+        int i3 = ((View) this).mPaddingLeft;
         float f2 = this.mSquareWidth;
-        int i4 = this.mPaddingTop;
+        int i4 = ((View) this).mPaddingTop;
         float f3 = this.mSquareHeight;
         Rect rect = new Rect((int) (((float) i3) + (((float) i2) * f2)), (int) (((float) i4) + (((float) i) * f3)), (int) (((float) i3) + (((float) (i2 + 1)) * f2)), (int) (((float) i4) + (((float) (i + 1)) * f3)));
         float f4 = f / ((float) (this.mDotSize / 2));
@@ -873,7 +811,7 @@ public class MiuiLockPatternView extends View {
 
     /* access modifiers changed from: protected */
     public Parcelable onSaveInstanceState() {
-        return new SavedState(super.onSaveInstanceState(), (String) null, this.mPatternDisplayMode.ordinal(), this.mInputEnabled, this.mInStealthMode, this.mEnableHapticFeedback);
+        return new SavedState(super.onSaveInstanceState(), null, this.mPatternDisplayMode.ordinal(), this.mInputEnabled, this.mInStealthMode, this.mEnableHapticFeedback);
     }
 
     /* access modifiers changed from: protected */
@@ -886,12 +824,17 @@ public class MiuiLockPatternView extends View {
         this.mEnableHapticFeedback = savedState.isTactileFeedbackEnabled();
     }
 
-    private static class SavedState extends View.BaseSavedState {
+    /* access modifiers changed from: private */
+    public static class SavedState extends View.BaseSavedState {
         public static final Parcelable.Creator<SavedState> CREATOR = new Parcelable.Creator<SavedState>() {
+            /* class com.android.keyguard.MiuiLockPatternView.SavedState.AnonymousClass1 */
+
+            @Override // android.os.Parcelable.Creator
             public SavedState createFromParcel(Parcel parcel) {
                 return new SavedState(parcel);
             }
 
+            @Override // android.os.Parcelable.Creator
             public SavedState[] newArray(int i) {
                 return new SavedState[i];
             }
@@ -915,9 +858,9 @@ public class MiuiLockPatternView extends View {
             super(parcel);
             this.mSerializedPattern = parcel.readString();
             this.mDisplayMode = parcel.readInt();
-            this.mInputEnabled = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
-            this.mInStealthMode = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
-            this.mTactileFeedbackEnabled = ((Boolean) parcel.readValue((ClassLoader) null)).booleanValue();
+            this.mInputEnabled = ((Boolean) parcel.readValue(null)).booleanValue();
+            this.mInStealthMode = ((Boolean) parcel.readValue(null)).booleanValue();
+            this.mTactileFeedbackEnabled = ((Boolean) parcel.readValue(null)).booleanValue();
         }
 
         public int getDisplayMode() {
@@ -946,7 +889,8 @@ public class MiuiLockPatternView extends View {
         }
     }
 
-    private final class PatternExploreByTouchHelper extends ExploreByTouchHelper {
+    /* access modifiers changed from: private */
+    public final class PatternExploreByTouchHelper extends ExploreByTouchHelper {
         private HashMap<Integer, VirtualViewContainer> mItems = new HashMap<>();
         private Rect mTempRect = new Rect();
 
@@ -987,7 +931,7 @@ public class MiuiLockPatternView extends View {
                 accessibilityEvent.setContentDescription(charSequence);
                 return;
             }
-            accessibilityEvent.setContentDescription(MiuiLockPatternView.this.mContext.getResources().getString(C0021R$string.input_pattern_hint_text));
+            accessibilityEvent.setContentDescription(((View) MiuiLockPatternView.this).mContext.getResources().getString(C0021R$string.input_pattern_hint_text));
         }
 
         public void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
@@ -1040,29 +984,29 @@ public class MiuiLockPatternView extends View {
             int i3 = i2 / 3;
             int i4 = i2 % 3;
             CellState cellState = MiuiLockPatternView.this.mCellStates[i3][i4];
-            float access$1000 = MiuiLockPatternView.this.getCenterXForColumn(i4);
-            float access$1100 = MiuiLockPatternView.this.getCenterYForRow(i3);
-            float access$1200 = MiuiLockPatternView.this.mSquareHeight * MiuiLockPatternView.this.mHitFactor * 0.5f;
-            float access$1400 = MiuiLockPatternView.this.mSquareWidth * MiuiLockPatternView.this.mHitFactor * 0.5f;
-            rect.left = (int) (access$1000 - access$1400);
-            rect.right = (int) (access$1000 + access$1400);
-            rect.top = (int) (access$1100 - access$1200);
-            rect.bottom = (int) (access$1100 + access$1200);
+            float centerXForColumn = MiuiLockPatternView.this.getCenterXForColumn(i4);
+            float centerYForRow = MiuiLockPatternView.this.getCenterYForRow(i3);
+            float f = MiuiLockPatternView.this.mSquareHeight * MiuiLockPatternView.this.mHitFactor * 0.5f;
+            float f2 = MiuiLockPatternView.this.mSquareWidth * MiuiLockPatternView.this.mHitFactor * 0.5f;
+            rect.left = (int) (centerXForColumn - f2);
+            rect.right = (int) (centerXForColumn + f2);
+            rect.top = (int) (centerYForRow - f);
+            rect.bottom = (int) (centerYForRow + f);
             return rect;
         }
 
         private CharSequence getTextForVirtualView(int i) {
-            return MiuiLockPatternView.this.getResources().getString(C0021R$string.lockscreen_access_pattern_cell_added_verbose, new Object[]{Integer.valueOf(i)});
+            return MiuiLockPatternView.this.getResources().getString(C0021R$string.lockscreen_access_pattern_cell_added_verbose, Integer.valueOf(i));
         }
 
         private int getVirtualViewIdForHit(float f, float f2) {
-            int access$1600;
-            int access$1500 = MiuiLockPatternView.this.getRowHit(f2);
-            if (access$1500 < 0 || (access$1600 = MiuiLockPatternView.this.getColumnHit(f)) < 0) {
+            int columnHit;
+            int rowHit = MiuiLockPatternView.this.getRowHit(f2);
+            if (rowHit < 0 || (columnHit = MiuiLockPatternView.this.getColumnHit(f)) < 0) {
                 return Integer.MIN_VALUE;
             }
-            boolean z = MiuiLockPatternView.this.mPatternDrawLookup[access$1500][access$1600];
-            int i = (access$1500 * 3) + access$1600 + 1;
+            boolean z = MiuiLockPatternView.this.mPatternDrawLookup[rowHit][columnHit];
+            int i = (rowHit * 3) + columnHit + 1;
             if (z) {
                 return i;
             }

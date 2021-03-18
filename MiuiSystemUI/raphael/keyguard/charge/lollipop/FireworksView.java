@@ -24,17 +24,13 @@ public class FireworksView extends View {
     private static final int OUTER_TRACK_START_COLOR = Color.parseColor("#002F3A81");
     private Drawable mFireDrawable;
     private int mFireHeight;
-    /* access modifiers changed from: private */
-    public List<PointF> mFireList;
+    private List<PointF> mFireList;
     private Runnable mFireRunnable;
     private int mFireWidth;
-    /* access modifiers changed from: private */
-    public FireworksManager mFireworksManager;
+    private FireworksManager mFireworksManager;
     private Choreographer.FrameCallback mFrameCallback;
-    /* access modifiers changed from: private */
-    public boolean mIsAnimationRuning;
-    /* access modifiers changed from: private */
-    public long mLastTime;
+    private boolean mIsAnimationRuning;
+    private long mLastTime;
     private Point mScreenSize;
     private float mSpeedMove;
     private Paint mTrackPaint;
@@ -52,7 +48,7 @@ public class FireworksView extends View {
     }
 
     public FireworksView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public FireworksView(Context context, AttributeSet attributeSet) {
@@ -62,12 +58,14 @@ public class FireworksView extends View {
     public FireworksView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mFrameCallback = new Choreographer.FrameCallback() {
+            /* class com.android.keyguard.charge.lollipop.FireworksView.AnonymousClass1 */
+
             public void doFrame(long j) {
                 if (FireworksView.this.mIsAnimationRuning) {
-                    long access$100 = (j - FireworksView.this.mLastTime) / 1000000;
-                    long unused = FireworksView.this.mLastTime = j;
+                    long j2 = (j - FireworksView.this.mLastTime) / 1000000;
+                    FireworksView.this.mLastTime = j;
                     if (FireworksView.this.mFireworksManager != null) {
-                        FireworksView.this.mFireworksManager.freshPositions(FireworksView.this.mFireList, access$100);
+                        FireworksView.this.mFireworksManager.freshPositions(FireworksView.this.mFireList, j2);
                         FireworksView.this.invalidate();
                     }
                     Choreographer.getInstance().postFrameCallback(this);
@@ -75,6 +73,8 @@ public class FireworksView extends View {
             }
         };
         this.mFireRunnable = new Runnable() {
+            /* class com.android.keyguard.charge.lollipop.FireworksView.AnonymousClass2 */
+
             public void run() {
                 if (FireworksView.this.mFireworksManager != null) {
                     FireworksView.this.mFireworksManager.fire();
@@ -119,10 +119,10 @@ public class FireworksView extends View {
         List<PointF> list = this.mFireList;
         if (list != null) {
             float f = ((float) this.mViewWidth) / 6.0f;
-            for (PointF next : list) {
-                float f2 = next.y;
+            for (PointF pointF : list) {
+                float f2 = pointF.y;
                 int i = this.mFireWidth;
-                int i2 = (int) (((next.x + 1.0f) * f) - ((float) (i / 2)));
+                int i2 = (int) (((pointF.x + 1.0f) * f) - ((float) (i / 2)));
                 int i3 = (int) f2;
                 this.mFireDrawable.setAlpha(evaluateAlpha(i3, this.mViewHeight));
                 this.mFireDrawable.setBounds(i2, i3, i + i2, this.mFireHeight + i3);

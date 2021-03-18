@@ -16,40 +16,36 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 
 public class MiuiChargeManager implements Dumpable {
-    /* access modifiers changed from: private */
-    public MiuiBatteryStatus mBatteryStatus;
-    /* access modifiers changed from: private */
-    public Context mContext;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler();
-    /* access modifiers changed from: private */
-    public boolean mIsChargeLevelAnimationRunning;
+    private MiuiBatteryStatus mBatteryStatus;
+    private Context mContext;
+    private Handler mHandler = new Handler();
+    private boolean mIsChargeLevelAnimationRunning;
     Runnable mNotUpdateLevelRunnable = new Runnable() {
+        /* class com.android.keyguard.charge.MiuiChargeManager.AnonymousClass2 */
+
         public void run() {
-            boolean unused = MiuiChargeManager.this.mNotUpdateLevelWhenBatteryChange = false;
+            MiuiChargeManager.this.mNotUpdateLevelWhenBatteryChange = false;
             if ((MiuiChargeManager.this.mRealLevel < MiuiChargeManager.this.mBatteryStatus.level && !MiuiChargeManager.this.mBatteryStatus.isCharging()) || MiuiChargeManager.this.mRealLevel > MiuiChargeManager.this.mBatteryStatus.level) {
                 MiuiChargeManager.this.mBatteryStatus.level = MiuiChargeManager.this.mRealLevel;
                 MiuiChargeManager.this.notifyBatteryStatusChanged();
             }
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mNotUpdateLevelWhenBatteryChange;
-    /* access modifiers changed from: private */
-    public int mRealLevel;
-    /* access modifiers changed from: private */
-    public Runnable mUpdateChargingFromPowerCenterRunnable = new Runnable() {
+    private boolean mNotUpdateLevelWhenBatteryChange;
+    private int mRealLevel;
+    private Runnable mUpdateChargingFromPowerCenterRunnable = new Runnable() {
+        /* class com.android.keyguard.charge.MiuiChargeManager.AnonymousClass3 */
+
         public void run() {
             MiuiChargeManager.this.getChargingStatusFromPowerCenter();
         }
     };
-    /* access modifiers changed from: private */
-    public int mWiredChargeType;
-    /* access modifiers changed from: private */
-    public int mWirelessChargeType;
+    private int mWiredChargeType;
+    private int mWirelessChargeType;
 
     /* access modifiers changed from: private */
-    public int checkWireState(int i, int i2) {
+    /* access modifiers changed from: public */
+    private int checkWireState(int i, int i2) {
         boolean z = false;
         boolean z2 = i == 4;
         if (i == 1 || i == 2) {
@@ -86,6 +82,8 @@ public class MiuiChargeManager implements Dumpable {
         intentFilter.addAction("miui.intent.action.ACTION_WIRELESS_TX_TYPE");
         intentFilter.setPriority(1001);
         this.mContext.registerReceiver(new BroadcastReceiver() {
+            /* class com.android.keyguard.charge.MiuiChargeManager.AnonymousClass1 */
+
             public void onReceive(Context context, Intent intent) {
                 if ("android.intent.action.BATTERY_CHANGED".equals(intent.getAction())) {
                     Dependency.get(MiuiChargeController.class);
@@ -94,33 +92,33 @@ public class MiuiChargeManager implements Dumpable {
                     int intExtra3 = intent.getIntExtra("level", 0);
                     int intExtra4 = intent.getIntExtra("health", 1);
                     int maxChargingWattage = MiuiBatteryStatus.getMaxChargingWattage(intent);
-                    int unused = MiuiChargeManager.this.mRealLevel = intExtra3;
-                    int access$100 = MiuiChargeManager.this.checkWireState(intExtra2, intExtra);
+                    MiuiChargeManager.this.mRealLevel = intExtra3;
+                    int checkWireState = MiuiChargeManager.this.checkWireState(intExtra2, intExtra);
                     if (!MiuiBatteryStatus.isPluggedIn(MiuiChargeManager.this.mBatteryStatus.plugged) && MiuiBatteryStatus.isPluggedIn(intExtra2)) {
-                        boolean unused2 = MiuiChargeManager.this.mIsChargeLevelAnimationRunning = false;
-                        boolean unused3 = MiuiChargeManager.this.mNotUpdateLevelWhenBatteryChange = false;
+                        MiuiChargeManager.this.mIsChargeLevelAnimationRunning = false;
+                        MiuiChargeManager.this.mNotUpdateLevelWhenBatteryChange = false;
                     }
-                    boolean access$500 = MiuiChargeManager.this.isBatteryStatusChanged(intExtra3, intExtra2, intExtra);
+                    boolean isBatteryStatusChanged = MiuiChargeManager.this.isBatteryStatusChanged(intExtra3, intExtra2, intExtra);
                     MiuiChargeManager.this.mBatteryStatus.plugged = intExtra2;
-                    MiuiChargeManager.this.mBatteryStatus.wireState = access$100;
+                    MiuiChargeManager.this.mBatteryStatus.wireState = checkWireState;
                     MiuiChargeManager.this.mBatteryStatus.status = intExtra;
                     MiuiChargeManager.this.mBatteryStatus.health = intExtra4;
                     MiuiChargeManager.this.mBatteryStatus.maxChargingWattage = maxChargingWattage;
-                    if (access$500) {
-                        MiuiBatteryStatus access$200 = MiuiChargeManager.this.mBatteryStatus;
+                    if (isBatteryStatusChanged) {
+                        MiuiBatteryStatus miuiBatteryStatus = MiuiChargeManager.this.mBatteryStatus;
                         MiuiChargeManager miuiChargeManager = MiuiChargeManager.this;
-                        access$200.chargeDeviceType = miuiChargeManager.getCurrentChargeDeviceType(miuiChargeManager.mBatteryStatus.wireState, MiuiChargeManager.this.mBatteryStatus.chargeDeviceType);
+                        miuiBatteryStatus.chargeDeviceType = miuiChargeManager.getCurrentChargeDeviceType(miuiChargeManager.mBatteryStatus.wireState, MiuiChargeManager.this.mBatteryStatus.chargeDeviceType);
                         MiuiChargeManager.this.mBatteryStatus.chargeSpeed = ChargeUtils.getChargeSpeed(MiuiChargeManager.this.mBatteryStatus.wireState, MiuiChargeManager.this.mBatteryStatus.chargeDeviceType);
                         MiuiChargeManager.this.notifyBatteryStatusChanged();
                     }
                 } else if ("miui.intent.action.ACTION_QUICK_CHARGE_TYPE".equals(intent.getAction())) {
-                    int unused4 = MiuiChargeManager.this.mWiredChargeType = intent.getIntExtra("miui.intent.extra.quick_charge_type", -1);
+                    MiuiChargeManager.this.mWiredChargeType = intent.getIntExtra("miui.intent.extra.quick_charge_type", -1);
                     if (MiuiChargeManager.this.mBatteryStatus.wireState == 11) {
                         MiuiChargeManager miuiChargeManager2 = MiuiChargeManager.this;
                         miuiChargeManager2.onChargeDeviceTypeChanged(miuiChargeManager2.mWiredChargeType);
                     }
                 } else if ("miui.intent.action.ACTION_WIRELESS_TX_TYPE".equals(intent.getAction())) {
-                    int unused5 = MiuiChargeManager.this.mWirelessChargeType = intent.getIntExtra("miui.intent.extra.wireless_tx_type", -1);
+                    MiuiChargeManager.this.mWirelessChargeType = intent.getIntExtra("miui.intent.extra.wireless_tx_type", -1);
                     if (MiuiChargeManager.this.mBatteryStatus.wireState == 10) {
                         MiuiChargeManager miuiChargeManager3 = MiuiChargeManager.this;
                         miuiChargeManager3.onChargeDeviceTypeChanged(miuiChargeManager3.mWirelessChargeType);
@@ -131,7 +129,8 @@ public class MiuiChargeManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public boolean isBatteryStatusChanged(int i, int i2, int i3) {
+    /* access modifiers changed from: public */
+    private boolean isBatteryStatusChanged(int i, int i2, int i3) {
         if (i == this.mBatteryStatus.level || ((this.mIsChargeLevelAnimationRunning || this.mNotUpdateLevelWhenBatteryChange) && i != 100)) {
             MiuiBatteryStatus miuiBatteryStatus = this.mBatteryStatus;
             if (i2 == miuiBatteryStatus.plugged && i3 == miuiBatteryStatus.status) {
@@ -144,7 +143,8 @@ public class MiuiChargeManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void onChargeDeviceTypeChanged(int i) {
+    /* access modifiers changed from: public */
+    private void onChargeDeviceTypeChanged(int i) {
         MiuiBatteryStatus miuiBatteryStatus = this.mBatteryStatus;
         if (miuiBatteryStatus != null && i >= 0) {
             int chargeSpeed = ChargeUtils.getChargeSpeed(miuiBatteryStatus.wireState, i);
@@ -189,7 +189,8 @@ public class MiuiChargeManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public int getCurrentChargeDeviceType(int i, int i2) {
+    /* access modifiers changed from: public */
+    private int getCurrentChargeDeviceType(int i, int i2) {
         if (i == 10) {
             return this.mWirelessChargeType;
         }
@@ -199,6 +200,7 @@ public class MiuiChargeManager implements Dumpable {
         return -1;
     }
 
+    @Override // com.android.systemui.Dumpable
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         printWriter.println("MiuiChargeManager state:");
         printWriter.print("  isChargeAnimationDisabled =");
@@ -214,8 +216,11 @@ public class MiuiChargeManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void getChargingStatusFromPowerCenter() {
+    /* access modifiers changed from: public */
+    private void getChargingStatusFromPowerCenter() {
         new AsyncTask<Void, Void, Boolean>() {
+            /* class com.android.keyguard.charge.MiuiChargeManager.AnonymousClass4 */
+
             /* access modifiers changed from: protected */
             public Boolean doInBackground(Void... voidArr) {
                 boolean z;
@@ -262,7 +267,8 @@ public class MiuiChargeManager implements Dumpable {
     }
 
     /* access modifiers changed from: private */
-    public void notifyBatteryStatusChanged() {
+    /* access modifiers changed from: public */
+    private void notifyBatteryStatusChanged() {
         if (this.mBatteryStatus != null) {
             Slog.i("MiuiChargeManager", "notifyBatteryStatusChanged:  status: " + this.mBatteryStatus.status + " isPlugged: " + this.mBatteryStatus.plugged + " level: " + this.mBatteryStatus.level + " wireState: " + this.mBatteryStatus.wireState + " chargeSpeed: " + this.mBatteryStatus.chargeSpeed + " mWiredChargeType: " + this.mWiredChargeType + " mWirelessChargeType: " + this.mWirelessChargeType + " chargeDeviceType: " + this.mBatteryStatus.chargeDeviceType + " maxChargingWattage: " + this.mBatteryStatus.maxChargingWattage + " SUPPORT_BROADCAST_QUICK_CHARGE: " + true);
             MiuiBatteryStatus miuiBatteryStatus = this.mBatteryStatus;

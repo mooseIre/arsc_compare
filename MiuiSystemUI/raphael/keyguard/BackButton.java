@@ -13,7 +13,7 @@ public class BackButton extends Button {
     }
 
     public BackButton(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public BackButton(Context context, AttributeSet attributeSet) {
@@ -24,6 +24,8 @@ public class BackButton extends Button {
     public void onFinishInflate() {
         super.onFinishInflate();
         setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.BackButton.AnonymousClass1 */
+
             public void onClick(View view) {
                 BackButton.this.takeBackAction();
             }

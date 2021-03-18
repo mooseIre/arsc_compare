@@ -23,11 +23,9 @@ import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeLogoView extends RelativeLayout {
     private AnimatorSet mAnimatorSet;
-    /* access modifiers changed from: private */
-    public int mChargeSpeed;
+    private int mChargeSpeed;
     private int mChargeTipTranslateSmall;
-    /* access modifiers changed from: private */
-    public MiuiChargeTurboView mChargeTurboView;
+    private MiuiChargeTurboView mChargeTurboView;
     private Interpolator mCubicInterpolator;
     private boolean mIsFoldChargeVideo;
     private Point mScreenSize;
@@ -39,11 +37,10 @@ public class MiuiChargeLogoView extends RelativeLayout {
     private int mTurboViewAlpha;
     private int mTurboViewTranslationY;
     private WindowManager mWindowManager;
-    /* access modifiers changed from: private */
-    public int mWireState;
+    private int mWireState;
 
     public MiuiChargeLogoView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiChargeLogoView(Context context, AttributeSet attributeSet) {
@@ -125,15 +122,17 @@ public class MiuiChargeLogoView extends RelativeLayout {
             this.mStateTipTranslationY = this.mChargeTipTranslateSmall;
             this.mStateTipAlpha = 1;
         }
-        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property2, new float[]{this.mStateTip.getTranslationY(), (float) this.mStateTipTranslationY});
-        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property, new float[]{this.mStateTip.getAlpha(), (float) this.mStateTipAlpha});
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mStateTip, new PropertyValuesHolder[]{ofFloat2, ofFloat}).setDuration(500);
+        PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property2, this.mStateTip.getTranslationY(), (float) this.mStateTipTranslationY);
+        PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(property, this.mStateTip.getAlpha(), (float) this.mStateTipAlpha);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this.mStateTip, ofFloat2, ofFloat).setDuration(500L);
         duration.setInterpolator(this.mCubicInterpolator);
-        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property2, new float[]{this.mChargeTurboView.getTranslationY(), (float) this.mTurboViewTranslationY});
-        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.mChargeTurboView.getAlpha(), (float) this.mTurboViewAlpha});
-        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mChargeTurboView, new PropertyValuesHolder[]{ofFloat4, ofFloat3}).setDuration(250);
+        PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(property2, this.mChargeTurboView.getTranslationY(), (float) this.mTurboViewTranslationY);
+        PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, this.mChargeTurboView.getAlpha(), (float) this.mTurboViewAlpha);
+        ObjectAnimator duration2 = ObjectAnimator.ofPropertyValuesHolder(this.mChargeTurboView, ofFloat4, ofFloat3).setDuration(250L);
         duration2.setInterpolator(this.mCubicInterpolator);
         duration2.addListener(new Animator.AnimatorListener() {
+            /* class com.android.keyguard.charge.container.MiuiChargeLogoView.AnonymousClass1 */
+
             public void onAnimationStart(Animator animator) {
                 if (2 == MiuiChargeLogoView.this.mChargeSpeed || 3 == MiuiChargeLogoView.this.mChargeSpeed) {
                     MiuiChargeLogoView.this.mChargeTurboView.setVisibility(8);
@@ -170,7 +169,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mAnimatorSet = animatorSet2;
         animatorSet2.setStartDelay((long) ChargeUtils.getWaveItemDelayTime());
-        this.mAnimatorSet.playTogether(new Animator[]{duration, duration2});
+        this.mAnimatorSet.playTogether(duration, duration2);
         this.mAnimatorSet.start();
     }
 
@@ -266,7 +265,8 @@ public class MiuiChargeLogoView extends RelativeLayout {
         this.mChargeTurboView.setLayoutParams(layoutParams2);
     }
 
-    private static class AccessibilityDisableTextView extends TextView {
+    /* access modifiers changed from: private */
+    public static class AccessibilityDisableTextView extends TextView {
         public AccessibilityDisableTextView(Context context) {
             super(context);
         }

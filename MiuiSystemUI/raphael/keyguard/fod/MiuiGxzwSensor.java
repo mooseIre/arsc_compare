@@ -11,14 +11,16 @@ import android.os.Looper;
 import android.util.Log;
 import com.android.systemui.C0010R$bool;
 
-class MiuiGxzwSensor {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwSensor {
     private static int TYPE_NONUI_SENSOR = 33171027;
     private static int TYPE_PUT_UP_DETECT = 33171030;
     private final Context mContext;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
-    /* access modifiers changed from: private */
-    public MiuiGxzwSensorListener mMiuiGxzwSensorListener;
+    private MiuiGxzwSensorListener mMiuiGxzwSensorListener;
     private final SensorEventListener mNonUIListener = new SensorEventListener() {
+        /* class com.android.keyguard.fod.MiuiGxzwSensor.AnonymousClass2 */
+
         public void onAccuracyChanged(Sensor sensor, int i) {
         }
 
@@ -36,6 +38,8 @@ class MiuiGxzwSensor {
         }
     };
     private final SensorEventListener mPutUpSensorListener = new SensorEventListener() {
+        /* class com.android.keyguard.fod.MiuiGxzwSensor.AnonymousClass1 */
+
         public void onAccuracyChanged(Sensor sensor, int i) {
         }
 
@@ -57,7 +61,8 @@ class MiuiGxzwSensor {
     private final SensorManager mSensorManager;
     private final boolean mSupportNonuiSensor;
 
-    interface MiuiGxzwSensorListener {
+    /* access modifiers changed from: package-private */
+    public interface MiuiGxzwSensorListener {
         void onDeviceMove();
 
         void onDevicePutUp();
@@ -83,6 +88,8 @@ class MiuiGxzwSensor {
         this.mMiuiGxzwSensorListener = miuiGxzwSensorListener;
         if (MiuiGxzwUtils.isFodAodShowEnable(this.mContext)) {
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwSensor$NwWCpZOTkkfzWBURlu7NhW1soPA */
+
                 public final void run() {
                     MiuiGxzwSensor.this.doRegisterDozeSensor();
                 }
@@ -111,6 +118,8 @@ class MiuiGxzwSensor {
             Log.e("MiuiGxzwSensor", "sensor not supported");
         } else {
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable() {
+                /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwSensor$tytcQllx08Mrvnkbc0VdDWjTliQ */
+
                 public final void run() {
                     MiuiGxzwSensor.this.doUnregisterSensor();
                 }

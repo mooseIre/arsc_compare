@@ -4,6 +4,8 @@ import android.animation.TimeInterpolator;
 
 public class Ease$Cubic {
     public static final TimeInterpolator easeInOut = new TimeInterpolator() {
+        /* class com.android.keyguard.Ease$Cubic.AnonymousClass3 */
+
         public float getInterpolation(float f) {
             float f2 = f / 0.5f;
             if (f2 < 1.0f) {

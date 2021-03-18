@@ -34,16 +34,20 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     protected ViewMediatorCallback mViewMediatorCallback;
 
     public KeyguardHostView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardHostView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mUpdateCallback = new KeyguardUpdateMonitorCallback() {
+            /* class com.android.keyguard.KeyguardHostView.AnonymousClass1 */
+
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onUserSwitchComplete(int i) {
                 KeyguardHostView.this.getSecurityContainer().showPrimarySecurityScreen(false);
             }
 
+            @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
             public void onTrustGrantedWithFlags(int i, int i2) {
                 if (i2 == KeyguardUpdateMonitor.getCurrentUser() && KeyguardHostView.this.isAttachedToWindow()) {
                     boolean isVisibleToUser = KeyguardHostView.this.isVisibleToUser();
@@ -91,13 +95,13 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     }
 
     public void cancelDismissAction() {
-        setOnDismissAction((ActivityStarter.OnDismissAction) null, (Runnable) null);
+        setOnDismissAction(null, null);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         this.mSecurityContainer = (KeyguardSecurityContainer) findViewById(C0015R$id.keyguard_security_container);
-        LockPatternUtils lockPatternUtils = new LockPatternUtils(this.mContext);
+        LockPatternUtils lockPatternUtils = new LockPatternUtils(((FrameLayout) this).mContext);
         this.mLockPatternUtils = lockPatternUtils;
         this.mSecurityContainer.setLockPatternUtils(lockPatternUtils);
         this.mSecurityContainer.setSecurityCallback(this);
@@ -130,7 +134,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     }
 
     public boolean handleBackKey() {
-        LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(this.mContext, "Wallpaper_Uncovered");
+        LockScreenMagazineUtils.sendLockScreenMagazineEventBroadcast(((FrameLayout) this).mContext, "Wallpaper_Uncovered");
         return this.mSecurityContainer.onBackPressed();
     }
 
@@ -139,10 +143,12 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         return this.mSecurityContainer;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityContainer.SecurityCallback
     public boolean dismiss(boolean z, int i, boolean z2) {
         return this.mSecurityContainer.showNextSecurityScreenOrFinish(z, i, z2);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityContainer.SecurityCallback
     public void finish(boolean z, int i) {
         boolean z2;
         ActivityStarter.OnDismissAction onDismissAction = this.mDismissAction;
@@ -164,6 +170,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityContainer.SecurityCallback
     public void reset() {
         this.mViewMediatorCallback.resetKeyguard();
     }
@@ -172,6 +179,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         this.mSecurityContainer.reset();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityContainer.SecurityCallback
     public void onSecurityModeChanged(KeyguardSecurityModel.SecurityMode securityMode, boolean z) {
         ViewMediatorCallback viewMediatorCallback = this.mViewMediatorCallback;
         if (viewMediatorCallback != null) {
@@ -182,6 +190,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityContainer.SecurityCallback
     public void userActivity() {
         ViewMediatorCallback viewMediatorCallback = this.mViewMediatorCallback;
         if (viewMediatorCallback != null) {
@@ -190,7 +199,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     }
 
     public void onPause() {
-        Log.d("KeyguardViewBase", String.format("screen off, instance %s at %s", new Object[]{Integer.toHexString(hashCode()), Long.valueOf(SystemClock.uptimeMillis())}));
+        Log.d("KeyguardViewBase", String.format("screen off, instance %s at %s", Integer.toHexString(hashCode()), Long.valueOf(SystemClock.uptimeMillis())));
         this.mSecurityContainer.showPrimarySecurityScreen(true);
         this.mSecurityContainer.onPause();
         clearFocus();
@@ -242,7 +251,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                             return false;
                     }
                 }
-                if (PhoneUtils.isInCall(this.mContext)) {
+                if (PhoneUtils.isInCall(((FrameLayout) this).mContext)) {
                     return true;
                 }
             }

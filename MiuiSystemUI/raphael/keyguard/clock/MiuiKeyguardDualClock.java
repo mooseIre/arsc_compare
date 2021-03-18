@@ -13,16 +13,19 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
     private MiuiDualClock mMiuiDualClock;
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void onUserSwitch() {
     }
 
     public MiuiKeyguardDualClock(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiKeyguardDualClock(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mLocalCityChangeListener = new MiuiDualClock.OnLocalCityChangeListener() {
+            /* class com.android.keyguard.clock.MiuiKeyguardDualClock.AnonymousClass1 */
+
             public void onLocalCityChanged(String str) {
                 Settings.System.putString(MiuiKeyguardDualClock.this.mContext.getContentResolver(), "local_city", str);
             }
@@ -37,6 +40,7 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
         addView(this.mMiuiDualClock);
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void setDarkStyle(boolean z) {
         super.setDarkStyle(z);
         if (this.mDarkStyle != z) {
@@ -44,6 +48,7 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
         }
     }
 
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateHourFormat() {
         super.updateHourFormat();
         MiuiDualClock miuiDualClock = this.mMiuiDualClock;
@@ -53,11 +58,13 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateResidentTimeZone(String str) {
         this.mMiuiDualClock.updateResidentTimeZone(str);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void onClockShowing() {
         MiuiDualClock miuiDualClock = this.mMiuiDualClock;
         if (miuiDualClock != null) {
@@ -66,11 +73,13 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateTimeZone(String str) {
         this.mMiuiDualClock.updateTimeZone(str);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateTime() {
         this.mMiuiDualClock.updateTime();
     }

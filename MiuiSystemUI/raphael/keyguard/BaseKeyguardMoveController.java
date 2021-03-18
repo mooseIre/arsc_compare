@@ -7,38 +7,38 @@ public class BaseKeyguardMoveController {
     public CallBack mCallBack;
 
     public interface CallBack {
-        ViewGroup getMoveIconLayout(boolean z) {
+        default ViewGroup getMoveIconLayout(boolean z) {
             return null;
         }
 
-        IntentButtonProvider.IntentButton.IconState getMoveIconState(boolean z) {
+        default IntentButtonProvider.IntentButton.IconState getMoveIconState(boolean z) {
             return null;
         }
 
-        boolean isMoveInCenterScreen() {
+        default boolean isMoveInCenterScreen() {
             return false;
         }
 
-        boolean isRightMove() {
+        default boolean isRightMove() {
             return false;
         }
 
-        void onAnimUpdate(float f) {
+        default void onAnimUpdate(float f) {
         }
 
-        void onBackAnimationEnd(boolean z) {
+        default void onBackAnimationEnd(boolean z) {
         }
 
-        void onCancelAnimationEnd(boolean z, boolean z2) {
+        default void onCancelAnimationEnd(boolean z, boolean z2) {
         }
 
-        void onCompletedAnimationEnd(boolean z) {
+        default void onCompletedAnimationEnd(boolean z) {
         }
 
-        void updateCanShowGxzw(boolean z) {
+        default void updateCanShowGxzw(boolean z) {
         }
 
-        void updateSwipingInProgress(boolean z) {
+        default void updateSwipingInProgress(boolean z) {
         }
     }
 

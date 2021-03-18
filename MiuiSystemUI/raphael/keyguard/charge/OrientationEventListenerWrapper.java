@@ -10,10 +10,8 @@ import android.view.OrientationListener;
 
 public abstract class OrientationEventListenerWrapper {
     private boolean mEnabled;
-    /* access modifiers changed from: private */
-    public OrientationListener mOldListener;
-    /* access modifiers changed from: private */
-    public int mOrientation;
+    private OrientationListener mOldListener;
+    private int mOrientation;
     private int mRate;
     private Sensor mSensor;
     private SensorEventListener mSensorEventListener;
@@ -86,7 +84,7 @@ public abstract class OrientationEventListenerWrapper {
                 OrientationEventListenerWrapper.this.mOldListener.onSensorChanged(1, sensorEvent.values);
             }
             if (i != OrientationEventListenerWrapper.this.mOrientation) {
-                int unused = OrientationEventListenerWrapper.this.mOrientation = i;
+                OrientationEventListenerWrapper.this.mOrientation = i;
                 OrientationEventListenerWrapper.this.onOrientationChanged(i);
             }
         }

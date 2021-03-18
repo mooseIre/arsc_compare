@@ -11,6 +11,7 @@ public final class KeyguardNegative1PageInjector_Factory implements Factory<Keyg
         this.mContextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardNegative1PageInjector get() {
         return provideInstance(this.mContextProvider);
     }

@@ -7,8 +7,7 @@ import android.view.View;
 import com.android.systemui.C0015R$id;
 
 public class EmergencyCarrierArea extends AlphaOptimizedLinearLayout {
-    /* access modifiers changed from: private */
-    public CarrierText mCarrierText;
+    private CarrierText mCarrierText;
     private EmergencyButton mEmergencyButton;
 
     public EmergencyCarrierArea(Context context) {
@@ -26,6 +25,8 @@ public class EmergencyCarrierArea extends AlphaOptimizedLinearLayout {
         EmergencyButton emergencyButton = (EmergencyButton) findViewById(C0015R$id.emergency_call_button);
         this.mEmergencyButton = emergencyButton;
         emergencyButton.setOnTouchListener(new View.OnTouchListener() {
+            /* class com.android.keyguard.EmergencyCarrierArea.AnonymousClass1 */
+
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (EmergencyCarrierArea.this.mCarrierText.getVisibility() != 0) {
                     return false;

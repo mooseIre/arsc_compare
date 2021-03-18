@@ -2,7 +2,6 @@ package com.android.keyguard;
 
 import android.app.ActivityManagerNative;
 import android.app.admin.DevicePolicyManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.RemoteException;
@@ -61,8 +60,8 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
     public MiuiKeyguardPasswordView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mConfiguration = new Configuration();
-        this.mVibrator = (Vibrator) this.mContext.getSystemService("vibrator");
-        this.mUm = (UserManager) this.mContext.getSystemService("user");
+        this.mVibrator = (Vibrator) ((LinearLayout) this).mContext.getSystemService("vibrator");
+        this.mUm = (UserManager) ((LinearLayout) this).mContext.getSystemService("user");
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mConfiguration.updateFrom(context.getResources().getConfiguration());
     }
@@ -128,15 +127,15 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
             setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_must_enter_owner_space);
             handleWrongPassword();
             return false;
-        } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
+        } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isSuperPowerActive(((LinearLayout) this).mContext)) {
             setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
             handleWrongPassword();
             return false;
-        } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
+        } else if (i != KeyguardUpdateMonitor.getCurrentUser() && MiuiKeyguardUtils.isGreenKidActive(((LinearLayout) this).mContext)) {
             setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
             handleWrongPassword();
             return false;
-        } else if (i != KeyguardUpdateMonitor.getCurrentUser() && PhoneUtils.isInCall(this.mContext)) {
+        } else if (i != KeyguardUpdateMonitor.getCurrentUser() && PhoneUtils.isInCall(((LinearLayout) this).mContext)) {
             Log.d("miui_keyguard_password", "Can't switch user to " + i + " when calling");
             setSwitchUserWrongMessage(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
             handleWrongPassword();
@@ -163,6 +162,7 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
         return -10000;
     }
 
+    @Override // com.android.keyguard.BackButton.BackButtonCallback
     public void onBackButtonClicked() {
         KeyguardSecurityCallback keyguardSecurityCallback = this.mCallback;
         if (keyguardSecurityCallback != null) {
@@ -170,6 +170,7 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
         }
     }
 
+    @Override // com.android.keyguard.EmergencyButton.EmergencyButtonCallback
     public void onEmergencyButtonClickedWhenInCall() {
         KeyguardSecurityCallback keyguardSecurityCallback = this.mCallback;
         if (keyguardSecurityCallback != null) {
@@ -184,6 +185,6 @@ public abstract class MiuiKeyguardPasswordView extends LinearLayout implements E
 
     /* access modifiers changed from: protected */
     public long getRequiredStrongAuthTimeout() {
-        return ((DevicePolicyManager) this.mContext.getSystemService("device_policy")).getRequiredStrongAuthTimeout((ComponentName) null, KeyguardUpdateMonitor.getCurrentUser());
+        return ((DevicePolicyManager) ((LinearLayout) this).mContext.getSystemService("device_policy")).getRequiredStrongAuthTimeout(null, KeyguardUpdateMonitor.getCurrentUser());
     }
 }

@@ -1,7 +1,8 @@
 package com.android.keyguard.injector;
 
+/* access modifiers changed from: package-private */
 /* compiled from: KeyguardViewMediatorInjector.kt */
-final class KeyguardViewMediatorInjector$keyguardGoingAway$1 implements Runnable {
+public final class KeyguardViewMediatorInjector$keyguardGoingAway$1 implements Runnable {
     final /* synthetic */ KeyguardViewMediatorInjector this$0;
 
     KeyguardViewMediatorInjector$keyguardGoingAway$1(KeyguardViewMediatorInjector keyguardViewMediatorInjector) {

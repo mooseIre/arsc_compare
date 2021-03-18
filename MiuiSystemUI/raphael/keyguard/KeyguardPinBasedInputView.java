@@ -22,14 +22,13 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     private View mButton7;
     private View mButton8;
     private View mButton9;
-    /* access modifiers changed from: private */
-    public boolean mIsKRoperator;
+    private boolean mIsKRoperator;
     private String mKrCustomized;
     private View mOkButton;
     protected PasswordTextView mPasswordEntry;
 
     public KeyguardPinBasedInputView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardPinBasedInputView(Context context, AttributeSet attributeSet) {
@@ -38,6 +37,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         this.mKrCustomized = SystemProperties.get("ro.miui.customized.region");
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public void reset() {
         this.mPasswordEntry.requestFocus();
         super.reset();
@@ -49,11 +49,13 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void resetState() {
         setPasswordEntryEnabled(true);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void setPasswordEntryEnabled(boolean z) {
         this.mPasswordEntry.setEnabled(z);
         View view = this.mOkButton;
@@ -66,6 +68,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void setPasswordEntryInputEnabled(boolean z) {
         this.mPasswordEntry.setEnabled(z);
         View view = this.mOkButton;
@@ -77,6 +80,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         }
     }
 
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public boolean onKeyDown(int i, KeyEvent keyEvent) {
         if (KeyEvent.isConfirmKey(i)) {
             performClick(this.mOkButton);
@@ -139,16 +143,19 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void resetPasswordText(boolean z, boolean z2) {
         this.mPasswordEntry.reset(z, z2);
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public LockscreenCredential getEnteredCredential() {
         return LockscreenCredential.createPinOrNone(this.mPasswordEntry.getText());
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.KeyguardAbsKeyInputView, com.android.keyguard.MiuiKeyguardPasswordView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mIsKRoperator = "kr_kt".equals(this.mKrCustomized) || "kr_skt".equals(this.mKrCustomized) || "kr_lgu".equals(this.mKrCustomized);
@@ -157,6 +164,9 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         passwordTextView.setOnKeyListener(this);
         this.mPasswordEntry.setSelected(true);
         this.mPasswordEntry.setUserActivityListener(new PasswordTextView.UserActivityListener() {
+            /* class com.android.keyguard.KeyguardPinBasedInputView.AnonymousClass1 */
+
+            @Override // com.android.keyguard.PasswordTextView.UserActivityListener
             public void onUserActivity() {
                 KeyguardPinBasedInputView.this.onUserInput();
             }
@@ -166,6 +176,8 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         if (findViewById != null) {
             findViewById.setOnTouchListener(this);
             this.mOkButton.setOnClickListener(new View.OnClickListener() {
+                /* class com.android.keyguard.KeyguardPinBasedInputView.AnonymousClass2 */
+
                 public void onClick(View view) {
                     if (KeyguardPinBasedInputView.this.mIsKRoperator) {
                         KeyguardPinBasedInputView.this.verifyPasswordAndUnlock();
@@ -179,6 +191,8 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         }
         this.mDeleteButton.setOnTouchListener(this);
         this.mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.KeyguardPinBasedInputView.AnonymousClass3 */
+
             public void onClick(View view) {
                 if (KeyguardPinBasedInputView.this.mIsKRoperator) {
                     KeyguardPinBasedInputView.this.mPasswordEntry.deleteLastChar();
@@ -189,6 +203,8 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
             }
         });
         this.mDeleteButton.setOnLongClickListener(new View.OnLongClickListener() {
+            /* class com.android.keyguard.KeyguardPinBasedInputView.AnonymousClass4 */
+
             public boolean onLongClick(View view) {
                 if (KeyguardPinBasedInputView.this.mIsKRoperator) {
                     KeyguardPinBasedInputView.this.mPasswordEntry.deleteLastChar();
@@ -213,6 +229,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
         this.mPasswordEntry.requestFocus();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
     public void onResume(int i) {
         super.onResume(i);
         this.mPasswordEntry.requestFocus();

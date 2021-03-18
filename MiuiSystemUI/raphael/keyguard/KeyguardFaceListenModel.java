@@ -36,76 +36,115 @@ public final class KeyguardFaceListenModel {
     public int hashCode() {
         int hashCode = ((Long.hashCode(this.timeMillis) * 31) + Integer.hashCode(this.userId)) * 31;
         boolean z = this.isListeningForFace;
-        boolean z2 = true;
+        int i = 1;
         if (z) {
             z = true;
         }
-        int i = (hashCode + (z ? 1 : 0)) * 31;
-        boolean z3 = this.isBouncer;
+        int i2 = z ? 1 : 0;
+        int i3 = z ? 1 : 0;
+        int i4 = z ? 1 : 0;
+        int i5 = (hashCode + i2) * 31;
+        boolean z2 = this.isBouncer;
+        if (z2) {
+            z2 = true;
+        }
+        int i6 = z2 ? 1 : 0;
+        int i7 = z2 ? 1 : 0;
+        int i8 = z2 ? 1 : 0;
+        int i9 = (i5 + i6) * 31;
+        boolean z3 = this.isAuthInterruptActive;
         if (z3) {
             z3 = true;
         }
-        int i2 = (i + (z3 ? 1 : 0)) * 31;
-        boolean z4 = this.isAuthInterruptActive;
+        int i10 = z3 ? 1 : 0;
+        int i11 = z3 ? 1 : 0;
+        int i12 = z3 ? 1 : 0;
+        int i13 = (i9 + i10) * 31;
+        boolean z4 = this.isKeyguardAwake;
         if (z4) {
             z4 = true;
         }
-        int i3 = (i2 + (z4 ? 1 : 0)) * 31;
-        boolean z5 = this.isKeyguardAwake;
+        int i14 = z4 ? 1 : 0;
+        int i15 = z4 ? 1 : 0;
+        int i16 = z4 ? 1 : 0;
+        int i17 = (i13 + i14) * 31;
+        boolean z5 = this.isListeningForFaceAssistant;
         if (z5) {
             z5 = true;
         }
-        int i4 = (i3 + (z5 ? 1 : 0)) * 31;
-        boolean z6 = this.isListeningForFaceAssistant;
+        int i18 = z5 ? 1 : 0;
+        int i19 = z5 ? 1 : 0;
+        int i20 = z5 ? 1 : 0;
+        int i21 = (i17 + i18) * 31;
+        boolean z6 = this.isSwitchingUser;
         if (z6) {
             z6 = true;
         }
-        int i5 = (i4 + (z6 ? 1 : 0)) * 31;
-        boolean z7 = this.isSwitchingUser;
+        int i22 = z6 ? 1 : 0;
+        int i23 = z6 ? 1 : 0;
+        int i24 = z6 ? 1 : 0;
+        int i25 = (i21 + i22) * 31;
+        boolean z7 = this.isFaceDisabled;
         if (z7) {
             z7 = true;
         }
-        int i6 = (i5 + (z7 ? 1 : 0)) * 31;
-        boolean z8 = this.isFaceDisabled;
+        int i26 = z7 ? 1 : 0;
+        int i27 = z7 ? 1 : 0;
+        int i28 = z7 ? 1 : 0;
+        int i29 = (i25 + i26) * 31;
+        boolean z8 = this.isBecauseCannotSkipBouncer;
         if (z8) {
             z8 = true;
         }
-        int i7 = (i6 + (z8 ? 1 : 0)) * 31;
-        boolean z9 = this.isBecauseCannotSkipBouncer;
+        int i30 = z8 ? 1 : 0;
+        int i31 = z8 ? 1 : 0;
+        int i32 = z8 ? 1 : 0;
+        int i33 = (i29 + i30) * 31;
+        boolean z9 = this.isKeyguardGoingAway;
         if (z9) {
             z9 = true;
         }
-        int i8 = (i7 + (z9 ? 1 : 0)) * 31;
-        boolean z10 = this.isKeyguardGoingAway;
+        int i34 = z9 ? 1 : 0;
+        int i35 = z9 ? 1 : 0;
+        int i36 = z9 ? 1 : 0;
+        int i37 = (i33 + i34) * 31;
+        boolean z10 = this.isFaceSettingEnabledForUser;
         if (z10) {
             z10 = true;
         }
-        int i9 = (i8 + (z10 ? 1 : 0)) * 31;
-        boolean z11 = this.isFaceSettingEnabledForUser;
+        int i38 = z10 ? 1 : 0;
+        int i39 = z10 ? 1 : 0;
+        int i40 = z10 ? 1 : 0;
+        int i41 = (i37 + i38) * 31;
+        boolean z11 = this.isLockIconPressed;
         if (z11) {
             z11 = true;
         }
-        int i10 = (i9 + (z11 ? 1 : 0)) * 31;
-        boolean z12 = this.isLockIconPressed;
+        int i42 = z11 ? 1 : 0;
+        int i43 = z11 ? 1 : 0;
+        int i44 = z11 ? 1 : 0;
+        int i45 = (i41 + i42) * 31;
+        boolean z12 = this.isScanningAllowedByStrongAuth;
         if (z12) {
             z12 = true;
         }
-        int i11 = (i10 + (z12 ? 1 : 0)) * 31;
-        boolean z13 = this.isScanningAllowedByStrongAuth;
+        int i46 = z12 ? 1 : 0;
+        int i47 = z12 ? 1 : 0;
+        int i48 = z12 ? 1 : 0;
+        int i49 = (i45 + i46) * 31;
+        boolean z13 = this.isPrimaryUser;
         if (z13) {
             z13 = true;
         }
-        int i12 = (i11 + (z13 ? 1 : 0)) * 31;
-        boolean z14 = this.isPrimaryUser;
-        if (z14) {
-            z14 = true;
+        int i50 = z13 ? 1 : 0;
+        int i51 = z13 ? 1 : 0;
+        int i52 = z13 ? 1 : 0;
+        int i53 = (i49 + i50) * 31;
+        boolean z14 = this.isSecureCameraLaunched;
+        if (!z14) {
+            i = z14 ? 1 : 0;
         }
-        int i13 = (i12 + (z14 ? 1 : 0)) * 31;
-        boolean z15 = this.isSecureCameraLaunched;
-        if (!z15) {
-            z2 = z15;
-        }
-        return i13 + (z2 ? 1 : 0);
+        return i53 + i;
     }
 
     @NotNull

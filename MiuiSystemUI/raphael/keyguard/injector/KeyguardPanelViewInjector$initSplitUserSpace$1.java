@@ -6,8 +6,9 @@ import android.util.Log;
 import android.view.View;
 import com.android.systemui.statusbar.phone.PanelView;
 
+/* access modifiers changed from: package-private */
 /* compiled from: KeyguardPanelViewInjector.kt */
-final class KeyguardPanelViewInjector$initSplitUserSpace$1 implements View.OnClickListener {
+public final class KeyguardPanelViewInjector$initSplitUserSpace$1 implements View.OnClickListener {
     final /* synthetic */ KeyguardPanelViewInjector this$0;
 
     KeyguardPanelViewInjector$initSplitUserSpace$1(KeyguardPanelViewInjector keyguardPanelViewInjector) {

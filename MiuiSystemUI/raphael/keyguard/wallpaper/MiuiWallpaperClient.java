@@ -15,16 +15,15 @@ import com.miui.miwallpaper.IMiuiKeyguardWallpaperService;
 import kotlin.ResultKt;
 import kotlin.Unit;
 import kotlin.coroutines.Continuation;
-import kotlin.coroutines.CoroutineContext;
+import kotlin.coroutines.intrinsics.IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
+import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.CoroutineScopeKt;
-import kotlinx.coroutines.CoroutineStart;
 import kotlinx.coroutines.Dispatchers;
-import kotlinx.coroutines.Job;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,24 +31,19 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback {
     @NotNull
     private final String TAG = "MiuiWallpaperClient";
-    /* access modifiers changed from: private */
-    public boolean mBinding;
+    private boolean mBinding;
     private final Context mContext;
     private final ServiceConnection mServiceConnection;
-    /* access modifiers changed from: private */
-    public final CoroutineScope mUiScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getMain());
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitor mUpdateMonitor = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class));
-    /* access modifiers changed from: private */
-    public final MiuiWallpaperClient$mWakefulnessLifecycle$1 mWakefulnessLifecycle = new MiuiWallpaperClient$mWakefulnessLifecycle$1(this);
-    /* access modifiers changed from: private */
-    public IMiuiKeyguardWallpaperService mWallpaperService;
+    private final CoroutineScope mUiScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getMain());
+    private final KeyguardUpdateMonitor mUpdateMonitor = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class));
+    private final MiuiWallpaperClient$mWakefulnessLifecycle$1 mWakefulnessLifecycle = new MiuiWallpaperClient$mWakefulnessLifecycle$1(this);
+    private IMiuiKeyguardWallpaperService mWallpaperService;
 
     public MiuiWallpaperClient(@NotNull Context context, @NotNull final WakefulnessLifecycle wakefulnessLifecycle) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
         Intrinsics.checkParameterIsNotNull(wakefulnessLifecycle, "wakefulnessLifecycle");
         this.mContext = context;
-        Job unused = BuildersKt__Builders_commonKt.launch$default(this.mUiScope, (CoroutineContext) null, (CoroutineStart) null, new AnonymousClass1(this, (Continuation) null), 3, (Object) null);
+        BuildersKt.launch$default(this.mUiScope, null, null, new AnonymousClass1(this, null), 3, null);
         this.mServiceConnection = new MiuiWallpaperClient$mServiceConnection$1(this);
     }
 
@@ -70,6 +64,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
             this.this$0 = r1;
         }
 
+        @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
         @NotNull
         public final Continuation<Unit> create(@Nullable Object obj, @NotNull Continuation<?> continuation) {
             Intrinsics.checkParameterIsNotNull(continuation, "completion");
@@ -78,13 +73,16 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
             return r0;
         }
 
-        public final Object invoke(Object obj, Object obj2) {
-            return ((AnonymousClass1) create(obj, (Continuation) obj2)).invokeSuspend(Unit.INSTANCE);
+        /* JADX DEBUG: Method arguments types fixed to match base method, original types: [java.lang.Object, java.lang.Object] */
+        @Override // kotlin.jvm.functions.Function2
+        public final Object invoke(CoroutineScope coroutineScope, Continuation<? super Unit> continuation) {
+            return ((AnonymousClass1) create(coroutineScope, continuation)).invokeSuspend(Unit.INSTANCE);
         }
 
+        @Override // kotlin.coroutines.jvm.internal.BaseContinuationImpl
         @Nullable
         public final Object invokeSuspend(@NotNull Object obj) {
-            Object unused = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
+            IntrinsicsKt.getCOROUTINE_SUSPENDED();
             if (this.label == 0) {
                 ResultKt.throwOnFailure(obj);
                 this.this$0.mUpdateMonitor.registerCallback(this.this$0);
@@ -109,6 +107,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
         }
     }
 
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onScreenTurnedOff() {
         try {
             IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
@@ -121,6 +120,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
         }
     }
 
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onFinishedGoingToSleep(int i) {
         try {
             IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
@@ -133,6 +133,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
         }
     }
 
+    @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
     public void onKeyguardShowingChanged(boolean z) {
         try {
             IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;

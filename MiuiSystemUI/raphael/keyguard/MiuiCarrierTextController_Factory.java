@@ -16,6 +16,7 @@ public final class MiuiCarrierTextController_Factory implements Factory<MiuiCarr
         this.backgroundHandlerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public MiuiCarrierTextController get() {
         return provideInstance(this.contextProvider, this.mainHandlerProvider, this.backgroundHandlerProvider);
     }

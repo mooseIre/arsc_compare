@@ -18,21 +18,26 @@ public class CarrierText extends TextView {
     private boolean mShouldMarquee;
 
     public CarrierText(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     /* JADX INFO: finally extract failed */
     public CarrierText(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mCarrierTextCallback = new MiuiCarrierTextController.CarrierTextListener() {
+            /* class com.android.keyguard.CarrierText.AnonymousClass1 */
+
+            @Override // com.android.keyguard.MiuiCarrierTextController.CarrierTextListener
             public void onCarrierTextChanged(String str) {
                 CarrierText.this.setText(str);
             }
 
+            @Override // com.android.keyguard.MiuiCarrierTextController.CarrierTextListener
             public void onFinishedGoingToSleep() {
                 CarrierText.this.setSelected(false);
             }
 
+            @Override // com.android.keyguard.MiuiCarrierTextController.CarrierTextListener
             public void onStartedWakingUp() {
                 CarrierText.this.setSelected(true);
             }
@@ -43,7 +48,7 @@ public class CarrierText extends TextView {
             obtainStyledAttributes.getBoolean(R$styleable.CarrierText_showAirplaneMode, false);
             obtainStyledAttributes.getBoolean(R$styleable.CarrierText_showMissingSim, false);
             obtainStyledAttributes.recycle();
-            setTransformationMethod(new CarrierTextTransformationMethod(this, this.mContext, z));
+            setTransformationMethod(new CarrierTextTransformationMethod(this, ((TextView) this).mContext, z));
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
             throw th;

@@ -14,6 +14,7 @@ import com.android.systemui.C0021R$string;
 public class AlipayScanItem extends IQuickOpenItem {
     private final ImageView mView;
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTag() {
         return "Alipay/Scanner";
     }
@@ -26,10 +27,12 @@ public class AlipayScanItem extends IQuickOpenItem {
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public View getView() {
         return this.mView;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public Intent getIntent() {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
@@ -51,10 +54,12 @@ public class AlipayScanItem extends IQuickOpenItem {
         return intent;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_alipay_scan);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_alipay_scan_sub);
     }

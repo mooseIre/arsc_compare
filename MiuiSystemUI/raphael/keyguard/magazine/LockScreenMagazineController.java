@@ -66,6 +66,8 @@ import org.json.JSONObject;
 
 public class LockScreenMagazineController implements SettingsObserver.Callback {
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
+        /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass2 */
+
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
             Log.d("LockScreenMagazineController", "received broadcast " + action);
@@ -83,50 +85,47 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         }
     };
     private final KeyguardClockContainer mClockContainerView;
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private long mCurrentTouchDownTime;
     private ValueAnimator mFullScreenAnimator;
     private RemoteViews mFullScreenRemoteView;
     private int mGXZWIconCenterX;
     private int mGXZWIconCenterY;
-    /* access modifiers changed from: private */
-    public final Handler mHandler = new Handler(Looper.getMainLooper()) {
+    private final Handler mHandler = new Handler(Looper.getMainLooper()) {
+        /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             int i = message.what;
             if (i == 1) {
                 LockScreenMagazineController.this.initLockScreenMagazinePreRes();
             } else if (i == 2 && LockScreenMagazineController.this.mStartedWakingUp) {
-                boolean unused = LockScreenMagazineController.this.handleSingleClickEvent();
+                LockScreenMagazineController.this.handleSingleClickEvent();
             }
         }
     };
-    /* access modifiers changed from: private */
-    public long mInitPreResElapsedRealtime = SystemClock.elapsedRealtime();
+    private long mInitPreResElapsedRealtime = SystemClock.elapsedRealtime();
     private float mInitialTouchX;
     private float mInitialTouchY;
-    /* access modifiers changed from: private */
-    public boolean mIsJumpingIntent = false;
-    /* access modifiers changed from: private */
-    public boolean mIsLockScreenMagazineOpenedWallpaper;
-    /* access modifiers changed from: private */
-    public boolean mIsLockScreenMagazinePkgExist = true;
+    private boolean mIsJumpingIntent = false;
+    private boolean mIsLockScreenMagazineOpenedWallpaper;
+    private boolean mIsLockScreenMagazinePkgExist = true;
     private boolean mIsSupportLockScreenMagazineLeft;
     private boolean mIsSupportLockScreenMagazineLeftOverlay;
-    /* access modifiers changed from: private */
-    public boolean mIsSwitchAnimating;
-    /* access modifiers changed from: private */
-    public KeyguardBottomAreaView mKeyguardBottomArea;
+    private boolean mIsSwitchAnimating;
+    private KeyguardBottomAreaView mKeyguardBottomArea;
     private KeyguardSecurityModel mKeyguardSecurityModel;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardShowing;
+    private boolean mKeyguardShowing;
     private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass3 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserUnlocked() {
             LockScreenMagazineController.this.updateLockScreenMagazineAvailable();
             LockScreenMagazineController.this.queryLockScreenMagazineWallpaperInfo();
             LockScreenMagazineController.this.initLockScreenMagazinePreRes();
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onMagazineResourceInited() {
             Log.d("LockScreenMagazineController", "completeMagazineResInitialization");
             LockScreenMagazineController.this.updateLockScreenMagazineAvailable();
@@ -137,73 +136,74 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
             LockScreenMagazineController.this.reset();
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onRegionChanged() {
             LockScreenMagazineController.this.initLockScreenMagazinePreRes();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             if (z != LockScreenMagazineController.this.mKeyguardShowing) {
-                boolean unused = LockScreenMagazineController.this.mKeyguardShowing = z;
+                LockScreenMagazineController.this.mKeyguardShowing = z;
                 if (LockScreenMagazineController.this.mKeyguardShowing) {
                     LockScreenMagazineController lockScreenMagazineController = LockScreenMagazineController.this;
-                    boolean unused2 = lockScreenMagazineController.mUnlockWithFingerprintPossible = lockScreenMagazineController.mUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
+                    lockScreenMagazineController.mUnlockWithFingerprintPossible = lockScreenMagazineController.mUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser());
                     long elapsedRealtime = SystemClock.elapsedRealtime();
                     if (elapsedRealtime - LockScreenMagazineController.this.mInitPreResElapsedRealtime > 172800000) {
                         LockScreenMagazineController.this.initLockScreenMagazinePreRes();
-                        long unused3 = LockScreenMagazineController.this.mInitPreResElapsedRealtime = elapsedRealtime;
+                        LockScreenMagazineController.this.mInitPreResElapsedRealtime = elapsedRealtime;
                     }
                 }
                 LockScreenMagazineController.this.reset();
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onUserSwitchComplete(int i) {
             LockScreenMagazineController.this.updateLockScreenMagazineWallpaperInfo();
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onDeviceProvisioned() {
             LockScreenMagazineController.this.initLockScreenMagazinePreRes();
             LockScreenMagazineController.this.mLockScreenMagazinePre.initSettingButton();
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onLockWallpaperProviderChanged() {
             LockScreenMagazineController.this.updateLockScreenMagazineWallpaperInfo();
             boolean isLockScreenMagazineOpenedWallpaper = WallpaperAuthorityUtils.isLockScreenMagazineOpenedWallpaper();
             if (LockScreenMagazineController.this.mIsLockScreenMagazineOpenedWallpaper != isLockScreenMagazineOpenedWallpaper) {
-                boolean unused = LockScreenMagazineController.this.mIsLockScreenMagazineOpenedWallpaper = isLockScreenMagazineOpenedWallpaper;
+                LockScreenMagazineController.this.mIsLockScreenMagazineOpenedWallpaper = isLockScreenMagazineOpenedWallpaper;
                 AnalyticsHelper.getInstance(LockScreenMagazineController.this.mContext).recordLockScreenWallperProviderChanged();
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
             LockScreenMagazineController.this.handleLockScreenMagazinePreViewVisibilityChanged(z);
         }
     };
     private boolean mLockScreenLeftOverlayAvailable;
     private boolean mLockScreenMagazineAvailable;
-    /* access modifiers changed from: private */
-    public LockScreenMagazinePreView mLockScreenMagazinePre;
+    private LockScreenMagazinePreView mLockScreenMagazinePre;
     private boolean mLockScreenMagazinePreViewVisible = false;
     private LockScreenMagazineWallpaperInfo mLockScreenMagazineWallpaperInfo = new LockScreenMagazineWallpaperInfo();
     private String mMagazineWallpaperAuthority;
     private RemoteViews mMainRemoteView;
     private ValueAnimator mNonFullScreenAnimator;
     private NotificationStackScrollLayout mNotificationStackScrollLayout;
-    /* access modifiers changed from: private */
-    public String mPreLeftScreenActivityName;
-    /* access modifiers changed from: private */
-    public String mPreLeftScreenDrawableResName;
-    /* access modifiers changed from: private */
-    public Drawable mPreMainEntryDarkIcon;
-    /* access modifiers changed from: private */
-    public Drawable mPreMainEntryLightIcon;
-    /* access modifiers changed from: private */
-    public String mPreMainEntryResDarkIconName;
-    /* access modifiers changed from: private */
-    public String mPreMainEntryResLightIconName;
-    /* access modifiers changed from: private */
-    public String mPreTransToLeftScreenDrawableResName;
+    private String mPreLeftScreenActivityName;
+    private String mPreLeftScreenDrawableResName;
+    private Drawable mPreMainEntryDarkIcon;
+    private Drawable mPreMainEntryLightIcon;
+    private String mPreMainEntryResDarkIconName;
+    private String mPreMainEntryResLightIconName;
+    private String mPreTransToLeftScreenDrawableResName;
     private LockScreenMagazinePreView.OnPreViewClickListener mPreViewClickListener = new LockScreenMagazinePreView.OnPreViewClickListener() {
+        /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass4 */
+
+        @Override // com.android.keyguard.magazine.LockScreenMagazinePreView.OnPreViewClickListener
         public void onPreButtonClick(View view) {
             AnalyticsHelper.getInstance(LockScreenMagazineController.this.mContext).recordLockScreenMagazinePreviewAction("click");
             if (LockScreenMagazineController.this.mIsLockScreenMagazinePkgExist) {
@@ -226,11 +226,13 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
             }
         }
 
+        @Override // com.android.keyguard.magazine.LockScreenMagazinePreView.OnPreViewClickListener
         public void onSettingButtonClick(View view, Intent intent) {
             LockScreenMagazineController.this.startActivity(intent);
             AnalyticsHelper.getInstance(LockScreenMagazineController.this.mContext).recordLockScreenMagazinePreviewAction("click_settings");
         }
 
+        @Override // com.android.keyguard.magazine.LockScreenMagazinePreView.OnPreViewClickListener
         public void onLinkButtonClick(View view) {
             if (LockScreenMagazineController.this.openLockScreenMagazineAd()) {
                 AnalyticsHelper.getInstance(LockScreenMagazineController.this.mContext).recordLockScreenMagazinePreviewAction("click_link");
@@ -238,9 +240,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         }
     };
     private boolean mPreViewShowing;
-    /* access modifiers changed from: private */
-    public String mPreviewComponent;
+    private String mPreviewComponent;
     Runnable mResetClockRunnable = new Runnable() {
+        /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass6 */
+
         public void run() {
             LockScreenMagazineController.this.startSwitchAnimator(false);
         }
@@ -249,21 +252,20 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     private float mScreenHeight;
     private float mScreenWidth;
     private final SettingsObserver mSettingsObserver;
-    /* access modifiers changed from: private */
-    public boolean mStartedWakingUp;
+    private boolean mStartedWakingUp;
     private boolean mSupportGestureWakeup;
     private AnimatorSet mSwitchAnimator;
     private int mUninvalidBottomAreaHeight;
     private int mUninvalidGXZWAreaRadius;
     private int mUninvalidStartEndAreaWidth;
     private int mUninvalidTopAreaHeight;
-    /* access modifiers changed from: private */
-    public boolean mUnlockWithFingerprintPossible;
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitor mUpdateMonitor;
-    /* access modifiers changed from: private */
-    public final KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
+    private boolean mUnlockWithFingerprintPossible;
+    private KeyguardUpdateMonitor mUpdateMonitor;
+    private final KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
     private final IMiuiKeyguardWallpaperController.IWallpaperChangeCallback mWallpaperChangeCallback = new IMiuiKeyguardWallpaperController.IWallpaperChangeCallback() {
+        /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$O5B_bpWLXbeOd_nKVT1t_hdphk */
+
+        @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
         public final void onWallpaperChange(boolean z) {
             LockScreenMagazineController.this.lambda$new$0$LockScreenMagazineController(z);
         }
@@ -327,6 +329,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
     }
 
+    @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
         Log.d("LockScreenMagazineController", "ContentObserver2Magazine onChange:$selfChange");
         if ("gesture_wakeup".equals(str)) {
@@ -340,7 +343,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
                 if (!Build.IS_INTERNATIONAL_BUILD || !WallpaperAuthorityUtils.isHomeDefaultWallpaper()) {
                     this.mUpdateMonitorInjector.handleLockWallpaperProviderChanged();
                 } else {
-                    onRemoteViewChange((RemoteViews) null, (RemoteViews) null);
+                    onRemoteViewChange(null, null);
                 }
             }
         }
@@ -392,7 +395,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void updateLockScreenMagazineWallpaperInfo() {
+    /* access modifiers changed from: public */
+    private void updateLockScreenMagazineWallpaperInfo() {
         LockScreenMagazinePreView lockScreenMagazinePreView = this.mLockScreenMagazinePre;
         if (lockScreenMagazinePreView != null) {
             lockScreenMagazinePreView.refreshWallpaperInfo(this.mMainRemoteView, this.mFullScreenRemoteView);
@@ -401,7 +405,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public boolean openLockScreenMagazineAd() {
+    /* access modifiers changed from: public */
+    private boolean openLockScreenMagazineAd() {
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = getLockScreenMagazineWallpaperInfo();
         return WallpaperAuthorityUtils.isLockScreenMagazineWallpaper() && lockScreenMagazineWallpaperInfo != null && lockScreenMagazineWallpaperInfo.opendAd(this.mContext);
     }
@@ -443,12 +448,14 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void updateLockScreenMagazineAvailable() {
+    /* access modifiers changed from: public */
+    private void updateLockScreenMagazineAvailable() {
         this.mLockScreenMagazineAvailable = LockScreenMagazineUtils.isLockScreenMagazineAvailable();
     }
 
     /* access modifiers changed from: private */
-    public void startSwitchAnimator(final boolean z) {
+    /* access modifiers changed from: public */
+    private void startSwitchAnimator(final boolean z) {
         this.mPreViewShowing = z;
         this.mUpdateMonitorInjector.handleLockScreenMagazinePreViewVisibilityChanged(z);
         cancelSwitchAnimate();
@@ -461,6 +468,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mFullScreenAnimator = ofFloat;
         ofFloat.setInterpolator(z ? Ease$Cubic.easeInOut : Ease$Quint.easeOut);
         this.mFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$6vmQZdkp64kAXihLRJ8ifD0m5h0 */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 LockScreenMagazineController.this.lambda$startSwitchAnimator$1$LockScreenMagazineController(valueAnimator);
             }
@@ -475,13 +484,17 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mNonFullScreenAnimator = ofFloat2;
         ofFloat2.setInterpolator(z ? Ease$Quint.easeOut : Ease$Cubic.easeInOut);
         this.mNonFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$nfbY8hY4lnY8Zw7xypiR4c1iHo */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 LockScreenMagazineController.this.lambda$startSwitchAnimator$2$LockScreenMagazineController(valueAnimator);
             }
         });
-        this.mSwitchAnimator.setDuration(500);
+        this.mSwitchAnimator.setDuration(500L);
         this.mSwitchAnimator.play(this.mFullScreenAnimator).with(this.mNonFullScreenAnimator);
         this.mSwitchAnimator.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass5 */
+
             public void onAnimationCancel(Animator animator) {
                 super.onAnimationCancel(animator);
             }
@@ -489,20 +502,20 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
             public void onAnimationEnd(Animator animator) {
                 super.onAnimationEnd(animator);
                 int i = 0;
-                boolean unused = LockScreenMagazineController.this.mIsSwitchAnimating = false;
+                LockScreenMagazineController.this.mIsSwitchAnimating = false;
                 if (LockScreenMagazineController.this.needGlobalSwitchAnimate()) {
                     LockScreenMagazineController.this.mLockScreenMagazinePre.setMainLayoutVisible(z ? 4 : 0);
                 }
-                LockScreenMagazinePreView access$600 = LockScreenMagazineController.this.mLockScreenMagazinePre;
+                LockScreenMagazinePreView lockScreenMagazinePreView = LockScreenMagazineController.this.mLockScreenMagazinePre;
                 if (!z) {
                     i = 4;
                 }
-                access$600.setFullScreenLayoutVisible(i);
+                lockScreenMagazinePreView.setFullScreenLayoutVisible(i);
             }
 
             public void onAnimationStart(Animator animator) {
                 super.onAnimationStart(animator);
-                boolean unused = LockScreenMagazineController.this.mIsSwitchAnimating = true;
+                LockScreenMagazineController.this.mIsSwitchAnimating = true;
                 if (LockScreenMagazineController.this.needGlobalSwitchAnimate()) {
                     LockScreenMagazineController.this.mLockScreenMagazinePre.setMainLayoutVisible(0);
                 }
@@ -529,7 +542,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public boolean needGlobalSwitchAnimate() {
+    /* access modifiers changed from: public */
+    private boolean needGlobalSwitchAnimate() {
         return Build.IS_INTERNATIONAL_BUILD && isSupportLockScreenMagazineLeft() && !MiuiKeyguardUtils.isGxzwSensor();
     }
 
@@ -617,7 +631,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public boolean handleSingleClickEvent() {
+    /* access modifiers changed from: public */
+    private boolean handleSingleClickEvent() {
         if (!this.mLockScreenMagazineAvailable) {
             return false;
         }
@@ -654,7 +669,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void startAppStoreToDownload() {
+    /* access modifiers changed from: public */
+    private void startAppStoreToDownload() {
         try {
             startActivity(PackageUtils.getMarketDownloadIntent(LockScreenMagazineUtils.LOCK_SCREEN_MAGAZINE_PACKAGE_NAME));
         } catch (Exception e) {
@@ -669,7 +685,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         }
     }
 
-    class MagazineResourceEntity {
+    /* access modifiers changed from: package-private */
+    public class MagazineResourceEntity {
         public boolean mIsLockScreenMagazinePkgExist = true;
         public boolean mIsSupportLeftOverlay;
         public String mPreLeftScreenActivityName;
@@ -685,10 +702,13 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void initLockScreenMagazinePreRes() {
+    /* access modifiers changed from: public */
+    private void initLockScreenMagazinePreRes() {
         if (this.mUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) && MiuiKeyguardUtils.isDeviceProvisionedInSettingsDb(this.mContext)) {
             Log.d("LockScreenMagazineController", "initLockScreenMagazinePreRes");
             new AsyncTask<Void, Void, MagazineResourceEntity>() {
+                /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass7 */
+
                 /* access modifiers changed from: protected */
                 public MagazineResourceEntity doInBackground(Void... voidArr) {
                     Bundle lockScreenMagazinePreContent = LockScreenMagazineUtils.getLockScreenMagazinePreContent(LockScreenMagazineController.this.mContext);
@@ -716,14 +736,14 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
                 /* access modifiers changed from: protected */
                 public void onPostExecute(MagazineResourceEntity magazineResourceEntity) {
-                    String unused = LockScreenMagazineController.this.mPreMainEntryResDarkIconName = magazineResourceEntity.mPreMainEntryResDarkIconName;
-                    String unused2 = LockScreenMagazineController.this.mPreMainEntryResLightIconName = magazineResourceEntity.mPreMainEntryResLightIconName;
-                    String unused3 = LockScreenMagazineController.this.mPreTransToLeftScreenDrawableResName = magazineResourceEntity.mPreTransToLeftScreenDrawableResName;
-                    String unused4 = LockScreenMagazineController.this.mPreLeftScreenDrawableResName = magazineResourceEntity.mPreLeftScreenDrawableResName;
-                    boolean unused5 = LockScreenMagazineController.this.mIsLockScreenMagazinePkgExist = magazineResourceEntity.mIsLockScreenMagazinePkgExist;
-                    Drawable unused6 = LockScreenMagazineController.this.mPreMainEntryDarkIcon = magazineResourceEntity.mPreMainEntryDarkIcon;
-                    Drawable unused7 = LockScreenMagazineController.this.mPreMainEntryLightIcon = magazineResourceEntity.mPreMainEntryLightIcon;
-                    String unused8 = LockScreenMagazineController.this.mPreLeftScreenActivityName = magazineResourceEntity.mPreLeftScreenActivityName;
+                    LockScreenMagazineController.this.mPreMainEntryResDarkIconName = magazineResourceEntity.mPreMainEntryResDarkIconName;
+                    LockScreenMagazineController.this.mPreMainEntryResLightIconName = magazineResourceEntity.mPreMainEntryResLightIconName;
+                    LockScreenMagazineController.this.mPreTransToLeftScreenDrawableResName = magazineResourceEntity.mPreTransToLeftScreenDrawableResName;
+                    LockScreenMagazineController.this.mPreLeftScreenDrawableResName = magazineResourceEntity.mPreLeftScreenDrawableResName;
+                    LockScreenMagazineController.this.mIsLockScreenMagazinePkgExist = magazineResourceEntity.mIsLockScreenMagazinePkgExist;
+                    LockScreenMagazineController.this.mPreMainEntryDarkIcon = magazineResourceEntity.mPreMainEntryDarkIcon;
+                    LockScreenMagazineController.this.mPreMainEntryLightIcon = magazineResourceEntity.mPreMainEntryLightIcon;
+                    LockScreenMagazineController.this.mPreLeftScreenActivityName = magazineResourceEntity.mPreLeftScreenActivityName;
                     if (!TextUtils.isEmpty(magazineResourceEntity.mPreLeftScreenActivityName)) {
                         LockScreenMagazineController.this.setSupportLockScreenMagazineLeft(true);
                     } else {
@@ -737,7 +757,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public String checkLeftScreenActivityExist(String str) {
+    /* access modifiers changed from: public */
+    private String checkLeftScreenActivityExist(String str) {
         String str2 = "";
         if (!TextUtils.isEmpty(str)) {
             try {
@@ -784,7 +805,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void queryLockScreenMagazineWallpaperInfo() {
+    /* access modifiers changed from: public */
+    private void queryLockScreenMagazineWallpaperInfo() {
         if (this.mLockScreenMagazineAvailable && WallpaperAuthorityUtils.isLockScreenMagazineWallpaper()) {
             try {
                 this.mLockScreenMagazineWallpaperInfo = (LockScreenMagazineWallpaperInfo) new Gson().fromJson(((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).getCurrentWallpaperString(), LockScreenMagazineWallpaperInfo.class);
@@ -827,7 +849,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    public void startActivity(Intent intent) {
+    /* access modifiers changed from: public */
+    private void startActivity(Intent intent) {
         StatusBar statusBar = (StatusBar) Dependency.get(StatusBar.class);
         if (statusBar != null) {
             statusBar.startActivity(intent, true);
@@ -881,9 +904,11 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public void startMagazineActivity(final long j) {
         if (!Build.IS_TABLET && !this.mIsJumpingIntent) {
             new AsyncTask<Void, Void, Bundle>() {
+                /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass8 */
+
                 /* access modifiers changed from: protected */
                 public Bundle doInBackground(Void... voidArr) {
-                    boolean unused = LockScreenMagazineController.this.mIsJumpingIntent = true;
+                    LockScreenMagazineController.this.mIsJumpingIntent = true;
                     return LockScreenMagazineController.this.getMagazineActivityExtras(j);
                 }
 
@@ -903,113 +928,19 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
                             Log.e("LockScreenMagazineController", "start activity failed.", e);
                         }
                     }
-                    boolean unused = LockScreenMagazineController.this.mIsJumpingIntent = false;
+                    LockScreenMagazineController.this.mIsJumpingIntent = false;
                 }
             }.execute(new Void[0]);
         }
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* JADX WARNING: Removed duplicated region for block: B:23:0x00c0  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public android.os.Bundle getMagazineActivityExtras(long r10) {
+    private android.os.Bundle getMagazineActivityExtras(long r10) {
         /*
-            r9 = this;
-            r0 = 0
-            r9.mPreviewComponent = r0
-            android.content.Context r1 = r9.mContext
-            boolean r1 = com.android.keyguard.wallpaper.WallpaperAuthorityUtils.isValidWallpaperAuthority(r1)
-            if (r1 == 0) goto L_0x0010
-            java.lang.String r1 = com.android.keyguard.wallpaper.WallpaperAuthorityUtils.getWallpaperAuthority()
-            goto L_0x0012
-        L_0x0010:
-            java.lang.String r1 = com.android.keyguard.wallpaper.WallpaperAuthorityUtils.APPLY_MAGAZINE_DEFAULT_AUTHORITY
-        L_0x0012:
-            android.content.Context r2 = r9.mContext
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "content://"
-            r3.append(r4)
-            r3.append(r1)
-            java.lang.String r3 = r3.toString()
-            android.net.Uri r3 = android.net.Uri.parse(r3)
-            boolean r2 = com.android.keyguard.utils.ContentProviderUtils.isProviderExists(r2, r3)
-            if (r2 != 0) goto L_0x0030
-            return r0
-        L_0x0030:
-            java.lang.Class<com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController> r2 = com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.class
-            java.lang.Object r2 = com.android.systemui.Dependency.get(r2)
-            com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController r2 = (com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController) r2
-            java.lang.String r2 = r2.getCurrentWallpaperString()
-            com.google.gson.Gson r3 = new com.google.gson.Gson     // Catch:{ Exception -> 0x0087 }
-            r3.<init>()     // Catch:{ Exception -> 0x0087 }
-            java.lang.Class<com.android.keyguard.wallpaper.entity.MiuiWallpaperInfo> r5 = com.android.keyguard.wallpaper.entity.MiuiWallpaperInfo.class
-            java.lang.Object r5 = r3.fromJson(r2, r5)     // Catch:{ Exception -> 0x0087 }
-            com.android.keyguard.wallpaper.entity.MiuiWallpaperInfo r5 = (com.android.keyguard.wallpaper.entity.MiuiWallpaperInfo) r5     // Catch:{ Exception -> 0x0087 }
-            com.android.keyguard.wallpaper.entity.RequestInfo r6 = new com.android.keyguard.wallpaper.entity.RequestInfo     // Catch:{ Exception -> 0x0087 }
-            r7 = 2
-            r6.<init>(r7, r5)     // Catch:{ Exception -> 0x0087 }
-            java.lang.String r5 = r3.toJson(r6)     // Catch:{ Exception -> 0x0087 }
-            java.lang.StringBuilder r6 = new java.lang.StringBuilder     // Catch:{ Exception -> 0x0087 }
-            r6.<init>()     // Catch:{ Exception -> 0x0087 }
-            r6.append(r4)     // Catch:{ Exception -> 0x0087 }
-            r6.append(r1)     // Catch:{ Exception -> 0x0087 }
-            java.lang.String r1 = r6.toString()     // Catch:{ Exception -> 0x0087 }
-            java.lang.String r1 = r9.getLockWallpaperListFromProvider(r1, r5)     // Catch:{ Exception -> 0x0087 }
-            java.lang.Class<com.android.keyguard.wallpaper.entity.ResultInfo> r4 = com.android.keyguard.wallpaper.entity.ResultInfo.class
-            java.lang.Object r1 = r3.fromJson(r1, r4)     // Catch:{ Exception -> 0x0087 }
-            com.android.keyguard.wallpaper.entity.ResultInfo r1 = (com.android.keyguard.wallpaper.entity.ResultInfo) r1     // Catch:{ Exception -> 0x0087 }
-            if (r1 == 0) goto L_0x0082
-            java.lang.String r4 = r1.previewComponent     // Catch:{ Exception -> 0x0087 }
-            r9.mPreviewComponent = r4     // Catch:{ Exception -> 0x0087 }
-            java.lang.String r9 = r1.dialogComponent     // Catch:{ Exception -> 0x0087 }
-            java.util.List<com.android.keyguard.wallpaper.entity.MiuiWallpaperInfo> r1 = r1.wallpaperInfos     // Catch:{ Exception -> 0x0080 }
-            java.lang.String r0 = r3.toJson(r1)     // Catch:{ Exception -> 0x0080 }
-            r8 = r0
-            r0 = r9
-            r9 = r8
-            goto L_0x0083
-        L_0x0080:
-            r1 = move-exception
-            goto L_0x0089
-        L_0x0082:
-            r9 = r0
-        L_0x0083:
-            r8 = r0
-            r0 = r9
-            r9 = r8
-            goto L_0x00a3
-        L_0x0087:
-            r1 = move-exception
-            r9 = r0
-        L_0x0089:
-            java.lang.StringBuilder r3 = new java.lang.StringBuilder
-            r3.<init>()
-            java.lang.String r4 = "getPreviewActivityExtras"
-            r3.append(r4)
-            java.lang.String r1 = r1.getMessage()
-            r3.append(r1)
-            java.lang.String r1 = r3.toString()
-            java.lang.String r3 = "LockScreenMagazineController"
-            android.util.Log.e(r3, r1)
-        L_0x00a3:
-            android.os.Bundle r1 = new android.os.Bundle
-            r1.<init>()
-            java.lang.String r3 = "showtime"
-            r1.putLong(r3, r10)
-            java.lang.String r10 = "currentWallpaperInfo"
-            r1.putString(r10, r2)
-            java.lang.String r10 = "wallpaperInfos"
-            r1.putString(r10, r0)
-            java.lang.String r10 = "dialogComponent"
-            r1.putString(r10, r9)
-            boolean r9 = miui.os.Build.IS_INTERNATIONAL_BUILD
-            if (r9 == 0) goto L_0x00c7
-            java.lang.String r9 = "entry_source"
-            java.lang.String r10 = "cta"
-            r1.putString(r9, r10)
-        L_0x00c7:
-            return r1
+        // Method dump skipped, instructions count: 200
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.magazine.LockScreenMagazineController.getMagazineActivityExtras(long):android.os.Bundle");
     }

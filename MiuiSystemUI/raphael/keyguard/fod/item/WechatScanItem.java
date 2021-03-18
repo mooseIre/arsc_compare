@@ -13,10 +13,12 @@ import com.android.systemui.C0021R$string;
 public class WechatScanItem extends IQuickOpenItem {
     private final ImageView mView;
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTag() {
         return "WeChat/Scanner";
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public boolean needStartProcess() {
         return true;
     }
@@ -29,10 +31,12 @@ public class WechatScanItem extends IQuickOpenItem {
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public View getView() {
         return this.mView;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public Intent getIntent() {
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.addCategory("android.intent.category.LAUNCHER");
@@ -41,10 +45,12 @@ public class WechatScanItem extends IQuickOpenItem {
         return intent;
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_scan);
     }
 
+    @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
         return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_scan_sub);
     }

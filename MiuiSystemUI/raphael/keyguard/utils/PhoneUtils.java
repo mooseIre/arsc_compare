@@ -44,7 +44,7 @@ public class PhoneUtils {
             } else {
                 Log.w("PhoneUtils", "KeyguardUpdateMonitor was null, launching intent anyway.");
             }
-            context.startActivityAsUser(telecommManager.createLaunchEmergencyDialerIntent((String) null).setFlags(343932928).putExtra("com.android.phone.EmergencyDialer.extra.ENTRY_TYPE", 1), ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
+            context.startActivityAsUser(telecommManager.createLaunchEmergencyDialerIntent(null).setFlags(343932928).putExtra("com.android.phone.EmergencyDialer.extra.ENTRY_TYPE", 1), ActivityOptions.makeCustomAnimation(context, 0, 0).toBundle(), new UserHandle(KeyguardUpdateMonitor.getCurrentUser()));
         }
     }
 }

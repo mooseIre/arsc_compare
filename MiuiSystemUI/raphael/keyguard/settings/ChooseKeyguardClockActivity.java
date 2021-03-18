@@ -57,49 +57,32 @@ import miuix.animation.base.AnimConfig;
 import miuix.recyclerview.widget.RecyclerView;
 
 public class ChooseKeyguardClockActivity extends Activity {
-    /* access modifiers changed from: private */
-    public ImageView mBackImage;
-    /* access modifiers changed from: private */
-    public boolean mBackImageLight = true;
-    /* access modifiers changed from: private */
-    public BottomSheetBehavior mBottomSheetBehavior;
-    /* access modifiers changed from: private */
-    public boolean mCenterClockViewLight = true;
+    private ImageView mBackImage;
+    private boolean mBackImageLight = true;
+    private BottomSheetBehavior mBottomSheetBehavior;
+    private boolean mCenterClockViewLight = true;
     private RecyclerView mClockList;
     protected MiuiClockView mClockView;
     private InputMethodManager mInputMethodManager;
     private boolean mIsMiWallpaper = false;
-    /* access modifiers changed from: private */
-    public boolean mIsNightMode = false;
+    private boolean mIsNightMode = false;
     private boolean mIsThemeLiveWallpaper = false;
-    /* access modifiers changed from: private */
-    public boolean mLeftClockViewLight = true;
-    /* access modifiers changed from: private */
-    public MediaPlayer mLiveLockWallpaperPlayer;
+    private boolean mLeftClockViewLight = true;
+    private MediaPlayer mLiveLockWallpaperPlayer;
     private TextureView mLiveLockWallpaperView;
-    /* access modifiers changed from: private */
-    public LockPatternUtils mLockPatternUtils;
-    /* access modifiers changed from: private */
-    public SlidingButton mLunarBtn;
+    private LockPatternUtils mLockPatternUtils;
+    private SlidingButton mLunarBtn;
     private FrameLayout mLunarCalendarLayout;
-    /* access modifiers changed from: private */
-    public RestrictedLockUtils.EnforcedAdmin mOwnerAdmin;
-    /* access modifiers changed from: private */
-    public AlertDialog mOwnerInfoDialog = null;
+    private RestrictedLockUtils.EnforcedAdmin mOwnerAdmin;
+    private AlertDialog mOwnerInfoDialog = null;
     private FrameLayout mOwnerInfoLayout;
     private LinearLayout mPanelView;
-    /* access modifiers changed from: private */
-    public View mRootView;
-    /* access modifiers changed from: private */
-    public int mRootViewInitHeight;
-    /* access modifiers changed from: private */
-    public int mSelectedClockStyle = 0;
-    /* access modifiers changed from: private */
-    public int[] mStyles = {4, 1, 2, 3};
-    /* access modifiers changed from: private */
-    public int mUserId;
-    /* access modifiers changed from: private */
-    public ImageView mWallPaper;
+    private View mRootView;
+    private int mRootViewInitHeight;
+    private int mSelectedClockStyle = 0;
+    private int[] mStyles = {4, 1, 2, 3};
+    private int mUserId;
+    private ImageView mWallPaper;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -128,6 +111,8 @@ public class ChooseKeyguardClockActivity extends Activity {
         ImageView imageView = (ImageView) findViewById(C0015R$id.back_image);
         this.mBackImage = imageView;
         imageView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass1 */
+
             public void onClick(View view) {
                 ChooseKeyguardClockActivity.this.finish();
             }
@@ -176,14 +161,22 @@ public class ChooseKeyguardClockActivity extends Activity {
                 z = false;
             }
             this.mLunarBtn.setChecked(z);
-            this.mClockView.setShowLunarCalendar(z ? 1 : 0);
+            MiuiClockView miuiClockView2 = this.mClockView;
+            int i = z ? 1 : 0;
+            int i2 = z ? 1 : 0;
+            int i3 = z ? 1 : 0;
+            miuiClockView2.setShowLunarCalendar(i);
         }
         this.mLunarCalendarLayout.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass2 */
+
             public void onClick(View view) {
                 ChooseKeyguardClockActivity.this.onLunarCalendarCheckedChanged(!ChooseKeyguardClockActivity.this.mLunarBtn.isChecked());
             }
         });
         this.mLunarBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass3 */
+
             public void onCheckedChanged(CompoundButton compoundButton, boolean z) {
                 boolean z2 = false;
                 if (Settings.System.getIntForUser(ChooseKeyguardClockActivity.this.getContentResolver(), "show_lunar_calendar", 0, ChooseKeyguardClockActivity.this.mUserId) == 1) {
@@ -197,6 +190,8 @@ public class ChooseKeyguardClockActivity extends Activity {
         FrameLayout frameLayout = (FrameLayout) findViewById(C0015R$id.owner_info_layout);
         this.mOwnerInfoLayout = frameLayout;
         frameLayout.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass4 */
+
             public void onClick(View view) {
                 if (ChooseKeyguardClockActivity.this.mOwnerAdmin != null) {
                     ChooseKeyguardClockActivity chooseKeyguardClockActivity = ChooseKeyguardClockActivity.this;
@@ -204,7 +199,7 @@ public class ChooseKeyguardClockActivity extends Activity {
                     return;
                 }
                 ChooseKeyguardClockActivity chooseKeyguardClockActivity2 = ChooseKeyguardClockActivity.this;
-                AlertDialog unused = chooseKeyguardClockActivity2.mOwnerInfoDialog = chooseKeyguardClockActivity2.showOwnerInfoDialog();
+                chooseKeyguardClockActivity2.mOwnerInfoDialog = chooseKeyguardClockActivity2.showOwnerInfoDialog();
             }
         });
         ImageView imageView2 = (ImageView) findViewById(C0015R$id.owner_info_restricted_icon);
@@ -235,8 +230,11 @@ public class ChooseKeyguardClockActivity extends Activity {
         }
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r3v0, resolved type: boolean */
+    /* JADX WARN: Multi-variable type inference failed */
     /* access modifiers changed from: private */
-    public void onLunarCalendarCheckedChanged(boolean z) {
+    /* access modifiers changed from: public */
+    private void onLunarCalendarCheckedChanged(boolean z) {
         this.mLunarBtn.setChecked(z);
         this.mClockView.setShowLunarCalendar(z ? 1 : 0);
         Settings.System.putIntForUser(getContentResolver(), "show_lunar_calendar", z, this.mUserId);
@@ -273,7 +271,8 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public AlertDialog showOwnerInfoDialog() {
+    /* access modifiers changed from: public */
+    private AlertDialog showOwnerInfoDialog() {
         this.mBottomSheetBehavior.setState(4);
         View inflate = LayoutInflater.from(this).inflate(C0017R$layout.owner_info_dialog, (ViewGroup) null, false);
         final SlidingButton findViewById = inflate.findViewById(C0015R$id.owner_info_button);
@@ -281,6 +280,8 @@ public class ChooseKeyguardClockActivity extends Activity {
         final EditText editText = (EditText) inflate.findViewById(C0015R$id.owner_info_edit_text);
         editText.setText(getOwnerInfo());
         ((LinearLayout) inflate.findViewById(C0015R$id.owner_info_container)).setOnClickListener(new View.OnClickListener(this) {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass5 */
+
             public void onClick(View view) {
                 SlidingButton slidingButton = findViewById;
                 slidingButton.setChecked(!slidingButton.isChecked());
@@ -290,6 +291,8 @@ public class ChooseKeyguardClockActivity extends Activity {
         builder.setCancelable(false);
         builder.setTitle(C0021R$string.lock_screen_signature_title);
         builder.setPositiveButton(C0021R$string.ok, new DialogInterface.OnClickListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass6 */
+
             public void onClick(DialogInterface dialogInterface, int i) {
                 ChooseKeyguardClockActivity.this.expandBottomSheet(editText.getWindowToken());
                 ChooseKeyguardClockActivity.this.mLockPatternUtils.setOwnerInfo(editText.getText().toString(), ChooseKeyguardClockActivity.this.mUserId);
@@ -300,6 +303,8 @@ public class ChooseKeyguardClockActivity extends Activity {
             }
         });
         builder.setNegativeButton(C0021R$string.cancel, new DialogInterface.OnClickListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass7 */
+
             public void onClick(DialogInterface dialogInterface, int i) {
                 ChooseKeyguardClockActivity.this.expandBottomSheet(editText.getWindowToken());
                 dialogInterface.dismiss();
@@ -312,10 +317,13 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void expandBottomSheet(IBinder iBinder) {
+    /* access modifiers changed from: public */
+    private void expandBottomSheet(IBinder iBinder) {
         if (this.mRootView.getMeasuredHeight() < this.mRootViewInitHeight) {
             this.mInputMethodManager.hideSoftInputFromWindow(iBinder, 0);
             this.mRootView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass8 */
+
                 public void onGlobalLayout() {
                     if (ChooseKeyguardClockActivity.this.mRootViewInitHeight == ChooseKeyguardClockActivity.this.mRootView.getMeasuredHeight()) {
                         ChooseKeyguardClockActivity.this.mBottomSheetBehavior.setState(3);
@@ -329,7 +337,8 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public String getOwnerInfo() {
+    /* access modifiers changed from: public */
+    private String getOwnerInfo() {
         if (this.mLockPatternUtils.isDeviceOwnerInfoEnabled()) {
             return this.mLockPatternUtils.getDeviceOwnerInfo();
         }
@@ -341,6 +350,8 @@ public class ChooseKeyguardClockActivity extends Activity {
 
     private void processWallpaperView() {
         new AsyncTask<Void, Void, Drawable>() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass9 */
+
             /* access modifiers changed from: protected */
             public Drawable doInBackground(Void... voidArr) {
                 Drawable lockWallpaperPreview = KeyguardWallpaperUtils.getLockWallpaperPreview(ChooseKeyguardClockActivity.this);
@@ -348,14 +359,14 @@ public class ChooseKeyguardClockActivity extends Activity {
                     Bitmap bitmap = ((BitmapDrawable) lockWallpaperPreview).getBitmap();
                     boolean z = true;
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, 1080, (bitmap.getHeight() * 1080) / bitmap.getWidth(), true);
-                    Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, R$styleable.AppCompatTheme_windowMinWidthMinor, androidx.constraintlayout.widget.R$styleable.Constraint_visibilityMode, androidx.constraintlayout.widget.R$styleable.Constraint_visibilityMode);
+                    Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, (int) R$styleable.AppCompatTheme_windowMinWidthMinor, (int) androidx.constraintlayout.widget.R$styleable.Constraint_visibilityMode, (int) androidx.constraintlayout.widget.R$styleable.Constraint_visibilityMode);
                     if (createBitmap != null) {
-                        boolean unused = ChooseKeyguardClockActivity.this.mBackImageLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap) != 0;
+                        ChooseKeyguardClockActivity.this.mBackImageLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap) != 0;
                         createBitmap.recycle();
                     }
                     Bitmap createBitmap2 = Bitmap.createBitmap(createScaledBitmap, 56, 150, 500, 500);
                     if (createBitmap2 != null) {
-                        boolean unused2 = ChooseKeyguardClockActivity.this.mLeftClockViewLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap2) == 0;
+                        ChooseKeyguardClockActivity.this.mLeftClockViewLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap2) == 0;
                         createBitmap2.recycle();
                     }
                     Bitmap createBitmap3 = Bitmap.createBitmap(createScaledBitmap, 56, 150, 500, 500);
@@ -364,7 +375,7 @@ public class ChooseKeyguardClockActivity extends Activity {
                         if (MiuiKeyguardUtils.getBitmapColorMode(createBitmap3) != 0) {
                             z = false;
                         }
-                        boolean unused3 = chooseKeyguardClockActivity.mCenterClockViewLight = z;
+                        chooseKeyguardClockActivity.mCenterClockViewLight = z;
                         createBitmap3.recycle();
                     }
                 } catch (Exception e) {
@@ -377,20 +388,21 @@ public class ChooseKeyguardClockActivity extends Activity {
             public void onPostExecute(Drawable drawable) {
                 int i;
                 ChooseKeyguardClockActivity.this.mWallPaper.setImageDrawable(drawable);
-                ImageView access$1600 = ChooseKeyguardClockActivity.this.mBackImage;
+                ImageView imageView = ChooseKeyguardClockActivity.this.mBackImage;
                 if (ChooseKeyguardClockActivity.this.mBackImageLight) {
                     i = R.drawable.action_bar_back_light;
                 } else {
                     i = R.drawable.action_bar_back_dark;
                 }
-                access$1600.setImageResource(i);
+                imageView.setImageResource(i);
                 ChooseKeyguardClockActivity.this.setMainClockTextColor();
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
     }
 
     /* access modifiers changed from: private */
-    public void setMainClockTextColor() {
+    /* access modifiers changed from: public */
+    private void setMainClockTextColor() {
         int i = this.mSelectedClockStyle;
         if (i == 2 || i == 4) {
             this.mClockView.setTextColorDark(!this.mLeftClockViewLight);
@@ -414,6 +426,8 @@ public class ChooseKeyguardClockActivity extends Activity {
         if (mediaPlayer != null) {
             this.mLiveLockWallpaperPlayer = null;
             AsyncTask.execute(new Runnable(this) {
+                /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass10 */
+
                 public void run() {
                     mediaPlayer.release();
                 }
@@ -426,6 +440,8 @@ public class ChooseKeyguardClockActivity extends Activity {
         Log.d("ChooseKeyguardClockActivity", "showMiLiveLockWallpaper wallpaper==" + fromFile);
         this.mLiveLockWallpaperPlayer = MediaPlayer.create(this, fromFile);
         this.mLiveLockWallpaperView.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+            /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass11 */
+
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
                 return false;
             }
@@ -448,7 +464,8 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     /* access modifiers changed from: private */
-    public void startLiveLockWallpaper() {
+    /* access modifiers changed from: public */
+    private void startLiveLockWallpaper() {
         MediaPlayer mediaPlayer = this.mLiveLockWallpaperPlayer;
         if (mediaPlayer != null) {
             try {
@@ -466,6 +483,7 @@ public class ChooseKeyguardClockActivity extends Activity {
             this.context = context2;
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public MyViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.choose_keyguard_clock_item, viewGroup, false);
             Folme.useAt(inflate).touch().handleTouchOf(inflate, new AnimConfig[0]);
@@ -475,6 +493,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         public void onBindViewHolder(MyViewHolder myViewHolder, int i) {
             myViewHolder.clockView.setClockStyle(ChooseKeyguardClockActivity.this.mStyles[i]);
             myViewHolder.itemRootView.setOnClickListener(new View.OnClickListener(i) {
+                /* class com.android.keyguard.settings.$$Lambda$ChooseKeyguardClockActivity$ClockAdapter$Dk9YcnfNZXXLHycm7_wh3QV3S3U */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -496,7 +515,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         /* renamed from: lambda$onBindViewHolder$0 */
         public /* synthetic */ void lambda$onBindViewHolder$0$ChooseKeyguardClockActivity$ClockAdapter(int i, View view) {
             ChooseKeyguardClockActivity chooseKeyguardClockActivity = ChooseKeyguardClockActivity.this;
-            int unused = chooseKeyguardClockActivity.mSelectedClockStyle = chooseKeyguardClockActivity.mStyles[i];
+            chooseKeyguardClockActivity.mSelectedClockStyle = chooseKeyguardClockActivity.mStyles[i];
             ChooseKeyguardClockActivity chooseKeyguardClockActivity2 = ChooseKeyguardClockActivity.this;
             chooseKeyguardClockActivity2.mClockView.setClockStyle(chooseKeyguardClockActivity2.mSelectedClockStyle);
             Settings.System.putIntForUser(this.context.getContentResolver(), "selected_keyguard_clock_position", ChooseKeyguardClockActivity.this.mSelectedClockStyle, ChooseKeyguardClockActivity.this.mUserId);
@@ -504,11 +523,13 @@ public class ChooseKeyguardClockActivity extends Activity {
             ChooseKeyguardClockActivity.this.setMainClockTextColor();
         }
 
+        @Override // androidx.recyclerview.widget.RecyclerView.Adapter
         public int getItemCount() {
             return ChooseKeyguardClockActivity.this.mStyles.length;
         }
 
-        class MyViewHolder extends RecyclerView.ViewHolder {
+        /* access modifiers changed from: package-private */
+        public class MyViewHolder extends RecyclerView.ViewHolder {
             MiuiClockView clockView;
             FrameLayout itemRootView;
 

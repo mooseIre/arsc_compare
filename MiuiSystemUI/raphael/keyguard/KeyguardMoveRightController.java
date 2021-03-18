@@ -26,36 +26,39 @@ import com.miui.systemui.DebugConfig;
 import java.io.IOException;
 
 public class KeyguardMoveRightController extends BaseKeyguardMoveController {
-    /* access modifiers changed from: private */
-    public boolean mCameraViewShowing;
-    /* access modifiers changed from: private */
-    public final Context mContext;
-    /* access modifiers changed from: private */
-    public boolean mIsOnIconTouchDown;
-    /* access modifiers changed from: private */
-    public MiuiKeyguardCameraView mKeyguardCameraView;
+    private boolean mCameraViewShowing;
+    private final Context mContext;
+    private boolean mIsOnIconTouchDown;
+    private MiuiKeyguardCameraView mKeyguardCameraView;
     private MiuiKeyguardCameraView.CallBack mKeyguardCameraViewCallBack = new MiuiKeyguardCameraView.CallBack() {
+        /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass1 */
+
+        @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
         public void onAnimUpdate(float f) {
             KeyguardMoveRightController.this.mCallBack.onAnimUpdate(f);
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
         public void onCompletedAnimationEnd() {
             KeyguardMoveRightController.this.mCallBack.onCompletedAnimationEnd(true);
             KeyguardMoveRightController.this.mCallBack.updateCanShowGxzw(false);
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
         public void onCancelAnimationEnd(boolean z) {
             KeyguardMoveRightController.this.mCallBack.onCancelAnimationEnd(true, z);
             KeyguardMoveRightController.this.mCallBack.updateCanShowGxzw(true);
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
         public void onBackAnimationEnd() {
             KeyguardMoveRightController.this.mCallBack.onBackAnimationEnd(true);
             KeyguardMoveRightController.this.mCallBack.updateCanShowGxzw(true);
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
         public void onVisibilityChanged(boolean z) {
-            boolean unused = KeyguardMoveRightController.this.mCameraViewShowing = z;
+            KeyguardMoveRightController.this.mCameraViewShowing = z;
             KeyguardMoveRightController.this.mCallBack.getMoveIconLayout(true).setVisibility(KeyguardMoveRightController.this.mCameraViewShowing ? 8 : 0);
             if (KeyguardMoveRightController.this.mIsOnIconTouchDown) {
                 KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
@@ -63,51 +66,61 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
         public void updatePreViewBackground() {
             KeyguardMoveRightController.this.updatePreViewBackground();
         }
     };
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitor mKeyguardUpdateMonitor;
+    private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass2 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStartedGoingToSleep(int i) {
             if (KeyguardMoveRightController.this.mCameraViewShowing) {
                 KeyguardMoveRightController.this.reset();
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             if (z) {
                 KeyguardMoveRightController.this.mCallBack.updateCanShowGxzw(true);
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardBouncerChanged(boolean z) {
             if (z) {
                 KeyguardMoveRightController.this.reset();
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
             if (z) {
                 KeyguardMoveRightController.this.reset();
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onKeyguardShowingChanged(boolean z) {
             if (!z && KeyguardMoveRightController.this.mKeyguardCameraView != null) {
                 KeyguardMoveRightController.this.mKeyguardCameraView.removeViewFromWindow();
                 KeyguardMoveRightController.this.mKeyguardCameraView.releaseBitmapResource();
-                MiuiKeyguardCameraView unused = KeyguardMoveRightController.this.mKeyguardCameraView = null;
+                KeyguardMoveRightController.this.mKeyguardCameraView = null;
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onStrongAuthStateChanged(int i) {
             super.onStrongAuthStateChanged(i);
             KeyguardUpdateMonitor unused = KeyguardMoveRightController.this.mKeyguardUpdateMonitor;
             if (i == KeyguardUpdateMonitor.getCurrentUser() && !KeyguardMoveRightController.this.mUserAuthenticatedSinceBoot && KeyguardMoveRightController.this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot()) {
-                boolean unused2 = KeyguardMoveRightController.this.mUserAuthenticatedSinceBoot = true;
+                KeyguardMoveRightController.this.mUserAuthenticatedSinceBoot = true;
                 new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass2.AnonymousClass1 */
+
                     public void run() {
                         KeyguardMoveRightController.this.updatePreViewBackground();
                     }
@@ -116,8 +129,7 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
         }
     };
     private boolean mTouchDownInitial;
-    /* access modifiers changed from: private */
-    public boolean mUserAuthenticatedSinceBoot;
+    private boolean mUserAuthenticatedSinceBoot;
 
     public KeyguardMoveRightController(Context context, BaseKeyguardMoveController.CallBack callBack) {
         super(callBack);
@@ -128,6 +140,8 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
         keyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         if (MiuiKeyguardUtils.hasNavigationBar(this.mContext)) {
             this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_fsg_nav_bar"), false, new ContentObserver(new Handler()) {
+                /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass3 */
+
                 public void onChange(boolean z) {
                     KeyguardMoveRightController.this.updatePreViewBackground();
                 }
@@ -136,8 +150,11 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
     }
 
     /* access modifiers changed from: private */
-    public void updatePreViewBackground() {
+    /* access modifiers changed from: public */
+    private void updatePreViewBackground() {
         new AsyncTask<Void, Void, Drawable>() {
+            /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass4 */
+
             /* access modifiers changed from: protected */
             public Drawable doInBackground(Void... voidArr) {
                 if (!KeyguardMoveRightController.this.mUserAuthenticatedSinceBoot) {
@@ -151,9 +168,9 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
             }
 
             private Drawable getDrawableExceptVela() {
-                Context access$600 = KeyguardMoveRightController.this.mContext;
+                Context context = KeyguardMoveRightController.this.mContext;
                 Drawable drawable = null;
-                Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(access$600, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
+                Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(context, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
                 if (resultFromProvider != null) {
                     String valueOf = String.valueOf(resultFromProvider.get("getCameraSplash"));
                     if (!TextUtils.isEmpty(valueOf)) {

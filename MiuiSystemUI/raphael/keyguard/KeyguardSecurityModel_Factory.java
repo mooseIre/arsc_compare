@@ -11,6 +11,7 @@ public final class KeyguardSecurityModel_Factory implements Factory<KeyguardSecu
         this.contextProvider = provider;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardSecurityModel get() {
         return provideInstance(this.contextProvider);
     }

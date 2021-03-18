@@ -5,7 +5,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.accessibility.AccessibilityManager;
 
-class LiftToActivateListener implements View.OnHoverListener {
+/* access modifiers changed from: package-private */
+public class LiftToActivateListener implements View.OnHoverListener {
     private final AccessibilityManager mAccessibilityManager;
     private boolean mCachedClickableState;
 

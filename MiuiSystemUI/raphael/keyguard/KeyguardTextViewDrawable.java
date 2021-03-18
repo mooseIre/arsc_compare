@@ -11,7 +11,7 @@ public class KeyguardTextViewDrawable extends TextView {
     private int mWidth;
 
     public KeyguardTextViewDrawable(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public KeyguardTextViewDrawable(Context context, AttributeSet attributeSet) {

@@ -5,18 +5,22 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.SystemClock;
 
-class MiuiGxzwTransparentTimer implements AlarmManager.OnAlarmListener {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwTransparentTimer implements AlarmManager.OnAlarmListener {
     private final AlarmManager mAlarmManager;
     private Handler mHandler = new Handler();
     private boolean mSetAlarm = false;
     private Runnable mTimeout = new Runnable() {
+        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwTransparentTimer$Pk9iG6cYSfTC_ZpI6uzaoeYdtTU */
+
         public final void run() {
             MiuiGxzwTransparentTimer.this.lambda$new$0$MiuiGxzwTransparentTimer();
         }
     };
     private TransparentTimerListener mTransparentTimerListener;
 
-    interface TransparentTimerListener {
+    /* access modifiers changed from: package-private */
+    public interface TransparentTimerListener {
         void onTransparentTimeout();
     }
 

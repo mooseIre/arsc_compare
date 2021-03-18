@@ -26,17 +26,14 @@ import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
 public class MiuiChargePercentCountView extends LinearLayout {
-    /* access modifiers changed from: private */
-    public ChargeLevelAnimationListener mChargeLevelAnimationListener;
+    private ChargeLevelAnimationListener mChargeLevelAnimationListener;
     private int mChargeNumberTranslateInit;
     private int mChargeNumberTranslateSmall;
     private int mChargeSpeed;
     private AnimatorSet mContentSwitchAnimator;
     private Interpolator mCubicInterpolator;
-    /* access modifiers changed from: private */
-    public int mCurrentProgress;
-    /* access modifiers changed from: private */
-    public NumberDrawView mIntegerTv;
+    private int mCurrentProgress;
+    private NumberDrawView mIntegerTv;
     private boolean mIsFoldChargeVideo;
     private int mLargeTextSizePx;
     private int mPercentTextSizePx;
@@ -51,7 +48,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
     }
 
     public MiuiChargePercentCountView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiChargePercentCountView(Context context, AttributeSet attributeSet) {
@@ -104,7 +101,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
                     valueAnimator.cancel();
                 }
                 this.mCurrentProgress = i;
-                this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%d", new Object[]{Integer.valueOf(i)}));
+                this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%d", Integer.valueOf(i)));
             }
         }
     }
@@ -114,20 +111,24 @@ public class MiuiChargePercentCountView extends LinearLayout {
             ValueAnimator valueAnimator = this.mValueAnimator;
             if (valueAnimator == null || !valueAnimator.isRunning()) {
                 this.mCurrentProgress = (int) f;
-                this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%1.2f", new Object[]{Float.valueOf(f)}));
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, Math.min(f + f2, 99.99f)});
+                this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%1.2f", Float.valueOf(f)));
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(f, Math.min(f + f2, 99.99f));
                 this.mValueAnimator = ofFloat;
                 ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    /* class com.android.keyguard.charge.view.MiuiChargePercentCountView.AnonymousClass1 */
+
                     public void onAnimationUpdate(ValueAnimator valueAnimator) {
                         int floatValue = (int) ((Float) valueAnimator.getAnimatedValue()).floatValue();
                         if (floatValue != MiuiChargePercentCountView.this.mCurrentProgress) {
                             ((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).updateBattery(floatValue);
-                            int unused = MiuiChargePercentCountView.this.mCurrentProgress = floatValue;
+                            MiuiChargePercentCountView.this.mCurrentProgress = floatValue;
                         }
-                        MiuiChargePercentCountView.this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%1.2f", new Object[]{valueAnimator.getAnimatedValue()}));
+                        MiuiChargePercentCountView.this.mIntegerTv.setLevelText(String.format(Locale.getDefault(), "%1.2f", valueAnimator.getAnimatedValue()));
                     }
                 });
                 this.mValueAnimator.addListener(new Animator.AnimatorListener() {
+                    /* class com.android.keyguard.charge.view.MiuiChargePercentCountView.AnonymousClass2 */
+
                     public void onAnimationCancel(Animator animator) {
                     }
 
@@ -146,7 +147,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
                     }
                 });
                 this.mValueAnimator.setInterpolator(new LinearInterpolator());
-                this.mValueAnimator.setDuration(10000);
+                this.mValueAnimator.setDuration(10000L);
                 this.mValueAnimator.start();
             }
         }
@@ -196,7 +197,8 @@ public class MiuiChargePercentCountView extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public void switchAnimation() {
+    /* access modifiers changed from: public */
+    private void switchAnimation() {
         float f;
         int i;
         Log.d("MiuiChargePercentCountView", "switchAnimation: chargeSpeed=" + this.mChargeSpeed);
@@ -228,7 +230,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
                 f = (float) i;
             }
         }
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(LinearLayout.SCALE_X, new float[]{getScaleX(), f2}), PropertyValuesHolder.ofFloat(LinearLayout.SCALE_Y, new float[]{getScaleY(), f2}), PropertyValuesHolder.ofFloat(LinearLayout.TRANSLATION_Y, new float[]{getTranslationY(), f})}).setDuration(500);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat(LinearLayout.SCALE_X, getScaleX(), f2), PropertyValuesHolder.ofFloat(LinearLayout.SCALE_Y, getScaleY(), f2), PropertyValuesHolder.ofFloat(LinearLayout.TRANSLATION_Y, getTranslationY(), f)).setDuration(500L);
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mContentSwitchAnimator = animatorSet2;
         animatorSet2.setInterpolator(this.mCubicInterpolator);
@@ -238,10 +240,12 @@ public class MiuiChargePercentCountView extends LinearLayout {
 
     private void startWaveTextAnimation() {
         Log.d("MiuiChargePercentCountView", "startWaveTextAnimation: chargeSpeed= " + this.mChargeSpeed);
-        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, new PropertyValuesHolder[]{PropertyValuesHolder.ofFloat(LinearLayout.ALPHA, new float[]{getAlpha(), 1.0f})}).setDuration(800);
+        ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat(LinearLayout.ALPHA, getAlpha(), 1.0f)).setDuration(800L);
         duration.setInterpolator(this.mQuartOutInterpolator);
         duration.setStartDelay((long) ChargeUtils.getWaveTextDelayTime());
         duration.addListener(new Animator.AnimatorListener() {
+            /* class com.android.keyguard.charge.view.MiuiChargePercentCountView.AnonymousClass3 */
+
             public void onAnimationCancel(Animator animator) {
             }
 

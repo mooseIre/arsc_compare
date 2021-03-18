@@ -1,18 +1,18 @@
 package com.android.keyguard.fod;
 
 public interface MiuiGxzwCallback {
-    void onGxzwAuthFailed() {
+    default void onGxzwAuthFailed() {
     }
 
-    void onGxzwAuthSucceeded() {
+    default void onGxzwAuthSucceeded() {
     }
 
-    void onGxzwEnableChange(boolean z) {
+    default void onGxzwEnableChange(boolean z) {
     }
 
-    void onGxzwTouchDown() {
+    default void onGxzwTouchDown() {
     }
 
-    void onGxzwTouchUp() {
+    default void onGxzwTouchUp() {
     }
 }

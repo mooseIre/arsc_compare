@@ -14,9 +14,9 @@ final class KeyguardSensorInjector$unregisterPickupSensor$1 implements Runnable 
     public final void run() {
         Slog.i(this.this$0.getTAG(), "unregister pickup sensor");
         this.this$0.mWakeupAndSleepSensor = null;
-        SensorManager access$getMSensorManager$p = this.this$0.mSensorManager;
-        if (access$getMSensorManager$p != null) {
-            access$getMSensorManager$p.unregisterListener(this.this$0.mPickupSensorListener);
+        SensorManager sensorManager = this.this$0.mSensorManager;
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this.this$0.mPickupSensorListener);
         }
     }
 }

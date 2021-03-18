@@ -117,7 +117,7 @@ public class OutlineView extends View {
     }
 
     public OutlineView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public OutlineView(Context context, AttributeSet attributeSet) {
@@ -161,19 +161,17 @@ public class OutlineView extends View {
         int i2 = this.mOuterCircleRadius;
         int i3 = this.mOuterCircleCenterY;
         float f = this.mArcAngleDegree;
-        Canvas canvas2 = canvas;
-        canvas2.drawArc((float) (i - i2), (float) (i3 - i2), (float) (i + i2), (float) (i3 + i2), f - 270.0f, 360.0f - (f * 2.0f), false, this.mOutCirclePaint);
+        canvas.drawArc((float) (i - i2), (float) (i3 - i2), (float) (i + i2), (float) (i3 + i2), f - 270.0f, 360.0f - (f * 2.0f), false, this.mOutCirclePaint);
         int i4 = this.mOuterCircleCenterX;
         int i5 = this.mOuterSecCircleRadius;
         int i6 = this.mOuterCircleCenterY;
         float f2 = this.mSecArcAngleDegree;
-        Canvas canvas3 = canvas;
-        canvas3.drawArc((float) (i4 - i5), (float) (i6 - i5), (float) (i4 + i5), (float) (i6 + i5), f2 - 270.0f, 360.0f - (f2 * 2.0f), false, this.mOutSecCirclePaint);
+        canvas.drawArc((float) (i4 - i5), (float) (i6 - i5), (float) (i4 + i5), (float) (i6 + i5), f2 - 270.0f, 360.0f - (f2 * 2.0f), false, this.mOutSecCirclePaint);
         int i7 = this.mOuterCircleCenterX;
         int i8 = this.mOuterThrCircleRadius;
         int i9 = this.mOuterCircleCenterY;
         float f3 = this.mThrArcAngleDegree;
-        canvas3.drawArc((float) (i7 - i8), (float) (i9 - i8), (float) (i7 + i8), (float) (i9 + i8), f3 - 270.0f, 360.0f - (f3 * 2.0f), false, this.mOutThrCirclePaint);
+        canvas.drawArc((float) (i7 - i8), (float) (i9 - i8), (float) (i7 + i8), (float) (i9 + i8), f3 - 270.0f, 360.0f - (f3 * 2.0f), false, this.mOutThrCirclePaint);
         float f4 = this.mArcLeftCircleCenterX;
         float f5 = this.mArcCircleRadius;
         float f6 = this.mArcCircleCenterY;

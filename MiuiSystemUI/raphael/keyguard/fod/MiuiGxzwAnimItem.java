@@ -4,7 +4,8 @@ import android.content.Context;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 
-abstract class MiuiGxzwAnimItem {
+/* access modifiers changed from: package-private */
+public abstract class MiuiGxzwAnimItem {
     private static final MiuiGxzwAnimRes DEFALUT_AOD_BACK = new MiuiGxzwAnimRes(new int[]{C0013R$drawable.finger_image_aod}, false, 30);
     private static final MiuiGxzwAnimRes DEFAULT_AOD_ICON = new MiuiGxzwAnimRes(35, "gxzw_aod_icon_anim_", false, 30, false);
     private static final MiuiGxzwAnimRes DEFAULT_LIGHT_BACK = new MiuiGxzwAnimRes(new int[]{C0013R$drawable.finger_image_light}, false, 30);

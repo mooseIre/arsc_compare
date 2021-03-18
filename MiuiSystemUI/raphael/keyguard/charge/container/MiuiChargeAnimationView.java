@@ -36,10 +36,8 @@ import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
 public class MiuiChargeAnimationView extends FrameLayout {
     private IChargeAnimationListener animationListener;
-    /* access modifiers changed from: private */
-    public ViewGroup itemContainer;
-    /* access modifiers changed from: private */
-    public MiuiChargeContainerView mChargeContainerView;
+    private ViewGroup itemContainer;
+    private MiuiChargeContainerView mChargeContainerView;
     private MiuiChargeIconView mChargeIconView;
     private MiuiChargeLogoView mChargeLogoView;
     private MiuiChargePercentCountView mChargePercentView;
@@ -51,14 +49,12 @@ public class MiuiChargeAnimationView extends FrameLayout {
     private int mIconPaddingTop;
     private boolean mIsFoldChargeVideo;
     private OrientationEventListenerWrapper mOrientationListener;
-    /* access modifiers changed from: private */
-    public ViewGroup mParentContainer;
+    private ViewGroup mParentContainer;
     private final Interpolator mQuartOutInterpolator;
     private Point mScreenSize;
     private boolean mShowChargingInNonLockscreen;
     private AnimatorSet mShowingAnimatorSet;
-    /* access modifiers changed from: private */
-    public boolean mStartingDismissAnim;
+    private boolean mStartingDismissAnim;
     private final boolean mSupportWaveChargeAnimation;
     private Runnable mTimeoutDismissJob;
     private KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
@@ -66,7 +62,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
     private int mWireState;
 
     public MiuiChargeAnimationView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public MiuiChargeAnimationView(Context context, AttributeSet attributeSet) {
@@ -81,11 +77,15 @@ public class MiuiChargeAnimationView extends FrameLayout {
         this.mIsFoldChargeVideo = false;
         this.mSupportWaveChargeAnimation = ChargeUtils.supportWaveChargeAnimation();
         this.mTimeoutDismissJob = new Runnable() {
+            /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass6 */
+
             public void run() {
                 MiuiChargeAnimationView.this.startDismiss("dismiss_for_timeout");
             }
         };
         this.mDismissRunnable = new Runnable() {
+            /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass7 */
+
             public void run() {
                 MiuiChargeAnimationView.this.stopChildAnimation();
                 MiuiChargeAnimationView.this.setComponentTransparent(true);
@@ -137,6 +137,9 @@ public class MiuiChargeAnimationView extends FrameLayout {
         setElevation(30.0f);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
         this.mOrientationListener = new OrientationEventListenerWrapper(context) {
+            /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass1 */
+
+            @Override // com.android.keyguard.charge.OrientationEventListenerWrapper
             public void onOrientationChanged(int i) {
                 MiuiChargeAnimationView.this.updateOrientation(i);
             }
@@ -144,7 +147,8 @@ public class MiuiChargeAnimationView extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    public void updateOrientation(int i) {
+    /* access modifiers changed from: public */
+    private void updateOrientation(int i) {
         if (this.mWireState != 11 && !this.mSupportWaveChargeAnimation) {
             Slog.i("MiuiChargeAnimationView", "onOrientationChanged: " + i);
             if (i > 45 && i < 135) {
@@ -237,30 +241,36 @@ public class MiuiChargeAnimationView extends FrameLayout {
         } else {
             enableOrientation();
         }
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, 1});
+        ValueAnimator ofInt = ValueAnimator.ofInt(0, 1);
         ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass2 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiChargeAnimationView.this.mParentContainer.setAlpha(valueAnimator.getAnimatedFraction());
             }
         });
-        ValueAnimator ofInt2 = ValueAnimator.ofInt(new int[]{0, 1});
+        ValueAnimator ofInt2 = ValueAnimator.ofInt(0, 1);
         ofInt2.setStartDelay((long) ChargeUtils.getWaveTextDelayTime());
         ofInt2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiChargeAnimationView.this.itemContainer.setAlpha(valueAnimator.getAnimatedFraction());
             }
         });
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mShowingAnimatorSet = animatorSet2;
-        animatorSet2.setDuration(800);
+        animatorSet2.setDuration(800L);
         this.mShowingAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
         this.mShowingAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass4 */
+
             public void onAnimationStart(Animator animator) {
                 super.onAnimationStart(animator);
                 MiuiChargeAnimationView.this.onChargeAnimationStart();
             }
         });
-        this.mShowingAnimatorSet.playTogether(new Animator[]{ofInt, ofInt2});
+        this.mShowingAnimatorSet.playTogether(ofInt, ofInt2);
         this.mShowingAnimatorSet.start();
         this.mChargeContainerView.startContainerAnimation(z);
         this.mChargePercentView.startPercentViewAnimation(z2);
@@ -291,17 +301,19 @@ public class MiuiChargeAnimationView extends FrameLayout {
             this.mDismissReason = str;
             this.mHandler.removeCallbacks(this.mTimeoutDismissJob);
             this.mHandler.removeCallbacks(this.mDismissRunnable);
-            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, new float[]{this.mParentContainer.getAlpha(), 0.0f});
-            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, new float[]{this.itemContainer.getScaleX(), 0.0f});
-            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, new float[]{this.itemContainer.getScaleY(), 0.0f});
-            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this.mParentContainer, new PropertyValuesHolder[]{ofFloat});
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, new float[]{this.itemContainer.getAlpha(), 0.0f});
-            ObjectAnimator ofPropertyValuesHolder2 = ObjectAnimator.ofPropertyValuesHolder(this.itemContainer, new PropertyValuesHolder[]{ofFloat2, ofFloat3, ofFloat4});
+            PropertyValuesHolder ofFloat = PropertyValuesHolder.ofFloat(property, this.mParentContainer.getAlpha(), 0.0f);
+            PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, this.itemContainer.getScaleX(), 0.0f);
+            PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, this.itemContainer.getScaleY(), 0.0f);
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this.mParentContainer, ofFloat);
+            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, this.itemContainer.getAlpha(), 0.0f);
+            ObjectAnimator ofPropertyValuesHolder2 = ObjectAnimator.ofPropertyValuesHolder(this.itemContainer, ofFloat2, ofFloat3, ofFloat4);
             AnimatorSet animatorSet2 = new AnimatorSet();
             this.mDismissAnimatorSet = animatorSet2;
-            animatorSet2.setDuration(600);
+            animatorSet2.setDuration(600L);
             this.mDismissAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
             this.mDismissAnimatorSet.addListener(new Animator.AnimatorListener() {
+                /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass5 */
+
                 public void onAnimationRepeat(Animator animator) {
                 }
 
@@ -316,7 +328,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
                     }
                     MiuiChargeAnimationView.this.itemContainer.setScaleX(1.0f);
                     MiuiChargeAnimationView.this.itemContainer.setScaleY(1.0f);
-                    boolean unused = MiuiChargeAnimationView.this.mStartingDismissAnim = false;
+                    MiuiChargeAnimationView.this.mStartingDismissAnim = false;
                 }
 
                 public void onAnimationCancel(Animator animator) {
@@ -324,7 +336,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
                 }
             });
             if (!this.mUpdateMonitorInjector.isKeyguardShowing() || !TextUtils.equals(str, "dismiss_for_timeout")) {
-                this.mDismissAnimatorSet.playTogether(new Animator[]{ofPropertyValuesHolder, ofPropertyValuesHolder2});
+                this.mDismissAnimatorSet.playTogether(ofPropertyValuesHolder, ofPropertyValuesHolder2);
             } else {
                 this.mDismissAnimatorSet.play(ofPropertyValuesHolder2);
             }

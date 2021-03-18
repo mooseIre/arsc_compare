@@ -5,7 +5,8 @@ import android.os.Handler;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-abstract class GxzwWindowFrameLayout extends FrameLayout {
+/* access modifiers changed from: package-private */
+public abstract class GxzwWindowFrameLayout extends FrameLayout {
     private boolean mAdded = false;
     public final Handler mHandler = new Handler();
     protected final WindowManager mWindowManager = ((WindowManager) getContext().getSystemService("window"));
@@ -35,6 +36,8 @@ abstract class GxzwWindowFrameLayout extends FrameLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         this.mHandler.post(new Runnable() {
+            /* class com.android.keyguard.fod.$$Lambda$GxzwWindowFrameLayout$zcil8p0vmCZMbI4psM5rDbfIPg */
+
             public final void run() {
                 GxzwWindowFrameLayout.this.updateViewAddState();
             }
@@ -45,6 +48,8 @@ abstract class GxzwWindowFrameLayout extends FrameLayout {
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mHandler.post(new Runnable() {
+            /* class com.android.keyguard.fod.$$Lambda$GxzwWindowFrameLayout$zcil8p0vmCZMbI4psM5rDbfIPg */
+
             public final void run() {
                 GxzwWindowFrameLayout.this.updateViewAddState();
             }

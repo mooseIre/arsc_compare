@@ -1,6 +1,5 @@
 package com.android.keyguard.fod;
 
-import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
@@ -14,7 +13,8 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import miui.maml.animation.interpolater.ElasticEaseOutInterpolater;
 
-class MiuiGxzwTipView extends FrameLayout {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwTipView extends FrameLayout {
     private float mFontScale;
     private int mTranslateX;
     private int mTranslateY;
@@ -46,15 +46,15 @@ class MiuiGxzwTipView extends FrameLayout {
             new ObjectAnimator();
             TextView textView = this.mTryAgain;
             int i = this.mTranslateX;
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, "translationX", new float[]{(float) (i + 60), (float) i});
-            ofFloat.setDuration(700);
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, "translationX", (float) (i + 60), (float) i);
+            ofFloat.setDuration(700L);
             ofFloat.setInterpolator(new ElasticEaseOutInterpolater());
             new ObjectAnimator();
-            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.mTryAgain, "alpha", new float[]{0.0f, 1.0f});
-            ofFloat2.setDuration(150);
+            ObjectAnimator ofFloat2 = ObjectAnimator.ofFloat(this.mTryAgain, "alpha", 0.0f, 1.0f);
+            ofFloat2.setDuration(150L);
             ofFloat2.setInterpolator(new DecelerateInterpolator());
             AnimatorSet animatorSet = new AnimatorSet();
-            animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2});
+            animatorSet.playTogether(ofFloat, ofFloat2);
             animatorSet.start();
         }
     }

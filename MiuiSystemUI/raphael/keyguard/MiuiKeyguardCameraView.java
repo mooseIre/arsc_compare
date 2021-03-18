@@ -49,13 +49,10 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private float mActiveAnimPer;
     private AnimatorSet mAnimatorSet;
     private float mBackAnimAspectRatio;
-    /* access modifiers changed from: private */
-    public ValueAnimator mBackgroundAnimator;
-    /* access modifiers changed from: private */
-    public AnimatorSet mBackgroundAnimatorSet;
+    private ValueAnimator mBackgroundAnimator;
+    private AnimatorSet mBackgroundAnimatorSet;
     private View mBackgroundView;
-    /* access modifiers changed from: private */
-    public CallBack mCallBack;
+    private CallBack mCallBack;
     private View mCameraScrimView;
     private Configuration mConfiguration = new Configuration();
     private Context mContext = getContext();
@@ -82,33 +79,32 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private float mInitialTouchX;
     private float mInitialTouchY;
     private boolean mIsActive;
-    /* access modifiers changed from: private */
-    public boolean mIsBackAnimRunning;
-    /* access modifiers changed from: private */
-    public boolean mIsCameraShowing;
-    /* access modifiers changed from: private */
-    public boolean mIsCorrectOperation;
-    /* access modifiers changed from: private */
-    public boolean mIsPendingStartCamera;
+    private boolean mIsBackAnimRunning;
+    private boolean mIsCameraShowing;
+    private boolean mIsCorrectOperation;
+    private boolean mIsPendingStartCamera;
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass1 */
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onKeyguardVisibilityChanged(boolean z) {
             if (!z) {
                 if (MiuiKeyguardCameraView.this.mIsPendingStartCamera) {
-                    boolean unused = MiuiKeyguardCameraView.this.mIsPendingStartCamera = false;
-                    boolean unused2 = MiuiKeyguardCameraView.this.mIsCameraShowing = true;
+                    MiuiKeyguardCameraView.this.mIsPendingStartCamera = false;
+                    MiuiKeyguardCameraView.this.mIsCameraShowing = true;
                     if (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet != null && !MiuiKeyguardCameraView.this.mBackgroundAnimatorSet.isRunning()) {
                         MiuiKeyguardCameraView.this.setAlpha(0.0f);
                         MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
                         MiuiKeyguardCameraView.this.updateKeepScreenOnFlag(false);
-                        AnimatorSet unused3 = MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
+                        MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
                         return;
                     }
                     return;
                 }
                 MiuiKeyguardCameraView.this.reset();
             } else if (MiuiKeyguardCameraView.this.mIsCameraShowing) {
-                boolean unused4 = MiuiKeyguardCameraView.this.mIsCameraShowing = false;
+                MiuiKeyguardCameraView.this.mIsCameraShowing = false;
                 MiuiKeyguardCameraView.this.startBackAnim();
             }
         }
@@ -129,31 +125,36 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private float mPreViewHeight;
     private float mPreViewInitRadius = 60.0f;
     private ViewOutlineProvider mPreViewOutlineProvider = new ViewOutlineProvider() {
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass2 */
+
         public void getOutline(View view, Outline outline) {
             outline.setRoundRect(0, 0, view.getWidth(), view.getHeight(), MiuiKeyguardCameraView.this.mPreViewRadius);
         }
     };
-    /* access modifiers changed from: private */
-    public float mPreViewRadius;
+    private float mPreViewRadius;
     private float mPreViewWidth;
     private int mScreenHeight;
     private Point mScreenSizePoint;
     private int mScreenWidth;
     private boolean mShowing = false;
     private final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass3 */
+
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
             Log.d("KeyguardCameraView", "xxxxxxxxonTaskMovedToFront");
             if (MiuiKeyguardCameraView.this.mIsCameraShowing && MiuiKeyguardCameraView.this.isNotCameraActivity(runningTaskInfo)) {
-                boolean unused = MiuiKeyguardCameraView.this.mIsCameraShowing = false;
+                MiuiKeyguardCameraView.this.mIsCameraShowing = false;
                 MiuiKeyguardCameraView.this.reset();
             }
         }
 
+        @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskStackChanged() {
             try {
                 List tasks = ActivityTaskManager.getService().getTasks(1);
                 if (MiuiKeyguardCameraView.this.mIsCameraShowing && !tasks.isEmpty() && MiuiKeyguardCameraView.this.isNotCameraActivity((ActivityManager.RunningTaskInfo) tasks.get(0))) {
-                    boolean unused = MiuiKeyguardCameraView.this.mIsCameraShowing = false;
+                    MiuiKeyguardCameraView.this.mIsCameraShowing = false;
                     MiuiKeyguardCameraView.this.reset();
                 }
             } catch (RemoteException e) {
@@ -194,7 +195,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     /* access modifiers changed from: private */
-    public boolean isNotCameraActivity(ActivityManager.RunningTaskInfo runningTaskInfo) {
+    /* access modifiers changed from: public */
+    private boolean isNotCameraActivity(ActivityManager.RunningTaskInfo runningTaskInfo) {
         return !PackageUtils.PACKAGE_NAME_CAMERA.equals(runningTaskInfo.topActivity.getPackageName());
     }
 
@@ -236,6 +238,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         this.mKeyguardUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
     }
 
+    @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
     public void onWallpaperChange(boolean z) {
         setDarkStyle(z);
     }
@@ -370,14 +373,14 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             f2 = f9 / 2.0f;
         }
         float f10 = f3 + f2;
-        float f11 = f;
         if (!this.mDarkStyle) {
+            float f11 = f10 + 2.0f;
             float f12 = this.mPreViewRadius;
-            canvas.drawRoundRect(f6 - 2.0f, f11 - 2.0f, f7 + 2.0f, f10 + 2.0f, f12, f12, this.mIconCircleStrokePaint);
+            canvas.drawRoundRect(f6 - 2.0f, f - 2.0f, f7 + 2.0f, f11, f12, f12, this.mIconCircleStrokePaint);
         }
         this.mIconCirclePaint.setAlpha((int) (this.mIconCircleAlpha * 255.0f));
         float f13 = this.mPreViewRadius;
-        canvas.drawRoundRect(f6, f11, f7, f10, f13, f13, this.mIconCirclePaint);
+        canvas.drawRoundRect(f6, f, f7, f10, f13, f13, this.mIconCirclePaint);
     }
 
     public void onTouchDown(float f, float f2, boolean z) {
@@ -435,6 +438,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         }
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         checkSize();
     }
@@ -623,21 +627,23 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private void startActiveAnim(float f, float f2) {
         cancelAnim();
         this.mAnimatorSet = new AnimatorSet();
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, f2});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f, f2);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$6G3eXA4who1pgF5AH_zyYs03b4 */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$startActiveAnim$0$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        this.mAnimatorSet.playTogether(new Animator[]{ofFloat});
+        this.mAnimatorSet.playTogether(ofFloat);
         if (f2 == 0.0f) {
             this.mAnimatorSet.setInterpolator(new PhysicBasedInterpolator(this, 0.9f, 0.8f));
-            this.mAnimatorSet.setDuration(250);
+            this.mAnimatorSet.setDuration(250L);
         } else {
             this.mAnimatorSet.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.67f));
-            this.mAnimatorSet.setDuration(450);
+            this.mAnimatorSet.setDuration(450L);
         }
-        this.mAnimatorSet.setDuration(450);
+        this.mAnimatorSet.setDuration(450L);
         this.mAnimatorSet.start();
     }
 
@@ -663,8 +669,10 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         AnimatorSet fullScreenAnim = getFullScreenAnim(f, (float) i, f2, (float) i2, this.mPreViewCenterX, (float) (i / 2), this.mPreViewCenterY, (float) (i2 / 2), this.mPreViewRadius, this.mPreViewInitRadius, this.mPreViewAlpha, 1.0f, this.mIconAlpha, 0.0f, this.mIconScale, 1.5f);
         this.mAnimatorSet = fullScreenAnim;
         fullScreenAnim.setInterpolator(new PhysicBasedInterpolator(this, 0.9f, 0.85f));
-        this.mAnimatorSet.setDuration(350);
+        this.mAnimatorSet.setDuration(350L);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass4 */
+
             public void onAnimationCancel(Animator animator) {
             }
 
@@ -675,13 +683,13 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                 }
                 if (MiuiKeyguardCameraView.this.mBackgroundAnimator != null) {
                     MiuiKeyguardCameraView.this.mBackgroundAnimator.cancel();
-                    ValueAnimator unused = MiuiKeyguardCameraView.this.mBackgroundAnimator = null;
+                    MiuiKeyguardCameraView.this.mBackgroundAnimator = null;
                 }
                 if (MiuiKeyguardCameraView.this.mBackgroundAnimatorSet != null && MiuiKeyguardCameraView.this.mIsCameraShowing) {
                     MiuiKeyguardCameraView.this.setAlpha(0.0f);
                     MiuiKeyguardCameraView.this.applyBlurRatio(0.0f);
                     MiuiKeyguardCameraView.this.updateKeepScreenOnFlag(false);
-                    AnimatorSet unused2 = MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
+                    MiuiKeyguardCameraView.this.mBackgroundAnimatorSet = null;
                 }
             }
         });
@@ -691,15 +699,17 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_camera_view");
         AnalyticsHelper.getInstance(this.mContext).trackPageStart("action_enter_camera_view");
         this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mBackgroundAnimator = ofFloat;
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$rB1kSAJJFjE75nb4TddKPG5sfdY */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$startFullScreenAnim$1$MiuiKeyguardCameraView(valueAnimator);
             }
         });
         this.mBackgroundAnimator.setInterpolator(new PhysicBasedInterpolator(this, 0.99f, 0.67f));
-        this.mBackgroundAnimator.setDuration(450);
+        this.mBackgroundAnimator.setDuration(450L);
         this.mBackgroundAnimator.start();
     }
 
@@ -711,55 +721,71 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
 
     private AnimatorSet getFullScreenAnim(float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11, float f12, float f13, float f14, float f15, float f16) {
         AnimatorSet animatorSet = new AnimatorSet();
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, f2});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f, f2);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$51hzYHue6y3vtxtOIniRQTaXdiw */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$2$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{f3, f4});
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(f3, f4);
         ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$8LjmED2WhrC2qoFK0g_HUIj1ik */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$3$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{f5, f6});
+        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(f5, f6);
         ofFloat3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$5Td_lbfjWN8BzH0Z_pjLq3UO74s */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$4$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat4 = ValueAnimator.ofFloat(new float[]{f7, f8});
+        ValueAnimator ofFloat4 = ValueAnimator.ofFloat(f7, f8);
         ofFloat4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$LU6pceS0n4SDv5uN5ul0p3rUssI */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$5$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat5 = ValueAnimator.ofFloat(new float[]{f11, f12});
+        ValueAnimator ofFloat5 = ValueAnimator.ofFloat(f11, f12);
         ofFloat5.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$D2WnIJcdZxsmYZKpokRGTQwLiwc */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$6$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat6 = ValueAnimator.ofFloat(new float[]{f9, f10});
+        ValueAnimator ofFloat6 = ValueAnimator.ofFloat(f9, f10);
         ofFloat6.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$AgpKqoMvOXstEWt3gkkdVxBmGK8 */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$7$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat7 = ValueAnimator.ofFloat(new float[]{f13, f14});
+        ValueAnimator ofFloat7 = ValueAnimator.ofFloat(f13, f14);
         ofFloat7.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$1vB_HhGuDkNM7Ni6teE9BVVVmw */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$8$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat8 = ValueAnimator.ofFloat(new float[]{f15, f16});
+        ValueAnimator ofFloat8 = ValueAnimator.ofFloat(f15, f16);
         ofFloat8.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$Zj4DoohRr5NAGksZzAseGYBAytY */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getFullScreenAnim$9$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3, ofFloat4, ofFloat5, ofFloat6, ofFloat7, ofFloat8});
+        animatorSet.playTogether(ofFloat, ofFloat2, ofFloat3, ofFloat4, ofFloat5, ofFloat6, ofFloat7, ofFloat8);
         return animatorSet;
     }
 
@@ -827,31 +853,39 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     public void startCancelAnim() {
         cancelAnim();
         this.mAnimatorSet = new AnimatorSet();
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.mActiveAnimPer, 0.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(this.mActiveAnimPer, 0.0f);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$2F3UNNHsCSOua2pF5p2OLHwgaoU */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$startCancelAnim$10$MiuiKeyguardCameraView(valueAnimator);
             }
         });
         ofFloat.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.67f));
-        ofFloat.setDuration(450);
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{this.mMoveYPer, 0.0f});
+        ofFloat.setDuration(450L);
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(this.mMoveYPer, 0.0f);
         ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$j5H8zwtWSLxOxNPfo6eLss4vJJA */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$startCancelAnim$11$MiuiKeyguardCameraView(valueAnimator);
             }
         });
         ofFloat2.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.67f));
-        ofFloat2.setDuration(450);
-        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{this.mMoveDistance, 0.0f});
+        ofFloat2.setDuration(450L);
+        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(this.mMoveDistance, 0.0f);
         ofFloat3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$9ukSib3kqT_Pk9H9EhzhIEsdc7c */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$startCancelAnim$12$MiuiKeyguardCameraView(valueAnimator);
             }
         });
         ofFloat3.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.71f));
-        ofFloat3.setDuration(700);
+        ofFloat3.setDuration(700L);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass5 */
+
             public void onAnimationEnd(Animator animator) {
                 MiuiKeyguardCameraView.this.dismiss();
                 if (MiuiKeyguardCameraView.this.mCallBack != null) {
@@ -859,7 +893,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
                 }
             }
         });
-        this.mAnimatorSet.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3});
+        this.mAnimatorSet.playTogether(ofFloat, ofFloat2, ofFloat3);
         this.mAnimatorSet.start();
     }
 
@@ -888,21 +922,24 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     /* access modifiers changed from: private */
-    public void startBackAnim() {
+    /* access modifiers changed from: public */
+    private void startBackAnim() {
         this.mIsBackAnimRunning = true;
         cancelAnim();
         int i = this.mScreenWidth;
         AnimatorSet backIconAnim = getBackIconAnim((float) i, 0.0f, (float) (i / 2), this.mIconInitCenterX, (float) (this.mScreenHeight / 2), this.mIconInitCenterY, 1.5f, 1.0f, 0.0f, 1.0f, 1.0f, 0.0f, 1.0f, 0.0f);
         this.mAnimatorSet = backIconAnim;
         backIconAnim.setInterpolator(new PhysicBasedInterpolator(this, 0.8f, 0.71f));
-        this.mAnimatorSet.setDuration(1000);
+        this.mAnimatorSet.setDuration(1000L);
         this.mAnimatorSet.addListener(new AnimatorListenerAdapter() {
+            /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass6 */
+
             public void onAnimationStart(Animator animator) {
                 MiuiKeyguardCameraView.this.startUpdateAspectRatioAnimation();
             }
 
             public void onAnimationEnd(Animator animator) {
-                boolean unused = MiuiKeyguardCameraView.this.mIsBackAnimRunning = false;
+                MiuiKeyguardCameraView.this.mIsBackAnimRunning = false;
                 MiuiKeyguardCameraView.this.reset();
                 if (MiuiKeyguardCameraView.this.mCallBack != null) {
                     MiuiKeyguardCameraView.this.mCallBack.onBackAnimationEnd();
@@ -915,49 +952,63 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
 
     private AnimatorSet getBackIconAnim(float f, float f2, float f3, float f4, float f5, float f6, float f7, float f8, float f9, float f10, float f11, float f12, float f13, float f14) {
         AnimatorSet animatorSet = new AnimatorSet();
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{f, f2});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(f, f2);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$SBI3MYC2RvehJOnTEGhHvnJWGI */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$13$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{f3, f4});
+        ValueAnimator ofFloat2 = ValueAnimator.ofFloat(f3, f4);
         ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$oHoNk9rBntb4VxVc6fouGwEKXg */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$14$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{f5, f6});
+        ValueAnimator ofFloat3 = ValueAnimator.ofFloat(f5, f6);
         ofFloat3.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$ecJA6brLsDERLkgSi3tEFhUdeaA */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$15$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat4 = ValueAnimator.ofFloat(new float[]{f11, f12});
+        ValueAnimator ofFloat4 = ValueAnimator.ofFloat(f11, f12);
         ofFloat4.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$r2w63oweQMniVOog3hkT5iGxJHs */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$16$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat5 = ValueAnimator.ofFloat(new float[]{f9, f10});
+        ValueAnimator ofFloat5 = ValueAnimator.ofFloat(f9, f10);
         ofFloat5.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$lmXwxD9kAYlYpvuHtESLO2rcnnE */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$17$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat6 = ValueAnimator.ofFloat(new float[]{f7, f8});
+        ValueAnimator ofFloat6 = ValueAnimator.ofFloat(f7, f8);
         ofFloat6.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$sqXxYUg_4SE5U1ML8lh4BZadbU0 */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$18$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        ValueAnimator ofFloat7 = ValueAnimator.ofFloat(new float[]{f13, f14});
+        ValueAnimator ofFloat7 = ValueAnimator.ofFloat(f13, f14);
         ofFloat7.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$SxqEydld7ogE7dam8P8iZtpUbU */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$getBackIconAnim$19$MiuiKeyguardCameraView(valueAnimator);
             }
         });
-        animatorSet.playTogether(new Animator[]{ofFloat, ofFloat2, ofFloat3, ofFloat4, ofFloat5, ofFloat6, ofFloat7});
+        animatorSet.playTogether(ofFloat, ofFloat2, ofFloat3, ofFloat4, ofFloat5, ofFloat6, ofFloat7);
         return animatorSet;
     }
 
@@ -1031,15 +1082,18 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     /* access modifiers changed from: private */
-    public void startUpdateAspectRatioAnimation() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{((float) this.mScreenHeight) / ((float) this.mScreenWidth), 1.0f});
+    /* access modifiers changed from: public */
+    private void startUpdateAspectRatioAnimation() {
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(((float) this.mScreenHeight) / ((float) this.mScreenWidth), 1.0f);
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.$$Lambda$MiuiKeyguardCameraView$TL74oKbU2dukfkxCGWzQs1eEvA0 */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
                 MiuiKeyguardCameraView.this.lambda$startUpdateAspectRatioAnimation$20$MiuiKeyguardCameraView(valueAnimator);
             }
         });
         ofFloat.setInterpolator(new PhysicBasedInterpolator(this, 0.99f, 0.67f));
-        ofFloat.setDuration(300);
+        ofFloat.setDuration(300L);
         ofFloat.start();
         if (!DeviceConfig.isLowGpuDevice()) {
             applyBlurRatio(1.0f);
@@ -1063,7 +1117,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     /* access modifiers changed from: private */
-    public void applyBlurRatio(float f) {
+    /* access modifiers changed from: public */
+    private void applyBlurRatio(float f) {
         if (f > 1.0f) {
             f = 1.0f;
         } else if (f < 0.0f) {
@@ -1099,7 +1154,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     /* access modifiers changed from: private */
-    public void updateKeepScreenOnFlag(boolean z) {
+    /* access modifiers changed from: public */
+    private void updateKeepScreenOnFlag(boolean z) {
         if (z) {
             this.mLpChanged.flags |= 128;
         } else {

@@ -26,23 +26,23 @@ public class MiuiFaceUnlockUtils {
 
     public static boolean isHardwareDetected(Context context) {
         getFaceManager(context);
-        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).isHardwareDetected();
+        return mWeakReferenceFaceManager.get().isHardwareDetected();
     }
 
     public static boolean isFaceFeatureEnabled(Context context) {
         getFaceManager(context);
-        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).isFaceFeatureEnabled();
+        return mWeakReferenceFaceManager.get().isFaceFeatureEnabled();
     }
 
     public static boolean hasEnrolledTemplates(Context context) {
         getFaceManager(context);
-        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).hasEnrolledTemplates();
+        return mWeakReferenceFaceManager.get().hasEnrolledTemplates();
     }
 
     public static boolean isSupportLiftingCamera(Context context) {
         try {
             Class<?> cls = Class.forName("miui.os.DeviceFeature");
-            return ((Boolean) cls.getDeclaredMethod("hasPopupCameraSupport", (Class[]) null).invoke(cls, new Object[0])).booleanValue();
+            return ((Boolean) cls.getDeclaredMethod("hasPopupCameraSupport", null).invoke(cls, new Object[0])).booleanValue();
         } catch (Exception e) {
             Log.e("miui_face", "reflect error when get hasPopupCameraSupport state", e);
             return false;
@@ -51,7 +51,7 @@ public class MiuiFaceUnlockUtils {
 
     public static boolean isSupportScreenOnDelayed(Context context) {
         getFaceManager(context);
-        return ((BaseMiuiFaceManager) mWeakReferenceFaceManager.get()).isSupportScreenOnDelayed() && !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper();
+        return mWeakReferenceFaceManager.get().isSupportScreenOnDelayed() && !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper();
     }
 
     public static boolean isSupportTeeFaceunlock() {

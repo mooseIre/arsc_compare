@@ -8,7 +8,8 @@ import android.util.Log;
 import android.util.Slog;
 import android.view.MotionEvent;
 
-class MiuiGxzwTouchHelper {
+/* access modifiers changed from: package-private */
+public class MiuiGxzwTouchHelper {
     private final Context mContext;
     private final MiuiGxzwIconView mMiuiGxzwIconView;
     private final MiuiGxzwQuickOpenView mMiuiGxzwQuickOpenView;
@@ -26,20 +27,19 @@ class MiuiGxzwTouchHelper {
 
     public boolean onTouch(MotionEvent motionEvent) {
         String str;
-        MotionEvent motionEvent2 = motionEvent;
         int findFodTouchEventIndex = findFodTouchEventIndex(motionEvent);
-        float x = motionEvent2.getX(findFodTouchEventIndex);
-        float y = motionEvent2.getY(findFodTouchEventIndex);
-        float pressure = motionEvent2.getPressure(findFodTouchEventIndex) * 2048.0f;
-        float toolMinor = motionEvent2.getToolMinor(findFodTouchEventIndex);
-        float orientation = motionEvent2.getOrientation(findFodTouchEventIndex);
-        float touchMajor = motionEvent2.getTouchMajor(findFodTouchEventIndex);
-        float touchMinor = motionEvent2.getTouchMinor(findFodTouchEventIndex);
-        int caculateAction = caculateAction(motionEvent2, findFodTouchEventIndex);
+        float x = motionEvent.getX(findFodTouchEventIndex);
+        float y = motionEvent.getY(findFodTouchEventIndex);
+        float pressure = motionEvent.getPressure(findFodTouchEventIndex) * 2048.0f;
+        float toolMinor = motionEvent.getToolMinor(findFodTouchEventIndex);
+        float orientation = motionEvent.getOrientation(findFodTouchEventIndex);
+        float touchMajor = motionEvent.getTouchMajor(findFodTouchEventIndex);
+        float touchMinor = motionEvent.getTouchMinor(findFodTouchEventIndex);
+        int caculateAction = caculateAction(motionEvent, findFodTouchEventIndex);
         if (MiuiGxzwUtils.isLargeFod()) {
-            str = String.format("onTouch: originalAction = %s, action = %s, x = %f, y = %f, pressure = %f, area = %f, angle = %f, major = %f, minor = %f", new Object[]{MotionEvent.actionToString(motionEvent.getAction()), MotionEvent.actionToString(caculateAction), Float.valueOf(x), Float.valueOf(y), Float.valueOf(pressure), Float.valueOf(toolMinor), Float.valueOf(orientation), Float.valueOf(touchMajor), Float.valueOf(touchMinor)});
+            str = String.format("onTouch: originalAction = %s, action = %s, x = %f, y = %f, pressure = %f, area = %f, angle = %f, major = %f, minor = %f", MotionEvent.actionToString(motionEvent.getAction()), MotionEvent.actionToString(caculateAction), Float.valueOf(x), Float.valueOf(y), Float.valueOf(pressure), Float.valueOf(toolMinor), Float.valueOf(orientation), Float.valueOf(touchMajor), Float.valueOf(touchMinor));
         } else {
-            str = String.format("onTouch: originalAction = %s, action = %s, x = %f, y = %f, pressure = %f, area = %f", new Object[]{MotionEvent.actionToString(motionEvent.getAction()), MotionEvent.actionToString(caculateAction), Float.valueOf(x), Float.valueOf(y), Float.valueOf(pressure), Float.valueOf(toolMinor)});
+            str = String.format("onTouch: originalAction = %s, action = %s, x = %f, y = %f, pressure = %f, area = %f", MotionEvent.actionToString(motionEvent.getAction()), MotionEvent.actionToString(caculateAction), Float.valueOf(x), Float.valueOf(y), Float.valueOf(pressure), Float.valueOf(toolMinor));
         }
         if (motionEvent.getAction() != 2 || (toolMinor > 0.0f && !this.mTouchDown)) {
             Slog.i("MiuiGxzwTouchHelper", str);
@@ -134,10 +134,7 @@ class MiuiGxzwTouchHelper {
         } else {
             this.mValidRegionCount++;
         }
-        if (this.mValidRegionCount < 3) {
-            return true;
-        }
-        return false;
+        return this.mValidRegionCount < 3;
     }
 
     private void userActivity() {

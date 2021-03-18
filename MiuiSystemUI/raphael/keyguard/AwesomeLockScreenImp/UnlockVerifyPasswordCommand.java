@@ -1,6 +1,5 @@
 package com.android.keyguard.AwesomeLockScreenImp;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import miui.maml.ActionCommand;
@@ -14,10 +13,8 @@ public class UnlockVerifyPasswordCommand extends ActionCommand {
     private Expression mDelayExp;
     private boolean mEnable;
     private Expression mEnableExp;
-    /* access modifiers changed from: private */
-    public Expression mPasswordExp;
-    /* access modifiers changed from: private */
-    public CommandTriggers mTriggers;
+    private Expression mPasswordExp;
+    private CommandTriggers mTriggers;
 
     public UnlockVerifyPasswordCommand(ScreenElement screenElement, Element element) {
         super(screenElement);
@@ -40,6 +37,8 @@ public class UnlockVerifyPasswordCommand extends ActionCommand {
             Expression expression = this.mDelayExp;
             final int evaluate = (int) (expression == null ? 0.0d : expression.evaluate());
             new AsyncTask<Void, Void, Boolean>() {
+                /* class com.android.keyguard.AwesomeLockScreenImp.UnlockVerifyPasswordCommand.AnonymousClass1 */
+
                 /* access modifiers changed from: protected */
                 public Boolean doInBackground(Void... voidArr) {
                     try {
@@ -58,7 +57,7 @@ public class UnlockVerifyPasswordCommand extends ActionCommand {
             }.execute(new Void[0]);
             return;
         }
-        getRoot().unlocked((Intent) null, 0);
+        getRoot().unlocked(null, 0);
     }
 
     public void init() {

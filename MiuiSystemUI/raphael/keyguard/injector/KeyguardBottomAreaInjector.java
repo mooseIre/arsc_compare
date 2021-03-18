@@ -83,10 +83,7 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
                 throw null;
             }
         }
-        if (!this.mTouchAtKeyguardBottomArea || !isBottomAreaStartMoving(motionEvent)) {
-            return false;
-        }
-        return true;
+        return this.mTouchAtKeyguardBottomArea && isBottomAreaStartMoving(motionEvent);
     }
 
     private final boolean isBottomAreaStartMoving(MotionEvent motionEvent) {
@@ -102,6 +99,7 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
         return false;
     }
 
+    @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
     public void onWallpaperChange(boolean z) {
         KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomAreaView;
         if (keyguardBottomAreaView != null) {
@@ -112,6 +110,7 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
         }
     }
 
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onKeyguardBouncerChanged(boolean z) {
         if (z) {
             KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomAreaView;

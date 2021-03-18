@@ -28,27 +28,19 @@ import java.util.ArrayList;
 import java.util.Stack;
 
 public class PasswordTextView extends View {
-    private static char DOT = '•';
-    /* access modifiers changed from: private */
-    public Interpolator mAppearInterpolator;
-    /* access modifiers changed from: private */
-    public int mCharPadding;
-    /* access modifiers changed from: private */
-    public Stack<CharState> mCharPool;
-    /* access modifiers changed from: private */
-    public Interpolator mDisappearInterpolator;
-    /* access modifiers changed from: private */
-    public int mDotSize;
-    /* access modifiers changed from: private */
-    public final Paint mDrawPaint;
+    private static char DOT = 8226;
+    private Interpolator mAppearInterpolator;
+    private int mCharPadding;
+    private Stack<CharState> mCharPool;
+    private Interpolator mDisappearInterpolator;
+    private int mDotSize;
+    private final Paint mDrawPaint;
     private final int mGravity;
     private PowerManager mPM;
-    /* access modifiers changed from: private */
-    public boolean mShowPassword;
+    private boolean mShowPassword;
     private String mText;
     public TextChangeListener mTextChangeListener;
-    /* access modifiers changed from: private */
-    public ArrayList<CharState> mTextChars;
+    private ArrayList<CharState> mTextChars;
     private final int mTextHeightRaw;
     private UserActivityListener mUserActivityListener;
 
@@ -65,7 +57,7 @@ public class PasswordTextView extends View {
     }
 
     public PasswordTextView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
     public PasswordTextView(Context context, AttributeSet attributeSet) {
@@ -97,11 +89,11 @@ public class PasswordTextView extends View {
             this.mDrawPaint.setFlags(129);
             this.mDrawPaint.setTextAlign(Paint.Align.CENTER);
             this.mDrawPaint.setTypeface(Typeface.create(context.getString(17039925), 0));
-            this.mShowPassword = Settings.System.getInt(this.mContext.getContentResolver(), "show_password", 1) != 1 ? false : z;
-            this.mAppearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563662);
-            this.mDisappearInterpolator = AnimationUtils.loadInterpolator(this.mContext, 17563663);
-            AnimationUtils.loadInterpolator(this.mContext, 17563661);
-            this.mPM = (PowerManager) this.mContext.getSystemService("power");
+            this.mShowPassword = Settings.System.getInt(((View) this).mContext.getContentResolver(), "show_password", 1) != 1 ? false : z;
+            this.mAppearInterpolator = AnimationUtils.loadInterpolator(((View) this).mContext, 17563662);
+            this.mDisappearInterpolator = AnimationUtils.loadInterpolator(((View) this).mContext, 17563663);
+            AnimationUtils.loadInterpolator(((View) this).mContext, 17563661);
+            this.mPM = (PowerManager) ((View) this).mContext.getSystemService("power");
         } catch (Throwable th) {
             obtainStyledAttributes.recycle();
             throw th;
@@ -224,7 +216,8 @@ public class PasswordTextView extends View {
     }
 
     /* access modifiers changed from: private */
-    public CharSequence getTransformedText() {
+    /* access modifiers changed from: public */
+    private CharSequence getTransformedText() {
         int size = this.mTextChars.size();
         StringBuilder sb = new StringBuilder(size);
         for (int i = 0; i < size; i++) {
@@ -258,7 +251,7 @@ public class PasswordTextView extends View {
         while (i3 < size) {
             CharState charState = this.mTextChars.get(i3);
             if (z) {
-                charState.startRemoveAnimation(Math.min(((long) (i3 <= i2 ? i3 * 2 : i - (((i3 - i2) - 1) * 2))) * 40, 200), Math.min(40 * ((long) i), 200) + 160);
+                charState.startRemoveAnimation(Math.min(((long) (i3 <= i2 ? i3 * 2 : i - (((i3 - i2) - 1) * 2))) * 40, 200L), Math.min(40 * ((long) i), 200L) + 160);
                 charState.removeDotSwapCallbacks();
             } else {
                 this.mCharPool.push(charState);
@@ -275,7 +268,7 @@ public class PasswordTextView extends View {
 
     /* access modifiers changed from: package-private */
     public void sendAccessibilityEventTypeViewTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        if (!AccessibilityManager.getInstance(this.mContext).isEnabled()) {
+        if (!AccessibilityManager.getInstance(((View) this).mContext).isEnabled()) {
             return;
         }
         if (isFocused() || (isSelected() && isShown())) {
@@ -308,7 +301,8 @@ public class PasswordTextView extends View {
         accessibilityNodeInfo.setInputType(16);
     }
 
-    private class CharState {
+    /* access modifiers changed from: private */
+    public class CharState {
         float currentDotSizeFactor;
         float currentTextSizeFactor;
         float currentTextTranslationY;
@@ -336,6 +330,7 @@ public class PasswordTextView extends View {
         private CharState() {
             this.currentTextTranslationY = 1.0f;
             this.removeEndListener = new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass1 */
                 private boolean mCancelled;
 
                 public void onAnimationCancel(Animator animator) {
@@ -358,32 +353,44 @@ public class PasswordTextView extends View {
                 }
             };
             this.dotFinishListener = new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass2 */
+
                 public void onAnimationEnd(Animator animator) {
                     CharState.this.dotAnimator = null;
                 }
             };
             this.textFinishListener = new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass3 */
+
                 public void onAnimationEnd(Animator animator) {
                     CharState.this.textAnimator = null;
                 }
             };
             this.textTranslateFinishListener = new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass4 */
+
                 public void onAnimationEnd(Animator animator) {
                     CharState.this.textTranslateAnimator = null;
                 }
             };
             this.widthFinishListener = new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass5 */
+
                 public void onAnimationEnd(Animator animator) {
                     CharState.this.widthAnimator = null;
                 }
             };
             this.dotSizeUpdater = new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass6 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     CharState.this.currentDotSizeFactor = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     PasswordTextView.this.invalidate();
                 }
             };
             this.textSizeUpdater = new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass7 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     boolean isCharVisibleForA11y = CharState.this.isCharVisibleForA11y();
                     CharState charState = CharState.this;
@@ -392,29 +399,35 @@ public class PasswordTextView extends View {
                     if (isCharVisibleForA11y != CharState.this.isCharVisibleForA11y()) {
                         CharState charState2 = CharState.this;
                         charState2.currentTextSizeFactor = f;
-                        CharSequence access$500 = PasswordTextView.this.getTransformedText();
+                        CharSequence transformedText = PasswordTextView.this.getTransformedText();
                         CharState.this.currentTextSizeFactor = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                         int indexOf = PasswordTextView.this.mTextChars.indexOf(CharState.this);
                         if (indexOf >= 0) {
-                            PasswordTextView.this.sendAccessibilityEventTypeViewTextChanged(access$500, indexOf, 1, 1);
+                            PasswordTextView.this.sendAccessibilityEventTypeViewTextChanged(transformedText, indexOf, 1, 1);
                         }
                     }
                     PasswordTextView.this.invalidate();
                 }
             };
             this.textTranslationUpdater = new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass8 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     CharState.this.currentTextTranslationY = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     PasswordTextView.this.invalidate();
                 }
             };
             this.widthUpdater = new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass9 */
+
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
                     CharState.this.currentWidthFactor = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                     PasswordTextView.this.invalidate();
                 }
             };
             this.dotSwapperRunnable = new Runnable() {
+                /* class com.android.keyguard.PasswordTextView.CharState.AnonymousClass10 */
+
                 public void run() {
                     CharState.this.performSwap();
                     CharState.this.isDotSwapPending = false;
@@ -486,7 +499,8 @@ public class PasswordTextView extends View {
         }
 
         /* access modifiers changed from: private */
-        public void removeDotSwapCallbacks() {
+        /* access modifiers changed from: public */
+        private void removeDotSwapCallbacks() {
             PasswordTextView.this.removeCallbacks(this.dotSwapperRunnable);
             this.isDotSwapPending = false;
         }
@@ -503,14 +517,15 @@ public class PasswordTextView extends View {
         }
 
         /* access modifiers changed from: private */
-        public void performSwap() {
+        /* access modifiers changed from: public */
+        private void performSwap() {
             startTextDisappearAnimation(0);
             startDotAppearAnimation(30);
         }
 
         private void startWidthDisappearAnimation(long j) {
             cancelAnimator(this.widthAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentWidthFactor, 0.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.currentWidthFactor, 0.0f);
             this.widthAnimator = ofFloat;
             ofFloat.addUpdateListener(this.widthUpdater);
             this.widthAnimator.addListener(this.widthFinishListener);
@@ -523,7 +538,7 @@ public class PasswordTextView extends View {
 
         private void startTextDisappearAnimation(long j) {
             cancelAnimator(this.textAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentTextSizeFactor, 0.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.currentTextSizeFactor, 0.0f);
             this.textAnimator = ofFloat;
             ofFloat.addUpdateListener(this.textSizeUpdater);
             this.textAnimator.addListener(this.textFinishListener);
@@ -536,7 +551,7 @@ public class PasswordTextView extends View {
 
         private void startDotDisappearAnimation(long j) {
             cancelAnimator(this.dotAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentDotSizeFactor, 0.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.currentDotSizeFactor, 0.0f);
             ofFloat.addUpdateListener(this.dotSizeUpdater);
             ofFloat.addListener(this.dotFinishListener);
             ofFloat.setInterpolator(PasswordTextView.this.mDisappearInterpolator);
@@ -549,7 +564,7 @@ public class PasswordTextView extends View {
 
         private void startWidthAppearAnimation() {
             cancelAnimator(this.widthAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentWidthFactor, 1.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.currentWidthFactor, 1.0f);
             this.widthAnimator = ofFloat;
             ofFloat.addUpdateListener(this.widthUpdater);
             this.widthAnimator.addListener(this.widthFinishListener);
@@ -560,7 +575,7 @@ public class PasswordTextView extends View {
 
         private void startTextAppearAnimation() {
             cancelAnimator(this.textAnimator);
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentTextSizeFactor, 1.0f});
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(this.currentTextSizeFactor, 1.0f);
             this.textAnimator = ofFloat;
             ofFloat.addUpdateListener(this.textSizeUpdater);
             this.textAnimator.addListener(this.textFinishListener);
@@ -569,12 +584,12 @@ public class PasswordTextView extends View {
             this.textAnimator.start();
             this.textAnimationIsGrowing = true;
             if (this.textTranslateAnimator == null) {
-                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{1.0f, 0.0f});
+                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(1.0f, 0.0f);
                 this.textTranslateAnimator = ofFloat2;
                 ofFloat2.addUpdateListener(this.textTranslationUpdater);
                 this.textTranslateAnimator.addListener(this.textTranslateFinishListener);
                 this.textTranslateAnimator.setInterpolator(PasswordTextView.this.mAppearInterpolator);
-                this.textTranslateAnimator.setDuration(160);
+                this.textTranslateAnimator.setDuration(160L);
                 this.textTranslateAnimator.start();
             }
         }
@@ -582,21 +597,21 @@ public class PasswordTextView extends View {
         private void startDotAppearAnimation(long j) {
             cancelAnimator(this.dotAnimator);
             if (!PasswordTextView.this.mShowPassword) {
-                ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{this.currentDotSizeFactor, 1.5f});
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(this.currentDotSizeFactor, 1.5f);
                 ofFloat.addUpdateListener(this.dotSizeUpdater);
                 ofFloat.setInterpolator(PasswordTextView.this.mAppearInterpolator);
-                ofFloat.setDuration(160);
-                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(new float[]{1.5f, 1.0f});
+                ofFloat.setDuration(160L);
+                ValueAnimator ofFloat2 = ValueAnimator.ofFloat(1.5f, 1.0f);
                 ofFloat2.addUpdateListener(this.dotSizeUpdater);
-                ofFloat2.setDuration(160);
+                ofFloat2.setDuration(160L);
                 ofFloat2.addListener(this.dotFinishListener);
                 AnimatorSet animatorSet = new AnimatorSet();
-                animatorSet.playSequentially(new Animator[]{ofFloat, ofFloat2});
+                animatorSet.playSequentially(ofFloat, ofFloat2);
                 animatorSet.setStartDelay(j);
                 animatorSet.start();
                 this.dotAnimator = animatorSet;
             } else {
-                ValueAnimator ofFloat3 = ValueAnimator.ofFloat(new float[]{this.currentDotSizeFactor, 1.0f});
+                ValueAnimator ofFloat3 = ValueAnimator.ofFloat(this.currentDotSizeFactor, 1.0f);
                 ofFloat3.addUpdateListener(this.dotSizeUpdater);
                 ofFloat3.setDuration((long) ((1.0f - this.currentDotSizeFactor) * 160.0f));
                 ofFloat3.addListener(this.dotFinishListener);
@@ -608,7 +623,8 @@ public class PasswordTextView extends View {
         }
 
         /* access modifiers changed from: private */
-        public void cancelAnimator(Animator animator) {
+        /* access modifiers changed from: public */
+        private void cancelAnimator(Animator animator) {
             if (animator != null) {
                 animator.cancel();
             }
@@ -641,11 +657,7 @@ public class PasswordTextView extends View {
         }
 
         public boolean isCharVisibleForA11y() {
-            boolean z = this.textAnimator != null && this.textAnimationIsGrowing;
-            if (this.currentTextSizeFactor > 0.0f || z) {
-                return true;
-            }
-            return false;
+            return this.currentTextSizeFactor > 0.0f || (this.textAnimator != null && this.textAnimationIsGrowing);
         }
     }
 }

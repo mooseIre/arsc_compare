@@ -15,14 +15,14 @@ public class ScreenshotProvider extends BitmapProvider {
 
     public void reset() {
         ScreenshotProvider.super.reset();
-        if (Boolean.parseBoolean(this.mRoot.getRawAttr("__is_secure"))) {
-            Drawable lockWallpaperPreview = KeyguardWallpaperUtils.getLockWallpaperPreview(this.mRoot.getContext().mContext);
+        if (Boolean.parseBoolean(((BitmapProvider) this).mRoot.getRawAttr("__is_secure"))) {
+            Drawable lockWallpaperPreview = KeyguardWallpaperUtils.getLockWallpaperPreview(((BitmapProvider) this).mRoot.getContext().mContext);
             if (lockWallpaperPreview instanceof BitmapDrawable) {
-                this.mVersionedBitmap.setBitmap(((BitmapDrawable) lockWallpaperPreview).getBitmap());
+                ((BitmapProvider) this).mVersionedBitmap.setBitmap(((BitmapDrawable) lockWallpaperPreview).getBitmap());
                 return;
             }
             return;
         }
-        this.mVersionedBitmap.setBitmap(SurfaceControl.screenshot(new Rect(), this.mRoot.getScreenWidth(), this.mRoot.getScreenHeight(), false, 0));
+        ((BitmapProvider) this).mVersionedBitmap.setBitmap(SurfaceControl.screenshot(new Rect(), ((BitmapProvider) this).mRoot.getScreenWidth(), ((BitmapProvider) this).mRoot.getScreenHeight(), false, 0));
     }
 }

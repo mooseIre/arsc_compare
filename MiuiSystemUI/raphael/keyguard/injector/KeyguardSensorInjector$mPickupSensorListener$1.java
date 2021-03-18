@@ -19,6 +19,7 @@ public final class KeyguardSensorInjector$mPickupSensorListener$1 implements Sen
         Intrinsics.checkParameterIsNotNull(sensor, "sensor");
     }
 
+    /* JADX WARN: Incorrect args count in method signature: ()V */
     KeyguardSensorInjector$mPickupSensorListener$1(KeyguardSensorInjector keyguardSensorInjector) {
         this.this$0 = keyguardSensorInjector;
     }
@@ -35,20 +36,20 @@ public final class KeyguardSensorInjector$mPickupSensorListener$1 implements Sen
                 String tag = this.this$0.getTAG();
                 Slog.i(tag, this.this$0.SCREEN_OFF_REASON + ":put down");
                 this.this$0.getMPowerManager().goToSleep(SystemClock.uptimeMillis());
-                Display access$getMDisplay$p = this.this$0.mDisplay;
-                if (access$getMDisplay$p != null) {
-                    int state = access$getMDisplay$p.getState();
+                Display display = this.this$0.mDisplay;
+                if (display != null) {
+                    display.getState();
                 } else {
                     Intrinsics.throwNpe();
                     throw null;
                 }
             }
         } else {
-            Display access$getMDisplay$p2 = this.this$0.mDisplay;
-            if (access$getMDisplay$p2 == null) {
+            Display display2 = this.this$0.mDisplay;
+            if (display2 == null) {
                 Intrinsics.throwNpe();
                 throw null;
-            } else if (access$getMDisplay$p2.getState() != 2 || !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
+            } else if (display2.getState() != 2 || !((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
                 this.this$0.getMPowerManager().wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:PICK_UP");
                 this.this$0.mWakeupByPickUp = true;
                 String tag2 = this.this$0.getTAG();

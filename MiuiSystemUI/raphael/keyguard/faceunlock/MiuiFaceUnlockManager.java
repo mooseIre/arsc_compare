@@ -23,19 +23,17 @@ import miui.os.Build;
 
 public class MiuiFaceUnlockManager {
     private final ArrayList<WeakReference<FaceUnlockCallback>> mCallbacks = new ArrayList<>();
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private boolean mDisableLockScreenFaceUnlockAnim = false;
     private int mFaceDetectTypeForCamera = 0;
     private int mFaceFailConunt;
-    /* access modifiers changed from: private */
-    public boolean mFaceLockedOut;
+    private boolean mFaceLockedOut;
     private BaseMiuiFaceManager mFaceManager;
-    /* access modifiers changed from: private */
-    public FaceRemoveCallback mFaceRemoveCallback;
-    /* access modifiers changed from: private */
-    public boolean mFaceUnlockApplyForKeyguard;
+    private FaceRemoveCallback mFaceRemoveCallback;
+    private boolean mFaceUnlockApplyForKeyguard;
     ContentObserver mFaceUnlockApplyForKeyguardObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass1 */
+
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
@@ -43,12 +41,13 @@ public class MiuiFaceUnlockManager {
             if (Settings.Secure.getIntForUser(miuiFaceUnlockManager.mContext.getContentResolver(), "face_unlcok_apply_for_lock", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
                 z2 = true;
             }
-            boolean unused = miuiFaceUnlockManager.mFaceUnlockApplyForKeyguard = z2;
+            miuiFaceUnlockManager.mFaceUnlockApplyForKeyguard = z2;
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mFaceUnlockStartByNotificationScreenOn;
+    private boolean mFaceUnlockStartByNotificationScreenOn;
     ContentObserver mFaceUnlockStartByNotificationScreenOnObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass4 */
+
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
@@ -56,12 +55,13 @@ public class MiuiFaceUnlockManager {
             if (Settings.Secure.getIntForUser(miuiFaceUnlockManager.mContext.getContentResolver(), "face_unlock_by_notification_screen_on", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
                 z2 = true;
             }
-            boolean unused = miuiFaceUnlockManager.mFaceUnlockStartByNotificationScreenOn = z2;
+            miuiFaceUnlockManager.mFaceUnlockStartByNotificationScreenOn = z2;
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mFaceUnlockSuccessShowMessage;
+    private boolean mFaceUnlockSuccessShowMessage;
     ContentObserver mFaceUnlockSuccessShowMessageObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass3 */
+
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
@@ -69,12 +69,13 @@ public class MiuiFaceUnlockManager {
             if (Settings.Secure.getIntForUser(miuiFaceUnlockManager.mContext.getContentResolver(), "face_unlock_success_show_message", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
                 z2 = true;
             }
-            boolean unused = miuiFaceUnlockManager.mFaceUnlockSuccessShowMessage = z2;
+            miuiFaceUnlockManager.mFaceUnlockSuccessShowMessage = z2;
         }
     };
-    /* access modifiers changed from: private */
-    public boolean mFaceUnlockSuccessStayScreen;
+    private boolean mFaceUnlockSuccessStayScreen;
     ContentObserver mFaceUnlockSuccessStayScreenObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass2 */
+
         public void onChange(boolean z) {
             super.onChange(z);
             MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
@@ -82,50 +83,56 @@ public class MiuiFaceUnlockManager {
             if (Settings.Secure.getIntForUser(miuiFaceUnlockManager.mContext.getContentResolver(), "face_unlock_success_stay_screen", 0, KeyguardUpdateMonitor.getCurrentUser()) != 0) {
                 z2 = true;
             }
-            boolean unused = miuiFaceUnlockManager.mFaceUnlockSuccessStayScreen = z2;
+            miuiFaceUnlockManager.mFaceUnlockSuccessStayScreen = z2;
         }
     };
     private final ArrayList<WeakReference<MiuiKeyguardFaceUnlockView>> mFaceViewList = new ArrayList<>();
     protected HandlerThread mHandlerThread = new HandlerThread("face_unlock");
     protected boolean mHasFace;
-    /* access modifiers changed from: private */
-    public boolean mKeyguardShowing;
+    private boolean mKeyguardShowing;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass6 */
+
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onRegionChanged() {
             Log.d("miui_face", "onRegionChanged");
             if (Build.IS_INTERNATIONAL_BUILD && !MiuiFaceUnlockUtils.isHardwareDetected(MiuiFaceUnlockManager.this.mContext)) {
-                MiuiFaceUnlockManager.this.deleteFeature("0", (FaceRemoveCallback) null);
+                MiuiFaceUnlockManager.this.deleteFeature("0", null);
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onChargeAnimationShowingChanged(boolean z) {
             MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onStartedWakingUpWithReason(String str) {
             if (!"android.policy:POWER".equalsIgnoreCase(str) && !"com.android.systemui:PICK_UP".equalsIgnoreCase(str)) {
                 return;
             }
             if (!MiuiFaceUnlockManager.this.isFaceAuthEnabled() || MiuiFaceUnlockManager.this.isStayScreenWhenFaceUnlockSuccess() || !MiuiFaceUnlockUtils.isSupportScreenOnDelayed(MiuiFaceUnlockManager.this.mContext) || !MiuiFaceUnlockManager.this.isFaceUnlockInited()) {
                 MiuiFaceUnlockUtils.setScreenTurnOnDelayed(false);
-                long unused = MiuiFaceUnlockManager.this.mScreenOnDelay = 0;
+                MiuiFaceUnlockManager.this.mScreenOnDelay = 0;
                 return;
             }
             MiuiFaceUnlockUtils.setScreenTurnOnDelayed(true);
             Slog.d("miui_face", "face unlock when screen on delayed");
-            long unused2 = MiuiFaceUnlockManager.this.mScreenOnDelay = 550;
+            MiuiFaceUnlockManager.this.mScreenOnDelay = 550;
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
             if (i != 5 && i != 10001) {
                 MiuiFaceUnlockManager.this.mHasFace = true;
             }
         }
 
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
             if (biometricSourceType == BiometricSourceType.FACE) {
                 if (i == 7 || i == 9) {
-                    boolean unused = MiuiFaceUnlockManager.this.mFaceLockedOut = true;
+                    MiuiFaceUnlockManager.this.mFaceLockedOut = true;
                 }
                 MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
                 if (miuiFaceUnlockManager.mHasFace) {
@@ -135,16 +142,19 @@ public class MiuiFaceUnlockManager {
             }
         }
 
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onKeyguardShowingChanged(boolean z) {
             if (MiuiFaceUnlockManager.this.mKeyguardShowing != z && !z && MiuiFaceUnlockManager.this.mUpdateMonitorInjector.isFaceUnlock() && !MiuiFaceUnlockManager.this.isStayScreenWhenFaceUnlockSuccess()) {
                 Slog.d("miui_face", "face unlock success and keyguard dismiss");
             }
-            boolean unused = MiuiFaceUnlockManager.this.mKeyguardShowing = z;
+            MiuiFaceUnlockManager.this.mKeyguardShowing = z;
         }
     };
     FaceManager.RemovalCallback mRemovalCallback = new FaceManager.RemovalCallback() {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass5 */
+
         public void onRemovalError(Face face, int i, CharSequence charSequence) {
-            Slog.i("miui_face", "mRemovalCallback, onRemovalError code:" + i + " msg:" + charSequence + ";id=" + face.getBiometricId());
+            Slog.i("miui_face", "mRemovalCallback, onRemovalError code:" + i + " msg:" + ((Object) charSequence) + ";id=" + face.getBiometricId());
             if (MiuiFaceUnlockManager.this.mFaceRemoveCallback != null) {
                 MiuiFaceUnlockManager.this.mFaceRemoveCallback.onFailed();
             }
@@ -158,13 +168,10 @@ public class MiuiFaceUnlockManager {
             MiuiFaceUnlockUtils.resetFaceUnlockSettingValues(MiuiFaceUnlockManager.this.mContext);
         }
     };
-    /* access modifiers changed from: private */
-    public long mScreenOnDelay;
+    private long mScreenOnDelay;
     private volatile float mScrollProgress;
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitor mUpdateMonitor;
-    /* access modifiers changed from: private */
-    public KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
+    private KeyguardUpdateMonitor mUpdateMonitor;
+    private KeyguardUpdateMonitorInjector mUpdateMonitorInjector;
     private boolean mWakeupByNotification;
     protected Handler mWorkerHandler;
 
@@ -216,8 +223,8 @@ public class MiuiFaceUnlockManager {
 
     public void addFaceUnlockView(MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView) {
         if (!this.mFaceViewList.contains(miuiKeyguardFaceUnlockView)) {
-            this.mFaceViewList.add(new WeakReference(miuiKeyguardFaceUnlockView));
-            removeFaceUnlockView((MiuiKeyguardFaceUnlockView) null);
+            this.mFaceViewList.add(new WeakReference<>(miuiKeyguardFaceUnlockView));
+            removeFaceUnlockView(null);
         }
     }
 
@@ -227,7 +234,7 @@ public class MiuiFaceUnlockManager {
 
     public void updateFaceUnlockView() {
         for (int i = 0; i < this.mFaceViewList.size(); i++) {
-            MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = (MiuiKeyguardFaceUnlockView) this.mFaceViewList.get(i).get();
+            MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mFaceViewList.get(i).get();
             if (miuiKeyguardFaceUnlockView != null) {
                 miuiKeyguardFaceUnlockView.updateFaceUnlockIconStatus();
             }
@@ -235,16 +242,13 @@ public class MiuiFaceUnlockManager {
     }
 
     public void registerFaceUnlockCallback(FaceUnlockCallback faceUnlockCallback) {
-        int i = 0;
-        while (i < this.mCallbacks.size()) {
-            if (this.mCallbacks.get(i).get() != faceUnlockCallback) {
-                i++;
-            } else {
+        for (int i = 0; i < this.mCallbacks.size(); i++) {
+            if (this.mCallbacks.get(i).get() == faceUnlockCallback) {
                 return;
             }
         }
-        this.mCallbacks.add(new WeakReference(faceUnlockCallback));
-        removeFaceUnlockCallback((FaceUnlockCallback) null);
+        this.mCallbacks.add(new WeakReference<>(faceUnlockCallback));
+        removeFaceUnlockCallback(null);
         sendFaceUnlockUpdates(faceUnlockCallback);
     }
 
@@ -274,6 +278,8 @@ public class MiuiFaceUnlockManager {
     public void initAll() {
         if (!((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).userNeedsStrongAuth() && isFaceAuthEnabled()) {
             runOnFaceUnlockWorkerThread(new Runnable() {
+                /* class com.android.keyguard.faceunlock.$$Lambda$MiuiFaceUnlockManager$wfx1DSouqFU4mftb68411ywKxj0 */
+
                 public final void run() {
                     MiuiFaceUnlockManager.this.lambda$initAll$0$MiuiFaceUnlockManager();
                 }
@@ -363,13 +369,14 @@ public class MiuiFaceUnlockManager {
     }
 
     /* access modifiers changed from: private */
-    public void handleFaceDetectError() {
+    /* access modifiers changed from: public */
+    private void handleFaceDetectError() {
         int i = this.mFaceFailConunt + 1;
         this.mFaceFailConunt = i;
-        if (!this.mFaceLockedOut && i >= 5 && !MiuiFaceUnlockUtils.isSupportTeeFaceunlock()) {
+        if (!(this.mFaceLockedOut || i < 5 || MiuiFaceUnlockUtils.isSupportTeeFaceunlock())) {
             this.mUpdateMonitor.handleReeFaceLockout();
             for (int i2 = 0; i2 < this.mCallbacks.size(); i2++) {
-                ((FaceUnlockCallback) this.mCallbacks.get(i2).get()).onFaceAuthLocked();
+                this.mCallbacks.get(i2).get().onFaceAuthLocked();
             }
         }
     }

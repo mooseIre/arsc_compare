@@ -5,8 +5,9 @@ import android.os.Bundle;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: WallpaperCommandSender.kt */
-final class WallpaperCommandSender$sendWallpaperCommand$1 implements Runnable {
+public final class WallpaperCommandSender$sendWallpaperCommand$1 implements Runnable {
     final /* synthetic */ String $action;
     final /* synthetic */ Bundle $bundle;
     final /* synthetic */ WallpaperCommandSender this$0;
@@ -18,10 +19,10 @@ final class WallpaperCommandSender$sendWallpaperCommand$1 implements Runnable {
     }
 
     public final void run() {
-        WallpaperManager access$getMWallpaperManager$p = this.this$0.mWallpaperManager;
-        NotificationShadeWindowView access$getMNotificationShadeWindowView$p = this.this$0.mNotificationShadeWindowView;
-        if (access$getMNotificationShadeWindowView$p != null) {
-            access$getMWallpaperManager$p.sendWallpaperCommand(access$getMNotificationShadeWindowView$p.getWindowToken(), this.$action, 0, 0, 0, this.$bundle);
+        WallpaperManager wallpaperManager = this.this$0.mWallpaperManager;
+        NotificationShadeWindowView notificationShadeWindowView = this.this$0.mNotificationShadeWindowView;
+        if (notificationShadeWindowView != null) {
+            wallpaperManager.sendWallpaperCommand(notificationShadeWindowView.getWindowToken(), this.$action, 0, 0, 0, this.$bundle);
         } else {
             Intrinsics.throwNpe();
             throw null;

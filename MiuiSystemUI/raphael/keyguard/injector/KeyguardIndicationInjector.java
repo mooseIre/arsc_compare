@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -29,14 +28,10 @@ import com.miui.systemui.DeviceConfig;
 
 public class KeyguardIndicationInjector {
     private ObjectAnimator mBottomButtonClickAnimator;
-    /* access modifiers changed from: private */
-    public AsyncTask<?, ?, ?> mChargeAsyncTask;
-    /* access modifiers changed from: private */
-    public int mChargeClickCount = 0;
-    /* access modifiers changed from: private */
-    public long mChargeTextClickTime;
-    /* access modifiers changed from: private */
-    public final Context mContext;
+    private AsyncTask<?, ?, ?> mChargeAsyncTask;
+    private int mChargeClickCount = 0;
+    private long mChargeTextClickTime;
+    private final Context mContext;
     private Animation mIndicationFromBottomAni;
     private ValueAnimator mIndicationTVAlphaAni;
 
@@ -65,10 +60,8 @@ public class KeyguardIndicationInjector {
         }
     }
 
-    public void handleExitArrowAndTextAnimation(ImageView imageView, KeyguardIndicationTextView keyguardIndicationTextView, Animation.AnimationListener animationListener) {
-        final ImageView imageView2 = imageView;
-        KeyguardIndicationTextView keyguardIndicationTextView2 = keyguardIndicationTextView;
-        if (imageView2 != null && keyguardIndicationTextView2 != null) {
+    public void handleExitArrowAndTextAnimation(final ImageView imageView, KeyguardIndicationTextView keyguardIndicationTextView, Animation.AnimationListener animationListener) {
+        if (imageView != null && keyguardIndicationTextView != null) {
             Animation loadAnimation = AnimationUtils.loadAnimation(this.mContext, 17432577);
             Animation loadAnimation2 = AnimationUtils.loadAnimation(this.mContext, 17432576);
             TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 0.0f, 1, -2.0f);
@@ -84,6 +77,8 @@ public class KeyguardIndicationInjector {
             animationSet2.setDuration(j);
             animationSet2.setStartOffset(100);
             animationSet.setAnimationListener(new Animation.AnimationListener(this) {
+                /* class com.android.keyguard.injector.KeyguardIndicationInjector.AnonymousClass1 */
+
                 public void onAnimationRepeat(Animation animation) {
                 }
 
@@ -91,24 +86,26 @@ public class KeyguardIndicationInjector {
                 }
 
                 public void onAnimationEnd(Animation animation) {
-                    imageView2.setVisibility(4);
+                    imageView.setVisibility(4);
                 }
             });
             animationSet2.setAnimationListener(animationListener);
-            imageView2.startAnimation(animationSet);
-            keyguardIndicationTextView2.startAnimation(animationSet2);
+            imageView.startAnimation(animationSet);
+            keyguardIndicationTextView.startAnimation(animationSet2);
         }
     }
 
     public void setDoubleClickListener(final KeyguardIndicationTextView keyguardIndicationTextView) {
         keyguardIndicationTextView.setOnClickListener(new View.OnClickListener() {
+            /* class com.android.keyguard.injector.KeyguardIndicationInjector.AnonymousClass2 */
+
             public void onClick(View view) {
                 boolean isPreViewVisible = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isPreViewVisible();
                 boolean isPowerPluggedIn = ((KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class)).isPowerPluggedIn();
                 Log.i("KeyguardIndicationInjector", "onClick: mPowerPluggedIn " + isPowerPluggedIn + ";isMagazinePreViewVisibility=" + isPreViewVisible);
                 if (isPowerPluggedIn && !isPreViewVisible) {
                     if (KeyguardIndicationInjector.this.mChargeClickCount == 0) {
-                        long unused = KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
+                        KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
                     }
                     KeyguardIndicationInjector.access$008(KeyguardIndicationInjector.this);
                     Log.i("KeyguardIndicationInjector", "onClick: mChargeClickCount " + KeyguardIndicationInjector.this.mChargeClickCount + ";time=" + (System.currentTimeMillis() - KeyguardIndicationInjector.this.mChargeTextClickTime));
@@ -116,56 +113,50 @@ public class KeyguardIndicationInjector {
                         return;
                     }
                     if (System.currentTimeMillis() - KeyguardIndicationInjector.this.mChargeTextClickTime > 150 && System.currentTimeMillis() - KeyguardIndicationInjector.this.mChargeTextClickTime < 500) {
-                        int unused2 = KeyguardIndicationInjector.this.mChargeClickCount = 0;
-                        long unused3 = KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
+                        KeyguardIndicationInjector.this.mChargeClickCount = 0;
+                        KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
                         ((MiuiChargeController) Dependency.get(MiuiChargeController.class)).checkBatteryStatus(true);
                         keyguardIndicationTextView.setAlpha(0.0f);
                     } else if (System.currentTimeMillis() - KeyguardIndicationInjector.this.mChargeTextClickTime > 500) {
-                        int unused4 = KeyguardIndicationInjector.this.mChargeClickCount = 1;
-                        long unused5 = KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
+                        KeyguardIndicationInjector.this.mChargeClickCount = 1;
+                        KeyguardIndicationInjector.this.mChargeTextClickTime = System.currentTimeMillis();
                     } else {
-                        int unused6 = KeyguardIndicationInjector.this.mChargeClickCount = 0;
+                        KeyguardIndicationInjector.this.mChargeClickCount = 0;
                     }
                 }
             }
         });
     }
 
-    @SuppressLint({"StaticFieldLeak"})
-    public void updatePowerIndication(boolean z, KeyguardIndicationTextView keyguardIndicationTextView) {
-        Class cls = KeyguardIndicationController.class;
-        final boolean isPowerPluggedIn = ((KeyguardIndicationController) Dependency.get(cls)).isPowerPluggedIn();
-        final int batteryLevel = ((KeyguardIndicationController) Dependency.get(cls)).getBatteryLevel();
+    public void updatePowerIndication(final boolean z, final KeyguardIndicationTextView keyguardIndicationTextView) {
+        final boolean isPowerPluggedIn = ((KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class)).isPowerPluggedIn();
+        final int batteryLevel = ((KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class)).getBatteryLevel();
         if (this.mChargeAsyncTask == null && isPowerPluggedIn && keyguardIndicationTextView != null) {
-            final KeyguardIndicationTextView keyguardIndicationTextView2 = keyguardIndicationTextView;
-            final boolean z2 = z;
             this.mChargeAsyncTask = new AsyncTask<Void, Void, String>() {
-                /* access modifiers changed from: protected */
+                /* class com.android.keyguard.injector.KeyguardIndicationInjector.AnonymousClass3 */
+
                 public void onPreExecute() {
-                    keyguardIndicationTextView2.setAlpha(0.0f);
+                    keyguardIndicationTextView.setAlpha(0.0f);
                 }
 
-                /* access modifiers changed from: protected */
                 public String doInBackground(Void... voidArr) {
                     return ChargeUtils.getChargingHintText(KeyguardIndicationInjector.this.mContext, isPowerPluggedIn, batteryLevel);
                 }
 
-                /* access modifiers changed from: protected */
                 public void onPostExecute(String str) {
-                    Log.i("KeyguardIndicationInjector", "handleChargeTextAnimation: " + z2 + ";powerPluggedIn=" + isPowerPluggedIn);
-                    if (!z2) {
-                        KeyguardIndicationInjector.this.handlePowerIndicationAnimation(keyguardIndicationTextView2);
+                    Log.i("KeyguardIndicationInjector", "handleChargeTextAnimation: " + z + ";powerPluggedIn=" + isPowerPluggedIn);
+                    if (!z) {
+                        KeyguardIndicationInjector.this.handlePowerIndicationAnimation(keyguardIndicationTextView);
                     } else {
-                        keyguardIndicationTextView2.setAlpha(1.0f);
+                        keyguardIndicationTextView.setAlpha(1.0f);
                     }
                     ((KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class)).showMiuiPowerIndication(str);
-                    AsyncTask unused = KeyguardIndicationInjector.this.mChargeAsyncTask = null;
+                    KeyguardIndicationInjector.this.mChargeAsyncTask = null;
                 }
 
-                /* access modifiers changed from: protected */
                 public void onCancelled() {
-                    keyguardIndicationTextView2.setAlpha(1.0f);
-                    AsyncTask unused = KeyguardIndicationInjector.this.mChargeAsyncTask = null;
+                    keyguardIndicationTextView.setAlpha(1.0f);
+                    KeyguardIndicationInjector.this.mChargeAsyncTask = null;
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
         }
@@ -180,15 +171,17 @@ public class KeyguardIndicationInjector {
         if (animation != null && animation.hasStarted()) {
             this.mIndicationFromBottomAni.cancel();
         }
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{0.0f, 1.0f});
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.mIndicationTVAlphaAni = ofFloat;
         ofFloat.setInterpolator(new DecelerateInterpolator());
         this.mIndicationTVAlphaAni.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.injector.$$Lambda$KeyguardIndicationInjector$rvtW3oq3pC4W0s7s7NwIVUmWbuE */
+
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                KeyguardIndicationTextView.this.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
+                KeyguardIndicationInjector.lambda$handlePowerIndicationAnimation$0(KeyguardIndicationTextView.this, valueAnimator);
             }
         });
-        this.mIndicationTVAlphaAni.setDuration(500).start();
+        this.mIndicationTVAlphaAni.setDuration(500L).start();
         TranslateAnimation translateAnimation = new TranslateAnimation(1, 0.0f, 1, 0.0f, 1, 2.0f, 1, 0.0f);
         this.mIndicationFromBottomAni = translateAnimation;
         translateAnimation.setDuration(500);
@@ -207,10 +200,12 @@ public class KeyguardIndicationInjector {
                 textView.setAlpha(0.0f);
                 return;
             }
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, View.ALPHA, new float[]{0.0f, 1.0f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat(textView, View.ALPHA, 0.0f, 1.0f);
             this.mBottomButtonClickAnimator = ofFloat;
             ofFloat.setInterpolator(Ease$Cubic.easeInOut);
             this.mBottomButtonClickAnimator.addListener(new AnimatorListenerAdapter(this) {
+                /* class com.android.keyguard.injector.KeyguardIndicationInjector.AnonymousClass4 */
+
                 public void onAnimationStart(Animator animator) {
                     textView.setVisibility(0);
                 }
@@ -225,7 +220,7 @@ public class KeyguardIndicationInjector {
                     textView.setAlpha(1.0f);
                 }
             });
-            this.mBottomButtonClickAnimator.setDuration(800);
+            this.mBottomButtonClickAnimator.setDuration(800L);
             this.mBottomButtonClickAnimator.start();
         }
     }

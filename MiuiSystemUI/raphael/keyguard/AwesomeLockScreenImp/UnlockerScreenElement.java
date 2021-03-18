@@ -20,7 +20,7 @@ public class UnlockerScreenElement extends AdvancedSlider {
         this.mAlwaysShow = Boolean.parseBoolean(element.getAttribute("alwaysShow"));
         this.mNoUnlock = Boolean.parseBoolean(element.getAttribute("noUnlock"));
         this.mDelay = Expression.build(getVariables(), element.getAttribute("delay"));
-        this.mIsHaptic = this.mIsHaptic || element.getAttribute("haptic").isEmpty();
+        ((AdvancedSlider) this).mIsHaptic = ((AdvancedSlider) this).mIsHaptic || element.getAttribute("haptic").isEmpty();
     }
 
     public void finish() {
@@ -53,7 +53,7 @@ public class UnlockerScreenElement extends AdvancedSlider {
     }
 
     private LockScreenRoot getLockScreenRoot() {
-        return this.mRoot;
+        return ((AdvancedSlider) this).mRoot;
     }
 
     /* access modifiers changed from: protected */

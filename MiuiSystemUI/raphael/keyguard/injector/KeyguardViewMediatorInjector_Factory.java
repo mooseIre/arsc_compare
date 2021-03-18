@@ -17,6 +17,7 @@ public final class KeyguardViewMediatorInjector_Factory implements Factory<Keygu
         this.mStatusBarKeyguardViewManagerProvider = provider3;
     }
 
+    @Override // javax.inject.Provider
     public KeyguardViewMediatorInjector get() {
         return provideInstance(this.mContextProvider, this.mBroadcastDispatcherProvider, this.mStatusBarKeyguardViewManagerProvider);
     }

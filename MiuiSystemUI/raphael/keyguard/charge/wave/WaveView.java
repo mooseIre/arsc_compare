@@ -27,6 +27,8 @@ public class WaveView extends View {
     private float mDamp = 0.95f;
     private int mExtraHeightBetweenWaves = 10;
     private Handler mHandler = new Handler() {
+        /* class com.android.keyguard.charge.wave.WaveView.AnonymousClass1 */
+
         public void handleMessage(Message message) {
             super.handleMessage(message);
             if (message.what == 10001) {
@@ -38,10 +40,8 @@ public class WaveView extends View {
     private int mProgress = 45;
     private Random mRandom = new Random();
     private int mWaterSpeed = -5;
-    /* access modifiers changed from: private */
-    public int mWave1Dx;
-    /* access modifiers changed from: private */
-    public int mWave2Dx;
+    private int mWave1Dx;
+    private int mWave2Dx;
     private AnimatorSet mWaveAnimatorSet = new AnimatorSet();
     private int[] mWaveEndColor = {Color.parseColor("#f1691e"), Color.parseColor("#1aabff"), Color.parseColor("#1ef1b8")};
     private int mWaveHeight1 = 28;
@@ -56,8 +56,7 @@ public class WaveView extends View {
     private int mWaveViewWidth = 2048;
     private int mWaveXOffset = 0;
     private int mWaveY = 0;
-    /* access modifiers changed from: private */
-    public float mWaveYPercent = -0.1f;
+    private float mWaveYPercent = -0.1f;
 
     public WaveView(Context context) {
         super(context);
@@ -173,34 +172,40 @@ public class WaveView extends View {
     }
 
     public void startAnim() {
-        ValueAnimator ofFloat = ValueAnimator.ofFloat(new float[]{-0.1f, 1.0f});
-        ofFloat.setDuration(2000);
+        ValueAnimator ofFloat = ValueAnimator.ofFloat(-0.1f, 1.0f);
+        ofFloat.setDuration(2000L);
         ofFloat.setInterpolator(new ExponentialEaseOutInterpolator());
         ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.charge.wave.WaveView.AnonymousClass2 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                float unused = WaveView.this.mWaveYPercent = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+                WaveView.this.mWaveYPercent = ((Float) valueAnimator.getAnimatedValue()).floatValue();
                 WaveView.this.postInvalidate();
             }
         });
-        ValueAnimator ofInt = ValueAnimator.ofInt(new int[]{0, this.mWaveLength1});
-        ofInt.setDuration(1600);
+        ValueAnimator ofInt = ValueAnimator.ofInt(0, this.mWaveLength1);
+        ofInt.setDuration(1600L);
         ofInt.setRepeatCount(-1);
         ofInt.setInterpolator(new LinearInterpolator());
         ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.charge.wave.WaveView.AnonymousClass3 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 if (Math.abs(((Integer) valueAnimator.getAnimatedValue()).intValue() - WaveView.this.mWave1Dx) > 1) {
-                    int unused = WaveView.this.mWave1Dx = ((Integer) valueAnimator.getAnimatedValue()).intValue();
+                    WaveView.this.mWave1Dx = ((Integer) valueAnimator.getAnimatedValue()).intValue();
                     WaveView.this.postInvalidate();
                 }
             }
         });
-        ValueAnimator ofInt2 = ValueAnimator.ofInt(new int[]{0, this.mWaveLength2});
-        ofInt2.setDuration(2400);
+        ValueAnimator ofInt2 = ValueAnimator.ofInt(0, this.mWaveLength2);
+        ofInt2.setDuration(2400L);
         ofInt2.setRepeatCount(-1);
         ofInt2.setInterpolator(new LinearInterpolator());
         ofInt2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            /* class com.android.keyguard.charge.wave.WaveView.AnonymousClass4 */
+
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                int unused = WaveView.this.mWave2Dx = ((Integer) valueAnimator.getAnimatedValue()).intValue();
+                WaveView.this.mWave2Dx = ((Integer) valueAnimator.getAnimatedValue()).intValue();
             }
         });
         this.mWaveAnimatorSet.setStartDelay(400);
@@ -225,7 +230,8 @@ public class WaveView extends View {
         resetState();
     }
 
-    private class Bubble {
+    /* access modifiers changed from: private */
+    public class Bubble {
         float Vx;
         float Vy;
         float alpha;

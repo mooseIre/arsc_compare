@@ -43,30 +43,25 @@ import java.util.concurrent.TimeUnit;
 import miui.view.animation.SineEaseInOutInterpolator;
 
 public class KeyguardPatternView extends MiuiKeyguardPasswordView implements KeyguardSecurityView, AppearAnimationCreator<MiuiLockPatternView.CellState> {
-    /* access modifiers changed from: private */
-    public boolean mAppearAnimating;
+    private boolean mAppearAnimating;
     private final AppearAnimationUtils mAppearAnimationUtils;
-    /* access modifiers changed from: private */
-    public Runnable mCancelPatternRunnable;
+    private Runnable mCancelPatternRunnable;
     private ViewGroup mContainer;
     private CountDownTimer mCountdownTimer;
-    /* access modifiers changed from: private */
-    public boolean mDisappearAnimatePending;
+    private boolean mDisappearAnimatePending;
     private final DisappearAnimationUtils mDisappearAnimationUtils;
     private final DisappearAnimationUtils mDisappearAnimationUtilsLocked;
-    /* access modifiers changed from: private */
-    public Runnable mDisappearFinishRunnable;
+    private Runnable mDisappearFinishRunnable;
     private int mDisappearYTranslation;
     private long mLastPokeTime;
     private final Rect mLockPatternScreenBounds;
-    /* access modifiers changed from: private */
-    public MiuiLockPatternView mLockPatternView;
-    /* access modifiers changed from: private */
-    public AsyncTask<?, ?, ?> mPendingLockCheck;
+    private MiuiLockPatternView mLockPatternView;
+    private AsyncTask<?, ?, ?> mPendingLockCheck;
     private final int mScreenHeight;
     private final Rect mTempRect;
     private final int[] mTmpPosition;
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public boolean disallowInterceptTouch(MotionEvent motionEvent) {
         return true;
     }
@@ -75,15 +70,15 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         return false;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public boolean needsInput() {
         return false;
     }
 
     public KeyguardPatternView(Context context) {
-        this(context, (AttributeSet) null);
+        this(context, null);
     }
 
-    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public KeyguardPatternView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mTmpPosition = new int[2];
@@ -92,32 +87,37 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         this.mCountdownTimer = null;
         this.mLastPokeTime = -7000;
         this.mCancelPatternRunnable = new Runnable() {
+            /* class com.android.keyguard.KeyguardPatternView.AnonymousClass1 */
+
             public void run() {
                 KeyguardPatternView.this.mLockPatternView.clearPattern();
             }
         };
-        this.mAppearAnimationUtils = new AppearAnimationUtils(context, 220, 1.5f, 2.0f, AnimationUtils.loadInterpolator(this.mContext, 17563662));
-        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context, 125, 1.2f, 0.6f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
-        this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context, 187, 1.2f, 0.6f, AnimationUtils.loadInterpolator(this.mContext, 17563663));
+        this.mAppearAnimationUtils = new AppearAnimationUtils(context, 220, 1.5f, 2.0f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563662));
+        this.mDisappearAnimationUtils = new DisappearAnimationUtils(context, 125, 1.2f, 0.6f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
+        this.mDisappearAnimationUtilsLocked = new DisappearAnimationUtils(context, 187, 1.2f, 0.6f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
         this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0012R$dimen.miui_disappear_y_translation);
         this.mScreenHeight = context.getResources().getConfiguration().screenHeightDp;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void setKeyguardCallback(KeyguardSecurityCallback keyguardSecurityCallback) {
         this.mCallback = keyguardSecurityCallback;
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void setLockPatternUtils(LockPatternUtils lockPatternUtils) {
         this.mLockPatternUtils = lockPatternUtils;
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mContainer = (ViewGroup) findViewById(C0015R$id.container);
         LockPatternUtils lockPatternUtils = this.mLockPatternUtils;
         if (lockPatternUtils == null) {
-            lockPatternUtils = new LockPatternUtils(this.mContext);
+            lockPatternUtils = new LockPatternUtils(((LinearLayout) this).mContext);
         }
         this.mLockPatternUtils = lockPatternUtils;
         MiuiLockPatternView miuiLockPatternView = (MiuiLockPatternView) findViewById(C0015R$id.lockPatternView);
@@ -162,6 +162,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         rect.set(iArr[0] - 40, iArr[1] - 40, iArr[0] + this.mLockPatternView.getWidth() + 40, this.mTmpPosition[1] + this.mLockPatternView.getHeight() + 40);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void reset() {
         this.mLockPatternView.setInStealthMode(!this.mLockPatternUtils.isVisiblePatternEnabled(KeyguardUpdateMonitor.getCurrentUser()));
         this.mLockPatternView.enableInput();
@@ -174,23 +175,27 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     private class UnlockPatternListener implements MiuiLockPatternView.OnPatternListener {
+        @Override // com.android.keyguard.MiuiLockPatternView.OnPatternListener
         public void onPatternCleared() {
         }
 
         private UnlockPatternListener() {
         }
 
+        @Override // com.android.keyguard.MiuiLockPatternView.OnPatternListener
         public void onPatternStart() {
             KeyguardPatternView.this.mLockPatternView.removeCallbacks(KeyguardPatternView.this.mCancelPatternRunnable);
         }
 
+        @Override // com.android.keyguard.MiuiLockPatternView.OnPatternListener
         public void onPatternCellAdded(List<LockPatternView.Cell> list) {
             KeyguardPatternView.this.mCallback.userActivity();
         }
 
+        @Override // com.android.keyguard.MiuiLockPatternView.OnPatternListener
         public void onPatternDetected(List<LockPatternView.Cell> list) {
             KeyguardPatternView.this.mLockPatternView.disableInput();
-            int i = 0;
+            final int i = 0;
             if (KeyguardPatternView.this.mPendingLockCheck != null) {
                 KeyguardPatternView.this.mPendingLockCheck.cancel(false);
             }
@@ -204,36 +209,43 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
                 UserSwitcherController userSwitcherController = (UserSwitcherController) Dependency.get(UserSwitcherController.class);
                 i = UserSwitcherController.getSecondUser();
             }
-            final int i2 = i;
-            if (LatencyTracker.isEnabled(KeyguardPatternView.this.mContext)) {
-                LatencyTracker.getInstance(KeyguardPatternView.this.mContext).onActionStart(3);
-                LatencyTracker.getInstance(KeyguardPatternView.this.mContext).onActionStart(4);
+            if (LatencyTracker.isEnabled(((LinearLayout) KeyguardPatternView.this).mContext)) {
+                LatencyTracker.getInstance(((LinearLayout) KeyguardPatternView.this).mContext).onActionStart(3);
+                LatencyTracker.getInstance(((LinearLayout) KeyguardPatternView.this).mContext).onActionStart(4);
             }
             final long currentTimeMillis = System.currentTimeMillis();
             KeyguardPatternView keyguardPatternView = KeyguardPatternView.this;
-            AsyncTask unused = keyguardPatternView.mPendingLockCheck = MiuiLockPatternChecker.checkCredentialForUsers(keyguardPatternView.mLockPatternUtils, LockscreenCredential.createPattern(list), currentUser, i2, KeyguardPatternView.this.mContext, new OnCheckForUsersCallback() {
+            keyguardPatternView.mPendingLockCheck = MiuiLockPatternChecker.checkCredentialForUsers(keyguardPatternView.mLockPatternUtils, LockscreenCredential.createPattern(list), currentUser, i, ((LinearLayout) KeyguardPatternView.this).mContext, new OnCheckForUsersCallback() {
+                /* class com.android.keyguard.KeyguardPatternView.UnlockPatternListener.AnonymousClass1 */
+
+                @Override // com.android.keyguard.OnCheckForUsersCallback
                 public void onEarlyMatched() {
                     Slog.i("miui_keyguard_password", "pattern unlock duration " + (System.currentTimeMillis() - currentTimeMillis));
                     UnlockPatternListener.this.handleUserCheckMatched(currentUser);
                 }
 
+                @Override // com.android.keyguard.OnCheckForUsersCallback
                 public void onChecked(boolean z, int i, int i2) {
-                    if (LatencyTracker.isEnabled(KeyguardPatternView.this.mContext)) {
-                        LatencyTracker.getInstance(KeyguardPatternView.this.mContext).onActionEnd(4);
+                    if (LatencyTracker.isEnabled(((LinearLayout) KeyguardPatternView.this).mContext)) {
+                        LatencyTracker.getInstance(((LinearLayout) KeyguardPatternView.this).mContext).onActionEnd(4);
                     }
                     KeyguardPatternView.this.mLockPatternView.enableInput();
-                    AsyncTask unused = KeyguardPatternView.this.mPendingLockCheck = null;
+                    KeyguardPatternView.this.mPendingLockCheck = null;
                     if (!z) {
                         UnlockPatternListener.this.onPatternChecked(i, false, i2, true);
                     }
                 }
             }, new OnCheckForUsersCallback() {
+                /* class com.android.keyguard.KeyguardPatternView.UnlockPatternListener.AnonymousClass2 */
+
+                @Override // com.android.keyguard.OnCheckForUsersCallback
                 public void onChecked(boolean z, int i, int i2) {
                 }
 
+                @Override // com.android.keyguard.OnCheckForUsersCallback
                 public void onEarlyMatched() {
                     Slog.i("miui_keyguard_password", "pattern unlock duration other user" + (System.currentTimeMillis() - currentTimeMillis));
-                    UnlockPatternListener.this.handleUserCheckMatched(i2);
+                    UnlockPatternListener.this.handleUserCheckMatched(i);
                 }
             });
             if (list.size() > 2) {
@@ -242,15 +254,17 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         }
 
         /* access modifiers changed from: private */
-        public void handleUserCheckMatched(int i) {
-            if (LatencyTracker.isEnabled(KeyguardPatternView.this.mContext)) {
-                LatencyTracker.getInstance(KeyguardPatternView.this.mContext).onActionEnd(3);
+        /* access modifiers changed from: public */
+        private void handleUserCheckMatched(int i) {
+            if (LatencyTracker.isEnabled(((LinearLayout) KeyguardPatternView.this).mContext)) {
+                LatencyTracker.getInstance(((LinearLayout) KeyguardPatternView.this).mContext).onActionEnd(3);
             }
             onPatternChecked(i, true, 0, true);
         }
 
         /* access modifiers changed from: private */
-        public void onPatternChecked(int i, boolean z, int i2, boolean z2) {
+        /* access modifiers changed from: public */
+        private void onPatternChecked(int i, boolean z, int i2, boolean z2) {
             if (!z) {
                 KeyguardPatternView.this.mLockPatternView.setDisplayMode(MiuiLockPatternView.DisplayMode.WRONG);
                 if (z2) {
@@ -277,6 +291,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleWrongPassword() {
         this.mLockPatternView.setDisplayMode(MiuiLockPatternView.DisplayMode.WRONG);
         this.mVibrator.vibrate(150);
@@ -284,12 +299,15 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     /* access modifiers changed from: private */
-    public void handleAttemptLockout(long j) {
+    /* access modifiers changed from: public */
+    private void handleAttemptLockout(long j) {
         this.mLockPatternView.clearPattern();
         this.mLockPatternView.setEnabled(false);
         long elapsedRealtime = j - SystemClock.elapsedRealtime();
         this.mCallback.handleAttemptLockout(elapsedRealtime);
         this.mCountdownTimer = new CountDownTimer(((long) Math.ceil(((double) elapsedRealtime) / 1000.0d)) * 1000, 1000) {
+            /* class com.android.keyguard.KeyguardPatternView.AnonymousClass2 */
+
             public void onTick(long j) {
             }
 
@@ -299,6 +317,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         }.start();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void onPause() {
         CountDownTimer countDownTimer = this.mCountdownTimer;
         if (countDownTimer != null) {
@@ -312,22 +331,24 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void onResume(int i) {
         reset();
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void showPromptReason(int i) {
         if (i != 0) {
             String promptReasonString = getPromptReasonString(i);
             if (!TextUtils.isEmpty(promptReasonString)) {
-                this.mKeyguardBouncerMessageView.showMessage(this.mContext.getResources().getString(C0021R$string.input_password_hint_text), promptReasonString);
+                this.mKeyguardBouncerMessageView.showMessage(((LinearLayout) this).mContext.getResources().getString(C0021R$string.input_password_hint_text), promptReasonString);
             }
         }
     }
 
     /* access modifiers changed from: protected */
     public String getPromptReasonString(int i) {
-        Resources resources = this.mContext.getResources();
+        Resources resources = ((LinearLayout) this).mContext.getResources();
         if (i == 0) {
             return "";
         }
@@ -336,7 +357,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
-            return resources.getQuantityString(C0019R$plurals.input_pattern_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), new Object[]{Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout))});
+            return resources.getQuantityString(C0019R$plurals.input_pattern_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout)));
         } else if (i == 3) {
             return resources.getString(C0021R$string.kg_prompt_reason_device_admin);
         } else {
@@ -347,14 +368,17 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         }
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void showMessage(String str, String str2, int i) {
         this.mKeyguardBouncerMessageView.showMessage(str, str2, i);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void applyHintAnimation(long j) {
         this.mKeyguardBouncerMessageView.applyHintAnimation(j);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public void startAppearAnimation() {
         this.mKeyguardBouncerMessageView.setVisibility(0);
         enableClipping(false);
@@ -364,11 +388,13 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         setTranslationY((float) (this.mScreenHeight / 2));
         AppearAnimationUtils.startTranslationYAnimation(this, 0, 500, 0.0f, new PhysicBasedInterpolator(0.99f, 0.3f));
         this.mAppearAnimationUtils.startAnimation2d(this.mLockPatternView.getCellStates(), new Runnable() {
+            /* class com.android.keyguard.KeyguardPatternView.AnonymousClass3 */
+
             public void run() {
                 KeyguardPatternView.this.enableClipping(true);
-                boolean unused = KeyguardPatternView.this.mAppearAnimating = false;
+                KeyguardPatternView.this.mAppearAnimating = false;
                 if (KeyguardPatternView.this.mDisappearAnimatePending) {
-                    boolean unused2 = KeyguardPatternView.this.mDisappearAnimatePending = false;
+                    KeyguardPatternView.this.mDisappearAnimatePending = false;
                     KeyguardPatternView keyguardPatternView = KeyguardPatternView.this;
                     keyguardPatternView.startDisappearAnimation(keyguardPatternView.mDisappearFinishRunnable);
                 }
@@ -376,6 +402,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         }, this);
     }
 
+    @Override // com.android.keyguard.KeyguardSecurityView
     public boolean startDisappearAnimation(final Runnable runnable) {
         DisappearAnimationUtils disappearAnimationUtils;
         if (this.mAppearAnimating) {
@@ -394,6 +421,8 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             disappearAnimationUtils = this.mDisappearAnimationUtils;
         }
         disappearAnimationUtils.startAnimation2d(this.mLockPatternView.getCellStates(), new Runnable() {
+            /* class com.android.keyguard.KeyguardPatternView.AnonymousClass4 */
+
             public void run() {
                 Log.d("SecurityPatternView", "startDisappearAnimation finish");
                 KeyguardPatternView.this.enableClipping(true);
@@ -408,7 +437,8 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     /* access modifiers changed from: private */
-    public void enableClipping(boolean z) {
+    /* access modifiers changed from: public */
+    private void enableClipping(boolean z) {
         setClipChildren(z);
         setClipToPadding(z);
     }
@@ -421,6 +451,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationFontScaleChanged() {
         float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.miui_keyguard_view_eca_text_size);
         this.mEmergencyButton.setTextSize(0, dimensionPixelSize);
@@ -428,6 +459,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationOrientationChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
         layoutParams.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_bouncer_message_view_margin_top);
@@ -439,6 +471,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     }
 
     /* access modifiers changed from: protected */
+    @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationSmallWidthChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
         layoutParams.width = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pattern_layout_width);

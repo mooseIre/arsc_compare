@@ -132,9 +132,8 @@ public class KeyguardWallpaperUtils {
                     int i2 = point.y;
                     if (i > i2) {
                         Log.e("LockWallpaper", "Wrong display metrics for width = " + i + " and height = " + i2);
-                        int i3 = i2;
                         i2 = i;
-                        i = i3;
+                        i = i2;
                     }
                     Bitmap decodeBitmap = BitmapFactory.decodeBitmap(file2.getAbsolutePath(), i, i2, false);
                     if (decodeBitmap != null) {
@@ -150,11 +149,9 @@ public class KeyguardWallpaperUtils {
                 if (sLockWallpaperCache == null) {
                     Slog.i("KeyguardWallpaperUtils", "getLockWallpaperCache empty");
                 }
-                Pair<File, Drawable> pair = sLockWallpaperCache;
-                return pair;
+                return sLockWallpaperCache;
             }
-            Pair<File, Drawable> pair2 = sLockWallpaperCache;
-            return pair2;
+            return sLockWallpaperCache;
         }
     }
 }

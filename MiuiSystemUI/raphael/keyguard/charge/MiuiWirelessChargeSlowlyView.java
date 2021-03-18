@@ -25,16 +25,13 @@ import com.android.systemui.C0022R$style;
 import java.io.IOException;
 
 public class MiuiWirelessChargeSlowlyView {
-    /* access modifiers changed from: private */
-    public Context mContext;
+    private Context mContext;
     private AlertDialog mDialog;
-    /* access modifiers changed from: private */
-    public Handler mHandler = new Handler();
-    /* access modifiers changed from: private */
-    public ImageView mImageView;
+    private Handler mHandler = new Handler();
+    private ImageView mImageView;
     private TextureView.SurfaceTextureListener mSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
-        /* access modifiers changed from: private */
-        public MediaPlayer mMediaPlayer;
+        /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2 */
+        private MediaPlayer mMediaPlayer;
 
         public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int i, int i2) {
         }
@@ -44,8 +41,12 @@ public class MiuiWirelessChargeSlowlyView {
             MediaPlayer mediaPlayer = new MediaPlayer();
             this.mMediaPlayer = mediaPlayer;
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2.AnonymousClass1 */
+
                 public void onPrepared(MediaPlayer mediaPlayer) {
                     MiuiWirelessChargeSlowlyView.this.mHandler.postDelayed(new Runnable() {
+                        /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2.AnonymousClass1.AnonymousClass1 */
+
                         public void run() {
                             if (AnonymousClass2.this.mMediaPlayer != null && !AnonymousClass2.this.mMediaPlayer.isPlaying()) {
                                 AnonymousClass2.this.mMediaPlayer.start();
@@ -55,13 +56,19 @@ public class MiuiWirelessChargeSlowlyView {
                 }
             });
             this.mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2.AnonymousClass2 */
+
                 public void onCompletion(MediaPlayer mediaPlayer) {
                     MiuiWirelessChargeSlowlyView.this.mHandler.postDelayed(new Runnable() {
+                        /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2.AnonymousClass2.AnonymousClass1 */
+
                         public void run() {
                             MiuiWirelessChargeSlowlyView.this.mImageView.setVisibility(0);
                         }
                     }, 1000);
                     MiuiWirelessChargeSlowlyView.this.mHandler.postDelayed(new Runnable() {
+                        /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2.AnonymousClass2.AnonymousClass2 */
+
                         public void run() {
                             if (AnonymousClass2.this.mMediaPlayer != null && !AnonymousClass2.this.mMediaPlayer.isPlaying()) {
                                 AnonymousClass2.this.mMediaPlayer.start();
@@ -94,6 +101,8 @@ public class MiuiWirelessChargeSlowlyView {
         public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
             if (MiuiWirelessChargeSlowlyView.this.mImageView.getVisibility() != 8) {
                 MiuiWirelessChargeSlowlyView.this.mHandler.postDelayed(new Runnable() {
+                    /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass2.AnonymousClass3 */
+
                     public void run() {
                         if (AnonymousClass2.this.mMediaPlayer != null && AnonymousClass2.this.mMediaPlayer.isPlaying()) {
                             MiuiWirelessChargeSlowlyView.this.mImageView.setVisibility(8);
@@ -137,7 +146,7 @@ public class MiuiWirelessChargeSlowlyView {
 
     private void initView() {
         AnonymousClass1 r2 = null;
-        View inflate = View.inflate(this.mContext, C0017R$layout.miui_keyguard_wireless_charge_slowly, (ViewGroup) null);
+        View inflate = View.inflate(this.mContext, C0017R$layout.miui_keyguard_wireless_charge_slowly, null);
         this.mImageView = (ImageView) inflate.findViewById(C0015R$id.wireless_charge_picture);
         TextureView textureView = (TextureView) inflate.findViewById(C0015R$id.wireless_charge_slowly_video);
         this.mTextureView = textureView;
@@ -147,6 +156,8 @@ public class MiuiWirelessChargeSlowlyView {
         builder.setView(inflate);
         if (this.mTipOnlyOnce) {
             r2 = new DialogInterface.OnClickListener() {
+                /* class com.android.keyguard.charge.MiuiWirelessChargeSlowlyView.AnonymousClass1 */
+
                 public void onClick(DialogInterface dialogInterface, int i) {
                     SharedPreferences.Editor edit = MiuiWirelessChargeSlowlyView.this.mContext.getSharedPreferences("wireless_charge", 0).edit();
                     edit.putBoolean("show_dialog", false);
@@ -163,7 +174,8 @@ public class MiuiWirelessChargeSlowlyView {
     }
 
     /* access modifiers changed from: private */
-    public Uri getVideoUri() {
+    /* access modifiers changed from: public */
+    private Uri getVideoUri() {
         return Uri.parse("android.resource://" + this.mContext.getPackageName() + "/" + C0020R$raw.wireless_charge_slowly_video);
     }
 }

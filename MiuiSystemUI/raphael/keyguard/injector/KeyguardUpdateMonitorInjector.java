@@ -3,7 +3,6 @@ package com.android.keyguard.injector;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.biometrics.BiometricManager;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.RemoteException;
 import android.os.Trace;
@@ -29,6 +28,7 @@ import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Iterator;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
@@ -72,6 +72,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         return KeyguardUpdateMonitor.getCurrentUser() == 0;
     }
 
+    @Override // com.android.systemui.controlcenter.policy.SuperSaveModeController.SuperSaveModeChangeListener
     public void onSuperSaveModeChange(boolean z) {
         forEachCallback(new KeyguardUpdateMonitorInjector$onSuperSaveModeChange$1(z));
     }
@@ -82,20 +83,21 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         ArrayList<WeakReference<KeyguardUpdateMonitorCallback>> callbacks = ((KeyguardUpdateMonitor) obj).getCallbacks();
         Intrinsics.checkExpressionValueIsNotNull(callbacks, "Dependency.get(KeyguardU…or::class.java).callbacks");
         ArrayList arrayList = new ArrayList();
-        for (WeakReference weakReference : callbacks) {
-            KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) weakReference.get();
+        Iterator<T> it = callbacks.iterator();
+        while (it.hasNext()) {
+            KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) it.next().get();
             if (keyguardUpdateMonitorCallback != null) {
                 arrayList.add(keyguardUpdateMonitorCallback);
             }
         }
-        ArrayList<MiuiKeyguardUpdateMonitorCallback> arrayList2 = new ArrayList<>();
-        for (Object next : arrayList) {
-            if (next instanceof MiuiKeyguardUpdateMonitorCallback) {
-                arrayList2.add(next);
+        ArrayList<MiuiKeyguardUpdateMonitorCallback> arrayList2 = new ArrayList();
+        for (Object obj2 : arrayList) {
+            if (obj2 instanceof MiuiKeyguardUpdateMonitorCallback) {
+                arrayList2.add(obj2);
             }
         }
-        for (MiuiKeyguardUpdateMonitorCallback invoke : arrayList2) {
-            function1.invoke(invoke);
+        for (MiuiKeyguardUpdateMonitorCallback miuiKeyguardUpdateMonitorCallback : arrayList2) {
+            function1.invoke(miuiKeyguardUpdateMonitorCallback);
         }
     }
 
@@ -161,7 +163,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
 
     private final void notifyAodOccludChanged(boolean z) {
         if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isWallpaperSupportsAmbientMode()) {
-            ((MiuiDozeServiceHost) Dependency.get(MiuiDozeServiceHost.class)).sendCommand("keyguard_occluded", z ? 1 : 0, (Bundle) null);
+            ((MiuiDozeServiceHost) Dependency.get(MiuiDozeServiceHost.class)).sendCommand("keyguard_occluded", z ? 1 : 0, null);
         }
     }
 
@@ -204,7 +206,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         Intrinsics.checkParameterIsNotNull(arrayList, "mCallbacks");
         int size = arrayList.size();
         for (int i = 0; i < size; i++) {
-            KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = (KeyguardUpdateMonitorCallback) arrayList.get(i).get();
+            KeyguardUpdateMonitorCallback keyguardUpdateMonitorCallback = arrayList.get(i).get();
             if (keyguardUpdateMonitorCallback != null && (keyguardUpdateMonitorCallback instanceof MiuiKeyguardUpdateMonitorCallback)) {
                 ((MiuiKeyguardUpdateMonitorCallback) keyguardUpdateMonitorCallback).onRegionChanged();
             }
@@ -223,7 +225,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
     public final void reportSuccessfulStrongAuthUnlockAttempt() {
         BiometricManager biometricManager = this.mBiometricManager;
         if (biometricManager != null) {
-            biometricManager.resetLockout((byte[]) null);
+            biometricManager.resetLockout(null);
         }
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             MiuiGxzwManager.getInstance().reportSuccessfulStrongAuthUnlockAttempt();

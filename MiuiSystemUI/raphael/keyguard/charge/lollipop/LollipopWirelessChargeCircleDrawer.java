@@ -18,16 +18,13 @@ import java.util.concurrent.BlockingQueue;
 
 public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnimationView.AnimationDrawer {
     public static final int[] WIRELESS_CIRCLE_RES_ARRAY = {C0013R$drawable.wireless_rapid_charge_0, C0013R$drawable.wireless_rapid_charge_1, C0013R$drawable.wireless_rapid_charge_2, C0013R$drawable.wireless_rapid_charge_3, C0013R$drawable.wireless_rapid_charge_4, C0013R$drawable.wireless_rapid_charge_5, C0013R$drawable.wireless_rapid_charge_6, C0013R$drawable.wireless_rapid_charge_7, C0013R$drawable.wireless_rapid_charge_8, C0013R$drawable.wireless_rapid_charge_9, C0013R$drawable.wireless_rapid_charge_10, C0013R$drawable.wireless_rapid_charge_11, C0013R$drawable.wireless_rapid_charge_12, C0013R$drawable.wireless_rapid_charge_13, C0013R$drawable.wireless_rapid_charge_14, C0013R$drawable.wireless_rapid_charge_15, C0013R$drawable.wireless_rapid_charge_16, C0013R$drawable.wireless_rapid_charge_17, C0013R$drawable.wireless_rapid_charge_18, C0013R$drawable.wireless_rapid_charge_19, C0013R$drawable.wireless_rapid_charge_20, C0013R$drawable.wireless_rapid_charge_21, C0013R$drawable.wireless_rapid_charge_22, C0013R$drawable.wireless_rapid_charge_23};
-    /* access modifiers changed from: private */
-    public final BlockingQueue<Bitmap> mBitmapQueue = new ArrayBlockingQueue(4);
+    private final BlockingQueue<Bitmap> mBitmapQueue = new ArrayBlockingQueue(4);
     private Context mContext;
-    /* access modifiers changed from: private */
-    public Handler mDecodeHandler;
+    private Handler mDecodeHandler;
     private DecodeTask mDecodeTask;
     private HandlerThread mDecodeThread;
     private int mFrameInterval;
-    /* access modifiers changed from: private */
-    public final Object mHandlerLock = new Object();
+    private final Object mHandlerLock = new Object();
     private long mLastFrameTime = -1;
     private Matrix mMatrix;
     private Paint mPaint;
@@ -41,7 +38,7 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
     }
 
     public void onAnimationDraw(TextureView textureView, long j) {
-        if (((Bitmap) this.mBitmapQueue.peek()) != null) {
+        if (this.mBitmapQueue.peek() != null) {
             long j2 = this.mLastFrameTime;
             if (j2 == -1) {
                 dequeueBitmapInfoAndDraw(textureView);
@@ -54,10 +51,10 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
     }
 
     private void dequeueBitmapInfoAndDraw(TextureView textureView) {
-        Bitmap bitmap = (Bitmap) this.mBitmapQueue.poll();
-        drawBitmap(textureView, bitmap, this.mPaint, this.mMatrix);
+        Bitmap poll = this.mBitmapQueue.poll();
+        drawBitmap(textureView, poll, this.mPaint, this.mMatrix);
         try {
-            this.mRecycleBitmapQueue.offer(bitmap);
+            this.mRecycleBitmapQueue.offer(poll);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -119,7 +116,7 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
         }
         synchronized (this.mHandlerLock) {
             if (this.mDecodeHandler != null) {
-                this.mDecodeHandler.removeCallbacksAndMessages((Object) null);
+                this.mDecodeHandler.removeCallbacksAndMessages(null);
                 this.mDecodeHandler = null;
             }
         }
@@ -129,10 +126,11 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
             this.mDecodeThread = null;
         }
         this.mBitmapQueue.clear();
-        setAnimationListener((LollipopWirelessAnimationView.AnimationDrawer.AnimationStateListener) null);
+        setAnimationListener(null);
     }
 
-    private class DecodeTask implements Runnable {
+    /* access modifiers changed from: private */
+    public class DecodeTask implements Runnable {
         private final int[] mAnimRes;
         private volatile int mCurrentPosition;
         private volatile boolean mDecoding;
@@ -144,7 +142,8 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
         }
 
         /* access modifiers changed from: private */
-        public void setDecoding(boolean z) {
+        /* access modifiers changed from: public */
+        private void setDecoding(boolean z) {
             this.mDecoding = z;
         }
 
@@ -180,7 +179,8 @@ public class LollipopWirelessChargeCircleDrawer implements LollipopWirelessAnima
     }
 
     /* access modifiers changed from: private */
-    public Bitmap decodeBitmap(int i) {
+    /* access modifiers changed from: public */
+    private Bitmap decodeBitmap(int i) {
         try {
             Bitmap poll = this.mRecycleBitmapQueue.size() >= 2 ? this.mRecycleBitmapQueue.poll() : null;
             BitmapFactory.Options options = new BitmapFactory.Options();

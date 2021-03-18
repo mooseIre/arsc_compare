@@ -22,6 +22,7 @@ import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.util.CommonUtil;
 import com.miui.systemui.util.MiuiTextUtils;
 import kotlin.TypeCastException;
+import kotlin.collections.ArraysKt___ArraysKt;
 import kotlin.jvm.internal.Intrinsics;
 import miui.os.Build;
 import miui.os.SystemProperties;
@@ -31,13 +32,10 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: KeyguardSensorInjector.kt */
 public final class KeyguardSensorInjector implements SettingsObserver.Callback, WakefulnessLifecycle.Observer {
-    /* access modifiers changed from: private */
-    public final int LARGE_AREA_TOUCH_SENSOR;
+    private final int LARGE_AREA_TOUCH_SENSOR;
     private final String LARGE_AREA_TOUCH_SENSOR_NAME;
-    /* access modifiers changed from: private */
-    public final String SCREEN_OFF_REASON;
-    /* access modifiers changed from: private */
-    public final String SCREEN_OPEN_REASON;
+    private final String SCREEN_OFF_REASON;
+    private final String SCREEN_OPEN_REASON;
     @NotNull
     private final String TAG = "KeyguardSensorInjector";
     private final int WAKEUP_AND_SLEEP_SENSOR_MTK;
@@ -46,8 +44,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     private final int WAKEUP_AND_SLEEP_SENSOR_XIAOMI;
     @NotNull
     private final Context mContext;
-    /* access modifiers changed from: private */
-    public Display mDisplay;
+    private Display mDisplay;
     private final Handler mHandler;
     private boolean mIsDeviceSupportLargeAreaTouch;
     @NotNull
@@ -55,27 +52,20 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     @NotNull
     private final KeyguardViewMediator mKeyguardViewMediator;
-    /* access modifiers changed from: private */
-    public Sensor mLargeAreaTouchSensor;
-    /* access modifiers changed from: private */
-    public final SensorEventListener mLargeAreaTouchSensorListener;
-    /* access modifiers changed from: private */
-    public final SensorEventListener mPickupSensorListener;
+    private Sensor mLargeAreaTouchSensor;
+    private final SensorEventListener mLargeAreaTouchSensorListener;
+    private final SensorEventListener mPickupSensorListener;
     private boolean mPickupSensorSettingsOpened;
     @NotNull
     private final PowerManager mPowerManager;
-    /* access modifiers changed from: private */
-    public ProximitySensorChangeCallback mProximitySensorChangeCallback;
+    private ProximitySensorChangeCallback mProximitySensorChangeCallback;
     private final ProximitySensorWrapper.ProximitySensorChangeListener mProximitySensorListener;
     private ProximitySensorWrapper mProximitySensorWrapper;
-    /* access modifiers changed from: private */
-    public final SensorManager mSensorManager;
+    private final SensorManager mSensorManager;
     private final UiOffloadThread mUiOffloadThread = ((UiOffloadThread) Dependency.get(UiOffloadThread.class));
     private final Runnable mUnregisterProximitySensorRunnable;
-    /* access modifiers changed from: private */
-    public Sensor mWakeupAndSleepSensor;
-    /* access modifiers changed from: private */
-    public boolean mWakeupByPickUp;
+    private Sensor mWakeupAndSleepSensor;
+    private boolean mWakeupByPickUp;
     private final boolean sIsEllipticProximity;
 
     /* compiled from: KeyguardSensorInjector.kt */
@@ -151,15 +141,18 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new TypeCastException("null cannot be cast to non-null type android.view.WindowManager");
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedWakingUp() {
         registerLargeAreaTouchSensor();
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onStartedGoingToSleep() {
         this.mWakeupByPickUp = false;
         registerPickupSensor();
     }
 
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
     public void onFinishedGoingToSleep() {
         unregisterLargeAreaTouchSensor();
         unregisterProximitySensor();
@@ -196,7 +189,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:16:0x0036, code lost:
-        if (kotlin.text.StringsKt.equals(r0, r4, true) != false) goto L_0x0038;
+        if (kotlin.text.StringsKt__StringsJVMKt.equals(r0, r4, true) != false) goto L_0x0038;
      */
     /* JADX WARNING: Removed duplicated region for block: B:24:0x0058  */
     /* JADX WARNING: Removed duplicated region for block: B:27:0x005c  */
@@ -204,78 +197,20 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private final void registerPickupSensor() {
         /*
-            r5 = this;
-            android.hardware.Sensor r0 = r5.mWakeupAndSleepSensor
-            if (r0 != 0) goto L_0x0066
-            boolean r0 = r5.mPickupSensorSettingsOpened
-            if (r0 != 0) goto L_0x0009
-            goto L_0x0066
-        L_0x0009:
-            android.hardware.SensorManager r0 = r5.mSensorManager
-            int r1 = r5.WAKEUP_AND_SLEEP_SENSOR_XIAOMI
-            r2 = 1
-            android.hardware.Sensor r0 = r0.getDefaultSensor(r1, r2)
-            r5.mWakeupAndSleepSensor = r0
-            r1 = 0
-            if (r0 == 0) goto L_0x003a
-            java.lang.String r3 = r5.WAKEUP_AND_SLEEP_SENSOR_NAME1
-            r4 = 0
-            if (r0 == 0) goto L_0x0021
-            java.lang.String r0 = r0.getName()
-            goto L_0x0022
-        L_0x0021:
-            r0 = r4
-        L_0x0022:
-            boolean r0 = kotlin.text.StringsKt__StringsJVMKt.equals(r3, r0, r2)
-            if (r0 != 0) goto L_0x0038
-            java.lang.String r0 = r5.WAKEUP_AND_SLEEP_SENSOR_NAME2
-            android.hardware.Sensor r3 = r5.mWakeupAndSleepSensor
-            if (r3 == 0) goto L_0x0032
-            java.lang.String r4 = r3.getName()
-        L_0x0032:
-            boolean r0 = kotlin.text.StringsKt__StringsJVMKt.equals(r0, r4, r2)
-            if (r0 == 0) goto L_0x003a
-        L_0x0038:
-            r0 = r2
-            goto L_0x003b
-        L_0x003a:
-            r0 = r1
-        L_0x003b:
-            if (r0 != 0) goto L_0x005a
-            java.lang.Class<com.android.keyguard.injector.KeyguardSensorInjector> r3 = com.android.keyguard.injector.KeyguardSensorInjector.class
-            java.lang.Object r3 = com.android.systemui.Dependency.get(r3)
-            com.android.keyguard.injector.KeyguardSensorInjector r3 = (com.android.keyguard.injector.KeyguardSensorInjector) r3
-            boolean r3 = r3.isSupportPickupByMTK()
-            if (r3 == 0) goto L_0x005a
-            android.hardware.SensorManager r0 = r5.mSensorManager
-            int r3 = r5.WAKEUP_AND_SLEEP_SENSOR_MTK
-            android.hardware.Sensor r0 = r0.getDefaultSensor(r3, r2)
-            r5.mWakeupAndSleepSensor = r0
-            if (r0 == 0) goto L_0x0058
-            goto L_0x0059
-        L_0x0058:
-            r2 = r1
-        L_0x0059:
-            r0 = r2
-        L_0x005a:
-            if (r0 == 0) goto L_0x0066
-            com.android.systemui.UiOffloadThread r0 = r5.mUiOffloadThread
-            com.android.keyguard.injector.KeyguardSensorInjector$registerPickupSensor$2 r1 = new com.android.keyguard.injector.KeyguardSensorInjector$registerPickupSensor$2
-            r1.<init>(r5)
-            r0.submit(r1)
-        L_0x0066:
-            return
+        // Method dump skipped, instructions count: 103
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardSensorInjector.registerPickupSensor():void");
     }
 
     /* access modifiers changed from: private */
-    public final void unregisterPickupSensor() {
+    /* access modifiers changed from: public */
+    private final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 
+    @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
-        if (Intrinsics.areEqual((Object) "pick_up_gesture_wakeup_mode", (Object) str)) {
+        if (Intrinsics.areEqual("pick_up_gesture_wakeup_mode", str)) {
             this.mPickupSensorSettingsOpened = MiuiTextUtils.parseBoolean(str2);
             boolean isFingerprintUnlock = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock();
             boolean isHiding = this.mKeyguardViewMediator.isHiding();
@@ -304,33 +239,15 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:2:0x0004, code lost:
-        r0 = r0.getDefaultSensor(r2.LARGE_AREA_TOUCH_SENSOR);
-     */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
     private final boolean isDeviceSupportLargeAreaTouch() {
-        /*
-            r2 = this;
-            android.hardware.SensorManager r0 = r2.mSensorManager
-            if (r0 == 0) goto L_0x001a
-            int r1 = r2.LARGE_AREA_TOUCH_SENSOR
-            android.hardware.Sensor r0 = r0.getDefaultSensor(r1)
-            if (r0 == 0) goto L_0x001a
-            java.lang.String r2 = r2.LARGE_AREA_TOUCH_SENSOR_NAME
-            java.lang.String r0 = r0.getName()
-            boolean r2 = kotlin.jvm.internal.Intrinsics.areEqual((java.lang.Object) r2, (java.lang.Object) r0)
-            if (r2 == 0) goto L_0x001a
-            r2 = 1
-            return r2
-        L_0x001a:
-            r2 = 0
-            return r2
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardSensorInjector.isDeviceSupportLargeAreaTouch():boolean");
+        Sensor defaultSensor;
+        SensorManager sensorManager = this.mSensorManager;
+        return (sensorManager == null || (defaultSensor = sensorManager.getDefaultSensor(this.LARGE_AREA_TOUCH_SENSOR)) == null || !Intrinsics.areEqual(this.LARGE_AREA_TOUCH_SENSOR_NAME, defaultSensor.getName())) ? false : true;
     }
 
     /* access modifiers changed from: private */
-    public final boolean shouldRegisterLargeAreaSensor() {
+    /* access modifiers changed from: public */
+    private final boolean shouldRegisterLargeAreaSensor() {
         return this.mIsDeviceSupportLargeAreaTouch && this.mSensorManager != null && this.mLargeAreaTouchSensor == null && !this.mKeyguardViewMediator.isHiding() && this.mKeyguardViewMediator.isShowing();
     }
 

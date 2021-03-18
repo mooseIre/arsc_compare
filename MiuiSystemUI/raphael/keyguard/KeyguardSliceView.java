@@ -95,11 +95,11 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         super.onFinishInflate();
         this.mTitle = (TextView) findViewById(C0015R$id.title);
         this.mRow = (Row) findViewById(C0015R$id.row);
-        this.mTextColor = Utils.getColorAttrDefaultColor(this.mContext, C0009R$attr.wallpaperTextColor);
-        this.mIconSize = (int) this.mContext.getResources().getDimension(C0012R$dimen.widget_icon_size);
-        this.mIconSizeWithHeader = (int) this.mContext.getResources().getDimension(C0012R$dimen.header_icon_size);
-        this.mRowTextSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
-        this.mRowWithHeaderTextSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.header_row_font_size);
+        this.mTextColor = Utils.getColorAttrDefaultColor(((LinearLayout) this).mContext, C0009R$attr.wallpaperTextColor);
+        this.mIconSize = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0012R$dimen.widget_icon_size);
+        this.mIconSizeWithHeader = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0012R$dimen.header_icon_size);
+        this.mRowTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
+        this.mRowWithHeaderTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.header_row_font_size);
         this.mTitle.setOnClickListener(this);
         this.mTitle.setBreakStrategy(2);
     }
@@ -137,8 +137,9 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         return this.mHasHeader;
     }
 
+    /* JADX DEBUG: Multi-variable search result rejected for r7v0, resolved type: boolean */
+    /* JADX WARN: Multi-variable type inference failed */
     private void showSlice() {
-        CharSequence charSequence;
         Drawable drawable;
         Trace.beginSection("KeyguardSliceView#showSlice");
         int i = 8;
@@ -178,6 +179,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         }
         int size = arrayList.size();
         int textColor = getTextColor();
+        boolean z = this.mHasHeader;
         Row row = this.mRow;
         if (size > 0) {
             i = 0;
@@ -186,13 +188,14 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mRow.getLayoutParams();
         layoutParams.topMargin = this.mHasHeader ? this.mRowWithHeaderPadding : this.mRowPadding;
         this.mRow.setLayoutParams(layoutParams);
-        for (int i4 = this.mHasHeader; i4 < size; i4++) {
-            RowContent rowContent = (RowContent) arrayList.get(i4);
+        int i4 = z;
+        while (i4 < size) {
+            RowContent rowContent = (RowContent) arrayList.get(i4 == 1 ? 1 : 0);
             SliceItem sliceItem = rowContent.getSliceItem();
             Uri uri = sliceItem.getSlice().getUri();
             KeyguardSliceTextView keyguardSliceTextView = (KeyguardSliceTextView) this.mRow.findViewWithTag(uri);
             if (keyguardSliceTextView == null) {
-                keyguardSliceTextView = new KeyguardSliceTextView(this.mContext);
+                keyguardSliceTextView = new KeyguardSliceTextView(((LinearLayout) this).mContext);
                 keyguardSliceTextView.setTextColor(textColor);
                 keyguardSliceTextView.setTag(uri);
                 this.mRow.addView(keyguardSliceTextView, i4 - (this.mHasHeader ? 1 : 0));
@@ -200,27 +203,23 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
             PendingIntent action = rowContent.getPrimaryAction() != null ? rowContent.getPrimaryAction().getAction() : null;
             this.mClickActions.put(keyguardSliceTextView, action);
             SliceItem titleItem2 = rowContent.getTitleItem();
-            if (titleItem2 == null) {
-                charSequence = null;
-            } else {
-                charSequence = titleItem2.getText();
-            }
-            keyguardSliceTextView.setText(charSequence);
+            keyguardSliceTextView.setText(titleItem2 == null ? null : titleItem2.getText());
             keyguardSliceTextView.setContentDescription(rowContent.getContentDescription());
             keyguardSliceTextView.setTextSize(0, this.mHasHeader ? this.mRowWithHeaderTextSize : this.mRowTextSize);
             SliceItem find = SliceQuery.find(sliceItem.getSlice(), "image");
             if (find != null) {
                 int i5 = this.mHasHeader ? this.mIconSizeWithHeader : this.mIconSize;
-                drawable = find.getIcon().loadDrawable(this.mContext);
+                drawable = find.getIcon().loadDrawable(((LinearLayout) this).mContext);
                 if (drawable != null) {
                     drawable.setBounds(0, 0, Math.max((int) ((((float) drawable.getIntrinsicWidth()) / ((float) drawable.getIntrinsicHeight())) * ((float) i5)), 1), i5);
                 }
             } else {
                 drawable = null;
             }
-            keyguardSliceTextView.setCompoundDrawables(drawable, (Drawable) null, (Drawable) null, (Drawable) null);
+            keyguardSliceTextView.setCompoundDrawables(drawable, null, null, null);
             keyguardSliceTextView.setOnClickListener(this);
             keyguardSliceTextView.setClickable(action != null);
+            i4++;
         }
         while (i2 < this.mRow.getChildCount()) {
             View childAt = this.mRow.getChildAt(i2);
@@ -271,6 +270,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         showSlice();
     }
 
+    @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         setupUri(str2);
     }
@@ -287,7 +287,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         }
         Uri parse = Uri.parse(str);
         this.mKeyguardSliceUri = parse;
-        LiveData<Slice> fromUri = SliceLiveData.fromUri(this.mContext, parse);
+        LiveData<Slice> fromUri = SliceLiveData.fromUri(((LinearLayout) this).mContext, parse);
         this.mLiveData = fromUri;
         if (z) {
             fromUri.observeForever(this);
@@ -307,11 +307,12 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         updateTextColors();
     }
 
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
-        this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_icon_size);
-        this.mIconSizeWithHeader = (int) this.mContext.getResources().getDimension(C0012R$dimen.header_icon_size);
-        this.mRowTextSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
-        this.mRowWithHeaderTextSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.header_row_font_size);
+        this.mIconSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_icon_size);
+        this.mIconSizeWithHeader = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0012R$dimen.header_icon_size);
+        this.mRowTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
+        this.mRowWithHeaderTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.header_row_font_size);
     }
 
     public void refresh() {
@@ -375,7 +376,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         }
 
         public Row(Context context) {
-            this(context, (AttributeSet) null);
+            this(context, null);
         }
 
         public Row(Context context, AttributeSet attributeSet) {
@@ -388,7 +389,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
 
         public Row(Context context, AttributeSet attributeSet, int i, int i2) {
             super(context, attributeSet, i, i2);
-            this.mKeepAwakeListener = new KeepAwakeAnimationListener(this.mContext);
+            this.mKeepAwakeListener = new KeepAwakeAnimationListener(((LinearLayout) this).mContext);
         }
 
         /* access modifiers changed from: protected */
@@ -396,16 +397,16 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
             LayoutTransition layoutTransition = new LayoutTransition();
             this.mLayoutTransition = layoutTransition;
             layoutTransition.setDuration(550);
-            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder((Object) null, new PropertyValuesHolder[]{PropertyValuesHolder.ofInt("left", new int[]{0, 1}), PropertyValuesHolder.ofInt("right", new int[]{0, 1})});
+            ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(null, PropertyValuesHolder.ofInt("left", 0, 1), PropertyValuesHolder.ofInt("right", 0, 1));
             this.mLayoutTransition.setAnimator(0, ofPropertyValuesHolder);
             this.mLayoutTransition.setAnimator(1, ofPropertyValuesHolder);
             this.mLayoutTransition.setInterpolator(0, Interpolators.ACCELERATE_DECELERATE);
             this.mLayoutTransition.setInterpolator(1, Interpolators.ACCELERATE_DECELERATE);
             this.mLayoutTransition.setStartDelay(0, 550);
             this.mLayoutTransition.setStartDelay(1, 550);
-            this.mLayoutTransition.setAnimator(2, ObjectAnimator.ofFloat((Object) null, "alpha", new float[]{0.0f, 1.0f}));
+            this.mLayoutTransition.setAnimator(2, ObjectAnimator.ofFloat((Object) null, "alpha", 0.0f, 1.0f));
             this.mLayoutTransition.setInterpolator(2, Interpolators.ALPHA_IN);
-            ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, "alpha", new float[]{1.0f, 0.0f});
+            ObjectAnimator ofFloat = ObjectAnimator.ofFloat((Object) null, "alpha", 1.0f, 0.0f);
             this.mLayoutTransition.setInterpolator(3, Interpolators.ALPHA_OUT);
             this.mLayoutTransition.setDuration(3, 137);
             this.mLayoutTransition.setAnimator(3, ofFloat);
@@ -449,12 +450,13 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         }
     }
 
+    /* access modifiers changed from: package-private */
     @VisibleForTesting
-    static class KeyguardSliceTextView extends TextView implements ConfigurationController.ConfigurationListener {
+    public static class KeyguardSliceTextView extends TextView implements ConfigurationController.ConfigurationListener {
         private static int sStyleId = C0022R$style.TextAppearance_Keyguard_Secondary;
 
         KeyguardSliceTextView(Context context) {
-            super(context, (AttributeSet) null, 0, sStyleId);
+            super(context, null, 0, sStyleId);
             onDensityOrFontScaleChanged();
             setEllipsize(TextUtils.TruncateAt.END);
         }
@@ -471,14 +473,17 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
             ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
         }
 
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onDensityOrFontScaleChanged() {
             updatePadding();
         }
 
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onOverlayChanged() {
             setTextAppearance(sStyleId);
         }
 
+        @Override // android.widget.TextView
         public void setText(CharSequence charSequence, TextView.BufferType bufferType) {
             super.setText(charSequence, bufferType);
             updatePadding();
@@ -492,9 +497,10 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
                 i = -1;
             }
             setPadding(dimension, 0, i * dimension, 0);
-            setCompoundDrawablePadding((int) this.mContext.getResources().getDimension(C0012R$dimen.widget_icon_padding));
+            setCompoundDrawablePadding((int) ((TextView) this).mContext.getResources().getDimension(C0012R$dimen.widget_icon_padding));
         }
 
+        @Override // android.widget.TextView
         public void setTextColor(int i) {
             super.setTextColor(i);
             updateDrawableColors();
@@ -508,7 +514,8 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
 
         private void updateDrawableColors() {
             int currentTextColor = getCurrentTextColor();
-            for (Drawable drawable : getCompoundDrawables()) {
+            Drawable[] compoundDrawables = getCompoundDrawables();
+            for (Drawable drawable : compoundDrawables) {
                 if (drawable != null) {
                     drawable.setTint(currentTextColor);
                 }
