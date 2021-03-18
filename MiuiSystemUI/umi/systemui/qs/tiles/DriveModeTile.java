@@ -2,6 +2,7 @@ package com.android.systemui.qs.tiles;
 
 import android.content.ComponentName;
 import android.content.Intent;
+import android.os.SystemProperties;
 import android.util.Log;
 import android.widget.Switch;
 import com.android.systemui.C0013R$drawable;
@@ -14,6 +15,7 @@ import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
 
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
+    private static final String[] BLACK_LIST = {"camellia", "camellian"};
     private final DriveModeController mDriveModeController;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
@@ -47,7 +49,7 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
-        return !Build.IS_INTERNATIONAL_BUILD && !Build.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
+        return !isInBlackList() && !Build.IS_INTERNATIONAL_BUILD && !Build.IS_TABLET && CrossUserUtils.getCurrentUserId() == 0;
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
@@ -135,5 +137,20 @@ public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     private void transitionMiuiLabSettings() {
         postStartActivityDismissingKeyguard(getMiuiLabSettingsIntent(), 0);
+    }
+
+    public boolean isInBlackList() {
+        try {
+            String str = SystemProperties.get("ro.product.vendor.name", "null");
+            for (String str2 : BLACK_LIST) {
+                if (str.equals(str2)) {
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(this.TAG, "Exception: " + e);
+        }
+        return false;
     }
 }

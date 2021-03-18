@@ -265,7 +265,7 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
                     }
 
                     public final void onClick(View view) {
-                        SizeCompatModeActivityController.RestartActivityButton.lambda$showHint$1(this.f$0, view);
+                        this.f$0.dismiss();
                     }
                 });
                 popupWindow.showAtLocation(this, this.mWinParams.gravity, this.mPopupOffsetX, this.mPopupOffsetY);

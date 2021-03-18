@@ -17,6 +17,8 @@ import android.provider.Settings;
 import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
 import android.util.Log;
+import android.util.MathUtils;
+import com.android.internal.BrightnessSynchronizer;
 import com.android.internal.logging.MetricsLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.RestrictedLockUtilsInternal;
@@ -36,6 +38,11 @@ import java.util.Iterator;
 import miui.mqsas.sdk.MQSEventManagerDelegate;
 
 public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable {
+    private static final Uri BRIGHTNESS_FLOAT_URI = Settings.System.getUriFor("screen_brightness_float");
+    private static final Uri BRIGHTNESS_FOR_VR_FLOAT_URI = Settings.System.getUriFor("screen_brightness_for_vr_float");
+    private static final Uri BRIGHTNESS_MODE_URI = Settings.System.getUriFor("screen_brightness_mode");
+    private static final Uri BRIGHTNESS_URI = Settings.System.getUriFor("screen_brightness");
+    private static final Uri DURATION_SLIDE_BAR_ANIMATION = Settings.System.getUriFor("slider_animation_duration");
     private volatile boolean mAutomatic;
     private final boolean mAutomaticAvailable;
     private final Handler mBackgroundHandler;
@@ -44,8 +51,8 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
     private final Context mContext;
     private final ToggleSlider mControl;
     private boolean mControlValueInitialized;
-    private final int mDefaultBacklight;
-    private final int mDefaultBacklightForVr;
+    private final float mDefaultBacklight;
+    private final float mDefaultBacklightForVr;
     private final DisplayManager mDisplayManager;
     private boolean mExternalChange;
     private final Handler mHandler = new Handler() {
@@ -58,11 +65,11 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
                 int i = message.what;
                 if (i == 0) {
                     MiuiBrightnessController miuiBrightnessController = MiuiBrightnessController.this;
-                    int i2 = message.arg1;
+                    float intBitsToFloat = Float.intBitsToFloat(message.arg1);
                     if (message.arg2 == 0) {
                         z = false;
                     }
-                    miuiBrightnessController.updateSlider(i2, z);
+                    miuiBrightnessController.updateSlider(intBitsToFloat, z);
                 } else if (i == 1) {
                     MiuiBrightnessController.this.mControl.setOnChangedListener(MiuiBrightnessController.this);
                 } else if (i == 2) {
@@ -83,21 +90,37 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
     };
     private volatile boolean mIsVrModeEnabled;
     private boolean mListening;
-    private final int mMaximumBacklight;
-    private final int mMaximumBacklightForVr;
-    private final int mMinimumBacklight;
-    private final int mMinimumBacklightForVr;
+    private final float mMaximumBacklight;
+    private final float mMaximumBacklightForVr;
+    private final int mMaximumBacklightForVrInt;
+    private final int mMaximumBacklightInt;
+    private final float mMinimumBacklight;
+    private final float mMinimumBacklightForVr;
+    private final int mMinimumBacklightForVrInt;
+    private final int mMinimumBacklightInt;
     private int mSliderAnimationDuration = 3000;
     private ValueAnimator mSliderAnimator;
     private final Runnable mStartListeningRunnable = new Runnable() {
         /* class com.android.systemui.statusbar.policy.MiuiBrightnessController.AnonymousClass1 */
 
         public void run() {
-            MiuiBrightnessController.this.mBrightnessObserver.startObserving();
-            MiuiBrightnessController.this.mUserTracker.startTracking();
-            MiuiBrightnessController.this.mUpdateModeRunnable.run();
-            MiuiBrightnessController.this.mUpdateSliderRunnable.run();
-            MiuiBrightnessController.this.mHandler.sendEmptyMessage(1);
+            if (!MiuiBrightnessController.this.mListening) {
+                MiuiBrightnessController.this.mListening = true;
+                MiuiBrightnessController.this.mControlValueInitialized = false;
+                if (MiuiBrightnessController.this.mVrManager != null) {
+                    try {
+                        MiuiBrightnessController.this.mVrManager.registerListener(MiuiBrightnessController.this.mVrStateCallbacks);
+                        MiuiBrightnessController.this.mIsVrModeEnabled = MiuiBrightnessController.this.mVrManager.getVrModeState();
+                    } catch (RemoteException e) {
+                        Log.e("BrightnessController", "Failed to register VR mode state listener: ", e);
+                    }
+                }
+                MiuiBrightnessController.this.mBrightnessObserver.startObserving();
+                MiuiBrightnessController.this.mUserTracker.startTracking();
+                MiuiBrightnessController.this.mUpdateModeRunnable.run();
+                MiuiBrightnessController.this.mUpdateSliderRunnable.run();
+                MiuiBrightnessController.this.mHandler.sendEmptyMessage(1);
+            }
         }
     };
     private int mStartValue;
@@ -105,9 +128,19 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         /* class com.android.systemui.statusbar.policy.MiuiBrightnessController.AnonymousClass2 */
 
         public void run() {
-            MiuiBrightnessController.this.mBrightnessObserver.stopObserving();
-            MiuiBrightnessController.this.mUserTracker.stopTracking();
-            MiuiBrightnessController.this.mHandler.sendEmptyMessage(2);
+            if (MiuiBrightnessController.this.mListening) {
+                MiuiBrightnessController.this.mListening = false;
+                if (MiuiBrightnessController.this.mVrManager != null) {
+                    try {
+                        MiuiBrightnessController.this.mVrManager.unregisterListener(MiuiBrightnessController.this.mVrStateCallbacks);
+                    } catch (RemoteException e) {
+                        Log.e("BrightnessController", "Failed to unregister VR mode state listener: ", e);
+                    }
+                }
+                MiuiBrightnessController.this.mBrightnessObserver.stopObserving();
+                MiuiBrightnessController.this.mUserTracker.stopTracking();
+                MiuiBrightnessController.this.mHandler.sendEmptyMessage(2);
+            }
         }
     };
     private final Runnable mUpdateModeRunnable = new Runnable() {
@@ -129,17 +162,17 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         /* class com.android.systemui.statusbar.policy.MiuiBrightnessController.AnonymousClass4 */
 
         public void run() {
-            int i;
+            float f;
             boolean z = MiuiBrightnessController.this.mIsVrModeEnabled;
             if (z) {
-                i = Settings.System.getIntForUser(MiuiBrightnessController.this.mContext.getContentResolver(), "screen_brightness_for_vr", MiuiBrightnessController.this.mDefaultBacklightForVr, KeyguardUpdateMonitor.getCurrentUser());
+                f = Settings.System.getFloatForUser(MiuiBrightnessController.this.mContext.getContentResolver(), "screen_brightness_for_vr_float", MiuiBrightnessController.this.mDefaultBacklightForVr, KeyguardUpdateMonitor.getCurrentUser());
             } else {
-                i = Settings.System.getIntForUser(MiuiBrightnessController.this.mContext.getContentResolver(), "screen_brightness", MiuiBrightnessController.this.mDefaultBacklight, KeyguardUpdateMonitor.getCurrentUser());
+                f = Settings.System.getFloatForUser(MiuiBrightnessController.this.mContext.getContentResolver(), "screen_brightness_float", MiuiBrightnessController.this.mDefaultBacklight, KeyguardUpdateMonitor.getCurrentUser());
                 MiuiBrightnessController miuiBrightnessController = MiuiBrightnessController.this;
                 miuiBrightnessController.mSliderAnimationDuration = Settings.System.getIntForUser(miuiBrightnessController.mContext.getContentResolver(), "slider_animation_duration", 3000, KeyguardUpdateMonitor.getCurrentUser());
             }
-            Log.d("BrightnessController", "UpdateSliderRunnable: value: " + i);
-            MiuiBrightnessController.this.mHandler.obtainMessage(0, i, z ? 1 : 0).sendToTarget();
+            Log.d("BrightnessController", "UpdateSliderRunnable: value: " + f);
+            MiuiBrightnessController.this.mHandler.obtainMessage(0, Float.floatToIntBits(f), z ? 1 : 0).sendToTarget();
         }
     };
     private final CurrentUserTracker mUserTracker;
@@ -158,11 +191,6 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
 
     /* access modifiers changed from: private */
     public class BrightnessObserver extends ContentObserver {
-        private final Uri BRIGHTNESS_FOR_VR_URI = Settings.System.getUriFor("screen_brightness_for_vr");
-        private final Uri BRIGHTNESS_MODE_URI = Settings.System.getUriFor("screen_brightness_mode");
-        private final Uri BRIGHTNESS_URI = Settings.System.getUriFor("screen_brightness");
-        private final Uri DURATION_SLIDE_BAR_ANIMATION = Settings.System.getUriFor("slider_animation_duration");
-
         public BrightnessObserver(Handler handler) {
             super(handler);
         }
@@ -173,17 +201,17 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
 
         public void onChange(boolean z, Uri uri) {
             if (!z) {
-                if (this.BRIGHTNESS_MODE_URI.equals(uri)) {
+                if (MiuiBrightnessController.BRIGHTNESS_MODE_URI.equals(uri)) {
                     Log.d("BrightnessController", "BrightnessObserver: brightness mode change.");
                     MiuiBrightnessController.this.mBackgroundHandler.post(MiuiBrightnessController.this.mUpdateModeRunnable);
                     MiuiBrightnessController.this.mBackgroundHandler.post(MiuiBrightnessController.this.mUpdateSliderRunnable);
-                } else if (this.BRIGHTNESS_URI.equals(uri)) {
+                } else if (MiuiBrightnessController.BRIGHTNESS_FLOAT_URI.equals(uri)) {
                     Log.d("BrightnessController", "BrightnessObserver: brightness change.");
                     MiuiBrightnessController.this.mBackgroundHandler.post(MiuiBrightnessController.this.mUpdateSliderRunnable);
-                } else if (this.BRIGHTNESS_FOR_VR_URI.equals(uri)) {
+                } else if (MiuiBrightnessController.BRIGHTNESS_FOR_VR_FLOAT_URI.equals(uri)) {
                     Log.d("BrightnessController", "BrightnessObserver: vr brightness change.");
                     MiuiBrightnessController.this.mBackgroundHandler.post(MiuiBrightnessController.this.mUpdateSliderRunnable);
-                } else if (this.DURATION_SLIDE_BAR_ANIMATION.equals(uri)) {
+                } else if (MiuiBrightnessController.DURATION_SLIDE_BAR_ANIMATION.equals(uri)) {
                     Log.d("BrightnessController", "BrightnessObserver: slide animation duration change.");
                     MiuiBrightnessController.this.mBackgroundHandler.post(MiuiBrightnessController.this.mUpdateSliderRunnable);
                     return;
@@ -202,10 +230,11 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
             Log.d("BrightnessController", "BrightnessObserver: startObserving.");
             ContentResolver contentResolver = MiuiBrightnessController.this.mContext.getContentResolver();
             contentResolver.unregisterContentObserver(this);
-            contentResolver.registerContentObserver(this.BRIGHTNESS_MODE_URI, false, this, -1);
-            contentResolver.registerContentObserver(this.BRIGHTNESS_URI, false, this, -1);
-            contentResolver.registerContentObserver(this.BRIGHTNESS_FOR_VR_URI, false, this, -1);
-            contentResolver.registerContentObserver(this.DURATION_SLIDE_BAR_ANIMATION, false, this, -1);
+            contentResolver.registerContentObserver(MiuiBrightnessController.BRIGHTNESS_MODE_URI, false, this, -1);
+            contentResolver.registerContentObserver(MiuiBrightnessController.BRIGHTNESS_URI, false, this, -1);
+            contentResolver.registerContentObserver(MiuiBrightnessController.BRIGHTNESS_FLOAT_URI, false, this, -1);
+            contentResolver.registerContentObserver(MiuiBrightnessController.BRIGHTNESS_FOR_VR_FLOAT_URI, false, this, -1);
+            contentResolver.registerContentObserver(MiuiBrightnessController.DURATION_SLIDE_BAR_ANIMATION, false, this, -1);
         }
 
         public void stopObserving() {
@@ -230,12 +259,16 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
         };
         this.mBrightnessObserver = new BrightnessObserver(this.mHandler);
         PowerManager powerManager = (PowerManager) context.getSystemService(PowerManager.class);
-        this.mMinimumBacklight = powerManager.getMinimumScreenBrightnessSetting();
-        this.mMaximumBacklight = powerManager.getMaximumScreenBrightnessSetting();
-        this.mDefaultBacklight = powerManager.getDefaultScreenBrightnessSetting();
-        this.mMinimumBacklightForVr = powerManager.getMinimumScreenBrightnessForVrSetting();
-        this.mMaximumBacklightForVr = powerManager.getMaximumScreenBrightnessForVrSetting();
-        this.mDefaultBacklightForVr = powerManager.getDefaultScreenBrightnessForVrSetting();
+        this.mMinimumBacklightInt = powerManager.getMinimumScreenBrightnessSetting();
+        this.mMaximumBacklightInt = powerManager.getMaximumScreenBrightnessSetting();
+        this.mMinimumBacklightForVrInt = powerManager.getMinimumScreenBrightnessForVrSetting();
+        this.mMaximumBacklightForVrInt = powerManager.getMaximumScreenBrightnessForVrSetting();
+        this.mMinimumBacklight = powerManager.getBrightnessConstraint(0);
+        this.mMaximumBacklight = powerManager.getBrightnessConstraint(1);
+        this.mDefaultBacklight = powerManager.getBrightnessConstraint(2);
+        this.mMinimumBacklightForVr = powerManager.getBrightnessConstraint(5);
+        this.mMaximumBacklightForVr = powerManager.getBrightnessConstraint(6);
+        this.mDefaultBacklightForVr = powerManager.getBrightnessConstraint(7);
         this.mAutomaticAvailable = context.getResources().getBoolean(17891369);
         this.mDisplayManager = (DisplayManager) context.getSystemService(DisplayManager.class);
         this.mVrManager = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
@@ -247,35 +280,11 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
     }
 
     public void registerCallbacks() {
-        if (!this.mListening) {
-            this.mControlValueInitialized = false;
-            IVrManager iVrManager = this.mVrManager;
-            if (iVrManager != null) {
-                try {
-                    iVrManager.registerListener(this.mVrStateCallbacks);
-                    this.mIsVrModeEnabled = this.mVrManager.getVrModeState();
-                } catch (RemoteException e) {
-                    Log.e("BrightnessController", "Failed to register VR mode state listener: ", e);
-                }
-            }
-            this.mBackgroundHandler.post(this.mStartListeningRunnable);
-            this.mListening = true;
-        }
+        this.mBackgroundHandler.post(this.mStartListeningRunnable);
     }
 
     public void unregisterCallbacks() {
-        if (this.mListening) {
-            IVrManager iVrManager = this.mVrManager;
-            if (iVrManager != null) {
-                try {
-                    iVrManager.unregisterListener(this.mVrStateCallbacks);
-                } catch (RemoteException e) {
-                    Log.e("BrightnessController", "Failed to unregister VR mode state listener: ", e);
-                }
-            }
-            this.mBackgroundHandler.post(this.mStopListeningRunnable);
-            this.mListening = false;
-        }
+        this.mBackgroundHandler.post(this.mStopListeningRunnable);
     }
 
     @Override // com.android.systemui.settings.ToggleSlider.Listener
@@ -294,9 +303,11 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
 
     public void onChanged(ToggleSlider toggleSlider, final boolean z, int i, boolean z2) {
         int i2;
-        final String str;
         int i3;
         int i4;
+        float f;
+        float f2;
+        final String str;
         if (!this.mExternalChange) {
             ValueAnimator valueAnimator = this.mSliderAnimator;
             if (valueAnimator != null) {
@@ -304,18 +315,24 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
             }
             if (this.mIsVrModeEnabled) {
                 i2 = 498;
-                i4 = this.mMinimumBacklightForVr;
-                i3 = this.mMaximumBacklightForVr;
-                str = "screen_brightness_for_vr";
+                i3 = this.mMinimumBacklightForVrInt;
+                i4 = this.mMaximumBacklightForVrInt;
+                f = this.mMinimumBacklightForVr;
+                f2 = this.mMaximumBacklightForVr;
+                str = "screen_brightness_for_vr_float";
             } else {
                 i2 = this.mAutomatic ? 219 : 218;
-                i4 = this.mMinimumBacklight;
-                i3 = this.mMaximumBacklight;
-                str = "screen_brightness";
+                i3 = this.mMinimumBacklightInt;
+                i4 = this.mMaximumBacklightInt;
+                f = this.mMinimumBacklight;
+                f2 = this.mMaximumBacklight;
+                str = "screen_brightness_float";
             }
-            final int convertGammaToLinear = BrightnessUtils.convertGammaToLinear(i, i4, i3);
+            final int convertGammaToLinear = BrightnessUtils.convertGammaToLinear(i, i3, i4);
+            final float min = MathUtils.min(BrightnessUtils.convertGammaToLinearFloat(i, f, f2), 1.0f);
             if (z2) {
-                MetricsLogger.action(this.mContext, i2, convertGammaToLinear);
+                Context context = this.mContext;
+                MetricsLogger.action(context, i2, BrightnessSynchronizer.brightnessFloatToInt(context, min));
             }
             AsyncTask.execute(new Runnable() {
                 /* class com.android.systemui.statusbar.policy.MiuiBrightnessController.AnonymousClass8 */
@@ -323,10 +340,10 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
                 public void run() {
                     if (z) {
                         MiuiBrightnessController.this.setBrightness(convertGammaToLinear);
-                    } else if (Settings.System.getIntForUser(MiuiBrightnessController.this.mContext.getContentResolver(), str, -1, -2) == convertGammaToLinear) {
+                    } else if (BrightnessSynchronizer.floatEquals(min, Settings.System.getFloatForUser(MiuiBrightnessController.this.mContext.getContentResolver(), str, Float.NaN, -2))) {
                         MiuiBrightnessController.this.setBrightness(-1);
                     } else {
-                        Settings.System.putIntForUser(MiuiBrightnessController.this.mContext.getContentResolver(), str, convertGammaToLinear, -2);
+                        Settings.System.putFloatForUser(MiuiBrightnessController.this.mContext.getContentResolver(), str, min, -2);
                     }
                 }
             });
@@ -364,20 +381,20 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void updateSlider(int i, boolean z) {
-        int i2;
-        int i3;
+    private void updateSlider(float f, boolean z) {
+        float f2;
+        float f3;
         if (z) {
-            i2 = this.mMinimumBacklightForVr;
-            i3 = this.mMaximumBacklightForVr;
+            f2 = this.mMinimumBacklightForVr;
+            f3 = this.mMaximumBacklightForVr;
         } else {
-            i2 = this.mMinimumBacklight;
-            i3 = this.mMaximumBacklight;
+            f2 = this.mMinimumBacklight;
+            f3 = this.mMaximumBacklight;
         }
-        if (i == BrightnessUtils.convertGammaToLinear(this.mControl.getValue(), i2, i3)) {
+        if (BrightnessSynchronizer.floatEquals(f, BrightnessUtils.convertGammaToLinearFloat(this.mControl.getValue(), f2, f3))) {
             this.mControlValueInitialized = true;
         } else {
-            animateSliderTo(BrightnessUtils.convertLinearToGamma(i, i2, i3));
+            animateSliderTo(BrightnessUtils.convertLinearToGammaFloat(f, f2, f3));
         }
     }
 

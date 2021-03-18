@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.notification.row;
 
 import java.util.Comparator;
-import kotlin.comparisons.ComparisonsKt;
+import kotlin.comparisons.ComparisonsKt__ComparisonsKt;
 import kotlin.jvm.internal.Intrinsics;
 
 /* compiled from: Comparisons.kt */
@@ -22,6 +22,6 @@ public final class ChannelEditorDialogController$getDisplayableChannels$$inlined
         if (name2 == null || (str2 = name2.toString()) == null) {
             str2 = t4.getId();
         }
-        return ComparisonsKt.compareValues(str, str2);
+        return ComparisonsKt__ComparisonsKt.compareValues(str, str2);
     }
 }

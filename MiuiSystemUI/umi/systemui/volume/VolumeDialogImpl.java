@@ -1,7 +1,6 @@
 package com.android.systemui.volume;
 
 import android.animation.ObjectAnimator;
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.app.KeyguardManager;
@@ -288,6 +287,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         initODICaptionsH();
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initDialog$1 */
     public /* synthetic */ void lambda$initDialog$1$VolumeDialogImpl(DialogInterface dialogInterface) {
@@ -305,6 +305,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }).start();
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initDialog$0 */
     public /* synthetic */ void lambda$initDialog$0$VolumeDialogImpl() {
@@ -314,6 +315,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initDialog$2 */
     public /* synthetic */ boolean lambda$initDialog$2$VolumeDialogImpl(View view, MotionEvent motionEvent) {
@@ -377,8 +379,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private VolumeRow getActiveRow() {
         for (VolumeRow volumeRow : this.mRows) {
             if (volumeRow.stream == this.mActiveStream) {
@@ -402,7 +402,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         return null;
     }
 
-    /* access modifiers changed from: private */
     public static int getImpliedLevel(SeekBar seekBar, int i) {
         int max = seekBar.getMax();
         int i2 = max / 100;
@@ -413,7 +412,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         return i == max ? i2 : ((int) ((((float) i) / ((float) max)) * ((float) i3))) + 1;
     }
 
-    @SuppressLint({"InflateParams"})
     private void initRow(VolumeRow volumeRow, int i, int i2, int i3, boolean z, boolean z2) {
         volumeRow.stream = i;
         volumeRow.iconRes = i2;
@@ -454,6 +452,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initRow$3 */
     public /* synthetic */ void lambda$initRow$3$VolumeDialogImpl(VolumeRow volumeRow, int i, View view) {
@@ -506,6 +505,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initSettingsH$4 */
     public /* synthetic */ void lambda$initSettingsH$4$VolumeDialogImpl(View view) {
@@ -530,6 +530,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         updateRingerH();
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initRingerH$5 */
     public /* synthetic */ void lambda$initRingerH$5$VolumeDialogImpl(View view) {
@@ -585,6 +586,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         this.mController.getCaptionsComponentState(false);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$initODICaptionsH$6 */
     public /* synthetic */ void lambda$initODICaptionsH$6$VolumeDialogImpl() {
@@ -600,7 +602,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: protected */
     public void showCaptionsTooltip() {
         ViewStub viewStub;
         if (!this.mHasSeenODICaptionsTooltip && (viewStub = this.mODICaptionsTooltipViewStub) != null) {
@@ -629,6 +630,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$showCaptionsTooltip$7 */
     public /* synthetic */ void lambda$showCaptionsTooltip$7$VolumeDialogImpl(View view) {
@@ -636,6 +638,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         Events.writeEvent(22, new Object[0]);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$showCaptionsTooltip$8 */
     public /* synthetic */ void lambda$showCaptionsTooltip$8$VolumeDialogImpl() {
@@ -665,13 +668,13 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$hideCaptionsTooltip$9 */
     public /* synthetic */ void lambda$hideCaptionsTooltip$9$VolumeDialogImpl() {
         this.mODICaptionsTooltipView.setVisibility(4);
     }
 
-    /* access modifiers changed from: protected */
     public void tryToRemoveCaptionsTooltip() {
         if (this.mHasSeenODICaptionsTooltip && this.mODICaptionsTooltipView != null) {
             ((ViewGroup) this.mDialog.findViewById(C0015R$id.volume_dialog_container)).removeView(this.mODICaptionsTooltipView);
@@ -679,8 +682,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void updateODICaptionsH(boolean z, boolean z2) {
         ViewGroup viewGroup = this.mODICaptionsView;
         if (viewGroup != null) {
@@ -716,6 +717,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateCaptionsIcon$10 */
     public /* synthetic */ void lambda$updateCaptionsIcon$10$VolumeDialogImpl(boolean z) {
@@ -766,8 +768,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void showH(int i) {
         if (D.BUG) {
             String str = TAG;
@@ -791,7 +791,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         checkODICaptionsTooltip(false);
     }
 
-    /* access modifiers changed from: protected */
     public void rescheduleTimeoutH() {
         this.mHandler.removeMessages(2);
         int computeTimeoutH = computeTimeoutH();
@@ -817,7 +816,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         return this.mAccessibilityMgr.getRecommendedTimeoutMillis(5000, 6);
     }
 
-    /* access modifiers changed from: protected */
     public void dismissH(int i) {
         if (D.BUG) {
             String str = TAG;
@@ -858,6 +856,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$dismissH$12 */
     public /* synthetic */ void lambda$dismissH$12$VolumeDialogImpl() {
@@ -870,6 +869,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }, 50);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$dismissH$11 */
     public /* synthetic */ void lambda$dismissH$11$VolumeDialogImpl() {
@@ -901,8 +901,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         return false;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void updateRowsH(VolumeRow volumeRow) {
         if (D.BUG) {
             Log.d(TAG, "updateRowsH");
@@ -921,7 +919,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: protected */
     public void updateRingerH() {
         VolumeDialogController.State state;
         VolumeDialogController.StreamState streamState;
@@ -1010,7 +1007,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: protected */
     public void onStateChangedH(VolumeDialogController.State state) {
         int i;
         if (D.BUG) {
@@ -1049,7 +1045,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         this.mWindow.setTitle(composeWindowTitle());
     }
 
-    /* access modifiers changed from: package-private */
     public CharSequence composeWindowTitle() {
         return this.mContext.getString(C0021R$string.volume_dialog_title, getStreamLabelH(getActiveRow().ss));
     }
@@ -1242,8 +1237,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void recheckH(VolumeRow volumeRow) {
         if (volumeRow == null) {
             if (D.BUG) {
@@ -1262,8 +1255,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         updateVolumeRowH(volumeRow);
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void setStreamImportantH(int i, boolean z) {
         for (VolumeRow volumeRow : this.mRows) {
             if (volumeRow.stream == i) {
@@ -1273,8 +1264,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:13:0x0024, code lost:
         recheckH(null);
      */
@@ -1347,6 +1336,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         };
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$getSinglePressFor$13 */
     public /* synthetic */ void lambda$getSinglePressFor$13$VolumeDialogImpl(ImageButton imageButton) {
@@ -1377,10 +1367,11 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
     public final class H extends Handler {
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public H() {
             super(Looper.getMainLooper());
+            VolumeDialogImpl.this = r1;
         }
 
         public void handleMessage(Message message) {
@@ -1413,10 +1404,11 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
     public final class CustomDialog extends Dialog implements DialogInterface {
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public CustomDialog(Context context) {
             super(context, C0022R$style.qs_theme);
+            VolumeDialogImpl.this = r1;
         }
 
         public boolean dispatchTouchEvent(MotionEvent motionEvent) {
@@ -1424,13 +1416,11 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
             return super.dispatchTouchEvent(motionEvent);
         }
 
-        /* access modifiers changed from: protected */
         public void onStart() {
             super.setCanceledOnTouchOutside(true);
             super.onStart();
         }
 
-        /* access modifiers changed from: protected */
         public void onStop() {
             super.onStop();
             VolumeDialogImpl.this.mHandler.sendEmptyMessage(4);
@@ -1445,11 +1435,11 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
     public final class VolumeSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
         private final VolumeRow mRow;
 
         private VolumeSeekBarChangeListener(VolumeRow volumeRow) {
+            VolumeDialogImpl.this = r1;
             this.mRow = volumeRow;
         }
 
@@ -1503,8 +1493,10 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    private final class Accessibility extends View.AccessibilityDelegate {
+    /* access modifiers changed from: private */
+    public final class Accessibility extends View.AccessibilityDelegate {
         private Accessibility() {
+            VolumeDialogImpl.this = r1;
         }
 
         public void init() {
@@ -1522,7 +1514,6 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         }
     }
 
-    /* access modifiers changed from: private */
     public static class VolumeRow {
         private ObjectAnimator anim;
         private int animTargetProgress;
