@@ -230,6 +230,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                     Slog.w("KeyguardViewMediator", "fw call startKeyguardExitAnimation timeout");
                     KeyguardViewMediator.this.startKeyguardExitAnimation(SystemClock.uptimeMillis(), 0);
                     return;
+                case 20:
+                    Slog.w("KeyguardViewMediator", "fw call password view onAnimationEnd timeout");
+                    KeyguardViewMediator.this.mHideAnimationFinishedRunnable.run();
+                    return;
                 default:
                     return;
             }
@@ -1308,6 +1312,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             Log.d("KeyguardViewMediator", "tryKeyguardDone: starting pre-hide animation");
             this.mHideAnimationRun = true;
             this.mHideAnimationRunning = true;
+            this.mHandler.sendEmptyMessageDelayed(20, 300);
             this.mKeyguardViewControllerLazy.get().startPreHideAnimation(this.mHideAnimationFinishedRunnable);
         }
     }
@@ -1531,9 +1536,12 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$5 */
     public /* synthetic */ void lambda$new$5$KeyguardViewMediator() {
-        Log.e("KeyguardViewMediator", "mHideAnimationFinishedRunnable#run");
-        this.mHideAnimationRunning = false;
-        tryKeyguardDone();
+        Log.e("KeyguardViewMediator", "mHideAnimationFinishedRunnable#run: mHideAnimationRun - " + this.mHideAnimationRun);
+        if (this.mHideAnimationRun) {
+            this.mHandler.removeMessages(20);
+            this.mHideAnimationRunning = false;
+            tryKeyguardDone();
+        }
     }
 
     /* access modifiers changed from: private */

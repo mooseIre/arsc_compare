@@ -77,7 +77,8 @@ public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
         }
     }
 
-    private class LauncherPackageMonitor extends PackageMonitor {
+    /* access modifiers changed from: private */
+    public class LauncherPackageMonitor extends PackageMonitor {
         private LauncherPackageMonitor() {
         }
 

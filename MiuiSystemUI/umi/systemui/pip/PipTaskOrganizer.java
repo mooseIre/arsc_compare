@@ -26,6 +26,7 @@ import com.android.systemui.C0016R$integer;
 import com.android.systemui.pip.PipAnimationController;
 import com.android.systemui.pip.PipSurfaceTransactionHelper;
 import com.android.systemui.pip.PipTaskOrganizer;
+import com.android.systemui.pip.PipUiEventLogger;
 import com.android.systemui.pip.phone.PipUpdateThread;
 import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.wm.DisplayController;
@@ -70,6 +71,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     private final PipAnimationController mPipAnimationController;
     private final PipBoundsHandler mPipBoundsHandler;
     private final List<PipTransitionCallback> mPipTransitionCallbacks = new ArrayList();
+    private final PipUiEventLogger mPipUiEventLoggerLogger;
     private boolean mShouldDeferEnteringPip;
     private final Divider mSplitDivider;
     private PipSurfaceTransactionHelper.SurfaceControlTransactionFactory mSurfaceControlTransactionFactory;
@@ -141,11 +143,12 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         return true;
     }
 
-    public PipTaskOrganizer(Context context, PipBoundsHandler pipBoundsHandler, PipSurfaceTransactionHelper pipSurfaceTransactionHelper, Divider divider, DisplayController displayController, PipAnimationController pipAnimationController) {
+    public PipTaskOrganizer(Context context, PipBoundsHandler pipBoundsHandler, PipSurfaceTransactionHelper pipSurfaceTransactionHelper, Divider divider, DisplayController displayController, PipAnimationController pipAnimationController, PipUiEventLogger pipUiEventLogger) {
         this.mPipBoundsHandler = pipBoundsHandler;
         this.mEnterExitAnimationDuration = context.getResources().getInteger(C0016R$integer.config_pipResizeAnimationDuration);
         this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
         this.mPipAnimationController = pipAnimationController;
+        this.mPipUiEventLoggerLogger = pipUiEventLogger;
         this.mSurfaceControlTransactionFactory = $$Lambda$0FLZQAxNoOm85ohJ3bgjkYQDWsU.INSTANCE;
         this.mSplitDivider = divider;
         displayController.addDisplayWindowListener(this);
@@ -184,12 +187,12 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
     }
 
     public void exitPip(final int i) {
-        WindowContainerToken windowContainerToken;
-        if (!this.mInPip || this.mExitingPip || (windowContainerToken = this.mToken) == null) {
+        if (!this.mInPip || this.mExitingPip || this.mToken == null) {
             Log.wtf(TAG, "Not allowed to exitPip in current state mInPip=" + this.mInPip + " mExitingPip=" + this.mExitingPip + " mToken=" + this.mToken);
             return;
         }
-        Configuration remove = this.mInitialState.remove(windowContainerToken.asBinder());
+        this.mPipUiEventLoggerLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_EXPAND_TO_FULLSCREEN);
+        Configuration remove = this.mInitialState.remove(this.mToken.asBinder());
         boolean z = remove.windowConfiguration.getRotation() != this.mPipBoundsHandler.getDisplayRotation();
         WindowContainerTransaction windowContainerTransaction = new WindowContainerTransaction();
         final Rect bounds = remove.windowConfiguration.getBounds();
@@ -205,11 +208,11 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
             SurfaceControl.Transaction transaction = this.mSurfaceControlTransactionFactory.getTransaction();
             this.mSurfaceTransactionHelper.scale(transaction, this.mLeash, bounds, this.mLastReportedBounds);
             transaction.setWindowCrop(this.mLeash, bounds.width(), bounds.height());
-            WindowContainerToken windowContainerToken2 = this.mToken;
+            WindowContainerToken windowContainerToken = this.mToken;
             if (i3 != 4) {
                 i2 = 1;
             }
-            windowContainerTransaction.setActivityWindowingMode(windowContainerToken2, i2);
+            windowContainerTransaction.setActivityWindowingMode(windowContainerToken, i2);
             windowContainerTransaction.setBounds(this.mToken, bounds);
             windowContainerTransaction.setBoundsChangeTransaction(this.mToken, transaction);
             applySyncTransaction(windowContainerTransaction, new WindowContainerTransactionCallback() {
@@ -275,8 +278,9 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
         this.mLeash = surfaceControl;
         this.mInitialState.put(windowContainerToken.asBinder(), new Configuration(this.mTaskInfo.configuration));
         ActivityManager.RunningTaskInfo runningTaskInfo2 = this.mTaskInfo;
-        PictureInPictureParams pictureInPictureParams = runningTaskInfo2.pictureInPictureParams;
-        this.mPictureInPictureParams = pictureInPictureParams;
+        this.mPictureInPictureParams = runningTaskInfo2.pictureInPictureParams;
+        this.mPipUiEventLoggerLogger.setTaskInfo(runningTaskInfo2);
+        this.mPipUiEventLoggerLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_ENTER);
         if (this.mShouldDeferEnteringPip) {
             SurfaceControl.Transaction transaction = this.mSurfaceControlTransactionFactory.getTransaction();
             transaction.setAlpha(this.mLeash, 0.0f);
@@ -284,7 +288,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
             transaction.apply();
             return;
         }
-        Rect destinationBounds = this.mPipBoundsHandler.getDestinationBounds(runningTaskInfo2.topActivity, getAspectRatioOrDefault(pictureInPictureParams), null, getMinimalSize(this.mTaskInfo.topActivityInfo));
+        Rect destinationBounds = this.mPipBoundsHandler.getDestinationBounds(this.mTaskInfo.topActivity, getAspectRatioOrDefault(this.mPictureInPictureParams), null, getMinimalSize(this.mTaskInfo.topActivityInfo));
         Objects.requireNonNull(destinationBounds, "Missing destination bounds");
         Rect bounds = this.mTaskInfo.configuration.windowConfiguration.getBounds();
         int i = this.mOneShotAnimationType;
@@ -443,6 +447,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
             this.mPictureInPictureParams = null;
             this.mInPip = false;
             this.mExitingPip = false;
+            this.mPipUiEventLoggerLogger.setTaskInfo(null);
         }
     }
 
@@ -510,10 +515,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
 
     private boolean applyPictureInPictureParams(PictureInPictureParams pictureInPictureParams) {
         PictureInPictureParams pictureInPictureParams2 = this.mPictureInPictureParams;
-        boolean z = true;
-        if (pictureInPictureParams2 != null && Objects.equals(pictureInPictureParams2.getAspectRatioRational(), pictureInPictureParams.getAspectRatioRational())) {
-            z = false;
-        }
+        boolean z = pictureInPictureParams2 == null || !Objects.equals(pictureInPictureParams2.getAspectRatioRational(), pictureInPictureParams.getAspectRatioRational());
         if (z) {
             this.mPictureInPictureParams = pictureInPictureParams;
             this.mPipBoundsHandler.onAspectRatioChanged(pictureInPictureParams.getAspectRatio());

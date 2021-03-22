@@ -139,7 +139,6 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     }
 
     public void applyMobileState(StatusBarSignalPolicy.MobileIconState mobileIconState) {
-        Log.d("StatusBarMobileView", "applyMobileState: " + super.toString() + "\n" + mobileIconState);
         boolean z = true;
         if (mobileIconState == null) {
             if (getVisibility() == 8) {
@@ -450,7 +449,6 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             int dimensionPixelSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_half_to_top_distance);
             int dimensionPixelSize2 = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_left_inout_over_strength);
             int dimensionPixelSize3 = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_mobile_type_middle_to_strength_start);
-            boolean z = ((LinearLayout) this).mContext.getResources().getConfiguration().getLayoutDirection() == 1;
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mMobileType.getLayoutParams();
             layoutParams.topMargin = (int) (((float) dimensionPixelSize) - (f / 2.0f));
             this.mMobileType.setLayoutParams(layoutParams);
@@ -460,11 +458,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             layoutParams2.setMarginEnd((int) ((f2 - f3) + ((float) dimensionPixelSize3)));
             this.mLeftInOut.setLayoutParams(layoutParams2);
             LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mMobileLeftContainer.getLayoutParams();
-            if (!z) {
-                layoutParams3.rightMargin = (int) (-(f2 + f3));
-            } else {
-                layoutParams3.rightMargin = 0;
-            }
+            layoutParams3.rightMargin = (int) (-(f2 + f3));
             this.mMobileLeftContainer.setLayoutParams(layoutParams3);
         }
         return !Objects.equals(str, this.mLastShowName);

@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.notification.interruption;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.ContentObserver;
 import android.hardware.display.AmbientDisplayConfiguration;
 import android.os.Handler;
@@ -17,6 +18,7 @@ import com.android.systemui.statusbar.notification.NotificationFilter;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.HeadsUpManager;
+import com.android.systemui.statusbar.policy.HeadsUpManagerInjector;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +26,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
     private final AmbientDisplayConfiguration mAmbientDisplayConfiguration;
     private final BatteryController mBatteryController;
     private final ContentResolver mContentResolver;
+    protected Context mContext;
     private final IDreamManager mDreamManager;
     protected HeadsUpManager mHeadsUpManager;
     private final ContentObserver mHeadsUpObserver;
@@ -34,7 +37,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
     @VisibleForTesting
     protected boolean mUseHeadsUp = false;
 
-    public NotificationInterruptStateProviderImpl(ContentResolver contentResolver, PowerManager powerManager, IDreamManager iDreamManager, AmbientDisplayConfiguration ambientDisplayConfiguration, NotificationFilter notificationFilter, BatteryController batteryController, StatusBarStateController statusBarStateController, HeadsUpManager headsUpManager, Handler handler) {
+    public NotificationInterruptStateProviderImpl(ContentResolver contentResolver, PowerManager powerManager, IDreamManager iDreamManager, AmbientDisplayConfiguration ambientDisplayConfiguration, NotificationFilter notificationFilter, BatteryController batteryController, StatusBarStateController statusBarStateController, HeadsUpManager headsUpManager, Handler handler, Context context) {
         this.mContentResolver = contentResolver;
         this.mPowerManager = powerManager;
         this.mDreamManager = iDreamManager;
@@ -43,6 +46,7 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
         this.mNotificationFilter = notificationFilter;
         this.mStatusBarStateController = statusBarStateController;
         this.mHeadsUpManager = headsUpManager;
+        this.mContext = context;
         this.mHeadsUpObserver = new ContentObserver(handler) {
             /* class com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProviderImpl.AnonymousClass1 */
 
@@ -210,6 +214,6 @@ public class NotificationInterruptStateProviderImpl implements NotificationInter
     }
 
     private boolean isSnoozedPackage(StatusBarNotification statusBarNotification) {
-        return this.mHeadsUpManager.isSnoozed(statusBarNotification.getPackageName());
+        return HeadsUpManagerInjector.isSnoozed(this.mContext, statusBarNotification, this.mHeadsUpManager.isSnoozePackageEmpty());
     }
 }

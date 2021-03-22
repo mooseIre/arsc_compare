@@ -874,7 +874,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             MobileSignalController.this.mCallState = i;
             ((MobileState) MobileSignalController.this.mCurrentState).callState = i;
             ((CallStateControllerImpl) Dependency.get(CallStateControllerImpl.class)).setCallState(MobileSignalController.this.mSlotId, i);
-            ((ControlPanelController) Dependency.get(ControlPanelController.class)).collapseControlCenter(true);
+            if (i == 1) {
+                ((ControlPanelController) Dependency.get(ControlPanelController.class)).collapseControlCenter(true);
+            }
             MobileSignalController.this.updateTelephony();
         }
     }

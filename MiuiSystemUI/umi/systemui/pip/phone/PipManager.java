@@ -23,6 +23,7 @@ import com.android.systemui.pip.PipAnimationController;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.PipTaskOrganizer;
+import com.android.systemui.pip.PipUiEventLogger;
 import com.android.systemui.pip.phone.PipManager;
 import com.android.systemui.shared.recents.IPinnedStackAnimationListener;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -317,7 +318,7 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         }
     }
 
-    public PipManager(Context context, BroadcastDispatcher broadcastDispatcher, DisplayController displayController, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipBoundsHandler pipBoundsHandler, PipSnapAlgorithm pipSnapAlgorithm, PipTaskOrganizer pipTaskOrganizer, SysUiState sysUiState) {
+    public PipManager(Context context, BroadcastDispatcher broadcastDispatcher, DisplayController displayController, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipBoundsHandler pipBoundsHandler, PipSnapAlgorithm pipSnapAlgorithm, PipTaskOrganizer pipTaskOrganizer, SysUiState sysUiState, PipUiEventLogger pipUiEventLogger) {
         this.mContext = context;
         this.mActivityManager = ActivityManager.getService();
         try {
@@ -334,7 +335,7 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         this.mMediaController = pipMediaController;
         PipMenuActivityController pipMenuActivityController = new PipMenuActivityController(context, pipMediaController, this.mInputConsumerController);
         this.mMenuController = pipMenuActivityController;
-        this.mTouchHandler = new PipTouchHandler(context, this.mActivityManager, pipMenuActivityController, this.mInputConsumerController, this.mPipBoundsHandler, this.mPipTaskOrganizer, floatingContentCoordinator, deviceConfigProxy, pipSnapAlgorithm, sysUiState);
+        this.mTouchHandler = new PipTouchHandler(context, this.mActivityManager, pipMenuActivityController, this.mInputConsumerController, this.mPipBoundsHandler, this.mPipTaskOrganizer, floatingContentCoordinator, deviceConfigProxy, pipSnapAlgorithm, sysUiState, pipUiEventLogger);
         this.mAppOpsListener = new PipAppOpsListener(context, this.mActivityManager, this.mTouchHandler.getMotionHelper());
         displayController.addDisplayChangingController(this.mRotationController);
         displayController.addDisplayWindowListener(this.mFixedRotationListener);

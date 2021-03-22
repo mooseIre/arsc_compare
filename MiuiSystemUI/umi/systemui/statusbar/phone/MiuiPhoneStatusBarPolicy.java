@@ -346,7 +346,6 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     public void onZenOrRingerChanged(boolean z, boolean z2) {
         this.mZenVisible = z;
         this.mRingerVisible = z2;
-        Log.d("MiuiPhoneStatusBarPolicy", "onZenOrRingerChanged: zenVisible = " + this.mZenVisible + " ringerVisible = " + this.mRingerVisible);
         updateVolumeZen();
     }
 
@@ -378,7 +377,6 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     public void initVloumeZen() {
         this.mRingerVisible = this.mZenController.isRingerModeOn();
         this.mZenVisible = this.mZenController.isZenModeOn();
-        Log.d("MiuiPhoneStatusBarPolicy", "initVloumeZen: ringerVisible = " + this.mRingerVisible + " zenVisible = " + this.mZenVisible);
         updateVolumeZen();
     }
 

@@ -15,7 +15,7 @@ import miui.os.Build;
 import miui.securityspace.CrossUserUtils;
 
 public class DriveModeTile extends QSTileImpl<QSTile.BooleanState> {
-    private static final String[] BLACK_LIST = {"camellia", "camellian"};
+    private static final String[] BLACK_LIST = {"camellia", "camellian", "lime"};
     private final DriveModeController mDriveModeController;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl

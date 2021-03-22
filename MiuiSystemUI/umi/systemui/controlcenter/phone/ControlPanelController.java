@@ -25,6 +25,7 @@ import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
+import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import java.util.ArrayList;
@@ -40,11 +41,22 @@ public class ControlPanelController implements CallbackController<UseControlPane
     private boolean mExpandableInKeyguard;
     private Handler mHandler = new H();
     private boolean mIsNCSwitching;
+    private final KeyguardStateController.Callback mKeyguardCallback = new KeyguardStateController.Callback() {
+        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass2 */
+
+        @Override // com.android.systemui.statusbar.policy.KeyguardStateController.Callback
+        public void onKeyguardShowingChanged() {
+            if (!ControlPanelController.this.isCCFullyCollapsed()) {
+                ControlPanelController.this.collapseControlCenter(true);
+            }
+        }
+    };
+    private KeyguardStateController mKeyguardStateController;
     private KeyguardViewMediator mKeyguardViewMediator;
     private final List<UseControlPanelChangeListener> mListeners;
     private boolean mNcSwitchGuideShown;
     private BroadcastReceiver mRemoteOperationReceiver = new BroadcastReceiver() {
-        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass3 */
+        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass4 */
 
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -78,7 +90,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
     };
     protected BroadcastReceiver mScreenOffReceiver = new BroadcastReceiver() {
-        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass2 */
+        /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass3 */
 
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -97,13 +109,14 @@ public class ControlPanelController implements CallbackController<UseControlPane
         void onUseControlPanelChange(boolean z);
     }
 
-    public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator, BroadcastDispatcher broadcastDispatcher, SettingsObserver settingsObserver) {
+    public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator, BroadcastDispatcher broadcastDispatcher, SettingsObserver settingsObserver, KeyguardStateController keyguardStateController) {
         this.mContext = context;
         this.mListeners = new ArrayList();
         this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0016R$integer.use_control_panel_setting_default);
         this.mKeyguardViewMediator = keyguardViewMediator;
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSettingsObserver = settingsObserver;
+        this.mKeyguardStateController = keyguardStateController;
         this.mNcSwitchGuideShown = Settings.System.getIntForUser(this.mContext.getContentResolver(), "nc_switch_guide_shown", 0, 0) != 0;
         this.mCurrentUserTracker = new CurrentUserTracker(this.mBroadcastDispatcher) {
             /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass1 */
@@ -192,6 +205,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         intentFilter2.addAction("android.intent.action.CLOSE_SYSTEM_DIALOGS");
         intentFilter2.addAction("android.intent.action.SCREEN_OFF");
         this.mBroadcastDispatcher.registerReceiver(this.mScreenOffReceiver, intentFilter2, null, UserHandle.ALL);
+        this.mKeyguardStateController.addCallback(this.mKeyguardCallback);
     }
 
     private void unRegister() {
@@ -199,6 +213,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mSettingsObserver.removeCallback(this);
         this.mBroadcastDispatcher.unregisterReceiver(this.mRemoteOperationReceiver);
         this.mBroadcastDispatcher.unregisterReceiver(this.mScreenOffReceiver);
+        this.mKeyguardStateController.removeCallback(this.mKeyguardCallback);
     }
 
     /* access modifiers changed from: private */

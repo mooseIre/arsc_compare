@@ -95,11 +95,14 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
 
     /* access modifiers changed from: protected */
     public void updateMiuiStatusBarPrompt() {
+        int i = 0;
         SystemUIPromptState systemUIPromptState = null;
         for (Map.Entry<String, SystemUIPromptState> entry : this.mMiuiStatusBarStates.entrySet()) {
             SystemUIPromptState value = entry.getValue();
-            if (value.mPriority >= 0) {
+            int i2 = value.mPriority;
+            if (i2 >= i) {
                 systemUIPromptState = value;
+                i = i2;
             }
         }
         if (this.mCurrentPromptState != systemUIPromptState) {

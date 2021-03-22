@@ -52,8 +52,7 @@ public class NotificationIconObserver {
     /* access modifiers changed from: protected */
     public void fireNotificationIconsChanged() {
         boolean z = this.mShowNotificationIcons;
-        Log.d("NotificationIconObserver", "fireNotificationIconsChanged: show = " + z);
-        for (int size = this.mCallbacks.size() + -1; size >= 0; size--) {
+        for (int size = this.mCallbacks.size() - 1; size >= 0; size--) {
             Callback callback = this.mCallbacks.get(size).get();
             if (callback != null) {
                 callback.onNotificationIconChanged(z);
@@ -84,6 +83,6 @@ public class NotificationIconObserver {
             z = MiuiStatusBarManager.isShowNotificationIconForUser(this.mContext, this.mCurrentUserId);
         }
         this.mShowNotificationIcons = z;
-        Log.d("NotificationIconObserver", "initProfile: userId = " + this.mCurrentUserId + " isShow = " + this.mShowNotificationIcons);
+        Log.d("NotificationIconObserver", "updateUserIdAndSetting: mCurrentUserId = " + this.mCurrentUserId + " mShowNotificationIcons = " + this.mShowNotificationIcons);
     }
 }

@@ -9,7 +9,6 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -247,7 +246,6 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
 
     @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
     public void onBatteryStyleChanged(int i) {
-        Log.d("MiuiBatteryMeterView", "onBatteryStyleChanged: batteryStyle = " + i);
         if (CustomizeUtil.HAS_NOTCH && i == 2) {
             i = 0;
         }

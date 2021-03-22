@@ -12,7 +12,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
-import android.util.Pair;
 import android.util.Size;
 import android.view.IPinnedStackController;
 import android.view.InputEvent;
@@ -26,7 +25,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.internal.os.logging.MetricsLoggerWrapper;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
@@ -34,6 +32,7 @@ import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.PipTaskOrganizer;
+import com.android.systemui.pip.PipUiEventLogger;
 import com.android.systemui.pip.phone.PipAccessibilityInteractionConnection;
 import com.android.systemui.pip.phone.PipMenuActivityController;
 import com.android.systemui.pip.phone.PipTouchHandler;
@@ -52,7 +51,6 @@ import kotlin.jvm.functions.Function5;
 
 public class PipTouchHandler {
     private final AccessibilityManager mAccessibilityManager;
-    private final IActivityManager mActivityManager;
     private int mBottomOffsetBufferPx;
     private PipAccessibilityInteractionConnection mConnection;
     private final Context mContext;
@@ -88,6 +86,7 @@ public class PipTouchHandler {
     private IPinnedStackController mPinnedStackController;
     private final PipBoundsHandler mPipBoundsHandler;
     private PipResizeGestureHandler mPipResizeGestureHandler;
+    private final PipUiEventLogger mPipUiEventLogger;
     @VisibleForTesting
     Rect mResizedBounds = new Rect();
     private float mSavedSnapFraction = -1.0f;
@@ -125,10 +124,7 @@ public class PipTouchHandler {
 
         @Override // com.android.systemui.pip.phone.PipMenuActivityController.Listener
         public void onPipDismiss() {
-            Pair<ComponentName, Integer> topPipActivity = PipUtils.getTopPipActivity(PipTouchHandler.this.mContext, PipTouchHandler.this.mActivityManager);
-            if (topPipActivity.first != null) {
-                MetricsLoggerWrapper.logPictureInPictureDismissByTap(PipTouchHandler.this.mContext, topPipActivity);
-            }
+            PipTouchHandler.this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_TAP_TO_REMOVE);
             PipTouchHandler.this.mTouchState.removeDoubleTapTimeoutCallback();
             PipTouchHandler.this.mMotionHelper.dismissPip();
         }
@@ -140,9 +136,8 @@ public class PipTouchHandler {
     }
 
     @SuppressLint({"InflateParams"})
-    public PipTouchHandler(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipSnapAlgorithm pipSnapAlgorithm, SysUiState sysUiState) {
+    public PipTouchHandler(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipSnapAlgorithm pipSnapAlgorithm, SysUiState sysUiState, PipUiEventLogger pipUiEventLogger) {
         this.mContext = context;
-        this.mActivityManager = iActivityManager;
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
         this.mMenuController = pipMenuActivityController;
@@ -164,7 +159,7 @@ public class PipTouchHandler {
             public final void run() {
                 PipTouchHandler.this.updateMovementBounds();
             }
-        }, sysUiState);
+        }, sysUiState, pipUiEventLogger);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         Handler handler = this.mHandler;
         $$Lambda$PipTouchHandler$Uq5M9Md512Sfgd22VAeFpot25E0 r4 = new Runnable() {
@@ -218,6 +213,7 @@ public class PipTouchHandler {
                 PipTouchHandler.this.updateMovementBounds();
             }
         }, this.mHandler);
+        this.mPipUiEventLogger = pipUiEventLogger;
         this.mTargetView = new DismissCircleView(context);
         FrameLayout frameLayout = new FrameLayout(context);
         this.mTargetViewContainer = frameLayout;
@@ -264,10 +260,7 @@ public class PipTouchHandler {
                         PipTouchHandler.AnonymousClass1.this.lambda$onReleasedInTarget$0$PipTouchHandler$1();
                     }
                 });
-                Pair<ComponentName, Integer> topPipActivity = PipUtils.getTopPipActivity(PipTouchHandler.this.mContext, PipTouchHandler.this.mActivityManager);
-                if (topPipActivity.first != null) {
-                    MetricsLoggerWrapper.logPictureInPictureDismissByDrag(PipTouchHandler.this.mContext, topPipActivity);
-                }
+                PipTouchHandler.this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_DRAG_TO_REMOVE);
             }
 
             /* access modifiers changed from: private */
@@ -476,7 +469,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void showDismissTargetMaybe() {
+    public void showDismissTargetMaybe() {
         createOrUpdateDismissTarget();
         if (this.mTargetViewContainer.getVisibility() != 0) {
             this.mTargetView.setTranslationY((float) this.mTargetViewContainer.getHeight());
@@ -520,8 +513,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onRegistrationChanged(boolean z) {
+    public void onRegistrationChanged(boolean z) {
         this.mAccessibilityManager.setPictureInPictureActionReplacingConnection(z ? this.mConnection : null);
         if (!z && this.mTouchState.isUserInteracting()) {
             cleanUpDismissTarget();
@@ -529,18 +521,16 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onAccessibilityShowMenu() {
+    public void onAccessibilityShowMenu() {
         this.mMenuController.showMenu(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:57:0x00dc, code lost:
         if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x00fe;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean handleTouchEvent(android.view.InputEvent r12) {
+    public boolean handleTouchEvent(android.view.InputEvent r12) {
         /*
         // Method dump skipped, instructions count: 282
         */
@@ -559,7 +549,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void updateDismissFraction() {
+    public void updateDismissFraction() {
         if (this.mMenuController != null && !this.mIsImeShowing) {
             Rect bounds = this.mMotionHelper.getBounds();
             float f = (float) this.mInsetBounds.bottom;
@@ -611,13 +601,14 @@ public class PipTouchHandler {
             }
             this.mMenuState = i;
             updateMovementBounds();
-            onRegistrationChanged(i == 0);
-            if (i != 1) {
-                Context context = this.mContext;
-                if (i == 2) {
-                    z2 = true;
-                }
-                MetricsLoggerWrapper.logPictureInPictureMenuVisible(context, z2);
+            if (i == 0) {
+                z2 = true;
+            }
+            onRegistrationChanged(z2);
+            if (i == 0) {
+                this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_HIDE_MENU);
+            } else if (i == 2) {
+                this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_SHOW_MENU);
             }
         }
     }
@@ -737,7 +728,7 @@ public class PipTouchHandler {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$K8tFYcJKtB3Bkuu5piDq01YhA */
 
                     public final void run() {
-                        PipTouchHandler.access$2100(PipTouchHandler.this);
+                        PipTouchHandler.this.updateDismissFraction();
                     }
                 }, new Runnable() {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$c8YgJLEypMoVYe3YjylatK650zk */
@@ -760,8 +751,7 @@ public class PipTouchHandler {
         }
 
         /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
-        private void flingEndAction() {
+        public void flingEndAction() {
             if (this.mShouldHideMenuAfterFling) {
                 PipTouchHandler.this.mMenuController.hideMenu();
             }
@@ -769,8 +759,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateMovementBounds() {
+    public void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
         this.mMotionHelper.setCurrentMovementBounds(this.mMovementBounds);
@@ -783,8 +772,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private Rect getMovementBounds(Rect rect) {
+    public Rect getMovementBounds(Rect rect) {
         Rect rect2 = new Rect();
         this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
         return rect2;

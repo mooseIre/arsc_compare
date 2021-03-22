@@ -32,6 +32,10 @@ public class NotificationUtil {
         return InCallUtils.isInCallNotification(expandedNotification);
     }
 
+    public static boolean containsVerifyCode(ExpandedNotification expandedNotification) {
+        return expandedNotification.getNotification().extras.containsKey("verify_code");
+    }
+
     public static boolean needCustomHeight(ExpandedNotification expandedNotification, boolean z) {
         if (expandedNotification == null) {
             return false;

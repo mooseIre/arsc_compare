@@ -22,11 +22,11 @@ import android.telephony.ServiceState;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
-import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
+import com.android.keyguard.MiuiCarrierTextController;
 import com.android.settingslib.net.DataUsageController;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0021R$string;
@@ -135,7 +135,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             }
         };
         this.mRegisterListeners = new Runnable() {
-            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass9 */
+            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass10 */
 
             public void run() {
                 NetworkControllerImpl.this.registerListeners();
@@ -653,10 +653,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 });
                 return;
             case '\b':
-                int intExtra2 = intent.getIntExtra("phone", -1);
+                final int intExtra2 = intent.getIntExtra("phone", -1);
                 int intExtra3 = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1);
                 boolean booleanExtra = intent.getBooleanExtra("state", false);
-                boolean booleanExtra2 = intent.getBooleanExtra("wfc_state", false);
+                final boolean booleanExtra2 = intent.getBooleanExtra("wfc_state", false);
                 if (intExtra2 >= 0) {
                     boolean[] zArr = this.mVolte;
                     if (intExtra2 < zArr.length) {
@@ -670,6 +670,13 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 if (this.mMobileSignalControllers.indexOfKey(intExtra3) >= 0) {
                     this.mMobileSignalControllers.get(intExtra3).setVolte(booleanExtra);
                     this.mMobileSignalControllers.get(intExtra3).setVowifi(booleanExtra2);
+                    this.mCallbackHandler.post(new Runnable(this) {
+                        /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass8 */
+
+                        public void run() {
+                            ((MiuiCarrierTextController) Dependency.get(MiuiCarrierTextController.class)).setVowifi(intExtra2, booleanExtra2);
+                        }
+                    });
                     return;
                 }
                 updateMobileControllers();
@@ -808,7 +815,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public void setCurrentSubscriptionsLocked(List<SubscriptionInfo> list) {
         int i;
         Collections.sort(list, new Comparator<SubscriptionInfo>(this) {
-            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass8 */
+            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass9 */
 
             public int compare(SubscriptionInfo subscriptionInfo, SubscriptionInfo subscriptionInfo2) {
                 int i;
@@ -833,11 +840,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         int i3 = 0;
         while (i3 < size) {
             int subscriptionId = list.get(i3).getSubscriptionId();
-            if (sparseArray.indexOfKey(subscriptionId) >= 0) {
-                this.mMobileSignalControllers.put(subscriptionId, (MobileSignalController) sparseArray.get(subscriptionId));
-                sparseArray.remove(subscriptionId);
-                i = size;
-            } else {
+            if (sparseArray.indexOfKey(subscriptionId) < 0 || !NetworkControllerHelper.equalMccMnc(((MobileSignalController) sparseArray.get(subscriptionId)).getSubscriptionInfo(), list.get(i3))) {
                 i = size;
                 MobileSignalController mobileSignalController = new MobileSignalController(this.mContext, this.mConfig, this.mHasMobileDataFeature, this.mPhone.createForSubscriptionId(subscriptionId), this.mCallbackHandler, this, list.get(i3), this.mSubDefaults, this.mReceiverHandler.getLooper());
                 mobileSignalController.setUserSetupComplete(this.mUserSetup);
@@ -848,6 +851,10 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 if (this.mListening) {
                     mobileSignalController.registerListener();
                 }
+            } else {
+                this.mMobileSignalControllers.put(subscriptionId, (MobileSignalController) sparseArray.get(subscriptionId));
+                sparseArray.remove(subscriptionId);
+                i = size;
             }
             i3++;
             size = i;
@@ -904,15 +911,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 return false;
             }
             MobileSignalController mobileSignalController = this.mMobileSignalControllers.get(subscriptionInfo.getSubscriptionId());
-            if (mobileSignalController != null) {
-                SubscriptionInfo subscriptionInfo2 = mobileSignalController.getSubscriptionInfo();
-                String mccString = subscriptionInfo2.getMccString();
-                String mncString = subscriptionInfo2.getMncString();
-                String mccString2 = subscriptionInfo.getMccString();
-                String mncString2 = subscriptionInfo.getMncString();
-                if (!TextUtils.equals(mccString, mccString2) || !TextUtils.equals(mncString, mncString2)) {
-                    return false;
-                }
+            if (!(mobileSignalController == null || NetworkControllerHelper.equalMccMnc(subscriptionInfo, mobileSignalController.getSubscriptionInfo()))) {
+                return false;
             }
         }
         return true;

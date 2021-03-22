@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
-import android.util.Log;
 import androidx.constraintlayout.widget.R$styleable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
@@ -123,9 +122,7 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     private long getTotalByte() {
-        long totalRxBytes = TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
-        Log.d("NetworkSpeedController", "getTotalByte: " + totalRxBytes);
-        return totalRxBytes;
+        return TrafficStats.getTotalRxBytes() + TrafficStats.getTotalTxBytes();
     }
 
     public void postUpdateNetworkSpeed() {

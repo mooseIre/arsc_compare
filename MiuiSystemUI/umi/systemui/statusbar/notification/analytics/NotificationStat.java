@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.notification.analytics;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -22,6 +23,7 @@ import com.miui.systemui.events.ClickAllowNotificationEvent;
 import com.miui.systemui.events.ClickEvent;
 import com.miui.systemui.events.ClickMoreEvent;
 import com.miui.systemui.events.ClickSetUnimportant;
+import com.miui.systemui.events.ClickSnoozeDialog;
 import com.miui.systemui.events.ExitModalEvent;
 import com.miui.systemui.events.ExpansionEvent;
 import com.miui.systemui.events.FloatAutoCollapseEvent;
@@ -35,6 +37,8 @@ import com.miui.systemui.events.ModalDialogConfirmEvent;
 import com.miui.systemui.events.NotifSource;
 import com.miui.systemui.events.NotificationPanelSlideEvent;
 import com.miui.systemui.events.SetConfigEvent;
+import com.miui.systemui.events.SnoozeToastClick;
+import com.miui.systemui.events.SnoozeToastVisible;
 import com.miui.systemui.events.VisibleEvent;
 import com.miui.systemui.util.CommonUtil;
 import java.util.ArrayList;
@@ -258,6 +262,18 @@ public class NotificationStat {
         }
     }
 
+    public void onSnoozeToastVisible() {
+        handleSnoozeToastVisibleEvent();
+    }
+
+    public void onSnoozeToastClick() {
+        handleSnoozeToastClickEvent();
+    }
+
+    public void onSnoozeDialogClick(int i) {
+        handleSnoozeDialogClick(i);
+    }
+
     public void logVisibilityChanges(List<String> list, List<String> list2, boolean z, boolean z2) {
         list.forEach(new Consumer() {
             /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$h58jkTJPtvADAYsXdsJA1kVW9lE */
@@ -339,6 +355,8 @@ public class NotificationStat {
         }
         notificationEntry.getSbn().seeTime = 0;
         hashMap.put("is_group", Integer.valueOf(getIsNotificationGrouped(notificationEntry)));
+        hashMap.put("is_priority", Integer.valueOf(getIsPriority(notificationEntry)));
+        hashMap.put("mipush_class", Integer.valueOf(getMipushClass(notificationEntry)));
         return hashMap;
     }
 
@@ -374,7 +392,7 @@ public class NotificationStat {
         String tag = equals ? notificationEntry.getSbn().getTag() : "";
         int isNotificationGrouped = getIsNotificationGrouped(notificationEntry);
         NotificationPanelStat notificationPanelStat = this.mPanelStat;
-        eventTracker.track(new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, notifSource, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes()));
+        eventTracker.track(new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, notifSource, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes(), getIsPriority(notificationEntry), getMipushClass(notificationEntry)));
     }
 
     private void handleExpansionChangedEvent(NotificationEntry notificationEntry, boolean z, boolean z2) {
@@ -390,7 +408,7 @@ public class NotificationStat {
     }
 
     private void handleCancelEvent(NotificationEntry notificationEntry, int i) {
-        this.mEventTracker.track(new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), i, getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry)));
+        this.mEventTracker.track(new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), i, getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry)));
     }
 
     private void handleCancelAllEvent(int i) {
@@ -398,7 +416,7 @@ public class NotificationStat {
     }
 
     private void handleMenuOpenEvent(NotificationEntry notificationEntry) {
-        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry)));
+        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry)));
     }
 
     private void handleSetConfigEvent(NotificationEntry notificationEntry) {
@@ -453,6 +471,18 @@ public class NotificationStat {
         this.mEventTracker.track(new NotificationPanelSlideEvent(str, str2));
     }
 
+    private void handleSnoozeToastVisibleEvent() {
+        this.mEventTracker.track(new SnoozeToastVisible());
+    }
+
+    private void handleSnoozeToastClickEvent() {
+        this.mEventTracker.track(new SnoozeToastClick());
+    }
+
+    private void handleSnoozeDialogClick(int i) {
+        this.mEventTracker.track(new ClickSnoozeDialog(i));
+    }
+
     private String getNotifPkg(NotificationEntry notificationEntry) {
         return notificationEntry.getSbn().getOpPkg();
     }
@@ -498,6 +528,22 @@ public class NotificationStat {
 
     private int getIsNotificationGrouped(NotificationEntry notificationEntry) {
         return (notificationEntry.isChildInGroup() || notificationEntry.getSbn().getNotification().isGroupSummary()) ? 1 : 0;
+    }
+
+    private int getIsPriority(NotificationEntry notificationEntry) {
+        return notificationEntry.getSbn().getNotification().extras.getInt("is_priority", -1);
+    }
+
+    private int getMipushClass(NotificationEntry notificationEntry) {
+        Bundle bundle = notificationEntry.getSbn().getNotification().extras;
+        if (!bundle.containsKey("mipush_class")) {
+            return -1;
+        }
+        int i = bundle.getInt("mipush_class");
+        if (i < 1 || i > 8) {
+            return 0;
+        }
+        return i;
     }
 
     private NotificationEntry getNotifEntry(String str) {

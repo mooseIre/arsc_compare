@@ -314,7 +314,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
             this.mNotificationShadeWindowController.setForceDozeBrightness(true);
         }
         boolean z = i == 1 && this.mDozeParameters.getAlwaysOn() && this.mWakeUpDelay > 0;
-        $$Lambda$BiometricUnlockController$eARUOiIHQidy4dPvrf3UVu6gsv0 r3 = new Runnable(isDeviceInteractive, z) {
+        $$Lambda$BiometricUnlockController$eARUOiIHQidy4dPvrf3UVu6gsv0 r4 = new Runnable(isDeviceInteractive, z) {
             /* class com.android.systemui.statusbar.phone.$$Lambda$BiometricUnlockController$eARUOiIHQidy4dPvrf3UVu6gsv0 */
             public final /* synthetic */ boolean f$1;
             public final /* synthetic */ boolean f$2;
@@ -329,7 +329,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
             }
         };
         if (!z && this.mMode != 0) {
-            r3.run();
+            r4.run();
         }
         int i2 = this.mMode;
         switch (i2) {
@@ -347,7 +347,7 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
                 }
                 this.mNotificationShadeWindowController.setNotificationShadeFocusable(false);
                 if (z) {
-                    this.mHandler.postDelayed(r3, (long) this.mWakeUpDelay);
+                    this.mHandler.postDelayed(r4, (long) this.mWakeUpDelay);
                 } else {
                     this.mKeyguardViewMediator.onWakeAndUnlocking();
                 }
@@ -371,6 +371,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
             case 8:
                 Trace.beginSection("MODE_DISMISS_BOUNCER or MODE_UNLOCK_FADING");
                 if (!((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceUnlockSuccessAndStayScreen() || this.mKeyguardViewController.bouncerIsOrWillBeShowing() || ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFingerprintUnlock()) {
+                    if (this.mMode == 7 && ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock()) {
+                        ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).fastUnlock();
+                    }
                     this.mKeyguardViewController.notifyKeyguardAuthenticated(false);
                 }
                 recordKeyguardUnlockWay(true);

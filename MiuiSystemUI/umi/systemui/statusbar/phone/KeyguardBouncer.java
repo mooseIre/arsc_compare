@@ -252,18 +252,19 @@ public class KeyguardBouncer {
             if (this.mRoot.getVisibility() != 0 && !this.mShowingSoon) {
                 int currentUser2 = KeyguardUpdateMonitor.getCurrentUser();
                 boolean z3 = false;
-                if (!(UserManager.isSplitSystemUser() && currentUser2 == 0) && currentUser2 == currentUser) {
+                boolean z4 = !(UserManager.isSplitSystemUser() && currentUser2 == 0) && currentUser2 == currentUser;
+                if (this.mKeyguardUpdateMonitor.getUserBleAuthenticated(currentUser) && !this.mKeyguardUpdateMonitor.getUserUnlockedWithBiometric(currentUser)) {
                     z3 = true;
                 }
-                if (!z3 || !this.mKeyguardView.dismiss(currentUser2)) {
-                    if (!z3) {
+                if (!z4 || !this.mKeyguardView.dismiss(currentUser2)) {
+                    if (!z4) {
                         Log.w("KeyguardBouncer", "User can't dismiss keyguard: " + currentUser2 + " != " + currentUser);
                     }
                     this.mShowingSoon = true;
                     DejankUtils.postAfterTraversal(this.mShowRunnable);
                     this.mCallback.onBouncerVisiblityChanged(true);
                     this.mExpansionCallback.onStartingToShow();
-                } else if (this.mKeyguardUpdateMonitor.getUserBleAuthenticated(currentUser) && !this.mKeyguardUpdateMonitor.getUserUnlockedWithBiometric(currentUser)) {
+                } else if (z3) {
                     MiuiKeyguardUtils.handleBleUnlockSucceed(this.mContext);
                 }
             }
