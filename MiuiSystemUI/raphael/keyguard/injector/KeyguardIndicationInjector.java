@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -128,6 +129,7 @@ public class KeyguardIndicationInjector {
         });
     }
 
+    @SuppressLint({"StaticFieldLeak"})
     public void updatePowerIndication(final boolean z, final KeyguardIndicationTextView keyguardIndicationTextView) {
         final boolean isPowerPluggedIn = ((KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class)).isPowerPluggedIn();
         final int batteryLevel = ((KeyguardIndicationController) Dependency.get(KeyguardIndicationController.class)).getBatteryLevel();
@@ -135,14 +137,17 @@ public class KeyguardIndicationInjector {
             this.mChargeAsyncTask = new AsyncTask<Void, Void, String>() {
                 /* class com.android.keyguard.injector.KeyguardIndicationInjector.AnonymousClass3 */
 
+                /* access modifiers changed from: protected */
                 public void onPreExecute() {
                     keyguardIndicationTextView.setAlpha(0.0f);
                 }
 
+                /* access modifiers changed from: protected */
                 public String doInBackground(Void... voidArr) {
                     return ChargeUtils.getChargingHintText(KeyguardIndicationInjector.this.mContext, isPowerPluggedIn, batteryLevel);
                 }
 
+                /* access modifiers changed from: protected */
                 public void onPostExecute(String str) {
                     Log.i("KeyguardIndicationInjector", "handleChargeTextAnimation: " + z + ";powerPluggedIn=" + isPowerPluggedIn);
                     if (!z) {
@@ -154,6 +159,7 @@ public class KeyguardIndicationInjector {
                     KeyguardIndicationInjector.this.mChargeAsyncTask = null;
                 }
 
+                /* access modifiers changed from: protected */
                 public void onCancelled() {
                     keyguardIndicationTextView.setAlpha(1.0f);
                     KeyguardIndicationInjector.this.mChargeAsyncTask = null;

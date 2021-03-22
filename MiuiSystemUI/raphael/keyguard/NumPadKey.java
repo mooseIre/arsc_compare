@@ -4,6 +4,7 @@ import android.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.PowerManager;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -20,6 +21,8 @@ import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.R$styleable;
+import com.miui.systemui.drawable.NumPadRippleDrawable;
+import miuix.animation.Folme;
 
 public class NumPadKey extends ViewGroup {
     static String[] sKlondike;
@@ -155,6 +158,15 @@ public class NumPadKey extends ViewGroup {
     public void doHapticKeyClick() {
         if (this.mLockPatternUtils.isTactileFeedbackEnabled()) {
             performHapticFeedback(1, 3);
+        }
+    }
+
+    /* access modifiers changed from: protected */
+    public void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        Drawable background = getBackground();
+        if (background instanceof NumPadRippleDrawable) {
+            Folme.clean(((NumPadRippleDrawable) background).getNumPadAnimTarget());
         }
     }
 }

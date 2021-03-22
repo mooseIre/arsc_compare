@@ -39,6 +39,17 @@ public class MiuiFastUnlockController {
         this.mKeyguardViewMediator = keyguardViewMediator;
     }
 
+    public boolean fastUnlock() {
+        if (!supportFastUnlock() || this.mKeyguardViewMediator == null) {
+            return false;
+        }
+        onStartFastUnlock();
+        this.mFastUnlock = true;
+        hideKeygaurdFast(this.mKeyguardViewMediator);
+        onFinishFashUnlock();
+        return true;
+    }
+
     public boolean wakeAndFastUnlock(String str) {
         if (!supportFastUnlock() || this.mKeyguardViewMediator == null) {
             return false;

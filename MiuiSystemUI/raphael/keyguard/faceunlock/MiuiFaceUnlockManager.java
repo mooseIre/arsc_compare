@@ -89,6 +89,7 @@ public class MiuiFaceUnlockManager {
     private final ArrayList<WeakReference<MiuiKeyguardFaceUnlockView>> mFaceViewList = new ArrayList<>();
     protected HandlerThread mHandlerThread = new HandlerThread("face_unlock");
     protected boolean mHasFace;
+    private boolean mKeyguardOccluded;
     private boolean mKeyguardShowing;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
         /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass6 */
@@ -148,6 +149,21 @@ public class MiuiFaceUnlockManager {
                 Slog.d("miui_face", "face unlock success and keyguard dismiss");
             }
             MiuiFaceUnlockManager.this.mKeyguardShowing = z;
+        }
+
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
+        public void onKeyguardOccludedChanged(boolean z) {
+            if (MiuiFaceUnlockManager.this.mKeyguardOccluded != z && MiuiFaceUnlockManager.this.mScrollProgress == 0.0f) {
+                MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
+            }
+            MiuiFaceUnlockManager.this.mKeyguardOccluded = z;
+        }
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+        public void onKeyguardBouncerChanged(boolean z) {
+            if (MiuiFaceUnlockManager.this.mKeyguardOccluded) {
+                MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
+            }
         }
     };
     FaceManager.RemovalCallback mRemovalCallback = new FaceManager.RemovalCallback() {
@@ -325,6 +341,10 @@ public class MiuiFaceUnlockManager {
         this.mScrollProgress = f;
     }
 
+    public float getHorizontalMoveLeftProgress() {
+        return this.mScrollProgress;
+    }
+
     public void setWakeupByNotification(boolean z) {
         this.mWakeupByNotification = z;
     }
@@ -374,6 +394,7 @@ public class MiuiFaceUnlockManager {
         int i = this.mFaceFailConunt + 1;
         this.mFaceFailConunt = i;
         if (!(this.mFaceLockedOut || i < 5 || MiuiFaceUnlockUtils.isSupportTeeFaceunlock())) {
+            this.mFaceLockedOut = true;
             this.mUpdateMonitor.handleReeFaceLockout();
             for (int i2 = 0; i2 < this.mCallbacks.size(); i2++) {
                 this.mCallbacks.get(i2).get().onFaceAuthLocked();
