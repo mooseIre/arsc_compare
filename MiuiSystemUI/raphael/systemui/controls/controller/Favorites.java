@@ -16,8 +16,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsControllerImpl.kt */
-final class Favorites {
+public final class Favorites {
     public static final Favorites INSTANCE = new Favorites();
     private static Map<ComponentName, ? extends List<StructureInfo>> favMap = MapsKt__MapsKt.emptyMap();
 

@@ -72,6 +72,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         listPreference.setOnPreferenceChangeListener($$Lambda$NavBarTuner$xJajVHN9uODpq3muoNpXW6uxwc.INSTANCE);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindLayout$2 */
     public /* synthetic */ void lambda$bindLayout$2$NavBarTuner(ListPreference listPreference, String str, String str2) {
@@ -173,6 +174,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindButton$5 */
     public /* synthetic */ void lambda$bindButton$5$NavBarTuner(String str, ListPreference listPreference, ListPreference listPreference2, Preference preference, String str2, String str3) {
@@ -198,6 +200,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindButton$4 */
     public /* synthetic */ void lambda$bindButton$4$NavBarTuner(String str, String str2, ListPreference listPreference, ListPreference listPreference2, Preference preference) {
@@ -221,6 +224,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         listPreference2.setVisible(false);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindButton$7 */
     public /* synthetic */ boolean lambda$bindButton$7$NavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2, Preference preference2, Object obj) {
@@ -245,6 +249,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         return true;
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindButton$6 */
     public /* synthetic */ void lambda$bindButton$6$NavBarTuner(String str, ListPreference listPreference, Preference preference, ListPreference listPreference2) {
@@ -252,6 +257,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         updateSummary(listPreference2);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindButton$9 */
     public /* synthetic */ boolean lambda$bindButton$9$NavBarTuner(Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, Preference preference2) {
@@ -279,6 +285,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         return true;
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$bindButton$8 */
     public /* synthetic */ void lambda$bindButton$8$NavBarTuner(EditText editText, Preference preference, String str, ListPreference listPreference, ListPreference listPreference2, DialogInterface dialogInterface, int i) {

@@ -12,6 +12,6 @@ public final class MediaCarouselController$inflateSettingsButton$2 implements Vi
     }
 
     public final void onClick(View view) {
-        this.this$0.activityStarter.startActivity(MediaCarouselControllerKt.settingsIntent, true);
+        this.this$0.activityStarter.startActivity(MediaCarouselControllerKt.access$getSettingsIntent$p(), true);
     }
 }

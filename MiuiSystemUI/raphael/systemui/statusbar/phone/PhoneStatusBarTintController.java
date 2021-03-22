@@ -3,7 +3,6 @@ package com.android.systemui.statusbar.phone;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Handler;
-import android.util.Log;
 import android.view.CompositionSamplingListener;
 import android.view.View;
 import com.android.systemui.C0012R$dimen;
@@ -112,7 +111,6 @@ public class PhoneStatusBarTintController implements View.OnAttachStateChangeLis
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateTint(float f) {
-        Log.d("PhoneStatusBarTintController", "updateTint: medianLuma = " + f);
         if (Math.abs(this.mCurrentMedianLuma - f) > this.mLuminanceChangeThreshold) {
             this.mCurrentMedianLuma = f;
             this.mLightBarController.setSmartDarkLight(f > this.mLuminanceThreshold);

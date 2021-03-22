@@ -159,15 +159,18 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         }
     }
 
-    public boolean isSnoozed(String str) {
-        return this.mSnoozedPackages.get(snoozeKey(str, this.mUser)) != null;
+    public boolean isSnoozePackageEmpty() {
+        return this.mSnoozedPackages.size() > 0;
     }
 
     public void snooze() {
+        HeadsUpManagerInjector.setSnoozeUntil(this.mClock.currentTimeMillis() + 60000);
         for (String str : this.mAlertEntries.keySet()) {
             HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
             String packageName = headsUpEntry.mEntry.getSbn().getPackageName();
-            if (!HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry.mEntry)) {
+            if (HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry.mEntry)) {
+                HeadsUpManagerInjector.setSnoozeUntil(0);
+            } else {
                 this.mSnoozedPackages.put(snoozeKey(packageName, this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
             }
         }

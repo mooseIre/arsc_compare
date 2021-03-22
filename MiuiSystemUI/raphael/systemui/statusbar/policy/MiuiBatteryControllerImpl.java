@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.provider.Settings;
-import android.util.Log;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.power.EnhancedEstimates;
@@ -47,7 +46,6 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
             synchronized (MiuiBatteryControllerImpl.this.mChangeCallbacks) {
                 int size = MiuiBatteryControllerImpl.this.mChangeCallbacks.size();
                 for (int i = 0; i < size; i++) {
-                    Log.d("MiuiBatteryControllerImpl", "onChange: batteryStyle = " + MiuiBatteryControllerImpl.this.mBatteryStyle);
                     MiuiBatteryControllerImpl.this.mChangeCallbacks.get(i).onBatteryStyleChanged(MiuiBatteryControllerImpl.this.mBatteryStyle);
                 }
             }

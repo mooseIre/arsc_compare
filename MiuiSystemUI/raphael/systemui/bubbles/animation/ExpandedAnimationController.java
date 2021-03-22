@@ -311,15 +311,11 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
             }
 
             public final void run() {
-                ExpandedAnimationController.lambda$snapBubbleBack$4(this.f$0);
+                this.f$0.setTranslationZ(0.0f);
             }
         });
         this.mMagnetizedBubbleDraggingOut = null;
         updateBubblePositions();
-    }
-
-    static /* synthetic */ void lambda$snapBubbleBack$4(View view) {
-        view.setTranslationZ(0.0f);
     }
 
     public void onGestureFinished() {

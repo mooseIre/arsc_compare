@@ -2137,6 +2137,7 @@ public final class R {
         public static final int choose_keyguard_clock_item_bg;
         public static final int choose_keyguard_clock_panel_text_color;
         public static final int choose_keyguard_time_text_color;
+        public static final int clickable_toast_text_color;
         public static final int clock_gray;
         public static final int clock_text_color;
         public static final int clock_white;
@@ -3056,6 +3057,9 @@ public final class R {
         public static final int choose_unlock_password_footer_margin;
         public static final int circle_avatar_size;
         public static final int clear_all_padding_top;
+        public static final int clickable_toast_margin_horizontal;
+        public static final int clickable_toast_margin_vertical;
+        public static final int clickable_toast_text_size;
         public static final int clock_collapsed_bottom_margin;
         public static final int clock_collapsed_bottom_margin_large_text;
         public static final int clock_expanded_bottom_margin;
@@ -6001,6 +6005,8 @@ public final class R {
         public static final int choose_keyguard_time_item_bg_selected;
         public static final int circle_blue_40dp;
         public static final int circle_white_40dp;
+        public static final int clickable_toast_frame;
+        public static final int clickalbe_toast_frame;
         public static final int clipboard_empty;
         public static final int clipboard_full;
         public static final int clock_view_bg;
@@ -8249,6 +8255,8 @@ public final class R {
         public static final int choose_clock_scroll_view;
         public static final int chronometer;
         public static final int clear_text;
+        public static final int click_btn_text;
+        public static final int clickable_toast_btn;
         public static final int clip_horizontal;
         public static final int clip_layer;
         public static final int clip_vertical;
@@ -9903,6 +9911,7 @@ public final class R {
         public static final int choose_keyguard_clock;
         public static final int choose_keyguard_clock_item;
         public static final int choose_lock_pattern_button;
+        public static final int clickable_toast;
         public static final int clipboard;
         public static final int connected_device_signal;
         public static final int contaminant_dialog;
@@ -11324,6 +11333,7 @@ public final class R {
         public static final int fingerprint_try_again_msg;
         public static final int fingerprint_try_again_text;
         public static final int flash_device;
+        public static final int float_notification_snooze_strategy;
         public static final int force_allow_on_external;
         public static final int force_allow_on_external_summary;
         public static final int force_msaa;
@@ -11768,6 +11778,15 @@ public final class R {
         public static final int miui_notification_menu_title_not_allow;
         public static final int miui_quick_settings_tiles_default;
         public static final int miui_quick_settings_tiles_stock;
+        public static final int miui_snooze_always_float;
+        public static final int miui_snooze_cancel;
+        public static final int miui_snooze_default_time;
+        public static final int miui_snooze_to_settings;
+        public static final int miui_snooze_toast_hint_default;
+        public static final int miui_snooze_toast_hint_until_unlock_screen;
+        public static final int miui_snooze_until_unlock_screen;
+        public static final int miui_snooze_user_set_fail;
+        public static final int miui_snooze_user_set_success;
         public static final int miuix_sbl_tracking_progress_labe_pull_to_refresh;
         public static final int miuix_sbl_tracking_progress_labe_refreshed;
         public static final int miuix_sbl_tracking_progress_labe_refreshing;

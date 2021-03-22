@@ -1,6 +1,5 @@
 package com.android.systemui.tuner;
 
-import com.android.systemui.Dependency;
 import com.android.systemui.tuner.TunerService;
 import java.util.function.Consumer;
 
@@ -14,6 +13,6 @@ public final /* synthetic */ class $$Lambda$NavBarTuner$tsKQ8HfwaDSvc3iDCsgHsW95
 
     @Override // java.util.function.Consumer
     public final void accept(Object obj) {
-        ((TunerService) Dependency.get(TunerService.class)).removeTunable((TunerService.Tunable) obj);
+        NavBarTuner.lambda$onDestroy$0((TunerService.Tunable) obj);
     }
 }

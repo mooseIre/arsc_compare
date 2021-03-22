@@ -687,7 +687,9 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
             super.onBiometricAuthenticated(i, biometricSourceType, z);
-            if (biometricSourceType != BiometricSourceType.FACE && biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            if (biometricSourceType == BiometricSourceType.FACE) {
+                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
+            } else if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
                 KeyguardIndicationController.this.mFingerprintAuthUserId = i;
                 KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED;
                 KeyguardIndicationController.this.handleFingerprintStateChanged();
@@ -698,8 +700,12 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
             super.onBiometricAuthFailed(biometricSourceType);
-            KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
-            KeyguardIndicationController.this.handleFingerprintStateChanged();
+            if (biometricSourceType == BiometricSourceType.FACE) {
+                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
+            } else if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+                KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
+                KeyguardIndicationController.this.handleFingerprintStateChanged();
+            }
         }
 
         @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback

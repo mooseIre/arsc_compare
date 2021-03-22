@@ -11,6 +11,7 @@ import android.metrics.LogMaker;
 import android.os.SystemClock;
 import android.text.format.Formatter;
 import android.util.Log;
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
@@ -83,6 +84,7 @@ public class DozeTriggers implements DozeMachine.Part {
     private final UiModeManager mUiModeManager;
     private final WakeLock mWakeLock;
 
+    @VisibleForTesting
     public enum DozingUpdateUiEvent implements UiEventLogger.UiEventEnum {
         DOZING_UPDATE_NOTIFICATION(433),
         DOZING_UPDATE_SIGMOTION(434),
@@ -166,6 +168,8 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mDozeSensors.destroy();
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void onNotification(Runnable runnable) {
         if (DozeMachine.DEBUG) {
             Log.d("DozeTriggers", "requestNotificationPulse");
@@ -223,7 +227,6 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$proximityCheckThenCall$0 */
     public /* synthetic */ void lambda$proximityCheckThenCall$0$DozeTriggers(long j, int i, Consumer consumer, Boolean bool) {
@@ -240,6 +243,8 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mWakeLock.release("DozeTriggers");
     }
 
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
     public void onSensor(int i, float f, float f2, float[] fArr) {
         boolean z = false;
         boolean z2 = i == 4;
@@ -292,7 +297,6 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onSensor$1 */
     public /* synthetic */ void lambda$onSensor$1$DozeTriggers(boolean z, boolean z2, float f, float f2, int i, boolean z3, Boolean bool) {
@@ -335,8 +339,8 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mMachine.wakeUp();
     }
 
-    /* access modifiers changed from: public */
-    private void onProximityFar(boolean z) {
+    /* access modifiers changed from: private */
+    public void onProximityFar(boolean z) {
         if (this.mMachine.isExecutingTransition()) {
             Log.w("DozeTriggers", "onProximityFar called during transition. Ignoring sensor response.");
             return;
@@ -398,7 +402,6 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onWakeScreen$2 */
     public /* synthetic */ void lambda$onWakeScreen$2$DozeTriggers(DozeMachine.State state, Boolean bool) {
@@ -408,7 +411,7 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* renamed from: com.android.systemui.doze.DozeTriggers$2 */
+    /* renamed from: com.android.systemui.doze.DozeTriggers$2  reason: invalid class name */
     static /* synthetic */ class AnonymousClass2 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
@@ -486,6 +489,8 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void requestPulse(int i, boolean z, Runnable runnable) {
         Assert.isMainThread();
         this.mDozeHost.extendPulse(i);
@@ -538,7 +543,6 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$requestPulse$3 */
     public /* synthetic */ void lambda$requestPulse$3$DozeTriggers(Runnable runnable, int i, Boolean bool) {
@@ -573,12 +577,10 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mDozeSensors.dump(printWriter);
     }
 
-    /* access modifiers changed from: private */
-    public class TriggerReceiver extends BroadcastReceiver {
+    private class TriggerReceiver extends BroadcastReceiver {
         private boolean mRegistered;
 
         private TriggerReceiver() {
-            DozeTriggers.this = r1;
         }
 
         public void onReceive(Context context, Intent intent) {
@@ -614,8 +616,7 @@ public class DozeTriggers implements DozeMachine.Part {
         }
     }
 
-    /* access modifiers changed from: private */
-    public class DockEventListener implements DockManager.DockEventListener {
+    private class DockEventListener implements DockManager.DockEventListener {
         private DockEventListener(DozeTriggers dozeTriggers) {
         }
     }

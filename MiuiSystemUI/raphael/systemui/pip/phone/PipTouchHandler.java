@@ -12,7 +12,6 @@ import android.graphics.drawable.TransitionDrawable;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.util.Log;
-import android.util.Pair;
 import android.util.Size;
 import android.view.IPinnedStackController;
 import android.view.InputEvent;
@@ -26,7 +25,6 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.internal.os.logging.MetricsLoggerWrapper;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
@@ -34,6 +32,7 @@ import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.PipTaskOrganizer;
+import com.android.systemui.pip.PipUiEventLogger;
 import com.android.systemui.pip.phone.PipAccessibilityInteractionConnection;
 import com.android.systemui.pip.phone.PipMenuActivityController;
 import com.android.systemui.pip.phone.PipTouchHandler;
@@ -52,7 +51,6 @@ import kotlin.jvm.functions.Function5;
 
 public class PipTouchHandler {
     private final AccessibilityManager mAccessibilityManager;
-    private final IActivityManager mActivityManager;
     private int mBottomOffsetBufferPx;
     private PipAccessibilityInteractionConnection mConnection;
     private final Context mContext;
@@ -88,6 +86,7 @@ public class PipTouchHandler {
     private IPinnedStackController mPinnedStackController;
     private final PipBoundsHandler mPipBoundsHandler;
     private PipResizeGestureHandler mPipResizeGestureHandler;
+    private final PipUiEventLogger mPipUiEventLogger;
     @VisibleForTesting
     Rect mResizedBounds = new Rect();
     private float mSavedSnapFraction = -1.0f;
@@ -125,10 +124,7 @@ public class PipTouchHandler {
 
         @Override // com.android.systemui.pip.phone.PipMenuActivityController.Listener
         public void onPipDismiss() {
-            Pair<ComponentName, Integer> topPipActivity = PipUtils.getTopPipActivity(PipTouchHandler.this.mContext, PipTouchHandler.this.mActivityManager);
-            if (topPipActivity.first != null) {
-                MetricsLoggerWrapper.logPictureInPictureDismissByTap(PipTouchHandler.this.mContext, topPipActivity);
-            }
+            PipTouchHandler.this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_TAP_TO_REMOVE);
             PipTouchHandler.this.mTouchState.removeDoubleTapTimeoutCallback();
             PipTouchHandler.this.mMotionHelper.dismissPip();
         }
@@ -140,9 +136,8 @@ public class PipTouchHandler {
     }
 
     @SuppressLint({"InflateParams"})
-    public PipTouchHandler(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipSnapAlgorithm pipSnapAlgorithm, SysUiState sysUiState) {
+    public PipTouchHandler(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipSnapAlgorithm pipSnapAlgorithm, SysUiState sysUiState, PipUiEventLogger pipUiEventLogger) {
         this.mContext = context;
-        this.mActivityManager = iActivityManager;
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
         this.mMenuController = pipMenuActivityController;
@@ -164,7 +159,7 @@ public class PipTouchHandler {
             public final void run() {
                 PipTouchHandler.this.updateMovementBounds();
             }
-        }, sysUiState);
+        }, sysUiState, pipUiEventLogger);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         Handler handler = this.mHandler;
         $$Lambda$PipTouchHandler$Uq5M9Md512Sfgd22VAeFpot25E0 r4 = new Runnable() {
@@ -218,6 +213,7 @@ public class PipTouchHandler {
                 PipTouchHandler.this.updateMovementBounds();
             }
         }, this.mHandler);
+        this.mPipUiEventLogger = pipUiEventLogger;
         this.mTargetView = new DismissCircleView(context);
         FrameLayout frameLayout = new FrameLayout(context);
         this.mTargetViewContainer = frameLayout;
@@ -264,10 +260,7 @@ public class PipTouchHandler {
                         PipTouchHandler.AnonymousClass1.this.lambda$onReleasedInTarget$0$PipTouchHandler$1();
                     }
                 });
-                Pair<ComponentName, Integer> topPipActivity = PipUtils.getTopPipActivity(PipTouchHandler.this.mContext, PipTouchHandler.this.mActivityManager);
-                if (topPipActivity.first != null) {
-                    MetricsLoggerWrapper.logPictureInPictureDismissByDrag(PipTouchHandler.this.mContext, topPipActivity);
-                }
+                PipTouchHandler.this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_DRAG_TO_REMOVE);
             }
 
             /* access modifiers changed from: private */
@@ -608,13 +601,14 @@ public class PipTouchHandler {
             }
             this.mMenuState = i;
             updateMovementBounds();
-            onRegistrationChanged(i == 0);
-            if (i != 1) {
-                Context context = this.mContext;
-                if (i == 2) {
-                    z2 = true;
-                }
-                MetricsLoggerWrapper.logPictureInPictureMenuVisible(context, z2);
+            if (i == 0) {
+                z2 = true;
+            }
+            onRegistrationChanged(z2);
+            if (i == 0) {
+                this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_HIDE_MENU);
+            } else if (i == 2) {
+                this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_SHOW_MENU);
             }
         }
     }

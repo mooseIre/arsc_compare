@@ -14,6 +14,6 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2<T> imp
 
     public final void accept(@NotNull Runnable runnable) {
         Intrinsics.checkParameterIsNotNull(runnable, "runnable");
-        this.this$0.cancelLoadRunnable = runnable;
+        ControlsFavoritingActivity.access$setCancelLoadRunnable$p(this.this$0, runnable);
     }
 }

@@ -40,7 +40,7 @@ public class TileServices extends IQSService.Stub {
     private final Handler mHandler;
     private final QSTileHost mHost;
     private final Handler mMainHandler;
-    private int mMaxBound = 5;
+    private int mMaxBound = 10;
     private final BroadcastReceiver mRequestListeningReceiver = new BroadcastReceiver() {
         /* class com.android.systemui.qs.external.TileServices.AnonymousClass2 */
 

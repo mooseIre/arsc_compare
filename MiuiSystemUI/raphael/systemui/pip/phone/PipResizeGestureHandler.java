@@ -22,6 +22,7 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipTaskOrganizer;
+import com.android.systemui.pip.PipUiEventLogger;
 import com.android.systemui.util.DeviceConfigProxy;
 import java.io.PrintWriter;
 import java.util.concurrent.Executor;
@@ -51,6 +52,7 @@ public class PipResizeGestureHandler {
     private final Function<Rect, Rect> mMovementBoundsSupplier;
     private final PipBoundsHandler mPipBoundsHandler;
     private PipTaskOrganizer mPipTaskOrganizer;
+    private PipUiEventLogger mPipUiEventLogger;
     private final SysUiState mSysUiState;
     private boolean mThresholdCrossed;
     private final Rect mTmpBottomLeftCorner = new Rect();
@@ -61,7 +63,7 @@ public class PipResizeGestureHandler {
     private float mTouchSlop;
     private final Runnable mUpdateMovementBoundsRunnable;
 
-    public PipResizeGestureHandler(Context context, PipBoundsHandler pipBoundsHandler, PipMotionHelper pipMotionHelper, DeviceConfigProxy deviceConfigProxy, PipTaskOrganizer pipTaskOrganizer, Function<Rect, Rect> function, Runnable runnable, SysUiState sysUiState) {
+    public PipResizeGestureHandler(Context context, PipBoundsHandler pipBoundsHandler, PipMotionHelper pipMotionHelper, DeviceConfigProxy deviceConfigProxy, PipTaskOrganizer pipTaskOrganizer, Function<Rect, Rect> function, Runnable runnable, SysUiState sysUiState, PipUiEventLogger pipUiEventLogger) {
         this.mContext = context;
         this.mDisplayId = context.getDisplayId();
         this.mMainExecutor = context.getMainExecutor();
@@ -71,6 +73,7 @@ public class PipResizeGestureHandler {
         this.mMovementBoundsSupplier = function;
         this.mUpdateMovementBoundsRunnable = runnable;
         this.mSysUiState = sysUiState;
+        this.mPipUiEventLogger = pipUiEventLogger;
         context.getDisplay().getRealSize(this.mMaxSize);
         reloadResources();
         this.mEnableUserResize = DeviceConfig.getBoolean("systemui", "pip_user_resize", true);
@@ -293,9 +296,10 @@ public class PipResizeGestureHandler {
                         PipResizeGestureHandler.this.lambda$onMotionEvent$1$PipResizeGestureHandler((Rect) obj);
                     }
                 });
-            } else {
-                resetState();
+                this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_RESIZE);
+                return;
             }
+            resetState();
         }
     }
 

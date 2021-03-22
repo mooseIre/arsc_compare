@@ -40,7 +40,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
     private final ZenModeController mZenModeController;
 
     public MiuiNotificationInterruptStateProviderImpl(Context context, ContentResolver contentResolver, PowerManager powerManager, IDreamManager iDreamManager, AmbientDisplayConfiguration ambientDisplayConfiguration, NotificationFilter notificationFilter, BatteryController batteryController, StatusBarStateController statusBarStateController, HeadsUpManager headsUpManager, Handler handler, ZenModeController zenModeController, SettingsManager settingsManager, CommandQueue commandQueue, StatusBarKeyguardViewManager statusBarKeyguardViewManager, DeviceProvisionedController deviceProvisionedController) {
-        super(contentResolver, powerManager, iDreamManager, ambientDisplayConfiguration, notificationFilter, batteryController, statusBarStateController, headsUpManager, handler);
+        super(contentResolver, powerManager, iDreamManager, ambientDisplayConfiguration, notificationFilter, batteryController, statusBarStateController, headsUpManager, handler, context);
         this.mContext = context;
         this.mStatusBarStateController = statusBarStateController;
         this.mZenModeController = zenModeController;
