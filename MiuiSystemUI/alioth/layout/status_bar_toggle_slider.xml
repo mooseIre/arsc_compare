@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <CheckBox android:id="@id/toggle" android:visibility="gone" android:layout_width="48.0dip" android:layout_height="0.0dip" android:button="@null" android:layout_alignParentTop="true" android:layout_alignParentBottom="true" android:layout_alignParentStart="true" />
+    <com.android.systemui.settings.ToggleSeekBar android:id="@id/slider" android:background="@null" android:layout_width="0.0dip" android:layout_height="wrap_content" android:maxHeight="@dimen/qs_brightness_dialog_height" android:progressDrawable="@drawable/brightness_toggle_progress" android:thumb="@drawable/brightness_toggle_thumb" android:layout_centerVertical="true" android:layout_alignParentStart="true" android:layout_alignParentEnd="true" android:mirrorForRtl="true" android:splitTrack="false" />
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_brightness_low" android:scaleType="fitXY" android:layout_centerVertical="true" android:layout_marginStart="@dimen/qs_brightness_icon_margin" android:layout_alignParentStart="true" />
+    <ImageView android:layout_width="wrap_content" android:layout_height="wrap_content" android:src="@drawable/ic_brightness_high" android:scaleType="fitXY" android:layout_centerVertical="true" android:layout_marginEnd="@dimen/qs_brightness_icon_margin" android:layout_alignParentEnd="true" />
+    <TextView android:textSize="12.0sp" android:textColor="#ff666666" android:gravity="center" android:id="@id/label" android:paddingTop="26.0dip" android:visibility="gone" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_centerVertical="true" android:layout_alignStart="@id/toggle" android:layout_alignEnd="@id/toggle" />
+</merge>

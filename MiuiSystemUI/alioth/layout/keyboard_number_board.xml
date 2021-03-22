@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/keyboard_number" android:layout_width="fill_parent" android:layout_height="@dimen/keyboard_view_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <view android:tag="1" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="2" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="3" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="4" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="5" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="6" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="7" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="8" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="9" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:textSize="@dimen/keyboard_shift_key_text_size" android:id="@id/btn_back" android:tag="@string/keyboard_key_back" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonSpecial" />
+    <view android:tag="0" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:id="@id/btn_number_delete" android:background="@drawable/keyboard_btn_delete" android:contentDescription="@string/accessibility_keyboard_delete_button" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonSpecial" />
+</FrameLayout>

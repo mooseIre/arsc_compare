@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.phone.NotificationPanelView android:id="@id/notification_panel" android:background="@android:color/transparent" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/notification_panel_window_bg" />
+    <ImageView android:id="@id/left_view_bg" android:layout_width="fill_parent" android:layout_height="fill_parent" android:scaleType="centerCrop" />
+    <com.android.keyguard.MiuiGoneFrameLayout android:id="@id/big_clock_container" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <include android:visibility="gone" layout="@layout/keyguard_status_view" />
+    <com.android.keyguard.clock.KeyguardClockContainer android:id="@id/miui_keyguard_clock_container" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="no" />
+    <FrameLayout android:id="@id/awesome_lock_screen_container" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+    <include layout="@layout/miui_keyguard_lock_screen_magazine_pre_layout" />
+    <include layout="@layout/miui_keyguard_face_unlock_view" />
+    <TextView android:textSize="16.0sp" android:textColor="#ffffffff" android:layout_gravity="end|center|top" android:id="@id/switch_to_system_user" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="40.0dip" android:text="@string/switch_system_user" android:drawableLeft="@drawable/logout_dark" android:drawablePadding="5.0dip" android:layout_marginEnd="23.0dip" />
+    <com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer android:layout_gravity="@integer/notification_panel_layout_gravity" android:id="@id/notification_container_parent" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <include layout="@layout/dock_info_overlay" />
+        <FrameLayout android:layout_gravity="@integer/notification_panel_layout_gravity" android:id="@id/qs_frame" android:clipChildren="false" android:clipToPadding="false" android:layout="@layout/qs_panel" android:layout_width="@dimen/qs_panel_width" android:layout_height="fill_parent" android:layout_marginLeft="@dimen/notification_left_right_margin" android:layout_marginRight="@dimen/notification_left_right_margin" systemui:viewType="com.android.systemui.plugins.qs.QS" />
+        <com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout android:layout_gravity="@integer/notification_panel_layout_gravity" android:id="@id/notification_stack_scroller" android:layout_width="@dimen/notification_panel_width" android:layout_height="fill_parent" android:layout_marginLeft="@dimen/notification_left_right_margin" android:layout_marginTop="@dimen/notification_panel_margin_top" android:layout_marginRight="@dimen/notification_left_right_margin" android:layout_marginBottom="@dimen/close_handle_underlap" android:elevation="4.0dip" />
+        <include layout="@layout/notification_group_header_sticky" />
+        <include layout="@layout/status_bar_notification_dismiss_all" />
+        <include android:id="@id/ambient_indication_container" layout="@layout/ambient_indication" />
+        <include layout="@layout/photo_preview_overlay" />
+        <ViewStub android:id="@id/keyguard_user_switcher" android:layout="@layout/keyguard_user_switcher" android:layout_width="fill_parent" android:layout_height="fill_parent" />
+        <include android:visibility="invisible" layout="@layout/miui_keyguard_status_bar" />
+        <Button android:id="@id/report_rejected_touch" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/status_bar_header_height_keyguard" android:text="@string/report_rejected_touch" />
+    </com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer>
+    <include android:visibility="gone" layout="@layout/keyguard_bottom_area" />
+    <com.android.systemui.statusbar.AlphaOptimizedView android:layout_gravity="bottom" android:id="@id/qs_navbar_scrim" android:background="@drawable/qs_navbar_scrim" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="96.0dip" />
+    <include layout="@layout/status_bar_expanded_plugin_frame" />
+    <include android:id="@id/keyguard_left_view" android:visibility="invisible" layout="@layout/miui_keyguard_left_view_container" />
+</com.android.systemui.statusbar.phone.NotificationPanelView>

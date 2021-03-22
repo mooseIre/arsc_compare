@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:id="@id/keyboard_symbol" android:layout_width="fill_parent" android:layout_height="@dimen/keyboard_view_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <view android:tag="^" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="\\" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="|" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="&lt;" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag=">" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="￠" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="£" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="€" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="¥" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="₱" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="[" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="]" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="{" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="}" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="\#" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="%" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="+" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="=" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="~" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="_" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="-" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="/" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag=":" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag=";" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="(" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag=")" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="$" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="&amp;" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="@string/keyboard_key" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:id="@id/btn_symbol_lock" android:background="@drawable/keyboard_lock_list" android:contentDescription="@string/accessibility_keyboard_symbol_board_symbol_lock_button" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonSpecial" />
+    <view android:tag="`" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="\?" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="!" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="*" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="\@" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="," class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:tag="'" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:id="@id/btn_symbol_delete" android:background="@drawable/keyboard_btn_delete" android:contentDescription="@string/accessibility_keyboard_delete_button" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonSpecial" />
+    <view android:textSize="@dimen/keyboard_shift_key_text_size" android:id="@id/btn_shift2letter" android:tag="ABC" android:contentDescription="@string/accessibility_keyboard_symbol_board_shift2letter_button" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonSpecial" />
+    <view android:textSize="@dimen/keyboard_shift_key_text_size" android:id="@id/btn_symbol_space" android:tag="@string/keyboard_key_space" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonNormal" />
+    <view android:id="@id/btn_symbol_ok" android:background="@drawable/keyboard_btn_enter" android:contentDescription="@string/accessibility_keyboard_ok_button" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton" style="@style/KeyboardButtonSpecial" />
+</FrameLayout>

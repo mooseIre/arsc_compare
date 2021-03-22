@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <miui.widget.StateEditText android:gravity="center|left" android:id="@id/owner_info_edit_text" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="15.0dip" android:hint="@string/owner_info_settings_edit_text_hint" android:maxLength="20" android:inputType="textNoSuggestions" style="@miui:style/Widget.StateEditText" />
+    <LinearLayout android:orientation="horizontal" android:id="@id/owner_info_container" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/choose_clock_list_left_margin" android:paddingEnd="@dimen/choose_clock_list_left_margin">
+        <TextView android:textAppearance="@style/style_select_color_title" android:textColor="@color/choose_keyguard_clock_panel_text_color" android:layout_gravity="center_vertical" android:id="@id/owner_info_title" android:layout_width="0.0dip" android:layout_height="wrap_content" android:text="@string/lock_screen_signature_msg" android:layout_weight="1.0" />
+        <miui.widget.SlidingButton android:layout_gravity="center_vertical" android:id="@id/owner_info_button" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="15.0dip" />
+    </LinearLayout>
+</LinearLayout>

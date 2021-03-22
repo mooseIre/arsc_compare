@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout android:layout_gravity="bottom|center" android:layout_width="wrap_content" android:layout_height="@dimen/floating_dismiss_gradient_height"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout android:layout_gravity="center" android:id="@id/bubble_dismiss_circle" android:background="@drawable/bubble_dismiss_circle" android:layout_width="@dimen/bubble_dismiss_encircle_size" android:layout_height="@dimen/bubble_dismiss_encircle_size" />
+    <LinearLayout android:gravity="center" android:orientation="horizontal" android:id="@id/bubble_dismiss_icon_container" android:paddingLeft="@dimen/bubble_dismiss_target_padding_x" android:paddingTop="@dimen/bubble_dismiss_target_padding_y" android:paddingRight="@dimen/bubble_dismiss_target_padding_x" android:paddingBottom="@dimen/bubble_dismiss_target_padding_y" android:clipChildren="false" android:clipToPadding="false" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <ImageView android:id="@id/bubble_dismiss_close_icon" android:layout_width="24.0dip" android:layout_height="24.0dip" android:src="@drawable/bubble_dismiss_icon" />
+    </LinearLayout>
+</FrameLayout>

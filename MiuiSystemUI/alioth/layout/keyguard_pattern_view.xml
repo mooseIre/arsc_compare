@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.keyguard.KeyguardPatternView android:layout_gravity="center" android:orientation="vertical" android:id="@id/keyguard_pattern_view" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layoutDirection="ltr"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:androidprv="http://schemas.android.com/apk/res-auto">
+    <include layout="@layout/miui_keyguard_face_unlock_view" />
+    <include android:id="@id/keyguard_security_bouncer_message" layout="@layout/keyguard_security_bouncer_message_view" />
+    <Space android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" />
+    <LinearLayout android:layout_gravity="center" android:orientation="vertical" android:id="@id/container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="@dimen/miui_keyguard_pattern_layout_width" android:layout_height="@dimen/miui_keyguard_pattern_layout_height" android:layout_marginBottom="@dimen/miui_keyguard_pattern_view_container_margin_bottom">
+        <com.android.keyguard.MiuiLockPatternView android:gravity="center" android:layout_gravity="center" android:id="@id/lockPatternView" android:clipChildren="false" android:clipToPadding="false" android:layout_width="@dimen/miui_keyguard_pattern_view_pattern_view_height_width" android:layout_height="@dimen/miui_keyguard_pattern_view_pattern_view_height_width" android:layout_marginBottom="@dimen/miui_keyguard_pattern_view_pattern_view_margin_bottom" />
+        <include android:id="@id/keyguard_selector_fade_container" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/miui_keyguard_pattern_view_eca_margin_bottom" layout="@layout/keyguard_eca" />
+    </LinearLayout>
+</com.android.keyguard.KeyguardPatternView>

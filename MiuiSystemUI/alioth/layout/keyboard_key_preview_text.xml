@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<view android:textSize="23.399994sp" android:textColor="@color/keyboard_preview_text" android:gravity="center" android:id="@id/preview_text" android:background="@drawable/keyboard_key_preview_bg" android:visibility="invisible" android:layout_width="wrap_content" android:layout_height="wrap_content" class="com.android.keyguard.widget.MiuiKeyBoardView$KeyButton"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

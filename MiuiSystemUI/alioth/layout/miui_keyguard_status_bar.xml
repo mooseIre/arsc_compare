@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView android:gravity="center_vertical" android:id="@id/keyguard_header" android:layout_width="fill_parent" android:layout_height="@dimen/status_bar_header_height_keyguard" android:baselineAligned="false"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:gravity="end|center" android:id="@id/status_icon_area" android:paddingTop="@dimen/status_bar_padding_top" android:layout_width="fill_parent" android:layout_height="fill_parent" android:layout_alignParentEnd="true">
+        <com.android.systemui.statusbar.views.MiuiClipEdgeViewLinearLayout android:gravity="end|center" android:id="@id/system_icons_container" android:layout_width="0.0dip" android:layout_height="fill_parent" android:layout_weight="1.0" android:layout_marginStart="@dimen/system_icons_super_container_margin_start">
+            <include layout="@layout/miui_system_icons" />
+        </com.android.systemui.statusbar.views.MiuiClipEdgeViewLinearLayout>
+        <com.android.systemui.statusbar.phone.MultiUserSwitch android:id="@id/multi_user_switch" android:background="@drawable/ripple_drawable" android:visibility="gone" android:layout_width="@dimen/multi_user_switch_width_keyguard" android:layout_height="fill_parent" android:layout_marginEnd="@dimen/multi_user_switch_keyguard_margin">
+            <ImageView android:layout_gravity="center" android:id="@id/multi_user_avatar" android:layout_width="@dimen/multi_user_avatar_keyguard_size" android:layout_height="@dimen/multi_user_avatar_keyguard_size" android:scaleType="centerInside" />
+        </com.android.systemui.statusbar.phone.MultiUserSwitch>
+    </LinearLayout>
+    <Space android:gravity="center" android:id="@id/cutout_space_view" android:visibility="gone" android:layout_width="0.0dip" android:layout_height="fill_parent" />
+    <FrameLayout android:id="@id/keyguard_drip_left_statusIcons_container" android:paddingTop="@dimen/status_bar_padding_top" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_toStartOf="@id/cutout_space_view" android:layout_toEndOf="@id/keyguard_carrier_text">
+        <com.android.systemui.statusbar.phone.MiuiDripLeftStatusIconContainer android:orientation="horizontal" android:id="@id/keyguard_drip_left_statusIcons" android:layout_width="wrap_content" android:layout_height="fill_parent" />
+    </FrameLayout>
+    <com.android.keyguard.CarrierText android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:ellipsize="marquee" android:gravity="center_vertical" android:id="@id/keyguard_carrier_text" android:paddingTop="@dimen/status_bar_padding_top" android:layout_width="wrap_content" android:layout_height="fill_parent" android:maxWidth="@dimen/statusbar_carrier_max_width" android:singleLine="true" android:marqueeRepeatLimit="1" android:textDirection="locale" android:layout_toEndOf="@id/prompt_container" systemui:showAirplaneMode="true" systemui:showMissingSim="true" />
+    <FrameLayout android:id="@id/prompt_container" android:paddingTop="@dimen/status_bar_padding_top" android:layout_width="wrap_content" android:layout_height="fill_parent" android:layout_alignParentStart="true" />
+</com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView>

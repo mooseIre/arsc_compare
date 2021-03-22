@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.qs.QSContainerImpl android:id="@id/quick_settings_container" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <View android:id="@id/quick_settings_status_bar_background" android:background="@android:color/transparent" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="48.0dip" />
+    <View android:id="@id/quick_settings_gradient_view" android:background="@android:color/transparent" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="126.0dip" android:layout_marginTop="48.0dip" />
+    <com.android.systemui.qs.QSContent android:orientation="vertical" android:id="@id/qs_content" android:background="@android:color/transparent" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent" android:importantForAccessibility="no">
+        <LinearLayout android:orientation="vertical" android:id="@id/qs_footer_bundle" android:layout_width="fill_parent" android:layout_height="wrap_content" android:elevation="4.0dip">
+            <include android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_brightness_top_margin" layout="@layout/quick_settings_brightness_dialog" />
+            <ImageView android:layout_gravity="center_horizontal" android:id="@id/qs_expand_indicator" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+        </LinearLayout>
+        <View android:id="@id/quick_settings_background" android:background="@drawable/panel_round_corner_bg" android:layout_width="fill_parent" android:layout_height="0.0dip" />
+        <com.android.systemui.qs.NonInterceptingScrollView android:id="@id/expanded_qs_scroll_view" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_weight="1.0" android:importantForAccessibility="no" android:elevation="4.0dip">
+            <com.android.systemui.qs.QSPanel android:id="@id/quick_settings_panel" android:background="@android:color/transparent" android:focusable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:accessibilityTraversalBefore="@id/slider">
+                <include layout="@layout/miui_qs_footer" />
+                <include android:id="@id/divider" layout="@layout/qs_media_divider" />
+            </com.android.systemui.qs.QSPanel>
+        </com.android.systemui.qs.NonInterceptingScrollView>
+        <com.android.systemui.qs.QuickQSPanel android:id="@id/quick_qs_panel" android:background="@android:color/transparent" android:focusable="true" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:importantForAccessibility="yes" android:elevation="4.0dip" android:accessibilityTraversalBefore="@id/slider" />
+    </com.android.systemui.qs.QSContent>
+    <include layout="@layout/miui_quick_status_bar_expanded_header" />
+    <include android:id="@id/qs_detail" layout="@layout/qs_detail" />
+    <include android:id="@id/qs_customize" android:visibility="gone" layout="@layout/qs_customize_panel" />
+</com.android.systemui.qs.QSContainerImpl>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.keyguard.AlphaOptimizedLinearLayout android:orientation="vertical" android:id="@id/customize_container" android:background="@drawable/qs_customizer_background" android:layout_width="fill_parent" android:layout_height="fill_parent">
+        <RelativeLayout android:id="@id/header" android:layout_width="fill_parent" android:layout_height="wrap_content">
+            <TextView android:id="@id/sub_title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/qs_customize_sub_title_margin_bottom" android:text="@string/drag_to_add_tiles" android:layout_alignParentBottom="true" style="@style/TextAppearance.QS.QSCustomizer.SubTitle" />
+            <TextView android:id="@id/title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/qs_customize_title_margin_bottom" android:text="@string/qs_customize_title" android:layout_above="@id/sub_title" style="@style/TextAppearance.QS.QSCustomizer.Title" />
+        </RelativeLayout>
+        <LinearLayout android:orientation="vertical" android:id="@id/content" android:background="@drawable/qs_customizer_bg" android:layout_width="fill_parent" android:layout_height="fill_parent">
+            <androidx.recyclerview.widget.RecyclerView android:id="@android:id/list" android:paddingTop="@dimen/qs_customize_content_padding_top" android:scrollbars="none" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="0.0dip" android:layout_weight="1.0" android:importantForAccessibility="no" android:paddingStart="@dimen/qs_customize_content_padding_horizontal" android:paddingEnd="@dimen/qs_customize_content_padding_horizontal" android:scrollIndicators="none" />
+            <include layout="@layout/qs_divider" />
+            <include layout="@layout/qs_detail_buttons" />
+        </LinearLayout>
+    </com.android.keyguard.AlphaOptimizedLinearLayout>
+    <View android:layout_gravity="bottom" android:id="@id/nav_bar_background" android:background="@color/transparent" android:layout_width="fill_parent" android:layout_height="@dimen/navigation_bar_size" />
+</merge>

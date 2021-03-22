@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.util.NeverExactlyLinearLayout android:gravity="center_vertical" android:layout_gravity="center" android:background="@android:color/transparent" android:paddingTop="@dimen/qs_tile_padding_top" android:paddingBottom="@dimen/qs_tile_padding_top" android:clickable="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:paddingStart="@dimen/qs_footer_padding_start" android:paddingEnd="@dimen/qs_footer_padding_end"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.util.AutoMarqueeTextView android:textAppearance="@style/TextAppearance.QS.TileLabel" android:textColor="?android:textColorPrimary" android:ellipsize="marquee" android:gravity="start" android:id="@id/footer_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:layout_weight="1.0" android:marqueeRepeatLimit="marquee_forever" />
+    <ImageView android:id="@id/footer_icon" android:layout_width="@dimen/qs_footer_icon_size" android:layout_height="@dimen/qs_footer_icon_size" android:src="@drawable/ic_info_outline" android:tint="?android:textColorPrimary" android:contentDescription="@null" android:layout_marginStart="8.0dip" />
+</com.android.systemui.util.NeverExactlyLinearLayout>

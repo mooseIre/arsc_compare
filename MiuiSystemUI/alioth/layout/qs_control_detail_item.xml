@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:background="@drawable/qs_control_detail_item_bg" android:focusable="true" android:clickable="true" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/qs_detail_item_padding_horizontal" android:paddingEnd="@dimen/qs_detail_item_padding_horizontal"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView android:id="@android:id/icon" android:layout_width="@dimen/qs_detail_item_icon_size" android:layout_height="@dimen/qs_detail_item_icon_size" android:tint="@color/qs_detail_item_icon_tint" />
+    <LinearLayout android:orientation="vertical" android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_detail_item_text_margin_top" android:layout_marginBottom="@dimen/qs_detail_item_text_margin_bottom" android:layout_weight="1.0" android:layout_marginStart="@dimen/qs_detail_item_text_margin_start">
+        <TextView android:textAppearance="@style/TextAppearance.QS.DetailItemPrimary" android:ellipsize="end" android:id="@android:id/title" android:layout_width="fill_parent" android:layout_height="wrap_content" android:singleLine="true" android:textDirection="locale" />
+        <TextView android:textAppearance="@style/TextAppearance.QS.DetailItemSecondary" android:id="@android:id/summary" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_detail_item_secondary_text_margin_top" android:singleLine="true" android:textDirection="locale" />
+    </LinearLayout>
+    <ImageView android:id="@android:id/icon2" android:focusable="true" android:clickable="true" android:layout_width="@dimen/qs_detail_item_icon_size" android:layout_height="@dimen/qs_detail_item_icon_size" android:scaleType="fitXY" android:tint="@color/qs_detail_item_icon_tint" android:contentDescription="@android:string/media_route_controller_disconnect" style="@style/MIUIQSBorderlessButton" />
+</LinearLayout>

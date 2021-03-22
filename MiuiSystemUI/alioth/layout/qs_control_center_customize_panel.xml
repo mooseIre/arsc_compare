@@ -1,0 +1,3 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.controlcenter.phone.customize.QSControlCustomizer android:gravity="center_horizontal" android:orientation="vertical" android:id="@id/qs_customize" android:visibility="invisible" android:clickable="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:elevation="4.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android" />

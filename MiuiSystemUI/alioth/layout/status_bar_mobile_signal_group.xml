@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.statusbar.StatusBarMobileView android:gravity="center_vertical" android:id="@id/mobile_combo" android:layout_width="wrap_content" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:systemui="http://schemas.android.com/apk/res-auto">
+    <LinearLayout android:orientation="horizontal" android:id="@id/mobile_content" android:layout_width="wrap_content" android:layout_height="fill_parent">
+        <com.android.keyguard.AlphaOptimizedLinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/mobile_group" android:layout_width="wrap_content" android:layout_height="fill_parent">
+            <ImageView android:layout_gravity="center_vertical" android:id="@id/mobile_speech_hd" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_speech_hd" android:adjustViewBounds="true" />
+            <ImageView android:layout_gravity="center_vertical" android:id="@id/mobile_roaming" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_data_connected_roam" android:adjustViewBounds="true" />
+            <ImageView android:layout_gravity="center_vertical" android:id="@id/mobile_volte" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_signal_hd_big" android:adjustViewBounds="true" />
+            <ImageView android:layout_gravity="center_vertical" android:id="@id/mobile_volte_no_service" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_volte_no_service" android:adjustViewBounds="true" />
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="fill_parent" android:layoutDirection="ltr">
+                <FrameLayout android:id="@id/mobile_container_left" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent">
+                    <TextView android:textAppearance="@style/TextAppearance.StatusBar.Signal" android:gravity="center_vertical" android:layout_gravity="end|center|top" android:id="@id/mobile_type" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxEms="10" android:singleLine="true" />
+                    <ImageView android:layout_gravity="end" android:id="@id/mobile_left_mobile_inout" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:adjustViewBounds="true" />
+                </FrameLayout>
+                <FrameLayout android:layout_width="wrap_content" android:layout_height="fill_parent">
+                    <ImageView android:id="@id/mobile_small_hd" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_signal_hd_notch" android:adjustViewBounds="true" />
+                    <ImageView android:id="@id/mobile_small_roam" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:src="@drawable/stat_sys_data_connected_roam_small" android:adjustViewBounds="true" />
+                    <ImageView android:id="@id/mobile_signal" android:layout_width="wrap_content" android:layout_height="fill_parent" android:adjustViewBounds="true" />
+                </FrameLayout>
+            </LinearLayout>
+            <LinearLayout android:id="@id/mobile_container_right" android:layout_width="wrap_content" android:layout_height="fill_parent">
+                <ImageView android:id="@id/mobile_type_image" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:adjustViewBounds="true" />
+                <ImageView android:id="@id/mobile_right_mobile_inout" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:adjustViewBounds="true" android:layout_marginStart="@dimen/status_bar_mobile_right_inout_margin_start" />
+            </LinearLayout>
+        </com.android.keyguard.AlphaOptimizedLinearLayout>
+        <ImageView android:id="@id/mobile_vowifi" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="fill_parent" android:adjustViewBounds="true" />
+    </LinearLayout>
+</com.android.systemui.statusbar.StatusBarMobileView>

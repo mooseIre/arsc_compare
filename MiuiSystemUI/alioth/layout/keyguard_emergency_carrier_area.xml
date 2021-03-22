@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.keyguard.EmergencyCarrierArea android:orientation="horizontal" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/eca_overlap" android:layout_alignParentBottom="true"
+  xmlns:android="http://schemas.android.com/apk/res/android" xmlns:androidprv="http://schemas.android.com/apk/res-auto">
+    <Space android:id="@id/empty_space_for_global" android:visibility="gone" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" />
+    <com.android.keyguard.EmergencyButton android:ellipsize="end" android:id="@id/emergency_call_button" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/emergency_call_string" android:singleLine="true" android:layout_weight="1.0" android:textAllCaps="@bool/kg_use_all_caps" style="@style/Keyguard.TextView.EmergencyButton" />
+    <Space android:id="@id/empty_space" android:layout_width="0.0px" android:layout_height="fill_parent" android:layout_weight="1.0" />
+    <TextView android:ellipsize="end" android:gravity="center" android:id="@id/delete_button" android:visibility="gone" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/delete" android:singleLine="true" android:layout_weight="1.0" android:textAllCaps="@bool/kg_use_all_caps" style="@style/Keyguard.TextView.BackButton" />
+    <com.android.keyguard.BackButton android:ellipsize="end" android:id="@id/back_button" android:layout_width="0.0dip" android:layout_height="fill_parent" android:text="@string/back" android:singleLine="true" android:layout_weight="1.0" android:textAllCaps="@bool/kg_use_all_caps" style="@style/Keyguard.TextView.BackButton" />
+    <com.android.keyguard.CarrierText android:ellipsize="marquee" android:gravity="center" android:id="@id/carrier_text" android:visibility="gone" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" androidprv:allCaps="@bool/kg_use_all_caps" style="@style/Keyguard.TextView" />
+</com.android.keyguard.EmergencyCarrierArea>

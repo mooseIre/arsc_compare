@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.systemui.controlcenter.phone.ControlPanelWindowView android:id="@id/control_panel" android:background="@drawable/qs_control_bg" android:focusable="true" android:clickable="true" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.controlcenter.phone.ControlPanelContentView android:layout_gravity="center_horizontal" android:id="@id/control_panel_content" android:clipChildren="false" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="fill_parent" android:splitMotionEvents="false">
+        <include layout="@layout/control_center_panel" />
+        <include layout="@layout/qs_control_detail" />
+        <include layout="@layout/qs_control_brightness_mirror" />
+        <include layout="@layout/qs_control_center_customize_panel" />
+    </com.android.systemui.controlcenter.phone.ControlPanelContentView>
+    <View android:layout_gravity="bottom" android:id="@id/control_center_bottom_area" android:visibility="invisible" android:layout_width="fill_parent" android:layout_height="@dimen/control_center_bottom_area_height" />
+</com.android.systemui.controlcenter.phone.ControlPanelWindowView>

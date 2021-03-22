@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:id="@id/miui_keyguard_clock_extra_info" android:layout_width="fill_parent" android:layout_height="wrap_content"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.keyguard.CarrierText android:textSize="@dimen/miui_clock_date_text_size" android:textColor="@color/miui_common_unlock_screen_common_text_color_new" android:id="@id/unlock_screen_sim_info" android:visibility="gone" android:layout_width="200.0dip" android:layout_height="wrap_content" android:maxLines="2" android:textAlignment="center" android:layout_marginStart="@dimen/left_top_clock_date_margin_extra" />
+    <TextView android:textSize="@dimen/miui_clock_date_text_size" android:textColor="@color/miui_common_unlock_screen_common_text_color_new" android:gravity="start|center|top" android:id="@id/unlock_screen_owner_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="@dimen/keyguard_owner_info_top_margin" android:maxLines="2" android:maxEms="9" android:layout_marginStart="@dimen/left_top_clock_date_margin_extra" />
+    <include android:layout_gravity="start" android:id="@id/unlock_screen_lock_screen_magazine_info" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="@dimen/left_top_clock_date_margin_extra" layout="@layout/miui_keyguard_lock_screen_magazine_clock_layout" />
+</LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.keyguard.KeyguardSliceView android:layout_gravity="center_horizontal" android:orientation="vertical" android:clipToPadding="false" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_centerHorizontal="true" android:paddingStart="16.0dip" android:paddingEnd="16.0dip"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <com.android.systemui.statusbar.policy.DateView android:textColor="@color/clock_white" android:gravity="center" android:layout_gravity="center" android:id="@id/date_view" android:layout_width="wrap_content" android:layout_height="wrap_content" android:letterSpacing="0.15" style="@style/widget_label" />
+    <TextView android:theme="@style/TextAppearance.Keyguard" android:textColor="@color/clock_white" android:id="@id/title" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="44.0dip" android:paddingEnd="44.0dip" />
+    <view android:gravity="center" android:orientation="horizontal" android:id="@id/row" android:layout_width="fill_parent" android:layout_height="wrap_content" class="com.android.keyguard.KeyguardSliceView$Row" />
+</com.android.keyguard.KeyguardSliceView>
