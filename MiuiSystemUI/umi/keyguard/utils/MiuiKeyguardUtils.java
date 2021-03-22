@@ -226,7 +226,7 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isTopActivityCameraApp(Context context) {
-        return PackageUtils.PACKAGE_NAME_CAMERA.equalsIgnoreCase(CommonUtil.getTopActivityPkg(context, true));
+        return PackageUtils.PACKAGE_NAME_CAMERA.equalsIgnoreCase(CommonUtil.getTopActivityPkg(context, false));
     }
 
     public static boolean isBrowserSearchExist(Context context) {

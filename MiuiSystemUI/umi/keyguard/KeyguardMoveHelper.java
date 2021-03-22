@@ -568,6 +568,7 @@ public class KeyguardMoveHelper {
             }
         } else if (this.mCurrentScreen == 1 && f == 0.0f) {
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
+            this.mKeyguardUpdateMonitor.requestFaceAuth();
         } else {
             MiuiGxzwManager.getInstance().setCanShowGxzw(false);
         }

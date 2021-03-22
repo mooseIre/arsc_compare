@@ -19,7 +19,7 @@ public final class KeyguardSensorInjector$mKeyguardUpdateMonitorCallback$1 exten
     @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onKeyguardVisibilityChanged(boolean z) {
         if (!z) {
-            KeyguardSensorInjector.access$unregisterPickupSensor(this.this$0);
+            this.this$0.unregisterPickupSensor();
             this.this$0.unregisterProximitySensor();
         }
     }

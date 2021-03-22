@@ -121,12 +121,11 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mMainHandler = handler;
         TelephonyManager telephonyManager = (TelephonyManager) context.getSystemService("phone");
         this.mPhone = telephonyManager;
-        this.mPhoneCount = telephonyManager.getActiveModemCount();
-        Log.d("MiuiCarrierTextController", "MiuiCarrierTextController: " + this.mPhoneCount);
-        int i = this.mPhoneCount;
-        this.mMiuiMobileTypeName = new String[i];
-        this.mSimError = new boolean[i];
-        this.mVowifi = new boolean[i];
+        int activeModemCount = telephonyManager.getActiveModemCount();
+        this.mPhoneCount = activeModemCount;
+        this.mMiuiMobileTypeName = new String[activeModemCount];
+        this.mSimError = new boolean[activeModemCount];
+        this.mVowifi = new boolean[activeModemCount];
         this.mSubscriptionManager = SubscriptionManager.from(context);
         this.mCustomCarrierObserver = (CustomCarrierObserver) Dependency.get(CustomCarrierObserver.class);
         this.mCarrierObserver = (CarrierObserver) Dependency.get(CarrierObserver.class);
@@ -239,7 +238,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
             }
             SubscriptionInfo subscriptionInfo = (SubscriptionInfo) it.next();
             int simSlotIndex = subscriptionInfo.getSimSlotIndex();
-            if (simSlotIndex >= 0 && simSlotIndex < this.mPhoneCount && this.mVowifi[simSlotIndex]) {
+            if (simSlotIndex >= 0 && simSlotIndex < this.mPhoneCount && this.mVowifi[simSlotIndex] && !TextUtils.isEmpty(strArr[simSlotIndex])) {
                 if (MCCUtils.isShowSpnWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(simSlotIndex)) || MCCUtils.isShowSpnByGidWhenAirplaneOn(this.mContext, this.mPhone.getSimOperatorNumericForPhone(simSlotIndex), this.mPhone.getGroupIdLevel1(subscriptionInfo.getSubscriptionId()))) {
                     zArr[simSlotIndex] = true;
                     z = false;
@@ -269,6 +268,14 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         }
         String[] strArr2 = this.mCarrier;
         return (strArr2 == null || i < 0 || i >= strArr2.length || TextUtils.isEmpty(strArr2[i])) ? "" : this.mCarrier[i];
+    }
+
+    public void setVowifi(int i, boolean z) {
+        boolean[] zArr = this.mVowifi;
+        if (zArr != null && i >= 0 && i < zArr.length) {
+            zArr[i] = z;
+        }
+        this.updateCarrierTextRunnable.run();
     }
 
     public void addCallback(CarrierTextListener carrierTextListener) {
@@ -343,7 +350,6 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
 
     @Override // com.android.systemui.statusbar.policy.NetworkController.EmergencyListener
     public void setEmergencyCallsOnly(final boolean z) {
-        Log.d("MiuiCarrierTextController", "setEmergencyCallsOnly: " + z);
         this.mMainHandler.post(new Runnable() {
             /* class com.android.keyguard.MiuiCarrierTextController.AnonymousClass5 */
 

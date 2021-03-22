@@ -32,7 +32,7 @@ public final class KeyguardSensorInjector$mPickupSensorListener$1 implements Sen
             if (fArr2 == null) {
                 return;
             }
-            if ((fArr2[0] == 2.0f || fArr2[0] == 0.0f) && this.this$0.mWakeupByPickUp && this.this$0.getMKeyguardViewMediator().isShowingAndNotOccluded()) {
+            if ((fArr2[0] == 2.0f || fArr2[0] == 0.0f) && (this.this$0.mWakeupByPickUp) && this.this$0.getMKeyguardViewMediator().isShowingAndNotOccluded()) {
                 String tag = this.this$0.getTAG();
                 Slog.i(tag, this.this$0.SCREEN_OFF_REASON + ":put down");
                 this.this$0.getMPowerManager().goToSleep(SystemClock.uptimeMillis());

@@ -110,10 +110,6 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new TypeCastException("null cannot be cast to non-null type android.hardware.SensorManager");
     }
 
-    public static final /* synthetic */ void access$unregisterPickupSensor(KeyguardSensorInjector keyguardSensorInjector) {
-        keyguardSensorInjector.unregisterPickupSensor();
-    }
-
     @NotNull
     public final Context getMContext() {
         return this.mContext;
@@ -206,7 +202,8 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardSensorInjector.registerPickupSensor():void");
     }
 
-    private final void unregisterPickupSensor() {
+    /* access modifiers changed from: private */
+    public final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 
@@ -248,8 +245,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final boolean shouldRegisterLargeAreaSensor() {
+    public final boolean shouldRegisterLargeAreaSensor() {
         return this.mIsDeviceSupportLargeAreaTouch && this.mSensorManager != null && this.mLargeAreaTouchSensor == null && !this.mKeyguardViewMediator.isHiding() && this.mKeyguardViewMediator.isShowing();
     }
 

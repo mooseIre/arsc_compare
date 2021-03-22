@@ -45,11 +45,8 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
                 }
                 KeyguardMoveLeftController keyguardMoveLeftController = KeyguardMoveLeftController.this;
                 keyguardMoveLeftController.mCallBack.onAnimUpdate(keyguardMoveLeftController.mScrollProgress * KeyguardMoveLeftController.this.mScreenWidth);
-                if (KeyguardMoveLeftController.this.mScrollProgress == 0.0f && !KeyguardMoveLeftController.this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
-                    KeyguardMoveLeftController.this.mKeyguardUpdateMonitor.requestFaceAuth();
-                } else if (KeyguardMoveLeftController.this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
-                    KeyguardMoveLeftController.this.mKeyguardUpdateMonitor.cancelFaceAuth();
-                }
+                KeyguardMoveLeftController.this.mKeyguardUpdateMonitor.updateFingerprintListeningState();
+                KeyguardMoveLeftController.this.mKeyguardUpdateMonitor.requestFaceAuth();
             }
         }
 

@@ -1,6 +1,7 @@
 package com.android.keyguard.clock;
 
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -34,8 +35,6 @@ import miui.date.Calendar;
 import miui.keyguard.clock.MiuiBaseClock;
 
 public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements RegionController.Callback {
-    protected AnimatorSet mAnimToNormalState = new AnimatorSet();
-    protected AnimatorSet mAnimToNotificationState = new AnimatorSet();
     protected Calendar mCalendar;
     protected FrameLayout mClockContainer;
     protected LinearLayout mClockExtraInfo;
@@ -91,7 +90,9 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     protected boolean mShowLunarCalendar = false;
     protected boolean mShowOwnerInfo = false;
     protected CarrierText mSimCardInfo;
+    protected AnimatorSet mSwitchAnimationSet = new AnimatorSet();
     protected boolean mTWRegion;
+    private int mToState;
 
     /* access modifiers changed from: protected */
     public boolean shouldShowSwitchAnim() {
@@ -142,6 +143,79 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         this.mCalendar = new Calendar();
         updateOwnerInfo();
         this.mLunarCalendarObserver.onChange(false);
+        initAnimators();
+    }
+
+    private void initAnimators() {
+        if (shouldShowSwitchAnim()) {
+            ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
+            ofFloat.setDuration(250L);
+            ofFloat.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass4 */
+
+                public void onAnimationEnd(Animator animator) {
+                    if (MiuiKeyguardSingleClock.this.mToState == 1) {
+                        MiuiKeyguardSingleClock.this.mOwnerInfo.setVisibility(8);
+                        MiuiKeyguardSingleClock.this.toNotificationStateAnimOutEnd();
+                    } else if (MiuiKeyguardSingleClock.this.mToState == 0) {
+                        MiuiKeyguardSingleClock.this.mOwnerInfo.setAlpha(0.0f);
+                        MiuiKeyguardSingleClock.this.updateOwnerInfo();
+                        MiuiKeyguardSingleClock.this.toNormalStateAnimOutEnd();
+                    }
+                }
+            });
+            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.clock.$$Lambda$MiuiKeyguardSingleClock$YiwRgDSUp8BBLVHQmgcGLQpNWGc */
+
+                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    MiuiKeyguardSingleClock.this.lambda$initAnimators$0$MiuiKeyguardSingleClock(valueAnimator);
+                }
+            });
+            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
+            ofFloat2.setDuration(250L);
+            ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                /* class com.android.keyguard.clock.$$Lambda$MiuiKeyguardSingleClock$_DmwqQoVvhSiFR_KSrCLMC95TjQ */
+
+                public final void onAnimationUpdate(ValueAnimator valueAnimator) {
+                    MiuiKeyguardSingleClock.this.lambda$initAnimators$1$MiuiKeyguardSingleClock(valueAnimator);
+                }
+            });
+            this.mSwitchAnimationSet.play(ofFloat2).after(ofFloat);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$initAnimators$0 */
+    public /* synthetic */ void lambda$initAnimators$0$MiuiKeyguardSingleClock(ValueAnimator valueAnimator) {
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        int i = this.mToState;
+        if (i == 1) {
+            this.mSimCardInfo.setAlpha(floatValue);
+            this.mOwnerInfo.setAlpha(floatValue);
+            this.mMagazineClockView.setAlpha(floatValue);
+            toNotificationStateAnimOutUpdate(floatValue);
+        } else if (i == 0) {
+            this.mSimCardInfo.setAlpha(floatValue);
+            this.mMagazineClockView.setAlpha(floatValue);
+            toNormalStateAnimOutUpdate(floatValue);
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$initAnimators$1 */
+    public /* synthetic */ void lambda$initAnimators$1$MiuiKeyguardSingleClock(ValueAnimator valueAnimator) {
+        float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
+        int i = this.mToState;
+        if (i == 1) {
+            this.mSimCardInfo.setAlpha(floatValue);
+            this.mMagazineClockView.setAlpha(floatValue);
+            toNotificationStateAnimInUpdate(floatValue);
+        } else if (i == 0) {
+            this.mSimCardInfo.setAlpha(floatValue);
+            this.mOwnerInfo.setAlpha(floatValue);
+            this.mMagazineClockView.setAlpha(floatValue);
+            toNormalStateAnimInUpdate(floatValue);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -335,7 +409,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             }
             layoutParams3.setMarginStart(i);
             this.mSimCardInfo.setLayoutParams(layoutParams3);
-            this.mSimCardInfo.setGravity(z ? 17 : 8388611);
+            this.mSimCardInfo.setTextAlignment(z ? 4 : 5);
         }
         LockScreenMagazineClockView lockScreenMagazineClockView = this.mMagazineClockView;
         if (lockScreenMagazineClockView != null) {
@@ -381,105 +455,18 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     /* access modifiers changed from: protected */
     public void switchToNotificationState() {
         if (shouldShowSwitchAnim()) {
-            this.mAnimToNormalState.cancel();
-            this.mAnimToNotificationState.cancel();
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
-            ofFloat.setDuration(250L);
-            ofFloat.addListener(new Animator.AnimatorListener() {
-                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass4 */
-
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                public void onAnimationRepeat(Animator animator) {
-                }
-
-                public void onAnimationStart(Animator animator) {
-                }
-
-                public void onAnimationEnd(Animator animator) {
-                    MiuiKeyguardSingleClock.this.mOwnerInfo.setVisibility(8);
-                    MiuiKeyguardSingleClock.this.toNotificationStateAnimOutEnd();
-                }
-            });
-            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass5 */
-
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                    MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.mOwnerInfo.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.mMagazineClockView.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.toNotificationStateAnimOutUpdate(floatValue);
-                }
-            });
-            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
-            ofFloat2.setDuration(250L);
-            ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass6 */
-
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                    MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.mMagazineClockView.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.toNotificationStateAnimInUpdate(floatValue);
-                }
-            });
-            this.mAnimToNotificationState.play(ofFloat2).after(ofFloat);
-            this.mAnimToNotificationState.start();
+            this.mToState = 1;
+            this.mSwitchAnimationSet.cancel();
+            this.mSwitchAnimationSet.start();
         }
     }
 
     /* access modifiers changed from: protected */
     public void switchToNormalState() {
         if (shouldShowSwitchAnim()) {
-            this.mAnimToNormalState.cancel();
-            this.mAnimToNotificationState.cancel();
-            ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
-            ofFloat.setDuration(250L);
-            ofFloat.addListener(new Animator.AnimatorListener() {
-                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass7 */
-
-                public void onAnimationCancel(Animator animator) {
-                }
-
-                public void onAnimationRepeat(Animator animator) {
-                }
-
-                public void onAnimationStart(Animator animator) {
-                }
-
-                public void onAnimationEnd(Animator animator) {
-                    MiuiKeyguardSingleClock.this.mOwnerInfo.setAlpha(0.0f);
-                    MiuiKeyguardSingleClock.this.updateOwnerInfo();
-                    MiuiKeyguardSingleClock.this.toNormalStateAnimOutEnd();
-                }
-            });
-            ofFloat.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass8 */
-
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                    MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.mMagazineClockView.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.toNormalStateAnimOutUpdate(floatValue);
-                }
-            });
-            ValueAnimator ofFloat2 = ValueAnimator.ofFloat(0.0f, 1.0f);
-            ofFloat2.setDuration(250L);
-            ofFloat2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                /* class com.android.keyguard.clock.MiuiKeyguardSingleClock.AnonymousClass9 */
-
-                public void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    float floatValue = ((Float) valueAnimator.getAnimatedValue()).floatValue();
-                    MiuiKeyguardSingleClock.this.mSimCardInfo.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.mOwnerInfo.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.mMagazineClockView.setAlpha(floatValue);
-                    MiuiKeyguardSingleClock.this.toNormalStateAnimInUpdate(floatValue);
-                }
-            });
-            this.mAnimToNormalState.play(ofFloat2).after(ofFloat);
-            this.mAnimToNormalState.start();
+            this.mToState = 0;
+            this.mSwitchAnimationSet.cancel();
+            this.mSwitchAnimationSet.start();
         }
     }
 

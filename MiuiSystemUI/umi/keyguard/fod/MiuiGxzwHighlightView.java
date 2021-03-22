@@ -11,8 +11,7 @@ import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0013R$drawable;
 
-/* access modifiers changed from: package-private */
-public class MiuiGxzwHighlightView extends ImageView {
+class MiuiGxzwHighlightView extends ImageView {
     private boolean mGradualGreenCircle = false;
     private boolean mGreenCircle = false;
     private int mGreenCircleColor;
