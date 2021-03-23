@@ -14,8 +14,8 @@ final class ControlsBindingControllerImpl$onComponentRemoved$1 implements Runnab
     }
 
     public final void run() {
-        ControlsProviderLifecycleManager access$getCurrentProvider$p = ControlsBindingControllerImpl.access$getCurrentProvider$p(this.this$0);
-        if (access$getCurrentProvider$p != null && Intrinsics.areEqual(access$getCurrentProvider$p.getComponentName(), this.$componentName)) {
+        ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0.currentProvider;
+        if (controlsProviderLifecycleManager != null && Intrinsics.areEqual(controlsProviderLifecycleManager.getComponentName(), this.$componentName)) {
             this.this$0.unbind();
         }
     }

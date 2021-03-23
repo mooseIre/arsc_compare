@@ -86,7 +86,7 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         /* class com.android.systemui.assist.$$Lambda$AssistHandleReminderExpBehavior$pwcnWUhYSvHUPTaX_vnnVqcvKYA */
 
         public final void run() {
-            AssistHandleReminderExpBehavior.lambda$pwcnWUhYSvHUPTaX_vnnVqcvKYA(AssistHandleReminderExpBehavior.this);
+            AssistHandleReminderExpBehavior.this.resetConsecutiveTaskSwitches();
         }
     };
     private int mRunningTaskId;
@@ -110,7 +110,7 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
 
         @Override // com.android.systemui.model.SysUiState.SysUiStateCallback
         public final void onSystemUiStateChanged(int i) {
-            AssistHandleReminderExpBehavior.m10lambda$V4NCzVQFEFRzsFBikU8WKQiVok(AssistHandleReminderExpBehavior.this, i);
+            AssistHandleReminderExpBehavior.this.handleSystemUiStateChanged(i);
         }
     };
     private final TaskStackChangeListener mTaskStackChangeListener = new TaskStackChangeListener() {
@@ -316,7 +316,8 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
     }
 
     /* access modifiers changed from: private */
-    public void handleSystemUiStateChanged(int i) {
+    /* access modifiers changed from: public */
+    private void handleSystemUiStateChanged(int i) {
         boolean z = (i & 2) != 0;
         if (this.mIsNavBarHidden != z) {
             resetConsecutiveTaskSwitches();
@@ -408,7 +409,8 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
     }
 
     /* access modifiers changed from: private */
-    public void resetConsecutiveTaskSwitches() {
+    /* access modifiers changed from: public */
+    private void resetConsecutiveTaskSwitches() {
         this.mHandler.removeCallbacks(this.mResetConsecutiveTaskSwitches);
         this.mConsecutiveTaskSwitches = 0;
     }

@@ -69,7 +69,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.colorextraction.drawable.ScrimDrawable;
 import com.android.internal.logging.MetricsLogger;
@@ -122,8 +121,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 
 public class GlobalActionsDialog implements DialogInterface.OnDismissListener, DialogInterface.OnShowListener, ConfigurationController.ConfigurationListener, GlobalActionsPanelPlugin.Callbacks, LifecycleOwner {
-    @VisibleForTesting
-    static final String GLOBAL_ACTION_KEY_POWER = "power";
+    static final String GLOBAL_ACTION_KEY_POWER;
     private final ActivityStarter mActivityStarter;
     private MyAdapter mAdapter;
     private ContentObserver mAirplaneModeObserver = new ContentObserver(this.mMainHandler) {
@@ -164,7 +162,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
     private final NotificationShadeDepthController mDepthController;
     private final DevicePolicyManager mDevicePolicyManager;
     private boolean mDeviceProvisioned = false;
-    @VisibleForTesting
     protected ActionsDialog mDialog;
     private int mDialogPressDelay = 850;
     private final IDreamManager mDreamManager;
@@ -194,7 +191,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
     private final IActivityManager mIActivityManager;
     private final IWindowManager mIWindowManager;
     private boolean mIsWaitingForEcmExit = false;
-    @VisibleForTesting
     protected final ArrayList<Action> mItems = new ArrayList<>();
     private boolean mKeyguardShowing = false;
     private final KeyguardStateController mKeyguardStateController;
@@ -204,7 +200,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
     private final MetricsLogger mMetricsLogger;
     private final NotificationShadeWindowController mNotificationShadeWindowController;
     private MyOverflowAdapter mOverflowAdapter;
-    @VisibleForTesting
     protected final ArrayList<Action> mOverflowItems = new ArrayList<>();
     PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
         /* class com.android.systemui.globalactions.GlobalActionsDialog.AnonymousClass8 */
@@ -221,13 +216,11 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     };
     private MyPowerOptionsAdapter mPowerAdapter;
-    @VisibleForTesting
     protected final ArrayList<Action> mPowerItems = new ArrayList<>();
     private final Resources mResources;
     private final RingerModeTracker mRingerModeTracker;
     private final ScreenRecordHelper mScreenRecordHelper;
     private final ScreenshotHelper mScreenshotHelper;
-    @VisibleForTesting
     boolean mShowLockScreenCardsAndControls = false;
     private final boolean mShowSilentToggle;
     private Action mSilentModeAction;
@@ -263,12 +256,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         boolean showDuringKeyguard();
     }
 
-    /* access modifiers changed from: private */
     public interface LongPressAction extends Action {
         boolean onLongPress();
     }
 
-    @VisibleForTesting
     public enum GlobalActionsEvent implements UiEventLogger.UiEventEnum {
         GA_POWER_MENU_OPEN(337),
         GA_POWER_MENU_CLOSE(471),
@@ -386,12 +377,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$GlobalActionsDialog(Integer num) {
         this.mHandler.sendEmptyMessage(1);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$GlobalActionsDialog(List list) {
@@ -450,6 +443,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$seedFavorites$2 */
     public /* synthetic */ void lambda$seedFavorites$2$GlobalActionsDialog(SharedPreferences sharedPreferences, SeedResponse seedResponse) {
@@ -510,8 +504,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         this.mWindowManagerFuncs.onGlobalActionsShown();
     }
 
-    /* access modifiers changed from: protected */
-    @VisibleForTesting
     public boolean shouldShowAction(Action action) {
         if (this.mKeyguardShowing && !action.showDuringKeyguard()) {
             return false;
@@ -522,8 +514,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         return false;
     }
 
-    /* access modifiers changed from: protected */
-    @VisibleForTesting
     public int getMaxShownPowerItems() {
         return this.mResources.getInteger(C0016R$integer.power_menu_max_columns);
     }
@@ -536,8 +526,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: protected */
-    @VisibleForTesting
     public String[] getDefaultActions() {
         return this.mResources.getStringArray(17236042);
     }
@@ -548,8 +536,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: protected */
-    @VisibleForTesting
     public void createActionItems() {
         if (!this.mHasVibrator) {
             this.mSilentModeAction = new SilentModeToggleAction();
@@ -628,8 +614,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
-    public void onRotate() {
+    /* access modifiers changed from: public */
+    private void onRotate() {
         createActionItems();
     }
 
@@ -655,8 +641,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         return actionsDialog;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public boolean shouldDisplayLockdown(UserInfo userInfo) {
         if (userInfo == null) {
             return false;
@@ -672,8 +656,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         return false;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public boolean shouldDisplayBugReport(UserInfo userInfo) {
         if (Settings.Global.getInt(this.mContentResolver, "bugreport_in_power_menu", 0) == 0) {
             return false;
@@ -715,8 +697,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         this.mActivityStarter.startPendingIntentDismissingKeyguard(pendingIntent);
     }
 
-    /* access modifiers changed from: protected */
-    @VisibleForTesting
     public final class PowerOptionsAction extends SinglePressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -728,8 +708,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         private PowerOptionsAction() {
-            super(GlobalActionsDialog.this, C0013R$drawable.ic_settings_power, 17040302);
+            super(r3, C0013R$drawable.ic_settings_power, 17040302);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -741,8 +723,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public final class ShutDownAction extends SinglePressAction implements LongPressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -754,8 +734,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         private ShutDownAction() {
-            super(GlobalActionsDialog.this, 17301552, 17040301);
+            super(r3, 17301552, 17040301);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.LongPressAction
@@ -773,8 +755,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    @VisibleForTesting
-    protected abstract class EmergencyAction extends SinglePressAction {
+    /* access modifiers changed from: protected */
+    public abstract class EmergencyAction extends SinglePressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean shouldBeSeparated() {
             return false;
@@ -807,10 +789,11 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public class EmergencyAffordanceAction extends EmergencyAction {
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         EmergencyAffordanceAction() {
-            super(GlobalActionsDialog.this, 17302220, 17040297);
+            super(r3, 17302220, 17040297);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -819,11 +802,11 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public class EmergencyDialerAction extends EmergencyAction {
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         private EmergencyDialerAction() {
-            super(GlobalActionsDialog.this, C0013R$drawable.ic_emergency_star, 17040297);
+            super(r3, C0013R$drawable.ic_emergency_star, 17040297);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -839,14 +822,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public EmergencyDialerAction makeEmergencyDialerActionForTesting() {
         return new EmergencyDialerAction();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public final class RestartAction extends SinglePressAction implements LongPressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -858,8 +837,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         private RestartAction() {
-            super(GlobalActionsDialog.this, 17302828, 17040304);
+            super(r3, 17302828, 17040304);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.LongPressAction
@@ -877,8 +858,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public class ScreenshotAction extends SinglePressAction implements LongPressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -890,8 +869,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public ScreenshotAction() {
-            super(GlobalActionsDialog.this, 17302830, 17040305);
+            super(r3, 17302830, 17040305);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -919,14 +900,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public ScreenshotAction makeScreenshotActionForTesting() {
         return new ScreenshotAction();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public class BugReportAction extends SinglePressAction implements LongPressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -938,8 +915,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public BugReportAction() {
-            super(GlobalActionsDialog.this, 17302484, 17039792);
+            super(r3, 17302484, 17039792);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -978,13 +957,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public BugReportAction makeBugReportActionForTesting() {
         return new BugReportAction();
     }
 
-    /* access modifiers changed from: private */
     public final class LogoutAction extends SinglePressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -996,8 +972,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         private LogoutAction() {
-            super(GlobalActionsDialog.this, 17302535, 17040300);
+            super(r3, 17302535, 17040300);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -1011,6 +989,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }, (long) GlobalActionsDialog.this.mDialogPressDelay);
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onPress$0 */
         public /* synthetic */ void lambda$onPress$0$GlobalActionsDialog$LogoutAction() {
@@ -1093,8 +1072,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         };
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public class LockDownAction extends SinglePressAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -1106,8 +1083,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         LockDownAction() {
-            super(GlobalActionsDialog.this, 17302487, 17040299);
+            super(r3, 17302487, 17040299);
+            GlobalActionsDialog.this = r3;
         }
 
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
@@ -1127,6 +1106,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onPress$0 */
         public /* synthetic */ void lambda$onPress$0$GlobalActionsDialog$LockDownAction() {
@@ -1134,8 +1114,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void lockProfiles() {
         int i = getCurrentUser().id;
         int[] enabledProfileIds = this.mUserManager.getEnabledProfileIds(i);
@@ -1146,8 +1124,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private UserInfo getCurrentUser() {
         try {
             return this.mIActivityManager.getCurrentUser();
@@ -1156,17 +1132,16 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public class CurrentUserProvider {
         private boolean mFetched;
         private UserInfo mUserInfo;
 
         private CurrentUserProvider() {
+            GlobalActionsDialog.this = r1;
             this.mUserInfo = null;
             this.mFetched = false;
         }
 
-        /* access modifiers changed from: package-private */
         public UserInfo get() {
             if (!this.mFetched) {
                 this.mFetched = true;
@@ -1227,8 +1202,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         this.mLifecycle.setCurrentState(Lifecycle.State.RESUMED);
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void refreshSilentMode() {
         if (!this.mHasVibrator) {
             Integer value = this.mRingerModeTracker.getRingerMode().getValue();
@@ -1260,6 +1233,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         public MyAdapter() {
+            GlobalActionsDialog.this = r1;
         }
 
         private int countItems(boolean z) {
@@ -1336,12 +1310,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return create;
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$getView$0 */
         public /* synthetic */ void lambda$getView$0$GlobalActionsDialog$MyAdapter(int i, View view) {
             onClickItem(i);
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$getView$1 */
         public /* synthetic */ boolean lambda$getView$1$GlobalActionsDialog$MyAdapter(int i, View view) {
@@ -1387,6 +1363,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         public MyPowerOptionsAdapter() {
+            GlobalActionsDialog.this = r1;
         }
 
         public int getCount() {
@@ -1446,12 +1423,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return view;
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$getView$0 */
         public /* synthetic */ void lambda$getView$0$GlobalActionsDialog$MyPowerOptionsAdapter(int i, View view) {
             onClickItem(i);
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$getView$1 */
         public /* synthetic */ boolean lambda$getView$1$GlobalActionsDialog$MyPowerOptionsAdapter(int i, View view) {
@@ -1492,6 +1471,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
 
         public MyOverflowAdapter() {
+            GlobalActionsDialog.this = r1;
         }
 
         public int getCount() {
@@ -1521,8 +1501,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return textView;
         }
 
-        /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
         private boolean onLongClickItem(int i) {
             Action item = getItem(i);
             if (!(item instanceof LongPressAction)) {
@@ -1537,8 +1515,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return ((LongPressAction) item).onLongPress();
         }
 
-        /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
         private void onClickItem(int i) {
             Action item = getItem(i);
             if (!(item instanceof SilentModeTriStateAction)) {
@@ -1553,7 +1529,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    private abstract class SinglePressAction implements Action {
+    /* access modifiers changed from: private */
+    public abstract class SinglePressAction implements Action {
         private final Drawable mIcon;
         private final int mIconResId;
         private final CharSequence mMessage;
@@ -1615,7 +1592,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public enum ToggleState {
         Off(false),
         TurningOn(true),
@@ -1633,7 +1609,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public abstract class ToggleAction implements Action {
         protected int mDisabledIconResid;
         protected int mDisabledStatusMessageResId;
@@ -1649,7 +1624,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         /* access modifiers changed from: package-private */
         public abstract void onToggle(boolean z);
 
-        /* access modifiers changed from: package-private */
         public void willCreate() {
         }
 
@@ -1715,7 +1689,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return !this.mState.inTransition();
         }
 
-        /* access modifiers changed from: protected */
         public void changeStateFromPress(boolean z) {
             this.mState = z ? ToggleState.On : ToggleState.Off;
         }
@@ -1725,7 +1698,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public class AirplaneModeAction extends ToggleAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -1737,11 +1709,12 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         AirplaneModeAction() {
-            super(GlobalActionsDialog.this, 17302480, 17302482, 17040314, 17040313, 17040312);
+            super(r8, 17302480, 17302482, 17040314, 17040313, 17040312);
+            GlobalActionsDialog.this = r8;
         }
 
-        /* access modifiers changed from: package-private */
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.ToggleAction
         public void onToggle(boolean z) {
             if (!GlobalActionsDialog.this.mHasTelephony || !((Boolean) TelephonyProperties.in_ecm_mode().orElse(Boolean.FALSE)).booleanValue()) {
@@ -1754,7 +1727,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             GlobalActionsDialog.this.mContext.startActivity(intent);
         }
 
-        /* access modifiers changed from: protected */
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.ToggleAction
         public void changeStateFromPress(boolean z) {
             if (GlobalActionsDialog.this.mHasTelephony && !((Boolean) TelephonyProperties.in_ecm_mode().orElse(Boolean.FALSE)).booleanValue()) {
@@ -1765,7 +1737,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public class SilentModeToggleAction extends ToggleAction {
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.Action
         public boolean showBeforeProvisioning() {
@@ -1777,11 +1748,12 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         public SilentModeToggleAction() {
-            super(GlobalActionsDialog.this, 17302328, 17302327, 17040309, 17040308, 17040307);
+            super(r8, 17302328, 17302327, 17040309, 17040308, 17040307);
+            GlobalActionsDialog.this = r8;
         }
 
-        /* access modifiers changed from: package-private */
         @Override // com.android.systemui.globalactions.GlobalActionsDialog.ToggleAction
         public void onToggle(boolean z) {
             if (z) {
@@ -1792,7 +1764,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
     public static class SilentModeTriStateAction implements Action, View.OnClickListener {
         private final int[] ITEM_IDS = {16909273, 16909274, 16909275};
         private final AudioManager mAudioManager;
@@ -1872,14 +1843,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void setZeroDialogPressDelayForTesting() {
         this.mDialogPressDelay = 0;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void onAirplaneModeChanged() {
         if (!this.mHasTelephony) {
             boolean z = false;
@@ -1892,8 +1859,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void changeAirplaneModeSystemSetting(boolean z) {
         Settings.Global.putInt(this.mContentResolver, "airplane_mode_on", z ? 1 : 0);
         Intent intent = new Intent("android.intent.action.AIRPLANE_MODE");
@@ -1910,8 +1875,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         return this.mLifecycle;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public static final class ActionsDialog extends Dialog implements DialogInterface, ColorExtractor.OnColorsChangedListener {
         private final MyAdapter mAdapter;
         private Drawable mBackgroundDrawable;
@@ -1926,7 +1889,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         private boolean mHadTopUi;
         private boolean mKeyguardShowing;
         private TextView mLockMessage;
-        @VisibleForTesting
         ViewGroup mLockMessageContainer;
         private final NotificationShadeWindowController mNotificationShadeWindowController;
         private final Runnable mOnRotateCallback;
@@ -1971,14 +1933,10 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             initializeLayout();
         }
 
-        /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
         private boolean isShowingControls() {
             return this.mControlsUiController != null;
         }
 
-        /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
         private void showControls(ControlsUiController controlsUiController) {
             this.mControlsUiController = controlsUiController;
             controlsUiController.show(this.mControlsView, new Runnable() {
@@ -2051,12 +2009,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$initializeWalletView$0 */
         public /* synthetic */ void lambda$initializeWalletView$0$GlobalActionsDialog$ActionsDialog() {
             RotationPolicy.setRotationLockAtAngle(this.mContext, false, 0);
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$initializeWalletView$1 */
         public /* synthetic */ void lambda$initializeWalletView$1$GlobalActionsDialog$ActionsDialog() {
@@ -2094,12 +2054,14 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             return globalActionsPopupMenu;
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$createPowerOverflowPopup$3 */
         public /* synthetic */ void lambda$createPowerOverflowPopup$3$GlobalActionsDialog$ActionsDialog(AdapterView adapterView, View view, int i, long j) {
             this.mOverflowAdapter.onClickItem(i);
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$createPowerOverflowPopup$4 */
         public /* synthetic */ boolean lambda$createPowerOverflowPopup$4$GlobalActionsDialog$ActionsDialog(AdapterView adapterView, View view, int i, long j) {
@@ -2172,6 +2134,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             getWindow().setBackgroundDrawable(this.mBackgroundDrawable);
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$initializeLayout$5 */
         public /* synthetic */ void lambda$initializeLayout$5$GlobalActionsDialog$ActionsDialog(View view) {
@@ -2187,7 +2150,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             viewGroup2.setClipToPadding(false);
         }
 
-        /* access modifiers changed from: protected */
         public void onStart() {
             super.setCanceledOnTouchOutside(true);
             super.onStart();
@@ -2211,7 +2173,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
-        /* access modifiers changed from: protected */
         public void onStop() {
             super.onStop();
             this.mColorExtractor.removeOnColorsChangedListener(this);
@@ -2268,6 +2229,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             animatorSet.start();
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$show$7 */
         public /* synthetic */ void lambda$show$7$GlobalActionsDialog$ActionsDialog(ValueAnimator valueAnimator) {
@@ -2286,6 +2248,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             });
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$dismiss$9 */
         public /* synthetic */ void lambda$dismiss$9$GlobalActionsDialog$ActionsDialog() {
@@ -2322,6 +2285,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$dismiss$8 */
         public /* synthetic */ void lambda$dismiss$8$GlobalActionsDialog$ActionsDialog(ValueAnimator valueAnimator) {
@@ -2330,8 +2294,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             this.mDepthController.updateGlobalDialogVisibility(animatedFraction, this.mGlobalActionsLayout);
         }
 
-        /* access modifiers changed from: private */
-        public void dismissForControlsActivity() {
+        /* access modifiers changed from: public */
+        private void dismissForControlsActivity() {
             dismissWithAnimation(new Runnable() {
                 /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$yh8uJQoAv1nRg6YOxU19qycI3Zo */
 
@@ -2341,6 +2305,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             });
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$dismissForControlsActivity$10 */
         public /* synthetic */ void lambda$dismissForControlsActivity$10$GlobalActionsDialog$ActionsDialog() {
@@ -2353,7 +2318,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }).start();
         }
 
-        /* access modifiers changed from: package-private */
         public void dismissWithAnimation(Runnable runnable) {
             if (this.mShowing) {
                 this.mShowing = false;
@@ -2361,9 +2325,8 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
-        /* access modifiers changed from: private */
         /* access modifiers changed from: public */
-        public void completeDismiss() {
+        private void completeDismiss() {
             this.mShowing = false;
             resetOrientation();
             dismissWallet();
@@ -2467,7 +2430,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
-        /* access modifiers changed from: package-private */
         public void hideLockMessage() {
             if (this.mLockMessageContainer.getVisibility() == 0) {
                 this.mLockMessageContainer.animate().alpha(0.0f).setDuration(150).setListener(new AnimatorListenerAdapter() {
@@ -2480,7 +2442,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
-        /* access modifiers changed from: package-private */
         public void showLockMessage() {
             Drawable drawable = this.mContext.getDrawable(17302479);
             drawable.setTint(this.mContext.getColor(C0011R$color.control_primary_text));
@@ -2488,7 +2449,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             this.mLockMessageContainer.setVisibility(0);
         }
 
-        /* access modifiers changed from: private */
         public static class ResetOrientationData {
             public boolean locked;
             public int rotation;
@@ -2498,8 +2458,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private boolean shouldShowControls() {
         boolean z = this.mShowLockScreenCardsAndControls && this.mLockPatternUtils.getStrongAuthForUser(getCurrentUser().id) != 1;
         if (controlsAvailable()) {
@@ -2528,8 +2486,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         return false;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void onPowerMenuLockScreenSettingsChanged() {
         boolean z = false;
         if (Settings.Secure.getInt(this.mContentResolver, "power_menu_locked_show_content", 0) != 0) {
