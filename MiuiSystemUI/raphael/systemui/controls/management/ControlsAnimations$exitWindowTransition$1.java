@@ -7,8 +7,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsAnimations.kt */
-final class ControlsAnimations$exitWindowTransition$1 extends Lambda implements Function1<View, Animator> {
+public final class ControlsAnimations$exitWindowTransition$1 extends Lambda implements Function1<View, Animator> {
     public static final ControlsAnimations$exitWindowTransition$1 INSTANCE = new ControlsAnimations$exitWindowTransition$1();
 
     ControlsAnimations$exitWindowTransition$1() {

@@ -10,7 +10,6 @@ import android.service.controls.IControlsSubscriber;
 import android.service.controls.IControlsSubscription;
 import android.service.controls.actions.ControlAction;
 import android.util.Log;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.controls.controller.ControlsBindingController;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import dagger.Lazy;
@@ -22,11 +21,7 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt__IterablesKt;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-@VisibleForTesting
-/* compiled from: ControlsBindingControllerImpl.kt */
 public class ControlsBindingControllerImpl implements ControlsBindingController {
     private final ControlsBindingControllerImpl$actionCallbackService$1 actionCallbackService = new ControlsBindingControllerImpl$actionCallbackService$1(this);
     private final DelayableExecutor backgroundExecutor;
@@ -37,7 +32,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     private LoadSubscriber loadSubscriber;
     private StatefulControlSubscriber statefulControlSubscriber;
 
-    public ControlsBindingControllerImpl(@NotNull Context context2, @NotNull DelayableExecutor delayableExecutor, @NotNull Lazy<ControlsController> lazy) {
+    public ControlsBindingControllerImpl(Context context2, DelayableExecutor delayableExecutor, Lazy<ControlsController> lazy) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(delayableExecutor, "backgroundExecutor");
         Intrinsics.checkParameterIsNotNull(lazy, "lazyController");
@@ -53,9 +48,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         return userHandle.getIdentifier();
     }
 
-    @VisibleForTesting
-    @NotNull
-    public ControlsProviderLifecycleManager createProviderManager$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull ComponentName componentName) {
+    public ControlsProviderLifecycleManager createProviderManager$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(ComponentName componentName) {
         Intrinsics.checkParameterIsNotNull(componentName, "component");
         Context context2 = this.context;
         DelayableExecutor delayableExecutor = this.backgroundExecutor;
@@ -81,8 +74,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController
-    @NotNull
-    public Runnable bindAndLoad(@NotNull ComponentName componentName, @NotNull ControlsBindingController.LoadCallback loadCallback) {
+    public Runnable bindAndLoad(ComponentName componentName, ControlsBindingController.LoadCallback loadCallback) {
         Intrinsics.checkParameterIsNotNull(componentName, "component");
         Intrinsics.checkParameterIsNotNull(loadCallback, "callback");
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
@@ -96,7 +88,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController
-    public void bindAndLoadSuggested(@NotNull ComponentName componentName, @NotNull ControlsBindingController.LoadCallback loadCallback) {
+    public void bindAndLoadSuggested(ComponentName componentName, ControlsBindingController.LoadCallback loadCallback) {
         Intrinsics.checkParameterIsNotNull(componentName, "component");
         Intrinsics.checkParameterIsNotNull(loadCallback, "callback");
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
@@ -109,7 +101,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController
-    public void subscribe(@NotNull StructureInfo structureInfo) {
+    public void subscribe(StructureInfo structureInfo) {
         Intrinsics.checkParameterIsNotNull(structureInfo, "structureInfo");
         unsubscribe();
         ControlsProviderLifecycleManager retrieveLifecycleManager = retrieveLifecycleManager(structureInfo.getComponentName());
@@ -136,7 +128,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController
-    public void action(@NotNull ComponentName componentName, @NotNull ControlInfo controlInfo, @NotNull ControlAction controlAction) {
+    public void action(ComponentName componentName, ControlInfo controlInfo, ControlAction controlAction) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(controlInfo, "controlInfo");
         Intrinsics.checkParameterIsNotNull(controlAction, "action");
@@ -148,7 +140,7 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     @Override // com.android.systemui.util.UserAwareController
-    public void changeUser(@NotNull UserHandle userHandle) {
+    public void changeUser(UserHandle userHandle) {
         Intrinsics.checkParameterIsNotNull(userHandle, "newUser");
         if (!Intrinsics.areEqual(userHandle, this.currentUser)) {
             unbind();
@@ -156,8 +148,8 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void unbind() {
+    /* access modifiers changed from: public */
+    private final void unbind() {
         unsubscribe();
         LoadSubscriber loadSubscriber2 = this.loadSubscriber;
         if (loadSubscriber2 != null) {
@@ -172,12 +164,11 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController
-    public void onComponentRemoved(@NotNull ComponentName componentName) {
+    public void onComponentRemoved(ComponentName componentName) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         this.backgroundExecutor.execute(new ControlsBindingControllerImpl$onComponentRemoved$1(this, componentName));
     }
 
-    @NotNull
     public String toString() {
         StringBuilder sb = new StringBuilder("  ControlsBindingController:\n");
         sb.append("    currentUser=" + this.currentUser + '\n');
@@ -191,25 +182,21 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         return sb3;
     }
 
-    /* compiled from: ControlsBindingControllerImpl.kt */
-    private abstract class CallbackRunnable implements Runnable {
-        @Nullable
+    /* access modifiers changed from: private */
+    public abstract class CallbackRunnable implements Runnable {
         private final ControlsProviderLifecycleManager provider;
         final /* synthetic */ ControlsBindingControllerImpl this$0;
-        @NotNull
         private final IBinder token;
 
         public abstract void doRun();
 
-        public CallbackRunnable(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder) {
+        public CallbackRunnable(ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             this.this$0 = controlsBindingControllerImpl;
             this.token = iBinder;
             this.provider = controlsBindingControllerImpl.currentProvider;
         }
 
-        /* access modifiers changed from: protected */
-        @Nullable
         public final ControlsProviderLifecycleManager getProvider() {
             return this.provider;
         }
@@ -228,15 +215,12 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* compiled from: ControlsBindingControllerImpl.kt */
     private final class OnLoadRunnable extends CallbackRunnable {
-        @NotNull
         private final ControlsBindingController.LoadCallback callback;
-        @NotNull
         private final List<Control> list;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-        public OnLoadRunnable(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, @NotNull IBinder iBinder, @NotNull List<Control> list2, ControlsBindingController.LoadCallback loadCallback) {
+        public OnLoadRunnable(ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder, List<Control> list2, ControlsBindingController.LoadCallback loadCallback) {
             super(controlsBindingControllerImpl, iBinder);
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(list2, "list");
@@ -252,18 +236,13 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* access modifiers changed from: private */
-    /* compiled from: ControlsBindingControllerImpl.kt */
     public final class OnCancelAndLoadRunnable extends CallbackRunnable {
-        @NotNull
         private final ControlsBindingController.LoadCallback callback;
-        @NotNull
         private final List<Control> list;
-        @NotNull
         private final IControlsSubscription subscription;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-        public OnCancelAndLoadRunnable(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, @NotNull IBinder iBinder, @NotNull List<Control> list2, @NotNull IControlsSubscription iControlsSubscription, ControlsBindingController.LoadCallback loadCallback) {
+        public OnCancelAndLoadRunnable(ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder, List<Control> list2, IControlsSubscription iControlsSubscription, ControlsBindingController.LoadCallback loadCallback) {
             super(controlsBindingControllerImpl, iBinder);
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(list2, "list");
@@ -285,14 +264,12 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* compiled from: ControlsBindingControllerImpl.kt */
     private final class OnSubscribeRunnable extends CallbackRunnable {
         private final long requestLimit;
-        @NotNull
         private final IControlsSubscription subscription;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-        public OnSubscribeRunnable(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, @NotNull IBinder iBinder, IControlsSubscription iControlsSubscription, long j) {
+        public OnSubscribeRunnable(ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder, IControlsSubscription iControlsSubscription, long j) {
             super(controlsBindingControllerImpl, iBinder);
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(iControlsSubscription, "subscription");
@@ -310,16 +287,13 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* access modifiers changed from: private */
-    /* compiled from: ControlsBindingControllerImpl.kt */
     public final class OnActionResponseRunnable extends CallbackRunnable {
-        @NotNull
         private final String controlId;
         private final int response;
         final /* synthetic */ ControlsBindingControllerImpl this$0;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-        public OnActionResponseRunnable(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, @NotNull IBinder iBinder, String str, int i) {
+        public OnActionResponseRunnable(ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder, String str, int i) {
             super(controlsBindingControllerImpl, iBinder);
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(str, "controlId");
@@ -337,15 +311,12 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* compiled from: ControlsBindingControllerImpl.kt */
     private final class OnLoadErrorRunnable extends CallbackRunnable {
-        @NotNull
         private final ControlsBindingController.LoadCallback callback;
-        @NotNull
         private final String error;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-        public OnLoadErrorRunnable(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, @NotNull IBinder iBinder, @NotNull String str, ControlsBindingController.LoadCallback loadCallback) {
+        public OnLoadErrorRunnable(ControlsBindingControllerImpl controlsBindingControllerImpl, IBinder iBinder, String str, ControlsBindingController.LoadCallback loadCallback) {
             super(controlsBindingControllerImpl, iBinder);
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(str, "error");
@@ -364,20 +335,16 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
         }
     }
 
-    /* access modifiers changed from: private */
-    /* compiled from: ControlsBindingControllerImpl.kt */
     public final class LoadSubscriber extends IControlsSubscriber.Stub {
         private Function0<Unit> _loadCancelInternal;
-        @NotNull
         private final ControlsBindingController.LoadCallback callback;
         private AtomicBoolean isTerminated = new AtomicBoolean(false);
-        @NotNull
         private final ArrayList<Control> loadedControls = new ArrayList<>();
         private final long requestLimit;
         private IControlsSubscription subscription;
         final /* synthetic */ ControlsBindingControllerImpl this$0;
 
-        public LoadSubscriber(@NotNull ControlsBindingControllerImpl controlsBindingControllerImpl, ControlsBindingController.LoadCallback loadCallback, long j) {
+        public LoadSubscriber(ControlsBindingControllerImpl controlsBindingControllerImpl, ControlsBindingController.LoadCallback loadCallback, long j) {
             Intrinsics.checkParameterIsNotNull(loadCallback, "callback");
             this.this$0 = controlsBindingControllerImpl;
             this.callback = loadCallback;
@@ -393,7 +360,10 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             throw null;
         }
 
-        @NotNull
+        public static final /* synthetic */ AtomicBoolean access$isTerminated$p(LoadSubscriber loadSubscriber) {
+            return loadSubscriber.isTerminated;
+        }
+
         public final ControlsBindingController.LoadCallback getCallback() {
             return this.callback;
         }
@@ -402,17 +372,15 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             return this.requestLimit;
         }
 
-        @NotNull
         public final ArrayList<Control> getLoadedControls() {
             return this.loadedControls;
         }
 
-        @NotNull
         public final Runnable loadCancel() {
             return new ControlsBindingControllerImpl$LoadSubscriber$loadCancel$1(this);
         }
 
-        public void onSubscribe(@NotNull IBinder iBinder, @NotNull IControlsSubscription iControlsSubscription) {
+        public void onSubscribe(IBinder iBinder, IControlsSubscription iControlsSubscription) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(iControlsSubscription, "subs");
             this.subscription = iControlsSubscription;
@@ -420,25 +388,24 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             this.this$0.backgroundExecutor.execute(new OnSubscribeRunnable(this.this$0, iBinder, iControlsSubscription, this.requestLimit));
         }
 
-        public void onNext(@NotNull IBinder iBinder, @NotNull Control control) {
+        public void onNext(IBinder iBinder, Control control) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(control, "c");
             this.this$0.backgroundExecutor.execute(new ControlsBindingControllerImpl$LoadSubscriber$onNext$1(this, control, iBinder));
         }
 
-        public void onError(@NotNull IBinder iBinder, @NotNull String str) {
+        public void onError(IBinder iBinder, String str) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             Intrinsics.checkParameterIsNotNull(str, "s");
             maybeTerminateAndRun(new OnLoadErrorRunnable(this.this$0, iBinder, str, this.callback));
         }
 
-        public void onComplete(@NotNull IBinder iBinder) {
+        public void onComplete(IBinder iBinder) {
             Intrinsics.checkParameterIsNotNull(iBinder, "token");
             maybeTerminateAndRun(new OnLoadRunnable(this.this$0, iBinder, this.loadedControls, this.callback));
         }
 
-        /* access modifiers changed from: private */
-        public final void maybeTerminateAndRun(Runnable runnable) {
+        private final void maybeTerminateAndRun(Runnable runnable) {
             if (!this.isTerminated.get()) {
                 this._loadCancelInternal = ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$1.INSTANCE;
                 ControlsProviderLifecycleManager controlsProviderLifecycleManager = this.this$0.currentProvider;

@@ -8,8 +8,9 @@ import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt___RangesKt;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationChildrenContainer.kt */
-final class MiuiNotificationChildrenContainer$startBackgroundAnimation$2 implements ValueAnimator.AnimatorUpdateListener {
+public final class MiuiNotificationChildrenContainer$startBackgroundAnimation$2 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ float $begin;
     final /* synthetic */ float $end;
     final /* synthetic */ ExpandableViewState $firstChildState;

@@ -18,7 +18,7 @@ public final class MediaCarouselScrollHandler$touchListener$1 implements Gefinge
     public boolean onTouchEvent(@Nullable MotionEvent motionEvent) {
         MediaCarouselScrollHandler mediaCarouselScrollHandler = this.this$0;
         if (motionEvent != null) {
-            return MediaCarouselScrollHandler.access$onTouch(mediaCarouselScrollHandler, motionEvent);
+            return mediaCarouselScrollHandler.onTouch(motionEvent);
         }
         Intrinsics.throwNpe();
         throw null;
@@ -28,7 +28,7 @@ public final class MediaCarouselScrollHandler$touchListener$1 implements Gefinge
     public boolean onInterceptTouchEvent(@Nullable MotionEvent motionEvent) {
         MediaCarouselScrollHandler mediaCarouselScrollHandler = this.this$0;
         if (motionEvent != null) {
-            return MediaCarouselScrollHandler.access$onInterceptTouch(mediaCarouselScrollHandler, motionEvent);
+            return mediaCarouselScrollHandler.onInterceptTouch(motionEvent);
         }
         Intrinsics.throwNpe();
         throw null;

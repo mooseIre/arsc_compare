@@ -16,7 +16,7 @@ public final class MediaCarouselScrollHandler$scrollChangedListener$1 implements
         if (this.this$0.getPlayerWidthPlusPadding() != 0) {
             int relativeScrollX = this.this$0.getScrollView().getRelativeScrollX();
             MediaCarouselScrollHandler mediaCarouselScrollHandler = this.this$0;
-            MediaCarouselScrollHandler.access$onMediaScrollingChanged(mediaCarouselScrollHandler, relativeScrollX / mediaCarouselScrollHandler.getPlayerWidthPlusPadding(), relativeScrollX % this.this$0.getPlayerWidthPlusPadding());
+            mediaCarouselScrollHandler.onMediaScrollingChanged(relativeScrollX / mediaCarouselScrollHandler.getPlayerWidthPlusPadding(), relativeScrollX % this.this$0.getPlayerWidthPlusPadding());
         }
     }
 }

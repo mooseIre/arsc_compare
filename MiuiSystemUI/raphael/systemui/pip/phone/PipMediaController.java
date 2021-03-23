@@ -204,4 +204,8 @@ public class PipMediaController {
             });
         }
     }
+
+    static /* synthetic */ void lambda$notifyActionsChanged$1(List list, ActionListener actionListener) {
+        actionListener.onMediaActionsChanged(list);
+    }
 }
