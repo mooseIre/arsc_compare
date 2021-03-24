@@ -678,13 +678,6 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         }
     }
 
-    public void updateResources(boolean z) {
-        if (z) {
-            updateLockScreenMagazineAvailable();
-            updateLockScreenMagazineWallpaperInfo();
-        }
-    }
-
     /* access modifiers changed from: package-private */
     public class MagazineResourceEntity {
         public boolean mIsLockScreenMagazinePkgExist = true;

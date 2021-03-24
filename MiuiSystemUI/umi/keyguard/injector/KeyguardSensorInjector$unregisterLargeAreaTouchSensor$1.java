@@ -10,9 +10,9 @@ public final class KeyguardSensorInjector$unregisterLargeAreaTouchSensor$1 imple
     }
 
     public final void run() {
-        if (KeyguardSensorInjector.access$getMSensorManager$p(this.this$0) != null && KeyguardSensorInjector.access$getMLargeAreaTouchSensor$p(this.this$0) != null) {
-            KeyguardSensorInjector.access$setMLargeAreaTouchSensor$p(this.this$0, null);
-            KeyguardSensorInjector.access$getMSensorManager$p(this.this$0).unregisterListener(KeyguardSensorInjector.access$getMLargeAreaTouchSensorListener$p(this.this$0));
+        if (this.this$0.mSensorManager != null && this.this$0.mLargeAreaTouchSensor != null) {
+            this.this$0.mLargeAreaTouchSensor = null;
+            this.this$0.mSensorManager.unregisterListener(this.this$0.mLargeAreaTouchSensorListener);
         }
     }
 }

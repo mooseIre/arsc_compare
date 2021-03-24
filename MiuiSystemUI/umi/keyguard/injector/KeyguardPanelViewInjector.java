@@ -2,7 +2,6 @@ package com.android.keyguard.injector;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -79,8 +78,6 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private KeyguardUpdateMonitorInjector mKeyguardUpdateMonitorInjector;
     private KeyguardVerticalMoveHelper mKeyguardVerticalMoveHelper;
-    private int mLastDensityDpi = -1;
-    private int mLastOrientation = -1;
     private MiuiKeyguardMoveLeftViewContainer mLeftView;
     private Drawable mLeftViewBackgroundImageDrawable;
     private ImageView mLeftViewBackgroundView;
@@ -218,7 +215,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 } else if (miuiNotificationPanelViewController2.getKeyguardFaceUnlockView() != null) {
                     Resources resources = this.mContext.getResources();
                     Intrinsics.checkExpressionValueIsNotNull(resources, "mContext.resources");
-                    this.mLastOrientation = resources.getConfiguration().orientation;
+                    int i = resources.getConfiguration().orientation;
                     this.mKeyguardMoveHelper = new KeyguardMoveHelper(this, this.mContext, miuiNotificationPanelViewController);
                     this.mKeyguardVerticalMoveHelper = new KeyguardVerticalMoveHelper(miuiNotificationPanelViewController);
                     LockScreenMagazineController lockScreenMagazineController = (LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class);
@@ -254,7 +251,6 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                     initSplitUserSpace();
                     initKeyguardBackground();
                     initKeyguardViewCollection();
-                    updateResource(false);
                     initScreenSize();
                     Object systemService = this.mContext.getSystemService("power");
                     if (systemService != null) {
@@ -437,15 +433,14 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     public final boolean onInterceptTouchEvent(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         initDownStates(motionEvent);
-        if (((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).disallowTouchEvent(motionEvent)) {
+        if (!((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).disallowInterceptTouch(motionEvent)) {
             return true;
         }
         KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
         if (keyguardMoveHelper != null) {
-            return keyguardMoveHelper.onInterceptTouchEvent(motionEvent);
+            keyguardMoveHelper.initDownStates(motionEvent);
         }
-        Intrinsics.throwNpe();
-        throw null;
+        return false;
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:53:0x0096, code lost:
@@ -475,55 +470,6 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         // Method dump skipped, instructions count: 217
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardPanelViewInjector.onTouchEvent(android.view.MotionEvent, int, float, float, boolean, boolean, boolean, boolean, boolean, boolean):boolean");
-    }
-
-    public final void updateResource(boolean z) {
-        NotificationPanelView notificationPanelView = this.mPanelView;
-        if (notificationPanelView != null) {
-            Context context = notificationPanelView.getContext();
-            Intrinsics.checkExpressionValueIsNotNull(context, "it.context");
-            Resources resources = context.getResources();
-            Intrinsics.checkExpressionValueIsNotNull(resources, "it.context.resources");
-            Configuration configuration = resources.getConfiguration();
-            int i = configuration.orientation;
-            if (i != this.mLastOrientation) {
-                this.mLastOrientation = i;
-                MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
-                if (miuiNotificationPanelViewController != null) {
-                    miuiNotificationPanelViewController.resetVerticalPanelPosition();
-                    KeyguardMoveHelper keyguardMoveHelper = this.mKeyguardMoveHelper;
-                    if (keyguardMoveHelper != null) {
-                        keyguardMoveHelper.reset(true);
-                    }
-                } else {
-                    Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
-                    throw null;
-                }
-            }
-            int i2 = configuration.densityDpi;
-            if (i2 != this.mLastDensityDpi) {
-                this.mLastDensityDpi = i2;
-                MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
-                if (miuiKeyguardMoveLeftViewContainer != null) {
-                    miuiKeyguardMoveLeftViewContainer.inflateLeftView();
-                }
-                KeyguardMoveHelper keyguardMoveHelper2 = this.mKeyguardMoveHelper;
-                if (keyguardMoveHelper2 != null) {
-                    keyguardMoveHelper2.reset(false);
-                }
-            }
-            KeyguardMoveHelper keyguardMoveHelper3 = this.mKeyguardMoveHelper;
-            if (keyguardMoveHelper3 != null) {
-                keyguardMoveHelper3.updateResource(z);
-            }
-            LockScreenMagazineController lockScreenMagazineController = this.mLockScreenMagazineController;
-            if (lockScreenMagazineController != null) {
-                lockScreenMagazineController.updateResources(z);
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("mLockScreenMagazineController");
-                throw null;
-            }
-        }
     }
 
     private final void initKeyguardBackground() {

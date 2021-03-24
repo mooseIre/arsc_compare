@@ -69,6 +69,8 @@ public class KeyguardMoveHelper {
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private KeyguardAffordanceView mLeftIcon;
     private KeyguardMoveLeftController mLeftMoveController;
+    private final MiuiKeyguardMoveLeftViewContainer mLeftView;
+    private final ImageView mLeftViewBg;
     private int mMinFlingVelocity;
     private boolean mMotionCancelled;
     private BaseKeyguardMoveController.CallBack mMoveViewCallBack = new BaseKeyguardMoveController.CallBack() {
@@ -188,6 +190,11 @@ public class KeyguardMoveHelper {
         initDimens();
         this.mLeftMoveController = new KeyguardMoveLeftController(context, this.mMoveViewCallBack);
         this.mRightMoveController = new KeyguardMoveRightController(context, this.mMoveViewCallBack);
+        this.mLeftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
+        this.mLeftViewBg = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftBackgroundView();
+        float f = -getScreenWidth();
+        this.mLeftView.setTranslationX(f);
+        this.mLeftViewBg.setTranslationX(f);
     }
 
     private void initDimens() {
@@ -262,12 +269,7 @@ public class KeyguardMoveHelper {
                 }
                 return true;
             }
-            this.mInitialTouchX = x;
-            this.mInitialTouchY = y;
-            initVelocityTracker();
-            trackMovement(motionEvent);
-            this.mMotionCancelled = false;
-            this.mIsTouchRightIcon = isOnIcon(this.mRightIcon, x, y);
+            initDownStates(motionEvent);
             return false;
         }
         if (DebugConfig.DEBUG_KEYGUARD) {
@@ -356,12 +358,17 @@ public class KeyguardMoveHelper {
         }
     }
 
-    public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        if (motionEvent.getActionMasked() != 0) {
-            return false;
+    public void initDownStates(MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() == 0) {
+            float y = motionEvent.getY();
+            float x = motionEvent.getX();
+            this.mInitialTouchX = x;
+            this.mInitialTouchY = y;
+            initVelocityTracker();
+            trackMovement(motionEvent);
+            this.mMotionCancelled = false;
+            this.mIsTouchRightIcon = isOnIcon(this.mRightIcon, x, y);
         }
-        onTouchEvent(motionEvent);
-        return false;
     }
 
     private void cancelAnimation() {
@@ -463,15 +470,13 @@ public class KeyguardMoveHelper {
     private void setTranslation(float f, boolean z, boolean z2, boolean z3, boolean z4) {
         float f2;
         float f3;
-        MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
-        ImageView leftBackgroundView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftBackgroundView();
         if (z4) {
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
             this.mFaceUnlockView.setTranslationX(0.0f);
             this.mFaceUnlockView.setAlpha(1.0f);
             this.mCurrentScreen = 1;
-            leftView.setTranslationX(-getScreenWidth());
-            leftBackgroundView.setVisibility(4);
+            this.mLeftView.setTranslationX(-getScreenWidth());
+            this.mLeftViewBg.setVisibility(4);
             animateShowLeftRightIcon();
             for (View view : this.mCallback.getMobileView()) {
                 view.setTranslationX(0.0f);
@@ -482,7 +487,7 @@ public class KeyguardMoveHelper {
         if (this.mCurrentScreen != 1 || f <= 0.0f) {
             f2 = this.mCurrentScreen == 0 ? (f / getScreenWidth()) + 1.0f : 0.0f;
         } else {
-            leftBackgroundView.setVisibility(0);
+            this.mLeftViewBg.setVisibility(0);
             f2 = f / getScreenWidth();
         }
         if (f2 < 0.0f) {
@@ -499,9 +504,9 @@ public class KeyguardMoveHelper {
         }
         if (f != this.mTranslation || z || z3) {
             if (!z2) {
-                leftView.setTranslationX(f3 - getScreenWidth());
-                leftBackgroundView.setAlpha(f2);
-                leftView.setAlpha(((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft() ? f2 : 1.0f);
+                this.mLeftView.setTranslationX(f3 - getScreenWidth());
+                this.mLeftViewBg.setAlpha(f2);
+                this.mLeftView.setAlpha(((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft() ? f2 : 1.0f);
                 for (View view2 : this.mCallback.getMobileView()) {
                     view2.setTranslationX(f3);
                     view2.setAlpha(1.0f - f2);
@@ -511,14 +516,17 @@ public class KeyguardMoveHelper {
             } else {
                 AnimatorSet animatorSet = new AnimatorSet();
                 ArrayList arrayList = new ArrayList();
-                arrayList.add(ObjectAnimator.ofFloat(leftView, View.TRANSLATION_X, leftView.getTranslationX(), f3 - getScreenWidth()));
+                MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
+                arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardMoveLeftViewContainer, View.TRANSLATION_X, miuiKeyguardMoveLeftViewContainer.getTranslationX(), f3 - getScreenWidth()));
                 MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView = this.mFaceUnlockView;
                 arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardFaceUnlockView, View.TRANSLATION_X, miuiKeyguardFaceUnlockView.getTranslationX(), f3));
-                arrayList.add(ObjectAnimator.ofFloat(leftBackgroundView, "alpha", leftBackgroundView.getAlpha(), f2));
+                ImageView imageView = this.mLeftViewBg;
+                arrayList.add(ObjectAnimator.ofFloat(imageView, "alpha", imageView.getAlpha(), f2));
                 MiuiKeyguardFaceUnlockView miuiKeyguardFaceUnlockView2 = this.mFaceUnlockView;
                 arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardFaceUnlockView2, "alpha", miuiKeyguardFaceUnlockView2.getAlpha(), 1.0f - f2));
                 if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
-                    arrayList.add(ObjectAnimator.ofFloat(leftView, "alpha", leftView.getAlpha(), f2));
+                    MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer2 = this.mLeftView;
+                    arrayList.add(ObjectAnimator.ofFloat(miuiKeyguardMoveLeftViewContainer2, "alpha", miuiKeyguardMoveLeftViewContainer2.getAlpha(), f2));
                 }
                 this.mCallback.getMobileView().forEach(new Consumer(arrayList, f3, f2) {
                     /* class com.android.keyguard.$$Lambda$KeyguardMoveHelper$I1gNRBK41CZEZCnSsORQ0z0Bk */
@@ -547,7 +555,7 @@ public class KeyguardMoveHelper {
         }
         if (this.mCurrentScreen == 0 && f == (-getScreenWidth())) {
             this.mCurrentScreen = 1;
-            leftBackgroundView.setVisibility(4);
+            this.mLeftViewBg.setVisibility(4);
             MiuiGxzwManager.getInstance().setCanShowGxzw(true);
             this.mKeyguardUpdateMonitor.requestFaceAuth();
             AnalyticsHelper.getInstance(this.mContext).trackPageStart("keyguard_view_main_lock_screen");
@@ -633,13 +641,6 @@ public class KeyguardMoveHelper {
         }
         velocityTracker.computeCurrentVelocity(1000);
         return this.mVelocityTracker.getXVelocity();
-    }
-
-    public void updateResource(boolean z) {
-        if (z) {
-            initDimens();
-            updateBottomIcons(this.mBottomAreaView);
-        }
     }
 
     public void reset(boolean z) {

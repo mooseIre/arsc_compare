@@ -22,12 +22,6 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
         super(context, attributeSet);
     }
 
-    /* access modifiers changed from: protected */
-    public void onFinishInflate() {
-        super.onFinishInflate();
-        inflateLeftView();
-    }
-
     public void inflateLeftView() {
         MiuiKeyguardMoveLeftBaseView miuiKeyguardMoveLeftBaseView = this.mKeyguardMoveLeftView;
         if (miuiKeyguardMoveLeftBaseView != null) {
@@ -35,9 +29,13 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
             this.mKeyguardMoveLeftView = null;
         }
         if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
-            this.mKeyguardMoveLeftView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
+            MiuiKeyguardMoveLeftLockScreenMagazineView miuiKeyguardMoveLeftLockScreenMagazineView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
+            this.mKeyguardMoveLeftView = miuiKeyguardMoveLeftLockScreenMagazineView;
+            miuiKeyguardMoveLeftLockScreenMagazineView.setVisibility(4);
         } else {
-            this.mKeyguardMoveLeftView = (MiuiKeyguardMoveLeftControlCenterView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_control_center_layout, (ViewGroup) null, false);
+            MiuiKeyguardMoveLeftControlCenterView miuiKeyguardMoveLeftControlCenterView = (MiuiKeyguardMoveLeftControlCenterView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_control_center_layout, (ViewGroup) null, false);
+            this.mKeyguardMoveLeftView = miuiKeyguardMoveLeftControlCenterView;
+            miuiKeyguardMoveLeftControlCenterView.setVisibility(0);
         }
         setCustomBackground();
         addView(this.mKeyguardMoveLeftView);
