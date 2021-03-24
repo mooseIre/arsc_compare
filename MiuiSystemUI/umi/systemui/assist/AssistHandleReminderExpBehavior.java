@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.concurrent.TimeUnit;
 
-/* access modifiers changed from: package-private */
 public final class AssistHandleReminderExpBehavior implements AssistHandleBehaviorController.BehaviorController {
     private static final String[] DEFAULT_HOME_CHANGE_ACTIONS = {"android.intent.action.ACTION_PREFERRED_ACTIVITY_CHANGED", "android.intent.action.PACKAGE_ADDED", "android.intent.action.PACKAGE_CHANGED", "android.intent.action.PACKAGE_REMOVED"};
     private static final long DEFAULT_LEARNING_TIME_MS = TimeUnit.DAYS.toMillis(10);
@@ -86,7 +85,7 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         /* class com.android.systemui.assist.$$Lambda$AssistHandleReminderExpBehavior$pwcnWUhYSvHUPTaX_vnnVqcvKYA */
 
         public final void run() {
-            AssistHandleReminderExpBehavior.this.resetConsecutiveTaskSwitches();
+            AssistHandleReminderExpBehavior.lambda$pwcnWUhYSvHUPTaX_vnnVqcvKYA(AssistHandleReminderExpBehavior.this);
         }
     };
     private int mRunningTaskId;
@@ -110,7 +109,7 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
 
         @Override // com.android.systemui.model.SysUiState.SysUiStateCallback
         public final void onSystemUiStateChanged(int i) {
-            AssistHandleReminderExpBehavior.this.handleSystemUiStateChanged(i);
+            AssistHandleReminderExpBehavior.m10lambda$V4NCzVQFEFRzsFBikU8WKQiVok(AssistHandleReminderExpBehavior.this, i);
         }
     };
     private final TaskStackChangeListener mTaskStackChangeListener = new TaskStackChangeListener() {
@@ -240,8 +239,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private ComponentName getCurrentDefaultHome() {
         ArrayList arrayList = new ArrayList();
         ComponentName homeActivities = this.mPackageManagerWrapper.get().getHomeActivities(arrayList);
@@ -267,8 +264,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleStatusBarStateChanged(int i) {
         boolean onLockscreen = onLockscreen(i);
         if (this.mOnLockscreen != onLockscreen) {
@@ -278,8 +273,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleDozingChanged(boolean z) {
         if (this.mIsDozing != z) {
             resetConsecutiveTaskSwitches();
@@ -288,8 +281,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleWakefullnessChanged(boolean z) {
         if (this.mIsAwake != z) {
             resetConsecutiveTaskSwitches();
@@ -298,8 +289,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleTaskStackTopChanged(int i, ComponentName componentName) {
         if (this.mRunningTaskId != i && componentName != null) {
             this.mRunningTaskId = i;
@@ -315,7 +304,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleSystemUiStateChanged(int i) {
         boolean z = (i & 2) != 0;
@@ -326,8 +314,6 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleOverviewShown() {
         resetConsecutiveTaskSwitches();
         callbackForCurrentState(false);
@@ -402,13 +388,13 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateLearningStatus$0 */
     public /* synthetic */ void lambda$updateLearningStatus$0$AssistHandleReminderExpBehavior() {
         Settings.Secure.putLong(this.mContext.getContentResolver(), "reminder_exp_learning_time_elapsed", this.mLearningTimeElapsed);
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void resetConsecutiveTaskSwitches() {
         this.mHandler.removeCallbacks(this.mResetConsecutiveTaskSwitches);

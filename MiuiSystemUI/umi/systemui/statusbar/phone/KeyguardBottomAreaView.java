@@ -52,6 +52,7 @@ import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.systemui.ActivityIntentHelper;
 import com.android.systemui.C0010R$bool;
@@ -79,7 +80,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import miui.maml.animation.interpolater.SineEaseInOutInterpolater;
 import miui.os.Build;
-import miui.util.FeatureParser;
 
 public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickListener, View.OnLongClickListener, KeyguardStateController.Callback, AccessibilityController.AccessibilityStateChangedCallback {
     public static final Intent INSECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA");
@@ -948,7 +948,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                 this.mIconState.drawable = KeyguardBottomAreaView.this.getLockScreenMagazineMainEntryIcon();
                 this.mIconState.contentDescription = ((FrameLayout) KeyguardBottomAreaView.this).mContext.getString(C0021R$string.accessibility_left_lock_screen_magazine_button);
                 IntentButtonProvider.IntentButton.IconState iconState = this.mIconState;
-                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || FeatureParser.getBoolean("is_pad", false) || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || !KeyguardBottomAreaView.this.isPhoneVisible() || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
+                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || MiuiKeyguardUtils.isPad() || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || !KeyguardBottomAreaView.this.isPhoneVisible() || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
                     z = false;
                 }
                 iconState.isVisible = z;
@@ -962,7 +962,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                 iconState2.drawable = drawable;
                 this.mIconState.contentDescription = ((FrameLayout) KeyguardBottomAreaView.this).mContext.getString(C0021R$string.accessibility_left_control_center_button);
                 IntentButtonProvider.IntentButton.IconState iconState3 = this.mIconState;
-                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || FeatureParser.getBoolean("is_pad", false) || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
+                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || MiuiKeyguardUtils.isPad() || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
                     z = false;
                 }
                 iconState3.isVisible = z;

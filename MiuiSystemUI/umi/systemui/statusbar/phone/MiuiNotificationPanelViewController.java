@@ -1199,13 +1199,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
     }
 
-    public final void resetVerticalPanelPosition() {
-        this.mNotificationStackScroller.setTranslationX(0.0f);
-        FrameLayout frameLayout = this.mQsFrame;
-        Intrinsics.checkExpressionValueIsNotNull(frameLayout, "mQsFrame");
-        frameLayout.setTranslationX(0.0f);
-    }
-
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
     @NotNull
@@ -1403,7 +1396,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final void updateKeyguardElementAlpha() {
         Object obj = Dependency.get(LockScreenMagazineController.class);
         Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(LockScree…neController::class.java)");
-        if (!((LockScreenMagazineController) obj).isPreViewVisible()) {
+        if (!((LockScreenMagazineController) obj).isPreViewVisible() && this.mIsDefaultTheme) {
             float min = Math.min(getKeyguardContentsAlpha(), ((float) 1) - getQsExpansionFraction());
             int i = min == 0.0f ? 4 : 0;
             KeyguardBottomAreaView keyguardBottomAreaView = this.mKeyguardBottomArea;
