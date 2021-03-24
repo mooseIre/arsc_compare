@@ -51,7 +51,7 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this);
     }
 
-    public final boolean disallowTouchEvent(@NotNull MotionEvent motionEvent) {
+    public final boolean disallowInterceptTouch(@NotNull MotionEvent motionEvent) {
         boolean z;
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if (motionEvent.getActionMasked() == 0) {
@@ -83,7 +83,7 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
                 throw null;
             }
         }
-        return this.mTouchAtKeyguardBottomArea && isBottomAreaStartMoving(motionEvent);
+        return !this.mTouchAtKeyguardBottomArea || !isBottomAreaStartMoving(motionEvent);
     }
 
     private final boolean isBottomAreaStartMoving(MotionEvent motionEvent) {

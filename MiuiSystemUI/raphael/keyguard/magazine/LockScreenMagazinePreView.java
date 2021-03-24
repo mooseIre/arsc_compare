@@ -131,7 +131,6 @@ public class LockScreenMagazinePreView extends RelativeLayout {
 
     private void initViews() {
         initLayoutVisibility();
-        initSettingButton();
         initFullScreenTitleLayout();
         initFullScreenTitle();
         initLinkButton();
