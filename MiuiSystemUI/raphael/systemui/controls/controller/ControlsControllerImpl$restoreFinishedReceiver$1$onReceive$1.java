@@ -15,6 +15,6 @@ final class ControlsControllerImpl$restoreFinishedReceiver$1$onReceive$1 impleme
         this.this$0.this$0.getAuxiliaryPersistenceWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core().initialize();
         this.this$0.this$0.persistenceWrapper.storeFavorites(this.this$0.this$0.getAuxiliaryPersistenceWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core().getFavorites());
         ControlsControllerImpl controlsControllerImpl = this.this$0.this$0;
-        ControlsControllerImpl.access$resetFavorites(controlsControllerImpl, controlsControllerImpl.getAvailable());
+        controlsControllerImpl.resetFavorites(controlsControllerImpl.getAvailable());
     }
 }

@@ -260,10 +260,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         boolean onLongPress();
     }
 
-    public static /* synthetic */ void lambda$jlxsGoRx8E3djFav9gCad5fjKg0(GlobalActionsDialog globalActionsDialog) {
-        globalActionsDialog.onRotate();
-    }
-
     public enum GlobalActionsEvent implements UiEventLogger.UiEventEnum {
         GA_POWER_MENU_OPEN(337),
         GA_POWER_MENU_CLOSE(471),
@@ -618,6 +614,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
+    /* access modifiers changed from: public */
     private void onRotate() {
         createActionItems();
     }

@@ -14,7 +14,7 @@ public class ExecutorImpl implements DelayableExecutor {
             /* class com.android.systemui.util.concurrency.$$Lambda$ExecutorImpl$vXdc7rv1NdEmVmxIWaGxknUGa10 */
 
             public final boolean handleMessage(Message message) {
-                return ExecutorImpl.this.onHandleMessage(message);
+                return ExecutorImpl.lambda$vXdc7rv1NdEmVmxIWaGxknUGa10(ExecutorImpl.this, message);
             }
         });
     }
@@ -32,8 +32,8 @@ public class ExecutorImpl implements DelayableExecutor {
         return executionToken;
     }
 
-    /* access modifiers changed from: private */
-    public boolean onHandleMessage(Message message) {
+    /* access modifiers changed from: public */
+    private boolean onHandleMessage(Message message) {
         if (message.what == 0) {
             ((ExecutionToken) message.obj).runnable.run();
             return true;
@@ -41,11 +41,11 @@ public class ExecutorImpl implements DelayableExecutor {
         throw new IllegalStateException("Unrecognized message: " + message.what);
     }
 
-    /* access modifiers changed from: private */
     public class ExecutionToken implements Runnable {
         public final Runnable runnable;
 
         private ExecutionToken(Runnable runnable2) {
+            ExecutorImpl.this = r1;
             this.runnable = runnable2;
         }
 

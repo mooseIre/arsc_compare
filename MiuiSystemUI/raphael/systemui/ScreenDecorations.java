@@ -20,6 +20,7 @@ import android.os.UserHandle;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.DisplayCutout;
 import android.view.View;
@@ -133,7 +134,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return i3 < 0 ? i3 + 4 : i3;
     }
 
-    private static String getWindowTitleByPos(int i) {
+    /* access modifiers changed from: private */
+    public static String getWindowTitleByPos(int i) {
         return "RoundCorner";
     }
 
@@ -171,14 +173,15 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         });
     }
 
+    /* access modifiers changed from: package-private */
     public Handler startHandlerThread() {
         HandlerThread handlerThread = new HandlerThread("ScreenDecorations");
         handlerThread.start();
         return handlerThread.getThreadHandler();
     }
 
-    /* access modifiers changed from: public */
-    private void startOnScreenDecorationsThread() {
+    /* access modifiers changed from: private */
+    public void startOnScreenDecorationsThread() {
         this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0010R$bool.support_round_corner);
         this.mRotation = this.mContext.getDisplay().getRotation();
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
@@ -201,6 +204,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 ScreenDecorations screenDecorations = ScreenDecorations.this;
                 if (!(screenDecorations.mOverlays == null || screenDecorations.mRotation == rotation)) {
                     ScreenDecorations.this.mPendingRotationChange = true;
+                    Log.i("ScreenDecorations", "Rotation changed, deferring " + rotation + ", staying at " + ScreenDecorations.this.mRotation);
                     for (int i2 = 0; i2 < 4; i2++) {
                         View[] viewArr = ScreenDecorations.this.mOverlays;
                         if (viewArr[i2] != null) {
@@ -300,6 +304,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 AnonymousClass5 r0 = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
                     /* class com.android.systemui.ScreenDecorations.AnonymousClass5 */
 
+                    /* access modifiers changed from: protected */
                     @Override // com.android.systemui.qs.SecureSetting
                     public void handleValueChanged(int i, boolean z) {
                         ScreenDecorations.this.updateColorInversion(i);
@@ -317,14 +322,12 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$setupDecorations$0 */
     public /* synthetic */ void lambda$setupDecorations$0$ScreenDecorations() {
         this.mTunerService.addTunable(this, "sysui_rounded_size");
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$setupDecorations$1 */
     public /* synthetic */ void lambda$setupDecorations$1$ScreenDecorations() {
@@ -341,10 +344,12 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    /* access modifiers changed from: package-private */
     public DisplayCutout getCutout() {
         return this.mContext.getDisplay().getCutout();
     }
 
+    /* access modifiers changed from: package-private */
     public boolean hasOverlays() {
         if (this.mOverlays == null) {
             return false;
@@ -381,6 +386,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private void createOverlay(final int i) {
+        Log.d("ScreenDecorations", "createOverlay: " + i);
         if (this.mOverlays == null) {
             this.mOverlays = new View[4];
         }
@@ -445,6 +451,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateForceBlackTopOverlayVisibility() {
         View view = this.mForceBlackTopOverlay;
         if (view != null) {
@@ -463,6 +471,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    /* access modifiers changed from: protected */
     public Drawable getTopDrawableId(int i) {
         int[] iArr;
         if (this.mForceBlackV2) {
@@ -478,6 +487,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return getDrawableForDensity(iArr[i]);
     }
 
+    /* access modifiers changed from: protected */
     public Drawable getForceBlackTopDrawableId(int i) {
         if (i >= 0) {
             int[] iArr = this.mForceBlackTopDrawables;
@@ -488,6 +498,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return null;
     }
 
+    /* access modifiers changed from: protected */
     public Drawable getBottomDrawableId(int i) {
         if (i >= 0) {
             int[] iArr = this.mNormalBottomDrawables;
@@ -504,10 +515,12 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return this.mContext.getResources().getDrawableForDensity(i, typedValue.density);
     }
 
+    /* access modifiers changed from: package-private */
     public WindowManager.LayoutParams getWindowLayoutParams(int i) {
         return getWindowLayoutParams(i, false);
     }
 
+    /* access modifiers changed from: package-private */
     public WindowManager.LayoutParams getWindowLayoutParams(int i, boolean z) {
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(getWidthLayoutParamByPos(i), getHeightLayoutParamByPos(i), z ? 2042 : 2024, 562037048, -3);
         int i2 = layoutParams.privateFlags | 80;
@@ -574,6 +587,8 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateColorInversion(int i) {
         int i2 = i != 0 ? -1 : -16777216;
         if (DEBUG_COLOR) {
@@ -593,6 +608,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         }
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.systemui.SystemUI
     public void onConfigurationChanged(Configuration configuration) {
         this.mHandler.post(new Runnable() {
@@ -604,12 +620,13 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         });
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onConfigurationChanged$2 */
     public /* synthetic */ void lambda$onConfigurationChanged$2$ScreenDecorations() {
+        int i = this.mRotation;
         this.mPendingRotationChange = false;
         updateOrientation();
+        Log.i("ScreenDecorations", "onConfigChanged from rot " + i + " to " + this.mRotation);
         setupDecorations();
         if (this.mOverlays != null || this.mForceBlackTopOverlay != null) {
             updateLayoutParams();
@@ -621,8 +638,11 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         postUpdateScreenDecorationsFront();
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateOrientation() {
         int rotation;
+        Log.d("ScreenDecorations", "updateOrientation: " + this.mPendingRotationChange);
         boolean z = this.mHandler.getLooper().getThread() == Thread.currentThread();
         Preconditions.checkState(z, "must call on " + this.mHandler.getLooper().getThread() + ", but was " + Thread.currentThread());
         if (!this.mPendingRotationChange && (rotation = this.mContext.getDisplay().getRotation()) != this.mRotation) {
@@ -642,11 +662,15 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         return i == 1 || i == 3;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void postUpdateScreenDecorationsFront() {
         this.mHandler.removeCallbacks(this.mUpdateScreenDecorations);
         this.mHandler.postAtFrontOfQueue(this.mUpdateScreenDecorations);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateScreenDecorations() {
         updateLayoutParams();
         updateBackground();
@@ -700,39 +724,44 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private class RestartingPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
+        private final int mPosition;
         private final int mTargetRotation;
         private final View mView;
 
         private RestartingPreDrawListener(View view, int i, int i2) {
-            ScreenDecorations.this = r1;
             this.mView = view;
             this.mTargetRotation = i2;
+            this.mPosition = i;
         }
 
         public boolean onPreDraw() {
             this.mView.getViewTreeObserver().removeOnPreDrawListener(this);
             if (this.mTargetRotation == ScreenDecorations.this.mRotation) {
+                Log.i("ScreenDecorations", ScreenDecorations.getWindowTitleByPos(this.mPosition) + " already in target rot " + this.mTargetRotation + ", allow draw without restarting it");
                 return true;
             }
             ScreenDecorations.this.mPendingRotationChange = false;
             ScreenDecorations.this.updateOrientation();
+            Log.i("ScreenDecorations", ScreenDecorations.getWindowTitleByPos(this.mPosition) + " restarting listener fired, restarting draw for rot " + ScreenDecorations.this.mRotation);
             this.mView.invalidate();
             return false;
         }
     }
 
+    /* access modifiers changed from: private */
     public class ValidatingPreDrawListener implements ViewTreeObserver.OnPreDrawListener {
         private final View mView;
 
         public ValidatingPreDrawListener(View view) {
-            ScreenDecorations.this = r1;
             this.mView = view;
         }
 
         public boolean onPreDraw() {
-            if (ScreenDecorations.this.mContext.getDisplay().getRotation() == ScreenDecorations.this.mRotation || ScreenDecorations.this.mPendingRotationChange) {
+            int rotation = ScreenDecorations.this.mContext.getDisplay().getRotation();
+            if (rotation == ScreenDecorations.this.mRotation || ScreenDecorations.this.mPendingRotationChange) {
                 return true;
             }
+            Log.i("ScreenDecorations", "Drawing rot " + ScreenDecorations.this.mRotation + ", but display is at rot " + rotation + ". Restarting draw");
             this.mView.invalidate();
             return false;
         }
