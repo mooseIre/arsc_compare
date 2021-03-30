@@ -232,6 +232,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
         if (this.mStartingDismissAnim && (animatorSet = this.mDismissAnimatorSet) != null) {
             animatorSet.cancel();
         }
+        ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).handleChargeAnimationShowingChanged(true, false);
         setComponentTransparent(false);
         int i = ChargeUtils.sBatteryStatus.wireState;
         this.mWireState = i;
@@ -288,14 +289,12 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     public void startDismiss(final String str) {
         Property property = FrameLayout.ALPHA;
-        if (TextUtils.equals(str, "dismiss_for_timeout")) {
-            ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).handleChargeAnimationShowingChanged(false);
-        }
         if (!this.mStartingDismissAnim) {
             AnimatorSet animatorSet = this.mShowingAnimatorSet;
             if (animatorSet != null && animatorSet.isStarted()) {
                 this.mShowingAnimatorSet.cancel();
             }
+            ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).handleChargeAnimationShowingChanged(false, TextUtils.equals(str, "dismiss_for_timeout") || TextUtils.equals(str, "dismiss_for_screen_off"));
             disableOrientation();
             Log.i("MiuiChargeAnimationView", "startDismiss: reason: " + str);
             this.mDismissReason = str;
@@ -305,8 +304,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
             PropertyValuesHolder ofFloat2 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_X, this.itemContainer.getScaleX(), 0.0f);
             PropertyValuesHolder ofFloat3 = PropertyValuesHolder.ofFloat(FrameLayout.SCALE_Y, this.itemContainer.getScaleY(), 0.0f);
             ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(this.mParentContainer, ofFloat);
-            PropertyValuesHolder ofFloat4 = PropertyValuesHolder.ofFloat(property, this.itemContainer.getAlpha(), 0.0f);
-            ObjectAnimator ofPropertyValuesHolder2 = ObjectAnimator.ofPropertyValuesHolder(this.itemContainer, ofFloat2, ofFloat3, ofFloat4);
+            ObjectAnimator ofPropertyValuesHolder2 = ObjectAnimator.ofPropertyValuesHolder(this.itemContainer, ofFloat2, ofFloat3, PropertyValuesHolder.ofFloat(property, this.itemContainer.getAlpha(), 0.0f));
             AnimatorSet animatorSet2 = new AnimatorSet();
             this.mDismissAnimatorSet = animatorSet2;
             animatorSet2.setDuration(600L);

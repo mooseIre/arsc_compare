@@ -325,9 +325,11 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
 
         @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
-        public void onChargeAnimationShowingChanged(boolean z) {
-            super.onChargeAnimationShowingChanged(z);
-            MiuiGxzwManager.this.updateGxzwState();
+        public void onChargeAnimationShowingChanged(boolean z, boolean z2) {
+            super.onChargeAnimationShowingChanged(z, z2);
+            if (!z2) {
+                MiuiGxzwManager.this.updateGxzwState();
+            }
         }
     };
     private boolean mLockScreenMagazinePreViewVisible;

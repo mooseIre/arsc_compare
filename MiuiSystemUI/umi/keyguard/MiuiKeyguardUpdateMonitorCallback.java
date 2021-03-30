@@ -1,7 +1,7 @@
 package com.android.keyguard;
 
 public class MiuiKeyguardUpdateMonitorCallback extends KeyguardUpdateMonitorCallback {
-    public void onChargeAnimationShowingChanged(boolean z) {
+    public void onChargeAnimationShowingChanged(boolean z, boolean z2) {
     }
 
     public void onFingerprintLockoutReset() {

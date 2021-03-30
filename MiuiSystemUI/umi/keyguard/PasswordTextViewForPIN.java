@@ -26,6 +26,7 @@ import java.util.Iterator;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
+import miuix.animation.controller.AnimState;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.FloatProperty;
 
@@ -35,6 +36,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     private final Paint mDrawPaint;
     private final Paint mFillPaint;
     private final int mGravity;
+    private Handler mHandler;
     private boolean mIsResetAnimating;
     private int mPasswordLength;
     private float mStrokeWidth;
@@ -63,7 +65,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         this.mText = "";
         this.mDrawPaint = new Paint();
         this.mFillPaint = new Paint();
-        new Handler(Looper.getMainLooper());
+        this.mHandler = new Handler(Looper.getMainLooper());
         setFocusableInTouchMode(true);
         setFocusable(true);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.PasswordTextView);
@@ -292,10 +294,15 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         float currentDotSizeFactor = 1.0f;
         boolean isVisible;
         private final String mAlphaTarget = ("char_alpha_" + hashCode());
+        private TransitionListener mAlphaTargetListener = new AlphaTargetListener();
+        private String mAlphaTargetValue = "AlphaTargetValue";
         private final float mMaxYOffset;
         private final String mScaleTarget = ("char_scale_" + hashCode());
+        private TransitionListener mScaleTargetListener = new ScaleTargetListener();
+        private String mScaleTargetValue = "ScaleTargetValue";
         private final String mYTarget = ("char_y_" + hashCode());
-        private int tag = 0;
+        private TransitionListener mYTargetListener = new YTargetListener();
+        private String mYTargetValue = "YTargetValue";
         float yOffset;
 
         CharState() {
@@ -305,61 +312,79 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             AnimConfig animConfig2 = new AnimConfig();
             animConfig2.setEase(-2, 0.8f, 0.3f);
             this.Y_CONFIG = animConfig2;
-            setupFolmeAnimations();
+            Folme.useValue(this.mYTarget).addListener(this.mYTargetListener).setTo(this.mYTargetValue, Float.valueOf(0.0f));
             this.mMaxYOffset = (PasswordTextViewForPIN.this.getContext().getResources().getDisplayMetrics().density * 7.0f) + 0.5f;
         }
 
-        private void setupFolmeAnimations() {
-            Folme.useValue(this.mScaleTarget).addListener(new TransitionListener() {
-                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass1 */
+        /* access modifiers changed from: package-private */
+        public class ScaleTargetListener extends TransitionListener {
+            ScaleTargetListener() {
+            }
 
-                @Override // miuix.animation.listener.TransitionListener
-                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
-                    CharState charState = CharState.this;
-                    charState.currentDotSizeFactor = f;
-                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
-                }
-            });
-            Folme.useValue(this.mAlphaTarget).addListener(new TransitionListener() {
-                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass2 */
+            @Override // miuix.animation.listener.TransitionListener
+            public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                CharState charState = CharState.this;
+                charState.currentDotSizeFactor = f;
+                PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+            }
+        }
 
-                @Override // miuix.animation.listener.TransitionListener
-                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
-                    if (((Integer) obj).intValue() == CharState.this.tag) {
-                        CharState charState = CharState.this;
-                        charState.alpha = f;
-                        PasswordTextViewForPIN.this.postInvalidateOnAnimation();
-                    }
-                }
+        /* access modifiers changed from: package-private */
+        public class AlphaTargetListener extends TransitionListener {
+            AlphaTargetListener() {
+            }
 
-                @Override // miuix.animation.listener.TransitionListener
-                public void onComplete(Object obj) {
-                    if (((Integer) obj).intValue() == CharState.this.tag && PasswordTextViewForPIN.this.mIsResetAnimating && PasswordTextViewForPIN.this.getVisibleTextCharSize() == 0) {
-                        PasswordTextViewForPIN.this.mIsResetAnimating = false;
-                    }
-                }
-            });
-            Folme.useValue(this.mYTarget).addListener(new TransitionListener() {
-                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass3 */
+            @Override // miuix.animation.listener.TransitionListener
+            public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                CharState charState = CharState.this;
+                charState.alpha = f;
+                PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+            }
 
-                @Override // miuix.animation.listener.TransitionListener
-                public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
-                    CharState charState = CharState.this;
-                    charState.yOffset = f;
-                    PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+            @Override // miuix.animation.listener.TransitionListener
+            public void onComplete(Object obj) {
+                if (PasswordTextViewForPIN.this.mIsResetAnimating && PasswordTextViewForPIN.this.getVisibleTextCharSize() == 0) {
+                    PasswordTextViewForPIN.this.mIsResetAnimating = false;
                 }
-            });
+            }
+        }
+
+        class YTargetListener extends TransitionListener {
+            YTargetListener() {
+            }
+
+            @Override // miuix.animation.listener.TransitionListener
+            public void onUpdate(Object obj, FloatProperty floatProperty, float f, float f2, boolean z) {
+                CharState charState = CharState.this;
+                charState.yOffset = f;
+                PasswordTextViewForPIN.this.postInvalidateOnAnimation();
+            }
         }
 
         /* access modifiers changed from: package-private */
         public void reset() {
             Folme.useValue(this.mAlphaTarget).cancel();
-            Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).clean();
-            this.tag++;
-            Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag)).to(Float.valueOf(0.0f), new AnimConfig[0]);
             Folme.useValue(this.mScaleTarget).cancel();
-            Folme.useValue(this.mScaleTarget).to(Float.valueOf(1.0f), new AnimConfig[0]);
+            resetScaleTargetListener();
+            resetAlphaTargetListener();
+            this.mAlphaTargetListener = new AlphaTargetListener();
+            Folme.useValue(this.mAlphaTarget).addListener(this.mAlphaTargetListener).setTo(this.mAlphaTargetValue, Float.valueOf(this.alpha)).to(this.mAlphaTargetValue, Float.valueOf(0.0f));
+            Folme.useValue(this.mScaleTarget).addListener(this.mScaleTargetListener).setTo(this.mScaleTargetValue, Float.valueOf(this.currentDotSizeFactor)).to(this.mScaleTargetValue, Float.valueOf(1.0f));
             this.isVisible = false;
+        }
+
+        private void resetScaleTargetListener() {
+            if (this.mScaleTargetListener != null) {
+                Folme.useValue(this.mScaleTarget).removeListener(this.mScaleTargetListener);
+            }
+            this.mScaleTargetListener = new ScaleTargetListener();
+        }
+
+        private void resetAlphaTargetListener() {
+            if (this.mAlphaTargetListener != null) {
+                Folme.useValue(this.mAlphaTarget).removeListener(this.mAlphaTargetListener);
+            }
+            this.mAlphaTargetListener = new AlphaTargetListener();
         }
 
         /* access modifiers changed from: package-private */
@@ -394,37 +419,59 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         }
 
         private void startDotAnnounceAnimation(long j) {
-            IStateStyle useValue = Folme.useValue(this.mYTarget);
-            Float valueOf = Float.valueOf(-this.mMaxYOffset);
-            AnimConfig animConfig = new AnimConfig(this.Y_CONFIG);
-            animConfig.setDelay(j);
-            IStateStyle iStateStyle = useValue.to(valueOf, animConfig);
-            Float valueOf2 = Float.valueOf(0.0f);
-            AnimConfig animConfig2 = new AnimConfig(this.Y_CONFIG);
-            animConfig2.setDelay(j + 100);
-            iStateStyle.to(valueOf2, animConfig2);
+            final AnimState animState = new AnimState();
+            animState.add(this.mYTargetValue, (double) (-this.mMaxYOffset));
+            final AnimState animState2 = new AnimState();
+            animState2.add(this.mYTargetValue, 0.0d);
+            final IStateStyle useValue = Folme.useValue(this.mYTarget);
+            PasswordTextViewForPIN.this.postRunnableDelayed(new Runnable() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass1 */
+
+                public void run() {
+                    useValue.to(animState, new AnimConfig(CharState.this.Y_CONFIG));
+                }
+            }, j);
+            PasswordTextViewForPIN.this.postRunnableDelayed(new Runnable() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass2 */
+
+                public void run() {
+                    useValue.to(animState2, new AnimConfig(CharState.this.Y_CONFIG));
+                }
+            }, j + 100);
         }
 
         private void startDotAppearAnimation() {
             startDotAlphaAnimation(1.0f, 0);
-            IStateStyle iStateStyle = Folme.useValue(this.mScaleTarget).to(Float.valueOf(0.8f), this.CONFIG);
-            Float valueOf = Float.valueOf(1.25f);
-            AnimConfig animConfig = new AnimConfig(this.CONFIG);
-            animConfig.setDelay(50);
-            IStateStyle iStateStyle2 = iStateStyle.to(valueOf, animConfig);
-            Float valueOf2 = Float.valueOf(1.0f);
-            AnimConfig animConfig2 = new AnimConfig(this.CONFIG);
-            animConfig2.setDelay(150);
-            iStateStyle2.to(valueOf2, animConfig2);
+            AnimState animState = new AnimState();
+            animState.add(this.mScaleTargetValue, 0.800000011920929d);
+            final AnimState animState2 = new AnimState();
+            animState2.add(this.mScaleTargetValue, 1.25d);
+            final AnimState animState3 = new AnimState();
+            animState3.add(this.mScaleTargetValue, 1.0d);
+            final IStateStyle iStateStyle = Folme.useValue(this.mScaleTarget).addListener(this.mScaleTargetListener).to(animState, new AnimConfig[0]);
+            PasswordTextViewForPIN.this.postRunnableDelayed(new Runnable() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass3 */
+
+                public void run() {
+                    iStateStyle.to(animState2, new AnimConfig(CharState.this.CONFIG));
+                }
+            }, 50);
+            PasswordTextViewForPIN.this.postRunnableDelayed(new Runnable() {
+                /* class com.android.keyguard.PasswordTextViewForPIN.CharState.AnonymousClass4 */
+
+                public void run() {
+                    iStateStyle.to(animState3, new AnimConfig(CharState.this.CONFIG));
+                }
+            }, 150);
         }
 
         private void startDotAlphaAnimation(float f, long j) {
             Folme.useValue(this.mAlphaTarget).cancel();
-            IStateStyle upVar = Folme.useValue(this.mAlphaTarget).setup(Integer.valueOf(this.tag));
-            Float valueOf = Float.valueOf(f);
+            resetAlphaTargetListener();
+            IStateStyle to = Folme.useValue(this.mAlphaTarget).addListener(this.mAlphaTargetListener).setTo(this.mAlphaTargetValue, Float.valueOf(this.alpha));
             AnimConfig animConfig = new AnimConfig(this.CONFIG);
             animConfig.setDelay(j);
-            upVar.to(valueOf, animConfig);
+            to.to(this.mAlphaTargetValue, Float.valueOf(f), animConfig);
         }
 
         public float draw(Canvas canvas, float f, int i, float f2, float f3) {
@@ -446,5 +493,11 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         for (int i = 0; i < this.mPasswordLength; i++) {
             this.mTextChars.get(i).clean();
         }
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void postRunnableDelayed(Runnable runnable, long j) {
+        this.mHandler.postDelayed(runnable, j);
     }
 }

@@ -103,8 +103,10 @@ public class MiuiFaceUnlockManager {
         }
 
         @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
-        public void onChargeAnimationShowingChanged(boolean z) {
-            MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
+        public void onChargeAnimationShowingChanged(boolean z, boolean z2) {
+            if (!z2) {
+                MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
+            }
         }
 
         @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
