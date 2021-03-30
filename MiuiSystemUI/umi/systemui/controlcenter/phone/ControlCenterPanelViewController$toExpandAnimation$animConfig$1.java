@@ -23,7 +23,7 @@ public final class ControlCenterPanelViewController$toExpandAnimation$animConfig
     @Override // miuix.animation.listener.TransitionListener
     public void onComplete(@Nullable Object obj) {
         ControlCenterPanelViewController.access$setAnimatingToCollapse$p(this.this$0, false);
-        ControlCenterPanelViewController.access$getPanelView$p(this.this$0).getTileLayout().setExpanded(true);
+        this.this$0.panelView.getTileLayout().setExpanded(true);
     }
 
     @Override // miuix.animation.listener.TransitionListener

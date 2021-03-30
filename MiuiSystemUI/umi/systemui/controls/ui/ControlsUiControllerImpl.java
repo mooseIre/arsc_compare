@@ -59,26 +59,19 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$ObjectRef;
 import kotlin.ranges.RangesKt___RangesKt;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: ControlsUiControllerImpl.kt */
 public final class ControlsUiControllerImpl implements ControlsUiController {
     private static final ComponentName EMPTY_COMPONENT;
     private static final StructureInfo EMPTY_STRUCTURE;
     private final ActivityStarter activityStarter;
     private List<StructureInfo> allStructures;
-    @NotNull
     private final DelayableExecutor bgExecutor;
     private final Collator collator;
-    @NotNull
     private final Context context;
-    @NotNull
     private final ControlActionCoordinator controlActionCoordinator;
     private final Map<ControlKey, ControlViewHolder> controlViewsById = new LinkedHashMap();
     private final Map<ControlKey, ControlWithState> controlsById = new LinkedHashMap();
-    @NotNull
     private final Lazy<ControlsController> controlsController;
-    @NotNull
     private final Lazy<ControlsListingController> controlsListingController;
     private Runnable dismissGlobalActions;
     private boolean hidden = true;
@@ -90,12 +83,10 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     private final ContextThemeWrapper popupThemedContext = new ContextThemeWrapper(this.context, C0022R$style.Control_ListPopupWindow);
     private StructureInfo selectedStructure = EMPTY_STRUCTURE;
     private final ShadeController shadeController;
-    @NotNull
     private final SharedPreferences sharedPreferences;
-    @NotNull
     private final DelayableExecutor uiExecutor;
 
-    public ControlsUiControllerImpl(@NotNull Lazy<ControlsController> lazy, @NotNull Context context2, @NotNull DelayableExecutor delayableExecutor, @NotNull DelayableExecutor delayableExecutor2, @NotNull Lazy<ControlsListingController> lazy2, @NotNull SharedPreferences sharedPreferences2, @NotNull ControlActionCoordinator controlActionCoordinator2, @NotNull ActivityStarter activityStarter2, @NotNull ShadeController shadeController2) {
+    public ControlsUiControllerImpl(Lazy<ControlsController> lazy, Context context2, DelayableExecutor delayableExecutor, DelayableExecutor delayableExecutor2, Lazy<ControlsListingController> lazy2, SharedPreferences sharedPreferences2, ControlActionCoordinator controlActionCoordinator2, ActivityStarter activityStarter2, ShadeController shadeController2) {
         Intrinsics.checkParameterIsNotNull(lazy, "controlsController");
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(delayableExecutor, "uiExecutor");
@@ -143,12 +134,10 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    @NotNull
     public final Lazy<ControlsController> getControlsController() {
         return this.controlsController;
     }
 
-    @NotNull
     public final DelayableExecutor getUiExecutor() {
         return this.uiExecutor;
     }
@@ -171,7 +160,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     /* JADX DEBUG: Multi-variable search result rejected for r6v20, resolved type: java.util.Map<com.android.systemui.controls.ui.ControlKey, com.android.systemui.controls.ui.ControlWithState> */
     /* JADX WARN: Multi-variable type inference failed */
     @Override // com.android.systemui.controls.ui.ControlsUiController
-    public void show(@NotNull ViewGroup viewGroup, @NotNull Runnable runnable) {
+    public void show(ViewGroup viewGroup, Runnable runnable) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
         Intrinsics.checkParameterIsNotNull(runnable, "dismissGlobalActions");
         Log.d("ControlsUiController", "show()");
@@ -221,8 +210,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void reload(ViewGroup viewGroup) {
+    private final void reload(ViewGroup viewGroup) {
         if (!this.hidden) {
             ControlsListingController controlsListingController2 = this.controlsListingController.get();
             ControlsListingController.ControlsListingCallback controlsListingCallback = this.listingCallback;
@@ -241,8 +229,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void showSeedingView(List<SelectionItem> list) {
+    private final void showSeedingView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
         ViewGroup viewGroup = this.parent;
@@ -261,8 +248,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void showInitialSetupView(List<SelectionItem> list) {
+    private final void showInitialSetupView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
         ViewGroup viewGroup = this.parent;
@@ -312,13 +298,13 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    public final void startFavoritingActivity(Context context2, StructureInfo structureInfo) {
+    /* access modifiers changed from: public */
+    private final void startFavoritingActivity(Context context2, StructureInfo structureInfo) {
         startTargetedActivity(context2, structureInfo, ControlsFavoritingActivity.class);
     }
 
-    /* access modifiers changed from: private */
-    public final void startEditingActivity(Context context2, StructureInfo structureInfo) {
+    /* access modifiers changed from: public */
+    private final void startEditingActivity(Context context2, StructureInfo structureInfo) {
         startTargetedActivity(context2, structureInfo, ControlsEditingActivity.class);
     }
 
@@ -360,8 +346,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         intent.putExtra("android.intent.extra.COMPONENT_NAME", structureInfo.getComponentName());
     }
 
-    /* access modifiers changed from: private */
-    public final void startProviderSelectorActivity(Context context2) {
+    private final void startProviderSelectorActivity(Context context2) {
         Intent intent = new Intent(context2, ControlsProviderSelectorActivity.class);
         intent.addFlags(335544320);
         startActivity(context2, intent);
@@ -379,8 +364,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    public final void showControlsView(List<SelectionItem> list) {
+    private final void showControlsView(List<SelectionItem> list) {
         this.controlViewsById.clear();
         createListView();
         createDropDown(list);
@@ -504,15 +488,14 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         return t3 != null ? t3 : list.get(0);
     }
 
-    /* access modifiers changed from: private */
-    public final void updatePreferences(StructureInfo structureInfo) {
+    private final void updatePreferences(StructureInfo structureInfo) {
         if (!Intrinsics.areEqual(structureInfo, EMPTY_STRUCTURE)) {
             this.sharedPreferences.edit().putString("controls_component", structureInfo.getComponentName().flattenToString()).putString("controls_structure", structureInfo.getStructure().toString()).commit();
         }
     }
 
-    /* access modifiers changed from: private */
-    public final void switchAppOrStructure(SelectionItem selectionItem) {
+    /* access modifiers changed from: public */
+    private final void switchAppOrStructure(SelectionItem selectionItem) {
         boolean z;
         List<StructureInfo> list = this.allStructures;
         if (list != null) {
@@ -592,7 +575,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     @Override // com.android.systemui.controls.ui.ControlsUiController
-    public void onActionResponse(@NotNull ComponentName componentName, @NotNull String str, int i) {
+    public void onActionResponse(ComponentName componentName, String str, int i) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(str, "controlId");
         this.uiExecutor.execute(new ControlsUiControllerImpl$onActionResponse$1(this, new ControlKey(componentName, str), i));
@@ -668,7 +651,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     @Override // com.android.systemui.controls.ui.ControlsUiController
-    public void onRefreshState(@NotNull ComponentName componentName, @NotNull List<Control> list) {
+    public void onRefreshState(ComponentName componentName, List<Control> list) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(list, "controls");
         for (T t : list) {

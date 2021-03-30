@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.C0021R$string;
@@ -48,8 +47,6 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
                 if (MiuiQSTileHostInjector.this.checkHuanjiFinish()) {
                     MiuiQSTileHostInjector.this.setMiuiQSTilesEdited();
                     MiuiQSTileHostInjector.this.onTuningChanged();
-                } else {
-                    MiuiQSTileHostInjector.this.resetTiles();
                 }
                 SharedPreferences.Editor edit = MiuiQSTileHostInjector.this.mMiuiUpdateVersionSharedPreferences.edit();
                 edit.putBoolean("deviceProvisionUpdateTiles", true);
@@ -95,7 +92,6 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     private SuperSaveModeController mSuperSaveModeController;
     private boolean mSuperSaveModeOn = false;
     private String mTileListKey = "sysui_qs_tiles";
-    private ArrayList<String> mTileSpecs;
     private LinkedHashMap<String, QSTile> mTiles;
     private TunerService mTunerService;
     private boolean mUseControlCenter = false;
@@ -114,7 +110,6 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         this.mHost = qSTileHost;
         this.mQsFactories = arrayList;
         this.mTiles = linkedHashMap;
-        this.mTileSpecs = arrayList2;
         this.mUseControlCenter = this.mControlPanelController.useControlPanel();
         this.mPluginManager.addPluginListener(this.mMiuiTilePluginListener, MiuiQSTilePlugin.class, true);
         if (this.mUseControlCenter) {
@@ -192,16 +187,6 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
                     list.add(0, this.mControlIndependentTiles.get(size));
                 }
             }
-        }
-    }
-
-    public void resetTiles() {
-        Log.d("QSTileHost", "resetTiles " + this.mUseControlCenter + " listKey:" + this.mTileListKey);
-        if (this.mTileListKey.equals("sysui_qs_tiles")) {
-            this.mTileSpecs.clear();
-            this.mTiles.values().forEach($$Lambda$MiuiQSTileHostInjector$TvxZmf6huBGafjkUs3QMGNRueDw.INSTANCE);
-            this.mTiles.clear();
-            this.mHost.onTuningChanged(this.mTileListKey, this.mQsDefaultTiles);
         }
     }
 

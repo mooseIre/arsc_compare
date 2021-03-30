@@ -37,18 +37,18 @@ public class NotificationSectionsFeatureManager {
     @NotNull
     public int[] getNotificationBuckets() {
         if (isFilteringEnabled() && isMediaControlsEnabled()) {
-            return new int[]{2, 3, 1, 4, 5, 6};
+            return new int[]{2, 3, 1, 4, 6, 7};
         }
         if (!isFilteringEnabled() && isMediaControlsEnabled()) {
-            return new int[]{2, 3, 1, 5, 6};
+            return new int[]{2, 3, 1, 6, 7};
         }
         if (isFilteringEnabled() && !isMediaControlsEnabled()) {
-            return new int[]{2, 3, 4, 5, 6};
+            return new int[]{2, 3, 4, 6, 7};
         }
         if (NotificationUtils.useNewInterruptionModel(this.context)) {
-            return new int[]{5, 6};
+            return new int[]{6, 7};
         }
-        return new int[]{5};
+        return new int[]{6};
     }
 
     public final int getNumberOfBuckets() {

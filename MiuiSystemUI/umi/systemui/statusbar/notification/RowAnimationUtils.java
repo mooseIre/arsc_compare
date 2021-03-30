@@ -1,9 +1,7 @@
 package com.android.systemui.statusbar.notification;
 
-import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
-import kotlin.jvm.internal.Intrinsics;
 import miuix.animation.Folme;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,20 +16,18 @@ public final class RowAnimationUtils {
         if (expandableNotificationRow != null) {
             boolean z = false;
             if (f >= ((float) 0)) {
+                int hashCode = expandableNotificationRow.hashCode();
                 if (expandableNotificationRow.isGroupExpansionChanging() || f == expandableNotificationRow.getScaleX()) {
+                    Folme.useValue(Integer.valueOf(hashCode)).cancel();
                     if (f != 1.0f) {
                         z = true;
                     }
                     setTouchAnimatingState(expandableNotificationRow, z);
                     return;
                 }
-                NotificationEntry entry = expandableNotificationRow.getEntry();
-                Intrinsics.checkExpressionValueIsNotNull(entry, "row.entry");
-                String key = entry.getKey();
-                Intrinsics.checkExpressionValueIsNotNull(key, "row.entry.key");
-                Folme.useValue(key).cancel();
-                Folme.getValueTarget(key).setMinVisibleChange(0.01f, "scale");
-                Folme.useValue(key).setTo("scale", Float.valueOf(expandableNotificationRow.getScaleX())).addListener(new RowAnimationUtils$startTouchAnimationIfNeed$1(f, expandableNotificationRow, "scale", key, key)).to("scale", Float.valueOf(f));
+                Folme.useValue(Integer.valueOf(hashCode)).cancel();
+                Folme.getValueTarget(Integer.valueOf(hashCode)).setMinVisibleChange(0.01f, "scale");
+                Folme.useValue(Integer.valueOf(hashCode)).setTo("scale", Float.valueOf(expandableNotificationRow.getScaleX())).addListener(new RowAnimationUtils$startTouchAnimationIfNeed$1(f, expandableNotificationRow, "scale", hashCode, Integer.valueOf(hashCode))).to("scale", Float.valueOf(f));
             }
         }
     }

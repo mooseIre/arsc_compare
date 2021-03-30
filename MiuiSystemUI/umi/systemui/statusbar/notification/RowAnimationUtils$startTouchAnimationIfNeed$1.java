@@ -16,7 +16,7 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$1 extends AutoCle
     final /* synthetic */ String $scaleAnimName;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    RowAnimationUtils$startTouchAnimationIfNeed$1(float f, ExpandableNotificationRow expandableNotificationRow, String str, String str2, Object obj) {
+    RowAnimationUtils$startTouchAnimationIfNeed$1(float f, ExpandableNotificationRow expandableNotificationRow, String str, int i, Object obj) {
         super(obj);
         this.$scale = f;
         this.$row = expandableNotificationRow;

@@ -7,6 +7,7 @@ import android.os.UserHandle;
 import android.text.TextUtils;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
+import com.android.systemui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.PushEvents;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
@@ -60,9 +61,11 @@ public class NotificationStat {
     private NotificationGroupManager mGroupManager;
     private HeadsUpManagerPhone mHeadsUpManager;
     private KeyguardStateController mKeyguardStateController;
+    private boolean mPanelHasExpanded = false;
     private NotificationPanelStat mPanelStat;
+    private NotificationSettingsManager mSettingsManager;
 
-    public NotificationStat(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, EventTracker eventTracker, NotificationPanelStat notificationPanelStat) {
+    public NotificationStat(Context context, NotificationEntryManager notificationEntryManager, NotificationGroupManager notificationGroupManager, HeadsUpManagerPhone headsUpManagerPhone, StatusBarStateController statusBarStateController, KeyguardStateController keyguardStateController, EventTracker eventTracker, NotificationPanelStat notificationPanelStat, NotificationSettingsManager notificationSettingsManager) {
         this.mContext = context;
         this.mEntryManager = notificationEntryManager;
         this.mGroupManager = notificationGroupManager;
@@ -82,9 +85,10 @@ public class NotificationStat {
                 }
             }
         });
+        this.mSettingsManager = notificationSettingsManager;
     }
 
-    public void onPanelExpanded(boolean z, boolean z2, int i) {
+    public void onPanelExpanded(boolean z, boolean z2, int i, int i2) {
         String str;
         if (this.mPanelStat == null) {
             this.mPanelStat = new NotificationPanelStat(this.mContext, this.mEventTracker);
@@ -93,7 +97,8 @@ public class NotificationStat {
             } else {
                 str = CommonUtil.getTopActivityPkg(this.mContext);
             }
-            this.mPanelStat.start(str, z2, i);
+            this.mPanelStat.start(str, z2, i, i2);
+            this.mPanelHasExpanded = true;
         }
     }
 
@@ -313,34 +318,41 @@ public class NotificationStat {
     }
 
     private void handleVisibleEvent(List<String> list, String str) {
-        List list2 = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate(list) {
-            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$57_sNF2n7Ax5LcAxQDxEiKpAB4Y */
-            public final /* synthetic */ List f$0;
+        if (!str.equals(NotifSource.PANEL.name()) || this.mPanelHasExpanded) {
+            List list2 = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate(list) {
+                /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$57_sNF2n7Ax5LcAxQDxEiKpAB4Y */
+                public final /* synthetic */ List f$0;
 
-            {
-                this.f$0 = r1;
-            }
+                {
+                    this.f$0 = r1;
+                }
 
-            @Override // java.util.function.Predicate
-            public final boolean test(Object obj) {
-                return this.f$0.contains(((NotificationEntry) obj).getKey());
-            }
-        }).map(new Function() {
-            /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$sqwH11aQ0BBdkw0RiRU2q_c1VZ8 */
+                @Override // java.util.function.Predicate
+                public final boolean test(Object obj) {
+                    return this.f$0.contains(((NotificationEntry) obj).getKey());
+                }
+            }).map(new Function(str) {
+                /* class com.android.systemui.statusbar.notification.analytics.$$Lambda$NotificationStat$4DW7FVr28pXqGC6w6Dt7TvhjgD4 */
+                public final /* synthetic */ String f$1;
 
-            @Override // java.util.function.Function
-            public final Object apply(Object obj) {
-                return NotificationStat.this.lambda$handleVisibleEvent$2$NotificationStat((NotificationEntry) obj);
+                {
+                    this.f$1 = r2;
+                }
+
+                @Override // java.util.function.Function
+                public final Object apply(Object obj) {
+                    return NotificationStat.this.lambda$handleVisibleEvent$2$NotificationStat(this.f$1, (NotificationEntry) obj);
+                }
+            }).collect(Collectors.toList());
+            if (list2.size() > 0) {
+                this.mEventTracker.track(new VisibleEvent(str, list2, getScreenOrientation()));
             }
-        }).collect(Collectors.toList());
-        if (list2.size() > 0) {
-            this.mEventTracker.track(new VisibleEvent(str, list2, getScreenOrientation()));
         }
     }
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$handleVisibleEvent$2 */
-    public /* synthetic */ Map lambda$handleVisibleEvent$2$NotificationStat(NotificationEntry notificationEntry) {
+    public /* synthetic */ Map lambda$handleVisibleEvent$2$NotificationStat(String str, NotificationEntry notificationEntry) {
         HashMap hashMap = new HashMap();
         hashMap.put("ts_id", Long.valueOf(getNotifTsId(notificationEntry)));
         hashMap.put("duration", Long.valueOf(System.currentTimeMillis() - notificationEntry.getSbn().seeTime));
@@ -354,9 +366,11 @@ public class NotificationStat {
             }
         }
         notificationEntry.getSbn().seeTime = 0;
+        notificationEntry.getSbn().mSeenByPanel = str.equals(NotifSource.PANEL.name());
         hashMap.put("is_group", Integer.valueOf(getIsNotificationGrouped(notificationEntry)));
         hashMap.put("is_priority", Integer.valueOf(getIsPriority(notificationEntry)));
         hashMap.put("mipush_class", Integer.valueOf(getMipushClass(notificationEntry)));
+        hashMap.put("is_section", Integer.valueOf(inImportantSection(notificationEntry)));
         return hashMap;
     }
 
@@ -392,7 +406,7 @@ public class NotificationStat {
         String tag = equals ? notificationEntry.getSbn().getTag() : "";
         int isNotificationGrouped = getIsNotificationGrouped(notificationEntry);
         NotificationPanelStat notificationPanelStat = this.mPanelStat;
-        eventTracker.track(new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, notifSource, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes(), getIsPriority(notificationEntry), getMipushClass(notificationEntry)));
+        eventTracker.track(new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, notifSource, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes(), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry)));
     }
 
     private void handleExpansionChangedEvent(NotificationEntry notificationEntry, boolean z, boolean z2) {
@@ -408,7 +422,7 @@ public class NotificationStat {
     }
 
     private void handleCancelEvent(NotificationEntry notificationEntry, int i) {
-        this.mEventTracker.track(new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), i, getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry)));
+        this.mEventTracker.track(new CancelEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), i, getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry)));
     }
 
     private void handleCancelAllEvent(int i) {
@@ -416,7 +430,7 @@ public class NotificationStat {
     }
 
     private void handleMenuOpenEvent(NotificationEntry notificationEntry) {
-        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry)));
+        this.mEventTracker.track(new MenuOpenEvent(getNotifPkg(notificationEntry), getNotifTargetPkg(notificationEntry), getNotifTsId(notificationEntry), getNotifStyle(notificationEntry), getNotifClearable(notificationEntry), getNotifSource(notificationEntry), getNotifIndex(notificationEntry), getIsNotificationGrouped(notificationEntry), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry)));
     }
 
     private void handleSetConfigEvent(NotificationEntry notificationEntry) {
@@ -531,19 +545,32 @@ public class NotificationStat {
     }
 
     private int getIsPriority(NotificationEntry notificationEntry) {
-        return notificationEntry.getSbn().getNotification().extras.getInt("is_priority", -1);
+        String notifPkg = getNotifPkg(notificationEntry);
+        if (isImportantPkg(notifPkg)) {
+            return 1;
+        }
+        if (notifPkg.equals("com.xiaomi.xmsf")) {
+            return notificationEntry.getSbn().getNotification().extras.getInt("is_priority", -1);
+        }
+        return -1;
     }
 
     private int getMipushClass(NotificationEntry notificationEntry) {
-        Bundle bundle = notificationEntry.getSbn().getNotification().extras;
-        if (!bundle.containsKey("mipush_class")) {
-            return -1;
+        String notifPkg = getNotifPkg(notificationEntry);
+        if (isImportantPkg(notifPkg)) {
+            return 1;
         }
-        int i = bundle.getInt("mipush_class");
-        if (i < 1 || i > 8) {
-            return 0;
+        if (notifPkg.equals("com.xiaomi.xmsf")) {
+            Bundle bundle = notificationEntry.getSbn().getNotification().extras;
+            if (bundle.containsKey("mipush_class")) {
+                int i = bundle.getInt("mipush_class");
+                if (i < 1 || i > 8) {
+                    return 0;
+                }
+                return i;
+            }
         }
-        return i;
+        return -1;
     }
 
     private NotificationEntry getNotifEntry(String str) {
@@ -552,5 +579,13 @@ public class NotificationStat {
 
     private int getScreenOrientation() {
         return this.mContext.getResources().getConfiguration().orientation;
+    }
+
+    private boolean isImportantPkg(String str) {
+        return this.mSettingsManager.isImportantWhitelist(str);
+    }
+
+    private int inImportantSection(NotificationEntry notificationEntry) {
+        return notificationEntry.getSbn().isImportant() ? 1 : 0;
     }
 }

@@ -669,6 +669,7 @@ public final class R {
         public static final int hdcp_checking_summaries;
         public static final int hdcp_checking_titles;
         public static final int hdcp_checking_values;
+        public static final int important_section_whitelist;
         public static final int keep_screen_on_when_large_area_touch;
         public static final int kg_wrong_puk_code_message_list;
         public static final int locale_carrier_names;

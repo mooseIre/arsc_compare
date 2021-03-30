@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 public final class MiuiNotificationSectionsManager$updateSectionBoundaries$1 extends Lambda implements Function1<View, NotificationSectionsManager.SectionUpdateState<? extends ExpandableView>> {
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $alertingState;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $gentleState;
+    final /* synthetic */ NotificationSectionsManager.SectionUpdateState $importantState;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $incomingState;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $mediaState;
     final /* synthetic */ NotificationSectionsManager.SectionUpdateState $peopleState;
@@ -21,15 +22,16 @@ public final class MiuiNotificationSectionsManager$updateSectionBoundaries$1 ext
     final /* synthetic */ MiuiNotificationSectionsManager this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    MiuiNotificationSectionsManager$updateSectionBoundaries$1(MiuiNotificationSectionsManager miuiNotificationSectionsManager, NotificationSectionsManager.SectionUpdateState sectionUpdateState, NotificationSectionsManager.SectionUpdateState sectionUpdateState2, NotificationSectionsManager.SectionUpdateState sectionUpdateState3, NotificationSectionsManager.SectionUpdateState sectionUpdateState4, NotificationSectionsManager.SectionUpdateState sectionUpdateState5, NotificationSectionsManager.SectionUpdateState sectionUpdateState6) {
+    MiuiNotificationSectionsManager$updateSectionBoundaries$1(MiuiNotificationSectionsManager miuiNotificationSectionsManager, NotificationSectionsManager.SectionUpdateState sectionUpdateState, NotificationSectionsManager.SectionUpdateState sectionUpdateState2, NotificationSectionsManager.SectionUpdateState sectionUpdateState3, NotificationSectionsManager.SectionUpdateState sectionUpdateState4, NotificationSectionsManager.SectionUpdateState sectionUpdateState5, NotificationSectionsManager.SectionUpdateState sectionUpdateState6, NotificationSectionsManager.SectionUpdateState sectionUpdateState7) {
         super(1);
         this.this$0 = miuiNotificationSectionsManager;
         this.$mediaState = sectionUpdateState;
         this.$incomingState = sectionUpdateState2;
         this.$peopleState = sectionUpdateState3;
-        this.$alertingState = sectionUpdateState4;
-        this.$gentleState = sectionUpdateState5;
-        this.$zenModeState = sectionUpdateState6;
+        this.$importantState = sectionUpdateState4;
+        this.$alertingState = sectionUpdateState5;
+        this.$gentleState = sectionUpdateState6;
+        this.$zenModeState = sectionUpdateState7;
     }
 
     @Nullable
@@ -43,6 +45,9 @@ public final class MiuiNotificationSectionsManager$updateSectionBoundaries$1 ext
         }
         if (view == this.this$0.getPeopleHeaderView()) {
             return this.$peopleState;
+        }
+        if (view == this.this$0.getImportantView()) {
+            return this.$importantState;
         }
         if (view == this.this$0.getAlertingHeaderView()) {
             return this.$alertingState;

@@ -14,6 +14,7 @@ import com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsManager;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
+import com.android.systemui.statusbar.notification.stack.SectionHeaderView;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import com.android.systemui.statusbar.notification.zen.ZenModeViewController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -29,6 +30,8 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     @NotNull
     private final ConfigurationController configurationController;
     private final MiuiNotificationSectionsManager$configurationListener$1 configurationListener = new MiuiNotificationSectionsManager$configurationListener$1(this);
+    @Nullable
+    private SectionHeaderView importantView;
     @NotNull
     private final NotificationSectionsLogger logger;
     private final MiuiNotificationSectionsFeatureManager sectionsFeatureManager;
@@ -66,6 +69,12 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         return this.zenModeView;
     }
 
+    @VisibleForTesting
+    @Nullable
+    public final SectionHeaderView getImportantView() {
+        return this.importantView;
+    }
+
     @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager
     public void initialize(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, @NotNull LayoutInflater layoutInflater) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "parent");
@@ -79,6 +88,7 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         Intrinsics.checkParameterIsNotNull(layoutInflater, "layoutInflater");
         super.reinflateViews(layoutInflater);
         reinflateZenModeView(layoutInflater);
+        reinflateImportantView(layoutInflater);
     }
 
     /* access modifiers changed from: private */
@@ -88,10 +98,14 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         this.zenModeView = zenModeView2;
     }
 
+    private final void reinflateImportantView(LayoutInflater layoutInflater) {
+        this.importantView = (SectionHeaderView) reinflateView(this.importantView, layoutInflater, C0017R$layout.status_bar_notification_section_header);
+    }
+
     @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm.SectionProvider, com.android.systemui.statusbar.notification.stack.NotificationSectionsManager
     public boolean beginsSection(@NotNull View view, @Nullable View view2) {
         Intrinsics.checkParameterIsNotNull(view, "view");
-        return view == this.zenModeView || super.beginsSection(view, view2);
+        return view == this.zenModeView || view == this.importantView || super.beginsSection(view, view2);
     }
 
     /* access modifiers changed from: protected */
@@ -99,7 +113,10 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     @Nullable
     public Integer getBucket(@Nullable View view) {
         if (view == this.zenModeView) {
-            return 7;
+            return 8;
+        }
+        if (view == this.importantView) {
+            return 5;
         }
         return super.getBucket(view);
     }
@@ -110,44 +127,52 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         Intrinsics.checkParameterIsNotNull(view, "child");
         if (view == this.zenModeView) {
             this.logger.logZenModeView(i);
+        } else if (view == this.importantView) {
+            this.logger.logImportantView(i);
         } else {
             super.logShadeChild(i, view);
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:87:0x019d, code lost:
-        if (r20.intValue() != r5.getBucket()) goto L_0x019f;
+    /* JADX WARNING: Code restructure failed: missing block: B:92:0x01bc, code lost:
+        if (r18.intValue() != r5.getBucket()) goto L_0x01be;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:101:0x01c8  */
-    /* JADX WARNING: Removed duplicated region for block: B:103:0x01d4  */
-    /* JADX WARNING: Removed duplicated region for block: B:104:0x01d6  */
-    /* JADX WARNING: Removed duplicated region for block: B:109:0x01ec  */
-    /* JADX WARNING: Removed duplicated region for block: B:115:0x0202  */
-    /* JADX WARNING: Removed duplicated region for block: B:122:0x021b  */
-    /* JADX WARNING: Removed duplicated region for block: B:124:0x022d  */
-    /* JADX WARNING: Removed duplicated region for block: B:158:0x0294  */
-    /* JADX WARNING: Removed duplicated region for block: B:160:0x029d  */
-    /* JADX WARNING: Removed duplicated region for block: B:166:0x02b3  */
-    /* JADX WARNING: Removed duplicated region for block: B:172:0x02c6  */
-    /* JADX WARNING: Removed duplicated region for block: B:178:0x02d9  */
-    /* JADX WARNING: Removed duplicated region for block: B:184:0x02ec  */
-    /* JADX WARNING: Removed duplicated region for block: B:190:0x02ff  */
-    /* JADX WARNING: Removed duplicated region for block: B:202:0x0331 A[LOOP:2: B:200:0x032b->B:202:0x0331, LOOP_END] */
-    /* JADX WARNING: Removed duplicated region for block: B:205:0x0352  */
-    /* JADX WARNING: Removed duplicated region for block: B:208:0x0366 A[ADDED_TO_REGION] */
-    /* JADX WARNING: Removed duplicated region for block: B:231:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:61:0x0147  */
-    /* JADX WARNING: Removed duplicated region for block: B:74:0x0171  */
-    /* JADX WARNING: Removed duplicated region for block: B:75:0x0174  */
-    /* JADX WARNING: Removed duplicated region for block: B:84:0x018a  */
-    /* JADX WARNING: Removed duplicated region for block: B:93:0x01a9  */
-    /* JADX WARNING: Removed duplicated region for block: B:96:0x01b2  */
-    /* JADX WARNING: Removed duplicated region for block: B:98:0x01bf  */
+    /* JADX WARNING: Removed duplicated region for block: B:101:0x01d1  */
+    /* JADX WARNING: Removed duplicated region for block: B:103:0x01de  */
+    /* JADX WARNING: Removed duplicated region for block: B:106:0x01e7  */
+    /* JADX WARNING: Removed duplicated region for block: B:108:0x01f3  */
+    /* JADX WARNING: Removed duplicated region for block: B:109:0x01f5  */
+    /* JADX WARNING: Removed duplicated region for block: B:114:0x020a  */
+    /* JADX WARNING: Removed duplicated region for block: B:115:0x020c  */
+    /* JADX WARNING: Removed duplicated region for block: B:120:0x0222  */
+    /* JADX WARNING: Removed duplicated region for block: B:126:0x0238  */
+    /* JADX WARNING: Removed duplicated region for block: B:133:0x024f  */
+    /* JADX WARNING: Removed duplicated region for block: B:135:0x0263  */
+    /* JADX WARNING: Removed duplicated region for block: B:170:0x02cd  */
+    /* JADX WARNING: Removed duplicated region for block: B:172:0x02d6  */
+    /* JADX WARNING: Removed duplicated region for block: B:178:0x02ec  */
+    /* JADX WARNING: Removed duplicated region for block: B:184:0x02ff  */
+    /* JADX WARNING: Removed duplicated region for block: B:190:0x0312  */
+    /* JADX WARNING: Removed duplicated region for block: B:196:0x0325  */
+    /* JADX WARNING: Removed duplicated region for block: B:202:0x0338  */
+    /* JADX WARNING: Removed duplicated region for block: B:208:0x034b  */
+    /* JADX WARNING: Removed duplicated region for block: B:220:0x037d A[LOOP:2: B:218:0x0377->B:220:0x037d, LOOP_END] */
+    /* JADX WARNING: Removed duplicated region for block: B:223:0x039e  */
+    /* JADX WARNING: Removed duplicated region for block: B:226:0x03b2  */
+    /* JADX WARNING: Removed duplicated region for block: B:250:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:54:0x014a  */
+    /* JADX WARNING: Removed duplicated region for block: B:55:0x014c  */
+    /* JADX WARNING: Removed duplicated region for block: B:58:0x0151  */
+    /* JADX WARNING: Removed duplicated region for block: B:66:0x0166  */
+    /* JADX WARNING: Removed duplicated region for block: B:79:0x0190  */
+    /* JADX WARNING: Removed duplicated region for block: B:80:0x0193  */
+    /* JADX WARNING: Removed duplicated region for block: B:89:0x01a9  */
+    /* JADX WARNING: Removed duplicated region for block: B:98:0x01c8  */
     @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void updateSectionBoundaries(@org.jetbrains.annotations.NotNull java.lang.String r27) {
+    public void updateSectionBoundaries(@org.jetbrains.annotations.NotNull java.lang.String r29) {
         /*
-        // Method dump skipped, instructions count: 915
+        // Method dump skipped, instructions count: 993
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager.updateSectionBoundaries(java.lang.String):void");
     }

@@ -81,19 +81,19 @@ public class ControlsEditController {
     private void initAnim() {
         this.mAnim = Folme.useAt(this.mControlsEditView).state();
         AnimState animState = new AnimState("controls_editor_show");
-        animState.add(ViewProperty.AUTO_ALPHA, 1.0f, new long[0]);
-        animState.add(ViewProperty.TRANSLATION_Y, 0, new long[0]);
+        animState.add(ViewProperty.AUTO_ALPHA, 1.0d);
+        animState.add(ViewProperty.TRANSLATION_Y, 0.0d);
         this.mShowAnim = animState;
         AnimState animState2 = new AnimState("controls_editor_hide");
-        animState2.add(ViewProperty.AUTO_ALPHA, 0.0f, new long[0]);
-        animState2.add(ViewProperty.TRANSLATION_Y, 100, new long[0]);
+        animState2.add(ViewProperty.AUTO_ALPHA, 0.0d);
+        animState2.add(ViewProperty.TRANSLATION_Y, 100.0d);
         this.mHideAnim = animState2;
         this.mPanelAnim = Folme.useAt(this.mControlCenterPanelView).state();
         AnimState animState3 = new AnimState("qs_control_customizer_show_panel");
-        animState3.add(ViewProperty.AUTO_ALPHA, 1.0f, new long[0]);
+        animState3.add(ViewProperty.AUTO_ALPHA, 1.0d);
         this.mPanelShowAnim = animState3;
         AnimState animState4 = new AnimState("qs_control_customizer_hide_panel");
-        animState4.add(ViewProperty.AUTO_ALPHA, 0.0f, new long[0]);
+        animState4.add(ViewProperty.AUTO_ALPHA, 0.0d);
         this.mPanelHideAnim = animState4;
     }
 

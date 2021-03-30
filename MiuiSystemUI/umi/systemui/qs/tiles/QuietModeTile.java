@@ -2,6 +2,7 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.RingtoneManager;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
@@ -14,6 +15,7 @@ import com.android.systemui.statusbar.policy.ZenModeController;
 import com.miui.systemui.util.CommonUtil;
 
 public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements ZenModeController.Callback {
+    private SharedPreferences mSharedPreferences;
     private final ZenModeController mZenModeController;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
@@ -21,9 +23,10 @@ public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements Ze
         return R$styleable.AppCompatTheme_windowActionBarOverlay;
     }
 
-    public QuietModeTile(QSHost qSHost, ZenModeController zenModeController) {
+    public QuietModeTile(QSHost qSHost, ZenModeController zenModeController, SharedPreferences sharedPreferences) {
         super(qSHost);
         this.mZenModeController = zenModeController;
+        this.mSharedPreferences = sharedPreferences;
         zenModeController.observe(getLifecycle(), this);
     }
 
@@ -79,7 +82,7 @@ public class QuietModeTile extends QSTileImpl<QSTile.BooleanState> implements Ze
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
-        return this.mZenModeController.isZenAvailable();
+        return DndTile.isVisible(this.mSharedPreferences);
     }
 
     @Override // com.android.systemui.statusbar.policy.ZenModeController.Callback

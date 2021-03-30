@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import miuix.animation.Folme;
+import miuix.animation.property.ViewProperty;
 
 public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTileLayout, QSHost.Callback, ControlPanelWindowManager.OnExpandChangeListener, FolmeAnimState {
     private int mBaseLineIdx;
@@ -420,7 +421,7 @@ public class QSControlCenterTileLayout extends ViewGroup implements QSPanel.QSTi
         Iterator<QSPanel.TileRecord> it = this.mRecords.iterator();
         while (it.hasNext()) {
             QSPanel.TileRecord next = it.next();
-            next.tileView.setTranslationY(ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, f2));
+            Folme.useAt(next.tileView).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(ControlCenterUtils.getTranslationY(this.mBaseLineIdx + ((Integer) next.tileView.getTag(C0015R$id.tag_tile_layout)).intValue(), i2, max, f2)));
         }
     }
 

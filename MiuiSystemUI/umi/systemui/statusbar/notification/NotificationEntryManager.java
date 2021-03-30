@@ -637,4 +637,8 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
     public void addCollectionListener(NotifCollectionListener notifCollectionListener) {
         this.mNotifCollectionListeners.add(notifCollectionListener);
     }
+
+    public int getImportantNotificationsCount() {
+        return (int) this.mSortedAndFiltered.stream().filter($$Lambda$NotificationEntryManager$XDKdt5lsVwxQcyNGVC2kL83OA_U.INSTANCE).count();
+    }
 }

@@ -21,6 +21,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.util.AccessibilityUtils;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
+import miuix.animation.base.AnimConfig;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.FloatProperty;
 
@@ -28,6 +29,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private boolean mAnimating;
     private boolean mAttached;
     private IStateStyle mBlurAmin;
+    private AnimConfig mBlurAnimConfig;
     private float mBlurRatio;
     private TransitionListener mBlurRatioListener;
     private View mBottomArea;
@@ -156,7 +158,12 @@ public class ControlPanelWindowView extends FrameLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         Folme.getValueTarget("ControlPanelViewBlur").setMinVisibleChange(0.01f, "blurRatio");
-        this.mBlurAmin = Folme.useValue("ControlPanelViewBlur").addListener(this.mBlurRatioListener);
+        IStateStyle useValue = Folme.useValue("ControlPanelViewBlur");
+        this.mBlurAmin = useValue;
+        useValue.setTo("blurRatio", Float.valueOf(this.mBlurRatio));
+        AnimConfig animConfig = new AnimConfig();
+        animConfig.addListeners(this.mBlurRatioListener);
+        this.mBlurAnimConfig = animConfig;
         this.mControlCenterPanel.setListening(false);
         this.mAttached = true;
     }
@@ -164,8 +171,7 @@ public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mBlurAmin.removeListener(this.mBlurRatioListener);
-        this.mBlurAmin.clean();
+        this.mBlurAnimConfig.removeListeners(this.mBlurRatioListener);
         this.mAttached = false;
     }
 
@@ -340,7 +346,7 @@ public class ControlPanelWindowView extends FrameLayout {
             float max = Math.max(Math.min(1.0f, f / 80.0f), 0.0f);
             float f2 = this.mBlurRatio;
             if (f2 != max) {
-                this.mBlurAmin.to("blurRatio", Float.valueOf(max));
+                this.mBlurAmin.to("blurRatio", Float.valueOf(max), this.mBlurAnimConfig);
             } else {
                 this.mBlurAmin.setTo("blurRatio", Float.valueOf(f2));
                 this.mControlPanelWindowManager.setBlurRatio(max);

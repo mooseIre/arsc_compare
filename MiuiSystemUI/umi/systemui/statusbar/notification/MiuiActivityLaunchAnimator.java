@@ -262,7 +262,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             builder2.withAlpha(1.0f);
             builder2.withMatrix(matrix2);
             builder2.withWindowCrop(remoteAnimationTarget2.screenSpaceBounds);
-            builder2.withLayer(remoteAnimationTarget.prefixOrderIndex - 2);
+            builder2.withRelativeLayer(-2, remoteAnimationTarget.leash);
             builder2.withCornerRadius(this.this$0.mWindowCornerRadius);
             builder2.withVisibility(this.this$0.isAnimationRunning());
             SyncRtSurfaceTransactionApplierCompat.SurfaceParams build2 = builder2.build();

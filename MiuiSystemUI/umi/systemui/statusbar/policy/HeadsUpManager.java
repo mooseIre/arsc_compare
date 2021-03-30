@@ -167,11 +167,13 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         HeadsUpManagerInjector.setSnoozeUntil(this.mClock.currentTimeMillis() + 60000);
         for (String str : this.mAlertEntries.keySet()) {
             HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
-            String packageName = headsUpEntry.mEntry.getSbn().getPackageName();
-            if (HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry.mEntry)) {
-                HeadsUpManagerInjector.setSnoozeUntil(0);
-            } else {
-                this.mSnoozedPackages.put(snoozeKey(packageName, this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
+            if (headsUpEntry != null) {
+                String packageName = headsUpEntry.mEntry.getSbn().getPackageName();
+                if (HeadsUpManagerInjector.injectSnooze(this.mContext, headsUpEntry.mEntry)) {
+                    HeadsUpManagerInjector.setSnoozeUntil(0);
+                } else {
+                    this.mSnoozedPackages.put(snoozeKey(packageName, this.mUser), Long.valueOf(this.mClock.currentTimeMillis() + ((long) this.mSnoozeLengthMs)));
+                }
             }
         }
     }
@@ -241,7 +243,8 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
 
     private boolean hasPinnedNotificationInternal() {
         for (String str : this.mAlertEntries.keySet()) {
-            if (getHeadsUpEntry(str).mEntry.isRowPinned()) {
+            HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
+            if (headsUpEntry != null && headsUpEntry.mEntry.isRowPinned()) {
                 return true;
             }
         }
@@ -252,10 +255,12 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
         NotificationEntry notificationEntry;
         for (String str : this.mAlertEntries.keySet()) {
             HeadsUpEntry headsUpEntry = getHeadsUpEntry(str);
-            setEntryPinned(headsUpEntry, false);
-            headsUpEntry.updateEntry(false);
-            if (z && (notificationEntry = headsUpEntry.mEntry) != null && notificationEntry.mustStayOnScreen()) {
-                headsUpEntry.mEntry.setHeadsUpIsVisible();
+            if (headsUpEntry != null) {
+                setEntryPinned(headsUpEntry, false);
+                headsUpEntry.updateEntry(false);
+                if (z && (notificationEntry = headsUpEntry.mEntry) != null && notificationEntry.mustStayOnScreen()) {
+                    headsUpEntry.mEntry.setHeadsUpIsVisible();
+                }
             }
         }
     }

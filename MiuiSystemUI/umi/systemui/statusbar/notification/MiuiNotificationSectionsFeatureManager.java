@@ -18,17 +18,17 @@ public final class MiuiNotificationSectionsFeatureManager extends NotificationSe
     @NotNull
     public int[] getNotificationBuckets() {
         if (isFilteringEnabled() && isMediaControlsEnabled()) {
-            return new int[]{2, 3, 1, 4, 5, 7};
+            return new int[]{2, 3, 1, 5, 4, 6, 8};
         }
         if (!isFilteringEnabled() && isMediaControlsEnabled()) {
-            return new int[]{2, 3, 1, 5, 7};
+            return new int[]{2, 3, 1, 5, 6, 8};
         }
         if (isFilteringEnabled() && !isMediaControlsEnabled()) {
-            return new int[]{2, 3, 4, 5, 7};
+            return new int[]{2, 3, 5, 4, 6, 8};
         }
         if (NotificationUtils.useNewInterruptionModel(getContext())) {
-            return new int[]{5, 7};
+            return new int[]{5, 6, 8};
         }
-        return new int[]{5, 7};
+        return new int[]{5, 6, 8};
     }
 }

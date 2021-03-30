@@ -9,22 +9,22 @@ import java.util.List;
 
 public interface NotificationPanelLogger {
     static default int toNotificationSection(int i) {
-        switch (i) {
-            case 1:
-                return 2;
-            case 2:
-                return 1;
-            case 3:
-                return 6;
-            case 4:
-                return 3;
-            case 5:
-                return 4;
-            case 6:
-                return 5;
-            default:
-                return 0;
+        if (i == 1) {
+            return 2;
         }
+        if (i == 2) {
+            return 1;
+        }
+        if (i == 3) {
+            return 6;
+        }
+        if (i == 4) {
+            return 3;
+        }
+        if (i != 6) {
+            return i != 7 ? 0 : 5;
+        }
+        return 4;
     }
 
     void logPanelShown(boolean z, List<NotificationEntry> list);

@@ -277,7 +277,7 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
     @Nullable
     public Integer getBucket(@Nullable View view) {
         if (view == this.silentHeaderView) {
-            return 6;
+            return 7;
         }
         if (view == this.incomingHeaderView) {
             return 2;
@@ -289,7 +289,7 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
             return 4;
         }
         if (view == this.alertingHeaderView) {
-            return 5;
+            return 6;
         }
         if (!(view instanceof ExpandableNotificationRow)) {
             return null;
@@ -324,9 +324,9 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
                 this.logger.logHeadsUp(i, isHeadsUp);
             } else if (bucket == 4) {
                 this.logger.logConversation(i, isHeadsUp);
-            } else if (bucket == 5) {
-                this.logger.logAlerting(i, isHeadsUp);
             } else if (bucket == 6) {
+                this.logger.logAlerting(i, isHeadsUp);
+            } else if (bucket == 7) {
                 this.logger.logSilent(i, isHeadsUp);
             }
         }
@@ -377,36 +377,36 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
         return new NotificationSectionsManager$decorViewHeaderState$1(expandableViewHeaderState(t), t);
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:57:0x0118, code lost:
-        if ((r2.getVisibility() == 8) == false) goto L_0x011d;
+    /* JADX WARNING: Code restructure failed: missing block: B:57:0x011c, code lost:
+        if ((r1.getVisibility() == 8) == false) goto L_0x0121;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:85:0x016f, code lost:
-        if (r8.intValue() != r4.getBucket()) goto L_0x0171;
+    /* JADX WARNING: Code restructure failed: missing block: B:85:0x0173, code lost:
+        if (r6.intValue() != r3.getBucket()) goto L_0x0175;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:101:0x01a6  */
-    /* JADX WARNING: Removed duplicated region for block: B:102:0x01a8  */
-    /* JADX WARNING: Removed duplicated region for block: B:113:0x01d2  */
-    /* JADX WARNING: Removed duplicated region for block: B:120:0x01eb  */
-    /* JADX WARNING: Removed duplicated region for block: B:122:0x01fe  */
-    /* JADX WARNING: Removed duplicated region for block: B:158:0x0266  */
-    /* JADX WARNING: Removed duplicated region for block: B:164:0x027c  */
-    /* JADX WARNING: Removed duplicated region for block: B:170:0x028f  */
-    /* JADX WARNING: Removed duplicated region for block: B:176:0x02a2  */
-    /* JADX WARNING: Removed duplicated region for block: B:182:0x02b5  */
-    /* JADX WARNING: Removed duplicated region for block: B:194:0x02e7 A[LOOP:2: B:192:0x02e1->B:194:0x02e7, LOOP_END] */
-    /* JADX WARNING: Removed duplicated region for block: B:197:0x0306  */
-    /* JADX WARNING: Removed duplicated region for block: B:204:0x031e  */
+    /* JADX WARNING: Removed duplicated region for block: B:102:0x01ac  */
+    /* JADX WARNING: Removed duplicated region for block: B:105:0x01b4  */
+    /* JADX WARNING: Removed duplicated region for block: B:113:0x01d5  */
+    /* JADX WARNING: Removed duplicated region for block: B:120:0x01ee  */
+    /* JADX WARNING: Removed duplicated region for block: B:122:0x0201  */
+    /* JADX WARNING: Removed duplicated region for block: B:158:0x0269  */
+    /* JADX WARNING: Removed duplicated region for block: B:164:0x027f  */
+    /* JADX WARNING: Removed duplicated region for block: B:170:0x0292  */
+    /* JADX WARNING: Removed duplicated region for block: B:176:0x02a5  */
+    /* JADX WARNING: Removed duplicated region for block: B:182:0x02b8  */
+    /* JADX WARNING: Removed duplicated region for block: B:194:0x02ea A[LOOP:2: B:192:0x02e4->B:194:0x02ea, LOOP_END] */
+    /* JADX WARNING: Removed duplicated region for block: B:197:0x0309  */
+    /* JADX WARNING: Removed duplicated region for block: B:204:0x0321  */
     /* JADX WARNING: Removed duplicated region for block: B:231:? A[RETURN, SYNTHETIC] */
-    /* JADX WARNING: Removed duplicated region for block: B:73:0x0145  */
-    /* JADX WARNING: Removed duplicated region for block: B:82:0x015c  */
-    /* JADX WARNING: Removed duplicated region for block: B:91:0x017b  */
-    /* JADX WARNING: Removed duplicated region for block: B:94:0x0184  */
-    /* JADX WARNING: Removed duplicated region for block: B:96:0x0191  */
-    /* JADX WARNING: Removed duplicated region for block: B:99:0x019a  */
+    /* JADX WARNING: Removed duplicated region for block: B:73:0x0149  */
+    /* JADX WARNING: Removed duplicated region for block: B:82:0x0160  */
+    /* JADX WARNING: Removed duplicated region for block: B:91:0x017f  */
+    /* JADX WARNING: Removed duplicated region for block: B:94:0x0188  */
+    /* JADX WARNING: Removed duplicated region for block: B:96:0x0195  */
+    /* JADX WARNING: Removed duplicated region for block: B:99:0x019e  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void updateSectionBoundaries(@org.jetbrains.annotations.NotNull java.lang.String r26) {
+    public void updateSectionBoundaries(@org.jetbrains.annotations.NotNull java.lang.String r25) {
         /*
-        // Method dump skipped, instructions count: 848
+        // Method dump skipped, instructions count: 851
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.stack.NotificationSectionsManager.updateSectionBoundaries(java.lang.String):void");
     }

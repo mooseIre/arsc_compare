@@ -51,10 +51,10 @@ public class NotificationPanelStat {
         this.mPanelSlidingTimes = 0;
     }
 
-    public void start(String str, boolean z, int i) {
+    public void start(String str, boolean z, int i, int i2) {
         if (this.mExpandEvent == null) {
             reset();
-            ExpandEvent expandEvent = new ExpandEvent(str, (z ? ExpandMode.MANUAL : ExpandMode.COMMAND).name(), i);
+            ExpandEvent expandEvent = new ExpandEvent(str, (z ? ExpandMode.MANUAL : ExpandMode.COMMAND).name(), i, i2);
             this.mExpandEvent = expandEvent;
             this.mEventTracker.track(expandEvent);
         }

@@ -22,7 +22,7 @@ public final class ControlsUiControllerImpl$createDropDown$3 implements View.OnC
     public void onClick(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "v");
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
-        GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(this.this$0.popupThemedContext, true);
+        GlobalActionsPopupMenu globalActionsPopupMenu = new GlobalActionsPopupMenu(ControlsUiControllerImpl.access$getPopupThemedContext$p(this.this$0), true);
         globalActionsPopupMenu.setAnchorView(this.$anchor);
         globalActionsPopupMenu.setAdapter(this.$adapter.element);
         globalActionsPopupMenu.setOnItemClickListener(new ControlsUiControllerImpl$createDropDown$3$onClick$$inlined$apply$lambda$1(globalActionsPopupMenu, this));

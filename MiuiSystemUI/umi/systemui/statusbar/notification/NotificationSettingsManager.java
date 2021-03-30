@@ -39,6 +39,7 @@ public class NotificationSettingsManager implements Dumpable {
     private List<String> mDisableAutoGroupSummaryPackages;
     private List<String> mHideAlertWindowWhitelist;
     private List<String> mHideForegroundWhitelist;
+    private List<String> mImportantWhitelist;
     private List<String> mPreInstallPackages;
     private List<String> mPrioritizedPackages;
     private List<String> mSubstitutePackages;
@@ -61,6 +62,7 @@ public class NotificationSettingsManager implements Dumpable {
         this.mBlockFloatPackages = getStringArray(C0008R$array.config_blockFloatPackages);
         this.mBlockKeyguardPackages = getStringArray(C0008R$array.config_blockKeyguardPackages);
         this.mAllowNotificationSlide = getStringArray(C0008R$array.config_allowNotificationSlide);
+        this.mImportantWhitelist = getStringArray(C0008R$array.important_section_whitelist);
         cloudDataManager.registerListener(new CloudDataListener() {
             /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationSettingsManager$d8gb7CE_AenvkjHLK6pCP4Go */
 
@@ -344,6 +346,10 @@ public class NotificationSettingsManager implements Dumpable {
             return false;
         }
         return bool.booleanValue();
+    }
+
+    public boolean isImportantWhitelist(String str) {
+        return this.mImportantWhitelist.contains(str);
     }
 
     @Override // com.android.systemui.Dumpable
