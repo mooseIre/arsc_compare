@@ -1,7 +1,8 @@
 package com.android.systemui.statusbar.phone;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MiuiKeyButtonRipple.kt */
-final class MiuiKeyButtonRipple$setPressedSoftware$1 implements Runnable {
+public final class MiuiKeyButtonRipple$setPressedSoftware$1 implements Runnable {
     final /* synthetic */ MiuiKeyButtonRipple this$0;
 
     MiuiKeyButtonRipple$setPressedSoftware$1(MiuiKeyButtonRipple miuiKeyButtonRipple) {
@@ -9,6 +10,6 @@ final class MiuiKeyButtonRipple$setPressedSoftware$1 implements Runnable {
     }
 
     public final void run() {
-        MiuiKeyButtonRipple.access$enterSoftware(this.this$0);
+        this.this$0.enterSoftware();
     }
 }

@@ -42,13 +42,9 @@ public class KeyguardMediaController {
 
             @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
-                KeyguardMediaController.access$updateVisibility(this.this$0);
+                this.this$0.updateVisibility();
             }
         });
-    }
-
-    public static final /* synthetic */ void access$updateVisibility(KeyguardMediaController keyguardMediaController) {
-        keyguardMediaController.updateVisibility();
     }
 
     public final void setVisibilityChangedListener(@Nullable Function1<? super Boolean, Unit> function1) {
@@ -72,6 +68,8 @@ public class KeyguardMediaController {
         updateVisibility();
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void updateVisibility() {
         Function1<? super Boolean, Unit> function1;
         int i = 0;

@@ -3,8 +3,9 @@ package com.android.systemui.controls.ui;
 import java.util.Iterator;
 import java.util.function.Consumer;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-final class ControlsUiControllerImpl$onSeedingComplete$1<T> implements Consumer<Boolean> {
+public final class ControlsUiControllerImpl$onSeedingComplete$1<T> implements Consumer<Boolean> {
     final /* synthetic */ ControlsUiControllerImpl this$0;
 
     ControlsUiControllerImpl$onSeedingComplete$1(ControlsUiControllerImpl controlsUiControllerImpl) {

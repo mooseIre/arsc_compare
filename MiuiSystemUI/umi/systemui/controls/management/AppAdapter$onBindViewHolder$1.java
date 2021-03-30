@@ -4,8 +4,9 @@ import android.content.ComponentName;
 import android.view.View;
 import com.android.systemui.controls.ControlsServiceInfo;
 
+/* access modifiers changed from: package-private */
 /* compiled from: AppAdapter.kt */
-final class AppAdapter$onBindViewHolder$1 implements View.OnClickListener {
+public final class AppAdapter$onBindViewHolder$1 implements View.OnClickListener {
     final /* synthetic */ int $index;
     final /* synthetic */ AppAdapter this$0;
 

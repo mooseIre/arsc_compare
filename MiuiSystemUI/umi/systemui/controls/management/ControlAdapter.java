@@ -11,16 +11,12 @@ import com.android.systemui.controls.ControlInterface;
 import java.util.List;
 import kotlin.NoWhenBranchMatchedException;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: ControlAdapter.kt */
 public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
     private final float elevation;
     private ControlsModel model;
-    @NotNull
     private final GridLayoutManager.SpanSizeLookup spanSizeLookup = new ControlAdapter$spanSizeLookup$1(this);
 
-    /* JADX DEBUG: Method arguments types fixed to match base method, original types: [androidx.recyclerview.widget.RecyclerView$ViewHolder, int, java.util.List] */
     @Override // androidx.recyclerview.widget.RecyclerView.Adapter
     public /* bridge */ /* synthetic */ void onBindViewHolder(Holder holder, int i, List list) {
         onBindViewHolder(holder, i, (List<Object>) list);
@@ -30,14 +26,12 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         this.elevation = f;
     }
 
-    @NotNull
     public final GridLayoutManager.SpanSizeLookup getSpanSizeLookup() {
         return this.spanSizeLookup;
     }
 
     @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    @NotNull
-    public Holder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
+    public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
         LayoutInflater from = LayoutInflater.from(viewGroup.getContext());
         if (i == 0) {
@@ -61,7 +55,7 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         }
     }
 
-    public final void changeModel(@NotNull ControlsModel controlsModel) {
+    public final void changeModel(ControlsModel controlsModel) {
         Intrinsics.checkParameterIsNotNull(controlsModel, "model");
         this.model = controlsModel;
         notifyDataSetChanged();
@@ -77,7 +71,7 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         return elements.size();
     }
 
-    public void onBindViewHolder(@NotNull Holder holder, int i) {
+    public void onBindViewHolder(Holder holder, int i) {
         Intrinsics.checkParameterIsNotNull(holder, "holder");
         ControlsModel controlsModel = this.model;
         if (controlsModel != null) {
@@ -85,7 +79,7 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         }
     }
 
-    public void onBindViewHolder(@NotNull Holder holder, int i, @NotNull List<Object> list) {
+    public void onBindViewHolder(Holder holder, int i, List<Object> list) {
         Intrinsics.checkParameterIsNotNull(holder, "holder");
         Intrinsics.checkParameterIsNotNull(list, "payloads");
         if (list.isEmpty()) {

@@ -6,8 +6,9 @@ import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
-final class ZoneHolder extends Holder {
+public final class ZoneHolder extends Holder {
     private final TextView zone;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
