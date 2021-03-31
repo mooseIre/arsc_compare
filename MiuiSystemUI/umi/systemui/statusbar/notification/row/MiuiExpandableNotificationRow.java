@@ -141,9 +141,9 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
 
     private final void updateBackgroundBg() {
         if (isHeadsUpState()) {
-            boolean isTransparentMode = NotificationContentInflaterInjector.isTransparentMode();
+            boolean isTransparentAble = NotificationContentInflaterInjector.isTransparentAble();
             NotificationContentView showingLayout = getShowingLayout();
-            boolean z = isTransparentMode && ((showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper);
+            boolean z = isTransparentAble && ((showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper);
             if (z) {
                 this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_transparent_heads_up_notification_bg);
             } else {

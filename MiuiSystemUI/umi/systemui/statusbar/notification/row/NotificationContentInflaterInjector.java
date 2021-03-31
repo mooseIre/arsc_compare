@@ -22,6 +22,7 @@ import com.android.systemui.statusbar.notification.InCallUtils;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
+import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.NotificationContentInflater;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -253,9 +254,9 @@ public class NotificationContentInflaterInjector {
 
     public static RemoteViews buildOneLineContent(Notification notification, boolean z, Context context) {
         int i;
-        boolean isTransparentMode = isTransparentMode();
+        boolean isTransparentAble = isTransparentAble();
         ApplicationInfo applicationInfo = context.getApplicationInfo();
-        if (isTransparentMode) {
+        if (isTransparentAble) {
             i = C0017R$layout.miui_notification_transparent_template_material_one_line;
         } else {
             i = C0017R$layout.miui_notification_template_material_one_line;
@@ -264,14 +265,14 @@ public class NotificationContentInflaterInjector {
         resetStandardTemplate(builderRemoteViews);
         handleMiuiAction(builderRemoteViews, notification);
         if (z) {
-            builderRemoteViews.setTextColor(C0015R$id.miui_action, context.getColor(isTransparentMode ? C0011R$color.optimized_game_heads_up_notification_action_text : C0011R$color.optimized_heads_up_notification_action_text));
+            builderRemoteViews.setTextColor(C0015R$id.miui_action, context.getColor(isTransparentAble ? C0011R$color.optimized_game_heads_up_notification_action_text : C0011R$color.optimized_heads_up_notification_action_text));
         }
         CharSequence charSequence = notification.extras.getCharSequence("android.title");
         if (charSequence != null) {
             builderRemoteViews.setViewVisibility(C0015R$id.title, 0);
             builderRemoteViews.setTextViewText(C0015R$id.title, processTextSpans(charSequence, context));
             if (z) {
-                builderRemoteViews.setTextColor(C0015R$id.title, context.getColor(isTransparentMode ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
+                builderRemoteViews.setTextColor(C0015R$id.title, context.getColor(isTransparentAble ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
             }
         }
         CharSequence charSequence2 = notification.extras.getCharSequence("android.text");
@@ -282,7 +283,7 @@ public class NotificationContentInflaterInjector {
             builderRemoteViews.setTextViewText(C0015R$id.text, processTextSpans(charSequence2, context));
             builderRemoteViews.setViewVisibility(C0015R$id.text, 0);
             if (z) {
-                builderRemoteViews.setTextColor(C0015R$id.text, context.getColor(isTransparentMode ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
+                builderRemoteViews.setTextColor(C0015R$id.text, context.getColor(isTransparentAble ? C0011R$color.optimized_game_heads_up_notification_text : C0011R$color.optimized_heads_up_notification_text));
             }
         }
         return builderRemoteViews;
@@ -506,11 +507,11 @@ public class NotificationContentInflaterInjector {
         return (((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || isLandscape(context)) && !InCallUtils.isGlobalInCallNotification(context, context2.getPackageName(), notification) && !NotificationUtil.isCustomViewNotification(notification);
     }
 
-    public static boolean isTransparentMode() {
-        return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || ((StatusBar) Dependency.get(StatusBar.class)).inFullscreenMode();
+    public static boolean isTransparentAble() {
+        return ((SettingsManager) Dependency.get(SettingsManager.class)).getGameModeEnabled() || (((StatusBar) Dependency.get(StatusBar.class)).inFullscreenMode() && NotificationUtils.isScreenLandscape());
     }
 
     public static boolean isBlurAble(boolean z, boolean z2) {
-        return ((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter() && !z && (!z2 || !isTransparentMode());
+        return ((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter() && !z && (!z2 || !isTransparentAble());
     }
 }

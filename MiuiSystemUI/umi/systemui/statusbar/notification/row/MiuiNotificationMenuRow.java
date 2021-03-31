@@ -536,6 +536,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
         ((NotificationStat) Dependency.get(NotificationStat.class)).onSetConfig(this.mParent.getEntry());
         saveFeedback(context, i == 0 ? "CONTENT" : "AD");
         dialogInterface.dismiss();
+        ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.AGGREGATE_FEEDBACK.name());
         Toast.makeText(context, C0021R$string.miui_notification_menu_feedback_success, 0).show();
     }
 

@@ -19,8 +19,10 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, DarkIconDispatcher.DarkReceiver, NotificationWakeUpCoordinator.WakeUpListener {
     @VisibleForTesting
@@ -304,7 +306,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     }
 
     private void updateHeadsUpHeaders() {
-        this.mHeadsUpManager.getAllEntries().forEach(new Consumer() {
+        ((List) this.mHeadsUpManager.getAllEntries().collect(Collectors.toList())).forEach(new Consumer() {
             /* class com.android.systemui.statusbar.phone.$$Lambda$HeadsUpAppearanceController$UoqlBKl4WkI5lx_o_D7VqchxTuM */
 
             @Override // java.util.function.Consumer

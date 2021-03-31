@@ -5,7 +5,8 @@ import android.view.VelocityTracker;
 import com.android.systemui.util.DeviceConfigProxy;
 import java.util.List;
 
-class DistanceClassifier extends FalsingClassifier {
+/* access modifiers changed from: package-private */
+public class DistanceClassifier extends FalsingClassifier {
     private DistanceVectors mCachedDistance;
     private boolean mDistanceDirty = true;
     private final float mHorizontalFlingThresholdPx;

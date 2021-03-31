@@ -22,23 +22,23 @@ public final class DriveModeControllerImpl$observe$2 extends BroadcastReceiver {
         String action = intent.getAction();
         if (intent.getData() != null) {
             if (Intrinsics.areEqual("android.intent.action.PACKAGE_ADDED", action)) {
-                if (!DriveModeControllerImpl.access$getMIsDriveModeAvailable$p(this.this$0)) {
+                if (!this.this$0.mIsDriveModeAvailable) {
                     Uri data = intent.getData();
                     if (data == null) {
                         Intrinsics.throwNpe();
                         throw null;
                     } else if (Intrinsics.areEqual("com.xiaomi.drivemode", data.getSchemeSpecificPart())) {
-                        DriveModeControllerImpl.access$setMIsDriveModeAvailable$p(this.this$0, true);
+                        this.this$0.mIsDriveModeAvailable = true;
                     }
                 }
-            } else if (Intrinsics.areEqual("android.intent.action.PACKAGE_REMOVED", action) && DriveModeControllerImpl.access$getMIsDriveModeAvailable$p(this.this$0)) {
+            } else if (Intrinsics.areEqual("android.intent.action.PACKAGE_REMOVED", action) && this.this$0.mIsDriveModeAvailable) {
                 Uri data2 = intent.getData();
                 if (data2 == null) {
                     Intrinsics.throwNpe();
                     throw null;
                 } else if (Intrinsics.areEqual(data2.getSchemeSpecificPart(), "com.xiaomi.drivemode")) {
-                    DriveModeControllerImpl.access$setMIsDriveModeAvailable$p(this.this$0, false);
-                    DriveModeControllerImpl.access$leaveDriveMode(this.this$0);
+                    this.this$0.mIsDriveModeAvailable = false;
+                    this.this$0.leaveDriveMode();
                 }
             }
         }

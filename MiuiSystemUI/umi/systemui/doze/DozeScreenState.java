@@ -96,7 +96,8 @@ public class DozeScreenState implements DozeMachine.Part {
     }
 
     /* access modifiers changed from: private */
-    public void applyPendingScreenState() {
+    /* access modifiers changed from: public */
+    private void applyPendingScreenState() {
         lambda$transitionTo$0(this.mPendingScreenState);
         this.mPendingScreenState = 0;
     }

@@ -208,16 +208,16 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
      */
     /* renamed from: handleNotificationClickAfterKeyguardDismissed */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean lambda$onNotificationClicked$0(android.service.notification.StatusBarNotification r12, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r13, com.android.systemui.statusbar.RemoteInputController r14, android.app.PendingIntent r15, boolean r16, boolean r17, boolean r18) {
+    public boolean lambda$onNotificationClicked$0(android.service.notification.StatusBarNotification r13, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow r14, com.android.systemui.statusbar.RemoteInputController r15, android.app.PendingIntent r16, boolean r17, boolean r18, boolean r19) {
         /*
-        // Method dump skipped, instructions count: 117
+        // Method dump skipped, instructions count: 122
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.StatusBarNotificationActivityStarter.lambda$onNotificationClicked$0(android.service.notification.StatusBarNotification, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow, com.android.systemui.statusbar.RemoteInputController, android.app.PendingIntent, boolean, boolean, boolean):boolean");
     }
 
     /* access modifiers changed from: private */
     /* renamed from: handleNotificationClickAfterPanelCollapsed */
-    public void lambda$handleNotificationClickAfterKeyguardDismissed$1(StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow, RemoteInputController remoteInputController, PendingIntent pendingIntent, boolean z, boolean z2, NotificationEntry notificationEntry) {
+    public void lambda$handleNotificationClickAfterKeyguardDismissed$1(StatusBarNotification statusBarNotification, ExpandableNotificationRow expandableNotificationRow, RemoteInputController remoteInputController, PendingIntent pendingIntent, boolean z, boolean z2, NotificationEntry notificationEntry, boolean z3) {
         this.mLogger.logHandleClickAfterPanelCollapsed(statusBarNotification.getKey());
         String key = statusBarNotification.getKey();
         try {
@@ -239,7 +239,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
             this.mLogger.logExpandingBubble(key);
             expandBubbleStackOnMainThread(entry);
         } else {
-            startNotificationIntent(pendingIntent, putExtra, entry, expandableNotificationRow, z2, z);
+            startNotificationIntent(pendingIntent, putExtra, entry, expandableNotificationRow, z2, z, z3);
         }
         if (z || canBubble) {
             this.mAssistManagerLazy.get().hideAssist();
@@ -285,7 +285,7 @@ public class StatusBarNotificationActivityStarter implements NotificationActivit
     }
 
     /* access modifiers changed from: protected */
-    public void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2) {
+    public void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2, boolean z3) {
         RemoteAnimationAdapter launchAnimation = this.mActivityLaunchAnimator.getLaunchAnimation(view, z);
         this.mLogger.logStartNotificationIntent(notificationEntry.getKey(), pendingIntent);
         if (launchAnimation != null) {

@@ -219,7 +219,7 @@ public class MediaControlPanel {
                         }
 
                         public final void onClick(View view) {
-                            MediaControlPanel.lambda$bind$2(this.f$0, view);
+                            this.f$0.run();
                         }
                     });
                 }
@@ -258,10 +258,6 @@ public class MediaControlPanel {
     /* renamed from: lambda$bind$1 */
     public /* synthetic */ void lambda$bind$1$MediaControlPanel(MediaData mediaData, View view) {
         this.mActivityStarter.startActivity(new Intent().setAction("com.android.settings.panel.action.MEDIA_OUTPUT").putExtra("com.android.settings.panel.extra.PACKAGE_NAME", mediaData.getPackageName()).putExtra("key_media_session_token", this.mToken), false, true, 268468224);
-    }
-
-    static /* synthetic */ void lambda$bind$2(Runnable runnable, View view) {
-        runnable.run();
     }
 
     /* access modifiers changed from: private */

@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.systemui.C0015R$id;
+import com.android.systemui.SystemUIApplication;
 
 public class NotificationUtils {
     private static final int[] sLocationBase = new int[2];
@@ -52,5 +53,9 @@ public class NotificationUtils {
             sUseNewInterruptionModel = Boolean.valueOf(z);
         }
         return sUseNewInterruptionModel.booleanValue();
+    }
+
+    public static boolean isScreenLandscape() {
+        return SystemUIApplication.getContext().getResources().getConfiguration().orientation == 2;
     }
 }
