@@ -31,6 +31,7 @@ public class MiuiGxzwFrameAnimation {
     private volatile int mMode = 1;
     private final Queue<Bitmap> mRecycleBitmapQueue = new ArrayBlockingQueue(2, true);
     private volatile boolean mSupportInBitmap = true;
+    private ISurfaceTextureStateHelper mSurfaceTextureStateHelper;
     private final View mView;
 
     public interface CustomerDrawBitmap {
@@ -47,8 +48,21 @@ public class MiuiGxzwFrameAnimation {
         void onStart();
     }
 
-    public MiuiGxzwFrameAnimation(TextureView textureView) {
+    /* access modifiers changed from: package-private */
+    public interface ISurfaceTextureStateHelper {
+        SurfaceTextureState getState();
+    }
+
+    /* access modifiers changed from: package-private */
+    public enum SurfaceTextureState {
+        Available,
+        Destroyed,
+        Unknown
+    }
+
+    public MiuiGxzwFrameAnimation(TextureView textureView, ISurfaceTextureStateHelper iSurfaceTextureStateHelper) {
         this.mView = textureView;
+        this.mSurfaceTextureStateHelper = iSurfaceTextureStateHelper;
         textureView.setOpaque(false);
         this.mContext = textureView.getContext();
         HandlerThread handlerThread = new HandlerThread("FrameAnimation Draw Thread");
@@ -164,20 +178,23 @@ public class MiuiGxzwFrameAnimation {
             return;
         }
         try {
-            Matrix configureDrawMatrix = configureDrawMatrix(bitmap, f);
-            float f2 = (float) i;
-            float f3 = (float) i2;
-            configureDrawMatrix.postTranslate(f2, f3);
-            lockCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
-            if (bitmap2 != null) {
-                Matrix configureDrawMatrix2 = configureDrawMatrix(bitmap2, f);
-                configureDrawMatrix2.postTranslate(f2, f3);
-                lockCanvas.drawBitmap(bitmap2, configureDrawMatrix2, null);
-            }
-            if (customerDrawBitmap == null) {
-                lockCanvas.drawBitmap(bitmap, configureDrawMatrix, null);
-            } else {
-                customerDrawBitmap.drawBitmap(lockCanvas, bitmap, configureDrawMatrix);
+            if (canCanvasDraw()) {
+                Matrix configureDrawMatrix = configureDrawMatrix(bitmap, f);
+                float f2 = (float) i;
+                float f3 = (float) i2;
+                configureDrawMatrix.postTranslate(f2, f3);
+                lockCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                if (bitmap2 != null) {
+                    Matrix configureDrawMatrix2 = configureDrawMatrix(bitmap2, f);
+                    configureDrawMatrix2.postTranslate(f2, f3);
+                    lockCanvas.drawBitmap(bitmap2, configureDrawMatrix2, null);
+                }
+                if (customerDrawBitmap == null) {
+                    lockCanvas.drawBitmap(bitmap, configureDrawMatrix, null);
+                } else {
+                    customerDrawBitmap.drawBitmap(lockCanvas, bitmap, configureDrawMatrix);
+                }
+                unlockCanvasAndPostSafely(lockCanvas);
             }
         } finally {
             unlockCanvasAndPostSafely(lockCanvas);
@@ -206,11 +223,19 @@ public class MiuiGxzwFrameAnimation {
         Canvas lockCanvas = lockCanvas();
         if (lockCanvas != null) {
             try {
-                lockCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                if (canCanvasDraw()) {
+                    lockCanvas.drawColor(0, PorterDuff.Mode.CLEAR);
+                    unlockCanvasAndPostSafely(lockCanvas);
+                }
             } finally {
                 unlockCanvasAndPostSafely(lockCanvas);
             }
         }
+    }
+
+    private boolean canCanvasDraw() {
+        ISurfaceTextureStateHelper iSurfaceTextureStateHelper = this.mSurfaceTextureStateHelper;
+        return iSurfaceTextureStateHelper == null || iSurfaceTextureStateHelper.getState() == SurfaceTextureState.Available;
     }
 
     private void unlockCanvasAndPostSafely(Canvas canvas) {

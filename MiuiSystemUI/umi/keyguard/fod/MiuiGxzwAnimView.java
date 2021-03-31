@@ -473,6 +473,8 @@ public class MiuiGxzwAnimView {
         };
         private boolean mShouldShowBackAnim = false;
         private boolean mSurfaceCreate = false;
+        private volatile MiuiGxzwFrameAnimation.SurfaceTextureState mSurfaceTextureState;
+        private MiuiGxzwFrameAnimation.ISurfaceTextureStateHelper mSurfaceTextureStateHelper;
         private final Handler mSystemUIHandler;
         private TextureView mTextureView;
         private final IMiuiKeyguardWallpaperController.IWallpaperChangeCallback mWallpaperChangeCallback;
@@ -501,13 +503,22 @@ public class MiuiGxzwAnimView {
                 }
             };
             this.mAlpha = 1.0f;
-            this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+            this.mSurfaceTextureState = MiuiGxzwFrameAnimation.SurfaceTextureState.Unknown;
+            this.mSurfaceTextureStateHelper = new MiuiGxzwFrameAnimation.ISurfaceTextureStateHelper() {
                 /* class com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass1 */
+
+                @Override // com.android.keyguard.fod.MiuiGxzwFrameAnimation.ISurfaceTextureStateHelper
+                public MiuiGxzwFrameAnimation.SurfaceTextureState getState() {
+                    return MiuiGxzwAnimViewInternal.this.mSurfaceTextureState;
+                }
+            };
+            this.mKeyguardUpdateMonitorCallback = new KeyguardUpdateMonitorCallback() {
+                /* class com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2 */
 
                 @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
                 public void onKeyguardBouncerChanged(boolean z) {
                     MiuiGxzwAnimViewInternal.this.mMainHandler.post(new Runnable(z, ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
-                        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1$i4db7Cf5H8H4M7ryC89z0IUwbhE */
+                        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$wEHG0WNHKQjSUWfRobd3_5_U0 */
                         public final /* synthetic */ boolean f$1;
                         public final /* synthetic */ boolean f$2;
 
@@ -517,30 +528,30 @@ public class MiuiGxzwAnimView {
                         }
 
                         public final void run() {
-                            MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass1.this.lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1(this.f$1, this.f$2);
+                            MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2.this.lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(this.f$1, this.f$2);
                         }
                     });
                 }
 
                 /* access modifiers changed from: private */
                 /* renamed from: lambda$onKeyguardBouncerChanged$0 */
-                public /* synthetic */ void lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$1(boolean z, boolean z2) {
+                public /* synthetic */ void lambda$onKeyguardBouncerChanged$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z, boolean z2) {
                     MiuiGxzwAnimViewInternal.this.onKeyguardBouncerChanged(z, z2);
                 }
             };
             this.mWallpaperChangeCallback = new IMiuiKeyguardWallpaperController.IWallpaperChangeCallback() {
-                /* class com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2 */
+                /* class com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass3 */
 
                 /* access modifiers changed from: private */
                 /* renamed from: lambda$onWallpaperChange$0 */
-                public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(boolean z) {
+                public /* synthetic */ void lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$3(boolean z) {
                     MiuiGxzwAnimViewInternal.this.onWallpaperChange(z);
                 }
 
                 @Override // com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController.IWallpaperChangeCallback
                 public void onWallpaperChange(boolean z) {
                     MiuiGxzwAnimViewInternal.this.mMainHandler.post(new Runnable(z) {
-                        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2$rSJ0ssoNyg2LzR8PzqBLE_kQpc */
+                        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$3$oTy3NenDOLxgllUFEnSyUU0WC5s */
                         public final /* synthetic */ boolean f$1;
 
                         {
@@ -548,7 +559,7 @@ public class MiuiGxzwAnimView {
                         }
 
                         public final void run() {
-                            MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass2.this.lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$2(this.f$1);
+                            MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass3.this.lambda$onWallpaperChange$0$MiuiGxzwAnimView$MiuiGxzwAnimViewInternal$3(this.f$1);
                         }
                     });
                 }
@@ -564,7 +575,7 @@ public class MiuiGxzwAnimView {
             TextureView textureView = new TextureView(getContext());
             this.mTextureView = textureView;
             textureView.setSurfaceTextureListener(this);
-            this.mMiuiGxzwFrameAnimation = new MiuiGxzwFrameAnimation(this.mTextureView);
+            this.mMiuiGxzwFrameAnimation = new MiuiGxzwFrameAnimation(this.mTextureView, this.mSurfaceTextureStateHelper);
             addView(this.mTextureView, layoutParams);
             this.mMiuiGxzwTipView = new MiuiGxzwTipView(getContext());
             addView(this.mMiuiGxzwTipView, new FrameLayout.LayoutParams(-1, -1));
@@ -612,6 +623,7 @@ public class MiuiGxzwAnimView {
 
         public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
             Log.i("MiuiGxzwAnimView", "onSurfaceTextureAvailable");
+            this.mSurfaceTextureState = MiuiGxzwFrameAnimation.SurfaceTextureState.Available;
             this.mSurfaceCreate = true;
             drawFingerprintIcon(this.mDozing);
             if (!this.mKeyguardAuthen || !this.mShowing || !this.mDozing) {
@@ -624,6 +636,7 @@ public class MiuiGxzwAnimView {
 
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
             Log.i("MiuiGxzwAnimView", "onSurfaceTextureDestroyed");
+            this.mSurfaceTextureState = MiuiGxzwFrameAnimation.SurfaceTextureState.Destroyed;
             this.mSurfaceCreate = false;
             this.mMiuiGxzwFrameAnimation.stopAnimation();
             return true;
@@ -1024,7 +1037,7 @@ public class MiuiGxzwAnimView {
             ofFloat.setDuration(300L);
             this.mAlphaAnimator.setInterpolator(new QuarticEaseOutInterpolator());
             this.mAlphaAnimator.addListener(new Animator.AnimatorListener() {
-                /* class com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass3 */
+                /* class com.android.keyguard.fod.MiuiGxzwAnimView.MiuiGxzwAnimViewInternal.AnonymousClass4 */
                 private boolean cancel = false;
 
                 public void onAnimationRepeat(Animator animator) {
