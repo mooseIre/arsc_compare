@@ -97,7 +97,7 @@ public class PipTouchHandler {
         /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$bnz9PC9JAAj_rxnZq96LLBoKnqw */
 
         public final void run() {
-            PipTouchHandler.lambda$bnz9PC9JAAj_rxnZq96LLBoKnqw(PipTouchHandler.this);
+            PipTouchHandler.this.showDismissTargetMaybe();
         }
     };
     private final PipSnapAlgorithm mSnapAlgorithm;
@@ -151,13 +151,13 @@ public class PipTouchHandler {
 
             @Override // java.util.function.Function
             public final Object apply(Object obj) {
-                return PipTouchHandler.lambda$Pinp5dDEZz4g_gFarHF_EBKOZzg(PipTouchHandler.this, (Rect) obj);
+                return PipTouchHandler.this.getMovementBounds((Rect) obj);
             }
         }, new Runnable() {
             /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$uINUOEMRLade2qxAeU4HH41XrU */
 
             public final void run() {
-                PipTouchHandler.m19lambda$uINUOEMRLade2qxAeU4HH41XrU(PipTouchHandler.this);
+                PipTouchHandler.this.updateMovementBounds();
             }
         }, sysUiState, pipUiEventLogger);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
@@ -186,7 +186,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.shared.system.InputConsumerController.InputListener
             public final boolean onInputEvent(InputEvent inputEvent) {
-                return PipTouchHandler.lambda$A78OVgVs8H_2SG6WUxzMSclOdX0(PipTouchHandler.this, inputEvent);
+                return PipTouchHandler.this.handleTouchEvent(inputEvent);
             }
         });
         inputConsumerController.setRegistrationListener(new InputConsumerController.RegistrationListener() {
@@ -194,7 +194,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.shared.system.InputConsumerController.RegistrationListener
             public final void onRegistrationChanged(boolean z) {
-                PipTouchHandler.m18lambda$NVpciZTELeGnxXPZeY5rYMmqJQ(PipTouchHandler.this, z);
+                PipTouchHandler.this.onRegistrationChanged(z);
             }
         });
         this.mPipBoundsHandler = pipBoundsHandler;
@@ -204,13 +204,13 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.pip.phone.PipAccessibilityInteractionConnection.AccessibilityCallbacks
             public final void onAccessibilityShowMenu() {
-                PipTouchHandler.lambda$1nY3kLe318Fm3UtIAbDmSK80h7w(PipTouchHandler.this);
+                PipTouchHandler.this.onAccessibilityShowMenu();
             }
         }, new Runnable() {
             /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$uINUOEMRLade2qxAeU4HH41XrU */
 
             public final void run() {
-                PipTouchHandler.m19lambda$uINUOEMRLade2qxAeU4HH41XrU(PipTouchHandler.this);
+                PipTouchHandler.this.updateMovementBounds();
             }
         }, this.mHandler);
         this.mPipUiEventLogger = pipUiEventLogger;
@@ -728,13 +728,13 @@ public class PipTouchHandler {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$K8tFYcJKtB3Bkuu5piDq01YhA */
 
                     public final void run() {
-                        PipTouchHandler.DefaultPipTouchGesture.lambda$onUp$0(PipTouchHandler.this);
+                        PipTouchHandler.this.updateDismissFraction();
                     }
                 }, new Runnable() {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$c8YgJLEypMoVYe3YjylatK650zk */
 
                     public final void run() {
-                        PipTouchHandler.DefaultPipTouchGesture.lambda$c8YgJLEypMoVYe3YjylatK650zk(PipTouchHandler.DefaultPipTouchGesture.this);
+                        PipTouchHandler.DefaultPipTouchGesture.this.flingEndAction();
                     }
                 });
             } else if (PipTouchHandler.this.mTouchState.isDoubleTap()) {

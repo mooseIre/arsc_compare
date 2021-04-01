@@ -122,7 +122,7 @@ public abstract class ControlCenterPanelAnimator {
 
     public void animateShowPanelWithoutScale(boolean z) {
         getPanelAnim().cancel();
-        getPanelAnim().setTo(z ? getPanelHideAnim() : getPanelShowAnim()).setup("anim_show_without_scale").to(z ? getPanelShowAnim() : getPanelHideAnim(), getAnimConfig());
+        getPanelAnim().to(z ? getPanelShowAnim() : getPanelHideAnim(), getAnimConfig());
     }
 
     public void updateOverExpandHeight(float f) {

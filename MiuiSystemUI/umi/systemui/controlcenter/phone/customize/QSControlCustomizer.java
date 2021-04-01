@@ -135,6 +135,7 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
                 QSControlCustomizer.this.isShown = false;
                 QSControlCustomizer.this.mShownRequested = false;
                 QSControlCustomizer.this.setCustomizing(false);
+                QSControlCustomizer.this.mUnAddedTilesLayout.resetMargin();
                 QSControlCustomizer.this.startAnimation(false);
                 QSControlCustomizer.this.releaseTiles();
                 QSControlCustomizer.this.setCustomizerAnimating(true);
@@ -239,12 +240,12 @@ public class QSControlCustomizer extends FrameLayout implements TileQueryHelper.
         super.onFinishInflate();
         this.mAnim = Folme.useAt(this).state();
         AnimState animState = new AnimState("qs_control_customizer_show");
-        animState.add(ViewProperty.ALPHA, 1.0d);
-        animState.add(ViewProperty.TRANSLATION_Y, 0.0d);
+        animState.add(ViewProperty.ALPHA, 1.0f, new long[0]);
+        animState.add(ViewProperty.TRANSLATION_Y, 0, new long[0]);
         this.mShowAnim = animState;
         AnimState animState2 = new AnimState("qs_control_customizer_hide");
-        animState2.add(ViewProperty.ALPHA, 0.0d);
-        animState2.add(ViewProperty.TRANSLATION_Y, 100.0d);
+        animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
+        animState2.add(ViewProperty.TRANSLATION_Y, 100, new long[0]);
         this.mHideAnim = animState2;
         if (!this.mLayoutParamsInited) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mHeader.getLayoutParams();

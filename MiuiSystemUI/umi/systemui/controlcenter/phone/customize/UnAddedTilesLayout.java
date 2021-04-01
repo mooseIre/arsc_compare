@@ -24,7 +24,6 @@ import miuix.animation.utils.VelocityMonitor;
 
 public class UnAddedTilesLayout extends FrameLayout {
     private static final boolean DEBUG = Constants.DEBUG;
-    private String MARGIN_VALUE_TAG;
     private View mAddedLayout;
     private IStateStyle mAnim;
     private View mContent;
@@ -33,7 +32,6 @@ public class UnAddedTilesLayout extends FrameLayout {
     private View mHeader;
     private boolean mInTop;
     private ImageView mIndicator;
-    private AnimConfig mMarginAnimConfig;
     private float mMarginDelta;
     private float mMarginTopStart;
     private float mMaxMarginTop;
@@ -48,7 +46,6 @@ public class UnAddedTilesLayout extends FrameLayout {
     public UnAddedTilesLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mDownY = -1.0f;
-        this.MARGIN_VALUE_TAG = "MarginTopValue";
         this.mContext = context;
         setClickable(true);
         setFocusable(true);
@@ -64,9 +61,8 @@ public class UnAddedTilesLayout extends FrameLayout {
         this.mIndicator = (ImageView) findViewById(C0015R$id.indicator);
         this.mHeader = findViewById(C0015R$id.header);
         this.mTitle = (TextView) findViewById(C0015R$id.others_title);
-        this.mAnim = Folme.useValue("setMarginTop");
+        IStateStyle useValue = Folme.useValue("setMarginTop");
         AnimConfig animConfig = new AnimConfig();
-        this.mMarginAnimConfig = animConfig;
         animConfig.setEase(EaseManager.getStyle(-2, 0.8f, 0.4f));
         animConfig.addListeners(new TransitionListener() {
             /* class com.android.systemui.controlcenter.phone.customize.UnAddedTilesLayout.AnonymousClass1 */
@@ -77,6 +73,7 @@ public class UnAddedTilesLayout extends FrameLayout {
                 UnAddedTilesLayout.this.setMarginTop((int) f);
             }
         });
+        this.mAnim = useValue.setConfig(animConfig, new FloatProperty[0]);
     }
 
     /* access modifiers changed from: protected */
@@ -97,7 +94,7 @@ public class UnAddedTilesLayout extends FrameLayout {
     }
 
     public void init() {
-        this.mAnim.to(this.MARGIN_VALUE_TAG, Float.valueOf(this.mMaxMarginTop), this.mMarginAnimConfig);
+        this.mAnim.to(Float.valueOf(this.mMaxMarginTop), new AnimConfig[0]);
     }
 
     public void updateResources() {
@@ -107,6 +104,10 @@ public class UnAddedTilesLayout extends FrameLayout {
 
     public void setAddedLayout(RecyclerView recyclerView) {
         this.mAddedLayout = recyclerView;
+    }
+
+    public void resetMargin() {
+        setMarginTop((int) this.mMaxMarginTop);
     }
 
     public void setMarginTop(int i, int i2) {
@@ -137,13 +138,13 @@ public class UnAddedTilesLayout extends FrameLayout {
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:8:0x002d, code lost:
-        if (r0 != 3) goto L_0x0106;
+    /* JADX WARNING: Code restructure failed: missing block: B:10:0x002d, code lost:
+        if (r0 != 3) goto L_0x00f4;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean onTouchEvent(android.view.MotionEvent r8) {
+    public boolean onTouchEvent(android.view.MotionEvent r7) {
         /*
-        // Method dump skipped, instructions count: 263
+        // Method dump skipped, instructions count: 245
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.customize.UnAddedTilesLayout.onTouchEvent(android.view.MotionEvent):boolean");
     }

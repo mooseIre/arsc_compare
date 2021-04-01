@@ -17,7 +17,7 @@ final class ControlsBindingControllerImpl$LoadSubscriber$onNext$1 implements Run
     }
 
     public final void run() {
-        if (!ControlsBindingControllerImpl.LoadSubscriber.access$isTerminated$p(this.this$0).get()) {
+        if (!this.this$0.isTerminated.get()) {
             this.this$0.getLoadedControls().add(this.$c);
             if (((long) this.this$0.getLoadedControls().size()) >= this.this$0.getRequestLimit()) {
                 ControlsBindingControllerImpl.LoadSubscriber loadSubscriber = this.this$0;

@@ -780,10 +780,10 @@ public class QSControlDetail extends FrameLayout {
             this.mDetailContainer.setAlpha(0.0f);
             IStateStyle state = Folme.useAt(this.mDetailContainer).state();
             AnimState animState = new AnimState("detail_container_alpha");
-            animState.add(ViewProperty.ALPHA, 1.0d);
-            animState.add(ViewProperty.ROTATION_X, 0.0d);
-            animState.add(ViewProperty.ROTATION_Y, 0.0d);
-            animState.add(ViewProperty.TRANSLATION_Z, 0.0d);
+            animState.add(ViewProperty.ALPHA, 1.0f, new long[0]);
+            animState.add(ViewProperty.ROTATION_X, 0, new long[0]);
+            animState.add(ViewProperty.ROTATION_Y, 0, new long[0]);
+            animState.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(0, 300.0f, 0.8f, 0.6666f);
             animConfig.addListeners(new TransitionListener() {
@@ -807,10 +807,10 @@ public class QSControlDetail extends FrameLayout {
         Folme.useAt(this.mDetailContainer).state().cancel();
         IStateStyle state2 = Folme.useAt(this.mDetailContainer).state();
         AnimState animState2 = new AnimState("detail_container_alpha");
-        animState2.add(ViewProperty.ALPHA, 0.0d);
-        animState2.add(ViewProperty.ROTATION_X, 0.0d);
-        animState2.add(ViewProperty.ROTATION_Y, 0.0d);
-        animState2.add(ViewProperty.TRANSLATION_Z, 0.0d);
+        animState2.add(ViewProperty.ALPHA, 0.0f, new long[0]);
+        animState2.add(ViewProperty.ROTATION_X, 0, new long[0]);
+        animState2.add(ViewProperty.ROTATION_Y, 0, new long[0]);
+        animState2.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
         AnimConfig animConfig2 = new AnimConfig();
         animConfig2.setEase(0, 300.0f, 0.8f, 0.6666f);
         animConfig2.addListeners(new TransitionListener() {

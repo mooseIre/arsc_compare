@@ -1,5 +1,6 @@
 package com.android.systemui.controlcenter.phone;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -40,9 +41,11 @@ import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
 import miuix.animation.property.ViewProperty;
-import miuix.animation.utils.EaseManager;
 import miuix.animation.utils.VelocityMonitor;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: ControlCenterPanelViewController.kt */
 public final class ControlCenterPanelViewController implements ConfigurationController.ConfigurationListener {
     private boolean animatingToCollapse;
     private final ControlPanelController ccController;
@@ -57,6 +60,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     private final NCSwitchController ncSwitchController;
     private int orientation = 1;
     private int paddingHorizontal;
+    @NotNull
     private final ControlCenterPanelAnimator panelAnimator = createPanelAnimator();
     private final ControlCenterPanelView panelView;
     private int screenHeight;
@@ -72,7 +76,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     private final VelocityMonitor velocityMonitor = new VelocityMonitor();
     private final VelocityTracker velocityTracker;
 
-    public ControlCenterPanelViewController(Context context2, ControlCenterPanelView controlCenterPanelView, ConfigurationController configurationController2, ControlPanelController controlPanelController, NCSwitchController nCSwitchController, StatusBarStateController statusBarStateController2) {
+    public ControlCenterPanelViewController(@NotNull Context context2, @NotNull ControlCenterPanelView controlCenterPanelView, @NotNull ConfigurationController configurationController2, @NotNull ControlPanelController controlPanelController, @NotNull NCSwitchController nCSwitchController, @NotNull StatusBarStateController statusBarStateController2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(controlCenterPanelView, "panelView");
         Intrinsics.checkParameterIsNotNull(configurationController2, "configurationController");
@@ -92,15 +96,16 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             /* class com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.AnonymousClass1 */
             final /* synthetic */ ControlCenterPanelViewController this$0;
 
+            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
-            public void onViewAttachedToWindow(View view) {
+            public void onViewAttachedToWindow(@Nullable View view) {
                 this.this$0.configurationController.addCallback(this.this$0);
             }
 
-            public void onViewDetachedFromWindow(View view) {
+            public void onViewDetachedFromWindow(@Nullable View view) {
                 this.this$0.configurationController.removeCallback(this.this$0);
             }
         });
@@ -115,6 +120,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.ccController.isSuperPowerMode();
     }
 
+    @NotNull
     public final ControlCenterPanelAnimator getPanelAnimator() {
         return this.panelAnimator;
     }
@@ -174,6 +180,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.transRatio;
     }
 
+    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
@@ -352,12 +359,14 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         this.isFsgLineEnabled = !MiuiSettings.Global.getBoolean(this.context.getContentResolver(), "hide_gesture_line");
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final boolean isExpandable() {
         return !isSuperPowerMode();
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-    public void onConfigChanged(Configuration configuration) {
+    public void onConfigChanged(@NotNull Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         this.panelView.updateResources();
         onOrientationChanged(configuration.orientation, false);
@@ -366,13 +375,14 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
     }
 
-    public final void onApplyWindowInsets(WindowInsets windowInsets) {
+    public final void onApplyWindowInsets(@NotNull WindowInsets windowInsets) {
         Intrinsics.checkParameterIsNotNull(windowInsets, "insets");
         this.stableInsetBottom = windowInsets.getStableInsetBottom();
         this.panelView.getContentContainer().getNavigationBarSpace().getLayoutParams().height = this.stableInsetBottom;
         updateFsgState();
     }
 
+    /* compiled from: ControlCenterPanelViewController.kt */
     public final class TouchHandler implements View.OnTouchListener {
         private Boolean eventAborted;
         private int initialScrollY;
@@ -388,11 +398,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         private boolean swipeCollapse;
         private float transY = -1.0f;
 
+        /* JADX WARN: Incorrect args count in method signature: ()V */
         public TouchHandler() {
-            ControlCenterPanelViewController.this = r1;
         }
 
-        public final Boolean dispatchTouchEvent(MotionEvent motionEvent) {
+        @Nullable
+        public final Boolean dispatchTouchEvent(@NotNull MotionEvent motionEvent) {
             ControlPanelWindowView controlPanelWindowView;
             Boolean bool = Boolean.TRUE;
             Boolean bool2 = Boolean.FALSE;
@@ -462,15 +473,17 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         /* JADX WARNING: Code restructure failed: missing block: B:18:0x0049, code lost:
             if (r4 != 3) goto L_0x013a;
          */
+        @org.jetbrains.annotations.Nullable
         /* Code decompiled incorrectly, please refer to instructions dump. */
-        public final java.lang.Boolean onInterceptTouchEvent(android.view.MotionEvent r9) {
+        public final java.lang.Boolean onInterceptTouchEvent(@org.jetbrains.annotations.NotNull android.view.MotionEvent r9) {
             /*
             // Method dump skipped, instructions count: 315
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.TouchHandler.onInterceptTouchEvent(android.view.MotionEvent):java.lang.Boolean");
         }
 
-        public boolean onTouch(View view, MotionEvent motionEvent) {
+        @SuppressLint({"ClickableViewAccessibility"})
+        public boolean onTouch(@NotNull View view, @NotNull MotionEvent motionEvent) {
             Intrinsics.checkParameterIsNotNull(view, "v");
             Intrinsics.checkParameterIsNotNull(motionEvent, "event");
             boolean z = ControlCenterPanelViewController.this.panelView.isExpanded() && !ControlCenterPanelViewController.this.ccController.isNCSwitching();
@@ -582,6 +595,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void calculateTransitionValues() {
         int height = this.panelView.getBigTileLayout().getHeight();
         ViewGroup.LayoutParams layoutParams = this.panelView.getBigTileLayout().getLayoutParams();
@@ -606,6 +621,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         throw new TypeCastException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void toExpandAnimation() {
         IStateStyle iStateStyle = this.expandTransAnim;
         if (iStateStyle != null) {
@@ -614,8 +631,9 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             animState.add(ViewProperty.HEIGHT, this.panelView.getTileContainer().getHeight(), new long[0]);
             AnimState animState2 = new AnimState("expand_trans");
             animState2.add(ViewProperty.HEIGHT, this.tileLayoutMinHeight + this.expandThreshold, new long[0]);
-            AnimConfig animConfig = new AnimConfig();
-            animConfig.setSpecial(ViewProperty.HEIGHT, EaseManager.getStyle(-2, 0.85f, 0.35f), this.velocityMonitor.getVelocity(0));
+            AnimConfig animConfig = new AnimConfig(ViewProperty.HEIGHT);
+            animConfig.setFromSpeed(this.velocityMonitor.getVelocity(0));
+            animConfig.setEase(-2, 0.85f, 0.35f);
             animConfig.addListeners(new ControlCenterPanelViewController$toExpandAnimation$animConfig$1(this));
             IStateStyle iStateStyle2 = this.expandTransAnim;
             if (iStateStyle2 != null) {
@@ -629,16 +647,19 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         throw null;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void toCollapseAnimation() {
         IStateStyle iStateStyle = this.expandTransAnim;
         if (iStateStyle != null) {
             iStateStyle.cancel(ViewProperty.HEIGHT);
-            AnimState animState = new AnimState("collapse_trans");
+            AnimState animState = new AnimState("expand_trans");
             animState.add(ViewProperty.HEIGHT, this.panelView.getTileContainer().getHeight(), new long[0]);
-            AnimState animState2 = new AnimState("collapse_trans");
+            AnimState animState2 = new AnimState("expand_trans");
             animState2.add(ViewProperty.HEIGHT, this.tileLayoutMinHeight, new long[0]);
-            AnimConfig animConfig = new AnimConfig();
-            animConfig.setSpecial(ViewProperty.HEIGHT, EaseManager.getStyle(-2, 1.0f, 0.35f), this.velocityMonitor.getVelocity(0));
+            AnimConfig animConfig = new AnimConfig(ViewProperty.HEIGHT);
+            animConfig.setFromSpeed(this.velocityMonitor.getVelocity(0));
+            animConfig.setEase(-2, 1.0f, 0.35f);
             animConfig.addListeners(new ControlCenterPanelViewController$toCollapseAnimation$animConfig$1(this));
             IStateStyle iStateStyle2 = this.expandTransAnim;
             if (iStateStyle2 != null) {
@@ -652,6 +673,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         throw null;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void updateTransRatioByTouch(float f, float f2) {
         float f3 = ((this.tileLayoutLastHeight - ((float) this.tileLayoutMinHeight)) + f) / ((float) this.expandThreshold);
         if (f3 < 0.0f) {

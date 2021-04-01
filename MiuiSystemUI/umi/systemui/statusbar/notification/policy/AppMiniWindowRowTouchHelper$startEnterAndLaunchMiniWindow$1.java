@@ -4,9 +4,8 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
-/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-public final class AppMiniWindowRowTouchHelper$startEnterAndLaunchMiniWindow$1 extends Lambda implements Function0<Unit> {
+final class AppMiniWindowRowTouchHelper$startEnterAndLaunchMiniWindow$1 extends Lambda implements Function0<Unit> {
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
