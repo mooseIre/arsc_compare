@@ -23,7 +23,6 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.CoroutineScopeKt;
-import kotlinx.coroutines.Dispatchers;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +33,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
     private boolean mBinding;
     private final Context mContext;
     private final ServiceConnection mServiceConnection;
-    private final CoroutineScope mUiScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getMain());
+    private final CoroutineScope mUiScope = CoroutineScopeKt.MainScope();
     private final KeyguardUpdateMonitor mUpdateMonitor = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class));
     private final MiuiWallpaperClient$mWakefulnessLifecycle$1 mWakefulnessLifecycle = new MiuiWallpaperClient$mWakefulnessLifecycle$1(this);
     private IMiuiKeyguardWallpaperService mWallpaperService;

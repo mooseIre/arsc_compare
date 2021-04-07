@@ -332,7 +332,6 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             if (!this.mChargeAnimationShowing) {
                 prepareChargeAnimation(i);
                 AnalyticsHelper.getInstance(this.mContext).recordChargeAnimation(this.mWireState);
-                this.mUpdateMonitorInjector.handleChargeAnimationShowingChanged(true);
                 this.mChargeAnimationShowing = true;
                 if (this.mIsFoldChargeVideo) {
                     registerAngleSensorListener();
@@ -357,7 +356,6 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
 
     public void dismissChargeAnimation(String str) {
         Log.i("MiuiChargeController", "dismissChargeAnimation: " + str);
-        this.mUpdateMonitorInjector.handleChargeAnimationShowingChanged(false);
         if (shouldShowChargeAnim() && this.mChargeAnimationShowing) {
             if (this.mBatteryStatus.isPluggedIn()) {
                 this.mKeyguardIndicationController.updatePowerIndication(false);
@@ -597,7 +595,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             if (ChargeUtils.supportWaveChargeAnimation()) {
                 prepareChargeAnimation(this.mWireState);
             }
-            dismissChargeAnimation("screen off");
+            dismissChargeAnimation("dismiss_for_screen_off");
         }
         this.mHandler.removeCallbacks(this.mScreenOffRunnable);
     }

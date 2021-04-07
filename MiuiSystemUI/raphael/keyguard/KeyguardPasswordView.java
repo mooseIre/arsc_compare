@@ -383,6 +383,11 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             if (!Build.IS_INTERNATIONAL_BUILD) {
                 this.mEmptySpace.setVisibility(0);
             }
+        } else if (Build.IS_INTERNATIONAL_BUILD) {
+            LinearLayout.LayoutParams layoutParams8 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
+            layoutParams8.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_em_btm_height);
+            layoutParams8.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_em_btm_height) / 10;
+            this.mEmergencyButton.setLayoutParams(layoutParams8);
         }
     }
 }

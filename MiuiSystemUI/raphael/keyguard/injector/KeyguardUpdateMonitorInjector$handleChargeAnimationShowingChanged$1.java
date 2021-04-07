@@ -11,11 +11,13 @@ import org.jetbrains.annotations.NotNull;
 /* compiled from: KeyguardUpdateMonitorInjector.kt */
 public final class KeyguardUpdateMonitorInjector$handleChargeAnimationShowingChanged$1 extends Lambda implements Function1<MiuiKeyguardUpdateMonitorCallback, Unit> {
     final /* synthetic */ boolean $chargeAnimationShowing;
+    final /* synthetic */ boolean $dismissForTimeoutOrScreenOff;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    KeyguardUpdateMonitorInjector$handleChargeAnimationShowingChanged$1(boolean z) {
+    KeyguardUpdateMonitorInjector$handleChargeAnimationShowingChanged$1(boolean z, boolean z2) {
         super(1);
         this.$chargeAnimationShowing = z;
+        this.$dismissForTimeoutOrScreenOff = z2;
     }
 
     /* Return type fixed from 'java.lang.Object' to match base method */
@@ -28,6 +30,6 @@ public final class KeyguardUpdateMonitorInjector$handleChargeAnimationShowingCha
 
     public final void invoke(@NotNull MiuiKeyguardUpdateMonitorCallback miuiKeyguardUpdateMonitorCallback) {
         Intrinsics.checkParameterIsNotNull(miuiKeyguardUpdateMonitorCallback, "callback");
-        miuiKeyguardUpdateMonitorCallback.onChargeAnimationShowingChanged(this.$chargeAnimationShowing);
+        miuiKeyguardUpdateMonitorCallback.onChargeAnimationShowingChanged(this.$chargeAnimationShowing, this.$dismissForTimeoutOrScreenOff);
     }
 }

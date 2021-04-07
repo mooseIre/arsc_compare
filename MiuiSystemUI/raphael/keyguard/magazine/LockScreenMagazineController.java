@@ -127,12 +127,12 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
         @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onMagazineResourceInited() {
-            Log.d("LockScreenMagazineController", "completeMagazineResInitialization");
+            Log.d("LockScreenMagazineController", "refresh MagazineInfo after MagazineRes Initialization complete");
             LockScreenMagazineController.this.updateLockScreenMagazineAvailable();
             LockScreenMagazineController.this.mLockScreenMagazinePre.updateViews();
             LockScreenMagazineController.this.mLockScreenMagazinePre.initSettingButton();
-            LockScreenMagazineController.this.mKeyguardBottomArea.updateLeftAffordance();
             ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView().inflateLeftView();
+            LockScreenMagazineController.this.mKeyguardBottomArea.updateLeftAffordance();
             LockScreenMagazineController.this.reset();
         }
 
@@ -276,7 +276,9 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mMagazineWallpaperAuthority = WallpaperAuthorityUtils.getWallpaperAuthority();
         this.mKeyguardSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
         this.mClockContainerView = ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView();
-        this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
+        this.mUpdateMonitor = keyguardUpdateMonitor;
+        keyguardUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mUpdateMonitorInjector = (KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class);
         this.mSettingsObserver = (SettingsObserver) Dependency.get(SettingsObserver.class);
         this.mSupportGestureWakeup = MiuiKeyguardUtils.isSupportGestureWakeup();
@@ -305,7 +307,6 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void onAttachedToWindow() {
         registerBroadcastReceivers();
-        this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mSettingsObserver.addCallbackForType(this, 1, "pick_up_gesture_wakeup_mode");
         this.mSettingsObserver.addCallback(this, 1, new String[0]);
         this.mSettingsObserver.addCallback(this, "lock_wallpaper_provider_authority");
@@ -314,7 +315,6 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void onDetachedFromWindow() {
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
-        this.mUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
         this.mSettingsObserver.removeCallback(this);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
     }
@@ -401,6 +401,18 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         if (lockScreenMagazinePreView != null) {
             lockScreenMagazinePreView.refreshWallpaperInfo(this.mMainRemoteView, this.mFullScreenRemoteView);
         }
+        this.mClockContainerView.post(new Runnable() {
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$UhljPLpJ4Msw1GYTxusDmAfOVvM */
+
+            public final void run() {
+                LockScreenMagazineController.this.lambda$updateLockScreenMagazineWallpaperInfo$1$LockScreenMagazineController();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateLockScreenMagazineWallpaperInfo$1 */
+    public /* synthetic */ void lambda$updateLockScreenMagazineWallpaperInfo$1$LockScreenMagazineController() {
         this.mClockContainerView.updateClockMagazineInfo();
     }
 
@@ -468,10 +480,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mFullScreenAnimator = ofFloat;
         ofFloat.setInterpolator(z ? Ease$Cubic.easeInOut : Ease$Quint.easeOut);
         this.mFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$6vmQZdkp64kAXihLRJ8ifD0m5h0 */
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$nfbY8hY4lnY8Zw7xypiR4c1iHo */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LockScreenMagazineController.this.lambda$startSwitchAnimator$1$LockScreenMagazineController(valueAnimator);
+                LockScreenMagazineController.this.lambda$startSwitchAnimator$2$LockScreenMagazineController(valueAnimator);
             }
         });
         float[] fArr2 = new float[2];
@@ -484,10 +496,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mNonFullScreenAnimator = ofFloat2;
         ofFloat2.setInterpolator(z ? Ease$Quint.easeOut : Ease$Cubic.easeInOut);
         this.mNonFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$nfbY8hY4lnY8Zw7xypiR4c1iHo */
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$c6JLNsSlAyuh4XtI1ZNxXkI59tA */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LockScreenMagazineController.this.lambda$startSwitchAnimator$2$LockScreenMagazineController(valueAnimator);
+                LockScreenMagazineController.this.lambda$startSwitchAnimator$3$LockScreenMagazineController(valueAnimator);
             }
         });
         this.mSwitchAnimator.setDuration(500L);
@@ -530,14 +542,14 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startSwitchAnimator$1 */
-    public /* synthetic */ void lambda$startSwitchAnimator$1$LockScreenMagazineController(ValueAnimator valueAnimator) {
+    /* renamed from: lambda$startSwitchAnimator$2 */
+    public /* synthetic */ void lambda$startSwitchAnimator$2$LockScreenMagazineController(ValueAnimator valueAnimator) {
         this.mLockScreenMagazinePre.setFullScreenLayoutAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startSwitchAnimator$2 */
-    public /* synthetic */ void lambda$startSwitchAnimator$2$LockScreenMagazineController(ValueAnimator valueAnimator) {
+    /* renamed from: lambda$startSwitchAnimator$3 */
+    public /* synthetic */ void lambda$startSwitchAnimator$3$LockScreenMagazineController(ValueAnimator valueAnimator) {
         setViewsAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
@@ -729,6 +741,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
                 /* access modifiers changed from: protected */
                 public void onPostExecute(MagazineResourceEntity magazineResourceEntity) {
+                    Log.d("LockScreenMagazineController", "initLockScreenMagazinePreRes parse complete");
                     LockScreenMagazineController.this.mPreMainEntryResDarkIconName = magazineResourceEntity.mPreMainEntryResDarkIconName;
                     LockScreenMagazineController.this.mPreMainEntryResLightIconName = magazineResourceEntity.mPreMainEntryResLightIconName;
                     LockScreenMagazineController.this.mPreTransToLeftScreenDrawableResName = magazineResourceEntity.mPreTransToLeftScreenDrawableResName;

@@ -213,11 +213,24 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     }
 
     private void dealCarrierNameForDisableCard(String[] strArr) {
-        int simSlotIndex;
+        boolean z;
         if (strArr != null) {
-            for (SubscriptionInfo subscriptionInfo : this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList()) {
-                if (!subscriptionInfo.areUiccApplicationsEnabled() && (simSlotIndex = subscriptionInfo.getSimSlotIndex()) >= 0 && simSlotIndex < strArr.length) {
-                    strArr[simSlotIndex] = "";
+            List completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
+            for (int i = 0; i < strArr.length; i++) {
+                Iterator it = completeActiveSubscriptionInfoList.iterator();
+                while (true) {
+                    if (!it.hasNext()) {
+                        z = false;
+                        break;
+                    }
+                    SubscriptionInfo subscriptionInfo = (SubscriptionInfo) it.next();
+                    if (i == subscriptionInfo.getSimSlotIndex() && subscriptionInfo.areUiccApplicationsEnabled()) {
+                        z = true;
+                        break;
+                    }
+                }
+                if (!z) {
+                    strArr[i] = "";
                 }
             }
         }

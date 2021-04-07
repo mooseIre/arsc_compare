@@ -121,10 +121,10 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         forEachCallback(KeyguardUpdateMonitorInjector$handleLockWallpaperProviderChanged$1.INSTANCE);
     }
 
-    public final void handleChargeAnimationShowingChanged(boolean z) {
+    public final void handleChargeAnimationShowingChanged(boolean z, boolean z2) {
         if (this.mChargeAnimationShowing != z) {
             this.mChargeAnimationShowing = z;
-            forEachCallback(new KeyguardUpdateMonitorInjector$handleChargeAnimationShowingChanged$1(z));
+            forEachCallback(new KeyguardUpdateMonitorInjector$handleChargeAnimationShowingChanged$1(z, z2));
         }
     }
 
@@ -304,6 +304,11 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
                 handleSimLockedStateChange(true);
             }
         }
+    }
+
+    @NotNull
+    public final String getWakeupReason() {
+        return this.mWakeupReason;
     }
 
     public final void handleStartedWakingUpWithReason(@NotNull String str) {
