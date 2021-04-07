@@ -156,6 +156,7 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     }
 
     private void stopSwipeAnimation() {
+        this.mFsGestureDemoSwipeView.cancelAnimation();
         this.handler.removeCallbacks(this.mSwipeAnimationRunnable);
     }
 

@@ -39,6 +39,12 @@ public final class NotificationRankingManager$rankingComparator$1<T> implements 
         boolean isRowHeadsUp2 = notificationEntry2.isRowHeadsUp();
         boolean unused = this.this$0.isHighPriority(notificationEntry);
         boolean unused2 = this.this$0.isHighPriority(notificationEntry2);
+        ExpandedNotification sbn3 = notificationEntry.getSbn();
+        Intrinsics.checkExpressionValueIsNotNull(sbn3, "a.sbn");
+        boolean isImportant = sbn3.isImportant();
+        ExpandedNotification sbn4 = notificationEntry2.getSbn();
+        Intrinsics.checkExpressionValueIsNotNull(sbn4, "b.sbn");
+        boolean isImportant2 = sbn4.isImportant();
         if (isRowHeadsUp != isRowHeadsUp2) {
             if (isRowHeadsUp) {
                 return -1;
@@ -53,7 +59,11 @@ public final class NotificationRankingManager$rankingComparator$1<T> implements 
             } else if ((this.this$0.getUsePeopleFiltering()) && i != i2) {
                 return this.this$0.peopleNotificationIdentifier.compareTo(i, i2);
             } else {
-                if (z != z2) {
+                if (isImportant != isImportant2) {
+                    if (isImportant) {
+                        return -1;
+                    }
+                } else if (z != z2) {
                     if (z) {
                         return -1;
                     }

@@ -16,6 +16,8 @@ public final class MiuiNotificationPanelViewController$onStartedGoingToSleep$1 e
 
     public void onAnimationEnd(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animator");
-        this.this$0.mKeyguardPanelViewInjector.setVisibility(4);
+        if (this.this$0.wakefulnessLifecycle.getWakefulness() == 3 || this.this$0.wakefulnessLifecycle.getWakefulness() == 0) {
+            this.this$0.mKeyguardPanelViewInjector.setVisibility(4);
+        }
     }
 }

@@ -65,6 +65,10 @@ public class FiveGControllerImpl {
         return this.mFiveGServiceStates[i].isConnectedOnSaMode();
     }
 
+    public boolean isConnectedOnNsaMode(int i) {
+        return this.mFiveGServiceStates[i].isConnectedOnNsaMode();
+    }
+
     public int getFiveGDrawable(int i) {
         if (this.mFiveGServiceStates[i].getIconGroup() == TelephonyIcons.FIVE_G_KR_ON) {
             return C0013R$drawable.signal_5g_on;

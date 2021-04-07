@@ -669,6 +669,7 @@ public final class R {
         public static final int hdcp_checking_summaries;
         public static final int hdcp_checking_titles;
         public static final int hdcp_checking_values;
+        public static final int important_section_whitelist;
         public static final int keep_screen_on_when_large_area_touch;
         public static final int kg_wrong_puk_code_message_list;
         public static final int locale_carrier_names;
@@ -3999,6 +4000,20 @@ public final class R {
         public static final int mixed_password_emergency_call_text_size;
         public static final int mobile_data_icon_start_padding;
         public static final int mobile_signal_group_end_padding;
+        public static final int modal_dialog_button_height;
+        public static final int modal_dialog_button_margin_bottom;
+        public static final int modal_dialog_button_margin_center;
+        public static final int modal_dialog_button_margin_left_right;
+        public static final int modal_dialog_button_margin_top_list;
+        public static final int modal_dialog_button_margin_top_msg;
+        public static final int modal_dialog_d_margin_top;
+        public static final int modal_dialog_icon_margin_left;
+        public static final int modal_dialog_icon_margin_top;
+        public static final int modal_dialog_icon_size;
+        public static final int modal_dialog_list_margin_top;
+        public static final int modal_dialog_margin_left_right;
+        public static final int modal_dialog_message_margin_right;
+        public static final int modal_dialog_message_margin_top;
         public static final int moon_size;
         public static final int mr_cast_group_volume_seekbar_height;
         public static final int mr_cast_meta_art_size;
@@ -7110,7 +7125,6 @@ public final class R {
         public static final int ic_sysbar_bg_land_darkmode_cts;
         public static final int ic_sysbar_docked;
         public static final int ic_sysbar_docked_dark;
-        public static final int ic_sysbar_help;
         public static final int ic_sysbar_help_darkmode;
         public static final int ic_sysbar_highlight;
         public static final int ic_sysbar_highlight_land;
@@ -8918,6 +8932,15 @@ public final class R {
         public static final int mobile_volte;
         public static final int mobile_volte_no_service;
         public static final int mobile_vowifi;
+        public static final int modal_dialog_button_barrier;
+        public static final int modal_dialog_button_container;
+        public static final int modal_dialog_button_space;
+        public static final int modal_dialog_icon;
+        public static final int modal_dialog_list;
+        public static final int modal_dialog_message;
+        public static final int modal_dialog_negative_button;
+        public static final int modal_dialog_positive_button;
+        public static final int modal_dialog_title;
         public static final int modal_menu_icon;
         public static final int modal_menu_title;
         public static final int modal_window_view;
@@ -10134,6 +10157,7 @@ public final class R {
         public static final int miui_keyguard_status_bar;
         public static final int miui_keyguard_wireless_charge_slowly;
         public static final int miui_modal_window;
+        public static final int miui_notification_modal_dialog;
         public static final int miui_notification_modal_menu;
         public static final int miui_notification_template_material_base;
         public static final int miui_notification_template_material_big_base;
@@ -11070,6 +11094,7 @@ public final class R {
         public static final int character_counter_pattern;
         public static final int charge_length_format;
         public static final int chip_text;
+        public static final int choose_clock_dual_clock_hint_text;
         public static final int choose_clock_panel_title;
         public static final int choose_clock_third_theme_hint_text;
         public static final int choose_clock_title_left_top;
@@ -12379,6 +12404,7 @@ public final class R {
         public static final int speed_label_very_slow;
         public static final int ssl_ca_cert_warning;
         public static final int standby_bucket_summary;
+        public static final int start_camera_error_try_again;
         public static final int start_dreams;
         public static final int status_bar;
         public static final int status_bar_airplane;

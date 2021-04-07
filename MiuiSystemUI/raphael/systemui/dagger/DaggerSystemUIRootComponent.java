@@ -2104,7 +2104,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.driveModeTileProvider = DriveModeTile_Factory.create(this.qSTileHostProvider, create6);
         this.editTileProvider = EditTile_Factory.create(this.qSTileHostProvider);
         this.miuiCellularTileProvider = MiuiCellularTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider);
-        this.miuiHotspotTileProvider = MiuiHotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider);
+        this.miuiHotspotTileProvider = MiuiHotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider, this.networkControllerImplProvider);
         this.muteTileProvider = MuteTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
         this.nightModeTileProvider = NightModeTile_Factory.create(this.qSTileHostProvider);
         PaperModeControllerImpl_Factory create7 = PaperModeControllerImpl_Factory.create(this.provideContextProvider, this.provideBgLooperProvider, this.providesBroadcastDispatcherProvider);
@@ -2116,13 +2116,13 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.powerModeTileProvider = PowerModeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverExtremeTileProvider = PowerSaverExtremeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverTileProvider = PowerSaverTile_Factory.create(this.qSTileHostProvider);
-        this.quietModeTileProvider = QuietModeTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
+        this.quietModeTileProvider = QuietModeTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider, this.provideSharePreferencesProvider);
         this.screenButtonTileProvider = ScreenButtonTile_Factory.create(this.qSTileHostProvider);
         this.screenLockTileProvider = ScreenLockTile_Factory.create(this.qSTileHostProvider);
         this.screenShotTileProvider = ScreenShotTile_Factory.create(this.qSTileHostProvider);
         this.syncTileProvider = SyncTile_Factory.create(this.qSTileHostProvider);
         this.vibrateTileProvider = VibrateTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
-        MiuiAirplaneModeTile_Factory create = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider);
+        MiuiAirplaneModeTile_Factory create = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider);
         this.miuiAirplaneModeTileProvider = create;
         Provider<QSFactoryInjectorImpl> provider = DoubleCheck.provider(QSFactoryInjectorImpl_Factory.create(this.qSTileHostProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, create, this.locationTileProvider));
         this.qSFactoryInjectorImplProvider = provider;
@@ -2236,7 +2236,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.appIconsManagerProvider = DoubleCheck.provider(AppIconsManager_Factory.create(this.provideContextProvider));
         Provider<NotificationPanelStat> provider16 = DoubleCheck.provider(NotificationPanelStat_Factory.create(this.provideContextProvider, this.eventTrackerProvider));
         this.notificationPanelStatProvider = provider16;
-        this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, provider16));
+        this.notificationStatProvider = DoubleCheck.provider(NotificationStat_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.statusBarStateControllerImplProvider, this.keyguardStateControllerImplProvider, this.eventTrackerProvider, provider16, this.notificationSettingsManagerProvider));
         this.usbNotificationControllerProvider = DoubleCheck.provider(UsbNotificationController_Factory.create(this.provideContextProvider));
         this.keyguardNotificationControllerProvider = DoubleCheck.provider(KeyguardNotificationController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.keyguardStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
         this.notificationBadgeControllerProvider = DoubleCheck.provider(NotificationBadgeController_Factory.create(this.provideContextProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.providesBroadcastDispatcherProvider));

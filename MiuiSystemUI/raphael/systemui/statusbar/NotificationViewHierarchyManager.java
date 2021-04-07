@@ -274,14 +274,19 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                 stack.push((ExpandableNotificationRow) containerChildAt);
             }
         }
+        ExpandableNotificationRow expandableNotificationRow = null;
         int i2 = 0;
         while (!stack.isEmpty()) {
-            ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) stack.pop();
-            NotificationEntry entry = expandableNotificationRow.getEntry();
+            ExpandableNotificationRow expandableNotificationRow2 = (ExpandableNotificationRow) stack.pop();
+            NotificationEntry entry = expandableNotificationRow2.getEntry();
             boolean isChildInGroupWithSummary = this.mGroupManager.isChildInGroupWithSummary(entry.getSbn());
-            expandableNotificationRow.setOnKeyguard(z);
+            expandableNotificationRow2.setOnKeyguard(z);
             if (!z) {
-                expandableNotificationRow.setSystemExpanded(this.mAlwaysExpandNonGroupedNotification || (i2 == 0 && !isChildInGroupWithSummary && !expandableNotificationRow.isLowPriority()));
+                expandableNotificationRow2.setSystemExpanded(this.mAlwaysExpandNonGroupedNotification || (i2 == 0 && !isChildInGroupWithSummary && !expandableNotificationRow2.isLowPriority()));
+                if (expandableNotificationRow != null) {
+                    expandableNotificationRow2.setSystemExpanded(expandableNotificationRow.getEntry().getBucket() != expandableNotificationRow2.getEntry().getBucket() && !this.mGroupManager.isChildInGroupWithSummary(expandableNotificationRow2.getEntry().getSbn()));
+                }
+                expandableNotificationRow = expandableNotificationRow2;
             }
             int userId = entry.getSbn().getUserId();
             boolean z2 = this.mGroupManager.isSummaryOfSuppressedGroup(entry.getSbn()) && !entry.isRowRemoved();
@@ -303,14 +308,14 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                     i2++;
                 }
             }
-            if (expandableNotificationRow.isSummaryWithChildren()) {
-                List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow.getAttachedChildren();
+            if (expandableNotificationRow2.isSummaryWithChildren()) {
+                List<ExpandableNotificationRow> attachedChildren = expandableNotificationRow2.getAttachedChildren();
                 for (int size = attachedChildren.size() - 1; size >= 0; size--) {
                     stack.push(attachedChildren.get(size));
                 }
             }
-            expandableNotificationRow.showAppOpsIcons(entry.mActiveAppOps);
-            expandableNotificationRow.setLastAudiblyAlertedMs(entry.getLastAudiblyAlertedMs());
+            expandableNotificationRow2.showAppOpsIcons(entry.mActiveAppOps);
+            expandableNotificationRow2.setLastAudiblyAlertedMs(entry.getLastAudiblyAlertedMs());
         }
         Trace.beginSection("NotificationPresenter#onUpdateRowStates");
         this.mPresenter.onUpdateRowStates();

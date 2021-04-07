@@ -191,11 +191,11 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         float f = (float) 2;
-        boolean isTransparentMode = NotificationContentInflaterInjector.isTransparentMode();
+        boolean isTransparentAble = NotificationContentInflaterInjector.isTransparentAble();
         ArrayList<ExpandableView> arrayList = stackScrollAlgorithmState.visibleChildren;
         Intrinsics.checkExpressionValueIsNotNull(arrayList, "algorithmState.visibleChildren");
         for (T t : arrayList) {
-            if (!isTransparentMode && (t instanceof ExpandableNotificationRow)) {
+            if (!isTransparentAble && (t instanceof ExpandableNotificationRow)) {
                 T t2 = t;
                 if (t2.isPinned()) {
                     f = updateChildZValue(t2, f, ambientState);

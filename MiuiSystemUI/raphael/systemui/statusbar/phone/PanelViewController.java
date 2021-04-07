@@ -72,7 +72,6 @@ public abstract class PanelViewController {
     private float mInitialTouchX;
     private float mInitialTouchY;
     private boolean mInstantExpanding;
-    protected boolean mIsDefaultTheme = true;
     private boolean mJustPeeked;
     protected KeyguardBottomAreaView mKeyguardBottomArea;
     protected final KeyguardStateController mKeyguardStateController;
@@ -949,13 +948,13 @@ public abstract class PanelViewController {
         public TouchHandler() {
         }
 
-        /* JADX WARNING: Code restructure failed: missing block: B:60:0x014b, code lost:
-            if (r3.mHintAnimationRunning == false) goto L_0x0155;
+        /* JADX WARNING: Code restructure failed: missing block: B:59:0x0147, code lost:
+            if (r3.mHintAnimationRunning == false) goto L_0x0151;
          */
         /* Code decompiled incorrectly, please refer to instructions dump. */
         public boolean onInterceptTouchEvent(android.view.MotionEvent r9) {
             /*
-            // Method dump skipped, instructions count: 429
+            // Method dump skipped, instructions count: 425
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.PanelViewController.TouchHandler.onInterceptTouchEvent(android.view.MotionEvent):boolean");
         }

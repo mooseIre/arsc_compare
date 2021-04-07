@@ -73,6 +73,12 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.drawerImg.getParent());
     }
 
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        super.onDestroy();
+        this.fsGestureDemoSwipeView.cancelAnimation();
+    }
+
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void startSwipeViewAnimation(final int i) {

@@ -1,7 +1,6 @@
 package com.android.systemui.qs;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,7 +11,6 @@ import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.tuner.TunerService;
-import java.io.File;
 
 public abstract class MiuiHeaderView extends RelativeLayout implements View.OnClickListener, TunerService.Tunable {
     private ActivityStarter mActStarter;
@@ -43,7 +41,6 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        Typeface typeface;
         super.onFinishInflate();
         MiuiClock miuiClock = (MiuiClock) findViewById(C0015R$id.date_time);
         this.mDateView = miuiClock;
@@ -51,12 +48,6 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         MiuiClock miuiClock2 = (MiuiClock) findViewById(C0015R$id.big_time);
         this.mClock = miuiClock2;
         miuiClock2.setOnClickListener(this);
-        if (new File("system/fonts/MitypeVF.ttf").exists()) {
-            typeface = Typeface.create("mitype-regular", 0);
-        } else {
-            typeface = Typeface.createFromAsset(getContext().getAssets(), "fonts/Mitype2018-50.otf");
-        }
-        this.mClock.setTypeface(typeface);
         ImageView imageView = (ImageView) findViewById(C0015R$id.notification_shade_shortcut);
         this.mShortcut = imageView;
         imageView.setOnClickListener(this);

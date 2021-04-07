@@ -302,7 +302,7 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
             if (!NotificationUtils.useNewInterruptionModel(this.mContext) || !hideSilentNotificationsOnLockscreen()) {
                 z = !notificationEntry.getRanking().isAmbient();
             } else {
-                z = notificationEntry.getBucket() == 1 || (notificationEntry.getBucket() != 6 && notificationEntry.getImportance() >= 3);
+                z = notificationEntry.getBucket() == 1 || (notificationEntry.getBucket() != 7 && notificationEntry.getImportance() >= 3);
             }
             if (!this.mShowLockscreenNotifications || !z) {
                 return false;

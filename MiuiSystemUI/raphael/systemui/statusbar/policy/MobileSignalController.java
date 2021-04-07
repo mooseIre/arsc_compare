@@ -58,6 +58,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     @VisibleForTesting
     boolean mInflateSignalStrengths = false;
     private boolean mIsLast5GConnected = false;
+    private boolean mIsLastNsaConnected = false;
+    private boolean mIsLastSaConnected = false;
     private boolean mIsSupportDoubleFiveG;
     private PhoneConstants.DataState mMMSDataState = PhoneConstants.DataState.DISCONNECTED;
     protected String[] mMiuiMobileTypeNameArray;
@@ -137,7 +139,8 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         this.mSupportDualVolte = telephonyManager2.isDualVolteSupported();
         int simSlotIndex = subscriptionInfo.getSimSlotIndex();
         this.mSlotId = simSlotIndex;
-        boolean isVolteOn = this.mNetworkController.isVolteOn(simSlotIndex);
+        ((MobileState) this.mCurrentState).phoneType = this.mMiuiTelephonyManager.getPhoneTypeForSlot(simSlotIndex);
+        boolean isVolteOn = this.mNetworkController.isVolteOn(this.mSlotId);
         ((MobileState) this.mCurrentState).volte = isVolteOn;
         ((MobileState) this.mLastState).volte = isVolteOn;
         boolean isVowifiOn = this.mNetworkController.isVowifiOn(this.mSlotId);
@@ -749,13 +752,27 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     }
 
     private void update5GStatusDatabase() {
-        if (((MobileState) this.mCurrentState).fiveGConnected != this.mIsLast5GConnected) {
-            String str = this.mTag;
-            Log.d(str, "mCurrentState.fiveGConnected:" + ((MobileState) this.mCurrentState).fiveGConnected + ", mSlotId:" + this.mSlotId);
+        if (((MobileState) this.mCurrentState).fiveGConnected != this.mIsLast5GConnected || this.mFiveGController.isConnectedOnSaMode(this.mSlotId) != this.mIsLastSaConnected) {
             this.mIsLast5GConnected = ((MobileState) this.mCurrentState).fiveGConnected;
+            String str = this.mTag;
+            Log.d(str, "update5GStatusDatabase mIsLast5GConnected: " + this.mIsLast5GConnected + ", mSlotId: " + this.mSlotId);
             if (miui.telephony.SubscriptionManager.isValidSlotId(this.mSlotId)) {
-                ContentResolver contentResolver = this.mContext.getContentResolver();
-                Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, ((MobileState) this.mCurrentState).fiveGConnected ? 1 : 0);
+                this.mIsLastSaConnected = this.mFiveGController.isConnectedOnSaMode(this.mSlotId);
+                this.mIsLastNsaConnected = this.mFiveGController.isConnectedOnNsaMode(this.mSlotId);
+                if (this.mIsLast5GConnected) {
+                    String str2 = this.mTag;
+                    Log.d(str2, "update5GStatusDatabase mIsLastSaConnected: " + this.mIsLastSaConnected + " ,mIsLastNsaConnected: " + this.mIsLastNsaConnected + ", mSlotId: " + this.mSlotId);
+                    if (this.mIsLastSaConnected) {
+                        ContentResolver contentResolver = this.mContext.getContentResolver();
+                        Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, 2);
+                    } else if (this.mIsLastNsaConnected) {
+                        ContentResolver contentResolver2 = this.mContext.getContentResolver();
+                        Settings.Global.putInt(contentResolver2, "5g_icon_group_mode" + this.mSlotId, 1);
+                    }
+                } else {
+                    ContentResolver contentResolver3 = this.mContext.getContentResolver();
+                    Settings.Global.putInt(contentResolver3, "5g_icon_group_mode" + this.mSlotId, 0);
+                }
             }
         }
     }
@@ -1265,7 +1282,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         int[] intArray = resources.getIntArray(C0008R$array.data_type_name_default_key);
         String[] stringArray = resources.getStringArray(C0008R$array.data_type_name_default_value);
         for (int i = 0; i < intArray.length; i++) {
-            strArr[intArray[i]] = stringArray[i];
+            if (intArray[i] >= 0 && intArray[i] < 11 && i < stringArray.length) {
+                strArr[intArray[i]] = stringArray[i];
+            }
         }
         if (Build.IS_CM_CUSTOMIZATION_TEST) {
             strArr[1] = "2G";
@@ -1273,17 +1292,23 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         int[] intArray2 = resources.getIntArray(C0008R$array.data_type_name_mcc_key);
         String[] stringArray2 = resources.getStringArray(C0008R$array.data_type_name_mcc_value);
         for (int i2 = 0; i2 < intArray2.length; i2++) {
-            strArr[intArray2[i2]] = stringArray2[i2];
+            if (intArray2[i2] >= 0 && intArray2[i2] < 11 && i2 < stringArray2.length) {
+                strArr[intArray2[i2]] = stringArray2[i2];
+            }
         }
         int[] intArray3 = resources.getIntArray(C0008R$array.data_type_name_mcc_mnc_key);
         String[] stringArray3 = resources.getStringArray(C0008R$array.data_type_name_mcc_mnc_value);
         for (int i3 = 0; i3 < intArray3.length; i3++) {
-            strArr[intArray3[i3]] = stringArray3[i3];
+            if (intArray3[i3] >= 0 && intArray3[i3] < 11 && i3 < stringArray3.length) {
+                strArr[intArray3[i3]] = stringArray3[i3];
+            }
         }
         int[] intArray4 = resources.getIntArray(C0008R$array.data_type_name_cus_reg_key);
         String[] stringArray4 = resources.getStringArray(C0008R$array.data_type_name_cus_reg_value);
         for (int i4 = 0; i4 < intArray4.length; i4++) {
-            strArr[intArray4[i4]] = stringArray4[i4];
+            if (intArray4[i4] >= 0 && intArray4[i4] < 11 && i4 < stringArray4.length) {
+                strArr[intArray4[i4]] = stringArray4[i4];
+            }
         }
         return strArr;
     }

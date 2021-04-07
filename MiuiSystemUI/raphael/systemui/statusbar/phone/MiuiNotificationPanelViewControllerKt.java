@@ -2,7 +2,6 @@ package com.android.systemui.statusbar.phone;
 
 import miuix.animation.base.AnimConfig;
 
-/* compiled from: MiuiNotificationPanelViewController.kt */
 public final class MiuiNotificationPanelViewControllerKt {
     private static final AnimConfig BLUR_ANIM_CONFIG;
 

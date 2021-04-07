@@ -13,6 +13,8 @@ public final class ModalController$addModalWindow$1 implements View.OnClickListe
     }
 
     public final void onClick(View view) {
-        this.this$0.animExitModal(ModalExitMode.MANUAL.name());
+        if (!this.this$0.isModalDialogMode()) {
+            this.this$0.animExitModal(ModalExitMode.MANUAL.name());
+        }
     }
 }

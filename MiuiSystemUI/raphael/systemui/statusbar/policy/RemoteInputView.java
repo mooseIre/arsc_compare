@@ -50,8 +50,10 @@ import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.RemoteInputController;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper;
 import com.android.systemui.statusbar.phone.LightBarController;
+import com.miui.systemui.events.ModalExitMode;
 import java.util.HashMap;
 import java.util.function.Consumer;
 
@@ -168,6 +170,7 @@ public class RemoteInputView extends LinearLayout implements View.OnClickListene
             Log.i("RemoteInput", "Unable to send remote input result", e);
             MetricsLogger.action(((LinearLayout) this).mContext, 399, this.mEntry.getSbn().getPackageName());
         }
+        ((ModalController) Dependency.get(ModalController.class)).animExitModal(ModalExitMode.OTHER.name());
     }
 
     public CharSequence getText() {

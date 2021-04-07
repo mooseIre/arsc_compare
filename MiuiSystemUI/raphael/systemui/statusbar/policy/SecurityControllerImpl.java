@@ -117,7 +117,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
 
     @Override // com.android.systemui.statusbar.policy.SecurityController
     public boolean isDeviceManaged() {
-        return this.mDevicePolicyManager.isDeviceManaged();
+        return this.mDevicePolicyManager.isDeviceManaged() || this.mDevicePolicyManager.isOrganizationOwnedDeviceWithManagedProfile();
     }
 
     @Override // com.android.systemui.statusbar.policy.SecurityController

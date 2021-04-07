@@ -308,7 +308,11 @@ public class OverviewProxyService extends CurrentUserTracker implements Callback
         }
 
         public boolean judgeInterceptByMiui(MotionEvent motionEvent, StatusBar statusBar) {
-            return (motionEvent.getActionMasked() == 3 || statusBar.getStatusBarWindow() == null || !((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, (float) statusBar.getStatusBarWindow().getWidth())) ? false : true;
+            if (motionEvent.getActionMasked() == 3 || statusBar.getStatusBarWindow() == null || !((ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class)).dispatchToControlPanel(motionEvent, (float) statusBar.getStatusBarWindow().getWidth())) {
+                return false;
+            }
+            Log.d("OverviewProxyService", "handle MotionEvent by home:" + motionEvent.getActionMasked());
+            return true;
         }
 
         @Override // com.android.systemui.shared.recents.ISystemUiProxy

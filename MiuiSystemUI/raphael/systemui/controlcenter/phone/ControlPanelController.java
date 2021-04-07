@@ -9,10 +9,12 @@ import android.os.Handler;
 import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0016R$integer;
 import com.android.systemui.C0017R$layout;
@@ -20,12 +22,14 @@ import com.android.systemui.C0020R$raw;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.widget.CornerVideoView;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.CallbackController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
+import com.miui.internal.R;
 import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import java.util.ArrayList;
@@ -117,6 +121,9 @@ public class ControlPanelController implements CallbackController<UseControlPane
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSettingsObserver = settingsObserver;
         this.mKeyguardStateController = keyguardStateController;
+        if (TextUtils.isEmpty(settingsObserver.getValue("use_control_panel"))) {
+            this.mSettingsObserver.setValue("use_control_panel", this.mUseControlPanelSettingDefault);
+        }
         this.mNcSwitchGuideShown = Settings.System.getIntForUser(this.mContext.getContentResolver(), "nc_switch_guide_shown", 0, 0) != 0;
         this.mCurrentUserTracker = new CurrentUserTracker(this.mBroadcastDispatcher) {
             /* class com.android.systemui.controlcenter.phone.ControlPanelController.AnonymousClass1 */
@@ -220,8 +227,25 @@ public class ControlPanelController implements CallbackController<UseControlPane
     /* access modifiers changed from: public */
     private void notifyAllListeners() {
         for (UseControlPanelChangeListener useControlPanelChangeListener : this.mListeners) {
-            useControlPanelChangeListener.onUseControlPanelChange(this.mUseControlPanel);
+            this.mHandler.post(new Runnable(useControlPanelChangeListener) {
+                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$TfCfpp62G3EAZtFLSCGJPgp5Y */
+                public final /* synthetic */ ControlPanelController.UseControlPanelChangeListener f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                public final void run() {
+                    ControlPanelController.this.lambda$notifyAllListeners$0$ControlPanelController(this.f$1);
+                }
+            });
         }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$notifyAllListeners$0 */
+    public /* synthetic */ void lambda$notifyAllListeners$0$ControlPanelController(UseControlPanelChangeListener useControlPanelChangeListener) {
+        useControlPanelChangeListener.onUseControlPanelChange(this.mUseControlPanel);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:13:0x002a  */
@@ -331,19 +355,24 @@ public class ControlPanelController implements CallbackController<UseControlPane
             MiuiSystemUIDialog.applyFlags(create);
             MiuiSystemUIDialog.setShowForAllUsers(this.mDialog, true);
             this.mDialog.show();
+            TextView textView = (TextView) this.mDialog.findViewById(R.id.alertTitle);
+            if (textView != null) {
+                textView.setSingleLine(false);
+                textView.setMaxLines(2);
+            }
             this.mDialog.getButton(-1).setOnClickListener(new View.OnClickListener() {
-                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$IOJ5s7cyqd_OWb4X5hZeGy2s60 */
+                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$csOtDSwrt5JO_LewXBLOgxXYcaI */
 
                 public final void onClick(View view) {
-                    ControlPanelController.this.lambda$showDialog$0$ControlPanelController(view);
+                    ControlPanelController.this.lambda$showDialog$1$ControlPanelController(view);
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$showDialog$0 */
-    public /* synthetic */ void lambda$showDialog$0$ControlPanelController(View view) {
+    /* renamed from: lambda$showDialog$1 */
+    public /* synthetic */ void lambda$showDialog$1$ControlPanelController(View view) {
         dismissDialog(true);
     }
 
@@ -360,18 +389,18 @@ public class ControlPanelController implements CallbackController<UseControlPane
                 frameLayout.removeView(findViewById);
             }
             frameLayout.postDelayed(new Runnable() {
-                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$B8VEa7KKUptKemobMxMsci49EGw */
+                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$HrqICi0W9eSpjeL4AloYkoH6TDE */
 
                 public final void run() {
-                    ControlPanelController.this.lambda$dismissDialog$1$ControlPanelController();
+                    ControlPanelController.this.lambda$dismissDialog$2$ControlPanelController();
                 }
             }, 1);
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$dismissDialog$1 */
-    public /* synthetic */ void lambda$dismissDialog$1$ControlPanelController() {
+    /* renamed from: lambda$dismissDialog$2 */
+    public /* synthetic */ void lambda$dismissDialog$2$ControlPanelController() {
         AlertDialog alertDialog = this.mDialog;
         if (alertDialog != null) {
             alertDialog.dismiss();

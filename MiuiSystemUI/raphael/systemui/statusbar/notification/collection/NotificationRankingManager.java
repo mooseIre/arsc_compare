@@ -124,6 +124,11 @@ public class NotificationRankingManager {
         boolean isRowHeadsUp = notificationEntry.isRowHeadsUp();
         boolean isImportantMedia = isImportantMedia(notificationEntry);
         boolean access$isSystemMax = NotificationRankingManagerKt.access$isSystemMax(notificationEntry);
+        ExpandedNotification sbn = notificationEntry.getSbn();
+        Intrinsics.checkExpressionValueIsNotNull(sbn, "entry.sbn");
+        if (sbn.isImportant()) {
+            return 5;
+        }
         if (NotificationRankingManagerKt.access$isColorizedForegroundService(notificationEntry)) {
             return 3;
         }
@@ -131,10 +136,10 @@ public class NotificationRankingManager {
             return 4;
         }
         if (isRowHeadsUp || isImportantMedia || access$isSystemMax) {
-            return 5;
+            return 6;
         }
         isHighPriority(notificationEntry);
-        return 5;
+        return 6;
     }
 
     private final void updateRankingForEntries(Iterable<NotificationEntry> iterable) {

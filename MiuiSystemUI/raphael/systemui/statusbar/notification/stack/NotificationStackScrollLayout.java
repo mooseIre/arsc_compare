@@ -4968,7 +4968,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 i3++;
                 if (!this.mHighPriorityBeforeSpeedBump) {
                     z2 = true ^ expandableNotificationRow.getEntry().isAmbient();
-                } else if (expandableNotificationRow.getEntry().getBucket() >= 6) {
+                } else if (expandableNotificationRow.getEntry().getBucket() >= 7) {
                     z2 = false;
                 }
                 if (z2) {
@@ -5025,10 +5025,10 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return true;
         }
         if (i == 1) {
-            return expandableNotificationRow.getEntry().getBucket() < 6;
+            return expandableNotificationRow.getEntry().getBucket() < 7;
         }
         if (i == 2) {
-            return expandableNotificationRow.getEntry().getBucket() == 6;
+            return expandableNotificationRow.getEntry().getBucket() == 7;
         }
         throw new IllegalArgumentException("Unknown selection: " + i);
     }

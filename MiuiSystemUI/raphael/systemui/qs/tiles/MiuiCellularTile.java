@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.SystemProperties;
+import android.telephony.SubscriptionInfo;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 import miui.app.AlertDialog;
 import miui.securityspace.CrossUserUtils;
-import miui.telephony.SubscriptionInfo;
 import miui.telephony.SubscriptionManager;
 import miui.telephony.TelephonyManager;
 
@@ -93,13 +93,10 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public void click() {
-        if (!this.mDataController.isMobileDataSupported()) {
-            return;
-        }
-        if (TelephonyManager.isCustForKrOps()) {
-            showConfirmDialog(((QSTile.BooleanState) this.mState).state == 2);
-        } else {
+        if (!TelephonyManager.isCustForKrOps()) {
             super.click();
+        } else if (this.mDataController.isMobileDataSupported()) {
+            showConfirmDialog(((QSTile.BooleanState) this.mState).state == 2);
         }
     }
 
@@ -181,7 +178,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         if (booleanState.dualTarget && (list = this.mSimInfoRecordList) != null && (i = callbackInfo.defaultDataSlot) >= 0 && i < list.size()) {
             SubscriptionInfo subscriptionInfo = this.mSimInfoRecordList.get(callbackInfo.defaultDataSlot);
-            if (VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSlotId())) {
+            if (VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSimSlotIndex())) {
                 charSequence = VirtualSimUtils.getVirtualSimCarrierName(this.mContext);
             } else {
                 charSequence = subscriptionInfo.getDisplayName();
@@ -304,8 +301,9 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
-        public void setSubs(List<android.telephony.SubscriptionInfo> list) {
-            MiuiCellularTile.this.mSimInfoRecordList = SubscriptionManager.getDefault().getSubscriptionInfoList();
+        public void setSubs(List<SubscriptionInfo> list) {
+            MiuiCellularTile miuiCellularTile = MiuiCellularTile.this;
+            miuiCellularTile.mSimInfoRecordList = miuiCellularTile.mController.getAllSubscriptions();
             MiuiCellularTile.this.refreshState(this.mInfo);
             if (!MiuiCellularTile.this.isShowingDetail()) {
                 return;
@@ -428,12 +426,12 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         private MiuiQSDetailItems.Item generateItem(SubscriptionInfo subscriptionInfo, int i) {
             MiuiQSDetailItems.Item acquireItem = this.mItems.acquireItem();
             boolean z = true;
-            if (subscriptionInfo.isActivated()) {
+            if (subscriptionInfo.areUiccApplicationsEnabled()) {
                 int[] iArr = this.SIM_SLOT_ICON;
                 if (i < iArr.length) {
                     acquireItem.icon = iArr[i];
                 }
-                acquireItem.line1 = VirtualSimUtils.isVirtualSim(((QSTileImpl) MiuiCellularTile.this).mContext, subscriptionInfo.getSlotId()) ? VirtualSimUtils.getVirtualSimCarrierName(((QSTileImpl) MiuiCellularTile.this).mContext) : subscriptionInfo.getDisplayName();
+                acquireItem.line1 = VirtualSimUtils.isVirtualSim(((QSTileImpl) MiuiCellularTile.this).mContext, subscriptionInfo.getSimSlotIndex()) ? VirtualSimUtils.getVirtualSimCarrierName(((QSTileImpl) MiuiCellularTile.this).mContext) : subscriptionInfo.getDisplayName();
                 acquireItem.activated = true;
             } else {
                 if (i < this.SIM_SLOT_ICON.length) {
@@ -447,7 +445,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
             }
             acquireItem.selected = z;
             acquireItem.icon2 = z ? C0013R$drawable.ic_qs_detail_item_selected : -1;
-            acquireItem.line2 = subscriptionInfo.getDisplayNumber();
+            acquireItem.line2 = subscriptionInfo.getNumber();
             acquireItem.tag = Integer.valueOf(i);
             return acquireItem;
         }

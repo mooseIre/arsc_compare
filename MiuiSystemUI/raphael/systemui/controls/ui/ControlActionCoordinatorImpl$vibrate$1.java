@@ -13,6 +13,6 @@ final class ControlActionCoordinatorImpl$vibrate$1 implements Runnable {
     }
 
     public final void run() {
-        this.this$0.vibrator.vibrate(this.$effect);
+        ControlActionCoordinatorImpl.access$getVibrator$p(this.this$0).vibrate(this.$effect);
     }
 }

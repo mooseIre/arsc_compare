@@ -105,6 +105,12 @@ public class HomeDemoAct extends FsGestureDemoBaseActiivy {
         this.fsgNavView.setBgView(this.navSubViewBgView);
     }
 
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        super.onDestroy();
+        this.fsGestureDemoSwipeView.cancelAnimation();
+    }
+
     private void startSwipeViewAnimation(final int i) {
         this.handler.postDelayed(new Runnable() {
             /* class com.android.systemui.fsgesture.HomeDemoAct.AnonymousClass4 */

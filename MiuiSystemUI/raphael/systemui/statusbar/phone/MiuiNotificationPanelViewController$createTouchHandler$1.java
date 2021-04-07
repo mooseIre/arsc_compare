@@ -29,6 +29,13 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
 
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController.NotificationPanelTouchHandler
+    public boolean disallowInterceptTouch(@NotNull MotionEvent motionEvent) {
+        Intrinsics.checkParameterIsNotNull(motionEvent, "event");
+        return motionEvent.getActionMasked() == 2 && !this.this$0.getMIsDefaultTheme() && !this.this$0.mQsExpanded;
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController.NotificationPanelTouchHandler
     public boolean onMiuiIntercept(@NotNull MotionEvent motionEvent) {
         Intrinsics.checkParameterIsNotNull(motionEvent, "event");
         if (motionEvent.getActionMasked() == 0) {

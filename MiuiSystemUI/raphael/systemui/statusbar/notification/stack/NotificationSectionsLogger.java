@@ -51,6 +51,10 @@ public final class NotificationSectionsLogger {
         logPosition(i, "ZEN MODE VIEW");
     }
 
+    public final void logImportantView(int i) {
+        logPosition(i, "IMPORTANT VIEW");
+    }
+
     public final void logOther(int i, @NotNull Class<?> cls) {
         Intrinsics.checkParameterIsNotNull(cls, "clazz");
         LogBuffer logBuffer2 = this.logBuffer;

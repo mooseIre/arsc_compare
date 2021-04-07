@@ -33,7 +33,6 @@ import com.android.systemui.statusbar.notification.collection.NotifCollection;
 import com.android.systemui.statusbar.notification.collection.NotifPipeline;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.interruption.NotificationInterruptStateProvider;
-import com.android.systemui.statusbar.policy.HeadsUpUtil;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import dagger.Lazy;
 import java.util.concurrent.Executor;
@@ -45,11 +44,11 @@ public class MiuiStatusBarNotificationActivityStarter extends StatusBarNotificat
 
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.StatusBarNotificationActivityStarter
-    public void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2) {
+    public void startNotificationIntent(PendingIntent pendingIntent, Intent intent, NotificationEntry notificationEntry, View view, boolean z, boolean z2, boolean z3) {
         ActivityOptions activityOptions = MiuiMultiWindowUtils.getActivityOptions(this.mContext, pendingIntent.getCreatorPackage());
-        boolean z3 = activityOptions != null;
-        Log.i("MiuiMultiWindowUtils", "startNotificationIntent: " + HeadsUpUtil.isClickedHeadsUpNotification(view));
-        if (!HeadsUpUtil.isClickedHeadsUpNotification(view) || z3) {
+        boolean z4 = activityOptions != null;
+        Log.i("MiuiMultiWindowUtils", "startNotificationIntent: " + z3);
+        if (z4 || !z3) {
             try {
                 pendingIntent.send(this.mContext, 0, intent, null, null, null, activityOptions != null ? activityOptions.toBundle() : StatusBar.getActivityOptions(null));
                 this.mLogger.logStartNotificationIntent(notificationEntry.getKey(), pendingIntent);
@@ -57,7 +56,7 @@ public class MiuiStatusBarNotificationActivityStarter extends StatusBarNotificat
                 this.mLogger.logSendingIntentFailed(e);
             }
         } else {
-            super.startNotificationIntent(pendingIntent, intent, notificationEntry, view, z, z2);
+            super.startNotificationIntent(pendingIntent, intent, notificationEntry, view, z, z2, z3);
         }
     }
 

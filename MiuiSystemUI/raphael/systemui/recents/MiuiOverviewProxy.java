@@ -11,16 +11,13 @@ import kotlin.jvm.internal.Intrinsics;
 public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     private final OverviewProxyService proxyService;
 
+    /* access modifiers changed from: public */
     private final void notifyGestureLineProgress(float f) {
     }
 
     public MiuiOverviewProxy(OverviewProxyService overviewProxyService) {
         Intrinsics.checkParameterIsNotNull(overviewProxyService, "proxyService");
         this.proxyService = overviewProxyService;
-    }
-
-    public static final /* synthetic */ void access$notifyCompleteAssistant(MiuiOverviewProxy miuiOverviewProxy) {
-        miuiOverviewProxy.notifyCompleteAssistant();
     }
 
     @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
@@ -93,6 +90,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         return false;
     }
 
+    /* access modifiers changed from: public */
     private final void notifyCompleteAssistant() {
         this.proxyService.notifyAssistantGestureCompletion(0.0f);
     }

@@ -70,8 +70,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
         this.mDetailAdapter.mItems = null;
     }
 
-    /* access modifiers changed from: private */
-    public class ExpandDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
+    private class ExpandDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
         private ExpandDetailItems mItems;
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
