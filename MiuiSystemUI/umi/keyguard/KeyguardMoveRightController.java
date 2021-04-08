@@ -23,9 +23,12 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.systemui.Dependency;
 import com.miui.systemui.DebugConfig;
+import com.miui.systemui.graphics.DrawableUtils;
 import java.io.IOException;
+import miui.os.Build;
 
 public class KeyguardMoveRightController extends BaseKeyguardMoveController {
+    private String mCameraPreviewUri;
     private boolean mCameraViewShowing;
     private final Context mContext;
     private boolean mIsOnIconTouchDown;
@@ -152,56 +155,56 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updatePreViewBackground() {
-        new AsyncTask<Void, Void, Drawable>() {
-            /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass4 */
+        if (!Build.IS_MIUI_LITE_VERSION) {
+            new AsyncTask<Void, Void, Drawable>() {
+                /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass4 */
 
-            /* access modifiers changed from: protected */
-            public Drawable doInBackground(Void... voidArr) {
-                if (!KeyguardMoveRightController.this.mUserAuthenticatedSinceBoot) {
-                    return null;
+                /* access modifiers changed from: protected */
+                public Drawable doInBackground(Void... voidArr) {
+                    if (!KeyguardMoveRightController.this.mUserAuthenticatedSinceBoot) {
+                        return null;
+                    }
+                    if (!PackageUtils.IS_VELA_CAMERA) {
+                        return getDrawableExceptVela();
+                    }
+                    KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
+                    return keyguardMoveRightController.getDrawableFromPackageBy565(keyguardMoveRightController.mContext, PackageUtils.PACKAGE_NAME_CAMERA, MiuiKeyguardUtils.getCameraImageName(KeyguardMoveRightController.this.mContext, MiuiKeyguardUtils.isFullScreenGestureOpened()));
                 }
-                if (!PackageUtils.IS_VELA_CAMERA) {
-                    return getDrawableExceptVela();
-                }
-                KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
-                return keyguardMoveRightController.getDrawableFromPackageBy565(keyguardMoveRightController.mContext, PackageUtils.PACKAGE_NAME_CAMERA, MiuiKeyguardUtils.getCameraImageName(KeyguardMoveRightController.this.mContext, MiuiKeyguardUtils.isFullScreenGestureOpened()));
-            }
 
-            private Drawable getDrawableExceptVela() {
-                Context context = KeyguardMoveRightController.this.mContext;
-                Drawable drawable = null;
-                Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(context, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
-                if (resultFromProvider != null) {
-                    String valueOf = String.valueOf(resultFromProvider.get("getCameraSplash"));
-                    if (!TextUtils.isEmpty(valueOf)) {
-                        try {
-                            drawable = ImageDecoder.decodeDrawable(ImageDecoder.createSource(KeyguardMoveRightController.this.mContext.getContentResolver(), Uri.parse(valueOf), KeyguardMoveRightController.this.mContext.getResources()), $$Lambda$KeyguardMoveRightController$4$BLih8lMjXuQGgfkpxsSjkJl_48.INSTANCE);
-                        } catch (IOException unused) {
-                            Log.e("KeyguardMoveRightController", "updatePreViewBackground ContentProviderUtils.getResultFromProvider splashProvider失败");
+                private Drawable getDrawableExceptVela() {
+                    if (TextUtils.isEmpty(KeyguardMoveRightController.this.mCameraPreviewUri)) {
+                        Context context = KeyguardMoveRightController.this.mContext;
+                        Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(context, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
+                        if (resultFromProvider != null) {
+                            KeyguardMoveRightController.this.mCameraPreviewUri = String.valueOf(resultFromProvider.get("getCameraSplash"));
                         }
                     }
+                    if (TextUtils.isEmpty(KeyguardMoveRightController.this.mCameraPreviewUri)) {
+                        return null;
+                    }
+                    try {
+                        return ImageDecoder.decodeDrawable(ImageDecoder.createSource(KeyguardMoveRightController.this.mContext.getContentResolver(), Uri.parse(KeyguardMoveRightController.this.mCameraPreviewUri), KeyguardMoveRightController.this.mContext.getResources()), $$Lambda$KeyguardMoveRightController$4$BLih8lMjXuQGgfkpxsSjkJl_48.INSTANCE);
+                    } catch (IOException unused) {
+                        Log.e("KeyguardMoveRightController", "updatePreViewBackground ContentProviderUtils.getResultFromProvider splashProvider失败");
+                        return null;
+                    }
                 }
-                if (drawable != null) {
-                    return drawable;
-                }
-                KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
-                return keyguardMoveRightController.getDrawableFromPackageBy565(keyguardMoveRightController.mContext, PackageUtils.PACKAGE_NAME_CAMERA, MiuiKeyguardUtils.getCameraImageName(KeyguardMoveRightController.this.mContext, MiuiKeyguardUtils.isFullScreenGestureOpened()));
-            }
 
-            static /* synthetic */ void lambda$getDrawableExceptVela$0(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
-                imageDecoder.setAllocator(1);
-                imageDecoder.setMemorySizePolicy(0);
-            }
-
-            /* access modifiers changed from: protected */
-            public void onPostExecute(Drawable drawable) {
-                if (drawable == null) {
-                    Log.e("KeyguardMoveRightController", "updatePreViewBackground  onPostExecute resultDrawable == null");
-                } else if (KeyguardMoveRightController.this.mKeyguardCameraView != null) {
-                    KeyguardMoveRightController.this.mKeyguardCameraView.setPreviewImageDrawable(drawable);
+                static /* synthetic */ void lambda$getDrawableExceptVela$0(ImageDecoder imageDecoder, ImageDecoder.ImageInfo imageInfo, ImageDecoder.Source source) {
+                    imageDecoder.setAllocator(1);
+                    imageDecoder.setMemorySizePolicy(0);
                 }
-            }
-        }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
+
+                /* access modifiers changed from: protected */
+                public void onPostExecute(Drawable drawable) {
+                    if (!DrawableUtils.isValidBitmapDrawable(drawable) || KeyguardMoveRightController.this.mKeyguardCameraView == null) {
+                        Log.e("KeyguardMoveRightController", "updatePreViewBackground  onPostExecute resultDrawable is inValid");
+                    } else {
+                        KeyguardMoveRightController.this.mKeyguardCameraView.setPreviewImageDrawable(drawable);
+                    }
+                }
+            }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
+        }
     }
 
     public Drawable getDrawableFromPackageBy565(Context context, String str, String str2) {

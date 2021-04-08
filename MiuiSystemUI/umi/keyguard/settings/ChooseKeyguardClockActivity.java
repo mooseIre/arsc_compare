@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import androidx.appcompat.R$styleable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +48,7 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
+import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.util.Locale;
@@ -140,10 +142,14 @@ public class ChooseKeyguardClockActivity extends Activity {
         BottomSheetBehavior from = BottomSheetBehavior.from(linearLayout);
         this.mBottomSheetBehavior = from;
         from.setState(3);
-        if (MiuiKeyguardUtils.isDefaultLockScreenTheme()) {
-            ((FrameLayout) findViewById(C0015R$id.third_theme_hint_layout)).setVisibility(8);
-        } else {
+        boolean isDualClock = ((DualClockObserver) Dependency.get(DualClockObserver.class)).isDualClock();
+        if (!MiuiKeyguardUtils.isDefaultLockScreenTheme() || isDualClock) {
             this.mPanelView.setVisibility(8);
+            if (isDualClock) {
+                ((TextView) findViewById(C0015R$id.third_theme_hint)).setText(getResources().getString(C0021R$string.choose_clock_dual_clock_hint_text));
+            }
+        } else {
+            findViewById(C0015R$id.third_theme_hint_layout).setVisibility(8);
         }
         this.mClockList = (RecyclerView) findViewById(C0015R$id.clock_list);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);

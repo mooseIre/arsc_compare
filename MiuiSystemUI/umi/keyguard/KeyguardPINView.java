@@ -20,6 +20,7 @@ import com.android.settingslib.animation.DisappearAnimationUtils;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.miui.systemui.anim.PhysicBasedInterpolator;
+import miui.os.Build;
 import miui.view.animation.SineEaseInOutInterpolator;
 
 public class KeyguardPINView extends KeyguardPinBasedInputView implements PasswordTextView.TextChangeListener {
@@ -254,6 +255,10 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
             LinearLayout.LayoutParams layoutParams7 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
             layoutParams7.height = dimensionPixelOffset7;
             this.mEmergencyButton.setLayoutParams(layoutParams7);
+        } else if (Build.IS_INTERNATIONAL_BUILD) {
+            LinearLayout.LayoutParams layoutParams8 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
+            layoutParams8.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_pin_view_em_btm_height);
+            this.mEmergencyButton.setLayoutParams(layoutParams8);
         }
     }
 }

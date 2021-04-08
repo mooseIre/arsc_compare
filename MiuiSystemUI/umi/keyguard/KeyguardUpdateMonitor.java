@@ -178,11 +178,15 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         }
     };
     private final ArrayList<WeakReference<KeyguardUpdateMonitorCallback>> mCallbacks = Lists.newArrayList();
-    private final Runnable mCancelNotReceived = new Runnable(this) {
+    private final Runnable mCancelNotReceived = new Runnable() {
         /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass1 */
 
         public void run() {
             Log.w("KeyguardUpdateMonitor", "Cancel not received, transitioning to STOPPED");
+            KeyguardUpdateMonitor keyguardUpdateMonitor = KeyguardUpdateMonitor.this;
+            keyguardUpdateMonitor.mFaceRunningState = 0;
+            keyguardUpdateMonitor.mFingerprintRunningState = 0;
+            KeyguardUpdateMonitor.this.updateFingerprintListeningState();
         }
     };
     private final Context mContext;

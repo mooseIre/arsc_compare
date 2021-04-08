@@ -844,52 +844,25 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     }
 
     public final void updateSwitchSystemUserEntrance() {
-        int i;
         TextView textView = this.mSwitchSystemUserEntrance;
         if (textView != null) {
             MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.mPanelViewController;
             if (miuiNotificationPanelViewController != null) {
-                if (miuiNotificationPanelViewController.isOnKeyguard() && shouldShowSwitchSystemUser()) {
-                    UserSwitcherController userSwitcherController = this.mUserContextController;
-                    if (userSwitcherController == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
-                        throw null;
-                    } else if (userSwitcherController.getCurrentUserId() != UserSwitcherController.getMaintenanceModeId()) {
-                        i = 0;
-                        textView.setVisibility(i);
-                        return;
-                    }
-                }
-                i = 8;
-                textView.setVisibility(i);
-                return;
+                textView.setVisibility((!miuiNotificationPanelViewController.isOnKeyguard() || !shouldShowSwitchSystemUser() || KeyguardUpdateMonitor.getCurrentUser() == UserSwitcherController.getMaintenanceModeId()) ? 8 : 0);
+            } else {
+                Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+                throw null;
             }
-            Intrinsics.throwUninitializedPropertyAccessException("mPanelViewController");
+        } else {
+            Intrinsics.throwUninitializedPropertyAccessException("mSwitchSystemUserEntrance");
             throw null;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("mSwitchSystemUserEntrance");
-        throw null;
     }
 
     private final boolean shouldShowSwitchSystemUser() {
         KeyguardUpdateMonitorInjector keyguardUpdateMonitorInjector = this.mKeyguardUpdateMonitorInjector;
         if (keyguardUpdateMonitorInjector != null) {
-            if (!keyguardUpdateMonitorInjector.isOwnerUser()) {
-                UserSwitcherController userSwitcherController = this.mUserContextController;
-                if (userSwitcherController == null) {
-                    Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
-                    throw null;
-                } else if (userSwitcherController.getCurrentUserId() != UserSwitcherController.getSecondUser()) {
-                    UserSwitcherController userSwitcherController2 = this.mUserContextController;
-                    if (userSwitcherController2 == null) {
-                        Intrinsics.throwUninitializedPropertyAccessException("mUserContextController");
-                        throw null;
-                    } else if (userSwitcherController2.getCurrentUserId() != UserSwitcherController.getKidSpaceUser()) {
-                        return true;
-                    }
-                }
-            }
-            return false;
+            return (keyguardUpdateMonitorInjector.isOwnerUser() || KeyguardUpdateMonitor.getCurrentUser() == UserSwitcherController.getSecondUser() || KeyguardUpdateMonitor.getCurrentUser() == UserSwitcherController.getKidSpaceUser()) ? false : true;
         }
         Intrinsics.throwUninitializedPropertyAccessException("mKeyguardUpdateMonitorInjector");
         throw null;

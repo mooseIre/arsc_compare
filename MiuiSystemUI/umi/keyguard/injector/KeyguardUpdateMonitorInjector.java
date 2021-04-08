@@ -306,6 +306,11 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
         }
     }
 
+    @NotNull
+    public final String getWakeupReason() {
+        return this.mWakeupReason;
+    }
+
     public final void handleStartedWakingUpWithReason(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "reason");
         this.mWakeupReason = str;
