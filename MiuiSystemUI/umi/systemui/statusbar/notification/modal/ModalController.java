@@ -190,37 +190,47 @@ public final class ModalController {
     public final void animExitModal(long j, boolean z, @NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "exitMode");
         if (this.isModal && !this.isAnimating) {
+            ModalWindowView modalWindowView2 = this.modalWindowView;
             ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$1 = null;
-            if (z) {
-                ModalWindowView modalWindowView2 = this.modalWindowView;
-                if (modalWindowView2 != null) {
-                    modalWindowView2.exitModal(this.entry);
-                } else {
-                    Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
-                    throw null;
+            if (modalWindowView2 != null) {
+                modalWindowView2.removeModalDialogImmediately();
+                if (z) {
+                    ModalWindowView modalWindowView3 = this.modalWindowView;
+                    if (modalWindowView3 != null) {
+                        modalWindowView3.exitModal(this.entry);
+                    } else {
+                        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+                        throw null;
+                    }
                 }
+                this.modalWindowManager.clearFocus();
+                ModalController$animExitModal$updateListener$1 modalController$animExitModal$updateListener$1 = new ModalController$animExitModal$updateListener$1(this);
+                ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$12 = new ModalController$animExitModal$animatorListener$1(this, str);
+                if (z) {
+                    modalController$animExitModal$animatorListener$1 = modalController$animExitModal$animatorListener$12;
+                }
+                startAnimator(modalController$animExitModal$updateListener$1, modalController$animExitModal$animatorListener$1, j);
+                this.isAnimating = true;
+                return;
             }
-            this.modalWindowManager.clearFocus();
-            ModalController$animExitModal$updateListener$1 modalController$animExitModal$updateListener$1 = new ModalController$animExitModal$updateListener$1(this);
-            ModalController$animExitModal$animatorListener$1 modalController$animExitModal$animatorListener$12 = new ModalController$animExitModal$animatorListener$1(this, str);
-            if (z) {
-                modalController$animExitModal$animatorListener$1 = modalController$animExitModal$animatorListener$12;
-            }
-            startAnimator(modalController$animExitModal$updateListener$1, modalController$animExitModal$animatorListener$1, j);
-            this.isAnimating = true;
+            Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+            throw null;
         }
     }
 
     public final void exitModalImmediately() {
-        ModalWindowView modalWindowView2 = this.modalWindowView;
-        if (modalWindowView2 != null) {
-            modalWindowView2.exitModal(this.entry);
-            exitModal(ModalExitMode.DOWNPULL.name());
-            this.isAnimating = false;
-            return;
+        NotificationEntry notificationEntry = this.entry;
+        if (notificationEntry != null) {
+            ModalWindowView modalWindowView2 = this.modalWindowView;
+            if (modalWindowView2 != null) {
+                modalWindowView2.exitModal(notificationEntry);
+                exitModal(ModalExitMode.DOWNPULL.name());
+                this.isAnimating = false;
+                return;
+            }
+            Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+            throw null;
         }
-        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
-        throw null;
     }
 
     /* access modifiers changed from: private */
@@ -275,11 +285,6 @@ public final class ModalController {
         this.onModalChangeListeners.add(onModalChangeListener);
     }
 
-    public final void removeOnModalChangeListener(@NotNull OnModalChangeListener onModalChangeListener) {
-        Intrinsics.checkParameterIsNotNull(onModalChangeListener, "listener");
-        this.onModalChangeListeners.remove(onModalChangeListener);
-    }
-
     public final boolean shouldExtendLifetime(@NotNull NotificationEntry notificationEntry) {
         Intrinsics.checkParameterIsNotNull(notificationEntry, "entry");
         return this.isModal && Intrinsics.areEqual(this.entry, notificationEntry);
@@ -323,6 +328,36 @@ public final class ModalController {
             modalWindowView2.dispatchTouchEvent(obtain);
             obtain.recycle();
             return;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+        throw null;
+    }
+
+    public final void showModalDialog(@NotNull ModalDialog modalDialog) {
+        Intrinsics.checkParameterIsNotNull(modalDialog, "modalDialog");
+        ModalWindowView modalWindowView2 = this.modalWindowView;
+        if (modalWindowView2 != null) {
+            modalWindowView2.addModalDialog(modalDialog.getView());
+        } else {
+            Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+            throw null;
+        }
+    }
+
+    public final void hideModalDialog() {
+        ModalWindowView modalWindowView2 = this.modalWindowView;
+        if (modalWindowView2 != null) {
+            modalWindowView2.removeModalDialog();
+        } else {
+            Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
+            throw null;
+        }
+    }
+
+    public final boolean isModalDialogMode() {
+        ModalWindowView modalWindowView2 = this.modalWindowView;
+        if (modalWindowView2 != null) {
+            return modalWindowView2.isModalDialogMode();
         }
         Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
         throw null;

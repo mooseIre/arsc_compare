@@ -9,6 +9,6 @@ final class ControlActionCoordinatorImpl$bouncerOrRun$2 implements Runnable {
     }
 
     public final void run() {
-        this.this$0.pendingAction = null;
+        ControlActionCoordinatorImpl.access$setPendingAction$p(this.this$0, null);
     }
 }

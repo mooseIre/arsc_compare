@@ -5,9 +5,8 @@ import android.content.pm.ResolveInfo;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-public final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
+final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable {
     final /* synthetic */ ControlViewHolder $cvh;
     final /* synthetic */ Intent $intent;
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
@@ -21,7 +20,7 @@ public final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable
     public final void run() {
         final List<ResolveInfo> queryIntentActivities = this.$cvh.getContext().getPackageManager().queryIntentActivities(this.$intent, 65536);
         Intrinsics.checkExpressionValueIsNotNull(queryIntentActivities, "cvh.context.packageManag…EFAULT_ONLY\n            )");
-        this.this$0.uiExecutor.execute(new Runnable(this) {
+        ControlActionCoordinatorImpl.access$getUiExecutor$p(this.this$0).execute(new Runnable(this) {
             /* class com.android.systemui.controls.ui.ControlActionCoordinatorImpl$showDialog$1.AnonymousClass1 */
             final /* synthetic */ ControlActionCoordinatorImpl$showDialog$1 this$0;
 
@@ -36,7 +35,7 @@ public final class ControlActionCoordinatorImpl$showDialog$1 implements Runnable
                     DetailDialog detailDialog = new DetailDialog(controlActionCoordinatorImpl$showDialog$1.$cvh, controlActionCoordinatorImpl$showDialog$1.$intent);
                     detailDialog.setOnDismissListener(new ControlActionCoordinatorImpl$showDialog$1$1$$special$$inlined$also$lambda$1(this));
                     detailDialog.show();
-                    controlActionCoordinatorImpl.dialog = detailDialog;
+                    ControlActionCoordinatorImpl.access$setDialog$p(controlActionCoordinatorImpl, detailDialog);
                     return;
                 }
                 this.this$0.$cvh.setErrorStatus();

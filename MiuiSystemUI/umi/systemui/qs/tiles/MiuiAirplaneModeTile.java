@@ -7,44 +7,31 @@ import android.widget.Switch;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
-import com.android.systemui.qs.GlobalSetting;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
+import com.android.systemui.statusbar.policy.NetworkController;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiAirplaneModeTile.kt */
-public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
+public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> implements NetworkController.SignalCallback {
+    private boolean mAirplane;
     private boolean mListening;
-    private final GlobalSetting mSetting;
-    private int mTargetValue;
+    private final NetworkController mNetworkController;
+    private boolean mTargetAirplane;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return 112;
     }
 
-    public MiuiAirplaneModeTile(@Nullable QSHost qSHost) {
+    /* JADX INFO: super call moved to the top of the method (can break code semantics) */
+    public MiuiAirplaneModeTile(@Nullable QSHost qSHost, @NotNull NetworkController networkController) {
         super(qSHost);
-        AnonymousClass1 r4 = new GlobalSetting(this, this.mContext, this.mHandler, "airplane_mode_on") {
-            /* class com.android.systemui.qs.tiles.MiuiAirplaneModeTile.AnonymousClass1 */
-            final /* synthetic */ MiuiAirplaneModeTile this$0;
-
-            {
-                this.this$0 = r1;
-            }
-
-            /* access modifiers changed from: protected */
-            @Override // com.android.systemui.qs.GlobalSetting
-            public void handleValueChanged(int i) {
-                this.this$0.mTargetValue = i;
-                this.this$0.handleRefreshState(Integer.valueOf(i));
-            }
-        };
-        this.mSetting = r4;
-        this.mTargetValue = r4.getValue();
+        Intrinsics.checkParameterIsNotNull(networkController, "networkController");
+        this.mNetworkController = networkController;
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
@@ -55,23 +42,20 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
-        int value = this.mSetting.getValue();
-        if (value != this.mTargetValue) {
+        boolean z = this.mAirplane;
+        if (z != this.mTargetAirplane) {
             String str = this.TAG;
-            Log.d(str, "handleClick: mTargetValue = " + this.mTargetValue + ", value = " + value);
+            Log.d(str, "handleClick: mTargetValue = " + this.mTargetAirplane + ", value = " + z);
             return;
         }
-        boolean z = true;
-        if (value == 1) {
-            z = false;
-        }
-        setEnabled(z);
+        setEnabled(!z);
         refreshState();
     }
 
     private final void setEnabled(boolean z) {
         Object systemService = this.mContext.getSystemService("connectivity");
         if (systemService != null) {
+            this.mTargetAirplane = z;
             ((ConnectivityManager) systemService).setAirplaneMode(z);
             return;
         }
@@ -94,8 +78,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(@Nullable QSTile.BooleanState booleanState, @Nullable Object obj) {
-        int i = 1;
-        boolean z = (obj instanceof Integer ? ((Number) obj).intValue() : this.mSetting.getValue()) != 0;
+        boolean z = this.mAirplane;
         if (booleanState != null) {
             booleanState.value = z;
             booleanState.label = this.mContext.getString(C0021R$string.airplane_mode);
@@ -104,10 +87,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
             } else {
                 booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_signal_airplane_disable);
             }
-            if (z) {
-                i = 2;
-            }
-            booleanState.state = i;
+            booleanState.state = z ? 2 : 1;
             StringBuilder sb = new StringBuilder();
             sb.append(booleanState.label.toString());
             sb.append(",");
@@ -144,8 +124,22 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
         super.handleSetListening(z);
         if (this.mListening != z) {
             this.mListening = z;
-            this.mTargetValue = this.mSetting.getValue();
-            this.mSetting.setListening(z);
+            if (z) {
+                this.mNetworkController.addCallback((NetworkController.SignalCallback) this);
+            } else {
+                this.mNetworkController.removeCallback((NetworkController.SignalCallback) this);
+            }
+        }
+    }
+
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
+    public void setIsAirplaneMode(@Nullable NetworkController.IconState iconState) {
+        super.setIsAirplaneMode(iconState);
+        if (iconState != null) {
+            boolean z = iconState.visible;
+            this.mTargetAirplane = z;
+            this.mAirplane = z;
+            refreshState();
         }
     }
 }

@@ -2714,6 +2714,11 @@ public class NotificationPanelViewController extends PanelViewController {
     }
 
     public class NotificationPanelTouchHandler extends PanelViewController.TouchHandler {
+        /* access modifiers changed from: package-private */
+        public boolean disallowInterceptTouch(MotionEvent motionEvent) {
+            return false;
+        }
+
         /* access modifiers changed from: protected */
         public boolean handleMiuiTouch(MotionEvent motionEvent) {
             return false;
@@ -2744,10 +2749,13 @@ public class NotificationPanelViewController extends PanelViewController {
                 if ((!notificationPanelViewController2.shouldQuickSettingsIntercept(notificationPanelViewController2.mDownX, NotificationPanelViewController.this.mDownY, 0.0f) && NotificationPanelViewController.this.mPulseExpansionHandler.onInterceptTouchEvent(motionEvent)) || onMiuiIntercept(motionEvent)) {
                     return true;
                 }
-                if (NotificationPanelViewController.this.isFullyCollapsed() || !NotificationPanelViewController.this.onQsIntercept(motionEvent)) {
-                    return super.onInterceptTouchEvent(motionEvent);
+                if (!NotificationPanelViewController.this.isFullyCollapsed() && NotificationPanelViewController.this.onQsIntercept(motionEvent)) {
+                    return true;
                 }
-                return true;
+                if (disallowInterceptTouch(motionEvent)) {
+                    return false;
+                }
+                return super.onInterceptTouchEvent(motionEvent);
             }
             NotificationPanelViewController.this.mMetricsLogger.count("panel_open", 1);
             NotificationPanelViewController.this.mMetricsLogger.count("panel_open_peek", 1);

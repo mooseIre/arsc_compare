@@ -125,7 +125,7 @@ public class HotspotControllerImpl implements HotspotController, WifiManager.Sof
     /* access modifiers changed from: private */
     /* renamed from: lambda$addCallback$0 */
     public /* synthetic */ void lambda$addCallback$0$HotspotControllerImpl(HotspotController.Callback callback) {
-        callback.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, getHotspotWifiStandard());
+        callback.onHotspotChanged(isHotspotEnabled(), this.mNumConnectedDevices, 0);
     }
 
     public void removeCallback(HotspotController.Callback callback) {

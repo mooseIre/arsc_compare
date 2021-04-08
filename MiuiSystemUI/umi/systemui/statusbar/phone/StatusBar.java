@@ -2817,7 +2817,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {

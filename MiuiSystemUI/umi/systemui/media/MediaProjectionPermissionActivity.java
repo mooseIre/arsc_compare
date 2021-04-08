@@ -41,10 +41,15 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
             finish();
             return;
         }
+        int userId = getUserId();
+        int contentUserHint = getIntent() != null ? getIntent().getContentUserHint() : -2;
+        if (contentUserHint != -2) {
+            userId = contentUserHint;
+        }
         PackageManager packageManager = getPackageManager();
         try {
-            ApplicationInfo applicationInfo = packageManager.getApplicationInfo(this.mPackageName, 0);
-            int i = applicationInfo.uid;
+            ApplicationInfo applicationInfoAsUser = packageManager.getApplicationInfoAsUser(this.mPackageName, 0, userId);
+            int i = applicationInfoAsUser.uid;
             this.mUid = i;
             try {
                 if (this.mService.hasProjectionPermission(i, this.mPackageName)) {
@@ -58,7 +63,7 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                     str = getString(C0021R$string.media_projection_dialog_service_text);
                     str2 = getString(C0021R$string.media_projection_dialog_service_title);
                 } else {
-                    String charSequence = applicationInfo.loadLabel(packageManager).toString();
+                    String charSequence = applicationInfoAsUser.loadLabel(packageManager).toString();
                     int length = charSequence.length();
                     int i2 = 0;
                     while (true) {

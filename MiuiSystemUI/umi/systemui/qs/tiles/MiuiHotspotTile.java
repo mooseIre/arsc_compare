@@ -8,38 +8,31 @@ import androidx.appcompat.R$styleable;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
-import com.android.systemui.qs.GlobalSetting;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.HotspotController;
+import com.android.systemui.statusbar.policy.NetworkController;
 import miui.securityspace.CrossUserUtils;
 
-public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
+public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> implements NetworkController.SignalCallback {
     static final Intent TETHER_SETTINGS = new Intent().setComponent(new ComponentName("com.android.settings", "com.android.settings.Settings$TetherSettingsActivity"));
-    private final GlobalSetting mAirplaneMode;
     private final Callback mHotspotCallback = new Callback();
     private final HotspotController mHotspotController;
     private boolean mIsAirplaneMode;
     private boolean mListening;
+    private final NetworkController mNetworkController;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
         return R$styleable.AppCompatTheme_windowFixedHeightMajor;
     }
 
-    public MiuiHotspotTile(QSHost qSHost, HotspotController hotspotController) {
+    public MiuiHotspotTile(QSHost qSHost, HotspotController hotspotController, NetworkController networkController) {
         super(qSHost);
         this.mHotspotController = hotspotController;
         hotspotController.observe(getLifecycle(), this.mHotspotCallback);
-        this.mAirplaneMode = new GlobalSetting(this.mContext, this.mHandler, "airplane_mode_on") {
-            /* class com.android.systemui.qs.tiles.MiuiHotspotTile.AnonymousClass1 */
-
-            /* access modifiers changed from: protected */
-            @Override // com.android.systemui.qs.GlobalSetting
-            public void handleValueChanged(int i) {
-                MiuiHotspotTile.this.refreshState();
-            }
-        };
+        this.mNetworkController = networkController;
+        networkController.observe(getLifecycle(), this);
     }
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
@@ -62,7 +55,6 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleSetListening(boolean z) {
         if (this.mListening != z) {
             this.mListening = z;
-            this.mAirplaneMode.setListening(z);
         }
     }
 
@@ -76,7 +68,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleClick() {
         Object obj;
         boolean z = ((QSTile.BooleanState) this.mState).value;
-        if ((z || this.mAirplaneMode.getValue() == 0) && this.mHotspotController.isHotspotReady()) {
+        if ((z || !this.mIsAirplaneMode) && this.mHotspotController.isHotspotReady()) {
             String str = this.TAG;
             StringBuilder sb = new StringBuilder();
             sb.append("handleClick: from: mState.value: ");
@@ -116,7 +108,6 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
         }
         booleanState.icon = icon;
         boolean z2 = this.mIsAirplaneMode;
-        this.mIsAirplaneMode = this.mAirplaneMode.getValue() != 0;
         boolean isHotspotTransient = this.mHotspotController.isHotspotTransient();
         booleanState.isTransient = isHotspotTransient;
         if (isHotspotTransient) {
@@ -147,6 +138,12 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> {
             return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_on);
         }
         return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_off);
+    }
+
+    @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
+    public void setIsAirplaneMode(NetworkController.IconState iconState) {
+        this.mIsAirplaneMode = iconState.visible;
+        refreshState();
     }
 
     private final class Callback implements HotspotController.Callback {

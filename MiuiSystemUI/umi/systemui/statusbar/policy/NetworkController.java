@@ -42,6 +42,8 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
 
     AccessPointController getAccessPointController();
 
+    List<SubscriptionInfo> getAllSubscriptions();
+
     DataSaverController getDataSaverController();
 
     DataUsageController getMobileDataController();

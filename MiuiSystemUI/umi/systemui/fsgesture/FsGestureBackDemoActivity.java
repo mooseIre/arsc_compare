@@ -73,6 +73,12 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.mDemoActivityView.getParent());
     }
 
+    /* access modifiers changed from: protected */
+    public void onDestroy() {
+        super.onDestroy();
+        this.mFsGestureDemoSwipeView.cancelAnimation();
+    }
+
     private void initView() {
         RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0015R$id.root_view);
         this.mBgView = findViewById(C0015R$id.bg_view);

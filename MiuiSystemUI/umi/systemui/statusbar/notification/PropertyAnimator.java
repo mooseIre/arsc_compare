@@ -24,8 +24,8 @@ public class PropertyAnimator {
         animatableProperty.getProperty().set(t, Float.valueOf(f));
     }
 
-    public static <T extends View> void startAnimation(final T t, AnimatableProperty animatableProperty, final float f, AnimationProperties animationProperties) {
-        final Property property = animatableProperty.getProperty();
+    public static <T extends View> void startAnimation(final T t, AnimatableProperty animatableProperty, float f, AnimationProperties animationProperties) {
+        Property property = animatableProperty.getProperty();
         final int animationStartTag = animatableProperty.getAnimationStartTag();
         final int animationEndTag = animatableProperty.getAnimationEndTag();
         Float f2 = (Float) ViewState.getChildTag(t, animationStartTag);
@@ -81,7 +81,6 @@ public class PropertyAnimator {
                         t.setTag(animatorTag, null);
                         t.setTag(animationStartTag, null);
                         t.setTag(animationEndTag, null);
-                        property.set(t, Float.valueOf(f));
                     }
                 });
                 ViewState.startAnimator(ofFloat, animationFinishListener);

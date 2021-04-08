@@ -58,6 +58,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     private final AccessPointControllerImpl mAccessPoints;
     private int mActiveMobileDataSubscription;
     private boolean mAirplaneMode;
+    protected List<SubscriptionInfo> mAndroidSubscriptions;
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final CallbackHandler mCallbackHandler;
     private final Runnable mClearForceValidated;
@@ -127,6 +128,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         this.mAirplaneMode = false;
         this.mLocale = null;
         this.mCurrentSubscriptions = new ArrayList();
+        this.mAndroidSubscriptions = new ArrayList();
         this.mClearForceValidated = new Runnable() {
             /* class com.android.systemui.statusbar.policy.$$Lambda$NetworkControllerImpl$oNWIIIg3gBRqx9jT8qywGtEkW2E */
 
@@ -135,7 +137,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             }
         };
         this.mRegisterListeners = new Runnable() {
-            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass10 */
+            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass11 */
 
             public void run() {
                 NetworkControllerImpl.this.registerListeners();
@@ -775,6 +777,23 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 arrayList.add(subscriptionInfo);
             }
         }
+        Collections.sort(completeActiveSubscriptionInfoList, new Comparator<SubscriptionInfo>(this) {
+            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass9 */
+
+            public int compare(SubscriptionInfo subscriptionInfo, SubscriptionInfo subscriptionInfo2) {
+                int i;
+                int i2;
+                if (subscriptionInfo.getSimSlotIndex() == subscriptionInfo2.getSimSlotIndex()) {
+                    i2 = subscriptionInfo.getSubscriptionId();
+                    i = subscriptionInfo2.getSubscriptionId();
+                } else {
+                    i2 = subscriptionInfo.getSimSlotIndex();
+                    i = subscriptionInfo2.getSimSlotIndex();
+                }
+                return i2 - i;
+            }
+        });
+        this.mAndroidSubscriptions = completeActiveSubscriptionInfoList;
         filterMobileSubscriptionInSameGroup(arrayList);
         if (hasCorrectMobileControllers(arrayList)) {
             updateNoSims();
@@ -815,7 +834,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public void setCurrentSubscriptionsLocked(List<SubscriptionInfo> list) {
         int i;
         Collections.sort(list, new Comparator<SubscriptionInfo>(this) {
-            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass9 */
+            /* class com.android.systemui.statusbar.policy.NetworkControllerImpl.AnonymousClass10 */
 
             public int compare(SubscriptionInfo subscriptionInfo, SubscriptionInfo subscriptionInfo2) {
                 int i;
@@ -840,7 +859,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         int i3 = 0;
         while (i3 < size) {
             int subscriptionId = list.get(i3).getSubscriptionId();
-            if (sparseArray.indexOfKey(subscriptionId) < 0 || !NetworkControllerHelper.equalMccMnc(((MobileSignalController) sparseArray.get(subscriptionId)).getSubscriptionInfo(), list.get(i3))) {
+            if (sparseArray.indexOfKey(subscriptionId) < 0 || !NetworkControllerHelper.equalSubscription(((MobileSignalController) sparseArray.get(subscriptionId)).getSubscriptionInfo(), list.get(i3))) {
                 i = size;
                 MobileSignalController mobileSignalController = new MobileSignalController(this.mContext, this.mConfig, this.mHasMobileDataFeature, this.mPhone.createForSubscriptionId(subscriptionId), this.mCallbackHandler, this, list.get(i3), this.mSubDefaults, this.mReceiverHandler.getLooper());
                 mobileSignalController.setUserSetupComplete(this.mUserSetup);
@@ -911,7 +930,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 return false;
             }
             MobileSignalController mobileSignalController = this.mMobileSignalControllers.get(subscriptionInfo.getSubscriptionId());
-            if (!(mobileSignalController == null || NetworkControllerHelper.equalMccMnc(subscriptionInfo, mobileSignalController.getSubscriptionInfo()))) {
+            if (!(mobileSignalController == null || NetworkControllerHelper.equalSubscription(subscriptionInfo, mobileSignalController.getSubscriptionInfo()))) {
                 return false;
             }
         }
@@ -1104,6 +1123,11 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             boolean[] zArr = this.mSpeechHd;
             return i < zArr.length && zArr[i];
         }
+    }
+
+    @Override // com.android.systemui.statusbar.policy.NetworkController
+    public List<SubscriptionInfo> getAllSubscriptions() {
+        return this.mAndroidSubscriptions;
     }
 
     /* access modifiers changed from: private */

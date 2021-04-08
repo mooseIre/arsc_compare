@@ -2194,7 +2194,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.driveModeTileProvider = DriveModeTile_Factory.create(this.qSTileHostProvider, create6);
         this.editTileProvider = EditTile_Factory.create(this.qSTileHostProvider);
         this.miuiCellularTileProvider = MiuiCellularTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider);
-        this.miuiHotspotTileProvider = MiuiHotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider);
+        this.miuiHotspotTileProvider = MiuiHotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider, this.networkControllerImplProvider);
         this.muteTileProvider = MuteTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
         this.nightModeTileProvider = NightModeTile_Factory.create(this.qSTileHostProvider);
     }
@@ -2212,7 +2212,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.screenShotTileProvider = ScreenShotTile_Factory.create(this.qSTileHostProvider);
         this.syncTileProvider = SyncTile_Factory.create(this.qSTileHostProvider);
         this.vibrateTileProvider = VibrateTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
-        MiuiAirplaneModeTile_Factory create2 = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider);
+        MiuiAirplaneModeTile_Factory create2 = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider);
         this.miuiAirplaneModeTileProvider = create2;
         Provider<QSFactoryInjectorImpl> provider = DoubleCheck.provider(QSFactoryInjectorImpl_Factory.create(this.qSTileHostProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, create2, this.locationTileProvider));
         this.qSFactoryInjectorImplProvider = provider;

@@ -17,11 +17,11 @@ final class ControlsBindingControllerImpl$LoadSubscriber$onNext$1 implements Run
     }
 
     public final void run() {
-        if (!this.this$0.isTerminated.get()) {
+        if (!ControlsBindingControllerImpl.LoadSubscriber.access$isTerminated$p(this.this$0).get()) {
             this.this$0.getLoadedControls().add(this.$c);
             if (((long) this.this$0.getLoadedControls().size()) >= this.this$0.getRequestLimit()) {
                 ControlsBindingControllerImpl.LoadSubscriber loadSubscriber = this.this$0;
-                loadSubscriber.maybeTerminateAndRun(new ControlsBindingControllerImpl.OnCancelAndLoadRunnable(loadSubscriber.this$0, this.$token, loadSubscriber.getLoadedControls(), ControlsBindingControllerImpl.LoadSubscriber.access$getSubscription$p(this.this$0), this.this$0.getCallback()));
+                ControlsBindingControllerImpl.LoadSubscriber.access$maybeTerminateAndRun(loadSubscriber, new ControlsBindingControllerImpl.OnCancelAndLoadRunnable(loadSubscriber.this$0, this.$token, loadSubscriber.getLoadedControls(), ControlsBindingControllerImpl.LoadSubscriber.access$getSubscription$p(this.this$0), this.this$0.getCallback()));
             }
         }
     }

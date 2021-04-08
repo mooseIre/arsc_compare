@@ -9,6 +9,7 @@ import android.content.Context;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -206,6 +207,7 @@ public class FsGestureDemoSwipeView extends FrameLayout {
 
     /* access modifiers changed from: package-private */
     public void cancelAnimation() {
+        Log.d("FsGestureDemoSwipeView", "cancelAnimation");
         setVisibility(8);
         AnimatorSet animatorSet = this.finalAnimatorSet;
         if (animatorSet != null) {

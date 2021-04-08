@@ -512,6 +512,10 @@ public final class NotificationEntry extends ListEntry {
         if (expandableNotificationRow != null) {
             expandableNotificationRow.notifyHeightChanged(z);
         }
+        ExpandableNotificationRow expandableNotificationRow2 = this.modalRow;
+        if (expandableNotificationRow2 != null) {
+            expandableNotificationRow2.notifyHeightChanged(z);
+        }
     }
 
     public void closeRemoteInput() {

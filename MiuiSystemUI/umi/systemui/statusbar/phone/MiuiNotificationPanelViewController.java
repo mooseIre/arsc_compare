@@ -120,6 +120,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private boolean mExpectingSynthesizedDown;
     private boolean mHidePanelRequested;
     private final Runnable mHidePanelRunnable = new MiuiNotificationPanelViewController$mHidePanelRunnable$1(this);
+    private boolean mIsDefaultTheme = true;
     private boolean mIsInteractive;
     private boolean mIsKeyguardOccluded;
     private float mKeyguardBouncerFraction;
@@ -330,6 +331,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         NotificationStackScrollLayoutExtKt.setPanelStretchingFromHeadsUp(this.mNotificationStackScroller, z);
     }
 
+    public final boolean getMIsDefaultTheme() {
+        return this.mIsDefaultTheme;
+    }
+
     /* access modifiers changed from: private */
     public final boolean getMPanelAppeared() {
         return NotificationStackScrollLayoutExtKt.isPanelAppeared(this.mNotificationStackScroller);
@@ -488,11 +493,19 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     /* access modifiers changed from: private */
     public final void handleNssCoverQs(float f) {
         QS qs;
+        float f2;
         if (!this.mQsExpanded && (qs = this.mQs) != null) {
             Intrinsics.checkExpressionValueIsNotNull(qs, "mQs");
             View header = qs.getHeader();
             Intrinsics.checkExpressionValueIsNotNull(header, "mQs.header");
-            updateScrollerTopPadding(RangesKt.coerceIn(this.mQsTopPadding + f, (float) header.getHeight(), super.calculateQsTopPadding()));
+            float height = (float) header.getHeight();
+            float calculateQsTopPadding = super.calculateQsTopPadding();
+            if (height <= calculateQsTopPadding) {
+                f2 = RangesKt.coerceIn(this.mQsTopPadding + f, height, calculateQsTopPadding);
+            } else {
+                f2 = RangesKt.coerceIn(this.mQsTopPadding + f, calculateQsTopPadding, height);
+            }
+            updateScrollerTopPadding(f2);
         }
     }
 
@@ -531,9 +544,12 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 Intrinsics.checkExpressionValueIsNotNull(header2, "mQs.header");
                 findViewById.setPivotY((float) header2.getHeight());
                 float f2 = 1.0f - (0.100000024f * height);
-                findViewById.setScaleX(f2);
-                findViewById.setScaleY(f2);
-                findViewById.setAlpha(1.0f - (height * 1.0f));
+                float f3 = 1.0f - (height * 1.0f);
+                if (!Float.isNaN(f2) && !Float.isNaN(f2) && !Float.isNaN(f3)) {
+                    findViewById.setScaleX(f2);
+                    findViewById.setScaleY(f2);
+                    findViewById.setAlpha(f3);
+                }
             }
         }
     }
@@ -1288,11 +1304,27 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (awesomeLockScreen != null) {
             awesomeLockScreen.setIsInteractive(true);
         }
+        String wakeupReason = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).getWakeupReason();
         Object obj = Dependency.get(MiuiFastUnlockController.class);
         Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(MiuiFastU…ckController::class.java)");
-        if (!((MiuiFastUnlockController) obj).isFastUnlock()) {
+        if (!((MiuiFastUnlockController) obj).isFastUnlock() && !Intrinsics.areEqual("InCallPresenter", wakeupReason)) {
             startWakeupAnimation();
         }
+    }
+
+    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
+    public void onStartedGoingToSleep() {
+        this.mIsInteractive = false;
+        AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
+        if (awesomeLockScreen != null) {
+            awesomeLockScreen.setIsInteractive(false);
+        }
+        if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
+            ((NotificationPanelViewController) this).mView.animate().cancel();
+            ((NotificationPanelViewController) this).mView.animate().setListener(new MiuiNotificationPanelViewController$onStartedGoingToSleep$1(this)).alpha(0.0f).setDuration(500).start();
+            return;
+        }
+        this.mKeyguardPanelViewInjector.setVisibility(4);
     }
 
     private final void startWakeupAnimation() {
@@ -1419,21 +1451,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             Intrinsics.checkExpressionValueIsNotNull(mainLayout, "Dependency.get(LockScree…ass.java).view.mainLayout");
             mainLayout.setAlpha(min);
         }
-    }
-
-    @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
-    public void onStartedGoingToSleep() {
-        this.mIsInteractive = false;
-        AwesomeLockScreen awesomeLockScreen = this.mAwesomeLockScreen;
-        if (awesomeLockScreen != null) {
-            awesomeLockScreen.setIsInteractive(false);
-        }
-        if (((MiuiKeyguardWallpaperControllerImpl) Dependency.get(MiuiKeyguardWallpaperControllerImpl.class)).isAodUsingSuperWallpaper()) {
-            ((NotificationPanelViewController) this).mView.animate().cancel();
-            ((NotificationPanelViewController) this).mView.animate().setListener(new MiuiNotificationPanelViewController$onStartedGoingToSleep$1(this)).alpha(0.0f).setDuration(500).start();
-            return;
-        }
-        this.mKeyguardPanelViewInjector.setVisibility(4);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:14:0x002d  */
