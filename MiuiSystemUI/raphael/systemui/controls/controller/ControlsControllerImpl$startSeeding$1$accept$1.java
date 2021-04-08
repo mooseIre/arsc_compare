@@ -52,7 +52,7 @@ public final class ControlsControllerImpl$startSeeding$1$accept$1 implements Run
             Intrinsics.checkExpressionValueIsNotNull(list2, "cs");
             favorites.replaceControls(new StructureInfo(componentName, charSequence, list2));
         }
-        this.this$0.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
+        ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
         ControlsControllerImpl$startSeeding$1 controlsControllerImpl$startSeeding$1 = this.this$0;
         Consumer consumer = controlsControllerImpl$startSeeding$1.$callback;
         String packageName = controlsControllerImpl$startSeeding$1.$componentName.getPackageName();

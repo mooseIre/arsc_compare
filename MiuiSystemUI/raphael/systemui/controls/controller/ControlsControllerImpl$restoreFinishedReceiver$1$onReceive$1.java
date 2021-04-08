@@ -13,8 +13,8 @@ final class ControlsControllerImpl$restoreFinishedReceiver$1$onReceive$1 impleme
     public final void run() {
         Log.d("ControlsControllerImpl", "Restore finished, storing auxiliary favorites");
         this.this$0.this$0.getAuxiliaryPersistenceWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core().initialize();
-        this.this$0.this$0.persistenceWrapper.storeFavorites(this.this$0.this$0.getAuxiliaryPersistenceWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core().getFavorites());
+        ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0.this$0).storeFavorites(this.this$0.this$0.getAuxiliaryPersistenceWrapper$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core().getFavorites());
         ControlsControllerImpl controlsControllerImpl = this.this$0.this$0;
-        controlsControllerImpl.resetFavorites(controlsControllerImpl.getAvailable());
+        ControlsControllerImpl.access$resetFavorites(controlsControllerImpl, controlsControllerImpl.getAvailable());
     }
 }

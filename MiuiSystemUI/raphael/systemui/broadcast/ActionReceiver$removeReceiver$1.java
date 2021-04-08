@@ -5,9 +5,8 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ActionReceiver.kt */
-public final class ActionReceiver$removeReceiver$1 extends Lambda implements Function1<ReceiverData, Boolean> {
+final class ActionReceiver$removeReceiver$1 extends Lambda implements Function1<ReceiverData, Boolean> {
     final /* synthetic */ BroadcastReceiver $receiver;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */

@@ -134,8 +134,40 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.listingController.addCallback(this.listingCallback);
     }
 
+    public static final /* synthetic */ ContentResolver access$getContentResolver$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.getContentResolver();
+    }
+
+    public static final /* synthetic */ UserHandle access$getCurrentUser$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.currentUser;
+    }
+
     public static final /* synthetic */ DelayableExecutor access$getExecutor$p(ControlsControllerImpl controlsControllerImpl) {
         return controlsControllerImpl.executor;
+    }
+
+    public static final /* synthetic */ ControlsFavoritePersistenceWrapper access$getPersistenceWrapper$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.persistenceWrapper;
+    }
+
+    public static final /* synthetic */ boolean access$getUserChanging$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.userChanging;
+    }
+
+    public static final /* synthetic */ void access$resetFavorites(ControlsControllerImpl controlsControllerImpl, boolean z) {
+        controlsControllerImpl.resetFavorites(z);
+    }
+
+    public static final /* synthetic */ void access$setAvailable$p(ControlsControllerImpl controlsControllerImpl, boolean z) {
+        controlsControllerImpl.available = z;
+    }
+
+    public static final /* synthetic */ void access$setUserChanging$p(ControlsControllerImpl controlsControllerImpl, boolean z) {
+        controlsControllerImpl.userChanging = z;
+    }
+
+    public static final /* synthetic */ void access$setValuesForUser(ControlsControllerImpl controlsControllerImpl, UserHandle userHandle) {
+        controlsControllerImpl.setValuesForUser(userHandle);
     }
 
     public static final class Companion {

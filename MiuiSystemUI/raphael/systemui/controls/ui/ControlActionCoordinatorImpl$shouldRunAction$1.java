@@ -1,7 +1,8 @@
 package com.android.systemui.controls.ui;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-final class ControlActionCoordinatorImpl$shouldRunAction$1 implements Runnable {
+public final class ControlActionCoordinatorImpl$shouldRunAction$1 implements Runnable {
     final /* synthetic */ String $controlId;
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
 
@@ -11,6 +12,6 @@ final class ControlActionCoordinatorImpl$shouldRunAction$1 implements Runnable {
     }
 
     public final void run() {
-        ControlActionCoordinatorImpl.access$getActionsInProgress$p(this.this$0).remove(this.$controlId);
+        this.this$0.actionsInProgress.remove(this.$controlId);
     }
 }

@@ -19,11 +19,11 @@ public final class ControlsControllerImpl$settingObserver$1 extends ContentObser
 
     public void onChange(boolean z, @NotNull Collection<? extends Uri> collection, int i, int i2) {
         Intrinsics.checkParameterIsNotNull(collection, "uris");
-        if (!this.this$0.userChanging && i2 == this.this$0.getCurrentUserId()) {
+        if (!ControlsControllerImpl.access$getUserChanging$p(this.this$0) && i2 == this.this$0.getCurrentUserId()) {
             ControlsControllerImpl controlsControllerImpl = this.this$0;
-            controlsControllerImpl.available = ControlsControllerImpl.Companion.isAvailable(controlsControllerImpl.getCurrentUserId(), this.this$0.getContentResolver());
+            ControlsControllerImpl.access$setAvailable$p(controlsControllerImpl, ControlsControllerImpl.Companion.isAvailable(controlsControllerImpl.getCurrentUserId(), ControlsControllerImpl.access$getContentResolver$p(this.this$0)));
             ControlsControllerImpl controlsControllerImpl2 = this.this$0;
-            controlsControllerImpl2.resetFavorites(controlsControllerImpl2.getAvailable());
+            ControlsControllerImpl.access$resetFavorites(controlsControllerImpl2, controlsControllerImpl2.getAvailable());
         }
     }
 }

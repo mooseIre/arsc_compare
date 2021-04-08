@@ -614,7 +614,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
-    /* access modifiers changed from: public */
     private void onRotate() {
         createActionItems();
     }
@@ -629,7 +628,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$jlxsGoRx8E3djFav9gCad5fjKg0 */
 
             public final void run() {
-                GlobalActionsDialog.lambda$jlxsGoRx8E3djFav9gCad5fjKg0(GlobalActionsDialog.this);
+                GlobalActionsDialog.this.onRotate();
             }
         }, this.mKeyguardShowing, this.mPowerAdapter);
         if (shouldShowLockMessage()) {
