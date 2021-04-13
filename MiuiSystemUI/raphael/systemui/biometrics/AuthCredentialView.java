@@ -19,6 +19,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
@@ -36,7 +37,7 @@ public abstract class AuthCredentialView extends LinearLayout {
         public void run() {
             TextView textView = AuthCredentialView.this.mErrorView;
             if (textView != null) {
-                textView.setText("");
+                textView.setText(CodeInjection.MD5);
             }
         }
     };

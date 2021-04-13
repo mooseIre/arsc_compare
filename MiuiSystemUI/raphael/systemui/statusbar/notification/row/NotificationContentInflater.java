@@ -466,6 +466,7 @@ public class NotificationContentInflater implements NotificationRowContentBinder
             this.mCallback = inflationCallback;
             this.mConversationProcessor = conversationNotificationProcessor;
             notificationEntry.setInflationTask(this);
+            NotificationContentInflaterInjector.initAppInfo(this.mEntry, this.mContext);
         }
 
         @VisibleForTesting
@@ -475,7 +476,6 @@ public class NotificationContentInflater implements NotificationRowContentBinder
 
         /* access modifiers changed from: protected */
         public InflationProgress doInBackground(Void... voidArr) {
-            NotificationContentInflaterInjector.initAppInfo(this.mEntry, this.mContext);
             try {
                 ExpandedNotification sbn = this.mEntry.getSbn();
                 Notification.Builder recoverBuilder = Notification.Builder.recoverBuilder(this.mContext, sbn.getNotification());

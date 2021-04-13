@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import codeinjection.CodeInjection;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.systemui.C0010R$bool;
@@ -209,7 +210,7 @@ public abstract class PanelViewController {
         if (this.mViewName != null) {
             str2 = this.mViewName + ": ";
         } else {
-            str2 = "";
+            str2 = CodeInjection.MD5;
         }
         sb.append(str2);
         sb.append(String.format(str, objArr));
@@ -897,34 +898,28 @@ public abstract class PanelViewController {
     }
 
     public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
-        String str;
         Object[] objArr = new Object[11];
         objArr[0] = getClass().getSimpleName();
         objArr[1] = Float.valueOf(getExpandedHeight());
         objArr[2] = Integer.valueOf(getMaxPanelHeight());
-        String str2 = "T";
-        objArr[3] = this.mClosing ? str2 : "f";
-        objArr[4] = this.mTracking ? str2 : "f";
-        objArr[5] = this.mJustPeeked ? str2 : "f";
+        String str = "T";
+        objArr[3] = this.mClosing ? str : "f";
+        objArr[4] = this.mTracking ? str : "f";
+        objArr[5] = this.mJustPeeked ? str : "f";
         ObjectAnimator objectAnimator = this.mPeekAnimator;
         objArr[6] = objectAnimator;
-        String str3 = " (started)";
-        if (objectAnimator == null || !objectAnimator.isStarted()) {
-            str = "";
-        } else {
-            str = str3;
-        }
-        objArr[7] = str;
+        String str2 = " (started)";
+        objArr[7] = (objectAnimator == null || !objectAnimator.isStarted()) ? CodeInjection.MD5 : str2;
         ValueAnimator valueAnimator = this.mHeightAnimator;
         objArr[8] = valueAnimator;
         if (valueAnimator == null || !valueAnimator.isStarted()) {
-            str3 = "";
+            str2 = CodeInjection.MD5;
         }
-        objArr[9] = str3;
+        objArr[9] = str2;
         if (!this.mTouchDisabled) {
-            str2 = "f";
+            str = "f";
         }
-        objArr[10] = str2;
+        objArr[10] = str;
         printWriter.println(String.format("[PanelView(%s): expandedHeight=%f maxPanelHeight=%d closing=%s tracking=%s justPeeked=%s peekAnim=%s%s timeAnim=%s%s touchDisabled=%s]", objArr));
     }
 

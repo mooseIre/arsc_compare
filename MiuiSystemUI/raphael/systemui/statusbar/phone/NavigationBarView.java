@@ -24,6 +24,7 @@ import android.view.WindowManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
@@ -1043,7 +1044,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         sb.append(rect.toShortString());
         sb.append(" ");
         sb.append(visibilityToString(getWindowVisibility()));
-        sb.append(z ? " OFFSCREEN!" : "");
+        sb.append(z ? " OFFSCREEN!" : CodeInjection.MD5);
         printWriter.println(sb.toString());
         printWriter.println(String.format("      mCurrentView: id=%s (%dx%d) %s %f", getResourceName(getCurrentView().getId()), Integer.valueOf(getCurrentView().getWidth()), Integer.valueOf(getCurrentView().getHeight()), visibilityToString(getCurrentView().getVisibility()), Float.valueOf(getCurrentView().getAlpha())));
         Object[] objArr = new Object[3];

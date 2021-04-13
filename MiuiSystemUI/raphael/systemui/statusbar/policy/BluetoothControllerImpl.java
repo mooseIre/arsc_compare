@@ -13,6 +13,7 @@ import android.os.UserManager;
 import android.provider.Settings;
 import android.util.Log;
 import androidx.constraintlayout.widget.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.settingslib.bluetooth.BluetoothCallback;
 import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
@@ -480,7 +481,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     @Override // com.android.systemui.statusbar.policy.BluetoothController
     public String getLastDeviceName() {
         if (this.mConnectedDevices.isEmpty()) {
-            return "";
+            return CodeInjection.MD5;
         }
         CachedBluetoothDevice cachedBluetoothDevice = this.mLastActiveDevice;
         if (cachedBluetoothDevice != null) {
@@ -488,7 +489,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         }
         CachedBluetoothDevice cachedBluetoothDevice2 = this.mConnectedDevices.get(0);
         if (cachedBluetoothDevice2 == null) {
-            return "";
+            return CodeInjection.MD5;
         }
         return cachedBluetoothDevice2.getName();
     }

@@ -3,6 +3,7 @@ package com.android.systemui.controls.controller;
 import android.database.ContentObserver;
 import android.net.Uri;
 import android.os.Handler;
+import com.android.systemui.controls.controller.ControlsControllerImpl;
 import java.util.Collection;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -21,7 +22,7 @@ public final class ControlsControllerImpl$settingObserver$1 extends ContentObser
         Intrinsics.checkParameterIsNotNull(collection, "uris");
         if (!ControlsControllerImpl.access$getUserChanging$p(this.this$0) && i2 == this.this$0.getCurrentUserId()) {
             ControlsControllerImpl controlsControllerImpl = this.this$0;
-            ControlsControllerImpl.access$setAvailable$p(controlsControllerImpl, ControlsControllerImpl.Companion.isAvailable(controlsControllerImpl.getCurrentUserId(), ControlsControllerImpl.access$getContentResolver$p(this.this$0)));
+            ControlsControllerImpl.access$setAvailable$p(controlsControllerImpl, ControlsControllerImpl.Companion.access$isAvailable(ControlsControllerImpl.Companion, controlsControllerImpl.getCurrentUserId(), ControlsControllerImpl.access$getContentResolver$p(this.this$0)));
             ControlsControllerImpl controlsControllerImpl2 = this.this$0;
             ControlsControllerImpl.access$resetFavorites(controlsControllerImpl2, controlsControllerImpl2.getAvailable());
         }

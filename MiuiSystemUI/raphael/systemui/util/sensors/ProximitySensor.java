@@ -5,6 +5,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0021R$string;
@@ -287,7 +288,7 @@ public class ProximitySensor {
             if (this.mTag != null) {
                 str2 = "[" + this.mTag + "] ";
             } else {
-                str2 = "";
+                str2 = CodeInjection.MD5;
             }
             sb.append(str2);
             sb.append(str);

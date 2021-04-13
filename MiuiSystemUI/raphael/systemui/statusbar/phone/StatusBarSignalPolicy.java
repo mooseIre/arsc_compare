@@ -342,6 +342,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         public boolean showDataTypeDataDisconnected;
         public boolean showDataTypeWhenWifiOn;
         public boolean showMobileDataTypeInMMS;
+        public boolean showMobileDataTypeSingle;
         public boolean speechHd;
         public int strengthId;
         public int subId;
@@ -365,7 +366,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
                 return false;
             }
             MobileIconState mobileIconState = (MobileIconState) obj;
-            if (this.subId == mobileIconState.subId && this.strengthId == mobileIconState.strengthId && this.typeId == mobileIconState.typeId && this.roaming == mobileIconState.roaming && Objects.equals(this.typeContentDescription, mobileIconState.typeContentDescription) && this.volteId == mobileIconState.volteId && this.airplane == mobileIconState.airplane && this.dataConnected == mobileIconState.dataConnected && this.wifiAvailable == mobileIconState.wifiAvailable && this.volte == mobileIconState.volte && this.hideVolte == mobileIconState.hideVolte && this.vowifiId == mobileIconState.vowifiId && this.vowifi == mobileIconState.vowifi && this.hideVowifi == mobileIconState.hideVowifi && this.speechHd == mobileIconState.speechHd && this.volteNoSerivce == mobileIconState.volteNoSerivce && this.fiveGDrawableId == mobileIconState.fiveGDrawableId && this.showDataTypeWhenWifiOn == mobileIconState.showDataTypeWhenWifiOn && this.showDataTypeDataDisconnected == mobileIconState.showDataTypeDataDisconnected && this.showMobileDataTypeInMMS == mobileIconState.showMobileDataTypeInMMS && Objects.equals(this.networkName, mobileIconState.networkName)) {
+            if (this.subId == mobileIconState.subId && this.strengthId == mobileIconState.strengthId && this.typeId == mobileIconState.typeId && this.roaming == mobileIconState.roaming && Objects.equals(this.typeContentDescription, mobileIconState.typeContentDescription) && this.volteId == mobileIconState.volteId && this.airplane == mobileIconState.airplane && this.dataConnected == mobileIconState.dataConnected && this.wifiAvailable == mobileIconState.wifiAvailable && this.volte == mobileIconState.volte && this.hideVolte == mobileIconState.hideVolte && this.vowifiId == mobileIconState.vowifiId && this.vowifi == mobileIconState.vowifi && this.hideVowifi == mobileIconState.hideVowifi && this.speechHd == mobileIconState.speechHd && this.volteNoSerivce == mobileIconState.volteNoSerivce && this.fiveGDrawableId == mobileIconState.fiveGDrawableId && this.showDataTypeWhenWifiOn == mobileIconState.showDataTypeWhenWifiOn && this.showDataTypeDataDisconnected == mobileIconState.showDataTypeDataDisconnected && this.showMobileDataTypeInMMS == mobileIconState.showMobileDataTypeInMMS && this.showMobileDataTypeSingle == mobileIconState.showMobileDataTypeSingle && Objects.equals(this.networkName, mobileIconState.networkName)) {
                 return true;
             }
             return false;
@@ -373,7 +374,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
 
         @Override // com.android.systemui.statusbar.phone.StatusBarSignalPolicy.SignalIconState
         public int hashCode() {
-            return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.subId), Integer.valueOf(this.strengthId), Integer.valueOf(this.typeId), Boolean.valueOf(this.roaming), this.typeContentDescription, Integer.valueOf(this.volteId), Boolean.valueOf(this.airplane), Boolean.valueOf(this.dataConnected), Boolean.valueOf(this.wifiAvailable), this.networkName, Boolean.valueOf(this.volte), Boolean.valueOf(this.hideVolte), Integer.valueOf(this.vowifiId), Boolean.valueOf(this.vowifi), Boolean.valueOf(this.hideVowifi), Boolean.valueOf(this.speechHd), Boolean.valueOf(this.volteNoSerivce), Integer.valueOf(this.fiveGDrawableId), Boolean.valueOf(this.showDataTypeWhenWifiOn), Boolean.valueOf(this.showDataTypeDataDisconnected), Boolean.valueOf(this.showMobileDataTypeInMMS));
+            return Objects.hash(Integer.valueOf(super.hashCode()), Integer.valueOf(this.subId), Integer.valueOf(this.strengthId), Integer.valueOf(this.typeId), Boolean.valueOf(this.roaming), this.typeContentDescription, Integer.valueOf(this.volteId), Boolean.valueOf(this.airplane), Boolean.valueOf(this.dataConnected), Boolean.valueOf(this.wifiAvailable), this.networkName, Boolean.valueOf(this.volte), Boolean.valueOf(this.hideVolte), Integer.valueOf(this.vowifiId), Boolean.valueOf(this.vowifi), Boolean.valueOf(this.hideVowifi), Boolean.valueOf(this.speechHd), Boolean.valueOf(this.volteNoSerivce), Integer.valueOf(this.fiveGDrawableId), Boolean.valueOf(this.showDataTypeWhenWifiOn), Boolean.valueOf(this.showDataTypeDataDisconnected), Boolean.valueOf(this.showMobileDataTypeInMMS), Boolean.valueOf(this.showMobileDataTypeSingle));
         }
 
         public MobileIconState copy() {
@@ -405,6 +406,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
             mobileIconState.showDataTypeWhenWifiOn = this.showDataTypeWhenWifiOn;
             mobileIconState.showDataTypeDataDisconnected = this.showDataTypeDataDisconnected;
             mobileIconState.showMobileDataTypeInMMS = this.showMobileDataTypeInMMS;
+            mobileIconState.showMobileDataTypeSingle = this.showMobileDataTypeSingle;
         }
 
         public static List<MobileIconState> copyStates(List<MobileIconState> list) {
@@ -418,7 +420,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         }
 
         public String toString() {
-            return "MobileIconState(subId=" + this.subId + ", strengthId=" + this.strengthId + ", roaming=" + this.roaming + ", typeId=" + this.typeId + ", volteId=" + this.volteId + ", airplane = " + this.airplane + ", dataConnected = " + this.dataConnected + ", wifiAvailable = " + this.wifiAvailable + ", networkName = " + this.networkName + ", volte = " + this.volte + ", hideVolte = " + this.hideVolte + ", vowifiId = " + this.vowifiId + ", vowifi = " + this.vowifi + ", hideVowifi = " + this.hideVowifi + ", speechHd = " + this.speechHd + ", volteNoSerivce = " + this.volteNoSerivce + ", fiveGDrawableId = " + this.fiveGDrawableId + ", showDataTypeWhenWifiOn = " + this.showDataTypeWhenWifiOn + ", showDataTypeDataDisconnected = " + this.showDataTypeDataDisconnected + ", showMobileDataTypeInMMS = " + this.showMobileDataTypeInMMS + ", visible=" + this.visible + ")";
+            return "MobileIconState(subId=" + this.subId + ", strengthId=" + this.strengthId + ", roaming=" + this.roaming + ", typeId=" + this.typeId + ", volteId=" + this.volteId + ", airplane = " + this.airplane + ", dataConnected = " + this.dataConnected + ", wifiAvailable = " + this.wifiAvailable + ", networkName = " + this.networkName + ", volte = " + this.volte + ", hideVolte = " + this.hideVolte + ", vowifiId = " + this.vowifiId + ", vowifi = " + this.vowifi + ", hideVowifi = " + this.hideVowifi + ", speechHd = " + this.speechHd + ", volteNoSerivce = " + this.volteNoSerivce + ", fiveGDrawableId = " + this.fiveGDrawableId + ", showDataTypeWhenWifiOn = " + this.showDataTypeWhenWifiOn + ", showDataTypeDataDisconnected = " + this.showDataTypeDataDisconnected + ", showMobileDataTypeInMMS = " + this.showMobileDataTypeInMMS + ", showMobileDataTypeSingle = " + this.showMobileDataTypeSingle + ", visible=" + this.visible + ")";
         }
     }
 }

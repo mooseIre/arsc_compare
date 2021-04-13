@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.service.notification.StatusBarNotification;
 import android.util.ArraySet;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.systemui.Dependency;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -163,7 +164,7 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
                 if (debugThrowable != null) {
                     str = Log.getStackTraceString(debugThrowable) + "\n";
                 } else {
-                    str = "";
+                    str = CodeInjection.MD5;
                 }
                 sb.append(str);
                 sb.append(" added removed");
@@ -513,34 +514,22 @@ public class NotificationGroupManager implements OnHeadsUpChangedListener, Statu
         public boolean suppressed;
 
         public String toString() {
-            String str;
-            String str2;
             StringBuilder sb = new StringBuilder();
             sb.append("    summary:\n      ");
             NotificationEntry notificationEntry = this.summary;
             sb.append(notificationEntry != null ? notificationEntry.getSbn() : "null");
             NotificationEntry notificationEntry2 = this.summary;
-            if (notificationEntry2 == null || notificationEntry2.getDebugThrowable() == null) {
-                str = "";
-            } else {
-                str = Log.getStackTraceString(this.summary.getDebugThrowable());
-            }
-            sb.append(str);
-            String str3 = sb.toString() + "\n    children size: " + this.children.size();
+            sb.append((notificationEntry2 == null || notificationEntry2.getDebugThrowable() == null) ? CodeInjection.MD5 : Log.getStackTraceString(this.summary.getDebugThrowable()));
+            String str = sb.toString() + "\n    children size: " + this.children.size();
             for (NotificationEntry notificationEntry3 : this.children.values()) {
                 StringBuilder sb2 = new StringBuilder();
-                sb2.append(str3);
+                sb2.append(str);
                 sb2.append("\n      ");
                 sb2.append(notificationEntry3.getSbn());
-                if (notificationEntry3.getDebugThrowable() != null) {
-                    str2 = Log.getStackTraceString(notificationEntry3.getDebugThrowable());
-                } else {
-                    str2 = "";
-                }
-                sb2.append(str2);
-                str3 = sb2.toString();
+                sb2.append(notificationEntry3.getDebugThrowable() != null ? Log.getStackTraceString(notificationEntry3.getDebugThrowable()) : CodeInjection.MD5);
+                str = sb2.toString();
             }
-            return str3 + "\n    summary suppressed: " + this.suppressed;
+            return str + "\n    summary suppressed: " + this.suppressed;
         }
     }
 }

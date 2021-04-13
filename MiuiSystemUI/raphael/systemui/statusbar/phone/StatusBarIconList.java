@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.phone;
 
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -220,9 +221,9 @@ public class StatusBarIconList {
 
         private String subSlotsString() {
             if (this.mSubSlots == null) {
-                return "";
+                return CodeInjection.MD5;
             }
-            return "" + this.mSubSlots.size() + " subSlots";
+            return CodeInjection.MD5 + this.mSubSlots.size() + " subSlots";
         }
     }
 }

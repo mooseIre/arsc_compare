@@ -10,13 +10,16 @@ import android.os.UserHandle;
 import android.provider.MiuiSettings;
 import android.util.Log;
 import com.android.internal.content.PackageMonitor;
+import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
+import com.miui.systemui.util.GestureObserver;
 import java.util.ArrayList;
 
 public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
     public static final ArrayList<String> sMiuiHomePkgNameList;
     private CommandQueue mCommandQueue;
     private Context mContext;
+    private GestureObserver mGestureObserver;
     private LauncherPackageMonitor mPackageMonitor;
     private boolean mUseMiuiHomeAsDefaultHome;
     private final BroadcastReceiver mUserPreferenceChangeReceiver = new BroadcastReceiver() {
@@ -42,6 +45,7 @@ public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
     public MiuiFullScreenGestureProxy(Context context, CommandQueue commandQueue) {
         this.mContext = context;
         this.mCommandQueue = commandQueue;
+        this.mGestureObserver = (GestureObserver) Dependency.get(GestureObserver.class);
     }
 
     public void start() {
@@ -71,8 +75,8 @@ public class MiuiFullScreenGestureProxy implements CommandQueue.Callbacks {
     private void updateDefaultHome(boolean z) {
         Log.w("MiuiFullScreenGestureProxy", "updateDefaultHome   useMiuiHomeAsDefaultHome=" + z);
         this.mUseMiuiHomeAsDefaultHome = z;
-        boolean z2 = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
-        if (!this.mUseMiuiHomeAsDefaultHome && z2) {
+        boolean isFullscreenGesture = this.mGestureObserver.isFullscreenGesture();
+        if (!this.mUseMiuiHomeAsDefaultHome && isFullscreenGesture) {
             MiuiSettings.Global.putBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar", false);
         }
     }

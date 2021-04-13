@@ -971,14 +971,10 @@ import com.miui.systemui.CloudDataManager;
 import com.miui.systemui.CloudDataManager_Factory;
 import com.miui.systemui.EventTracker;
 import com.miui.systemui.EventTracker_Factory;
-import com.miui.systemui.MemoryMonitor;
-import com.miui.systemui.MemoryMonitor_Factory;
 import com.miui.systemui.SettingsManager;
 import com.miui.systemui.SettingsManager_Factory;
 import com.miui.systemui.SettingsObserverImpl;
 import com.miui.systemui.SettingsObserverImpl_Factory;
-import com.miui.systemui.ViewLeakMonitor;
-import com.miui.systemui.ViewLeakMonitor_Factory;
 import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.analytics.SystemUIStat_Factory;
 import com.miui.systemui.display.OLEDScreenHelper;
@@ -992,6 +988,7 @@ import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver_Factory;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver_Factory;
+import com.miui.systemui.util.GestureObserver_Factory;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import com.miui.systemui.util.HapticFeedBackImpl_Factory;
 import com.miui.systemui.util.PackageEventController;
@@ -1007,6 +1004,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import javax.inject.Provider;
+import miui.systemui.performance.EvilMethodMonitor;
+import miui.systemui.performance.EvilMethodMonitor_Factory;
+import miui.systemui.performance.MemoryMonitor;
+import miui.systemui.performance.MemoryMonitor_Factory;
+import miui.systemui.performance.ViewLeakMonitor;
+import miui.systemui.performance.ViewLeakMonitor_Factory;
 
 public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootComponent {
     private static final Provider ABSENT_JDK_OPTIONAL_PROVIDER = InstanceFactory.create(Optional.empty());
@@ -1111,6 +1114,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private EditTile_Factory editTileProvider;
     private Provider<EnhancedEstimatesImpl> enhancedEstimatesImplProvider;
     private Provider<EventTracker> eventTrackerProvider;
+    private Provider<EvilMethodMonitor> evilMethodMonitorProvider;
     private Provider<ExpandableNotificationRowComponent.Builder> expandableNotificationRowComponentBuilderProvider;
     private NotificationLogger_ExpansionStateLogger_Factory expansionStateLoggerProvider;
     private Provider<ExtensionControllerImpl> extensionControllerImplProvider;
@@ -1997,7 +2001,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.notificationShadeDepthControllerProvider = DoubleCheck.provider(NotificationShadeDepthController_Factory.create(this.statusBarStateControllerImplProvider, this.blurUtilsProvider, this.biometricUnlockControllerProvider, this.keyguardStateControllerImplProvider, provider20, this.provideWallpaperManagerProvider, this.notificationShadeWindowControllerProvider, this.dozeParametersProvider, this.dumpManagerProvider));
         this.dismissCallbackRegistryProvider = DoubleCheck.provider(DismissCallbackRegistry_Factory.create(this.provideUiBackgroundExecutorProvider));
         this.statusBarTouchableRegionManagerProvider = DoubleCheck.provider(StatusBarTouchableRegionManager_Factory.create(this.contextProvider, this.notificationShadeWindowControllerProvider, this.provideConfigurationControllerProvider, this.provideHeadsUpManagerPhoneProvider));
-        Provider<SettingsObserverImpl> provider21 = DoubleCheck.provider(SettingsObserverImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
+        Provider<SettingsObserverImpl> provider21 = DoubleCheck.provider(SettingsObserverImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider, this.provideBgHandlerProvider));
         this.settingsObserverImplProvider = provider21;
         Provider<ControlPanelController> provider22 = DoubleCheck.provider(ControlPanelController_Factory.create(this.contextProvider, this.newKeyguardViewMediatorProvider, this.providesBroadcastDispatcherProvider, provider21, this.keyguardStateControllerImplProvider));
         this.controlPanelControllerProvider = provider22;
@@ -2254,12 +2258,13 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.notificationAlertControllerProvider = DoubleCheck.provider(NotificationAlertController_Factory.create(this.contextProvider, this.provideINotificationManagerProvider, this.provideNotificationEntryManagerProvider, this.notificationGroupManagerProvider, this.statusBarStateControllerImplProvider, this.screenLifecycleProvider, this.zenModeControllerImplProvider, this.settingsManagerProvider, this.notificationLockscreenUserManagerImplProvider, this.statusBarKeyguardViewManagerProvider));
         this.notificationDynamicFpsControllerProvider = DoubleCheck.provider(NotificationDynamicFpsController_Factory.create(this.contextProvider, this.provideNotificationEntryManagerProvider, this.provideHeadsUpManagerPhoneProvider, this.provideStatusBarProvider, this.statusBarStateControllerImplProvider, this.screenLifecycleProvider));
         this.notificationCountLimitPolicyProvider = DoubleCheck.provider(NotificationCountLimitPolicy_Factory.create(this.provideNotificationEntryManagerProvider));
-        this.miuiRecentProxyProvider = DoubleCheck.provider(MiuiRecentProxy_Factory.create(this.contextProvider, this.provideCommandQueueProvider, this.provideMainHandlerProvider));
+        this.miuiRecentProxyProvider = DoubleCheck.provider(MiuiRecentProxy_Factory.create(this.contextProvider, this.provideCommandQueueProvider));
         this.orientationPolicyProvider = DoubleCheck.provider(OrientationPolicy_Factory.create(this.contextProvider));
-        this.viewLeakMonitorProvider = DoubleCheck.provider(ViewLeakMonitor_Factory.create(this.contextProvider, this.provideBgLooperProvider, this.statusBarStateControllerImplProvider, this.provideNotificationEntryManagerProvider, this.provideConfigurationControllerProvider, this.controlPanelControllerProvider, this.settingsManagerProvider, this.dumpManagerProvider));
-        Provider<MemoryMonitor> provider13 = DoubleCheck.provider(MemoryMonitor_Factory.create(this.contextProvider, this.provideBgLooperProvider, this.dumpManagerProvider));
-        this.memoryMonitorProvider = provider13;
-        this.performanceToolsProvider = DoubleCheck.provider(PerformanceTools_Factory.create(this.viewLeakMonitorProvider, provider13));
+        this.viewLeakMonitorProvider = DoubleCheck.provider(ViewLeakMonitor_Factory.create(this.contextProvider, this.provideBgLooperProvider, this.statusBarStateControllerImplProvider, this.provideNotificationEntryManagerProvider, this.provideConfigurationControllerProvider, this.controlPanelControllerProvider, this.settingsManagerProvider));
+        this.memoryMonitorProvider = DoubleCheck.provider(MemoryMonitor_Factory.create(this.contextProvider, this.provideBgLooperProvider));
+        Provider<EvilMethodMonitor> provider13 = DoubleCheck.provider(EvilMethodMonitor_Factory.create(this.contextProvider, this.provideBgLooperProvider));
+        this.evilMethodMonitorProvider = provider13;
+        this.performanceToolsProvider = DoubleCheck.provider(PerformanceTools_Factory.create(this.viewLeakMonitorProvider, this.memoryMonitorProvider, provider13, this.dumpManagerProvider));
         this.notificationPanelNavigationBarCoordinatorProvider = DoubleCheck.provider(NotificationPanelNavigationBarCoordinator_Factory.create(this.provideCommandQueueProvider, this.provideConfigurationControllerProvider, this.lightBarControllerProvider));
         this.headsetPolicyProvider = DoubleCheck.provider(HeadsetPolicy_Factory.create(this.contextProvider));
         this.miuiFullScreenGestureProxyProvider = DoubleCheck.provider(MiuiFullScreenGestureProxy_Factory.create(this.contextProvider, this.provideCommandQueueProvider));
@@ -2350,10 +2355,10 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.contextProvider, this.provideBgLooperProvider));
         this.miuiDripLeftStatusBarIconControllerImplProvider = DoubleCheck.provider(MiuiDripLeftStatusBarIconControllerImpl_Factory.create(this.contextProvider));
         this.miuiKeyguardWallpaperControllerImplProvider = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
-        this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
     }
 
     private void initialize6(Builder builder) {
+        this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
         this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
         Provider<ModalRowInflater> provider = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));
         this.modalRowInflaterProvider = provider;
@@ -2551,6 +2556,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
     private final class DependencyInjectorImpl implements Dependency.DependencyInjector {
         private CarrierObserver_Factory carrierObserverProvider;
         private DriveModeObserver_Factory driveModeObserverProvider;
+        private GestureObserver_Factory gestureObserverProvider;
         private MiuiCarrierTextController_Factory miuiCarrierTextControllerProvider;
         private NCSwitchController_Factory nCSwitchControllerProvider;
         private NotificationIconObserver_Factory notificationIconObserverProvider;
@@ -2565,6 +2571,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             this.miuiCarrierTextControllerProvider = MiuiCarrierTextController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
             this.notificationIconObserverProvider = NotificationIconObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider);
             this.nCSwitchControllerProvider = NCSwitchController_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.statusBarStateControllerImplProvider, DaggerTvSystemUIRootComponent.this.controlPanelControllerProvider, DaggerTvSystemUIRootComponent.this.shadeControllerImplProvider, DaggerTvSystemUIRootComponent.this.provideHeadsUpManagerPhoneProvider, DaggerTvSystemUIRootComponent.this.systemUIStatProvider);
+            this.gestureObserverProvider = GestureObserver_Factory.create(DaggerTvSystemUIRootComponent.this.contextProvider, DaggerTvSystemUIRootComponent.this.provideMainHandlerProvider, DaggerTvSystemUIRootComponent.this.provideBgHandlerProvider);
         }
 
         @Override // com.android.systemui.Dependency.DependencyInjector
@@ -2685,6 +2692,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             Dependency_MembersInjector.injectMRecordingController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.recordingControllerProvider));
             Dependency_MembersInjector.injectMProtoTracer(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.protoTracerProvider));
             Dependency_MembersInjector.injectMDivider(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.provideDividerProvider));
+            Dependency_MembersInjector.injectMPerformanceTools(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.performanceToolsProvider));
             Dependency_MembersInjector.injectMSettingsManager(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.settingsManagerProvider));
             Dependency_MembersInjector.injectMCloudDataManager(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.cloudDataManagerProvider));
             Dependency_MembersInjector.injectMEventTracker(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.eventTrackerProvider));
@@ -2748,6 +2756,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
             Dependency_MembersInjector.injectMNCSwitchController(dependency, DoubleCheck.lazy(this.nCSwitchControllerProvider));
             Dependency_MembersInjector.injectMSystemUIStat(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.systemUIStatProvider));
             Dependency_MembersInjector.injectMPhoneSignalController(dependency, DoubleCheck.lazy(DaggerTvSystemUIRootComponent.this.phoneSignalControllerImplProvider));
+            Dependency_MembersInjector.injectMGestureObserver(dependency, DoubleCheck.lazy(this.gestureObserverProvider));
             return dependency;
         }
     }

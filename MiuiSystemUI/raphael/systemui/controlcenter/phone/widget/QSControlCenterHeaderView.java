@@ -3,6 +3,7 @@ package com.android.systemui.controlcenter.phone.widget;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,6 +110,11 @@ public class QSControlCenterHeaderView extends LinearLayout {
         this.mBigTime = (MiuiClock) findViewById(C0015R$id.big_time);
         this.mDateView.setOnClickListener(this.mOnClickListener);
         this.mBigTime.setOnClickListener(this.mOnClickListener);
+        try {
+            this.mBigTime.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/MiClock-Light.otf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ImageView imageView = (ImageView) findViewById(C0015R$id.tiles_edit);
         this.mTilesEdit = imageView;
         imageView.setContentDescription(this.mContext.getResources().getString(C0021R$string.accessibility_desc_quick_settings_edit));

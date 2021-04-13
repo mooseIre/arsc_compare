@@ -2,6 +2,7 @@ package com.android.systemui.controls.controller;
 
 import android.content.ComponentName;
 import android.service.controls.Control;
+import codeinjection.CodeInjection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -16,8 +17,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt___RangesKt;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsControllerImpl.kt */
-final class Favorites {
+public final class Favorites {
     public static final Favorites INSTANCE = new Favorites();
     private static Map<ComponentName, ? extends List<StructureInfo>> favMap = MapsKt__MapsKt.emptyMap();
 
@@ -145,7 +147,7 @@ final class Favorites {
                     }
                     Object structure = control.getStructure();
                     if (structure == null) {
-                        structure = "";
+                        structure = CodeInjection.MD5;
                     }
                     if (!Intrinsics.areEqual(t2.getStructure(), structure)) {
                         z = true;

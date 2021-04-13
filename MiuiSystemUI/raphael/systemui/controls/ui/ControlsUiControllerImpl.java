@@ -23,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.ListPopupWindow;
 import android.widget.Space;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
@@ -154,9 +155,9 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     static {
-        ComponentName componentName = new ComponentName("", "");
+        ComponentName componentName = new ComponentName(CodeInjection.MD5, CodeInjection.MD5);
         EMPTY_COMPONENT = componentName;
-        EMPTY_STRUCTURE = new StructureInfo(componentName, "", new ArrayList());
+        EMPTY_STRUCTURE = new StructureInfo(componentName, CodeInjection.MD5, new ArrayList());
     }
 
     @Override // com.android.systemui.controls.ui.ControlsUiController
@@ -485,7 +486,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         if (string == null || (componentName = ComponentName.unflattenFromString(string)) == null) {
             componentName = EMPTY_COMPONENT;
         }
-        String string2 = this.sharedPreferences.getString("controls_structure", "");
+        String string2 = this.sharedPreferences.getString("controls_structure", CodeInjection.MD5);
         Iterator<T> it = list.iterator();
         while (true) {
             if (!it.hasNext()) {

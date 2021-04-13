@@ -11,6 +11,7 @@ import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
@@ -137,7 +138,7 @@ public class ShortcutPicker extends PreferenceFragment implements TunerService.T
     @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
         if (str2 == null) {
-            str2 = "";
+            str2 = CodeInjection.MD5;
         }
         this.mSelectablePreferences.forEach(new Consumer(str2) {
             /* class com.android.systemui.tuner.$$Lambda$ShortcutPicker$i1fIZ726bNySXwulncRN12T1Qg */

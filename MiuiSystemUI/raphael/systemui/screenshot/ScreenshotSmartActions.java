@@ -11,6 +11,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.UserHandle;
 import android.util.Slog;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.SystemUIFactory;
 import com.android.systemui.screenshot.ScreenshotNotificationSmartActionsProvider;
@@ -37,7 +38,7 @@ public class ScreenshotSmartActions {
             try {
                 ActivityManager.RunningTaskInfo runningTask = ActivityManagerWrapper.getInstance().getRunningTask();
                 if (runningTask == null || runningTask.topActivity == null) {
-                    componentName = new ComponentName("", "");
+                    componentName = new ComponentName(CodeInjection.MD5, CodeInjection.MD5);
                 } else {
                     componentName = runningTask.topActivity;
                 }

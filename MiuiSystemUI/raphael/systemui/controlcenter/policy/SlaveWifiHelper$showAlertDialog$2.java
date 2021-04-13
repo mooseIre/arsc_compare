@@ -8,8 +8,9 @@ import com.android.systemui.statusbar.policy.NetworkController;
 import kotlin.TypeCastException;
 import miui.app.AlertDialog;
 
+/* access modifiers changed from: package-private */
 /* compiled from: SlaveWifiHelper.kt */
-final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClickListener {
+public final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClickListener {
     final /* synthetic */ NetworkController.AccessPointController $accessPointController;
     final /* synthetic */ AccessPoint $ap;
     final /* synthetic */ Context $context;
@@ -27,7 +28,7 @@ final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClick
             if (((AlertDialog) dialogInterface).isChecked()) {
                 PreferenceManager.getDefaultSharedPreferences(this.$context).edit().putBoolean("dual_wifi_switching_not_remind", true).commit();
             }
-            SlaveWifiHelper.access$getSlaveWifiUtils$p(this.this$0).disconnectSlaveWifi();
+            this.this$0.slaveWifiUtils.disconnectSlaveWifi();
             this.$accessPointController.connect(this.$ap);
             dialogInterface.dismiss();
             return;

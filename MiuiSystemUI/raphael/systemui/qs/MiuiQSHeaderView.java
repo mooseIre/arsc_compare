@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import codeinjection.CodeInjection;
 import com.android.keyguard.CarrierText;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
@@ -147,7 +148,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
 
     /* access modifiers changed from: protected */
     public boolean showCarrier() {
-        if (Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CM_CUSTOMIZATION_TEST || "TW".equalsIgnoreCase(SystemProperties.get("ro.miui.region", ""))) {
+        if (Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CM_CUSTOMIZATION_TEST || "TW".equalsIgnoreCase(SystemProperties.get("ro.miui.region", CodeInjection.MD5))) {
             return true;
         }
         return ((RelativeLayout) this).mContext.getResources().getBoolean(C0010R$bool.show_carrier_in_status_bar_header);

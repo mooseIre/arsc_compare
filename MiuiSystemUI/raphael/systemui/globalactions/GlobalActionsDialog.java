@@ -69,6 +69,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
+import codeinjection.CodeInjection;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.colorextraction.drawable.ScrimDrawable;
 import com.android.internal.logging.MetricsLogger;
@@ -614,6 +615,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         }
     }
 
+    /* access modifiers changed from: public */
     private void onRotate() {
         createActionItems();
     }
@@ -628,7 +630,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$jlxsGoRx8E3djFav9gCad5fjKg0 */
 
             public final void run() {
-                GlobalActionsDialog.this.onRotate();
+                GlobalActionsDialog.lambda$jlxsGoRx8E3djFav9gCad5fjKg0(GlobalActionsDialog.this);
             }
         }, this.mKeyguardShowing, this.mPowerAdapter);
         if (shouldShowLockMessage()) {
@@ -1166,7 +1168,7 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
                         str2 = "Primary";
                     }
                     sb.append(str2);
-                    sb.append(z ? " ✔" : "");
+                    sb.append(z ? " ✔" : CodeInjection.MD5);
                     addIfShouldShowAction(list, new SinglePressAction(17302706, createFromPath, sb.toString()) {
                         /* class com.android.systemui.globalactions.GlobalActionsDialog.AnonymousClass6 */
 
@@ -1903,6 +1905,15 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
         private final IBinder mToken = new Binder();
         private final GlobalActionsPanelPlugin.PanelViewController mWalletViewController;
 
+        public static /* synthetic */ void lambda$b7BjyiDlA1YYZd2S_4WLEfoJbac(ActionsDialog actionsDialog) {
+            actionsDialog.completeDismiss();
+        }
+
+        /* renamed from: lambda$pdjB9IUZqjM8heY8C5-6yJKk6nA */
+        public static /* synthetic */ void m15lambda$pdjB9IUZqjM8heY8C56yJKk6nA(ActionsDialog actionsDialog) {
+            actionsDialog.dismissForControlsActivity();
+        }
+
         ActionsDialog(Context context, MyAdapter myAdapter, MyOverflowAdapter myOverflowAdapter, GlobalActionsPanelPlugin.PanelViewController panelViewController, NotificationShadeDepthController notificationShadeDepthController, SysuiColorExtractor sysuiColorExtractor, IStatusBarService iStatusBarService, NotificationShadeWindowController notificationShadeWindowController, boolean z, ControlsUiController controlsUiController, SysUiState sysUiState, Runnable runnable, boolean z2, MyPowerOptionsAdapter myPowerOptionsAdapter) {
             super(context, C0022R$style.Theme_SystemUI_Dialog_GlobalActions);
             this.mContext = context;
@@ -2293,7 +2304,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             this.mDepthController.updateGlobalDialogVisibility(animatedFraction, this.mGlobalActionsLayout);
         }
 
-        /* access modifiers changed from: public */
         private void dismissForControlsActivity() {
             dismissWithAnimation(new Runnable() {
                 /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsDialog$ActionsDialog$yh8uJQoAv1nRg6YOxU19qycI3Zo */
@@ -2324,7 +2334,6 @@ public class GlobalActionsDialog implements DialogInterface.OnDismissListener, D
             }
         }
 
-        /* access modifiers changed from: public */
         private void completeDismiss() {
             this.mShowing = false;
             resetOrientation();

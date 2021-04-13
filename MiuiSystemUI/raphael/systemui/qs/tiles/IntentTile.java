@@ -12,6 +12,7 @@ import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.appcompat.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
@@ -156,7 +157,7 @@ public class IntentTile extends QSTileImpl<QSTile.State> {
             String stringExtra2 = intent.getStringExtra("package");
             this.mIntentPackage = stringExtra2;
             if (stringExtra2 == null) {
-                stringExtra2 = "";
+                stringExtra2 = CodeInjection.MD5;
             }
             this.mIntentPackage = stringExtra2;
         }

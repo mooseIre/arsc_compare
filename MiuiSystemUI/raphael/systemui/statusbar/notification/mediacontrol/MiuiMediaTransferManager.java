@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import codeinjection.CodeInjection;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.media.InfoMediaManager;
 import com.android.settingslib.media.LocalMediaManager;
@@ -41,7 +42,7 @@ public class MiuiMediaTransferManager {
         @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onDeviceListUpdate(List<MediaDevice> list) {
             MiuiMediaTransferManager.this.updatePhoneDevice((MiuiMediaTransferManager) list);
-            MiuiMediaTransferManager.this.updateCurrentDevice("");
+            MiuiMediaTransferManager.this.updateCurrentDevice(CodeInjection.MD5);
         }
 
         @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback

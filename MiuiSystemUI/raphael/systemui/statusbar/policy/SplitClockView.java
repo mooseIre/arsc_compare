@@ -10,6 +10,7 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 import android.widget.TextClock;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0015R$id;
 
 public class SplitClockView extends LinearLayout {
@@ -66,7 +67,7 @@ public class SplitClockView extends LinearLayout {
         String timeFormatString = DateFormat.getTimeFormatString(getContext(), ActivityManager.getCurrentUser());
         int amPmPartEndIndex = getAmPmPartEndIndex(timeFormatString);
         if (amPmPartEndIndex == -1) {
-            str2 = "";
+            str2 = CodeInjection.MD5;
             str = timeFormatString;
         } else {
             str = timeFormatString.substring(0, amPmPartEndIndex);

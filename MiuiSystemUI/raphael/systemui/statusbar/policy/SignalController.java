@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SignalController.IconGroup;
 import com.android.systemui.statusbar.policy.SignalController.State;
@@ -111,7 +112,7 @@ public abstract class SignalController<T extends State, I extends IconGroup> {
 
     /* access modifiers changed from: package-private */
     public CharSequence getTextIfExists(int i) {
-        return i != 0 ? this.mContext.getText(i) : "";
+        return i != 0 ? this.mContext.getText(i) : CodeInjection.MD5;
     }
 
     /* access modifiers changed from: protected */

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
@@ -613,11 +614,11 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
                 intent.setClassName(activityInfo.packageName, activityInfo.name);
                 intent.addFlags(32768);
                 intent.addFlags(268435456);
-                intent.putExtra("appName", "");
+                intent.putExtra("appName", CodeInjection.MD5);
                 intent.putExtra("packageName", packageName);
                 intent.putExtra("userId", UserHandle.getUserId(expandedNotification.getAppUid()));
                 intent.putExtra("messageId", messageId);
-                intent.putExtra("notificationId", "");
+                intent.putExtra("notificationId", CodeInjection.MD5);
                 intent.putExtra("miui.category", NotificationUtil.getCategory(expandedNotification));
                 try {
                     this.mContext.startActivityAsUser(intent, UserHandle.CURRENT);
@@ -686,7 +687,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
         private int mIconResId;
 
         public MiuiNotificationMenuItem(MiuiNotificationMenuRow miuiNotificationMenuRow, Context context, int i, NotificationGuts.GutsContent gutsContent, int i2) {
-            super(context, "", gutsContent, i2);
+            super(context, CodeInjection.MD5, gutsContent, i2);
             this.mContentDescription = context.getResources().getString(i);
             if (i2 >= 0) {
                 this.mIconResId = i2;
@@ -718,7 +719,7 @@ public class MiuiNotificationMenuRow implements NotificationMenuRowPlugin {
     }
 
     private static boolean canBlock(Context context, ExpandedNotification expandedNotification) {
-        if (NotificationSettingsHelper.isNonBlockable(context, expandedNotification.getPackageName(), "")) {
+        if (NotificationSettingsHelper.isNonBlockable(context, expandedNotification.getPackageName(), CodeInjection.MD5)) {
             return false;
         }
         return !NotificationUtil.isUidSystem(expandedNotification.getAppUid());

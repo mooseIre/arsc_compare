@@ -2,6 +2,7 @@ package com.android.systemui.controlcenter.phone;
 
 import android.graphics.Bitmap;
 import android.os.UserHandle;
+import codeinjection.CodeInjection;
 import java.util.HashMap;
 
 public interface ExpandInfoController {
@@ -52,14 +53,14 @@ public interface ExpandInfoController {
     }
 
     public static class Info {
-        public String action = "";
+        public String action = CodeInjection.MD5;
         public boolean available;
         public Bitmap icon = null;
         public boolean initialized;
-        public String status = "";
-        public String title = "";
-        public String unit = "";
-        public String uri = "";
+        public String status = CodeInjection.MD5;
+        public String title = CodeInjection.MD5;
+        public String unit = CodeInjection.MD5;
+        public String uri = CodeInjection.MD5;
 
         public boolean equal(Info info) {
             String str;

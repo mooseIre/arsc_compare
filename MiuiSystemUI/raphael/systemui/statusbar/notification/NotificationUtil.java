@@ -16,6 +16,7 @@ import android.util.Slog;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
@@ -210,7 +211,7 @@ public class NotificationUtil {
         if (charSequence == null) {
             charSequence = notification.extras.getCharSequence("android.title.big");
         }
-        return charSequence != null ? charSequence : "";
+        return charSequence != null ? charSequence : CodeInjection.MD5;
     }
 
     public static CharSequence resolveText(Notification notification) {
@@ -218,12 +219,12 @@ public class NotificationUtil {
         if (charSequence == null) {
             charSequence = notification.extras.getCharSequence("android.bigText");
         }
-        return charSequence != null ? charSequence : "";
+        return charSequence != null ? charSequence : CodeInjection.MD5;
     }
 
     public static CharSequence resolveSubText(Notification notification) {
         CharSequence charSequence = notification.extras.getCharSequence("android.subText");
-        return charSequence != null ? charSequence : "";
+        return charSequence != null ? charSequence : CodeInjection.MD5;
     }
 
     public static boolean isUserOwner(Context context) {

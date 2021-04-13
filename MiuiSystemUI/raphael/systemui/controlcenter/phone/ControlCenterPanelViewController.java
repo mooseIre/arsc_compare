@@ -5,7 +5,6 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.hardware.display.DisplayManager;
-import android.provider.MiuiSettings;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
@@ -17,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import com.android.systemui.C0012R$dimen;
+import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.animator.AdvancedAnimatorImpl;
 import com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator;
 import com.android.systemui.controlcenter.phone.animator.PrimaryAnimatorImpl;
@@ -31,6 +31,7 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.CommonUtil;
+import com.miui.systemui.util.GestureObserver;
 import com.miui.systemui.util.MiuiAnimationUtils;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
@@ -42,13 +43,14 @@ import miuix.animation.controller.AnimState;
 import miuix.animation.property.ViewProperty;
 import miuix.animation.utils.VelocityMonitor;
 
-public final class ControlCenterPanelViewController implements ConfigurationController.ConfigurationListener {
+public final class ControlCenterPanelViewController implements ConfigurationController.ConfigurationListener, GestureObserver.Callback {
     private boolean animatingToCollapse;
     private final ControlPanelController ccController;
     private final ConfigurationController configurationController;
     private final Context context;
     private int expandThreshold;
     private IStateStyle expandTransAnim;
+    private final GestureObserver gestureObserver;
     private boolean isFsgEnabled;
     private boolean isFsgLineEnabled;
     private int maxVelocity = 1000;
@@ -84,6 +86,9 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         this.ccController = controlPanelController;
         this.ncSwitchController = nCSwitchController;
         this.statusBarStateController = statusBarStateController2;
+        Object obj = Dependency.get(GestureObserver.class);
+        Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(GestureObserver::class.java)");
+        this.gestureObserver = (GestureObserver) obj;
         VelocityTracker obtain = VelocityTracker.obtain();
         Intrinsics.checkExpressionValueIsNotNull(obtain, "VelocityTracker.obtain()");
         this.velocityTracker = obtain;
@@ -97,9 +102,11 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
 
             public void onViewAttachedToWindow(View view) {
                 this.this$0.configurationController.addCallback(this.this$0);
+                this.this$0.gestureObserver.addCallback(this.this$0);
             }
 
             public void onViewDetachedFromWindow(View view) {
+                this.this$0.gestureObserver.removeCallback(this.this$0);
                 this.this$0.configurationController.removeCallback(this.this$0);
             }
         });
@@ -136,7 +143,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         Intrinsics.checkExpressionValueIsNotNull(state, "Folme.useAt(panelView.tileContainer).state()");
         this.expandTransAnim = state;
         this.panelAnimator.onFinishInflate();
-        updateFsgState();
         onOrientationChanged(getOrientation(), true);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.context);
         Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "it");
@@ -346,11 +352,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return (!this.isFsgEnabled || !this.isFsgLineEnabled || this.statusBarStateController.getState() == 1 || this.statusBarStateController.getState() == 2 || this.stableInsetBottom == 0) ? false : true;
     }
 
-    private final void updateFsgState() {
-        this.isFsgEnabled = MiuiSettings.Global.getBoolean(this.context.getContentResolver(), "force_fsg_nav_bar");
-        this.isFsgLineEnabled = !MiuiSettings.Global.getBoolean(this.context.getContentResolver(), "hide_gesture_line");
-    }
-
     private final boolean isExpandable() {
         return !isSuperPowerMode();
     }
@@ -369,7 +370,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         Intrinsics.checkParameterIsNotNull(windowInsets, "insets");
         this.stableInsetBottom = windowInsets.getStableInsetBottom();
         this.panelView.getContentContainer().getNavigationBarSpace().getLayoutParams().height = this.stableInsetBottom;
-        updateFsgState();
     }
 
     public final class TouchHandler implements View.OnTouchListener {
@@ -666,5 +666,11 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             setTransRatio(RangesKt___RangesKt.coerceAtLeast(f3, 0.0f));
         }
         this.velocityMonitor.update(((this.transRatio * ((float) this.expandThreshold)) - this.tileLayoutLastHeight) + ((float) this.tileLayoutMinHeight));
+    }
+
+    @Override // com.miui.systemui.util.GestureObserver.Callback
+    public void onGestureConfigChange(boolean z, boolean z2) {
+        this.isFsgEnabled = z;
+        this.isFsgLineEnabled = z;
     }
 }

@@ -1,6 +1,7 @@
 package com.android.systemui.qs;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -48,6 +49,11 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
         MiuiClock miuiClock2 = (MiuiClock) findViewById(C0015R$id.big_time);
         this.mClock = miuiClock2;
         miuiClock2.setOnClickListener(this);
+        try {
+            this.mClock.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/MiClock-Light.otf"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         ImageView imageView = (ImageView) findViewById(C0015R$id.notification_shade_shortcut);
         this.mShortcut = imageView;
         imageView.setOnClickListener(this);

@@ -164,6 +164,7 @@ import com.miui.systemui.statusbar.PanelExpansionObserver;
 import com.miui.systemui.statusbar.phone.DriveModeObserver;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
+import com.miui.systemui.util.GestureObserver;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import dagger.Lazy;
 
@@ -616,6 +617,10 @@ public final class Dependency_MembersInjector {
         dependency.mDivider = lazy;
     }
 
+    public static void injectMPerformanceTools(Dependency dependency, Lazy<PerformanceTools> lazy) {
+        dependency.mPerformanceTools = lazy;
+    }
+
     public static void injectMSettingsManager(Dependency dependency, Lazy<SettingsManager> lazy) {
         dependency.mSettingsManager = lazy;
     }
@@ -866,5 +871,9 @@ public final class Dependency_MembersInjector {
 
     public static void injectMPhoneSignalController(Dependency dependency, Lazy<IPhoneSignalController> lazy) {
         dependency.mPhoneSignalController = lazy;
+    }
+
+    public static void injectMGestureObserver(Dependency dependency, Lazy<GestureObserver> lazy) {
+        dependency.mGestureObserver = lazy;
     }
 }

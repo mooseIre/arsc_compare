@@ -1,5 +1,6 @@
 package com.android.systemui.qs.logging;
 
+import codeinjection.CodeInjection;
 import com.android.systemui.log.LogMessage;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
@@ -32,7 +33,7 @@ public final class QSLogger$logTileUpdated$2 extends Lambda implements Function1
         if (logMessage.getBool1()) {
             str = " Activity in/out=" + logMessage.getBool2() + '/' + logMessage.getBool3();
         } else {
-            str = "";
+            str = CodeInjection.MD5;
         }
         sb.append(str);
         return sb.toString();

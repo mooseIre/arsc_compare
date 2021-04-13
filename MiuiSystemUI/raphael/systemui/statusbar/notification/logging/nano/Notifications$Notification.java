@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.notification.logging.nano;
 
+import codeinjection.CodeInjection;
 import com.google.protobuf.nano.CodedOutputByteBufferNano;
 import com.google.protobuf.nano.InternalNano;
 import com.google.protobuf.nano.MessageNano;
@@ -31,7 +32,7 @@ public final class Notifications$Notification extends MessageNano {
 
     public Notifications$Notification clear() {
         this.uid = 0;
-        this.packageName = "";
+        this.packageName = CodeInjection.MD5;
         this.instanceId = 0;
         this.groupInstanceId = 0;
         this.isGroupSummary = false;
@@ -46,7 +47,7 @@ public final class Notifications$Notification extends MessageNano {
         if (i != 0) {
             codedOutputByteBufferNano.writeInt32(1, i);
         }
-        if (!this.packageName.equals("")) {
+        if (!this.packageName.equals(CodeInjection.MD5)) {
             codedOutputByteBufferNano.writeString(2, this.packageName);
         }
         int i2 = this.instanceId;
@@ -76,7 +77,7 @@ public final class Notifications$Notification extends MessageNano {
         if (i != 0) {
             computeSerializedSize += CodedOutputByteBufferNano.computeInt32Size(1, i);
         }
-        if (!this.packageName.equals("")) {
+        if (!this.packageName.equals(CodeInjection.MD5)) {
             computeSerializedSize += CodedOutputByteBufferNano.computeStringSize(2, this.packageName);
         }
         int i2 = this.instanceId;

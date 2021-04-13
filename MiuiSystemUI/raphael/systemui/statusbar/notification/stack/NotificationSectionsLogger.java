@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.notification.stack;
 
+import codeinjection.CodeInjection;
 import com.android.systemui.log.LogBuffer;
 import com.android.systemui.log.LogLevel;
 import com.android.systemui.log.LogMessageImpl;
@@ -97,7 +98,7 @@ public final class NotificationSectionsLogger {
     }
 
     private final void logPosition(int i, String str, boolean z) {
-        String str2 = z ? " (HUN)" : "";
+        String str2 = z ? " (HUN)" : CodeInjection.MD5;
         LogBuffer logBuffer2 = this.logBuffer;
         LogLevel logLevel = LogLevel.DEBUG;
         NotificationSectionsLogger$logPosition$2 notificationSectionsLogger$logPosition$2 = NotificationSectionsLogger$logPosition$2.INSTANCE;

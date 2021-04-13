@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.graphics.drawable.Icon;
 import android.os.Parcelable;
+import codeinjection.CodeInjection;
 
 public class MiuiNotificationCompat {
     public static boolean isShowMiuiAction(Notification notification) {
@@ -15,7 +16,7 @@ public class MiuiNotificationCompat {
     }
 
     public static CharSequence getMiuiActionTitle(Notification notification) {
-        return isShowMiuiAction(notification) ? notification.actions[0].title : "";
+        return isShowMiuiAction(notification) ? notification.actions[0].title : CodeInjection.MD5;
     }
 
     public static boolean isEnableFloat(Notification notification) {

@@ -41,6 +41,7 @@ import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import codeinjection.CodeInjection;
 import com.android.settingslib.Utils;
 import com.android.settingslib.volume.Util;
 import com.android.systemui.C0013R$drawable;
@@ -1306,7 +1307,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
 
     private String getStreamLabelH(VolumeDialogController.StreamState streamState) {
         if (streamState == null) {
-            return "";
+            return CodeInjection.MD5;
         }
         String str = streamState.remoteLabel;
         if (str != null) {
@@ -1317,7 +1318,7 @@ public class VolumeDialogImpl implements VolumeDialog, ConfigurationController.C
         } catch (Resources.NotFoundException unused) {
             String str2 = TAG;
             Slog.e(str2, "Can't find translation for stream " + streamState);
-            return "";
+            return CodeInjection.MD5;
         }
     }
 

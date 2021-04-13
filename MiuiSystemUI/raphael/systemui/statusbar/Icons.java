@@ -56,6 +56,7 @@ public class Icons {
         sTintIconMap.put(C0013R$drawable.stat_sys_data_connected_roam_small, Integer.valueOf(C0013R$drawable.stat_sys_data_connected_roam_small_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_speakerphone, Integer.valueOf(C0013R$drawable.stat_sys_speakerphone_tint));
         sTintIconMap.put(C0013R$drawable.stat_notify_call_mute, Integer.valueOf(C0013R$drawable.stat_notify_call_mute_tint));
+        sTintIconMap.put(C0013R$drawable.stat_sys_call_record, Integer.valueOf(C0013R$drawable.stat_sys_call_record_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_quiet_mode, Integer.valueOf(C0013R$drawable.stat_sys_quiet_mode_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_usb_share, Integer.valueOf(C0013R$drawable.stat_sys_usb_share_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_managed_profile_status, Integer.valueOf(C0013R$drawable.stat_sys_managed_profile_status_tint));
@@ -135,6 +136,7 @@ public class Icons {
         sTintIconMap.put(C0013R$drawable.stat_sys_data_connected_roam_small_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_data_connected_roam_small_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_speakerphone_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_speakerphone_tint));
         sTintIconMap.put(C0013R$drawable.stat_notify_call_mute_darkmode, Integer.valueOf(C0013R$drawable.stat_notify_call_mute_tint));
+        sTintIconMap.put(C0013R$drawable.stat_sys_call_record_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_call_record_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_quiet_mode_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_quiet_mode_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_usb_share_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_usb_share_tint));
         sTintIconMap.put(C0013R$drawable.stat_sys_managed_profile_status_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_managed_profile_status_tint));
@@ -214,6 +216,7 @@ public class Icons {
         sLightIconMap.put(C0013R$drawable.stat_sys_data_connected_roam_small_tint, Integer.valueOf(C0013R$drawable.stat_sys_data_connected_roam_small));
         sLightIconMap.put(C0013R$drawable.stat_sys_speakerphone_tint, Integer.valueOf(C0013R$drawable.stat_sys_speakerphone));
         sLightIconMap.put(C0013R$drawable.stat_notify_call_mute_tint, Integer.valueOf(C0013R$drawable.stat_notify_call_mute));
+        sLightIconMap.put(C0013R$drawable.stat_sys_call_record_tint, Integer.valueOf(C0013R$drawable.stat_sys_call_record));
         sLightIconMap.put(C0013R$drawable.stat_sys_quiet_mode_tint, Integer.valueOf(C0013R$drawable.stat_sys_quiet_mode));
         sLightIconMap.put(C0013R$drawable.stat_sys_usb_share_tint, Integer.valueOf(C0013R$drawable.stat_sys_usb_share));
         sLightIconMap.put(C0013R$drawable.stat_sys_managed_profile_status_tint, Integer.valueOf(C0013R$drawable.stat_sys_managed_profile_status));
@@ -294,6 +297,7 @@ public class Icons {
         sLightIconMap.put(C0013R$drawable.stat_sys_data_connected_roam_small_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_data_connected_roam_small));
         sLightIconMap.put(C0013R$drawable.stat_sys_speakerphone_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_speakerphone));
         sLightIconMap.put(C0013R$drawable.stat_notify_call_mute_darkmode, Integer.valueOf(C0013R$drawable.stat_notify_call_mute));
+        sLightIconMap.put(C0013R$drawable.stat_sys_call_record_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_call_record));
         sLightIconMap.put(C0013R$drawable.stat_sys_quiet_mode_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_quiet_mode));
         sLightIconMap.put(C0013R$drawable.stat_sys_usb_share_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_usb_share));
         sLightIconMap.put(C0013R$drawable.stat_sys_managed_profile_status_darkmode, Integer.valueOf(C0013R$drawable.stat_sys_managed_profile_status));
@@ -374,6 +378,7 @@ public class Icons {
         sDarkIconMap.put(C0013R$drawable.stat_sys_data_connected_roam_small, Integer.valueOf(C0013R$drawable.stat_sys_data_connected_roam_small_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_speakerphone, Integer.valueOf(C0013R$drawable.stat_sys_speakerphone_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_notify_call_mute, Integer.valueOf(C0013R$drawable.stat_notify_call_mute_darkmode));
+        sDarkIconMap.put(C0013R$drawable.stat_sys_call_record, Integer.valueOf(C0013R$drawable.stat_sys_call_record_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_quiet_mode, Integer.valueOf(C0013R$drawable.stat_sys_quiet_mode_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_usb_share, Integer.valueOf(C0013R$drawable.stat_sys_usb_share_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_managed_profile_status, Integer.valueOf(C0013R$drawable.stat_sys_managed_profile_status_darkmode));
@@ -453,6 +458,7 @@ public class Icons {
         sDarkIconMap.put(C0013R$drawable.stat_sys_data_connected_roam_small_tint, Integer.valueOf(C0013R$drawable.stat_sys_data_connected_roam_small_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_speakerphone_tint, Integer.valueOf(C0013R$drawable.stat_sys_speakerphone_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_notify_call_mute_tint, Integer.valueOf(C0013R$drawable.stat_notify_call_mute_darkmode));
+        sDarkIconMap.put(C0013R$drawable.stat_sys_call_record_tint, Integer.valueOf(C0013R$drawable.stat_sys_call_record_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_quiet_mode_tint, Integer.valueOf(C0013R$drawable.stat_sys_quiet_mode_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_usb_share_tint, Integer.valueOf(C0013R$drawable.stat_sys_usb_share_darkmode));
         sDarkIconMap.put(C0013R$drawable.stat_sys_managed_profile_status_tint, Integer.valueOf(C0013R$drawable.stat_sys_managed_profile_status_darkmode));

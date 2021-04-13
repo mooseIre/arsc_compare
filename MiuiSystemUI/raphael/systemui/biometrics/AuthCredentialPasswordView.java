@@ -9,6 +9,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImeAwareEditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.systemui.C0015R$id;
@@ -114,7 +115,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
         if (bArr != null) {
             this.mImm.hideSoftInputFromWindow(getWindowToken(), 0);
         } else {
-            this.mPasswordField.setText("");
+            this.mPasswordField.setText(CodeInjection.MD5);
         }
     }
 

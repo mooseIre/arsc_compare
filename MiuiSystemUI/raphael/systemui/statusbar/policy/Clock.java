@@ -16,6 +16,7 @@ import android.text.format.DateFormat;
 import android.text.style.RelativeSizeSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.settingslib.Utils;
 import com.android.systemui.C0009R$attr;
 import com.android.systemui.C0012R$dimen;
@@ -128,7 +129,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             public /* synthetic */ void lambda$onReceive$1$Clock$2(Locale locale) {
                 if (!locale.equals(Clock.this.mLocale)) {
                     Clock.this.mLocale = locale;
-                    Clock.this.mClockFormatString = "";
+                    Clock.this.mClockFormatString = CodeInjection.MD5;
                 }
             }
 
@@ -236,7 +237,7 @@ public class Clock extends TextView implements DemoMode, TunerService.Tunable, C
             this.mCurrentUserId = this.mCurrentUserTracker.getCurrentUserId();
         }
         this.mCalendar = Calendar.getInstance(TimeZone.getDefault());
-        this.mClockFormatString = "";
+        this.mClockFormatString = CodeInjection.MD5;
         updateClock();
         updateClockVisibility();
         updateShowSeconds();

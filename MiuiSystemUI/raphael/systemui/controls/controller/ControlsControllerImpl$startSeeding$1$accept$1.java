@@ -3,6 +3,7 @@ package com.android.systemui.controls.controller;
 import android.content.ComponentName;
 import android.service.controls.Control;
 import android.util.ArrayMap;
+import codeinjection.CodeInjection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public final class ControlsControllerImpl$startSeeding$1$accept$1 implements Run
         for (Control control : this.$controls) {
             Object structure = control.getStructure();
             if (structure == null) {
-                structure = "";
+                structure = CodeInjection.MD5;
             }
             List list = (List) arrayMap.get(structure);
             if (list == null) {
@@ -52,7 +53,7 @@ public final class ControlsControllerImpl$startSeeding$1$accept$1 implements Run
             Intrinsics.checkExpressionValueIsNotNull(list2, "cs");
             favorites.replaceControls(new StructureInfo(componentName, charSequence, list2));
         }
-        ControlsControllerImpl.access$getPersistenceWrapper$p(this.this$0.this$0).storeFavorites(Favorites.INSTANCE.getAllStructures());
+        this.this$0.this$0.persistenceWrapper.storeFavorites(Favorites.INSTANCE.getAllStructures());
         ControlsControllerImpl$startSeeding$1 controlsControllerImpl$startSeeding$1 = this.this$0;
         Consumer consumer = controlsControllerImpl$startSeeding$1.$callback;
         String packageName = controlsControllerImpl$startSeeding$1.$componentName.getPackageName();

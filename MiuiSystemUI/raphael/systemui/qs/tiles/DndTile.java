@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.notification.EnableZenModeDialog;
 import com.android.systemui.C0013R$drawable;
@@ -352,7 +353,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
                 }
                 ZenModeConfig config = DndTile.this.mController.getConfig();
                 ZenModeConfig.ZenRule zenRule = config.manualRule;
-                String ownerCaption = (zenRule == null || (str = zenRule.enabler) == null) ? "" : getOwnerCaption(str);
+                String ownerCaption = (zenRule == null || (str = zenRule.enabler) == null) ? CodeInjection.MD5 : getOwnerCaption(str);
                 for (ZenModeConfig.ZenRule zenRule2 : config.automaticRules.values()) {
                     if (zenRule2.isAutomaticActive()) {
                         if (ownerCaption.isEmpty()) {
@@ -377,12 +378,12 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
             try {
                 ApplicationInfo applicationInfo = packageManager.getApplicationInfo(str, 0);
                 if (applicationInfo == null || (loadLabel = applicationInfo.loadLabel(packageManager)) == null) {
-                    return "";
+                    return CodeInjection.MD5;
                 }
                 return ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_app, loadLabel.toString().trim());
             } catch (Throwable th) {
                 Slog.w(((QSTileImpl) DndTile.this).TAG, "Error loading owner caption", th);
-                return "";
+                return CodeInjection.MD5;
             }
         }
 

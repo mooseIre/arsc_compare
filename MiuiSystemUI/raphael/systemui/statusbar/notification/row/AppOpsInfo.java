@@ -12,6 +12,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.systemui.C0015R$id;
@@ -133,7 +134,7 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
     private String getPrompt() {
         ArraySet<Integer> arraySet = this.mAppOps;
         if (arraySet == null || arraySet.size() == 0) {
-            return "";
+            return CodeInjection.MD5;
         }
         if (this.mAppOps.size() == 1) {
             if (this.mAppOps.contains(26)) {

@@ -3,6 +3,7 @@ package com.android.systemui.broadcast.logging;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
+import codeinjection.CodeInjection;
 import com.android.systemui.log.LogBuffer;
 import com.android.systemui.log.LogLevel;
 import com.android.systemui.log.LogMessageImpl;
@@ -91,7 +92,7 @@ public final class BroadcastDispatcherLogger {
             Intrinsics.checkExpressionValueIsNotNull(categoriesIterator, "filter.categoriesIterator()");
             str = SequencesKt.joinToString$default(SequencesKt.asSequence(categoriesIterator), ",", "Categories(", ")", 0, null, null, 56, null);
         } else {
-            str = "";
+            str = CodeInjection.MD5;
         }
         LogLevel logLevel = LogLevel.INFO;
         BroadcastDispatcherLogger$logContextReceiverRegistered$2 broadcastDispatcherLogger$logContextReceiverRegistered$2 = BroadcastDispatcherLogger$logContextReceiverRegistered$2.INSTANCE;
@@ -99,7 +100,7 @@ public final class BroadcastDispatcherLogger {
         if (!logBuffer.getFrozen()) {
             LogMessageImpl obtain = logBuffer.obtain("BroadcastDispatcherLog", logLevel, broadcastDispatcherLogger$logContextReceiverRegistered$2);
             obtain.setInt1(i);
-            if (!Intrinsics.areEqual(str, "")) {
+            if (!Intrinsics.areEqual(str, CodeInjection.MD5)) {
                 joinToString$default = joinToString$default + '\n' + str;
             }
             obtain.setStr1(joinToString$default);

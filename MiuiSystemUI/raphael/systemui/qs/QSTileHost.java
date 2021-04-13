@@ -14,6 +14,7 @@ import android.service.quicksettings.Tile;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.InstanceId;
 import com.android.internal.logging.InstanceIdSequence;
 import com.android.internal.logging.UiEventLogger;
@@ -134,14 +135,14 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     public void onPluginConnected(QSFactory qSFactory, Context context) {
         this.mQsFactories.add(0, qSFactory);
         String value = this.mTunerService.getValue("sysui_qs_tiles");
-        onTuningChanged("sysui_qs_tiles", "");
+        onTuningChanged("sysui_qs_tiles", CodeInjection.MD5);
         onTuningChanged("sysui_qs_tiles", value);
     }
 
     public void onPluginDisconnected(QSFactory qSFactory) {
         this.mQsFactories.remove(qSFactory);
         String value = this.mTunerService.getValue("sysui_qs_tiles");
-        onTuningChanged("sysui_qs_tiles", "");
+        onTuningChanged("sysui_qs_tiles", CodeInjection.MD5);
         onTuningChanged("sysui_qs_tiles", value);
     }
 
@@ -296,7 +297,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
                     return;
                 }
                 Log.d("QSTileHost", "No valid tiles on tuning changed. Setting to default.");
-                changeTiles(arrayList, loadTileSpecs(this.mContext, ""));
+                changeTiles(arrayList, loadTileSpecs(this.mContext, CodeInjection.MD5));
             }
         }
     }

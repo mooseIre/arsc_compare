@@ -23,6 +23,7 @@ import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.ImageView;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.IBatteryStats;
 import com.android.internal.widget.ViewClippingUtil;
@@ -380,7 +381,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     } else if (TextUtils.isEmpty(this.mUpArrowIndication) || this.mChargeUIEntering) {
                         this.mTextView.switchIndication(this.mRestingIndication);
                     } else {
-                        this.mTextView.switchIndication(this.mUpArrowEntering ? "" : this.mUpArrowIndication);
+                        this.mTextView.switchIndication(this.mUpArrowEntering ? CodeInjection.MD5 : this.mUpArrowIndication);
                         ImageView imageView = this.mUpArrow;
                         if (imageView != null) {
                             if (this.mDarkStyle) {
@@ -644,7 +645,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
             if (!shouldSuppressBiometricError(i, biometricSourceType, KeyguardIndicationController.this.mKeyguardUpdateMonitor)) {
                 if (biometricSourceType == BiometricSourceType.FACE) {
-                    KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
+                    KeyguardIndicationController.this.handleFaceUnlockBouncerMessage(CodeInjection.MD5);
                     return;
                 }
                 KeyguardIndicationController.this.mFingerprintErrorMsgId = i;
@@ -688,7 +689,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
             super.onBiometricAuthenticated(i, biometricSourceType, z);
             if (biometricSourceType == BiometricSourceType.FACE) {
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
+                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage(CodeInjection.MD5);
             } else if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
                 KeyguardIndicationController.this.mFingerprintAuthUserId = i;
                 KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED;
@@ -701,7 +702,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
             super.onBiometricAuthFailed(biometricSourceType);
             if (biometricSourceType == BiometricSourceType.FACE) {
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage("");
+                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage(CodeInjection.MD5);
             } else if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
                 KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
                 KeyguardIndicationController.this.handleFingerprintStateChanged();
@@ -827,8 +828,9 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             return;
         }
         MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState = this.mFpiState;
-        String str2 = "";
-        if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED) {
+        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
+        String str2 = CodeInjection.MD5;
+        if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == miuiKeyguardFingerprintUtils$FingerprintIdentificationState2) {
             str2 = this.mResources.getString(C0021R$string.fingerprint_try_again_text);
             str = this.mResources.getString(C0021R$string.fingerprint_try_again_msg);
         } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
@@ -858,9 +860,9 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         }
         getTextColor();
         this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
-        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 = this.mFpiState;
-        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
-        if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 == miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 && this.mLastFpiState != miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
+        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 = this.mFpiState;
+        MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState4 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
+        if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 == miuiKeyguardFingerprintUtils$FingerprintIdentificationState4 && this.mLastFpiState != miuiKeyguardFingerprintUtils$FingerprintIdentificationState4 && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
             this.mStatusBarKeyguardViewManager.applyHintAnimation(500);
         }
         if (this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED && MiuiKeyguardUtils.isGxzwSensor() && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
@@ -895,7 +897,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     str2 = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
                 }
             }
-            str2 = "";
+            str2 = CodeInjection.MD5;
         }
         this.mStatusBarKeyguardViewManager.showBouncerMessage(str, str2, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
     }

@@ -2,6 +2,7 @@ package com.android.systemui.shared.system;
 
 import android.content.Context;
 import android.view.ViewConfiguration;
+import codeinjection.CodeInjection;
 import java.util.StringJoiner;
 
 public class QuickStepContract {
@@ -30,8 +31,9 @@ public class QuickStepContract {
 
     public static String getSystemUiStateString(int i) {
         StringJoiner stringJoiner = new StringJoiner("|");
-        String str = "";
-        stringJoiner.add((i & 1) != 0 ? "screen_pinned" : str);
+        int i2 = i & 1;
+        String str = CodeInjection.MD5;
+        stringJoiner.add(i2 != 0 ? "screen_pinned" : str);
         stringJoiner.add((i & 128) != 0 ? "overview_disabled" : str);
         stringJoiner.add((i & 256) != 0 ? "home_disabled" : str);
         stringJoiner.add((i & 1024) != 0 ? "search_disabled" : str);

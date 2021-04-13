@@ -13,6 +13,7 @@ import android.os.Binder;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
+import codeinjection.CodeInjection;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.policy.KeyguardNotificationController;
 import java.util.ArrayList;
@@ -79,7 +80,7 @@ public class NotificationProvider extends ContentProvider {
 
     private String parseSelection(String str) {
         if (TextUtils.isEmpty(str)) {
-            return "";
+            return CodeInjection.MD5;
         }
         return " AND (" + str + ')';
     }

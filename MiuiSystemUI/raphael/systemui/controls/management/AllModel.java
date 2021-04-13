@@ -3,6 +3,7 @@ package com.android.systemui.controls.management;
 import android.service.controls.Control;
 import android.text.TextUtils;
 import android.util.ArrayMap;
+import codeinjection.CodeInjection;
 import com.android.systemui.controls.ControlStatus;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.management.ControlsModel;
@@ -150,7 +151,7 @@ public final class AllModel implements ControlsModel {
         for (T t : list) {
             Object zone = t.getControl().getZone();
             if (zone == null) {
-                zone = "";
+                zone = CodeInjection.MD5;
             }
             Object obj = orderedMap.get(zone);
             if (obj == null) {

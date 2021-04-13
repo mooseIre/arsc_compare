@@ -1,6 +1,7 @@
 package com.android.systemui.controlcenter.phone.customize;
 
 import android.content.Context;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.qs.customize.TileQueryHelper;
@@ -25,7 +26,7 @@ public class CCTileQueryHelper extends TileQueryHelper {
         Iterator<String> it = this.mControlIndependentTiles.iterator();
         while (it.hasNext()) {
             String str = this.mTilesStock;
-            this.mTilesStock = str.replace(it.next() + ",", "");
+            this.mTilesStock = str.replace(it.next() + ",", CodeInjection.MD5);
         }
     }
 

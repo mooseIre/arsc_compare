@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.res.Resources;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.controls.ControlStatus;
 import com.android.systemui.controls.TooltipManager;
@@ -40,7 +41,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
         for (T t : allControls) {
             Object structure = t.getControl().getStructure();
             if (structure == null) {
-                structure = "";
+                structure = CodeInjection.MD5;
             }
             Object obj = linkedHashMap.get(structure);
             if (obj == null) {
@@ -95,7 +96,7 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
                     Object[] objArr = new Object[1];
                     Object obj = this.this$0.this$0.appName;
                     if (obj == null) {
-                        obj = "";
+                        obj = CodeInjection.MD5;
                     }
                     objArr[0] = obj;
                     access$getStatusText$p.setText(resources.getString(i2, objArr));
@@ -122,14 +123,14 @@ public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1
                         }
 
                         public void onAnimationEnd(@Nullable Animator animator) {
-                            if (ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getVisibility() == 0 && ControlsFavoritingActivity.access$getMTooltipManager$p(this.this$0.this$0.this$0) != null) {
+                            if (ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getVisibility() == 0 && this.this$0.this$0.this$0.mTooltipManager != null) {
                                 int[] iArr = new int[2];
                                 ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getLocationOnScreen(iArr);
                                 int width = iArr[0] + (ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getWidth() / 2);
                                 int height = iArr[1] + ControlsFavoritingActivity.access$getPageIndicator$p(this.this$0.this$0.this$0).getHeight();
-                                TooltipManager access$getMTooltipManager$p = ControlsFavoritingActivity.access$getMTooltipManager$p(this.this$0.this$0.this$0);
-                                if (access$getMTooltipManager$p != null) {
-                                    access$getMTooltipManager$p.show(C0021R$string.controls_structure_tooltip, width, height);
+                                TooltipManager tooltipManager = this.this$0.this$0.this$0.mTooltipManager;
+                                if (tooltipManager != null) {
+                                    tooltipManager.show(C0021R$string.controls_structure_tooltip, width, height);
                                 }
                             }
                         }

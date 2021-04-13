@@ -65,6 +65,10 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         void onClockVisibilityChanged(boolean z);
     }
 
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
+
     public MiuiClock(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }

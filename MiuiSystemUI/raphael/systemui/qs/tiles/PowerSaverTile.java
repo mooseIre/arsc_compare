@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.widget.Switch;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
@@ -121,7 +122,7 @@ public class PowerSaverTile extends QSTileImpl<QSTile.BooleanState> {
             return uri;
         }
         Uri.Builder buildUpon = uri.buildUpon();
-        buildUpon.encodedAuthority("" + i + "@" + uri.getEncodedAuthority());
+        buildUpon.encodedAuthority(CodeInjection.MD5 + i + "@" + uri.getEncodedAuthority());
         return buildUpon.build();
     }
 

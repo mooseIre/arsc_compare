@@ -1206,6 +1206,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
     public void resetViews(boolean z) {
         super.resetViews(z);
+        this.mNotificationStackScroller.setOverScrollAmount(0.0f, false, z, !z);
         if (isOnKeyguard() || isOnShade()) {
             this.mKeyguardPanelViewInjector.resetLockScreenMagazine();
             this.mKeyguardPanelViewInjector.resetKeyguardVerticalMoveHelper();

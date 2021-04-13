@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.GuardedBy;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.statusbar.policy.CastController;
@@ -276,7 +277,7 @@ public class CastControllerImpl implements CastController {
     private String getAppName(String str) {
         PackageManager packageManager = this.mContext.getPackageManager();
         if (Utils.isHeadlessRemoteDisplayProvider(packageManager, str)) {
-            return "";
+            return CodeInjection.MD5;
         }
         try {
             ApplicationInfo applicationInfo = packageManager.getApplicationInfo(str, 0);

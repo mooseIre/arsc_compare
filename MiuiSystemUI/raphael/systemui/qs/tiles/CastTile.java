@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import codeinjection.CodeInjection;
 import com.android.internal.app.MediaRouteDialogPresenter;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.C0013R$drawable;
@@ -226,7 +227,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
         String string = this.mContext.getString(C0021R$string.quick_settings_cast_title);
         booleanState.label = string;
         booleanState.contentDescription = string;
-        booleanState.stateDescription = "";
+        booleanState.stateDescription = CodeInjection.MD5;
         booleanState.value = false;
         List<CastController.CastDevice> castDevices = this.mController.getCastDevices();
         Iterator<CastController.CastDevice> it = castDevices.iterator();
@@ -263,7 +264,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             }
             booleanState.state = i;
             if (!booleanState.value) {
-                booleanState.secondaryLabel = "";
+                booleanState.secondaryLabel = CodeInjection.MD5;
             }
             booleanState.contentDescription = ((Object) booleanState.contentDescription) + "," + this.mContext.getString(C0021R$string.accessibility_quick_settings_open_details);
             booleanState.expandedAccessibilityClassName = Button.class.getName();
