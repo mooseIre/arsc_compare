@@ -13,6 +13,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0021R$string;
 import java.util.Locale;
 
@@ -49,10 +50,10 @@ public class NumberDrawView extends TextView {
 
     public NumberDrawView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
-        this.mLevel = "";
-        this.mShowLevel = "";
+        this.mLevel = CodeInjection.MD5;
+        this.mShowLevel = CodeInjection.MD5;
         this.mDot = ".";
-        this.mLocaleName = "";
+        this.mLocaleName = CodeInjection.MD5;
         init(context);
     }
 
@@ -153,7 +154,7 @@ public class NumberDrawView extends TextView {
 
     public void setLevelText(String str) {
         if (TextUtils.isEmpty(str)) {
-            this.mLevel = "";
+            this.mLevel = CodeInjection.MD5;
         } else if (!str.equals(this.mLevel)) {
             if (str.length() > 5) {
                 str = "100";
@@ -161,7 +162,7 @@ public class NumberDrawView extends TextView {
             this.mLevel = str;
             String string = this.mResources.getString(C0021R$string.keyguard_charging_battery_level, str);
             this.mShowLevel = string;
-            this.mShowLevel = string.replace(" ", "");
+            this.mShowLevel = string.replace(" ", CodeInjection.MD5);
             invalidate();
             requestLayout();
         }
@@ -263,6 +264,6 @@ public class NumberDrawView extends TextView {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mLevel = "";
+        this.mLevel = CodeInjection.MD5;
     }
 }

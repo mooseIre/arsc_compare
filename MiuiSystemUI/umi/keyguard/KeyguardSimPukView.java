@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import codeinjection.CodeInjection;
 import com.android.keyguard.PasswordTextView;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.systemui.C0008R$array;
@@ -170,8 +171,8 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
 
         /* access modifiers changed from: package-private */
         public void reset() {
-            KeyguardSimPukView.this.mPinText = "";
-            KeyguardSimPukView.this.mPukText = "";
+            KeyguardSimPukView.this.mPinText = CodeInjection.MD5;
+            KeyguardSimPukView.this.mPukText = CodeInjection.MD5;
             this.state = 0;
             KeyguardSimPukView.this.handleSubInfoChangeIfNeeded();
             if (KeyguardSimPukView.this.mShowDefaultMessage) {
@@ -186,7 +187,6 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
     /* access modifiers changed from: public */
     private void showDefaultMessage() {
         String str;
-        CharSequence charSequence;
         int i = this.mRemainingAttempts;
         if (i >= 0) {
             this.mSecurityMessageDisplay.setMessage(getPukPasswordErrorMessage(i, true));
@@ -203,12 +203,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
             str = resources.getString(C0021R$string.kg_puk_enter_puk_hint);
         } else {
             SubscriptionInfo subscriptionInfoForSubId = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getSubscriptionInfoForSubId(this.mSubId);
-            if (subscriptionInfoForSubId != null) {
-                charSequence = subscriptionInfoForSubId.getDisplayName();
-            } else {
-                charSequence = "";
-            }
-            String string = resources.getString(C0021R$string.kg_puk_enter_puk_hint_multi, charSequence);
+            String string = resources.getString(C0021R$string.kg_puk_enter_puk_hint_multi, subscriptionInfoForSubId != null ? subscriptionInfoForSubId.getDisplayName() : CodeInjection.MD5);
             if (subscriptionInfoForSubId != null) {
                 subscriptionInfoForSubId.getIconTint();
             }
@@ -221,7 +216,7 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
         if (securityMessageDisplay != null) {
             securityMessageDisplay.setMessage(str);
         }
-        new CheckSimPuk("", "", this.mSubId) {
+        new CheckSimPuk(CodeInjection.MD5, CodeInjection.MD5, this.mSubId) {
             /* class com.android.keyguard.KeyguardSimPukView.AnonymousClass2 */
 
             /* access modifiers changed from: package-private */

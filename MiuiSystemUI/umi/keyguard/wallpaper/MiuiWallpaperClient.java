@@ -18,6 +18,7 @@ import kotlin.coroutines.Continuation;
 import kotlin.coroutines.intrinsics.IntrinsicsKt;
 import kotlin.coroutines.jvm.internal.DebugMetadata;
 import kotlin.coroutines.jvm.internal.SuspendLambda;
+import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlinx.coroutines.BuildersKt;
@@ -32,6 +33,7 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
     private final String TAG = "MiuiWallpaperClient";
     private boolean mBinding;
     private final Context mContext;
+    private Function0<Unit> mFunctionCallbacks = MiuiWallpaperClient$mFunctionCallbacks$1.INSTANCE;
     private final ServiceConnection mServiceConnection;
     private final CoroutineScope mUiScope = CoroutineScopeKt.MainScope();
     private final KeyguardUpdateMonitor mUpdateMonitor = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class));
@@ -92,6 +94,10 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
         }
     }
 
+    private final void bindService(Function0<Unit> function0) {
+        this.mFunctionCallbacks = function0;
+    }
+
     public final void bindService() {
         Log.d(this.TAG, "bind services");
         if (!this.mBinding) {
@@ -138,6 +144,8 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
             IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
             if (iMiuiKeyguardWallpaperService != null) {
                 iMiuiKeyguardWallpaperService.onKeyguardShowingChanged(z);
+            } else {
+                bindService(new MiuiWallpaperClient$onKeyguardShowingChanged$1(this, z));
             }
         } catch (RemoteException e) {
             String str = this.TAG;

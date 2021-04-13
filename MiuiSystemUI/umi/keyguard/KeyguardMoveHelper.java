@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import miui.view.animation.CubicEaseOutInterpolator;
 
-public class KeyguardMoveHelper {
+public class KeyguardMoveHelper extends BaseKeyguardMoveHelper {
     private Runnable mAnimationEndRunnable = new Runnable() {
         /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass4 */
 
@@ -60,8 +60,6 @@ public class KeyguardMoveHelper {
             KeyguardMoveHelper.this.mSwipingInProgress = false;
         }
     };
-    private float mInitialTouchX;
-    private float mInitialTouchY;
     private boolean mIsCameraPreviewMoving;
     private boolean mIsRightMove;
     private boolean mIsTouchRightIcon;
@@ -89,9 +87,9 @@ public class KeyguardMoveHelper {
             if (z) {
                 KeyguardMoveHelper.this.mCallback.onHorizontalMove(0.0f, true);
                 if (z2) {
-                    KeyguardMoveHelper.this.mSwipingInProgress = false;
-                } else {
                     KeyguardMoveHelper.this.mBottomAreaView.startButtonLayoutAnimate(false, true);
+                } else {
+                    KeyguardMoveHelper.this.mSwipingInProgress = false;
                 }
             }
         }
@@ -149,7 +147,6 @@ public class KeyguardMoveHelper {
     private Animator mSwipeAnimator;
     private boolean mSwipingInProgress;
     private float mTranslation;
-    private VelocityTracker mVelocityTracker;
 
     public interface Callback {
         float getMaxTranslationDistance();
@@ -174,6 +171,7 @@ public class KeyguardMoveHelper {
     }
 
     public KeyguardMoveHelper(Callback callback, Context context, MiuiNotificationPanelViewController miuiNotificationPanelViewController) {
+        super(miuiNotificationPanelViewController);
         this.mContext = context;
         this.mCallback = callback;
         this.mFalsingManager = miuiNotificationPanelViewController.getFalsingManager();
@@ -214,31 +212,32 @@ public class KeyguardMoveHelper {
     public boolean onTouchEvent(MotionEvent motionEvent) {
         int actionMasked = motionEvent.getActionMasked();
         if ((!this.mMotionCancelled || actionMasked == 0) && !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isPreViewVisible()) {
-            float y = motionEvent.getY();
-            float x = motionEvent.getX();
+            initCommonTouchEvent(motionEvent);
             if (actionMasked != 0) {
                 if (actionMasked == 1) {
-                    finishAction(true, motionEvent, x, y);
+                    finishAction(true, motionEvent, this.x, this.y);
                 } else if (actionMasked == 2) {
-                    trackMovement(motionEvent);
-                    float f = x - this.mInitialTouchX;
-                    float f2 = y - this.mInitialTouchY;
+                    float f = this.x - this.mInitialTouchX;
+                    float f2 = this.y - this.mInitialTouchY;
                     this.mIsRightMove = f > 0.0f;
                     float minusMisTouchOperationDist = minusMisTouchOperationDist(f);
                     float minusMisTouchOperationDist2 = minusMisTouchOperationDist(f2);
                     if (this.mSwipingInProgress) {
                         if (this.mIsCameraPreviewMoving) {
                             KeyguardMoveRightController keyguardMoveRightController = this.mRightMoveController;
-                            float f3 = this.mCenterScreenTouchSlopTranslation;
-                            keyguardMoveRightController.onTouchMove(x + f3, y + f3);
+                            float f3 = this.x;
+                            float f4 = this.mCenterScreenTouchSlopTranslation;
+                            keyguardMoveRightController.onTouchMove(f3 + f4, this.y + f4);
                         } else if (!isMovingLeftView()) {
                             KeyguardMoveRightController keyguardMoveRightController2 = this.mRightMoveController;
-                            float f4 = this.mCenterScreenTouchSlopTranslation;
-                            this.mIsCameraPreviewMoving = keyguardMoveRightController2.onTouchMove(x + f4, y + f4);
+                            float f5 = this.x;
+                            float f6 = this.mCenterScreenTouchSlopTranslation;
+                            this.mIsCameraPreviewMoving = keyguardMoveRightController2.onTouchMove(f5 + f6, this.y + f6);
                         } else if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
                             KeyguardMoveLeftController keyguardMoveLeftController = this.mLeftMoveController;
-                            float f5 = this.mCenterScreenTouchSlopTranslation;
-                            keyguardMoveLeftController.onTouchMove(x + f5, y + f5);
+                            float f7 = this.x;
+                            float f8 = this.mCenterScreenTouchSlopTranslation;
+                            keyguardMoveLeftController.onTouchMove(f7 + f8, this.y + f8);
                         } else {
                             if (!this.mIsRightMove) {
                                 minusMisTouchOperationDist = -minusMisTouchOperationDist;
@@ -249,11 +248,13 @@ public class KeyguardMoveHelper {
                         if (isValidHorizontalTouchDown(f, f2)) {
                             startSwiping();
                             KeyguardMoveRightController keyguardMoveRightController3 = this.mRightMoveController;
-                            float f6 = this.mCenterScreenTouchSlopTranslation;
-                            keyguardMoveRightController3.onTouchDown(x + f6, f6 + y, this.mIsTouchRightIcon);
+                            float f9 = this.x;
+                            float f10 = this.mCenterScreenTouchSlopTranslation;
+                            keyguardMoveRightController3.onTouchDown(f9 + f10, this.y + f10, this.mIsTouchRightIcon);
                             KeyguardMoveLeftController keyguardMoveLeftController2 = this.mLeftMoveController;
-                            float f7 = this.mCenterScreenTouchSlopTranslation;
-                            keyguardMoveLeftController2.onTouchDown(x + f7, y + f7, true);
+                            float f11 = this.x;
+                            float f12 = this.mCenterScreenTouchSlopTranslation;
+                            keyguardMoveLeftController2.onTouchDown(f11 + f12, this.y + f12, true);
                             setTranslation(0.0f, false, false, false);
                             this.mKeyguardUpdateMonitor.cancelFaceAuth();
                         } else {
@@ -262,14 +263,15 @@ public class KeyguardMoveHelper {
                         }
                     }
                 } else if (actionMasked == 3) {
-                    finishAction(false, motionEvent, x, y);
+                    finishAction(false, motionEvent, this.x, this.y);
                 } else if (actionMasked == 5) {
                     this.mMotionCancelled = true;
-                    endMotion(true, x, y);
+                    endMotion(true, this.x, this.y);
                 }
                 return true;
             }
-            initDownStates(motionEvent);
+            this.mMotionCancelled = false;
+            this.mIsTouchRightIcon = isOnIcon(this.mRightIcon, this.x, this.y);
             return false;
         }
         if (DebugConfig.DEBUG_KEYGUARD) {
@@ -284,7 +286,6 @@ public class KeyguardMoveHelper {
     private void finishAction(boolean z, MotionEvent motionEvent, float f, float f2) {
         this.mIsCameraPreviewMoving = false;
         this.mMotionCancelled = false;
-        trackMovement(motionEvent);
         this.mRightMoveController.onTouchUp(f, f2);
         this.mLeftMoveController.onTouchUp(f, f2);
         if (!((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
@@ -617,21 +618,6 @@ public class KeyguardMoveHelper {
 
     private float getScale(float f, KeyguardAffordanceView keyguardAffordanceView) {
         return Math.min(((f / keyguardAffordanceView.getRestingAlpha()) * 0.2f) + 0.8f, 1.5f);
-    }
-
-    private void trackMovement(MotionEvent motionEvent) {
-        VelocityTracker velocityTracker = this.mVelocityTracker;
-        if (velocityTracker != null) {
-            velocityTracker.addMovement(motionEvent);
-        }
-    }
-
-    private void initVelocityTracker() {
-        VelocityTracker velocityTracker = this.mVelocityTracker;
-        if (velocityTracker != null) {
-            velocityTracker.recycle();
-        }
-        this.mVelocityTracker = VelocityTracker.obtain();
     }
 
     private float getCurrentVelocity(float f, float f2) {

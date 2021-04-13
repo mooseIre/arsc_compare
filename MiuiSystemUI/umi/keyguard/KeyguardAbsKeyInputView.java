@@ -11,6 +11,7 @@ import android.util.Slog;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.widget.LinearLayout;
+import codeinjection.CodeInjection;
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
@@ -279,7 +280,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
     public String getPromptReasonString(int i) {
         Resources resources = ((LinearLayout) this).mContext.getResources();
         if (i == 0) {
-            return "";
+            return CodeInjection.MD5;
         }
         if (i == 1) {
             return resources.getString(C0021R$string.input_password_after_boot_msg);

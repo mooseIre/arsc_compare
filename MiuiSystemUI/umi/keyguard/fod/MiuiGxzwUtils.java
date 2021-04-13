@@ -15,6 +15,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.DisplayCutout;
+import codeinjection.CodeInjection;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
@@ -87,8 +88,8 @@ public class MiuiGxzwUtils {
                 phySicalScreenPx(context);
             }
             screenWhPx(context);
-            String str = SystemProperties.get("persist.vendor.sys.fp.fod.location.X_Y", "");
-            String str2 = SystemProperties.get("persist.vendor.sys.fp.fod.size.width_height", "");
+            String str = SystemProperties.get("persist.vendor.sys.fp.fod.location.X_Y", CodeInjection.MD5);
+            String str2 = SystemProperties.get("persist.vendor.sys.fp.fod.size.width_height", CodeInjection.MD5);
             if (str.isEmpty() || str2.isEmpty()) {
                 resetDefaultValue();
                 return;

@@ -18,6 +18,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import codeinjection.CodeInjection;
 import com.android.keyguard.PasswordTextView;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.R$styleable;
@@ -60,7 +61,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     public PasswordTextViewForPIN(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mTextChars = new ArrayList<>();
-        this.mText = "";
+        this.mText = CodeInjection.MD5;
         this.mDrawPaint = new Paint();
         this.mFillPaint = new Paint();
         new Handler(Looper.getMainLooper());
@@ -229,7 +230,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
     @Override // com.android.keyguard.PasswordTextView
     public void reset(boolean z, boolean z2) {
         String str = this.mText;
-        this.mText = "";
+        this.mText = CodeInjection.MD5;
         this.mIsResetAnimating = true;
         if (z) {
             int size = this.mTextChars.size();

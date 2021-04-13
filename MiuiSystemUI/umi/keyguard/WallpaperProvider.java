@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.UserHandle;
+import codeinjection.CodeInjection;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftControlCenterView;
@@ -75,8 +76,9 @@ public class WallpaperProvider extends ContentProvider {
         } else {
             boolean z = true;
             if (str.equals("CHECK_SMART_HOME_STATUS")) {
-                String str3 = "";
-                if (!PackageUtils.isAppInstalledForUser(getContext(), "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser()) || !MiuiKeyguardUtils.isRegionSupportMiHome(getContext())) {
+                boolean isAppInstalledForUser = PackageUtils.isAppInstalledForUser(getContext(), "com.xiaomi.smarthome", KeyguardUpdateMonitor.getCurrentUser());
+                String str3 = CodeInjection.MD5;
+                if (!isAppInstalledForUser || !MiuiKeyguardUtils.isRegionSupportMiHome(getContext())) {
                     z = false;
                 } else {
                     Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(getContext(), MiuiKeyguardUtils.maybeAddUserId(MiuiKeyguardMoveLeftControlCenterView.KEYGUARD_SMART_HOME, KeyguardUpdateMonitor.getCurrentUser()), "online_devices_count", (String) null, (Bundle) null);

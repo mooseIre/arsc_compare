@@ -31,6 +31,7 @@ public final class MiuiWallpaperClient$mServiceConnection$1 implements ServiceCo
                 Log.d(this.this$0.getTAG(), "mWallpaperService == null");
             }
             this.this$0.mBinding = true;
+            this.this$0.mFunctionCallbacks.invoke();
         } catch (RemoteException e) {
             String tag = this.this$0.getTAG();
             Log.e(tag, "onServiceConnected: " + e.getMessage());

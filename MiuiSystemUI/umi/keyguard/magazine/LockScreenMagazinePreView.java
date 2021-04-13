@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.magazine.entity.LockScreenMagazineWallpaperInfo;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
@@ -486,7 +487,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         if (lockScreenMagazineWallpaperInfo != null) {
             if (!Build.IS_INTERNATIONAL_BUILD && !TextUtils.isEmpty(lockScreenMagazineWallpaperInfo.content)) {
                 LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo2 = this.mLockScreenMagazineWallpaperInfo;
-                lockScreenMagazineWallpaperInfo2.content = lockScreenMagazineWallpaperInfo2.content.replaceAll("\\s*", "");
+                lockScreenMagazineWallpaperInfo2.content = lockScreenMagazineWallpaperInfo2.content.replaceAll("\\s*", CodeInjection.MD5);
             }
             updateViews(remoteViews, remoteViews2);
         }

@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import codeinjection.CodeInjection;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.systemui.C0009R$attr;
 import com.android.systemui.C0012R$dimen;
@@ -111,7 +112,7 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
             str = resources.getString(C0021R$string.kg_sim_pin_instructions);
         } else {
             SubscriptionInfo subscriptionInfoForSubId = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getSubscriptionInfoForSubId(this.mSubId);
-            String string = resources.getString(C0021R$string.kg_sim_pin_instructions_multi, subscriptionInfoForSubId != null ? subscriptionInfoForSubId.getDisplayName() : "");
+            String string = resources.getString(C0021R$string.kg_sim_pin_instructions_multi, subscriptionInfoForSubId != null ? subscriptionInfoForSubId.getDisplayName() : CodeInjection.MD5);
             if (subscriptionInfoForSubId != null) {
                 subscriptionInfoForSubId.getIconTint();
             }
@@ -128,7 +129,7 @@ public class KeyguardSimPinView extends KeyguardPinBasedInputView {
     private void showDefaultMessage() {
         setLockedSimMessage();
         if (this.mRemainingAttempts < 0) {
-            new CheckSimPin("", this.mSubId) {
+            new CheckSimPin(CodeInjection.MD5, this.mSubId) {
                 /* class com.android.keyguard.KeyguardSimPinView.AnonymousClass2 */
 
                 /* access modifiers changed from: package-private */

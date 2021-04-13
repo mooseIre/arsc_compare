@@ -138,14 +138,25 @@ public class VideoView extends RelativeLayout {
             }
 
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                if (VideoView.this.mMediaPlayer == null) {
-                    return false;
-                }
-                VideoView.this.mMediaPlayer.pause();
-                VideoView.this.mMediaPlayer.stop();
-                VideoView.this.mMediaPlayer.release();
-                VideoView.this.mMediaPlayer = null;
+                ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+                    /* class com.android.keyguard.charge.video.$$Lambda$VideoView$7$eSiKx5_5ztW_T0NNIfoDqKujg8Q */
+
+                    public final void run() {
+                        VideoView.AnonymousClass7.this.lambda$onSurfaceTextureDestroyed$1$VideoView$7();
+                    }
+                });
                 return false;
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceTextureDestroyed$1 */
+            public /* synthetic */ void lambda$onSurfaceTextureDestroyed$1$VideoView$7() {
+                if (VideoView.this.mMediaPlayer != null) {
+                    VideoView.this.mMediaPlayer.pause();
+                    VideoView.this.mMediaPlayer.stop();
+                    VideoView.this.mMediaPlayer.release();
+                    VideoView.this.mMediaPlayer = null;
+                }
             }
         };
         this.mRapidChargeSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
@@ -188,14 +199,25 @@ public class VideoView extends RelativeLayout {
             }
 
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                if (VideoView.this.mRapidMediaPlayer == null) {
-                    return false;
-                }
-                VideoView.this.mRapidMediaPlayer.pause();
-                VideoView.this.mRapidMediaPlayer.stop();
-                VideoView.this.mRapidMediaPlayer.release();
-                VideoView.this.mRapidMediaPlayer = null;
+                ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+                    /* class com.android.keyguard.charge.video.$$Lambda$VideoView$8$OH2nrQUwhIhFGqrtBvUSeyxDBv8 */
+
+                    public final void run() {
+                        VideoView.AnonymousClass8.this.lambda$onSurfaceTextureDestroyed$1$VideoView$8();
+                    }
+                });
                 return false;
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceTextureDestroyed$1 */
+            public /* synthetic */ void lambda$onSurfaceTextureDestroyed$1$VideoView$8() {
+                if (VideoView.this.mRapidMediaPlayer != null) {
+                    VideoView.this.mRapidMediaPlayer.pause();
+                    VideoView.this.mRapidMediaPlayer.stop();
+                    VideoView.this.mRapidMediaPlayer.release();
+                    VideoView.this.mRapidMediaPlayer = null;
+                }
             }
         };
         this.mStrongRapidChargeSurfaceTextureListener = new TextureView.SurfaceTextureListener() {
@@ -238,14 +260,25 @@ public class VideoView extends RelativeLayout {
             }
 
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                if (VideoView.this.mStrongRapidMediaPlayer == null) {
-                    return false;
-                }
-                VideoView.this.mStrongRapidMediaPlayer.pause();
-                VideoView.this.mStrongRapidMediaPlayer.stop();
-                VideoView.this.mStrongRapidMediaPlayer.release();
-                VideoView.this.mStrongRapidMediaPlayer = null;
+                ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+                    /* class com.android.keyguard.charge.video.$$Lambda$VideoView$9$pvl1XgJdYG6QMGWCTELmtNKXjs4 */
+
+                    public final void run() {
+                        VideoView.AnonymousClass9.this.lambda$onSurfaceTextureDestroyed$1$VideoView$9();
+                    }
+                });
                 return false;
+            }
+
+            /* access modifiers changed from: private */
+            /* renamed from: lambda$onSurfaceTextureDestroyed$1 */
+            public /* synthetic */ void lambda$onSurfaceTextureDestroyed$1$VideoView$9() {
+                if (VideoView.this.mStrongRapidMediaPlayer != null) {
+                    VideoView.this.mStrongRapidMediaPlayer.pause();
+                    VideoView.this.mStrongRapidMediaPlayer.stop();
+                    VideoView.this.mStrongRapidMediaPlayer.release();
+                    VideoView.this.mStrongRapidMediaPlayer = null;
+                }
             }
         };
         this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);

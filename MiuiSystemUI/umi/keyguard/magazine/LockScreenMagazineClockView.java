@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.magazine.entity.LockScreenMagazineWallpaperInfo;
@@ -186,7 +187,7 @@ public class LockScreenMagazineClockView extends LinearLayout {
     }
 
     public boolean needJump92(Context context, Uri uri) {
-        return uri != null && "MY".equalsIgnoreCase(SystemProperties.get("ro.miui.region", "")) && PackageUtils.isAppInstalledForUser(context, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser());
+        return uri != null && "MY".equalsIgnoreCase(SystemProperties.get("ro.miui.region", CodeInjection.MD5)) && PackageUtils.isAppInstalledForUser(context, "com.ziyou.haokan", KeyguardUpdateMonitor.getCurrentUser());
     }
 
     /* access modifiers changed from: private */
