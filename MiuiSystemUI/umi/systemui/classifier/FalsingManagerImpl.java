@@ -14,6 +14,7 @@ import android.os.PowerManager;
 import android.provider.Settings;
 import android.view.MotionEvent;
 import android.view.accessibility.AccessibilityManager;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
@@ -298,7 +299,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onSuccessfulUnlock() {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onSucccessfulUnlock", "");
+            FalsingLog.i("onSucccessfulUnlock", CodeInjection.MD5);
         }
         this.mDataCollector.onSucccessfulUnlock();
     }
@@ -328,7 +329,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onQsDown() {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onQsDown", "");
+            FalsingLog.i("onQsDown", CodeInjection.MD5);
         }
         this.mHumanInteractionClassifier.setType(0);
         this.mDataCollector.onQsDown();
@@ -342,7 +343,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onTrackingStarted(boolean z) {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onTrackingStarted", "");
+            FalsingLog.i("onTrackingStarted", CodeInjection.MD5);
         }
         this.mHumanInteractionClassifier.setType(z ? 8 : 4);
         this.mDataCollector.onTrackingStarted();
@@ -374,7 +375,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificatonStartDraggingDown() {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onNotificatonStartDraggingDown", "");
+            FalsingLog.i("onNotificatonStartDraggingDown", CodeInjection.MD5);
         }
         this.mHumanInteractionClassifier.setType(2);
         this.mDataCollector.onNotificatonStartDraggingDown();
@@ -383,7 +384,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onStartExpandingFromPulse() {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onStartExpandingFromPulse", "");
+            FalsingLog.i("onStartExpandingFromPulse", CodeInjection.MD5);
         }
         this.mHumanInteractionClassifier.setType(9);
         this.mDataCollector.onStartExpandingFromPulse();
@@ -407,7 +408,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onNotificationStartDismissing() {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onNotificationStartDismissing", "");
+            FalsingLog.i("onNotificationStartDismissing", CodeInjection.MD5);
         }
         this.mHumanInteractionClassifier.setType(1);
         this.mDataCollector.onNotificatonStartDismissing();
@@ -431,7 +432,7 @@ public class FalsingManagerImpl implements FalsingManager {
     @Override // com.android.systemui.plugins.FalsingManager
     public void onAffordanceSwipingStarted(boolean z) {
         if (FalsingLog.ENABLED) {
-            FalsingLog.i("onAffordanceSwipingStarted", "");
+            FalsingLog.i("onAffordanceSwipingStarted", CodeInjection.MD5);
         }
         if (z) {
             this.mHumanInteractionClassifier.setType(6);

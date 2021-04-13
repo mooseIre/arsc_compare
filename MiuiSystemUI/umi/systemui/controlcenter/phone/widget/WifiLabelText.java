@@ -13,6 +13,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 
@@ -29,7 +30,7 @@ public class WifiLabelText extends TextView {
     private String mCustomCarrier;
     private ContentObserver mCustomCarrierObserver;
     private boolean mForceHide;
-    private String mRealCarrier = "";
+    private String mRealCarrier = CodeInjection.MD5;
     private boolean mShowCarrier;
     private ContentObserver mShowCarrierObserver = new ContentObserver(new Handler((Looper) Dependency.get(Dependency.BG_LOOPER))) {
         /* class com.android.systemui.controlcenter.phone.widget.WifiLabelText.AnonymousClass2 */
@@ -60,7 +61,7 @@ public class WifiLabelText extends TextView {
         super.onAttachedToWindow();
         if (ConnectivityManager.from(((TextView) this).mContext).isNetworkSupported(0)) {
             this.mSupportNetwork = true;
-            setText("");
+            setText(CodeInjection.MD5);
             setVisibility(8);
             return;
         }

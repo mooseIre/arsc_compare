@@ -2,6 +2,7 @@ package com.android.systemui.controls.ui;
 
 import android.content.ComponentName;
 import android.graphics.drawable.Drawable;
+import codeinjection.CodeInjection;
 import com.android.systemui.controls.ControlsServiceInfo;
 import com.android.systemui.controls.management.ControlsListingController;
 import java.util.ArrayList;
@@ -32,7 +33,7 @@ public final class ControlsUiControllerImpl$createCallback$1 implements Controls
             Intrinsics.checkExpressionValueIsNotNull(loadIcon, "it.loadIcon()");
             ComponentName componentName = t.componentName;
             Intrinsics.checkExpressionValueIsNotNull(componentName, "it.componentName");
-            arrayList.add(new SelectionItem(loadLabel, "", loadIcon, componentName));
+            arrayList.add(new SelectionItem(loadLabel, CodeInjection.MD5, loadIcon, componentName));
         }
         this.this$0.getUiExecutor().execute(new ControlsUiControllerImpl$createCallback$1$onServicesUpdated$1(this, arrayList));
     }

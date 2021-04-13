@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
 import com.android.systemui.C0013R$drawable;
@@ -133,7 +134,6 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.SignalState signalState, Object obj) {
-        CharSequence charSequence;
         CallbackInfo callbackInfo = (CallbackInfo) obj;
         if (callbackInfo == null) {
             callbackInfo = this.mSignalCallback.mInfo;
@@ -158,19 +158,14 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
             signalState.secondaryLabel = resources.getString(C0021R$string.status_bar_airplane);
         } else if (z) {
             signalState.state = 2;
-            if (callbackInfo.multipleSubs) {
-                charSequence = callbackInfo.dataSubscriptionName;
-            } else {
-                charSequence = "";
-            }
-            signalState.secondaryLabel = appendMobileDataType(charSequence, getMobileDataContentName(callbackInfo));
+            signalState.secondaryLabel = appendMobileDataType(callbackInfo.multipleSubs ? callbackInfo.dataSubscriptionName : CodeInjection.MD5, getMobileDataContentName(callbackInfo));
         } else {
             signalState.state = 1;
             signalState.secondaryLabel = resources.getString(C0021R$string.cell_data_off);
         }
         signalState.contentDescription = signalState.label;
         if (signalState.state == 1) {
-            signalState.stateDescription = "";
+            signalState.stateDescription = CodeInjection.MD5;
         } else {
             signalState.stateDescription = signalState.secondaryLabel;
         }

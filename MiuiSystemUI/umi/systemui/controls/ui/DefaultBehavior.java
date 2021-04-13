@@ -1,6 +1,7 @@
 package com.android.systemui.controls.ui;
 
 import android.service.controls.Control;
+import codeinjection.CodeInjection;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +24,7 @@ public final class DefaultBehavior implements Behavior {
         if (controlViewHolder != null) {
             Control control = controlWithState.getControl();
             if (control == null || (charSequence = control.getStatusText()) == null) {
-                charSequence = "";
+                charSequence = CodeInjection.MD5;
             }
             ControlViewHolder.setStatusText$default(controlViewHolder, charSequence, false, 2, null);
             ControlViewHolder controlViewHolder2 = this.cvh;

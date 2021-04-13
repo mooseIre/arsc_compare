@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.TextUtils;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.C0008R$array;
 import com.android.systemui.C0021R$string;
@@ -83,12 +84,12 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     private SharedPreferences mMiuiUpdateVersionSharedPreferences;
     private OldModeController mOldModeController;
     private boolean mOldModeOn = false;
-    protected String mPluginDefaultTiles = "";
+    protected String mPluginDefaultTiles = CodeInjection.MD5;
     private PluginManager mPluginManager;
-    protected String mPluginStockTiles = "";
-    protected String mQsDefaultTiles = "";
+    protected String mPluginStockTiles = CodeInjection.MD5;
+    protected String mQsDefaultTiles = CodeInjection.MD5;
     private ArrayList<QSFactory> mQsFactories;
-    protected String mQsStockTiles = "";
+    protected String mQsStockTiles = CodeInjection.MD5;
     private SuperSaveModeController mSuperSaveModeController;
     private boolean mSuperSaveModeOn = false;
     private String mTileListKey = "sysui_qs_tiles";
@@ -147,13 +148,13 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         if (this.mUseControlCenter) {
             for (String str : this.mControlIndependentTiles) {
                 String str2 = this.mQsStockTiles;
-                this.mQsStockTiles = str2.replace(str + ",", "");
+                this.mQsStockTiles = str2.replace(str + ",", CodeInjection.MD5);
                 String str3 = this.mQsDefaultTiles;
-                this.mQsDefaultTiles = str3.replace(str + ",", "");
+                this.mQsDefaultTiles = str3.replace(str + ",", CodeInjection.MD5);
                 String str4 = this.mPluginStockTiles;
-                this.mPluginStockTiles = str4.replace(str + ",", "");
+                this.mPluginStockTiles = str4.replace(str + ",", CodeInjection.MD5);
                 String str5 = this.mPluginDefaultTiles;
-                this.mPluginDefaultTiles = str5.replace(str + ",", "");
+                this.mPluginDefaultTiles = str5.replace(str + ",", CodeInjection.MD5);
             }
         }
     }
@@ -259,7 +260,7 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void onTuningChanged() {
-        this.mHost.onTuningChanged("sysui_qs_tiles", "");
+        this.mHost.onTuningChanged("sysui_qs_tiles", CodeInjection.MD5);
         this.mHost.onTuningChanged("sysui_qs_tiles", getTileListValue());
     }
 

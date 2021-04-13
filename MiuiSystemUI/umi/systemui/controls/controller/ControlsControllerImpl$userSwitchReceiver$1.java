@@ -20,15 +20,15 @@ public final class ControlsControllerImpl$userSwitchReceiver$1 extends Broadcast
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
         if (Intrinsics.areEqual(intent.getAction(), "android.intent.action.USER_SWITCHED")) {
-            this.this$0.userChanging = true;
+            ControlsControllerImpl.access$setUserChanging$p(this.this$0, true);
             UserHandle of = UserHandle.of(intent.getIntExtra("android.intent.extra.user_handle", getSendingUserId()));
-            if (Intrinsics.areEqual(this.this$0.currentUser, of)) {
-                this.this$0.userChanging = false;
+            if (Intrinsics.areEqual(ControlsControllerImpl.access$getCurrentUser$p(this.this$0), of)) {
+                ControlsControllerImpl.access$setUserChanging$p(this.this$0, false);
                 return;
             }
             ControlsControllerImpl controlsControllerImpl = this.this$0;
             Intrinsics.checkExpressionValueIsNotNull(of, "newUser");
-            controlsControllerImpl.setValuesForUser(of);
+            ControlsControllerImpl.access$setValuesForUser(controlsControllerImpl, of);
         }
     }
 }

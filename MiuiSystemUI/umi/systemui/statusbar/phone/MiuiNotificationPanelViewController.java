@@ -700,6 +700,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return ((((f3 * coerceAtMost) / ((float) 3)) - f3) + coerceAtMost) * f2;
     }
 
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public final boolean isOnKeyguard() {
         return this.statusBarStateController.getState() == 1;
     }
@@ -1206,6 +1207,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
     public void resetViews(boolean z) {
         super.resetViews(z);
+        this.mNotificationStackScroller.setOverScrollAmount(0.0f, false, z, !z);
         if (isOnKeyguard() || isOnShade()) {
             this.mKeyguardPanelViewInjector.resetLockScreenMagazine();
             this.mKeyguardPanelViewInjector.resetKeyguardVerticalMoveHelper();

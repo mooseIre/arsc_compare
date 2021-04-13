@@ -5,9 +5,8 @@ import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.ranges.RangesKt___RangesKt;
 
-/* access modifiers changed from: package-private */
 /* compiled from: AppMiniWindowRowTouchHelper.kt */
-public final class AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
+final class AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ AppMiniWindowRowTouchHelper this$0;
 
     AppMiniWindowRowTouchHelper$startResetToNotificationAnimation$$inlined$apply$lambda$1(AppMiniWindowRowTouchHelper appMiniWindowRowTouchHelper) {

@@ -30,6 +30,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
@@ -700,7 +701,7 @@ public class ZenModePanel extends FrameLayout {
     }
 
     private Condition forever() {
-        return new Condition(this.mForeverId, foreverSummary(this.mContext), "", "", 0, 1, 0);
+        return new Condition(this.mForeverId, foreverSummary(this.mContext), CodeInjection.MD5, CodeInjection.MD5, 0, 1, 0);
     }
 
     private static String foreverSummary(Context context) {

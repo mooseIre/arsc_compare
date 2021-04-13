@@ -2,6 +2,7 @@ package com.android.systemui.controls.controller;
 
 import android.content.ComponentName;
 import android.service.controls.Control;
+import codeinjection.CodeInjection;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -146,7 +147,7 @@ public final class Favorites {
                     }
                     Object structure = control.getStructure();
                     if (structure == null) {
-                        structure = "";
+                        structure = CodeInjection.MD5;
                     }
                     if (!Intrinsics.areEqual(t2.getStructure(), structure)) {
                         z = true;

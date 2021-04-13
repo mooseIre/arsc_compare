@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 import com.android.systemui.controlcenter.ControlCenter;
-import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
@@ -13,6 +12,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.MiuiNotificationShadePolicy;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
 import com.miui.systemui.util.BlurUtil;
+import com.miui.systemui.util.CommonUtil;
 import java.util.HashSet;
 import java.util.Iterator;
 
@@ -136,7 +136,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         if (ControlCenter.DEBUG) {
             Log.d("ControlPanelWindowManager", "Fsg state disable:" + z2);
         }
-        ControlCenterUtils.updateFsgState(this.mContext, "typefrom_status_bar_expansion", z2);
+        CommonUtil.updateFsgState(this.mContext, "typefrom_status_bar_expansion", z2);
         if (!z2) {
             this.mMiuiNotificationShadePolicy.notifyFsgChanged(false);
         }

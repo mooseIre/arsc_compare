@@ -19,14 +19,15 @@ import com.android.systemui.statusbar.phone.NotificationGroupManager;
 public class NotificationFilter {
     private NotificationEntryManager.KeyguardEnvironment mEnvironment;
     private ForegroundServiceController mFsc;
-    private final Boolean mIsMediaFlagEnabled = Boolean.TRUE;
+    private final NotificationGroupManager mGroupManager = ((NotificationGroupManager) Dependency.get(NotificationGroupManager.class));
+    private final Boolean mIsMediaFlagEnabled;
     private final StatusBarStateController mStatusBarStateController;
     private NotificationLockscreenUserManager mUserManager;
 
     public NotificationFilter(StatusBarStateController statusBarStateController, MediaFeatureFlag mediaFeatureFlag) {
-        NotificationGroupManager notificationGroupManager = (NotificationGroupManager) Dependency.get(NotificationGroupManager.class);
         this.mStatusBarStateController = statusBarStateController;
         mediaFeatureFlag.getEnabled();
+        this.mIsMediaFlagEnabled = Boolean.TRUE;
     }
 
     private NotificationEntryManager.KeyguardEnvironment getEnvironment() {
@@ -72,7 +73,7 @@ public class NotificationFilter {
             return true;
         }
         if (!this.mIsMediaFlagEnabled.booleanValue() || !MediaDataManagerKt.isMediaNotification(sbn)) {
-            return NotificationFilterController.shouldFilterOut(notificationEntry);
+            return NotificationFilterController.shouldFilterOut(notificationEntry, this.mGroupManager);
         }
         return true;
     }

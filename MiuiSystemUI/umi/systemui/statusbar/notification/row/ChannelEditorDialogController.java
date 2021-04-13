@@ -13,6 +13,7 @@ import android.view.Window;
 import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
@@ -186,7 +187,7 @@ public final class ChannelEditorDialogController {
     @NotNull
     public final CharSequence groupNameForId(@Nullable String str) {
         CharSequence charSequence = this.groupNameLookup.get(str);
-        return charSequence != null ? charSequence : "";
+        return charSequence != null ? charSequence : CodeInjection.MD5;
     }
 
     public final void proposeEditForChannel(@NotNull NotificationChannel notificationChannel, int i) {

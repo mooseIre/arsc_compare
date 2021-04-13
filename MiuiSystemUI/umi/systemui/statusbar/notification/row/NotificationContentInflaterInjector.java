@@ -10,6 +10,7 @@ import android.os.Parcel;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.widget.RemoteViews;
+import codeinjection.CodeInjection;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0015R$id;
@@ -362,7 +363,7 @@ public class NotificationContentInflaterInjector {
             charSequence = charSequence2;
         }
         handleTitle(remoteViews, charSequence, z, context);
-        if (charSequence2 == null || !charSequence2.equals("")) {
+        if (charSequence2 == null || !charSequence2.equals(CodeInjection.MD5)) {
             remoteViews.setViewVisibility(C0015R$id.line1, 0);
         } else {
             remoteViews.setViewVisibility(C0015R$id.line1, 8);

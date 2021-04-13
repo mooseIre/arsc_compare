@@ -13,6 +13,7 @@ import android.util.TypedValue;
 import android.widget.EditText;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.C0023R$xml;
@@ -48,6 +49,10 @@ public class NavBarTuner extends TunerPreferenceFragment {
     public void onDestroy() {
         super.onDestroy();
         this.mTunables.forEach($$Lambda$NavBarTuner$tsKQ8HfwaDSvc3iDCsgHsW954hc.INSTANCE);
+    }
+
+    static /* synthetic */ void lambda$onDestroy$0(TunerService.Tunable tunable) {
+        ((TunerService) Dependency.get(TunerService.class)).removeTunable(tunable);
     }
 
     private void addTunable(TunerService.Tunable tunable, String... strArr) {
@@ -211,7 +216,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
             int extractKeycode = NavigationBarInflaterView.extractKeycode(extractButton);
             listPreference2.setValue(extractImage);
             updateSummary(listPreference2);
-            preference.setSummary(extractKeycode + "");
+            preference.setSummary(extractKeycode + CodeInjection.MD5);
             preference.setVisible(true);
             listPreference2.setVisible(true);
             return;
@@ -288,7 +293,7 @@ public class NavBarTuner extends TunerPreferenceFragment {
         } catch (Exception unused) {
             i2 = 66;
         }
-        preference.setSummary(i2 + "");
+        preference.setSummary(i2 + CodeInjection.MD5);
         setValue(str, listPreference, preference, listPreference2);
     }
 

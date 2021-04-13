@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.text.format.DateUtils;
 import android.widget.SeekBar;
 import androidx.lifecycle.Observer;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.media.SeekBarViewModel;
 import kotlin.jvm.internal.Intrinsics;
@@ -45,8 +46,8 @@ public final class SeekBarObserver implements Observer<SeekBarViewModel.Progress
             this.holder.getSeekBar().setEnabled(false);
             this.holder.getSeekBar().getThumb().setAlpha(0);
             this.holder.getSeekBar().setProgress(0);
-            this.holder.getElapsedTimeView().setText("");
-            this.holder.getTotalTimeView().setText("");
+            this.holder.getElapsedTimeView().setText(CodeInjection.MD5);
+            this.holder.getTotalTimeView().setText(CodeInjection.MD5);
             return;
         }
         Drawable thumb = this.holder.getSeekBar().getThumb();

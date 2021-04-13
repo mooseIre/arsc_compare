@@ -3,6 +3,7 @@ package com.android.systemui.controls.controller;
 import android.content.ComponentName;
 import android.service.controls.Control;
 import android.util.ArrayMap;
+import codeinjection.CodeInjection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +26,7 @@ public final class ControlsControllerImpl$startSeeding$1$accept$1 implements Run
         for (Control control : this.$controls) {
             Object structure = control.getStructure();
             if (structure == null) {
-                structure = "";
+                structure = CodeInjection.MD5;
             }
             List list = (List) arrayMap.get(structure);
             if (list == null) {

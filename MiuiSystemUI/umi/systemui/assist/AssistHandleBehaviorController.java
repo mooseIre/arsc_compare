@@ -69,10 +69,6 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         }
     }
 
-    public static /* synthetic */ void lambda$oeveMWAQo5jd5bG1H5Ci7Dy4X74(AssistHandleBehaviorController assistHandleBehaviorController) {
-        assistHandleBehaviorController.showAndGoInternal();
-    }
-
     AssistHandleBehaviorController(Context context, AssistUtils assistUtils, Handler handler, Provider<AssistHandleViewController> provider, DeviceConfigHelper deviceConfigHelper, Map<AssistHandleBehavior, BehaviorController> map, NavigationModeController navigationModeController, Lazy<AccessibilityManager> lazy, DumpManager dumpManager) {
         this.mContext = context;
         this.mAssistUtils = assistUtils;
@@ -135,6 +131,7 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         this.mHandler.post(this.mShowAndGo);
     }
 
+    /* access modifiers changed from: public */
     private void showAndGoInternal() {
         maybeShowHandles(false);
         long showAndGoDuration = getShowAndGoDuration();

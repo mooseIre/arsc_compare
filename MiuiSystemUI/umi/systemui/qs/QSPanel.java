@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.widget.RemeasuringLinearLayout;
@@ -53,7 +54,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
     private MiuiBrightnessController mBrightnessController;
     private BrightnessMirrorController mBrightnessMirrorController;
     protected View mBrightnessView;
-    private String mCachedSpecs = "";
+    private String mCachedSpecs = CodeInjection.MD5;
     private MiuiQSDetail.Callback mCallback;
     private int mContentMarginEnd;
     private int mContentMarginStart;
@@ -729,7 +730,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
             next.tile.removeCallback(next.callback);
         }
         this.mRecords.clear();
-        this.mCachedSpecs = "";
+        this.mCachedSpecs = CodeInjection.MD5;
         for (QSTile qSTile : collection) {
             addTile(qSTile, z);
         }

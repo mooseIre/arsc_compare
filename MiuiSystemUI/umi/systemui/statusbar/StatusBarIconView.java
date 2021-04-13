@@ -29,6 +29,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import androidx.core.graphics.ColorUtils;
+import codeinjection.CodeInjection;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.systemui.C0010R$bool;
@@ -496,7 +497,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
 
     public static String contentDescForNotification(Context context, Notification notification) {
         CharSequence charSequence;
-        CharSequence charSequence2 = "";
+        CharSequence charSequence2 = CodeInjection.MD5;
         try {
             charSequence = Notification.Builder.recoverBuilder(context, notification).loadHeaderAppName();
         } catch (RuntimeException e) {

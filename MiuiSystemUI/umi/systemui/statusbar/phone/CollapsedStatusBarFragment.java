@@ -223,10 +223,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     /* access modifiers changed from: protected */
     public int clockHiddenMode() {
-        if ((this.mDisabled1 & 8388608) == 0 && !this.mStatusBar.isClosed() && !this.mKeyguardStateController.isShowing() && !this.mStatusBarStateController.isDozing()) {
-            return 4;
-        }
-        return 8;
+        return (this.mStatusBar.isClosed() || this.mKeyguardStateController.isShowing() || this.mStatusBarStateController.isDozing() || this.mStatusBarComponent.headsUpShouldBeVisible()) ? 8 : 4;
     }
 
     public void hideNotificationIconArea(boolean z) {

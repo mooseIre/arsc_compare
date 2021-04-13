@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.core.view.ViewCompat;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.controls.ControlInterface;
@@ -105,7 +106,7 @@ public final class ControlHolder extends Holder {
             Intrinsics.checkExpressionValueIsNotNull(view, "itemView");
             charSequence = view.getContext().getText(C0021R$string.controls_removed);
         } else {
-            charSequence = "";
+            charSequence = CodeInjection.MD5;
         }
         textView.setText(charSequence);
         this.itemView.setOnClickListener(new ControlHolder$bindData$1(this, elementWrapper));

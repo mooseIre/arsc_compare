@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
@@ -25,7 +26,10 @@ import com.android.systemui.controls.ui.RenderInfo;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.util.LifecycleActivity;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: ControlsRequestDialog.kt */
 public class ControlsRequestDialog extends LifecycleActivity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     private final BroadcastDispatcher broadcastDispatcher;
     private final ControlsRequestDialog$callback$1 callback = new ControlsRequestDialog$callback$1();
@@ -36,7 +40,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     private final ControlsRequestDialog$currentUserTracker$1 currentUserTracker = new ControlsRequestDialog$currentUserTracker$1(this, this.broadcastDispatcher);
     private Dialog dialog;
 
-    public ControlsRequestDialog(ControlsController controlsController, BroadcastDispatcher broadcastDispatcher2, ControlsListingController controlsListingController2) {
+    public ControlsRequestDialog(@NotNull ControlsController controlsController, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull ControlsListingController controlsListingController2) {
         Intrinsics.checkParameterIsNotNull(controlsController, "controller");
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(controlsListingController2, "controlsListingController");
@@ -45,8 +49,9 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         this.controlsListingController = controlsListingController2;
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
-    public void onCreate(Bundle bundle) {
+    public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
         if (!this.controller.getAvailable()) {
             Log.w("ControlsRequestDialog", "Quick Controls not available for this user ");
@@ -76,6 +81,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         finish();
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onResume() {
         super.onResume();
@@ -116,6 +122,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         }
     }
 
+    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         Dialog dialog2 = this.dialog;
@@ -146,7 +153,8 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controls.management.ControlsRequestDialog.isCurrentFavorite():boolean");
     }
 
-    public final Dialog createDialog(CharSequence charSequence) {
+    @NotNull
+    public final Dialog createDialog(@NotNull CharSequence charSequence) {
         Intrinsics.checkParameterIsNotNull(charSequence, "label");
         RenderInfo.Companion companion = RenderInfo.Companion;
         ComponentName componentName = this.controlComponent;
@@ -198,11 +206,11 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         throw null;
     }
 
-    public void onCancel(DialogInterface dialogInterface) {
+    public void onCancel(@Nullable DialogInterface dialogInterface) {
         finish();
     }
 
-    public void onClick(DialogInterface dialogInterface, int i) {
+    public void onClick(@Nullable DialogInterface dialogInterface, int i) {
         if (i == -1) {
             ControlsController controlsController = this.controller;
             ComponentName componentName = this.controlComponent;
@@ -211,7 +219,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
                 if (control2 != null) {
                     CharSequence structure = control2.getStructure();
                     if (structure == null) {
-                        structure = "";
+                        structure = CodeInjection.MD5;
                     }
                     Control control3 = this.control;
                     if (control3 != null) {

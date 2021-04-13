@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.res.Resources;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.controls.ControlStatus;
 import com.android.systemui.controls.TooltipManager;
@@ -39,7 +40,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
         for (T t : allControls) {
             Object structure = t.getControl().getStructure();
             if (structure == null) {
-                structure = "";
+                structure = CodeInjection.MD5;
             }
             Object obj = linkedHashMap.get(structure);
             if (obj == null) {
@@ -94,7 +95,7 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1<T> imp
                     Object[] objArr = new Object[1];
                     Object obj = this.this$0.this$0.appName;
                     if (obj == null) {
-                        obj = "";
+                        obj = CodeInjection.MD5;
                     }
                     objArr[0] = obj;
                     access$getStatusText$p.setText(resources.getString(i2, objArr));

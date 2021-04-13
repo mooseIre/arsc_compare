@@ -24,6 +24,7 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.util.SparseArray;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.MiuiCarrierTextController;
@@ -302,6 +303,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         intentFilter.addAction("android.intent.action.ACTION_IMS_REGISTED");
         intentFilter.addAction("android.intent.action.ACTION_SPEECH_CODEC_IS_HD");
         intentFilter.addAction("android.intent.action.RADIO_TECHNOLOGY");
+        intentFilter.addAction("android.net.wifi.supplicant.STATE_CHANGE");
         if (miui.telephony.TelephonyManager.getDefault().getCtVolteSupportedMode() > 0) {
             intentFilter.addAction("miui.intent.action.ACTION_ENHANCED_4G_LTE_MODE_CHANGE_FOR_SLOT1");
             intentFilter.addAction("miui.intent.action.ACTION_ENHANCED_4G_LTE_MODE_CHANGE_FOR_SLOT2");
@@ -389,7 +391,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     @Override // com.android.systemui.statusbar.policy.NetworkController, com.android.settingslib.net.DataUsageController.NetworkNameProvider
     public String getMobileDataNetworkName() {
         MobileSignalController dataController = getDataController();
-        return dataController != null ? ((MobileSignalController.MobileState) dataController.getState()).networkNameData : "";
+        return dataController != null ? ((MobileSignalController.MobileState) dataController.getState()).networkNameData : CodeInjection.MD5;
     }
 
     @Override // com.android.systemui.statusbar.policy.NetworkController
@@ -1087,7 +1089,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     private SubscriptionInfo addSignalController(int i, int i2) {
-        SubscriptionInfo subscriptionInfo = new SubscriptionInfo(i, "", i2, "", "", 0, 0, "", 0, null, null, null, "", false, null, null);
+        SubscriptionInfo subscriptionInfo = new SubscriptionInfo(i, CodeInjection.MD5, i2, CodeInjection.MD5, CodeInjection.MD5, 0, 0, CodeInjection.MD5, 0, null, null, null, CodeInjection.MD5, false, null, null);
         MobileSignalController mobileSignalController = new MobileSignalController(this.mContext, this.mConfig, this.mHasMobileDataFeature, this.mPhone.createForSubscriptionId(subscriptionInfo.getSubscriptionId()), this.mCallbackHandler, this, subscriptionInfo, this.mSubDefaults, this.mReceiverHandler.getLooper());
         this.mMobileSignalControllers.put(i, mobileSignalController);
         ((MobileSignalController.MobileState) mobileSignalController.getState()).userSetup = true;

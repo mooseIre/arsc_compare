@@ -1961,6 +1961,7 @@ public final class R {
         public static final int config_showRotationLock;
         public static final int config_showRsrpSignalLevelforLTE;
         public static final int config_show_customize_carrier_name;
+        public static final int config_show_data_type_left_single;
         public static final int config_show_mobile_type;
         public static final int config_smart_replies_in_notifications_edit_choices_before_sending;
         public static final int config_smart_replies_in_notifications_enabled;
@@ -7631,7 +7632,7 @@ public final class R {
         public static final int stat_sys_branded_vpn;
         public static final int stat_sys_call_record;
         public static final int stat_sys_call_record_darkmode;
-        public static final int stat_sys_call_tint;
+        public static final int stat_sys_call_record_tint;
         public static final int stat_sys_camera;
         public static final int stat_sys_cast;
         public static final int stat_sys_data_bluetooth;
@@ -8929,6 +8930,7 @@ public final class R {
         public static final int mobile_speech_hd;
         public static final int mobile_type;
         public static final int mobile_type_image;
+        public static final int mobile_type_single;
         public static final int mobile_volte;
         public static final int mobile_volte_no_service;
         public static final int mobile_vowifi;

@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.settings.CurrentUserTracker;
@@ -135,7 +136,7 @@ public class NotificationBadgeController {
     private void updateAppBadgeNum(String str, CharSequence charSequence, int i, int i2, boolean z) {
         String str2;
         if (str == null) {
-            str2 = "";
+            str2 = CodeInjection.MD5;
         } else {
             str2 = str + "/" + ((Object) charSequence);
         }
@@ -156,7 +157,7 @@ public class NotificationBadgeController {
 
     private CharSequence getMessageClassName(ExpandedNotification expandedNotification) {
         CharSequence messageClassName = expandedNotification.getMessageClassName();
-        return messageClassName == null ? "" : messageClassName;
+        return messageClassName == null ? CodeInjection.MD5 : messageClassName;
     }
 
     private boolean needStatBadgeNum(ExpandedNotification expandedNotification) {

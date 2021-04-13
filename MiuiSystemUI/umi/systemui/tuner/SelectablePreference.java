@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import androidx.preference.CheckBoxPreference;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.ScalingDrawableWrapper;
 
@@ -12,7 +13,7 @@ public class SelectablePreference extends CheckBoxPreference {
 
     @Override // androidx.preference.Preference
     public String toString() {
-        return "";
+        return CodeInjection.MD5;
     }
 
     public SelectablePreference(Context context) {

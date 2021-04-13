@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.SystemProperties;
+import codeinjection.CodeInjection;
 import com.android.systemui.Dumpable;
 import com.android.systemui.statusbar.policy.RegionController;
 import java.io.FileDescriptor;
@@ -55,7 +56,7 @@ public class RegionController implements Dumpable {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateRegion() {
-        this.mRegion = SystemProperties.get("ro.miui.region", "");
+        this.mRegion = SystemProperties.get("ro.miui.region", CodeInjection.MD5);
     }
 
     public void addCallback(Callback callback) {

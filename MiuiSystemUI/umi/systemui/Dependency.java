@@ -167,6 +167,7 @@ import com.miui.systemui.statusbar.PanelExpansionObserver;
 import com.miui.systemui.statusbar.phone.DriveModeObserver;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
+import com.miui.systemui.util.GestureObserver;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import dagger.Lazy;
 import java.util.Objects;
@@ -236,6 +237,7 @@ public class Dependency {
     Lazy<ForegroundServiceNotificationListener> mForegroundServiceNotificationListener;
     Lazy<FragmentService> mFragmentService;
     Lazy<GarbageMonitor> mGarbageMonitor;
+    Lazy<GestureObserver> mGestureObserver;
     Lazy<HotspotController> mHotspotController;
     Lazy<INotificationManager> mINotificationManager;
     Lazy<IStatusBarService> mIStatusBarService;
@@ -310,6 +312,7 @@ public class Dependency {
     Lazy<OverviewProxyService> mOverviewProxyService;
     Lazy<PackageManagerWrapper> mPackageManagerWrapper;
     Lazy<PanelExpansionObserver> mPanelExpansionObserver;
+    Lazy<PerformanceTools> mPerformanceTools;
     Lazy<IPhoneSignalController> mPhoneSignalController;
     Lazy<PluginDependencyProvider> mPluginDependencyProvider;
     Lazy<PluginManager> mPluginManager;
@@ -1590,9 +1593,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap111 = this.mProviders;
-        Lazy<SettingsManager> lazy111 = this.mSettingsManager;
+        Lazy<PerformanceTools> lazy111 = this.mPerformanceTools;
         Objects.requireNonNull(lazy111);
-        arrayMap111.put(SettingsManager.class, new LazyDependencyCreator() {
+        arrayMap111.put(PerformanceTools.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1601,9 +1604,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap112 = this.mProviders;
-        Lazy<CloudDataManager> lazy112 = this.mCloudDataManager;
+        Lazy<SettingsManager> lazy112 = this.mSettingsManager;
         Objects.requireNonNull(lazy112);
-        arrayMap112.put(CloudDataManager.class, new LazyDependencyCreator() {
+        arrayMap112.put(SettingsManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1612,9 +1615,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap113 = this.mProviders;
-        Lazy<EventTracker> lazy113 = this.mEventTracker;
+        Lazy<CloudDataManager> lazy113 = this.mCloudDataManager;
         Objects.requireNonNull(lazy113);
-        arrayMap113.put(EventTracker.class, new LazyDependencyCreator() {
+        arrayMap113.put(CloudDataManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1623,9 +1626,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap114 = this.mProviders;
-        Lazy<AppIconsManager> lazy114 = this.mAppIconsManager;
+        Lazy<EventTracker> lazy114 = this.mEventTracker;
         Objects.requireNonNull(lazy114);
-        arrayMap114.put(AppIconsManager.class, new LazyDependencyCreator() {
+        arrayMap114.put(EventTracker.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1634,9 +1637,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap115 = this.mProviders;
-        Lazy<NotificationStat> lazy115 = this.mNotificationStat;
+        Lazy<AppIconsManager> lazy115 = this.mAppIconsManager;
         Objects.requireNonNull(lazy115);
-        arrayMap115.put(NotificationStat.class, new LazyDependencyCreator() {
+        arrayMap115.put(AppIconsManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1645,9 +1648,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap116 = this.mProviders;
-        Lazy<UsbNotificationController> lazy116 = this.mUsbNotificationController;
+        Lazy<NotificationStat> lazy116 = this.mNotificationStat;
         Objects.requireNonNull(lazy116);
-        arrayMap116.put(UsbNotificationController.class, new LazyDependencyCreator() {
+        arrayMap116.put(NotificationStat.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1656,9 +1659,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap117 = this.mProviders;
-        Lazy<KeyguardNotificationController> lazy117 = this.mKeyguardNotificationHelper;
+        Lazy<UsbNotificationController> lazy117 = this.mUsbNotificationController;
         Objects.requireNonNull(lazy117);
-        arrayMap117.put(KeyguardNotificationController.class, new LazyDependencyCreator() {
+        arrayMap117.put(UsbNotificationController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1667,9 +1670,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap118 = this.mProviders;
-        Lazy<NotificationSettingsManager> lazy118 = this.mNotificationSettingsManager;
+        Lazy<KeyguardNotificationController> lazy118 = this.mKeyguardNotificationHelper;
         Objects.requireNonNull(lazy118);
-        arrayMap118.put(NotificationSettingsManager.class, new LazyDependencyCreator() {
+        arrayMap118.put(KeyguardNotificationController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1678,9 +1681,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap119 = this.mProviders;
-        Lazy<NotificationBadgeController> lazy119 = this.mNotificationBadgeController;
+        Lazy<NotificationSettingsManager> lazy119 = this.mNotificationSettingsManager;
         Objects.requireNonNull(lazy119);
-        arrayMap119.put(NotificationBadgeController.class, new LazyDependencyCreator() {
+        arrayMap119.put(NotificationSettingsManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1689,9 +1692,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap120 = this.mProviders;
-        Lazy<NotificationSensitiveController> lazy120 = this.mNotificationSensitiveController;
+        Lazy<NotificationBadgeController> lazy120 = this.mNotificationBadgeController;
         Objects.requireNonNull(lazy120);
-        arrayMap120.put(NotificationSensitiveController.class, new LazyDependencyCreator() {
+        arrayMap120.put(NotificationBadgeController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1700,9 +1703,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap121 = this.mProviders;
-        Lazy<MiuiChargeManager> lazy121 = this.mMiuiChargeManager;
+        Lazy<NotificationSensitiveController> lazy121 = this.mNotificationSensitiveController;
         Objects.requireNonNull(lazy121);
-        arrayMap121.put(MiuiChargeManager.class, new LazyDependencyCreator() {
+        arrayMap121.put(NotificationSensitiveController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1711,9 +1714,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap122 = this.mProviders;
-        Lazy<MiuiChargeController> lazy122 = this.mMiuiChargeController;
+        Lazy<MiuiChargeManager> lazy122 = this.mMiuiChargeManager;
         Objects.requireNonNull(lazy122);
-        arrayMap122.put(MiuiChargeController.class, new LazyDependencyCreator() {
+        arrayMap122.put(MiuiChargeManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1722,9 +1725,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap123 = this.mProviders;
-        Lazy<HapticFeedBackImpl> lazy123 = this.mMiuihapticFeedBack;
+        Lazy<MiuiChargeController> lazy123 = this.mMiuiChargeController;
         Objects.requireNonNull(lazy123);
-        arrayMap123.put(HapticFeedBackImpl.class, new LazyDependencyCreator() {
+        arrayMap123.put(MiuiChargeController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1733,9 +1736,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap124 = this.mProviders;
-        Lazy<KeyguardIndicationInjector> lazy124 = this.mKeyguardIndicationInjector;
+        Lazy<HapticFeedBackImpl> lazy124 = this.mMiuihapticFeedBack;
         Objects.requireNonNull(lazy124);
-        arrayMap124.put(KeyguardIndicationInjector.class, new LazyDependencyCreator() {
+        arrayMap124.put(HapticFeedBackImpl.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1744,9 +1747,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap125 = this.mProviders;
-        Lazy<KeyguardPanelViewInjector> lazy125 = this.mKeyguardNotificationInjector;
+        Lazy<KeyguardIndicationInjector> lazy125 = this.mKeyguardIndicationInjector;
         Objects.requireNonNull(lazy125);
-        arrayMap125.put(KeyguardPanelViewInjector.class, new LazyDependencyCreator() {
+        arrayMap125.put(KeyguardIndicationInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1755,9 +1758,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap126 = this.mProviders;
-        Lazy<KeyguardUpdateMonitorInjector> lazy126 = this.mKeyguardUpdateMonitorInjector;
+        Lazy<KeyguardPanelViewInjector> lazy126 = this.mKeyguardNotificationInjector;
         Objects.requireNonNull(lazy126);
-        arrayMap126.put(KeyguardUpdateMonitorInjector.class, new LazyDependencyCreator() {
+        arrayMap126.put(KeyguardPanelViewInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1766,9 +1769,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap127 = this.mProviders;
-        Lazy<MiuiDozeServiceHost> lazy127 = this.mDozeServiceHost;
+        Lazy<KeyguardUpdateMonitorInjector> lazy127 = this.mKeyguardUpdateMonitorInjector;
         Objects.requireNonNull(lazy127);
-        arrayMap127.put(MiuiDozeServiceHost.class, new LazyDependencyCreator() {
+        arrayMap127.put(KeyguardUpdateMonitorInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1777,9 +1780,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap128 = this.mProviders;
-        Lazy<SettingsObserver> lazy128 = this.mContentObserver;
+        Lazy<MiuiDozeServiceHost> lazy128 = this.mDozeServiceHost;
         Objects.requireNonNull(lazy128);
-        arrayMap128.put(SettingsObserver.class, new LazyDependencyCreator() {
+        arrayMap128.put(MiuiDozeServiceHost.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1788,9 +1791,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap129 = this.mProviders;
-        Lazy<KeyguardIndicationController> lazy129 = this.mKeyguardIndicationController;
+        Lazy<SettingsObserver> lazy129 = this.mContentObserver;
         Objects.requireNonNull(lazy129);
-        arrayMap129.put(KeyguardIndicationController.class, new LazyDependencyCreator() {
+        arrayMap129.put(SettingsObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1799,9 +1802,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap130 = this.mProviders;
-        Lazy<LockScreenMagazineController> lazy130 = this.mLockScreenMagazineController;
+        Lazy<KeyguardIndicationController> lazy130 = this.mKeyguardIndicationController;
         Objects.requireNonNull(lazy130);
-        arrayMap130.put(LockScreenMagazineController.class, new LazyDependencyCreator() {
+        arrayMap130.put(KeyguardIndicationController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1810,9 +1813,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap131 = this.mProviders;
-        Lazy<MiuiFaceUnlockManager> lazy131 = this.mMiuiFaceUnlockManager;
+        Lazy<LockScreenMagazineController> lazy131 = this.mLockScreenMagazineController;
         Objects.requireNonNull(lazy131);
-        arrayMap131.put(MiuiFaceUnlockManager.class, new LazyDependencyCreator() {
+        arrayMap131.put(LockScreenMagazineController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1821,9 +1824,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap132 = this.mProviders;
-        Lazy<MiuiGxzwManager> lazy132 = this.mMiuiGxzwManager;
+        Lazy<MiuiFaceUnlockManager> lazy132 = this.mMiuiFaceUnlockManager;
         Objects.requireNonNull(lazy132);
-        arrayMap132.put(MiuiGxzwManager.class, new LazyDependencyCreator() {
+        arrayMap132.put(MiuiFaceUnlockManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1832,9 +1835,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap133 = this.mProviders;
-        Lazy<MiuiFastUnlockController> lazy133 = this.mMiuiFastUnlockController;
+        Lazy<MiuiGxzwManager> lazy133 = this.mMiuiGxzwManager;
         Objects.requireNonNull(lazy133);
-        arrayMap133.put(MiuiFastUnlockController.class, new LazyDependencyCreator() {
+        arrayMap133.put(MiuiGxzwManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1843,9 +1846,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap134 = this.mProviders;
-        Lazy<ForceBlackObserver> lazy134 = this.mForceBlackObserver;
+        Lazy<MiuiFastUnlockController> lazy134 = this.mMiuiFastUnlockController;
         Objects.requireNonNull(lazy134);
-        arrayMap134.put(ForceBlackObserver.class, new LazyDependencyCreator() {
+        arrayMap134.put(MiuiFastUnlockController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1854,9 +1857,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap135 = this.mProviders;
-        Lazy<KeyguardClockInjector> lazy135 = this.mKeyguardClockInjector;
+        Lazy<ForceBlackObserver> lazy135 = this.mForceBlackObserver;
         Objects.requireNonNull(lazy135);
-        arrayMap135.put(KeyguardClockInjector.class, new LazyDependencyCreator() {
+        arrayMap135.put(ForceBlackObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1865,9 +1868,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap136 = this.mProviders;
-        Lazy<KeyguardBottomAreaInjector> lazy136 = this.mKeyguardBottomAreaInjector;
+        Lazy<KeyguardClockInjector> lazy136 = this.mKeyguardClockInjector;
         Objects.requireNonNull(lazy136);
-        arrayMap136.put(KeyguardBottomAreaInjector.class, new LazyDependencyCreator() {
+        arrayMap136.put(KeyguardClockInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1876,9 +1879,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap137 = this.mProviders;
-        Lazy<KeyguardNegative1PageInjector> lazy137 = this.mKeyguardNegative1PageInjector;
+        Lazy<KeyguardBottomAreaInjector> lazy137 = this.mKeyguardBottomAreaInjector;
         Objects.requireNonNull(lazy137);
-        arrayMap137.put(KeyguardNegative1PageInjector.class, new LazyDependencyCreator() {
+        arrayMap137.put(KeyguardBottomAreaInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1887,9 +1890,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap138 = this.mProviders;
-        Lazy<KeyguardSensorInjector> lazy138 = this.mKeyguardSensorInjector;
+        Lazy<KeyguardNegative1PageInjector> lazy138 = this.mKeyguardNegative1PageInjector;
         Objects.requireNonNull(lazy138);
-        arrayMap138.put(KeyguardSensorInjector.class, new LazyDependencyCreator() {
+        arrayMap138.put(KeyguardNegative1PageInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1898,9 +1901,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap139 = this.mProviders;
-        Lazy<KeyguardViewMediatorInjector> lazy139 = this.mKeyguardViewMediatorInjector;
+        Lazy<KeyguardSensorInjector> lazy139 = this.mKeyguardSensorInjector;
         Objects.requireNonNull(lazy139);
-        arrayMap139.put(KeyguardViewMediatorInjector.class, new LazyDependencyCreator() {
+        arrayMap139.put(KeyguardSensorInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1909,9 +1912,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap140 = this.mProviders;
-        Lazy<SmartDarkObserver> lazy140 = this.mSmartDarkObserver;
+        Lazy<KeyguardViewMediatorInjector> lazy140 = this.mKeyguardViewMediatorInjector;
         Objects.requireNonNull(lazy140);
-        arrayMap140.put(SmartDarkObserver.class, new LazyDependencyCreator() {
+        arrayMap140.put(KeyguardViewMediatorInjector.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1920,9 +1923,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap141 = this.mProviders;
-        Lazy<MiuiStatusBarPromptController> lazy141 = this.mMiuiStatusBarPromptController;
+        Lazy<SmartDarkObserver> lazy141 = this.mSmartDarkObserver;
         Objects.requireNonNull(lazy141);
-        arrayMap141.put(MiuiStatusBarPromptController.class, new LazyDependencyCreator() {
+        arrayMap141.put(SmartDarkObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1931,9 +1934,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap142 = this.mProviders;
-        Lazy<NotificationIconObserver> lazy142 = this.mNotificationIconObserver;
+        Lazy<MiuiStatusBarPromptController> lazy142 = this.mMiuiStatusBarPromptController;
         Objects.requireNonNull(lazy142);
-        arrayMap142.put(NotificationIconObserver.class, new LazyDependencyCreator() {
+        arrayMap142.put(MiuiStatusBarPromptController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1942,9 +1945,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap143 = this.mProviders;
-        Lazy<DualClockObserver> lazy143 = this.mDualClockObserver;
+        Lazy<NotificationIconObserver> lazy143 = this.mNotificationIconObserver;
         Objects.requireNonNull(lazy143);
-        arrayMap143.put(DualClockObserver.class, new LazyDependencyCreator() {
+        arrayMap143.put(NotificationIconObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1953,9 +1956,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap144 = this.mProviders;
-        Lazy<DriveModeObserver> lazy144 = this.mDriveModeObserver;
+        Lazy<DualClockObserver> lazy144 = this.mDualClockObserver;
         Objects.requireNonNull(lazy144);
-        arrayMap144.put(DriveModeObserver.class, new LazyDependencyCreator() {
+        arrayMap144.put(DualClockObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1964,9 +1967,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap145 = this.mProviders;
-        Lazy<MiuiDripLeftStatusBarIconControllerImpl> lazy145 = this.mMiuiDripLeftStatusBarIconControllerImpl;
+        Lazy<DriveModeObserver> lazy145 = this.mDriveModeObserver;
         Objects.requireNonNull(lazy145);
-        arrayMap145.put(MiuiDripLeftStatusBarIconControllerImpl.class, new LazyDependencyCreator() {
+        arrayMap145.put(DriveModeObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1975,9 +1978,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap146 = this.mProviders;
-        Lazy<WallpaperCommandSender> lazy146 = this.mUpdateWallpaperCommand;
+        Lazy<MiuiDripLeftStatusBarIconControllerImpl> lazy146 = this.mMiuiDripLeftStatusBarIconControllerImpl;
         Objects.requireNonNull(lazy146);
-        arrayMap146.put(WallpaperCommandSender.class, new LazyDependencyCreator() {
+        arrayMap146.put(MiuiDripLeftStatusBarIconControllerImpl.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1986,9 +1989,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap147 = this.mProviders;
-        Lazy<MiuiKeyguardWallpaperControllerImpl> lazy147 = this.mMiuiKeyguardWallpaperControllerImpl;
+        Lazy<WallpaperCommandSender> lazy147 = this.mUpdateWallpaperCommand;
         Objects.requireNonNull(lazy147);
-        arrayMap147.put(MiuiKeyguardWallpaperControllerImpl.class, new LazyDependencyCreator() {
+        arrayMap147.put(WallpaperCommandSender.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -1997,9 +2000,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap148 = this.mProviders;
-        Lazy<MiuiWallpaperClient> lazy148 = this.mMiuiWallpaperClient;
+        Lazy<MiuiKeyguardWallpaperControllerImpl> lazy148 = this.mMiuiKeyguardWallpaperControllerImpl;
         Objects.requireNonNull(lazy148);
-        arrayMap148.put(MiuiWallpaperClient.class, new LazyDependencyCreator() {
+        arrayMap148.put(MiuiKeyguardWallpaperControllerImpl.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2008,9 +2011,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap149 = this.mProviders;
-        Lazy<ControlPanelController> lazy149 = this.mControlPanelController;
+        Lazy<MiuiWallpaperClient> lazy149 = this.mMiuiWallpaperClient;
         Objects.requireNonNull(lazy149);
-        arrayMap149.put(ControlPanelController.class, new LazyDependencyCreator() {
+        arrayMap149.put(MiuiWallpaperClient.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2019,9 +2022,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap150 = this.mProviders;
-        Lazy<ControlPanelWindowManager> lazy150 = this.mControlPanelWindowManager;
+        Lazy<ControlPanelController> lazy150 = this.mControlPanelController;
         Objects.requireNonNull(lazy150);
-        arrayMap150.put(ControlPanelWindowManager.class, new LazyDependencyCreator() {
+        arrayMap150.put(ControlPanelController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2030,9 +2033,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap151 = this.mProviders;
-        Lazy<NetworkSpeedController> lazy151 = this.mNetworkSpeedController;
+        Lazy<ControlPanelWindowManager> lazy151 = this.mControlPanelWindowManager;
         Objects.requireNonNull(lazy151);
-        arrayMap151.put(NetworkSpeedController.class, new LazyDependencyCreator() {
+        arrayMap151.put(ControlPanelWindowManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2041,9 +2044,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap152 = this.mProviders;
-        Lazy<ControlCenterActivityStarter> lazy152 = this.mControlCenterActivityStarter;
+        Lazy<NetworkSpeedController> lazy152 = this.mNetworkSpeedController;
         Objects.requireNonNull(lazy152);
-        arrayMap152.put(ControlCenterActivityStarter.class, new LazyDependencyCreator() {
+        arrayMap152.put(NetworkSpeedController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2052,9 +2055,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap153 = this.mProviders;
-        Lazy<ExpandInfoController> lazy153 = this.mExpandInfoController;
+        Lazy<ControlCenterActivityStarter> lazy153 = this.mControlCenterActivityStarter;
         Objects.requireNonNull(lazy153);
-        arrayMap153.put(ExpandInfoController.class, new LazyDependencyCreator() {
+        arrayMap153.put(ControlCenterActivityStarter.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2063,9 +2066,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap154 = this.mProviders;
-        Lazy<ControlsPluginManager> lazy154 = this.mControlsPluginManager;
+        Lazy<ExpandInfoController> lazy154 = this.mExpandInfoController;
         Objects.requireNonNull(lazy154);
-        arrayMap154.put(ControlsPluginManager.class, new LazyDependencyCreator() {
+        arrayMap154.put(ExpandInfoController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2074,9 +2077,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap155 = this.mProviders;
-        Lazy<AppMiniWindowManager> lazy155 = this.mAppMiniWindowManager;
+        Lazy<ControlsPluginManager> lazy155 = this.mControlsPluginManager;
         Objects.requireNonNull(lazy155);
-        arrayMap155.put(AppMiniWindowManager.class, new LazyDependencyCreator() {
+        arrayMap155.put(ControlsPluginManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2085,9 +2088,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap156 = this.mProviders;
-        Lazy<ModalController> lazy156 = this.mModalController;
+        Lazy<AppMiniWindowManager> lazy156 = this.mAppMiniWindowManager;
         Objects.requireNonNull(lazy156);
-        arrayMap156.put(ModalController.class, new LazyDependencyCreator() {
+        arrayMap156.put(AppMiniWindowManager.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2096,9 +2099,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap157 = this.mProviders;
-        Lazy<FiveGControllerImpl> lazy157 = this.mFiveGControllerImpl;
+        Lazy<ModalController> lazy157 = this.mModalController;
         Objects.requireNonNull(lazy157);
-        arrayMap157.put(FiveGControllerImpl.class, new LazyDependencyCreator() {
+        arrayMap157.put(ModalController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2107,9 +2110,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap158 = this.mProviders;
-        Lazy<CallStateControllerImpl> lazy158 = this.mCallStateController;
+        Lazy<FiveGControllerImpl> lazy158 = this.mFiveGControllerImpl;
         Objects.requireNonNull(lazy158);
-        arrayMap158.put(CallStateControllerImpl.class, new LazyDependencyCreator() {
+        arrayMap158.put(FiveGControllerImpl.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2118,9 +2121,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap159 = this.mProviders;
-        Lazy<RegionController> lazy159 = this.mRegionController;
+        Lazy<CallStateControllerImpl> lazy159 = this.mCallStateController;
         Objects.requireNonNull(lazy159);
-        arrayMap159.put(RegionController.class, new LazyDependencyCreator() {
+        arrayMap159.put(CallStateControllerImpl.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2129,9 +2132,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap160 = this.mProviders;
-        Lazy<CustomCarrierObserver> lazy160 = this.mCustomCarrierObserver;
+        Lazy<RegionController> lazy160 = this.mRegionController;
         Objects.requireNonNull(lazy160);
-        arrayMap160.put(CustomCarrierObserver.class, new LazyDependencyCreator() {
+        arrayMap160.put(RegionController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2140,9 +2143,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap161 = this.mProviders;
-        Lazy<CarrierObserver> lazy161 = this.mCarrierObserver;
+        Lazy<CustomCarrierObserver> lazy161 = this.mCustomCarrierObserver;
         Objects.requireNonNull(lazy161);
-        arrayMap161.put(CarrierObserver.class, new LazyDependencyCreator() {
+        arrayMap161.put(CustomCarrierObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2151,9 +2154,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap162 = this.mProviders;
-        Lazy<MiuiCarrierTextController> lazy162 = this.mMiuiCarrierTextController;
+        Lazy<CarrierObserver> lazy162 = this.mCarrierObserver;
         Objects.requireNonNull(lazy162);
-        arrayMap162.put(MiuiCarrierTextController.class, new LazyDependencyCreator() {
+        arrayMap162.put(CarrierObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2162,9 +2165,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap163 = this.mProviders;
-        Lazy<ToggleManagerController> lazy163 = this.mToggleManagerController;
+        Lazy<MiuiCarrierTextController> lazy163 = this.mMiuiCarrierTextController;
         Objects.requireNonNull(lazy163);
-        arrayMap163.put(ToggleManagerController.class, new LazyDependencyCreator() {
+        arrayMap163.put(MiuiCarrierTextController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2173,9 +2176,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap164 = this.mProviders;
-        Lazy<IMiuiKeyguardWallpaperController> lazy164 = this.mWallPaperController;
+        Lazy<ToggleManagerController> lazy164 = this.mToggleManagerController;
         Objects.requireNonNull(lazy164);
-        arrayMap164.put(IMiuiKeyguardWallpaperController.class, new LazyDependencyCreator() {
+        arrayMap164.put(ToggleManagerController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2184,9 +2187,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap165 = this.mProviders;
-        Lazy<PanelExpansionObserver> lazy165 = this.mPanelExpansionObserver;
+        Lazy<IMiuiKeyguardWallpaperController> lazy165 = this.mWallPaperController;
         Objects.requireNonNull(lazy165);
-        arrayMap165.put(PanelExpansionObserver.class, new LazyDependencyCreator() {
+        arrayMap165.put(IMiuiKeyguardWallpaperController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2195,9 +2198,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap166 = this.mProviders;
-        Lazy<SuperSaveModeController> lazy166 = this.mSuperSaveModeController;
+        Lazy<PanelExpansionObserver> lazy166 = this.mPanelExpansionObserver;
         Objects.requireNonNull(lazy166);
-        arrayMap166.put(SuperSaveModeController.class, new LazyDependencyCreator() {
+        arrayMap166.put(PanelExpansionObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2206,9 +2209,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap167 = this.mProviders;
-        Lazy<DemoModeController> lazy167 = this.mDemoModeController;
+        Lazy<SuperSaveModeController> lazy167 = this.mSuperSaveModeController;
         Objects.requireNonNull(lazy167);
-        arrayMap167.put(DemoModeController.class, new LazyDependencyCreator() {
+        arrayMap167.put(SuperSaveModeController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2217,9 +2220,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap168 = this.mProviders;
-        Lazy<SlaveWifiSignalController> lazy168 = this.mSlaveWifiSignalController;
+        Lazy<DemoModeController> lazy168 = this.mDemoModeController;
         Objects.requireNonNull(lazy168);
-        arrayMap168.put(SlaveWifiSignalController.class, new LazyDependencyCreator() {
+        arrayMap168.put(DemoModeController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2228,9 +2231,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap169 = this.mProviders;
-        Lazy<MiuiAlarmControllerImpl> lazy169 = this.mMiuiAlarmControllerImpl;
+        Lazy<SlaveWifiSignalController> lazy169 = this.mSlaveWifiSignalController;
         Objects.requireNonNull(lazy169);
-        arrayMap169.put(MiuiAlarmControllerImpl.class, new LazyDependencyCreator() {
+        arrayMap169.put(SlaveWifiSignalController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2239,9 +2242,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap170 = this.mProviders;
-        Lazy<NotificationPanelNavigationBarCoordinator> lazy170 = this.mNotificationNavigationCoordinator;
+        Lazy<MiuiAlarmControllerImpl> lazy170 = this.mMiuiAlarmControllerImpl;
         Objects.requireNonNull(lazy170);
-        arrayMap170.put(NotificationPanelNavigationBarCoordinator.class, new LazyDependencyCreator() {
+        arrayMap170.put(MiuiAlarmControllerImpl.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2250,9 +2253,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap171 = this.mProviders;
-        Lazy<NCSwitchController> lazy171 = this.mNCSwitchController;
+        Lazy<NotificationPanelNavigationBarCoordinator> lazy171 = this.mNotificationNavigationCoordinator;
         Objects.requireNonNull(lazy171);
-        arrayMap171.put(NCSwitchController.class, new LazyDependencyCreator() {
+        arrayMap171.put(NotificationPanelNavigationBarCoordinator.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2261,9 +2264,9 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap172 = this.mProviders;
-        Lazy<SystemUIStat> lazy172 = this.mSystemUIStat;
+        Lazy<NCSwitchController> lazy172 = this.mNCSwitchController;
         Objects.requireNonNull(lazy172);
-        arrayMap172.put(SystemUIStat.class, new LazyDependencyCreator() {
+        arrayMap172.put(NCSwitchController.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator
@@ -2272,9 +2275,31 @@ public class Dependency {
             }
         });
         ArrayMap<Object, LazyDependencyCreator> arrayMap173 = this.mProviders;
-        Lazy<IPhoneSignalController> lazy173 = this.mPhoneSignalController;
+        Lazy<SystemUIStat> lazy173 = this.mSystemUIStat;
         Objects.requireNonNull(lazy173);
-        arrayMap173.put(IPhoneSignalController.class, new LazyDependencyCreator() {
+        arrayMap173.put(SystemUIStat.class, new LazyDependencyCreator() {
+            /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
+
+            @Override // com.android.systemui.Dependency.LazyDependencyCreator
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        ArrayMap<Object, LazyDependencyCreator> arrayMap174 = this.mProviders;
+        Lazy<IPhoneSignalController> lazy174 = this.mPhoneSignalController;
+        Objects.requireNonNull(lazy174);
+        arrayMap174.put(IPhoneSignalController.class, new LazyDependencyCreator() {
+            /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
+
+            @Override // com.android.systemui.Dependency.LazyDependencyCreator
+            public final Object createDependency() {
+                return Lazy.this.get();
+            }
+        });
+        ArrayMap<Object, LazyDependencyCreator> arrayMap175 = this.mProviders;
+        Lazy<GestureObserver> lazy175 = this.mGestureObserver;
+        Objects.requireNonNull(lazy175);
+        arrayMap175.put(GestureObserver.class, new LazyDependencyCreator() {
             /* class com.android.systemui.$$Lambda$VsMsjQwuYhfrxzUr7AqZvcfoH4 */
 
             @Override // com.android.systemui.Dependency.LazyDependencyCreator

@@ -20,6 +20,7 @@ import android.view.WindowInsets;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
@@ -324,7 +325,7 @@ public class QSControlDetail extends FrameLayout {
                         miuiQSDetailItems2.setDetailShowing(false);
                         str = miuiQSDetailItems2.getSuffix();
                     } else {
-                        str = "";
+                        str = CodeInjection.MD5;
                         z = false;
                     }
                     if (!TextUtils.isEmpty(str)) {

@@ -14,6 +14,7 @@ import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.DateTimeView;
+import codeinjection.CodeInjection;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
@@ -270,7 +271,7 @@ public class KeyguardNotificationController {
         Notification notification = notificationEntry.getSbn().getNotification();
         CharSequence appName = isSensitive ? notificationEntry.getSbn().getAppName() : NotificationUtil.resolveTitle(notification);
         CharSequence hiddenText = isSensitive ? NotificationUtil.getHiddenText() : NotificationUtil.resolveText(notification);
-        String str = "";
+        String str = CodeInjection.MD5;
         if (isSensitive) {
             charSequence = str;
         } else {

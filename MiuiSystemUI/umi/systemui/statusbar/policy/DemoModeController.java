@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.TextUtils;
+import codeinjection.CodeInjection;
 import com.android.systemui.DemoMode;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class DemoModeController {
         public void onReceive(Context context, Intent intent) {
             Bundle extras;
             if ("com.android.systemui.demo".equals(intent.getAction()) && (extras = intent.getExtras()) != null) {
-                String lowerCase = extras.getString("command", "").trim().toLowerCase();
+                String lowerCase = extras.getString("command", CodeInjection.MD5).trim().toLowerCase();
                 if (lowerCase.length() > 0) {
                     DemoModeController.this.mLastArgs = extras;
                     DemoModeController.this.mLastCommand = lowerCase;

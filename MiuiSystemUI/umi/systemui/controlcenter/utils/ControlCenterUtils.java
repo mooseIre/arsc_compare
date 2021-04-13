@@ -1,7 +1,6 @@
 package com.android.systemui.controlcenter.utils;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -13,15 +12,6 @@ import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
 
 public class ControlCenterUtils extends Utils {
-    public static void updateFsgState(Context context, String str, boolean z) {
-        Intent intent = new Intent();
-        intent.setAction("com.android.systemui.fsgesture");
-        intent.putExtra("typeFrom", str);
-        intent.putExtra("isEnter", z);
-        intent.addFlags(67108864);
-        context.sendBroadcast(intent);
-    }
-
     public static float afterFriction(float f, float f2) {
         float min = Math.min(f / f2, 1.0f);
         float f3 = min * min;

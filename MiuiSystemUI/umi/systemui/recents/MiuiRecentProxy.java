@@ -2,37 +2,27 @@ package com.android.systemui.recents;
 
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
-import android.os.Handler;
-import android.provider.MiuiSettings;
-import android.provider.Settings;
+import com.android.systemui.Dependency;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.statusbar.CommandQueue;
+import com.miui.systemui.util.GestureObserver;
 
-public class MiuiRecentProxy implements CommandQueue.Callbacks {
+public class MiuiRecentProxy implements CommandQueue.Callbacks, GestureObserver.Callback {
     private CommandQueue mCommandQueue;
     private Context mContext;
-    private Handler mHandler;
     private boolean mIsFsgMode = false;
     private boolean mStatusBarHidden;
 
-    public MiuiRecentProxy(Context context, CommandQueue commandQueue, Handler handler) {
+    public MiuiRecentProxy(Context context, CommandQueue commandQueue) {
         this.mContext = context;
         this.mCommandQueue = commandQueue;
-        this.mHandler = handler;
     }
 
     public void start() {
-        this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("force_fsg_nav_bar"), false, new ContentObserver(this.mHandler) {
-            /* class com.android.systemui.recents.MiuiRecentProxy.AnonymousClass1 */
-
-            public void onChange(boolean z) {
-                MiuiRecentProxy miuiRecentProxy = MiuiRecentProxy.this;
-                miuiRecentProxy.mIsFsgMode = MiuiSettings.Global.getBoolean(miuiRecentProxy.mContext.getContentResolver(), "force_fsg_nav_bar");
-            }
-        });
-        this.mIsFsgMode = MiuiSettings.Global.getBoolean(this.mContext.getContentResolver(), "force_fsg_nav_bar");
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
+        GestureObserver gestureObserver = (GestureObserver) Dependency.get(GestureObserver.class);
+        gestureObserver.addCallback(this);
+        this.mIsFsgMode = gestureObserver.isFullscreenGesture();
     }
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
@@ -58,5 +48,10 @@ public class MiuiRecentProxy implements CommandQueue.Callbacks {
             sysUiState.setFlag(1048576, z);
             sysUiState.commitUpdate(i);
         }
+    }
+
+    @Override // com.miui.systemui.util.GestureObserver.Callback
+    public void onGestureConfigChange(boolean z, boolean z2) {
+        this.mIsFsgMode = z;
     }
 }

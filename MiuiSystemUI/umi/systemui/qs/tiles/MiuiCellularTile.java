@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
 import com.android.systemui.C0013R$drawable;
@@ -482,7 +483,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         Intent intent = new Intent("android.intent.action.MAIN");
         intent.setComponent(unflattenFromString);
-        intent.putExtra(":miui:starting_window_label", "");
+        intent.putExtra(":miui:starting_window_label", CodeInjection.MD5);
         intent.setFlags(335544320);
         return intent;
     }

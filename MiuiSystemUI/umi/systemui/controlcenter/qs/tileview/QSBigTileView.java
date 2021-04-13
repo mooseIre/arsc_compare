@@ -20,6 +20,7 @@ import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0012R$dimen;
@@ -110,9 +111,9 @@ public class QSBigTileView extends QSTileView {
     public QSBigTileView(Context context, AttributeSet attributeSet, int i) {
         super(context);
         this.mHandler = new H();
-        this.mActiveString = "";
-        this.mInActiveString = "";
-        this.mUnavailableString = "";
+        this.mActiveString = CodeInjection.MD5;
+        this.mInActiveString = CodeInjection.MD5;
+        this.mUnavailableString = CodeInjection.MD5;
         this.mTileCallBack = new QSTileCallback();
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);

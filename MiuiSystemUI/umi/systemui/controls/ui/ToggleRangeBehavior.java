@@ -14,6 +14,7 @@ import android.util.MathUtils;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
@@ -34,9 +35,9 @@ public final class ToggleRangeBehavior implements Behavior {
     @NotNull
     public Control control;
     @NotNull
-    private String currentRangeValue = "";
+    private String currentRangeValue = CodeInjection.MD5;
     @NotNull
-    private CharSequence currentStatusText = "";
+    private CharSequence currentStatusText = CodeInjection.MD5;
     @NotNull
     public ControlViewHolder cvh;
     private boolean isChecked;
@@ -364,10 +365,10 @@ public final class ToggleRangeBehavior implements Behavior {
             return format;
         } catch (IllegalFormatException e) {
             Log.w("ControlsUiController", "Illegal format in range template", e);
-            if (Intrinsics.areEqual(str2, "")) {
-                return "";
+            if (Intrinsics.areEqual(str2, CodeInjection.MD5)) {
+                return CodeInjection.MD5;
             }
-            return format(str2, "", f);
+            return format(str2, CodeInjection.MD5, f);
         }
     }
 

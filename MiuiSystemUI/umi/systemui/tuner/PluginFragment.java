@@ -18,6 +18,7 @@ import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
+import codeinjection.CodeInjection;
 import com.android.internal.util.ArrayUtils;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
@@ -131,7 +132,7 @@ public class PluginFragment extends PreferenceFragment {
     }
 
     private String toName(String str) {
-        String replace = str.replace("com.android.systemui.action.PLUGIN_", "");
+        String replace = str.replace("com.android.systemui.action.PLUGIN_", CodeInjection.MD5);
         StringBuilder sb = new StringBuilder();
         String[] split = replace.split("_");
         for (String str2 : split) {

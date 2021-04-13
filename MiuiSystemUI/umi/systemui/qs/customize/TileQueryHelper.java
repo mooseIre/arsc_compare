@@ -15,6 +15,7 @@ import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;
 import android.widget.Button;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.qs.QSTile;
@@ -99,7 +100,7 @@ public class TileQueryHelper {
         if (string != null) {
             arrayList.addAll(Arrays.asList(string.split(",")));
         } else {
-            string = "";
+            string = CodeInjection.MD5;
         }
         String[] split = this.mTilesStock.split(",");
         for (String str : split) {

@@ -23,6 +23,7 @@ import androidx.slice.Slice;
 import androidx.slice.SliceProvider;
 import androidx.slice.builders.ListBuilder;
 import androidx.slice.builders.SliceAction;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
@@ -274,7 +275,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
             if (withinNHoursLocked(this.mNextAlarmInfo, 12)) {
                 this.mNextAlarm = android.text.format.DateFormat.format(android.text.format.DateFormat.is24HourFormat(getContext(), ActivityManager.getCurrentUser()) ? "HH:mm" : "h:mm", this.mNextAlarmInfo.getTriggerTime()).toString();
             } else {
-                this.mNextAlarm = "";
+                this.mNextAlarm = CodeInjection.MD5;
             }
         }
         notifyChange();

@@ -148,6 +148,7 @@ public class MiuiStatusBarSignalPolicy extends StatusBarSignalPolicy implements 
             state.showDataTypeWhenWifiOn = miuiMobileState.showDataTypeWhenWifiOn;
             state.showDataTypeDataDisconnected = miuiMobileState.showDataTypeDataDisconnected;
             state.showMobileDataTypeInMMS = miuiMobileState.showMobileDataTypeInMMS;
+            state.showMobileDataTypeSingle = miuiMobileState.showMobileDataTypeSingle;
             this.mIconController.setMobileIcons(this.mSlotMobile, StatusBarSignalPolicy.MobileIconState.copyStates(this.mMobileStates));
         }
     }

@@ -1,5 +1,6 @@
 package com.android.systemui.statusbar.phone.nano;
 
+import codeinjection.CodeInjection;
 import com.google.protobuf.nano.CodedOutputByteBufferNano;
 import com.google.protobuf.nano.InternalNano;
 import com.google.protobuf.nano.MessageNano;
@@ -371,7 +372,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
     public TouchAnalyticsProto$Session clear() {
         this.startTimestampMillis = 0;
         this.durationMillis = 0;
-        this.build = "";
+        this.build = CodeInjection.MD5;
         this.result = 0;
         this.touchEvents = TouchEvent.emptyArray();
         this.sensorEvents = SensorEvent.emptyArray();
@@ -379,7 +380,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         this.touchAreaHeight = 0;
         this.type = 0;
         this.phoneEvents = PhoneEvent.emptyArray();
-        this.deviceId = "";
+        this.deviceId = CodeInjection.MD5;
         this.cachedSize = -1;
         return this;
     }
@@ -394,7 +395,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         if (j2 != 0) {
             codedOutputByteBufferNano.writeUInt64(2, j2);
         }
-        if (!this.build.equals("")) {
+        if (!this.build.equals(CodeInjection.MD5)) {
             codedOutputByteBufferNano.writeString(3, this.build);
         }
         int i = this.result;
@@ -458,7 +459,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
                 i2++;
             }
         }
-        if (!this.deviceId.equals("")) {
+        if (!this.deviceId.equals(CodeInjection.MD5)) {
             codedOutputByteBufferNano.writeString(13, this.deviceId);
         }
         super.writeTo(codedOutputByteBufferNano);
@@ -476,7 +477,7 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
         if (j2 != 0) {
             computeSerializedSize += CodedOutputByteBufferNano.computeUInt64Size(2, j2);
         }
-        if (!this.build.equals("")) {
+        if (!this.build.equals(CodeInjection.MD5)) {
             computeSerializedSize += CodedOutputByteBufferNano.computeStringSize(3, this.build);
         }
         int i = this.result;
@@ -540,6 +541,6 @@ public final class TouchAnalyticsProto$Session extends MessageNano {
                 i2++;
             }
         }
-        return !this.deviceId.equals("") ? computeSerializedSize + CodedOutputByteBufferNano.computeStringSize(13, this.deviceId) : computeSerializedSize;
+        return !this.deviceId.equals(CodeInjection.MD5) ? computeSerializedSize + CodedOutputByteBufferNano.computeStringSize(13, this.deviceId) : computeSerializedSize;
     }
 }

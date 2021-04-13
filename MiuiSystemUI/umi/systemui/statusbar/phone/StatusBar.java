@@ -68,6 +68,7 @@ import android.view.WindowManagerGlobal;
 import android.view.accessibility.AccessibilityManager;
 import android.widget.DateTimeView;
 import android.widget.ImageView;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.logging.MetricsLogger;
@@ -306,7 +307,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             if ("com.android.systemui.demo".equals(action)) {
                 Bundle extras = intent.getExtras();
                 if (extras != null) {
-                    String lowerCase = extras.getString("command", "").trim().toLowerCase();
+                    String lowerCase = extras.getString("command", CodeInjection.MD5).trim().toLowerCase();
                     if (lowerCase.length() > 0) {
                         try {
                             StatusBar.this.dispatchDemoCommand(lowerCase, extras);
@@ -2429,7 +2430,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
         printWriter.println("  Panels: ");
         if (this.mNotificationPanelViewController != null) {
-            printWriter.println("    mNotificationPanel=" + this.mNotificationPanelViewController.getView() + " params=" + this.mNotificationPanelViewController.getView().getLayoutParams().debug(""));
+            printWriter.println("    mNotificationPanel=" + this.mNotificationPanelViewController.getView() + " params=" + this.mNotificationPanelViewController.getView().getLayoutParams().debug(CodeInjection.MD5));
             printWriter.print("      ");
             this.mNotificationPanelViewController.dump(fileDescriptor, printWriter, strArr);
         }
@@ -2439,7 +2440,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
             ((Dumpable) this.mStackScroller).dump(fileDescriptor, printWriter, strArr);
         }
         printWriter.println("  Theme:");
-        String str = this.mUiModeManager == null ? "null" : this.mUiModeManager.getNightMode() + "";
+        String str = this.mUiModeManager == null ? "null" : this.mUiModeManager.getNightMode() + CodeInjection.MD5;
         StringBuilder sb = new StringBuilder();
         sb.append("    dark theme: ");
         sb.append(str);

@@ -27,6 +27,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0022R$style;
@@ -378,7 +379,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
 
     private String formatNextAlarm(AlarmManager.AlarmClockInfo alarmClockInfo) {
         if (alarmClockInfo == null) {
-            return "";
+            return CodeInjection.MD5;
         }
         return DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), DateFormat.is24HourFormat(((RelativeLayout) this).mContext, ActivityManager.getCurrentUser()) ? "EHm" : "Ehma"), alarmClockInfo.getTriggerTime()).toString();
     }

@@ -34,6 +34,7 @@ import android.util.Log;
 import android.util.Slog;
 import android.view.accessibility.AccessibilityManager;
 import androidx.lifecycle.Observer;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.GuardedBy;
 import com.android.settingslib.volume.MediaSessions;
 import com.android.settingslib.volume.Util;
@@ -615,7 +616,7 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
         PackageManager packageManager = context.getPackageManager();
         String packageName = componentName.getPackageName();
         try {
-            String trim = Objects.toString(packageManager.getApplicationInfo(packageName, 0).loadLabel(packageManager), "").trim();
+            String trim = Objects.toString(packageManager.getApplicationInfo(packageName, 0).loadLabel(packageManager), CodeInjection.MD5).trim();
             return trim.length() > 0 ? trim : packageName;
         } catch (PackageManager.NameNotFoundException unused) {
         }

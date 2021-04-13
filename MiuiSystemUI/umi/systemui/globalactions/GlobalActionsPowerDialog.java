@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ListAdapter;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0017R$layout;
 
@@ -22,7 +23,7 @@ public class GlobalActionsPowerDialog {
         dialog.setContentView(viewGroup);
         Window window = dialog.getWindow();
         window.setType(2020);
-        window.setTitle("");
+        window.setTitle(CodeInjection.MD5);
         window.setBackgroundDrawable(resources.getDrawable(C0013R$drawable.control_background, context.getTheme()));
         window.addFlags(131072);
         return dialog;

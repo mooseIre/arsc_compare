@@ -4,6 +4,7 @@ import android.app.backup.BackupManager;
 import android.content.ComponentName;
 import android.util.Log;
 import android.util.Xml;
+import codeinjection.CodeInjection;
 import com.android.systemui.backup.BackupHelper;
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -108,7 +109,7 @@ public final class ControlsFavoritePersistenceWrapper {
                 return arrayList;
             }
             String name = xmlPullParser.getName();
-            String str2 = "";
+            String str2 = CodeInjection.MD5;
             if (name == null) {
                 name = str2;
             }

@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.internal.graphics.ColorUtils;
 import com.android.systemui.C0011R$color;
 import com.android.systemui.C0014R$fraction;
@@ -78,7 +79,7 @@ public final class ControlViewHolder {
     private Dialog lastChallengeDialog;
     @NotNull
     private final ViewGroup layout;
-    private CharSequence nextStatusText = "";
+    private CharSequence nextStatusText = CodeInjection.MD5;
     private final Function0<Unit> onDialogCancel;
     private ValueAnimator stateAnimator;
     private final TextView status;

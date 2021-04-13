@@ -40,6 +40,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.OverScroller;
 import android.widget.ScrollView;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.graphics.ColorUtils;
@@ -3003,7 +3004,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 }
                 StringBuilder sb = new StringBuilder();
                 sb.append("Attempting to re-position ");
-                sb.append(z ? "transient" : "");
+                sb.append(z ? "transient" : CodeInjection.MD5);
                 sb.append(" view {");
                 sb.append(expandableView);
                 sb.append("}");

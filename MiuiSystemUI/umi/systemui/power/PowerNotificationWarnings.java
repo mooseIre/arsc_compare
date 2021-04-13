@@ -29,6 +29,7 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.Slog;
 import android.view.View;
+import codeinjection.CodeInjection;
 import com.android.settingslib.Utils;
 import com.android.settingslib.fuelgauge.BatterySaverUtils;
 import com.android.settingslib.utils.PowerUtil;
@@ -327,7 +328,7 @@ public class PowerNotificationWarnings implements PowerUI.WarningsUI {
             systemUIDialog.setIconAttribute(16843605);
             systemUIDialog.setTitle(C0021R$string.high_temp_alarm_title);
             systemUIDialog.setShowForAllUsers(true);
-            systemUIDialog.setMessage(this.mContext.getString(C0021R$string.high_temp_alarm_notify_message, ""));
+            systemUIDialog.setMessage(this.mContext.getString(C0021R$string.high_temp_alarm_notify_message, CodeInjection.MD5));
             systemUIDialog.setPositiveButton(17039370, new DialogInterface.OnClickListener() {
                 /* class com.android.systemui.power.$$Lambda$PowerNotificationWarnings$wL6F1WmvK9p9dyYXQnu9ScZBxSA */
 

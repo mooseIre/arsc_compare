@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.opengl.GLES20;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -46,7 +47,7 @@ public class ImageGLProgram {
         }
         bufferedReader.close();
         if (sb == null) {
-            return "";
+            return CodeInjection.MD5;
         }
         return sb.toString();
         throw th;

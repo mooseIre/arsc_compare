@@ -4,9 +4,10 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 
 public class KeyguardIndicationTextView extends TextView {
-    private CharSequence mText = "";
+    private CharSequence mText = CodeInjection.MD5;
 
     public KeyguardIndicationTextView(Context context) {
         super(context);
@@ -26,7 +27,7 @@ public class KeyguardIndicationTextView extends TextView {
 
     public void switchIndication(CharSequence charSequence) {
         if (TextUtils.isEmpty(charSequence)) {
-            this.mText = "";
+            this.mText = CodeInjection.MD5;
             setVisibility(4);
         } else if (!TextUtils.equals(charSequence, this.mText)) {
             this.mText = charSequence;

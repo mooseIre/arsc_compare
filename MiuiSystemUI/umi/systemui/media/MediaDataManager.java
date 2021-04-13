@@ -315,8 +315,8 @@ public final class MediaDataManager implements Dumpable {
             String loadHeaderAppName = Notification.Builder.recoverBuilder(this.context, notification2).loadHeaderAppName();
             Notification notification3 = statusBarNotification.getNotification();
             Intrinsics.checkExpressionValueIsNotNull(notification3, "sbn.notification");
-            Drawable loadDrawable2 = notification3.getSmallIcon().loadDrawable(this.context);
-            Intrinsics.checkExpressionValueIsNotNull(loadDrawable2, "sbn.notification.smallIcon.loadDrawable(context)");
+            Drawable loadDrawableAsUser = notification3.getSmallIcon().loadDrawableAsUser(this.context, statusBarNotification.getUser().getIdentifier());
+            Intrinsics.checkExpressionValueIsNotNull(loadDrawableAsUser, "sbn.notification.smallIc…sbn.user.getIdentifier())");
             Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
             T t = (T) metadata.getString("android.media.metadata.DISPLAY_TITLE");
             ref$ObjectRef.element = t;
@@ -363,7 +363,7 @@ public final class MediaDataManager implements Dumpable {
                     packageContext = context2;
                 }
             }
-            this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBg$1(this, str, str2, statusBarNotification, computeBackgroundColor, loadHeaderAppName, loadDrawable2, ref$ObjectRef2, ref$ObjectRef, icon, arrayList, list, token, notification2));
+            this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBg$1(this, str, str2, statusBarNotification, computeBackgroundColor, loadHeaderAppName, loadDrawableAsUser, ref$ObjectRef2, ref$ObjectRef, icon, arrayList, list, token, notification2));
         }
     }
 

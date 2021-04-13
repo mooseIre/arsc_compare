@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+import codeinjection.CodeInjection;
 import com.miui.systemui.DebugConfig;
 
 public abstract class PanelBar extends FrameLayout {
@@ -123,7 +124,7 @@ public abstract class PanelBar extends FrameLayout {
                 Object[] objArr = new Object[3];
                 objArr[0] = Integer.valueOf(this.mState);
                 objArr[1] = panelViewController;
-                objArr[2] = isEnabled ? "" : " (disabled)";
+                objArr[2] = isEnabled ? CodeInjection.MD5 : " (disabled)";
                 LOG("PanelBar.onTouch: state=%d ACTION_DOWN: panel %s %s", objArr);
             }
             if (!isEnabled) {

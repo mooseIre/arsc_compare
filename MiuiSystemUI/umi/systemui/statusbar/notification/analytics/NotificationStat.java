@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.UserHandle;
 import android.text.TextUtils;
+import codeinjection.CodeInjection;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
@@ -403,7 +404,7 @@ public class NotificationStat {
         boolean notifClearable = getNotifClearable(notificationEntry);
         String notifSource = getNotifSource(notificationEntry);
         int notifIndex2 = getNotifIndex(notificationEntry);
-        String tag = equals ? notificationEntry.getSbn().getTag() : "";
+        String tag = equals ? notificationEntry.getSbn().getTag() : CodeInjection.MD5;
         int isNotificationGrouped = getIsNotificationGrouped(notificationEntry);
         NotificationPanelStat notificationPanelStat = this.mPanelStat;
         eventTracker.track(new ClickEvent(notifPkg, notifTargetPkg, notifTsId, notifIndex, notifClearable, notifSource, notifIndex2, tag, isNotificationGrouped, notificationPanelStat == null ? -1 : notificationPanelStat.getPanelSlidingTimes(), getIsPriority(notificationEntry), getMipushClass(notificationEntry), inImportantSection(notificationEntry)));

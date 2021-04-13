@@ -17,6 +17,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
+import codeinjection.CodeInjection;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -549,13 +550,13 @@ public class NotificationLockscreenUserManagerImpl implements Dumpable, Notifica
         printWriter.print("  mCurrentProfiles=");
         synchronized (this.mLock) {
             for (int size = this.mCurrentProfiles.size() - 1; size >= 0; size += -1) {
-                printWriter.print("" + this.mCurrentProfiles.valueAt(size).id + " ");
+                printWriter.print(CodeInjection.MD5 + this.mCurrentProfiles.valueAt(size).id + " ");
             }
         }
         printWriter.print("  mCurrentManagedProfiles=");
         synchronized (this.mLock) {
             for (int size2 = this.mCurrentManagedProfiles.size() - 1; size2 >= 0; size2 += -1) {
-                printWriter.print("" + this.mCurrentManagedProfiles.valueAt(size2).id + " ");
+                printWriter.print(CodeInjection.MD5 + this.mCurrentManagedProfiles.valueAt(size2).id + " ");
             }
         }
         printWriter.println();

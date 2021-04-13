@@ -18,6 +18,7 @@ import android.os.Looper;
 import android.os.RemoteException;
 import android.util.Log;
 import android.view.WindowManager;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.os.SomeArgs;
 import com.android.systemui.SystemUI;
@@ -264,7 +265,7 @@ public class AuthController extends SystemUI implements CommandQueue.Callbacks, 
 
     private String getErrorString(int i, int i2, int i3) {
         if (i != 2) {
-            return i != 8 ? "" : FaceManager.getErrorString(this.mContext, i2, i3);
+            return i != 8 ? CodeInjection.MD5 : FaceManager.getErrorString(this.mContext, i2, i3);
         }
         return FingerprintManager.getErrorString(this.mContext, i2, i3);
     }

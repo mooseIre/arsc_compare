@@ -6,6 +6,7 @@ import android.service.notification.StatusBarNotification;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.systemui.Dependency;
@@ -445,7 +446,7 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
                 boolean isNotificationForCurrentProfiles = this.mKeyguardEnvironment.isNotificationForCurrentProfiles(statusBarNotification);
                 StringBuilder sb = new StringBuilder();
                 sb.append("notification is ");
-                sb.append(isNotificationForCurrentProfiles ? "" : "not ");
+                sb.append(isNotificationForCurrentProfiles ? CodeInjection.MD5 : "not ");
                 sb.append("for you");
                 Log.d("NotificationEntryMgr", sb.toString());
             }
