@@ -19,6 +19,7 @@ import android.widget.GridLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0012R$dimen;
@@ -401,7 +402,7 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
             if (!str.equals(cacheKey)) {
                 clockView12 = DateFormat.getBestDateTimePattern(locale, string);
                 if (!context.getResources().getBoolean(C0010R$bool.config_showAmpm) && !string.contains("a")) {
-                    clockView12 = clockView12.replaceAll("a", "").trim();
+                    clockView12 = clockView12.replaceAll("a", CodeInjection.MD5).trim();
                 }
                 String bestDateTimePattern = DateFormat.getBestDateTimePattern(locale, string2);
                 clockView24 = bestDateTimePattern;

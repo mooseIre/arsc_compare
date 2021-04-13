@@ -26,6 +26,7 @@ import android.view.accessibility.AccessibilityManager;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.fod.item.IQuickOpenItem;
@@ -369,7 +370,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         removeViewFromWindow();
         setVisibility(8);
         cleanQuickOpenItemList();
-        showTitle("", "");
+        showTitle(CodeInjection.MD5, CodeInjection.MD5);
         this.mTipView.setVisibility(4);
         this.mCurrentSelectItem = null;
         TextView textView = this.mSkipTeach;
@@ -437,7 +438,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         animatorSet.playTogether(ofFloat, ofFloat2);
         animatorSet.setDuration(100L);
         animatorSet.start();
-        showTitle("", "");
+        showTitle(CodeInjection.MD5, CodeInjection.MD5);
     }
 
     /* access modifiers changed from: private */

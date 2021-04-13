@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import androidx.preference.PreferenceManager;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
@@ -286,7 +287,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void startAppStoreToDownload(int i) {
-        String str = "";
+        String str = CodeInjection.MD5;
         try {
             if (i == C0015R$id.keyguard_smarthome_info) {
                 str = "com.xiaomi.smarthome";

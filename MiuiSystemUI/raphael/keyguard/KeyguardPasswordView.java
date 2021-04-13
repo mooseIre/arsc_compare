@@ -23,6 +23,7 @@ import android.view.animation.Interpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Space;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.internal.widget.TextViewInputDisabler;
 import com.android.keyguard.fod.MiuiGxzwManager;
@@ -172,7 +173,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     /* access modifiers changed from: protected */
     @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public void resetPasswordText(boolean z, boolean z2) {
-        this.mPasswordEntry.setText("");
+        this.mPasswordEntry.setText(CodeInjection.MD5);
         if (z2) {
             this.mPasswordEntry.setHint(C0021R$string.wrong_password);
         }

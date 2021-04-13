@@ -30,8 +30,6 @@ import miui.os.Build;
 public class KeyguardMoveRightController extends BaseKeyguardMoveController {
     private String mCameraPreviewUri;
     private boolean mCameraViewShowing;
-    private final Context mContext;
-    private boolean mIsOnIconTouchDown;
     private MiuiKeyguardCameraView mKeyguardCameraView;
     private MiuiKeyguardCameraView.CallBack mKeyguardCameraViewCallBack = new MiuiKeyguardCameraView.CallBack() {
         /* class com.android.keyguard.KeyguardMoveRightController.AnonymousClass1 */
@@ -48,8 +46,8 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
         }
 
         @Override // com.android.keyguard.MiuiKeyguardCameraView.CallBack
-        public void onCancelAnimationEnd(boolean z) {
-            KeyguardMoveRightController.this.mCallBack.onCancelAnimationEnd(true, z);
+        public void onCancelAnimationEnd() {
+            KeyguardMoveRightController.this.mCallBack.onCancelAnimationEnd(true, false);
             KeyguardMoveRightController.this.mCallBack.updateCanShowGxzw(true);
         }
 
@@ -63,8 +61,8 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
         public void onVisibilityChanged(boolean z) {
             KeyguardMoveRightController.this.mCameraViewShowing = z;
             KeyguardMoveRightController.this.mCallBack.getMoveIconLayout(true).setVisibility(KeyguardMoveRightController.this.mCameraViewShowing ? 8 : 0);
-            if (KeyguardMoveRightController.this.mIsOnIconTouchDown) {
-                KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
+            KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
+            if (keyguardMoveRightController.mIsOnIconTouchDown) {
                 keyguardMoveRightController.mCallBack.updateCanShowGxzw(!keyguardMoveRightController.mCameraViewShowing);
             }
         }
@@ -131,12 +129,13 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
             }
         }
     };
-    private boolean mTouchDownInitial;
     private boolean mUserAuthenticatedSinceBoot;
 
     public KeyguardMoveRightController(Context context, BaseKeyguardMoveController.CallBack callBack) {
-        super(callBack);
-        this.mContext = context;
+        super(callBack, context);
+        if (!MiuiKeyguardUtils.isPad()) {
+            this.mEnableErrorTips = true;
+        }
         this.mUserAuthenticatedSinceBoot = ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).getStrongAuthTracker().hasUserAuthenticatedSinceBoot();
         KeyguardUpdateMonitor keyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mKeyguardUpdateMonitor = keyguardUpdateMonitor;
@@ -168,7 +167,8 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
                         return getDrawableExceptVela();
                     }
                     KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
-                    return keyguardMoveRightController.getDrawableFromPackageBy565(keyguardMoveRightController.mContext, PackageUtils.PACKAGE_NAME_CAMERA, MiuiKeyguardUtils.getCameraImageName(KeyguardMoveRightController.this.mContext, MiuiKeyguardUtils.isFullScreenGestureOpened()));
+                    Context context = keyguardMoveRightController.mContext;
+                    return keyguardMoveRightController.getDrawableFromPackageBy565(context, PackageUtils.PACKAGE_NAME_CAMERA, MiuiKeyguardUtils.getCameraImageName(context, MiuiKeyguardUtils.isFullScreenGestureOpened()));
                 }
 
                 private Drawable getDrawableExceptVela() {
@@ -238,37 +238,42 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
                 this.mKeyguardCameraView = new MiuiKeyguardCameraView(this.mContext, this.mKeyguardCameraViewCallBack);
                 updatePreViewBackground();
             }
-            this.mKeyguardCameraView.onTouchDown(f, f2, this.mIsOnIconTouchDown);
+            this.mKeyguardCameraView.onTouchDown(f, f2);
             this.mCallBack.getMoveIconLayout(true).setVisibility(8);
             this.mCallBack.updateCanShowGxzw(false);
+        } else {
+            this.mInitialTouchX = f;
+            this.mInitialTouchY = f2;
         }
         this.mTouchDownInitial = true;
     }
 
+    @Override // com.android.keyguard.BaseKeyguardMoveController
     public boolean onTouchMove(float f, float f2) {
-        if (!this.mTouchDownInitial) {
+        if (super.onTouchMove(f, f2)) {
+            return true;
+        }
+        if (!this.mTouchDownInitial || !this.mIsOnIconTouchDown) {
             return false;
         }
         MiuiKeyguardCameraView miuiKeyguardCameraView = this.mKeyguardCameraView;
         if (miuiKeyguardCameraView != null) {
             miuiKeyguardCameraView.onTouchMove(f, f2);
         }
-        if (!this.mIsOnIconTouchDown) {
-            return true;
-        }
         this.mCallBack.updateCanShowGxzw(false);
         return true;
     }
 
+    @Override // com.android.keyguard.BaseKeyguardMoveController
     public void onTouchUp(float f, float f2) {
+        MiuiKeyguardCameraView miuiKeyguardCameraView;
         if (this.mTouchDownInitial) {
-            this.mTouchDownInitial = false;
-            MiuiKeyguardCameraView miuiKeyguardCameraView = this.mKeyguardCameraView;
-            if (miuiKeyguardCameraView != null) {
+            if (this.mIsOnIconTouchDown && (miuiKeyguardCameraView = this.mKeyguardCameraView) != null) {
                 miuiKeyguardCameraView.onTouchUp(f, f2);
             }
             this.mCallBack.updateSwipingInProgress(false);
         }
+        super.onTouchUp(f, f2);
     }
 
     public void reset() {

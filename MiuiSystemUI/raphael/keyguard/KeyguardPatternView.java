@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.LinearLayout;
+import codeinjection.CodeInjection;
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockPatternView;
@@ -350,7 +351,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     public String getPromptReasonString(int i) {
         Resources resources = ((LinearLayout) this).mContext.getResources();
         if (i == 0) {
-            return "";
+            return CodeInjection.MD5;
         }
         if (i == 1) {
             return resources.getString(C0021R$string.input_password_after_boot_msg);

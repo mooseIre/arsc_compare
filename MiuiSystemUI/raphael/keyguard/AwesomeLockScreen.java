@@ -9,6 +9,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.AwesomeLockScreenImp.AwesomeLockScreenView;
 import com.android.keyguard.AwesomeLockScreenImp.LockScreenRoot;
@@ -209,7 +210,7 @@ public class AwesomeLockScreen extends FrameLayout implements LockScreenRoot.Loc
         Intent intent2 = new Intent("miui.intent.action.TRACK_EVENT");
         intent2.putExtra("eventId", "lockscreen_intent_type");
         if (intent == null) {
-            str = "";
+            str = CodeInjection.MD5;
         } else {
             str = intent.toString();
         }

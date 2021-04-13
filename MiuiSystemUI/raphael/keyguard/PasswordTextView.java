@@ -22,6 +22,7 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Interpolator;
 import android.widget.EditText;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.R$styleable;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class PasswordTextView extends View {
     public PasswordTextView(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
         this.mTextChars = new ArrayList<>();
-        this.mText = "";
+        this.mText = CodeInjection.MD5;
         this.mCharPool = new Stack<>();
         this.mDrawPaint = new Paint();
         boolean z = true;
@@ -243,7 +244,7 @@ public class PasswordTextView extends View {
 
     public void reset(boolean z, boolean z2) {
         CharSequence transformedText = getTransformedText();
-        this.mText = "";
+        this.mText = CodeInjection.MD5;
         int size = this.mTextChars.size();
         int i = size - 1;
         int i2 = i / 2;

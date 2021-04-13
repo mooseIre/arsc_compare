@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
 import androidx.constraintlayout.widget.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityContainer;
 import com.android.keyguard.KeyguardSecurityModel;
@@ -118,7 +119,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
     }
 
     public void showMessage(String str, int i) {
-        this.mSecurityContainer.showMessage("", str, i);
+        this.mSecurityContainer.showMessage(CodeInjection.MD5, str, i);
     }
 
     public void showMessage(String str, String str2, int i) {

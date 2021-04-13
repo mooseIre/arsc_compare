@@ -22,6 +22,7 @@ import android.view.IWindowManager;
 import android.view.TouchDelegate;
 import android.view.View;
 import android.widget.Toast;
+import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.systemui.C0008R$array;
@@ -85,7 +86,7 @@ public class MiuiKeyguardUtils {
             return uri;
         }
         Uri.Builder buildUpon = uri.buildUpon();
-        buildUpon.encodedAuthority("" + i + "@" + uri.getEncodedAuthority());
+        buildUpon.encodedAuthority(CodeInjection.MD5 + i + "@" + uri.getEncodedAuthority());
         return buildUpon.build();
     }
 

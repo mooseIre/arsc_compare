@@ -83,7 +83,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private boolean mIsActive;
     private boolean mIsBackAnimRunning;
     private boolean mIsCameraShowing;
-    private boolean mIsCorrectOperation;
     private boolean mIsPendingStartCamera;
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
@@ -191,7 +190,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
 
         void onBackAnimationEnd();
 
-        void onCancelAnimationEnd(boolean z);
+        void onCancelAnimationEnd();
 
         void onCompletedAnimationEnd();
 
@@ -401,12 +400,12 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         canvas.drawRoundRect(f6, f, f7, f10, f13, f13, this.mIconCirclePaint);
     }
 
-    public void onTouchDown(float f, float f2, boolean z) {
-        if (!this.mShowing || (z && !this.mIsPendingStartCamera)) {
+    public void onTouchDown(float f, float f2) {
+        if (!this.mShowing || !this.mIsPendingStartCamera) {
             cancelAnim();
             this.mInitialTouchX = f;
             this.mInitialTouchY = f2;
-            this.mMoveActivePer = z ? 0.6f : 0.3f;
+            this.mMoveActivePer = 0.6f;
             this.mTouchX = f;
             this.mTouchY = f2;
             this.mMoveYPer = 0.0f;
@@ -415,13 +414,10 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             this.mIsActive = false;
             this.mLastIsActive = false;
             this.mActiveAnimPer = 0.0f;
-            this.mIsCorrectOperation = true;
             this.mTouchDownInitial = true;
             this.mIsBackAnimRunning = false;
-            if (z) {
-                initBitmapResource();
-                show();
-            }
+            initBitmapResource();
+            show();
         }
     }
 
@@ -438,10 +434,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             if (f4 > f5) {
                 this.mTouchY = f5;
             }
-            if (this.mIsCorrectOperation) {
-                this.mMoveDistance = (float) Math.sqrt(Math.pow((double) (this.mInitialTouchX - this.mTouchX), 2.0d) + Math.pow((double) (this.mInitialTouchY - this.mTouchY), 2.0d));
-                handleMoveDistanceChanged();
-            }
+            this.mMoveDistance = (float) Math.sqrt(Math.pow((double) (this.mInitialTouchX - this.mTouchX), 2.0d) + Math.pow((double) (this.mInitialTouchY - this.mTouchY), 2.0d));
+            handleMoveDistanceChanged();
         }
     }
 
@@ -450,7 +444,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             this.mTouchDownInitial = false;
             if (this.mIsActive) {
                 startFullScreenAnim();
-            } else if (this.mIsCorrectOperation) {
+            } else {
                 startCancelAnim();
             }
         }
@@ -517,11 +511,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         float f = this.mMovePer;
         float f2 = this.mMoveActivePer;
         if (f > f2) {
-            if (f2 == 0.3f) {
-                handleMisOperation();
-            } else {
-                this.mIsActive = true;
-            }
+            this.mIsActive = true;
         } else if (f2 == 0.6f) {
             this.mIsActive = false;
         }
@@ -530,15 +520,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         } else if (this.mIsActive && !this.mLastIsActive) {
             startActiveAnim(this.mActiveAnimPer, 1.0f);
             ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("mesh_heavy", false);
-        }
-    }
-
-    private void handleMisOperation() {
-        if (this.mIsCorrectOperation) {
-            this.mIsCorrectOperation = false;
-            this.mMoveDistance = this.mMoveActivePer * ((float) (this.mScreenWidth / 3));
-            startCancelAnim();
-            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).extLongHapticFeedback(165, true, 60);
         }
     }
 
@@ -915,7 +896,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             public void onAnimationEnd(Animator animator) {
                 MiuiKeyguardCameraView.this.dismiss();
                 if (MiuiKeyguardCameraView.this.mCallBack != null) {
-                    MiuiKeyguardCameraView.this.mCallBack.onCancelAnimationEnd(MiuiKeyguardCameraView.this.mIsCorrectOperation);
+                    MiuiKeyguardCameraView.this.mCallBack.onCancelAnimationEnd();
                 }
             }
         });

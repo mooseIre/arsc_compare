@@ -46,6 +46,7 @@ import android.util.Slog;
 import android.util.SparseArray;
 import android.util.SparseBooleanArray;
 import androidx.lifecycle.Observer;
+import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -212,12 +213,12 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
         public void onAuthenticationHelp(int i, CharSequence charSequence) {
             Slog.d("miui_face", "onAuthenticationHelp helpMsgId=" + i + ";helpString=" + ((Object) charSequence));
-            KeyguardUpdateMonitor.this.handleFaceHelp(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
+            KeyguardUpdateMonitor.this.handleFaceHelp(i, TextUtils.isEmpty(charSequence) ? CodeInjection.MD5 : charSequence.toString());
         }
 
         public void onAuthenticationError(int i, CharSequence charSequence) {
             Slog.d("miui_face", "onAuthenticationError errMsgId=" + i + ";errString=" + ((Object) charSequence));
-            KeyguardUpdateMonitor.this.handleFaceError(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
+            KeyguardUpdateMonitor.this.handleFaceError(i, TextUtils.isEmpty(charSequence) ? CodeInjection.MD5 : charSequence.toString());
         }
 
         public void onAuthenticationAcquired(int i) {
@@ -280,7 +281,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         }
 
         public void onAuthenticationError(int i, CharSequence charSequence) {
-            KeyguardUpdateMonitor.this.handleFingerprintError(i, TextUtils.isEmpty(charSequence) ? "" : charSequence.toString());
+            KeyguardUpdateMonitor.this.handleFingerprintError(i, TextUtils.isEmpty(charSequence) ? CodeInjection.MD5 : charSequence.toString());
         }
 
         public void onAuthenticationAcquired(int i) {
@@ -1732,7 +1733,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             Slog.v("miui_face", "start face detect");
             this.mFaceManager.authenticate((CryptoObject) null, this.mFaceCancelSignal, 0, this.mFaceAuthenticationCallback, (Handler) null, currentUser);
             setFaceRunningState(1);
-            handleFaceHelp(10001, "");
+            handleFaceHelp(10001, CodeInjection.MD5);
             return;
         }
         this.mMiuiFaceUnlockManager.printUnlockWithFaceImPossibleLog();

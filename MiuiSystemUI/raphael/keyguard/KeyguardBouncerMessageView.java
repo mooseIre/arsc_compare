@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import miui.view.animation.SineEaseInInterpolator;
@@ -43,13 +44,14 @@ public class KeyguardBouncerMessageView extends RelativeLayout {
 
     public void showMessage(int i, int i2) {
         if (getVisibility() != 8) {
-            String str = "";
-            this.mTitle.setText(i == 0 ? str : this.mResources.getString(i));
-            TextView textView = this.mContent;
+            TextView textView = this.mTitle;
+            String str = CodeInjection.MD5;
+            textView.setText(i == 0 ? str : this.mResources.getString(i));
+            TextView textView2 = this.mContent;
             if (i2 != 0) {
                 str = this.mResources.getString(i2);
             }
-            textView.setText(str);
+            textView2.setText(str);
         }
     }
 

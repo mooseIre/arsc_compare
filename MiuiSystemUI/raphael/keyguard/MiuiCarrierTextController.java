@@ -7,6 +7,7 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.internal.telephony.IccCardConstants;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
@@ -172,8 +173,9 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         String[] strArr = new String[this.mPhoneCount];
         int i = 0;
         while (true) {
-            str = "";
-            if (i >= this.mPhoneCount) {
+            int i2 = this.mPhoneCount;
+            str = CodeInjection.MD5;
+            if (i >= i2) {
                 break;
             }
             if (this.mSimError[i] || !this.mPhone.hasIccCard(i)) {
@@ -189,13 +191,13 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         dealCarrierNameForDisableCard(strArr);
         if (!this.mAirplane || !dealCarrierNameForAirplane(strArr)) {
             boolean z = true;
-            for (int i2 = 0; i2 < this.mPhoneCount; i2++) {
-                if (!TextUtils.isEmpty(strArr[i2])) {
+            for (int i3 = 0; i3 < this.mPhoneCount; i3++) {
+                if (!TextUtils.isEmpty(strArr[i3])) {
                     if (z) {
-                        str = strArr[i2];
+                        str = strArr[i3];
                         z = false;
                     } else {
-                        str = str + " | " + strArr[i2];
+                        str = str + " | " + strArr[i3];
                     }
                 }
             }
@@ -230,7 +232,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
                     }
                 }
                 if (!z) {
-                    strArr[i] = "";
+                    strArr[i] = CodeInjection.MD5;
                 }
             }
         }
@@ -261,7 +263,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         if (!z) {
             for (i = 0; i < this.mPhoneCount; i++) {
                 if (!zArr[i]) {
-                    strArr[i] = "";
+                    strArr[i] = CodeInjection.MD5;
                 }
             }
         }
@@ -280,7 +282,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
             return this.mCustomCarrier[i];
         }
         String[] strArr2 = this.mCarrier;
-        return (strArr2 == null || i < 0 || i >= strArr2.length || TextUtils.isEmpty(strArr2[i])) ? "" : this.mCarrier[i];
+        return (strArr2 == null || i < 0 || i >= strArr2.length || TextUtils.isEmpty(strArr2[i])) ? CodeInjection.MD5 : this.mCarrier[i];
     }
 
     public void setVowifi(int i, boolean z) {
