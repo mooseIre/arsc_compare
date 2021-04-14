@@ -3,6 +3,7 @@ package com.android.keyguard.clock;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import miui.keyguard.clock.KeyguardClockController;
 
 public class MiuiClockView extends FrameLayout {
@@ -92,5 +93,13 @@ public class MiuiClockView extends FrameLayout {
         if (keyguardClockController != null) {
             keyguardClockController.onRemoveFromWindow();
         }
+    }
+
+    public TextView getTimeView() {
+        KeyguardClockController keyguardClockController = this.mMiuiClockController;
+        if (keyguardClockController != null) {
+            return keyguardClockController.getTimeView();
+        }
+        return null;
     }
 }

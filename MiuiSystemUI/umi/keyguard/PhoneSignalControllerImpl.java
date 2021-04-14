@@ -94,7 +94,7 @@ public class PhoneSignalControllerImpl implements IPhoneSignalController {
         for (int i = 0; i < this.mPhoneCount; i++) {
             this.mPhoneSignalAvailable[i] = false;
             this.mPhoneSignalLevel[i] = 0;
-            TelephonyManager.getDefault().listenForSlot(i, getPhoneStateListener(i), 257);
+            TelephonyManager.getDefault().listenForSlot(i, getPhoneStateListener(i), 1);
         }
     }
 

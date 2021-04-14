@@ -132,9 +132,9 @@ public class ChooseKeyguardClockActivity extends Activity {
             this.mWallPaper.setVisibility(8);
             this.mLiveLockWallpaperView.setVisibility(8);
         }
-        MiuiClockView miuiClockView = (MiuiClockView) findViewById(C0015R$id.main_clock_view);
-        this.mClockView = miuiClockView;
-        miuiClockView.setClockStyle(this.mSelectedClockStyle);
+        this.mClockView = (MiuiClockView) findViewById(C0015R$id.main_clock_view);
+        setTimeGravity();
+        this.mClockView.setClockStyle(this.mSelectedClockStyle);
         this.mClockView.setOwnerInfo(getOwnerInfo());
         this.mRootView = findViewById(C0015R$id.root_view);
         LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.choose_clock_scroll_view);
@@ -167,11 +167,11 @@ public class ChooseKeyguardClockActivity extends Activity {
                 z = false;
             }
             this.mLunarBtn.setChecked(z);
-            MiuiClockView miuiClockView2 = this.mClockView;
+            MiuiClockView miuiClockView = this.mClockView;
             int i = z ? 1 : 0;
             int i2 = z ? 1 : 0;
             int i3 = z ? 1 : 0;
-            miuiClockView2.setShowLunarCalendar(i);
+            miuiClockView.setShowLunarCalendar(i);
         }
         this.mLunarCalendarLayout.setOnClickListener(new View.OnClickListener() {
             /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass2 */
@@ -524,6 +524,7 @@ public class ChooseKeyguardClockActivity extends Activity {
             chooseKeyguardClockActivity.mSelectedClockStyle = chooseKeyguardClockActivity.mStyles[i];
             ChooseKeyguardClockActivity chooseKeyguardClockActivity2 = ChooseKeyguardClockActivity.this;
             chooseKeyguardClockActivity2.mClockView.setClockStyle(chooseKeyguardClockActivity2.mSelectedClockStyle);
+            ChooseKeyguardClockActivity.this.setTimeGravity();
             Settings.System.putIntForUser(this.context.getContentResolver(), "selected_keyguard_clock_position", ChooseKeyguardClockActivity.this.mSelectedClockStyle, ChooseKeyguardClockActivity.this.mUserId);
             notifyDataSetChanged();
             ChooseKeyguardClockActivity.this.setMainClockTextColor();
@@ -550,6 +551,14 @@ public class ChooseKeyguardClockActivity extends Activity {
                 this.clockView.setAutoDualClock(false);
                 this.itemRootView = (FrameLayout) view.findViewById(C0015R$id.item_root_view);
             }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void setTimeGravity() {
+        if (this.mSelectedClockStyle == 3 && this.mClockView.getTimeView() != null) {
+            this.mClockView.getTimeView().setGravity(3);
         }
     }
 
