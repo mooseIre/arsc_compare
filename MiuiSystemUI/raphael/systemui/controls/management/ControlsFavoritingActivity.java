@@ -30,10 +30,7 @@ import java.util.List;
 import java.util.concurrent.Executor;
 import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ControlsFavoritingActivity.kt */
 public final class ControlsFavoritingActivity extends LifecycleActivity {
     private CharSequence appName;
     private Runnable cancelLoadRunnable;
@@ -131,7 +128,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    public ControlsFavoritingActivity(@NotNull Executor executor2, @NotNull ControlsControllerImpl controlsControllerImpl, @NotNull ControlsListingController controlsListingController, @NotNull BroadcastDispatcher broadcastDispatcher, @NotNull GlobalActionsComponent globalActionsComponent2) {
+    public ControlsFavoritingActivity(Executor executor2, ControlsControllerImpl controlsControllerImpl, ControlsListingController controlsListingController, BroadcastDispatcher broadcastDispatcher, GlobalActionsComponent globalActionsComponent2) {
         Intrinsics.checkParameterIsNotNull(executor2, "executor");
         Intrinsics.checkParameterIsNotNull(controlsControllerImpl, "controller");
         Intrinsics.checkParameterIsNotNull(controlsListingController, "listingController");
@@ -153,9 +150,8 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         animateExitAndFinish();
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
-    public void onCreate(@Nullable Bundle bundle) {
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         Resources resources = getResources();
         Intrinsics.checkExpressionValueIsNotNull(resources, "resources");
@@ -270,8 +266,8 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    public final void animateExitAndFinish() {
+    /* access modifiers changed from: public */
+    private final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");
         ControlsAnimations.exitAnimation(viewGroup, new ControlsFavoritingActivity$animateExitAndFinish$1(this)).start();
@@ -291,7 +287,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         this.doneButton = requireViewById2;
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onPause() {
         super.onPause();
@@ -301,7 +296,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onStart() {
         super.onStart();
@@ -309,7 +303,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         this.currentUserTracker.startTracking();
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onResume() {
         super.onResume();
@@ -320,7 +313,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onStop() {
         super.onStop();
@@ -328,7 +320,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         this.currentUserTracker.stopTracking();
     }
 
-    public void onConfigurationChanged(@NotNull Configuration configuration) {
+    public void onConfigurationChanged(Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         super.onConfigurationChanged(configuration);
         TooltipManager tooltipManager = this.mTooltipManager;
@@ -337,7 +329,6 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         Runnable runnable = this.cancelLoadRunnable;

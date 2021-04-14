@@ -230,11 +230,9 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
 
     private String getTileListValue() {
         if (this.mTileListKey.equals("sysui_qs_super_save_tiles")) {
-            if (this.mUseControlCenter) {
-                return this.mContext.getResources().getString(C0021R$string.control_quick_settings_tiles_super_save);
-            }
-            return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_super_save);
-        } else if (this.mTileListKey.equals("sysui_qs_old_mode_tiles") && !this.mUseControlCenter) {
+            return getUltraBatteryList();
+        }
+        if (this.mTileListKey.equals("sysui_qs_old_mode_tiles") && !this.mUseControlCenter) {
             String value = this.mTunerService.getValue("sysui_qs_old_mode_tiles");
             if (TextUtils.isEmpty(value)) {
                 return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_old_mode);
@@ -248,6 +246,14 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
             }
             return this.mQsDefaultTiles;
         }
+    }
+
+    private String getUltraBatteryList() {
+        if (!this.mUseControlCenter) {
+            return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_super_save);
+        }
+        String string = this.mContext.getResources().getString(C0021R$string.control_quick_settings_tiles_super_save);
+        return !this.mContext.getPackageManager().hasSystemFeature("android.hardware.nfc") ? string.replace("nfc", "mute") : string;
     }
 
     public String getQsStockTiles() {

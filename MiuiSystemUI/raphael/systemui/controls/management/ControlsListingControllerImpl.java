@@ -56,34 +56,6 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
         this.serviceListing.reload();
     }
 
-    public static final /* synthetic */ Context access$getContext$p(ControlsListingControllerImpl controlsListingControllerImpl) {
-        return controlsListingControllerImpl.context;
-    }
-
-    public static final /* synthetic */ ServiceListing access$getServiceListing$p(ControlsListingControllerImpl controlsListingControllerImpl) {
-        return controlsListingControllerImpl.serviceListing;
-    }
-
-    public static final /* synthetic */ Function1 access$getServiceListingBuilder$p(ControlsListingControllerImpl controlsListingControllerImpl) {
-        return controlsListingControllerImpl.serviceListingBuilder;
-    }
-
-    public static final /* synthetic */ ServiceListing.Callback access$getServiceListingCallback$p(ControlsListingControllerImpl controlsListingControllerImpl) {
-        return controlsListingControllerImpl.serviceListingCallback;
-    }
-
-    public static final /* synthetic */ AtomicInteger access$getUserChangeInProgress$p(ControlsListingControllerImpl controlsListingControllerImpl) {
-        return controlsListingControllerImpl.userChangeInProgress;
-    }
-
-    public static final /* synthetic */ void access$setCurrentUserId$p(ControlsListingControllerImpl controlsListingControllerImpl, int i) {
-        controlsListingControllerImpl.currentUserId = i;
-    }
-
-    public static final /* synthetic */ void access$setServiceListing$p(ControlsListingControllerImpl controlsListingControllerImpl, ServiceListing serviceListing2) {
-        controlsListingControllerImpl.serviceListing = serviceListing2;
-    }
-
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public ControlsListingControllerImpl(Context context2, Executor executor) {
         this(context2, executor, AnonymousClass1.INSTANCE);

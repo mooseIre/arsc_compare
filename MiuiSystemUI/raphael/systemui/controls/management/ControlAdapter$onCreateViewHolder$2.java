@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
-final class ControlAdapter$onCreateViewHolder$2 extends Lambda implements Function2<String, Boolean, Unit> {
+public final class ControlAdapter$onCreateViewHolder$2 extends Lambda implements Function2<String, Boolean, Unit> {
     final /* synthetic */ ControlAdapter this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -26,9 +27,9 @@ final class ControlAdapter$onCreateViewHolder$2 extends Lambda implements Functi
 
     public final void invoke(@NotNull String str, boolean z) {
         Intrinsics.checkParameterIsNotNull(str, "id");
-        ControlsModel access$getModel$p = ControlAdapter.access$getModel$p(this.this$0);
-        if (access$getModel$p != null) {
-            access$getModel$p.changeFavoriteStatus(str, z);
+        ControlsModel controlsModel = this.this$0.model;
+        if (controlsModel != null) {
+            controlsModel.changeFavoriteStatus(str, z);
         }
     }
 }

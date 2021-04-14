@@ -789,7 +789,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
                 }
 
                 public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                    PhysicsAnimationLayout.PhysicsPropertyAnimator.lambda$startPathAnimation$4(this.f$0, valueAnimator);
+                    this.f$0.run();
                 }
             });
             this.mPathAnimator.addListener(new AnimatorListenerAdapter() {
