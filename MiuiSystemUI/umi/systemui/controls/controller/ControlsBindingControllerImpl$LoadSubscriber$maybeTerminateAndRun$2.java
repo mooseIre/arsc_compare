@@ -2,9 +2,8 @@ package com.android.systemui.controls.controller;
 
 import com.android.systemui.controls.controller.ControlsBindingControllerImpl;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsBindingControllerImpl.kt */
-public final class ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2 implements Runnable {
+final class ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2 implements Runnable {
     final /* synthetic */ Runnable $postTerminateFn;
     final /* synthetic */ ControlsBindingControllerImpl.LoadSubscriber this$0;
 
@@ -14,7 +13,7 @@ public final class ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAn
     }
 
     public final void run() {
-        this.this$0.isTerminated.compareAndSet(false, true);
+        ControlsBindingControllerImpl.LoadSubscriber.access$isTerminated$p(this.this$0).compareAndSet(false, true);
         this.$postTerminateFn.run();
     }
 }

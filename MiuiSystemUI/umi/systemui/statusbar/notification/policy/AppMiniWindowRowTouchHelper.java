@@ -205,8 +205,7 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void onMiniWindowReset() {
+    public final void onMiniWindowReset() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
             miuiExpandableNotificationRow.applyMiniWindowExpandParams(null);
@@ -221,8 +220,7 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void onExpandedParamsUpdated() {
+    public final void onExpandedParamsUpdated() {
         MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
         if (miuiExpandableNotificationRow != null) {
             miuiExpandableNotificationRow.applyMiniWindowExpandParams(this.mExpandedParams);
@@ -349,8 +347,7 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void handleHideNotificationPanel() {
+    public final void handleHideNotificationPanel() {
         ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
         ofFloat.setDuration(300L);
         ofFloat.setInterpolator(new DecelerateInterpolator());

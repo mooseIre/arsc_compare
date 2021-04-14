@@ -115,7 +115,12 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
             Log.d("AccessPointController", "connect networkId=" + accessPoint.getConfig().networkId);
         }
         if (accessPoint.isSaved()) {
-            this.mWifiTracker.getManager().connect(accessPoint.getConfig().networkId, this.mConnectListener);
+            int i = accessPoint.getConfig().networkId;
+            if (i >= 0) {
+                this.mWifiTracker.getManager().connect(i, this.mConnectListener);
+            } else {
+                Log.e("AccessPointController", "error: networkId < 0 :" + i);
+            }
         } else if (accessPoint.getSecurity() != 0) {
             Intent intent = new Intent("android.settings.WIFI_SETTINGS");
             intent.putExtra("ssid", accessPoint.getSsidStr());
@@ -139,7 +144,12 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
     private void fireAcccessPointsCallback(List<AccessPoint> list) {
         Iterator<NetworkController.AccessPointController.AccessPointCallback> it = this.mCallbacks.iterator();
         while (it.hasNext()) {
-            it.next().onAccessPointsChanged(list);
+            NetworkController.AccessPointController.AccessPointCallback next = it.next();
+            if (next != null) {
+                next.onAccessPointsChanged(list);
+            } else {
+                Log.e("AccessPointController", "error: callback is null!");
+            }
         }
     }
 

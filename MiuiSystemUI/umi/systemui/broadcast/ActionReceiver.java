@@ -22,8 +22,11 @@ import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt__SequencesKt;
+import org.jetbrains.annotations.NotNull;
 
+/* compiled from: ActionReceiver.kt */
 public final class ActionReceiver extends BroadcastReceiver implements Dumpable {
+    @NotNull
     private static final AtomicInteger index = new AtomicInteger(0);
     private final String action;
     private final ArraySet<String> activeCategories = new ArraySet<>();
@@ -35,8 +38,12 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
     private final Function1<BroadcastReceiver, Unit> unregisterAction;
     private final int userId;
 
+    public static final /* synthetic */ ArraySet access$getReceiverDatas$p(ActionReceiver actionReceiver) {
+        return actionReceiver.receiverDatas;
+    }
+
     @Override // com.android.systemui.Dumpable
-    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
+    public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
@@ -65,7 +72,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
     /* JADX DEBUG: Multi-variable search result rejected for r4v0, resolved type: kotlin.jvm.functions.Function2<? super android.content.BroadcastReceiver, ? super android.content.IntentFilter, kotlin.Unit> */
     /* JADX DEBUG: Multi-variable search result rejected for r5v0, resolved type: kotlin.jvm.functions.Function1<? super android.content.BroadcastReceiver, kotlin.Unit> */
     /* JADX WARN: Multi-variable type inference failed */
-    public ActionReceiver(String str, int i, Function2<? super BroadcastReceiver, ? super IntentFilter, Unit> function2, Function1<? super BroadcastReceiver, Unit> function1, Executor executor, BroadcastDispatcherLogger broadcastDispatcherLogger) {
+    public ActionReceiver(@NotNull String str, int i, @NotNull Function2<? super BroadcastReceiver, ? super IntentFilter, Unit> function2, @NotNull Function1<? super BroadcastReceiver, Unit> function1, @NotNull Executor executor, @NotNull BroadcastDispatcherLogger broadcastDispatcherLogger) {
         Intrinsics.checkParameterIsNotNull(str, "action");
         Intrinsics.checkParameterIsNotNull(function2, "registerAction");
         Intrinsics.checkParameterIsNotNull(function1, "unregisterAction");
@@ -79,7 +86,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         this.logger = broadcastDispatcherLogger;
     }
 
-    public final void addReceiverData(ReceiverData receiverData) {
+    public final void addReceiverData(@NotNull ReceiverData receiverData) throws IllegalArgumentException {
         Sequence sequence;
         Intrinsics.checkParameterIsNotNull(receiverData, "receiverData");
         if (receiverData.getFilter().hasAction(this.action)) {
@@ -101,7 +108,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         }
     }
 
-    public final boolean hasReceiver(BroadcastReceiver broadcastReceiver) {
+    public final boolean hasReceiver(@NotNull BroadcastReceiver broadcastReceiver) {
         Intrinsics.checkParameterIsNotNull(broadcastReceiver, "receiver");
         ArraySet<ReceiverData> arraySet = this.receiverDatas;
         if ((arraySet instanceof Collection) && arraySet.isEmpty()) {
@@ -125,7 +132,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         return intentFilter;
     }
 
-    public final void removeReceiver(BroadcastReceiver broadcastReceiver) {
+    public final void removeReceiver(@NotNull BroadcastReceiver broadcastReceiver) {
         Intrinsics.checkParameterIsNotNull(broadcastReceiver, "receiver");
         if ((CollectionsKt__MutableCollectionsKt.removeAll(this.receiverDatas, new ActionReceiver$removeReceiver$1(broadcastReceiver))) && this.receiverDatas.isEmpty() && this.registered) {
             this.unregisterAction.invoke(this);
@@ -134,7 +141,7 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         }
     }
 
-    public void onReceive(Context context, Intent intent) {
+    public void onReceive(@NotNull Context context, @NotNull Intent intent) throws IllegalStateException {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
         if (!(!Intrinsics.areEqual(intent.getAction(), this.action))) {

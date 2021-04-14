@@ -56,7 +56,8 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
                 Slog.d("FlashlightController", String.format("onReceive: isToggle=%b, newState=%b, from=%s", Boolean.valueOf(booleanExtra), Boolean.valueOf(z), intent.getSender()));
                 MiuiFlashlightControllerImpl.this.setFlashlight(z);
             } else if ("action_temp_state_change".equals(action)) {
-                boolean z2 = intent.getIntExtra("temp_state", 0) == 1;
+                int intExtra = intent.getIntExtra("temp_state", 0);
+                boolean z2 = intExtra == 4 || intExtra == 1;
                 if (z2 && MiuiFlashlightControllerImpl.this.mFlashlightEnabled) {
                     Slog.d("FlashlightController", String.format("onReceive: forceOff=%b, state=%b, from=%s", Boolean.valueOf(z2), Boolean.FALSE, intent.getSender()));
                     MiuiFlashlightControllerImpl.this.setFlashlight(false);

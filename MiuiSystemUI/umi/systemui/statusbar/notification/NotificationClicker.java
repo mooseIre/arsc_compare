@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar.notification;
 
 import android.app.Notification;
-import android.os.SystemClock;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 import android.view.View;
@@ -44,7 +43,7 @@ public final class NotificationClicker implements View.OnClickListener {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ((StatusBar) obj).wakeUpIfDozing(SystemClock.uptimeMillis(), this.f$0, "NOTIFICATION_CLICK");
+                NotificationClicker.lambda$onClick$0(this.f$0, (StatusBar) obj);
             }
         });
         ExpandableNotificationRow expandableNotificationRow = (ExpandableNotificationRow) view;
@@ -66,7 +65,7 @@ public final class NotificationClicker implements View.OnClickListener {
                 /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationClicker$CH899qDTz3sQ4q5eBHDPoFomAGA */
 
                 public final void run() {
-                    ExpandableNotificationRow.this.setJustClicked(false);
+                    NotificationClicker.lambda$onClick$1(ExpandableNotificationRow.this);
                 }
             });
             if (!expandableNotificationRow.getEntry().isBubble()) {

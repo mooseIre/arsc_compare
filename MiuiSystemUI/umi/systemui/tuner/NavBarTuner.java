@@ -51,10 +51,6 @@ public class NavBarTuner extends TunerPreferenceFragment {
         this.mTunables.forEach($$Lambda$NavBarTuner$tsKQ8HfwaDSvc3iDCsgHsW954hc.INSTANCE);
     }
 
-    static /* synthetic */ void lambda$onDestroy$0(TunerService.Tunable tunable) {
-        ((TunerService) Dependency.get(TunerService.class)).removeTunable(tunable);
-    }
-
     private void addTunable(TunerService.Tunable tunable, String... strArr) {
         this.mTunables.add(tunable);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(tunable, strArr);
