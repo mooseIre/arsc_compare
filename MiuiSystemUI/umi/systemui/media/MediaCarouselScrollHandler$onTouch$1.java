@@ -1,7 +1,8 @@
 package com.android.systemui.media;
 
+/* access modifiers changed from: package-private */
 /* compiled from: MediaCarouselScrollHandler.kt */
-final class MediaCarouselScrollHandler$onTouch$1 implements Runnable {
+public final class MediaCarouselScrollHandler$onTouch$1 implements Runnable {
     final /* synthetic */ MediaCarouselScrollHandler this$0;
 
     MediaCarouselScrollHandler$onTouch$1(MediaCarouselScrollHandler mediaCarouselScrollHandler) {

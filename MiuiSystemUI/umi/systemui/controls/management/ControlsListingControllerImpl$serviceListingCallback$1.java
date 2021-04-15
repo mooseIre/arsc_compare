@@ -11,9 +11,8 @@ import java.util.List;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsListingControllerImpl.kt */
-public final class ControlsListingControllerImpl$serviceListingCallback$1 implements ServiceListing.Callback {
+final class ControlsListingControllerImpl$serviceListingCallback$1 implements ServiceListing.Callback {
     final /* synthetic */ ControlsListingControllerImpl this$0;
 
     ControlsListingControllerImpl$serviceListingCallback$1(ControlsListingControllerImpl controlsListingControllerImpl) {

@@ -21,7 +21,7 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
-import kotlin.sequences.SequencesKt__SequencesKt;
+import kotlin.sequences.SequencesKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: ActionReceiver.kt */
@@ -92,8 +92,8 @@ public final class ActionReceiver extends BroadcastReceiver implements Dumpable 
         if (receiverData.getFilter().hasAction(this.action)) {
             ArraySet<String> arraySet = this.activeCategories;
             Iterator<String> categoriesIterator = receiverData.getFilter().categoriesIterator();
-            if (categoriesIterator == null || (sequence = SequencesKt__SequencesKt.asSequence(categoriesIterator)) == null) {
-                sequence = SequencesKt__SequencesKt.emptySequence();
+            if (categoriesIterator == null || (sequence = SequencesKt.asSequence(categoriesIterator)) == null) {
+                sequence = SequencesKt.emptySequence();
             }
             boolean z = CollectionsKt__MutableCollectionsKt.addAll(arraySet, sequence);
             if (this.receiverDatas.add(receiverData) && this.receiverDatas.size() == 1) {
