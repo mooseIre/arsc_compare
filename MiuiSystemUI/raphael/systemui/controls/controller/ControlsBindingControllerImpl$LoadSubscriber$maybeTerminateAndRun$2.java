@@ -13,7 +13,7 @@ final class ControlsBindingControllerImpl$LoadSubscriber$maybeTerminateAndRun$2 
     }
 
     public final void run() {
-        this.this$0.isTerminated.compareAndSet(false, true);
+        ControlsBindingControllerImpl.LoadSubscriber.access$isTerminated$p(this.this$0).compareAndSet(false, true);
         this.$postTerminateFn.run();
     }
 }

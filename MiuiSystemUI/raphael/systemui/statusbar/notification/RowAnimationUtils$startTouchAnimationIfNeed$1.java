@@ -26,7 +26,7 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$1 extends AutoCle
     @Override // com.miui.systemui.animation.AutoCleanFloatTransitionListener
     public void onStart() {
         if (this.$scale != 1.0f) {
-            RowAnimationUtils.access$setTouchAnimatingState(RowAnimationUtils.INSTANCE, this.$row, true);
+            RowAnimationUtils.INSTANCE.setTouchAnimatingState(this.$row, true);
         }
     }
 
@@ -52,7 +52,7 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$1 extends AutoCle
     @Override // com.miui.systemui.animation.AutoCleanFloatTransitionListener
     public void onEnd() {
         if (this.$scale == 1.0f) {
-            RowAnimationUtils.access$setTouchAnimatingState(RowAnimationUtils.INSTANCE, this.$row, false);
+            RowAnimationUtils.INSTANCE.setTouchAnimatingState(this.$row, false);
         }
         ExpandableNotificationRow expandableNotificationRow = this.$row;
         if (expandableNotificationRow instanceof MiuiExpandableNotificationRow) {
@@ -63,6 +63,6 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$1 extends AutoCle
     @Override // miuix.animation.listener.TransitionListener
     public void onCancel(@Nullable Object obj) {
         super.onCancel(obj);
-        RowAnimationUtils.access$setTouchAnimatingState(RowAnimationUtils.INSTANCE, this.$row, false);
+        RowAnimationUtils.INSTANCE.setTouchAnimatingState(this.$row, false);
     }
 }

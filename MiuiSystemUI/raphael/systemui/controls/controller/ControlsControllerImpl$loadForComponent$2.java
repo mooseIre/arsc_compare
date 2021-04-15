@@ -34,6 +34,6 @@ public final class ControlsControllerImpl$loadForComponent$2 implements Controls
     @Override // com.android.systemui.controls.controller.ControlsBindingController.LoadCallback
     public void error(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "message");
-        this.this$0.executor.execute(new ControlsControllerImpl$loadForComponent$2$error$1(this));
+        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$loadForComponent$2$error$1(this));
     }
 }

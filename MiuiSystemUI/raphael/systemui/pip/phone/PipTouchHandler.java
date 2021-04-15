@@ -521,8 +521,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onAccessibilityShowMenu() {
+    public void onAccessibilityShowMenu() {
         this.mMenuController.showMenu(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 

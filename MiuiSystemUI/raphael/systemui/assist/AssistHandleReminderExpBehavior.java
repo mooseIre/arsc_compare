@@ -85,7 +85,7 @@ public final class AssistHandleReminderExpBehavior implements AssistHandleBehavi
         /* class com.android.systemui.assist.$$Lambda$AssistHandleReminderExpBehavior$pwcnWUhYSvHUPTaX_vnnVqcvKYA */
 
         public final void run() {
-            AssistHandleReminderExpBehavior.this.resetConsecutiveTaskSwitches();
+            AssistHandleReminderExpBehavior.lambda$pwcnWUhYSvHUPTaX_vnnVqcvKYA(AssistHandleReminderExpBehavior.this);
         }
     };
     private int mRunningTaskId;

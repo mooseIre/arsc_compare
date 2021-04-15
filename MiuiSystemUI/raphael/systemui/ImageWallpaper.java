@@ -8,7 +8,6 @@ import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.util.Size;
 import android.view.SurfaceHolder;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.ImageWallpaper;
 import com.android.systemui.glwallpaper.EglHelper;
 import com.android.systemui.glwallpaper.GLWallpaperRenderer;
@@ -39,10 +38,8 @@ public class ImageWallpaper extends WallpaperService {
 
     /* access modifiers changed from: package-private */
     public class GLEngine extends WallpaperService.Engine {
-        @VisibleForTesting
-        static final int MIN_SURFACE_HEIGHT = 64;
-        @VisibleForTesting
-        static final int MIN_SURFACE_WIDTH = 64;
+        static final int MIN_SURFACE_HEIGHT;
+        static final int MIN_SURFACE_WIDTH;
         private EglHelper mEglHelper;
         private final Runnable mFinishRenderingTask = new Runnable() {
             /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$4IwqG_0jMNtMT6yCqqjKAFKSvE */
@@ -57,13 +54,16 @@ public class ImageWallpaper extends WallpaperService {
             return true;
         }
 
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         GLEngine() {
-            super(ImageWallpaper.this);
+            super(r1);
+            ImageWallpaper.this = r1;
         }
 
-        @VisibleForTesting
+        /* JADX INFO: super call moved to the top of the method (can break code semantics) */
         GLEngine(Handler handler) {
-            super(ImageWallpaper.this, $$Lambda$87DoTfJA3qVM7QF6F_6BpQlQTA.INSTANCE, handler);
+            super(r2, $$Lambda$87DoTfJA3qVM7QF6F_6BpQlQTA.INSTANCE, handler);
+            ImageWallpaper.this = r2;
         }
 
         public void onCreate(SurfaceHolder surfaceHolder) {
@@ -74,12 +74,10 @@ public class ImageWallpaper extends WallpaperService {
             updateSurfaceSize();
         }
 
-        /* access modifiers changed from: package-private */
         public EglHelper getEglHelperInstance() {
             return new EglHelper();
         }
 
-        /* access modifiers changed from: package-private */
         public ImageWallpaperRenderer getRendererInstance() {
             return new ImageWallpaperRenderer(getDisplayContext());
         }
@@ -100,6 +98,7 @@ public class ImageWallpaper extends WallpaperService {
             });
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onDestroy$0 */
         public /* synthetic */ void lambda$onDestroy$0$ImageWallpaper$GLEngine() {
@@ -126,6 +125,7 @@ public class ImageWallpaper extends WallpaperService {
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onSurfaceCreated$1 */
         public /* synthetic */ void lambda$onSurfaceCreated$1$ImageWallpaper$GLEngine(SurfaceHolder surfaceHolder) {
@@ -152,6 +152,7 @@ public class ImageWallpaper extends WallpaperService {
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onSurfaceChanged$2 */
         public /* synthetic */ void lambda$onSurfaceChanged$2$ImageWallpaper$GLEngine(int i, int i2) {
@@ -164,14 +165,14 @@ public class ImageWallpaper extends WallpaperService {
                     /* class com.android.systemui.$$Lambda$ImageWallpaper$GLEngine$dwIVxRzjo8QTPBtgktS9kM6mj4o */
 
                     public final void run() {
-                        ImageWallpaper.GLEngine.lambda$dwIVxRzjo8QTPBtgktS9kM6mj4o(ImageWallpaper.GLEngine.this);
+                        ImageWallpaper.GLEngine.this.drawFrame();
                     }
                 });
             }
         }
 
-        /* access modifiers changed from: private */
-        public void drawFrame() {
+        /* access modifiers changed from: public */
+        private void drawFrame() {
             preRender();
             requestRender();
             postRender();
@@ -249,8 +250,8 @@ public class ImageWallpaper extends WallpaperService {
             }
         }
 
-        /* access modifiers changed from: private */
-        public void finishRendering() {
+        /* access modifiers changed from: public */
+        private void finishRendering() {
             Trace.beginSection("ImageWallpaper#finishRendering");
             EglHelper eglHelper = this.mEglHelper;
             if (eglHelper != null) {
@@ -264,7 +265,6 @@ public class ImageWallpaper extends WallpaperService {
             return this.mRenderer.isWcgContent();
         }
 
-        /* access modifiers changed from: protected */
         public void dump(String str, FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
             super.dump(str, fileDescriptor, printWriter, strArr);
             printWriter.print(str);

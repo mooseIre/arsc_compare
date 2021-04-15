@@ -4,8 +4,9 @@ import java.util.function.Consumer;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2<T> implements Consumer<Runnable> {
+public final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2<T> implements Consumer<Runnable> {
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
     ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2(ControlsFavoritingActivity controlsFavoritingActivity) {
@@ -14,6 +15,6 @@ final class ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2<T> imp
 
     public final void accept(@NotNull Runnable runnable) {
         Intrinsics.checkParameterIsNotNull(runnable, "runnable");
-        ControlsFavoritingActivity.access$setCancelLoadRunnable$p(this.this$0, runnable);
+        this.this$0.cancelLoadRunnable = runnable;
     }
 }

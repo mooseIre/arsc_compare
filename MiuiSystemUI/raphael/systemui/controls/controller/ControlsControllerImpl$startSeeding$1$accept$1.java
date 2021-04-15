@@ -10,8 +10,9 @@ import java.util.Map;
 import java.util.function.Consumer;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsControllerImpl.kt */
-final class ControlsControllerImpl$startSeeding$1$accept$1 implements Runnable {
+public final class ControlsControllerImpl$startSeeding$1$accept$1 implements Runnable {
     final /* synthetic */ List $controls;
     final /* synthetic */ ControlsControllerImpl$startSeeding$1 this$0;
 
