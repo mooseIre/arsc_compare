@@ -18,7 +18,7 @@ import codeinjection.CodeInjection;
 import com.android.internal.logging.InstanceId;
 import com.android.internal.logging.InstanceIdSequence;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -209,7 +209,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         if ("sysui_qs_tiles".equals(str)) {
             Log.d("QSTileHost", "Recreating tiles");
             if (str2 == null && UserManager.isDeviceInDemoMode(this.mContext)) {
-                str2 = this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_retail_mode);
+                str2 = this.mContext.getResources().getString(C0020R$string.quick_settings_tiles_retail_mode);
             }
             List<String> loadTileSpecs = loadTileSpecs(this.mContext, str2);
             int currentUser = ActivityManager.getCurrentUser();
@@ -441,7 +441,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     public List<String> loadTileSpecs(Context context, String str) {
         Resources resources = context.getResources();
         if (TextUtils.isEmpty(str)) {
-            str = resources.getString(C0021R$string.quick_settings_tiles);
+            str = resources.getString(C0020R$string.quick_settings_tiles);
             if (DEBUG) {
                 Log.d("QSTileHost", "Loaded tile specs from config: " + str);
             }

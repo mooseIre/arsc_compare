@@ -5,14 +5,14 @@ import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.statusbar.notification.row.StackScrollerDecorView;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 
 public class EmptyShadeView extends StackScrollerDecorView {
     private TextView mEmptyText;
-    private int mText = C0021R$string.empty_shade_text;
+    private int mText = C0020R$string.empty_shade_text;
 
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
@@ -34,7 +34,7 @@ public class EmptyShadeView extends StackScrollerDecorView {
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     public View findContentView() {
-        return findViewById(C0015R$id.no_notifications);
+        return findViewById(C0014R$id.no_notifications);
     }
 
     public void setText(int i) {

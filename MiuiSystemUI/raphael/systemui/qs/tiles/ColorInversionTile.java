@@ -3,15 +3,15 @@ package com.android.systemui.qs.tiles;
 import android.content.Intent;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.SecureSetting;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 
 public class ColorInversionTile extends QSTileImpl<QSTile.BooleanState> {
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_invert_colors);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_invert_colors);
     private final SecureSetting mSetting = new SecureSetting(this.mContext, this.mHandler, "accessibility_display_inversion_enabled") {
         /* class com.android.systemui.qs.tiles.ColorInversionTile.AnonymousClass1 */
 
@@ -69,7 +69,7 @@ public class ColorInversionTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0021R$string.quick_settings_inversion_label);
+        return this.mContext.getString(C0020R$string.quick_settings_inversion_label);
     }
 
     /* access modifiers changed from: protected */
@@ -85,7 +85,7 @@ public class ColorInversionTile extends QSTileImpl<QSTile.BooleanState> {
             i = 2;
         }
         booleanState.state = i;
-        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_inversion_label);
+        booleanState.label = this.mContext.getString(C0020R$string.quick_settings_inversion_label);
         booleanState.icon = this.mIcon;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.contentDescription = booleanState.label;
@@ -95,8 +95,8 @@ public class ColorInversionTile extends QSTileImpl<QSTile.BooleanState> {
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0021R$string.accessibility_quick_settings_color_inversion_changed_on);
+            return this.mContext.getString(C0020R$string.accessibility_quick_settings_color_inversion_changed_on);
         }
-        return this.mContext.getString(C0021R$string.accessibility_quick_settings_color_inversion_changed_off);
+        return this.mContext.getString(C0020R$string.accessibility_quick_settings_color_inversion_changed_off);
     }
 }

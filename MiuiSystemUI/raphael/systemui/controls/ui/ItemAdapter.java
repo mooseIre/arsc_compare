@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,8 +31,8 @@ final class ItemAdapter extends ArrayAdapter<SelectionItem> {
         if (view == null) {
             view = this.layoutInflater.inflate(this.resource, viewGroup, false);
         }
-        ((TextView) view.requireViewById(C0015R$id.controls_spinner_item)).setText(selectionItem.getTitle());
-        ((ImageView) view.requireViewById(C0015R$id.app_icon)).setImageDrawable(selectionItem.getIcon());
+        ((TextView) view.requireViewById(C0014R$id.controls_spinner_item)).setText(selectionItem.getTitle());
+        ((ImageView) view.requireViewById(C0014R$id.app_icon)).setImageDrawable(selectionItem.getIcon());
         Intrinsics.checkExpressionValueIsNotNull(view, "view");
         return view;
     }

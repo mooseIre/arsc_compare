@@ -5,9 +5,9 @@ import android.os.Handler;
 import android.telephony.SubscriptionInfo;
 import android.util.ArraySet;
 import android.util.Log;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SecurityController;
@@ -58,7 +58,7 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
         this.mSlotWifi = this.mContext.getString(17041413);
         this.mSlotEthernet = this.mContext.getString(17041391);
         this.mSlotVpn = this.mContext.getString(17041412);
-        this.mActivityEnabled = this.mContext.getResources().getBoolean(C0010R$bool.config_showActivity);
+        this.mActivityEnabled = this.mContext.getResources().getBoolean(C0009R$bool.config_showActivity);
         this.mIconController = statusBarIconController;
         initMiuiSlot();
         this.mNetworkController = (NetworkController) Dependency.get(NetworkController.class);
@@ -71,12 +71,12 @@ public class StatusBarSignalPolicy implements NetworkController.SignalCallback, 
     /* access modifiers changed from: private */
     public void updateVpn() {
         boolean z = this.mSecurityController.isVpnEnabled() && !this.mSecurityController.isSilentVpnPackage();
-        this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C0021R$string.accessibility_vpn_on));
+        this.mIconController.setIcon(this.mSlotVpn, currentVpnIconId(this.mSecurityController.isVpnBranded()), this.mContext.getResources().getString(C0020R$string.accessibility_vpn_on));
         this.mIconController.setIconVisibility(this.mSlotVpn, z);
     }
 
     private int currentVpnIconId(boolean z) {
-        return C0013R$drawable.stat_sys_vpn;
+        return C0012R$drawable.stat_sys_vpn;
     }
 
     @Override // com.android.systemui.statusbar.policy.SecurityController.SecurityControllerCallback

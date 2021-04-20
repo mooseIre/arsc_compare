@@ -148,9 +148,9 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         RestartActivityButton(Context context, boolean z) {
             super(context);
             this.mShouldShowHint = !z;
-            Drawable drawable = context.getDrawable(C0013R$drawable.btn_restart);
+            Drawable drawable = context.getDrawable(C0012R$drawable.btn_restart);
             setImageDrawable(drawable);
-            setContentDescription(context.getString(C0021R$string.restart_button_description));
+            setContentDescription(context.getString(C0020R$string.restart_button_description));
             int intrinsicWidth = drawable.getIntrinsicWidth();
             int intrinsicHeight = drawable.getIntrinsicHeight();
             this.mPopupOffsetX = intrinsicWidth / 2;
@@ -240,10 +240,10 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         /* access modifiers changed from: package-private */
         public void showHint() {
             if (this.mShowingHint == null) {
-                View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.size_compat_mode_hint, (ViewGroup) null);
+                View inflate = LayoutInflater.from(getContext()).inflate(C0016R$layout.size_compat_mode_hint, (ViewGroup) null);
                 PopupWindow popupWindow = new PopupWindow(inflate, -2, -2);
                 popupWindow.setWindowLayoutType(this.mWinParams.type);
-                popupWindow.setElevation(getResources().getDimension(C0012R$dimen.bubble_elevation));
+                popupWindow.setElevation(getResources().getDimension(C0011R$dimen.bubble_elevation));
                 popupWindow.setAnimationStyle(16973910);
                 popupWindow.setClippingEnabled(false);
                 popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
@@ -254,7 +254,7 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
                     }
                 });
                 this.mShowingHint = popupWindow;
-                Button button = (Button) inflate.findViewById(C0015R$id.got_it);
+                Button button = (Button) inflate.findViewById(C0014R$id.got_it);
                 button.setBackground(new RippleDrawable(ColorStateList.valueOf(-3355444), null, null));
                 button.setOnClickListener(new View.OnClickListener(popupWindow) {
                     /* class com.android.systemui.$$Lambda$SizeCompatModeActivityController$RestartActivityButton$tZJkvUnAETgfbkQvNUGL2mQWd9s */

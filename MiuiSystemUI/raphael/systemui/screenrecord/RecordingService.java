@@ -22,9 +22,9 @@ import android.util.Log;
 import android.widget.Toast;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.screenrecord.ScreenMediaRecorder;
 import com.android.systemui.settings.CurrentUserContextTracker;
 import java.io.IOException;
@@ -135,7 +135,7 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             stopSelf();
         } else if (z) {
             Intent putExtra = new Intent("android.intent.action.SEND").setType("video/mp4").putExtra("android.intent.extra.STREAM", Uri.parse(intent.getStringExtra("extra_path")));
-            String string = getResources().getString(C0021R$string.screenrecord_share_label);
+            String string = getResources().getString(C0020R$string.screenrecord_share_label);
             sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
             this.mNotificationManager.cancelAsUser(null, 4273, userHandle);
             startActivity(Intent.createChooser(putExtra, string).setFlags(268435456));
@@ -144,7 +144,7 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             ContentResolver contentResolver = getContentResolver();
             Uri parse = Uri.parse(intent.getStringExtra("extra_path"));
             contentResolver.delete(parse, null, null);
-            Toast.makeText(this, C0021R$string.screenrecord_delete_description, 1).show();
+            Toast.makeText(this, C0020R$string.screenrecord_delete_description, 1).show();
             this.mNotificationManager.cancelAsUser(null, 4273, userHandle);
             Log.d("RecordingService", "Deleted recording " + parse);
         }
@@ -168,7 +168,7 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             createRecordingNotification();
             this.mUiEventLogger.log(Events$ScreenRecordEvent.SCREEN_RECORD_START);
         } catch (RemoteException | IOException | IllegalStateException e) {
-            Toast.makeText(this, C0021R$string.screenrecord_start_error, 1).show();
+            Toast.makeText(this, C0020R$string.screenrecord_start_error, 1).show();
             e.printStackTrace();
             this.mController.updateState(false);
         }
@@ -179,18 +179,18 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
     public void createRecordingNotification() {
         String str;
         Resources resources = getResources();
-        NotificationChannel notificationChannel = new NotificationChannel("screen_record", getString(C0021R$string.screenrecord_name), 3);
-        notificationChannel.setDescription(getString(C0021R$string.screenrecord_channel_description));
+        NotificationChannel notificationChannel = new NotificationChannel("screen_record", getString(C0020R$string.screenrecord_name), 3);
+        notificationChannel.setDescription(getString(C0020R$string.screenrecord_channel_description));
         notificationChannel.enableVibration(true);
         this.mNotificationManager.createNotificationChannel(notificationChannel);
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", resources.getString(C0021R$string.screenrecord_name));
+        bundle.putString("android.substName", resources.getString(C0020R$string.screenrecord_name));
         if (this.mAudioSource == ScreenRecordingAudioSource.NONE) {
-            str = resources.getString(C0021R$string.screenrecord_ongoing_screen_only);
+            str = resources.getString(C0020R$string.screenrecord_ongoing_screen_only);
         } else {
-            str = resources.getString(C0021R$string.screenrecord_ongoing_screen_and_audio);
+            str = resources.getString(C0020R$string.screenrecord_ongoing_screen_and_audio);
         }
-        startForeground(4274, new Notification.Builder(this, "screen_record").setSmallIcon(C0013R$drawable.ic_screenrecord).setContentTitle(str).setContentText(getResources().getString(C0021R$string.screenrecord_stop_text)).setUsesChronometer(true).setColorized(true).setColor(getResources().getColor(C0011R$color.GM2_red_700)).setOngoing(true).setContentIntent(PendingIntent.getService(this, 2, getNotificationIntent(this), 201326592)).addExtras(bundle).build());
+        startForeground(4274, new Notification.Builder(this, "screen_record").setSmallIcon(C0012R$drawable.ic_screenrecord).setContentTitle(str).setContentText(getResources().getString(C0020R$string.screenrecord_stop_text)).setUsesChronometer(true).setColorized(true).setColor(getResources().getColor(C0010R$color.GM2_red_700)).setOngoing(true).setContentIntent(PendingIntent.getService(this, 2, getNotificationIntent(this), 201326592)).addExtras(bundle).build());
     }
 
     /* access modifiers changed from: protected */
@@ -199,13 +199,13 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
         String str;
         Resources resources = getApplicationContext().getResources();
         if (this.mAudioSource == ScreenRecordingAudioSource.NONE) {
-            str = resources.getString(C0021R$string.screenrecord_ongoing_screen_only);
+            str = resources.getString(C0020R$string.screenrecord_ongoing_screen_only);
         } else {
-            str = resources.getString(C0021R$string.screenrecord_ongoing_screen_and_audio);
+            str = resources.getString(C0020R$string.screenrecord_ongoing_screen_and_audio);
         }
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", resources.getString(C0021R$string.screenrecord_name));
-        return new Notification.Builder(getApplicationContext(), "screen_record").setContentTitle(str).setContentText(getResources().getString(C0021R$string.screenrecord_background_processing_label)).setSmallIcon(C0013R$drawable.ic_screenrecord).addExtras(bundle).build();
+        bundle.putString("android.substName", resources.getString(C0020R$string.screenrecord_name));
+        return new Notification.Builder(getApplicationContext(), "screen_record").setContentTitle(str).setContentText(getResources().getString(C0020R$string.screenrecord_background_processing_label)).setSmallIcon(C0012R$drawable.ic_screenrecord).addExtras(bundle).build();
     }
 
     /* access modifiers changed from: protected */
@@ -213,11 +213,11 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
     public Notification createSaveNotification(ScreenMediaRecorder.SavedRecording savedRecording) {
         Uri uri = savedRecording.getUri();
         Intent dataAndType = new Intent("android.intent.action.VIEW").setFlags(268435457).setDataAndType(uri, "video/mp4");
-        Notification.Action build = new Notification.Action.Builder(Icon.createWithResource(this, C0013R$drawable.ic_screenrecord), getResources().getString(C0021R$string.screenrecord_share_label), PendingIntent.getService(this, 2, getShareIntent(this, uri.toString()), 201326592)).build();
-        Notification.Action build2 = new Notification.Action.Builder(Icon.createWithResource(this, C0013R$drawable.ic_screenrecord), getResources().getString(C0021R$string.screenrecord_delete_label), PendingIntent.getService(this, 2, getDeleteIntent(this, uri.toString()), 201326592)).build();
+        Notification.Action build = new Notification.Action.Builder(Icon.createWithResource(this, C0012R$drawable.ic_screenrecord), getResources().getString(C0020R$string.screenrecord_share_label), PendingIntent.getService(this, 2, getShareIntent(this, uri.toString()), 201326592)).build();
+        Notification.Action build2 = new Notification.Action.Builder(Icon.createWithResource(this, C0012R$drawable.ic_screenrecord), getResources().getString(C0020R$string.screenrecord_delete_label), PendingIntent.getService(this, 2, getDeleteIntent(this, uri.toString()), 201326592)).build();
         Bundle bundle = new Bundle();
-        bundle.putString("android.substName", getResources().getString(C0021R$string.screenrecord_name));
-        Notification.Builder addExtras = new Notification.Builder(this, "screen_record").setSmallIcon(C0013R$drawable.ic_screenrecord).setContentTitle(getResources().getString(C0021R$string.screenrecord_save_message)).setContentIntent(PendingIntent.getActivity(this, 2, dataAndType, 67108864)).addAction(build).addAction(build2).setAutoCancel(true).addExtras(bundle);
+        bundle.putString("android.substName", getResources().getString(C0020R$string.screenrecord_name));
+        Notification.Builder addExtras = new Notification.Builder(this, "screen_record").setSmallIcon(C0012R$drawable.ic_screenrecord).setContentTitle(getResources().getString(C0020R$string.screenrecord_save_message)).setContentIntent(PendingIntent.getActivity(this, 2, dataAndType, 67108864)).addAction(build).addAction(build2).setAutoCancel(true).addExtras(bundle);
         Bitmap thumbnail = savedRecording.getThumbnail();
         if (thumbnail != null) {
             addExtras.setLargeIcon(thumbnail).setStyle(new Notification.BigPictureStyle().bigPicture(thumbnail).bigLargeIcon((Bitmap) null));
@@ -264,7 +264,7 @@ public class RecordingService extends Service implements MediaRecorder.OnInfoLis
             }
         } catch (IOException e) {
             Log.e("RecordingService", "Error saving screen recording: " + e.getMessage());
-            Toast.makeText(this, C0021R$string.screenrecord_delete_error, 1).show();
+            Toast.makeText(this, C0020R$string.screenrecord_delete_error, 1).show();
         } catch (Throwable th) {
             this.mNotificationManager.cancelAsUser(null, 4275, userHandle);
             throw th;

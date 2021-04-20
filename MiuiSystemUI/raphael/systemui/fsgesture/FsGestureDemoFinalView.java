@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0016R$layout;
 
 public class FsGestureDemoFinalView extends FrameLayout {
     public FsGestureDemoFinalView(Context context, AttributeSet attributeSet) {
@@ -21,6 +21,6 @@ public class FsGestureDemoFinalView extends FrameLayout {
     }
 
     private void init() {
-        LayoutInflater.from(getContext()).inflate(C0017R$layout.fs_gesture_demo_final_view, this);
+        LayoutInflater.from(getContext()).inflate(C0016R$layout.fs_gesture_demo_final_view, this);
     }
 }

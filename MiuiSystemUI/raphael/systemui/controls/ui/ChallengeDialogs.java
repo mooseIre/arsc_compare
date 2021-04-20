@@ -11,8 +11,8 @@ import android.service.controls.actions.ModeAction;
 import android.util.Log;
 import android.view.Window;
 import android.widget.EditText;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -35,15 +35,15 @@ public final class ChallengeDialogs {
         }
         Resources resources = controlViewHolder.getContext().getResources();
         if (z2) {
-            pair = new Pair(resources.getString(C0021R$string.controls_pin_wrong), Integer.valueOf(C0021R$string.controls_pin_instructions_retry));
+            pair = new Pair(resources.getString(C0020R$string.controls_pin_wrong), Integer.valueOf(C0020R$string.controls_pin_instructions_retry));
         } else {
-            pair = new Pair(resources.getString(C0021R$string.controls_pin_verify, controlViewHolder.getTitle().getText()), Integer.valueOf(C0021R$string.controls_pin_instructions));
+            pair = new Pair(resources.getString(C0020R$string.controls_pin_verify, controlViewHolder.getTitle().getText()), Integer.valueOf(C0020R$string.controls_pin_instructions));
         }
         String str = (String) pair.component1();
         int intValue = ((Number) pair.component2()).intValue();
         AlertDialog.Builder builder = new AlertDialog.Builder(controlViewHolder.getContext(), 16974545);
         builder.setTitle(str);
-        builder.setView(C0017R$layout.controls_dialog_pin);
+        builder.setView(C0016R$layout.controls_dialog_pin);
         builder.setPositiveButton(17039370, new ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1(str, controlViewHolder, lastAction, function0));
         builder.setNegativeButton(17039360, new ChallengeDialogs$createPinDialog$$inlined$apply$lambda$2(str, controlViewHolder, lastAction, function0));
         AlertDialog create = builder.create();
@@ -63,7 +63,7 @@ public final class ChallengeDialogs {
             return null;
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(controlViewHolder.getContext(), 16974545);
-        builder.setTitle(controlViewHolder.getContext().getResources().getString(C0021R$string.controls_confirmation_message, controlViewHolder.getTitle().getText()));
+        builder.setTitle(controlViewHolder.getContext().getResources().getString(C0020R$string.controls_confirmation_message, controlViewHolder.getTitle().getText()));
         builder.setPositiveButton(17039370, new ChallengeDialogs$createConfirmationDialog$$inlined$apply$lambda$1(controlViewHolder, lastAction, function0));
         builder.setNegativeButton(17039360, new ChallengeDialogs$createConfirmationDialog$$inlined$apply$lambda$2(controlViewHolder, lastAction, function0));
         AlertDialog create = builder.create();

@@ -7,8 +7,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.DrawableWrapper;
 import android.util.AttributeSet;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
 import java.io.IOException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -31,12 +31,12 @@ public class ScreenRecordDrawable extends DrawableWrapper {
     @Override // android.graphics.drawable.Drawable, android.graphics.drawable.DrawableWrapper
     public void inflate(Resources resources, XmlPullParser xmlPullParser, AttributeSet attributeSet, Resources.Theme theme) throws XmlPullParserException, IOException {
         super.inflate(resources, xmlPullParser, attributeSet, theme);
-        setDrawable(resources.getDrawable(C0013R$drawable.ic_screen_record_background, theme).mutate());
-        this.mFillDrawable = resources.getDrawable(C0013R$drawable.ic_screen_record_background, theme).mutate();
-        this.mIconDrawable = resources.getDrawable(C0013R$drawable.ic_screenrecord, theme).mutate();
-        this.mHorizontalPadding = resources.getDimensionPixelSize(C0012R$dimen.status_bar_horizontal_padding);
-        this.mTextSize = (float) resources.getDimensionPixelSize(C0012R$dimen.screenrecord_status_text_size);
-        this.mIconRadius = resources.getDimensionPixelSize(C0012R$dimen.screenrecord_status_icon_radius);
+        setDrawable(resources.getDrawable(C0012R$drawable.ic_screen_record_background, theme).mutate());
+        this.mFillDrawable = resources.getDrawable(C0012R$drawable.ic_screen_record_background, theme).mutate();
+        this.mIconDrawable = resources.getDrawable(C0012R$drawable.ic_screenrecord, theme).mutate();
+        this.mHorizontalPadding = resources.getDimensionPixelSize(C0011R$dimen.status_bar_horizontal_padding);
+        this.mTextSize = (float) resources.getDimensionPixelSize(C0011R$dimen.screenrecord_status_text_size);
+        this.mIconRadius = resources.getDimensionPixelSize(C0011R$dimen.screenrecord_status_icon_radius);
         this.mLevel = attributeSet.getAttributeIntValue(null, "level", 0);
         Paint paint = new Paint();
         this.mPaint = paint;
@@ -44,8 +44,8 @@ public class ScreenRecordDrawable extends DrawableWrapper {
         this.mPaint.setColor(-1);
         this.mPaint.setTextSize(this.mTextSize);
         this.mPaint.setFakeBoldText(true);
-        this.mWidthPx = resources.getDimensionPixelSize(C0012R$dimen.screenrecord_status_icon_width);
-        this.mHeightPx = resources.getDimensionPixelSize(C0012R$dimen.screenrecord_status_icon_height);
+        this.mWidthPx = resources.getDimensionPixelSize(C0011R$dimen.screenrecord_status_icon_width);
+        this.mHeightPx = resources.getDimensionPixelSize(C0011R$dimen.screenrecord_status_icon_height);
     }
 
     public int getIntrinsicWidth() {

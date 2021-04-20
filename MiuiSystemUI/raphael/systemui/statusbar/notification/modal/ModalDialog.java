@@ -14,10 +14,10 @@ import android.widget.ListView;
 import android.widget.Space;
 import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import miui.R;
 import miuix.animation.Folme;
@@ -25,14 +25,14 @@ import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
 
 public class ModalDialog implements DialogInterface {
-    private View mButtonContainer = this.mView.findViewById(C0015R$id.modal_dialog_button_container);
-    private Space mButtonSpace = ((Space) this.mView.findViewById(C0015R$id.modal_dialog_button_space));
+    private View mButtonContainer = this.mView.findViewById(C0014R$id.modal_dialog_button_container);
+    private Space mButtonSpace = ((Space) this.mView.findViewById(C0014R$id.modal_dialog_button_space));
     private Context mContext;
-    private ImageView mIconView = ((ImageView) this.mView.findViewById(C0015R$id.modal_dialog_icon));
-    private ListView mListView = ((ListView) this.mView.findViewById(C0015R$id.modal_dialog_list));
-    private TextView mMessageTv = ((TextView) this.mView.findViewById(C0015R$id.modal_dialog_message));
-    private TextView mNegativeButton = ((TextView) this.mView.findViewById(C0015R$id.modal_dialog_negative_button));
-    private TextView mPositiveButton = ((TextView) this.mView.findViewById(C0015R$id.modal_dialog_positive_button));
+    private ImageView mIconView = ((ImageView) this.mView.findViewById(C0014R$id.modal_dialog_icon));
+    private ListView mListView = ((ListView) this.mView.findViewById(C0014R$id.modal_dialog_list));
+    private TextView mMessageTv = ((TextView) this.mView.findViewById(C0014R$id.modal_dialog_message));
+    private TextView mNegativeButton = ((TextView) this.mView.findViewById(C0014R$id.modal_dialog_negative_button));
+    private TextView mPositiveButton = ((TextView) this.mView.findViewById(C0014R$id.modal_dialog_positive_button));
     private TextView mTitleTv;
     private View mView;
 
@@ -40,11 +40,11 @@ public class ModalDialog implements DialogInterface {
     }
 
     public ModalDialog(Context context) {
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, C0022R$style.Theme_Dialog_Alert);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, C0021R$style.Theme_Dialog_Alert);
         this.mContext = contextThemeWrapper;
-        View inflate = LayoutInflater.from(contextThemeWrapper).inflate(C0017R$layout.miui_notification_modal_dialog, (ViewGroup) null, false);
+        View inflate = LayoutInflater.from(contextThemeWrapper).inflate(C0016R$layout.miui_notification_modal_dialog, (ViewGroup) null, false);
         this.mView = inflate;
-        this.mTitleTv = (TextView) inflate.findViewById(C0015R$id.modal_dialog_title);
+        this.mTitleTv = (TextView) inflate.findViewById(C0014R$id.modal_dialog_title);
         ITouchStyle iTouchStyle = Folme.useAt(this.mPositiveButton).touch();
         iTouchStyle.setScale(1.0f, new ITouchStyle.TouchType[0]);
         iTouchStyle.handleTouchOf(this.mPositiveButton, new AnimConfig[0]);
@@ -69,9 +69,9 @@ public class ModalDialog implements DialogInterface {
     public void show() {
         int i;
         if (this.mListView.getVisibility() == 0) {
-            i = C0012R$dimen.modal_dialog_button_margin_top_list;
+            i = C0011R$dimen.modal_dialog_button_margin_top_list;
         } else {
-            i = C0012R$dimen.modal_dialog_button_margin_top_msg;
+            i = C0011R$dimen.modal_dialog_button_margin_top_msg;
         }
         ((ViewGroup.MarginLayoutParams) ((ConstraintLayout.LayoutParams) this.mButtonContainer.getLayoutParams())).topMargin = this.mContext.getResources().getDimensionPixelOffset(i);
         ((ModalController) Dependency.get(ModalController.class)).showModalDialog(this);
@@ -193,7 +193,7 @@ public class ModalDialog implements DialogInterface {
 
         public CheckedItemAdapter(Context context, int i, int i2, CharSequence[] charSequenceArr) {
             super(context, i, i2, charSequenceArr);
-            this.mItemPadding = context.getResources().getDimensionPixelOffset(C0012R$dimen.modal_dialog_margin_left_right);
+            this.mItemPadding = context.getResources().getDimensionPixelOffset(C0011R$dimen.modal_dialog_margin_left_right);
         }
 
         public View getView(int i, View view, ViewGroup viewGroup) {

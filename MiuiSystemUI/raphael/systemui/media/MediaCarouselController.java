@@ -9,8 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.media.MediaDataManager;
 import com.android.systemui.media.MediaHostStatesManager;
 import com.android.systemui.media.PlayerViewHolder;
@@ -94,10 +94,10 @@ public final class MediaCarouselController {
         this.activityStarter = activityStarter2;
         ViewGroup inflateMediaCarousel = inflateMediaCarousel();
         this.mediaFrame = inflateMediaCarousel;
-        View requireViewById = inflateMediaCarousel.requireViewById(C0015R$id.media_carousel_scroller);
+        View requireViewById = inflateMediaCarousel.requireViewById(C0014R$id.media_carousel_scroller);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "mediaFrame.requireViewBy….media_carousel_scroller)");
         this.mediaCarousel = (MediaScrollView) requireViewById;
-        View requireViewById2 = this.mediaFrame.requireViewById(C0015R$id.media_page_indicator);
+        View requireViewById2 = this.mediaFrame.requireViewById(C0014R$id.media_page_indicator);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "mediaFrame.requireViewBy….id.media_page_indicator)");
         this.pageIndicator = (PageIndicator) requireViewById2;
         this.mediaCarouselScrollHandler = new MiuiMediaCarouselScrollHandler(this.mediaCarousel, this.pageIndicator, delayableExecutor, new Function0<Unit>(mediaDataFilter) {
@@ -151,7 +151,7 @@ public final class MediaCarouselController {
         Intrinsics.checkExpressionValueIsNotNull(configuration, "context.resources.configuration");
         setRtl(configuration.getLayoutDirection() == 1);
         inflateSettingsButton();
-        View requireViewById3 = this.mediaCarousel.requireViewById(C0015R$id.media_carousel);
+        View requireViewById3 = this.mediaCarousel.requireViewById(C0014R$id.media_carousel);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "mediaCarousel.requireViewById(R.id.media_carousel)");
         this.mediaContent = (ViewGroup) requireViewById3;
         configurationController.addCallback(this.configListener);
@@ -287,7 +287,7 @@ public final class MediaCarouselController {
 
     /* access modifiers changed from: private */
     public final void inflateSettingsButton() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.media_carousel_settings_button, this.mediaFrame, false);
+        View inflate = LayoutInflater.from(this.context).inflate(C0016R$layout.media_carousel_settings_button, this.mediaFrame, false);
         if (inflate != null) {
             View view = this.settingsButton;
             if (view != null) {
@@ -321,7 +321,7 @@ public final class MediaCarouselController {
     }
 
     private final ViewGroup inflateMediaCarousel() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.media_carousel, (ViewGroup) new UniqueObjectHostView(this.context), false);
+        View inflate = LayoutInflater.from(this.context).inflate(C0016R$layout.media_carousel, (ViewGroup) new UniqueObjectHostView(this.context), false);
         if (inflate != null) {
             ViewGroup viewGroup = (ViewGroup) inflate;
             viewGroup.setLayoutDirection(3);

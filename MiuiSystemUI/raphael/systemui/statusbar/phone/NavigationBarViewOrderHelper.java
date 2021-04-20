@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Set;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 /* compiled from: KeyOrderObserver.kt */
 public final class NavigationBarViewOrderHelper {
     public static final NavigationBarViewOrderHelper INSTANCE = new NavigationBarViewOrderHelper();
-    private static final Set<Integer> sKeyIdSet = SetsKt__SetsKt.setOf((Object[]) new Integer[]{Integer.valueOf(C0015R$id.menu), Integer.valueOf(C0015R$id.recent_apps), Integer.valueOf(C0015R$id.back)});
+    private static final Set<Integer> sKeyIdSet = SetsKt__SetsKt.setOf((Object[]) new Integer[]{Integer.valueOf(C0014R$id.menu), Integer.valueOf(C0014R$id.recent_apps), Integer.valueOf(C0014R$id.back)});
 
     private NavigationBarViewOrderHelper() {
     }

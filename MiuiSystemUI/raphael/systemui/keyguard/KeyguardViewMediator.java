@@ -60,7 +60,7 @@ import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
-import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0009R$bool;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -732,7 +732,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         this.mKeyguardDisplayManager = new KeyguardDisplayManager(this.mContext, new InjectionInflationController(SystemUIFactory.getInstance().getRootComponent()));
         this.mAlarmManager = (AlarmManager) this.mContext.getSystemService("alarm");
         KeyguardUpdateMonitor.setCurrentUser(ActivityManager.getCurrentUser());
-        if (this.mContext.getResources().getBoolean(C0010R$bool.config_enableKeyguardService)) {
+        if (this.mContext.getResources().getBoolean(C0009R$bool.config_enableKeyguardService)) {
             if (!shouldWaitForProvisioning() && !this.mLockPatternUtils.isLockScreenDisabled(KeyguardUpdateMonitor.getCurrentUser())) {
                 z = true;
             }

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import androidx.core.view.GestureDetectorCompat;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.qs.PageIndicator;
 import com.android.systemui.util.animation.PhysicsAnimator;
@@ -432,7 +432,7 @@ public class MediaCarouselScrollHandler {
     public void updateMediaPaddings() {
         Context context = this.scrollView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "scrollView.context");
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_media_padding);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_media_padding);
         int childCount = this.mediaContent.getChildCount();
         int i = 0;
         while (i < childCount) {

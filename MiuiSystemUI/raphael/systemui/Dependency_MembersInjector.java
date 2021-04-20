@@ -625,6 +625,10 @@ public final class Dependency_MembersInjector {
         dependency.mSettingsManager = lazy;
     }
 
+    public static void injectMCodeBlueService(Dependency dependency, Lazy<CodeBlueService> lazy) {
+        dependency.mCodeBlueService = lazy;
+    }
+
     public static void injectMCloudDataManager(Dependency dependency, Lazy<CloudDataManager> lazy) {
         dependency.mCloudDataManager = lazy;
     }

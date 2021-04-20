@@ -9,7 +9,7 @@ import android.net.wifi.WifiManager;
 import android.text.TextUtils;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.wifi.WifiStatusTracker;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.statusbar.policy.NetworkController;
 import com.android.systemui.statusbar.policy.SignalController;
 import java.util.Objects;
@@ -56,7 +56,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
         boolean z2 = z && ((WifiState) this.mCurrentState).ssid != null;
         String charSequence = getTextIfExists(getContentDescription()).toString();
         if (((WifiState) this.mCurrentState).inetCondition == 0) {
-            charSequence = charSequence + "," + this.mContext.getString(C0021R$string.data_connection_no_internet);
+            charSequence = charSequence + "," + this.mContext.getString(C0020R$string.data_connection_no_internet);
         }
         NetworkController.IconState iconState = new NetworkController.IconState(z, getCurrentIconId(), charSequence);
         NetworkController.IconState iconState2 = new NetworkController.IconState(((WifiState) this.mCurrentState).connected, getQsCurrentIconId(), charSequence);

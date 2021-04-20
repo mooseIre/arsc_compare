@@ -7,9 +7,9 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.LinearLayout;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 
 public class AuthBiometricFingerprintView extends AuthBiometricView {
     private boolean shouldAnimateForTransition(int i, int i2) {
@@ -68,8 +68,8 @@ public class AuthBiometricFingerprintView extends AuthBiometricView {
     }
 
     private void showTouchSensorString() {
-        this.mIndicatorView.setText(C0021R$string.fingerprint_dialog_touch_sensor);
-        this.mIndicatorView.setTextColor(C0011R$color.biometric_dialog_gray);
+        this.mIndicatorView.setText(C0020R$string.fingerprint_dialog_touch_sensor);
+        this.mIndicatorView.setTextColor(C0010R$color.biometric_dialog_gray);
     }
 
     private void updateIcon(int i, int i2) {
@@ -92,16 +92,16 @@ public class AuthBiometricFingerprintView extends AuthBiometricView {
         int i3;
         if (i2 == 1 || i2 == 2) {
             if (i == 4 || i == 3) {
-                i3 = C0013R$drawable.fingerprint_dialog_error_to_fp;
+                i3 = C0012R$drawable.fingerprint_dialog_error_to_fp;
             } else {
-                i3 = C0013R$drawable.fingerprint_dialog_fp_to_error;
+                i3 = C0012R$drawable.fingerprint_dialog_fp_to_error;
             }
         } else if (i2 == 3 || i2 == 4) {
-            i3 = C0013R$drawable.fingerprint_dialog_fp_to_error;
+            i3 = C0012R$drawable.fingerprint_dialog_fp_to_error;
         } else if (i2 != 6) {
             return null;
         } else {
-            i3 = C0013R$drawable.fingerprint_dialog_fp_to_error;
+            i3 = C0012R$drawable.fingerprint_dialog_fp_to_error;
         }
         return ((LinearLayout) this).mContext.getDrawable(i3);
     }

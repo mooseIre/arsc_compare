@@ -5,7 +5,7 @@ import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Interpolators;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -45,7 +45,7 @@ public final class ViewGroupFadeHelper {
             for (View view2 : gatherViews) {
                 if (view2.getHasOverlappingRendering() && view2.getLayerType() == 0) {
                     view2.setLayerType(2, null);
-                    view2.setTag(C0015R$id.view_group_fade_helper_hardware_layer, Boolean.TRUE);
+                    view2.setTag(C0014R$id.view_group_fade_helper_hardware_layer, Boolean.TRUE);
                 }
             }
             ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
@@ -55,8 +55,8 @@ public final class ViewGroupFadeHelper {
             ofFloat.addUpdateListener(new ViewGroupFadeHelper$Companion$fadeOutAllChildrenExcept$$inlined$apply$lambda$1(j, viewGroup, gatherViews, runnable));
             ofFloat.addListener(new ViewGroupFadeHelper$Companion$fadeOutAllChildrenExcept$$inlined$apply$lambda$2(j, viewGroup, gatherViews, runnable));
             ofFloat.start();
-            viewGroup.setTag(C0015R$id.view_group_fade_helper_modified_views, gatherViews);
-            viewGroup.setTag(C0015R$id.view_group_fade_helper_animator, ofFloat);
+            viewGroup.setTag(C0014R$id.view_group_fade_helper_modified_views, gatherViews);
+            viewGroup.setTag(C0014R$id.view_group_fade_helper_animator, ofFloat);
         }
 
         private final Set<View> gatherViews(ViewGroup viewGroup, View view, Function1<? super View, Boolean> function1) {
@@ -87,27 +87,27 @@ public final class ViewGroupFadeHelper {
 
         public final void reset(@NotNull ViewGroup viewGroup) {
             Intrinsics.checkParameterIsNotNull(viewGroup, "root");
-            Set<View> asMutableSet = TypeIntrinsics.asMutableSet(viewGroup.getTag(C0015R$id.view_group_fade_helper_modified_views));
-            Animator animator = (Animator) viewGroup.getTag(C0015R$id.view_group_fade_helper_animator);
+            Set<View> asMutableSet = TypeIntrinsics.asMutableSet(viewGroup.getTag(C0014R$id.view_group_fade_helper_modified_views));
+            Animator animator = (Animator) viewGroup.getTag(C0014R$id.view_group_fade_helper_animator);
             if (!(asMutableSet == null || animator == null)) {
                 animator.cancel();
-                Float f = (Float) viewGroup.getTag(C0015R$id.view_group_fade_helper_previous_value_tag);
+                Float f = (Float) viewGroup.getTag(C0014R$id.view_group_fade_helper_previous_value_tag);
                 for (View view : asMutableSet) {
-                    Float f2 = (Float) view.getTag(C0015R$id.view_group_fade_helper_restore_tag);
+                    Float f2 = (Float) view.getTag(C0014R$id.view_group_fade_helper_restore_tag);
                     if (f2 != null) {
                         if (Intrinsics.areEqual(f, view.getAlpha())) {
                             view.setAlpha(f2.floatValue());
                         }
-                        if (Intrinsics.areEqual((Boolean) view.getTag(C0015R$id.view_group_fade_helper_hardware_layer), Boolean.TRUE)) {
+                        if (Intrinsics.areEqual((Boolean) view.getTag(C0014R$id.view_group_fade_helper_hardware_layer), Boolean.TRUE)) {
                             view.setLayerType(0, null);
-                            view.setTag(C0015R$id.view_group_fade_helper_hardware_layer, null);
+                            view.setTag(C0014R$id.view_group_fade_helper_hardware_layer, null);
                         }
-                        view.setTag(C0015R$id.view_group_fade_helper_restore_tag, null);
+                        view.setTag(C0014R$id.view_group_fade_helper_restore_tag, null);
                     }
                 }
-                viewGroup.setTag(C0015R$id.view_group_fade_helper_modified_views, null);
-                viewGroup.setTag(C0015R$id.view_group_fade_helper_previous_value_tag, null);
-                viewGroup.setTag(C0015R$id.view_group_fade_helper_animator, null);
+                viewGroup.setTag(C0014R$id.view_group_fade_helper_modified_views, null);
+                viewGroup.setTag(C0014R$id.view_group_fade_helper_previous_value_tag, null);
+                viewGroup.setTag(C0014R$id.view_group_fade_helper_animator, null);
             }
         }
     }

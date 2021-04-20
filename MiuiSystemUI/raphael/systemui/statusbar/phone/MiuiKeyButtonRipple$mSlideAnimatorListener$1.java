@@ -17,7 +17,7 @@ public final class MiuiKeyButtonRipple$mSlideAnimatorListener$1 extends Animator
     public void onAnimationEnd(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animation");
         this.this$0.getMRunningAnimations().remove(animator);
-        MiuiKeyButtonRipple.access$sildeSecondPart(this.this$0);
+        this.this$0.sildeSecondPart();
         if (this.this$0.getMRunningAnimations().isEmpty() && !this.this$0.getMPressed()) {
             this.this$0.setMDrawingHardwareGlow(false);
             this.this$0.invalidateSelf();

@@ -1,8 +1,8 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.res.Resources;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0014R$fraction;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0013R$fraction;
 import com.android.systemui.statusbar.notification.NotificationUtils;
 import com.android.systemui.statusbar.phone.KeyguardClockPositionAlgorithm;
 import kotlin.jvm.internal.Intrinsics;
@@ -43,10 +43,10 @@ public final class MiuiKeyguardClockPositionAlgorithm extends KeyguardClockPosit
     public void loadDimens(@Nullable Resources resources) {
         super.loadDimens(resources);
         if (resources != null) {
-            this.mClockYFractionMin = resources.getFraction(C0014R$fraction.keyguard_clock_y_fraction_min, 1, 1);
-            this.mClockYFractionMax = resources.getFraction(C0014R$fraction.keyguard_clock_y_fraction_max, 1, 1);
-            resources.getDimensionPixelSize(C0012R$dimen.miui_keyguard_clock_magin_top);
-            this.mClockNotificationsPadding = (float) resources.getDimensionPixelSize(C0012R$dimen.miui_keyguard_clock_stack_scroller_padding_top);
+            this.mClockYFractionMin = resources.getFraction(C0013R$fraction.keyguard_clock_y_fraction_min, 1, 1);
+            this.mClockYFractionMax = resources.getFraction(C0013R$fraction.keyguard_clock_y_fraction_max, 1, 1);
+            resources.getDimensionPixelSize(C0011R$dimen.miui_keyguard_clock_magin_top);
+            this.mClockNotificationsPadding = (float) resources.getDimensionPixelSize(C0011R$dimen.miui_keyguard_clock_stack_scroller_padding_top);
             return;
         }
         Intrinsics.throwNpe();

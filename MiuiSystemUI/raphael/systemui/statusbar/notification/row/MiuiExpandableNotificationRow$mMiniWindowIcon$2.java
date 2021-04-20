@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.notification.row;
 
 import android.widget.ImageView;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
@@ -17,6 +17,6 @@ final class MiuiExpandableNotificationRow$mMiniWindowIcon$2 extends Lambda imple
 
     @Override // kotlin.jvm.functions.Function0
     public final ImageView invoke() {
-        return (ImageView) this.this$0.findViewById(C0015R$id.mini_window_icon);
+        return (ImageView) this.this$0.findViewById(C0014R$id.mini_window_icon);
     }
 }

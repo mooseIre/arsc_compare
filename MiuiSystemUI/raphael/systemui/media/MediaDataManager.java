@@ -20,8 +20,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.palette.graphics.Palette;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpManager;
@@ -422,7 +422,7 @@ public final class MediaDataManager implements Dumpable {
     }
 
     private final MediaAction getResumeMediaAction(Runnable runnable) {
-        return new MediaAction(this.context.getDrawable(C0013R$drawable.lb_ic_play), runnable, this.context.getString(C0021R$string.controls_media_resume), null, 8, null);
+        return new MediaAction(this.context.getDrawable(C0012R$drawable.lb_ic_play), runnable, this.context.getString(C0020R$string.controls_media_resume), null, 8, null);
     }
 
     public final void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {

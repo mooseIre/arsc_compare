@@ -24,7 +24,7 @@ import android.widget.CheckBox;
 import android.widget.Toast;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 
 public class WifiDebuggingActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private CheckBox mAlwaysAllow;
@@ -51,16 +51,16 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
             return;
         }
         AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(C0021R$string.wifi_debugging_title);
-        alertParams.mMessage = getString(C0021R$string.wifi_debugging_message, new Object[]{stringExtra, this.mBssid});
-        alertParams.mPositiveButtonText = getString(C0021R$string.wifi_debugging_allow);
+        alertParams.mTitle = getString(C0020R$string.wifi_debugging_title);
+        alertParams.mMessage = getString(C0020R$string.wifi_debugging_message, new Object[]{stringExtra, this.mBssid});
+        alertParams.mPositiveButtonText = getString(C0020R$string.wifi_debugging_allow);
         alertParams.mNegativeButtonText = getString(17039360);
         alertParams.mPositiveButtonListener = this;
         alertParams.mNegativeButtonListener = this;
         View inflate = LayoutInflater.from(alertParams.mContext).inflate(17367092, (ViewGroup) null);
         CheckBox checkBox = (CheckBox) inflate.findViewById(16908753);
         this.mAlwaysAllow = checkBox;
-        checkBox.setText(getString(C0021R$string.wifi_debugging_always));
+        checkBox.setText(getString(C0020R$string.wifi_debugging_always));
         alertParams.mView = inflate;
         window.setCloseOnTouchOutside(false);
         setupAlert();
@@ -73,7 +73,7 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
         }
         if (motionEvent.getAction() == 1) {
             EventLog.writeEvent(1397638484, "62187985");
-            Toast.makeText(view.getContext(), C0021R$string.touch_filtered_warning, 0).show();
+            Toast.makeText(view.getContext(), C0020R$string.touch_filtered_warning, 0).show();
         }
         return true;
     }

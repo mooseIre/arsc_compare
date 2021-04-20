@@ -2,7 +2,7 @@ package com.android.systemui.media;
 
 import android.content.Context;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.android.systemui.C0023R$xml;
+import com.android.systemui.C0022R$xml;
 import com.android.systemui.media.MediaHostStatesManager;
 import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
@@ -58,8 +58,8 @@ public final class MediaViewController {
         Intrinsics.checkParameterIsNotNull(mediaHostStatesManager2, "mediaHostStatesManager");
         this.configurationController = configurationController2;
         this.mediaHostStatesManager = mediaHostStatesManager2;
-        this.collapsedLayout.load(context, C0023R$xml.media_collapsed);
-        this.expandedLayout.load(context, C0023R$xml.media_expanded);
+        this.collapsedLayout.load(context, C0022R$xml.media_collapsed);
+        this.expandedLayout.load(context, C0022R$xml.media_expanded);
         this.mediaHostStatesManager.addController(this);
         this.layoutController.setSizeChangedListener(new Function2<Integer, Integer, Unit>(this) {
             /* class com.android.systemui.media.MediaViewController.AnonymousClass1 */

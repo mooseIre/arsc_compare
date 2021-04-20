@@ -907,7 +907,7 @@ package com.android.systemui;
 public final class R {
 
     /* renamed from: com.android.systemui.R$anim  reason: case insensitive filesystem */
-    public final class C0007R$anim {
+    public final class C0006R$anim {
         public static final int $$lock_lock__1__0 = 2130771968;
         public static final int $$lock_lock__1__1 = 2130771969;
         public static final int $$lock_lock__1__2 = 2130771970;
@@ -1487,7 +1487,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$array  reason: case insensitive filesystem */
-    public final class C0008R$array {
+    public final class C0007R$array {
         public static final int animator_duration_scale_entries = 2130903040;
         public static final int animator_duration_scale_values = 2130903041;
         public static final int app_process_limit_entries = 2130903042;
@@ -1626,7 +1626,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$attr  reason: case insensitive filesystem */
-    public final class C0009R$attr {
+    public final class C0008R$attr {
         public static final int MiuiAmPmStyle = 2130968576;
         public static final int MiuiClockMode = 2130968577;
         public static final int MiuiClockShowDark = 2130968578;
@@ -2799,7 +2799,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$bool  reason: case insensitive filesystem */
-    public final class C0010R$bool {
+    public final class C0009R$bool {
         public static final int abc_action_bar_embed_tabs = 2131034112;
         public static final int abc_allow_stacked_button_bar = 2131034113;
         public static final int abc_config_actionMenuItemAllCaps = 2131034114;
@@ -2888,39 +2888,40 @@ public final class R {
         public static final int enable_safety_warning = 2131034197;
         public static final int enable_volume_ui = 2131034198;
         public static final int expanded_status_bar_darkmode = 2131034199;
-        public static final int is_tablet = 2131034200;
-        public static final int kept_notifications_on_keyguard = 2131034201;
-        public static final int keyguard_show_vertical_time = 2131034202;
-        public static final int keyguard_wireless_strong_charge_ssw = 2131034203;
-        public static final int kg_hide_emgcy_btn_when_oos = 2131034204;
-        public static final int kg_show_ime_at_screen_on = 2131034205;
-        public static final int kg_sim_puk_account_full_screen = 2131034206;
-        public static final int kg_use_all_caps = 2131034207;
-        public static final int left_hole_device = 2131034208;
-        public static final int mtrl_btn_textappearance_all_caps = 2131034209;
-        public static final int play_incall_notification = 2131034210;
-        public static final int qs_show_user_switcher_for_single_user = 2131034211;
-        public static final int quick_settings_rssi_tile_capitalization = 2131034212;
-        public static final int quick_settings_show_full_alarm = 2131034213;
-        public static final int recents_grow_in_multiwindow = 2131034214;
-        public static final int show_battery_digit_full = 2131034215;
-        public static final int show_carrier_in_status_bar_header = 2131034216;
-        public static final int show_carrier_under_left_hole_keyguard = 2131034217;
-        public static final int show_plmn_and_spn_in_carrier = 2131034218;
-        public static final int simple_cache_enable_im_memory = 2131034219;
-        public static final int status_bar_hide_volte = 2131034220;
-        public static final int status_bar_hide_vowifi_mcc_mnc = 2131034221;
-        public static final int status_bar_show_dual_vowifi_icons = 2131034222;
-        public static final int status_bar_show_mobile_type_in_mms = 2131034223;
-        public static final int status_bar_show_mobile_type_when_wifi_on = 2131034224;
-        public static final int status_bar_show_spn_when_airplane = 2131034225;
-        public static final int support_drip_overlay = 2131034226;
-        public static final int support_round_corner = 2131034227;
-        public static final int use_status_bar_tint = 2131034228;
+        public static final int header_big_time_use_system_font = 2131034200;
+        public static final int is_tablet = 2131034201;
+        public static final int kept_notifications_on_keyguard = 2131034202;
+        public static final int keyguard_show_vertical_time = 2131034203;
+        public static final int keyguard_wireless_strong_charge_ssw = 2131034204;
+        public static final int kg_hide_emgcy_btn_when_oos = 2131034205;
+        public static final int kg_show_ime_at_screen_on = 2131034206;
+        public static final int kg_sim_puk_account_full_screen = 2131034207;
+        public static final int kg_use_all_caps = 2131034208;
+        public static final int left_hole_device = 2131034209;
+        public static final int mtrl_btn_textappearance_all_caps = 2131034210;
+        public static final int play_incall_notification = 2131034211;
+        public static final int qs_show_user_switcher_for_single_user = 2131034212;
+        public static final int quick_settings_rssi_tile_capitalization = 2131034213;
+        public static final int quick_settings_show_full_alarm = 2131034214;
+        public static final int recents_grow_in_multiwindow = 2131034215;
+        public static final int show_battery_digit_full = 2131034216;
+        public static final int show_carrier_in_status_bar_header = 2131034217;
+        public static final int show_carrier_under_left_hole_keyguard = 2131034218;
+        public static final int show_plmn_and_spn_in_carrier = 2131034219;
+        public static final int simple_cache_enable_im_memory = 2131034220;
+        public static final int status_bar_hide_volte = 2131034221;
+        public static final int status_bar_hide_vowifi_mcc_mnc = 2131034222;
+        public static final int status_bar_show_dual_vowifi_icons = 2131034223;
+        public static final int status_bar_show_mobile_type_in_mms = 2131034224;
+        public static final int status_bar_show_mobile_type_when_wifi_on = 2131034225;
+        public static final int status_bar_show_spn_when_airplane = 2131034226;
+        public static final int support_drip_overlay = 2131034227;
+        public static final int support_round_corner = 2131034228;
+        public static final int use_status_bar_tint = 2131034229;
     }
 
     /* renamed from: com.android.systemui.R$color  reason: case insensitive filesystem */
-    public final class C0011R$color {
+    public final class C0010R$color {
         public static final int GM2_blue_200 = 2131099648;
         public static final int GM2_blue_300 = 2131099649;
         public static final int GM2_blue_50 = 2131099650;
@@ -3698,7 +3699,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$dimen  reason: case insensitive filesystem */
-    public final class C0012R$dimen {
+    public final class C0011R$dimen {
         public static final int G = 2131165184;
         public static final int abc_action_bar_content_inset_material = 2131165185;
         public static final int abc_action_bar_content_inset_with_nav = 2131165186;
@@ -5834,7 +5835,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$drawable  reason: case insensitive filesystem */
-    public final class C0013R$drawable {
+    public final class C0012R$drawable {
         public static final int $$face_dialog_dark_to_checkmark__10__0 = 2131230720;
         public static final int $$face_dialog_dark_to_checkmark__11__0 = 2131230721;
         public static final int $$face_dialog_dark_to_checkmark__11__1 = 2131230722;
@@ -8821,7 +8822,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$fraction  reason: case insensitive filesystem */
-    public final class C0014R$fraction {
+    public final class C0013R$fraction {
         public static final int battery_button_height_fraction = 2131296256;
         public static final int battery_subpixel_smoothing_left = 2131296257;
         public static final int battery_subpixel_smoothing_right = 2131296258;
@@ -8846,7 +8847,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$id  reason: case insensitive filesystem */
-    public final class C0015R$id {
+    public final class C0014R$id {
         public static final int ALT = 2131361792;
         public static final int CTRL = 2131361793;
         public static final int Content = 2131361794;
@@ -10545,7 +10546,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$integer  reason: case insensitive filesystem */
-    public final class C0016R$integer {
+    public final class C0015R$integer {
         public static final int abc_config_activityDefaultDur = 2131427328;
         public static final int abc_config_activityShortDur = 2131427329;
         public static final int ambient_notification_extension_time = 2131427330;
@@ -10757,7 +10758,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$layout  reason: case insensitive filesystem */
-    public final class C0017R$layout {
+    public final class C0016R$layout {
         public static final int abc_action_bar_title_item = 2131558400;
         public static final int abc_action_bar_up_container = 2131558401;
         public static final int abc_action_menu_item_layout = 2131558402;
@@ -11341,13 +11342,13 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$mipmap  reason: case insensitive filesystem */
-    public final class C0018R$mipmap {
+    public final class C0017R$mipmap {
         public static final int ic_daydreams = 2131623936;
         public static final int ic_launcher_dreams = 2131623937;
     }
 
     /* renamed from: com.android.systemui.R$plurals  reason: case insensitive filesystem */
-    public final class C0019R$plurals {
+    public final class C0018R$plurals {
         public static final int abc_slice_duration_days = 2131689472;
         public static final int abc_slice_duration_min = 2131689473;
         public static final int abc_slice_duration_years = 2131689474;
@@ -11387,7 +11388,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$raw  reason: case insensitive filesystem */
-    public final class C0020R$raw {
+    public final class C0019R$raw {
         public static final int image_wallpaper_fragment_shader = 2131755008;
         public static final int image_wallpaper_vertex_shader = 2131755009;
         public static final int lb_voice_failure = 2131755010;
@@ -11419,7 +11420,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$string  reason: case insensitive filesystem */
-    public final class C0021R$string {
+    public final class C0020R$string {
         public static final int abbrev_wday_month_day_no_year = 2131820544;
         public static final int abbrev_wday_month_day_no_year_alarm = 2131820545;
         public static final int abc_action_bar_home_description = 2131820546;
@@ -13701,7 +13702,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$style  reason: case insensitive filesystem */
-    public final class C0022R$style {
+    public final class C0021R$style {
         public static final int AlertDialog_AppCompat = 2131886080;
         public static final int AlertDialog_AppCompat_Light = 2131886081;
         public static final int Animation = 2131886082;
@@ -14744,7 +14745,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$xml  reason: case insensitive filesystem */
-    public final class C0023R$xml {
+    public final class C0022R$xml {
         public static final int fileprovider = 2132082688;
         public static final int lockscreen_settings = 2132082689;
         public static final int media_collapsed = 2132082690;

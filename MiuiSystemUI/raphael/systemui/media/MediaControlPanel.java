@@ -20,16 +20,16 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintSet;
 import com.android.settingslib.Utils;
 import com.android.settingslib.widget.AdaptiveIcon;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.util.animation.TransitionLayout;
 import java.util.List;
 import java.util.concurrent.Executor;
 
 public class MediaControlPanel {
-    public static final int[] ACTION_IDS = {C0015R$id.action0, C0015R$id.action1, C0015R$id.action2, C0015R$id.action3, C0015R$id.action4};
+    public static final int[] ACTION_IDS = {C0014R$id.action0, C0014R$id.action1, C0014R$id.action2, C0014R$id.action3, C0014R$id.action4};
     protected final ActivityStarter mActivityStarter;
     private int mAlbumArtRadius;
     private int mAlbumArtSize;
@@ -69,7 +69,7 @@ public class MediaControlPanel {
 
     private void loadDimens() {
         this.mAlbumArtRadius = this.mContext.getResources().getDimensionPixelSize(Utils.getThemeAttr(this.mContext, 16844145));
-        this.mAlbumArtSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_media_album_size);
+        this.mAlbumArtSize = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_media_album_size);
     }
 
     public PlayerViewHolder getView() {
@@ -133,20 +133,20 @@ public class MediaControlPanel {
             if (z) {
                 albumView.setImageDrawable(scaleDrawable(mediaData.getArtwork()));
             }
-            setVisibleAndAlpha(collapsedLayout, C0015R$id.album_art, z);
-            setVisibleAndAlpha(expandedLayout, C0015R$id.album_art, z);
+            setVisibleAndAlpha(collapsedLayout, C0014R$id.album_art, z);
+            setVisibleAndAlpha(expandedLayout, C0014R$id.album_art, z);
             ImageView appIcon = this.mViewHolder.getAppIcon();
             if (mediaData.getAppIcon() != null) {
                 appIcon.setImageDrawable(mediaData.getAppIcon());
             } else {
-                appIcon.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.ic_music_note));
+                appIcon.setImageDrawable(this.mContext.getDrawable(C0012R$drawable.ic_music_note));
             }
             this.mViewHolder.getTitleText().setText(mediaData.getSong());
             this.mViewHolder.getAppName().setText(mediaData.getApp());
             this.mViewHolder.getArtistText().setText(mediaData.getArtist());
             this.mViewHolder.getSeamless().setVisibility(0);
-            setVisibleAndAlpha(collapsedLayout, C0015R$id.media_seamless, true);
-            setVisibleAndAlpha(expandedLayout, C0015R$id.media_seamless, true);
+            setVisibleAndAlpha(collapsedLayout, C0014R$id.media_seamless, true);
+            setVisibleAndAlpha(expandedLayout, C0014R$id.media_seamless, true);
             this.mViewHolder.getSeamless().setOnClickListener(new View.OnClickListener(mediaData) {
                 /* class com.android.systemui.media.$$Lambda$MediaControlPanel$TE2FbF426T83JfnZb2pju5PDfs */
                 public final /* synthetic */ MediaData f$1;

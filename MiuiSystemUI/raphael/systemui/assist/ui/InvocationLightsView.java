@@ -11,7 +11,7 @@ import android.util.MathUtils;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0008R$attr;
 import com.android.systemui.Dependency;
 import com.android.systemui.assist.ui.PerimeterPathGuide;
 import com.android.systemui.statusbar.NavigationBarController;
@@ -61,11 +61,11 @@ public class InvocationLightsView extends View implements NavigationBarTransitio
         this.mPaint.setAntiAlias(true);
         this.mGuide = new PerimeterPathGuide(context, createCornerPathRenderer(context), this.mStrokeWidth / 2, DisplayUtils.getWidth(context), DisplayUtils.getHeight(context));
         this.mViewHeight = Math.max(Math.max(DisplayUtils.getCornerRadiusBottom(context), DisplayUtils.getCornerRadiusTop(context)), DisplayUtils.convertDpToPx(3.0f, context));
-        int themeAttr = Utils.getThemeAttr(((View) this).mContext, C0009R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(((View) this).mContext, Utils.getThemeAttr(((View) this).mContext, C0009R$attr.lightIconTheme));
+        int themeAttr = Utils.getThemeAttr(((View) this).mContext, C0008R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(((View) this).mContext, Utils.getThemeAttr(((View) this).mContext, C0008R$attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(((View) this).mContext, themeAttr);
-        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.singleToneColor);
-        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor);
+        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.singleToneColor);
+        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.singleToneColor);
         for (int i3 = 0; i3 < 4; i3++) {
             this.mAssistInvocationLights.add(new EdgeLight(0, 0.0f, 0.0f));
         }

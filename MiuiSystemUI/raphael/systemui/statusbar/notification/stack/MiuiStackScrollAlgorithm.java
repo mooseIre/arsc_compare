@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -59,10 +59,10 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     public final void updateResources() {
-        this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_top_minus);
-        this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_bottom_minus);
+        this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_top_minus);
+        this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_bottom_minus);
         this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105489);
-        this.mHeadsUpMarginTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
+        this.mHeadsUpMarginTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: protected */
@@ -117,7 +117,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
                         viewState.setSpringYOffset((int) (ambientState.getSpringLength() + f));
                     }
                 }
-                t2.setTag(C0015R$id.miui_child_index_hint, Integer.valueOf(i));
+                t2.setTag(C0014R$id.miui_child_index_hint, Integer.valueOf(i));
                 i = i2;
             } else {
                 CollectionsKt.throwIndexOverflow();

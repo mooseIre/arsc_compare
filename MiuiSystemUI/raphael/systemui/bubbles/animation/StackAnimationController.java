@@ -14,7 +14,7 @@ import androidx.dynamicanimation.animation.FlingAnimation;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.bubbles.animation.PhysicsAnimationLayout;
 import com.android.systemui.util.FloatingContentCoordinator;
 import com.android.systemui.util.animation.PhysicsAnimator;
@@ -533,12 +533,12 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
     @Override // com.android.systemui.bubbles.animation.PhysicsAnimationLayout.PhysicsAnimationController
     public void onActiveControllerForLayout(PhysicsAnimationLayout physicsAnimationLayout) {
         Resources resources = physicsAnimationLayout.getResources();
-        this.mStackOffset = (float) resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_offset);
-        this.mBubbleSize = resources.getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
-        this.mBubbleBitmapSize = resources.getDimensionPixelSize(C0012R$dimen.bubble_bitmap_size);
-        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
-        this.mBubbleOffscreen = resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_offscreen);
-        this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_starting_offset_y);
+        this.mStackOffset = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_stack_offset);
+        this.mBubbleSize = resources.getDimensionPixelSize(C0011R$dimen.individual_bubble_size);
+        this.mBubbleBitmapSize = resources.getDimensionPixelSize(C0011R$dimen.bubble_bitmap_size);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
+        this.mBubbleOffscreen = resources.getDimensionPixelSize(C0011R$dimen.bubble_stack_offscreen);
+        this.mStackStartingVerticalOffset = resources.getDimensionPixelSize(C0011R$dimen.bubble_stack_starting_offset_y);
         this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105489);
     }
 
@@ -546,7 +546,7 @@ public class StackAnimationController extends PhysicsAnimationLayout.PhysicsAnim
         PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
         if (physicsAnimationLayout != null) {
             Resources resources = physicsAnimationLayout.getContext().getResources();
-            this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
+            this.mBubblePaddingTop = resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
             this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105489);
         }
     }

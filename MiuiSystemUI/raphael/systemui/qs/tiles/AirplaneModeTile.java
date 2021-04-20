@@ -8,7 +8,7 @@ import android.net.ConnectivityManager;
 import android.sysprop.TelephonyProperties;
 import android.widget.Switch;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.QSTile;
@@ -79,7 +79,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0021R$string.airplane_mode);
+        return this.mContext.getString(C0020R$string.airplane_mode);
     }
 
     /* access modifiers changed from: protected */
@@ -88,7 +88,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
         int i = 1;
         boolean z = (obj instanceof Integer ? ((Integer) obj).intValue() : this.mSetting.getValue()) != 0;
         booleanState.value = z;
-        booleanState.label = this.mContext.getString(C0021R$string.airplane_mode);
+        booleanState.label = this.mContext.getString(C0020R$string.airplane_mode);
         booleanState.icon = this.mIcon;
         if (booleanState.slash == null) {
             booleanState.slash = new QSTile.SlashState();
@@ -106,9 +106,9 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_on);
+            return this.mContext.getString(C0020R$string.accessibility_quick_settings_airplane_changed_on);
         }
-        return this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_off);
+        return this.mContext.getString(C0020R$string.accessibility_quick_settings_airplane_changed_off);
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl

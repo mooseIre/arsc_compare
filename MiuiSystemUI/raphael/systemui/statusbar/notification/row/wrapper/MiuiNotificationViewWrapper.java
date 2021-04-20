@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.statusbar.TransformableView;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -20,7 +20,7 @@ public class MiuiNotificationViewWrapper extends NotificationViewWrapper {
     }
 
     private void resolveViews() {
-        this.mAppIcon = (ImageView) this.mView.findViewById(C0015R$id.app_icon);
+        this.mAppIcon = (ImageView) this.mView.findViewById(C0014R$id.app_icon);
     }
 
     private void handleViews() {

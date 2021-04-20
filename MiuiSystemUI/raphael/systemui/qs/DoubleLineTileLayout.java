@@ -6,7 +6,7 @@ import android.content.res.Resources;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSPanel;
@@ -84,9 +84,9 @@ public final class DoubleLineTileLayout extends ViewGroup implements QSPanel.QST
         Context context = ((ViewGroup) this).mContext;
         Intrinsics.checkExpressionValueIsNotNull(context, "mContext");
         Resources resources = context.getResources();
-        this.smallTileSize = resources.getDimensionPixelSize(C0012R$dimen.qs_quick_tile_size);
-        this.cellMarginHorizontal = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_margin_horizontal_two_line);
-        this.cellMarginVertical = resources.getDimensionPixelSize(C0012R$dimen.new_qs_vertical_margin);
+        this.smallTileSize = resources.getDimensionPixelSize(C0011R$dimen.qs_quick_tile_size);
+        this.cellMarginHorizontal = resources.getDimensionPixelSize(C0011R$dimen.qs_tile_margin_horizontal_two_line);
+        this.cellMarginVertical = resources.getDimensionPixelSize(C0011R$dimen.new_qs_vertical_margin);
         requestLayout();
         return false;
     }

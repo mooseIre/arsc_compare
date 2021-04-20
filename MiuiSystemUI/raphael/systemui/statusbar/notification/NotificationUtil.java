@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.ImageView;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 import com.android.systemui.media.MediaDataManagerKt;
@@ -203,7 +203,7 @@ public class NotificationUtil {
     }
 
     public static String getHiddenText() {
-        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getString(C0021R$string.notification_hidden_text);
+        return ((NotificationSettingsManager) Dependency.get(NotificationSettingsManager.class)).getString(C0020R$string.notification_hidden_text);
     }
 
     public static CharSequence resolveTitle(Notification notification) {

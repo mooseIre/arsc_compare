@@ -16,10 +16,10 @@ import androidx.appcompat.R$styleable;
 import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Prefs;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.DetailAdapter;
@@ -94,9 +94,9 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         }
         String mobileDataNetworkName = this.mController.getMobileDataNetworkName();
         if (TextUtils.isEmpty(mobileDataNetworkName)) {
-            mobileDataNetworkName = this.mContext.getString(C0021R$string.mobile_data_disable_message_default_carrier);
+            mobileDataNetworkName = this.mContext.getString(C0020R$string.mobile_data_disable_message_default_carrier);
         }
-        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C0021R$string.mobile_data_disable_title).setMessage(this.mContext.getString(C0021R$string.mobile_data_disable_message, mobileDataNetworkName)).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039638, new DialogInterface.OnClickListener() {
+        AlertDialog create = new AlertDialog.Builder(this.mContext).setTitle(C0020R$string.mobile_data_disable_title).setMessage(this.mContext.getString(C0020R$string.mobile_data_disable_message, mobileDataNetworkName)).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).setPositiveButton(17039638, new DialogInterface.OnClickListener() {
             /* class com.android.systemui.qs.tiles.$$Lambda$CellularTile$oLJGrvqAwKFs9wNM4MvnfZ_a1QQ */
 
             public final void onClick(DialogInterface dialogInterface, int i) {
@@ -129,7 +129,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
+        return this.mContext.getString(C0020R$string.quick_settings_cellular_detail_title);
     }
 
     /* access modifiers changed from: protected */
@@ -139,29 +139,29 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
             callbackInfo = this.mSignalCallback.mInfo;
         }
         Resources resources = this.mContext.getResources();
-        signalState.label = resources.getString(C0021R$string.mobile_data);
+        signalState.label = resources.getString(C0020R$string.mobile_data);
         boolean z = this.mDataController.isMobileDataSupported() && this.mDataController.isMobileDataEnabled();
         signalState.value = z;
         signalState.activityIn = z && callbackInfo.activityIn;
         signalState.activityOut = z && callbackInfo.activityOut;
         signalState.expandedAccessibilityClassName = Switch.class.getName();
         if (callbackInfo.noSim) {
-            signalState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_no_sim);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_no_sim);
         } else {
-            signalState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_swap_vert);
+            signalState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_swap_vert);
         }
         if (callbackInfo.noSim) {
             signalState.state = 0;
-            signalState.secondaryLabel = resources.getString(C0021R$string.keyguard_missing_sim_message_short);
+            signalState.secondaryLabel = resources.getString(C0020R$string.keyguard_missing_sim_message_short);
         } else if (callbackInfo.airplaneModeEnabled) {
             signalState.state = 0;
-            signalState.secondaryLabel = resources.getString(C0021R$string.status_bar_airplane);
+            signalState.secondaryLabel = resources.getString(C0020R$string.status_bar_airplane);
         } else if (z) {
             signalState.state = 2;
             signalState.secondaryLabel = appendMobileDataType(callbackInfo.multipleSubs ? callbackInfo.dataSubscriptionName : CodeInjection.MD5, getMobileDataContentName(callbackInfo));
         } else {
             signalState.state = 1;
-            signalState.secondaryLabel = resources.getString(C0021R$string.cell_data_off);
+            signalState.secondaryLabel = resources.getString(C0020R$string.cell_data_off);
         }
         signalState.contentDescription = signalState.label;
         if (signalState.state == 1) {
@@ -178,16 +178,16 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         if (TextUtils.isEmpty(charSequence)) {
             return Html.fromHtml(charSequence2.toString(), 0);
         }
-        return Html.fromHtml(this.mContext.getString(C0021R$string.mobile_carrier_text_format, charSequence, charSequence2), 0);
+        return Html.fromHtml(this.mContext.getString(C0020R$string.mobile_carrier_text_format, charSequence, charSequence2), 0);
     }
 
     private CharSequence getMobileDataContentName(CallbackInfo callbackInfo) {
         if (callbackInfo.roaming && !TextUtils.isEmpty(callbackInfo.dataContentDescription)) {
-            String string = this.mContext.getString(C0021R$string.data_connection_roaming);
+            String string = this.mContext.getString(C0020R$string.data_connection_roaming);
             String charSequence = callbackInfo.dataContentDescription.toString();
-            return this.mContext.getString(C0021R$string.mobile_data_text_format, string, charSequence);
+            return this.mContext.getString(C0020R$string.mobile_data_text_format, string, charSequence);
         } else if (callbackInfo.roaming) {
-            return this.mContext.getString(C0021R$string.data_connection_roaming);
+            return this.mContext.getString(C0020R$string.data_connection_roaming);
         } else {
             return callbackInfo.dataContentDescription;
         }
@@ -283,7 +283,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return ((QSTileImpl) CellularTile.this).mContext.getString(C0021R$string.quick_settings_cellular_detail_title);
+            return ((QSTileImpl) CellularTile.this).mContext.getString(C0020R$string.quick_settings_cellular_detail_title);
         }
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
@@ -309,7 +309,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
         public View createDetailView(Context context, View view, ViewGroup viewGroup) {
             int i = 0;
             if (view == null) {
-                view = LayoutInflater.from(((QSTileImpl) CellularTile.this).mContext).inflate(C0017R$layout.data_usage, viewGroup, false);
+                view = LayoutInflater.from(((QSTileImpl) CellularTile.this).mContext).inflate(C0016R$layout.data_usage, viewGroup, false);
             }
             DataUsageDetailView dataUsageDetailView = (DataUsageDetailView) view;
             DataUsageController.DataUsageInfo dataUsageInfo = CellularTile.this.mDataController.getDataUsageInfo();
@@ -317,7 +317,7 @@ public class CellularTile extends QSTileImpl<QSTile.SignalState> {
                 return dataUsageDetailView;
             }
             dataUsageDetailView.bind(dataUsageInfo);
-            View findViewById = dataUsageDetailView.findViewById(C0015R$id.roaming_text);
+            View findViewById = dataUsageDetailView.findViewById(C0014R$id.roaming_text);
             if (!CellularTile.this.mSignalCallback.mInfo.roaming) {
                 i = 4;
             }

@@ -35,14 +35,14 @@ public class SlicePermissionActivity extends Activity implements DialogInterface
             verifyCallingPkg();
             String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(packageManager.getApplicationInfo(this.mCallingPkg, 0).loadSafeLabel(packageManager, 500.0f, 5).toString());
             String unicodeWrap2 = BidiFormatter.getInstance().unicodeWrap(packageManager.getApplicationInfo(this.mProviderPkg, 0).loadSafeLabel(packageManager, 500.0f, 5).toString());
-            AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0021R$string.slice_permission_title, new Object[]{unicodeWrap, unicodeWrap2})).setView(C0017R$layout.slice_permission_request).setNegativeButton(C0021R$string.slice_permission_deny, this).setPositiveButton(C0021R$string.slice_permission_allow, this).setOnDismissListener(this).create();
+            AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0020R$string.slice_permission_title, new Object[]{unicodeWrap, unicodeWrap2})).setView(C0016R$layout.slice_permission_request).setNegativeButton(C0020R$string.slice_permission_deny, this).setPositiveButton(C0020R$string.slice_permission_allow, this).setOnDismissListener(this).create();
             create.getWindow().addSystemFlags(524288);
             create.show();
-            ((TextView) create.getWindow().getDecorView().findViewById(C0015R$id.text1)).setText(getString(C0021R$string.slice_permission_text_1, new Object[]{unicodeWrap2}));
-            ((TextView) create.getWindow().getDecorView().findViewById(C0015R$id.text2)).setText(getString(C0021R$string.slice_permission_text_2, new Object[]{unicodeWrap2}));
-            CheckBox checkBox = (CheckBox) create.getWindow().getDecorView().findViewById(C0015R$id.slice_permission_checkbox);
+            ((TextView) create.getWindow().getDecorView().findViewById(C0014R$id.text1)).setText(getString(C0020R$string.slice_permission_text_1, new Object[]{unicodeWrap2}));
+            ((TextView) create.getWindow().getDecorView().findViewById(C0014R$id.text2)).setText(getString(C0020R$string.slice_permission_text_2, new Object[]{unicodeWrap2}));
+            CheckBox checkBox = (CheckBox) create.getWindow().getDecorView().findViewById(C0014R$id.slice_permission_checkbox);
             this.mAllCheckbox = checkBox;
-            checkBox.setText(getString(C0021R$string.slice_permission_checkbox, new Object[]{unicodeWrap}));
+            checkBox.setText(getString(C0020R$string.slice_permission_checkbox, new Object[]{unicodeWrap}));
         } catch (PackageManager.NameNotFoundException e) {
             Log.e("SlicePermissionActivity", "Couldn't find package", e);
             finish();

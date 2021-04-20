@@ -9,9 +9,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import java.util.ArrayList;
 
 public class PageIndicator extends ViewGroup {
@@ -28,8 +28,8 @@ public class PageIndicator extends ViewGroup {
         }
     };
     private final int mPageDotWidth = ((int) (((float) this.mPageIndicatorWidth) * 0.4f));
-    private final int mPageIndicatorHeight = ((int) ((ViewGroup) this).mContext.getResources().getDimension(C0012R$dimen.qs_page_indicator_height));
-    private final int mPageIndicatorWidth = ((int) ((ViewGroup) this).mContext.getResources().getDimension(C0012R$dimen.qs_page_indicator_width));
+    private final int mPageIndicatorHeight = ((int) ((ViewGroup) this).mContext.getResources().getDimension(C0011R$dimen.qs_page_indicator_height));
+    private final int mPageIndicatorWidth = ((int) ((ViewGroup) this).mContext.getResources().getDimension(C0011R$dimen.qs_page_indicator_width));
     private int mPosition = -1;
     private final ArrayList<Integer> mQueuedPositions = new ArrayList<>();
 
@@ -59,7 +59,7 @@ public class PageIndicator extends ViewGroup {
             }
             while (i > getChildCount()) {
                 ImageView imageView = new ImageView(((ViewGroup) this).mContext);
-                imageView.setImageResource(C0013R$drawable.minor_a_b);
+                imageView.setImageResource(C0012R$drawable.minor_a_b);
                 imageView.setImageTintList(ColorStateList.valueOf(i2));
                 addView(imageView, new ViewGroup.LayoutParams(this.mPageIndicatorWidth, this.mPageIndicatorHeight));
             }
@@ -70,7 +70,7 @@ public class PageIndicator extends ViewGroup {
     public void setLocation(float f) {
         int i = (int) f;
         int i2 = 0;
-        setContentDescription(getContext().getString(C0021R$string.accessibility_quick_settings_page, Integer.valueOf(i + 1), Integer.valueOf(getChildCount())));
+        setContentDescription(getContext().getString(C0020R$string.accessibility_quick_settings_page, Integer.valueOf(i + 1), Integer.valueOf(getChildCount())));
         int i3 = i << 1;
         if (f != ((float) i)) {
             i2 = 1;
@@ -107,7 +107,7 @@ public class PageIndicator extends ViewGroup {
         while (i2 < childCount) {
             ImageView imageView = (ImageView) getChildAt(i2);
             imageView.setTranslationX(0.0f);
-            imageView.setImageResource(C0013R$drawable.major_a_b);
+            imageView.setImageResource(C0012R$drawable.major_a_b);
             imageView.setAlpha(getAlpha(i2 == i));
             i2++;
         }
@@ -148,23 +148,23 @@ public class PageIndicator extends ViewGroup {
         if (z3) {
             if (z) {
                 if (z2) {
-                    return C0013R$drawable.major_b_a_animation;
+                    return C0012R$drawable.major_b_a_animation;
                 }
-                return C0013R$drawable.major_b_c_animation;
+                return C0012R$drawable.major_b_c_animation;
             } else if (z2) {
-                return C0013R$drawable.major_a_b_animation;
+                return C0012R$drawable.major_a_b_animation;
             } else {
-                return C0013R$drawable.major_c_b_animation;
+                return C0012R$drawable.major_c_b_animation;
             }
         } else if (z) {
             if (z2) {
-                return C0013R$drawable.minor_b_c_animation;
+                return C0012R$drawable.minor_b_c_animation;
             }
-            return C0013R$drawable.minor_b_a_animation;
+            return C0012R$drawable.minor_b_a_animation;
         } else if (z2) {
-            return C0013R$drawable.minor_c_b_animation;
+            return C0012R$drawable.minor_c_b_animation;
         } else {
-            return C0013R$drawable.minor_a_b_animation;
+            return C0012R$drawable.minor_a_b_animation;
         }
     }
 

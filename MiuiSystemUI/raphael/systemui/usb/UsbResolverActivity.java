@@ -18,7 +18,7 @@ import android.widget.CheckBox;
 import com.android.internal.app.IntentForwarderActivity;
 import com.android.internal.app.ResolverActivity;
 import com.android.internal.app.chooser.TargetInfo;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -102,9 +102,9 @@ public class UsbResolverActivity extends ResolverActivity {
             return;
         }
         if (this.mDevice == null) {
-            checkBox.setText(C0021R$string.always_use_accessory);
+            checkBox.setText(C0020R$string.always_use_accessory);
         } else {
-            checkBox.setText(C0021R$string.always_use_device);
+            checkBox.setText(C0020R$string.always_use_device);
         }
     }
 

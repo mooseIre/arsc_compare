@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.policy.BoostHelper;
@@ -54,6 +54,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private boolean mIsIntercept;
     private boolean mIsMove;
     private boolean mIsMoveY;
+    private Boolean mIsSwipeCollapse;
     private boolean mIsUp;
     private int[] mLocation;
     private boolean mNCAnimSwitched;
@@ -80,6 +81,7 @@ public class ControlPanelWindowView extends FrameLayout {
         this.mLocation = new int[2];
         this.mNCBlurSwitched = false;
         this.mNCAnimSwitched = false;
+        this.mIsSwipeCollapse = Boolean.FALSE;
         this.mBlurRatioListener = new TransitionListener() {
             /* class com.android.systemui.controlcenter.phone.ControlPanelWindowView.AnonymousClass1 */
 
@@ -144,12 +146,12 @@ public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mContent = (ControlPanelContentView) findViewById(C0015R$id.control_panel_content);
-        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0015R$id.control_center_panel);
+        this.mContent = (ControlPanelContentView) findViewById(C0014R$id.control_panel_content);
+        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0014R$id.control_center_panel);
         this.mControlCenterPanel = controlCenterPanelView;
         controlCenterPanelView.setControlPanelWindowView(this);
-        this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0015R$id.tile_layout);
-        this.mBottomArea = findViewById(C0015R$id.control_center_bottom_area);
+        this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0014R$id.tile_layout);
+        this.mBottomArea = findViewById(C0014R$id.control_center_bottom_area);
     }
 
     /* access modifiers changed from: protected */
@@ -241,10 +243,14 @@ public class ControlPanelWindowView extends FrameLayout {
             this.mDownY = motionEvent.getRawY();
             this.mDownX = motionEvent.getRawX();
             this.mDownExpandHeight = this.mExpandHeight;
+            this.mIsSwipeCollapse = this.mControlCenterPanel.shouldCollapseBySwipeUp();
         } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
             return this.mIsIntercept;
         } else {
             if (this.mIsMove && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && this.mIsMoveY && this.mControlCenterPanel.shouldCollapseByBottomTouch()) {
+                return true;
+            }
+            if (this.mIsMove && this.mIsMoveY && motionEvent.getRawY() < this.mDownY && this.mIsSwipeCollapse.booleanValue()) {
                 return true;
             }
         }

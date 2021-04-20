@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import com.android.internal.graphics.ColorUtils;
 import com.android.launcher3.icons.BitmapInfo;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.bubbles.Bubble;
 import java.lang.ref.WeakReference;
 import java.util.Objects;
@@ -76,8 +76,8 @@ public class BubbleViewInfoTask extends AsyncTask<Void, Void, BubbleViewInfo> {
             BubbleViewInfo bubbleViewInfo = new BubbleViewInfo();
             if (!z && !bubble.isInflated()) {
                 LayoutInflater from = LayoutInflater.from(context);
-                bubbleViewInfo.imageView = (BadgedImageView) from.inflate(C0017R$layout.bubble_view, (ViewGroup) bubbleStackView, false);
-                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C0017R$layout.bubble_expanded_view, (ViewGroup) bubbleStackView, false);
+                bubbleViewInfo.imageView = (BadgedImageView) from.inflate(C0016R$layout.bubble_view, (ViewGroup) bubbleStackView, false);
+                BubbleExpandedView bubbleExpandedView = (BubbleExpandedView) from.inflate(C0016R$layout.bubble_expanded_view, (ViewGroup) bubbleStackView, false);
                 bubbleViewInfo.expandedView = bubbleExpandedView;
                 bubbleExpandedView.setStackView(bubbleStackView);
             }

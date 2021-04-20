@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Space;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.Intrinsics;
 import miuix.core.widget.NestedScrollView;
 import miuix.springback.view.SpringBackLayout;
@@ -60,16 +60,16 @@ public final class ControlCenterContentContainer extends SpringBackLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0015R$id.content_scroller);
+        View findViewById = findViewById(C0014R$id.content_scroller);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.content_scroller)");
         NestedScrollView nestedScrollView = (NestedScrollView) findViewById;
         this.scroller = nestedScrollView;
         if (nestedScrollView != null) {
             nestedScrollView.setFillViewport(true);
-            View findViewById2 = findViewById(C0015R$id.content_container);
+            View findViewById2 = findViewById(C0014R$id.content_container);
             Intrinsics.checkExpressionValueIsNotNull(findViewById2, "findViewById(R.id.content_container)");
             this.container = (LinearLayout) findViewById2;
-            View requireViewById = requireViewById(C0015R$id.navigation_bar_space);
+            View requireViewById = requireViewById(C0014R$id.navigation_bar_space);
             Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.navigation_bar_space)");
             this.navigationBarSpace = (Space) requireViewById;
             return;

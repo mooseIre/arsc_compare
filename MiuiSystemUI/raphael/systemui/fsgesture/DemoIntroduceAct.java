@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 
 public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     TextView backBtn;
@@ -17,9 +17,9 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
     @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0017R$layout.demo_intro_layout);
+        setContentView(C0016R$layout.demo_intro_layout);
         final boolean booleanExtra = getIntent().getBooleanExtra("IS_FROM_PROVISION", false);
-        TextView textView = (TextView) findViewById(C0015R$id.btn_back);
+        TextView textView = (TextView) findViewById(C0014R$id.btn_back);
         this.backBtn = textView;
         textView.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.fsgesture.DemoIntroduceAct.AnonymousClass1 */
@@ -28,7 +28,7 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
                 DemoIntroduceAct.this.finish();
             }
         });
-        TextView textView2 = (TextView) findViewById(C0015R$id.btn_next);
+        TextView textView2 = (TextView) findViewById(C0014R$id.btn_next);
         this.nextBtn = textView2;
         textView2.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.fsgesture.DemoIntroduceAct.AnonymousClass2 */
@@ -43,7 +43,7 @@ public class DemoIntroduceAct extends FsGestureDemoBaseActiivy {
                 DemoIntroduceAct.this.finish();
             }
         });
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0015R$id.intro_container);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0014R$id.intro_container);
         this.mIntroContainer = relativeLayout;
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle(relativeLayout);
     }

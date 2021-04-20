@@ -15,8 +15,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
@@ -106,21 +106,21 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         this.mUniqueChannelsInRow = set;
         bindHeader();
         bindActions();
-        View findViewById = findViewById(C0015R$id.turn_off_notifications);
+        View findViewById = findViewById(C0014R$id.turn_off_notifications);
         findViewById.setOnClickListener(getTurnOffNotificationsClickListener());
         findViewById.setVisibility((!findViewById.hasOnClickListeners() || this.mIsNonBlockable) ? 8 : 0);
-        View findViewById2 = findViewById(C0015R$id.done);
+        View findViewById2 = findViewById(C0014R$id.done);
         findViewById2.setOnClickListener(this.mOnDone);
         findViewById2.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
     }
 
     private void bindActions() {
         View.OnClickListener settingsOnClickListener = getSettingsOnClickListener();
-        View findViewById = findViewById(C0015R$id.info);
+        View findViewById = findViewById(C0014R$id.info);
         findViewById.setOnClickListener(settingsOnClickListener);
         findViewById.setVisibility(findViewById.hasOnClickListeners() ? 0 : 8);
-        findViewById(C0015R$id.settings_link).setOnClickListener(settingsOnClickListener);
-        ((TextView) findViewById(C0015R$id.non_configurable_text)).setText(getResources().getString(C0021R$string.no_shortcut, this.mAppName));
+        findViewById(C0014R$id.settings_link).setOnClickListener(settingsOnClickListener);
+        ((TextView) findViewById(C0014R$id.non_configurable_text)).setText(getResources().getString(C0020R$string.no_shortcut, this.mAppName));
     }
 
     private void bindHeader() {
@@ -199,12 +199,12 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         } catch (PackageManager.NameNotFoundException unused) {
             this.mPkgIcon = this.mPm.getDefaultActivityIcon();
         }
-        ((TextView) findViewById(C0015R$id.name)).setText(this.mAppName);
-        ((ImageView) findViewById(C0015R$id.icon)).setImageDrawable(this.mPkgIcon);
+        ((TextView) findViewById(C0014R$id.name)).setText(this.mAppName);
+        ((ImageView) findViewById(C0014R$id.icon)).setImageDrawable(this.mPkgIcon);
     }
 
     private void bindDelegate() {
-        TextView textView = (TextView) findViewById(C0015R$id.delegate_name);
+        TextView textView = (TextView) findViewById(C0014R$id.delegate_name);
         if (!TextUtils.equals(this.mPackageName, this.mDelegatePkg)) {
             textView.setVisibility(0);
         } else {
@@ -229,10 +229,10 @@ public class PartialConversationInfo extends LinearLayout implements Notificatio
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0020R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0020R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 

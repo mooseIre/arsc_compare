@@ -8,10 +8,10 @@ import kotlin.jvm.internal.Lambda;
 
 /* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationPanelViewController.kt */
-public final class MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2 extends Lambda implements Function1<View, Boolean> {
-    public static final MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2 INSTANCE = new MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2();
+public final class MiuiNotificationPanelViewController$startNotificationWakeAnimation$animateShadeViews$2 extends Lambda implements Function1<View, Boolean> {
+    public static final MiuiNotificationPanelViewController$startNotificationWakeAnimation$animateShadeViews$2 INSTANCE = new MiuiNotificationPanelViewController$startNotificationWakeAnimation$animateShadeViews$2();
 
-    MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$2() {
+    MiuiNotificationPanelViewController$startNotificationWakeAnimation$animateShadeViews$2() {
         super(1);
     }
 

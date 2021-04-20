@@ -17,9 +17,9 @@ import android.view.animation.Interpolator;
 import android.view.animation.PathInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Prefs;
 import com.android.systemui.statusbar.notification.row.NotificationConversationInfo;
@@ -213,24 +213,24 @@ public final class PriorityOnboardingDialogController {
                     if (dialog5 != null) {
                         dialog5.setContentView(this.view);
                         dialog5.setCanceledOnTouchOutside(true);
-                        TextView textView = (TextView) dialog5.findViewById(C0015R$id.done_button);
+                        TextView textView = (TextView) dialog5.findViewById(C0014R$id.done_button);
                         if (textView != null) {
                             textView.setOnClickListener(new PriorityOnboardingDialogController$initDialog$$inlined$apply$lambda$1(this));
                         }
-                        TextView textView2 = (TextView) dialog5.findViewById(C0015R$id.settings_button);
+                        TextView textView2 = (TextView) dialog5.findViewById(C0014R$id.settings_button);
                         if (textView2 != null) {
                             textView2.setOnClickListener(new PriorityOnboardingDialogController$initDialog$$inlined$apply$lambda$2(this));
                         }
-                        ImageView imageView = (ImageView) dialog5.findViewById(C0015R$id.conversation_icon);
+                        ImageView imageView = (ImageView) dialog5.findViewById(C0014R$id.conversation_icon);
                         if (imageView != null) {
                             imageView.setImageDrawable(this.icon);
                         }
-                        ImageView imageView2 = (ImageView) dialog5.findViewById(C0015R$id.icon);
+                        ImageView imageView2 = (ImageView) dialog5.findViewById(C0014R$id.icon);
                         if (imageView2 != null) {
                             imageView2.setImageDrawable(this.badge);
                         }
-                        ImageView imageView3 = (ImageView) dialog5.findViewById(C0015R$id.conversation_icon_badge_ring);
-                        ImageView imageView4 = (ImageView) dialog5.findViewById(C0015R$id.conversation_icon_badge_bg);
+                        ImageView imageView3 = (ImageView) dialog5.findViewById(C0014R$id.conversation_icon_badge_ring);
+                        ImageView imageView4 = (ImageView) dialog5.findViewById(C0014R$id.conversation_icon_badge_bg);
                         Intrinsics.checkExpressionValueIsNotNull(imageView3, "mImportanceRingView");
                         Drawable drawable = imageView3.getDrawable();
                         if (drawable != null) {
@@ -272,20 +272,20 @@ public final class PriorityOnboardingDialogController {
                                 animatorSet.playSequentially(ofInt, ofInt2);
                                 Dialog dialog6 = this.dialog;
                                 if (dialog6 != null) {
-                                    int dimensionPixelSize5 = dialog6.getContext().getResources().getDimensionPixelSize(C0012R$dimen.conversation_onboarding_bullet_gap_width);
+                                    int dimensionPixelSize5 = dialog6.getContext().getResources().getDimensionPixelSize(C0011R$dimen.conversation_onboarding_bullet_gap_width);
                                     SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
-                                    spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_show_at_top_text), new BulletSpan(dimensionPixelSize5), 0);
+                                    spannableStringBuilder.append(dialog5.getContext().getText(C0020R$string.priority_onboarding_show_at_top_text), new BulletSpan(dimensionPixelSize5), 0);
                                     spannableStringBuilder.append((CharSequence) System.lineSeparator());
-                                    spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_show_avatar_text), new BulletSpan(dimensionPixelSize5), 0);
+                                    spannableStringBuilder.append(dialog5.getContext().getText(C0020R$string.priority_onboarding_show_avatar_text), new BulletSpan(dimensionPixelSize5), 0);
                                     if (this.showsAsBubble) {
                                         spannableStringBuilder.append((CharSequence) System.lineSeparator());
-                                        spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_appear_as_bubble_text), new BulletSpan(dimensionPixelSize5), 0);
+                                        spannableStringBuilder.append(dialog5.getContext().getText(C0020R$string.priority_onboarding_appear_as_bubble_text), new BulletSpan(dimensionPixelSize5), 0);
                                     }
                                     if (this.ignoresDnd) {
                                         spannableStringBuilder.append((CharSequence) System.lineSeparator());
-                                        spannableStringBuilder.append(dialog5.getContext().getText(C0021R$string.priority_onboarding_ignores_dnd_text), new BulletSpan(dimensionPixelSize5), 0);
+                                        spannableStringBuilder.append(dialog5.getContext().getText(C0020R$string.priority_onboarding_ignores_dnd_text), new BulletSpan(dimensionPixelSize5), 0);
                                     }
-                                    ((TextView) dialog5.findViewById(C0015R$id.behaviors)).setText(spannableStringBuilder);
+                                    ((TextView) dialog5.findViewById(C0014R$id.behaviors)).setText(spannableStringBuilder);
                                     Window window2 = dialog5.getWindow();
                                     if (window2 != null) {
                                         window2.setBackgroundDrawable(new ColorDrawable(0));

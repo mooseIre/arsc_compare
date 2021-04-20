@@ -12,7 +12,7 @@ import android.widget.TextView;
 import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternChecker;
 import com.android.internal.widget.LockscreenCredential;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 
 public class AuthCredentialPasswordView extends AuthCredentialView implements TextView.OnEditorActionListener, View.OnClickListener {
     private final InputMethodManager mImm = ((InputMethodManager) ((LinearLayout) this).mContext.getSystemService(InputMethodManager.class));
@@ -26,7 +26,7 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     @Override // com.android.systemui.biometrics.AuthCredentialView
     public void onFinishInflate() {
         super.onFinishInflate();
-        ImeAwareEditText findViewById = findViewById(C0015R$id.lockPassword);
+        ImeAwareEditText findViewById = findViewById(C0014R$id.lockPassword);
         this.mPasswordField = findViewById;
         findViewById.setOnEditorActionListener(this);
         this.mPasswordField.setOnKeyListener(new View.OnKeyListener() {
@@ -36,8 +36,8 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
                 return AuthCredentialPasswordView.this.lambda$onFinishInflate$0$AuthCredentialPasswordView(view, i, keyEvent);
             }
         });
-        findViewById(C0015R$id.footerLeftButton).setOnClickListener(this);
-        findViewById(C0015R$id.footerRightButton).setOnClickListener(this);
+        findViewById(C0014R$id.footerLeftButton).setOnClickListener(this);
+        findViewById(C0014R$id.footerRightButton).setOnClickListener(this);
     }
 
     /* access modifiers changed from: private */
@@ -120,10 +120,10 @@ public class AuthCredentialPasswordView extends AuthCredentialView implements Te
     }
 
     public void onClick(View view) {
-        if (view.getId() == C0015R$id.footerLeftButton) {
+        if (view.getId() == C0014R$id.footerLeftButton) {
             this.mContainerView.sendEarlyUserCanceled();
             this.mContainerView.animateAway(1);
-        } else if (view.getId() == C0015R$id.footerRightButton) {
+        } else if (view.getId() == C0014R$id.footerRightButton) {
             checkPasswordAndUnlock();
         }
     }

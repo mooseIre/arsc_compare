@@ -11,9 +11,9 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import codeinjection.CodeInjection;
 import com.android.keyguard.CarrierText;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
@@ -56,14 +56,14 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     @Override // com.android.systemui.qs.MiuiHeaderView
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mCarrierText = (CarrierText) findViewById(C0015R$id.notification_shade_carrier);
-        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
+        this.mCarrierText = (CarrierText) findViewById(C0014R$id.notification_shade_carrier);
+        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
         this.mFullscreenNetworkSpeedView = networkSpeedView;
         networkSpeedView.setVisibilityByStatusBar(true);
-        LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.statusIcons);
+        LinearLayout linearLayout = (LinearLayout) findViewById(C0014R$id.statusIcons);
         this.mStatusIcons = linearLayout;
         this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(linearLayout, (CommandQueue) Dependency.get(CommandQueue.class), true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
-        this.mBattery = (MiuiBatteryMeterView) findViewById(C0015R$id.battery);
+        this.mBattery = (MiuiBatteryMeterView) findViewById(C0014R$id.battery);
         this.mLastOrientation = getResources().getConfiguration().orientation;
         updateLayout();
     }
@@ -104,7 +104,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
                 RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) this.mDateView.getLayoutParams();
                 layoutParams.removeRule(6);
                 layoutParams.removeRule(12);
-                layoutParams.addRule(2, C0015R$id.notification_shade_carrier);
+                layoutParams.addRule(2, C0014R$id.notification_shade_carrier);
                 this.mDateView.setLayoutParams(layoutParams);
                 RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mCarrierText.getLayoutParams();
                 layoutParams2.removeRule(17);
@@ -119,7 +119,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
             this.mCarrierText.setVisibility(8);
             RelativeLayout.LayoutParams layoutParams3 = (RelativeLayout.LayoutParams) this.mDateView.getLayoutParams();
             layoutParams3.removeRule(2);
-            layoutParams3.addRule(6, C0015R$id.system_icon_area);
+            layoutParams3.addRule(6, C0014R$id.system_icon_area);
             layoutParams3.addRule(12);
             this.mDateView.setLayoutParams(layoutParams3);
             return;
@@ -129,16 +129,16 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         updateShortCutVisibility();
         RelativeLayout.LayoutParams layoutParams4 = (RelativeLayout.LayoutParams) this.mDateView.getLayoutParams();
         layoutParams4.removeRule(2);
-        layoutParams4.addRule(6, C0015R$id.system_icon_area);
+        layoutParams4.addRule(6, C0014R$id.system_icon_area);
         layoutParams4.addRule(12);
         this.mDateView.setLayoutParams(layoutParams4);
         if (showCarrier) {
             RelativeLayout.LayoutParams layoutParams5 = (RelativeLayout.LayoutParams) this.mCarrierText.getLayoutParams();
             layoutParams5.removeRule(20);
-            layoutParams5.addRule(6, C0015R$id.system_icon_area);
+            layoutParams5.addRule(6, C0014R$id.system_icon_area);
             layoutParams5.addRule(12);
-            layoutParams5.addRule(17, C0015R$id.date_time);
-            layoutParams5.setMarginStart(getResources().getDimensionPixelOffset(C0012R$dimen.notch_expanded_header_carrier_margin));
+            layoutParams5.addRule(17, C0014R$id.date_time);
+            layoutParams5.setMarginStart(getResources().getDimensionPixelOffset(C0011R$dimen.notch_expanded_header_carrier_margin));
             this.mCarrierText.setLayoutParams(layoutParams5);
             this.mCarrierText.setVisibility(0);
             return;
@@ -151,12 +151,12 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         if (Build.IS_CT_CUSTOMIZATION_TEST || Build.IS_CU_CUSTOMIZATION_TEST || Build.IS_CM_CUSTOMIZATION_TEST || "TW".equalsIgnoreCase(SystemProperties.get("ro.miui.region", CodeInjection.MD5))) {
             return true;
         }
-        return ((RelativeLayout) this).mContext.getResources().getBoolean(C0010R$bool.show_carrier_in_status_bar_header);
+        return ((RelativeLayout) this).mContext.getResources().getBoolean(C0009R$bool.show_carrier_in_status_bar_header);
     }
 
     @Override // com.android.systemui.qs.MiuiHeaderView
     public void themeChanged() {
-        boolean z = getResources().getBoolean(C0010R$bool.expanded_status_bar_darkmode);
+        boolean z = getResources().getBoolean(C0009R$bool.expanded_status_bar_darkmode);
         Rect rect = new Rect(0, 0, 0, 0);
         float f = z ? 1.0f : 0.0f;
         DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);

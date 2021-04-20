@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 
 public class WorkLockActivity extends Activity {
@@ -51,7 +51,7 @@ public class WorkLockActivity extends Activity {
         }
         setOverlayWithDecorCaptionEnabled(true);
         View view = new View(this);
-        view.setContentDescription(getString(C0021R$string.accessibility_desc_work_lock));
+        view.setContentDescription(getString(C0020R$string.accessibility_desc_work_lock));
         view.setBackgroundColor(getPrimaryColor());
         setContentView(view);
     }

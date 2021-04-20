@@ -12,7 +12,7 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 
 public class WifiDebuggingSecondaryUserActivity extends AlertActivity implements DialogInterface.OnClickListener {
     private WifiChangeReceiver mWifiChangeReceiver;
@@ -25,8 +25,8 @@ public class WifiDebuggingSecondaryUserActivity extends AlertActivity implements
         this.mWifiManager = (WifiManager) getSystemService("wifi");
         this.mWifiChangeReceiver = new WifiChangeReceiver(this);
         AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(C0021R$string.wifi_debugging_secondary_user_title);
-        alertParams.mMessage = getString(C0021R$string.wifi_debugging_secondary_user_message);
+        alertParams.mTitle = getString(C0020R$string.wifi_debugging_secondary_user_title);
+        alertParams.mMessage = getString(C0020R$string.wifi_debugging_secondary_user_message);
         alertParams.mPositiveButtonText = getString(17039370);
         alertParams.mPositiveButtonListener = this;
         setupAlert();

@@ -25,10 +25,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.R$styleable;
 import com.android.systemui.plugins.ActivityStarter;
@@ -59,7 +59,7 @@ public class SmartReplyView extends ViewGroup {
     private final int mDefaultTextColor;
     private final int mDefaultTextColorDarkBg;
     private final int mDoubleLineButtonPaddingHorizontal;
-    private final int mHeightUpperLimit = NotificationUtils.getFontScaledHeight(((ViewGroup) this).mContext, C0012R$dimen.smart_reply_button_max_height);
+    private final int mHeightUpperLimit = NotificationUtils.getFontScaledHeight(((ViewGroup) this).mContext, C0011R$dimen.smart_reply_button_max_height);
     private final KeyguardDismissUtil mKeyguardDismissUtil = ((KeyguardDismissUtil) Dependency.get(KeyguardDismissUtil.class));
     private final double mMinStrokeContrast;
     private final NotificationRemoteInputManager mRemoteInputManager = ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class));
@@ -84,13 +84,13 @@ public class SmartReplyView extends ViewGroup {
 
     public SmartReplyView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        int color = context.getColor(C0011R$color.smart_reply_button_background);
+        int color = context.getColor(C0010R$color.smart_reply_button_background);
         this.mCurrentBackgroundColor = color;
         this.mDefaultBackgroundColor = color;
-        this.mDefaultTextColor = ((ViewGroup) this).mContext.getColor(C0011R$color.smart_reply_button_text);
-        this.mDefaultTextColorDarkBg = ((ViewGroup) this).mContext.getColor(C0011R$color.smart_reply_button_text_dark_bg);
-        this.mDefaultStrokeColor = ((ViewGroup) this).mContext.getColor(C0011R$color.smart_reply_button_stroke);
-        int color2 = ((ViewGroup) this).mContext.getColor(C0011R$color.notification_ripple_untinted_color);
+        this.mDefaultTextColor = ((ViewGroup) this).mContext.getColor(C0010R$color.smart_reply_button_text);
+        this.mDefaultTextColorDarkBg = ((ViewGroup) this).mContext.getColor(C0010R$color.smart_reply_button_text_dark_bg);
+        this.mDefaultStrokeColor = ((ViewGroup) this).mContext.getColor(C0010R$color.smart_reply_button_stroke);
+        int color2 = ((ViewGroup) this).mContext.getColor(C0010R$color.notification_ripple_untinted_color);
         this.mRippleColor = color2;
         this.mRippleColorDarkBg = Color.argb(Color.alpha(color2), 255, 255, 255);
         this.mMinStrokeContrast = ContrastColorUtil.calculateContrast(this.mDefaultStrokeColor, this.mDefaultBackgroundColor);
@@ -167,12 +167,12 @@ public class SmartReplyView extends ViewGroup {
     }
 
     public static SmartReplyView inflate(Context context) {
-        return (SmartReplyView) LayoutInflater.from(context).inflate(C0017R$layout.smart_reply_view, (ViewGroup) null);
+        return (SmartReplyView) LayoutInflater.from(context).inflate(C0016R$layout.smart_reply_view, (ViewGroup) null);
     }
 
     @VisibleForTesting
     static Button inflateReplyButton(SmartReplyView smartReplyView, Context context, int i, SmartReplies smartReplies, SmartReplyController smartReplyController, NotificationEntry notificationEntry, boolean z) {
-        Button button = (Button) LayoutInflater.from(context).inflate(C0017R$layout.smart_reply_button, (ViewGroup) smartReplyView, false);
+        Button button = (Button) LayoutInflater.from(context).inflate(C0016R$layout.smart_reply_button, (ViewGroup) smartReplyView, false);
         CharSequence charSequence = smartReplies.choices.get(i);
         button.setText(charSequence);
         View.OnClickListener r0 = new View.OnClickListener(new ActivityStarter.OnDismissAction(smartReplies, charSequence, i, button, smartReplyController, notificationEntry, context) {
@@ -225,7 +225,7 @@ public class SmartReplyView extends ViewGroup {
 
             public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
                 super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, SmartReplyView.this.getResources().getString(C0021R$string.accessibility_send_smart_reply)));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, SmartReplyView.this.getResources().getString(C0020R$string.accessibility_send_smart_reply)));
             }
         });
         setButtonColors(button, smartReplyView.mCurrentBackgroundColor, smartReplyView.mDefaultStrokeColor, smartReplyView.mDefaultTextColor, smartReplyView.mRippleColor, smartReplyView.mStrokeWidth);
@@ -259,10 +259,10 @@ public class SmartReplyView extends ViewGroup {
     @VisibleForTesting
     static Button inflateActionButton(SmartReplyView smartReplyView, Context context, Context context2, int i, SmartActions smartActions, SmartReplyController smartReplyController, NotificationEntry notificationEntry, HeadsUpManager headsUpManager, boolean z) {
         Notification.Action action = smartActions.actions.get(i);
-        Button button = (Button) LayoutInflater.from(context).inflate(C0017R$layout.smart_action_button, (ViewGroup) smartReplyView, false);
+        Button button = (Button) LayoutInflater.from(context).inflate(C0016R$layout.smart_action_button, (ViewGroup) smartReplyView, false);
         button.setText(action.title);
         Drawable loadDrawable = action.getIcon().loadDrawable(context2);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.smart_action_button_icon_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.smart_action_button_icon_size);
         loadDrawable.setBounds(0, 0, dimensionPixelSize, dimensionPixelSize);
         button.setCompoundDrawables(loadDrawable, null, null, null);
         View.OnClickListener r10 = new View.OnClickListener(action, smartReplyController, notificationEntry, i, smartActions, headsUpManager) {

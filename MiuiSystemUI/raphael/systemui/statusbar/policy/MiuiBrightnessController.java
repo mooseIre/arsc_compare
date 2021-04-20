@@ -18,7 +18,6 @@ import android.service.vr.IVrManager;
 import android.service.vr.IVrStateCallbacks;
 import android.util.Log;
 import android.util.MathUtils;
-import codeinjection.CodeInjection;
 import com.android.internal.BrightnessSynchronizer;
 import com.android.internal.logging.MetricsLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
@@ -36,7 +35,6 @@ import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import miui.mqsas.sdk.MQSEventManagerDelegate;
 
 public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable {
     private static final Uri BRIGHTNESS_FLOAT_URI = Settings.System.getUriFor("screen_brightness_float");
@@ -292,14 +290,12 @@ public class MiuiBrightnessController implements ToggleSlider.Listener, Dumpable
     public void onStart(int i) {
         Log.d("BrightnessController", "ToggleSlider: onStart: value: " + i);
         this.mStartValue = i;
-        MQSEventManagerDelegate.getInstance().reportBrightnessEvent(0, i, this.mAutomatic ? 1 : 0, CodeInjection.MD5);
     }
 
     @Override // com.android.systemui.settings.ToggleSlider.Listener
     public void onStop(int i) {
         Log.d("BrightnessController", "ToggleSlider: onStop: value: " + i);
         ((SystemUIStat) Dependency.get(SystemUIStat.class)).onSlideBrightnessBar(this.mStartValue, i, this.mAutomatic);
-        MQSEventManagerDelegate.getInstance().reportBrightnessEvent(1, i, this.mAutomatic ? 1 : 0, CodeInjection.MD5);
     }
 
     public void onChanged(ToggleSlider toggleSlider, final boolean z, int i, boolean z2) {

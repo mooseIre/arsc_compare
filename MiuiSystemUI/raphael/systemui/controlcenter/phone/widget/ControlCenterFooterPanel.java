@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,13 +57,13 @@ public final class ControlCenterFooterPanel extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View requireViewById = requireViewById(C0015R$id.settings_footer);
+        View requireViewById = requireViewById(C0014R$id.settings_footer);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.settings_footer)");
         this.settingsFooter = (QSControlFooter) requireViewById;
-        View requireViewById2 = requireViewById(C0015R$id.footer_divider);
+        View requireViewById2 = requireViewById(C0014R$id.footer_divider);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.footer_divider)");
         this.divider = requireViewById2;
-        View requireViewById3 = requireViewById(C0015R$id.qs_expand_indicator);
+        View requireViewById3 = requireViewById(C0014R$id.qs_expand_indicator);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById(R.id.qs_expand_indicator)");
         this.indicator = (ImageView) requireViewById3;
     }
@@ -71,7 +71,7 @@ public final class ControlCenterFooterPanel extends LinearLayout {
     public final void updateResources() {
         ImageView imageView = this.indicator;
         if (imageView != null) {
-            imageView.setImageDrawable(getContext().getDrawable(C0013R$drawable.qs_control_tiles_indicator));
+            imageView.setImageDrawable(getContext().getDrawable(C0012R$drawable.qs_control_tiles_indicator));
             QSControlFooter qSControlFooter = this.settingsFooter;
             if (qSControlFooter != null) {
                 qSControlFooter.updateResources();

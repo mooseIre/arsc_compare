@@ -13,8 +13,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.miui.systemui.BuildConfig;
 import miui.telephony.TelephonyManager;
@@ -123,10 +123,10 @@ public class UsbNotificationController {
     private void refreshWhenUsbConnectChanged(boolean z) {
         if (SUPPORT_DISABLE_USB_BY_SIM && z && this.mDisableUsbBySim && !this.mIsDialogShowing) {
             this.mIsDialogShowing = true;
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0022R$style.Theme_Dialog_Alert);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.Theme_Dialog_Alert);
             builder.setCancelable(true);
-            builder.setTitle(C0021R$string.activate_usb_title);
-            builder.setMessage(C0021R$string.activate_usb_message);
+            builder.setTitle(C0020R$string.activate_usb_title);
+            builder.setMessage(C0020R$string.activate_usb_message);
             builder.setIconAttribute(16843605);
             builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
             AlertDialog create = builder.create();

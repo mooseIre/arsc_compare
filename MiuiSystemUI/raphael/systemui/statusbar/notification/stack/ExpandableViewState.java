@@ -5,18 +5,18 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.view.View;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 
 public class ExpandableViewState extends ViewState {
-    private static final int TAG_ANIMATOR_HEIGHT = C0015R$id.height_animator_tag;
-    private static final int TAG_ANIMATOR_TOP_INSET = C0015R$id.top_inset_animator_tag;
-    private static final int TAG_END_HEIGHT = C0015R$id.height_animator_end_value_tag;
-    private static final int TAG_END_TOP_INSET = C0015R$id.top_inset_animator_end_value_tag;
-    private static final int TAG_START_HEIGHT = C0015R$id.height_animator_start_value_tag;
-    private static final int TAG_START_TOP_INSET = C0015R$id.top_inset_animator_start_value_tag;
+    private static final int TAG_ANIMATOR_HEIGHT = C0014R$id.height_animator_tag;
+    private static final int TAG_ANIMATOR_TOP_INSET = C0014R$id.top_inset_animator_tag;
+    private static final int TAG_END_HEIGHT = C0014R$id.height_animator_end_value_tag;
+    private static final int TAG_END_TOP_INSET = C0014R$id.top_inset_animator_end_value_tag;
+    private static final int TAG_START_HEIGHT = C0014R$id.height_animator_start_value_tag;
+    private static final int TAG_START_TOP_INSET = C0014R$id.top_inset_animator_start_value_tag;
     public boolean belowSpeedBump;
     public int clipTopAmount;
     public boolean dimmed;

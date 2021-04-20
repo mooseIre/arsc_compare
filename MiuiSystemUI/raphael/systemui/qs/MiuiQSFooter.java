@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.qs.TouchAnimator;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +42,7 @@ public final class MiuiQSFooter extends FrameLayout implements QSFooter {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0015R$id.footer_page_indicator);
+        View findViewById = findViewById(C0014R$id.footer_page_indicator);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.footer_page_indicator)");
         this.mPageIndicator = (MiuiPageIndicator) findViewById;
         updateResources();

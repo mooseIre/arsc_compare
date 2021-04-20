@@ -13,10 +13,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Space;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.recents.OverviewProxyService;
 import com.android.systemui.shared.system.QuickStepContract;
@@ -69,10 +69,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
 
     private void inflateChildren() {
         removeAllViews();
-        FrameLayout frameLayout = (FrameLayout) this.mLayoutInflater.inflate(C0017R$layout.navigation_layout, (ViewGroup) this, false);
+        FrameLayout frameLayout = (FrameLayout) this.mLayoutInflater.inflate(C0016R$layout.navigation_layout, (ViewGroup) this, false);
         this.mHorizontal = frameLayout;
         addView(frameLayout);
-        FrameLayout frameLayout2 = (FrameLayout) this.mLayoutInflater.inflate(C0017R$layout.navigation_layout_vertical, (ViewGroup) this, false);
+        FrameLayout frameLayout2 = (FrameLayout) this.mLayoutInflater.inflate(C0016R$layout.navigation_layout_vertical, (ViewGroup) this, false);
         this.mVertical = frameLayout2;
         addView(frameLayout2);
         updateAlternativeOrder();
@@ -82,9 +82,9 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     public String getDefaultLayout() {
         int i;
         if (QuickStepContract.isGesturalMode(this.mNavBarMode)) {
-            i = C0021R$string.config_navBarLayoutHandle;
+            i = C0020R$string.config_navBarLayoutHandle;
         } else if (this.mOverviewProxyService.shouldShowSwipeUpUI()) {
-            i = C0021R$string.config_navBarLayoutQuickstep;
+            i = C0020R$string.config_navBarLayoutQuickstep;
         } else {
             i = KeyOrderObserver.Companion.getDefaultLayoutResource(((FrameLayout) this).mContext);
         }
@@ -143,10 +143,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     }
 
     private void updateAlternativeOrder() {
-        updateAlternativeOrder(this.mHorizontal.findViewById(C0015R$id.ends_group));
-        updateAlternativeOrder(this.mHorizontal.findViewById(C0015R$id.center_group));
-        updateAlternativeOrder(this.mVertical.findViewById(C0015R$id.ends_group));
-        updateAlternativeOrder(this.mVertical.findViewById(C0015R$id.center_group));
+        updateAlternativeOrder(this.mHorizontal.findViewById(C0014R$id.ends_group));
+        updateAlternativeOrder(this.mHorizontal.findViewById(C0014R$id.center_group));
+        updateAlternativeOrder(this.mVertical.findViewById(C0014R$id.ends_group));
+        updateAlternativeOrder(this.mVertical.findViewById(C0014R$id.center_group));
     }
 
     private void updateAlternativeOrder(View view) {
@@ -156,10 +156,10 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     }
 
     private void initiallyFill(ButtonDispatcher buttonDispatcher) {
-        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C0015R$id.ends_group));
-        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C0015R$id.center_group));
-        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C0015R$id.ends_group));
-        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C0015R$id.center_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C0014R$id.ends_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mHorizontal.findViewById(C0014R$id.center_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C0014R$id.ends_group));
+        addAll(buttonDispatcher, (ViewGroup) this.mVertical.findViewById(C0014R$id.center_group));
     }
 
     private void addAll(ButtonDispatcher buttonDispatcher, ViewGroup viewGroup) {
@@ -187,14 +187,14 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
         String[] split2 = split[0].split(",");
         String[] split3 = split[1].split(",");
         String[] split4 = split[2].split(",");
-        inflateButtons(split2, (ViewGroup) this.mHorizontal.findViewById(C0015R$id.ends_group), false, true);
-        inflateButtons(split2, (ViewGroup) this.mVertical.findViewById(C0015R$id.ends_group), true, true);
-        inflateButtons(split3, (ViewGroup) this.mHorizontal.findViewById(C0015R$id.center_group), false, false);
-        inflateButtons(split3, (ViewGroup) this.mVertical.findViewById(C0015R$id.center_group), true, false);
-        addGravitySpacer((LinearLayout) this.mHorizontal.findViewById(C0015R$id.ends_group));
-        addGravitySpacer((LinearLayout) this.mVertical.findViewById(C0015R$id.ends_group));
-        inflateButtons(split4, (ViewGroup) this.mHorizontal.findViewById(C0015R$id.ends_group), false, false);
-        inflateButtons(split4, (ViewGroup) this.mVertical.findViewById(C0015R$id.ends_group), true, false);
+        inflateButtons(split2, (ViewGroup) this.mHorizontal.findViewById(C0014R$id.ends_group), false, true);
+        inflateButtons(split2, (ViewGroup) this.mVertical.findViewById(C0014R$id.ends_group), true, true);
+        inflateButtons(split3, (ViewGroup) this.mHorizontal.findViewById(C0014R$id.center_group), false, false);
+        inflateButtons(split3, (ViewGroup) this.mVertical.findViewById(C0014R$id.center_group), true, false);
+        addGravitySpacer((LinearLayout) this.mHorizontal.findViewById(C0014R$id.ends_group));
+        addGravitySpacer((LinearLayout) this.mVertical.findViewById(C0014R$id.ends_group));
+        inflateButtons(split4, (ViewGroup) this.mHorizontal.findViewById(C0014R$id.ends_group), false, false);
+        inflateButtons(split4, (ViewGroup) this.mVertical.findViewById(C0014R$id.ends_group), true, false);
         updateButtonDispatchersCurrentView();
         updateBackground(true);
     }
@@ -272,38 +272,38 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
             extractButton = extractButton("menu_ime");
         }
         if ("home".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.home, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.home, viewGroup, false);
         }
         if ("back".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.back, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.back, viewGroup, false);
         }
         if ("recent".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.recent_apps, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.recent_apps, viewGroup, false);
         }
         if ("menu_ime".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.menu_ime, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.menu_ime, viewGroup, false);
         }
         if ("space".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.nav_key_space, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.nav_key_space, viewGroup, false);
         }
         if ("clipboard".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.clipboard, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.clipboard, viewGroup, false);
         }
         if ("contextual".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.contextual, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.contextual, viewGroup, false);
         }
         if ("home_handle".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.home_handle, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.home_handle, viewGroup, false);
         }
         if ("ime_switcher".equals(extractButton)) {
-            return layoutInflater.inflate(C0017R$layout.ime_switcher, viewGroup, false);
+            return layoutInflater.inflate(C0016R$layout.ime_switcher, viewGroup, false);
         }
         if (!extractButton.startsWith("key")) {
             return null;
         }
         String extractImage = extractImage(extractButton);
         int extractKeycode = extractKeycode(extractButton);
-        View inflate = layoutInflater.inflate(C0017R$layout.custom_key, viewGroup, false);
+        View inflate = layoutInflater.inflate(C0016R$layout.custom_key, viewGroup, false);
         KeyButtonView keyButtonView = (KeyButtonView) inflate;
         keyButtonView.setCode(extractKeycode);
         if (extractImage != null) {
@@ -368,8 +368,8 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
                 this.mButtonDispatchers.valueAt(i).clear();
             }
         }
-        clearAllChildren((ViewGroup) this.mHorizontal.findViewById(C0015R$id.nav_buttons));
-        clearAllChildren((ViewGroup) this.mVertical.findViewById(C0015R$id.nav_buttons));
+        clearAllChildren((ViewGroup) this.mHorizontal.findViewById(C0014R$id.nav_buttons));
+        clearAllChildren((ViewGroup) this.mVertical.findViewById(C0014R$id.nav_buttons));
     }
 
     private void clearAllChildren(ViewGroup viewGroup) {
@@ -391,11 +391,11 @@ public class NavigationBarInflaterView extends FrameLayout implements Navigation
     public void updateBackground(boolean z) {
         if (z) {
             boolean z2 = !((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled();
-            this.mHorizontal.setBackgroundResource(z2 ? C0013R$drawable.ic_sysbar_bg_darkmode_cts : C0013R$drawable.ic_sysbar_bg_darkmode);
-            this.mVertical.setBackgroundResource(z2 ? C0013R$drawable.ic_sysbar_bg_land_darkmode_cts : C0013R$drawable.ic_sysbar_bg_land_darkmode);
+            this.mHorizontal.setBackgroundResource(z2 ? C0012R$drawable.ic_sysbar_bg_darkmode_cts : C0012R$drawable.ic_sysbar_bg_darkmode);
+            this.mVertical.setBackgroundResource(z2 ? C0012R$drawable.ic_sysbar_bg_land_darkmode_cts : C0012R$drawable.ic_sysbar_bg_land_darkmode);
             return;
         }
-        this.mHorizontal.setBackgroundResource(C0013R$drawable.ic_sysbar_bg);
-        this.mVertical.setBackgroundResource(C0013R$drawable.ic_sysbar_bg_land);
+        this.mHorizontal.setBackgroundResource(C0012R$drawable.ic_sysbar_bg);
+        this.mVertical.setBackgroundResource(C0012R$drawable.ic_sysbar_bg_land);
     }
 }

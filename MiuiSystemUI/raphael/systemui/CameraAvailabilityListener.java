@@ -106,9 +106,9 @@ public final class CameraAvailabilityListener {
             if (systemService != null) {
                 CameraManager cameraManager = (CameraManager) systemService;
                 Resources resources = context.getResources();
-                String string = resources.getString(C0021R$string.config_frontBuiltInDisplayCutoutProtection);
-                String string2 = resources.getString(C0021R$string.config_protectedCameraId);
-                String string3 = resources.getString(C0021R$string.config_cameraProtectionExcludedPackages);
+                String string = resources.getString(C0020R$string.config_frontBuiltInDisplayCutoutProtection);
+                String string2 = resources.getString(C0020R$string.config_protectedCameraId);
+                String string3 = resources.getString(C0020R$string.config_cameraProtectionExcludedPackages);
                 Intrinsics.checkExpressionValueIsNotNull(string, "pathString");
                 Path pathFromString = pathFromString(string);
                 Intrinsics.checkExpressionValueIsNotNull(string2, "cameraId");

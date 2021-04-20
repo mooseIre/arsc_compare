@@ -9,16 +9,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.stack.SwipeableView;
 
 public class ZenModeView extends ExpandableView implements SwipeableView {
-    private final String CONTENT_ALL_TIME = getResources().getString(C0021R$string.zen_mode_warnings_all_time_content);
-    private final String CONTENT_KEYGUARD = getResources().getString(C0021R$string.zen_mode_warnings_keyguard_content);
+    private final String CONTENT_ALL_TIME = getResources().getString(C0020R$string.zen_mode_warnings_all_time_content);
+    private final String CONTENT_KEYGUARD = getResources().getString(C0020R$string.zen_mode_warnings_keyguard_content);
     private ViewGroup mContent;
     public ZenModeViewController mController;
 
@@ -52,7 +52,7 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        ViewGroup viewGroup = (ViewGroup) findViewById(C0015R$id.content);
+        ViewGroup viewGroup = (ViewGroup) findViewById(C0014R$id.content);
         this.mContent = viewGroup;
         viewGroup.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.statusbar.notification.zen.$$Lambda$ZenModeView$_6oqLxuLrd6dpOtYMGRgCl0UadQ */
@@ -91,7 +91,7 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
     }
 
     private void loadContentViews() {
-        ((TextView) LayoutInflater.from(getContext()).inflate(C0017R$layout.item_zen_mode, this.mContent, true).findViewById(C0015R$id.zen_quit)).setOnClickListener(new View.OnClickListener() {
+        ((TextView) LayoutInflater.from(getContext()).inflate(C0016R$layout.item_zen_mode, this.mContent, true).findViewById(C0014R$id.zen_quit)).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.statusbar.notification.zen.$$Lambda$ZenModeView$IX1IT9wvL5wir1_ziDkIeeeOlqA */
 
             public final void onClick(View view) {
@@ -115,7 +115,7 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
             Log.e("ZenModeView", "resetContentText: unable to get KEY_ZEN_MODE_INTERCEPT_SCENE");
             return;
         }
-        TextView textView = (TextView) findViewById(C0015R$id.zen_content);
+        TextView textView = (TextView) findViewById(C0014R$id.zen_content);
         if (textView != null) {
             textView.setText(i == 1 ? this.CONTENT_ALL_TIME : this.CONTENT_KEYGUARD);
         }

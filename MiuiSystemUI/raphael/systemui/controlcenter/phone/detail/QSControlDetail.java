@@ -22,12 +22,12 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
@@ -145,7 +145,7 @@ public class QSControlDetail extends FrameLayout {
     public QSControlDetail(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mContext = context;
-        this.mWifiBtDetailHeight = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_detail_wifi_bt_height);
+        this.mWifiBtDetailHeight = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_detail_wifi_bt_height);
     }
 
     /* access modifiers changed from: protected */
@@ -163,29 +163,29 @@ public class QSControlDetail extends FrameLayout {
                 i = 0;
                 i2 = 0;
             } else if (getLayoutDirection() == 0) {
-                i = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_land_tiles_margin_middle);
+                i = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_land_tiles_margin_middle);
                 i2 = 0;
             } else {
-                i2 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_land_tiles_margin_middle);
+                i2 = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land) + this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_land_tiles_margin_middle);
                 i = 0;
             }
             setPadding(i, 0, i2, 0);
         }
-        this.mWifiBtDetailHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_detail_wifi_bt_height);
+        this.mWifiBtDetailHeight = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_detail_wifi_bt_height);
         updateDetailLayout();
     }
 
     public void updateResources() {
-        setBackgroundColor(this.mContext.getColor(C0011R$color.qs_control_detail_layout_bg_color));
+        setBackgroundColor(this.mContext.getColor(C0010R$color.qs_control_detail_layout_bg_color));
         updateBackground();
-        this.mQsDetailHeaderTitle.setTextAppearance(C0022R$style.TextAppearance_QSControl_DetailHeader);
-        this.mDetailSettingsButton.setTextAppearance(C0022R$style.TextAppearance_QSControl_DetailMoreButton);
-        this.mDetailSettingsButton.setBackground(this.mContext.getDrawable(C0013R$drawable.qs_control_detail_more_button_bg));
+        this.mQsDetailHeaderTitle.setTextAppearance(C0021R$style.TextAppearance_QSControl_DetailHeader);
+        this.mDetailSettingsButton.setTextAppearance(C0021R$style.TextAppearance_QSControl_DetailMoreButton);
+        this.mDetailSettingsButton.setBackground(this.mContext.getDrawable(C0012R$drawable.qs_control_detail_more_button_bg));
         this.mDetailViews.clear();
     }
 
     private void updateBackground() {
-        Drawable smoothRoundDrawable = ControlCenterUtils.getSmoothRoundDrawable(this.mContext, C0013R$drawable.qs_control_detail_bg);
+        Drawable smoothRoundDrawable = ControlCenterUtils.getSmoothRoundDrawable(this.mContext, C0012R$drawable.qs_control_detail_bg);
         if (smoothRoundDrawable != null) {
             this.mDetailContainer.setBackground(smoothRoundDrawable);
         }
@@ -196,14 +196,14 @@ public class QSControlDetail extends FrameLayout {
         super.onFinishInflate();
         setClickable(false);
         this.mDetailContent = (ViewGroup) findViewById(16908290);
-        TextView textView = (TextView) findViewById(C0015R$id.more_button);
+        TextView textView = (TextView) findViewById(C0014R$id.more_button);
         this.mDetailSettingsButton = textView;
         ControlCenterUtils.createButtonFolmeTouchStyle(textView);
-        View findViewById = findViewById(C0015R$id.qs_detail_container);
+        View findViewById = findViewById(C0014R$id.qs_detail_container);
         this.mDetailContainer = findViewById;
         findViewById.setClickable(true);
         updateBackground();
-        View findViewById2 = findViewById(C0015R$id.qs_control_detail_header);
+        View findViewById2 = findViewById(C0014R$id.qs_control_detail_header);
         this.mQsDetailHeader = findViewById2;
         this.mQsDetailHeaderTitle = (TextView) findViewById2.findViewById(16908310);
         SlidingButton findViewById3 = this.mQsDetailHeader.findViewById(16908311);
@@ -211,8 +211,8 @@ public class QSControlDetail extends FrameLayout {
         findViewById3.setFocusable(true);
         this.mQsDetailHeaderSwitch.setFocusableInTouchMode(true);
         this.mQsDetailHeaderSwitch.setImportantForAccessibility(1);
-        this.mQsDetailHeaderSwitch.setContentDescription(this.mContext.getResources().getString(C0021R$string.accessibility_detail_switch));
-        this.detailCornerRadius = this.mContext.getResources().getDimension(C0012R$dimen.qs_control_corner_general_radius);
+        this.mQsDetailHeaderSwitch.setContentDescription(this.mContext.getResources().getString(C0020R$string.accessibility_detail_switch));
+        this.detailCornerRadius = this.mContext.getResources().getDimension(C0011R$dimen.qs_control_corner_general_radius);
         this.mDetailContainer.setClipToOutline(true);
         this.mDetailContainer.setOutlineProvider(new ViewOutlineProvider() {
             /* class com.android.systemui.controlcenter.phone.detail.QSControlDetail.AnonymousClass1 */
@@ -227,7 +227,7 @@ public class QSControlDetail extends FrameLayout {
 
             public void onClick(View view) {
                 QSControlDetail qSControlDetail = QSControlDetail.this;
-                qSControlDetail.announceForAccessibility(qSControlDetail.mContext.getString(C0021R$string.accessibility_desc_quick_settings));
+                qSControlDetail.announceForAccessibility(qSControlDetail.mContext.getString(C0020R$string.accessibility_desc_quick_settings));
                 QSControlDetail.this.mDonedClicked = true;
                 QSControlDetail.this.mQsPanel.closeDetail(false);
             }
@@ -246,7 +246,7 @@ public class QSControlDetail extends FrameLayout {
     }
 
     private void updateDetailText() {
-        this.mDetailSettingsButton.setText(C0021R$string.quick_settings_more_settings);
+        this.mDetailSettingsButton.setText(C0020R$string.quick_settings_more_settings);
     }
 
     private void updateDetailLayout() {
@@ -310,7 +310,7 @@ public class QSControlDetail extends FrameLayout {
                     this.mCurrentDetailIndex = metricsCategory;
                     this.mDetailViews.put(metricsCategory, createDetailView);
                     MetricsLogger.visible(this.mContext, this.mDetailAdapter.getMetricsCategory());
-                    announceForAccessibility(this.mContext.getString(C0021R$string.accessibility_quick_settings_detail, this.mDetailAdapter.getTitle()));
+                    announceForAccessibility(this.mContext.getString(C0020R$string.accessibility_quick_settings_detail, this.mDetailAdapter.getTitle()));
                 } else {
                     throw new IllegalStateException("Must return detail view");
                 }
@@ -440,16 +440,16 @@ public class QSControlDetail extends FrameLayout {
                 sb.append((Object) this.mDetailAdapter.getTitle());
                 sb.append(" ");
                 if (z) {
-                    str = this.mContext.getResources().getString(C0021R$string.accessibility_detail_switch_on);
+                    str = this.mContext.getResources().getString(C0020R$string.accessibility_detail_switch_on);
                 } else {
-                    str = this.mContext.getResources().getString(C0021R$string.accessibility_detail_switch_off);
+                    str = this.mContext.getResources().getString(C0020R$string.accessibility_detail_switch_off);
                 }
                 sb.append(str);
                 slidingButton.announceForAccessibility(sb.toString());
                 return;
             }
             SlidingButton slidingButton2 = this.mQsDetailHeaderSwitch;
-            slidingButton2.announceForAccessibility(((Object) this.mDetailAdapter.getTitle()) + " " + this.mContext.getResources().getString(C0021R$string.accessibility_detail_switch_disable));
+            slidingButton2.announceForAccessibility(((Object) this.mDetailAdapter.getTitle()) + " " + this.mContext.getResources().getString(C0020R$string.accessibility_detail_switch_disable));
         }
     }
 

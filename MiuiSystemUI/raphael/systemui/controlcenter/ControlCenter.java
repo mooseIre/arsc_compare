@@ -14,8 +14,8 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.SystemUI;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
@@ -215,12 +215,12 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mControlPanelController.setControlCenter(this);
         this.mSuperSaveModeController.addCallback((SuperSaveModeController.SuperSaveModeChangeListener) this);
         this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
-        ControlPanelWindowView controlPanelWindowView = (ControlPanelWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0017R$layout.control_panel, (ViewGroup) null);
+        ControlPanelWindowView controlPanelWindowView = (ControlPanelWindowView) this.mInjectionInflationController.injectable(LayoutInflater.from(this.mContext)).inflate(C0016R$layout.control_panel, (ViewGroup) null);
         this.mControlPanelWindowView = controlPanelWindowView;
         controlPanelWindowView.setControlCenter(this);
         this.mControlPanelWindowManager.addControlPanel(this.mControlPanelWindowView);
         register();
-        ControlPanelContentView controlPanelContentView = (ControlPanelContentView) this.mControlPanelWindowView.findViewById(C0015R$id.control_panel_content);
+        ControlPanelContentView controlPanelContentView = (ControlPanelContentView) this.mControlPanelWindowView.findViewById(C0014R$id.control_panel_content);
         this.mControlPanelContentView = controlPanelContentView;
         if (controlPanelContentView != null) {
             controlPanelContentView.setHost(this.mQSControlTileHost);

@@ -39,11 +39,11 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.internal.widget.CachingIconView;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.bubbles.BubbleController;
@@ -467,7 +467,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     public void updateShelfIconColor() {
         StatusBarIconView shelfIcon = this.mEntry.getIcons().getShelfIcon();
         int i = 0;
-        if (!Boolean.TRUE.equals(shelfIcon.getTag(C0015R$id.icon_is_pre_L)) || NotificationUtils.isGrayscale(shelfIcon, ContrastColorUtil.getInstance(((FrameLayout) this).mContext))) {
+        if (!Boolean.TRUE.equals(shelfIcon.getTag(C0014R$id.icon_is_pre_L)) || NotificationUtils.isGrayscale(shelfIcon, ContrastColorUtil.getInstance(((FrameLayout) this).mContext))) {
             i = getOriginalIconColor();
         }
         shelfIcon.setStaticDrawableColor(i);
@@ -981,7 +981,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         if (notificationGuts != null) {
             int indexOfChild = indexOfChild(notificationGuts);
             removeView(notificationGuts);
-            NotificationGuts notificationGuts2 = (NotificationGuts) LayoutInflater.from(((FrameLayout) this).mContext).inflate(C0017R$layout.notification_guts, (ViewGroup) this, false);
+            NotificationGuts notificationGuts2 = (NotificationGuts) LayoutInflater.from(((FrameLayout) this).mContext).inflate(C0016R$layout.notification_guts, (ViewGroup) this, false);
             this.mGuts = notificationGuts2;
             notificationGuts2.setVisibility(notificationGuts.isExposed() ? 0 : 8);
             addView(this.mGuts, indexOfChild);
@@ -1335,20 +1335,20 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     }
 
     private void initDimens() {
-        this.mNotificationMinHeightBeforeN = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_min_height_legacy);
-        this.mNotificationMinHeightBeforeP = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_min_height_before_p);
-        this.mNotificationMinHeight = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_min_height);
-        this.mNotificationMinHeightLarge = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_min_height_increased);
-        this.mNotificationMinHeightMedia = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_min_height_media);
-        this.mNotificationMaxHeight = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_max_height);
-        this.mMaxHeadsUpHeightBeforeN = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_max_heads_up_height_legacy);
-        this.mMaxHeadsUpHeightBeforeP = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_max_heads_up_height_before_p);
-        this.mMaxHeadsUpHeight = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_max_heads_up_height);
-        this.mMaxHeadsUpHeightIncreased = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0012R$dimen.notification_max_heads_up_height_increased);
+        this.mNotificationMinHeightBeforeN = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_min_height_legacy);
+        this.mNotificationMinHeightBeforeP = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_min_height_before_p);
+        this.mNotificationMinHeight = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_min_height);
+        this.mNotificationMinHeightLarge = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_min_height_increased);
+        this.mNotificationMinHeightMedia = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_min_height_media);
+        this.mNotificationMaxHeight = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_max_height);
+        this.mMaxHeadsUpHeightBeforeN = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_max_heads_up_height_legacy);
+        this.mMaxHeadsUpHeightBeforeP = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_max_heads_up_height_before_p);
+        this.mMaxHeadsUpHeight = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_max_heads_up_height);
+        this.mMaxHeadsUpHeightIncreased = NotificationUtils.getFontScaledHeight(((FrameLayout) this).mContext, C0011R$dimen.notification_max_heads_up_height_increased);
         Resources resources = getResources();
-        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height_increased);
-        this.mEnableNonGroupedNotificationExpand = resources.getBoolean(C0010R$bool.config_enableNonGroupedNotificationExpand);
-        this.mShowGroupBackgroundWhenExpanded = resources.getBoolean(C0010R$bool.config_showGroupNotificationBgWhenExpanded);
+        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0011R$dimen.notification_divider_height_increased);
+        this.mEnableNonGroupedNotificationExpand = resources.getBoolean(C0009R$bool.config_enableNonGroupedNotificationExpand);
+        this.mShowGroupBackgroundWhenExpanded = resources.getBoolean(C0009R$bool.config_showGroupNotificationBgWhenExpanded);
     }
 
     /* access modifiers changed from: package-private */
@@ -1436,8 +1436,8 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
     @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPublicLayout = (NotificationContentView) findViewById(C0015R$id.expandedPublic);
-        NotificationContentView notificationContentView = (NotificationContentView) findViewById(C0015R$id.expanded);
+        this.mPublicLayout = (NotificationContentView) findViewById(C0014R$id.expandedPublic);
+        NotificationContentView notificationContentView = (NotificationContentView) findViewById(C0014R$id.expanded);
         this.mPrivateLayout = notificationContentView;
         NotificationContentView[] notificationContentViewArr = {notificationContentView, this.mPublicLayout};
         this.mLayouts = notificationContentViewArr;
@@ -1445,7 +1445,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
             notificationContentView2.setExpandClickListener(this.mExpandClickListener);
             notificationContentView2.setContainingNotification(this);
         }
-        ViewStub viewStub = (ViewStub) findViewById(C0015R$id.notification_guts_stub);
+        ViewStub viewStub = (ViewStub) findViewById(C0014R$id.notification_guts_stub);
         this.mGutsStub = viewStub;
         viewStub.setOnInflateListener(new ViewStub.OnInflateListener() {
             /* class com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.AnonymousClass4 */
@@ -1457,7 +1457,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
                 ExpandableNotificationRow.this.mGutsStub = null;
             }
         });
-        ViewStub viewStub2 = (ViewStub) findViewById(C0015R$id.child_container_stub);
+        ViewStub viewStub2 = (ViewStub) findViewById(C0014R$id.child_container_stub);
         this.mChildrenContainerStub = viewStub2;
         viewStub2.setOnInflateListener(new ViewStub.OnInflateListener() {
             /* class com.android.systemui.statusbar.notification.row.ExpandableNotificationRow.AnonymousClass5 */
@@ -2563,7 +2563,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         }
         NotificationMenuRowPlugin provider = getProvider();
         if (provider != null && provider.getSnoozeMenuItem(getContext()) != null) {
-            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_snooze, getContext().getResources().getString(C0021R$string.notification_menu_snooze_action)));
+            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_snooze, getContext().getResources().getString(C0020R$string.notification_menu_snooze_action)));
         }
     }
 
@@ -2581,7 +2581,7 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         } else if (i == 1048576) {
             performDismissWithBlockingHelper(true);
             return true;
-        } else if (i != C0015R$id.action_snooze || (provider = getProvider()) == null) {
+        } else if (i != C0014R$id.action_snooze || (provider = getProvider()) == null) {
             return false;
         } else {
             NotificationMenuRowPlugin.MenuItem snoozeMenuItem = provider.getSnoozeMenuItem(getContext());

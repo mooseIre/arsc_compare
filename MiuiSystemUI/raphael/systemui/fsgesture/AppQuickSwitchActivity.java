@@ -7,8 +7,8 @@ import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 
 public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     private FsGestureDemoTitleView fsGestureDemoTitleView;
@@ -42,16 +42,16 @@ public class AppQuickSwitchActivity extends FsGestureDemoBaseActiivy {
     @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0017R$layout.activity_app_quick);
+        setContentView(C0016R$layout.activity_app_quick);
         initView();
         initData();
     }
 
     private void initView() {
-        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0015R$id.fsgesture_title_view);
-        this.mCardContainer = (ScrollerLayout) findViewById(C0015R$id.card_container);
-        this.mFsGestureView = findViewById(C0015R$id.fsg_nav_view);
-        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0015R$id.fsgesture_swipe_view);
+        this.fsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0014R$id.fsgesture_title_view);
+        this.mCardContainer = (ScrollerLayout) findViewById(C0014R$id.card_container);
+        this.mFsGestureView = findViewById(C0014R$id.fsg_nav_view);
+        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0014R$id.fsgesture_swipe_view);
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.fsGestureDemoTitleView.getParent());
         this.mScreenWidth = getScreenWidth(this);
         this.mScreenHeight = getScreenHeight(this);

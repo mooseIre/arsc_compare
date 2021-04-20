@@ -19,9 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.plugins.qs.QS;
@@ -113,13 +113,13 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
     }
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return this.mInjectionInflater.injectable(layoutInflater.cloneInContext(new ContextThemeWrapper(getContext(), C0022R$style.qs_theme))).inflate(C0017R$layout.qs_panel, viewGroup, false);
+        return this.mInjectionInflater.injectable(layoutInflater.cloneInContext(new ContextThemeWrapper(getContext(), C0021R$style.qs_theme))).inflate(C0016R$layout.qs_panel, viewGroup, false);
     }
 
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.mQSPanel = (QSPanel) view.findViewById(C0015R$id.quick_settings_panel);
-        NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C0015R$id.expanded_qs_scroll_view);
+        this.mQSPanel = (QSPanel) view.findViewById(C0014R$id.quick_settings_panel);
+        NonInterceptingScrollView nonInterceptingScrollView = (NonInterceptingScrollView) view.findViewById(C0014R$id.expanded_qs_scroll_view);
         this.mQSPanelScrollView = nonInterceptingScrollView;
         nonInterceptingScrollView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             /* class com.android.systemui.qs.$$Lambda$QSFragment$2XSLuGneMm7PezTcR5XlC3hGadQ */
@@ -135,15 +135,15 @@ public class QSFragment extends LifecycleFragment implements QS, CommandQueue.Ca
                 QSFragment.this.lambda$onViewCreated$1$QSFragment(view, i, i2, i3, i4);
             }
         });
-        this.mQSDetail = (MiuiQSDetail) view.findViewById(C0015R$id.qs_detail);
-        this.mHeader = (MiuiNotificationShadeHeader) view.findViewById(C0015R$id.header);
-        this.mQSPanel.setHeaderContainer((ViewGroup) view.findViewById(C0015R$id.header_text_container));
-        this.mFooter = (QSFooter) view.findViewById(C0015R$id.qs_footer);
-        QSContainerImpl qSContainerImpl = (QSContainerImpl) view.findViewById(C0015R$id.quick_settings_container);
+        this.mQSDetail = (MiuiQSDetail) view.findViewById(C0014R$id.qs_detail);
+        this.mHeader = (MiuiNotificationShadeHeader) view.findViewById(C0014R$id.header);
+        this.mQSPanel.setHeaderContainer((ViewGroup) view.findViewById(C0014R$id.header_text_container));
+        this.mFooter = (QSFooter) view.findViewById(C0014R$id.qs_footer);
+        QSContainerImpl qSContainerImpl = (QSContainerImpl) view.findViewById(C0014R$id.quick_settings_container);
         this.mContainer = qSContainerImpl;
         this.mQSDetail.setQsPanel(this.mQSPanel, this.mHeader, qSContainerImpl.getQuickQSPanel(), (View) this.mFooter);
         this.mQSAnimator = new QSAnimator(this, this.mContainer.getQuickQSPanel(), this.mQSPanel);
-        MiuiQSCustomizer miuiQSCustomizer = (MiuiQSCustomizer) view.findViewById(C0015R$id.qs_customize);
+        MiuiQSCustomizer miuiQSCustomizer = (MiuiQSCustomizer) view.findViewById(C0014R$id.qs_customize);
         this.mQSCustomizer = miuiQSCustomizer;
         miuiQSCustomizer.setQs(this);
         if (bundle != null) {

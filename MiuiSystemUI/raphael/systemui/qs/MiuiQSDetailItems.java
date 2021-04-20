@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.utils.Constants;
@@ -86,14 +86,14 @@ public class MiuiQSDetailItems extends FrameLayout {
         this.mTag = "MiuiQSDetailItems";
         Resources resources = getResources();
         this.mControlPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
-        this.mQsDetailIconOverlaySize = (int) resources.getDimension(C0012R$dimen.qs_detail_icon_overlay_size);
+        this.mQsDetailIconOverlaySize = (int) resources.getDimension(C0011R$dimen.qs_detail_icon_overlay_size);
     }
 
     public static MiuiQSDetailItems convertOrInflate(Context context, View view, ViewGroup viewGroup) {
         if (view instanceof MiuiQSDetailItems) {
             return (MiuiQSDetailItems) view;
         }
-        return (MiuiQSDetailItems) LayoutInflater.from(context).inflate(C0017R$layout.miui_qs_detail_items, viewGroup, false);
+        return (MiuiQSDetailItems) LayoutInflater.from(context).inflate(C0016R$layout.miui_qs_detail_items, viewGroup, false);
     }
 
     /* access modifiers changed from: protected */
@@ -162,7 +162,7 @@ public class MiuiQSDetailItems extends FrameLayout {
         Item[] itemArr2 = this.mScrapItems;
         if (!(itemArr2 == itemArr || itemArr2 == null)) {
             synchronized (ITEM_POOL) {
-                for (Item item : this.mScrapItems) {
+                for (Item item : itemArr2) {
                     ITEM_POOL.release(item);
                 }
             }
@@ -249,13 +249,13 @@ public class MiuiQSDetailItems extends FrameLayout {
         public ItemHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             int i2;
             if (i == 2) {
-                return new LineItemHolder(LayoutInflater.from(MiuiQSDetailItems.this.mContext).inflate(C0017R$layout.qs_detail_line_item, viewGroup, false));
+                return new LineItemHolder(LayoutInflater.from(MiuiQSDetailItems.this.mContext).inflate(C0016R$layout.qs_detail_line_item, viewGroup, false));
             }
             LayoutInflater from = LayoutInflater.from(MiuiQSDetailItems.this.mContext);
             if (MiuiQSDetailItems.this.mControlPanelController.isUseControlCenter()) {
-                i2 = C0017R$layout.qs_control_detail_item;
+                i2 = C0016R$layout.qs_control_detail_item;
             } else {
-                i2 = C0017R$layout.miui_qs_detail_item;
+                i2 = C0016R$layout.miui_qs_detail_item;
             }
             return new CompleteItemHolder(from.inflate(i2, viewGroup, false));
         }
@@ -296,7 +296,7 @@ public class MiuiQSDetailItems extends FrameLayout {
                     completeItemHolder.itemView.setOnClickListener(null);
                 }
                 if (item.canDisconnect) {
-                    completeItemHolder.button.setImageResource(C0013R$drawable.ic_qs_cancel);
+                    completeItemHolder.button.setImageResource(C0012R$drawable.ic_qs_cancel);
                     completeItemHolder.button.setVisibility(0);
                     completeItemHolder.button.setClickable(true);
                     completeItemHolder.button.setOnClickListener(new View.OnClickListener() {

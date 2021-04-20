@@ -10,8 +10,8 @@ import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Prefs;
@@ -76,7 +76,7 @@ public class MultiUserSwitch extends FrameLayout implements View.OnClickListener
     /* access modifiers changed from: private */
     /* renamed from: lambda$isMultiUserEnabled$0 */
     public /* synthetic */ Boolean lambda$isMultiUserEnabled$0$MultiUserSwitch() {
-        return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled(((FrameLayout) this).mContext.getResources().getBoolean(C0010R$bool.qs_show_user_switcher_for_single_user)));
+        return Boolean.valueOf(this.mUserManager.isUserSwitcherEnabled(((FrameLayout) this).mContext.getResources().getBoolean(C0009R$bool.qs_show_user_switcher_for_single_user)));
     }
 
     public boolean isMultiUserEnabled() {
@@ -150,7 +150,7 @@ public class MultiUserSwitch extends FrameLayout implements View.OnClickListener
             }
         })).booleanValue() || (userSwitcherController = this.mUserSwitcherController) == null) ? null : userSwitcherController.getCurrentUserName(((FrameLayout) this).mContext);
         if (!TextUtils.isEmpty(currentUserName)) {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.accessibility_quick_settings_user, currentUserName);
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.accessibility_quick_settings_user, currentUserName);
         }
         if (!TextUtils.equals(getContentDescription(), str)) {
             setContentDescription(str);

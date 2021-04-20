@@ -14,7 +14,7 @@ import android.os.SystemProperties;
 import android.util.Log;
 import com.android.internal.app.AlertActivity;
 import com.android.internal.app.AlertController;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 
 public class UsbDebuggingSecondaryUserActivity extends AlertActivity implements DialogInterface.OnClickListener {
@@ -33,8 +33,8 @@ public class UsbDebuggingSecondaryUserActivity extends AlertActivity implements 
             this.mDisconnectedReceiver = new UsbDisconnectedReceiver(this, this);
         }
         AlertController.AlertParams alertParams = ((AlertActivity) this).mAlertParams;
-        alertParams.mTitle = getString(C0021R$string.usb_debugging_secondary_user_title);
-        alertParams.mMessage = getString(C0021R$string.usb_debugging_secondary_user_message);
+        alertParams.mTitle = getString(C0020R$string.usb_debugging_secondary_user_title);
+        alertParams.mMessage = getString(C0020R$string.usb_debugging_secondary_user_message);
         alertParams.mPositiveButtonText = getString(17039370);
         alertParams.mPositiveButtonListener = this;
         setupAlert();

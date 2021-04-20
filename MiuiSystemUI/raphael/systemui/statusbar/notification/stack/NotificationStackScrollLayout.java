@@ -50,13 +50,13 @@ import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0009R$attr;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0008R$attr;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.ExpandHelper;
@@ -941,16 +941,16 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         });
         this.mSections = this.mSectionsManager.createSectionsForBuckets();
         this.mAmbientState = new AmbientState(context, this.mSectionsManager, this.mHeadsUpManager);
-        this.mBgColor = context.getColor(C0011R$color.notification_shade_background_color);
-        ExpandHelper expandHelper = new ExpandHelper(getContext(), this.mExpandHelperCallback, resources.getDimensionPixelSize(C0012R$dimen.notification_min_height), resources.getDimensionPixelSize(C0012R$dimen.notification_max_height));
+        this.mBgColor = context.getColor(C0010R$color.notification_shade_background_color);
+        ExpandHelper expandHelper = new ExpandHelper(getContext(), this.mExpandHelperCallback, resources.getDimensionPixelSize(C0011R$dimen.notification_min_height), resources.getDimensionPixelSize(C0011R$dimen.notification_max_height));
         this.mExpandHelper = expandHelper;
         expandHelper.setEventSource(this);
         this.mExpandHelper.setScrollAdapter(this);
         this.mSwipeHelper = new NotificationSwipeHelper(0, new MiuiNotificationSwipeCallback(this.mNotificationCallback, mediaTimeoutListener, mediaDataFilter, zenModeViewController), getContext(), this.mMenuEventListener, this.mFalsingManager);
         this.mStackScrollAlgorithm = createStackScrollAlgorithm(context);
         initView(context);
-        this.mShouldDrawNotificationBackground = resources.getBoolean(C0010R$bool.config_drawNotificationBackground);
-        this.mFadeNotificationsOnDismiss = resources.getBoolean(C0010R$bool.config_fadeNotificationsOnDismiss);
+        this.mShouldDrawNotificationBackground = resources.getBoolean(C0009R$bool.config_drawNotificationBackground);
+        this.mFadeNotificationsOnDismiss = resources.getBoolean(C0009R$bool.config_fadeNotificationsOnDismiss);
         this.mRoundnessManager.setAnimatedChildren(this.mChildrenToAddAnimated);
         this.mRoundnessManager.setOnRoundingChangedCallback(new Runnable() {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$ZNzbjhiYOpIhFG8SoCZYGISAg68 */
@@ -982,7 +982,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         });
         setWillNotDraw(!(this.mShouldDrawNotificationBackground ? true : z2));
         this.mBackgroundPaint.setAntiAlias(true);
-        this.mClearAllEnabled = resources.getBoolean(C0010R$bool.config_enableNotificationsClearAll);
+        this.mClearAllEnabled = resources.getBoolean(C0009R$bool.config_enableNotificationsClearAll);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(new TunerService.Tunable() {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Jw0uVZk_QqBt9QukDWfY9zQ7BQU */
 
@@ -1250,7 +1250,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onUiModeChanged() {
-        this.mBgColor = ((ViewGroup) this).mContext.getColor(C0011R$color.notification_shade_background_color);
+        this.mBgColor = ((ViewGroup) this).mContext.getColor(C0010R$color.notification_shade_background_color);
         updateBackgroundDimming();
         this.mShelf.onUiModeChanged();
     }
@@ -1400,19 +1400,19 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mMaximumVelocity = viewConfiguration.getScaledMaximumFlingVelocity();
         this.mOverflingDistance = viewConfiguration.getScaledOverflingDistance();
         Resources resources = context.getResources();
-        this.mCollapsedSize = resources.getDimensionPixelSize(C0012R$dimen.notification_min_height);
-        this.mGapHeight = resources.getDimensionPixelSize(C0012R$dimen.notification_section_divider_height);
+        this.mCollapsedSize = resources.getDimensionPixelSize(C0011R$dimen.notification_min_height);
+        this.mGapHeight = resources.getDimensionPixelSize(C0011R$dimen.notification_section_divider_height);
         this.mStackScrollAlgorithm.initView(context);
         this.mAmbientState.reload(context);
-        this.mPaddingBetweenElements = Math.max(1, resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height));
-        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height_increased);
-        this.mMinTopOverScrollToEscape = (float) resources.getDimensionPixelSize(C0012R$dimen.min_top_overscroll_to_qs);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(C0012R$dimen.status_bar_height);
-        this.mBottomMargin = resources.getDimensionPixelSize(C0012R$dimen.notification_panel_margin_bottom);
-        this.mSidePaddings = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
-        this.mMinInteractionHeight = resources.getDimensionPixelSize(C0012R$dimen.notification_min_interaction_height);
+        this.mPaddingBetweenElements = Math.max(1, resources.getDimensionPixelSize(C0011R$dimen.notification_divider_height));
+        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0011R$dimen.notification_divider_height_increased);
+        this.mMinTopOverScrollToEscape = (float) resources.getDimensionPixelSize(C0011R$dimen.min_top_overscroll_to_qs);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(C0011R$dimen.status_bar_height);
+        this.mBottomMargin = resources.getDimensionPixelSize(C0011R$dimen.notification_panel_margin_bottom);
+        this.mSidePaddings = resources.getDimensionPixelSize(C0011R$dimen.notification_side_paddings);
+        this.mMinInteractionHeight = resources.getDimensionPixelSize(C0011R$dimen.notification_min_interaction_height);
         this.mCornerRadius = resources.getDimensionPixelSize(Utils.getThemeAttr(((ViewGroup) this).mContext, 16844145));
-        this.mHeadsUpInset = this.mStatusBarHeight + resources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
+        this.mHeadsUpInset = this.mStatusBarHeight + resources.getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: private */
@@ -1978,7 +1978,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        this.mStatusBarHeight = getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_height);
+        this.mStatusBarHeight = getResources().getDimensionPixelOffset(C0011R$dimen.status_bar_height);
         this.mSwipeHelper.setDensityScale(getResources().getDisplayMetrics().density);
         this.mSwipeHelper.setPagingTouchSlop((float) ViewConfiguration.get(getContext()).getScaledPagingTouchSlop());
         initView(getContext());
@@ -4123,7 +4123,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public void updateDecorViews(boolean z) {
         if (z != this.mUsingLightTheme) {
             this.mUsingLightTheme = z;
-            int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(new ContextThemeWrapper(((ViewGroup) this).mContext, z ? C0022R$style.Theme_SystemUI_Light : C0022R$style.Theme_SystemUI), C0009R$attr.wallpaperTextColor);
+            int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(new ContextThemeWrapper(((ViewGroup) this).mContext, z ? C0021R$style.Theme_SystemUI_Light : C0021R$style.Theme_SystemUI), C0008R$attr.wallpaperTextColor);
             this.mSectionsManager.setHeaderForegroundColor(colorAttrDefaultColor);
             this.mFooterView.setTextColor(colorAttrDefaultColor);
         }
@@ -4236,7 +4236,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public void updateEmptyShadeView(boolean z) {
         this.mEmptyShadeView.setVisible(z, this.mIsExpanded && this.mAnimationsEnabled);
         int textResource = this.mEmptyShadeView.getTextResource();
-        int i = this.mZenController.areNotificationsHiddenInShade() ? C0021R$string.dnd_suppressing_shade_text : C0021R$string.empty_shade_text;
+        int i = this.mZenController.areNotificationsHiddenInShade() ? C0020R$string.dnd_suppressing_shade_text : C0020R$string.empty_shade_text;
         if (textResource != i) {
             this.mEmptyShadeView.setText(i);
         }
@@ -4787,11 +4787,15 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                     NotificationStackScrollLayout.this.lambda$performDismissAllAnimations$10$NotificationStackScrollLayout(this.f$1);
                 }
             });
-            ((ShadeController) Dependency.get(ShadeController.class)).animateCollapsePanels(0);
-            return;
+            if (this.mNotificationPanelController.canPanelBeCollapsed()) {
+                ((ShadeController) Dependency.get(ShadeController.class)).animateCollapsePanels(0);
+            } else {
+                ((ShadeController) Dependency.get(ShadeController.class)).runPostCollapseRunnables();
+            }
+        } else {
+            setDismissAllInProgress(false);
+            runnable.run();
         }
-        setDismissAllInProgress(false);
-        runnable.run();
     }
 
     /* access modifiers changed from: private */
@@ -4809,7 +4813,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public void inflateFooterView() {
-        FooterView footerView = (FooterView) LayoutInflater.from(((ViewGroup) this).mContext).inflate(C0017R$layout.status_bar_notification_footer, (ViewGroup) this, false);
+        FooterView footerView = (FooterView) LayoutInflater.from(((ViewGroup) this).mContext).inflate(C0016R$layout.status_bar_notification_footer, (ViewGroup) this, false);
         footerView.setDismissButtonClickListener(new View.OnClickListener() {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$tCwjRwJ30PZe98oBqPRQvVRpRU */
 
@@ -4841,8 +4845,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private void inflateEmptyShadeView() {
-        EmptyShadeView emptyShadeView = (EmptyShadeView) LayoutInflater.from(((ViewGroup) this).mContext).inflate(C0017R$layout.status_bar_no_notifications, (ViewGroup) this, false);
-        emptyShadeView.setText(C0021R$string.empty_shade_text);
+        EmptyShadeView emptyShadeView = (EmptyShadeView) LayoutInflater.from(((ViewGroup) this).mContext).inflate(C0016R$layout.status_bar_no_notifications, (ViewGroup) this, false);
+        emptyShadeView.setText(C0020R$string.empty_shade_text);
         emptyShadeView.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$aYoS3zV7WlRKm89tA3jUB5k2PaQ */
 

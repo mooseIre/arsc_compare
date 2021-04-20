@@ -4,7 +4,7 @@ import android.app.AlertDialog;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.service.controls.Control;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ public final class StatusBehavior implements Behavior {
                 ControlViewHolder controlViewHolder2 = this.cvh;
                 if (controlViewHolder2 != null) {
                     controlViewHolder2.getLayout().setOnLongClickListener(new StatusBehavior$bind$msg$2(this, controlWithState));
-                    i2 = C0021R$string.controls_error_removed;
+                    i2 = C0020R$string.controls_error_removed;
                 } else {
                     Intrinsics.throwUninitializedPropertyAccessException("cvh");
                     throw null;
@@ -52,7 +52,7 @@ public final class StatusBehavior implements Behavior {
                 throw null;
             }
         } else if (status == 3) {
-            i2 = C0021R$string.controls_error_generic;
+            i2 = C0020R$string.controls_error_generic;
         } else if (status != 4) {
             ControlViewHolder controlViewHolder3 = this.cvh;
             if (controlViewHolder3 != null) {
@@ -63,7 +63,7 @@ public final class StatusBehavior implements Behavior {
                 throw null;
             }
         } else {
-            i2 = C0021R$string.controls_error_timeout;
+            i2 = C0020R$string.controls_error_timeout;
         }
         ControlViewHolder controlViewHolder4 = this.cvh;
         if (controlViewHolder4 == null) {
@@ -92,9 +92,9 @@ public final class StatusBehavior implements Behavior {
         CharSequence applicationLabel = packageManager.getApplicationLabel(packageManager.getApplicationInfo(controlWithState.getComponentName().getPackageName(), 128));
         AlertDialog.Builder builder = new AlertDialog.Builder(controlViewHolder.getContext(), 16974545);
         Resources resources = controlViewHolder.getContext().getResources();
-        builder.setTitle(resources.getString(C0021R$string.controls_error_removed_title));
-        builder.setMessage(resources.getString(C0021R$string.controls_error_removed_message, controlViewHolder.getTitle().getText(), applicationLabel));
-        builder.setPositiveButton(C0021R$string.controls_open_app, new StatusBehavior$showNotFoundDialog$$inlined$apply$lambda$1(builder, controlViewHolder, applicationLabel, controlWithState));
+        builder.setTitle(resources.getString(C0020R$string.controls_error_removed_title));
+        builder.setMessage(resources.getString(C0020R$string.controls_error_removed_message, controlViewHolder.getTitle().getText(), applicationLabel));
+        builder.setPositiveButton(C0020R$string.controls_open_app, new StatusBehavior$showNotFoundDialog$$inlined$apply$lambda$1(builder, controlViewHolder, applicationLabel, controlWithState));
         builder.setNegativeButton(17039360, StatusBehavior$showNotFoundDialog$builder$1$2.INSTANCE);
         AlertDialog create = builder.create();
         create.getWindow().setType(2020);

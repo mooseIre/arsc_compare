@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.WindowManagerGlobal;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -289,9 +289,9 @@ public class RotationButtonController {
                 this.mLastRotationSuggestion = i;
                 boolean isRotationAnimationCCW = isRotationAnimationCCW(i2, i);
                 if (i2 == 0 || i2 == 2) {
-                    i3 = isRotationAnimationCCW ? C0022R$style.RotateButtonCCWStart90 : C0022R$style.RotateButtonCWStart90;
+                    i3 = isRotationAnimationCCW ? C0021R$style.RotateButtonCCWStart90 : C0021R$style.RotateButtonCWStart90;
                 } else {
-                    i3 = isRotationAnimationCCW ? C0022R$style.RotateButtonCCWStart0 : C0022R$style.RotateButtonCWStart0;
+                    i3 = isRotationAnimationCCW ? C0021R$style.RotateButtonCCWStart0 : C0021R$style.RotateButtonCWStart0;
                 }
                 this.mStyleRes = i3;
                 this.mRotationButton.updateIcon();

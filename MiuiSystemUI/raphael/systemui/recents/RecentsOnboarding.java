@@ -24,11 +24,11 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0008R$array;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0007R$array;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Prefs;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -63,7 +63,7 @@ public class RecentsOnboarding {
             if (view == RecentsOnboarding.this.mLayout) {
                 this.mBroadcastDispatcher.registerReceiver(RecentsOnboarding.this.mReceiver, new IntentFilter("android.intent.action.SCREEN_OFF"));
                 RecentsOnboarding.this.mLayoutAttachedToWindow = true;
-                if (view.getTag().equals(Integer.valueOf(C0021R$string.recents_swipe_up_onboarding))) {
+                if (view.getTag().equals(Integer.valueOf(C0020R$string.recents_swipe_up_onboarding))) {
                     RecentsOnboarding.this.mHasDismissedSwipeUpTip = false;
                 } else {
                     RecentsOnboarding.this.mHasDismissedQuickScrubTip = false;
@@ -74,7 +74,7 @@ public class RecentsOnboarding {
         public void onViewDetachedFromWindow(View view) {
             if (view == RecentsOnboarding.this.mLayout) {
                 RecentsOnboarding.this.mLayoutAttachedToWindow = false;
-                if (view.getTag().equals(Integer.valueOf(C0021R$string.recents_quick_scrub_onboarding))) {
+                if (view.getTag().equals(Integer.valueOf(C0020R$string.recents_quick_scrub_onboarding))) {
                     RecentsOnboarding.this.mHasDismissedQuickScrubTip = true;
                     if (RecentsOnboarding.this.hasDismissedQuickScrubOnboardingOnce()) {
                         RecentsOnboarding.this.setHasSeenQuickScrubOnboarding(true);
@@ -155,7 +155,7 @@ public class RecentsOnboarding {
                                         RecentsOnboarding.access$608(RecentsOnboarding.this);
                                         if (RecentsOnboarding.this.mNumAppsLaunchedSinceSwipeUpTipDismiss >= i) {
                                             RecentsOnboarding.this.mNumAppsLaunchedSinceSwipeUpTipDismiss = 0;
-                                            z2 = RecentsOnboarding.this.show(C0021R$string.recents_swipe_up_onboarding);
+                                            z2 = RecentsOnboarding.this.show(C0020R$string.recents_swipe_up_onboarding);
                                         } else {
                                             z2 = false;
                                         }
@@ -163,7 +163,7 @@ public class RecentsOnboarding {
                                         return;
                                     }
                                 } else {
-                                    z2 = RecentsOnboarding.this.show(C0021R$string.recents_swipe_up_onboarding);
+                                    z2 = RecentsOnboarding.this.show(C0020R$string.recents_swipe_up_onboarding);
                                 }
                                 if (z2) {
                                     RecentsOnboarding.this.notifyOnTip(0, 0);
@@ -171,10 +171,10 @@ public class RecentsOnboarding {
                             }
                         } else if (RecentsOnboarding.this.getOpenedOverviewCount() >= 10) {
                             if (!RecentsOnboarding.this.mHasDismissedQuickScrubTip) {
-                                z = RecentsOnboarding.this.show(C0021R$string.recents_quick_scrub_onboarding);
+                                z = RecentsOnboarding.this.show(C0020R$string.recents_quick_scrub_onboarding);
                             } else if (RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss >= 10) {
                                 RecentsOnboarding.this.mOverviewOpenedCountSinceQuickScrubTipDismiss = 0;
-                                z = RecentsOnboarding.this.show(C0021R$string.recents_quick_scrub_onboarding);
+                                z = RecentsOnboarding.this.show(C0020R$string.recents_quick_scrub_onboarding);
                             } else {
                                 z = false;
                             }
@@ -212,16 +212,16 @@ public class RecentsOnboarding {
         this.mWindowManager = (WindowManager) this.mContext.getSystemService("window");
         HashSet hashSet = new HashSet();
         this.mBlacklistedPackages = hashSet;
-        Collections.addAll(hashSet, resources.getStringArray(C0008R$array.recents_onboarding_blacklisted_packages));
-        View inflate = LayoutInflater.from(this.mContext).inflate(C0017R$layout.recents_onboarding, (ViewGroup) null);
+        Collections.addAll(hashSet, resources.getStringArray(C0007R$array.recents_onboarding_blacklisted_packages));
+        View inflate = LayoutInflater.from(this.mContext).inflate(C0016R$layout.recents_onboarding, (ViewGroup) null);
         this.mLayout = inflate;
-        this.mTextView = (TextView) inflate.findViewById(C0015R$id.onboarding_text);
-        this.mDismissView = (ImageView) this.mLayout.findViewById(C0015R$id.dismiss);
-        this.mArrowView = this.mLayout.findViewById(C0015R$id.arrow);
+        this.mTextView = (TextView) inflate.findViewById(C0014R$id.onboarding_text);
+        this.mDismissView = (ImageView) this.mLayout.findViewById(C0014R$id.dismiss);
+        this.mArrowView = this.mLayout.findViewById(C0014R$id.arrow);
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(16843829, typedValue, true);
         this.mOnboardingToastColor = resources.getColor(typedValue.resourceId);
-        this.mOnboardingToastArrowRadius = resources.getDimensionPixelSize(C0012R$dimen.recents_onboarding_toast_arrow_corner_radius);
+        this.mOnboardingToastArrowRadius = resources.getDimensionPixelSize(C0011R$dimen.recents_onboarding_toast_arrow_corner_radius);
         this.mLayout.addOnAttachStateChangeListener(this.mOnAttachStateChangeListener);
         this.mDismissView.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.recents.$$Lambda$RecentsOnboarding$VU_OZtWyvAx7bVWSUdhKQFeocZE */
@@ -242,7 +242,7 @@ public class RecentsOnboarding {
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$RecentsOnboarding(View view) {
         hide(true);
-        if (view.getTag().equals(Integer.valueOf(C0021R$string.recents_swipe_up_onboarding))) {
+        if (view.getTag().equals(Integer.valueOf(C0020R$string.recents_swipe_up_onboarding))) {
             this.mHasDismissedSwipeUpTip = true;
             this.mNumAppsLaunchedSinceSwipeUpTipDismiss = 0;
             setDismissedSwipeUpOnboardingCount(getDismissedSwipeUpOnboardingCount() + 1);
@@ -322,11 +322,11 @@ public class RecentsOnboarding {
             return false;
         }
         this.mLayout.setSystemUiVisibility(256);
-        if (i == C0021R$string.recents_swipe_up_onboarding) {
+        if (i == C0020R$string.recents_swipe_up_onboarding) {
             i2 = 81;
         } else {
             i2 = (this.mContext.getResources().getConfiguration().getLayoutDirection() == 0 ? 3 : 5) | 80;
-            i3 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.recents_quick_scrub_onboarding_margin_start);
+            i3 = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.recents_quick_scrub_onboarding_margin_start);
         }
         this.mWindowManager.addView(this.mLayout, getWindowLayoutParams(i2, i3));
         this.mLayout.setAlpha(0.0f);

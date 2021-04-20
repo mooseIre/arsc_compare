@@ -20,12 +20,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.logging.UiEventLoggerImpl;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.controlcenter.phone.widget.AnimatorListenerWrapper;
 import com.android.systemui.keyguard.ScreenLifecycle;
 import com.android.systemui.plugins.qs.QS;
@@ -101,7 +101,7 @@ public class MiuiQSCustomizer extends LinearLayout {
     }
 
     public MiuiQSCustomizer(Context context, AttributeSet attributeSet, LightBarController lightBarController, KeyguardStateController keyguardStateController, ScreenLifecycle screenLifecycle, TileQueryHelper tileQueryHelper, UiEventLogger uiEventLogger) {
-        super(new ContextThemeWrapper(context, C0022R$style.edit_theme), attributeSet);
+        super(new ContextThemeWrapper(context, C0021R$style.edit_theme), attributeSet);
         AnonymousClass4 r3 = new AnimatorListenerAdapter() {
             /* class com.android.systemui.qs.customize.MiuiQSCustomizer.AnonymousClass4 */
 
@@ -131,9 +131,9 @@ public class MiuiQSCustomizer extends LinearLayout {
                 MiuiQSCustomizer.this.hide(z);
             }
         };
-        this.mSpanCount = Math.max(1, ((LinearLayout) this).mContext.getResources().getInteger(C0016R$integer.quick_settings_num_columns));
-        LayoutInflater.from(getContext()).inflate(C0017R$layout.qs_customize_panel_content, this);
-        this.mClipper = new QSDetailClipper(findViewById(C0015R$id.customize_container));
+        this.mSpanCount = Math.max(1, ((LinearLayout) this).mContext.getResources().getInteger(C0015R$integer.quick_settings_num_columns));
+        LayoutInflater.from(getContext()).inflate(C0016R$layout.qs_customize_panel_content, this);
+        this.mClipper = new QSDetailClipper(findViewById(C0014R$id.customize_container));
         this.mRecyclerView = (RecyclerView) findViewById(16908298);
         MiuiTileAdapter miuiTileAdapter = new MiuiTileAdapter(getContext(), uiEventLogger, this.mRecyclerView);
         this.mTileAdapter = miuiTileAdapter;
@@ -142,7 +142,7 @@ public class MiuiQSCustomizer extends LinearLayout {
         this.mTileQueryHelper.setCustomizer(this);
         this.mRecyclerView.setAdapter(this.mTileAdapter);
         this.mTileAdapter.getItemTouchHelper().attachToRecyclerView(this.mRecyclerView);
-        this.mHeader = (RelativeLayout) findViewById(C0015R$id.header);
+        this.mHeader = (RelativeLayout) findViewById(C0014R$id.header);
         updateLayout();
         this.mRecyclerView.addItemDecoration(this.mTileAdapter.getItemDecoration());
         DefaultItemAnimator defaultItemAnimator = new DefaultItemAnimator();
@@ -155,12 +155,12 @@ public class MiuiQSCustomizer extends LinearLayout {
     }
 
     private void updateResources() {
-        this.mTitle.setText(C0021R$string.qs_customize_title);
-        this.mSubTitle.setText(C0021R$string.drag_to_add_tiles);
+        this.mTitle.setText(C0020R$string.qs_customize_title);
+        this.mSubTitle.setText(C0020R$string.drag_to_add_tiles);
         this.mResetButton.setText(17041223);
-        this.mDoneButton.setText(C0021R$string.quick_settings_done);
+        this.mDoneButton.setText(C0020R$string.quick_settings_done);
         Resources resources = ((LinearLayout) this).mContext.getResources();
-        int max = Math.max(1, resources.getInteger(C0016R$integer.quick_settings_num_columns));
+        int max = Math.max(1, resources.getInteger(C0015R$integer.quick_settings_num_columns));
         if (this.mSpanCount != max) {
             if (resources.getConfiguration().orientation == 1) {
                 this.mHeader.setVisibility(0);
@@ -186,7 +186,7 @@ public class MiuiQSCustomizer extends LinearLayout {
         if (!this.isShown) {
             this.mX = i;
             this.mY = i2;
-            announceForAccessibility(((LinearLayout) this).mContext.getString(C0021R$string.accessibility_desc_quick_settings_edit));
+            announceForAccessibility(((LinearLayout) this).mContext.getString(C0020R$string.accessibility_desc_quick_settings_edit));
             this.mUiEventLogger.log(QSEditEvent.QS_EDIT_OPEN);
             this.isShown = true;
             this.mOpening = true;
@@ -291,7 +291,7 @@ public class MiuiQSCustomizer extends LinearLayout {
     private void initMiuiAddedView() {
         TextView textView = (TextView) findViewById(16908314);
         this.mResetButton = textView;
-        textView.setText(C0021R$string.reset);
+        textView.setText(C0020R$string.reset);
         this.mResetButton.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.qs.customize.$$Lambda$MiuiQSCustomizer$eQKhGYeggWS8XRQpmH9qHZQpl7M */
 
@@ -301,7 +301,7 @@ public class MiuiQSCustomizer extends LinearLayout {
         });
         TextView textView2 = (TextView) findViewById(16908313);
         this.mDoneButton = textView2;
-        textView2.setText(C0021R$string.quick_settings_done);
+        textView2.setText(C0020R$string.quick_settings_done);
         this.mDoneButton.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.qs.customize.$$Lambda$MiuiQSCustomizer$3kV5KpVJpOJfqoQ1ScSLLoaadek */
 
@@ -309,8 +309,8 @@ public class MiuiQSCustomizer extends LinearLayout {
                 MiuiQSCustomizer.this.lambda$initMiuiAddedView$1$MiuiQSCustomizer(view);
             }
         });
-        this.mTitle = (TextView) findViewById(C0015R$id.title);
-        this.mSubTitle = (TextView) findViewById(C0015R$id.sub_title);
+        this.mTitle = (TextView) findViewById(C0014R$id.title);
+        this.mSubTitle = (TextView) findViewById(C0014R$id.sub_title);
         this.mSpanCount = -1;
         updateResources();
     }
@@ -338,7 +338,7 @@ public class MiuiQSCustomizer extends LinearLayout {
         };
         r0.setSpanSizeLookup(this.mTileAdapter.getSizeLookup());
         this.mRecyclerView.setLayoutManager(r0);
-        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getResources().getDimensionPixelOffset(C0012R$dimen.qs_customize_padding_bottom));
+        setPadding(getPaddingLeft(), getPaddingTop(), getPaddingRight(), getResources().getDimensionPixelOffset(C0011R$dimen.qs_customize_padding_bottom));
     }
 
     public void hide(boolean z) {
@@ -364,7 +364,7 @@ public class MiuiQSCustomizer extends LinearLayout {
     }
 
     public void setMargins(int i, int i2) {
-        View findViewById = findViewById(C0015R$id.customize_container);
+        View findViewById = findViewById(C0014R$id.customize_container);
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) findViewById.getLayoutParams();
         marginLayoutParams.rightMargin = i;
         marginLayoutParams.leftMargin = i2;

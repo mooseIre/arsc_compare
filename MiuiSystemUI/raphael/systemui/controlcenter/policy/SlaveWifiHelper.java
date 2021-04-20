@@ -9,9 +9,9 @@ import androidx.preference.PreferenceManager;
 import com.android.settingslib.wifi.AccessPoint;
 import com.android.settingslib.wifi.SlaveWifiUtils;
 import com.android.settingslib.wifi.WifiUtils;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.qs.MiuiQSDetailItems;
@@ -20,16 +20,13 @@ import java.util.ArrayList;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import miui.app.AlertDialog;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: SlaveWifiHelper.kt */
 public final class SlaveWifiHelper {
     private final ConnectivityManager connectivityManager;
-    @NotNull
     private final Context context;
     private final SlaveWifiUtils slaveWifiUtils;
 
-    public SlaveWifiHelper(@NotNull Context context2) {
+    public SlaveWifiHelper(Context context2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         this.context = context2;
         this.slaveWifiUtils = new SlaveWifiUtils(context2);
@@ -41,7 +38,7 @@ public final class SlaveWifiHelper {
         throw new TypeCastException("null cannot be cast to non-null type android.net.ConnectivityManager");
     }
 
-    public final void updateItem(@NotNull Context context2, @NotNull NetworkController.AccessPointController accessPointController, @NotNull MiuiQSDetailItems miuiQSDetailItems, @NotNull ArrayList<MiuiQSDetailItems.Item> arrayList, @NotNull AccessPoint accessPoint) {
+    public final void updateItem(Context context2, NetworkController.AccessPointController accessPointController, MiuiQSDetailItems miuiQSDetailItems, ArrayList<MiuiQSDetailItems.Item> arrayList, AccessPoint accessPoint) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(accessPointController, "accessPointController");
         Intrinsics.checkParameterIsNotNull(miuiQSDetailItems, "qsDetailItems");
@@ -54,12 +51,12 @@ public final class SlaveWifiHelper {
         if (accessPoint.isActive()) {
             acquireItem.selected = true;
             acquireItem.line2 = accessPoint.getSummary();
-            acquireItem.icon2 = C0013R$drawable.ic_qs_detail_item_selected;
+            acquireItem.icon2 = C0012R$drawable.ic_qs_detail_item_selected;
             arrayList.add(acquireItem);
         } else if (isSlaveActive(accessPoint)) {
             acquireItem.selected = true;
-            acquireItem.line2 = context2.getString(C0021R$string.quick_settings_wifi_detail_dual_wifi_accelerated);
-            acquireItem.icon2 = C0013R$drawable.ic_qs_detail_item_selected;
+            acquireItem.line2 = context2.getString(C0020R$string.quick_settings_wifi_detail_dual_wifi_accelerated);
+            acquireItem.icon2 = C0012R$drawable.ic_qs_detail_item_selected;
             arrayList.add(acquireItem);
             Object obj = Dependency.get(ControlPanelController.class);
             Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(ControlPanelController::class.java)");
@@ -71,12 +68,12 @@ public final class SlaveWifiHelper {
         } else {
             acquireItem.selected = false;
             acquireItem.line2 = null;
-            acquireItem.icon2 = accessPoint.getSecurity() != 0 ? C0013R$drawable.ic_qs_wifi_lock : -1;
+            acquireItem.icon2 = accessPoint.getSecurity() != 0 ? C0012R$drawable.ic_qs_wifi_lock : -1;
             arrayList.add(acquireItem);
         }
     }
 
-    public final boolean connect(@NotNull Context context2, @NotNull AccessPoint accessPoint, @NotNull NetworkController.AccessPointController accessPointController) {
+    public final boolean connect(Context context2, AccessPoint accessPoint, NetworkController.AccessPointController accessPointController) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(accessPoint, "ap");
         Intrinsics.checkParameterIsNotNull(accessPointController, "accessPointController");
@@ -91,15 +88,15 @@ public final class SlaveWifiHelper {
     }
 
     private final void showAlertDialog(Context context2, AccessPoint accessPoint, NetworkController.AccessPointController accessPointController) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context2, C0022R$style.Theme_Dialog_Alert);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context2, C0021R$style.Theme_Dialog_Alert);
         builder.setCancelable(false);
         Resources resources = context2.getResources();
         Intrinsics.checkExpressionValueIsNotNull(resources, "context.getResources()");
-        builder.setTitle(resources.getString(C0021R$string.quick_settings_wifi_detail_dual_wifi_switching_prompt));
-        builder.setMessage(resources.getString(C0021R$string.quick_settings_wifi_detail_dual_wifi_switching_summary));
-        builder.setCheckBox(false, resources.getString(C0021R$string.quick_settings_wifi_detail_dual_wifi_switching_not_remind));
-        builder.setNegativeButton(resources.getString(C0021R$string.quick_settings_wifi_detail_dual_wifi_switching_cancel), SlaveWifiHelper$showAlertDialog$1.INSTANCE);
-        builder.setPositiveButton(resources.getString(C0021R$string.quick_settings_wifi_detail_dual_wifi_switching_confirm), new SlaveWifiHelper$showAlertDialog$2(this, context2, accessPointController, accessPoint));
+        builder.setTitle(resources.getString(C0020R$string.quick_settings_wifi_detail_dual_wifi_switching_prompt));
+        builder.setMessage(resources.getString(C0020R$string.quick_settings_wifi_detail_dual_wifi_switching_summary));
+        builder.setCheckBox(false, resources.getString(C0020R$string.quick_settings_wifi_detail_dual_wifi_switching_not_remind));
+        builder.setNegativeButton(resources.getString(C0020R$string.quick_settings_wifi_detail_dual_wifi_switching_cancel), SlaveWifiHelper$showAlertDialog$1.INSTANCE);
+        builder.setPositiveButton(resources.getString(C0020R$string.quick_settings_wifi_detail_dual_wifi_switching_confirm), new SlaveWifiHelper$showAlertDialog$2(this, context2, accessPointController, accessPoint));
         AlertDialog create = builder.create();
         Intrinsics.checkExpressionValueIsNotNull(create, "dialog");
         create.getWindow().setType(2010);

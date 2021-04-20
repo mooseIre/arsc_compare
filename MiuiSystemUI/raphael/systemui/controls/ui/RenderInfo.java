@@ -5,7 +5,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.ArrayMap;
 import android.util.SparseArray;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0012R$drawable;
 import kotlin.Pair;
 import kotlin.collections.MapsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
@@ -87,7 +87,7 @@ public final class RenderInfo {
             if (intValue3 == -1) {
                 drawable = (Drawable) RenderInfo.appIconMap.get(componentName);
                 if (drawable == null) {
-                    drawable = context.getResources().getDrawable(C0013R$drawable.ic_device_unknown_on, null);
+                    drawable = context.getResources().getDrawable(C0012R$drawable.ic_device_unknown_on, null);
                     RenderInfo.appIconMap.put(componentName, drawable);
                 }
             } else {

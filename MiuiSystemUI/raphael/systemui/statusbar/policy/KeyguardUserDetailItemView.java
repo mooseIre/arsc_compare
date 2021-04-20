@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.policy;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.qs.tiles.UserDetailItemView;
 
 public class KeyguardUserDetailItemView extends UserDetailItemView {
@@ -25,6 +25,6 @@ public class KeyguardUserDetailItemView extends UserDetailItemView {
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.qs.tiles.UserDetailItemView
     public int getFontSizeDimen() {
-        return C0012R$dimen.kg_user_switcher_text_size;
+        return C0011R$dimen.kg_user_switcher_text_size;
     }
 }

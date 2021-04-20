@@ -17,7 +17,7 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.SystemUI;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.google.android.collect.Sets;
@@ -41,7 +41,7 @@ public class ThemeOverlayController extends SystemUI {
     @Override // com.android.systemui.SystemUI
     public void start() {
         this.mUserManager = (UserManager) this.mContext.getSystemService(UserManager.class);
-        this.mThemeManager = new ThemeOverlayManager((OverlayManager) this.mContext.getSystemService(OverlayManager.class), AsyncTask.THREAD_POOL_EXECUTOR, this.mContext.getString(C0021R$string.launcher_overlayable_package), this.mContext.getString(C0021R$string.themepicker_overlayable_package));
+        this.mThemeManager = new ThemeOverlayManager((OverlayManager) this.mContext.getSystemService(OverlayManager.class), AsyncTask.THREAD_POOL_EXECUTOR, this.mContext.getString(C0020R$string.launcher_overlayable_package), this.mContext.getString(C0020R$string.themepicker_overlayable_package));
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
         intentFilter.addAction("android.intent.action.MANAGED_PROFILE_ADDED");

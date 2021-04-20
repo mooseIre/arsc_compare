@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.res.Resources;
 import android.util.MathUtils;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.Interpolators;
 import com.android.systemui.doze.util.BurnInHelperKt;
 import com.android.systemui.statusbar.notification.NotificationUtils;
@@ -36,10 +36,10 @@ public class KeyguardClockPositionAlgorithm {
     }
 
     public void loadDimens(Resources resources) {
-        this.mClockNotificationsMargin = resources.getDimensionPixelSize(C0012R$dimen.keyguard_clock_notifications_margin);
-        this.mContainerTopPadding = Math.max(resources.getDimensionPixelSize(C0012R$dimen.keyguard_clock_top_margin), resources.getDimensionPixelSize(C0012R$dimen.keyguard_lock_height) + resources.getDimensionPixelSize(C0012R$dimen.keyguard_lock_padding) + resources.getDimensionPixelSize(C0012R$dimen.keyguard_clock_lock_margin));
-        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C0012R$dimen.burn_in_prevention_offset_x);
-        this.mBurnInPreventionOffsetY = resources.getDimensionPixelSize(C0012R$dimen.burn_in_prevention_offset_y);
+        this.mClockNotificationsMargin = resources.getDimensionPixelSize(C0011R$dimen.keyguard_clock_notifications_margin);
+        this.mContainerTopPadding = Math.max(resources.getDimensionPixelSize(C0011R$dimen.keyguard_clock_top_margin), resources.getDimensionPixelSize(C0011R$dimen.keyguard_lock_height) + resources.getDimensionPixelSize(C0011R$dimen.keyguard_lock_padding) + resources.getDimensionPixelSize(C0011R$dimen.keyguard_clock_lock_margin));
+        this.mBurnInPreventionOffsetX = resources.getDimensionPixelSize(C0011R$dimen.burn_in_prevention_offset_x);
+        this.mBurnInPreventionOffsetY = resources.getDimensionPixelSize(C0011R$dimen.burn_in_prevention_offset_y);
     }
 
     public void setup(int i, int i2, int i3, float f, int i4, int i5, int i6, boolean z, boolean z2, float f2, float f3, boolean z3, int i7) {

@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.controls.ControlsEditController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
@@ -45,14 +45,14 @@ public class ControlPanelContentView extends FrameLayout {
         ExpandInfoController expandInfoController = (ExpandInfoController) Dependency.get(ExpandInfoController.class);
         this.mExpandInfoController = expandInfoController;
         expandInfoController.setContentView(this);
-        this.mDetail = (QSControlDetail) findViewById(C0015R$id.qs_detail);
-        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0015R$id.control_center_panel);
+        this.mDetail = (QSControlDetail) findViewById(C0014R$id.qs_detail);
+        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0014R$id.control_center_panel);
         this.mControlCenterPanelView = controlCenterPanelView;
         controlCenterPanelView.setControlPanelContentView(this);
-        QSControlCustomizer qSControlCustomizer = (QSControlCustomizer) findViewById(C0015R$id.qs_customize);
+        QSControlCustomizer qSControlCustomizer = (QSControlCustomizer) findViewById(C0014R$id.qs_customize);
         this.mQSCustomizer = qSControlCustomizer;
         qSControlCustomizer.setQSControlCenterPanel(this);
-        ImageView imageView = (ImageView) findViewById(C0015R$id.tiles_edit);
+        ImageView imageView = (ImageView) findViewById(C0014R$id.tiles_edit);
         this.mTilesEdit = imageView;
         imageView.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.controlcenter.phone.ControlPanelContentView.AnonymousClass1 */

@@ -9,9 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.Prefs;
 import com.android.systemui.recents.TriangleShape;
 import kotlin.TypeCastException;
@@ -19,36 +19,40 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
 
+/* compiled from: TooltipManager.kt */
 public final class TooltipManager {
     private final View arrowView;
     private final boolean below;
+    @NotNull
     private final ViewGroup layout;
     private final int maxTimesShown;
     private final String preferenceName;
+    @NotNull
     private final Function1<Integer, Unit> preferenceStorer;
     private int shown;
     private final TextView textView;
 
-    public TooltipManager(Context context, String str, int i, boolean z) {
+    public TooltipManager(@NotNull Context context, @NotNull String str, int i, boolean z) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(str, "preferenceName");
         this.preferenceName = str;
         this.maxTimesShown = i;
         this.below = z;
         this.shown = Prefs.getInt(context, str, 0);
-        View inflate = LayoutInflater.from(context).inflate(C0017R$layout.controls_onboarding, (ViewGroup) null);
+        View inflate = LayoutInflater.from(context).inflate(C0016R$layout.controls_onboarding, (ViewGroup) null);
         if (inflate != null) {
             this.layout = (ViewGroup) inflate;
             this.preferenceStorer = new TooltipManager$preferenceStorer$1(this, context);
             this.layout.setAlpha(0.0f);
-            this.textView = (TextView) this.layout.requireViewById(C0015R$id.onboarding_text);
-            this.layout.requireViewById(C0015R$id.dismiss).setOnClickListener(new TooltipManager$$special$$inlined$apply$lambda$1(this));
-            View requireViewById = this.layout.requireViewById(C0015R$id.arrow);
+            this.textView = (TextView) this.layout.requireViewById(C0014R$id.onboarding_text);
+            this.layout.requireViewById(C0014R$id.dismiss).setOnClickListener(new TooltipManager$$special$$inlined$apply$lambda$1(this));
+            View requireViewById = this.layout.requireViewById(C0014R$id.arrow);
             TypedValue typedValue = new TypedValue();
             context.getTheme().resolveAttribute(16843829, typedValue, true);
             int color = context.getResources().getColor(typedValue.resourceId, context.getTheme());
-            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.recents_onboarding_toast_arrow_corner_radius);
+            int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.recents_onboarding_toast_arrow_corner_radius);
             ViewGroup.LayoutParams layoutParams = requireViewById.getLayoutParams();
             ShapeDrawable shapeDrawable = new ShapeDrawable(TriangleShape.create((float) layoutParams.width, (float) layoutParams.height, this.below));
             Paint paint = shapeDrawable.getPaint();
@@ -81,6 +85,7 @@ public final class TooltipManager {
         this(context, str, (i2 & 4) != 0 ? 2 : i, (i2 & 8) != 0 ? true : z);
     }
 
+    @NotNull
     public final ViewGroup getLayout() {
         return this.layout;
     }

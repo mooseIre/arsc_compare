@@ -5,8 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.controls.ControlInterface;
 import java.util.List;
 import kotlin.NoWhenBranchMatchedException;
@@ -35,19 +35,19 @@ public final class ControlAdapter extends RecyclerView.Adapter<Holder> {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
         LayoutInflater from = LayoutInflater.from(viewGroup.getContext());
         if (i == 0) {
-            View inflate = from.inflate(C0017R$layout.controls_zone_header, viewGroup, false);
+            View inflate = from.inflate(C0016R$layout.controls_zone_header, viewGroup, false);
             Intrinsics.checkExpressionValueIsNotNull(inflate, "layoutInflater.inflate(R…ne_header, parent, false)");
             return new ZoneHolder(inflate);
         } else if (i == 1) {
-            View inflate2 = from.inflate(C0017R$layout.controls_base_item, viewGroup, false);
+            View inflate2 = from.inflate(C0016R$layout.controls_base_item, viewGroup, false);
             inflate2.getLayoutParams().width = -1;
             inflate2.setElevation(this.elevation);
-            inflate2.setBackground(viewGroup.getContext().getDrawable(C0013R$drawable.control_background_ripple));
+            inflate2.setBackground(viewGroup.getContext().getDrawable(C0012R$drawable.control_background_ripple));
             Intrinsics.checkExpressionValueIsNotNull(inflate2, "layoutInflater.inflate(R…le)\n                    }");
             ControlsModel controlsModel = this.model;
             return new ControlHolder(inflate2, controlsModel != null ? controlsModel.getMoveHelper() : null, new ControlAdapter$onCreateViewHolder$2(this));
         } else if (i == 2) {
-            View inflate3 = from.inflate(C0017R$layout.controls_horizontal_divider_with_empty, viewGroup, false);
+            View inflate3 = from.inflate(C0016R$layout.controls_horizontal_divider_with_empty, viewGroup, false);
             Intrinsics.checkExpressionValueIsNotNull(inflate3, "layoutInflater.inflate(\n…ith_empty, parent, false)");
             return new DividerHolder(inflate3);
         } else {

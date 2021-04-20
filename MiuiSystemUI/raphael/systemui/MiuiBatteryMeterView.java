@@ -92,7 +92,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         this.mUseLegacyDrawable = false;
         this.mForceShowDigit = false;
         this.mQuickCharging = false;
-        this.mIconId = C0020R$raw.stat_sys_battery;
+        this.mIconId = C0019R$raw.stat_sys_battery;
         this.mBatteryStyle = 0;
         this.mTintArea = new Rect();
         this.mBatteryTextColors = new int[7];
@@ -132,9 +132,9 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
                 MiuiBatteryMeterIconView miuiBatteryMeterIconView = MiuiBatteryMeterView.this.mBatteryIconView;
                 Context context = MiuiBatteryMeterView.this.getContext();
                 if (isCharging) {
-                    i = C0021R$string.accessibility_battery_level_charging;
+                    i = C0020R$string.accessibility_battery_level_charging;
                 } else {
-                    i = C0021R$string.accessibility_battery_level;
+                    i = C0020R$string.accessibility_battery_level;
                 }
                 miuiBatteryMeterIconView.setContentDescription(context.getString(i, Integer.valueOf(level)));
                 MiuiBatteryMeterView.this.update();
@@ -151,14 +151,14 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         setOrientation(0);
         setGravity(8388627);
         addOnAttachStateChangeListener(new Utils.DisableStateTracker(0, 2, (CommandQueue) Dependency.get(CommandQueue.class)));
-        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C0017R$layout.battery_digital_view, (ViewGroup) null);
+        FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C0016R$layout.battery_digital_view, (ViewGroup) null);
         this.mBatteryDigitalView = frameLayout;
-        this.mBatteryIconView = (MiuiBatteryMeterIconView) frameLayout.findViewById(C0015R$id.battery_image);
-        this.mBatteryChargingInView = (ImageView) this.mBatteryDigitalView.findViewById(C0015R$id.battery_charge_image);
+        this.mBatteryIconView = (MiuiBatteryMeterIconView) frameLayout.findViewById(C0014R$id.battery_image);
+        this.mBatteryChargingInView = (ImageView) this.mBatteryDigitalView.findViewById(C0014R$id.battery_charge_image);
         ViewGroup.LayoutParams layoutParams = this.mBatteryIconView.getLayoutParams();
         layoutParams.width = -2;
         this.mBatteryIconView.setLayoutParams(layoutParams);
-        TextView textView = (TextView) this.mBatteryDigitalView.findViewById(C0015R$id.battery_digit);
+        TextView textView = (TextView) this.mBatteryDigitalView.findViewById(C0014R$id.battery_digit);
         this.mBatteryTextDigitView = textView;
         textView.setTypeface(this.mDigitTypeface);
         addView(this.mBatteryDigitalView);
@@ -182,26 +182,26 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
 
     private void updateResources() {
         Resources resources = this.mContext.getResources();
-        this.mBatteryTextColors[0] = resources.getColor(C0011R$color.status_bar_textColor);
-        this.mBatteryTextColors[1] = resources.getColor(C0011R$color.status_bar_textColor_darkmode);
-        this.mBatteryTextColors[2] = resources.getColor(C0011R$color.status_bar_battery_digit_textColor);
-        this.mBatteryTextColors[3] = resources.getColor(C0011R$color.status_bar_battery_digit_textColor_darkmode);
-        this.mBatteryTextColors[4] = resources.getColor(C0011R$color.status_bar_battery_power_save_digit_textColor);
-        this.mBatteryTextColors[5] = resources.getColor(C0011R$color.status_bar_battery_power_save_digit_textColor_darkmode);
-        this.mBatteryTextColors[6] = resources.getColor(C0011R$color.status_bar_icon_text_color_dark_mode_cts);
-        boolean z = resources.getBoolean(C0010R$bool.battery_meter_use_legacy_drawable);
+        this.mBatteryTextColors[0] = resources.getColor(C0010R$color.status_bar_textColor);
+        this.mBatteryTextColors[1] = resources.getColor(C0010R$color.status_bar_textColor_darkmode);
+        this.mBatteryTextColors[2] = resources.getColor(C0010R$color.status_bar_battery_digit_textColor);
+        this.mBatteryTextColors[3] = resources.getColor(C0010R$color.status_bar_battery_digit_textColor_darkmode);
+        this.mBatteryTextColors[4] = resources.getColor(C0010R$color.status_bar_battery_power_save_digit_textColor);
+        this.mBatteryTextColors[5] = resources.getColor(C0010R$color.status_bar_battery_power_save_digit_textColor_darkmode);
+        this.mBatteryTextColors[6] = resources.getColor(C0010R$color.status_bar_icon_text_color_dark_mode_cts);
+        boolean z = resources.getBoolean(C0009R$bool.battery_meter_use_legacy_drawable);
         this.mUseLegacyDrawable = z;
         this.mBatteryIconView.setUseLegacyDrawable(z);
         this.mBatteryIconView.setup();
-        this.mShowBatteryDigitFull = resources.getBoolean(C0010R$bool.show_battery_digit_full);
+        this.mShowBatteryDigitFull = resources.getBoolean(C0009R$bool.show_battery_digit_full);
         TextView textView = this.mBatteryTextDigitView;
         if (textView != null) {
             FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) textView.getLayoutParams();
-            layoutParams.rightMargin = resources.getDimensionPixelSize(C0012R$dimen.battery_meter_progress_center_left_offset);
+            layoutParams.rightMargin = resources.getDimensionPixelSize(C0011R$dimen.battery_meter_progress_center_left_offset);
             this.mBatteryTextDigitView.setLayoutParams(layoutParams);
         }
         FrameLayout.LayoutParams layoutParams2 = (FrameLayout.LayoutParams) this.mBatteryChargingInView.getLayoutParams();
-        layoutParams2.rightMargin = resources.getDimensionPixelSize(C0012R$dimen.battery_meter_progress_center_left_offset);
+        layoutParams2.rightMargin = resources.getDimensionPixelSize(C0011R$dimen.battery_meter_progress_center_left_offset);
         this.mBatteryChargingInView.setLayoutParams(layoutParams2);
     }
 
@@ -342,15 +342,15 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
         scaleBatteryMeterViews();
         TextView textView = this.mBatteryTextDigitView;
         if (textView != null) {
-            textView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.statusbar_battery_digit_size));
+            textView.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.statusbar_battery_digit_size));
         }
         TextView textView2 = this.mBatteryPercentView;
         if (textView2 != null) {
-            textView2.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.statusbar_battery_size));
+            textView2.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.statusbar_battery_size));
         }
         TextView textView3 = this.mBatteryPercentMarkView;
         if (textView3 != null) {
-            textView3.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.battery_percent_mark_view_text_size));
+            textView3.setTextSize(0, (float) this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.battery_percent_mark_view_text_size));
         }
         onConfigChanged(getContext().getResources().getConfiguration());
     }
@@ -358,11 +358,11 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     private void scaleBatteryMeterViews() {
         Resources resources = getContext().getResources();
         TypedValue typedValue = new TypedValue();
-        resources.getValue(C0012R$dimen.status_bar_icon_scale_factor, typedValue, true);
+        resources.getValue(C0011R$dimen.status_bar_icon_scale_factor, typedValue, true);
         float f = typedValue.getFloat();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.status_bar_battery_icon_width);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.status_bar_battery_icon_height);
-        new LinearLayout.LayoutParams((int) (((float) dimensionPixelSize2) * f), (int) (((float) dimensionPixelSize) * f)).setMargins(0, 0, 0, resources.getDimensionPixelSize(C0012R$dimen.battery_margin_bottom));
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.status_bar_battery_icon_width);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0011R$dimen.status_bar_battery_icon_height);
+        new LinearLayout.LayoutParams((int) (((float) dimensionPixelSize2) * f), (int) (((float) dimensionPixelSize) * f)).setMargins(0, 0, 0, resources.getDimensionPixelSize(C0011R$dimen.battery_margin_bottom));
     }
 
     private void updateChargingIconView() {
@@ -380,7 +380,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     }
 
     private int getChargingIconId() {
-        return this.mQuickCharging ? C0013R$drawable.battery_meter_quick_charging : C0013R$drawable.battery_meter_charging;
+        return this.mQuickCharging ? C0012R$drawable.battery_meter_quick_charging : C0012R$drawable.battery_meter_charging;
     }
 
     private void updateIcon(ImageView imageView, int i) {
@@ -403,7 +403,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private int getIconId() {
-        return this.mCharging ? this.mForceShowDigit ? C0020R$raw.stat_sys_battery_charge_digit : C0020R$raw.stat_sys_battery_charge : (this.mPowerSave || this.mExtremePowerSave) ? this.mForceShowDigit ? C0020R$raw.stat_sys_battery_power_save_digit : C0020R$raw.stat_sys_battery_power_save : this.mForceShowDigit ? C0020R$raw.stat_sys_battery_digital : C0020R$raw.stat_sys_battery;
+        return this.mCharging ? this.mForceShowDigit ? C0019R$raw.stat_sys_battery_charge_digit : C0019R$raw.stat_sys_battery_charge : (this.mPowerSave || this.mExtremePowerSave) ? this.mForceShowDigit ? C0019R$raw.stat_sys_battery_power_save_digit : C0019R$raw.stat_sys_battery_power_save : this.mForceShowDigit ? C0019R$raw.stat_sys_battery_digital : C0019R$raw.stat_sys_battery;
     }
 
     private void updateShowPercent() {
@@ -412,7 +412,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
             if (!z) {
                 this.mBatteryPercentView = loadPercentView();
                 ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(-2, -1);
-                marginLayoutParams.setMargins(getResources().getDimensionPixelOffset(C0012R$dimen.statusbar_battery_percent_margin_start), 0, getResources().getDimensionPixelOffset(C0012R$dimen.statusbar_battery_percent_margin_end), 0);
+                marginLayoutParams.setMargins(getResources().getDimensionPixelOffset(C0011R$dimen.statusbar_battery_percent_margin_start), 0, getResources().getDimensionPixelOffset(C0011R$dimen.statusbar_battery_percent_margin_end), 0);
                 addView(this.mBatteryPercentView, -1, marginLayoutParams);
                 this.mBatteryPercentView.setTypeface(this.mDigitTypeface);
                 this.mBatteryPercentView.setImportantForAccessibility(2);
@@ -422,7 +422,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
                 }
                 TextView loadPercentMarkView = loadPercentMarkView();
                 this.mBatteryPercentMarkView = loadPercentMarkView;
-                loadPercentMarkView.setText(this.mContext.getResources().getString(C0021R$string.battery_meter_percent_sign));
+                loadPercentMarkView.setText(this.mContext.getResources().getString(C0020R$string.battery_meter_percent_sign));
                 addView(this.mBatteryPercentMarkView, -1, new LinearLayout.LayoutParams(-2, -1));
                 this.mBatteryPercentMarkView.setTypeface(this.mMarkTypeface);
                 this.mBatteryPercentMarkView.setImportantForAccessibility(2);
@@ -445,7 +445,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     }
 
     private TextView loadPercentView() {
-        return (TextView) LayoutInflater.from(getContext()).inflate(C0017R$layout.battery_percentage_view, (ViewGroup) null);
+        return (TextView) LayoutInflater.from(getContext()).inflate(C0016R$layout.battery_percentage_view, (ViewGroup) null);
     }
 
     private void setPercentViewTextColor() {
@@ -484,7 +484,7 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
     }
 
     private TextView loadPercentMarkView() {
-        return (TextView) LayoutInflater.from(getContext()).inflate(C0017R$layout.battery_percentage_mark_view, (ViewGroup) null);
+        return (TextView) LayoutInflater.from(getContext()).inflate(C0016R$layout.battery_percentage_mark_view, (ViewGroup) null);
     }
 
     @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
@@ -496,9 +496,9 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
             MiuiBatteryMeterIconView miuiBatteryMeterIconView = this.mBatteryIconView;
             Context context = getContext();
             if (this.mCharging) {
-                i = C0021R$string.accessibility_battery_level_charging;
+                i = C0020R$string.accessibility_battery_level_charging;
             } else {
-                i = C0021R$string.accessibility_battery_level;
+                i = C0020R$string.accessibility_battery_level;
             }
             miuiBatteryMeterIconView.setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
             setDigitViewTextColor();
@@ -515,9 +515,9 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
             MiuiBatteryMeterIconView miuiBatteryMeterIconView = this.mBatteryIconView;
             Context context = getContext();
             if (this.mCharging) {
-                i = C0021R$string.accessibility_battery_level_charging;
+                i = C0020R$string.accessibility_battery_level_charging;
             } else {
-                i = C0021R$string.accessibility_battery_level;
+                i = C0020R$string.accessibility_battery_level;
             }
             miuiBatteryMeterIconView.setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
             setDigitViewTextColor();

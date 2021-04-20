@@ -18,7 +18,7 @@ import android.view.InputMonitor;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
 import com.android.internal.policy.TaskResizingAlgorithm;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipTaskOrganizer;
@@ -93,7 +93,7 @@ public class PipResizeGestureHandler {
     }
 
     private void reloadResources() {
-        this.mDelta = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.pip_resize_edge_size);
+        this.mDelta = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.pip_resize_edge_size);
         this.mTouchSlop = (float) ViewConfiguration.get(this.mContext).getScaledTouchSlop();
     }
 

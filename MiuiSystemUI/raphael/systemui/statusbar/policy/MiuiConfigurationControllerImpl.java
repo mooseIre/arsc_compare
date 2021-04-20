@@ -29,21 +29,19 @@ public final class MiuiConfigurationControllerImpl extends ConfigurationControll
     public void onConfigurationChanged(@NotNull Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         super.onConfigurationChanged(configuration);
-        ArrayList<ConfigurationController.ConfigurationListener> arrayList = new ArrayList(getListeners());
         int i = configuration.extraConfig.themeChanged;
         if (i != this.themeChanged) {
             this.themeChanged = i;
-            onMiuiThemeChanged();
-            boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
-            for (ConfigurationController.ConfigurationListener configurationListener : arrayList) {
-                if (getListeners().contains(configurationListener)) {
-                    configurationListener.onMiuiThemeChanged(isDefaultLockScreenTheme);
-                }
-            }
+            ((AppIconsManager) Dependency.get(AppIconsManager.class)).clearAll();
+            onMiuiThemeChanged(MiuiKeyguardUtils.isDefaultLockScreenTheme());
         }
     }
 
-    private final void onMiuiThemeChanged() {
-        ((AppIconsManager) Dependency.get(AppIconsManager.class)).clearAll();
+    public final void onMiuiThemeChanged(boolean z) {
+        for (ConfigurationController.ConfigurationListener configurationListener : new ArrayList(getListeners())) {
+            if (getListeners().contains(configurationListener)) {
+                configurationListener.onMiuiThemeChanged(z);
+            }
+        }
     }
 }

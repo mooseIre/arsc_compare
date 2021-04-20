@@ -5,8 +5,8 @@ import android.net.Uri;
 import android.os.UserHandle;
 import android.text.TextUtils;
 import android.widget.Switch;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -109,16 +109,16 @@ public class ScreenShotTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0021R$string.quick_settings_screenshot_label);
+        return this.mContext.getString(C0020R$string.quick_settings_screenshot_label);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         booleanState.value = false;
         booleanState.state = 1;
-        booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_screenshot);
-        booleanState.label = this.mHost.getContext().getString(C0021R$string.quick_settings_screenshot_label);
-        booleanState.contentDescription = this.mContext.getString(C0021R$string.quick_settings_screenshot_label);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_screenshot);
+        booleanState.label = this.mHost.getContext().getString(C0020R$string.quick_settings_screenshot_label);
+        booleanState.contentDescription = this.mContext.getString(C0020R$string.quick_settings_screenshot_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
 

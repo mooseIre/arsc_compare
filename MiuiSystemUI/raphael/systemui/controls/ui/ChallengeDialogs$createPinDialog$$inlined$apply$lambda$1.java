@@ -4,12 +4,11 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.service.controls.actions.ControlAction;
 import android.widget.EditText;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.functions.Function0;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ChallengeDialogs.kt */
-public final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 implements DialogInterface.OnClickListener {
+final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 implements DialogInterface.OnClickListener {
     final /* synthetic */ ControlViewHolder $cvh$inlined;
     final /* synthetic */ ControlAction $lastAction$inlined;
 
@@ -21,8 +20,8 @@ public final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 impl
     public final void onClick(DialogInterface dialogInterface, int i) {
         if (dialogInterface instanceof Dialog) {
             Dialog dialog = (Dialog) dialogInterface;
-            dialog.requireViewById(C0015R$id.controls_pin_input);
-            this.$cvh$inlined.action(ChallengeDialogs.access$addChallengeValue(ChallengeDialogs.INSTANCE, this.$lastAction$inlined, ((EditText) dialog.requireViewById(C0015R$id.controls_pin_input)).getText().toString()));
+            dialog.requireViewById(C0014R$id.controls_pin_input);
+            this.$cvh$inlined.action(ChallengeDialogs.access$addChallengeValue(ChallengeDialogs.INSTANCE, this.$lastAction$inlined, ((EditText) dialog.requireViewById(C0014R$id.controls_pin_input)).getText().toString()));
             dialogInterface.dismiss();
         }
     }

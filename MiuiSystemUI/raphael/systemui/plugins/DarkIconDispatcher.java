@@ -34,6 +34,9 @@ public interface DarkIconDispatcher {
     default void reapply() {
     }
 
+    default void reapply(DarkReceiver darkReceiver) {
+    }
+
     void removeDarkReceiver(ImageView imageView);
 
     void removeDarkReceiver(DarkReceiver darkReceiver);

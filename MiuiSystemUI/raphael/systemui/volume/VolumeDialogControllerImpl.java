@@ -38,7 +38,7 @@ import codeinjection.CodeInjection;
 import com.android.internal.annotations.GuardedBy;
 import com.android.settingslib.volume.MediaSessions;
 import com.android.settingslib.volume.Util;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.VolumeDialogController;
@@ -111,17 +111,17 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     static {
         ArrayMap<Integer, Integer> arrayMap = new ArrayMap<>();
         STREAMS = arrayMap;
-        arrayMap.put(4, Integer.valueOf(C0021R$string.stream_alarm));
-        STREAMS.put(6, Integer.valueOf(C0021R$string.stream_bluetooth_sco));
-        STREAMS.put(8, Integer.valueOf(C0021R$string.stream_dtmf));
-        STREAMS.put(3, Integer.valueOf(C0021R$string.stream_music));
-        STREAMS.put(10, Integer.valueOf(C0021R$string.stream_accessibility));
-        STREAMS.put(5, Integer.valueOf(C0021R$string.stream_notification));
-        STREAMS.put(2, Integer.valueOf(C0021R$string.stream_ring));
-        STREAMS.put(1, Integer.valueOf(C0021R$string.stream_system));
-        STREAMS.put(7, Integer.valueOf(C0021R$string.stream_system_enforced));
-        STREAMS.put(9, Integer.valueOf(C0021R$string.stream_tts));
-        STREAMS.put(0, Integer.valueOf(C0021R$string.stream_voice_call));
+        arrayMap.put(4, Integer.valueOf(C0020R$string.stream_alarm));
+        STREAMS.put(6, Integer.valueOf(C0020R$string.stream_bluetooth_sco));
+        STREAMS.put(8, Integer.valueOf(C0020R$string.stream_dtmf));
+        STREAMS.put(3, Integer.valueOf(C0020R$string.stream_music));
+        STREAMS.put(10, Integer.valueOf(C0020R$string.stream_accessibility));
+        STREAMS.put(5, Integer.valueOf(C0020R$string.stream_notification));
+        STREAMS.put(2, Integer.valueOf(C0020R$string.stream_ring));
+        STREAMS.put(1, Integer.valueOf(C0020R$string.stream_system));
+        STREAMS.put(7, Integer.valueOf(C0020R$string.stream_system_enforced));
+        STREAMS.put(9, Integer.valueOf(C0020R$string.stream_tts));
+        STREAMS.put(0, Integer.valueOf(C0020R$string.stream_voice_call));
     }
 
     public VolumeDialogControllerImpl(Context context, BroadcastDispatcher broadcastDispatcher, Optional<Lazy<StatusBar>> optional, RingerModeTracker ringerModeTracker) {

@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.media.MediaAction;
 import com.android.systemui.media.MediaControlPanel;
@@ -123,8 +123,8 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
 
     private void setSeamless(MediaData mediaData, PlayerViewHolder playerViewHolder, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
         playerViewHolder.getSeamless().setVisibility(0);
-        setVisibleAndAlpha(constraintSet2, C0015R$id.media_seamless, true);
-        setVisibleAndAlpha(constraintSet, C0015R$id.media_seamless, true);
+        setVisibleAndAlpha(constraintSet2, C0014R$id.media_seamless, true);
+        setVisibleAndAlpha(constraintSet, C0014R$id.media_seamless, true);
         int id = playerViewHolder.getSeamless().getId();
         float f = mediaData.getResumption() ? 0.38f : 1.0f;
         constraintSet.setAlpha(id, f);
@@ -146,7 +146,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
             action.setContentDescription(mediaAction.getContentDescription());
             Notification.Action notificationAction = mediaAction.getNotificationAction();
             Runnable action2 = mediaAction.getAction();
-            if (notificationAction != null) {
+            if (notificationAction != null && notificationAction.actionIntent != null) {
                 enableActionButton(action, new View.OnClickListener(notificationAction, action) {
                     /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$37drBkuRL76GGV6bNhqhR5LC18 */
                     public final /* synthetic */ Notification.Action f$0;
@@ -186,8 +186,8 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
             setVisibleAndAlpha(constraintSet, i3, true);
             i++;
         }
-        constraintSet2.constrainWidth(C0015R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_collapsed_gap) * i2);
-        constraintSet.constrainWidth(C0015R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_expanded_gap) * i);
+        constraintSet2.constrainWidth(C0014R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_collapsed_gap) * i2);
+        constraintSet.constrainWidth(C0014R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_expanded_gap) * i);
         while (i < iArr.length) {
             setVisibleAndAlpha(constraintSet, iArr[i], false);
             setVisibleAndAlpha(constraintSet2, iArr[i], false);
