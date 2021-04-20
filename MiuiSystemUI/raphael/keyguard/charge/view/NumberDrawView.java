@@ -14,7 +14,7 @@ import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import java.util.Locale;
 
 public class NumberDrawView extends TextView {
@@ -160,7 +160,7 @@ public class NumberDrawView extends TextView {
                 str = "100";
             }
             this.mLevel = str;
-            String string = this.mResources.getString(C0021R$string.keyguard_charging_battery_level, str);
+            String string = this.mResources.getString(C0020R$string.keyguard_charging_battery_level, str);
             this.mShowLevel = string;
             this.mShowLevel = string.replace(" ", CodeInjection.MD5);
             invalidate();

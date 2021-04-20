@@ -7,8 +7,8 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 
 public class WechatPayItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -27,7 +27,7 @@ public class WechatPayItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_wechat_pay);
+        imageView.setImageResource(C0012R$drawable.gxzw_quick_open_wechat_pay);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -47,11 +47,11 @@ public class WechatPayItem extends IQuickOpenItem {
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
-        return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_pay);
+        return this.mContext.getString(C0020R$string.gxzw_quick_open_wechat_pay);
     }
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
-        return this.mContext.getString(C0021R$string.gxzw_quick_open_wechat_pay_sub);
+        return this.mContext.getString(C0020R$string.gxzw_quick_open_wechat_pay_sub);
     }
 }

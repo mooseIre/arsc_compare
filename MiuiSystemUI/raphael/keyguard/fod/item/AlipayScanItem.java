@@ -8,8 +8,8 @@ import android.graphics.Region;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 
 public class AlipayScanItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -23,7 +23,7 @@ public class AlipayScanItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_alipay_scan);
+        imageView.setImageResource(C0012R$drawable.gxzw_quick_open_alipay_scan);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -56,11 +56,11 @@ public class AlipayScanItem extends IQuickOpenItem {
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
-        return this.mContext.getString(C0021R$string.gxzw_quick_open_alipay_scan);
+        return this.mContext.getString(C0020R$string.gxzw_quick_open_alipay_scan);
     }
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
-        return this.mContext.getString(C0021R$string.gxzw_quick_open_alipay_scan_sub);
+        return this.mContext.getString(C0020R$string.gxzw_quick_open_alipay_scan_sub);
     }
 }

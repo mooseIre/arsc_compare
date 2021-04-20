@@ -27,7 +27,7 @@ import android.view.animation.Interpolator;
 import com.android.internal.widget.ExploreByTouchHelper;
 import com.android.internal.widget.LockPatternView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -244,7 +244,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternStarted() {
-        sendAccessEvent(C0021R$string.lockscreen_access_pattern_start);
+        sendAccessEvent(C0020R$string.lockscreen_access_pattern_start);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternStart();
@@ -252,7 +252,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternDetected() {
-        sendAccessEvent(C0021R$string.lockscreen_access_pattern_detected);
+        sendAccessEvent(C0020R$string.lockscreen_access_pattern_detected);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternDetected(this.mPattern);
@@ -260,7 +260,7 @@ public class MiuiLockPatternView extends View {
     }
 
     private void notifyPatternCleared() {
-        sendAccessEvent(C0021R$string.lockscreen_access_pattern_cleared);
+        sendAccessEvent(C0020R$string.lockscreen_access_pattern_cleared);
         OnPatternListener onPatternListener = this.mOnPatternListener;
         if (onPatternListener != null) {
             onPatternListener.onPatternCleared();
@@ -931,7 +931,7 @@ public class MiuiLockPatternView extends View {
                 accessibilityEvent.setContentDescription(charSequence);
                 return;
             }
-            accessibilityEvent.setContentDescription(((View) MiuiLockPatternView.this).mContext.getResources().getString(C0021R$string.input_pattern_hint_text));
+            accessibilityEvent.setContentDescription(((View) MiuiLockPatternView.this).mContext.getResources().getString(C0020R$string.input_pattern_hint_text));
         }
 
         public void onPopulateAccessibilityEvent(View view, AccessibilityEvent accessibilityEvent) {
@@ -996,7 +996,7 @@ public class MiuiLockPatternView extends View {
         }
 
         private CharSequence getTextForVirtualView(int i) {
-            return MiuiLockPatternView.this.getResources().getString(C0021R$string.lockscreen_access_pattern_cell_added_verbose, Integer.valueOf(i));
+            return MiuiLockPatternView.this.getResources().getString(C0020R$string.lockscreen_access_pattern_cell_added_verbose, Integer.valueOf(i));
         }
 
         private int getVirtualViewIdForHit(float f, float f2) {

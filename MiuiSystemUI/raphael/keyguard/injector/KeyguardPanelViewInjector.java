@@ -28,10 +28,10 @@ import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.KeyguardIndicationController;
@@ -63,9 +63,9 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     @NotNull
     private final Context mContext;
     private DoubleTapHelper mDoubleTapHelper;
-    private int mDoubleTapMinimumValidThresholdBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_bottom);
-    private int mDoubleTapMinimumValidThresholdTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_top);
-    private int mDoubleTapMinimumWidthThreshold = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.double_tap_sleep_valid_minimum_width);
+    private int mDoubleTapMinimumValidThresholdBottom = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.double_tap_sleep_valid_minimum_bottom);
+    private int mDoubleTapMinimumValidThresholdTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.double_tap_sleep_valid_minimum_top);
+    private int mDoubleTapMinimumWidthThreshold = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.double_tap_sleep_valid_minimum_width);
     private boolean mForceBlack;
     private ForceBlackObserver mForceBlackObserver;
     private float mHorizontalMoveDistance;
@@ -321,7 +321,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private final void initSplitUserSpace() {
         NotificationPanelView notificationPanelView = this.mPanelView;
         if (notificationPanelView != null) {
-            View findViewById = notificationPanelView.findViewById(C0015R$id.switch_to_system_user);
+            View findViewById = notificationPanelView.findViewById(C0014R$id.switch_to_system_user);
             Intrinsics.checkExpressionValueIsNotNull(findViewById, "mPanelView!!.findViewByI…id.switch_to_system_user)");
             TextView textView = (TextView) findViewById;
             this.mSwitchSystemUserEntrance = textView;
@@ -921,7 +921,7 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     public void onWallpaperChange(boolean z) {
         TextView switchSystemUserEntrance = getSwitchSystemUserEntrance();
         switchSystemUserEntrance.setTextColor(z ? -1308622848 : -1);
-        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0013R$drawable.logout_light : C0013R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
+        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0012R$drawable.logout_light : C0012R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
         KeyguardStatusBarView keyguardStatusBarView = this.mKeyguardStatusBarView;
         if (keyguardStatusBarView != null) {
             keyguardStatusBarView.setDarkStyle(z);
@@ -964,17 +964,17 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         Window window2;
         if (this.mSimLockedTipsDialog == null) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext);
-            builder.setTitle(this.mContext.getString(C0021R$string.sim_state_locked_dialog_title));
+            builder.setTitle(this.mContext.getString(C0020R$string.sim_state_locked_dialog_title));
             StringCompanionObject stringCompanionObject = StringCompanionObject.INSTANCE;
-            String string = this.mContext.getString(C0021R$string.sim_state_locked_puk_dialog_message);
+            String string = this.mContext.getString(C0020R$string.sim_state_locked_puk_dialog_message);
             Intrinsics.checkExpressionValueIsNotNull(string, "mContext.getString(R.str…ocked_puk_dialog_message)");
             String format = String.format(string, Arrays.copyOf(new Object[]{10}, 1));
             Intrinsics.checkExpressionValueIsNotNull(format, "java.lang.String.format(format, *args)");
             builder.setMessage(format);
             if (PhoneUtils.isInCall(this.mContext)) {
-                str = this.mContext.getString(C0021R$string.return_to_incall_screen);
+                str = this.mContext.getString(C0020R$string.return_to_incall_screen);
             } else {
-                str = this.mContext.getString(C0021R$string.emergency_call_string);
+                str = this.mContext.getString(C0020R$string.emergency_call_string);
             }
             builder.setNeutralButton(str, new KeyguardPanelViewInjector$showSimLockedTipsDialog$1(this));
             builder.setCancelable(false);

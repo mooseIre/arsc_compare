@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.RegionController;
 import kotlin.jvm.internal.Intrinsics;
@@ -25,10 +25,10 @@ public final class KeyguardNegative1PageInjector implements RegionController.Cal
 
     public final void onFinishInflate(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "notificationPanelView");
-        View findViewById = view.findViewById(C0015R$id.left_view_bg);
+        View findViewById = view.findViewById(C0014R$id.left_view_bg);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "notificationPanelView.fi…ewById(R.id.left_view_bg)");
         this.mLeftViewBg = (ImageView) findViewById;
-        this.mKeyguardLeftView = (MiuiKeyguardMoveLeftViewContainer) view.findViewById(C0015R$id.keyguard_left_view);
+        this.mKeyguardLeftView = (MiuiKeyguardMoveLeftViewContainer) view.findViewById(C0014R$id.keyguard_left_view);
         this.mUpdateMonitorCallback = new KeyguardNegative1PageInjector$onFinishInflate$1(this);
     }
 

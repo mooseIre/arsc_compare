@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
-import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0009R$bool;
 
 /* access modifiers changed from: package-private */
 public class MiuiGxzwSensor {
@@ -105,7 +105,7 @@ public class MiuiGxzwSensor {
         } else if (sensorManager.getDefaultSensor(TYPE_NONUI_SENSOR) == null) {
             return false;
         } else {
-            if (this.mContext.getResources().getBoolean(C0010R$bool.config_enableFodNonuiSensor) || MiuiGxzwUtils.isSupportNonuiSensor()) {
+            if (this.mContext.getResources().getBoolean(C0009R$bool.config_enableFodNonuiSensor) || MiuiGxzwUtils.isSupportNonuiSensor()) {
                 return true;
             }
             return false;

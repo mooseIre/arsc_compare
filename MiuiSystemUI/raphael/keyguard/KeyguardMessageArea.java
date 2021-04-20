@@ -10,9 +10,9 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.lang.ref.WeakReference;
@@ -100,7 +100,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onThemeChanged() {
-        TypedArray obtainStyledAttributes = ((TextView) this).mContext.obtainStyledAttributes(new int[]{C0011R$color.white_disabled});
+        TypedArray obtainStyledAttributes = ((TextView) this).mContext.obtainStyledAttributes(new int[]{C0010R$color.white_disabled});
         ColorStateList valueOf = ColorStateList.valueOf(obtainStyledAttributes.getColor(0, -1));
         obtainStyledAttributes.recycle();
         this.mDefaultColorState = valueOf;
@@ -109,7 +109,7 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
-        TypedArray obtainStyledAttributes = ((TextView) this).mContext.obtainStyledAttributes(C0022R$style.Keyguard_TextView, new int[]{16842901});
+        TypedArray obtainStyledAttributes = ((TextView) this).mContext.obtainStyledAttributes(C0021R$style.Keyguard_TextView, new int[]{16842901});
         setTextSize(0, (float) obtainStyledAttributes.getDimensionPixelSize(0, 0));
         obtainStyledAttributes.recycle();
     }
@@ -129,8 +129,8 @@ public class KeyguardMessageArea extends TextView implements SecurityMessageDisp
     }
 
     public static KeyguardMessageArea findSecurityMessageDisplay(View view) {
-        KeyguardMessageArea keyguardMessageArea = (KeyguardMessageArea) view.findViewById(C0015R$id.keyguard_message_area);
-        return keyguardMessageArea == null ? (KeyguardMessageArea) view.getRootView().findViewById(C0015R$id.keyguard_message_area) : keyguardMessageArea;
+        KeyguardMessageArea keyguardMessageArea = (KeyguardMessageArea) view.findViewById(C0014R$id.keyguard_message_area);
+        return keyguardMessageArea == null ? (KeyguardMessageArea) view.getRootView().findViewById(C0014R$id.keyguard_message_area) : keyguardMessageArea;
     }
 
     /* access modifiers changed from: protected */

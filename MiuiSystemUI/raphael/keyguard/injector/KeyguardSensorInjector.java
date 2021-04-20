@@ -13,7 +13,7 @@ import android.view.WindowManager;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0008R$array;
+import com.android.systemui.C0007R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
 import com.android.systemui.keyguard.KeyguardViewMediator;
@@ -110,6 +110,10 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new TypeCastException("null cannot be cast to non-null type android.hardware.SensorManager");
     }
 
+    public static final /* synthetic */ void access$unregisterPickupSensor(KeyguardSensorInjector keyguardSensorInjector) {
+        keyguardSensorInjector.unregisterPickupSensor();
+    }
+
     @NotNull
     public final Context getMContext() {
         return this.mContext;
@@ -202,8 +206,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.injector.KeyguardSensorInjector.registerPickupSensor():void");
     }
 
-    /* access modifiers changed from: private */
-    public final void unregisterPickupSensor() {
+    private final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 
@@ -254,7 +257,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     public final boolean isSupportPickupByMTK() {
-        String[] stringArray = this.mContext.getResources().getStringArray(C0008R$array.device_support_pickup_by_MTK);
+        String[] stringArray = this.mContext.getResources().getStringArray(C0007R$array.device_support_pickup_by_MTK);
         Intrinsics.checkExpressionValueIsNotNull(stringArray, "mContext.resources.getSt…ce_support_pickup_by_MTK)");
         return ArraysKt.contains(stringArray, Build.DEVICE);
     }

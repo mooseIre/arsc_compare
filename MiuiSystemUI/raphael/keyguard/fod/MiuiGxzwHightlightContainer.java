@@ -7,8 +7,8 @@ import android.util.Slog;
 import android.view.LayoutInflater;
 import android.view.WindowManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 
 /* access modifiers changed from: package-private */
 public class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
@@ -96,8 +96,8 @@ public class MiuiGxzwHightlightContainer extends GxzwNoRotateFrameLayout {
     }
 
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_gxzw_icon_view, this);
-        this.mMiuiGxzwHighlightView = (MiuiGxzwHighlightView) findViewById(C0015R$id.gxzw_highlight);
+        LayoutInflater.from(getContext()).inflate(C0016R$layout.miui_keyguard_gxzw_icon_view, this);
+        this.mMiuiGxzwHighlightView = (MiuiGxzwHighlightView) findViewById(C0014R$id.gxzw_highlight);
         setSystemUiVisibility(4864);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(this.mRegion.width(), this.mRegion.height(), 2018, 16778776, -2);
         this.mLayoutParams = layoutParams;

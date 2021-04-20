@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.view.View;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 
 /* access modifiers changed from: package-private */
 public class MiuiGxzwQuickLoadingView extends View {
@@ -70,6 +70,6 @@ public class MiuiGxzwQuickLoadingView extends View {
     }
 
     private void updatePixelSize() {
-        this.mLoadingMaxRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_loading_max_radius);
+        this.mLoadingMaxRadius = getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_loading_max_radius);
     }
 }
