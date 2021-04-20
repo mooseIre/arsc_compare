@@ -17,9 +17,9 @@ import android.view.Display;
 import android.view.DisplayCutout;
 import codeinjection.CodeInjection;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
 import com.miui.systemui.util.ReflectUtil;
 import java.math.BigDecimal;
 
@@ -259,18 +259,18 @@ public class MiuiGxzwUtils {
     }
 
     public static boolean supportHalo(Context context) {
-        return context.getResources().getBoolean(C0010R$bool.config_enableFodCircleHalo);
+        return context.getResources().getBoolean(C0009R$bool.config_enableFodCircleHalo);
     }
 
     public static int getHaloRes() {
-        return C0013R$drawable.gxzw_white_halo_light;
+        return C0012R$drawable.gxzw_white_halo_light;
     }
 
     public static float getHaloResCircleRadius(Context context) {
-        return (float) context.getResources().getDimensionPixelOffset(C0012R$dimen.gxzw_halo_res_circle_radius);
+        return (float) context.getResources().getDimensionPixelOffset(C0011R$dimen.gxzw_halo_res_circle_radius);
     }
 
     public static int getHealthHaloRes() {
-        return C0013R$drawable.gxzw_green_halo_light;
+        return C0012R$drawable.gxzw_green_halo_light;
     }
 }

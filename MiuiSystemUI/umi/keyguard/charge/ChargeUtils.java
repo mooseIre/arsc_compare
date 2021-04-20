@@ -5,15 +5,16 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.android.systemui.C0008R$array;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0019R$plurals;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0007R$array;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0018R$plurals;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
@@ -95,7 +96,7 @@ public class ChargeUtils {
     private static int getChargeAnimationType() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (contextForUser != null) {
-            return contextForUser.getResources().getInteger(C0016R$integer.keyguard_charge_animation_type);
+            return contextForUser.getResources().getInteger(C0015R$integer.keyguard_charge_animation_type);
         }
         return 0;
     }
@@ -124,7 +125,7 @@ public class ChargeUtils {
             return null;
         }
         if (supportWirelessCharge() && sNeedRepositionDevice) {
-            return context.getString(C0021R$string.wireless_charge_reset_device);
+            return context.getString(C0020R$string.wireless_charge_reset_device);
         }
         Bundle batteryInfo = getBatteryInfo(context);
         Resources resources = context.getResources();
@@ -134,27 +135,27 @@ public class ChargeUtils {
             long mins = getMins(j);
             int i2 = (hours > 0 ? 1 : (hours == 0 ? 0 : -1));
             if (i2 > 0 && mins > 0) {
-                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_time_text, (int) hours, Long.valueOf(hours), Long.valueOf(mins));
+                str = resources.getQuantityString(C0018R$plurals.keyguard_charging_info_could_use_time_text, (int) hours, Long.valueOf(hours), Long.valueOf(mins));
             } else if (i2 > 0) {
-                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_hour_time_text, (int) hours, Long.valueOf(hours));
+                str = resources.getQuantityString(C0018R$plurals.keyguard_charging_info_could_use_hour_time_text, (int) hours, Long.valueOf(hours));
             } else if (mins > 0) {
-                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_min_time_text, (int) mins, Long.valueOf(mins));
+                str = resources.getQuantityString(C0018R$plurals.keyguard_charging_info_could_use_min_time_text, (int) mins, Long.valueOf(mins));
             }
         }
         if (!TextUtils.isEmpty(str)) {
             return str;
         }
         if (i == 100) {
-            return resources.getString(C0021R$string.keyguard_charged);
+            return resources.getString(C0020R$string.keyguard_charged);
         }
         if (isStrongSuperQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0020R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isSuperQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0020R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isQuickCharging()) {
-            return resources.getString(C0021R$string.keyguard_charging_quick_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0020R$string.keyguard_charging_quick_and_level_tip, Integer.valueOf(i));
         } else {
-            return resources.getString(C0021R$string.keyguard_charging_normal_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0020R$string.keyguard_charging_normal_and_level_tip, Integer.valueOf(i));
         }
     }
 
@@ -185,7 +186,7 @@ public class ChargeUtils {
 
     public static boolean isSupportWirelessStrongChargeSsw() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
-        boolean z = contextForUser != null ? contextForUser.getResources().getBoolean(C0010R$bool.keyguard_wireless_strong_charge_ssw) : false;
+        boolean z = contextForUser != null ? contextForUser.getResources().getBoolean(C0009R$bool.keyguard_wireless_strong_charge_ssw) : false;
         if (((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).getCurrentChargeDeviceType() != 15 || !z) {
             return SUPPORT_WIRELESS_CHARGE;
         }
@@ -207,7 +208,7 @@ public class ChargeUtils {
     private static boolean supportStrongSuperRapidCharge() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (mIsSupportStrongSuperRapidChargeList.isEmpty() && contextForUser != null) {
-            mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.config_charge_supportWirelessStrongSuper));
+            mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_charge_supportWirelessStrongSuper));
         }
         return mIsSupportStrongSuperRapidChargeList.contains(Build.DEVICE);
     }
@@ -256,5 +257,12 @@ public class ChargeUtils {
 
     public static void showSystemOverlayToast(Context context, CharSequence charSequence, int i) {
         Toast.makeText(context, charSequence, i).show();
+    }
+
+    public static boolean isOrientationLocked(Context context) {
+        if (Settings.System.getInt(context.getContentResolver(), "accelerometer_rotation", 0) == 0) {
+            return true;
+        }
+        return SUPPORT_WIRELESS_CHARGE;
     }
 }

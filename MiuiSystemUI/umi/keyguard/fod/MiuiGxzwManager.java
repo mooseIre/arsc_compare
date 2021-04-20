@@ -28,8 +28,8 @@ import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -859,7 +859,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
             toast.cancel();
         }
         if (this.mShowed && !this.mKeyguardAuthen && z) {
-            Toast makeText = Toast.makeText(this.mContext, C0021R$string.finger_error_single_mode, 0);
+            Toast makeText = Toast.makeText(this.mContext, C0020R$string.finger_error_single_mode, 0);
             this.mToast = makeText;
             makeText.show();
         }
@@ -964,16 +964,16 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         int i = 0;
         switch (Settings.System.getIntForUser(this.mContext.getContentResolver(), "fod_animation_type", MiuiGxzwAnimManager.getDefaultAnimType(), 0)) {
             case 6:
-                i = C0013R$drawable.gxzw_light_recognizing_anim_11;
+                i = C0012R$drawable.gxzw_light_recognizing_anim_11;
                 break;
             case 7:
-                i = C0013R$drawable.gxzw_star_recognizing_anim_15;
+                i = C0012R$drawable.gxzw_star_recognizing_anim_15;
                 break;
             case 8:
-                i = C0013R$drawable.gxzw_aurora_recognizing_anim_15;
+                i = C0012R$drawable.gxzw_aurora_recognizing_anim_15;
                 break;
             case 9:
-                i = C0013R$drawable.gxzw_pulse_recognizing_anim_10;
+                i = C0012R$drawable.gxzw_pulse_recognizing_anim_10;
                 break;
         }
         return BitmapFactory.decodeResource(this.mContext.getResources(), i);

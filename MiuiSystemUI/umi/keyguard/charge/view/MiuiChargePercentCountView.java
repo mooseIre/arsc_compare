@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.R$styleable;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiChargeManager;
-import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0009R$bool;
 import com.android.systemui.Dependency;
 import java.util.Locale;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
@@ -65,7 +65,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
     }
 
     private void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();

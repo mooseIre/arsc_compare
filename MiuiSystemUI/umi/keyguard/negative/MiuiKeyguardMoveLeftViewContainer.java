@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.Dependency;
 
 public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
@@ -29,11 +29,11 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
             this.mKeyguardMoveLeftView = null;
         }
         if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
-            MiuiKeyguardMoveLeftLockScreenMagazineView miuiKeyguardMoveLeftLockScreenMagazineView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
+            MiuiKeyguardMoveLeftLockScreenMagazineView miuiKeyguardMoveLeftLockScreenMagazineView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0016R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
             this.mKeyguardMoveLeftView = miuiKeyguardMoveLeftLockScreenMagazineView;
             miuiKeyguardMoveLeftLockScreenMagazineView.setVisibility(4);
         } else {
-            MiuiKeyguardMoveLeftControlCenterView miuiKeyguardMoveLeftControlCenterView = (MiuiKeyguardMoveLeftControlCenterView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_control_center_layout, (ViewGroup) null, false);
+            MiuiKeyguardMoveLeftControlCenterView miuiKeyguardMoveLeftControlCenterView = (MiuiKeyguardMoveLeftControlCenterView) LayoutInflater.from(getContext()).inflate(C0016R$layout.miui_keyguard_left_view_control_center_layout, (ViewGroup) null, false);
             this.mKeyguardMoveLeftView = miuiKeyguardMoveLeftControlCenterView;
             miuiKeyguardMoveLeftControlCenterView.setVisibility(0);
         }

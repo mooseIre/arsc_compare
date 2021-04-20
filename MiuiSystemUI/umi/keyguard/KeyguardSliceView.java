@@ -30,10 +30,10 @@ import androidx.slice.widget.SliceLiveData;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.graphics.ColorUtils;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0009R$attr;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0008R$attr;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.keyguard.KeyguardSliceProvider;
@@ -74,8 +74,8 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         super(context, attributeSet);
         this.mTunerService = tunerService;
         this.mClickActions = new HashMap<>();
-        this.mRowPadding = resources.getDimensionPixelSize(C0012R$dimen.subtitle_clock_padding);
-        this.mRowWithHeaderPadding = resources.getDimensionPixelSize(C0012R$dimen.header_subtitle_padding);
+        this.mRowPadding = resources.getDimensionPixelSize(C0011R$dimen.subtitle_clock_padding);
+        this.mRowWithHeaderPadding = resources.getDimensionPixelSize(C0011R$dimen.header_subtitle_padding);
         this.mActivityStarter = activityStarter;
         this.mConfigurationController = configurationController;
         LayoutTransition layoutTransition = new LayoutTransition();
@@ -93,13 +93,13 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mTitle = (TextView) findViewById(C0015R$id.title);
-        this.mRow = (Row) findViewById(C0015R$id.row);
-        this.mTextColor = Utils.getColorAttrDefaultColor(((LinearLayout) this).mContext, C0009R$attr.wallpaperTextColor);
-        this.mIconSize = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0012R$dimen.widget_icon_size);
-        this.mIconSizeWithHeader = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0012R$dimen.header_icon_size);
-        this.mRowTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
-        this.mRowWithHeaderTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.header_row_font_size);
+        this.mTitle = (TextView) findViewById(C0014R$id.title);
+        this.mRow = (Row) findViewById(C0014R$id.row);
+        this.mTextColor = Utils.getColorAttrDefaultColor(((LinearLayout) this).mContext, C0008R$attr.wallpaperTextColor);
+        this.mIconSize = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0011R$dimen.widget_icon_size);
+        this.mIconSizeWithHeader = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0011R$dimen.header_icon_size);
+        this.mRowTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.widget_label_font_size);
+        this.mRowWithHeaderTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.header_row_font_size);
         this.mTitle.setOnClickListener(this);
         this.mTitle.setBreakStrategy(2);
     }
@@ -309,10 +309,10 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
-        this.mIconSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_icon_size);
-        this.mIconSizeWithHeader = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0012R$dimen.header_icon_size);
-        this.mRowTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
-        this.mRowWithHeaderTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.header_row_font_size);
+        this.mIconSize = ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.widget_icon_size);
+        this.mIconSizeWithHeader = (int) ((LinearLayout) this).mContext.getResources().getDimension(C0011R$dimen.header_icon_size);
+        this.mRowTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.widget_label_font_size);
+        this.mRowWithHeaderTextSize = (float) ((LinearLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.header_row_font_size);
     }
 
     public void refresh() {
@@ -453,7 +453,7 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public static class KeyguardSliceTextView extends TextView implements ConfigurationController.ConfigurationListener {
-        private static int sStyleId = C0022R$style.TextAppearance_Keyguard_Secondary;
+        private static int sStyleId = C0021R$style.TextAppearance_Keyguard_Secondary;
 
         KeyguardSliceTextView(Context context) {
             super(context, null, 0, sStyleId);
@@ -492,12 +492,12 @@ public class KeyguardSliceView extends LinearLayout implements View.OnClickListe
         private void updatePadding() {
             int i = 1;
             boolean z = !TextUtils.isEmpty(getText());
-            int dimension = ((int) getContext().getResources().getDimension(C0012R$dimen.widget_horizontal_padding)) / 2;
+            int dimension = ((int) getContext().getResources().getDimension(C0011R$dimen.widget_horizontal_padding)) / 2;
             if (!z) {
                 i = -1;
             }
             setPadding(dimension, 0, i * dimension, 0);
-            setCompoundDrawablePadding((int) ((TextView) this).mContext.getResources().getDimension(C0012R$dimen.widget_icon_padding));
+            setCompoundDrawablePadding((int) ((TextView) this).mContext.getResources().getDimension(C0011R$dimen.widget_icon_padding));
         }
 
         @Override // android.widget.TextView

@@ -14,7 +14,7 @@ import android.util.AttributeSet;
 import android.view.Choreographer;
 import android.view.View;
 import android.view.WindowManager;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0012R$drawable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -97,7 +97,7 @@ public class FireworksView extends View {
         this.mTrackPaint.setShader(new LinearGradient(0.0f, 0.0f, 0.0f, (float) this.mViewHeight, new int[]{OUTER_TRACK_START_COLOR, OUTER_TRACK_MIDDLE_COLOR, OUTER_TRACK_END_COLOR}, new float[]{0.0f, 0.12f, 1.0f}, Shader.TileMode.CLAMP));
         this.mFireworksManager = new FireworksManager(this.mViewHeight, this.mSpeedMove);
         this.mFireList = new ArrayList();
-        this.mFireDrawable = context.getDrawable(C0013R$drawable.charge_animation_fire_light_icon);
+        this.mFireDrawable = context.getDrawable(C0012R$drawable.charge_animation_fire_light_icon);
     }
 
     /* access modifiers changed from: protected */

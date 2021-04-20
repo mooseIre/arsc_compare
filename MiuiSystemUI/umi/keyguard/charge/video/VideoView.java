@@ -19,8 +19,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.video.VideoView;
 import com.android.keyguard.utils.ExecutorHelper;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0012R$drawable;
 
 public class VideoView extends RelativeLayout {
     private ObjectAnimator alphaOut;
@@ -281,13 +281,13 @@ public class VideoView extends RelativeLayout {
                 }
             }
         };
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
         this.mContext = context;
         this.mWindowManager = (WindowManager) getContext().getSystemService("window");
         this.mPoint = new Point();
         ImageView imageView = new ImageView(context);
         this.mBackImage = imageView;
-        imageView.setBackgroundResource(C0013R$drawable.wired_charge_video_bg_img);
+        imageView.setBackgroundResource(C0012R$drawable.wired_charge_video_bg_img);
         if (this.mIsFoldChargeVideo) {
             checkScreenSize(true);
             addView(this.mBackImage, getTextTureParams());

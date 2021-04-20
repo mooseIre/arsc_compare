@@ -1,15 +1,16 @@
 package com.android.keyguard.fod;
 
 import android.content.Context;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
 
-abstract class MiuiGxzwAnimItem {
-    private static final MiuiGxzwAnimRes DEFALUT_AOD_BACK = new MiuiGxzwAnimRes(new int[]{C0013R$drawable.finger_image_aod}, false, 30);
+/* access modifiers changed from: package-private */
+public abstract class MiuiGxzwAnimItem {
+    private static final MiuiGxzwAnimRes DEFALUT_AOD_BACK = new MiuiGxzwAnimRes(new int[]{C0012R$drawable.finger_image_aod}, false, 30);
     private static final MiuiGxzwAnimRes DEFAULT_AOD_ICON = new MiuiGxzwAnimRes(35, "gxzw_aod_icon_anim_", false, 30, false);
-    private static final MiuiGxzwAnimRes DEFAULT_LIGHT_BACK = new MiuiGxzwAnimRes(new int[]{C0013R$drawable.finger_image_light}, false, 30);
+    private static final MiuiGxzwAnimRes DEFAULT_LIGHT_BACK = new MiuiGxzwAnimRes(new int[]{C0012R$drawable.finger_image_light}, false, 30);
     private static final MiuiGxzwAnimRes DEFAULT_LIGHT_ICON = new MiuiGxzwAnimRes(35, "gxzw_light_icon_anim_", false, 30, false);
-    private static final MiuiGxzwAnimRes DEFAULT_NORMAL_BACK = new MiuiGxzwAnimRes(new int[]{C0013R$drawable.finger_image_normal}, false, 30);
+    private static final MiuiGxzwAnimRes DEFAULT_NORMAL_BACK = new MiuiGxzwAnimRes(new int[]{C0012R$drawable.finger_image_normal}, false, 30);
     private static final MiuiGxzwAnimRes DEFAULT_NORMAL_ICON = new MiuiGxzwAnimRes(35, "gxzw_normal_icon_anim_", false, 30, false);
     private final MiuiGxzwAnimRes mAodBack = generalAodBack();
     private final MiuiGxzwAnimRes mAodFalse = generalAodFalse();
@@ -82,7 +83,7 @@ abstract class MiuiGxzwAnimItem {
     }
 
     public int getFalseTipTranslationY(Context context) {
-        return context.getResources().getDimensionPixelOffset(C0012R$dimen.gxzw_normal_false_tip_translation_y);
+        return context.getResources().getDimensionPixelOffset(C0011R$dimen.gxzw_normal_false_tip_translation_y);
     }
 
     /* access modifiers changed from: protected */

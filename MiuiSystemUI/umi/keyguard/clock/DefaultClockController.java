@@ -9,10 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.android.internal.colorextraction.ColorExtractor;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
 import com.android.systemui.plugins.ClockPlugin;
 import java.util.TimeZone;
@@ -68,10 +68,10 @@ public class DefaultClockController implements ClockPlugin {
     }
 
     private void createViews() {
-        View inflate = this.mLayoutInflater.inflate(C0017R$layout.default_clock_preview, (ViewGroup) null);
+        View inflate = this.mLayoutInflater.inflate(C0016R$layout.default_clock_preview, (ViewGroup) null);
         this.mView = inflate;
-        this.mTextTime = (TextView) inflate.findViewById(C0015R$id.time);
-        this.mTextDate = (TextView) this.mView.findViewById(C0015R$id.date);
+        this.mTextTime = (TextView) inflate.findViewById(C0014R$id.time);
+        this.mTextDate = (TextView) this.mView.findViewById(C0014R$id.date);
     }
 
     @Override // com.android.systemui.plugins.ClockPlugin
@@ -83,12 +83,12 @@ public class DefaultClockController implements ClockPlugin {
 
     @Override // com.android.systemui.plugins.ClockPlugin
     public String getTitle() {
-        return this.mResources.getString(C0021R$string.clock_title_default);
+        return this.mResources.getString(C0020R$string.clock_title_default);
     }
 
     @Override // com.android.systemui.plugins.ClockPlugin
     public Bitmap getThumbnail() {
-        return BitmapFactory.decodeResource(this.mResources, C0013R$drawable.default_thumbnail);
+        return BitmapFactory.decodeResource(this.mResources, C0012R$drawable.default_thumbnail);
     }
 
     @Override // com.android.systemui.plugins.ClockPlugin

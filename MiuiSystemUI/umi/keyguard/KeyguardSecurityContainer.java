@@ -40,11 +40,11 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.settingslib.utils.ThreadUtils;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0019R$plurals;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0018R$plurals;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIFactory;
@@ -452,7 +452,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        KeyguardSecurityViewFlipper keyguardSecurityViewFlipper = (KeyguardSecurityViewFlipper) findViewById(C0015R$id.view_flipper);
+        KeyguardSecurityViewFlipper keyguardSecurityViewFlipper = (KeyguardSecurityViewFlipper) findViewById(C0014R$id.view_flipper);
         this.mSecurityViewFlipper = keyguardSecurityViewFlipper;
         keyguardSecurityViewFlipper.setLockPatternUtils(this.mLockPatternUtils);
     }
@@ -480,7 +480,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
         if (alertDialog != null) {
             alertDialog.dismiss();
         }
-        AlertDialog create = new AlertDialog.Builder(((FrameLayout) this).mContext).setTitle(str).setMessage(str2).setCancelable(false).setNeutralButton(C0021R$string.ok, (DialogInterface.OnClickListener) null).create();
+        AlertDialog create = new AlertDialog.Builder(((FrameLayout) this).mContext).setTitle(str).setMessage(str2).setCancelable(false).setNeutralButton(C0020R$string.ok, (DialogInterface.OnClickListener) null).create();
         this.mAlertDialog = create;
         if (!(((FrameLayout) this).mContext instanceof Activity)) {
             create.getWindow().setType(2009);
@@ -558,13 +558,13 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     private void showAlmostAtWipeDialog(int i, int i2, int i3) {
         String str;
         if (i3 == 1) {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.kg_failed_attempts_almost_at_wipe, Integer.valueOf(i), Integer.valueOf(i2));
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.kg_failed_attempts_almost_at_wipe, Integer.valueOf(i), Integer.valueOf(i2));
         } else if (i3 == 2) {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.kg_failed_attempts_almost_at_erase_profile, Integer.valueOf(i), Integer.valueOf(i2));
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.kg_failed_attempts_almost_at_erase_profile, Integer.valueOf(i), Integer.valueOf(i2));
         } else if (i3 != 3) {
             str = null;
         } else {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.kg_failed_attempts_almost_at_erase_user, Integer.valueOf(i), Integer.valueOf(i2));
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.kg_failed_attempts_almost_at_erase_user, Integer.valueOf(i), Integer.valueOf(i2));
         }
         showDialog(null, str);
     }
@@ -572,13 +572,13 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     private void showWipeDialog(int i, int i2) {
         String str;
         if (i2 == 1) {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.kg_failed_attempts_now_wiping, Integer.valueOf(i));
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.kg_failed_attempts_now_wiping, Integer.valueOf(i));
         } else if (i2 == 2) {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.kg_failed_attempts_now_erasing_profile, Integer.valueOf(i));
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.kg_failed_attempts_now_erasing_profile, Integer.valueOf(i));
         } else if (i2 != 3) {
             str = null;
         } else {
-            str = ((FrameLayout) this).mContext.getString(C0021R$string.kg_failed_attempts_now_erasing_user, Integer.valueOf(i));
+            str = ((FrameLayout) this).mContext.getString(C0020R$string.kg_failed_attempts_now_erasing_user, Integer.valueOf(i));
         }
         showDialog(null, str);
     }
@@ -626,7 +626,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
         }
         MiuiGxzwManager.getInstance().setShowLockoutView(true);
         this.mLockoutView.setVisibility(0);
-        final TextView textView = (TextView) this.mLockoutView.findViewById(C0015R$id.phone_locked_timeout_id);
+        final TextView textView = (TextView) this.mLockoutView.findViewById(C0014R$id.phone_locked_timeout_id);
         AlphaAnimation alphaAnimation = new AlphaAnimation(0.0f, 1.0f);
         alphaAnimation.setDuration(500);
         this.mLockoutView.startAnimation(alphaAnimation);
@@ -647,10 +647,10 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     /* access modifiers changed from: public */
     private void updateCountDown(TextView textView, long j) {
         if (j <= 60) {
-            textView.setText(getResources().getQuantityString(C0019R$plurals.phone_locked_timeout_seconds_string, (int) j, Long.valueOf(j)));
+            textView.setText(getResources().getQuantityString(C0018R$plurals.phone_locked_timeout_seconds_string, (int) j, Long.valueOf(j)));
             return;
         }
-        textView.setText(getResources().getQuantityString(C0019R$plurals.phone_locked_timeout_minutes_string, ((int) j) / 60, Long.valueOf(j / 60)));
+        textView.setText(getResources().getQuantityString(C0018R$plurals.phone_locked_timeout_minutes_string, ((int) j) / 60, Long.valueOf(j / 60)));
     }
 
     /* access modifiers changed from: protected */
@@ -684,18 +684,18 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     }
 
     private void loadLockoutView() {
-        View inflate = View.inflate(getContext(), C0017R$layout.miui_unlockscreen_lockout, null);
+        View inflate = View.inflate(getContext(), C0016R$layout.miui_unlockscreen_lockout, null);
         ((ViewGroup) getParent()).addView(inflate);
-        View findViewById = inflate.findViewById(C0015R$id.unlockscreen_lockout_id);
+        View findViewById = inflate.findViewById(C0014R$id.unlockscreen_lockout_id);
         this.mLockoutView = findViewById;
-        Button button = (Button) findViewById.findViewById(C0015R$id.foget_password);
-        this.mFogetPasswordMethod = this.mLockoutView.findViewById(C0015R$id.forget_password_hint_container);
-        this.mFogetPasswordSuggestion = this.mLockoutView.findViewById(C0015R$id.forget_password_suggesstion);
-        this.mForgetPasswordMethodBack = (TextView) this.mFogetPasswordMethod.findViewById(C0015R$id.forget_password_method_back);
-        this.mForgetPasswordMethodNext = (TextView) this.mFogetPasswordMethod.findViewById(C0015R$id.forget_password_method_next);
+        Button button = (Button) findViewById.findViewById(C0014R$id.foget_password);
+        this.mFogetPasswordMethod = this.mLockoutView.findViewById(C0014R$id.forget_password_hint_container);
+        this.mFogetPasswordSuggestion = this.mLockoutView.findViewById(C0014R$id.forget_password_suggesstion);
+        this.mForgetPasswordMethodBack = (TextView) this.mFogetPasswordMethod.findViewById(C0014R$id.forget_password_method_back);
+        this.mForgetPasswordMethodNext = (TextView) this.mFogetPasswordMethod.findViewById(C0014R$id.forget_password_method_next);
         if (getLayoutDirection() == 1) {
-            this.mForgetPasswordMethodBack.setBackgroundResource(C0013R$drawable.miui_keyguard_forget_password_suggestion_right);
-            this.mForgetPasswordMethodNext.setBackgroundResource(C0013R$drawable.miui_keyguard_forget_password_suggestion_left);
+            this.mForgetPasswordMethodBack.setBackgroundResource(C0012R$drawable.miui_keyguard_forget_password_suggestion_right);
+            this.mForgetPasswordMethodNext.setBackgroundResource(C0012R$drawable.miui_keyguard_forget_password_suggestion_left);
         }
         button.setOnClickListener(new View.OnClickListener() {
             /* class com.android.keyguard.KeyguardSecurityContainer.AnonymousClass4 */
@@ -703,7 +703,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
             public void onClick(View view) {
                 KeyguardSecurityContainer.this.setLockoutViewVisible(4);
                 KeyguardSecurityContainer.this.mFogetPasswordMethod.setVisibility(0);
-                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordMethod.findViewById(C0015R$id.forget_password_method_content)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0021R$string.phone_locked_foget_password_method_content)));
+                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordMethod.findViewById(C0014R$id.forget_password_method_content)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0020R$string.phone_locked_foget_password_method_content)));
             }
         });
         this.mLockoutView.setOnTouchListener(new View.OnTouchListener() {
@@ -724,7 +724,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
                 KeyguardSecurityContainer.this.mFogetPasswordMethod.setVisibility(4);
                 KeyguardSecurityContainer.this.setLockoutViewVisible(4);
                 KeyguardSecurityContainer.this.mFogetPasswordSuggestion.setVisibility(0);
-                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_one)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0021R$string.phone_locked_forget_password_suggesstion_one_content), new Html.ImageGetter() {
+                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0014R$id.forget_password_suggesstion_one)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0020R$string.phone_locked_forget_password_suggesstion_one_content), new Html.ImageGetter() {
                     /* class com.android.keyguard.KeyguardSecurityContainer.AnonymousClass6.AnonymousClass1 */
 
                     public Drawable getDrawable(String str) {
@@ -733,15 +733,15 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
                             return null;
                         }
                         if ("POCO".equals(Build.BRAND)) {
-                            drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0013R$drawable.miui_keyguard_forget_password_poco);
+                            drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0012R$drawable.miui_keyguard_forget_password_poco);
                         } else {
-                            drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0013R$drawable.miui_keyguard_forget_password_mi);
+                            drawable = KeyguardSecurityContainer.this.getResources().getDrawable(C0012R$drawable.miui_keyguard_forget_password_mi);
                         }
                         drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
                         return drawable;
                     }
                 }, null));
-                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_two)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0021R$string.phone_locked_forget_password_suggesstion_two_content)));
+                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0014R$id.forget_password_suggesstion_two)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0020R$string.phone_locked_forget_password_suggesstion_two_content)));
             }
         });
         this.mForgetPasswordMethodBack.setOnClickListener(new View.OnClickListener() {
@@ -752,7 +752,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
                 KeyguardSecurityContainer.this.setLockoutViewVisible(0);
             }
         });
-        this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_ok).setOnClickListener(new View.OnClickListener() {
+        this.mFogetPasswordSuggestion.findViewById(C0014R$id.forget_password_suggesstion_ok).setOnClickListener(new View.OnClickListener() {
             /* class com.android.keyguard.KeyguardSecurityContainer.AnonymousClass8 */
 
             public void onClick(View view) {
@@ -766,9 +766,9 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void setLockoutViewVisible(int i) {
-        this.mLockoutView.findViewById(C0015R$id.phone_locked_textview).setVisibility(i);
-        this.mLockoutView.findViewById(C0015R$id.phone_locked_timeout_id).setVisibility(i);
-        this.mLockoutView.findViewById(C0015R$id.foget_password).setVisibility(i);
+        this.mLockoutView.findViewById(C0014R$id.phone_locked_textview).setVisibility(i);
+        this.mLockoutView.findViewById(C0014R$id.phone_locked_timeout_id).setVisibility(i);
+        this.mLockoutView.findViewById(C0014R$id.foget_password).setVisibility(i);
     }
 
     /* access modifiers changed from: private */
@@ -844,41 +844,41 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     private int getSecurityViewIdForMode(KeyguardSecurityModel.SecurityMode securityMode) {
         int i = AnonymousClass11.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[securityMode.ordinal()];
         if (i == 1) {
-            return C0015R$id.keyguard_pattern_view;
+            return C0014R$id.keyguard_pattern_view;
         }
         if (i == 2) {
-            return C0015R$id.keyguard_pin_view;
+            return C0014R$id.keyguard_pin_view;
         }
         if (i == 3) {
-            return C0015R$id.keyguard_password_view;
+            return C0014R$id.keyguard_password_view;
         }
         if (i == 6) {
-            return C0015R$id.keyguard_sim_pin_view;
+            return C0014R$id.keyguard_sim_pin_view;
         }
         if (i != 7) {
             return 0;
         }
-        return C0015R$id.keyguard_sim_puk_view;
+        return C0014R$id.keyguard_sim_puk_view;
     }
 
     public int getLayoutIdFor(KeyguardSecurityModel.SecurityMode securityMode) {
         int i = AnonymousClass11.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[securityMode.ordinal()];
         if (i == 1) {
-            return C0017R$layout.keyguard_pattern_view;
+            return C0016R$layout.keyguard_pattern_view;
         }
         if (i == 2) {
-            return C0017R$layout.keyguard_pin_view;
+            return C0016R$layout.keyguard_pin_view;
         }
         if (i == 3) {
-            return C0017R$layout.keyguard_password_view;
+            return C0016R$layout.keyguard_password_view;
         }
         if (i == 6) {
-            return C0017R$layout.keyguard_sim_pin_view;
+            return C0016R$layout.keyguard_sim_pin_view;
         }
         if (i != 7) {
             return 0;
         }
-        return C0017R$layout.keyguard_sim_puk_view;
+        return C0016R$layout.keyguard_sim_puk_view;
     }
 
     public KeyguardSecurityModel.SecurityMode getSecurityMode() {

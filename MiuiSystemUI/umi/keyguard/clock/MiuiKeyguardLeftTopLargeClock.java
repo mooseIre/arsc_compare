@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0011R$color;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$color;
 import miui.keyguard.clock.MiuiBaseClock;
 import miui.system.R;
 
@@ -23,7 +23,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
 
     public MiuiKeyguardLeftTopLargeClock(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        boolean z = context.getResources().getBoolean(C0010R$bool.config_keyguard_clock_notification_center);
+        boolean z = context.getResources().getBoolean(C0009R$bool.config_keyguard_clock_notification_center);
         try {
             this.mMiuiBaseClock = this.mLayoutInflater.inflate(R.layout.miui_left_top_large_clock, (ViewGroup) null, false);
             updateLunarCalendarInfo();
@@ -89,7 +89,7 @@ public class MiuiKeyguardLeftTopLargeClock extends MiuiKeyguardSingleClock {
             super.setDarkStyle(z);
             this.mMiuiBaseClock.setTextColorDark(z);
             this.mMiuiNoticationStateClock.setTextColorDark(z);
-            int color = z ? getContext().getResources().getColor(C0011R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
+            int color = z ? getContext().getResources().getColor(C0010R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1;
             this.mOwnerInfo.setTextColor(color);
             this.mMagazineClockView.setTextColor(color);
         }

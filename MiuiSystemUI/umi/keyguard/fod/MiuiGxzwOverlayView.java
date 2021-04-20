@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.WindowManager;
 import com.android.keyguard.fod.MiuiGxzwIconView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.miui.systemui.util.MiuiTextUtils;
 import java.io.File;
 import java.util.concurrent.Executor;
@@ -74,8 +74,8 @@ public class MiuiGxzwOverlayView extends GxzwWindowFrameLayout implements MiuiGx
     }
 
     private void initView() {
-        LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_gxzw_overlay, this);
-        this.mHbmOverlay = findViewById(C0015R$id.hbm_overlay);
+        LayoutInflater.from(getContext()).inflate(C0016R$layout.miui_keyguard_gxzw_overlay, this);
+        this.mHbmOverlay = findViewById(C0014R$id.hbm_overlay);
         setSystemUiVisibility(4864);
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2021, 83957016, -2);
         this.mLayoutParams = layoutParams;

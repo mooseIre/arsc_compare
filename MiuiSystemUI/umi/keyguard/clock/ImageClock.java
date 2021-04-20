@@ -5,7 +5,7 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
@@ -42,8 +42,8 @@ public class ImageClock extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mHourHand = (ImageView) findViewById(C0015R$id.hour_hand);
-        this.mMinuteHand = (ImageView) findViewById(C0015R$id.minute_hand);
+        this.mHourHand = (ImageView) findViewById(C0014R$id.hour_hand);
+        this.mMinuteHand = (ImageView) findViewById(C0014R$id.minute_hand);
     }
 
     /* access modifiers changed from: protected */

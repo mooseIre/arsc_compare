@@ -22,8 +22,8 @@ import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -238,9 +238,9 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
         Resources resources = this.mContext.getResources();
         if (DeviceConfig.IS_NOTCH) {
-            i = C0012R$dimen.miui_face_unlock_view_notch_top;
+            i = C0011R$dimen.miui_face_unlock_view_notch_top;
         } else {
-            i = C0012R$dimen.miui_face_unlock_view_top;
+            i = C0011R$dimen.miui_face_unlock_view_top;
         }
         marginLayoutParams.topMargin = resources.getDimensionPixelSize(i);
         setLayoutParams(marginLayoutParams);
@@ -304,15 +304,16 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
     public void updateFaceUnlockIconStatus() {
         if (MiuiFaceUnlockUtils.isHardwareDetected(this.mContext)) {
             if (!shouldFaceUnlockViewExecuteAnimation() || !shouldShowFaceUnlockImage()) {
+                clearAnimation();
                 setVisibility(4);
             } else {
                 setVisibility(0);
             }
             boolean isFaceUnlock = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock();
             if (this.mUpdateMonitor.isBouncerShowing() || !this.mLightClock) {
-                setBackground(getResources().getDrawable(isFaceUnlock ? C0013R$drawable.face_unlock_success20 : C0013R$drawable.face_unlock_error1));
+                setBackground(getResources().getDrawable(isFaceUnlock ? C0012R$drawable.face_unlock_success20 : C0012R$drawable.face_unlock_error1));
             } else {
-                setBackground(getResources().getDrawable(isFaceUnlock ? C0013R$drawable.face_unlock_black_success20 : C0013R$drawable.face_unlock_black_error1));
+                setBackground(getResources().getDrawable(isFaceUnlock ? C0012R$drawable.face_unlock_black_success20 : C0012R$drawable.face_unlock_black_error1));
             }
         }
     }

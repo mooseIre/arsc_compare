@@ -30,7 +30,7 @@ import com.android.keyguard.charge.OrientationEventListenerWrapper;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.charge.view.MiuiChargePercentCountView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0009R$bool;
 import com.android.systemui.Dependency;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
@@ -99,12 +99,12 @@ public class MiuiChargeAnimationView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void init(Context context) {
         this.mWindowManager = (WindowManager) context.getSystemService("window");
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
         this.mScreenSize = new Point();
         updateSizeForScreenSizeChange();
         RelativeLayout relativeLayout = new RelativeLayout(context);
         this.mParentContainer = relativeLayout;
-        relativeLayout.setBackgroundColor(Color.argb(242, 0, 0, 0));
+        relativeLayout.setBackgroundColor(Color.argb(255, 0, 0, 0));
         new RelativeLayout.LayoutParams(-1, -1).addRule(13);
         this.mChargeContainerView = new MiuiChargeContainerView(context);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-1, -1);
@@ -455,7 +455,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     private void enableOrientation() {
         OrientationEventListenerWrapper orientationEventListenerWrapper = this.mOrientationListener;
-        if (orientationEventListenerWrapper != null && orientationEventListenerWrapper.canDetectOrientation()) {
+        if (orientationEventListenerWrapper != null && orientationEventListenerWrapper.canDetectOrientation() && !ChargeUtils.isOrientationLocked(getContext())) {
             Slog.i("MiuiChargeAnimationView", "enable orientation sensor");
             this.mOrientationListener.enable();
         }

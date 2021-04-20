@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import miui.maml.animation.interpolater.ElasticEaseOutInterpolater;
 
 /* access modifiers changed from: package-private */
@@ -27,8 +27,8 @@ public class MiuiGxzwTipView extends FrameLayout {
 
     private void initView() {
         setBackgroundColor(0);
-        LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_gxzw_tip_view, this);
-        this.mTryAgain = (TextView) findViewById(C0015R$id.gxzw_anim_try_again);
+        LayoutInflater.from(getContext()).inflate(C0016R$layout.miui_keyguard_gxzw_tip_view, this);
+        this.mTryAgain = (TextView) findViewById(C0014R$id.gxzw_anim_try_again);
     }
 
     public void startTipAnim(boolean z, String str, float f) {
@@ -77,7 +77,7 @@ public class MiuiGxzwTipView extends FrameLayout {
     private void updateFontScale() {
         Configuration configuration = getResources().getConfiguration();
         if (this.mFontScale != configuration.fontScale) {
-            this.mTryAgain.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_tip_font_size));
+            this.mTryAgain.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.gxzw_tip_font_size));
             this.mFontScale = configuration.fontScale;
         }
     }

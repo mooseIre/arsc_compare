@@ -17,8 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.view.MiuiChargeTurboView;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0020R$string;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeLogoView extends RelativeLayout {
@@ -57,7 +57,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -69,7 +69,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
         this.mStateTip.setIncludeFontPadding(false);
         this.mStateTip.setTextColor(Color.parseColor("#8CFFFFFF"));
         this.mStateTip.setGravity(17);
-        this.mStateTip.setText(getResources().getString(C0021R$string.rapid_charge_mode_tip));
+        this.mStateTip.setText(getResources().getString(C0020R$string.rapid_charge_mode_tip));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams.addRule(14);
         layoutParams.topMargin = this.mTipTopMargin;
@@ -220,7 +220,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mStateTip.setText(getResources().getString(C0021R$string.rapid_charge_mode_tip));
+        this.mStateTip.setText(getResources().getString(C0020R$string.rapid_charge_mode_tip));
         checkScreenSize();
     }
 

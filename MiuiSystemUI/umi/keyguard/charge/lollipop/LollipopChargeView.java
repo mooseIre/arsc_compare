@@ -15,7 +15,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import com.android.keyguard.charge.container.IChargeView;
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0012R$drawable;
 
 public class LollipopChargeView extends IChargeView {
     private Drawable mBottomLightDrawable;
@@ -52,9 +52,9 @@ public class LollipopChargeView extends IChargeView {
     public void init(Context context) {
         Property property = View.ROTATION;
         super.init(context);
-        this.mInnerCircleDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_rotate_circle_icon);
-        this.mInnerParticleDrawable = context.getDrawable(C0013R$drawable.charge_animation_particle_circle_icon);
-        this.mBottomLightDrawable = context.getDrawable(C0013R$drawable.charge_animation_bottom_light_icon);
+        this.mInnerCircleDrawable = context.getDrawable(C0012R$drawable.charge_animation_wired_rotate_circle_icon);
+        this.mInnerParticleDrawable = context.getDrawable(C0012R$drawable.charge_animation_particle_circle_icon);
+        this.mBottomLightDrawable = context.getDrawable(C0012R$drawable.charge_animation_bottom_light_icon);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-2, -2);
         layoutParams.gravity = 81;
         OutlineView outlineView = new OutlineView(context);
