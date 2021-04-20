@@ -35,10 +35,10 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.volume.Util;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Prefs;
 import com.android.systemui.qs.QSDndEvent;
 import com.android.systemui.qs.QSEvents;
@@ -185,8 +185,8 @@ public class ZenModePanel extends FrameLayout {
         this.mForeverId = Condition.newId(this.mContext).appendPath("forever").build();
         this.mConfigurableTexts = new ConfigurableTexts(this.mContext);
         this.mVoiceCapable = Util.isVoiceCapable(this.mContext);
-        this.mZenModeConditionLayoutId = C0017R$layout.zen_mode_condition;
-        this.mZenModeButtonLayoutId = C0017R$layout.zen_mode_button;
+        this.mZenModeConditionLayoutId = C0016R$layout.zen_mode_condition;
+        this.mZenModeButtonLayoutId = C0016R$layout.zen_mode_button;
         if (DEBUG) {
             Log.d(this.mTag, "new ZenModePanel");
         }
@@ -194,11 +194,11 @@ public class ZenModePanel extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void createZenButtons() {
-        SegmentedButtons segmentedButtons = (SegmentedButtons) findViewById(C0015R$id.zen_buttons);
+        SegmentedButtons segmentedButtons = (SegmentedButtons) findViewById(C0014R$id.zen_buttons);
         this.mZenButtons = segmentedButtons;
-        segmentedButtons.addButton(C0021R$string.interruption_level_none_twoline, C0021R$string.interruption_level_none_with_warning, 2);
-        this.mZenButtons.addButton(C0021R$string.interruption_level_alarms_twoline, C0021R$string.interruption_level_alarms, 3);
-        this.mZenButtons.addButton(C0021R$string.interruption_level_priority_twoline, C0021R$string.interruption_level_priority, 1);
+        segmentedButtons.addButton(C0020R$string.interruption_level_none_twoline, C0020R$string.interruption_level_none_with_warning, 2);
+        this.mZenButtons.addButton(C0020R$string.interruption_level_alarms_twoline, C0020R$string.interruption_level_alarms, 3);
+        this.mZenButtons.addButton(C0020R$string.interruption_level_priority_twoline, C0020R$string.interruption_level_priority, 1);
         this.mZenButtons.setCallback(this.mZenButtonsCallback);
     }
 
@@ -206,9 +206,9 @@ public class ZenModePanel extends FrameLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         createZenButtons();
-        this.mZenIntroduction = findViewById(C0015R$id.zen_introduction);
-        this.mZenIntroductionMessage = (TextView) findViewById(C0015R$id.zen_introduction_message);
-        View findViewById = findViewById(C0015R$id.zen_introduction_confirm);
+        this.mZenIntroduction = findViewById(C0014R$id.zen_introduction);
+        this.mZenIntroductionMessage = (TextView) findViewById(C0014R$id.zen_introduction_message);
+        View findViewById = findViewById(C0014R$id.zen_introduction_confirm);
         this.mZenIntroductionConfirm = findViewById;
         findViewById.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.volume.$$Lambda$ZenModePanel$lbJ8lHqFYfMZusckwTZAx6gp_I */
@@ -217,7 +217,7 @@ public class ZenModePanel extends FrameLayout {
                 ZenModePanel.this.lambda$onFinishInflate$0$ZenModePanel(view);
             }
         });
-        TextView textView = (TextView) findViewById(C0015R$id.zen_introduction_customize);
+        TextView textView = (TextView) findViewById(C0014R$id.zen_introduction_customize);
         this.mZenIntroductionCustomize = textView;
         textView.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.volume.$$Lambda$ZenModePanel$1BYa_z9Fn3nPDHjhUKHednhVOqQ */
@@ -226,18 +226,18 @@ public class ZenModePanel extends FrameLayout {
                 ZenModePanel.this.lambda$onFinishInflate$1$ZenModePanel(view);
             }
         });
-        this.mConfigurableTexts.add(this.mZenIntroductionCustomize, C0021R$string.zen_priority_customize_button);
-        this.mZenConditions = (LinearLayout) findViewById(C0015R$id.zen_conditions);
-        this.mZenAlarmWarning = (TextView) findViewById(C0015R$id.zen_alarm_warning);
-        this.mZenRadioGroup = (RadioGroup) findViewById(C0015R$id.zen_radio_buttons);
-        this.mZenRadioGroupContent = (LinearLayout) findViewById(C0015R$id.zen_radio_buttons_content);
-        this.mEdit = (ViewGroup) findViewById(C0015R$id.edit_container);
+        this.mConfigurableTexts.add(this.mZenIntroductionCustomize, C0020R$string.zen_priority_customize_button);
+        this.mZenConditions = (LinearLayout) findViewById(C0014R$id.zen_conditions);
+        this.mZenAlarmWarning = (TextView) findViewById(C0014R$id.zen_alarm_warning);
+        this.mZenRadioGroup = (RadioGroup) findViewById(C0014R$id.zen_radio_buttons);
+        this.mZenRadioGroupContent = (LinearLayout) findViewById(C0014R$id.zen_radio_buttons_content);
+        this.mEdit = (ViewGroup) findViewById(C0014R$id.edit_container);
         View findViewById2 = findViewById(16908292);
         this.mEmpty = findViewById2;
         findViewById2.setVisibility(4);
         this.mEmptyText = (TextView) this.mEmpty.findViewById(16908310);
         this.mEmptyIcon = (ImageView) this.mEmpty.findViewById(16908294);
-        View findViewById3 = findViewById(C0015R$id.auto_rule);
+        View findViewById3 = findViewById(C0014R$id.auto_rule);
         this.mAutoRule = findViewById3;
         this.mAutoTitle = (TextView) findViewById3.findViewById(16908310);
         this.mAutoRule.setVisibility(4);
@@ -597,13 +597,13 @@ public class ZenModePanel extends FrameLayout {
         this.mZenIntroduction.setVisibility(z ? 0 : 8);
         if (z) {
             if (z2) {
-                i = C0021R$string.zen_priority_introduction;
+                i = C0020R$string.zen_priority_introduction;
             } else if (z4) {
-                i = C0021R$string.zen_alarms_introduction;
+                i = C0020R$string.zen_alarms_introduction;
             } else if (this.mVoiceCapable) {
-                i = C0021R$string.zen_silence_introduction_voice;
+                i = C0020R$string.zen_silence_introduction_voice;
             } else {
-                i = C0021R$string.zen_silence_introduction;
+                i = C0020R$string.zen_silence_introduction;
             }
             this.mConfigurableTexts.add(this.mZenIntroductionMessage, i);
             this.mConfigurableTexts.update();
@@ -630,17 +630,17 @@ public class ZenModePanel extends FrameLayout {
         }
         Condition condition = this.mSessionExitCondition;
         if (condition == null || isForever(condition)) {
-            i = C0021R$string.zen_alarm_warning_indef;
+            i = C0020R$string.zen_alarm_warning_indef;
         } else {
             long tryParseCountdownConditionId = ZenModeConfig.tryParseCountdownConditionId(this.mSessionExitCondition.id);
-            i = (tryParseCountdownConditionId <= currentTimeMillis || nextAlarm >= tryParseCountdownConditionId) ? 0 : C0021R$string.zen_alarm_warning;
+            i = (tryParseCountdownConditionId <= currentTimeMillis || nextAlarm >= tryParseCountdownConditionId) ? 0 : C0020R$string.zen_alarm_warning;
         }
         if (i == 0) {
             return null;
         }
         boolean z2 = nextAlarm - currentTimeMillis < 86400000;
         boolean is24HourFormat = DateFormat.is24HourFormat(this.mContext, ActivityManager.getCurrentUser());
-        return getResources().getString(i, getResources().getString(z2 ? C0021R$string.alarm_template : C0021R$string.alarm_template_far, DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), z2 ? is24HourFormat ? "Hm" : "hma" : is24HourFormat ? "EEEHm" : "EEEhma"), nextAlarm)));
+        return getResources().getString(i, getResources().getString(z2 ? C0020R$string.alarm_template : C0020R$string.alarm_template_far, DateFormat.format(DateFormat.getBestDateTimePattern(Locale.getDefault(), z2 ? is24HourFormat ? "Hm" : "hma" : is24HourFormat ? "EEEHm" : "EEEhma"), nextAlarm)));
     }
 
     /* access modifiers changed from: package-private */
@@ -892,15 +892,15 @@ public class ZenModePanel extends FrameLayout {
         String str;
         int selectedZen = getSelectedZen(0);
         if (selectedZen == 1) {
-            str = this.mContext.getString(C0021R$string.interruption_level_priority);
+            str = this.mContext.getString(C0020R$string.interruption_level_priority);
         } else if (selectedZen == 2) {
-            str = this.mContext.getString(C0021R$string.interruption_level_none);
+            str = this.mContext.getString(C0020R$string.interruption_level_none);
         } else if (selectedZen == 3) {
-            str = this.mContext.getString(C0021R$string.interruption_level_alarms);
+            str = this.mContext.getString(C0020R$string.interruption_level_alarms);
         } else {
             return;
         }
-        announceForAccessibility(this.mContext.getString(C0021R$string.zen_mode_and_condition, str, conditionTag.line1.getText()));
+        announceForAccessibility(this.mContext.getString(C0020R$string.zen_mode_and_condition, str, conditionTag.line1.getText()));
     }
 
     /* access modifiers changed from: private */
@@ -1004,7 +1004,7 @@ public class ZenModePanel extends FrameLayout {
         private int mNoneSelected;
 
         private ZenPrefs() {
-            this.mNoneDangerousThreshold = ZenModePanel.this.mContext.getResources().getInteger(C0016R$integer.zen_mode_alarm_warning_threshold);
+            this.mNoneDangerousThreshold = ZenModePanel.this.mContext.getResources().getInteger(C0015R$integer.zen_mode_alarm_warning_threshold);
             Prefs.registerListener(ZenModePanel.this.mContext, this);
             updateMinuteIndex();
             updateNoneSelected();

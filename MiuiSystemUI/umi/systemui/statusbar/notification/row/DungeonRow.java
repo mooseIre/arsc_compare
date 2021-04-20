@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.icon.IconPack;
@@ -41,13 +41,13 @@ public final class DungeonRow extends LinearLayout {
         IconPack icons;
         StatusBarIconView statusBarIcon;
         ExpandableNotificationRow row;
-        View findViewById = findViewById(C0015R$id.app_name);
+        View findViewById = findViewById(C0014R$id.app_name);
         if (findViewById != null) {
             TextView textView = (TextView) findViewById;
             NotificationEntry notificationEntry = this.entry;
             StatusBarIcon statusBarIcon2 = null;
             textView.setText((notificationEntry == null || (row = notificationEntry.getRow()) == null) ? null : row.getAppName());
-            View findViewById2 = findViewById(C0015R$id.icon);
+            View findViewById2 = findViewById(C0014R$id.icon);
             if (findViewById2 != null) {
                 StatusBarIconView statusBarIconView = (StatusBarIconView) findViewById2;
                 NotificationEntry notificationEntry2 = this.entry;

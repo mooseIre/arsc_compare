@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -44,13 +44,13 @@ public final class QSHeaderInfoLayout extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0015R$id.alarm_container);
+        View findViewById = findViewById(C0014R$id.alarm_container);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.alarm_container)");
         this.alarmContainer = findViewById;
-        View findViewById2 = findViewById(C0015R$id.ringer_container);
+        View findViewById2 = findViewById(C0014R$id.ringer_container);
         Intrinsics.checkExpressionValueIsNotNull(findViewById2, "findViewById(R.id.ringer_container)");
         this.ringerContainer = findViewById2;
-        View findViewById3 = findViewById(C0015R$id.status_separator);
+        View findViewById3 = findViewById(C0014R$id.status_separator);
         Intrinsics.checkExpressionValueIsNotNull(findViewById3, "findViewById(R.id.status_separator)");
         this.statusSeparator = findViewById3;
     }

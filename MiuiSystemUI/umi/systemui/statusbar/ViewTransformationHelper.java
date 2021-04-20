@@ -8,13 +8,13 @@ import android.util.ArraySet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.TransformState;
 import java.util.Stack;
 
 public class ViewTransformationHelper implements TransformableView, TransformState.TransformInfo {
-    private static final int TAG_CONTAINS_TRANSFORMED_VIEW = C0015R$id.contains_transformed_view;
+    private static final int TAG_CONTAINS_TRANSFORMED_VIEW = C0014R$id.contains_transformed_view;
     private ArrayMap<Integer, CustomTransformation> mCustomTransformations = new ArrayMap<>();
     private ArraySet<Integer> mKeysTransformingToSimilar = new ArraySet<>();
     private ArrayMap<Integer, View> mTransformedViews = new ArrayMap<>();

@@ -5,8 +5,8 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.media.KeyguardMediaController;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -243,13 +243,13 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
 
     public void reinflateViews(@NotNull LayoutInflater layoutInflater) {
         Intrinsics.checkParameterIsNotNull(layoutInflater, "layoutInflater");
-        SectionHeaderView sectionHeaderView = (SectionHeaderView) reinflateView(this.silentHeaderView, layoutInflater, C0017R$layout.status_bar_notification_section_header);
-        sectionHeaderView.setHeaderText(C0021R$string.notification_section_header_gentle);
+        SectionHeaderView sectionHeaderView = (SectionHeaderView) reinflateView(this.silentHeaderView, layoutInflater, C0016R$layout.status_bar_notification_section_header);
+        sectionHeaderView.setHeaderText(C0020R$string.notification_section_header_gentle);
         sectionHeaderView.setOnHeaderClickListener(new NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$1(this));
         sectionHeaderView.setOnClearAllClickListener(new NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$2(this));
         this.silentHeaderView = sectionHeaderView;
-        SectionHeaderView sectionHeaderView2 = (SectionHeaderView) reinflateView(this.alertingHeaderView, layoutInflater, C0017R$layout.status_bar_notification_section_header);
-        sectionHeaderView2.setHeaderText(C0021R$string.notification_section_header_alerting);
+        SectionHeaderView sectionHeaderView2 = (SectionHeaderView) reinflateView(this.alertingHeaderView, layoutInflater, C0016R$layout.status_bar_notification_section_header);
+        sectionHeaderView2.setHeaderText(C0020R$string.notification_section_header_alerting);
         sectionHeaderView2.setOnHeaderClickListener(new NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$3(this));
         this.alertingHeaderView = sectionHeaderView2;
         Subscription subscription = this.peopleHubSubscription;
@@ -257,12 +257,12 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
             subscription.unsubscribe();
         }
         this.peopleHubSubscription = null;
-        this.peopleHeaderView = (PeopleHubView) reinflateView(this.peopleHeaderView, layoutInflater, C0017R$layout.people_strip);
-        SectionHeaderView sectionHeaderView3 = (SectionHeaderView) reinflateView(this.incomingHeaderView, layoutInflater, C0017R$layout.status_bar_notification_section_header);
-        sectionHeaderView3.setHeaderText(C0021R$string.notification_section_header_incoming);
+        this.peopleHeaderView = (PeopleHubView) reinflateView(this.peopleHeaderView, layoutInflater, C0016R$layout.people_strip);
+        SectionHeaderView sectionHeaderView3 = (SectionHeaderView) reinflateView(this.incomingHeaderView, layoutInflater, C0016R$layout.status_bar_notification_section_header);
+        sectionHeaderView3.setHeaderText(C0020R$string.notification_section_header_incoming);
         sectionHeaderView3.setOnHeaderClickListener(new NotificationSectionsManager$reinflateViews$$inlined$apply$lambda$4(this));
         this.incomingHeaderView = sectionHeaderView3;
-        MediaHeaderView mediaHeaderView = (MediaHeaderView) reinflateView(this.mediaControlsView, layoutInflater, C0017R$layout.keyguard_media_header);
+        MediaHeaderView mediaHeaderView = (MediaHeaderView) reinflateView(this.mediaControlsView, layoutInflater, C0016R$layout.keyguard_media_header);
         this.keyguardMediaController.attach(mediaHeaderView);
         this.mediaControlsView = mediaHeaderView;
     }

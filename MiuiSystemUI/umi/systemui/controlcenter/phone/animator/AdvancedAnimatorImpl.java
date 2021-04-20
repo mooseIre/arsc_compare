@@ -2,7 +2,7 @@ package com.android.systemui.controlcenter.phone.animator;
 
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelViewController;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -69,8 +69,8 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
         this.footerPanelBaseIndex = i;
         this.mViews.clear();
         this.mTransViews.clear();
-        addAnimateView(getPanelView().getHeader().findViewById(C0015R$id.carrier_text), 0);
-        addAnimateView(getPanelView().getHeader().findViewById(C0015R$id.system_icon_area), 0);
+        addAnimateView(getPanelView().getHeader().findViewById(C0014R$id.carrier_text), 0);
+        addAnimateView(getPanelView().getHeader().findViewById(C0014R$id.system_icon_area), 0);
         if (!this.controller.isSuperPowerMode()) {
             View shortCut = getPanelView().getHeader().getShortCut();
             addAnimateView(shortCut, 1);
@@ -114,14 +114,14 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
 
     private final void addAnimateView(View view, int i) {
         if (view != null && !this.mViews.contains(view)) {
-            view.setTag(C0015R$id.tag_control_center, Integer.valueOf(i));
+            view.setTag(C0014R$id.tag_control_center, Integer.valueOf(i));
             this.mViews.add(view);
         }
     }
 
     private final void addTransAnimateView(View view, int i) {
         if (view != null && !this.mTransViews.contains(view)) {
-            view.setTag(C0015R$id.tag_control_center_trans, Integer.valueOf(i));
+            view.setTag(C0014R$id.tag_control_center_trans, Integer.valueOf(i));
             this.mTransViews.add(view);
         }
     }
@@ -230,7 +230,7 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
             float screenHeight = (float) this.controller.getScreenHeight();
             float f2 = RangesKt___RangesKt.coerceIn(f, 0.0f, screenHeight);
             for (T t : this.mTransViews) {
-                Object tag = t.getTag(C0015R$id.tag_control_center_trans);
+                Object tag = t.getTag(C0014R$id.tag_control_center_trans);
                 if (tag != null) {
                     t.setTranslationY(ControlCenterUtils.getTranslationY(((Integer) tag).intValue(), this.overFlingLines, f2, screenHeight));
                 } else {

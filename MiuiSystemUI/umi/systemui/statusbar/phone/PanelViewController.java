@@ -18,8 +18,8 @@ import android.view.ViewTreeObserver;
 import codeinjection.CodeInjection;
 import com.android.internal.util.LatencyTracker;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
@@ -310,9 +310,9 @@ public abstract class PanelViewController {
         this.mLatencyTracker = latencyTracker;
         this.mFalsingManager = falsingManager;
         this.mDozeLog = dozeLog;
-        this.mNotificationsDragEnabled = this.mResources.getBoolean(C0010R$bool.config_enableNotificationShadeDrag);
+        this.mNotificationsDragEnabled = this.mResources.getBoolean(C0009R$bool.config_enableNotificationShadeDrag);
         this.mVibratorHelper = vibratorHelper;
-        this.mVibrateOnOpening = this.mResources.getBoolean(C0010R$bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = this.mResources.getBoolean(C0009R$bool.config_vibrateOnIconAnimation);
         this.mStatusBarTouchableRegionManager = statusBarTouchableRegionManager;
         this.mPerf = new BoostFramework();
     }
@@ -322,8 +322,8 @@ public abstract class PanelViewController {
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mView.getContext());
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         this.mSlopMultiplier = viewConfiguration.getScaledAmbiguousGestureMultiplier();
-        this.mResources.getDimension(C0012R$dimen.hint_move_distance);
-        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C0012R$dimen.unlock_falsing_threshold);
+        this.mResources.getDimension(C0011R$dimen.hint_move_distance);
+        this.mUnlockFalsingThreshold = this.mResources.getDimensionPixelSize(C0011R$dimen.unlock_falsing_threshold);
     }
 
     /* access modifiers changed from: protected */
@@ -653,10 +653,11 @@ public abstract class PanelViewController {
     }
 
     public void setExpandedHeightInternal(float f) {
+        float f2;
         if (Float.isNaN(f)) {
             Log.wtf(TAG, "ExpandedHeight set to NaN");
         }
-        float f2 = 0.0f;
+        float f3 = 0.0f;
         if (this.mExpandLatencyTracking && f != 0.0f) {
             DejankUtils.postAfterTraversal(new Runnable() {
                 /* class com.android.systemui.statusbar.phone.$$Lambda$PanelViewController$3TJ0A2OT3Q4yelawe6rfaI8nnw */
@@ -680,18 +681,27 @@ public abstract class PanelViewController {
                 setOverExpansion(Math.max(0.0f, f - maxPanelHeight), false);
             }
         }
-        float f3 = this.mExpandedHeight;
-        if (f3 < 1.0f && f3 != 0.0f && this.mClosing) {
+        float f4 = this.mExpandedHeight;
+        if (f4 < 1.0f && f4 != 0.0f && this.mClosing) {
             this.mExpandedHeight = 0.0f;
             ValueAnimator valueAnimator = this.mHeightAnimator;
             if (valueAnimator != null) {
                 valueAnimator.end();
             }
         }
-        if (maxPanelHeight != 0.0f) {
+        if (maxPanelHeight == 0.0f) {
+            f2 = 0.0f;
+        } else {
             f2 = this.mExpandedHeight / maxPanelHeight;
         }
-        this.mExpandedFraction = Math.min(1.0f, f2);
+        float min = Math.min(1.0f, f2);
+        this.mExpandedFraction = min;
+        if (Float.isNaN(min)) {
+            if (this.mExpandedHeight > maxPanelHeight) {
+                f3 = 1.0f;
+            }
+            this.mExpandedFraction = f3;
+        }
         onHeightUpdated(this.mExpandedHeight);
         notifyBarPanelExpansionChanged();
     }

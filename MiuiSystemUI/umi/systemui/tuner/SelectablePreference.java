@@ -5,7 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.util.TypedValue;
 import androidx.preference.CheckBoxPreference;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.statusbar.ScalingDrawableWrapper;
 
 public class SelectablePreference extends CheckBoxPreference {
@@ -18,7 +18,7 @@ public class SelectablePreference extends CheckBoxPreference {
 
     public SelectablePreference(Context context) {
         super(context);
-        setWidgetLayoutResource(C0017R$layout.preference_widget_radiobutton);
+        setWidgetLayoutResource(C0016R$layout.preference_widget_radiobutton);
         setSelectable(true);
         this.mSize = (int) TypedValue.applyDimension(1, 32.0f, context.getResources().getDisplayMetrics());
     }

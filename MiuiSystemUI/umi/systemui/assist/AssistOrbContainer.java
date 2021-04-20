@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Interpolators;
 
 public class AssistOrbContainer extends FrameLayout {
@@ -28,9 +28,9 @@ public class AssistOrbContainer extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mScrim = findViewById(C0015R$id.assist_orb_scrim);
-        this.mNavbarScrim = findViewById(C0015R$id.assist_orb_navbar_scrim);
-        this.mOrb = (AssistOrbView) findViewById(C0015R$id.assist_orb);
+        this.mScrim = findViewById(C0014R$id.assist_orb_scrim);
+        this.mNavbarScrim = findViewById(C0014R$id.assist_orb_navbar_scrim);
+        this.mOrb = (AssistOrbView) findViewById(C0014R$id.assist_orb);
     }
 
     public void show(boolean z, boolean z2) {

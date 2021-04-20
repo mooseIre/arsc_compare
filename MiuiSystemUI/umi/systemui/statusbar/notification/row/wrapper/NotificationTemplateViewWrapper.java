@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.internal.widget.NotificationActionListLayout;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
 import com.android.systemui.statusbar.CrossFadeHelper;
@@ -384,7 +384,7 @@ public class NotificationTemplateViewWrapper extends NotificationHeaderViewWrapp
         int extraMeasureHeight = notificationActionListLayout != null ? notificationActionListLayout.getExtraMeasureHeight() : 0;
         View view = this.mRemoteInputHistory;
         if (!(view == null || view.getVisibility() == 8)) {
-            extraMeasureHeight += this.mRow.getContext().getResources().getDimensionPixelSize(C0012R$dimen.remote_input_history_extra_height);
+            extraMeasureHeight += this.mRow.getContext().getResources().getDimensionPixelSize(C0011R$dimen.remote_input_history_extra_height);
         }
         return extraMeasureHeight + NotificationViewWrapperInjector.getExtraMeasureHeight(this, this.mRow) + super.getExtraMeasureHeight();
     }

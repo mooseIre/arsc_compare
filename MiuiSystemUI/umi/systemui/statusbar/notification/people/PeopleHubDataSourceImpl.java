@@ -7,7 +7,7 @@ import android.os.UserManager;
 import android.util.IconDrawableFactory;
 import android.util.SparseArray;
 import com.android.settingslib.notification.ConversationIconFactory;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
@@ -52,6 +52,6 @@ public final class PeopleHubDataSourceImpl implements DataSource<Object> {
         Context applicationContext = context.getApplicationContext();
         IconDrawableFactory newInstance = IconDrawableFactory.newInstance(applicationContext);
         Intrinsics.checkExpressionValueIsNotNull(applicationContext, "appContext");
-        this.iconFactory = new ConversationIconFactory(applicationContext, launcherApps, packageManager, newInstance, applicationContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_guts_conversation_icon_size));
+        this.iconFactory = new ConversationIconFactory(applicationContext, launcherApps, packageManager, newInstance, applicationContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_guts_conversation_icon_size));
     }
 }

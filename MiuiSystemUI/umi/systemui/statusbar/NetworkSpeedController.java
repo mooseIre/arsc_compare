@@ -15,7 +15,7 @@ import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
 import androidx.constraintlayout.widget.R$styleable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 import com.miui.systemui.statusbar.phone.DriveModeObserver;
@@ -197,10 +197,10 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     /* access modifiers changed from: private */
     public static String formatSpeed(Context context, long j) {
         String str;
-        int i = C0021R$string.kilobyte_per_second;
+        int i = C0020R$string.kilobyte_per_second;
         float f = ((float) j) / 1024.0f;
         if (f > 999.0f) {
-            i = C0021R$string.megabyte_per_second;
+            i = C0020R$string.megabyte_per_second;
             f /= 1024.0f;
         }
         if (f < 100.0f) {
@@ -208,7 +208,7 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
         } else {
             str = String.format("%.0f", Float.valueOf(f));
         }
-        return context.getResources().getString(C0021R$string.network_speed_suffix, str, context.getString(i));
+        return context.getResources().getString(C0020R$string.network_speed_suffix, str, context.getString(i));
     }
 
     @Override // com.miui.systemui.statusbar.phone.DriveModeObserver.Callback

@@ -16,6 +16,7 @@ import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.media.MediaDataManagerKt;
 import com.android.systemui.plugins.NotificationListenerController;
 import com.android.systemui.statusbar.NotificationListener;
+import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
@@ -109,7 +110,11 @@ public class NotificationFilterController {
             Context context = SystemUIApplication.getContext();
             String packageName = notificationEntry.getSbn().getPackageName();
             if (!notificationEntry.getSbn().isSubstituteNotification() || TextUtils.equals(notificationEntry.getSbn().getOpPkg(), "com.xiaomi.xmsf") || !NotificationSettingsHelper.isNotificationsBanned(context, packageName)) {
-                return shouldFilterOutKeyguard(notificationEntry, notificationGroupManager);
+                if (!(notificationGroupManager != null && notificationGroupManager.isSummaryOfSuppressedGroup(notificationEntry.getSbn()))) {
+                    return shouldFilterOutKeyguard(notificationEntry);
+                }
+                Log.d("NotificationFilterController", String.format("filter group summary suppressed key=%s", notificationEntry.getKey()));
+                return true;
             }
             ((NotificationEntryManager) Dependency.get(NotificationEntryManager.class)).performRemoveNotification(notificationEntry.getSbn(), 7);
             Log.d("NotificationFilterController", String.format("filter Notification banned substitute key=%s", notificationEntry.getKey()));
@@ -117,16 +122,11 @@ public class NotificationFilterController {
         }
     }
 
-    private static boolean shouldFilterOutKeyguard(NotificationEntry notificationEntry, NotificationGroupManager notificationGroupManager) {
-        if (!((KeyguardStateController) Dependency.get(KeyguardStateController.class)).isShowing()) {
-            return false;
+    private static boolean shouldFilterOutKeyguard(NotificationEntry notificationEntry) {
+        if (((KeyguardStateController) Dependency.get(KeyguardStateController.class)).isShowing()) {
+            return !((NotificationLockscreenUserManager) Dependency.get(NotificationLockscreenUserManager.class)).shouldShowOnKeyguard(notificationEntry);
         }
-        boolean z = notificationGroupManager != null && notificationGroupManager.isSummaryOfSuppressedGroup(notificationEntry.getSbn());
-        Log.d("NotificationFilterController", String.format("filter Notification group summary suppressed key=%s", notificationEntry.getKey()));
-        if (z) {
-            return true;
-        }
-        return !shouldShowOnKeyguard(notificationEntry);
+        return false;
     }
 
     public static boolean shouldShowOnKeyguard(NotificationEntry notificationEntry) {

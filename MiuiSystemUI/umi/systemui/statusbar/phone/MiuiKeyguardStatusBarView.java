@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0008R$array;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0007R$array;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -60,8 +60,8 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
 
     public MiuiKeyguardStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mLeftHoleDevice = context.getResources().getBoolean(C0010R$bool.left_hole_device);
-        this.mShowCarrierUnderLeftHoleKeyguard = context.getResources().getBoolean(C0010R$bool.show_carrier_under_left_hole_keyguard);
+        this.mLeftHoleDevice = context.getResources().getBoolean(C0009R$bool.left_hole_device);
+        this.mShowCarrierUnderLeftHoleKeyguard = context.getResources().getBoolean(C0009R$bool.show_carrier_under_left_hole_keyguard);
     }
 
     @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView, com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
@@ -87,7 +87,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         }
         if (this.mDripRightIconManager != null) {
             ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightIconManager);
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightIconManager, new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons))));
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightIconManager, new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0007R$array.config_drip_right_block_statusBarIcons))));
         }
         updateIconsAndTextColors();
     }
@@ -95,14 +95,14 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     /* access modifiers changed from: protected */
     public void updateViewStatusBarPaddingTop(View view) {
         if (view != null) {
-            view.setPadding(view.getPaddingLeft(), getResources().getDimensionPixelSize(C0012R$dimen.status_bar_padding_top), view.getPaddingRight(), view.getPaddingBottom());
+            view.setPadding(view.getPaddingLeft(), getResources().getDimensionPixelSize(C0011R$dimen.status_bar_padding_top), view.getPaddingRight(), view.getPaddingBottom());
         }
     }
 
     /* access modifiers changed from: protected */
     public void updateTextViewClockSize(TextView textView) {
         if (textView != null) {
-            textView.setTextSize(0, (float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_size));
+            textView.setTextSize(0, (float) getContext().getResources().getDimensionPixelSize(C0011R$dimen.status_bar_clock_size));
         }
     }
 
@@ -153,9 +153,9 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         if (miuiLightDarkIconManager3 != null) {
             miuiLightDarkIconManager3.setLight(!z, i);
         }
-        applyDarkness(C0015R$id.fullscreen_network_speed_view, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
-        applyDarkness(C0015R$id.battery, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
-        applyDarkness(C0015R$id.clock, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
+        applyDarkness(C0014R$id.fullscreen_network_speed_view, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
+        applyDarkness(C0014R$id.battery, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
+        applyDarkness(C0014R$id.clock, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
     }
 
     /* access modifiers changed from: private */

@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import android.view.ViewOutlineProvider;
 import androidx.core.view.GestureDetectorCompat;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.qs.PageIndicator;
 import com.android.systemui.util.animation.PhysicsAnimator;
@@ -101,6 +101,7 @@ public class MediaCarouselScrollHandler {
         return this.contentTranslation;
     }
 
+    /* access modifiers changed from: public */
     private final void setContentTranslation(float f) {
         this.contentTranslation = f;
         this.mediaContent.setTranslationX(f);
@@ -236,6 +237,7 @@ public class MediaCarouselScrollHandler {
         }
     }
 
+    /* access modifiers changed from: public */
     private final boolean onTouch(MotionEvent motionEvent) {
         float f;
         boolean z = true;
@@ -304,6 +306,7 @@ public class MediaCarouselScrollHandler {
         throw null;
     }
 
+    /* access modifiers changed from: public */
     private final boolean onInterceptTouch(MotionEvent motionEvent) {
         return this.gestureDetector.onTouchEvent(motionEvent);
     }
@@ -340,6 +343,7 @@ public class MediaCarouselScrollHandler {
         return true;
     }
 
+    /* access modifiers changed from: public */
     private final boolean onFling(float f, float f2) {
         float f3 = f * f;
         double d = (double) f2;
@@ -403,6 +407,7 @@ public class MediaCarouselScrollHandler {
         this.scrollView.setClipToOutline((this.contentTranslation == 0.0f && this.scrollIntoCurrentMedia == 0) ? false : true);
     }
 
+    /* access modifiers changed from: public */
     private final void onMediaScrollingChanged(int i, int i2) {
         boolean z = false;
         boolean z2 = this.scrollIntoCurrentMedia != 0;
@@ -432,7 +437,7 @@ public class MediaCarouselScrollHandler {
     public void updateMediaPaddings() {
         Context context = this.scrollView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "scrollView.context");
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_media_padding);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_media_padding);
         int childCount = this.mediaContent.getChildCount();
         int i = 0;
         while (i < childCount) {

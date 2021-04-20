@@ -12,10 +12,10 @@ import android.view.ViewParent;
 import android.view.WindowInsets;
 import android.widget.ImageView;
 import com.android.internal.policy.ScreenDecorationsUtils;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0021R$style;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -38,16 +38,16 @@ public final class DetailDialog extends Dialog {
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public DetailDialog(@NotNull ControlViewHolder controlViewHolder, @NotNull Intent intent2) {
-        super(controlViewHolder.getContext(), C0022R$style.Theme_SystemUI_Dialog_Control_DetailPanel);
+        super(controlViewHolder.getContext(), C0021R$style.Theme_SystemUI_Dialog_Control_DetailPanel);
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         Intrinsics.checkParameterIsNotNull(intent2, "intent");
         this.cvh = controlViewHolder;
         this.intent = intent2;
         getWindow().setType(2020);
-        setContentView(C0017R$layout.controls_detail_dialog);
-        ((ViewGroup) requireViewById(C0015R$id.controls_activity_view)).addView(this.activityView);
-        ((ImageView) requireViewById(C0015R$id.control_detail_close)).setOnClickListener(new DetailDialog$$special$$inlined$apply$lambda$1(this));
-        ImageView imageView = (ImageView) requireViewById(C0015R$id.control_detail_open_in_app);
+        setContentView(C0016R$layout.controls_detail_dialog);
+        ((ViewGroup) requireViewById(C0014R$id.controls_activity_view)).addView(this.activityView);
+        ((ImageView) requireViewById(C0014R$id.control_detail_close)).setOnClickListener(new DetailDialog$$special$$inlined$apply$lambda$1(this));
+        ImageView imageView = (ImageView) requireViewById(C0014R$id.control_detail_open_in_app);
         imageView.setOnClickListener(new DetailDialog$$special$$inlined$apply$lambda$2(imageView, this));
         getWindow().getDecorView().setOnApplyWindowInsetsListener(new View.OnApplyWindowInsetsListener(this) {
             /* class com.android.systemui.controls.ui.DetailDialog.AnonymousClass4 */
@@ -65,8 +65,8 @@ public final class DetailDialog extends Dialog {
                 return WindowInsets.CONSUMED;
             }
         });
-        ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.control_detail_root);
-        int i = Settings.Secure.getInt(this.cvh.getContext().getContentResolver(), "systemui.controls_panel_top_offset", this.cvh.getContext().getResources().getDimensionPixelSize(C0012R$dimen.controls_activity_view_top_offset));
+        ViewGroup viewGroup = (ViewGroup) requireViewById(C0014R$id.control_detail_root);
+        int i = Settings.Secure.getInt(this.cvh.getContext().getContentResolver(), "systemui.controls_panel_top_offset", this.cvh.getContext().getResources().getDimensionPixelSize(C0011R$dimen.controls_activity_view_top_offset));
         ViewGroup.LayoutParams layoutParams = viewGroup.getLayoutParams();
         if (layoutParams != null) {
             ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
@@ -79,7 +79,7 @@ public final class DetailDialog extends Dialog {
                 if (ScreenDecorationsUtils.supportsRoundedCornersOnWindows(getContext().getResources())) {
                     Context context = getContext();
                     Intrinsics.checkExpressionValueIsNotNull(context, "context");
-                    this.activityView.setCornerRadius((float) context.getResources().getDimensionPixelSize(C0012R$dimen.controls_activity_view_corner_radius));
+                    this.activityView.setCornerRadius((float) context.getResources().getDimensionPixelSize(C0011R$dimen.controls_activity_view_corner_radius));
                     return;
                 }
                 return;

@@ -8,8 +8,8 @@ import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
 
 public class DataUsageGraph extends View {
     private long mLimitLevel;
@@ -27,11 +27,11 @@ public class DataUsageGraph extends View {
     public DataUsageGraph(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         Resources resources = context.getResources();
-        this.mTrackColor = Utils.getColorStateListDefaultColor(context, C0011R$color.data_usage_graph_track);
-        this.mWarningColor = Utils.getColorStateListDefaultColor(context, C0011R$color.data_usage_graph_warning);
+        this.mTrackColor = Utils.getColorStateListDefaultColor(context, C0010R$color.data_usage_graph_track);
+        this.mWarningColor = Utils.getColorStateListDefaultColor(context, C0010R$color.data_usage_graph_warning);
         this.mUsageColor = Utils.getColorAccentDefaultColor(context);
         this.mOverlimitColor = Utils.getColorErrorDefaultColor(context);
-        this.mMarkerWidth = resources.getDimensionPixelSize(C0012R$dimen.data_usage_graph_marker_width);
+        this.mMarkerWidth = resources.getDimensionPixelSize(C0011R$dimen.data_usage_graph_marker_width);
     }
 
     public void setLevels(long j, long j2, long j3) {

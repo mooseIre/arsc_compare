@@ -6,7 +6,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.widget.MiuiQSPanel$MiuiRecord;
@@ -70,8 +70,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
         this.mDetailAdapter.mItems = null;
     }
 
-    /* access modifiers changed from: private */
-    public class ExpandDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
+    private class ExpandDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {
         private ExpandDetailItems mItems;
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
@@ -108,7 +107,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return QSControlExpandDetail.this.mContext.getString(C0021R$string.qs_control_expand_detail_title);
+            return QSControlExpandDetail.this.mContext.getString(C0020R$string.qs_control_expand_detail_title);
         }
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter

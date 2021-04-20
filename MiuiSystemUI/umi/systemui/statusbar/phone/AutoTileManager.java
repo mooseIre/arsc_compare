@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0008R$array;
+import com.android.systemui.C0007R$array;
 import com.android.systemui.qs.AutoAddTracker;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.SecureSetting;
@@ -239,7 +239,7 @@ public class AutoTileManager implements UserAwareController {
 
     private void populateSettingsList() {
         try {
-            String[] addMiuiSettings = addMiuiSettings(this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd));
+            String[] addMiuiSettings = addMiuiSettings(this.mContext.getResources().getStringArray(C0007R$array.config_quickSettingsAutoAdd));
             for (String str : addMiuiSettings) {
                 String[] split = str.split(":");
                 if (split.length == 2) {
@@ -255,7 +255,7 @@ public class AutoTileManager implements UserAwareController {
 
     private String[] addMiuiSettings(String[] strArr) {
         try {
-            return (String[]) ArrayUtils.addAll(strArr, this.mContext.getResources().getStringArray(C0008R$array.miui_config_quickSettingsAutoAdd));
+            return (String[]) ArrayUtils.addAll(strArr, this.mContext.getResources().getStringArray(C0007R$array.miui_config_quickSettingsAutoAdd));
         } catch (Resources.NotFoundException unused) {
             Log.w("AutoTileManager", "Missing MIUI config resource");
             return strArr;

@@ -6,7 +6,7 @@ import android.os.SystemProperties;
 import android.util.MathUtils;
 import android.view.SurfaceControl;
 import com.android.internal.util.IndentingPrintWriter;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dump.DumpManager;
 import java.io.FileDescriptor;
@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class BlurUtils implements Dumpable {
     private final boolean blurDisabledSysProp = SystemProperties.getBoolean("persist.sys.sf.disable_blurs", false);
     private final boolean blurSupportedSysProp = SystemProperties.getBoolean("ro.surface_flinger.supports_background_blur", false);
-    private final int maxBlurRadius = this.resources.getDimensionPixelSize(C0012R$dimen.max_window_blur_radius);
+    private final int maxBlurRadius = this.resources.getDimensionPixelSize(C0011R$dimen.max_window_blur_radius);
     private final int minBlurRadius;
     private final Resources resources;
 
@@ -26,7 +26,7 @@ public class BlurUtils implements Dumpable {
         Intrinsics.checkParameterIsNotNull(resources2, "resources");
         Intrinsics.checkParameterIsNotNull(dumpManager, "dumpManager");
         this.resources = resources2;
-        this.minBlurRadius = resources2.getDimensionPixelSize(C0012R$dimen.min_window_blur_radius);
+        this.minBlurRadius = resources2.getDimensionPixelSize(C0011R$dimen.min_window_blur_radius);
         String name = BlurUtils.class.getName();
         Intrinsics.checkExpressionValueIsNotNull(name, "javaClass.name");
         dumpManager.registerDumpable(name, this);

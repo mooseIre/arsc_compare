@@ -5,10 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.android.systemui.C0008R$array;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0007R$array;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -20,6 +20,7 @@ import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 import java.util.ArrayList;
 import java.util.Arrays;
+import miui.os.Build;
 
 public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment implements RegionController.Callback {
     private StatusBarIconController.DarkIconManager mDripLeftDarkIconManager;
@@ -33,7 +34,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(C0017R$layout.miui_status_bar, viewGroup, false);
+        return layoutInflater.inflate(C0016R$layout.miui_status_bar, viewGroup, false);
     }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
@@ -44,7 +45,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (phoneStatusBarView instanceof MiuiPhoneStatusBarView) {
             ((MiuiPhoneStatusBarView) phoneStatusBarView).setNotificationIconAreaInnner(notificationInnerAreaView);
         }
-        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.centered_icon_area);
+        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0014R$id.centered_icon_area);
         View centeredNotificationAreaView = notificationIconAreaController.getCenteredNotificationAreaView();
         this.mCenteredIconArea = centeredNotificationAreaView;
         if (centeredNotificationAreaView.getParent() != null) {
@@ -58,27 +59,30 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void initMiuiViewsOnViewCreated(View view) {
         super.initMiuiViewsOnViewCreated(view);
-        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
+        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0014R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
         this.mDripLeftDarkIconManager = darkIconManager;
         darkIconManager.setShouldLog(true);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftDarkIconManager);
-        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons)));
-        StatusBarIconController.DarkIconManager darkIconManager2 = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_right_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
+        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0007R$array.config_drip_right_block_statusBarIcons)));
+        StatusBarIconController.DarkIconManager darkIconManager2 = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0014R$id.drip_right_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
         this.mDripRightDarkIconManager = darkIconManager2;
         darkIconManager2.setShouldLog(true);
         this.mDripRightDarkIconManager.setDrip(true);
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightDarkIconManager, arrayList);
-        this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0015R$id.drip_left_statusIcons);
-        this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0015R$id.prompt_container);
-        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_splitter);
-        this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_view);
+        this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0014R$id.drip_left_statusIcons);
+        this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0014R$id.prompt_container);
+        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_splitter);
+        this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_view);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
     }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void onViewCreated(View view, Bundle bundle) {
         super.onViewCreated(view, bundle);
-        this.mStatusBarCarrier = (DarkCarrierText) view.findViewById(C0015R$id.status_bar_carrier_text);
+        if (Build.IS_TABLET) {
+            this.mClockView.setClockMode(2);
+        }
+        this.mStatusBarCarrier = (DarkCarrierText) view.findViewById(C0014R$id.status_bar_carrier_text);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mStatusBarCarrier);
         updateStatusBarCarrierVisibility();
     }
@@ -247,7 +251,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     public void updateStatusBarCarrierVisibility() {
         DarkCarrierText darkCarrierText = this.mStatusBarCarrier;
         if (darkCarrierText != null) {
-            darkCarrierText.setVisibility((darkCarrierText.getContext().getResources().getBoolean(C0010R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) ? 0 : 8);
+            darkCarrierText.setVisibility((darkCarrierText.getContext().getResources().getBoolean(C0009R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) ? 0 : 8);
         }
     }
 }

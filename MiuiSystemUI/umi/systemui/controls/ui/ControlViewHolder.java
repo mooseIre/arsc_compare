@@ -28,10 +28,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0014R$fraction;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0013R$fraction;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controls.controller.ControlsController;
 import com.android.systemui.controls.ui.RenderInfo;
@@ -107,17 +107,17 @@ public final class ControlViewHolder {
         this.controlActionCoordinator = controlActionCoordinator2;
         Context context2 = viewGroup.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "layout.context");
-        this.toggleBackgroundIntensity = context2.getResources().getFraction(C0014R$fraction.controls_toggle_bg_intensity, 1, 1);
-        View requireViewById = this.layout.requireViewById(C0015R$id.icon);
+        this.toggleBackgroundIntensity = context2.getResources().getFraction(C0013R$fraction.controls_toggle_bg_intensity, 1, 1);
+        View requireViewById = this.layout.requireViewById(C0014R$id.icon);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "layout.requireViewById(R.id.icon)");
         this.icon = (ImageView) requireViewById;
-        View requireViewById2 = this.layout.requireViewById(C0015R$id.status);
+        View requireViewById2 = this.layout.requireViewById(C0014R$id.status);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "layout.requireViewById(R.id.status)");
         this.status = (TextView) requireViewById2;
-        View requireViewById3 = this.layout.requireViewById(C0015R$id.title);
+        View requireViewById3 = this.layout.requireViewById(C0014R$id.title);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "layout.requireViewById(R.id.title)");
         this.title = (TextView) requireViewById3;
-        View requireViewById4 = this.layout.requireViewById(C0015R$id.subtitle);
+        View requireViewById4 = this.layout.requireViewById(C0014R$id.subtitle);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById4, "layout.requireViewById(R.id.subtitle)");
         this.subtitle = (TextView) requireViewById4;
         Context context3 = this.layout.getContext();
@@ -128,12 +128,12 @@ public final class ControlViewHolder {
         if (background != null) {
             LayerDrawable layerDrawable = (LayerDrawable) background;
             layerDrawable.mutate();
-            Drawable findDrawableByLayerId = layerDrawable.findDrawableByLayerId(C0015R$id.clip_layer);
+            Drawable findDrawableByLayerId = layerDrawable.findDrawableByLayerId(C0014R$id.clip_layer);
             if (findDrawableByLayerId != null) {
                 ClipDrawable clipDrawable = (ClipDrawable) findDrawableByLayerId;
                 this.clipLayer = clipDrawable;
                 clipDrawable.setAlpha(0);
-                Drawable findDrawableByLayerId2 = layerDrawable.findDrawableByLayerId(C0015R$id.background);
+                Drawable findDrawableByLayerId2 = layerDrawable.findDrawableByLayerId(C0014R$id.background);
                 if (findDrawableByLayerId2 != null) {
                     this.baseLayer = (GradientDrawable) findDrawableByLayerId2;
                     this.status.setSelected(true);
@@ -369,7 +369,7 @@ public final class ControlViewHolder {
     }
 
     public final void setErrorStatus() {
-        animateStatusChange(true, new ControlViewHolder$setErrorStatus$1(this, this.context.getResources().getString(C0021R$string.controls_error_failed)));
+        animateStatusChange(true, new ControlViewHolder$setErrorStatus$1(this, this.context.getResources().getString(C0020R$string.controls_error_failed)));
     }
 
     private final void updateContentDescription() {
@@ -493,7 +493,7 @@ public final class ControlViewHolder {
         List list;
         int i2;
         ColorStateList customColor;
-        int color = this.context.getResources().getColor(C0011R$color.control_default_background, this.context.getTheme());
+        int color = this.context.getResources().getColor(C0010R$color.control_default_background, this.context.getTheme());
         Ref$IntRef ref$IntRef = new Ref$IntRef();
         Ref$IntRef ref$IntRef2 = new Ref$IntRef();
         if (z2) {
@@ -511,7 +511,7 @@ public final class ControlViewHolder {
                 throw null;
             }
         } else {
-            list = CollectionsKt__CollectionsKt.listOf((Object[]) new Integer[]{Integer.valueOf(this.context.getResources().getColor(C0011R$color.control_default_background, this.context.getTheme())), 0});
+            list = CollectionsKt__CollectionsKt.listOf((Object[]) new Integer[]{Integer.valueOf(this.context.getResources().getColor(C0010R$color.control_default_background, this.context.getTheme())), 0});
         }
         ref$IntRef.element = ((Number) list.get(0)).intValue();
         ref$IntRef2.element = ((Number) list.get(1)).intValue();

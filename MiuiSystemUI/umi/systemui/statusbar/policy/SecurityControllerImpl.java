@@ -24,7 +24,7 @@ import android.util.SparseArray;
 import com.android.internal.annotations.GuardedBy;
 import com.android.internal.net.LegacyVpnInfo;
 import com.android.internal.net.VpnConfig;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.statusbar.policy.SecurityController;
@@ -312,7 +312,7 @@ public class SecurityControllerImpl extends CurrentUserTracker implements Securi
 
     private String getNameForVpnConfig(VpnConfig vpnConfig, UserHandle userHandle) {
         if (vpnConfig.legacy) {
-            return this.mContext.getString(C0021R$string.legacy_vpn_name);
+            return this.mContext.getString(C0020R$string.legacy_vpn_name);
         }
         String str = vpnConfig.user;
         try {

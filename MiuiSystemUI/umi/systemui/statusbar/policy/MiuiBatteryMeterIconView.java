@@ -19,14 +19,14 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.util.PathParser;
 import android.widget.ImageView;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0020R$raw;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0019R$raw;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.phone.BatteryIcon;
 
@@ -109,7 +109,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
         this.mTintArea = new Rect(0, 0, 0, 0);
         this.mUseTint = false;
         this.mDark = false;
-        this.mIconId = C0020R$raw.stat_sys_battery;
+        this.mIconId = C0019R$raw.stat_sys_battery;
         this.mProgressDrawables = new ArrayMap<>();
         this.mProgressDarkDrawables = new ArrayMap<>();
         this.mClearPaint = new Paint(1);
@@ -151,7 +151,7 @@ public class MiuiBatteryMeterIconView extends ImageView {
             setImageDrawable(null);
             return;
         }
-        LayerDrawable layerDrawable = (LayerDrawable) getContext().getResources().getDrawable(C0013R$drawable.battery_meter);
+        LayerDrawable layerDrawable = (LayerDrawable) getContext().getResources().getDrawable(C0012R$drawable.battery_meter);
         this.mLayerDrawable = layerDrawable;
         layerDrawable.mutate();
         if (this.mProgressOrientationPortrait) {
@@ -159,16 +159,16 @@ public class MiuiBatteryMeterIconView extends ImageView {
         } else {
             i = this.mProgressGravityStart ? 8388611 : 8388613;
         }
-        Drawable drawable = getResources().getDrawable(C0013R$drawable.battery_meter_progress_normal);
+        Drawable drawable = getResources().getDrawable(C0012R$drawable.battery_meter_progress_normal);
         drawable.mutate();
         ClipDrawable clipDrawable = new ClipDrawable(drawable, i, this.mProgressOrientationPortrait ? 2 : 1);
         this.mProgressClipDrawable = clipDrawable;
         clipDrawable.mutate();
-        this.mLayerDrawable.setDrawableByLayerId(C0015R$id.progress, this.mProgressClipDrawable);
+        this.mLayerDrawable.setDrawableByLayerId(C0014R$id.progress, this.mProgressClipDrawable);
         LayerDrawable layerDrawable2 = this.mLayerDrawable;
-        layerDrawable2.setLayerGravity(layerDrawable2.findIndexByLayerId(C0015R$id.progress), 17);
+        layerDrawable2.setLayerGravity(layerDrawable2.findIndexByLayerId(C0014R$id.progress), 17);
         LayerDrawable layerDrawable3 = this.mLayerDrawable;
-        layerDrawable3.setLayerInset(layerDrawable3.findIndexByLayerId(C0015R$id.progress), 0, 0, (int) (this.mProgressCenterLeftOffset * 2.0f), 0);
+        layerDrawable3.setLayerInset(layerDrawable3.findIndexByLayerId(C0014R$id.progress), 0, 0, (int) (this.mProgressCenterLeftOffset * 2.0f), 0);
         this.mProgressWidth = this.mProgressClipDrawable.getIntrinsicWidth();
         this.mProgressHeight = this.mProgressClipDrawable.getIntrinsicHeight();
         setImageDrawable(this.mLayerDrawable);
@@ -176,29 +176,29 @@ public class MiuiBatteryMeterIconView extends ImageView {
 
     private void updateResources() {
         Resources resources = getContext().getResources();
-        this.mMaskScale = resources.getDimension(C0012R$dimen.battery_meter_charging_mask_scale);
-        this.mProgressCenterLeftOffset = resources.getDimension(C0012R$dimen.battery_meter_progress_center_left_offset);
-        this.mProgressOrientationPortrait = resources.getBoolean(C0010R$bool.battery_meter_progress_oriention_portrait);
-        this.mProgressGravityStart = resources.getBoolean(C0010R$bool.battery_meter_progress_gravity_start);
-        this.mWhiteBg = resources.getDrawable(C0013R$drawable.battery_meter_bg);
-        this.mDarkBg = resources.getDrawable(C0013R$drawable.battery_meter_bg_dark);
+        this.mMaskScale = resources.getDimension(C0011R$dimen.battery_meter_charging_mask_scale);
+        this.mProgressCenterLeftOffset = resources.getDimension(C0011R$dimen.battery_meter_progress_center_left_offset);
+        this.mProgressOrientationPortrait = resources.getBoolean(C0009R$bool.battery_meter_progress_oriention_portrait);
+        this.mProgressGravityStart = resources.getBoolean(C0009R$bool.battery_meter_progress_gravity_start);
+        this.mWhiteBg = resources.getDrawable(C0012R$drawable.battery_meter_bg);
+        this.mDarkBg = resources.getDrawable(C0012R$drawable.battery_meter_bg_dark);
         Matrix matrix = new Matrix();
         float f = this.mMaskScale;
         matrix.setScale(f, f);
-        this.mMaskCharging = resources.getBoolean(C0010R$bool.battery_meter_mask_charging);
-        this.mMaskProgress = resources.getBoolean(C0010R$bool.battery_meter_mask_progress);
+        this.mMaskCharging = resources.getBoolean(C0009R$bool.battery_meter_mask_charging);
+        this.mMaskProgress = resources.getBoolean(C0009R$bool.battery_meter_mask_progress);
         if (this.mMaskCharging) {
             try {
-                this.mChargingMaskPath = PathParser.createPathFromPathData(resources.getString(C0021R$string.battery_meter_charging_mask_path));
-                this.mChargingMask = resources.getDrawable(C0013R$drawable.battery_meter_charging_mask);
+                this.mChargingMaskPath = PathParser.createPathFromPathData(resources.getString(C0020R$string.battery_meter_charging_mask_path));
+                this.mChargingMask = resources.getDrawable(C0012R$drawable.battery_meter_charging_mask);
                 this.mChargingMaskPath.transform(matrix);
             } catch (Exception e) {
                 this.mChargingMaskPath = null;
                 Log.e("BatteryMeterIconView", "create ChargingMaskPath Exception=" + e);
             }
             try {
-                this.mQuickChargingMaskPath = PathParser.createPathFromPathData(resources.getString(C0021R$string.battery_meter_quick_charging_mask_path));
-                this.mQuickChargingMask = resources.getDrawable(C0013R$drawable.battery_meter_quick_charging_mask);
+                this.mQuickChargingMaskPath = PathParser.createPathFromPathData(resources.getString(C0020R$string.battery_meter_quick_charging_mask_path));
+                this.mQuickChargingMask = resources.getDrawable(C0012R$drawable.battery_meter_quick_charging_mask);
                 this.mQuickChargingMaskPath.transform(matrix);
             } catch (Exception e2) {
                 this.mQuickChargingMaskPath = null;
@@ -207,41 +207,41 @@ public class MiuiBatteryMeterIconView extends ImageView {
         }
         if (this.mMaskProgress) {
             try {
-                this.mProgressMaskPath = PathParser.createPathFromPathData(resources.getString(C0021R$string.battery_meter_progress_mask_path));
-                this.mRoundProgress = resources.getDrawable(C0013R$drawable.battery_meter_progress_mask);
+                this.mProgressMaskPath = PathParser.createPathFromPathData(resources.getString(C0020R$string.battery_meter_progress_mask_path));
+                this.mRoundProgress = resources.getDrawable(C0012R$drawable.battery_meter_progress_mask);
                 this.mProgressMaskPath.transform(matrix);
             } catch (Exception e3) {
                 this.mProgressMaskPath = null;
                 Log.e("BatteryMeterIconView", "create ProgressMaskPath Exception=" + e3);
             }
         }
-        this.mProgressMaskMin = resources.getInteger(C0016R$integer.battery_meter_progress_mask_min);
-        this.mProgressMaskMax = resources.getInteger(C0016R$integer.battery_meter_progress_mask_max);
+        this.mProgressMaskMin = resources.getInteger(C0015R$integer.battery_meter_progress_mask_min);
+        this.mProgressMaskMax = resources.getInteger(C0015R$integer.battery_meter_progress_mask_max);
         this.mProgressDrawables.clear();
         this.mProgressDarkDrawables.clear();
-        this.mBatteryLowColor = resources.getColor(C0011R$color.status_bar_battery_low);
-        this.mBatteryNormalLightColor = resources.getColor(C0011R$color.status_bar_battery_normal_light);
-        this.mBatteryNormalDarkColor = resources.getColor(C0011R$color.status_bar_battery_normal_dark);
-        this.mBatteryNormalDigitLightColor = resources.getColor(C0011R$color.status_bar_battery_normal_digit_light);
-        this.mBatteryNormalDigitDarkColor = resources.getColor(C0011R$color.status_bar_battery_normal_digit_dark);
-        this.mBatteryChargingColor = resources.getColor(C0011R$color.status_bar_battery_charging);
-        this.mBatteryPowerSaveColor = resources.getColor(C0011R$color.status_bar_battery_power_save);
-        this.mProgressDrawables.put(BatteryStatus.LOW, resources.getDrawable(C0013R$drawable.battery_meter_progress_low));
-        this.mProgressDarkDrawables.put(BatteryStatus.LOW, resources.getDrawable(C0013R$drawable.battery_meter_progress_low_dark));
-        this.mProgressDrawables.put(BatteryStatus.LOW_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_low_digit));
-        this.mProgressDarkDrawables.put(BatteryStatus.LOW_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_low_digit_dark));
-        this.mProgressDrawables.put(BatteryStatus.NORMAL, resources.getDrawable(C0013R$drawable.battery_meter_progress_normal));
-        this.mProgressDarkDrawables.put(BatteryStatus.NORMAL, resources.getDrawable(C0013R$drawable.battery_meter_progress_normal_dark));
-        this.mProgressDrawables.put(BatteryStatus.NORMAL_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_normal_digit));
-        this.mProgressDarkDrawables.put(BatteryStatus.NORMAL_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_normal_digit_dark));
-        this.mProgressDrawables.put(BatteryStatus.CHARGING, resources.getDrawable(C0013R$drawable.battery_meter_progress_charging));
-        this.mProgressDarkDrawables.put(BatteryStatus.CHARGING, resources.getDrawable(C0013R$drawable.battery_meter_progress_charging_dark));
-        this.mProgressDrawables.put(BatteryStatus.CHARGING_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_charging_digit));
-        this.mProgressDarkDrawables.put(BatteryStatus.CHARGING_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_charging_digit_dark));
-        this.mProgressDrawables.put(BatteryStatus.POWER_SAVE, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save));
-        this.mProgressDarkDrawables.put(BatteryStatus.POWER_SAVE, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save_dark));
-        this.mProgressDrawables.put(BatteryStatus.POWER_SAVE_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save_digit));
-        this.mProgressDarkDrawables.put(BatteryStatus.POWER_SAVE_DIGIT, resources.getDrawable(C0013R$drawable.battery_meter_progress_power_save_digit_dark));
+        this.mBatteryLowColor = resources.getColor(C0010R$color.status_bar_battery_low);
+        this.mBatteryNormalLightColor = resources.getColor(C0010R$color.status_bar_battery_normal_light);
+        this.mBatteryNormalDarkColor = resources.getColor(C0010R$color.status_bar_battery_normal_dark);
+        this.mBatteryNormalDigitLightColor = resources.getColor(C0010R$color.status_bar_battery_normal_digit_light);
+        this.mBatteryNormalDigitDarkColor = resources.getColor(C0010R$color.status_bar_battery_normal_digit_dark);
+        this.mBatteryChargingColor = resources.getColor(C0010R$color.status_bar_battery_charging);
+        this.mBatteryPowerSaveColor = resources.getColor(C0010R$color.status_bar_battery_power_save);
+        this.mProgressDrawables.put(BatteryStatus.LOW, resources.getDrawable(C0012R$drawable.battery_meter_progress_low));
+        this.mProgressDarkDrawables.put(BatteryStatus.LOW, resources.getDrawable(C0012R$drawable.battery_meter_progress_low_dark));
+        this.mProgressDrawables.put(BatteryStatus.LOW_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_low_digit));
+        this.mProgressDarkDrawables.put(BatteryStatus.LOW_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_low_digit_dark));
+        this.mProgressDrawables.put(BatteryStatus.NORMAL, resources.getDrawable(C0012R$drawable.battery_meter_progress_normal));
+        this.mProgressDarkDrawables.put(BatteryStatus.NORMAL, resources.getDrawable(C0012R$drawable.battery_meter_progress_normal_dark));
+        this.mProgressDrawables.put(BatteryStatus.NORMAL_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_normal_digit));
+        this.mProgressDarkDrawables.put(BatteryStatus.NORMAL_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_normal_digit_dark));
+        this.mProgressDrawables.put(BatteryStatus.CHARGING, resources.getDrawable(C0012R$drawable.battery_meter_progress_charging));
+        this.mProgressDarkDrawables.put(BatteryStatus.CHARGING, resources.getDrawable(C0012R$drawable.battery_meter_progress_charging_dark));
+        this.mProgressDrawables.put(BatteryStatus.CHARGING_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_charging_digit));
+        this.mProgressDarkDrawables.put(BatteryStatus.CHARGING_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_charging_digit_dark));
+        this.mProgressDrawables.put(BatteryStatus.POWER_SAVE, resources.getDrawable(C0012R$drawable.battery_meter_progress_power_save));
+        this.mProgressDarkDrawables.put(BatteryStatus.POWER_SAVE, resources.getDrawable(C0012R$drawable.battery_meter_progress_power_save_dark));
+        this.mProgressDrawables.put(BatteryStatus.POWER_SAVE_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_power_save_digit));
+        this.mProgressDarkDrawables.put(BatteryStatus.POWER_SAVE_DIGIT, resources.getDrawable(C0012R$drawable.battery_meter_progress_power_save_digit_dark));
     }
 
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
@@ -277,20 +277,20 @@ public class MiuiBatteryMeterIconView extends ImageView {
         }
         if (z4 || z2) {
             if (z) {
-                Drawable drawable2 = getContext().getDrawable(C0013R$drawable.battery_meter_bg_tint);
+                Drawable drawable2 = getContext().getDrawable(C0012R$drawable.battery_meter_bg_tint);
                 this.mTintBgDrawable = drawable2;
                 if (drawable2 != null) {
                     drawable2.mutate();
-                    this.mLayerDrawable.setDrawableByLayerId(C0015R$id.background, this.mTintBgDrawable);
+                    this.mLayerDrawable.setDrawableByLayerId(C0014R$id.background, this.mTintBgDrawable);
                 }
-                Drawable drawable3 = getContext().getDrawable(C0013R$drawable.battery_meter_progress_tint);
+                Drawable drawable3 = getContext().getDrawable(C0012R$drawable.battery_meter_progress_tint);
                 if (drawable3 != null) {
                     drawable3.mutate();
                     this.mProgressClipDrawable.setDrawable(drawable3);
                 }
             } else {
                 this.mProgressClipDrawable.setTintList(null);
-                this.mLayerDrawable.setDrawableByLayerId(C0015R$id.background, this.mDark ? this.mDarkBg : this.mWhiteBg);
+                this.mLayerDrawable.setDrawableByLayerId(C0014R$id.background, this.mDark ? this.mDarkBg : this.mWhiteBg);
                 if (this.mDark) {
                     drawable = this.mProgressDarkDrawables.get(getStatus());
                 } else {
@@ -374,32 +374,32 @@ public class MiuiBatteryMeterIconView extends ImageView {
 
     private Drawable getLegacyDrawable(boolean z) {
         int i = this.mIconId;
-        if (i == C0020R$raw.stat_sys_battery_power_save) {
+        if (i == C0019R$raw.stat_sys_battery_power_save) {
             if (z) {
                 return BatteryIcon.getInstance(getContext()).getGraphicPowerSaveIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicPowerSaveIcon(this.mLevel);
-        } else if (i == C0020R$raw.stat_sys_battery_power_save_digit) {
+        } else if (i == C0019R$raw.stat_sys_battery_power_save_digit) {
             if (z) {
                 return BatteryIcon.getInstance(getContext()).getGraphicPowerSaveDigitIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicPowerSaveDigitIcon(this.mLevel);
-        } else if (i == C0020R$raw.stat_sys_battery_charge) {
+        } else if (i == C0019R$raw.stat_sys_battery_charge) {
             if (z) {
                 return BatteryIcon.getInstance(getContext()).getGraphicChargeIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicChargeIcon(this.mLevel);
-        } else if (i == C0020R$raw.stat_sys_battery_charge_digit) {
+        } else if (i == C0019R$raw.stat_sys_battery_charge_digit) {
             if (z) {
                 return BatteryIcon.getInstance(getContext()).getGraphicChargeDigitIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicChargeDigitIcon(this.mLevel);
-        } else if (i == C0020R$raw.stat_sys_battery) {
+        } else if (i == C0019R$raw.stat_sys_battery) {
             if (z) {
                 return BatteryIcon.getInstance(getContext()).getGraphicIconDarkMode(this.mLevel);
             }
             return BatteryIcon.getInstance(getContext()).getGraphicIcon(this.mLevel);
-        } else if (i != C0020R$raw.stat_sys_battery_digital) {
+        } else if (i != C0019R$raw.stat_sys_battery_digital) {
             return null;
         } else {
             if (z) {

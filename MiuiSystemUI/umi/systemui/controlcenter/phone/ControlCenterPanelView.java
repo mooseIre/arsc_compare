@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.LinearLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelViewController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.phone.detail.QSControlDetail;
@@ -282,31 +282,31 @@ public final class ControlCenterPanelView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View requireViewById = requireViewById(C0015R$id.header);
+        View requireViewById = requireViewById(C0014R$id.header);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.header)");
         this.header = (QSControlCenterHeaderView) requireViewById;
-        View requireViewById2 = requireViewById(C0015R$id.foot_panel);
+        View requireViewById2 = requireViewById(C0014R$id.foot_panel);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.foot_panel)");
         this.footer = (ControlCenterFooterPanel) requireViewById2;
-        View requireViewById3 = requireViewById(C0015R$id.content_springer);
+        View requireViewById3 = requireViewById(C0014R$id.content_springer);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById(R.id.content_springer)");
         this.contentContainer = (ControlCenterContentContainer) requireViewById3;
-        View requireViewById4 = requireViewById(C0015R$id.tiles_springer);
+        View requireViewById4 = requireViewById(C0014R$id.tiles_springer);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById4, "requireViewById(R.id.tiles_springer)");
         this.tileContainer = (ControlCenterTilesContainer) requireViewById4;
-        View requireViewById5 = requireViewById(C0015R$id.big_tiles);
+        View requireViewById5 = requireViewById(C0014R$id.big_tiles);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById5, "requireViewById(R.id.big_tiles)");
         this.bigTileLayout = (ControlCenterBigTileGroup) requireViewById5;
-        View requireViewById6 = requireViewById(C0015R$id.tile_layout);
+        View requireViewById6 = requireViewById(C0014R$id.tile_layout);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById6, "requireViewById(R.id.tile_layout)");
         this.tileLayout = (QSControlCenterTileLayout) requireViewById6;
-        View requireViewById7 = requireViewById(C0015R$id.cc_content);
+        View requireViewById7 = requireViewById(C0014R$id.cc_content);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById7, "requireViewById(R.id.cc_content)");
         this.ccContainer = (LinearLayout) requireViewById7;
-        View requireViewById8 = requireViewById(C0015R$id.brightness_container);
+        View requireViewById8 = requireViewById(C0014R$id.brightness_container);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById8, "requireViewById(R.id.brightness_container)");
         this.brightnessView = (ControlCenterBrightnessView) requireViewById8;
-        View requireViewById9 = requireViewById(C0015R$id.smart_home_container);
+        View requireViewById9 = requireViewById(C0014R$id.smart_home_container);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById9, "requireViewById(R.id.smart_home_container)");
         this.smartHomeContainer = (LinearLayout) requireViewById9;
         this.panelViewController.onFinishInflate();
@@ -390,6 +390,15 @@ public final class ControlCenterPanelView extends LinearLayout {
         }
         Intrinsics.throwUninitializedPropertyAccessException("smartHomeContainer");
         throw null;
+    }
+
+    @Nullable
+    public final Boolean shouldCollapseBySwipeUp() {
+        ControlCenterPanelViewController.TouchHandler touchHandler2 = this.touchHandler;
+        if (touchHandler2 != null) {
+            return Boolean.valueOf(touchHandler2.shouldCollapseBySwipeUp());
+        }
+        return null;
     }
 
     public final void setTouchable(boolean z) {

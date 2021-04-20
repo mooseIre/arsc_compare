@@ -11,8 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import com.android.settingslib.RestrictedLockUtils;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.R$styleable;
 import com.android.systemui.settings.ToggleSlider;
 import com.android.systemui.statusbar.policy.BrightnessMirrorController;
@@ -104,16 +104,16 @@ public class ToggleSliderView extends RelativeLayout implements ToggleSlider {
                 }
             }
         };
-        View.inflate(context, C0017R$layout.status_bar_toggle_slider, this);
+        View.inflate(context, C0016R$layout.status_bar_toggle_slider, this);
         context.getResources();
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.ToggleSliderView, i, 0);
-        CompoundButton compoundButton = (CompoundButton) findViewById(C0015R$id.toggle);
+        CompoundButton compoundButton = (CompoundButton) findViewById(C0014R$id.toggle);
         this.mToggle = compoundButton;
         compoundButton.setOnCheckedChangeListener(this.mCheckListener);
-        ToggleSeekBar toggleSeekBar = (ToggleSeekBar) findViewById(C0015R$id.slider);
+        ToggleSeekBar toggleSeekBar = (ToggleSeekBar) findViewById(C0014R$id.slider);
         this.mSlider = toggleSeekBar;
         toggleSeekBar.setOnSeekBarChangeListener(this.mSeekListener);
-        TextView textView = (TextView) findViewById(C0015R$id.label);
+        TextView textView = (TextView) findViewById(C0014R$id.label);
         this.mLabel = textView;
         textView.setText(obtainStyledAttributes.getString(R$styleable.ToggleSliderView_text));
         this.mSlider.setAccessibilityLabel(getContentDescription().toString());

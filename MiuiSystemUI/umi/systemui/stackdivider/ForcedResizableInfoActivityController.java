@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.UserHandle;
 import android.util.ArraySet;
 import android.widget.Toast;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import java.util.function.Consumer;
@@ -106,13 +106,13 @@ public class ForcedResizableInfoActivityController {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void activityDismissingDockedStack() {
-        Toast.makeText(this.mContext, C0021R$string.dock_non_resizeble_failed_to_dock_text, 0).show();
+        Toast.makeText(this.mContext, C0020R$string.dock_non_resizeble_failed_to_dock_text, 0).show();
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void activityLaunchOnSecondaryDisplayFailed() {
-        Toast.makeText(this.mContext, C0021R$string.activity_launch_on_secondary_display_failed_text, 0).show();
+        Toast.makeText(this.mContext, C0020R$string.activity_launch_on_secondary_display_failed_text, 0).show();
     }
 
     /* access modifiers changed from: private */

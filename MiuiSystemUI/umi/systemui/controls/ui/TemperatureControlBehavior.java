@@ -5,7 +5,7 @@ import android.graphics.drawable.LayerDrawable;
 import android.service.controls.Control;
 import android.service.controls.templates.ControlTemplate;
 import android.service.controls.templates.TemperatureControlTemplate;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.controls.ui.ControlViewHolder;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
@@ -68,7 +68,7 @@ public final class TemperatureControlBehavior implements Behavior {
                 if (controlViewHolder2 != null) {
                     Drawable background = controlViewHolder2.getLayout().getBackground();
                     if (background != null) {
-                        Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C0015R$id.clip_layer);
+                        Drawable findDrawableByLayerId = ((LayerDrawable) background).findDrawableByLayerId(C0014R$id.clip_layer);
                         Intrinsics.checkExpressionValueIsNotNull(findDrawableByLayerId, "ld.findDrawableByLayerId(R.id.clip_layer)");
                         this.clipLayer = findDrawableByLayerId;
                         Control control3 = this.control;

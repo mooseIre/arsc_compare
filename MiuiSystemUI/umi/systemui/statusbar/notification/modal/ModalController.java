@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
@@ -87,10 +87,10 @@ public final class ModalController {
     }
 
     private final void addModalWindow() {
-        View inflate = LayoutInflater.from(this.context).inflate(C0017R$layout.miui_modal_window, (ViewGroup) null);
+        View inflate = LayoutInflater.from(this.context).inflate(C0016R$layout.miui_modal_window, (ViewGroup) null);
         inflate.setOnClickListener(new ModalController$addModalWindow$1(this));
         this.modalWindowManager.addNotificationModalWindow(inflate);
-        View findViewById = inflate.findViewById(C0015R$id.modal_window_view);
+        View findViewById = inflate.findViewById(C0014R$id.modal_window_view);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "view.findViewById(R.id.modal_window_view)");
         this.modalWindowView = (ModalWindowView) findViewById;
     }
@@ -149,7 +149,7 @@ public final class ModalController {
             if (expandableNotificationRow != null) {
                 expandableNotificationRow.setOnClickListener(new ModalController$enterModal$2(this));
             }
-            if (!(expandableNotificationRow == null || (notificationBackgroundView = (NotificationBackgroundView) expandableNotificationRow.findViewById(C0015R$id.backgroundNormal)) == null)) {
+            if (!(expandableNotificationRow == null || (notificationBackgroundView = (NotificationBackgroundView) expandableNotificationRow.findViewById(C0014R$id.backgroundNormal)) == null)) {
                 notificationBackgroundView.disableBlur();
             }
             ModalWindowView modalWindowView3 = this.modalWindowView;

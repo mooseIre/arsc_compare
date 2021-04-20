@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row.wrapper;
 import android.content.Context;
 import android.view.View;
 import com.android.internal.widget.ConversationLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +39,7 @@ public final class MiuiNotificationConversationTemplateViewWrapper extends Notif
         View findViewById = this.mView.findViewById(16908724);
         this.actionsContainer = findViewById;
         if (findViewById == null) {
-            this.actionsContainer = this.mView.findViewById(C0015R$id.actions_container);
+            this.actionsContainer = this.mView.findViewById(C0014R$id.actions_container);
         }
     }
 

@@ -6,8 +6,8 @@ import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.view.SurfaceControl;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 
 public class PipSurfaceTransactionHelper implements ConfigurationController.ConfigurationListener {
@@ -27,13 +27,13 @@ public class PipSurfaceTransactionHelper implements ConfigurationController.Conf
     public PipSurfaceTransactionHelper(Context context, ConfigurationController configurationController) {
         Resources resources = context.getResources();
         this.mContext = context;
-        this.mEnableCornerRadius = resources.getBoolean(C0010R$bool.config_pipEnableRoundCorner);
+        this.mEnableCornerRadius = resources.getBoolean(C0009R$bool.config_pipEnableRoundCorner);
         configurationController.addCallback(this);
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
-        this.mCornerRadius = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.pip_corner_radius);
+        this.mCornerRadius = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.pip_corner_radius);
     }
 
     /* access modifiers changed from: package-private */

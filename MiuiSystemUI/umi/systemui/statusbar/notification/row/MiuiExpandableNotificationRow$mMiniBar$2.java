@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.notification.row;
 
 import android.view.View;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
@@ -17,6 +17,6 @@ final class MiuiExpandableNotificationRow$mMiniBar$2 extends Lambda implements F
 
     @Override // kotlin.jvm.functions.Function0
     public final View invoke() {
-        return this.this$0.findViewById(C0015R$id.mini_window_bar);
+        return this.this$0.findViewById(C0014R$id.mini_window_bar);
     }
 }

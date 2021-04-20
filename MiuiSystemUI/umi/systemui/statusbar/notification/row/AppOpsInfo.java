@@ -15,8 +15,8 @@ import android.widget.TextView;
 import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.statusbar.notification.row.NotificationGuts;
 
 public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsContent {
@@ -104,23 +104,23 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         } catch (PackageManager.NameNotFoundException unused) {
             drawable = this.mPm.getDefaultActivityIcon();
         }
-        ((ImageView) findViewById(C0015R$id.pkgicon)).setImageDrawable(drawable);
-        ((TextView) findViewById(C0015R$id.pkgname)).setText(this.mAppName);
+        ((ImageView) findViewById(C0014R$id.pkgicon)).setImageDrawable(drawable);
+        ((TextView) findViewById(C0014R$id.pkgname)).setText(this.mAppName);
     }
 
     private void bindPrompt() {
-        ((TextView) findViewById(C0015R$id.prompt)).setText(getPrompt());
+        ((TextView) findViewById(C0014R$id.prompt)).setText(getPrompt());
     }
 
     private void bindButtons() {
-        findViewById(C0015R$id.settings).setOnClickListener(new View.OnClickListener() {
+        findViewById(C0014R$id.settings).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.statusbar.notification.row.$$Lambda$AppOpsInfo$MC_PUe5w52BX3b0kt9URHDzbSUA */
 
             public final void onClick(View view) {
                 AppOpsInfo.this.lambda$bindButtons$1$AppOpsInfo(view);
             }
         });
-        TextView textView = (TextView) findViewById(C0015R$id.ok);
+        TextView textView = (TextView) findViewById(C0014R$id.ok);
         textView.setOnClickListener(this.mOnOk);
         textView.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
     }
@@ -138,22 +138,22 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         }
         if (this.mAppOps.size() == 1) {
             if (this.mAppOps.contains(26)) {
-                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera);
+                return ((LinearLayout) this).mContext.getString(C0020R$string.appops_camera);
             }
             if (this.mAppOps.contains(27)) {
-                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_microphone);
+                return ((LinearLayout) this).mContext.getString(C0020R$string.appops_microphone);
             }
-            return ((LinearLayout) this).mContext.getString(C0021R$string.appops_overlay);
+            return ((LinearLayout) this).mContext.getString(C0020R$string.appops_overlay);
         } else if (this.mAppOps.size() != 2) {
-            return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera_mic_overlay);
+            return ((LinearLayout) this).mContext.getString(C0020R$string.appops_camera_mic_overlay);
         } else {
             if (!this.mAppOps.contains(26)) {
-                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_mic_overlay);
+                return ((LinearLayout) this).mContext.getString(C0020R$string.appops_mic_overlay);
             }
             if (this.mAppOps.contains(27)) {
-                return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera_mic);
+                return ((LinearLayout) this).mContext.getString(C0020R$string.appops_camera_mic);
             }
-            return ((LinearLayout) this).mContext.getString(C0021R$string.appops_camera_overlay);
+            return ((LinearLayout) this).mContext.getString(C0020R$string.appops_camera_overlay);
         }
     }
 
@@ -161,10 +161,10 @@ public class AppOpsInfo extends LinearLayout implements NotificationGuts.GutsCon
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0020R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0020R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 

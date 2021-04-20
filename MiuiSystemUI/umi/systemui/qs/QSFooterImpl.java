@@ -25,9 +25,9 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.Utils;
 import com.android.settingslib.development.DevelopmentSettingsEnabler;
 import com.android.settingslib.drawable.UserIconDrawable;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.qs.TouchAnimator;
@@ -94,15 +94,15 @@ public class QSFooterImpl extends FrameLayout implements QSFooter, View.OnClickL
                 QSFooterImpl.this.lambda$onFinishInflate$1$QSFooterImpl(view);
             }
         });
-        this.mPageIndicator = (MiuiPageIndicator) findViewById(C0015R$id.footer_page_indicator);
-        this.mSettingsButton = (SettingsButton) findViewById(C0015R$id.settings_button);
-        this.mSettingsContainer = findViewById(C0015R$id.settings_button_container);
+        this.mPageIndicator = (MiuiPageIndicator) findViewById(C0014R$id.footer_page_indicator);
+        this.mSettingsButton = (SettingsButton) findViewById(C0014R$id.settings_button);
+        this.mSettingsContainer = findViewById(C0014R$id.settings_button_container);
         this.mSettingsButton.setOnClickListener(this);
-        MultiUserSwitch multiUserSwitch = (MultiUserSwitch) findViewById(C0015R$id.multi_user_switch);
+        MultiUserSwitch multiUserSwitch = (MultiUserSwitch) findViewById(C0014R$id.multi_user_switch);
         this.mMultiUserSwitch = multiUserSwitch;
-        this.mMultiUserAvatar = (ImageView) multiUserSwitch.findViewById(C0015R$id.multi_user_avatar);
-        this.mActionsContainer = findViewById(C0015R$id.qs_footer_actions_container);
-        this.mEditContainer = findViewById(C0015R$id.qs_footer_actions_edit_container);
+        this.mMultiUserAvatar = (ImageView) multiUserSwitch.findViewById(C0014R$id.multi_user_avatar);
+        this.mActionsContainer = findViewById(C0014R$id.qs_footer_actions_container);
+        this.mEditContainer = findViewById(C0014R$id.qs_footer_actions_edit_container);
         ((RippleDrawable) this.mSettingsButton.getBackground()).setForceSoftware(true);
         updateResources();
         addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -148,7 +148,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter, View.OnClickL
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void setBuildText() {
-        TextView textView = (TextView) findViewById(C0015R$id.build);
+        TextView textView = (TextView) findViewById(C0014R$id.build);
         if (textView != null) {
             if (DevelopmentSettingsEnabler.isDevelopmentSettingsEnabled(((FrameLayout) this).mContext)) {
                 textView.setText(((FrameLayout) this).mContext.getString(17039791, Build.VERSION.RELEASE_OR_CODENAME, Build.ID));
@@ -167,8 +167,8 @@ public class QSFooterImpl extends FrameLayout implements QSFooter, View.OnClickL
         } else {
             i2 = QuickQSPanel.getDefaultMaxTiles();
         }
-        int dimensionPixelSize = (i - ((((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_tile_size) - ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_tile_padding)) * i2)) / (i2 - 1);
-        int dimensionPixelOffset = ((FrameLayout) this).mContext.getResources().getDimensionPixelOffset(C0012R$dimen.default_gear_space);
+        int dimensionPixelSize = (i - ((((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_quick_tile_size) - ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_quick_tile_padding)) * i2)) / (i2 - 1);
+        int dimensionPixelOffset = ((FrameLayout) this).mContext.getResources().getDimensionPixelOffset(C0011R$dimen.default_gear_space);
         TouchAnimator.Builder builder = new TouchAnimator.Builder();
         View view = this.mSettingsContainer;
         float[] fArr = new float[2];
@@ -323,7 +323,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter, View.OnClickL
     private void miuiUpdateVisibilities() {
         int i = 0;
         this.mSettingsContainer.setVisibility(this.mQsDisabled ? 8 : 0);
-        this.mSettingsContainer.findViewById(C0015R$id.tuner_icon).setVisibility(4);
+        this.mSettingsContainer.findViewById(C0014R$id.tuner_icon).setVisibility(4);
         UserManager.isDeviceInDemoMode(((FrameLayout) this).mContext);
         MultiUserSwitch multiUserSwitch = this.mMultiUserSwitch;
         if (!this.mExpanded || !multiUserSwitch.isMultiUserEnabled() || !this.mMultiUserSwitch.hasMultipleUsers()) {
@@ -385,7 +385,7 @@ public class QSFooterImpl extends FrameLayout implements QSFooter, View.OnClickL
                 }
             });
         } else {
-            Toast.makeText(getContext(), C0021R$string.tuner_toast, 1).show();
+            Toast.makeText(getContext(), C0020R$string.tuner_toast, 1).show();
             TunerService.setTunerEnabled(((FrameLayout) this).mContext, true);
         }
         lambda$onClick$5();

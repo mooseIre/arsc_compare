@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.controller.ControlsController;
@@ -26,10 +26,7 @@ import com.android.systemui.controls.ui.RenderInfo;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 import com.android.systemui.util.LifecycleActivity;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ControlsRequestDialog.kt */
 public class ControlsRequestDialog extends LifecycleActivity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     private final BroadcastDispatcher broadcastDispatcher;
     private final ControlsRequestDialog$callback$1 callback = new ControlsRequestDialog$callback$1();
@@ -40,7 +37,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
     private final ControlsRequestDialog$currentUserTracker$1 currentUserTracker = new ControlsRequestDialog$currentUserTracker$1(this, this.broadcastDispatcher);
     private Dialog dialog;
 
-    public ControlsRequestDialog(@NotNull ControlsController controlsController, @NotNull BroadcastDispatcher broadcastDispatcher2, @NotNull ControlsListingController controlsListingController2) {
+    public ControlsRequestDialog(ControlsController controlsController, BroadcastDispatcher broadcastDispatcher2, ControlsListingController controlsListingController2) {
         Intrinsics.checkParameterIsNotNull(controlsController, "controller");
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher2, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(controlsListingController2, "controlsListingController");
@@ -49,9 +46,8 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         this.controlsListingController = controlsListingController2;
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
-    public void onCreate(@Nullable Bundle bundle) {
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         if (!this.controller.getAvailable()) {
             Log.w("ControlsRequestDialog", "Quick Controls not available for this user ");
@@ -81,7 +77,6 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         finish();
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onResume() {
         super.onResume();
@@ -122,7 +117,6 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         }
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         Dialog dialog2 = this.dialog;
@@ -153,8 +147,7 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controls.management.ControlsRequestDialog.isCurrentFavorite():boolean");
     }
 
-    @NotNull
-    public final Dialog createDialog(@NotNull CharSequence charSequence) {
+    public final Dialog createDialog(CharSequence charSequence) {
         Intrinsics.checkParameterIsNotNull(charSequence, "label");
         RenderInfo.Companion companion = RenderInfo.Companion;
         ComponentName componentName = this.controlComponent;
@@ -162,8 +155,8 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
             Control control2 = this.control;
             if (control2 != null) {
                 RenderInfo lookup$default = RenderInfo.Companion.lookup$default(companion, this, componentName, control2.getDeviceType(), 0, 8, null);
-                View inflate = LayoutInflater.from(this).inflate(C0017R$layout.controls_dialog, (ViewGroup) null);
-                ImageView imageView = (ImageView) inflate.requireViewById(C0015R$id.icon);
+                View inflate = LayoutInflater.from(this).inflate(C0016R$layout.controls_dialog, (ViewGroup) null);
+                ImageView imageView = (ImageView) inflate.requireViewById(C0014R$id.icon);
                 imageView.setImageDrawable(lookup$default.getIcon());
                 Context context = imageView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "context");
@@ -172,22 +165,22 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
                 Context context2 = imageView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context2, "context");
                 imageView.setImageTintList(resources.getColorStateList(foreground, context2.getTheme()));
-                View requireViewById = inflate.requireViewById(C0015R$id.title);
+                View requireViewById = inflate.requireViewById(C0014R$id.title);
                 Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById<TextView>(R.id.title)");
                 TextView textView = (TextView) requireViewById;
                 Control control3 = this.control;
                 if (control3 != null) {
                     textView.setText(control3.getTitle());
-                    View requireViewById2 = inflate.requireViewById(C0015R$id.subtitle);
+                    View requireViewById2 = inflate.requireViewById(C0014R$id.subtitle);
                     Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById<TextView>(R.id.subtitle)");
                     TextView textView2 = (TextView) requireViewById2;
                     Control control4 = this.control;
                     if (control4 != null) {
                         textView2.setText(control4.getSubtitle());
-                        View requireViewById3 = inflate.requireViewById(C0015R$id.control);
+                        View requireViewById3 = inflate.requireViewById(C0014R$id.control);
                         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById<View>(R.id.control)");
-                        requireViewById3.setElevation(inflate.getResources().getFloat(C0012R$dimen.control_card_elevation));
-                        AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0021R$string.controls_dialog_title)).setMessage(getString(C0021R$string.controls_dialog_message, new Object[]{charSequence})).setPositiveButton(C0021R$string.controls_dialog_ok, this).setNegativeButton(17039360, this).setOnCancelListener(this).setView(inflate).create();
+                        requireViewById3.setElevation(inflate.getResources().getFloat(C0011R$dimen.control_card_elevation));
+                        AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0020R$string.controls_dialog_title)).setMessage(getString(C0020R$string.controls_dialog_message, new Object[]{charSequence})).setPositiveButton(C0020R$string.controls_dialog_ok, this).setNegativeButton(17039360, this).setOnCancelListener(this).setView(inflate).create();
                         SystemUIDialog.registerDismissListener(create);
                         create.setCanceledOnTouchOutside(true);
                         Intrinsics.checkExpressionValueIsNotNull(create, "dialog");
@@ -206,11 +199,11 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
         throw null;
     }
 
-    public void onCancel(@Nullable DialogInterface dialogInterface) {
+    public void onCancel(DialogInterface dialogInterface) {
         finish();
     }
 
-    public void onClick(@Nullable DialogInterface dialogInterface, int i) {
+    public void onClick(DialogInterface dialogInterface, int i) {
         if (i == -1) {
             ControlsController controlsController = this.controller;
             ComponentName componentName = this.controlComponent;

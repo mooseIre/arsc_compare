@@ -10,9 +10,9 @@ import android.widget.TextView;
 import com.android.internal.colorextraction.drawable.ScrimDrawable;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0009R$attr;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0008R$attr;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.GlobalActions;
 import com.android.systemui.plugins.GlobalActionsPanelPlugin;
@@ -68,7 +68,7 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
     @Override // com.android.systemui.plugins.GlobalActions
     public void showShutdownUi(boolean z, String str) {
         Drawable scrimDrawable = new ScrimDrawable();
-        Dialog dialog = new Dialog(this.mContext, C0022R$style.Theme_SystemUI_Dialog_GlobalActions);
+        Dialog dialog = new Dialog(this.mContext, C0021R$style.Theme_SystemUI_Dialog_GlobalActions);
         dialog.setOnShowListener(new DialogInterface.OnShowListener(scrimDrawable, dialog) {
             /* class com.android.systemui.globalactions.$$Lambda$GlobalActionsImpl$FGsviRHv4VNB5P1rRHu2A1JPouY */
             public final /* synthetic */ ScrimDrawable f$1;
@@ -95,10 +95,10 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
         window.clearFlags(2);
         window.addFlags(17629472);
         window.setBackgroundDrawable(scrimDrawable);
-        window.setWindowAnimations(C0022R$style.Animation_ShutdownUi);
+        window.setWindowAnimations(C0021R$style.Animation_ShutdownUi);
         dialog.setContentView(17367304);
         dialog.setCancelable(false);
-        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, C0009R$attr.wallpaperTextColor);
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(this.mContext, C0008R$attr.wallpaperTextColor);
         ((ProgressBar) dialog.findViewById(16908301)).getIndeterminateDrawable().setTint(colorAttrDefaultColor);
         TextView textView = (TextView) dialog.findViewById(16908308);
         TextView textView2 = (TextView) dialog.findViewById(16908309);
@@ -121,7 +121,7 @@ public class GlobalActionsImpl implements GlobalActions, CommandQueue.Callbacks 
             this.mBlurUtils.applyBlur(dialog.getWindow().getDecorView().getViewRootImpl(), this.mBlurUtils.blurRadiusOfRatio(1.0f));
             return;
         }
-        scrimDrawable.setAlpha((int) (this.mContext.getResources().getFloat(C0012R$dimen.shutdown_scrim_behind_alpha) * 255.0f));
+        scrimDrawable.setAlpha((int) (this.mContext.getResources().getFloat(C0011R$dimen.shutdown_scrim_behind_alpha) * 255.0f));
     }
 
     private int getRebootMessage(boolean z, String str) {

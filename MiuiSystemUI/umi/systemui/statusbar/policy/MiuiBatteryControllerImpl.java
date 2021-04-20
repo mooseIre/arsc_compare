@@ -5,6 +5,7 @@ import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.MiuiSettings;
 import android.provider.Settings;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -42,7 +43,7 @@ public class MiuiBatteryControllerImpl extends BatteryControllerImpl {
 
         public void onChange(boolean z) {
             MiuiBatteryControllerImpl miuiBatteryControllerImpl = MiuiBatteryControllerImpl.this;
-            miuiBatteryControllerImpl.mBatteryStyle = Settings.System.getIntForUser(miuiBatteryControllerImpl.mContext.getContentResolver(), "battery_indicator_style", 1, -2);
+            miuiBatteryControllerImpl.mBatteryStyle = Settings.System.getIntForUser(miuiBatteryControllerImpl.mContext.getContentResolver(), "battery_indicator_style", MiuiSettings.System.BATTERY_INDICATOR_STYLE_DEFAULT, -2);
             synchronized (MiuiBatteryControllerImpl.this.mChangeCallbacks) {
                 int size = MiuiBatteryControllerImpl.this.mChangeCallbacks.size();
                 for (int i = 0; i < size; i++) {

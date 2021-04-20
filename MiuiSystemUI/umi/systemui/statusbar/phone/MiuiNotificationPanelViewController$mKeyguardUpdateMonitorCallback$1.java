@@ -17,15 +17,6 @@ public final class MiuiNotificationPanelViewController$mKeyguardUpdateMonitorCal
     }
 
     @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
-    public void onKeyguardShowingChanged(boolean z) {
-        if (z) {
-            this.this$0.addAwesomeLockScreenIfNeed();
-        } else {
-            this.this$0.removeAwesomeLockScreen();
-        }
-    }
-
-    @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
     public void onKeyguardOccludedChanged(boolean z) {
         this.this$0.mIsKeyguardOccluded = z;
     }

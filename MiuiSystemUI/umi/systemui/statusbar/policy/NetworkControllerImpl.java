@@ -29,8 +29,8 @@ import com.android.internal.annotations.GuardedBy;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.MiuiCarrierTextController;
 import com.android.settingslib.net.DataUsageController;
-import com.android.systemui.C0010R$bool;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -301,6 +301,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         intentFilter.addAction("android.telephony.action.CARRIER_CONFIG_CHANGED");
         intentFilter.addAction("android.intent.action.ANY_DATA_STATE");
         intentFilter.addAction("android.intent.action.ACTION_IMS_REGISTED");
+        intentFilter.addAction("android.intent.action.ACTION_IMS_REGISTED0");
+        intentFilter.addAction("android.intent.action.ACTION_IMS_REGISTED1");
         intentFilter.addAction("android.intent.action.ACTION_SPEECH_CODEC_IS_HD");
         intentFilter.addAction("android.intent.action.RADIO_TECHNOLOGY");
         intentFilter.addAction("android.net.wifi.supplicant.STATE_CHANGE");
@@ -478,7 +480,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     @Override // com.android.systemui.statusbar.policy.NetworkController
     public void addCallback(NetworkController.SignalCallback signalCallback) {
         signalCallback.setSubs(this.mCurrentSubscriptions);
-        signalCallback.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0021R$string.accessibility_airplane_mode, this.mContext));
+        signalCallback.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0020R$string.accessibility_airplane_mode, this.mContext));
         signalCallback.setNoSims(this.mHasNoSubs, this.mSimDetected);
         this.mWifiSignalController.notifyListeners(signalCallback);
         this.mEthernetSignalController.notifyListeners(signalCallback);
@@ -536,21 +538,21 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 break;
             case -2047452593:
                 if (action.equals("android.intent.action.ACTION_SPEECH_CODEC_IS_HD")) {
-                    c = '\t';
+                    c = 11;
                     break;
                 }
                 c = 65535;
                 break;
             case -1859256000:
                 if (action.equals("miui.intent.action.ACTION_ENHANCED_4G_LTE_MODE_CHANGE_FOR_SLOT1")) {
-                    c = 11;
+                    c = '\r';
                     break;
                 }
                 c = 65535;
                 break;
             case -1859255999:
                 if (action.equals("miui.intent.action.ACTION_ENHANCED_4G_LTE_MODE_CHANGE_FOR_SLOT2")) {
-                    c = '\f';
+                    c = 14;
                     break;
                 }
                 c = 65535;
@@ -578,7 +580,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 break;
             case -1082809675:
                 if (action.equals("android.intent.action.RADIO_TECHNOLOGY")) {
-                    c = '\n';
+                    c = '\f';
                     break;
                 }
                 c = 65535;
@@ -600,6 +602,20 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             case -25388475:
                 if (action.equals("android.intent.action.ACTION_DEFAULT_DATA_SUBSCRIPTION_CHANGED")) {
                     c = 4;
+                    break;
+                }
+                c = 65535;
+                break;
+            case 416603559:
+                if (action.equals("android.intent.action.ACTION_IMS_REGISTED0")) {
+                    c = '\t';
+                    break;
+                }
+                c = 65535;
+                break;
+            case 416603560:
+                if (action.equals("android.intent.action.ACTION_IMS_REGISTED1")) {
+                    c = '\n';
                     break;
                 }
                 c = 65535;
@@ -657,6 +673,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 });
                 return;
             case '\b':
+            case '\t':
+            case '\n':
                 final int intExtra2 = intent.getIntExtra("phone", -1);
                 int intExtra3 = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1);
                 boolean booleanExtra = intent.getBooleanExtra("state", false);
@@ -685,7 +703,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 }
                 updateMobileControllers();
                 return;
-            case '\t':
+            case 11:
                 int intExtra4 = intent.getIntExtra("phone", -1);
                 int intExtra5 = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1);
                 boolean booleanExtra3 = intent.getBooleanExtra("is_hd", false);
@@ -972,7 +990,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     }
 
     private void notifyListeners() {
-        this.mCallbackHandler.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0021R$string.accessibility_airplane_mode, this.mContext));
+        this.mCallbackHandler.setIsAirplaneMode(new NetworkController.IconState(this.mAirplaneMode, TelephonyIcons.FLIGHT_MODE_ICON, C0020R$string.accessibility_airplane_mode, this.mContext));
         this.mCallbackHandler.setNoSims(this.mHasNoSubs, this.mSimDetected);
     }
 
@@ -1175,14 +1193,14 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         static Config readConfig(Context context) {
             Config config = new Config();
             Resources resources = context.getResources();
-            config.showAtLeast3G = resources.getBoolean(C0010R$bool.config_showMin3G);
+            config.showAtLeast3G = resources.getBoolean(C0009R$bool.config_showMin3G);
             resources.getBoolean(17891360);
-            config.hspaDataDistinguishable = resources.getBoolean(C0010R$bool.config_hspa_data_distinguishable) && !Build.IS_CM_CUSTOMIZATION;
+            config.hspaDataDistinguishable = resources.getBoolean(C0009R$bool.config_hspa_data_distinguishable) && !Build.IS_CM_CUSTOMIZATION;
             resources.getBoolean(17891475);
-            config.alwaysShowNetworkTypeIcon = context.getResources().getBoolean(C0010R$bool.config_alwaysShowTypeIcon);
-            config.showRsrpSignalLevelforLTE = resources.getBoolean(C0010R$bool.config_showRsrpSignalLevelforLTE);
-            resources.getBoolean(C0010R$bool.config_hideNoInternetState);
-            config.showVolteIcon = resources.getBoolean(C0010R$bool.config_display_volte);
+            config.alwaysShowNetworkTypeIcon = context.getResources().getBoolean(C0009R$bool.config_alwaysShowTypeIcon);
+            config.showRsrpSignalLevelforLTE = resources.getBoolean(C0009R$bool.config_showRsrpSignalLevelforLTE);
+            resources.getBoolean(C0009R$bool.config_hideNoInternetState);
+            config.showVolteIcon = resources.getBoolean(C0009R$bool.config_display_volte);
             SubscriptionManager.from(context);
             PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService("carrier_config")).getConfigForSubId(SubscriptionManager.getDefaultDataSubscriptionId());
             if (configForSubId != null) {
@@ -1192,7 +1210,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 configForSubId.getBoolean("hide_lte_plus_data_icon_bool");
             }
             SystemProperties.getBoolean("persist.sysui.rat_icon_enhancement", false);
-            config.showVowifiIcon = resources.getBoolean(C0010R$bool.config_display_vowifi);
+            config.showVowifiIcon = resources.getBoolean(C0009R$bool.config_display_vowifi);
             return config;
         }
     }

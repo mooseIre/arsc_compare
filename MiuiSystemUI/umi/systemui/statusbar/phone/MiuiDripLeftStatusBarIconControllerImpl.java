@@ -7,8 +7,8 @@ import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.view.ViewGroup;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C0008R$array;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0007R$array;
+import com.android.systemui.C0011R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.statusbar.StatusIconDisplayable;
@@ -34,7 +34,7 @@ public class MiuiDripLeftStatusBarIconControllerImpl extends StatusBarIconList i
     }
 
     public MiuiDripLeftStatusBarIconControllerImpl(Context context) {
-        super(context.getResources().getStringArray(C0008R$array.config_drip_left_statusBarIcons));
+        super(context.getResources().getStringArray(C0007R$array.config_drip_left_statusBarIcons));
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
         this.mContext = context;
         loadDimens();
@@ -156,7 +156,7 @@ public class MiuiDripLeftStatusBarIconControllerImpl extends StatusBarIconList i
 
     @Override // com.android.systemui.statusbar.phone.StatusBarIconController
     public void setExternalIcon(String str) {
-        this.mIconGroups.forEach(new Consumer(getViewIndex(getSlotIndex(str), 0), this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_drawing_size)) {
+        this.mIconGroups.forEach(new Consumer(getViewIndex(getSlotIndex(str), 0), this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_icon_drawing_size)) {
             /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiDripLeftStatusBarIconControllerImpl$TrbE5Pq8j7QfCfsdMGrSnfjuqEk */
             public final /* synthetic */ int f$0;
             public final /* synthetic */ int f$1;

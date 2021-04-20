@@ -10,8 +10,8 @@ import android.view.WindowInsets;
 import android.view.animation.Interpolator;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0015R$integer;
 import com.android.systemui.Interpolators;
 import com.android.systemui.bubbles.animation.PhysicsAnimationLayout;
 import com.android.systemui.util.animation.PhysicsAnimator;
@@ -95,12 +95,12 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
         if (physicsAnimationLayout != null) {
             Resources resources = physicsAnimationLayout.getContext().getResources();
-            this.mBubblePaddingTop = (float) resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
+            this.mBubblePaddingTop = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
             this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105489);
-            this.mStackOffsetPx = (float) resources.getDimensionPixelSize(C0012R$dimen.bubble_stack_offset);
-            this.mBubblePaddingTop = (float) resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
-            this.mBubbleSizePx = (float) resources.getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
-            this.mBubblesMaxRendered = resources.getInteger(C0016R$integer.bubbles_max_rendered);
+            this.mStackOffsetPx = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_stack_offset);
+            this.mBubblePaddingTop = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
+            this.mBubbleSizePx = (float) resources.getDimensionPixelSize(C0011R$dimen.individual_bubble_size);
+            this.mBubblesMaxRendered = resources.getInteger(C0015R$integer.bubbles_max_rendered);
             float widthForDisplayingBubbles = getWidthForDisplayingBubbles() - ((float) (this.mExpandedViewPadding * 2));
             int i2 = this.mBubblesMaxRendered;
             this.mSpaceBetweenBubbles = (widthForDisplayingBubbles - (((float) (i2 + 1)) * this.mBubbleSizePx)) / ((float) i2);
@@ -311,11 +311,15 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
             }
 
             public final void run() {
-                this.f$0.setTranslationZ(0.0f);
+                ExpandedAnimationController.lambda$snapBubbleBack$4(this.f$0);
             }
         });
         this.mMagnetizedBubbleDraggingOut = null;
         updateBubblePositions();
+    }
+
+    static /* synthetic */ void lambda$snapBubbleBack$4(View view) {
+        view.setTranslationZ(0.0f);
     }
 
     public void onGestureFinished() {

@@ -100,7 +100,10 @@ public class NotificationCenter extends SystemUI {
         }
 
         public void onServiceDisconnected(ComponentName componentName) {
-            ((SystemUI) NotificationCenter.this).mContext.unbindService(NotificationCenter.this.mNcConn);
+            try {
+                ((SystemUI) NotificationCenter.this).mContext.unbindService(NotificationCenter.this.mNcConn);
+            } catch (Exception unused) {
+            }
             Log.e(NotificationCenter.TAG, "NcService disconnected, unbind");
             NotificationCenter.this.mNcService = null;
             NotificationCenter.this.mHasBind = false;
@@ -109,7 +112,10 @@ public class NotificationCenter extends SystemUI {
         }
 
         public void onBindingDied(ComponentName componentName) {
-            ((SystemUI) NotificationCenter.this).mContext.unbindService(NotificationCenter.this.mNcConn);
+            try {
+                ((SystemUI) NotificationCenter.this).mContext.unbindService(NotificationCenter.this.mNcConn);
+            } catch (Exception unused) {
+            }
             Log.e(NotificationCenter.TAG, "NcService died, unbind");
             NotificationCenter.this.mNcService = null;
             NotificationCenter.this.mHasBind = false;

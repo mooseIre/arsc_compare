@@ -15,7 +15,7 @@ final class ControlHolder$bindData$1 implements View.OnClickListener {
 
     public final void onClick(View view) {
         ControlHolder controlHolder = this.this$0;
-        controlHolder.updateFavorite(!controlHolder.favorite.isChecked());
-        this.this$0.getFavoriteCallback().invoke(((ControlInterface) this.$wrapper).getControlId(), Boolean.valueOf(this.this$0.favorite.isChecked()));
+        controlHolder.updateFavorite(!ControlHolder.access$getFavorite$p(controlHolder).isChecked());
+        this.this$0.getFavoriteCallback().invoke(((ControlInterface) this.$wrapper).getControlId(), Boolean.valueOf(ControlHolder.access$getFavorite$p(this.this$0).isChecked()));
     }
 }

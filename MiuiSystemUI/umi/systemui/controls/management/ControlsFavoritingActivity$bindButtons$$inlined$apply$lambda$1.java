@@ -7,7 +7,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 
 /* compiled from: ControlsFavoritingActivity.kt */
 final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 implements View.OnClickListener {
@@ -23,7 +23,7 @@ final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 imple
         Intent intent = new Intent();
         intent.setComponent(new ComponentName(this.$this_apply.getContext(), ControlsProviderSelectorActivity.class));
         if (ControlsFavoritingActivity.access$getDoneButton$p(this.this$0).isEnabled()) {
-            Toast.makeText(this.this$0.getApplicationContext(), C0021R$string.controls_favorite_toast_no_changes, 0).show();
+            Toast.makeText(this.this$0.getApplicationContext(), C0020R$string.controls_favorite_toast_no_changes, 0).show();
         }
         ControlsFavoritingActivity controlsFavoritingActivity = this.this$0;
         controlsFavoritingActivity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(controlsFavoritingActivity, new Pair[0]).toBundle());

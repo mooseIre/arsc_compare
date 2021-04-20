@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
 import com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController;
@@ -79,10 +79,10 @@ public final class ControlCenterBrightnessView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View requireViewById = requireViewById(C0015R$id.auto_brightness);
+        View requireViewById = requireViewById(C0014R$id.auto_brightness);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.auto_brightness)");
         this.autoBrightness = (AutoBrightnessView) requireViewById;
-        View requireViewById2 = requireViewById(C0015R$id.qs_brightness);
+        View requireViewById2 = requireViewById(C0014R$id.qs_brightness);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.qs_brightness)");
         this.brightnessView = (QCToggleSliderView) requireViewById2;
         Context context = getContext();
@@ -104,7 +104,7 @@ public final class ControlCenterBrightnessView extends LinearLayout {
             Intrinsics.throwUninitializedPropertyAccessException("brightnessView");
             throw null;
         } else if (qCBrightnessMirrorController != null) {
-            View findViewById = qCBrightnessMirrorController.getMirror().findViewById(C0015R$id.brightness_slider);
+            View findViewById = qCBrightnessMirrorController.getMirror().findViewById(C0014R$id.brightness_slider);
             if (findViewById != null) {
                 qCToggleSliderView.setMirror((QCToggleSliderView) findViewById);
                 QCToggleSliderView qCToggleSliderView2 = this.brightnessView;

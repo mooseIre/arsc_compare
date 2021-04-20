@@ -7,7 +7,7 @@ import android.graphics.Rect;
 import android.opengl.GLES20;
 import android.util.Log;
 import android.util.Size;
-import com.android.systemui.C0020R$raw;
+import com.android.systemui.C0019R$raw;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -42,7 +42,7 @@ public class ImageWallpaperRenderer implements GLWallpaperRenderer {
     @Override // com.android.systemui.glwallpaper.GLWallpaperRenderer
     public void onSurfaceCreated() {
         GLES20.glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        this.mProgram.useGLProgram(C0020R$raw.image_wallpaper_vertex_shader, C0020R$raw.image_wallpaper_fragment_shader);
+        this.mProgram.useGLProgram(C0019R$raw.image_wallpaper_vertex_shader, C0019R$raw.image_wallpaper_fragment_shader);
         this.mTexture.use(new Consumer() {
             /* class com.android.systemui.glwallpaper.$$Lambda$ImageWallpaperRenderer$tbObMkzj33QDR6llFkRAHA0TWow */
 

@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.window.WindowContainerToken;
 import android.window.WindowContainerTransaction;
 import android.window.WindowOrganizer;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.SystemUI;
 import com.android.systemui.TransactionPool;
 import com.android.systemui.recents.Recents;
@@ -228,13 +228,13 @@ public class Divider extends SystemUI implements DividerView.DividerCallbacks, D
     private void addDivider(Configuration configuration) {
         int i;
         Context displayContext = this.mDisplayController.getDisplayContext(this.mContext.getDisplayId());
-        this.mView = (DividerView) LayoutInflater.from(displayContext).inflate(C0017R$layout.docked_stack_divider, (ViewGroup) null);
+        this.mView = (DividerView) LayoutInflater.from(displayContext).inflate(C0016R$layout.docked_stack_divider, (ViewGroup) null);
         DisplayLayout displayLayout = this.mDisplayController.getDisplayLayout(this.mContext.getDisplayId());
         this.mView.injectDependencies(this.mWindowManager, this.mDividerState, this, this.mSplits, this.mSplitLayout, this.mImePositionProcessor, this.mWindowManagerProxy);
         boolean z = false;
         this.mView.setVisibility(this.mVisible ? 0 : 4);
         this.mView.setMinimizedDockStack(this.mMinimized, this.mHomeStackResizable, (SurfaceControl.Transaction) null);
-        int dimensionPixelSize = displayContext.getResources().getDimensionPixelSize(C0012R$dimen.docked_stack_divider_thickness);
+        int dimensionPixelSize = displayContext.getResources().getDimensionPixelSize(C0011R$dimen.docked_stack_divider_thickness);
         if (configuration.orientation == 2) {
             z = true;
         }

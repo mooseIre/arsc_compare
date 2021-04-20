@@ -22,7 +22,7 @@ import android.window.WindowContainerTransaction;
 import android.window.WindowContainerTransactionCallback;
 import android.window.WindowOrganizer;
 import com.android.internal.os.SomeArgs;
-import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0015R$integer;
 import com.android.systemui.pip.PipAnimationController;
 import com.android.systemui.pip.PipSurfaceTransactionHelper;
 import com.android.systemui.pip.PipTaskOrganizer;
@@ -145,7 +145,7 @@ public class PipTaskOrganizer extends TaskOrganizer implements DisplayController
 
     public PipTaskOrganizer(Context context, PipBoundsHandler pipBoundsHandler, PipSurfaceTransactionHelper pipSurfaceTransactionHelper, Divider divider, DisplayController displayController, PipAnimationController pipAnimationController, PipUiEventLogger pipUiEventLogger) {
         this.mPipBoundsHandler = pipBoundsHandler;
-        this.mEnterExitAnimationDuration = context.getResources().getInteger(C0016R$integer.config_pipResizeAnimationDuration);
+        this.mEnterExitAnimationDuration = context.getResources().getInteger(C0015R$integer.config_pipResizeAnimationDuration);
         this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
         this.mPipAnimationController = pipAnimationController;
         this.mPipUiEventLoggerLogger = pipUiEventLogger;

@@ -75,6 +75,10 @@ public final class MiuiVendorServices_MembersInjector {
         miuiVendorServices.mMiuiFullScreenGestureProxy = miuiFullScreenGestureProxy;
     }
 
+    public static void injectMCodeBlueService(MiuiVendorServices miuiVendorServices, CodeBlueService codeBlueService) {
+        miuiVendorServices.mCodeBlueService = codeBlueService;
+    }
+
     public static void injectMOledScreenHelper(MiuiVendorServices miuiVendorServices, OLEDScreenHelper oLEDScreenHelper) {
         miuiVendorServices.mOledScreenHelper = oLEDScreenHelper;
     }

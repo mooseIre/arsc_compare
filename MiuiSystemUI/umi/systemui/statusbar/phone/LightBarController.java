@@ -6,7 +6,7 @@ import android.view.InsetsFlags;
 import android.view.ViewDebug;
 import com.android.internal.colorextraction.ColorExtractor;
 import com.android.internal.view.AppearanceRegion;
-import com.android.systemui.C0011R$color;
+import com.android.systemui.C0010R$color;
 import com.android.systemui.Dumpable;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.shared.system.QuickStepContract;
@@ -38,7 +38,7 @@ public class LightBarController implements BatteryController.BatteryStateChangeC
     }
 
     public LightBarController(Context context, DarkIconDispatcher darkIconDispatcher, BatteryController batteryController, NavigationModeController navigationModeController) {
-        Color.valueOf(context.getColor(C0011R$color.dark_mode_icon_color_single_tone));
+        Color.valueOf(context.getColor(C0010R$color.dark_mode_icon_color_single_tone));
         this.mStatusBarIconController = (SysuiDarkIconDispatcher) darkIconDispatcher;
         this.mBatteryController = batteryController;
         batteryController.addCallback(this);

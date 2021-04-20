@@ -13,13 +13,13 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.ViewTreeObserver;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C0007R$anim;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0006R$anim;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.KeyguardAffordanceView;
 
 public class LockIcon extends KeyguardAffordanceView {
-    private static final int[][] LOCK_ANIM_RES_IDS = {new int[]{C0007R$anim.lock_to_error, C0007R$anim.lock_unlock, C0007R$anim.lock_lock, C0007R$anim.lock_scanning}, new int[]{C0007R$anim.lock_to_error_circular, C0007R$anim.lock_unlock_circular, C0007R$anim.lock_lock_circular, C0007R$anim.lock_scanning_circular}, new int[]{C0007R$anim.lock_to_error_filled, C0007R$anim.lock_unlock_filled, C0007R$anim.lock_lock_filled, C0007R$anim.lock_scanning_filled}, new int[]{C0007R$anim.lock_to_error_rounded, C0007R$anim.lock_unlock_rounded, C0007R$anim.lock_lock_rounded, C0007R$anim.lock_scanning_rounded}};
+    private static final int[][] LOCK_ANIM_RES_IDS = {new int[]{C0006R$anim.lock_to_error, C0006R$anim.lock_unlock, C0006R$anim.lock_lock, C0006R$anim.lock_scanning}, new int[]{C0006R$anim.lock_to_error_circular, C0006R$anim.lock_unlock_circular, C0006R$anim.lock_lock_circular, C0006R$anim.lock_scanning_circular}, new int[]{C0006R$anim.lock_to_error_filled, C0006R$anim.lock_unlock_filled, C0006R$anim.lock_lock_filled, C0006R$anim.lock_scanning_filled}, new int[]{C0006R$anim.lock_to_error_rounded, C0006R$anim.lock_unlock_rounded, C0006R$anim.lock_lock_rounded, C0006R$anim.lock_scanning_rounded}};
     private float mDozeAmount;
     private boolean mDozing;
     private final SparseArray<Drawable> mDrawableCache = new SparseArray<>();
@@ -37,7 +37,7 @@ public class LockIcon extends KeyguardAffordanceView {
             LockIcon.this.setImageDrawable(icon, false);
             if (i == 2) {
                 LockIcon lockIcon = LockIcon.this;
-                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C0021R$string.accessibility_scanning_face));
+                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C0020R$string.accessibility_scanning_face));
             }
             if (!(icon instanceof AnimatedVectorDrawable)) {
                 return true;

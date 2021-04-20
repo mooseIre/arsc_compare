@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.MiuiSettings;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.fuelgauge.BatterySaverUtils;
@@ -23,7 +24,7 @@ import java.util.Iterator;
 public class BatteryControllerImpl extends BroadcastReceiver implements BatteryController {
     private static final boolean DEBUG = Log.isLoggable("BatteryController", 3);
     private boolean mAodPowerSave;
-    protected int mBatteryStyle = 1;
+    protected int mBatteryStyle = MiuiSettings.System.BATTERY_INDICATOR_STYLE_DEFAULT;
     private final Handler mBgHandler;
     private final BroadcastDispatcher mBroadcastDispatcher;
     protected final ArrayList<BatteryController.BatteryStateChangeCallback> mChangeCallbacks = new ArrayList<>();

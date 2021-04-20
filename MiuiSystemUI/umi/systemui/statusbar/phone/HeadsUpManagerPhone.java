@@ -6,8 +6,8 @@ import android.graphics.Region;
 import android.util.Pools;
 import androidx.collection.ArraySet;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0015R$integer;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -117,8 +117,8 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, Vis
     public HeadsUpManagerPhone(Context context, StatusBarStateController statusBarStateController, KeyguardBypassController keyguardBypassController, NotificationGroupManager notificationGroupManager, ConfigurationController configurationController) {
         super(context);
         Resources resources = this.mContext.getResources();
-        this.mExtensionTime = resources.getInteger(C0016R$integer.ambient_notification_extension_time);
-        this.mAutoHeadsUpNotificationDecay = resources.getInteger(C0016R$integer.auto_heads_up_notification_decay);
+        this.mExtensionTime = resources.getInteger(C0015R$integer.ambient_notification_extension_time);
+        this.mAutoHeadsUpNotificationDecay = resources.getInteger(C0015R$integer.auto_heads_up_notification_decay);
         statusBarStateController.addCallback(this.mStatusBarStateListener);
         this.mBypassController = keyguardBypassController;
         this.mGroupManager = notificationGroupManager;
@@ -151,7 +151,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, Vis
     /* access modifiers changed from: public */
     private void updateResources() {
         Resources resources = this.mContext.getResources();
-        this.mHeadsUpInset = resources.getDimensionPixelSize(17105489) + resources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding);
+        this.mHeadsUpInset = resources.getDimensionPixelSize(17105489) + resources.getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: package-private */

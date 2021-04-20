@@ -6,8 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import miui.os.Build;
 
 public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
@@ -25,9 +25,9 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
     @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0017R$layout.drawer_demo_layout);
-        this.drawerImg = (ImageView) findViewById(C0015R$id.drawer_img);
-        View findViewById = findViewById(C0015R$id.shelter_view);
+        setContentView(C0016R$layout.drawer_demo_layout);
+        this.drawerImg = (ImageView) findViewById(C0014R$id.drawer_img);
+        View findViewById = findViewById(C0014R$id.shelter_view);
         this.shelterView = findViewById;
         findViewById.setOnTouchListener(new View.OnTouchListener() {
             /* class com.android.systemui.fsgesture.DrawerDemoAct.AnonymousClass1 */
@@ -57,7 +57,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
                 DrawerDemoAct.this.drawerImg.setTranslationX((float) DrawerDemoAct.this.initTranslateWidht);
             }
         });
-        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(C0015R$id.fsgesture_title_view);
+        FsGestureDemoTitleView fsGestureDemoTitleView2 = (FsGestureDemoTitleView) findViewById(C0014R$id.fsgesture_title_view);
         this.fsGestureDemoTitleView = fsGestureDemoTitleView2;
         fsGestureDemoTitleView2.prepareTitleView(4);
         this.fsGestureDemoTitleView.registerSkipEvent(new View.OnClickListener() {
@@ -68,7 +68,7 @@ public class DrawerDemoAct extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.fsGestureDemoTitleView);
-        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0015R$id.fsgesture_swipe_view);
+        this.fsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0014R$id.fsgesture_swipe_view);
         startSwipeViewAnimation(3);
         this.mNavigationHandle = GestureLineUtils.createAndaddNavigationHandle((RelativeLayout) this.drawerImg.getParent());
     }

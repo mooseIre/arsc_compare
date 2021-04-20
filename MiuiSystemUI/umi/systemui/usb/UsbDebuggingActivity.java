@@ -11,8 +11,8 @@ import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.os.SystemProperties;
 import android.util.Log;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import miui.app.Activity;
 import miui.app.AlertDialog;
 
@@ -70,8 +70,8 @@ public class UsbDebuggingActivity extends Activity {
                 UsbDebuggingActivity.this.finish();
             }
         };
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, C0022R$style.Theme_Dialog_Alert);
-        builder.setTitle(getString(C0021R$string.usb_debugging_title)).setMessage(getString(C0021R$string.usb_debugging_message, new Object[]{stringExtra})).setCheckBox(true, getString(C0021R$string.usb_debugging_always)).setCancelable(true).setPositiveButton(getString(17039370), this.onClickListener).setNegativeButton(getString(17039360), this.onClickListener).setOnDismissListener(this.onDismissListener);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, C0021R$style.Theme_Dialog_Alert);
+        builder.setTitle(getString(C0020R$string.usb_debugging_title)).setMessage(getString(C0020R$string.usb_debugging_message, new Object[]{stringExtra})).setCheckBox(true, getString(C0020R$string.usb_debugging_always)).setCancelable(true).setPositiveButton(getString(17039370), this.onClickListener).setNegativeButton(getString(17039360), this.onClickListener).setOnDismissListener(this.onDismissListener);
         AlertDialog create = builder.create();
         this.mCheckBoxDialog = create;
         create.show();

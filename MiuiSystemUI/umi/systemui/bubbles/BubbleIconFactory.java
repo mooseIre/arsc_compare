@@ -15,11 +15,11 @@ import com.android.launcher3.icons.BitmapInfo;
 import com.android.launcher3.icons.R$dimen;
 import com.android.launcher3.icons.ShadowGenerator;
 import com.android.settingslib.R$color;
-import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0011R$dimen;
 
 public class BubbleIconFactory extends BaseIconFactory {
     protected BubbleIconFactory(Context context) {
-        super(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C0012R$dimen.individual_bubble_size));
+        super(context, context.getResources().getConfiguration().densityDpi, context.getResources().getDimensionPixelSize(C0011R$dimen.individual_bubble_size));
     }
 
     /* access modifiers changed from: package-private */

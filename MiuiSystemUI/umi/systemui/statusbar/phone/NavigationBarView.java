@@ -26,11 +26,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.assist.AssistHandleViewController;
@@ -119,13 +119,13 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         public void onInitializeAccessibilityNodeInfo(View view, AccessibilityNodeInfo accessibilityNodeInfo) {
             super.onInitializeAccessibilityNodeInfo(view, accessibilityNodeInfo);
             if (this.mToggleOverviewAction == null) {
-                this.mToggleOverviewAction = new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_toggle_overview, NavigationBarView.this.getContext().getString(C0021R$string.quick_step_accessibility_toggle_overview));
+                this.mToggleOverviewAction = new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_toggle_overview, NavigationBarView.this.getContext().getString(C0020R$string.quick_step_accessibility_toggle_overview));
             }
             accessibilityNodeInfo.addAction(this.mToggleOverviewAction);
         }
 
         public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
-            if (i != C0015R$id.action_toggle_overview) {
+            if (i != C0014R$id.action_toggle_overview) {
                 return super.performAccessibilityAction(view, i, bundle);
             }
             ((Recents) Dependency.get(Recents.class)).toggleRecentApps();
@@ -170,9 +170,9 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         }
 
         public void startTransition(LayoutTransition layoutTransition, ViewGroup viewGroup, View view, int i) {
-            if (view.getId() == C0015R$id.back) {
+            if (view.getId() == C0014R$id.back) {
                 this.mBackTransitioning = true;
-            } else if (view.getId() == C0015R$id.home && i == 2) {
+            } else if (view.getId() == C0014R$id.home && i == 2) {
                 this.mHomeAppearing = true;
                 this.mStartDelay = layoutTransition.getStartDelay(i);
                 this.mDuration = layoutTransition.getDuration(i);
@@ -181,9 +181,9 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         }
 
         public void endTransition(LayoutTransition layoutTransition, ViewGroup viewGroup, View view, int i) {
-            if (view.getId() == C0015R$id.back) {
+            if (view.getId() == C0014R$id.back) {
                 this.mBackTransitioning = false;
-            } else if (view.getId() == C0015R$id.home && i == 2) {
+            } else if (view.getId() == C0014R$id.home && i == 2) {
                 this.mHomeAppearing = false;
             }
         }
@@ -229,10 +229,10 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         boolean isGesturalMode = QuickStepContract.isGesturalMode(addListener);
         this.mSysUiFlagContainer = (SysUiState) Dependency.get(SysUiState.class);
         this.mPluginManager = (PluginManager) Dependency.get(PluginManager.class);
-        this.mContextualButtonGroup = new ContextualButtonGroup(C0015R$id.menu_container);
-        ContextualButton contextualButton = new ContextualButton(C0015R$id.ime_switcher, C0013R$drawable.ic_ime_switcher_default);
-        RotationContextButton rotationContextButton = new RotationContextButton(C0015R$id.rotate_suggestion, C0013R$drawable.ic_sysbar_rotate_button);
-        ContextualButton contextualButton2 = new ContextualButton(C0015R$id.accessibility_button, C0013R$drawable.ic_sysbar_accessibility_button);
+        this.mContextualButtonGroup = new ContextualButtonGroup(C0014R$id.menu_container);
+        ContextualButton contextualButton = new ContextualButton(C0014R$id.ime_switcher, C0012R$drawable.ic_ime_switcher_default);
+        RotationContextButton rotationContextButton = new RotationContextButton(C0014R$id.rotate_suggestion, C0012R$drawable.ic_sysbar_rotate_button);
+        ContextualButton contextualButton2 = new ContextualButton(C0014R$id.accessibility_button, C0012R$drawable.ic_sysbar_accessibility_button);
         this.mContextualButtonGroup.addButton(contextualButton);
         if (!isGesturalMode) {
             this.mContextualButtonGroup.addButton(rotationContextButton);
@@ -243,31 +243,31 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         this.mRecentsOnboarding = new RecentsOnboarding(context, overviewProxyService);
         FloatingRotationButton floatingRotationButton = new FloatingRotationButton(context);
         this.mFloatingRotationButton = floatingRotationButton;
-        this.mRotationButtonController = new RotationButtonController(context, C0022R$style.RotateButtonCCWStart90, !isGesturalMode ? rotationContextButton : floatingRotationButton);
+        this.mRotationButtonController = new RotationButtonController(context, C0021R$style.RotateButtonCCWStart90, !isGesturalMode ? rotationContextButton : floatingRotationButton);
         this.mConfiguration = new Configuration();
         this.mTmpLastConfiguration = new Configuration();
         this.mConfiguration.updateFrom(context.getResources().getConfiguration());
         this.mScreenPinningNotify = new ScreenPinningNotify(((FrameLayout) this).mContext);
         this.mBarTransitions = new NavigationBarTransitions(this, (CommandQueue) Dependency.get(CommandQueue.class));
         SparseArray<ButtonDispatcher> sparseArray = this.mButtonDispatchers;
-        int i = C0015R$id.back;
+        int i = C0014R$id.back;
         sparseArray.put(i, new ButtonDispatcher(i));
         SparseArray<ButtonDispatcher> sparseArray2 = this.mButtonDispatchers;
-        int i2 = C0015R$id.home;
+        int i2 = C0014R$id.home;
         sparseArray2.put(i2, new ButtonDispatcher(i2));
         SparseArray<ButtonDispatcher> sparseArray3 = this.mButtonDispatchers;
-        int i3 = C0015R$id.home_handle;
+        int i3 = C0014R$id.home_handle;
         sparseArray3.put(i3, new ButtonDispatcher(i3));
         SparseArray<ButtonDispatcher> sparseArray4 = this.mButtonDispatchers;
-        int i4 = C0015R$id.recent_apps;
+        int i4 = C0014R$id.recent_apps;
         sparseArray4.put(i4, new ButtonDispatcher(i4));
-        this.mButtonDispatchers.put(C0015R$id.ime_switcher, contextualButton);
-        this.mButtonDispatchers.put(C0015R$id.accessibility_button, contextualButton2);
-        this.mButtonDispatchers.put(C0015R$id.rotate_suggestion, rotationContextButton);
-        this.mButtonDispatchers.put(C0015R$id.menu_container, this.mContextualButtonGroup);
+        this.mButtonDispatchers.put(C0014R$id.ime_switcher, contextualButton);
+        this.mButtonDispatchers.put(C0014R$id.accessibility_button, contextualButton2);
+        this.mButtonDispatchers.put(C0014R$id.rotate_suggestion, rotationContextButton);
+        this.mButtonDispatchers.put(C0014R$id.menu_container, this.mContextualButtonGroup);
         this.mDeadZone = new DeadZone(this);
         this.mTaskSwitchHelper = new NavigationBarViewTaskSwitchHelper(context, this);
-        this.mNavColorSampleMargin = getResources().getDimensionPixelSize(C0012R$dimen.navigation_handle_sample_horizontal_margin);
+        this.mNavColorSampleMargin = getResources().getDimensionPixelSize(C0011R$dimen.navigation_handle_sample_horizontal_margin);
         this.mEdgeBackGestureHandler = new EdgeBackGestureHandler(context, this.mOverviewProxyService, this.mSysUiFlagContainer, this.mPluginManager, new Runnable() {
             /* class com.android.systemui.statusbar.phone.$$Lambda$WrUd8iBVzCnkNGlDjVh6Yvbf6CM */
 
@@ -381,31 +381,31 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     public ButtonDispatcher getRecentsButton() {
-        return this.mButtonDispatchers.get(C0015R$id.recent_apps);
+        return this.mButtonDispatchers.get(C0014R$id.recent_apps);
     }
 
     public ButtonDispatcher getBackButton() {
-        return this.mButtonDispatchers.get(C0015R$id.back);
+        return this.mButtonDispatchers.get(C0014R$id.back);
     }
 
     public ButtonDispatcher getHomeButton() {
-        return this.mButtonDispatchers.get(C0015R$id.home);
+        return this.mButtonDispatchers.get(C0014R$id.home);
     }
 
     public ButtonDispatcher getImeSwitchButton() {
-        return this.mButtonDispatchers.get(C0015R$id.ime_switcher);
+        return this.mButtonDispatchers.get(C0014R$id.ime_switcher);
     }
 
     public ButtonDispatcher getAccessibilityButton() {
-        return this.mButtonDispatchers.get(C0015R$id.accessibility_button);
+        return this.mButtonDispatchers.get(C0014R$id.accessibility_button);
     }
 
     public RotationContextButton getRotateSuggestionButton() {
-        return (RotationContextButton) this.mButtonDispatchers.get(C0015R$id.rotate_suggestion);
+        return (RotationContextButton) this.mButtonDispatchers.get(C0014R$id.rotate_suggestion);
     }
 
     public ButtonDispatcher getHomeHandle() {
-        return this.mButtonDispatchers.get(C0015R$id.home_handle);
+        return this.mButtonDispatchers.get(C0014R$id.home_handle);
     }
 
     public SparseArray<ButtonDispatcher> getButtonDispatchers() {
@@ -436,11 +436,11 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
             z = false;
         }
         if (z2 || z3) {
-            this.mDockedIcon = getDrawable(C0013R$drawable.ic_sysbar_docked);
+            this.mDockedIcon = getDrawable(C0012R$drawable.ic_sysbar_docked);
             this.mHomeDefaultIcon = getHomeDrawable();
         }
         if (z3 || z) {
-            this.mRecentIcon = getDrawable(C0013R$drawable.ic_sysbar_recent);
+            this.mRecentIcon = getDrawable(C0012R$drawable.ic_sysbar_recent);
             this.mContextualButtonGroup.updateIcons();
         }
         if (z2 || z3 || z) {
@@ -455,15 +455,15 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     public int getBackDrawableRes() {
-        return chooseNavigationIconDrawableRes(C0013R$drawable.ic_sysbar_back, C0013R$drawable.ic_sysbar_back_quick_step);
+        return chooseNavigationIconDrawableRes(C0012R$drawable.ic_sysbar_back, C0012R$drawable.ic_sysbar_back_quick_step);
     }
 
     public KeyButtonDrawable getHomeDrawable() {
         KeyButtonDrawable keyButtonDrawable;
         if (this.mOverviewProxyService.shouldShowSwipeUpUI()) {
-            keyButtonDrawable = getDrawable(C0013R$drawable.ic_sysbar_home_quick_step);
+            keyButtonDrawable = getDrawable(C0012R$drawable.ic_sysbar_home_quick_step);
         } else {
-            keyButtonDrawable = getDrawable(C0013R$drawable.ic_sysbar_home);
+            keyButtonDrawable = getDrawable(C0012R$drawable.ic_sysbar_home);
         }
         orientHomeButton(keyButtonDrawable);
         return keyButtonDrawable;
@@ -485,7 +485,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
                 return;
             }
             if (!this.mOverviewProxyService.shouldShowSwipeUpUI() && !this.mIsVertical && z) {
-                f2 = -getResources().getDimension(C0012R$dimen.navbar_back_button_ime_offset);
+                f2 = -getResources().getDimension(C0011R$dimen.navbar_back_button_ime_offset);
             }
             ObjectAnimator ofPropertyValuesHolder = ObjectAnimator.ofPropertyValuesHolder(keyButtonDrawable, PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_ROTATE, f), PropertyValuesHolder.ofFloat(KeyButtonDrawable.KEY_DRAWABLE_TRANSLATE_Y, f2));
             ofPropertyValuesHolder.setInterpolator(Interpolators.FAST_OUT_SLOW_IN);
@@ -575,7 +575,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         getHomeButton().setImageDrawable(keyButtonDrawable2);
         getBackButton().setImageDrawable(keyButtonDrawable);
         updateRecentsIcon();
-        this.mContextualButtonGroup.setButtonVisibility(C0015R$id.ime_switcher, (this.mNavigationIconHints & 2) != 0);
+        this.mContextualButtonGroup.setButtonVisibility(C0014R$id.ime_switcher, (this.mNavigationIconHints & 2) != 0);
         this.mBarTransitions.reapplyDarkIntensity();
         boolean z2 = QuickStepContract.isGesturalMode(this.mNavBarMode) || (this.mDisabledFlags & 2097152) != 0;
         boolean isRecentsButtonDisabled = isRecentsButtonDisabled();
@@ -592,7 +592,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
             z4 = false;
             isRecentsButtonDisabled = false;
         }
-        ViewGroup viewGroup = (ViewGroup) getCurrentView().findViewById(C0015R$id.nav_buttons);
+        ViewGroup viewGroup = (ViewGroup) getCurrentView().findViewById(C0014R$id.nav_buttons);
         if (!(viewGroup == null || (layoutTransition = viewGroup.getLayoutTransition()) == null || layoutTransition.getTransitionListeners().contains(this.mTransitionListener))) {
             layoutTransition.addTransitionListener(this.mTransitionListener);
         }
@@ -629,7 +629,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
 
     private void updateLayoutTransitionsEnabled() {
         boolean z = !this.mWakeAndUnlocking && this.mLayoutTransitionsEnabled;
-        LayoutTransition layoutTransition = ((ViewGroup) getCurrentView().findViewById(C0015R$id.nav_buttons)).getLayoutTransition();
+        LayoutTransition layoutTransition = ((ViewGroup) getCurrentView().findViewById(C0014R$id.nav_buttons)).getLayoutTransition();
         if (layoutTransition == null) {
             return;
         }
@@ -651,7 +651,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
         if (layoutParams != null) {
             boolean z2 = layoutParams.windowAnimations != 0;
             if (!z2 && z) {
-                layoutParams.windowAnimations = C0022R$style.Animation_NavigationBarFadeIn;
+                layoutParams.windowAnimations = C0021R$style.Animation_NavigationBarFadeIn;
             } else if (z2 && !z) {
                 layoutParams.windowAnimations = 0;
             } else {
@@ -746,7 +746,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
 
     public void setAccessibilityButtonState(boolean z, boolean z2) {
         getAccessibilityButton().setLongClickable(z2);
-        this.mContextualButtonGroup.setButtonVisibility(C0015R$id.accessibility_button, z);
+        this.mContextualButtonGroup.setButtonVisibility(C0014R$id.accessibility_button, z);
     }
 
     /* access modifiers changed from: package-private */
@@ -756,7 +756,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
 
     public void onFinishInflate() {
         super.onFinishInflate();
-        NavigationBarInflaterView navigationBarInflaterView = (NavigationBarInflaterView) findViewById(C0015R$id.navigation_inflater);
+        NavigationBarInflaterView navigationBarInflaterView = (NavigationBarInflaterView) findViewById(C0014R$id.navigation_inflater);
         this.mNavigationInflaterView = navigationBarInflaterView;
         navigationBarInflaterView.setButtonDispatchers(this.mButtonDispatchers);
         getImeSwitchButton().setOnClickListener(this.mImeSwitcherClickListener);
@@ -828,8 +828,8 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     private void updateOrientationViews() {
-        this.mHorizontal = findViewById(C0015R$id.horizontal);
-        this.mVertical = findViewById(C0015R$id.vertical);
+        this.mHorizontal = findViewById(C0014R$id.horizontal);
+        this.mVertical = findViewById(C0014R$id.vertical);
         updateCurrentView();
     }
 
@@ -1141,7 +1141,7 @@ public class NavigationBarView extends FrameLayout implements NavigationModeCont
     }
 
     public void reverseOrder() {
-        ViewGroup viewGroup = (ViewGroup) this.mHorizontal.findViewById(C0015R$id.ends_group);
+        ViewGroup viewGroup = (ViewGroup) this.mHorizontal.findViewById(C0014R$id.ends_group);
         if (viewGroup != null) {
             NavigationBarViewOrderHelper.INSTANCE.reverseOrder(viewGroup);
         }

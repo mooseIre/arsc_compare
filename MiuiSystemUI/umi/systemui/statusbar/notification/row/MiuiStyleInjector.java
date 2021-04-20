@@ -3,8 +3,8 @@ package com.android.systemui.statusbar.notification.row;
 import android.content.res.Resources;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
@@ -19,9 +19,9 @@ public final class MiuiStyleInjector {
 
     public final int getHybridNotificationStyle() {
         if (NotificationSettingsHelper.showGoogleStyle()) {
-            return C0022R$style.HybridNotification;
+            return C0021R$style.HybridNotification;
         }
-        return C0022R$style.HybridNotificationMiui;
+        return C0021R$style.HybridNotificationMiui;
     }
 
     public final void alignConversationIcon(@NotNull ImageView imageView, @NotNull Resources resources) {
@@ -31,7 +31,7 @@ public final class MiuiStyleInjector {
             ViewGroup.LayoutParams layoutParams = imageView.getLayoutParams();
             if (layoutParams != null) {
                 ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
-                marginLayoutParams.setMarginStart(NotificationSettingsHelper.showMiuiStyle() ? resources.getDimensionPixelSize(C0012R$dimen.notification_hybrid_icon_margin_start) : 0);
+                marginLayoutParams.setMarginStart(NotificationSettingsHelper.showMiuiStyle() ? resources.getDimensionPixelSize(C0011R$dimen.notification_hybrid_icon_margin_start) : 0);
                 imageView.setLayoutParams(marginLayoutParams);
                 return;
             }

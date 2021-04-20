@@ -17,8 +17,8 @@ import android.os.UserManager;
 import android.service.notification.ZenModeConfig;
 import android.telecom.TelecomManager;
 import android.util.Log;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.screenrecord.RecordingController;
@@ -302,23 +302,23 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         }
         updateTTY();
         updateBluetooth(null);
-        this.mIconController.setIcon(this.mSlotAlarmClock, C0013R$drawable.stat_sys_alarm, this.mResources.getString(C0021R$string.status_bar_alarm));
+        this.mIconController.setIcon(this.mSlotAlarmClock, C0012R$drawable.stat_sys_alarm, this.mResources.getString(C0020R$string.status_bar_alarm));
         this.mIconController.setIconVisibility(this.mSlotAlarmClock, false);
-        this.mIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_dnd, null);
+        this.mIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_dnd, null);
         this.mIconController.setIconVisibility(this.mSlotZen, false);
-        this.mIconController.setIcon(this.mSlotVolume, C0013R$drawable.stat_sys_ringer_vibrate, null);
+        this.mIconController.setIcon(this.mSlotVolume, C0012R$drawable.stat_sys_ringer_vibrate, null);
         this.mIconController.setIconVisibility(this.mSlotVolume, false);
-        this.mIconController.setIcon(this.mSlotCast, C0013R$drawable.stat_sys_cast, null);
+        this.mIconController.setIcon(this.mSlotCast, C0012R$drawable.stat_sys_cast, null);
         this.mIconController.setIconVisibility(this.mSlotCast, false);
-        this.mIconController.setIcon(this.mSlotManagedProfile, C0013R$drawable.stat_sys_managed_profile_status, this.mResources.getString(C0021R$string.accessibility_managed_profile));
+        this.mIconController.setIcon(this.mSlotManagedProfile, C0012R$drawable.stat_sys_managed_profile_status, this.mResources.getString(C0020R$string.accessibility_managed_profile));
         this.mIconController.setIconVisibility(this.mSlotManagedProfile, this.mManagedProfileIconVisible);
-        this.mIconController.setIcon(this.mSlotDataSaver, C0013R$drawable.stat_sys_data_saver, this.mResources.getString(C0021R$string.accessibility_data_saver_on));
+        this.mIconController.setIcon(this.mSlotDataSaver, C0012R$drawable.stat_sys_data_saver, this.mResources.getString(C0020R$string.accessibility_data_saver_on));
         this.mIconController.setIconVisibility(this.mSlotDataSaver, false);
-        this.mIconController.setIcon(this.mSlotLocation, 17303181, this.mResources.getString(C0021R$string.accessibility_location_active));
+        this.mIconController.setIcon(this.mSlotLocation, 17303181, this.mResources.getString(C0020R$string.accessibility_location_active));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
-        this.mIconController.setIcon(this.mSlotSensorsOff, C0013R$drawable.stat_sys_sensors_off, this.mResources.getString(C0021R$string.accessibility_sensors_off_active));
+        this.mIconController.setIcon(this.mSlotSensorsOff, C0012R$drawable.stat_sys_sensors_off, this.mResources.getString(C0020R$string.accessibility_sensors_off_active));
         this.mIconController.setIconVisibility(this.mSlotSensorsOff, this.mSensorPrivacyController.isSensorPrivacyEnabled());
-        this.mIconController.setIcon(this.mSlotScreenRecord, C0013R$drawable.stat_sys_screen_record, null);
+        this.mIconController.setIcon(this.mSlotScreenRecord, C0012R$drawable.stat_sys_screen_record, null);
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, false);
         miuiInit();
         this.mBluetooth.addCallback(this);
@@ -367,7 +367,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             if (DEBUG) {
                 Log.v("PhoneStatusBarPolicy", "updateTTY: set TTY on");
             }
-            this.mIconController.setIcon(this.mSlotTty, C0013R$drawable.stat_sys_tty_mode, this.mResources.getString(C0021R$string.accessibility_tty_enabled));
+            this.mIconController.setIcon(this.mSlotTty, C0012R$drawable.stat_sys_tty_mode, this.mResources.getString(C0020R$string.accessibility_tty_enabled));
             this.mIconController.setIconVisibility(this.mSlotTty, true);
             return;
         }
@@ -404,9 +404,9 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         boolean isCurrentOrientationLockPortrait = RotationLockTile.isCurrentOrientationLockPortrait(this.mRotationLockController, this.mResources);
         if (z) {
             if (isCurrentOrientationLockPortrait) {
-                this.mIconController.setIcon(this.mSlotRotate, C0013R$drawable.stat_sys_rotate_portrait, this.mResources.getString(C0021R$string.accessibility_rotation_lock_on_portrait));
+                this.mIconController.setIcon(this.mSlotRotate, C0012R$drawable.stat_sys_rotate_portrait, this.mResources.getString(C0020R$string.accessibility_rotation_lock_on_portrait));
             } else {
-                this.mIconController.setIcon(this.mSlotRotate, C0013R$drawable.stat_sys_rotate_landscape, this.mResources.getString(C0021R$string.accessibility_rotation_lock_on_landscape));
+                this.mIconController.setIcon(this.mSlotRotate, C0012R$drawable.stat_sys_rotate_landscape, this.mResources.getString(C0020R$string.accessibility_rotation_lock_on_landscape));
             }
             this.mIconController.setIconVisibility(this.mSlotRotate, true);
             return;
@@ -438,14 +438,14 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
             Log.d("PhoneStatusBarPolicy", "screenrecord: countdown " + j);
         }
         int floorDiv = (int) Math.floorDiv(j + 500, 1000);
-        int i = C0013R$drawable.stat_sys_screen_record;
+        int i = C0012R$drawable.stat_sys_screen_record;
         String num = Integer.toString(floorDiv);
         if (floorDiv == 1) {
-            i = C0013R$drawable.stat_sys_screen_record_1;
+            i = C0012R$drawable.stat_sys_screen_record_1;
         } else if (floorDiv == 2) {
-            i = C0013R$drawable.stat_sys_screen_record_2;
+            i = C0012R$drawable.stat_sys_screen_record_2;
         } else if (floorDiv == 3) {
-            i = C0013R$drawable.stat_sys_screen_record_3;
+            i = C0012R$drawable.stat_sys_screen_record_3;
         }
         this.mIconController.setIcon(this.mSlotScreenRecord, i, num);
         this.mIconController.setIconVisibility(this.mSlotScreenRecord, true);
@@ -490,7 +490,7 @@ public class PhoneStatusBarPolicy implements BluetoothController.Callback, Comma
         if (DEBUG) {
             Log.d("PhoneStatusBarPolicy", "screenrecord: showing icon");
         }
-        this.mIconController.setIcon(this.mSlotScreenRecord, C0013R$drawable.stat_sys_screen_record, this.mResources.getString(C0021R$string.screenrecord_ongoing_screen_only));
+        this.mIconController.setIcon(this.mSlotScreenRecord, C0012R$drawable.stat_sys_screen_record, this.mResources.getString(C0020R$string.screenrecord_ongoing_screen_only));
         this.mHandler.post(new Runnable() {
             /* class com.android.systemui.statusbar.phone.$$Lambda$PhoneStatusBarPolicy$hbDnNuauoFqDYTmNtwOofkocYHM */
 

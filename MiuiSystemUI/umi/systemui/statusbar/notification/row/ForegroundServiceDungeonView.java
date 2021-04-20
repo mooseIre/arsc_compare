@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +32,6 @@ public final class ForegroundServiceDungeonView extends StackScrollerDecorView {
     @Override // com.android.systemui.statusbar.notification.row.StackScrollerDecorView
     @Nullable
     public View findContentView() {
-        return findViewById(C0015R$id.foreground_service_dungeon);
+        return findViewById(C0014R$id.foreground_service_dungeon);
     }
 }

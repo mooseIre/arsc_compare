@@ -1,6 +1,6 @@
 package com.android.systemui.controls.ui;
 
-import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0012R$drawable;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
@@ -20,6 +20,6 @@ final class RenderInfoKt$deviceIconMap$1 extends Lambda implements Function1<Int
     }
 
     public final int invoke(int i) {
-        return C0013R$drawable.ic_device_unknown;
+        return C0012R$drawable.ic_device_unknown;
     }
 }

@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.QSIconView;
 import com.android.systemui.plugins.qs.QSTile;
@@ -48,7 +48,7 @@ public class MiuiQSTileBaseView extends QSTileView {
         FrameLayout frameLayout = new FrameLayout(context);
         this.mIconFrame = frameLayout;
         frameLayout.setForegroundGravity(17);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_icon_bg_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_tile_icon_bg_size);
         addView(this.mIconFrame, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
         this.mIcon = qSIconView;
         this.mIconFrame.addView(qSIconView);
@@ -169,7 +169,7 @@ public class MiuiQSTileBaseView extends QSTileView {
             accessibilityEvent.setClassName(this.mAccessibilityClass);
             if (Switch.class.getName().equals(this.mAccessibilityClass)) {
                 boolean z = this.mClicked != this.mTileState;
-                accessibilityEvent.setContentDescription(getResources().getString(z ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
+                accessibilityEvent.setContentDescription(getResources().getString(z ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
                 accessibilityEvent.setChecked(z);
             }
         }
@@ -183,7 +183,7 @@ public class MiuiQSTileBaseView extends QSTileView {
             }
             if (Switch.class.getName().equals(this.mAccessibilityClass)) {
                 boolean z = this.mClicked != this.mTileState;
-                accessibilityNodeInfo.setText(getResources().getString(z ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
+                accessibilityNodeInfo.setText(getResources().getString(z ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
                 accessibilityNodeInfo.setChecked(z);
                 accessibilityNodeInfo.setCheckable(true);
             }

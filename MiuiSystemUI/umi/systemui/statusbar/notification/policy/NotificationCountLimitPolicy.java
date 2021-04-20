@@ -29,7 +29,7 @@ public class NotificationCountLimitPolicy {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void checkNotificationCountLimit(String str) {
-        List list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate(str) {
+        List list = (List) this.mEntryManager.getAllNotifs().stream().filter(new Predicate(str) {
             /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationCountLimitPolicy$Nuj6QARJ5Tk90SSd1vymdMl4IrY */
             public final /* synthetic */ String f$0;
 

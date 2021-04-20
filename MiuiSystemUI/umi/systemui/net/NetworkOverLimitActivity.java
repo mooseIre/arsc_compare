@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import android.util.Log;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0020R$string;
 
 public class NetworkOverLimitActivity extends Activity {
     public void onCreate(Bundle bundle) {
@@ -17,9 +17,9 @@ public class NetworkOverLimitActivity extends Activity {
         final NetworkTemplate parcelableExtra = getIntent().getParcelableExtra("android.net.NETWORK_TEMPLATE");
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getLimitedDialogTitleForTemplate(parcelableExtra));
-        builder.setMessage(C0021R$string.data_usage_disabled_dialog);
+        builder.setMessage(C0020R$string.data_usage_disabled_dialog);
         builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
-        builder.setNegativeButton(C0021R$string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(C0020R$string.data_usage_disabled_dialog_enable, new DialogInterface.OnClickListener() {
             /* class com.android.systemui.net.NetworkOverLimitActivity.AnonymousClass1 */
 
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -50,8 +50,8 @@ public class NetworkOverLimitActivity extends Activity {
 
     private static int getLimitedDialogTitleForTemplate(NetworkTemplate networkTemplate) {
         if (networkTemplate.getMatchRule() != 1) {
-            return C0021R$string.data_usage_disabled_dialog_title;
+            return C0020R$string.data_usage_disabled_dialog_title;
         }
-        return C0021R$string.data_usage_disabled_dialog_mobile_title;
+        return C0020R$string.data_usage_disabled_dialog_mobile_title;
     }
 }

@@ -10,11 +10,11 @@ import kotlin.jvm.internal.Lambda;
 
 /* access modifiers changed from: package-private */
 /* compiled from: MiuiNotificationPanelViewController.kt */
-public final class MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$1 extends Lambda implements Function1<View, Boolean> {
+public final class MiuiNotificationPanelViewController$startNotificationWakeAnimation$animateShadeViews$1 extends Lambda implements Function1<View, Boolean> {
     final /* synthetic */ List $visibleNotifications;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    MiuiNotificationPanelViewController$startWakeupAnimation$animateShadeViews$1(List list) {
+    MiuiNotificationPanelViewController$startNotificationWakeAnimation$animateShadeViews$1(List list) {
         super(1);
         this.$visibleNotifications = list;
     }

@@ -6,8 +6,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.statusbar.StatusBarMobileView;
 import com.android.systemui.statusbar.StatusBarWifiView;
 import com.android.systemui.statusbar.StatusIconDisplayable;
@@ -55,9 +55,9 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     private void initDimens() {
         this.mIconDotFrameWidth = getResources().getDimensionPixelSize(17105492);
-        this.mDotPadding = getResources().getDimensionPixelSize(C0012R$dimen.overflow_icon_dot_padding);
-        this.mIconSpacing = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_system_icon_spacing);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.overflow_dot_radius) * 2;
+        this.mDotPadding = getResources().getDimensionPixelSize(C0011R$dimen.overflow_icon_dot_padding);
+        this.mIconSpacing = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_system_icon_spacing);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.overflow_dot_radius) * 2;
         this.mStaticDotDiameter = dimensionPixelSize;
         this.mUnderflowWidth = this.mIconDotFrameWidth + ((dimensionPixelSize + this.mDotPadding) * -1);
     }
@@ -117,12 +117,12 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     public void onViewAdded(View view) {
         super.onViewAdded(view);
-        view.setTag(C0015R$id.status_bar_view_state_tag, new StatusIconState());
+        view.setTag(C0014R$id.status_bar_view_state_tag, new StatusIconState());
     }
 
     public void onViewRemoved(View view) {
         super.onViewRemoved(view);
-        view.setTag(C0015R$id.status_bar_view_state_tag, null);
+        view.setTag(C0014R$id.status_bar_view_state_tag, null);
     }
 
     public void addIgnoredSlots(List<String> list) {
@@ -230,7 +230,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
     }
 
     private static StatusIconState getViewStateFromChild(View view) {
-        return (StatusIconState) view.getTag(C0015R$id.status_bar_view_state_tag);
+        return (StatusIconState) view.getTag(C0014R$id.status_bar_view_state_tag);
     }
 
     private static int getViewTotalMeasuredWidth(View view) {

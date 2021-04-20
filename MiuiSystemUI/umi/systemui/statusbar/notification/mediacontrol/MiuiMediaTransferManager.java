@@ -16,8 +16,8 @@ import com.android.settingslib.media.InfoMediaManager;
 import com.android.settingslib.media.LocalMediaManager;
 import com.android.settingslib.media.MediaDevice;
 import com.android.settingslib.media.PhoneMediaDevice;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.miui.systemui.util.ReflectUtil;
@@ -139,7 +139,7 @@ public class MiuiMediaTransferManager {
 
     public void setRemoved(View view) {
         if (MIUI_MEDIA_SEAMLESS_ENABLED && this.mLocalMediaManager != null && view != null) {
-            ImageView imageView = (ImageView) view.findViewById(C0015R$id.media_seamless_image);
+            ImageView imageView = (ImageView) view.findViewById(C0014R$id.media_seamless_image);
             if (!this.mViews.remove(imageView)) {
                 Log.e("MiuiMediaTransferManager", "Tried to remove unknown view " + imageView);
             } else if (this.mViews.size() == 0) {
@@ -151,7 +151,7 @@ public class MiuiMediaTransferManager {
 
     public void applyMediaTransferView(ViewGroup viewGroup) {
         if (MIUI_MEDIA_SEAMLESS_ENABLED && this.mLocalMediaManager != null && viewGroup != null) {
-            ImageView imageView = (ImageView) viewGroup.findViewById(C0015R$id.media_seamless_image);
+            ImageView imageView = (ImageView) viewGroup.findViewById(C0014R$id.media_seamless_image);
             if (imageView == null) {
                 Log.e("MiuiMediaTransferManager", "There is no {ImageView @media_seamless_image} in root");
                 return;
@@ -187,11 +187,11 @@ public class MiuiMediaTransferManager {
     private void updateChip(ImageView imageView, String str) {
         MediaDevice mediaDevice;
         if (TextUtils.equals(this.mPhoneName, str) || (mediaDevice = this.mCurDevice) == null || (mediaDevice instanceof PhoneMediaDevice)) {
-            imageView.setImageResource(C0013R$drawable.ic_media_seamless);
+            imageView.setImageResource(C0012R$drawable.ic_media_seamless);
             imageView.setContentDescription(this.mPhoneName);
             return;
         }
-        imageView.setImageResource(C0013R$drawable.ic_media_seamless_others);
+        imageView.setImageResource(C0012R$drawable.ic_media_seamless_others);
         imageView.setContentDescription(str);
     }
 }

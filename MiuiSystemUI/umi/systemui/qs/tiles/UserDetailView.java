@@ -12,10 +12,10 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.drawable.CircleFramedDrawable;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.qs.PseudoGridView;
 import com.android.systemui.qs.QSUserSwitcherEvent;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
@@ -28,7 +28,7 @@ public class UserDetailView extends PseudoGridView {
     }
 
     public static UserDetailView inflate(Context context, ViewGroup viewGroup, boolean z) {
-        return (UserDetailView) LayoutInflater.from(context).inflate(C0017R$layout.qs_user_detail, viewGroup, z);
+        return (UserDetailView) LayoutInflater.from(context).inflate(C0016R$layout.qs_user_detail, viewGroup, z);
     }
 
     public void createAndSetAdapter(UserSwitcherController userSwitcherController, UiEventLogger uiEventLogger) {
@@ -71,7 +71,7 @@ public class UserDetailView extends PseudoGridView {
             if (userRecord.picture == null) {
                 convertOrInflate.bind(name, getDrawable(this.mContext, userRecord).mutate(), userRecord.resolveId());
             } else {
-                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mContext.getResources().getDimension(C0012R$dimen.qs_framed_avatar_size));
+                CircleFramedDrawable circleFramedDrawable = new CircleFramedDrawable(userRecord.picture, (int) this.mContext.getResources().getDimension(C0011R$dimen.qs_framed_avatar_size));
                 if (!userRecord.isSwitchToEnabled) {
                     colorFilter = UserSwitcherController.BaseUserAdapter.getDisabledUserAvatarColorFilter();
                 }
@@ -93,14 +93,14 @@ public class UserDetailView extends PseudoGridView {
             int i;
             Drawable iconDrawable = UserSwitcherController.BaseUserAdapter.getIconDrawable(context, userRecord);
             if (userRecord.isCurrent) {
-                i = C0011R$color.qs_user_switcher_selected_avatar_icon_color;
+                i = C0010R$color.qs_user_switcher_selected_avatar_icon_color;
             } else if (!userRecord.isSwitchToEnabled) {
-                i = C0011R$color.GM2_grey_600;
+                i = C0010R$color.GM2_grey_600;
             } else {
-                i = C0011R$color.qs_user_switcher_avatar_icon_color;
+                i = C0010R$color.qs_user_switcher_avatar_icon_color;
             }
             iconDrawable.setTint(context.getResources().getColor(i, context.getTheme()));
-            return new LayerDrawable(new Drawable[]{context.getDrawable(userRecord.isCurrent ? C0013R$drawable.bg_avatar_selected : C0013R$drawable.qs_bg_avatar), iconDrawable});
+            return new LayerDrawable(new Drawable[]{context.getDrawable(userRecord.isCurrent ? C0012R$drawable.bg_avatar_selected : C0012R$drawable.qs_bg_avatar), iconDrawable});
         }
 
         public void onClick(View view) {

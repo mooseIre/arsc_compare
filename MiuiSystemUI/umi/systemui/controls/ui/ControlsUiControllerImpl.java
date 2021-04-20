@@ -24,13 +24,13 @@ import android.widget.ListPopupWindow;
 import android.widget.Space;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
-import com.android.systemui.C0022R$style;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.controller.ControlsController;
 import com.android.systemui.controls.controller.StructureInfo;
@@ -60,19 +60,26 @@ import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Ref$ObjectRef;
 import kotlin.ranges.RangesKt___RangesKt;
+import org.jetbrains.annotations.NotNull;
 
+/* compiled from: ControlsUiControllerImpl.kt */
 public final class ControlsUiControllerImpl implements ControlsUiController {
     private static final ComponentName EMPTY_COMPONENT;
     private static final StructureInfo EMPTY_STRUCTURE;
     private final ActivityStarter activityStarter;
     private List<StructureInfo> allStructures;
+    @NotNull
     private final DelayableExecutor bgExecutor;
     private final Collator collator;
+    @NotNull
     private final Context context;
+    @NotNull
     private final ControlActionCoordinator controlActionCoordinator;
     private final Map<ControlKey, ControlViewHolder> controlViewsById = new LinkedHashMap();
     private final Map<ControlKey, ControlWithState> controlsById = new LinkedHashMap();
+    @NotNull
     private final Lazy<ControlsController> controlsController;
+    @NotNull
     private final Lazy<ControlsListingController> controlsListingController;
     private Runnable dismissGlobalActions;
     private boolean hidden = true;
@@ -81,13 +88,15 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     private final Consumer<Boolean> onSeedingComplete;
     private ViewGroup parent;
     private ListPopupWindow popup;
-    private final ContextThemeWrapper popupThemedContext = new ContextThemeWrapper(this.context, C0022R$style.Control_ListPopupWindow);
+    private final ContextThemeWrapper popupThemedContext = new ContextThemeWrapper(this.context, C0021R$style.Control_ListPopupWindow);
     private StructureInfo selectedStructure = EMPTY_STRUCTURE;
     private final ShadeController shadeController;
+    @NotNull
     private final SharedPreferences sharedPreferences;
+    @NotNull
     private final DelayableExecutor uiExecutor;
 
-    public ControlsUiControllerImpl(Lazy<ControlsController> lazy, Context context2, DelayableExecutor delayableExecutor, DelayableExecutor delayableExecutor2, Lazy<ControlsListingController> lazy2, SharedPreferences sharedPreferences2, ControlActionCoordinator controlActionCoordinator2, ActivityStarter activityStarter2, ShadeController shadeController2) {
+    public ControlsUiControllerImpl(@NotNull Lazy<ControlsController> lazy, @NotNull Context context2, @NotNull DelayableExecutor delayableExecutor, @NotNull DelayableExecutor delayableExecutor2, @NotNull Lazy<ControlsListingController> lazy2, @NotNull SharedPreferences sharedPreferences2, @NotNull ControlActionCoordinator controlActionCoordinator2, @NotNull ActivityStarter activityStarter2, @NotNull ShadeController shadeController2) {
         Intrinsics.checkParameterIsNotNull(lazy, "controlsController");
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(delayableExecutor, "uiExecutor");
@@ -135,10 +144,12 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
+    @NotNull
     public final Lazy<ControlsController> getControlsController() {
         return this.controlsController;
     }
 
+    @NotNull
     public final DelayableExecutor getUiExecutor() {
         return this.uiExecutor;
     }
@@ -161,7 +172,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     /* JADX DEBUG: Multi-variable search result rejected for r6v20, resolved type: java.util.Map<com.android.systemui.controls.ui.ControlKey, com.android.systemui.controls.ui.ControlWithState> */
     /* JADX WARN: Multi-variable type inference failed */
     @Override // com.android.systemui.controls.ui.ControlsUiController
-    public void show(ViewGroup viewGroup, Runnable runnable) {
+    public void show(@NotNull ViewGroup viewGroup, @NotNull Runnable runnable) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
         Intrinsics.checkParameterIsNotNull(runnable, "dismissGlobalActions");
         Log.d("ControlsUiController", "show()");
@@ -211,6 +222,8 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void reload(ViewGroup viewGroup) {
         if (!this.hidden) {
             ControlsListingController controlsListingController2 = this.controlsListingController.get();
@@ -230,15 +243,17 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void showSeedingView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
-        int i = C0017R$layout.controls_no_favorites;
+        int i = C0016R$layout.controls_no_favorites;
         ViewGroup viewGroup = this.parent;
         if (viewGroup != null) {
             from.inflate(i, viewGroup, true);
             ViewGroup viewGroup2 = this.parent;
             if (viewGroup2 != null) {
-                ((TextView) viewGroup2.requireViewById(C0015R$id.controls_subtitle)).setText(this.context.getResources().getString(C0021R$string.controls_seeding_in_progress));
+                ((TextView) viewGroup2.requireViewById(C0014R$id.controls_subtitle)).setText(this.context.getResources().getString(C0020R$string.controls_seeding_in_progress));
             } else {
                 Intrinsics.throwUninitializedPropertyAccessException("parent");
                 throw null;
@@ -249,28 +264,30 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void showInitialSetupView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
-        int i = C0017R$layout.controls_no_favorites;
+        int i = C0016R$layout.controls_no_favorites;
         ViewGroup viewGroup = this.parent;
         if (viewGroup != null) {
             from.inflate(i, viewGroup, true);
             ViewGroup viewGroup2 = this.parent;
             if (viewGroup2 != null) {
-                View requireViewById = viewGroup2.requireViewById(C0015R$id.controls_no_favorites_group);
+                View requireViewById = viewGroup2.requireViewById(C0014R$id.controls_no_favorites_group);
                 if (requireViewById != null) {
                     ViewGroup viewGroup3 = (ViewGroup) requireViewById;
                     viewGroup3.setOnClickListener(new ControlsUiControllerImpl$showInitialSetupView$1(this));
                     ViewGroup viewGroup4 = this.parent;
                     if (viewGroup4 != null) {
-                        ((TextView) viewGroup4.requireViewById(C0015R$id.controls_subtitle)).setText(this.context.getResources().getString(C0021R$string.quick_controls_subtitle));
+                        ((TextView) viewGroup4.requireViewById(C0014R$id.controls_subtitle)).setText(this.context.getResources().getString(C0020R$string.quick_controls_subtitle));
                         ViewGroup viewGroup5 = this.parent;
                         if (viewGroup5 != null) {
-                            View requireViewById2 = viewGroup5.requireViewById(C0015R$id.controls_icon_row);
+                            View requireViewById2 = viewGroup5.requireViewById(C0014R$id.controls_icon_row);
                             if (requireViewById2 != null) {
                                 ViewGroup viewGroup6 = (ViewGroup) requireViewById2;
                                 for (T t : list) {
-                                    View inflate = from.inflate(C0017R$layout.controls_icon, viewGroup3, false);
+                                    View inflate = from.inflate(C0016R$layout.controls_icon, viewGroup3, false);
                                     if (inflate != null) {
                                         ImageView imageView = (ImageView) inflate;
                                         imageView.setContentDescription(t.getTitle());
@@ -299,13 +316,13 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    /* access modifiers changed from: public */
-    private final void startFavoritingActivity(Context context2, StructureInfo structureInfo) {
+    /* access modifiers changed from: private */
+    public final void startFavoritingActivity(Context context2, StructureInfo structureInfo) {
         startTargetedActivity(context2, structureInfo, ControlsFavoritingActivity.class);
     }
 
-    /* access modifiers changed from: public */
-    private final void startEditingActivity(Context context2, StructureInfo structureInfo) {
+    /* access modifiers changed from: private */
+    public final void startEditingActivity(Context context2, StructureInfo structureInfo) {
         startTargetedActivity(context2, structureInfo, ControlsEditingActivity.class);
     }
 
@@ -347,6 +364,8 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         intent.putExtra("android.intent.extra.COMPONENT_NAME", structureInfo.getComponentName());
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void startProviderSelectorActivity(Context context2) {
         Intent intent = new Intent(context2, ControlsProviderSelectorActivity.class);
         intent.addFlags(335544320);
@@ -365,6 +384,8 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void showControlsView(List<SelectionItem> list) {
         this.controlViewsById.clear();
         createListView();
@@ -373,12 +394,12 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     private final void createMenu() {
-        String[] strArr = {this.context.getResources().getString(C0021R$string.controls_menu_add), this.context.getResources().getString(C0021R$string.controls_menu_edit)};
+        String[] strArr = {this.context.getResources().getString(C0020R$string.controls_menu_add), this.context.getResources().getString(C0020R$string.controls_menu_edit)};
         Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
-        ref$ObjectRef.element = (T) new ArrayAdapter(this.context, C0017R$layout.controls_more_item, strArr);
+        ref$ObjectRef.element = (T) new ArrayAdapter(this.context, C0016R$layout.controls_more_item, strArr);
         ViewGroup viewGroup = this.parent;
         if (viewGroup != null) {
-            ImageView imageView = (ImageView) viewGroup.requireViewById(C0015R$id.controls_more);
+            ImageView imageView = (ImageView) viewGroup.requireViewById(C0014R$id.controls_more);
             imageView.setOnClickListener(new ControlsUiControllerImpl$createMenu$1(this, imageView, ref$ObjectRef));
             return;
         }
@@ -388,14 +409,14 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
 
     private final void createListView() {
         LayoutInflater from = LayoutInflater.from(this.context);
-        int i = C0017R$layout.controls_with_favorites;
+        int i = C0016R$layout.controls_with_favorites;
         ViewGroup viewGroup = this.parent;
         if (viewGroup != null) {
             from.inflate(i, viewGroup, true);
             int findMaxColumns = findMaxColumns();
             ViewGroup viewGroup2 = this.parent;
             if (viewGroup2 != null) {
-                View requireViewById = viewGroup2.requireViewById(C0015R$id.global_actions_controls_list);
+                View requireViewById = viewGroup2.requireViewById(C0014R$id.global_actions_controls_list);
                 if (requireViewById != null) {
                     ViewGroup viewGroup3 = (ViewGroup) requireViewById;
                     Intrinsics.checkExpressionValueIsNotNull(from, "inflater");
@@ -408,7 +429,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
                             if (createRow.getChildCount() == findMaxColumns) {
                                 createRow = createRow(from, viewGroup3);
                             }
-                            View inflate = from.inflate(C0017R$layout.controls_base_item, createRow, false);
+                            View inflate = from.inflate(C0016R$layout.controls_base_item, createRow, false);
                             if (inflate != null) {
                                 ViewGroup viewGroup4 = (ViewGroup) inflate;
                                 createRow.addView(viewGroup4);
@@ -440,11 +461,11 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     private final int findMaxColumns() {
         int i;
         Resources resources = this.context.getResources();
-        int integer = resources.getInteger(C0016R$integer.controls_max_columns);
-        int integer2 = resources.getInteger(C0016R$integer.controls_max_columns_adjust_below_width_dp);
+        int integer = resources.getInteger(C0015R$integer.controls_max_columns);
+        int integer2 = resources.getInteger(C0015R$integer.controls_max_columns_adjust_below_width_dp);
         TypedValue typedValue = new TypedValue();
         boolean z = true;
-        resources.getValue(C0012R$dimen.controls_max_columns_adjust_above_font_scale, typedValue, true);
+        resources.getValue(C0011R$dimen.controls_max_columns_adjust_above_font_scale, typedValue, true);
         float f = typedValue.getFloat();
         Intrinsics.checkExpressionValueIsNotNull(resources, "res");
         Configuration configuration = resources.getConfiguration();
@@ -489,14 +510,16 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         return t3 != null ? t3 : list.get(0);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void updatePreferences(StructureInfo structureInfo) {
         if (!Intrinsics.areEqual(structureInfo, EMPTY_STRUCTURE)) {
             this.sharedPreferences.edit().putString("controls_component", structureInfo.getComponentName().flattenToString()).putString("controls_structure", structureInfo.getStructure().toString()).commit();
         }
     }
 
-    /* access modifiers changed from: public */
-    private final void switchAppOrStructure(SelectionItem selectionItem) {
+    /* access modifiers changed from: private */
+    public final void switchAppOrStructure(SelectionItem selectionItem) {
         boolean z;
         List<StructureInfo> list = this.allStructures;
         if (list != null) {
@@ -576,14 +599,14 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     @Override // com.android.systemui.controls.ui.ControlsUiController
-    public void onActionResponse(ComponentName componentName, String str, int i) {
+    public void onActionResponse(@NotNull ComponentName componentName, @NotNull String str, int i) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(str, "controlId");
         this.uiExecutor.execute(new ControlsUiControllerImpl$onActionResponse$1(this, new ControlKey(componentName, str), i));
     }
 
     private final ViewGroup createRow(LayoutInflater layoutInflater, ViewGroup viewGroup) {
-        View inflate = layoutInflater.inflate(C0017R$layout.controls_row, viewGroup, false);
+        View inflate = layoutInflater.inflate(C0016R$layout.controls_row, viewGroup, false);
         if (inflate != null) {
             ViewGroup viewGroup2 = (ViewGroup) inflate;
             viewGroup.addView(viewGroup2);
@@ -616,26 +639,26 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
                 findSelectionItem = list.get(0);
             }
             Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
-            T t4 = (T) new ItemAdapter(this.context, C0017R$layout.controls_spinner_item);
+            T t4 = (T) new ItemAdapter(this.context, C0016R$layout.controls_spinner_item);
             t4.addAll(arrayList);
             ref$ObjectRef.element = t4;
             ViewGroup viewGroup = this.parent;
             if (viewGroup != null) {
-                TextView textView = (TextView) viewGroup.requireViewById(C0015R$id.app_or_structure_spinner);
+                TextView textView = (TextView) viewGroup.requireViewById(C0014R$id.app_or_structure_spinner);
                 textView.setText(findSelectionItem.getTitle());
                 Drawable background = textView.getBackground();
                 if (background != null) {
                     Drawable drawable = ((LayerDrawable) background).getDrawable(0);
                     Context context2 = textView.getContext();
                     Intrinsics.checkExpressionValueIsNotNull(context2, "context");
-                    drawable.setTint(context2.getResources().getColor(C0011R$color.control_spinner_dropdown, null));
+                    drawable.setTint(context2.getResources().getColor(C0010R$color.control_spinner_dropdown, null));
                     if (arrayList.size() == 1) {
                         textView.setBackground(null);
                         return;
                     }
                     ViewGroup viewGroup2 = this.parent;
                     if (viewGroup2 != null) {
-                        ViewGroup viewGroup3 = (ViewGroup) viewGroup2.requireViewById(C0015R$id.controls_header);
+                        ViewGroup viewGroup3 = (ViewGroup) viewGroup2.requireViewById(C0014R$id.controls_header);
                         viewGroup3.setOnClickListener(new ControlsUiControllerImpl$createDropDown$3(this, viewGroup3, ref$ObjectRef));
                         return;
                     }
@@ -652,7 +675,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     @Override // com.android.systemui.controls.ui.ControlsUiController
-    public void onRefreshState(ComponentName componentName, List<Control> list) {
+    public void onRefreshState(@NotNull ComponentName componentName, @NotNull List<Control> list) {
         Intrinsics.checkParameterIsNotNull(componentName, "componentName");
         Intrinsics.checkParameterIsNotNull(list, "controls");
         for (T t : list) {

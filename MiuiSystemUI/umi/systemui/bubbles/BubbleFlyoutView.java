@@ -21,9 +21,9 @@ import android.view.ViewOutlineProvider;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
 import com.android.systemui.bubbles.Bubble;
 import com.android.systemui.recents.TriangleShape;
 
@@ -67,21 +67,21 @@ public class BubbleFlyoutView extends FrameLayout {
 
     public BubbleFlyoutView(Context context) {
         super(context);
-        LayoutInflater.from(context).inflate(C0017R$layout.bubble_flyout, (ViewGroup) this, true);
-        this.mFlyoutTextContainer = (ViewGroup) findViewById(C0015R$id.bubble_flyout_text_container);
-        this.mSenderText = (TextView) findViewById(C0015R$id.bubble_flyout_name);
-        this.mSenderAvatar = (ImageView) findViewById(C0015R$id.bubble_flyout_avatar);
-        this.mMessageText = (TextView) this.mFlyoutTextContainer.findViewById(C0015R$id.bubble_flyout_text);
+        LayoutInflater.from(context).inflate(C0016R$layout.bubble_flyout, (ViewGroup) this, true);
+        this.mFlyoutTextContainer = (ViewGroup) findViewById(C0014R$id.bubble_flyout_text_container);
+        this.mSenderText = (TextView) findViewById(C0014R$id.bubble_flyout_name);
+        this.mSenderAvatar = (ImageView) findViewById(C0014R$id.bubble_flyout_avatar);
+        this.mMessageText = (TextView) this.mFlyoutTextContainer.findViewById(C0014R$id.bubble_flyout_text);
         Resources resources = getResources();
-        this.mFlyoutPadding = resources.getDimensionPixelSize(C0012R$dimen.bubble_flyout_padding_x);
-        this.mFlyoutSpaceFromBubble = resources.getDimensionPixelSize(C0012R$dimen.bubble_flyout_space_from_bubble);
-        this.mPointerSize = resources.getDimensionPixelSize(C0012R$dimen.bubble_flyout_pointer_size);
-        this.mBubbleSize = resources.getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.bubble_bitmap_size);
+        this.mFlyoutPadding = resources.getDimensionPixelSize(C0011R$dimen.bubble_flyout_padding_x);
+        this.mFlyoutSpaceFromBubble = resources.getDimensionPixelSize(C0011R$dimen.bubble_flyout_space_from_bubble);
+        this.mPointerSize = resources.getDimensionPixelSize(C0011R$dimen.bubble_flyout_pointer_size);
+        this.mBubbleSize = resources.getDimensionPixelSize(C0011R$dimen.individual_bubble_size);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.bubble_bitmap_size);
         this.mBubbleBitmapSize = dimensionPixelSize;
         this.mBubbleIconTopPadding = ((float) (this.mBubbleSize - dimensionPixelSize)) / 2.0f;
-        this.mBubbleElevation = resources.getDimensionPixelSize(C0012R$dimen.bubble_elevation);
-        this.mFlyoutElevation = resources.getDimensionPixelSize(C0012R$dimen.bubble_flyout_elevation);
+        this.mBubbleElevation = resources.getDimensionPixelSize(C0011R$dimen.bubble_elevation);
+        this.mFlyoutElevation = resources.getDimensionPixelSize(C0011R$dimen.bubble_flyout_elevation);
         float f = ((float) this.mBubbleBitmapSize) * 0.228f;
         this.mOriginalDotSize = f;
         float f2 = (f * 1.0f) / 2.0f;

@@ -48,12 +48,12 @@ import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0012R$dimen;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Prefs;
 import com.android.systemui.bubbles.BadgedImageView;
@@ -510,17 +510,17 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mInflater = LayoutInflater.from(context);
         this.mSysUiState = sysUiState;
         Resources resources = getResources();
-        this.mMaxBubbles = resources.getInteger(C0016R$integer.bubbles_max_rendered);
-        this.mBubbleSize = resources.getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
-        this.mBubbleElevation = resources.getDimensionPixelSize(C0012R$dimen.bubble_elevation);
-        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
-        this.mBubbleTouchPadding = resources.getDimensionPixelSize(C0012R$dimen.bubble_touch_padding);
+        this.mMaxBubbles = resources.getInteger(C0015R$integer.bubbles_max_rendered);
+        this.mBubbleSize = resources.getDimensionPixelSize(C0011R$dimen.individual_bubble_size);
+        this.mBubbleElevation = resources.getDimensionPixelSize(C0011R$dimen.bubble_elevation);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
+        this.mBubbleTouchPadding = resources.getDimensionPixelSize(C0011R$dimen.bubble_touch_padding);
         this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
-        this.mImeOffset = resources.getDimensionPixelSize(C0012R$dimen.pip_ime_offset);
+        this.mImeOffset = resources.getDimensionPixelSize(C0011R$dimen.pip_ime_offset);
         this.mDisplaySize = new Point();
         ((WindowManager) context.getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
-        this.mExpandedViewPadding = resources.getDimensionPixelSize(C0012R$dimen.bubble_expanded_view_padding);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.bubble_elevation);
+        this.mExpandedViewPadding = resources.getDimensionPixelSize(C0011R$dimen.bubble_expanded_view_padding);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.bubble_elevation);
         TypedArray obtainStyledAttributes = ((FrameLayout) this).mContext.obtainStyledAttributes(new int[]{16844145});
         this.mCornerRadius = obtainStyledAttributes.getDimensionPixelSize(0, 0);
         obtainStyledAttributes.recycle();
@@ -586,7 +586,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         springForce.setDampingRatio(0.75f);
         springAnimation.setSpring(springForce);
         this.mFlyoutTransitionSpring.addEndListener(this.mAfterFlyoutTransitionSpring);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.dismiss_circle_size);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0011R$dimen.dismiss_circle_size);
         this.mDismissTargetCircle = new DismissCircleView(context);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize2, dimensionPixelSize2);
         layoutParams.gravity = 81;
@@ -594,15 +594,15 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         this.mDismissTargetAnimator = PhysicsAnimator.getInstance(this.mDismissTargetCircle);
         FrameLayout frameLayout4 = new FrameLayout(context);
         this.mDismissTargetContainer = frameLayout4;
-        frameLayout4.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_gradient_height), 80));
-        this.mDismissTargetContainer.setPadding(0, 0, 0, getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_bottom_margin));
+        frameLayout4.setLayoutParams(new FrameLayout.LayoutParams(-1, getResources().getDimensionPixelSize(C0011R$dimen.floating_dismiss_gradient_height), 80));
+        this.mDismissTargetContainer.setPadding(0, 0, 0, getResources().getDimensionPixelSize(C0011R$dimen.floating_dismiss_bottom_margin));
         this.mDismissTargetContainer.setClipToPadding(false);
         this.mDismissTargetContainer.setClipChildren(false);
         this.mDismissTargetContainer.addView(this.mDismissTargetCircle);
         this.mDismissTargetContainer.setVisibility(4);
-        this.mDismissTargetContainer.setBackgroundResource(C0013R$drawable.floating_dismiss_gradient_transition);
+        this.mDismissTargetContainer.setBackgroundResource(C0012R$drawable.floating_dismiss_gradient_transition);
         addView(this.mDismissTargetContainer);
-        this.mDismissTargetCircle.setTranslationY((float) getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_gradient_height));
+        this.mDismissTargetCircle.setTranslationY((float) getResources().getDimensionPixelSize(C0011R$dimen.floating_dismiss_gradient_height));
         this.mMagneticTarget = new MagnetizedObject.MagneticTarget(this.mDismissTargetCircle, Settings.Secure.getInt(getContext().getContentResolver(), "bubble_dismiss_radius", this.mBubbleSize * 2));
         setClipChildren(false);
         setFocusable(true);
@@ -809,7 +809,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         if (viewGroup != null) {
             removeView(viewGroup);
         }
-        ViewGroup viewGroup2 = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0017R$layout.bubble_manage_menu, (ViewGroup) this, false);
+        ViewGroup viewGroup2 = (ViewGroup) LayoutInflater.from(getContext()).inflate(C0016R$layout.bubble_manage_menu, (ViewGroup) this, false);
         this.mManageMenu = viewGroup2;
         viewGroup2.setVisibility(4);
         PhysicsAnimator.getInstance(this.mManageMenu).setDefaultSpringConfig(this.mManageSpringConfig);
@@ -821,29 +821,29 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
             }
         });
         this.mManageMenu.setClipToOutline(true);
-        this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_dismiss_container).setOnClickListener(new View.OnClickListener() {
+        this.mManageMenu.findViewById(C0014R$id.bubble_manage_menu_dismiss_container).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.bubbles.$$Lambda$BubbleStackView$r9lwHRxNgYPwFIdyspAWzwNWX0c */
 
             public final void onClick(View view) {
                 BubbleStackView.this.lambda$setUpManageMenu$10$BubbleStackView(view);
             }
         });
-        this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_dont_bubble_container).setOnClickListener(new View.OnClickListener() {
+        this.mManageMenu.findViewById(C0014R$id.bubble_manage_menu_dont_bubble_container).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.bubbles.$$Lambda$BubbleStackView$GRQaewUOo0NVAl_1r4p82XhLmc4 */
 
             public final void onClick(View view) {
                 BubbleStackView.this.lambda$setUpManageMenu$11$BubbleStackView(view);
             }
         });
-        this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_settings_container).setOnClickListener(new View.OnClickListener() {
+        this.mManageMenu.findViewById(C0014R$id.bubble_manage_menu_settings_container).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.bubbles.$$Lambda$BubbleStackView$OgUqEHRcTH_CSY2Hykwvk0S0vx4 */
 
             public final void onClick(View view) {
                 BubbleStackView.this.lambda$setUpManageMenu$13$BubbleStackView(view);
             }
         });
-        this.mManageSettingsIcon = (ImageView) this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_settings_icon);
-        this.mManageSettingsText = (TextView) this.mManageMenu.findViewById(C0015R$id.bubble_manage_menu_settings_name);
+        this.mManageSettingsIcon = (ImageView) this.mManageMenu.findViewById(C0014R$id.bubble_manage_menu_settings_icon);
+        this.mManageSettingsText = (TextView) this.mManageMenu.findViewById(C0014R$id.bubble_manage_menu_settings_name);
         this.mManageMenu.setLayoutDirection(3);
         addView(this.mManageMenu);
     }
@@ -900,7 +900,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         boolean shouldShowBubblesEducation = shouldShowBubblesEducation();
         this.mShouldShowUserEducation = shouldShowBubblesEducation;
         if (shouldShowBubblesEducation) {
-            View inflate = this.mInflater.inflate(C0017R$layout.bubble_stack_user_education, (ViewGroup) this, false);
+            View inflate = this.mInflater.inflate(C0016R$layout.bubble_stack_user_education, (ViewGroup) this, false);
             this.mUserEducationView = inflate;
             inflate.setVisibility(8);
             TypedArray obtainStyledAttributes = ((FrameLayout) this).mContext.obtainStyledAttributes(new int[]{16843829, 16842809});
@@ -908,8 +908,8 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
             int color2 = obtainStyledAttributes.getColor(1, -1);
             obtainStyledAttributes.recycle();
             int ensureTextContrast = ContrastColorUtil.ensureTextContrast(color2, color, true);
-            ((TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_title)).setTextColor(ensureTextContrast);
-            ((TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_description)).setTextColor(ensureTextContrast);
+            ((TextView) this.mUserEducationView.findViewById(C0014R$id.user_education_title)).setTextColor(ensureTextContrast);
+            ((TextView) this.mUserEducationView.findViewById(C0014R$id.user_education_description)).setTextColor(ensureTextContrast);
             updateUserEducationForLayoutDirection();
             addView(this.mUserEducationView);
         }
@@ -920,7 +920,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         boolean shouldShowManageEducation = shouldShowManageEducation();
         this.mShouldShowManageEducation = shouldShowManageEducation;
         if (shouldShowManageEducation) {
-            BubbleManageEducationView bubbleManageEducationView2 = (BubbleManageEducationView) this.mInflater.inflate(C0017R$layout.bubbles_manage_button_education, (ViewGroup) this, false);
+            BubbleManageEducationView bubbleManageEducationView2 = (BubbleManageEducationView) this.mInflater.inflate(C0016R$layout.bubbles_manage_button_education, (ViewGroup) this, false);
             this.mManageEducationView = bubbleManageEducationView2;
             bubbleManageEducationView2.setVisibility(8);
             this.mManageEducationView.setElevation((float) this.mBubbleElevation);
@@ -988,7 +988,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
         Resources resources = getContext().getResources();
         this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
-        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
         RectF allowableStackPositionRegion = this.mStackAnimationController.getAllowableStackPositionRegion();
         this.mWasOnLeftBeforeRotation = this.mStackAnimationController.isStackOnLeftSide();
         float f = this.mStackAnimationController.getStackPosition().y;
@@ -1022,8 +1022,8 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         ((WindowManager) getContext().getSystemService("window")).getDefaultDisplay().getRealSize(this.mDisplaySize);
         Resources resources = getContext().getResources();
         this.mStatusBarHeight = resources.getDimensionPixelSize(17105489);
-        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0012R$dimen.bubble_padding_top);
-        this.mBubbleSize = getResources().getDimensionPixelSize(C0012R$dimen.individual_bubble_size);
+        this.mBubblePaddingTop = resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
+        this.mBubbleSize = getResources().getDimensionPixelSize(C0011R$dimen.individual_bubble_size);
         for (Bubble bubble : this.mBubbleData.getBubbles()) {
             if (bubble.getIconView() == null) {
                 Log.d("Bubbles", "Display size changed. Icon null: " + bubble);
@@ -1035,7 +1035,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         }
         this.mExpandedAnimationController.updateResources(this.mOrientation, this.mDisplaySize);
         this.mStackAnimationController.updateResources(this.mOrientation);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.dismiss_circle_size);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.dismiss_circle_size);
         this.mDismissTargetCircle.getLayoutParams().width = dimensionPixelSize;
         this.mDismissTargetCircle.getLayoutParams().height = dimensionPixelSize;
         this.mDismissTargetCircle.requestLayout();
@@ -1114,10 +1114,10 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
     /* access modifiers changed from: package-private */
     public void setupLocalMenu(AccessibilityNodeInfo accessibilityNodeInfo) {
         Resources resources = ((FrameLayout) this).mContext.getResources();
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_top_left, resources.getString(C0021R$string.bubble_accessibility_action_move_top_left)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_top_right, resources.getString(C0021R$string.bubble_accessibility_action_move_top_right)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_bottom_left, resources.getString(C0021R$string.bubble_accessibility_action_move_bottom_left)));
-        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_move_bottom_right, resources.getString(C0021R$string.bubble_accessibility_action_move_bottom_right)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_move_top_left, resources.getString(C0020R$string.bubble_accessibility_action_move_top_left)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_move_top_right, resources.getString(C0020R$string.bubble_accessibility_action_move_top_right)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_move_bottom_left, resources.getString(C0020R$string.bubble_accessibility_action_move_bottom_left)));
+        accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_move_bottom_right, resources.getString(C0020R$string.bubble_accessibility_action_move_bottom_right)));
         accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_DISMISS);
         if (this.mIsExpanded) {
             accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_COLLAPSE);
@@ -1133,7 +1133,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         RectF allowableStackPositionRegion = this.mStackAnimationController.getAllowableStackPositionRegion();
         if (i == 1048576) {
             this.mBubbleData.dismissAll(6);
-            announceForAccessibility(getResources().getString(C0021R$string.accessibility_bubble_dismissed));
+            announceForAccessibility(getResources().getString(C0020R$string.accessibility_bubble_dismissed));
             return true;
         } else if (i == 524288) {
             this.mBubbleData.setExpanded(false);
@@ -1141,16 +1141,16 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         } else if (i == 262144) {
             this.mBubbleData.setExpanded(true);
             return true;
-        } else if (i == C0015R$id.action_move_top_left) {
+        } else if (i == C0014R$id.action_move_top_left) {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.left, allowableStackPositionRegion.top);
             return true;
-        } else if (i == C0015R$id.action_move_top_right) {
+        } else if (i == C0014R$id.action_move_top_right) {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.right, allowableStackPositionRegion.top);
             return true;
-        } else if (i == C0015R$id.action_move_bottom_left) {
+        } else if (i == C0014R$id.action_move_bottom_left) {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.left, allowableStackPositionRegion.bottom);
             return true;
-        } else if (i != C0015R$id.action_move_bottom_right) {
+        } else if (i != C0014R$id.action_move_bottom_right) {
             return false;
         } else {
             this.mStackAnimationController.springStackAfterFling(allowableStackPositionRegion.right, allowableStackPositionRegion.bottom);
@@ -1165,13 +1165,13 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
                 String appName = bubble.getAppName();
                 String title = bubble.getTitle();
                 if (title == null) {
-                    title = getResources().getString(C0021R$string.notification_bubble_title);
+                    title = getResources().getString(C0020R$string.notification_bubble_title);
                 }
                 if (bubble.getIconView() != null) {
                     if (this.mIsExpanded || i > 0) {
-                        bubble.getIconView().setContentDescription(getResources().getString(C0021R$string.bubble_content_description_single, title, appName));
+                        bubble.getIconView().setContentDescription(getResources().getString(C0020R$string.bubble_content_description_single, title, appName));
                     } else {
-                        bubble.getIconView().setContentDescription(getResources().getString(C0021R$string.bubble_content_description_stack, title, appName, Integer.valueOf(this.mBubbleContainer.getChildCount() - 1)));
+                        bubble.getIconView().setContentDescription(getResources().getString(C0020R$string.bubble_content_description_stack, title, appName, Integer.valueOf(this.mBubbleContainer.getChildCount() - 1)));
                     }
                 }
             }
@@ -1407,18 +1407,18 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
     private void updateUserEducationForLayoutDirection() {
         View view = this.mUserEducationView;
         if (view != null) {
-            LinearLayout linearLayout = (LinearLayout) view.findViewById(C0015R$id.user_education_view);
-            TextView textView = (TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_title);
-            TextView textView2 = (TextView) this.mUserEducationView.findViewById(C0015R$id.user_education_description);
+            LinearLayout linearLayout = (LinearLayout) view.findViewById(C0014R$id.user_education_view);
+            TextView textView = (TextView) this.mUserEducationView.findViewById(C0014R$id.user_education_title);
+            TextView textView2 = (TextView) this.mUserEducationView.findViewById(C0014R$id.user_education_description);
             if (getResources().getConfiguration().getLayoutDirection() == 0) {
                 this.mUserEducationView.setLayoutDirection(0);
-                linearLayout.setBackgroundResource(C0013R$drawable.bubble_stack_user_education_bg);
+                linearLayout.setBackgroundResource(C0012R$drawable.bubble_stack_user_education_bg);
                 textView.setGravity(3);
                 textView2.setGravity(3);
                 return;
             }
             this.mUserEducationView.setLayoutDirection(1);
-            linearLayout.setBackgroundResource(C0013R$drawable.bubble_stack_user_education_bg_rtl);
+            linearLayout.setBackgroundResource(C0012R$drawable.bubble_stack_user_education_bg_rtl);
             textView.setGravity(5);
             textView2.setGravity(5);
         }
@@ -1478,18 +1478,18 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
     public /* synthetic */ void lambda$maybeShowManageEducation$24$BubbleStackView() {
         this.mExpandedBubble.getExpandedView().getManageButtonBoundsOnScreen(this.mTempRect);
         int manageViewHeight = this.mManageEducationView.getManageViewHeight();
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.bubbles_manage_education_top_inset);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.bubbles_manage_education_top_inset);
         this.mManageEducationView.bringToFront();
         this.mManageEducationView.setManageViewPosition(0, (this.mTempRect.top - manageViewHeight) + dimensionPixelSize);
         this.mManageEducationView.animate().setDuration(200).setInterpolator(Interpolators.FAST_OUT_SLOW_IN).alpha(1.0f);
-        this.mManageEducationView.findViewById(C0015R$id.manage).setOnClickListener(new View.OnClickListener() {
+        this.mManageEducationView.findViewById(C0014R$id.manage).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.bubbles.$$Lambda$BubbleStackView$9NxqZetHgM6c4X0j2S1B9RZkd0 */
 
             public final void onClick(View view) {
                 BubbleStackView.this.lambda$maybeShowManageEducation$21$BubbleStackView(view);
             }
         });
-        this.mManageEducationView.findViewById(C0015R$id.got_it).setOnClickListener(new View.OnClickListener() {
+        this.mManageEducationView.findViewById(C0014R$id.got_it).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.bubbles.$$Lambda$BubbleStackView$GYZbVitDInH2RKYw7i19AAO6zHM */
 
             public final void onClick(View view) {
@@ -1508,7 +1508,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
     /* access modifiers changed from: private */
     /* renamed from: lambda$maybeShowManageEducation$21 */
     public /* synthetic */ void lambda$maybeShowManageEducation$21$BubbleStackView(View view) {
-        this.mExpandedBubble.getExpandedView().findViewById(C0015R$id.settings_button).performClick();
+        this.mExpandedBubble.getExpandedView().findViewById(C0014R$id.settings_button).performClick();
         maybeShowManageEducation(false);
     }
 
@@ -2254,7 +2254,7 @@ public class BubbleStackView extends FrameLayout implements ViewTreeObserver.OnC
         if (z && this.mBubbleData.hasBubbleInStackWithKey(this.mExpandedBubble.getKey())) {
             Bubble bubbleInStackWithKey = this.mBubbleData.getBubbleInStackWithKey(this.mExpandedBubble.getKey());
             this.mManageSettingsIcon.setImageDrawable(bubbleInStackWithKey.getBadgedAppIcon());
-            this.mManageSettingsText.setText(getResources().getString(C0021R$string.bubbles_app_settings, bubbleInStackWithKey.getAppName()));
+            this.mManageSettingsText.setText(getResources().getString(C0020R$string.bubbles_app_settings, bubbleInStackWithKey.getAppName()));
         }
         this.mExpandedBubble.getExpandedView().getManageButtonBoundsOnScreen(this.mTempRect);
         boolean z2 = getResources().getConfiguration().getLayoutDirection() == 0;

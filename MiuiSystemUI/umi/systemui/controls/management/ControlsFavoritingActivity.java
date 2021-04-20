@@ -15,9 +15,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import androidx.viewpager2.widget.ViewPager2;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.systemui.C0015R$id;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0014R$id;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Prefs;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.TooltipManager;
@@ -173,7 +173,7 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
             TextView textView = this.statusText;
             if (textView != null) {
                 textView.setText(getResources().getText(17040487));
-                this.controller.loadForComponent(componentName, new ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1(getResources().getText(C0021R$string.controls_favorite_other_zone_header), this), new ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2(this));
+                this.controller.loadForComponent(componentName, new ControlsFavoritingActivity$loadControls$$inlined$let$lambda$1(getResources().getText(C0020R$string.controls_favorite_other_zone_header), this), new ControlsFavoritingActivity$loadControls$$inlined$let$lambda$2(this));
                 return;
             }
             Intrinsics.throwUninitializedPropertyAccessException("statusText");
@@ -205,20 +205,20 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
     }
 
     private final void bindViews() {
-        setContentView(C0017R$layout.controls_management);
+        setContentView(C0016R$layout.controls_management);
         Lifecycle lifecycle = getLifecycle();
         ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        View requireViewById = requireViewById(C0015R$id.controls_management_root);
+        View requireViewById = requireViewById(C0014R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById<ViewGrou…controls_management_root)");
         Window window = getWindow();
         Intrinsics.checkExpressionValueIsNotNull(window, "window");
         Intent intent = getIntent();
         Intrinsics.checkExpressionValueIsNotNull(intent, "intent");
         lifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
-        ViewStub viewStub = (ViewStub) requireViewById(C0015R$id.stub);
-        viewStub.setLayoutResource(C0017R$layout.controls_management_favorites);
+        ViewStub viewStub = (ViewStub) requireViewById(C0014R$id.stub);
+        viewStub.setLayoutResource(C0016R$layout.controls_management_favorites);
         viewStub.inflate();
-        View requireViewById2 = requireViewById(C0015R$id.status_message);
+        View requireViewById2 = requireViewById(C0014R$id.status_message);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.status_message)");
         this.statusText = (TextView) requireViewById2;
         if (shouldShowTooltip()) {
@@ -234,26 +234,26 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
                 throw null;
             }
         }
-        View requireViewById3 = requireViewById(C0015R$id.structure_page_indicator);
+        View requireViewById3 = requireViewById(C0014R$id.structure_page_indicator);
         ManagementPageIndicator managementPageIndicator = (ManagementPageIndicator) requireViewById3;
         managementPageIndicator.setVisibilityListener(new ControlsFavoritingActivity$bindViews$$inlined$apply$lambda$1(this));
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById<Manageme…}\n            }\n        }");
         this.pageIndicator = managementPageIndicator;
         CharSequence charSequence = this.structureExtra;
         if (charSequence == null && (charSequence = this.appName) == null) {
-            charSequence = getResources().getText(C0021R$string.controls_favorite_default_title);
+            charSequence = getResources().getText(C0020R$string.controls_favorite_default_title);
         }
-        View requireViewById4 = requireViewById(C0015R$id.title);
+        View requireViewById4 = requireViewById(C0014R$id.title);
         TextView textView2 = (TextView) requireViewById4;
         textView2.setText(charSequence);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById4, "requireViewById<TextView…   text = title\n        }");
         this.titleView = textView2;
-        View requireViewById5 = requireViewById(C0015R$id.subtitle);
+        View requireViewById5 = requireViewById(C0014R$id.subtitle);
         TextView textView3 = (TextView) requireViewById5;
-        textView3.setText(textView3.getResources().getText(C0021R$string.controls_favorite_subtitle));
+        textView3.setText(textView3.getResources().getText(C0020R$string.controls_favorite_subtitle));
         Intrinsics.checkExpressionValueIsNotNull(requireViewById5, "requireViewById<TextView…orite_subtitle)\n        }");
         this.subtitleView = textView3;
-        View requireViewById6 = requireViewById(C0015R$id.structure_pager);
+        View requireViewById6 = requireViewById(C0014R$id.structure_pager);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById6, "requireViewById<ViewPager2>(R.id.structure_pager)");
         ViewPager2 viewPager2 = (ViewPager2) requireViewById6;
         this.structurePager = viewPager2;
@@ -268,18 +268,18 @@ public final class ControlsFavoritingActivity extends LifecycleActivity {
 
     /* access modifiers changed from: public */
     private final void animateExitAndFinish() {
-        ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
+        ViewGroup viewGroup = (ViewGroup) requireViewById(C0014R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");
         ControlsAnimations.exitAnimation(viewGroup, new ControlsFavoritingActivity$animateExitAndFinish$1(this)).start();
     }
 
     private final void bindButtons() {
-        View requireViewById = requireViewById(C0015R$id.other_apps);
+        View requireViewById = requireViewById(C0014R$id.other_apps);
         Button button = (Button) requireViewById;
         button.setOnClickListener(new ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1(button, this));
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById<Button>(…)\n            }\n        }");
         this.otherAppsButton = requireViewById;
-        View requireViewById2 = requireViewById(C0015R$id.done);
+        View requireViewById2 = requireViewById(C0014R$id.done);
         Button button2 = (Button) requireViewById2;
         button2.setEnabled(false);
         button2.setOnClickListener(new ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2(this));

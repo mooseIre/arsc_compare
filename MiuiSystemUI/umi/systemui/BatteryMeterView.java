@@ -70,7 +70,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         setOrientation(0);
         setGravity(8388627);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, R$styleable.BatteryMeterView, i, 0);
-        int color = obtainStyledAttributes.getColor(R$styleable.BatteryMeterView_frameColor, context.getColor(C0011R$color.meter_background_color));
+        int color = obtainStyledAttributes.getColor(R$styleable.BatteryMeterView_frameColor, context.getColor(C0010R$color.meter_background_color));
         this.mPercentageStyleId = obtainStyledAttributes.getResourceId(R$styleable.BatteryMeterView_textAppearance, 0);
         this.mDrawable = new ThemedBatteryDrawable(context, color);
         obtainStyledAttributes.recycle();
@@ -82,8 +82,8 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         ImageView imageView = new ImageView(context);
         this.mBatteryIconView = imageView;
         imageView.setImageDrawable(this.mDrawable);
-        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(getResources().getDimensionPixelSize(C0012R$dimen.status_bar_battery_icon_width), getResources().getDimensionPixelSize(C0012R$dimen.status_bar_battery_icon_height));
-        marginLayoutParams.setMargins(0, 0, 0, getResources().getDimensionPixelOffset(C0012R$dimen.battery_margin_bottom));
+        ViewGroup.MarginLayoutParams marginLayoutParams = new ViewGroup.MarginLayoutParams(getResources().getDimensionPixelSize(C0011R$dimen.status_bar_battery_icon_width), getResources().getDimensionPixelSize(C0011R$dimen.status_bar_battery_icon_height));
+        marginLayoutParams.setMargins(0, 0, 0, getResources().getDimensionPixelOffset(C0011R$dimen.battery_margin_bottom));
         addView(this.mBatteryIconView, marginLayoutParams);
         updateShowPercent();
         this.mDualToneHandler = new DualToneHandler(context);
@@ -173,7 +173,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     }
 
     private TextView loadPercentView() {
-        return (TextView) LayoutInflater.from(getContext()).inflate(C0017R$layout.battery_percentage_view, (ViewGroup) null);
+        return (TextView) LayoutInflater.from(getContext()).inflate(C0016R$layout.battery_percentage_view, (ViewGroup) null);
     }
 
     /* access modifiers changed from: private */
@@ -185,9 +185,9 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
             if (this.mBatteryPercentView == null) {
                 Context context = getContext();
                 if (this.mCharging) {
-                    i = C0021R$string.accessibility_battery_level_charging;
+                    i = C0020R$string.accessibility_battery_level_charging;
                 } else {
-                    i = C0021R$string.accessibility_battery_level;
+                    i = C0020R$string.accessibility_battery_level;
                 }
                 setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
             } else if (this.mShowPercentMode != 3 || this.mCharging) {
@@ -210,7 +210,7 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     public /* synthetic */ void lambda$updatePercentText$0$BatteryMeterView(String str) {
         if (str != null) {
             this.mBatteryPercentView.setText(str);
-            setContentDescription(getContext().getString(C0021R$string.accessibility_battery_level_with_estimate, Integer.valueOf(this.mLevel), str));
+            setContentDescription(getContext().getString(C0020R$string.accessibility_battery_level_with_estimate, Integer.valueOf(this.mLevel), str));
             return;
         }
         setPercentTextAtCurrentLevel();
@@ -221,9 +221,9 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
         this.mBatteryPercentView.setText(NumberFormat.getPercentInstance().format((double) (((float) this.mLevel) / 100.0f)));
         Context context = getContext();
         if (this.mCharging) {
-            i = C0021R$string.accessibility_battery_level_charging;
+            i = C0020R$string.accessibility_battery_level_charging;
         } else {
-            i = C0021R$string.accessibility_battery_level;
+            i = C0020R$string.accessibility_battery_level;
         }
         setContentDescription(context.getString(i, Integer.valueOf(this.mLevel)));
     }
@@ -279,11 +279,11 @@ public class BatteryMeterView extends LinearLayout implements BatteryController.
     private void scaleBatteryMeterViews() {
         Resources resources = getContext().getResources();
         TypedValue typedValue = new TypedValue();
-        resources.getValue(C0012R$dimen.status_bar_icon_scale_factor, typedValue, true);
+        resources.getValue(C0011R$dimen.status_bar_icon_scale_factor, typedValue, true);
         float f = typedValue.getFloat();
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.status_bar_battery_icon_height);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.status_bar_battery_icon_width);
-        int dimensionPixelSize3 = resources.getDimensionPixelSize(C0012R$dimen.battery_margin_bottom);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.status_bar_battery_icon_height);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0011R$dimen.status_bar_battery_icon_width);
+        int dimensionPixelSize3 = resources.getDimensionPixelSize(C0011R$dimen.battery_margin_bottom);
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (((float) dimensionPixelSize2) * f), (int) (((float) dimensionPixelSize) * f));
         layoutParams.setMargins(0, 0, 0, dimensionPixelSize3);
         this.mBatteryIconView.setLayoutParams(layoutParams);

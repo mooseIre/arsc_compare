@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0017R$layout;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiKeyguardMediaController;
@@ -93,13 +93,13 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
 
     /* access modifiers changed from: private */
     public final void reinflateZenModeView(LayoutInflater layoutInflater) {
-        ZenModeView zenModeView2 = (ZenModeView) reinflateView(this.zenModeView, layoutInflater, C0017R$layout.keyguard_zen_header);
+        ZenModeView zenModeView2 = (ZenModeView) reinflateView(this.zenModeView, layoutInflater, C0016R$layout.keyguard_zen_header);
         this.zenModeViewController.attach(zenModeView2);
         this.zenModeView = zenModeView2;
     }
 
     private final void reinflateImportantView(LayoutInflater layoutInflater) {
-        this.importantView = (SectionHeaderView) reinflateView(this.importantView, layoutInflater, C0017R$layout.status_bar_notification_section_header);
+        this.importantView = (SectionHeaderView) reinflateView(this.importantView, layoutInflater, C0016R$layout.status_bar_notification_section_header);
     }
 
     @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm.SectionProvider, com.android.systemui.statusbar.notification.stack.NotificationSectionsManager
@@ -193,7 +193,7 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
             intent.putExtra(":settings:show_fragment", "com.android.settings.NotificationControlCenterSettings");
             Context context = Utils.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context, "Utils.getContext()");
-            intent.putExtra(":settings:show_fragment_title", context.getResources().getString(C0021R$string.notification_control_center));
+            intent.putExtra(":settings:show_fragment_title", context.getResources().getString(C0020R$string.notification_control_center));
             intent.addFlags(268435456);
             return intent;
         }

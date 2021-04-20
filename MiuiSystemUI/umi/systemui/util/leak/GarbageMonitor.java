@@ -19,9 +19,9 @@ import android.os.SystemProperties;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.LongSparseArray;
-import com.android.systemui.C0013R$drawable;
-import com.android.systemui.C0016R$integer;
-import com.android.systemui.C0021R$string;
+import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0020R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.ActivityStarter;
@@ -70,7 +70,7 @@ public class GarbageMonitor implements Dumpable {
         this.mLeakReporter = leakReporter;
         this.mDumpTruck = new DumpTruck(this.mContext);
         if (ENABLE_AM_HEAP_LIMIT) {
-            this.mHeapLimit = (long) Settings.Global.getInt(context.getContentResolver(), "systemui_am_heap_limit", this.mContext.getResources().getInteger(C0016R$integer.watch_heap_limit));
+            this.mHeapLimit = (long) Settings.Global.getInt(context.getContentResolver(), "systemui_am_heap_limit", this.mContext.getResources().getInteger(C0015R$integer.watch_heap_limit));
         }
     }
 
@@ -237,7 +237,7 @@ public class GarbageMonitor implements Dumpable {
         }
 
         MemoryIconDrawable(Context context) {
-            this.baseIcon = context.getDrawable(C0013R$drawable.ic_memory).mutate();
+            this.baseIcon = context.getDrawable(C0012R$drawable.ic_memory).mutate();
             this.dp = context.getResources().getDisplayMetrics().density;
             this.paint.setColor(QSTileImpl.getColorForState(context, 2));
         }
@@ -432,7 +432,7 @@ public class GarbageMonitor implements Dumpable {
             if (this.dumpInProgress) {
                 str = "Dumping...";
             } else {
-                str = this.mContext.getString(C0021R$string.heap_dump_tile_name);
+                str = this.mContext.getString(C0020R$string.heap_dump_tile_name);
             }
             state.label = str;
             ProcessMemInfo processMemInfo = this.pmi;

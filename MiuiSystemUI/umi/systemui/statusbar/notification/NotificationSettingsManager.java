@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.systemui.C0008R$array;
+import com.android.systemui.C0007R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Prefs;
@@ -48,21 +48,21 @@ public class NotificationSettingsManager implements Dumpable {
     public NotificationSettingsManager(Context context, CloudDataManager cloudDataManager) {
         this.mContext = context;
         this.mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
-        this.mPrioritizedPackages = getStringArray(C0008R$array.config_prioritizedPackages);
-        this.mSubstitutePackages = getStringArray(C0008R$array.config_canSendSubstituteNotificationPackages);
-        this.mCustomAppIconPackages = getStringArray(C0008R$array.config_canCustomNotificationAppIcon);
-        this.mDisableAutoGroupSummaryPackages = getStringArray(C0008R$array.config_disableAutoGroupSummaryPackages);
-        this.mHideForegroundWhitelist = getStringArray(C0008R$array.system_foreground_notification_whitelist);
-        this.mHideAlertWindowWhitelist = getStringArray(C0008R$array.system_alert_window_notification_whitelist);
-        this.mAvoidDisturbPackages = getStringArray(C0008R$array.avoid_disturb_app_whitelist);
-        this.mPreInstallPackages = getStringArray(C0008R$array.config_preInstalledPackages);
-        this.mCanShowBadgePackages = getStringArray(C0008R$array.config_canShowBadgePackages);
-        this.mAllowFloatPackages = getStringArray(C0008R$array.config_allowFloatPackages);
-        this.mAllowKeyguardPackages = getStringArray(C0008R$array.config_allowKeyguardPackages);
-        this.mBlockFloatPackages = getStringArray(C0008R$array.config_blockFloatPackages);
-        this.mBlockKeyguardPackages = getStringArray(C0008R$array.config_blockKeyguardPackages);
-        this.mAllowNotificationSlide = getStringArray(C0008R$array.config_allowNotificationSlide);
-        this.mImportantWhitelist = getStringArray(C0008R$array.important_section_whitelist);
+        this.mPrioritizedPackages = getStringArray(C0007R$array.config_prioritizedPackages);
+        this.mSubstitutePackages = getStringArray(C0007R$array.config_canSendSubstituteNotificationPackages);
+        this.mCustomAppIconPackages = getStringArray(C0007R$array.config_canCustomNotificationAppIcon);
+        this.mDisableAutoGroupSummaryPackages = getStringArray(C0007R$array.config_disableAutoGroupSummaryPackages);
+        this.mHideForegroundWhitelist = getStringArray(C0007R$array.system_foreground_notification_whitelist);
+        this.mHideAlertWindowWhitelist = getStringArray(C0007R$array.system_alert_window_notification_whitelist);
+        this.mAvoidDisturbPackages = getStringArray(C0007R$array.avoid_disturb_app_whitelist);
+        this.mPreInstallPackages = getStringArray(C0007R$array.config_preInstalledPackages);
+        this.mCanShowBadgePackages = getStringArray(C0007R$array.config_canShowBadgePackages);
+        this.mAllowFloatPackages = getStringArray(C0007R$array.config_allowFloatPackages);
+        this.mAllowKeyguardPackages = getStringArray(C0007R$array.config_allowKeyguardPackages);
+        this.mBlockFloatPackages = getStringArray(C0007R$array.config_blockFloatPackages);
+        this.mBlockKeyguardPackages = getStringArray(C0007R$array.config_blockKeyguardPackages);
+        this.mAllowNotificationSlide = getStringArray(C0007R$array.config_allowNotificationSlide);
+        this.mImportantWhitelist = getStringArray(C0007R$array.important_section_whitelist);
         cloudDataManager.registerListener(new CloudDataListener() {
             /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationSettingsManager$d8gb7CE_AenvkjHLK6pCP4Go */
 
@@ -76,7 +76,13 @@ public class NotificationSettingsManager implements Dumpable {
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$NotificationSettingsManager(boolean z) {
-        onCloudDataUpdated();
+        this.mBgHandler.post(new Runnable() {
+            /* class com.android.systemui.statusbar.notification.$$Lambda$pcJW1Pu_19JOg5lRO0t00UV2DuQ */
+
+            public final void run() {
+                NotificationSettingsManager.this.onCloudDataUpdated();
+            }
+        });
     }
 
     private List<String> getStringArray(int i) {
@@ -89,26 +95,14 @@ public class NotificationSettingsManager implements Dumpable {
             this.mAllowFloatPackages = floatWhitelist;
         }
         if (NotificationCloudData.Companion.isFloatDataUpdated(this.mContext, this.mAllowFloatPackages)) {
-            this.mBgHandler.post(new Runnable() {
-                /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationSettingsManager$yxjwWiXuYbIej07h3m_Ynt7n8c0 */
-
-                public final void run() {
-                    NotificationSettingsManager.this.lambda$onCloudDataUpdated$1$NotificationSettingsManager();
-                }
-            });
+            NotificationFilterHelper.updateFloatWhiteList(this.mContext, this.mAllowFloatPackages);
         }
         List<String> keyguardWhitelist = NotificationCloudData.Companion.getKeyguardWhitelist(this.mContext);
         if (keyguardWhitelist != null && !keyguardWhitelist.isEmpty()) {
             this.mAllowKeyguardPackages = keyguardWhitelist;
         }
         if (NotificationCloudData.Companion.isKeyguardDataUpdated(this.mContext, this.mAllowKeyguardPackages)) {
-            this.mBgHandler.post(new Runnable() {
-                /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationSettingsManager$TBAtro6UZEXCqz3ZylABms_UzP8 */
-
-                public final void run() {
-                    NotificationSettingsManager.this.lambda$onCloudDataUpdated$2$NotificationSettingsManager();
-                }
-            });
+            NotificationFilterHelper.updateKeyguardWhitelist(this.mContext, this.mAllowKeyguardPackages);
         }
         List<String> floatBlacklist = NotificationCloudData.Companion.getFloatBlacklist(this.mContext);
         if (floatBlacklist != null && !floatBlacklist.isEmpty()) {
@@ -126,18 +120,6 @@ public class NotificationSettingsManager implements Dumpable {
         if (slideWhiteList != null && !slideWhiteList.isEmpty()) {
             this.mAllowNotificationSlide = slideWhiteList;
         }
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$onCloudDataUpdated$1 */
-    public /* synthetic */ void lambda$onCloudDataUpdated$1$NotificationSettingsManager() {
-        NotificationFilterHelper.updateFloatWhiteList(this.mContext, this.mAllowFloatPackages);
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$onCloudDataUpdated$2 */
-    public /* synthetic */ void lambda$onCloudDataUpdated$2$NotificationSettingsManager() {
-        NotificationFilterHelper.updateKeyguardWhitelist(this.mContext, this.mAllowKeyguardPackages);
     }
 
     public String getString(int i) {

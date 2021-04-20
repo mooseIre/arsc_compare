@@ -12,9 +12,9 @@ public class Somnambulator extends Activity {
             Intent intent2 = new Intent(this, Somnambulator.class);
             intent2.setFlags(276824064);
             Intent intent3 = new Intent();
-            intent3.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(this, C0018R$mipmap.ic_launcher_dreams));
+            intent3.putExtra("android.intent.extra.shortcut.ICON_RESOURCE", Intent.ShortcutIconResource.fromContext(this, C0017R$mipmap.ic_launcher_dreams));
             intent3.putExtra("android.intent.extra.shortcut.INTENT", intent2);
-            intent3.putExtra("android.intent.extra.shortcut.NAME", getString(C0021R$string.start_dreams));
+            intent3.putExtra("android.intent.extra.shortcut.NAME", getString(C0020R$string.start_dreams));
             setResult(-1, intent3);
         } else if (intent.hasCategory("android.intent.category.DESK_DOCK")) {
             Sandman.startDreamWhenDockedIfAppropriate(this);

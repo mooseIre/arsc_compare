@@ -9,8 +9,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0011R$color;
-import com.android.systemui.C0015R$id;
+import com.android.systemui.C0010R$color;
+import com.android.systemui.C0014R$id;
 
 public class ScreenshotActionChip extends FrameLayout {
     private ImageView mIcon;
@@ -31,13 +31,13 @@ public class ScreenshotActionChip extends FrameLayout {
 
     public ScreenshotActionChip(Context context, AttributeSet attributeSet, int i, int i2) {
         super(context, attributeSet, i, i2);
-        this.mIconColor = context.getColor(C0011R$color.global_screenshot_button_icon);
+        this.mIconColor = context.getColor(C0010R$color.global_screenshot_button_icon);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        this.mIcon = (ImageView) findViewById(C0015R$id.screenshot_action_chip_icon);
-        this.mText = (TextView) findViewById(C0015R$id.screenshot_action_chip_text);
+        this.mIcon = (ImageView) findViewById(C0014R$id.screenshot_action_chip_icon);
+        this.mText = (TextView) findViewById(C0014R$id.screenshot_action_chip_text);
     }
 
     /* access modifiers changed from: package-private */

@@ -5,8 +5,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-final class ControlsFavoritingActivity$bindViews$$inlined$apply$lambda$1 extends Lambda implements Function1<Integer, Unit> {
+public final class ControlsFavoritingActivity$bindViews$$inlined$apply$lambda$1 extends Lambda implements Function1<Integer, Unit> {
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -24,9 +25,9 @@ final class ControlsFavoritingActivity$bindViews$$inlined$apply$lambda$1 extends
     }
 
     public final void invoke(int i) {
-        TooltipManager access$getMTooltipManager$p;
-        if (i != 0 && (access$getMTooltipManager$p = ControlsFavoritingActivity.access$getMTooltipManager$p(this.this$0)) != null) {
-            access$getMTooltipManager$p.hide(true);
+        TooltipManager tooltipManager;
+        if (i != 0 && (tooltipManager = this.this$0.mTooltipManager) != null) {
+            tooltipManager.hide(true);
         }
     }
 }
