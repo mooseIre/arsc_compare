@@ -179,6 +179,7 @@ public class KeyguardPINView extends KeyguardPinBasedInputView implements Passwo
     public void handleConfigurationOrientationChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
         layoutParams.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pin_view_rows_layout_height);
+        layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pin_view_container_margin_bottom);
         this.mContainer.setLayoutParams(layoutParams);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
         layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_bouncer_message_view_margin_top);
