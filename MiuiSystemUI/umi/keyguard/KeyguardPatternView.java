@@ -474,15 +474,18 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
     /* access modifiers changed from: protected */
     @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationSmallWidthChanged() {
-        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
-        layoutParams.width = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_layout_width);
-        layoutParams.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_layout_height);
-        layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_view_container_margin_bottom);
-        this.mContainer.setLayoutParams(layoutParams);
-        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mLockPatternView.getLayoutParams();
-        layoutParams2.width = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
-        layoutParams2.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
-        this.mLockPatternView.setLayoutParams(layoutParams2);
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
+        layoutParams.topMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_bouncer_message_view_margin_top);
+        this.mKeyguardBouncerMessageView.setLayoutParams(layoutParams);
+        LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mContainer.getLayoutParams();
+        layoutParams2.width = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_layout_width);
+        layoutParams2.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_layout_height);
+        layoutParams2.bottomMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_view_container_margin_bottom);
+        this.mContainer.setLayoutParams(layoutParams2);
+        LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mLockPatternView.getLayoutParams();
+        layoutParams3.width = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
+        layoutParams3.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_pattern_view_pattern_view_height_width);
+        this.mLockPatternView.setLayoutParams(layoutParams3);
         setPositionForFod();
     }
 
