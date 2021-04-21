@@ -5,9 +5,8 @@ import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
-public final class DividerHolder extends Holder {
+final class DividerHolder extends Holder {
     private final View divider;
     private final View frame;
 

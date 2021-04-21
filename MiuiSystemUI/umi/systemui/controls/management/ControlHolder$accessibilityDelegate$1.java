@@ -6,8 +6,9 @@ import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KDeclarationContainer;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
-final /* synthetic */ class ControlHolder$accessibilityDelegate$1 extends FunctionReference implements Function1<Boolean, CharSequence> {
+public final /* synthetic */ class ControlHolder$accessibilityDelegate$1 extends FunctionReference implements Function1<Boolean, CharSequence> {
     ControlHolder$accessibilityDelegate$1(ControlHolder controlHolder) {
         super(1, controlHolder);
     }
@@ -36,6 +37,6 @@ final /* synthetic */ class ControlHolder$accessibilityDelegate$1 extends Functi
 
     @Nullable
     public final CharSequence invoke(boolean z) {
-        return ControlHolder.access$stateDescription((ControlHolder) this.receiver, z);
+        return ((ControlHolder) this.receiver).stateDescription(z);
     }
 }

@@ -24,10 +24,6 @@ public final class ChallengeDialogs {
     private ChallengeDialogs() {
     }
 
-    public static final /* synthetic */ ControlAction access$addChallengeValue(ChallengeDialogs challengeDialogs, ControlAction controlAction, String str) {
-        return challengeDialogs.addChallengeValue(controlAction, str);
-    }
-
     public final Dialog createPinDialog(ControlViewHolder controlViewHolder, boolean z, boolean z2, Function0<Unit> function0) {
         Pair pair;
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
@@ -75,6 +71,7 @@ public final class ChallengeDialogs {
         return create;
     }
 
+    /* access modifiers changed from: public */
     private final void setInputType(EditText editText, boolean z) {
         if (z) {
             editText.setInputType(129);
@@ -83,6 +80,7 @@ public final class ChallengeDialogs {
         }
     }
 
+    /* access modifiers changed from: public */
     private final ControlAction addChallengeValue(ControlAction controlAction, String str) {
         String templateId = controlAction.getTemplateId();
         if (controlAction instanceof BooleanAction) {

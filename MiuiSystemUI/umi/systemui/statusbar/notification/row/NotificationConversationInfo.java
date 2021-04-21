@@ -29,6 +29,7 @@ import android.view.accessibility.AccessibilityEvent;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.notification.ConversationIconFactory;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0016R$layout;
@@ -102,6 +103,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     private int mSelectedAction = -1;
     private ShortcutInfo mShortcutInfo;
     private TextView mSilentDescriptionView;
+    @VisibleForTesting
     boolean mSkipPost = false;
     private Context mUserContext;
     private VisualStabilityManager mVisualStabilityManager;
@@ -122,6 +124,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return this;
     }
 
+    @VisibleForTesting
     public boolean isAnimating() {
         return false;
     }
@@ -140,7 +143,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return false;
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$NotificationConversationInfo(View view) {
@@ -148,7 +150,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         updateToggleActions(this.mSelectedAction, true);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$NotificationConversationInfo(View view) {
@@ -156,7 +157,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         updateToggleActions(this.mSelectedAction, true);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$2 */
     public /* synthetic */ void lambda$new$2$NotificationConversationInfo(View view) {
@@ -164,7 +164,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         updateToggleActions(this.mSelectedAction, true);
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$3 */
     public /* synthetic */ void lambda$new$3$NotificationConversationInfo(View view) {
@@ -179,6 +178,8 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         super(context, attributeSet);
     }
 
+    /* access modifiers changed from: package-private */
+    @VisibleForTesting
     public void setSelectedAction(int i) {
         if (this.mSelectedAction != i) {
             this.mSelectedAction = i;
@@ -265,7 +266,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         };
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$getSettingsOnClickListener$4 */
     public /* synthetic */ void lambda$getSettingsOnClickListener$4$NotificationConversationInfo(int i, View view) {
@@ -332,6 +332,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return true;
     }
 
+    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mPriorityDescriptionView = (TextView) findViewById(C0014R$id.priority_summary);
@@ -459,6 +460,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         view3.setSelected(false);
     }
 
+    /* access modifiers changed from: package-private */
     public int getSelectedAction() {
         if (this.mNotificationChannel.getImportance() <= 2 && this.mNotificationChannel.getImportance() > -1000) {
             return 4;
@@ -554,11 +556,13 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         return this.mActualHeight;
     }
 
+    /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
         super.onLayout(z, i, i2, i3, i4);
         this.mActualHeight = getHeight();
     }
 
+    /* access modifiers changed from: package-private */
     public class UpdateChannelRunnable implements Runnable {
         private final int mAction;
         private final String mAppPkg;
@@ -567,7 +571,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
         private final INotificationManager mINotificationManager;
 
         public UpdateChannelRunnable(INotificationManager iNotificationManager, String str, int i, int i2, NotificationChannel notificationChannel) {
-            NotificationConversationInfo.this = r1;
             this.mINotificationManager = iNotificationManager;
             this.mAppPkg = str;
             this.mAppUid = i;
@@ -615,7 +618,6 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             }
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$run$0 */
         public /* synthetic */ void lambda$run$0$NotificationConversationInfo$UpdateChannelRunnable() {

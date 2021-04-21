@@ -29,6 +29,6 @@ final /* synthetic */ class MiuiOverviewProxy$onAssistantGestureCompletion$1 ext
 
     @Override // kotlin.jvm.functions.Function0
     public final void invoke() {
-        ((MiuiOverviewProxy) this.receiver).notifyCompleteAssistant();
+        MiuiOverviewProxy.access$notifyCompleteAssistant((MiuiOverviewProxy) this.receiver);
     }
 }

@@ -2,8 +2,7 @@ package com.android.systemui.classifier.brightline;
 
 import com.android.systemui.util.DeviceConfigProxy;
 
-/* access modifiers changed from: package-private */
-public class DiagonalClassifier extends FalsingClassifier {
+class DiagonalClassifier extends FalsingClassifier {
     private final float mHorizontalAngleRange;
     private final float mVerticalAngleRange;
 

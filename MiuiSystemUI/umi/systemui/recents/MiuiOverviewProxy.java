@@ -19,6 +19,10 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         this.proxyService = overviewProxyService;
     }
 
+    public static final /* synthetic */ void access$notifyCompleteAssistant(MiuiOverviewProxy miuiOverviewProxy) {
+        miuiOverviewProxy.notifyCompleteAssistant();
+    }
+
     @Override // com.android.systemui.shared.recents.IMiuiSystemUiProxy
     public void exitSplitScreen() {
         if (verifyCaller("startScreenPinning")) {

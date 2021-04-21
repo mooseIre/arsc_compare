@@ -18,19 +18,25 @@ import com.android.systemui.controls.ui.RenderInfo;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function2;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: ControlAdapter.kt */
 public final class ControlHolder extends Holder {
     private final ControlHolderAccessibilityDelegate accessibilityDelegate;
     private final CheckBox favorite;
+    @NotNull
     private final Function2<String, Boolean, Unit> favoriteCallback;
     private final String favoriteStateDescription;
     private final ImageView icon;
+    @Nullable
     private final ControlsModel.MoveHelper moveHelper;
     private final String notFavoriteStateDescription;
     private final TextView removed;
     private final TextView subtitle;
     private final TextView title;
 
+    @NotNull
     public final Function2<String, Boolean, Unit> getFavoriteCallback() {
         return this.favoriteCallback;
     }
@@ -38,7 +44,7 @@ public final class ControlHolder extends Holder {
     /* JADX DEBUG: Multi-variable search result rejected for r4v0, resolved type: kotlin.jvm.functions.Function2<? super java.lang.String, ? super java.lang.Boolean, kotlin.Unit> */
     /* JADX WARN: Multi-variable type inference failed */
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public ControlHolder(View view, ControlsModel.MoveHelper moveHelper2, Function2<? super String, ? super Boolean, Unit> function2) {
+    public ControlHolder(@NotNull View view, @Nullable ControlsModel.MoveHelper moveHelper2, @NotNull Function2<? super String, ? super Boolean, Unit> function2) {
         super(view, null);
         Intrinsics.checkParameterIsNotNull(view, "view");
         Intrinsics.checkParameterIsNotNull(function2, "favoriteCallback");
@@ -72,8 +78,8 @@ public final class ControlHolder extends Holder {
         ViewCompat.setAccessibilityDelegate(this.itemView, controlHolderAccessibilityDelegate);
     }
 
-    /* access modifiers changed from: public */
-    private final CharSequence stateDescription(boolean z) {
+    /* access modifiers changed from: private */
+    public final CharSequence stateDescription(boolean z) {
         if (!z) {
             return this.notFavoriteStateDescription;
         }
@@ -86,7 +92,7 @@ public final class ControlHolder extends Holder {
     }
 
     @Override // com.android.systemui.controls.management.Holder
-    public void bindData(ElementWrapper elementWrapper) {
+    public void bindData(@NotNull ElementWrapper elementWrapper) {
         CharSequence charSequence;
         Intrinsics.checkParameterIsNotNull(elementWrapper, "wrapper");
         ControlInterface controlInterface = (ControlInterface) elementWrapper;

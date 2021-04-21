@@ -15,6 +15,6 @@ final class ControlsListingControllerImpl$removeCallback$1 implements Runnable {
 
     public final void run() {
         Log.d("ControlsListingControllerImpl", "Unsubscribing callback");
-        ControlsListingControllerImpl.access$getCallbacks$p(this.this$0).remove(this.$listener);
+        this.this$0.callbacks.remove(this.$listener);
     }
 }
