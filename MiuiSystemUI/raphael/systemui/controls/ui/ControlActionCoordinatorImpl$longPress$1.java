@@ -28,7 +28,7 @@ final class ControlActionCoordinatorImpl$longPress$1 extends Lambda implements F
             ControlViewHolder controlViewHolder = this.$cvh;
             Intent intent = control.getAppIntent().getIntent();
             Intrinsics.checkExpressionValueIsNotNull(intent, "it.getAppIntent().getIntent()");
-            ControlActionCoordinatorImpl.access$showDialog(controlActionCoordinatorImpl, controlViewHolder, intent);
+            controlActionCoordinatorImpl.showDialog(controlViewHolder, intent);
         }
     }
 }

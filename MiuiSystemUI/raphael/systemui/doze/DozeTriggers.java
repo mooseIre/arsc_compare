@@ -84,10 +84,6 @@ public class DozeTriggers implements DozeMachine.Part {
     private final UiModeManager mUiModeManager;
     private final WakeLock mWakeLock;
 
-    public static /* synthetic */ void lambda$ulqUMEXi8OgK7771oZ9BOr21BBk(DozeTriggers dozeTriggers, boolean z) {
-        dozeTriggers.onProximityFar(z);
-    }
-
     @VisibleForTesting
     public enum DozingUpdateUiEvent implements UiEventLogger.UiEventEnum {
         DOZING_UPDATE_NOTIFICATION(433),
@@ -343,7 +339,8 @@ public class DozeTriggers implements DozeMachine.Part {
         this.mMachine.wakeUp();
     }
 
-    private void onProximityFar(boolean z) {
+    /* access modifiers changed from: private */
+    public void onProximityFar(boolean z) {
         if (this.mMachine.isExecutingTransition()) {
             Log.w("DozeTriggers", "onProximityFar called during transition. Ignoring sensor response.");
             return;

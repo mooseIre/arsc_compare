@@ -23,6 +23,6 @@ final class KeyguardMediaController$attach$1 extends Lambda implements Function1
     }
 
     public final void invoke(boolean z) {
-        this.this$0.updateVisibility();
+        KeyguardMediaController.access$updateVisibility(this.this$0);
     }
 }
