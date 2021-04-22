@@ -62,7 +62,8 @@ public abstract class AuthCredentialView extends LinearLayout {
     protected int mUserId;
     private final UserManager mUserManager = ((UserManager) ((LinearLayout) this).mContext.getSystemService(UserManager.class));
 
-    interface Callback {
+    /* access modifiers changed from: package-private */
+    public interface Callback {
         void onCredentialMatched(byte[] bArr);
     }
 

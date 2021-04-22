@@ -18,9 +18,7 @@ import kotlin.Unit;
 import kotlin.collections.CollectionsKt__CollectionsKt;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: AppAdapter.kt */
 public final class AppAdapter extends RecyclerView.Adapter<Holder> {
     private final AppAdapter$callback$1 callback;
     private final FavoritesRenderer favoritesRenderer;
@@ -31,7 +29,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
 
     /* JADX DEBUG: Multi-variable search result rejected for r7v0, resolved type: kotlin.jvm.functions.Function1<? super android.content.ComponentName, kotlin.Unit> */
     /* JADX WARN: Multi-variable type inference failed */
-    public AppAdapter(@NotNull Executor executor, @NotNull Executor executor2, @NotNull Lifecycle lifecycle, @NotNull ControlsListingController controlsListingController, @NotNull LayoutInflater layoutInflater2, @NotNull Function1<? super ComponentName, Unit> function1, @NotNull FavoritesRenderer favoritesRenderer2, @NotNull Resources resources2) {
+    public AppAdapter(Executor executor, Executor executor2, Lifecycle lifecycle, ControlsListingController controlsListingController, LayoutInflater layoutInflater2, Function1<? super ComponentName, Unit> function1, FavoritesRenderer favoritesRenderer2, Resources resources2) {
         Intrinsics.checkParameterIsNotNull(executor, "backgroundExecutor");
         Intrinsics.checkParameterIsNotNull(executor2, "uiExecutor");
         Intrinsics.checkParameterIsNotNull(lifecycle, "lifecycle");
@@ -50,8 +48,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
     }
 
     @Override // androidx.recyclerview.widget.RecyclerView.Adapter
-    @NotNull
-    public Holder onCreateViewHolder(@NotNull ViewGroup viewGroup, int i) {
+    public Holder onCreateViewHolder(ViewGroup viewGroup, int i) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "parent");
         View inflate = this.layoutInflater.inflate(C0016R$layout.controls_app_item, viewGroup, false);
         Intrinsics.checkExpressionValueIsNotNull(inflate, "layoutInflater.inflate(R…_app_item, parent, false)");
@@ -63,22 +60,20 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
         return this.listOfServices.size();
     }
 
-    public void onBindViewHolder(@NotNull Holder holder, int i) {
+    public void onBindViewHolder(Holder holder, int i) {
         Intrinsics.checkParameterIsNotNull(holder, "holder");
         holder.bindData(this.listOfServices.get(i));
         holder.itemView.setOnClickListener(new AppAdapter$onBindViewHolder$1(this, i));
     }
 
-    /* compiled from: AppAdapter.kt */
     public static final class Holder extends RecyclerView.ViewHolder {
-        @NotNull
         private final FavoritesRenderer favRenderer;
         private final TextView favorites;
         private final ImageView icon;
         private final TextView title;
 
         /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-        public Holder(@NotNull View view, @NotNull FavoritesRenderer favoritesRenderer) {
+        public Holder(View view, FavoritesRenderer favoritesRenderer) {
             super(view);
             Intrinsics.checkParameterIsNotNull(view, "view");
             Intrinsics.checkParameterIsNotNull(favoritesRenderer, "favRenderer");
@@ -94,7 +89,7 @@ public final class AppAdapter extends RecyclerView.Adapter<Holder> {
             this.favorites = (TextView) requireViewById3;
         }
 
-        public final void bindData(@NotNull ControlsServiceInfo controlsServiceInfo) {
+        public final void bindData(ControlsServiceInfo controlsServiceInfo) {
             Intrinsics.checkParameterIsNotNull(controlsServiceInfo, "data");
             this.icon.setImageDrawable(controlsServiceInfo.loadIcon());
             this.title.setText(controlsServiceInfo.loadLabel());

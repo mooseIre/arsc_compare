@@ -32,7 +32,7 @@ final class ControlActionCoordinatorImpl$touch$1 extends Lambda implements Funct
             ControlViewHolder controlViewHolder = this.$cvh;
             Intent intent = this.$control.getAppIntent().getIntent();
             Intrinsics.checkExpressionValueIsNotNull(intent, "control.getAppIntent().getIntent()");
-            controlActionCoordinatorImpl.showDialog(controlViewHolder, intent);
+            ControlActionCoordinatorImpl.access$showDialog(controlActionCoordinatorImpl, controlViewHolder, intent);
             return;
         }
         this.$cvh.action(new CommandAction(this.$templateId));

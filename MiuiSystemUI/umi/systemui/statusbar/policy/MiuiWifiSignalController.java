@@ -23,7 +23,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
             /* class com.android.systemui.statusbar.policy.$$Lambda$MiuiWifiSignalController$MUWAVC22i7B3vqU5A1N8W3Oo91w */
 
             public final void run() {
-                MiuiWifiSignalController.this.handleStatusUpdated();
+                MiuiWifiSignalController.lambda$MUWAVC22i7B3vqU5A1N8W3Oo91w(MiuiWifiSignalController.this);
             }
         });
         this.mWifiTracker = wifiStatusTracker;
@@ -106,8 +106,7 @@ public class MiuiWifiSignalController extends SignalController<WifiState, Signal
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void handleStatusUpdated() {
+    public void handleStatusUpdated() {
         ((WifiState) this.mCurrentState).statusLabel = this.mWifiTracker.statusLabel;
         notifyListenersIfNecessary();
     }
