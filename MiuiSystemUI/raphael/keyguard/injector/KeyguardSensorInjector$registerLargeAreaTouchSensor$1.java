@@ -1,8 +1,7 @@
 package com.android.keyguard.injector;
 
-/* access modifiers changed from: package-private */
 /* compiled from: KeyguardSensorInjector.kt */
-public final class KeyguardSensorInjector$registerLargeAreaTouchSensor$1 implements Runnable {
+final class KeyguardSensorInjector$registerLargeAreaTouchSensor$1 implements Runnable {
     final /* synthetic */ KeyguardSensorInjector this$0;
 
     KeyguardSensorInjector$registerLargeAreaTouchSensor$1(KeyguardSensorInjector keyguardSensorInjector) {

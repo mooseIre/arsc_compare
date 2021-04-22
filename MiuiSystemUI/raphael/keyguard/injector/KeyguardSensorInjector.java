@@ -246,7 +246,8 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    public final boolean shouldRegisterLargeAreaSensor() {
+    /* access modifiers changed from: public */
+    private final boolean shouldRegisterLargeAreaSensor() {
         return this.mIsDeviceSupportLargeAreaTouch && this.mSensorManager != null && this.mLargeAreaTouchSensor == null && !this.mKeyguardViewMediator.isHiding() && this.mKeyguardViewMediator.isShowing();
     }
 
