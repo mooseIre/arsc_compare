@@ -4,9 +4,8 @@ import android.animation.ValueAnimator;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: LightSourceDrawable.kt */
-public final class LightSourceDrawable$illuminate$$inlined$apply$lambda$2 implements ValueAnimator.AnimatorUpdateListener {
+final class LightSourceDrawable$illuminate$$inlined$apply$lambda$2 implements ValueAnimator.AnimatorUpdateListener {
     final /* synthetic */ LightSourceDrawable this$0;
 
     LightSourceDrawable$illuminate$$inlined$apply$lambda$2(LightSourceDrawable lightSourceDrawable) {

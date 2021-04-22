@@ -71,7 +71,6 @@ public final class ChallengeDialogs {
         return create;
     }
 
-    /* access modifiers changed from: public */
     private final void setInputType(EditText editText, boolean z) {
         if (z) {
             editText.setInputType(129);

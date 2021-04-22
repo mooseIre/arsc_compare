@@ -12,7 +12,7 @@ public final class ControlsFavoritingActivity$currentUserTracker$1 extends Curre
     ControlsFavoritingActivity$currentUserTracker$1(ControlsFavoritingActivity controlsFavoritingActivity, BroadcastDispatcher broadcastDispatcher, BroadcastDispatcher broadcastDispatcher2) {
         super(broadcastDispatcher2);
         this.this$0 = controlsFavoritingActivity;
-        this.startingUser = ControlsFavoritingActivity.access$getController$p(controlsFavoritingActivity).getCurrentUserId();
+        this.startingUser = controlsFavoritingActivity.controller.getCurrentUserId();
     }
 
     @Override // com.android.systemui.settings.CurrentUserTracker

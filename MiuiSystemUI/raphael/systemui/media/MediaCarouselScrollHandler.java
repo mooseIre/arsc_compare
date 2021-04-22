@@ -101,7 +101,6 @@ public class MediaCarouselScrollHandler {
         return this.contentTranslation;
     }
 
-    /* access modifiers changed from: public */
     private final void setContentTranslation(float f) {
         this.contentTranslation = f;
         this.mediaContent.setTranslationX(f);
@@ -343,7 +342,6 @@ public class MediaCarouselScrollHandler {
         return true;
     }
 
-    /* access modifiers changed from: public */
     private final boolean onFling(float f, float f2) {
         float f3 = f * f;
         double d = (double) f2;
