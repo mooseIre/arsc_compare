@@ -19,6 +19,7 @@ import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.phone.MiuiLightDarkIconManager;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
@@ -28,7 +29,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
     private MiuiBatteryMeterView mBattery;
     private CarrierText mCarrierText;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
-    private StatusBarIconController.MiuiLightDarkIconManager mIconManager;
+    private MiuiLightDarkIconManager mIconManager;
     private LinearLayout mStatusIcons;
     private boolean mSuperSave;
 
@@ -62,7 +63,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         networkSpeedView.setVisibilityByStatusBar(true);
         LinearLayout linearLayout = (LinearLayout) findViewById(C0014R$id.statusIcons);
         this.mStatusIcons = linearLayout;
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(linearLayout, (CommandQueue) Dependency.get(CommandQueue.class), true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
+        this.mIconManager = new MiuiLightDarkIconManager(linearLayout, (CommandQueue) Dependency.get(CommandQueue.class), true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
         this.mBattery = (MiuiBatteryMeterView) findViewById(C0014R$id.battery);
         this.mLastOrientation = getResources().getConfiguration().orientation;
         updateLayout();
@@ -179,7 +180,7 @@ public class MiuiQSHeaderView extends MiuiHeaderView implements SuperSaveModeCon
         if (carrierText != null) {
             carrierText.setTextColor(i);
         }
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
+        MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
         if (miuiLightDarkIconManager != null) {
             miuiLightDarkIconManager.setLight(!z, i);
         }

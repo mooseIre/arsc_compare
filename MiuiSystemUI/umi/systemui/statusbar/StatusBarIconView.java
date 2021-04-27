@@ -260,8 +260,8 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         if (z) {
             this.mDotRadius = (float) this.mStaticDotRadius;
         }
-        this.mSystemIconDesiredHeight = resources.getDimension(17105494);
-        this.mSystemIconIntrinsicHeight = resources.getDimension(17105493);
+        this.mSystemIconDesiredHeight = resources.getDimension(17105495);
+        this.mSystemIconIntrinsicHeight = resources.getDimension(17105494);
     }
 
     public void setNotification(ExpandedNotification expandedNotification) {
@@ -521,6 +521,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         return context.getString(C0020R$string.accessibility_desc_notification_icon, charSequence, charSequence2);
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setDecorColor(int i) {
         this.mDecorColor = i;
         updateDecorColor();
@@ -542,6 +543,7 @@ public class StatusBarIconView extends AnimatedImageView implements StatusIconDi
         }
     }
 
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setStaticDrawableColor(int i) {
         this.mDrawableColor = i;
         setColorInternal(i);

@@ -3,6 +3,9 @@ package com.android.systemui.statusbar.policy;
 import android.content.res.Configuration;
 
 public interface ConfigurationController extends CallbackController<ConfigurationListener> {
+    void notifyThemeChanged();
+
+    void onConfigurationChanged(Configuration configuration);
 
     public interface ConfigurationListener {
         default void onConfigChanged(Configuration configuration) {
@@ -25,9 +28,9 @@ public interface ConfigurationController extends CallbackController<Configuratio
 
         default void onUiModeChanged() {
         }
+
+        default void onMiuiThemeChanged(boolean z, boolean z2) {
+            onMiuiThemeChanged(z);
+        }
     }
-
-    void notifyThemeChanged();
-
-    void onConfigurationChanged(Configuration configuration);
 }

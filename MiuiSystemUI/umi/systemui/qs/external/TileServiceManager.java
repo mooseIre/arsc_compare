@@ -70,8 +70,8 @@ public class TileServiceManager {
                         if (intent.getBooleanExtra("android.intent.extra.REPLACING", false)) {
                             Intent intent2 = new Intent("android.service.quicksettings.action.QS_TILE");
                             intent2.setPackage(encodedSchemeSpecificPart);
-                            for (ResolveInfo resolveInfo : context.getPackageManager().queryIntentServicesAsUser(intent2, 0, ActivityManager.getCurrentUser())) {
-                                if (Objects.equals(resolveInfo.serviceInfo.packageName, component.getPackageName()) && Objects.equals(resolveInfo.serviceInfo.name, component.getClassName())) {
+                            for (ResolveInfo resolveInfo : context.getPackageManager().queryIntentServicesAsUser(intent2, 128, ActivityManager.getCurrentUser())) {
+                                if (Objects.equals(resolveInfo.serviceInfo.packageName, component.getPackageName()) && Objects.equals(resolveInfo.serviceInfo.name, component.getClassName()) && !CustomTile.isServiceRestricted(resolveInfo.serviceInfo)) {
                                     return;
                                 }
                             }

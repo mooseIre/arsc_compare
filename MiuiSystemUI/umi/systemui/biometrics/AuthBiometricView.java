@@ -18,7 +18,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0010R$color;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
@@ -36,15 +35,12 @@ public abstract class AuthBiometricView extends LinearLayout {
     private final Handler mHandler;
     private float mIconOriginalY;
     protected ImageView mIconView;
-    @VisibleForTesting
     protected TextView mIndicatorView;
     private final Injector mInjector;
     private int mMediumHeight;
     private int mMediumWidth;
-    @VisibleForTesting
     Button mNegativeButton;
     private AuthPanelController mPanelController;
-    @VisibleForTesting
     Button mPositiveButton;
     private boolean mRequireConfirmation;
     private final Runnable mResetErrorRunnable;
@@ -56,10 +52,8 @@ public abstract class AuthBiometricView extends LinearLayout {
     private final int mTextColorError;
     private final int mTextColorHint;
     private TextView mTitleView;
-    @VisibleForTesting
     Button mTryAgainButton;
 
-    /* access modifiers changed from: package-private */
     public interface Callback {
         void onAction(int i);
     }
@@ -82,8 +76,6 @@ public abstract class AuthBiometricView extends LinearLayout {
     /* access modifiers changed from: protected */
     public abstract boolean supportsSmallDialog();
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public static class Injector {
         AuthBiometricView mBiometricView;
 
@@ -131,6 +123,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$AuthBiometricView(View view) {
@@ -156,7 +149,6 @@ public abstract class AuthBiometricView extends LinearLayout {
         this(context, attributeSet, new Injector());
     }
 
-    @VisibleForTesting
     AuthBiometricView(Context context, AttributeSet attributeSet, Injector injector) {
         super(context, attributeSet);
         this.mSize = 0;
@@ -189,6 +181,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         };
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$AuthBiometricView() {
@@ -197,6 +190,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         Utils.notifyAccessibilityContentChanged(this.mAccessibilityManager, this);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$2 */
     public /* synthetic */ void lambda$new$2$AuthBiometricView() {
@@ -229,8 +223,6 @@ public abstract class AuthBiometricView extends LinearLayout {
         this.mRequireConfirmation = z;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void updateSize(final int i) {
         Log.v("BiometricPrompt/AuthBiometricView", "Current size: " + this.mSize + " New size: " + i);
         if (i == 1) {
@@ -344,12 +336,14 @@ public abstract class AuthBiometricView extends LinearLayout {
         Utils.notifyAccessibilityContentChanged(this.mAccessibilityManager, this);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateSize$3 */
     public /* synthetic */ void lambda$updateSize$3$AuthBiometricView(ValueAnimator valueAnimator) {
         this.mIconView.setY(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateSize$4 */
     public /* synthetic */ void lambda$updateSize$4$AuthBiometricView(ValueAnimator valueAnimator) {
@@ -366,15 +360,6 @@ public abstract class AuthBiometricView extends LinearLayout {
         }
     }
 
-    static /* synthetic */ void lambda$updateSize$5(AuthBiometricView authBiometricView, ValueAnimator valueAnimator) {
-        authBiometricView.setTranslationY(((Float) valueAnimator.getAnimatedValue()).floatValue());
-    }
-
-    static /* synthetic */ void lambda$updateSize$6(AuthBiometricView authBiometricView, ValueAnimator valueAnimator) {
-        authBiometricView.setAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
-    }
-
-    /* access modifiers changed from: package-private */
     public void updateState(int i) {
         Log.v("BiometricPrompt/AuthBiometricView", "newState: " + i);
         if (i == 1 || i == 2) {
@@ -417,6 +402,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         this.mState = i;
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateState$7 */
     public /* synthetic */ void lambda$updateState$7$AuthBiometricView() {
@@ -454,6 +440,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         }, (long) this.mInjector.getDelayAfterError());
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onError$8 */
     public /* synthetic */ void lambda$onError$8$AuthBiometricView() {
@@ -509,14 +496,11 @@ public abstract class AuthBiometricView extends LinearLayout {
         Utils.notifyAccessibilityContentChanged(this.mAccessibilityManager, this);
     }
 
-    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         onFinishInflateInternal();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void onFinishInflateInternal() {
         this.mTitleView = this.mInjector.getTitleView();
         this.mSubtitleView = this.mInjector.getSubtitleView();
@@ -549,6 +533,7 @@ public abstract class AuthBiometricView extends LinearLayout {
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflateInternal$9 */
     public /* synthetic */ void lambda$onFinishInflateInternal$9$AuthBiometricView(View view) {
@@ -561,12 +546,14 @@ public abstract class AuthBiometricView extends LinearLayout {
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflateInternal$10 */
     public /* synthetic */ void lambda$onFinishInflateInternal$10$AuthBiometricView(View view) {
         updateState(6);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflateInternal$11 */
     public /* synthetic */ void lambda$onFinishInflateInternal$11$AuthBiometricView(View view) {
@@ -576,20 +563,16 @@ public abstract class AuthBiometricView extends LinearLayout {
         Utils.notifyAccessibilityContentChanged(this.mAccessibilityManager, this);
     }
 
-    /* access modifiers changed from: package-private */
     public void startTransitionToCredentialUI() {
         updateSize(3);
         this.mCallback.onAction(6);
     }
 
-    /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         onAttachedToWindowInternal();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void onAttachedToWindowInternal() {
         String str;
         setText(this.mTitleView, this.mBiometricPromptBundle.getString("title"));
@@ -611,13 +594,11 @@ public abstract class AuthBiometricView extends LinearLayout {
         this.mTryAgainButton.setVisibility(this.mSavedState.getInt("try_agian_visibility"));
     }
 
-    /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mHandler.removeCallbacksAndMessages(null);
     }
 
-    /* access modifiers changed from: protected */
     public void onMeasure(int i, int i2) {
         int size = View.MeasureSpec.getSize(i);
         int size2 = View.MeasureSpec.getSize(i2);
@@ -647,8 +628,6 @@ public abstract class AuthBiometricView extends LinearLayout {
         onLayoutInternal();
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void onLayoutInternal() {
         if (this.mIconOriginalY == 0.0f) {
             this.mIconOriginalY = this.mIconView.getY();

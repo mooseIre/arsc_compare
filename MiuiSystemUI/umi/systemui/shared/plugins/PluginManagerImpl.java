@@ -105,6 +105,7 @@ public class PluginManagerImpl extends BroadcastReceiver implements PluginManage
         addPluginListener(str, pluginListener, cls, false);
     }
 
+    @Override // com.android.systemui.shared.plugins.PluginManager
     public <T extends Plugin> void addPluginListener(String str, PluginListener<T> pluginListener, Class cls, boolean z) {
         this.mPluginPrefs.addAction(str);
         PluginInstanceManager createPluginInstanceManager = this.mFactory.createPluginInstanceManager(this.mContext, str, pluginListener, z, this.mLooper, cls, this);

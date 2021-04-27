@@ -86,6 +86,20 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void setStaticDrawableColor(int i) {
+        ColorStateList valueOf = ColorStateList.valueOf(i);
+        this.mWifiIcon.setImageTintList(valueOf);
+        this.mWifiActivityView.setImageTintList(valueOf);
+        this.mWifiStandardView.setTextColor(i);
+        this.mDotView.setDecorColor(i);
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void setDecorColor(int i) {
+        this.mDotView.setDecorColor(i);
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public String getSlot() {
         return this.mSlot;
     }

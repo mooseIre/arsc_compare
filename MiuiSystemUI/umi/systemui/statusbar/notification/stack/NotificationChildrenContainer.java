@@ -34,7 +34,7 @@ import java.util.List;
 public class NotificationChildrenContainer extends ViewGroup {
     private static final AnimationProperties ALPHA_FADE_IN;
     @VisibleForTesting
-    static final int NUMBER_OF_CHILDREN_WHEN_COLLAPSED = 3;
+    public static final int NUMBER_OF_CHILDREN_WHEN_COLLAPSED = 3;
     @VisibleForTesting
     static final int NUMBER_OF_CHILDREN_WHEN_SYSTEM_EXPANDED = 5;
     private int mActualHeight;

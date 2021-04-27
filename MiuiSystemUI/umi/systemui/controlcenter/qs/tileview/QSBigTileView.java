@@ -485,7 +485,7 @@ public class QSBigTileView extends QSTileView {
             this.mExpandIndicatorAnim = Folme.useAt(view2).state();
             AnimState animState = new AnimState("clicked state");
             this.mExpandIndicatorClickState = animState;
-            animState.add(ViewProperty.ALPHA, f2, new long[0]);
+            animState.add(ViewProperty.ALPHA, (double) f2);
             AnimConfig animConfig = new AnimConfig();
             animConfig.setEase(EaseManager.getStyle(0, 300.0f, 0.99f, 0.6666f));
             this.mExpandIndicatorAnimConfig = animConfig;
@@ -509,9 +509,9 @@ public class QSBigTileView extends QSTileView {
                 }
                 this.mExpandIndicator.setAlpha(this.mInitAlpha);
                 AnimState animState = new AnimState("qs big tile up");
-                animState.add(ViewProperty.ROTATION_X, 0, new long[0]);
-                animState.add(ViewProperty.ROTATION_Y, 0, new long[0]);
-                animState.add(ViewProperty.TRANSLATION_Z, 0, new long[0]);
+                animState.add(ViewProperty.ROTATION_X, 0.0d);
+                animState.add(ViewProperty.ROTATION_Y, 0.0d);
+                animState.add(ViewProperty.TRANSLATION_Z, 0.0d);
                 state.to(animState, this.mBigQSTileAnimConfig);
                 return;
             }
@@ -547,9 +547,9 @@ public class QSBigTileView extends QSTileView {
             float sqrt = (float) ((Math.sqrt((double) ((f3 * f3) + (f4 * f4))) / 211.0d) * 25.0d);
             if (motionEvent.getAction() == 0) {
                 AnimState animState2 = new AnimState("qs big tile down");
-                animState2.add(ViewProperty.ROTATION_X, f5, new long[0]);
-                animState2.add(ViewProperty.ROTATION_Y, f6, new long[0]);
-                animState2.add(ViewProperty.TRANSLATION_Z, sqrt, new long[0]);
+                animState2.add(ViewProperty.ROTATION_X, (double) f5);
+                animState2.add(ViewProperty.ROTATION_Y, (double) f6);
+                animState2.add(ViewProperty.TRANSLATION_Z, (double) sqrt);
                 state.to(animState2, this.mBigQSTileAnimConfig);
                 return;
             }

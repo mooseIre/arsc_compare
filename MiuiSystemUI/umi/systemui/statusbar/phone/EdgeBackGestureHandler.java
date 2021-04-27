@@ -42,7 +42,6 @@ import com.android.systemui.settings.CurrentUserTracker;
 import com.android.systemui.shared.plugins.PluginManager;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.QuickStepContract;
-import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.shared.tracing.ProtoTraceable;
 import com.android.systemui.statusbar.phone.EdgeBackGestureHandler;
@@ -409,12 +408,6 @@ public class EdgeBackGestureHandler extends CurrentUserTracker implements Displa
     private void logGesture(int i) {
         if (this.mLogGesture) {
             this.mLogGesture = false;
-            int i2 = (int) this.mDownPoint.y;
-            int i3 = this.mIsOnLeftEdge ? 1 : 2;
-            PointF pointF = this.mDownPoint;
-            int i4 = (int) pointF.y;
-            PointF pointF2 = this.mEndPoint;
-            SysUiStatsLog.write(224, i, i2, i3, (int) pointF.x, i4, (int) pointF2.x, (int) pointF2.y, this.mEdgeWidthLeft + this.mLeftInset, this.mDisplaySize.x - (this.mEdgeWidthRight + this.mRightInset));
         }
     }
 

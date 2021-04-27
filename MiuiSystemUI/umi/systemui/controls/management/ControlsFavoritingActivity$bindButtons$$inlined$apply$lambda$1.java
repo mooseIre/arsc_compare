@@ -9,9 +9,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.android.systemui.C0020R$string;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 implements View.OnClickListener {
+final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 implements View.OnClickListener {
     final /* synthetic */ Button $this_apply;
     final /* synthetic */ ControlsFavoritingActivity this$0;
 

@@ -151,7 +151,7 @@ public class HeadsUpManagerPhone extends HeadsUpManager implements Dumpable, Vis
     /* access modifiers changed from: public */
     private void updateResources() {
         Resources resources = this.mContext.getResources();
-        this.mHeadsUpInset = resources.getDimensionPixelSize(17105489) + resources.getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
+        this.mHeadsUpInset = resources.getDimensionPixelSize(17105490) + resources.getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
     }
 
     /* access modifiers changed from: package-private */

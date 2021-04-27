@@ -109,8 +109,10 @@ public class KeyButtonView extends ImageView implements ButtonInterface {
                     KeyButtonView.this.mLongClicked = true;
                     return;
                 }
-                KeyButtonView.this.sendEvent(0, 128);
-                KeyButtonView.this.sendAccessibilityEvent(2);
+                if (KeyButtonView.this.mCode != 0) {
+                    KeyButtonView.this.sendEvent(0, 128);
+                    KeyButtonView.this.sendAccessibilityEvent(2);
+                }
                 KeyButtonView.this.mLongClicked = true;
             }
         };

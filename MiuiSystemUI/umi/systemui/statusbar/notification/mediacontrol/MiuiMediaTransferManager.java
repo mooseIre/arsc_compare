@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.MediaRoute2Info;
 import android.media.MediaRouter;
-import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -25,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MiuiMediaTransferManager {
-    private static final boolean MIUI_MEDIA_SEAMLESS_ENABLED = (Build.VERSION.SDK_INT > 28);
     private final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
     private MediaDevice mCurDevice;
     private LocalMediaManager mLocalMediaManager;
@@ -65,11 +63,19 @@ public class MiuiMediaTransferManager {
     };
     private String mPhoneName;
     private List<ImageView> mViews = new ArrayList();
+    private boolean sHasTransferComponent;
 
     public MiuiMediaTransferManager(Context context) {
         LocalBluetoothManager localBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class);
         this.mLocalMediaManager = new LocalMediaManager(context, localBluetoothManager, new InfoMediaManager(context, context.getPackageName(), null, localBluetoothManager), null);
         this.mMediaRouter = (MediaRouter) context.getSystemService("media_router");
+        checkForTransferComponent(context);
+    }
+
+    private void checkForTransferComponent(Context context) {
+        if (context.getPackageManager().resolveActivity(new Intent("miui.bluetooth.mible.MiuiAudioRelayActivity"), 0) != null) {
+            this.sHasTransferComponent = true;
+        }
     }
 
     /* access modifiers changed from: private */
@@ -138,7 +144,7 @@ public class MiuiMediaTransferManager {
     }
 
     public void setRemoved(View view) {
-        if (MIUI_MEDIA_SEAMLESS_ENABLED && this.mLocalMediaManager != null && view != null) {
+        if (this.mLocalMediaManager != null && view != null) {
             ImageView imageView = (ImageView) view.findViewById(C0014R$id.media_seamless_image);
             if (!this.mViews.remove(imageView)) {
                 Log.e("MiuiMediaTransferManager", "Tried to remove unknown view " + imageView);
@@ -150,7 +156,7 @@ public class MiuiMediaTransferManager {
     }
 
     public void applyMediaTransferView(ViewGroup viewGroup) {
-        if (MIUI_MEDIA_SEAMLESS_ENABLED && this.mLocalMediaManager != null && viewGroup != null) {
+        if (this.mLocalMediaManager != null && viewGroup != null && this.sHasTransferComponent) {
             ImageView imageView = (ImageView) viewGroup.findViewById(C0014R$id.media_seamless_image);
             if (imageView == null) {
                 Log.e("MiuiMediaTransferManager", "There is no {ImageView @media_seamless_image} in root");

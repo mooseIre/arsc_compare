@@ -58,10 +58,18 @@ public class KeyguardNotificationController {
                 super.handleMessage(message);
                 switch (message.what) {
                     case 3000:
-                        KeyguardNotificationController.this.handleInsertDB((ContentValues) message.obj);
+                        ContentValues buildValues = KeyguardNotificationController.this.buildValues((NotificationEntry) message.obj);
+                        if (buildValues != null) {
+                            KeyguardNotificationController.this.handleInsertDB(buildValues);
+                            return;
+                        }
                         return;
                     case 3001:
-                        KeyguardNotificationController.this.handleUpdateDB((ContentValues) message.obj);
+                        ContentValues buildValues2 = KeyguardNotificationController.this.buildValues((NotificationEntry) message.obj);
+                        if (buildValues2 != null) {
+                            KeyguardNotificationController.this.handleUpdateDB(buildValues2);
+                            return;
+                        }
                         return;
                     case 3002:
                         KeyguardNotificationController.this.handleDeleteDB(message.arg1);
@@ -104,18 +112,12 @@ public class KeyguardNotificationController {
             return;
         }
         updateSortedKeys(3000, notificationEntry.getKey());
-        ContentValues buildValues = buildValues(notificationEntry);
-        if (buildValues != null) {
-            this.mBgHandler.obtainMessage(3000, buildValues).sendToTarget();
-        }
+        this.mBgHandler.obtainMessage(3000, notificationEntry).sendToTarget();
     }
 
     public void update(NotificationEntry notificationEntry) {
         updateSortedKeys(3001, notificationEntry.getKey());
-        ContentValues buildValues = buildValues(notificationEntry);
-        if (buildValues != null) {
-            this.mBgHandler.obtainMessage(3001, buildValues).sendToTarget();
-        }
+        this.mBgHandler.obtainMessage(3001, notificationEntry).sendToTarget();
     }
 
     public void remove(String str) {
@@ -261,6 +263,8 @@ public class KeyguardNotificationController {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private ContentValues buildValues(NotificationEntry notificationEntry) {
         CharSequence charSequence;
         byte[] drawableToByte = drawableToByte(notificationEntry.getSbn().getAppIcon());

@@ -194,9 +194,9 @@ public class DisplayLayout {
 
     static int getStatusBarHeight(boolean z, Resources resources) {
         if (z) {
-            return resources.getDimensionPixelSize(17105490);
+            return resources.getDimensionPixelSize(17105491);
         }
-        return resources.getDimensionPixelSize(17105491);
+        return resources.getDimensionPixelSize(17105492);
     }
 
     public static DisplayCutout calculateDisplayCutoutForRotation(DisplayCutout displayCutout, int i, int i2, int i3) {

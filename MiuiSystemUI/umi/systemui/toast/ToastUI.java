@@ -38,7 +38,7 @@ public class ToastUI extends SystemUI implements CommandQueue.Callbacks {
         this.mAccessibilityManager = iAccessibilityManager;
         Resources resources = this.mContext.getResources();
         this.mGravity = resources.getInteger(17694915);
-        this.mY = resources.getDimensionPixelSize(17105547);
+        this.mY = resources.getDimensionPixelSize(17105548);
     }
 
     @Override // com.android.systemui.SystemUI

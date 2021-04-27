@@ -5,9 +5,8 @@ import android.view.View;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-public final class ControlsUiControllerImpl$showInitialSetupView$1 implements View.OnClickListener {
+final class ControlsUiControllerImpl$showInitialSetupView$1 implements View.OnClickListener {
     final /* synthetic */ ControlsUiControllerImpl this$0;
 
     ControlsUiControllerImpl$showInitialSetupView$1(ControlsUiControllerImpl controlsUiControllerImpl) {

@@ -131,7 +131,7 @@ public enum ScrimState {
             this.mFrontAlpha = 0.0f;
             this.mBubbleAlpha = 0.0f;
             this.mAnimationDuration = this.mKeyguardFadingAway ? this.mKeyguardFadingAwayDuration : 300;
-            this.mAnimateChange = !this.mLaunchingAffordanceWithPreview;
+            this.mAnimateChange = false;
             this.mFrontTint = 0;
             this.mBehindTint = 0;
             this.mBubbleTint = 0;

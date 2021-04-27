@@ -8,41 +8,39 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import android.widget.LinearLayout;
+import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.CommandQueue;
-import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.EncryptionHelper;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
-import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.policy.NetworkController;
 
 public class CollapsedStatusBarFragment extends Fragment implements CommandQueue.Callbacks, StatusBarStateController.StateListener {
     protected View mCenteredIconArea;
-    protected MiuiClock mClockView;
-    private CommandQueue mCommandQueue;
-    private StatusBarIconController.DarkIconManager mDarkIconManager;
+    private View mClockView;
+    protected CommandQueue mCommandQueue;
     private int mDisabled1;
     protected KeyguardStateController mKeyguardStateController;
     private NetworkController mNetworkController;
     protected View mNotificationIconAreaInner;
-    private View mOperatorNameFrame;
+    protected View mOperatorNameFrame;
     private NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback() {
         /* class com.android.systemui.statusbar.phone.CollapsedStatusBarFragment.AnonymousClass1 */
 
         @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsAirplaneMode(NetworkController.IconState iconState) {
-            CollapsedStatusBarFragment.this.mCommandQueue.recomputeDisableFlags(CollapsedStatusBarFragment.this.getContext().getDisplayId(), true);
+            CollapsedStatusBarFragment collapsedStatusBarFragment = CollapsedStatusBarFragment.this;
+            collapsedStatusBarFragment.mCommandQueue.recomputeDisableFlags(collapsedStatusBarFragment.getContext().getDisplayId(), true);
         }
     };
     protected PhoneStatusBarView mStatusBar;
     private StatusBar mStatusBarComponent;
     private StatusBarStateController mStatusBarStateController;
-    private LinearLayout mSystemIconArea;
+    private View mSystemIconArea;
 
     /* access modifiers changed from: protected */
     public void hideMiuiDripNetworkSpeedView(boolean z) {
@@ -87,13 +85,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         if (bundle != null && bundle.containsKey("panel_state")) {
             this.mStatusBar.restoreHierarchyState(bundle.getSparseParcelableArray("panel_state"));
         }
-        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0014R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
-        this.mDarkIconManager = darkIconManager;
-        darkIconManager.setShouldLog(true);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDarkIconManager);
-        this.mSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0014R$id.system_icon_area);
+        this.mSystemIconArea = this.mStatusBar.findViewById(C0014R$id.system_icon_area);
         initMiuiViewsOnViewCreated(view);
-        this.mClockView = (MiuiClock) this.mStatusBar.findViewById(C0014R$id.clock);
+        this.mClockView = this.mStatusBar.findViewById(C0014R$id.clock);
         showSystemIconArea(false);
         showClock(false);
         initEmergencyCryptkeeperText();
@@ -121,7 +115,6 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     public void onDestroyView() {
         super.onDestroyView();
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDarkIconManager);
         if (this.mNetworkController.hasEmergencyCryptKeeperText()) {
             this.mNetworkController.removeCallback(this.mSignalCallback);
         }
@@ -224,7 +217,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     /* access modifiers changed from: protected */
     public int clockHiddenMode() {
-        return (this.mStatusBar.isClosed() || this.mKeyguardStateController.isShowing() || this.mStatusBarStateController.isDozing() || this.mStatusBarComponent.headsUpShouldBeVisible()) ? 8 : 4;
+        return (this.mStatusBar.isClosed() || this.mKeyguardStateController.isShowing() || this.mStatusBarStateController.isDozing()) ? 8 : 4;
     }
 
     public void hideNotificationIconArea(boolean z) {
@@ -305,8 +298,11 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         }
     }
 
-    private void initOperatorName() {
-        this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0014R$id.operator_name)).inflate();
+    /* access modifiers changed from: protected */
+    public void initOperatorName() {
+        if (getResources().getBoolean(C0009R$bool.config_showOperatorNameInStatusBar)) {
+            this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0014R$id.operator_name)).inflate();
+        }
     }
 
     @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener

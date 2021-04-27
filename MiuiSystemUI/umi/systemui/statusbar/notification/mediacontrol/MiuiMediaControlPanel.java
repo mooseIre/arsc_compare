@@ -31,7 +31,12 @@ import miuix.animation.Folme;
 import miuix.animation.base.AnimConfig;
 
 public class MiuiMediaControlPanel extends MediaControlPanel {
+    private final int COLLAPSED_GAP;
+    private final int COLLAPSED_GAP_EXTRA;
+    private final int EXPANDED_GAP;
+    private int collapsedCount = 0;
     private int direction;
+    private int expandedCount = 0;
     private final MiuiMediaTransferManager mMediaTransferManager;
     private final Set<AsyncTask<?, ?, ?>> mProcessArtworkTasks = new ArraySet();
 
@@ -39,6 +44,9 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         super(context, executor, activityStarter, mediaViewController, seekBarViewModel);
         this.mMediaTransferManager = miuiMediaTransferManager;
         this.direction = this.mContext.getResources().getConfiguration().getLayoutDirection();
+        this.COLLAPSED_GAP_EXTRA = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_collapsed_extra);
+        this.COLLAPSED_GAP = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_collapsed_gap);
+        this.EXPANDED_GAP = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_expanded_gap);
     }
 
     @Override // com.android.systemui.media.MediaControlPanel
@@ -133,65 +141,81 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
     }
 
     private void setMediaActions(MediaData mediaData, PlayerViewHolder playerViewHolder, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
+        boolean z;
         int[] iArr = MediaControlPanel.ACTION_IDS;
         List<Integer> actionsToShowInCompact = mediaData.getActionsToShowInCompact();
         List<MediaAction> actions = mediaData.getActions();
         int i = 0;
         int i2 = 0;
-        while (i < actions.size() && i < iArr.length) {
-            int i3 = iArr[i];
-            ImageButton action = playerViewHolder.getAction(i3);
-            MediaAction mediaAction = actions.get(i);
-            action.setImageDrawable(mediaAction.getDrawable());
-            action.setContentDescription(mediaAction.getContentDescription());
-            Notification.Action notificationAction = mediaAction.getNotificationAction();
-            Runnable action2 = mediaAction.getAction();
-            if (notificationAction != null && notificationAction.actionIntent != null) {
-                enableActionButton(action, new View.OnClickListener(notificationAction, action) {
-                    /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$37drBkuRL76GGV6bNhqhR5LC18 */
-                    public final /* synthetic */ Notification.Action f$0;
-                    public final /* synthetic */ ImageButton f$1;
-
-                    {
-                        this.f$0 = r1;
-                        this.f$1 = r2;
-                    }
-
-                    public final void onClick(View view) {
-                        Notification.Action action;
-                        ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(this.f$1, action.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(this.f$0.actionIntent));
-                    }
-                });
-            } else if (action2 != null) {
-                enableActionButton(action, new View.OnClickListener(action2) {
-                    /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$SmuBjPadan0Q8RJ_PKy9AlL7YwQ */
-                    public final /* synthetic */ Runnable f$0;
-
-                    {
-                        this.f$0 = r1;
-                    }
-
-                    public final void onClick(View view) {
-                        this.f$0.run();
-                    }
-                });
+        while (true) {
+            z = true;
+            if (i >= actions.size() || i >= iArr.length) {
+                constraintSet2.constrainWidth(C0014R$id.actions, this.COLLAPSED_GAP_EXTRA + (this.COLLAPSED_GAP * i2));
+                constraintSet.constrainWidth(C0014R$id.actions, this.EXPANDED_GAP * i);
             } else {
-                action.setEnabled(false);
+                int i3 = iArr[i];
+                ImageButton action = playerViewHolder.getAction(i3);
+                MediaAction mediaAction = actions.get(i);
+                action.setImageDrawable(mediaAction.getDrawable());
+                action.setContentDescription(mediaAction.getContentDescription());
+                Notification.Action notificationAction = mediaAction.getNotificationAction();
+                Runnable action2 = mediaAction.getAction();
+                if (notificationAction != null && notificationAction.actionIntent != null) {
+                    enableActionButton(action, new View.OnClickListener(notificationAction, action) {
+                        /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$37drBkuRL76GGV6bNhqhR5LC18 */
+                        public final /* synthetic */ Notification.Action f$0;
+                        public final /* synthetic */ ImageButton f$1;
+
+                        {
+                            this.f$0 = r1;
+                            this.f$1 = r2;
+                        }
+
+                        public final void onClick(View view) {
+                            Notification.Action action;
+                            ((NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class)).getRemoteViewsOnClickHandler().onClickHandler(this.f$1, action.actionIntent, RemoteViews.RemoteResponse.fromPendingIntent(this.f$0.actionIntent));
+                        }
+                    });
+                } else if (action2 != null) {
+                    enableActionButton(action, new View.OnClickListener(action2) {
+                        /* class com.android.systemui.statusbar.notification.mediacontrol.$$Lambda$MiuiMediaControlPanel$SmuBjPadan0Q8RJ_PKy9AlL7YwQ */
+                        public final /* synthetic */ Runnable f$0;
+
+                        {
+                            this.f$0 = r1;
+                        }
+
+                        public final void onClick(View view) {
+                            this.f$0.run();
+                        }
+                    });
+                } else {
+                    action.setEnabled(false);
+                }
+                boolean contains = actionsToShowInCompact.contains(Integer.valueOf(i));
+                if (contains) {
+                    i2++;
+                }
+                setVisibleAndAlpha(constraintSet2, i3, contains);
+                setVisibleAndAlpha(constraintSet, i3, true);
+                i++;
             }
-            boolean contains = actionsToShowInCompact.contains(Integer.valueOf(i));
-            if (contains) {
-                i2++;
-            }
-            setVisibleAndAlpha(constraintSet2, i3, contains);
-            setVisibleAndAlpha(constraintSet, i3, true);
-            i++;
         }
-        constraintSet2.constrainWidth(C0014R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_collapsed_gap) * i2);
-        constraintSet.constrainWidth(C0014R$id.actions, this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_expanded_gap) * i);
+        constraintSet2.constrainWidth(C0014R$id.actions, this.COLLAPSED_GAP_EXTRA + (this.COLLAPSED_GAP * i2));
+        constraintSet.constrainWidth(C0014R$id.actions, this.EXPANDED_GAP * i);
+        if (this.collapsedCount == i2 && this.expandedCount == i) {
+            z = false;
+        } else {
+            this.collapsedCount = i2;
+            this.expandedCount = i;
+        }
         while (i < iArr.length) {
             setVisibleAndAlpha(constraintSet, iArr[i], false);
             setVisibleAndAlpha(constraintSet2, iArr[i], false);
             i++;
+        }
+        if (z) {
+            this.mMediaViewController.refreshState();
         }
     }
 

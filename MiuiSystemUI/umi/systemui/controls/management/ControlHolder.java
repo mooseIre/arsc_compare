@@ -79,7 +79,8 @@ public final class ControlHolder extends Holder {
     }
 
     /* access modifiers changed from: private */
-    public final CharSequence stateDescription(boolean z) {
+    /* access modifiers changed from: public */
+    private final CharSequence stateDescription(boolean z) {
         if (!z) {
             return this.notFavoriteStateDescription;
         }

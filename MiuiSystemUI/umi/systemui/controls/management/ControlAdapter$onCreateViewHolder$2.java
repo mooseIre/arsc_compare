@@ -26,9 +26,9 @@ final class ControlAdapter$onCreateViewHolder$2 extends Lambda implements Functi
 
     public final void invoke(@NotNull String str, boolean z) {
         Intrinsics.checkParameterIsNotNull(str, "id");
-        ControlsModel access$getModel$p = ControlAdapter.access$getModel$p(this.this$0);
-        if (access$getModel$p != null) {
-            access$getModel$p.changeFavoriteStatus(str, z);
+        ControlsModel controlsModel = this.this$0.model;
+        if (controlsModel != null) {
+            controlsModel.changeFavoriteStatus(str, z);
         }
     }
 }

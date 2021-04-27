@@ -3,26 +3,25 @@ package com.android.systemui.media;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
+import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager;
 import com.android.systemui.statusbar.notification.stack.MediaHeaderView;
+import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
+import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: KeyguardMediaController.kt */
 public class KeyguardMediaController {
     private final KeyguardBypassController bypassController;
     private final MediaHost mediaHost;
     private final NotificationLockscreenUserManager notifLockscreenUserManager;
+    private MiuiNotificationSectionsManager notificationSectionsManager;
     private final SysuiStatusBarStateController statusBarStateController;
-    @Nullable
     private MediaHeaderView view;
-    @Nullable
     private Function1<? super Boolean, Unit> visibilityChangedListener;
 
-    public KeyguardMediaController(@NotNull MediaHost mediaHost2, @NotNull KeyguardBypassController keyguardBypassController, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager) {
+    public KeyguardMediaController(MediaHost mediaHost2, KeyguardBypassController keyguardBypassController, SysuiStatusBarStateController sysuiStatusBarStateController, NotificationLockscreenUserManager notificationLockscreenUserManager) {
         Intrinsics.checkParameterIsNotNull(mediaHost2, "mediaHost");
         Intrinsics.checkParameterIsNotNull(keyguardBypassController, "bypassController");
         Intrinsics.checkParameterIsNotNull(sysuiStatusBarStateController, "statusBarStateController");
@@ -35,7 +34,6 @@ public class KeyguardMediaController {
             /* class com.android.systemui.media.KeyguardMediaController.AnonymousClass1 */
             final /* synthetic */ KeyguardMediaController this$0;
 
-            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
@@ -47,29 +45,37 @@ public class KeyguardMediaController {
         });
     }
 
-    public final void setVisibilityChangedListener(@Nullable Function1<? super Boolean, Unit> function1) {
+    public final void setVisibilityChangedListener(Function1<? super Boolean, Unit> function1) {
         this.visibilityChangedListener = function1;
     }
 
-    @Nullable
     public final MediaHeaderView getView() {
         return this.view;
     }
 
-    public final void attach(@NotNull MediaHeaderView mediaHeaderView) {
+    public final void setNotificationSectionsManager(MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
+        this.notificationSectionsManager = miuiNotificationSectionsManager;
+    }
+
+    public final void attach(MediaHeaderView mediaHeaderView) {
         Intrinsics.checkParameterIsNotNull(mediaHeaderView, "mediaView");
         this.view = mediaHeaderView;
+        if (mediaHeaderView instanceof MiuiMediaHeaderView) {
+            if (mediaHeaderView != null) {
+                ((MiuiMediaHeaderView) mediaHeaderView).setNotificationSectionsManager(this.notificationSectionsManager);
+            } else {
+                throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView");
+            }
+        }
         this.mediaHost.addVisibilityChangeListener(new KeyguardMediaController$attach$1(this));
         this.mediaHost.setExpansion(0.0f);
-        this.mediaHost.setShowsOnlyActiveMedia(true);
+        this.mediaHost.setShowsOnlyActiveMedia(false);
         this.mediaHost.setFalsingProtectionNeeded(true);
         this.mediaHost.init(2);
         mediaHeaderView.setContentView(this.mediaHost.getHostView());
         updateVisibility();
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void updateVisibility() {
         Function1<? super Boolean, Unit> function1;
         int i = 0;

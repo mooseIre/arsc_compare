@@ -409,6 +409,29 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
     }
 
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void setStaticDrawableColor(int i) {
+        ColorStateList valueOf = ColorStateList.valueOf(i);
+        this.mMobile.setImageTintList(valueOf);
+        this.mVowifi.setImageTintList(valueOf);
+        this.mSpeechHd.setImageTintList(valueOf);
+        this.mSmallRoaming.setImageTintList(valueOf);
+        this.mRightInOut.setImageTintList(valueOf);
+        this.mLeftInOut.setImageTintList(valueOf);
+        this.mMobileTypeImage.setImageTintList(valueOf);
+        this.mSmallHd.setImageTintList(valueOf);
+        this.mMobileType.setTextColor(valueOf);
+        this.mMobileTypeSingle.setTextColor(valueOf);
+        this.mVolte.setImageTintList(valueOf);
+        this.mMobileRoaming.setImageTintList(valueOf);
+        this.mDotView.setDecorColor(i);
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void setDecorColor(int i) {
+        this.mDotView.setDecorColor(i);
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public boolean isIconVisible() {
         return this.mState.visible;
     }

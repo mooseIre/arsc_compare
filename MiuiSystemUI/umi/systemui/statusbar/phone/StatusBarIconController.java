@@ -1,7 +1,6 @@
 package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.ArraySet;
@@ -110,34 +109,29 @@ public interface StatusBarIconController {
         }
     }
 
-    public static class MiuiLightDarkIconManager extends IconManager {
+    public static class TintedIconManager extends IconManager {
         private int mColor;
-        private boolean mLight;
 
-        public MiuiLightDarkIconManager(ViewGroup viewGroup, CommandQueue commandQueue, boolean z, int i) {
+        public TintedIconManager(ViewGroup viewGroup, CommandQueue commandQueue) {
             super(viewGroup, commandQueue);
-            this.mLight = z;
-            this.mColor = i;
         }
 
         /* access modifiers changed from: protected */
         @Override // com.android.systemui.statusbar.phone.StatusBarIconController.IconManager
         public void onIconAdded(int i, String str, boolean z, StatusBarIconHolder statusBarIconHolder) {
             StatusIconDisplayable addHolder = addHolder(i, str, z, statusBarIconHolder);
-            Rect rect = new Rect();
-            float f = this.mLight ? 0.0f : 1.0f;
-            int i2 = this.mColor;
-            addHolder.onDarkChanged(rect, f, i2, i2, i2, false);
+            addHolder.setStaticDrawableColor(this.mColor);
+            addHolder.setDecorColor(this.mColor);
         }
 
-        public void setLight(boolean z, int i) {
-            this.mLight = z;
+        public void setTint(int i) {
             this.mColor = i;
-            Rect rect = new Rect();
             for (int i2 = 0; i2 < this.mGroup.getChildCount(); i2++) {
                 View childAt = this.mGroup.getChildAt(i2);
                 if (childAt instanceof StatusIconDisplayable) {
-                    ((StatusIconDisplayable) childAt).onDarkChanged(rect, z ? 0.0f : 1.0f, i, i, i, false);
+                    StatusIconDisplayable statusIconDisplayable = (StatusIconDisplayable) childAt;
+                    statusIconDisplayable.setStaticDrawableColor(this.mColor);
+                    statusIconDisplayable.setDecorColor(this.mColor);
                 }
             }
         }
@@ -147,7 +141,6 @@ public interface StatusBarIconController {
         protected final Context mContext;
         protected DemoStatusIcons mDemoStatusIcons;
         protected boolean mDemoable = true;
-        protected boolean mDrip;
         protected final ViewGroup mGroup;
         protected int mIconSize;
         private boolean mIsInDemoMode;
@@ -240,10 +233,9 @@ public interface StatusBarIconController {
             return StatusBarWifiView.fromContext(this.mContext, str);
         }
 
-        private StatusBarMobileView onCreateStatusBarMobileView(String str) {
-            StatusBarMobileView fromContext = StatusBarMobileView.fromContext(this.mContext, str);
-            fromContext.setDrip(this.mDrip);
-            return fromContext;
+        /* access modifiers changed from: protected */
+        public StatusBarMobileView onCreateStatusBarMobileView(String str) {
+            return StatusBarMobileView.fromContext(this.mContext, str);
         }
 
         /* access modifiers changed from: protected */
@@ -322,10 +314,6 @@ public interface StatusBarIconController {
             if (this.mIsInDemoMode) {
                 this.mDemoStatusIcons.updateMobileState(mobileIconState);
             }
-        }
-
-        public void setDrip(boolean z) {
-            this.mDrip = z;
         }
     }
 }

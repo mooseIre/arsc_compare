@@ -218,6 +218,10 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         return false;
     }
 
+    public boolean isWindowShow() {
+        return this.mIsExpand;
+    }
+
     public void updateNavigationBarSlippery() {
         if (this.mStatusBar.getNavigationBarView() != null) {
             this.mStatusBar.getNavigationBarView().updateSlippery();

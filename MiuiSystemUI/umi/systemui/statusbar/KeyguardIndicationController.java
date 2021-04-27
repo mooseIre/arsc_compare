@@ -27,6 +27,7 @@ import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.app.IBatteryStats;
 import com.android.internal.widget.ViewClippingUtil;
+import com.android.keyguard.KeyguardSecurityModel;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.MiuiKeyguardFingerprintUtils$FingerprintIdentificationState;
@@ -129,6 +130,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     private boolean mPowerPluggedInWired;
     private final Resources mResources;
     private String mRestingIndication;
+    private KeyguardSecurityModel mSecurityModel;
     private StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
     private final StatusBarStateController mStatusBarStateController;
     private MiuiKeyguardIndicationTextView mTextView;
@@ -171,6 +173,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         Resources resources = context.getResources();
         this.mResources = resources;
         this.mUpArrowIndication = resources.getString(C0020R$string.default_lockscreen_unlock_hint_text);
+        this.mSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mDevicePolicyManager = devicePolicyManager;
         this.mKeyguardStateController = keyguardStateController;
@@ -802,12 +805,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleFaceUnlockBouncerMessage(String str) {
-        String str2;
-        if (this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth()) {
-            str2 = this.mResources.getString(C0020R$string.face_unlock_passwork_and_fingerprint);
-        } else {
-            str2 = this.mResources.getString(C0020R$string.input_password_hint_text);
-        }
+        String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
         if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
             if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
                 str = this.mResources.getString(C0020R$string.face_unlock_fail);
@@ -815,7 +813,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                 str = this.mResources.getString(C0020R$string.face_unlock_fail_retry_global);
             }
         }
-        this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
     }
 
     /* access modifiers changed from: private */
@@ -834,7 +832,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             str2 = this.mResources.getString(C0020R$string.fingerprint_try_again_text);
             str = this.mResources.getString(C0020R$string.fingerprint_try_again_msg);
         } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
-            str2 = this.mResources.getString(C0020R$string.fingerprint_not_identified_title);
+            str2 = getTitle();
             str = this.mResources.getString(C0020R$string.fingerprint_not_identified_msg);
         } else {
             if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
@@ -853,7 +851,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     str = str2;
                 }
             } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
-                str2 = this.mResources.getString(C0020R$string.fingerprint_not_identified_title);
+                str2 = getTitle();
                 str = this.mResources.getString(C0020R$string.fingerprint_again_identified_msg);
             }
             str = str2;
@@ -881,25 +879,109 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: public */
     private void handleShowBouncerMessage() {
         String str;
-        String str2;
-        if (this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth()) {
-            str = this.mResources.getString(C0020R$string.face_unlock_passwork_and_fingerprint);
-        } else {
-            str = this.mResources.getString(C0020R$string.input_password_hint_text);
-        }
+        String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
         if (this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout()) {
-            str2 = this.mResources.getString(C0020R$string.fingerprint_not_identified_msg);
+            str = this.mResources.getString(C0020R$string.fingerprint_not_identified_msg);
         } else {
             if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
                 if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
-                    str2 = this.mResources.getString(C0020R$string.face_unlock_fail);
+                    str = this.mResources.getString(C0020R$string.face_unlock_fail);
                 } else if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).shouldShowFaceUnlockRetryMessageInBouncer()) {
-                    str2 = this.mResources.getString(C0020R$string.face_unlock_fail_retry_global);
+                    str = this.mResources.getString(C0020R$string.face_unlock_fail_retry_global);
                 }
             }
-            str2 = CodeInjection.MD5;
+            str = CodeInjection.MD5;
         }
-        this.mStatusBarKeyguardViewManager.showBouncerMessage(str, str2, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: com.android.systemui.statusbar.KeyguardIndicationController$6  reason: invalid class name */
+    public static /* synthetic */ class AnonymousClass6 {
+        static final /* synthetic */ int[] $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(14:0|1|2|3|4|5|6|7|8|9|10|11|12|(3:13|14|16)) */
+        /* JADX WARNING: Can't wrap try/catch for region: R(16:0|1|2|3|4|5|6|7|8|9|10|11|12|13|14|16) */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:11:0x003e */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:13:0x0049 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x001d */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:7:0x0028 */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:9:0x0033 */
+        static {
+            /*
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode[] r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode = r0
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Pattern     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.PIN     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                int[] r0 = com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0028 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Password     // Catch:{ NoSuchFieldError -> 0x0028 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0028 }
+                r2 = 3
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0028 }
+            L_0x0028:
+                int[] r0 = com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0033 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Invalid     // Catch:{ NoSuchFieldError -> 0x0033 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0033 }
+                r2 = 4
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0033 }
+            L_0x0033:
+                int[] r0 = com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x003e }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.None     // Catch:{ NoSuchFieldError -> 0x003e }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x003e }
+                r2 = 5
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x003e }
+            L_0x003e:
+                int[] r0 = com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0049 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.SimPin     // Catch:{ NoSuchFieldError -> 0x0049 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0049 }
+                r2 = 6
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0049 }
+            L_0x0049:
+                int[] r0 = com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x0054 }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.SimPuk     // Catch:{ NoSuchFieldError -> 0x0054 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0054 }
+                r2 = 7
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0054 }
+            L_0x0054:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass6.<clinit>():void");
+        }
+    }
+
+    private String getTitleWithFingerprint() {
+        int i = AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
+        if (i == 1) {
+            return this.mContext.getResources().getString(C0020R$string.face_unlock_pattern_and_fingerprint);
+        }
+        if (i != 2) {
+            return i != 3 ? this.mContext.getResources().getString(C0020R$string.face_unlock_passwork_and_fingerprint) : this.mContext.getResources().getString(C0020R$string.face_unlock_password_and_fingerprint);
+        }
+        return this.mContext.getResources().getString(C0020R$string.face_unlock_pin_and_fingerprint);
+    }
+
+    private String getTitle() {
+        int i = AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
+        if (i == 1) {
+            return this.mContext.getResources().getString(C0020R$string.input_lockscreen_pattern_hint_text);
+        }
+        if (i != 2) {
+            return i != 3 ? this.mContext.getResources().getString(C0020R$string.input_password_hint_text) : this.mContext.getResources().getString(C0020R$string.input_lockscreen_password_hint_text);
+        }
+        return this.mContext.getResources().getString(C0020R$string.input_lockscreen_pin_hint_text);
     }
 
     public void onStartedWakingUp() {

@@ -543,28 +543,33 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         }
         T t4 = this.mCurrentState;
         ((MobileState) t4).miuiVoiceType = voiceNetworkType;
-        if ((((MobileIconGroup) ((MobileState) t4).iconGroup).mMiuiDataType == 0 && !((MobileState) t4).fiveGConnected) || (isCdma() && !isCallIdle())) {
+        boolean z2 = (((MobileIconGroup) ((MobileState) t4).iconGroup).mMiuiDataType == 0 && !((MobileState) t4).fiveGConnected) || (isCdma() && !isCallIdle());
+        if (!Utils.isInService(this.mServiceState)) {
             T t5 = this.mCurrentState;
-            ((MobileState) t5).showType = ((MobileState) t5).miuiVoiceType;
-            ((MobileState) t5).showName = transformVoiceTypeToName(((MobileState) t5).showType);
-        } else {
+            ((MobileState) t5).showType = -1;
+            ((MobileState) t5).showName = CodeInjection.MD5;
+        } else if (z2) {
             T t6 = this.mCurrentState;
-            ((MobileState) t6).showType = ((MobileState) t6).miuiDataType;
-            ((MobileState) t6).showName = getMobileTypeName(((MobileState) t6).showType);
+            ((MobileState) t6).showType = ((MobileState) t6).miuiVoiceType;
+            ((MobileState) t6).showName = transformVoiceTypeToName(((MobileState) t6).showType);
+        } else {
+            T t7 = this.mCurrentState;
+            ((MobileState) t7).showType = ((MobileState) t7).miuiDataType;
+            ((MobileState) t7).showName = getMobileTypeName(((MobileState) t7).showType);
         }
         if (((MobileState) this.mCurrentState).CTSim) {
             ServiceState serviceState3 = this.mServiceState;
-            boolean z2 = (serviceState3 == null || (rilVoiceRadioTechnology = serviceState3.getRilVoiceRadioTechnology()) == 6 || rilVoiceRadioTechnology == 4 || rilVoiceRadioTechnology == 5) ? false : true;
-            T t7 = this.mCurrentState;
-            MobileState mobileState = (MobileState) t7;
-            if (!z2 || !this.mEnableVolteForSlot || ((MobileState) t7).volte || ((MobileState) t7).airplaneMode || ((MobileState) t7).roaming) {
+            boolean z3 = (serviceState3 == null || (rilVoiceRadioTechnology = serviceState3.getRilVoiceRadioTechnology()) == 6 || rilVoiceRadioTechnology == 4 || rilVoiceRadioTechnology == 5) ? false : true;
+            T t8 = this.mCurrentState;
+            MobileState mobileState = (MobileState) t8;
+            if (!z3 || !this.mEnableVolteForSlot || ((MobileState) t8).volte || ((MobileState) t8).airplaneMode || ((MobileState) t8).roaming) {
                 z = false;
             }
             mobileState.volteNoService = z;
         }
-        T t8 = this.mCurrentState;
-        if (((MobileState) t8).volteNoService && !this.mSupportDualVolte && !((MobileState) t8).dataSim) {
-            ((MobileState) t8).volteNoService = false;
+        T t9 = this.mCurrentState;
+        if (((MobileState) t9).volteNoService && !this.mSupportDualVolte && !((MobileState) t9).dataSim) {
+            ((MobileState) t9).volteNoService = false;
         }
         notifyListenersIfNecessary();
     }

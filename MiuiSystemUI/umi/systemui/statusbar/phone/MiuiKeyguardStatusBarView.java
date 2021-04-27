@@ -7,26 +7,28 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0007R$array;
 import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
-import com.android.systemui.statusbar.phone.StatusBarIconController;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.android.systemui.statusbar.policy.RegionController;
+import com.android.systemui.statusbar.views.NetworkSpeedView;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements RegionController.Callback, DualClockObserver.Callback, ForceBlackObserver.Callback {
+    private ControlPanelWindowManager mControlPanelWindowManager;
     private CurrentUserTracker mCurrentUserTracker = new CurrentUserTracker((BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class)) {
         /* class com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView.AnonymousClass1 */
 
@@ -36,9 +38,13 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         }
     };
     private boolean mDark = false;
+    private MiuiLightDarkIconManager mDripLeftIconManager;
+    private MiuiDripLeftStatusIconContainer mDripLeftStatusIconContainer;
     private boolean mForceBlack = false;
     private boolean mIsShowDualClock = false;
+    private View mKeyguardLeftSide;
     private boolean mLeftHoleDevice;
+    private NetworkSpeedView mNetworkSpeedView;
     private boolean mShowCarrier;
     private ContentObserver mShowCarrierObserver = new ContentObserver((Handler) Dependency.get(Dependency.MAIN_HANDLER)) {
         /* class com.android.systemui.statusbar.phone.MiuiKeyguardStatusBarView.AnonymousClass2 */
@@ -56,40 +62,63 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         }
     };
     private boolean mShowCarrierUnderLeftHoleKeyguard;
+    private FrameLayout mStatusBarPromptContainer;
     private boolean mTWRegion;
 
     public MiuiKeyguardStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mLeftHoleDevice = context.getResources().getBoolean(C0009R$bool.left_hole_device);
         this.mShowCarrierUnderLeftHoleKeyguard = context.getResources().getBoolean(C0009R$bool.show_carrier_under_left_hole_keyguard);
+        this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
     }
 
     @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView, com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
         super.onDensityOrFontScaleChanged();
         updateViewStatusBarPaddingTop(this.mStatusIconArea);
-        updateViewStatusBarPaddingTop(this.mStatusBarPromptContainer);
-        updateViewStatusBarPaddingTop(this.mDripLeftStatusIconFrameContainer);
-        updateViewStatusBarPaddingTop(this.mCarrierLabel);
+        updateViewStatusBarPaddingTop(this.mKeyguardLeftSide);
         updateTextViewClockSize(this.mCarrierLabel);
         updateTextViewClockSize(this.mNetworkSpeedView);
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onMiuiThemeChanged(boolean z) {
-        if (this.mIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mIconManager);
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mIconManager);
+        MiuiLightDarkEndIconManager miuiLightDarkEndIconManager = this.mIconManager;
+        if (miuiLightDarkEndIconManager != null) {
+            miuiLightDarkEndIconManager.detachFromWindow();
+            this.mIconManager.attachToWindow();
         }
         if (this.mDripLeftIconManager != null) {
             ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftIconManager);
             ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftIconManager);
         }
-        if (this.mDripRightIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightIconManager);
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightIconManager, new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0007R$array.config_drip_right_block_statusBarIcons))));
-        }
         updateIconsAndTextColors();
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView
+    public boolean updateLayoutParamsNoCutout() {
+        boolean updateLayoutParamsNoCutout = super.updateLayoutParamsNoCutout();
+        if (updateLayoutParamsNoCutout) {
+            this.mIconManager.setDripEnd(false);
+            this.mDripLeftStatusIconContainer.setVisibility(8);
+            this.mNetworkSpeedView.setVisibilityByStatusBar(true);
+            ((RelativeLayout.LayoutParams) this.mKeyguardLeftSide.getLayoutParams()).removeRule(16);
+        }
+        return updateLayoutParamsNoCutout;
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView
+    public boolean updateLayoutParamsForCutout() {
+        boolean updateLayoutParamsForCutout = super.updateLayoutParamsForCutout();
+        if (updateLayoutParamsForCutout) {
+            this.mIconManager.setDripEnd(true);
+            this.mDripLeftStatusIconContainer.setVisibility(0);
+            this.mNetworkSpeedView.setVisibilityByStatusBar(false);
+            ((RelativeLayout.LayoutParams) this.mKeyguardLeftSide.getLayoutParams()).addRule(16, C0014R$id.cutout_space_view);
+        }
+        return updateLayoutParamsForCutout;
     }
 
     /* access modifiers changed from: protected */
@@ -104,6 +133,29 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         if (textView != null) {
             textView.setTextSize(0, (float) getContext().getResources().getDimensionPixelSize(C0011R$dimen.status_bar_clock_size));
         }
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView
+    public void onFinishInflate() {
+        super.onFinishInflate();
+        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0014R$id.keyguard_drip_left_statusIcons);
+        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0014R$id.prompt_container);
+        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
+        this.mKeyguardLeftSide = findViewById(C0014R$id.keyguard_status_bar_left_side);
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView
+    public void miuiOnAttachedToWindow() {
+        super.miuiOnAttachedToWindow();
+        int lightModeIconColorSingleTone = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone();
+        MiuiLightDarkEndIconManager miuiLightDarkEndIconManager = new MiuiLightDarkEndIconManager(this.mStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), false, true, lightModeIconColorSingleTone);
+        this.mIconManager = miuiLightDarkEndIconManager;
+        miuiLightDarkEndIconManager.attachToWindow();
+        this.mDripLeftIconManager = new MiuiLightDarkIconManager(this.mDripLeftStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
+        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftIconManager);
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer(this.mStatusBarPromptContainer, 0);
     }
 
     /* access modifiers changed from: protected */
@@ -127,6 +179,9 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         ((ForceBlackObserver) Dependency.get(ForceBlackObserver.class)).removeCallback(this);
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
         ((DualClockObserver) Dependency.get(DualClockObserver.class)).removeCallback(this);
+        this.mIconManager.detachFromWindow();
+        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer(this.mStatusBarPromptContainer);
+        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftIconManager);
         this.mCurrentUserTracker.stopTracking();
     }
 
@@ -141,17 +196,13 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         float f = z ? 1.0f : 0.0f;
         Log.d("MiuiKeyguardStatusBarView", "updateIconsAndTextColors: dark = " + z + ", iconColor = " + i + ", intensity = " + f);
         this.mCarrierLabel.setTextColor(i);
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
+        MiuiLightDarkEndIconManager miuiLightDarkEndIconManager = this.mIconManager;
+        if (miuiLightDarkEndIconManager != null) {
+            miuiLightDarkEndIconManager.setLight(!z, i);
+        }
+        MiuiLightDarkIconManager miuiLightDarkIconManager = this.mDripLeftIconManager;
         if (miuiLightDarkIconManager != null) {
             miuiLightDarkIconManager.setLight(!z, i);
-        }
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager2 = this.mDripLeftIconManager;
-        if (miuiLightDarkIconManager2 != null) {
-            miuiLightDarkIconManager2.setLight(!z, i);
-        }
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager3 = this.mDripRightIconManager;
-        if (miuiLightDarkIconManager3 != null) {
-            miuiLightDarkIconManager3.setLight(!z, i);
         }
         applyDarkness(C0014R$id.fullscreen_network_speed_view, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
         applyDarkness(C0014R$id.battery, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
@@ -195,5 +246,14 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     public void onForceBlackChange(boolean z, boolean z2) {
         this.mForceBlack = z;
         updateIconsAndTextColors();
+    }
+
+    public boolean onTouchEvent(MotionEvent motionEvent) {
+        if (!this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
+            this.mControlPanelWindowManager.setTransToControlPanel(false);
+            return super.onTouchEvent(motionEvent);
+        }
+        this.mControlPanelWindowManager.setTransToControlPanel(true);
+        return false;
     }
 }

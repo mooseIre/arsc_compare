@@ -2,7 +2,6 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.view.View;
 import android.view.ViewGroup;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
@@ -13,9 +12,7 @@ import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.NotificationContentInflaterInjector;
 import com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm;
-import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import com.android.systemui.statusbar.policy.ConfigurationController;
-import com.android.systemui.util.ConvenienceExtensionsKt;
 import java.util.ArrayList;
 import java.util.Iterator;
 import kotlin.collections.CollectionsKt;
@@ -61,15 +58,8 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     public final void updateResources() {
         this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_top_minus);
         this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_bottom_minus);
-        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105489);
+        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105490);
         this.mHeadsUpMarginTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
-    }
-
-    /* access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
-    public void initAlgorithmState(@Nullable ViewGroup viewGroup, @Nullable StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @Nullable AmbientState ambientState) {
-        updateSectionHeadersVisibility(viewGroup);
-        super.initAlgorithmState(viewGroup, stackScrollAlgorithmState, ambientState);
     }
 
     /* access modifiers changed from: protected */
@@ -259,27 +249,6 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         return updateChild;
     }
 
-    private final void updateSectionHeadersVisibility(ViewGroup viewGroup) {
-        if (!(viewGroup == null || viewGroup.getChildCount() == 0)) {
-            boolean z = false;
-            for (View view : ConvenienceExtensionsKt.getChildren(viewGroup)) {
-                if ((view instanceof SectionHeaderView) || (view instanceof PeopleHubView)) {
-                    ExpandableViewState viewState = ((ExpandableView) view).getViewState();
-                    if (viewState != null) {
-                        viewState.hidden = !z;
-                    }
-                    if (z) {
-                    }
-                } else if (!z) {
-                    Intrinsics.checkExpressionValueIsNotNull(view, "child");
-                    if (view.getVisibility() != 0) {
-                    }
-                }
-                z = true;
-            }
-        }
-    }
-
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.notification.stack.StackScrollAlgorithm
     public int getPaddingAfterChild(@NotNull StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, @NotNull AmbientState ambientState, @NotNull ExpandableView expandableView, int i) {
@@ -291,7 +260,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
             int i3 = i + 1;
             if (stackScrollAlgorithmState.visibleChildren.size() > i3) {
                 ExpandableView expandableView2 = stackScrollAlgorithmState.visibleChildren.get(i3);
-                if ((expandableView2 instanceof ZenModeView) || (expandableView2 instanceof SectionHeaderView) || (expandableView2 instanceof PeopleHubView)) {
+                if ((expandableView2 instanceof SectionHeaderView) || (expandableView2 instanceof PeopleHubView)) {
                     return this.mGroupMinusBottom + super.getPaddingAfterChild(stackScrollAlgorithmState, ambientState, expandableView, i);
                 }
             }

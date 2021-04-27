@@ -1,36 +1,39 @@
 package com.android.systemui.statusbar.phone;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.widget.LinearLayout;
-import com.android.systemui.C0007R$array;
 import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
-import com.android.systemui.plugins.DarkIconDispatcher;
+import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.RegionController;
-import com.android.systemui.statusbar.views.DarkCarrierText;
 import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
-import java.util.ArrayList;
-import java.util.Arrays;
-import miui.os.Build;
 
-public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment implements RegionController.Callback {
+public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment implements RegionController.Callback, ControlPanelWindowManager.OnExpandChangeListener {
+    private ControlPanelWindowManager mControlPanelWindowManager;
+    private int mDisable1;
     private StatusBarIconController.DarkIconManager mDripLeftDarkIconManager;
     private NetworkSpeedSplitter mDripNetworkSpeedSplitter;
     private NetworkSpeedView mDripNetworkSpeedView;
-    private StatusBarIconController.DarkIconManager mDripRightDarkIconManager;
     private LinearLayout mDripSystemIconArea;
     private String mRegion;
-    private DarkCarrierText mStatusBarCarrier;
     private View mStatusBarPromptContainer;
+
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public void onCreate(Bundle bundle) {
+        super.onCreate(bundle);
+        this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
+    }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
@@ -63,41 +66,47 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         this.mDripLeftDarkIconManager = darkIconManager;
         darkIconManager.setShouldLog(true);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftDarkIconManager);
-        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0007R$array.config_drip_right_block_statusBarIcons)));
-        StatusBarIconController.DarkIconManager darkIconManager2 = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0014R$id.drip_right_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
-        this.mDripRightDarkIconManager = darkIconManager2;
-        darkIconManager2.setShouldLog(true);
-        this.mDripRightDarkIconManager.setDrip(true);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightDarkIconManager, arrayList);
         this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0014R$id.drip_left_statusIcons);
         this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0014R$id.prompt_container);
         this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_splitter);
         this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_view);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
-    }
-
-    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
-    public void onViewCreated(View view, Bundle bundle) {
-        super.onViewCreated(view, bundle);
-        if (Build.IS_TABLET) {
-            this.mClockView.setClockMode(2);
-        }
-        this.mStatusBarCarrier = (DarkCarrierText) view.findViewById(C0014R$id.status_bar_carrier_text);
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mStatusBarCarrier);
-        updateStatusBarCarrierVisibility();
+        this.mControlPanelWindowManager.addExpandChangeListener(this);
     }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void onDestroyView() {
         super.onDestroyView();
+        this.mControlPanelWindowManager.removeExpandChangeListener(this);
         ((RegionController) Dependency.get(RegionController.class)).removeCallback(this);
         if (this.mDripLeftDarkIconManager != null) {
             ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftDarkIconManager);
         }
-        if (this.mDripRightDarkIconManager != null) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightDarkIconManager);
+    }
+
+    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks, com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public void disable(int i, int i2, int i3, boolean z) {
+        if (this.mControlPanelWindowManager.isPanelExpanded()) {
+            z = false;
         }
-        ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mStatusBarCarrier);
+        this.mDisable1 = i2;
+        super.disable(i, i2, i3, z);
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public int adjustDisableFlags(int i) {
+        int adjustDisableFlags = super.adjustDisableFlags(i);
+        return this.mControlPanelWindowManager.isWindowShow() ? 8388608 | 131072 | adjustDisableFlags | 1048576 : adjustDisableFlags;
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public int clockHiddenMode() {
+        if ((this.mDisable1 & 8388608) != 0) {
+            return 8;
+        }
+        return super.clockHiddenMode();
     }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
@@ -244,14 +253,25 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     @Override // com.android.systemui.statusbar.policy.RegionController.Callback
     public void onRegionChanged(String str) {
         this.mRegion = str;
-        updateStatusBarCarrierVisibility();
+        initOperatorName();
     }
 
     /* access modifiers changed from: protected */
-    public void updateStatusBarCarrierVisibility() {
-        DarkCarrierText darkCarrierText = this.mStatusBarCarrier;
-        if (darkCarrierText != null) {
-            darkCarrierText.setVisibility((darkCarrierText.getContext().getResources().getBoolean(C0009R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) ? 0 : 8);
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public void initOperatorName() {
+        PhoneStatusBarView phoneStatusBarView;
+        if (this.mOperatorNameFrame == null && (phoneStatusBarView = this.mStatusBar) != null) {
+            if (phoneStatusBarView.getContext().getResources().getBoolean(C0009R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) {
+                Log.d("CollapsedStatusBarFragment", "initOperatorName: ");
+                this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0014R$id.operator_name)).inflate();
+            }
+        }
+    }
+
+    @Override // com.android.systemui.controlcenter.phone.ControlPanelWindowManager.OnExpandChangeListener
+    public void onExpandChange(boolean z) {
+        if (getContext() != null && getContext().getDisplay() != null) {
+            this.mCommandQueue.recomputeDisableFlags(getContext().getDisplay().getDisplayId(), false);
         }
     }
 }

@@ -7,15 +7,19 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.metrics.LogMaker;
 import android.net.Uri;
 import android.os.Binder;
+import android.os.Build;
+import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.service.quicksettings.IQSTileService;
 import android.service.quicksettings.Tile;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.IWindowManager;
 import android.view.WindowManagerGlobal;
@@ -74,21 +78,47 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         return (((long) this.mHost.indexOf(getTileSpec())) * 60000) + 3600000;
     }
 
-    /* JADX WARNING: Removed duplicated region for block: B:17:0x0041 A[Catch:{ NameNotFoundException -> 0x007b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:18:0x004c A[Catch:{ NameNotFoundException -> 0x007b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:21:0x0051 A[Catch:{ NameNotFoundException -> 0x007b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:29:0x0075 A[Catch:{ NameNotFoundException -> 0x007b }] */
-    /* JADX WARNING: Removed duplicated region for block: B:33:? A[RETURN, SYNTHETIC] */
+    /* JADX WARNING: Removed duplicated region for block: B:23:0x0059 A[Catch:{ NameNotFoundException -> 0x0083 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:31:0x007d A[Catch:{ NameNotFoundException -> 0x0083 }] */
+    /* JADX WARNING: Removed duplicated region for block: B:35:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updateDefaultTileAndIcon() {
         /*
-        // Method dump skipped, instructions count: 128
+        // Method dump skipped, instructions count: 136
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.qs.external.CustomTile.updateDefaultTileAndIcon():void");
     }
 
     private boolean isSystemApp(PackageManager packageManager) throws PackageManager.NameNotFoundException {
         return packageManager.getApplicationInfo(this.mComponent.getPackageName(), 0).isSystemApp();
+    }
+
+    public static boolean isServiceRestricted(ServiceInfo serviceInfo) {
+        Bundle bundle = serviceInfo.metaData;
+        boolean z = false;
+        if (bundle == null) {
+            return false;
+        }
+        String string = bundle.getString("com.android.device.restriction");
+        if (TextUtils.isEmpty(string)) {
+            return false;
+        }
+        String[] split = string.split(";");
+        int length = split.length;
+        int i = 0;
+        while (true) {
+            if (i < length) {
+                String str = split[i];
+                if (str != null && str.trim().equals(Build.DEVICE)) {
+                    z = true;
+                    break;
+                }
+                i++;
+            } else {
+                break;
+            }
+        }
+        return !z;
     }
 
     private boolean iconEquals(Icon icon, Icon icon2) {

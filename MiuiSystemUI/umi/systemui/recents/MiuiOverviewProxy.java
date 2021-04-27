@@ -11,6 +11,7 @@ import kotlin.jvm.internal.Intrinsics;
 public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
     private final OverviewProxyService proxyService;
 
+    /* access modifiers changed from: public */
     private final void notifyGestureLineProgress(float f) {
     }
 
@@ -89,6 +90,7 @@ public final class MiuiOverviewProxy extends IMiuiSystemUiProxy.Stub {
         return false;
     }
 
+    /* access modifiers changed from: public */
     private final void notifyCompleteAssistant() {
         this.proxyService.notifyAssistantGestureCompletion(0.0f);
     }

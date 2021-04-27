@@ -24,10 +24,7 @@ import com.android.systemui.globalactions.GlobalActionsComponent;
 import com.android.systemui.util.LifecycleActivity;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ControlsEditingActivity.kt */
 public final class ControlsEditingActivity extends LifecycleActivity {
     private static final int EMPTY_TEXT_ID = C0020R$string.controls_favorite_removed;
     private static final int SUBTITLE_ID = C0020R$string.controls_favorite_rearrange;
@@ -59,7 +56,7 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         throw null;
     }
 
-    public ControlsEditingActivity(@NotNull ControlsControllerImpl controlsControllerImpl, @NotNull BroadcastDispatcher broadcastDispatcher, @NotNull GlobalActionsComponent globalActionsComponent2) {
+    public ControlsEditingActivity(ControlsControllerImpl controlsControllerImpl, BroadcastDispatcher broadcastDispatcher, GlobalActionsComponent globalActionsComponent2) {
         Intrinsics.checkParameterIsNotNull(controlsControllerImpl, "controller");
         Intrinsics.checkParameterIsNotNull(broadcastDispatcher, "broadcastDispatcher");
         Intrinsics.checkParameterIsNotNull(globalActionsComponent2, "globalActionsComponent");
@@ -68,9 +65,8 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         this.currentUserTracker = new ControlsEditingActivity$currentUserTracker$1(this, broadcastDispatcher, broadcastDispatcher);
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
-    public void onCreate(@Nullable Bundle bundle) {
+    public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
         ComponentName componentName = (ComponentName) getIntent().getParcelableExtra("android.intent.extra.COMPONENT_NAME");
         if (componentName != null) {
@@ -88,7 +84,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         bindButtons();
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onStart() {
         super.onStart();
@@ -96,7 +91,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         this.currentUserTracker.startTracking();
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onStop() {
         super.onStop();
@@ -108,7 +102,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         animateExitAndFinish();
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void animateExitAndFinish() {
         ViewGroup viewGroup = (ViewGroup) requireViewById(C0014R$id.controls_management_root);
@@ -164,7 +157,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         this.saveButton = requireViewById;
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void saveFavorites() {
         ControlsControllerImpl controlsControllerImpl = this.controller;
@@ -247,7 +239,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
         }
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.util.LifecycleActivity
     public void onDestroy() {
         this.currentUserTracker.stopTracking();

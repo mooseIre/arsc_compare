@@ -12,6 +12,8 @@ public interface PluginManager {
 
     <T extends Plugin> void addPluginListener(String str, PluginListener<T> pluginListener, Class<?> cls);
 
+    <T extends Plugin> void addPluginListener(String str, PluginListener<T> pluginListener, Class cls, boolean z);
+
     <T> boolean dependsOn(Plugin plugin, Class<T> cls);
 
     String[] getWhitelistedPlugins();

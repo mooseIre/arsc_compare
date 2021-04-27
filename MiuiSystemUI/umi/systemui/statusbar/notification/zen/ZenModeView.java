@@ -130,6 +130,26 @@ public class ZenModeView extends ExpandableView implements SwipeableView {
         }
     }
 
+    public void setVisibility(int i) {
+        int visibility = getVisibility();
+        super.setVisibility(i);
+        if (i != 4 && i != visibility) {
+            post(new Runnable() {
+                /* class com.android.systemui.statusbar.notification.zen.$$Lambda$ZenModeView$Ej2qdspsI9vFlQ0yXUV9mEO6Hsc */
+
+                public final void run() {
+                    ZenModeView.this.lambda$setVisibility$2$ZenModeView();
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$setVisibility$2 */
+    public /* synthetic */ void lambda$setVisibility$2$ZenModeView() {
+        this.mController.updateSectionBoundaries();
+    }
+
     @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     public void resetTranslation() {
         setTranslation(0.0f);
