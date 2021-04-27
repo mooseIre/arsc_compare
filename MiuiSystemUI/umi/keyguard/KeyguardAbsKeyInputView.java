@@ -31,6 +31,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
     protected AsyncTask<?, ?, ?> mPendingLockCheck;
     protected boolean mResumed;
     protected SecurityMessageDisplay mSecurityMessageDisplay;
+    private KeyguardSecurityModel mSecurityModel;
 
     /* access modifiers changed from: protected */
     public abstract LockscreenCredential getEnteredCredential();
@@ -102,6 +103,7 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         super.onFinishInflate();
         this.mLockPatternUtils = new LockPatternUtils(((LinearLayout) this).mContext);
         this.mSecurityMessageDisplay = KeyguardMessageArea.findSecurityMessageDisplay(this);
+        this.mSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
     }
 
     /* access modifiers changed from: protected */
@@ -271,9 +273,54 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
         if (i != 0) {
             String promptReasonString = getPromptReasonString(i);
             if (!TextUtils.isEmpty(promptReasonString)) {
-                this.mKeyguardBouncerMessageView.showMessage(((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_password_hint_text), promptReasonString);
+                this.mKeyguardBouncerMessageView.showMessage(getPromptTitle(), promptReasonString);
             }
         }
+    }
+
+    /* access modifiers changed from: package-private */
+    /* renamed from: com.android.keyguard.KeyguardAbsKeyInputView$4  reason: invalid class name */
+    public static /* synthetic */ class AnonymousClass4 {
+        static final /* synthetic */ int[] $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode;
+
+        /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|6) */
+        /* JADX WARNING: Code restructure failed: missing block: B:7:?, code lost:
+            return;
+         */
+        /* JADX WARNING: Failed to process nested try/catch */
+        /* JADX WARNING: Missing exception handler attribute for start block: B:3:0x0012 */
+        static {
+            /*
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode[] r0 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.values()
+                int r0 = r0.length
+                int[] r0 = new int[r0]
+                com.android.keyguard.KeyguardAbsKeyInputView.AnonymousClass4.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode = r0
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.PIN     // Catch:{ NoSuchFieldError -> 0x0012 }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x0012 }
+                r2 = 1
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x0012 }
+            L_0x0012:
+                int[] r0 = com.android.keyguard.KeyguardAbsKeyInputView.AnonymousClass4.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode     // Catch:{ NoSuchFieldError -> 0x001d }
+                com.android.keyguard.KeyguardSecurityModel$SecurityMode r1 = com.android.keyguard.KeyguardSecurityModel.SecurityMode.Password     // Catch:{ NoSuchFieldError -> 0x001d }
+                int r1 = r1.ordinal()     // Catch:{ NoSuchFieldError -> 0x001d }
+                r2 = 2
+                r0[r1] = r2     // Catch:{ NoSuchFieldError -> 0x001d }
+            L_0x001d:
+                return
+            */
+            throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.KeyguardAbsKeyInputView.AnonymousClass4.<clinit>():void");
+        }
+    }
+
+    private String getPromptTitle() {
+        int i = AnonymousClass4.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
+        if (i == 1) {
+            return ((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_lockscreen_pin_hint_text);
+        }
+        if (i != 2) {
+            return ((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_password_hint_text);
+        }
+        return ((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_lockscreen_password_hint_text);
     }
 
     /* access modifiers changed from: protected */
