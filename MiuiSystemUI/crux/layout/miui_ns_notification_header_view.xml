@@ -4,9 +4,7 @@
   xmlns:systemui="http://schemas.android.com/apk/res/com.android.systemui">
     <LinearLayout android:gravity="center_vertical" android:orientation="horizontal" android:id="@id/panel_header" android:layout_width="fill_parent" android:layout_height="@dimen/ns_notification_header_statusbar_height" android:layout_above="@id/big_time">
         <com.android.keyguard.CarrierText android:textAppearance="@style/TextAppearance.StatusBar.Clock" android:ellipsize="marquee" android:gravity="center_vertical" android:layout_gravity="center_vertical" android:id="@id/carrier_text" android:layout_width="wrap_content" android:layout_height="wrap_content" android:maxWidth="@dimen/statusbar_carrier_max_width" android:maxEms="7" android:singleLine="true" android:marqueeRepeatLimit="1" />
-        <com.android.keyguard.AlphaOptimizedLinearLayout android:gravity="end|center" android:orientation="horizontal" android:id="@id/system_icon_area" android:focusable="true" android:focusableInTouchMode="true" android:layout_width="fill_parent" android:layout_height="fill_parent">
-            <include layout="@layout/miui_system_icons" />
-        </com.android.keyguard.AlphaOptimizedLinearLayout>
+        <include android:id="@id/system_icon_area" android:layout_width="fill_parent" android:layout_height="fill_parent" layout="@layout/miui_system_icons" />
     </LinearLayout>
     <RelativeLayout android:id="@id/time_header" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginTop="@dimen/qs_control_header_tiles_margin_top" android:layout_below="@id/panel_header">
         <com.android.systemui.statusbar.policy.MiuiClock android:textAppearance="@style/TextAppearance.QSControl.Clock" android:gravity="center_vertical" android:id="@id/big_time" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentStart="true" systemui:MiuiClockMode="time" systemui:MiuiClockShowDark="false" />
