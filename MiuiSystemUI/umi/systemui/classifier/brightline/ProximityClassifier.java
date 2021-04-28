@@ -4,8 +4,7 @@ import android.view.MotionEvent;
 import com.android.systemui.util.DeviceConfigProxy;
 import com.android.systemui.util.sensors.ProximitySensor;
 
-/* access modifiers changed from: package-private */
-public class ProximityClassifier extends FalsingClassifier {
+class ProximityClassifier extends FalsingClassifier {
     private final DistanceClassifier mDistanceClassifier;
     private long mGestureStartTimeNs;
     private boolean mNear;

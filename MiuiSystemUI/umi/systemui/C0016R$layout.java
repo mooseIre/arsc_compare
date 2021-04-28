@@ -9693,6 +9693,7 @@ public final class R {
         public static final int doze_pulse_duration_out;
         public static final int doze_pulse_duration_visible;
         public static final int doze_small_icon_alpha;
+        public static final int flash_force_off_light_state;
         public static final int flash_on_value;
         public static final int heads_up_default_snooze_length_ms;
         public static final int heads_up_notification_decay;

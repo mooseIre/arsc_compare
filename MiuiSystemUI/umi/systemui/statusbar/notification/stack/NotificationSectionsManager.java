@@ -324,13 +324,9 @@ public class NotificationSectionsManager implements StackScrollAlgorithm.Section
                 this.logger.logHeadsUp(i, isHeadsUp);
             } else if (bucket == 4) {
                 this.logger.logConversation(i, isHeadsUp);
-            } else if (bucket == 5) {
-                this.logger.logImportant(i, isHeadsUp);
             } else if (bucket == 6) {
                 this.logger.logAlerting(i, isHeadsUp);
-            } else if (bucket != 7) {
-                this.logger.logOther(i, expandableNotificationRow.getClass());
-            } else {
+            } else if (bucket == 7) {
                 this.logger.logSilent(i, isHeadsUp);
             }
         }

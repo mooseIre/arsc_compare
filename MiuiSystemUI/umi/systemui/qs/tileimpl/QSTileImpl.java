@@ -205,11 +205,11 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mQSLogger.logTileClick(this.mTileSpec, this.mStatusBarStateController.getState(), this.mState.state);
         Message obtain = Message.obtain(this.mHandler, 2, Boolean.valueOf(z));
         if (!hideCustomizerAfterClick() || !z) {
-            Log.d(this.TAG, "send click msg");
+            Log.i(this.TAG, "send click msg");
             obtain.sendToTarget();
             return;
         }
-        Log.d(this.TAG, "send click msg delayed");
+        Log.i(this.TAG, "send click msg delayed");
         showEdit(false);
         this.mHandler.sendMessageDelayed(obtain, 420);
     }

@@ -71,7 +71,6 @@ public final class ChallengeDialogs {
         return create;
     }
 
-    /* access modifiers changed from: public */
     private final void setInputType(EditText editText, boolean z) {
         if (z) {
             editText.setInputType(129);
@@ -80,7 +79,6 @@ public final class ChallengeDialogs {
         }
     }
 
-    /* access modifiers changed from: public */
     private final ControlAction addChallengeValue(ControlAction controlAction, String str) {
         String templateId = controlAction.getTemplateId();
         if (controlAction instanceof BooleanAction) {

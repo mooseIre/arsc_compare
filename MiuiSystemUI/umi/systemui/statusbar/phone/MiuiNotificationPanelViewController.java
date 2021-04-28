@@ -232,20 +232,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Context context2 = notificationPanelView2.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "mView.context");
         context2.getResources().getDimensionPixelSize(C0011R$dimen.notification_sticky_group_header_height);
-        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback((ControlPanelController.UseControlPanelChangeListener) new ControlPanelController.UseControlPanelChangeListener(this) {
-            /* class com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.AnonymousClass2 */
-            final /* synthetic */ MiuiNotificationPanelViewController this$0;
-
-            {
-                this.this$0 = r1;
-            }
-
-            @Override // com.android.systemui.controlcenter.phone.ControlPanelController.UseControlPanelChangeListener
-            public final void onUseControlPanelChange(boolean z) {
-                MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-                miuiNotificationPanelViewController.mQsNotificationTopPadding = z ? miuiNotificationPanelViewController.mResources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding) : 0;
-            }
-        });
         this.mChildPositionsChangedListener = new MiuiNotificationPanelViewController$mChildPositionsChangedListener$1(this);
         this.mConfiguration = new Configuration();
     }
@@ -734,6 +720,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return ((((f3 * coerceAtMost) / ((float) 3)) - f3) + coerceAtMost) * f2;
     }
 
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public final boolean isOnKeyguard() {
         return this.statusBarStateController.getState() == 1;
     }
@@ -982,15 +969,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             }
             notificationsQuickSettingsContainer.setElevation(f + ((float) 1));
         }
-    }
-
-    /* access modifiers changed from: protected */
-    @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
-    public void loadDimens() {
-        super.loadDimens();
-        Object obj = Dependency.get(ControlPanelController.class);
-        Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(ControlPanelController::class.java)");
-        this.mQsNotificationTopPadding = ((ControlPanelController) obj).isUseControlCenter() ? this.mResources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding) : 0;
     }
 
     @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
@@ -1528,14 +1506,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.updateDismissView():void");
-    }
-
-    public final int getAdditionalInsetBottom() {
-        DismissView dismissView = this.mDismissView;
-        if (dismissView != null) {
-            return dismissView.getPanelAdditionalInsetBottom();
-        }
-        return 0;
     }
 
     private final void initDismissView() {

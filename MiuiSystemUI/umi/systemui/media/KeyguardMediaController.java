@@ -3,11 +3,8 @@ package com.android.systemui.media;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
-import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager;
 import com.android.systemui.statusbar.notification.stack.MediaHeaderView;
-import com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
-import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
@@ -16,7 +13,6 @@ public class KeyguardMediaController {
     private final KeyguardBypassController bypassController;
     private final MediaHost mediaHost;
     private final NotificationLockscreenUserManager notifLockscreenUserManager;
-    private MiuiNotificationSectionsManager notificationSectionsManager;
     private final SysuiStatusBarStateController statusBarStateController;
     private MediaHeaderView view;
     private Function1<? super Boolean, Unit> visibilityChangedListener;
@@ -53,20 +49,9 @@ public class KeyguardMediaController {
         return this.view;
     }
 
-    public final void setNotificationSectionsManager(MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
-        this.notificationSectionsManager = miuiNotificationSectionsManager;
-    }
-
     public final void attach(MediaHeaderView mediaHeaderView) {
         Intrinsics.checkParameterIsNotNull(mediaHeaderView, "mediaView");
         this.view = mediaHeaderView;
-        if (mediaHeaderView instanceof MiuiMediaHeaderView) {
-            if (mediaHeaderView != null) {
-                ((MiuiMediaHeaderView) mediaHeaderView).setNotificationSectionsManager(this.notificationSectionsManager);
-            } else {
-                throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.notification.stack.MiuiMediaHeaderView");
-            }
-        }
         this.mediaHost.addVisibilityChangeListener(new KeyguardMediaController$attach$1(this));
         this.mediaHost.setExpansion(0.0f);
         this.mediaHost.setShowsOnlyActiveMedia(false);

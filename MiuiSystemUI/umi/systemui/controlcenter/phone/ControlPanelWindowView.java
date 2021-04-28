@@ -193,6 +193,9 @@ public class ControlPanelWindowView extends FrameLayout {
         if (motionEvent.getActionMasked() == 0) {
             verifyState();
         }
+        if (!this.mIsGetSelfEvent) {
+            Log.i("ControllerPanelWindowView", "get self event" + motionEvent.getActionMasked());
+        }
         this.mIsGetSelfEvent = true;
         return super.dispatchTouchEvent(motionEvent);
     }
@@ -368,14 +371,14 @@ public class ControlPanelWindowView extends FrameLayout {
                     this.mContentShowing = true;
                     onControlPanelFinishExpand();
                     cancelHeightChangeAnimator();
-                    Log.d("ControllerPanelWindowView", "showContent:" + this.mContent.getHeight());
+                    Log.i("ControllerPanelWindowView", "showContent:" + this.mContent.getHeight());
                 }
             } else if (this.mContentShowing) {
                 this.mContent.hideContent();
                 this.mContentShowing = false;
                 AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(getContext(), 191);
                 onControlPanelHide();
-                Log.d("ControllerPanelWindowView", "hideContent");
+                Log.i("ControllerPanelWindowView", "hideContent");
             }
         }
     }

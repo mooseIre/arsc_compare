@@ -294,7 +294,7 @@ public class NotificationPanelViewController extends PanelViewController {
     protected int mQsMaxExpansionHeight;
     private int mQsMinExpansionHeight;
     private View mQsNavbarScrim;
-    protected int mQsNotificationTopPadding;
+    private int mQsNotificationTopPadding;
     private int mQsPeekHeight;
     private boolean mQsScrimEnabled = true;
     private ValueAnimator mQsSizeChangeAnimator;

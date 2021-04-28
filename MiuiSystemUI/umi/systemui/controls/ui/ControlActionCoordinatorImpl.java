@@ -52,6 +52,10 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         throw new TypeCastException("null cannot be cast to non-null type android.os.Vibrator");
     }
 
+    public static final /* synthetic */ Set access$getActionsInProgress$p(ControlActionCoordinatorImpl controlActionCoordinatorImpl) {
+        return controlActionCoordinatorImpl.actionsInProgress;
+    }
+
     @Override // com.android.systemui.controls.ui.ControlActionCoordinator
     public void closeDialogs() {
         Dialog dialog2 = this.dialog;
@@ -144,7 +148,6 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         this.bgExecutor.execute(new ControlActionCoordinatorImpl$vibrate$1(this, vibrationEffect));
     }
 
-    /* access modifiers changed from: public */
     private final void showDialog(ControlViewHolder controlViewHolder, Intent intent) {
         this.bgExecutor.execute(new ControlActionCoordinatorImpl$showDialog$1(this, controlViewHolder, intent));
     }

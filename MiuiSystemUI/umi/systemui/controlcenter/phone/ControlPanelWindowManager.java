@@ -103,7 +103,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     }
 
     public void onExpandChange(boolean z) {
-        Log.d("ControlPanelWindowManager", "onExpandChange: " + z + "," + this.mIsExpand);
+        Log.i("ControlPanelWindowManager", "onExpandChange: " + z + "," + this.mIsExpand);
         if (z && !this.mIsExpand) {
             this.mIsExpand = true;
             this.mControlPanel.setVisibility(0);

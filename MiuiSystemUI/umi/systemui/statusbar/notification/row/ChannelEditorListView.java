@@ -91,7 +91,8 @@ public final class ChannelEditorListView extends LinearLayout {
     }
 
     /* access modifiers changed from: private */
-    public final void updateRows() {
+    /* access modifiers changed from: public */
+    private final void updateRows() {
         ChannelEditorDialogController channelEditorDialogController = this.controller;
         if (channelEditorDialogController != null) {
             boolean areAppNotificationsEnabled = channelEditorDialogController.areAppNotificationsEnabled();

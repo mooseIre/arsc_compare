@@ -33,13 +33,13 @@ public final class ControlsControllerImpl$startSeeding$1 implements ControlsBind
 
     public void accept(@NotNull List<Control> list) {
         Intrinsics.checkParameterIsNotNull(list, "controls");
-        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$startSeeding$1$accept$1(this, list));
+        this.this$0.executor.execute(new ControlsControllerImpl$startSeeding$1$accept$1(this, list));
     }
 
     @Override // com.android.systemui.controls.controller.ControlsBindingController.LoadCallback
     public void error(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "message");
         Log.e("ControlsControllerImpl", "Unable to seed favorites: " + str);
-        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$startSeeding$1$error$1(this));
+        this.this$0.executor.execute(new ControlsControllerImpl$startSeeding$1$error$1(this));
     }
 }

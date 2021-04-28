@@ -7,7 +7,6 @@ import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
-import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.policy.ZenModeController;
 import kotlin.Unit;
@@ -21,8 +20,6 @@ public final class ZenModeViewController implements ZenModeController.Callback {
     private final KeyguardBypassController bypassController;
     private boolean manuallyDismissed;
     private final NotificationLockscreenUserManager notifLockscreenUserManager;
-    @Nullable
-    private MiuiNotificationSectionsManager notificationSectionsManager;
     private final SysuiStatusBarStateController statusBarStateController;
     @Nullable
     private ZenModeView view;
@@ -54,10 +51,6 @@ public final class ZenModeViewController implements ZenModeController.Callback {
             }
         });
         this.zenModeController.addCallback(this);
-    }
-
-    public final void setNotificationSectionsManager(@Nullable MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
-        this.notificationSectionsManager = miuiNotificationSectionsManager;
     }
 
     public final void setVisibilityChangedListener(@Nullable Function2<? super Boolean, ? super Boolean, Unit> function2) {
@@ -137,12 +130,5 @@ public final class ZenModeViewController implements ZenModeController.Callback {
 
     public final void jump2Settings() {
         ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(new Intent("android.settings.SOUND_SETTINGS"), 0);
-    }
-
-    public final void updateSectionBoundaries() {
-        MiuiNotificationSectionsManager miuiNotificationSectionsManager = this.notificationSectionsManager;
-        if (miuiNotificationSectionsManager != null) {
-            miuiNotificationSectionsManager.updateSectionBoundaries("ZenModeView visibility changed");
-        }
     }
 }

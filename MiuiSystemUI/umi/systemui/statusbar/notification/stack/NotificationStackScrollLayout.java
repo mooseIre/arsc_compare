@@ -2227,8 +2227,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             i = this.mHeadsUpInset + getTopHeadsUpPinnedHeight();
         }
         int max = Math.max(0, i - this.mMaxLayoutHeight);
-        int max2 = Math.max(((MiuiNotificationPanelViewController) this.mNotificationPanelController).getAdditionalInsetBottom(), getImeInset());
-        return max + Math.min(max2, Math.max(0, i - (getHeight() - max2)));
+        int imeInset = getImeInset();
+        return max + Math.min(imeInset, Math.max(0, i - (getHeight() - imeInset)));
     }
 
     private int getImeInset() {

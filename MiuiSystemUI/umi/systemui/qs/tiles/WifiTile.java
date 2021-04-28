@@ -103,7 +103,7 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
     public void handleClick() {
         TState tstate = this.mState;
         if (((QSTile.SignalState) tstate).isTransient) {
-            Log.d(this.TAG, "handleClick: not ready, ignore");
+            Log.i(this.TAG, "handleClick: not ready, ignore");
             return;
         }
         ((QSTile.SignalState) tstate).copyTo(this.mStateBeforeClick);

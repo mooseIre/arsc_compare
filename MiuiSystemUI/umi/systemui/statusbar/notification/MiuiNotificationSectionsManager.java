@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.C0020R$string;
@@ -15,12 +14,10 @@ import com.android.systemui.statusbar.notification.people.PeopleHubViewAdapter;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsLogger;
 import com.android.systemui.statusbar.notification.stack.NotificationSectionsManager;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
-import com.android.systemui.statusbar.notification.stack.PeopleHubView;
 import com.android.systemui.statusbar.notification.stack.SectionHeaderView;
 import com.android.systemui.statusbar.notification.zen.ZenModeView;
 import com.android.systemui.statusbar.notification.zen.ZenModeViewController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
-import com.android.systemui.util.ConvenienceExtensionsKt;
 import com.miui.internal.vip.utils.Utils;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
@@ -35,7 +32,6 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     private final MiuiNotificationSectionsManager$configurationListener$1 configurationListener = new MiuiNotificationSectionsManager$configurationListener$1(this);
     @Nullable
     private SectionHeaderView importantView;
-    private final MiuiKeyguardMediaController keyguardMediaController;
     @NotNull
     private final NotificationSectionsLogger logger;
     private final MiuiNotificationSectionsFeatureManager sectionsFeatureManager;
@@ -62,7 +58,6 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         Intrinsics.checkParameterIsNotNull(notificationSectionsLogger, "logger");
         this.statusBarStateController = statusBarStateController2;
         this.configurationController = configurationController2;
-        this.keyguardMediaController = miuiKeyguardMediaController;
         this.zenModeViewController = zenModeViewController2;
         this.sectionsFeatureManager = miuiNotificationSectionsFeatureManager;
         this.logger = notificationSectionsLogger;
@@ -86,8 +81,6 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
         Intrinsics.checkParameterIsNotNull(layoutInflater, "layoutInflater");
         super.initialize(notificationStackScrollLayout, layoutInflater);
         this.configurationController.addCallback(this.configurationListener);
-        this.keyguardMediaController.setNotificationSectionsManager(this);
-        this.zenModeViewController.setNotificationSectionsManager(this);
     }
 
     @Override // com.android.systemui.statusbar.notification.stack.NotificationSectionsManager
@@ -166,6 +159,7 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     /* JADX WARNING: Removed duplicated region for block: B:220:0x037d A[LOOP:2: B:218:0x0377->B:220:0x037d, LOOP_END] */
     /* JADX WARNING: Removed duplicated region for block: B:223:0x039e  */
     /* JADX WARNING: Removed duplicated region for block: B:226:0x03b2  */
+    /* JADX WARNING: Removed duplicated region for block: B:250:? A[RETURN, SYNTHETIC] */
     /* JADX WARNING: Removed duplicated region for block: B:54:0x014a  */
     /* JADX WARNING: Removed duplicated region for block: B:55:0x014c  */
     /* JADX WARNING: Removed duplicated region for block: B:58:0x0151  */
@@ -178,27 +172,9 @@ public final class MiuiNotificationSectionsManager extends NotificationSectionsM
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateSectionBoundaries(@org.jetbrains.annotations.NotNull java.lang.String r29) {
         /*
-        // Method dump skipped, instructions count: 1000
+        // Method dump skipped, instructions count: 993
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager.updateSectionBoundaries(java.lang.String):void");
-    }
-
-    private final void updateSectionHeadersVisibility(ViewGroup viewGroup) {
-        if (!(viewGroup == null || viewGroup.getChildCount() == 0)) {
-            boolean z = false;
-            for (View view : ConvenienceExtensionsKt.getChildren(viewGroup)) {
-                if ((view instanceof SectionHeaderView) || (view instanceof PeopleHubView)) {
-                    view.setVisibility(z ? 0 : 8);
-                    if (z) {
-                    }
-                } else if (!z) {
-                    Intrinsics.checkExpressionValueIsNotNull(view, "child");
-                    if (view.getVisibility() != 0) {
-                    }
-                }
-                z = true;
-            }
-        }
     }
 
     /* compiled from: MiuiNotificationSectionsManager.kt */
