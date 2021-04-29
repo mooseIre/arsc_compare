@@ -48,7 +48,7 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         /* class com.android.systemui.assist.$$Lambda$AssistHandleBehaviorController$oeveMWAQo5jd5bG1H5Ci7Dy4X74 */
 
         public final void run() {
-            AssistHandleBehaviorController.lambda$oeveMWAQo5jd5bG1H5Ci7Dy4X74(AssistHandleBehaviorController.this);
+            AssistHandleBehaviorController.this.showAndGoInternal();
         }
     };
     private long mShowAndGoEndsAt;
@@ -131,7 +131,6 @@ public final class AssistHandleBehaviorController implements AssistHandleCallbac
         this.mHandler.post(this.mShowAndGo);
     }
 
-    /* access modifiers changed from: public */
     private void showAndGoInternal() {
         maybeShowHandles(false);
         long showAndGoDuration = getShowAndGoDuration();

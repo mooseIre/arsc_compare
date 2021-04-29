@@ -3,8 +3,9 @@ package com.android.systemui.controls;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
+/* access modifiers changed from: package-private */
 /* compiled from: TooltipManager.kt */
-final class TooltipManager$show$1 implements Runnable {
+public final class TooltipManager$show$1 implements Runnable {
     final /* synthetic */ int $x;
     final /* synthetic */ int $y;
     final /* synthetic */ TooltipManager this$0;
@@ -22,7 +23,7 @@ final class TooltipManager$show$1 implements Runnable {
         this.this$0.getLayout().setTranslationX((float) ((this.$x - iArr[0]) - (this.this$0.getLayout().getWidth() / 2)));
         ViewGroup layout = this.this$0.getLayout();
         float f = (float) (this.$y - iArr[1]);
-        if (!this.this$0.below) {
+        if (!(this.this$0.below)) {
             i = this.this$0.getLayout().getHeight();
         }
         layout.setTranslationY(f - ((float) i));

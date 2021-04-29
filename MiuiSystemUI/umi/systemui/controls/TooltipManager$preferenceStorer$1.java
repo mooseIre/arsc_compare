@@ -6,8 +6,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: TooltipManager.kt */
-final class TooltipManager$preferenceStorer$1 extends Lambda implements Function1<Integer, Unit> {
+public final class TooltipManager$preferenceStorer$1 extends Lambda implements Function1<Integer, Unit> {
     final /* synthetic */ Context $context;
     final /* synthetic */ TooltipManager this$0;
 

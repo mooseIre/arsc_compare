@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PipControlsViewController {
-    private static final String TAG = "PipControlsViewController";
+    private static final String TAG;
     private List<RemoteAction> mCustomActions = new ArrayList();
     private ArrayList<PipControlButtonView> mCustomButtonViews = new ArrayList<>();
     private final View.OnFocusChangeListener mFocusChangeListener = new View.OnFocusChangeListener() {
@@ -116,12 +116,14 @@ public class PipControlsViewController {
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$PipControlsViewController(View view) {
         this.mPipManager.movePipToFullscreen();
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$1 */
     public /* synthetic */ void lambda$new$1$PipControlsViewController(View view) {
@@ -132,6 +134,7 @@ public class PipControlsViewController {
         }
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$2 */
     public /* synthetic */ void lambda$new$2$PipControlsViewController(View view) {
@@ -145,9 +148,8 @@ public class PipControlsViewController {
         }
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    public void updateMediaController() {
+    private void updateMediaController() {
         MediaController mediaController = this.mPipManager.getMediaController();
         MediaController mediaController2 = this.mMediaController;
         if (mediaController2 != mediaController) {
@@ -162,8 +164,6 @@ public class PipControlsViewController {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void updateUserActions() {
         int i = 0;
         if (!this.mCustomActions.isEmpty()) {

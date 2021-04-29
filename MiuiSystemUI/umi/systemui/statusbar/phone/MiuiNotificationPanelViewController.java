@@ -18,6 +18,7 @@ import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
+import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
 import android.view.accessibility.AccessibilityManager;
 import android.view.animation.Animation;
@@ -93,6 +94,7 @@ import kotlin.TypeCastException;
 import kotlin.Unit;
 import kotlin.collections.CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
+import kotlin.jvm.internal.Ref$ObjectRef;
 import kotlin.ranges.RangesKt;
 import kotlin.reflect.KFunction;
 import kotlin.sequences.Sequence;
@@ -720,7 +722,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return ((((f3 * coerceAtMost) / ((float) 3)) - f3) + coerceAtMost) * f2;
     }
 
-    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public final boolean isOnKeyguard() {
         return this.statusBarStateController.getState() == 1;
     }
@@ -987,15 +988,55 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     /* access modifiers changed from: protected */
-    /* JADX WARNING: Removed duplicated region for block: B:23:0x00eb  */
-    /* JADX WARNING: Removed duplicated region for block: B:27:0x0110  */
     @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public void setKeyguardStatusViewVisibility(int r10, boolean r11, boolean r12) {
-        /*
-        // Method dump skipped, instructions count: 303
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.setKeyguardStatusViewVisibility(int, boolean, boolean):void");
+    public void setKeyguardStatusViewVisibility(int i, boolean z, boolean z2) {
+        Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
+        ref$ObjectRef.element = (T) ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView();
+        MiuiNotificationPanelViewController$setKeyguardStatusViewVisibility$mAnimateKeyguardClockInvisibleEndRunnable$1 miuiNotificationPanelViewController$setKeyguardStatusViewVisibility$mAnimateKeyguardClockInvisibleEndRunnable$1 = new MiuiNotificationPanelViewController$setKeyguardStatusViewVisibility$mAnimateKeyguardClockInvisibleEndRunnable$1(this, ref$ObjectRef);
+        if ((z || this.mBarState != 1 || i == 1) && !z2) {
+            int i2 = 4;
+            if (this.mBarState == 2 && i == 1) {
+                addAwesomeLockScreenIfNeed();
+                ref$ObjectRef.element.animate().cancel();
+                T t = ref$ObjectRef.element;
+                if (this.mIsDefaultTheme) {
+                    i2 = 0;
+                }
+                t.setVisibility(i2);
+                this.mKeyguardStatusViewAnimating = true;
+                ref$ObjectRef.element.setAlpha(0.0f);
+                ref$ObjectRef.element.animate().alpha(1.0f).setStartDelay(0).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(this.mAnimateKeyguardStatusViewVisibleEndRunnable);
+            } else if (i == 1) {
+                addAwesomeLockScreenIfNeed();
+                ref$ObjectRef.element.animate().cancel();
+                this.mKeyguardStatusViewAnimating = false;
+                T t2 = ref$ObjectRef.element;
+                if (this.mIsDefaultTheme) {
+                    i2 = 0;
+                }
+                t2.setVisibility(i2);
+                ref$ObjectRef.element.setAlpha(1.0f);
+            } else {
+                removeAwesomeLockScreen();
+                ref$ObjectRef.element.animate().cancel();
+                this.mKeyguardStatusViewAnimating = false;
+                ref$ObjectRef.element.setVisibility(4);
+                ref$ObjectRef.element.setAlpha(1.0f);
+            }
+        } else {
+            ref$ObjectRef.element.animate().cancel();
+            this.mKeyguardStatusViewAnimating = true;
+            ref$ObjectRef.element.animate().alpha(0.0f).setStartDelay(0).setDuration(160).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(miuiNotificationPanelViewController$setKeyguardStatusViewVisibility$mAnimateKeyguardClockInvisibleEndRunnable$1);
+            if (z) {
+                ViewPropertyAnimator animate = ref$ObjectRef.element.animate();
+                KeyguardStateController keyguardStateController = this.mKeyguardStateController;
+                Intrinsics.checkExpressionValueIsNotNull(keyguardStateController, "mKeyguardStateController");
+                ViewPropertyAnimator startDelay = animate.setStartDelay(keyguardStateController.getKeyguardFadingAwayDuration());
+                KeyguardStateController keyguardStateController2 = this.mKeyguardStateController;
+                Intrinsics.checkExpressionValueIsNotNull(keyguardStateController2, "mKeyguardStateController");
+                startDelay.setDuration(keyguardStateController2.getKeyguardFadingAwayDuration() / ((long) 2)).start();
+            }
+        }
     }
 
     /* access modifiers changed from: protected */

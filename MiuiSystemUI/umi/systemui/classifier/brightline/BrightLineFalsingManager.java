@@ -55,7 +55,7 @@ public class BrightLineFalsingManager implements FalsingManager {
 
         @Override // com.android.systemui.util.sensors.ProximitySensor.ProximitySensorListener
         public final void onSensorEvent(ProximitySensor.ProximityEvent proximityEvent) {
-            BrightLineFalsingManager.lambda$DCb2WK5QgVL78Az07qEbZU0x84o(BrightLineFalsingManager.this, proximityEvent);
+            BrightLineFalsingManager.this.onProximityEvent(proximityEvent);
         }
     };
     private boolean mSessionStarted;
@@ -208,6 +208,8 @@ public class BrightLineFalsingManager implements FalsingManager {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updateSessionActive() {
         if (shouldSessionBeActive()) {
             sessionStart();
@@ -248,7 +250,6 @@ public class BrightLineFalsingManager implements FalsingManager {
         return this.mPreviousResult;
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$isFalseTouch$0 */
     public /* synthetic */ boolean lambda$isFalseTouch$0$BrightLineFalsingManager(FalsingClassifier falsingClassifier) {
@@ -282,19 +283,19 @@ public class BrightLineFalsingManager implements FalsingManager {
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                BrightLineFalsingManager.lambda$onTouchEvent$2(this.f$0, (FalsingClassifier) obj);
+                ((FalsingClassifier) obj).onTouchEvent(this.f$0);
             }
         });
     }
 
-    /* access modifiers changed from: public */
-    private void onProximityEvent(ProximitySensor.ProximityEvent proximityEvent) {
+    /* access modifiers changed from: private */
+    public void onProximityEvent(ProximitySensor.ProximityEvent proximityEvent) {
         this.mClassifiers.forEach(new Consumer() {
             /* class com.android.systemui.classifier.brightline.$$Lambda$BrightLineFalsingManager$_d89p1tVOz6Jf4LOgqm74DRgw1s */
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                BrightLineFalsingManager.lambda$onProximityEvent$3(ProximitySensor.ProximityEvent.this, (FalsingClassifier) obj);
+                ((FalsingClassifier) obj).onProximityEvent(ProximitySensor.ProximityEvent.this);
             }
         });
     }
@@ -454,6 +455,7 @@ public class BrightLineFalsingManager implements FalsingManager {
             this.mRecentMotionEvents = list;
         }
 
+        /* access modifiers changed from: package-private */
         public String getString() {
             StringJoiner stringJoiner = new StringJoiner(",");
             stringJoiner.add(Integer.toString(1)).add(this.mIsFalse ? "1" : "0").add(Integer.toString(this.mInteractionType));
@@ -464,6 +466,7 @@ public class BrightLineFalsingManager implements FalsingManager {
         }
     }
 
+    /* access modifiers changed from: private */
     public static class XYDt {
         private final int mDT;
         private final int mX;
