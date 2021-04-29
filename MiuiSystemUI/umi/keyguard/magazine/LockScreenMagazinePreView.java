@@ -481,7 +481,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         updateRemoteTextView(this.mRemoteFullScreenLayout, false);
     }
 
-    public void refreshWallpaperInfo(RemoteViews remoteViews, RemoteViews remoteViews2) {
+    public void refreshWallpaperInfo() {
         LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getLockScreenMagazineWallpaperInfo();
         this.mLockScreenMagazineWallpaperInfo = lockScreenMagazineWallpaperInfo;
         if (lockScreenMagazineWallpaperInfo != null) {
@@ -489,13 +489,8 @@ public class LockScreenMagazinePreView extends RelativeLayout {
                 LockScreenMagazineWallpaperInfo lockScreenMagazineWallpaperInfo2 = this.mLockScreenMagazineWallpaperInfo;
                 lockScreenMagazineWallpaperInfo2.content = lockScreenMagazineWallpaperInfo2.content.replaceAll("\\s*", CodeInjection.MD5);
             }
-            updateViews(remoteViews, remoteViews2);
+            updateViews();
         }
-    }
-
-    public void updateViews(RemoteViews remoteViews, RemoteViews remoteViews2) {
-        checkResetRemoteView(remoteViews, remoteViews2);
-        updateViews();
     }
 
     public void updateViews() {
@@ -664,7 +659,7 @@ public class LockScreenMagazinePreView extends RelativeLayout {
         }
     }
 
-    private void checkResetRemoteView(RemoteViews remoteViews, RemoteViews remoteViews2) {
+    public void resetRemoteView(RemoteViews remoteViews, RemoteViews remoteViews2) {
         if (remoteViews == null || this.mMainRemoteView == null || remoteViews.getLayoutId() != this.mMainRemoteView.getLayoutId()) {
             this.mRemoteMainLayout.removeView(this.mRemoteMainView);
             this.mRemoteMainView = null;
