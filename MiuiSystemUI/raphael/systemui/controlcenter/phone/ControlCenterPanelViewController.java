@@ -41,6 +41,7 @@ import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
 import miuix.animation.controller.AnimState;
 import miuix.animation.property.ViewProperty;
+import miuix.animation.utils.EaseManager;
 import miuix.animation.utils.VelocityMonitor;
 
 public final class ControlCenterPanelViewController implements ConfigurationController.ConfigurationListener, GestureObserver.Callback {
@@ -614,9 +615,8 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             animState.add(ViewProperty.HEIGHT, this.panelView.getTileContainer().getHeight(), new long[0]);
             AnimState animState2 = new AnimState("expand_trans");
             animState2.add(ViewProperty.HEIGHT, this.tileLayoutMinHeight + this.expandThreshold, new long[0]);
-            AnimConfig animConfig = new AnimConfig(ViewProperty.HEIGHT);
-            animConfig.setFromSpeed(this.velocityMonitor.getVelocity(0));
-            animConfig.setEase(-2, 0.85f, 0.35f);
+            AnimConfig animConfig = new AnimConfig();
+            animConfig.setSpecial(ViewProperty.HEIGHT, EaseManager.getStyle(-2, 0.85f, 0.35f), this.velocityMonitor.getVelocity(0));
             animConfig.addListeners(new ControlCenterPanelViewController$toExpandAnimation$animConfig$1(this));
             IStateStyle iStateStyle2 = this.expandTransAnim;
             if (iStateStyle2 != null) {
@@ -634,13 +634,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         IStateStyle iStateStyle = this.expandTransAnim;
         if (iStateStyle != null) {
             iStateStyle.cancel(ViewProperty.HEIGHT);
-            AnimState animState = new AnimState("expand_trans");
+            AnimState animState = new AnimState("collapse_trans");
             animState.add(ViewProperty.HEIGHT, this.panelView.getTileContainer().getHeight(), new long[0]);
-            AnimState animState2 = new AnimState("expand_trans");
+            AnimState animState2 = new AnimState("collapse_trans");
             animState2.add(ViewProperty.HEIGHT, this.tileLayoutMinHeight, new long[0]);
-            AnimConfig animConfig = new AnimConfig(ViewProperty.HEIGHT);
-            animConfig.setFromSpeed(this.velocityMonitor.getVelocity(0));
-            animConfig.setEase(-2, 1.0f, 0.35f);
+            AnimConfig animConfig = new AnimConfig();
+            animConfig.setSpecial(ViewProperty.HEIGHT, EaseManager.getStyle(-2, 1.0f, 0.35f), this.velocityMonitor.getVelocity(0));
             animConfig.addListeners(new ControlCenterPanelViewController$toCollapseAnimation$animConfig$1(this));
             IStateStyle iStateStyle2 = this.expandTransAnim;
             if (iStateStyle2 != null) {

@@ -77,7 +77,7 @@ public final class ClickableToast implements IClickableToast {
             }
             WindowManager.LayoutParams layoutParams8 = this.mParams;
             if (layoutParams8 != null) {
-                layoutParams8.y = this.context.getResources().getDimensionPixelOffset(17105547);
+                layoutParams8.y = this.context.getResources().getDimensionPixelOffset(17105548);
             }
             this.mCancelRunnable = new Runnable(this) {
                 /* class com.android.systemui.statusbar.views.ClickableToast.AnonymousClass1 */

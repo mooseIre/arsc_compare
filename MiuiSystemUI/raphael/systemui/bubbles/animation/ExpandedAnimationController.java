@@ -96,7 +96,7 @@ public class ExpandedAnimationController extends PhysicsAnimationLayout.PhysicsA
         if (physicsAnimationLayout != null) {
             Resources resources = physicsAnimationLayout.getContext().getResources();
             this.mBubblePaddingTop = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
-            this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105489);
+            this.mStatusBarHeight = (float) resources.getDimensionPixelSize(17105490);
             this.mStackOffsetPx = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_stack_offset);
             this.mBubblePaddingTop = (float) resources.getDimensionPixelSize(C0011R$dimen.bubble_padding_top);
             this.mBubbleSizePx = (float) resources.getDimensionPixelSize(C0011R$dimen.individual_bubble_size);

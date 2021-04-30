@@ -38,6 +38,7 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
     private String mFlashDevice;
     private boolean mFlashlightEnabled;
     private boolean mForceOff;
+    private int mForceOffLightState = 1;
     private Handler mHandler;
     private final ArrayList<WeakReference<FlashlightController.FlashlightListener>> mListeners = new ArrayList<>(1);
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
@@ -57,9 +58,9 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
                 MiuiFlashlightControllerImpl.this.setFlashlight(z);
             } else if ("action_temp_state_change".equals(action)) {
                 int intExtra = intent.getIntExtra("temp_state", 0);
-                boolean z2 = intExtra == 4 || intExtra == 1;
+                boolean z2 = intExtra == MiuiFlashlightControllerImpl.this.mForceOffLightState || intExtra == 1;
+                Slog.d("FlashlightController", String.format("onReceive: forceOff=%b, state=%b, from=%s", Boolean.valueOf(z2), Boolean.FALSE, intent.getSender()));
                 if (z2 && MiuiFlashlightControllerImpl.this.mFlashlightEnabled) {
-                    Slog.d("FlashlightController", String.format("onReceive: forceOff=%b, state=%b, from=%s", Boolean.valueOf(z2), Boolean.FALSE, intent.getSender()));
                     MiuiFlashlightControllerImpl.this.setFlashlight(false);
                     MiuiFlashlightControllerImpl.this.postShowToast();
                 }
@@ -126,6 +127,7 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
         this.mContext = context;
         this.mCameraManager = (CameraManager) context.getSystemService("camera");
         this.mWaringToastString = this.mContext.getResources().getString(C0020R$string.torch_high_temperature_warning);
+        this.mForceOffLightState = this.mContext.getResources().getInteger(C0015R$integer.flash_force_off_light_state);
         ensureHandler();
         this.mBgHandler.post(new Runnable() {
             /* class com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.AnonymousClass1 */
@@ -270,7 +272,7 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
                                 r2 = 0
                                 java.io.FileReader r3 = new java.io.FileReader     // Catch:{ Exception -> 0x0025, all -> 0x0023 }
                                 com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl r4 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.this     // Catch:{ Exception -> 0x0025, all -> 0x0023 }
-                                java.lang.String r4 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$600(r4)     // Catch:{ Exception -> 0x0025, all -> 0x0023 }
+                                java.lang.String r4 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$700(r4)     // Catch:{ Exception -> 0x0025, all -> 0x0023 }
                                 r3.<init>(r4)     // Catch:{ Exception -> 0x0025, all -> 0x0023 }
                                 int r2 = r3.read()     // Catch:{ Exception -> 0x0021 }
                                 r4 = 48
@@ -306,15 +308,15 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
                                 java.lang.String r1 = "setFlashModeInternal: StatusDetectingRunnable: state change"
                                 android.util.Slog.d(r2, r1)
                                 com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl r6 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.this
-                                com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$700(r6, r0)
+                                com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$800(r6, r0)
                                 goto L_0x0056
                             L_0x0040:
                                 java.lang.String r0 = "setFlashModeInternal: in runnable, post delay StatusDetectingRunnable"
                                 android.util.Slog.d(r2, r0)
                                 com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl r0 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.this
-                                android.os.Handler r0 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$900(r0)
+                                android.os.Handler r0 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$1000(r0)
                                 com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl r6 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.this
-                                java.lang.Runnable r6 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$800(r6)
+                                java.lang.Runnable r6 = com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.access$900(r6)
                                 r1 = 1000(0x3e8, double:4.94E-321)
                                 r0.postDelayed(r6, r1)
                             L_0x0056:

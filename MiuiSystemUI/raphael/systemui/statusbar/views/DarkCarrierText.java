@@ -8,6 +8,10 @@ import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 
 public class DarkCarrierText extends CarrierText implements DarkIconDispatcher.DarkReceiver {
+    public boolean hasOverlappingRendering() {
+        return false;
+    }
+
     public DarkCarrierText(Context context) {
         super(context);
     }

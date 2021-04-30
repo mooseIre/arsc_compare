@@ -46,7 +46,7 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
     public BatteryIndicator(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mContext = context;
-        this.mLowLevel = context.getResources().getInteger(285868035);
+        this.mLowLevel = context.getResources().getInteger(285868036);
         updateDisplaySize();
     }
 

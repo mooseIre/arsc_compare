@@ -18,6 +18,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.ScreenDecorations;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.plugins.DarkIconDispatcher;
+import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
@@ -31,16 +32,16 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     protected NetworkSpeedView mDripNetworkSpeedView;
     protected View mDripStatusBarLeftStatusIconArea;
     protected View mDripStatusBarNotificationIconArea;
-    protected View mDripStatusBarRightStatusIcons;
     private boolean mFirstMove;
     protected NetworkSpeedView mFullScreenNetworkSpeedView;
     protected View mFullscreenStatusBarNotificationIconArea;
-    protected View mFullscreenStatusBarStatusIcons;
     private GestureDetectorCompat mGestureDetector;
     private boolean mIsGiveAllEvent;
+    private MiuiEndIconManager mMiuiEndIconManager;
     protected View mNotificationIconAreaInner;
     protected PhoneStatusBarTintController mPhoneStatusBarTintController = new PhoneStatusBarTintController(this, (MiuiLightBarController) Dependency.get(LightBarController.class));
     protected View mStatusBarLeftContainer;
+    protected LinearLayout mStatusBarStatusIcons;
     protected View mSystemIconArea;
 
     public MiuiPhoneStatusBarView(Context context, AttributeSet attributeSet) {
@@ -64,8 +65,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         this.mDripStatusBarNotificationIconArea = findViewById(C0014R$id.drip_notification_icon_area);
         this.mDripStatusBarLeftStatusIconArea = findViewById(C0014R$id.drip_left_status_icon_area);
         this.mFullscreenStatusBarNotificationIconArea = findViewById(C0014R$id.fullscreen_notification_icon_area);
-        this.mFullscreenStatusBarStatusIcons = findViewById(C0014R$id.statusIcons);
-        this.mDripStatusBarRightStatusIcons = findViewById(C0014R$id.drip_right_statusIcons);
+        this.mStatusBarStatusIcons = (LinearLayout) findViewById(C0014R$id.statusIcons);
         this.mSystemIconArea = findViewById(C0014R$id.system_icon_area);
         this.mDripNetworkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.drip_network_speed_view);
         this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) findViewById(C0014R$id.drip_network_speed_splitter);
@@ -78,6 +78,9 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView
     public void onAttachedToWindow() {
+        MiuiEndIconManager miuiEndIconManager = new MiuiEndIconManager(this.mStatusBarStatusIcons, (CommandQueue) Dependency.get(CommandQueue.class), false);
+        this.mMiuiEndIconManager = miuiEndIconManager;
+        miuiEndIconManager.attachToWindow();
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mDripNetworkSpeedView);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mDripNetworkSpeedSplitter);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mFullScreenNetworkSpeedView);
@@ -92,6 +95,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mDripNetworkSpeedView);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mDripNetworkSpeedSplitter);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mFullScreenNetworkSpeedView);
+        this.mMiuiEndIconManager.detachFromWindow();
         super.onDetachedFromWindow();
     }
 
@@ -126,12 +130,11 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
                 layoutParams2.width = -2;
                 layoutParams2.weight = 0.0f;
                 this.mFullscreenStatusBarNotificationIconArea.setVisibility(0);
-                this.mFullscreenStatusBarStatusIcons.setVisibility(0);
                 this.mFullScreenNetworkSpeedView.setVisibilityByStatusBar(true);
                 this.mDripNetworkSpeedView.setVisibilityByStatusBar(false);
                 this.mDripStatusBarLeftStatusIconArea.setVisibility(8);
                 this.mDripStatusBarNotificationIconArea.setVisibility(8);
-                this.mDripStatusBarRightStatusIcons.setVisibility(8);
+                this.mMiuiEndIconManager.setDripEnd(false);
                 return;
             }
             setStatusBarType(1);
@@ -152,12 +155,11 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
             layoutParams5.width = 0;
             layoutParams5.weight = 1.0f;
             this.mFullscreenStatusBarNotificationIconArea.setVisibility(8);
-            this.mFullscreenStatusBarStatusIcons.setVisibility(8);
             this.mFullScreenNetworkSpeedView.setVisibilityByStatusBar(false);
             this.mDripNetworkSpeedView.setVisibilityByStatusBar(true);
             this.mDripStatusBarLeftStatusIconArea.setVisibility(0);
             this.mDripStatusBarNotificationIconArea.setVisibility(0);
-            this.mDripStatusBarRightStatusIcons.setVisibility(0);
+            this.mMiuiEndIconManager.setDripEnd(true);
         }
     }
 

@@ -61,7 +61,7 @@ public class KeyguardMediaController {
         this.view = mediaHeaderView;
         this.mediaHost.addVisibilityChangeListener(new KeyguardMediaController$attach$1(this));
         this.mediaHost.setExpansion(0.0f);
-        this.mediaHost.setShowsOnlyActiveMedia(true);
+        this.mediaHost.setShowsOnlyActiveMedia(false);
         this.mediaHost.setFalsingProtectionNeeded(true);
         this.mediaHost.init(2);
         mediaHeaderView.setContentView(this.mediaHost.getHostView());

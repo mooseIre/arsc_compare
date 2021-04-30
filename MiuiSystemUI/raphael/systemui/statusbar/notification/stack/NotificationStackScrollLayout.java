@@ -88,6 +88,7 @@ import com.android.systemui.statusbar.notification.NotificationPanelNavigationBa
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.NotificationUtils;
+import com.android.systemui.statusbar.notification.NotificationVisualHelper;
 import com.android.systemui.statusbar.notification.VisibilityLocationProvider;
 import com.android.systemui.statusbar.notification.VisualStabilityManager;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
@@ -1483,10 +1484,10 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     public boolean isInVisibleLocation(NotificationEntry notificationEntry) {
         ExpandableNotificationRow row = notificationEntry.getRow();
         ExpandableViewState viewState = row.getViewState();
-        if (viewState == null || (viewState.location & 5) == 0 || row.getVisibility() != 0) {
-            return false;
+        if (viewState != null && (viewState.location & 5) != 0 && row.getVisibility() == 0 && NotificationVisualHelper.isVisualView(notificationEntry, this, this.mStatusBar.isPanelExpanded())) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private void setMaxLayoutHeight(int i) {

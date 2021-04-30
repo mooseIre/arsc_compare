@@ -8,6 +8,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.ConfigurationControllerImpl;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.graphics.AppIconsManager;
+import com.miui.systemui.util.MiuiThemeUtils;
 import java.util.ArrayList;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -33,14 +34,15 @@ public final class MiuiConfigurationControllerImpl extends ConfigurationControll
         if (i != this.themeChanged) {
             this.themeChanged = i;
             ((AppIconsManager) Dependency.get(AppIconsManager.class)).clearAll();
-            onMiuiThemeChanged(MiuiKeyguardUtils.isDefaultLockScreenTheme());
+            MiuiThemeUtils.updateDefaultSysUiTheme(configuration);
+            onMiuiThemeChanged(MiuiKeyguardUtils.isDefaultLockScreenTheme(), MiuiThemeUtils.isDefaultSysUiTheme());
         }
     }
 
-    public final void onMiuiThemeChanged(boolean z) {
+    public final void onMiuiThemeChanged(boolean z, boolean z2) {
         for (ConfigurationController.ConfigurationListener configurationListener : new ArrayList(getListeners())) {
             if (getListeners().contains(configurationListener)) {
-                configurationListener.onMiuiThemeChanged(z);
+                configurationListener.onMiuiThemeChanged(z, z2);
             }
         }
     }

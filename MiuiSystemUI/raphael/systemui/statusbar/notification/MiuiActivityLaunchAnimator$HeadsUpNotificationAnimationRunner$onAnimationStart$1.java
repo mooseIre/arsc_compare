@@ -21,7 +21,7 @@ final class MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnim
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public final void run() {
         /*
-        // Method dump skipped, instructions count: 668
+        // Method dump skipped, instructions count: 664
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnimationStart$1.run():void");
     }

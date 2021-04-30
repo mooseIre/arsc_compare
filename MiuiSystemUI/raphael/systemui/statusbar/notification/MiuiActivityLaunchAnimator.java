@@ -35,14 +35,6 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
     private final NotificationShadeWindowViewController mNotificationShadeWindowViewController;
     private final float mWindowCornerRadius;
 
-    public static final /* synthetic */ NotificationPanelViewController access$getMNotificationPanel$p(MiuiActivityLaunchAnimator miuiActivityLaunchAnimator) {
-        return miuiActivityLaunchAnimator.mNotificationPanel;
-    }
-
-    public static final /* synthetic */ void access$setMClosingActivityType$p(MiuiActivityLaunchAnimator miuiActivityLaunchAnimator, int i) {
-        miuiActivityLaunchAnimator.mClosingActivityType = i;
-    }
-
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiActivityLaunchAnimator(NotificationShadeWindowViewController notificationShadeWindowViewController, ActivityLaunchAnimator.Callback callback, NotificationPanelViewController notificationPanelViewController, NotificationShadeDepthController notificationShadeDepthController, NotificationListContainer notificationListContainer, Executor executor) {
         super(notificationShadeWindowViewController, callback, notificationPanelViewController, notificationShadeDepthController, notificationListContainer, executor);
@@ -198,7 +190,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
         }
 
         private final void setExpandAnimationRunning(boolean z) {
-            MiuiActivityLaunchAnimator.access$getMNotificationPanel$p(this.this$0).setLaunchingNotification(z);
+            this.this$0.mNotificationPanel.setLaunchingNotification(z);
             this.mSourceNotification.setExpandAnimationRunning(z);
             this.this$0.mNotificationShadeWindowViewController.setExpandAnimationRunning(z);
             this.this$0.mNotificationContainer.setExpandingNotification(z ? this.mSourceNotification : null);
@@ -222,7 +214,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
 
         private final void applyParamsToNotificationShade(ActivityLaunchAnimator.ExpandAnimationParameters expandAnimationParameters) {
             this.this$0.mNotificationContainer.applyExpandAnimationParams(expandAnimationParameters);
-            MiuiActivityLaunchAnimator.access$getMNotificationPanel$p(this.this$0).applyExpandAnimationParams(expandAnimationParameters);
+            this.this$0.mNotificationPanel.applyExpandAnimationParams(expandAnimationParameters);
             this.this$0.mDepthController.setNotificationLaunchAnimationParams(expandAnimationParameters);
         }
 

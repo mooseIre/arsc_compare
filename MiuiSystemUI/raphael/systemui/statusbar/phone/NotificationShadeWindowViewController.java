@@ -160,6 +160,9 @@ public class NotificationShadeWindowViewController {
                         NotificationShadeWindowViewController.this.mExpandingBelowNotch = true;
                         z4 = true;
                     }
+                    if (NotificationShadeWindowViewController.this.mStatusBarView == null) {
+                        return bool;
+                    }
                     if (z4) {
                         return Boolean.valueOf(NotificationShadeWindowViewController.this.mStatusBarView.dispatchTouchEvent(motionEvent));
                     }

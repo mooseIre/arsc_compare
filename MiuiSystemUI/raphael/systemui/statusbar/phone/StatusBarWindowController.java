@@ -26,12 +26,12 @@ public class StatusBarWindowController {
         this.mLpChanged = new WindowManager.LayoutParams();
         this.mResources = resources;
         if (this.mBarHeight < 0) {
-            this.mBarHeight = resources.getDimensionPixelSize(17105489);
+            this.mBarHeight = resources.getDimensionPixelSize(17105490);
         }
     }
 
     public void refreshStatusBarHeight() {
-        int dimensionPixelSize = this.mResources.getDimensionPixelSize(17105489);
+        int dimensionPixelSize = this.mResources.getDimensionPixelSize(17105490);
         if (this.mBarHeight != dimensionPixelSize) {
             this.mBarHeight = dimensionPixelSize;
             apply(this.mCurrentState);

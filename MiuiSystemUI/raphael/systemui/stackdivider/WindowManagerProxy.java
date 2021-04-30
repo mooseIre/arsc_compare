@@ -2,6 +2,8 @@ package com.android.systemui.stackdivider;
 
 import android.app.ActivityManager;
 import android.app.ActivityTaskManager;
+import android.app.IActivityManager;
+import android.content.ComponentName;
 import android.graphics.Rect;
 import android.os.Handler;
 import android.os.RemoteException;
@@ -162,10 +164,21 @@ public class WindowManagerProxy {
         if (rootTasks.isEmpty()) {
             return false;
         }
+        IActivityManager service = ActivityManager.getService();
         ActivityManager.RunningTaskInfo runningTaskInfo = null;
         for (int size = rootTasks.size() - 1; size >= 0; size--) {
             ActivityManager.RunningTaskInfo runningTaskInfo2 = (ActivityManager.RunningTaskInfo) rootTasks.get(size);
-            if ((runningTaskInfo2.isResizeable || runningTaskInfo2.topActivityType == 2) && (runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 1 || runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 13)) {
+            if (runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 100) {
+                String stackPackageName = getStackPackageName(runningTaskInfo2);
+                if (stackPackageName != null) {
+                    Log.d("WindowManagerProxy", "applyEnterSplit ready to kill taskId " + runningTaskInfo2.taskId + " packageName " + stackPackageName + " userId " + runningTaskInfo2.userId);
+                    try {
+                        service.forceStopPackage(stackPackageName, runningTaskInfo2.userId);
+                    } catch (Exception e) {
+                        Log.e("WindowManagerProxy", "forceStopPackage error ", e);
+                    }
+                }
+            } else if ((runningTaskInfo2.isResizeable || runningTaskInfo2.topActivityType == 2) && (runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 1 || runningTaskInfo2.configuration.windowConfiguration.getWindowingMode() == 13)) {
                 runningTaskInfo = isHomeOrRecentTask(runningTaskInfo2) ? runningTaskInfo2 : null;
                 windowContainerTransaction.reparent(runningTaskInfo2.token, splitScreenTaskOrganizer.mSecondary.token, true);
             }
@@ -282,5 +295,24 @@ public class WindowManagerProxy {
     /* access modifiers changed from: package-private */
     public void runInSync(SyncTransactionQueue.TransactionRunnable transactionRunnable) {
         this.mSyncTransactionQueue.runInSync(transactionRunnable);
+    }
+
+    public String getStackPackageName(ActivityManager.RunningTaskInfo runningTaskInfo) {
+        if (runningTaskInfo == null) {
+            return null;
+        }
+        ComponentName componentName = runningTaskInfo.origActivity;
+        if (componentName != null) {
+            return componentName.getPackageName();
+        }
+        ComponentName componentName2 = runningTaskInfo.realActivity;
+        if (componentName2 != null) {
+            return componentName2.getPackageName();
+        }
+        ComponentName componentName3 = runningTaskInfo.topActivity;
+        if (componentName3 != null) {
+            return componentName3.getPackageName();
+        }
+        return null;
     }
 }

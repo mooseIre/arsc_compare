@@ -21,6 +21,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
     private int mIconSpacing;
     private ArrayList<String> mIgnoredSlots;
     private ArrayList<StatusIconState> mLayoutStates;
+    private ArrayList<View> mLayoutVisibleView;
     private ArrayList<View> mMeasureViews;
     private boolean mNeedsUnderflow;
     private boolean mShouldRestrictIcons;
@@ -35,6 +36,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
         this.mNeedsUnderflow = true;
         this.mShouldRestrictIcons = false;
         this.mLayoutStates = new ArrayList<>();
+        this.mLayoutVisibleView = new ArrayList<>();
         this.mMeasureViews = new ArrayList<>();
         this.mIgnoredSlots = new ArrayList<>();
         initDimens();
@@ -47,7 +49,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
     }
 
     private void initDimens() {
-        getResources().getDimensionPixelSize(17105492);
+        getResources().getDimensionPixelSize(17105493);
         getResources().getDimensionPixelSize(C0011R$dimen.overflow_icon_dot_padding);
         this.mIconSpacing = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_system_icon_spacing);
         getResources().getDimensionPixelSize(C0011R$dimen.overflow_dot_radius);
@@ -56,7 +58,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        float height = ((float) getHeight()) / 2.0f;
+        float height = ((float) (getHeight() + getPaddingTop())) / 2.0f;
         for (int i5 = 0; i5 < getChildCount(); i5++) {
             View childAt = getChildAt(i5);
             int measuredWidth = childAt.getMeasuredWidth();
@@ -120,6 +122,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
 
     private void calculateIconTranslations() {
         this.mLayoutStates.clear();
+        this.mLayoutVisibleView.clear();
         float width = (float) getWidth();
         float paddingStart = (float) getPaddingStart();
         float paddingEnd = width - ((float) getPaddingEnd());
@@ -134,6 +137,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
                 viewStateFromChild.xTranslation = paddingStart;
                 viewStateFromChild.visibleState = 0;
                 this.mLayoutStates.add(viewStateFromChild);
+                this.mLayoutVisibleView.add(childAt);
                 paddingStart = paddingStart + ((float) getViewTotalWidth(childAt)) + ((float) this.mIconSpacing);
             }
         }
@@ -150,7 +154,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
                 break;
             }
             StatusIconState statusIconState = this.mLayoutStates.get(i3);
-            if ((this.mNeedsUnderflow && statusIconState.xTranslation >= ((float) this.mUnderflowWidth) + paddingEnd) || (this.mShouldRestrictIcons && i4 >= i2)) {
+            if ((this.mNeedsUnderflow && statusIconState.xTranslation + ((float) getViewTotalWidth(this.mLayoutVisibleView.get(i3))) > ((float) this.mUnderflowWidth) + paddingEnd) || (this.mShouldRestrictIcons && i4 >= i2)) {
                 break;
             }
             Math.min(paddingEnd, statusIconState.xTranslation + ((float) this.mUnderflowWidth) + ((float) this.mIconSpacing));
@@ -170,6 +174,7 @@ public class MiuiDripLeftStatusIconContainer extends AlphaOptimizedLinearLayout 
                 viewStateFromChild2.xTranslation = (width - viewStateFromChild2.xTranslation) - ((float) childAt2.getWidth());
             }
         }
+        this.mLayoutVisibleView.clear();
     }
 
     private void applyIconStates() {

@@ -359,14 +359,6 @@ public class ControlsBindingControllerImpl implements ControlsBindingController 
             throw null;
         }
 
-        public static final /* synthetic */ AtomicBoolean access$isTerminated$p(LoadSubscriber loadSubscriber) {
-            return loadSubscriber.isTerminated;
-        }
-
-        public static final /* synthetic */ void access$maybeTerminateAndRun(LoadSubscriber loadSubscriber, Runnable runnable) {
-            loadSubscriber.maybeTerminateAndRun(runnable);
-        }
-
         public final ControlsBindingController.LoadCallback getCallback() {
             return this.callback;
         }

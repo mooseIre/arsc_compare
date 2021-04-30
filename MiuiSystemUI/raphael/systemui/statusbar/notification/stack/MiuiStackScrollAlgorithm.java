@@ -61,7 +61,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     public final void updateResources() {
         this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_top_minus);
         this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_bottom_minus);
-        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105489);
+        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105490);
         this.mHeadsUpMarginTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
     }
 

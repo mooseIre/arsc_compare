@@ -28,14 +28,13 @@ import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
 import codeinjection.CodeInjection;
+import com.android.settingslib.Utils;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0021R$style;
-import com.android.systemui.Dependency;
 import com.android.systemui.DualToneHandler;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.plugins.ActivityStarter;
-import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.qs.TouchAnimator;
 import com.android.systemui.qs.carrier.QSCarrierGroup;
 import com.android.systemui.statusbar.CommandQueue;
@@ -46,7 +45,6 @@ import com.android.systemui.statusbar.policy.Clock;
 import com.android.systemui.statusbar.policy.DateView;
 import com.android.systemui.statusbar.policy.NextAlarmController;
 import com.android.systemui.statusbar.policy.ZenModeController;
-import com.android.systemui.statusbar.views.NetworkSpeedView;
 import com.android.systemui.util.RingerModeTracker;
 import java.util.ArrayList;
 import java.util.List;
@@ -62,9 +60,10 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     private int mContentMarginStart;
     private int mCutOutPaddingLeft;
     private int mCutOutPaddingRight;
+    private DualToneHandler mDualToneHandler;
     private float mExpandedHeaderAlpha = 1.0f;
     private View mHeaderTextContainerView;
-    private StatusBarIconController.MiuiLightDarkIconManager mIconManager;
+    private StatusBarIconController.TintedIconManager mIconManager;
     private final LifecycleRegistry mLifecycle = new LifecycleRegistry(this);
     private boolean mListening;
     private AlarmManager.AlarmClockInfo mNextAlarm;
@@ -99,7 +98,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         this.mZenController = zenModeController;
         this.mStatusBarIconController = statusBarIconController;
         this.mActivityStarter = activityStarter;
-        new DualToneHandler(new ContextThemeWrapper(context, C0021R$style.QSHeaderTheme));
+        this.mDualToneHandler = new DualToneHandler(new ContextThemeWrapper(context, C0021R$style.QSHeaderTheme));
         this.mCommandQueue = commandQueue;
         this.mRingerModeTracker = ringerModeTracker;
     }
@@ -112,7 +111,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         MiuiStatusIconContainer miuiStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0014R$id.statusIcons);
         miuiStatusIconContainer.addIgnoredSlots(getIgnoredIconSlots());
         miuiStatusIconContainer.setShouldRestrictIcons(false);
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(miuiStatusIconContainer, this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
+        this.mIconManager = new StatusBarIconController.TintedIconManager(miuiStatusIconContainer, this.mCommandQueue);
         this.mHeaderTextContainerView = findViewById(C0014R$id.header_text_container);
         this.mStatusSeparator = findViewById(C0014R$id.status_separator);
         this.mNextAlarmIcon = (ImageView) findViewById(C0014R$id.next_alarm_icon);
@@ -139,16 +138,11 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         });
         QSCarrierGroup qSCarrierGroup = (QSCarrierGroup) findViewById(C0014R$id.carrier_group);
         updateResources();
-        Rect rect = new Rect(0, 0, 0, 0);
-        DarkIconDispatcher darkIconDispatcher = (DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class);
-        int lightModeIconColorSingleTone = darkIconDispatcher.getLightModeIconColorSingleTone();
-        applyDarkness(C0014R$id.clock, rect, 0.0f, lightModeIconColorSingleTone, lightModeIconColorSingleTone, darkIconDispatcher.getDarkModeIconColorSingleTone());
-        this.mIconManager.setLight(true, lightModeIconColorSingleTone);
-        this.mNextAlarmIcon.setImageTintList(ColorStateList.valueOf(lightModeIconColorSingleTone));
-        this.mRingerModeIcon.setImageTintList(ColorStateList.valueOf(lightModeIconColorSingleTone));
-        NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
-        networkSpeedView.setVisibilityByStatusBar(true);
-        networkSpeedView.setTextColor(lightModeIconColorSingleTone);
+        new Rect(0, 0, 0, 0);
+        int singleColor = this.mDualToneHandler.getSingleColor(getColorIntensity(Utils.getColorAttrDefaultColor(getContext(), 16842800)));
+        this.mIconManager.setTint(singleColor);
+        this.mNextAlarmIcon.setImageTintList(ColorStateList.valueOf(singleColor));
+        this.mRingerModeIcon.setImageTintList(ColorStateList.valueOf(singleColor));
         Clock clock = (Clock) findViewById(C0014R$id.clock);
         this.mClockView = clock;
         clock.setOnClickListener(this);
@@ -216,13 +210,6 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         return z2 != z || !Objects.equals(text, this.mNextAlarmTextView.getText());
     }
 
-    private void applyDarkness(int i, Rect rect, float f, int i2, int i3, int i4) {
-        View findViewById = findViewById(i);
-        if (findViewById instanceof DarkIconDispatcher.DarkReceiver) {
-            ((DarkIconDispatcher.DarkReceiver) findViewById).onDarkChanged(rect, f, i2, i3, i4, false);
-        }
-    }
-
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
@@ -236,7 +223,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     }
 
     private void updateMinimumHeight() {
-        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105489) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_quick_header_panel_height));
+        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_quick_header_panel_height));
     }
 
     private void updateResources() {
@@ -247,12 +234,12 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         this.mHeaderTextContainerView.getLayoutParams().height = resources.getDimensionPixelSize(C0011R$dimen.qs_header_tooltip_height);
         View view = this.mHeaderTextContainerView;
         view.setLayoutParams(view.getLayoutParams());
-        this.mSystemIconsView.getLayoutParams().height = resources.getDimensionPixelSize(17105440);
+        this.mSystemIconsView.getLayoutParams().height = resources.getDimensionPixelSize(17105441);
         View view2 = this.mSystemIconsView;
         view2.setLayoutParams(view2.getLayoutParams());
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (this.mQsDisabled) {
-            layoutParams.height = resources.getDimensionPixelSize(17105440);
+            layoutParams.height = resources.getDimensionPixelSize(17105441);
         } else {
             layoutParams.height = -2;
         }

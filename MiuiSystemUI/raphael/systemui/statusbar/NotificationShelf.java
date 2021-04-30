@@ -135,7 +135,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         this.mShelfIcons.setPadding(dimensionPixelOffset, 0, dimensionPixelOffset, 0);
         this.mScrollFastThreshold = resources.getDimensionPixelOffset(C0011R$dimen.scroll_fast_threshold);
         this.mShowNotificationShelf = resources.getBoolean(C0009R$bool.config_showNotificationShelf);
-        this.mIconSize = resources.getDimensionPixelSize(17105492);
+        this.mIconSize = resources.getDimensionPixelSize(17105493);
         this.mHiddenShelfIconSize = (float) resources.getDimensionPixelOffset(C0011R$dimen.hidden_shelf_icon_size);
         this.mGapHeight = resources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding);
         if (!this.mShowNotificationShelf) {

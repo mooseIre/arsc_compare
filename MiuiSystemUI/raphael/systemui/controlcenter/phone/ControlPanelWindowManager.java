@@ -103,7 +103,7 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
     }
 
     public void onExpandChange(boolean z) {
-        Log.d("ControlPanelWindowManager", "onExpandChange: " + z + "," + this.mIsExpand);
+        Log.i("ControlPanelWindowManager", "onExpandChange: " + z + "," + this.mIsExpand);
         if (z && !this.mIsExpand) {
             this.mIsExpand = true;
             this.mControlPanel.setVisibility(0);
@@ -216,6 +216,10 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
             return controlPanelWindowView.isExpanded();
         }
         return false;
+    }
+
+    public boolean isWindowShow() {
+        return this.mIsExpand;
     }
 
     public void updateNavigationBarSlippery() {

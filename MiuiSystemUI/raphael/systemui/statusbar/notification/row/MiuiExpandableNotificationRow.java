@@ -26,6 +26,7 @@ import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationO
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.CommonExtensionsKt;
+import java.util.function.Consumer;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
 import kotlin.TypeCastException;
@@ -134,12 +135,13 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     }
 
     @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
-    public void setHeadsUpAnimatingAway(boolean z) {
-        super.setHeadsUpAnimatingAway(z);
-        updateBackgroundBg();
+    public void setHeadsUpAnimatingAwayListener(@NotNull Consumer<Boolean> consumer) {
+        Intrinsics.checkParameterIsNotNull(consumer, "listener");
+        super.setHeadsUpAnimatingAwayListener(new MiuiExpandableNotificationRow$setHeadsUpAnimatingAwayListener$1(this, consumer));
     }
 
-    private final void updateBackgroundBg() {
+    /* access modifiers changed from: private */
+    public final void updateBackgroundBg() {
         if (isHeadsUpState()) {
             boolean isTransparentAble = NotificationContentInflaterInjector.isTransparentAble();
             NotificationContentView showingLayout = getShowingLayout();
@@ -389,11 +391,17 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     public ExpandableViewState resetViewState() {
         ExpandableViewState resetViewState = super.resetViewState();
         if (isChildInGroup() || isSummaryWithChildren()) {
-            if (resetViewState != null) {
-                resetViewState.scaleX = 1.0f;
+            boolean z = true;
+            if (resetViewState == null || !resetViewState.isAnimating()) {
+                z = false;
             }
-            if (resetViewState != null) {
-                resetViewState.scaleY = 1.0f;
+            if (!z) {
+                if (resetViewState != null) {
+                    resetViewState.scaleX = 1.0f;
+                }
+                if (resetViewState != null) {
+                    resetViewState.scaleY = 1.0f;
+                }
             }
         }
         return resetViewState;

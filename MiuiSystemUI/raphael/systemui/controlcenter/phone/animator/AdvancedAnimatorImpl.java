@@ -1,7 +1,6 @@
 package com.android.systemui.controlcenter.phone.animator;
 
 import android.view.View;
-import android.widget.ImageView;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelViewController;
@@ -232,16 +231,18 @@ public final class AdvancedAnimatorImpl extends ControlCenterPanelAnimator {
             for (T t : this.mTransViews) {
                 Object tag = t.getTag(C0014R$id.tag_control_center_trans);
                 if (tag != null) {
-                    t.setTranslationY(ControlCenterUtils.getTranslationY(((Integer) tag).intValue(), this.overFlingLines, f2, screenHeight));
+                    float translationY = ControlCenterUtils.getTranslationY(((Integer) tag).intValue(), this.overFlingLines, f2, screenHeight);
+                    Folme.useAt(t).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(translationY));
                 } else {
                     throw new TypeCastException("null cannot be cast to non-null type kotlin.Int");
                 }
             }
-            ImageView indicator = getPanelView().getFooter().getIndicator();
+            IStateStyle state = Folme.useAt(getPanelView().getFooter().getIndicator()).state();
             int i = this.overFlingLines;
-            indicator.setTranslationY(ControlCenterUtils.getTranslationY(i - 1, i, f2, screenHeight));
+            state.setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(ControlCenterUtils.getTranslationY(i - 1, i, f2, screenHeight)));
             int i2 = this.overFlingLines;
-            getPanelView().getSmartHomeContainer().setTranslationY(ControlCenterUtils.getTranslationY(i2 - 2, i2, f2, screenHeight));
+            float translationY2 = ControlCenterUtils.getTranslationY(i2 - 2, i2, f2, screenHeight);
+            Folme.useAt(getPanelView().getSmartHomeContainer()).state().setTo(ViewProperty.TRANSLATION_Y, Float.valueOf(translationY2));
             getPanelView().getTileLayout().updateTransHeight(null, f, this.controller.getScreenHeight(), this.overFlingLines);
         }
     }

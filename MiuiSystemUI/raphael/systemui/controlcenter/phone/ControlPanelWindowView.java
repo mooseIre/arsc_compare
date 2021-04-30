@@ -21,6 +21,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.util.AccessibilityUtils;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
+import miuix.animation.base.AnimConfig;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.property.FloatProperty;
 
@@ -28,6 +29,7 @@ public class ControlPanelWindowView extends FrameLayout {
     private boolean mAnimating;
     private boolean mAttached;
     private IStateStyle mBlurAmin;
+    private AnimConfig mBlurAnimConfig;
     private float mBlurRatio;
     private TransitionListener mBlurRatioListener;
     private View mBottomArea;
@@ -158,7 +160,12 @@ public class ControlPanelWindowView extends FrameLayout {
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
         Folme.getValueTarget("ControlPanelViewBlur").setMinVisibleChange(0.01f, "blurRatio");
-        this.mBlurAmin = Folme.useValue("ControlPanelViewBlur").addListener(this.mBlurRatioListener);
+        IStateStyle useValue = Folme.useValue("ControlPanelViewBlur");
+        this.mBlurAmin = useValue;
+        useValue.setup("blurRatioSetup").setTo("blurRatio", Float.valueOf(this.mBlurRatio));
+        AnimConfig animConfig = new AnimConfig();
+        animConfig.addListeners(this.mBlurRatioListener);
+        this.mBlurAnimConfig = animConfig;
         this.mControlCenterPanel.setListening(false);
         this.mAttached = true;
     }
@@ -166,8 +173,7 @@ public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mBlurAmin.removeListener(this.mBlurRatioListener);
-        this.mBlurAmin.clean();
+        this.mBlurAnimConfig.removeListeners(this.mBlurRatioListener);
         this.mAttached = false;
     }
 
@@ -186,6 +192,9 @@ public class ControlPanelWindowView extends FrameLayout {
         }
         if (motionEvent.getActionMasked() == 0) {
             verifyState();
+        }
+        if (!this.mIsGetSelfEvent) {
+            Log.i("ControllerPanelWindowView", "get self event" + motionEvent.getActionMasked());
         }
         this.mIsGetSelfEvent = true;
         return super.dispatchTouchEvent(motionEvent);
@@ -234,6 +243,7 @@ public class ControlPanelWindowView extends FrameLayout {
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
+        boolean z = false;
         this.mIsIntercept = this.mInterceptTouchEvent || !isExpanded() || super.onInterceptTouchEvent(motionEvent);
         this.mIsDown = motionEvent.getAction() == 0;
         this.mIsMove = motionEvent.getAction() == 2;
@@ -243,7 +253,10 @@ public class ControlPanelWindowView extends FrameLayout {
             this.mDownY = motionEvent.getRawY();
             this.mDownX = motionEvent.getRawX();
             this.mDownExpandHeight = this.mExpandHeight;
-            this.mIsSwipeCollapse = this.mControlCenterPanel.shouldCollapseBySwipeUp();
+            if (this.mControlCenterPanel.shouldCollapseBySwipeUp().booleanValue() && !this.mControlCenterTileLayout.isExpanded()) {
+                z = true;
+            }
+            this.mIsSwipeCollapse = Boolean.valueOf(z);
         } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
             return this.mIsIntercept;
         } else {
@@ -344,29 +357,28 @@ public class ControlPanelWindowView extends FrameLayout {
             Log.d("ControllerPanelWindowView", "updateExpandHeight: not attached");
         } else if ((this.mControlCenter.isExpandable() || f == 0.0f) && this.mExpandHeight != f) {
             float max = Math.max(Math.min(1.0f, f / 80.0f), 0.0f);
-            float f2 = this.mBlurRatio;
-            if (f2 != max) {
-                this.mBlurAmin.to("blurRatio", Float.valueOf(max));
+            if (this.mBlurRatio != max) {
+                this.mBlurAmin.setup("blurRatioSetup").to("blurRatio", Float.valueOf(max), this.mBlurAnimConfig);
             } else {
-                this.mBlurAmin.setTo("blurRatio", Float.valueOf(f2));
+                this.mBlurAmin.setup("blurRatioSetup").setTo("blurRatio", Float.valueOf(this.mBlurRatio));
                 this.mControlPanelWindowManager.setBlurRatio(max);
             }
-            float f3 = this.mExpandHeight;
+            float f2 = this.mExpandHeight;
             this.mExpandHeight = f;
-            if (f3 < 80.0f || f >= 80.0f) {
-                if (f3 < 80.0f && f >= 80.0f && !this.mContentShowing) {
+            if (f2 < 80.0f || f >= 80.0f) {
+                if (f2 < 80.0f && f >= 80.0f && !this.mContentShowing) {
                     this.mContent.showContent();
                     this.mContentShowing = true;
                     onControlPanelFinishExpand();
                     cancelHeightChangeAnimator();
-                    Log.d("ControllerPanelWindowView", "showContent:" + this.mContent.getHeight());
+                    Log.i("ControllerPanelWindowView", "showContent:" + this.mContent.getHeight());
                 }
             } else if (this.mContentShowing) {
                 this.mContent.hideContent();
                 this.mContentShowing = false;
                 AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(getContext(), 191);
                 onControlPanelHide();
-                Log.d("ControllerPanelWindowView", "hideContent");
+                Log.i("ControllerPanelWindowView", "hideContent");
             }
         }
     }

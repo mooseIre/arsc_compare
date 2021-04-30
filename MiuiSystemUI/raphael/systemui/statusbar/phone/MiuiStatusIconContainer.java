@@ -54,7 +54,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
     }
 
     private void initDimens() {
-        this.mIconDotFrameWidth = getResources().getDimensionPixelSize(17105492);
+        this.mIconDotFrameWidth = getResources().getDimensionPixelSize(17105493);
         this.mDotPadding = getResources().getDimensionPixelSize(C0011R$dimen.overflow_icon_dot_padding);
         this.mIconSpacing = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_system_icon_spacing);
         int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.overflow_dot_radius) * 2;
@@ -64,7 +64,7 @@ public class MiuiStatusIconContainer extends AlphaOptimizedLinearLayout {
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        float height = ((float) getHeight()) / 2.0f;
+        float height = ((float) (getHeight() + getPaddingTop())) / 2.0f;
         for (int i5 = 0; i5 < getChildCount(); i5++) {
             View childAt = getChildAt(i5);
             int measuredWidth = childAt.getMeasuredWidth();

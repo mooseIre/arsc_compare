@@ -143,38 +143,42 @@ public class TileQueryHelper {
     private void addPackageTiles(QSTileHost qSTileHost) {
         Collection<QSTile> tiles = qSTileHost.getTiles();
         PackageManager packageManager = this.mContext.getPackageManager();
-        for (ResolveInfo resolveInfo : packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 0, ActivityManager.getCurrentUser())) {
+        for (ResolveInfo resolveInfo : packageManager.queryIntentServicesAsUser(new Intent("android.service.quicksettings.action.QS_TILE"), 128, ActivityManager.getCurrentUser())) {
             String str = resolveInfo.serviceInfo.packageName;
             ComponentName componentName = new ComponentName(str, resolveInfo.serviceInfo.name);
             if (!this.mTilesStock.contains(componentName.flattenToString())) {
-                CharSequence loadLabel = resolveInfo.serviceInfo.applicationInfo.loadLabel(packageManager);
-                String spec = CustomTile.toSpec(componentName);
-                if (!ControlCenterUtils.filterNearby(spec)) {
-                    QSTile.State state = getState(tiles, spec);
-                    if (state != null) {
-                        addTile(spec, loadLabel, state, false);
-                    } else {
-                        ServiceInfo serviceInfo = resolveInfo.serviceInfo;
-                        if (serviceInfo.icon != 0 || serviceInfo.applicationInfo.icon != 0) {
-                            ServiceInfo serviceInfo2 = resolveInfo.serviceInfo;
-                            int i = serviceInfo2.icon;
-                            if (i == 0) {
-                                i = serviceInfo2.applicationInfo.icon;
-                            }
-                            Icon createWithResource = Icon.createWithResource(str, i);
-                            Drawable drawable = null;
-                            if (createWithResource != null) {
-                                try {
-                                    drawable = createWithResource.loadDrawable(this.mContext);
-                                } catch (Exception unused) {
-                                    Log.w("TileQueryHelper", "Invalid icon");
+                if (CustomTile.isServiceRestricted(resolveInfo.serviceInfo)) {
+                    Log.d("TileQueryHelper", "Custom tile is restricted: " + str);
+                } else {
+                    CharSequence loadLabel = resolveInfo.serviceInfo.applicationInfo.loadLabel(packageManager);
+                    String spec = CustomTile.toSpec(componentName);
+                    if (!ControlCenterUtils.filterNearby(spec)) {
+                        QSTile.State state = getState(tiles, spec);
+                        if (state != null) {
+                            addTile(spec, loadLabel, state, false);
+                        } else {
+                            ServiceInfo serviceInfo = resolveInfo.serviceInfo;
+                            if (serviceInfo.icon != 0 || serviceInfo.applicationInfo.icon != 0) {
+                                ServiceInfo serviceInfo2 = resolveInfo.serviceInfo;
+                                int i = serviceInfo2.icon;
+                                if (i == 0) {
+                                    i = serviceInfo2.applicationInfo.icon;
                                 }
-                            }
-                            if ("android.permission.BIND_QUICK_SETTINGS_TILE".equals(resolveInfo.serviceInfo.permission) && drawable != null) {
-                                drawable.mutate();
-                                drawable.setTint(this.mContext.getColor(17170443));
-                                CharSequence loadLabel2 = resolveInfo.serviceInfo.loadLabel(packageManager);
-                                createStateAndAddTile(spec, drawable, loadLabel2 != null ? loadLabel2.toString() : "null", loadLabel);
+                                Icon createWithResource = Icon.createWithResource(str, i);
+                                Drawable drawable = null;
+                                if (createWithResource != null) {
+                                    try {
+                                        drawable = createWithResource.loadDrawable(this.mContext);
+                                    } catch (Exception unused) {
+                                        Log.w("TileQueryHelper", "Invalid icon");
+                                    }
+                                }
+                                if ("android.permission.BIND_QUICK_SETTINGS_TILE".equals(resolveInfo.serviceInfo.permission) && drawable != null) {
+                                    drawable.mutate();
+                                    drawable.setTint(this.mContext.getColor(17170443));
+                                    CharSequence loadLabel2 = resolveInfo.serviceInfo.loadLabel(packageManager);
+                                    createStateAndAddTile(spec, drawable, loadLabel2 != null ? loadLabel2.toString() : "null", loadLabel);
+                                }
                             }
                         }
                     }

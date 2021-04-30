@@ -24,6 +24,7 @@ import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.utils.ControlCenterUtils;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.phone.MiuiLightDarkIconManager;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
@@ -37,7 +38,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
     private Context mContext;
     private MiuiClock mDateView;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
-    private StatusBarIconController.MiuiLightDarkIconManager mIconManager;
+    private MiuiLightDarkIconManager mIconManager;
     private Configuration mLastConfiguration;
     View.OnClickListener mOnClickListener = new View.OnClickListener() {
         /* class com.android.systemui.controlcenter.phone.widget.QSControlCenterHeaderView.AnonymousClass1 */
@@ -104,7 +105,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
         this.mCarrierText = (CarrierText) findViewById(C0014R$id.carrier_text);
         LinearLayout linearLayout = (LinearLayout) findViewById(C0014R$id.statusIcons);
         this.mStatusIcons = linearLayout;
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager(linearLayout, (CommandQueue) Dependency.get(CommandQueue.class), true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
+        this.mIconManager = new MiuiLightDarkIconManager(linearLayout, (CommandQueue) Dependency.get(CommandQueue.class), true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
         this.mOrientation = getOrientation();
         this.mDateView = (MiuiClock) findViewById(C0014R$id.date_time);
         this.mBigTime = (MiuiClock) findViewById(C0014R$id.big_time);
@@ -184,7 +185,7 @@ public class QSControlCenterHeaderView extends LinearLayout {
         if (carrierText != null) {
             carrierText.setTextColor(i);
         }
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
+        MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
         if (miuiLightDarkIconManager != null) {
             miuiLightDarkIconManager.setLight(!z, i);
         }

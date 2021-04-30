@@ -90,7 +90,8 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
                 return;
             }
         }
-        Log.d(this.TAG, "handleClick: bluetooth not ready");
+        String str = this.TAG;
+        Log.i(str, "handleClick: bluetooth not ready:" + this.mController.isBluetoothReady() + " isTransient:" + ((QSTile.BooleanState) this.mState).isTransient);
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl

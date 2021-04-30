@@ -181,14 +181,14 @@ public class NotificationLogger implements StatusBarStateController.StateListene
     public void stopNotificationLogging() {
         if (this.mLogging) {
             this.mLogging = false;
-            this.mKeyguard = false;
-            this.mFloating = false;
             if (!this.mCurrentlyVisibleNotifications.isEmpty()) {
                 logNotificationVisibilityChanges(Collections.emptyList(), this.mCurrentlyVisibleNotifications);
                 recycleAllVisibilityObjects(this.mCurrentlyVisibleNotifications);
             }
             this.mHandler.removeCallbacks(this.mVisibilityReporter);
             this.mListContainer.setChildLocationsChangedListener(null);
+            this.mKeyguard = false;
+            this.mFloating = false;
         }
     }
 

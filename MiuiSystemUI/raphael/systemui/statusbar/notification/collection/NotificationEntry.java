@@ -36,6 +36,8 @@ public final class NotificationEntry extends ListEntry {
     public boolean hideSensitiveByAppLock;
     private long initializationTime;
     private boolean interruption;
+    public boolean isVisual;
+    public boolean isVisualInFloat;
     private long lastFullScreenIntentLaunchTime;
     public long lastRemoteInputSent;
     public final ArraySet<Integer> mActiveAppOps;
@@ -71,6 +73,7 @@ public final class NotificationEntry extends ListEntry {
     public Uri remoteInputUri;
     private ExpandableNotificationRow row;
     public int targetSdk;
+    public int visualPosition;
 
     public enum DismissState {
         NOT_DISMISSED,

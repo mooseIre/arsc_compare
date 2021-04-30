@@ -15,6 +15,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
+import com.android.systemui.statusbar.phone.MiuiLightDarkIconManager;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
@@ -25,7 +26,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
     private CarrierText mCarrierText;
     protected CommandQueue mCommandQueue;
     private NetworkSpeedView mFullscreenNetworkSpeedView;
-    protected StatusBarIconController.MiuiLightDarkIconManager mIconManager;
+    protected MiuiLightDarkIconManager mIconManager;
 
     @Override // com.android.systemui.tuner.TunerService.Tunable
     public void onTuningChanged(String str, String str2) {
@@ -68,7 +69,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         NetworkSpeedView networkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
         this.mFullscreenNetworkSpeedView = networkSpeedView;
         networkSpeedView.setVisibilityByStatusBar(true);
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0014R$id.statusIcons), this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
+        this.mIconManager = new MiuiLightDarkIconManager((ViewGroup) findViewById(C0014R$id.statusIcons), this.mCommandQueue, true, ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone());
         updateTimeColor();
     }
 
@@ -116,7 +117,7 @@ public class MiuiNotificationHeaderView extends MiuiHeaderView {
         if (carrierText != null) {
             carrierText.setTextColor(i);
         }
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
+        MiuiLightDarkIconManager miuiLightDarkIconManager = this.mIconManager;
         if (miuiLightDarkIconManager != null) {
             miuiLightDarkIconManager.setLight(!z, i);
         }

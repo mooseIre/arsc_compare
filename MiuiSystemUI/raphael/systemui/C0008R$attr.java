@@ -3836,6 +3836,7 @@ public final class R {
         public static final int media_control_app_name_size;
         public static final int media_control_artist_size;
         public static final int media_control_bg_radius;
+        public static final int media_control_collapsed_extra;
         public static final int media_control_collapsed_gap;
         public static final int media_control_end_margin;
         public static final int media_control_expanded_gap;
@@ -8437,7 +8438,6 @@ public final class R {
         public static final int drip_network_speed_splitter;
         public static final int drip_network_speed_view;
         public static final int drip_notification_icon_area;
-        public static final int drip_right_statusIcons;
         public static final int dummy;
         public static final int dungeon_title;
         public static final int easeIn;
@@ -8716,7 +8716,6 @@ public final class R {
         public static final int keyguard_clock_container;
         public static final int keyguard_disable_esim;
         public static final int keyguard_drip_left_statusIcons;
-        public static final int keyguard_drip_left_statusIcons_container;
         public static final int keyguard_electric_torch;
         public static final int keyguard_esim_area;
         public static final int keyguard_force_black_background;
@@ -8748,6 +8747,7 @@ public final class R {
         public static final int keyguard_sim_puk_view;
         public static final int keyguard_smarthome_info;
         public static final int keyguard_status_area;
+        public static final int keyguard_status_bar_left_side;
         public static final int keyguard_status_view;
         public static final int keyguard_up_arrow;
         public static final int keyguard_user_switcher;
@@ -9029,7 +9029,6 @@ public final class R {
         public static final int noScroll;
         public static final int no_carrier_text;
         public static final int no_notifications;
-        public static final int no_use_id;
         public static final int non_configurable_multichannel_text;
         public static final int non_configurable_text;
         public static final int none;
@@ -9382,7 +9381,6 @@ public final class R {
         public static final int status;
         public static final int statusIcons;
         public static final int status_bar;
-        public static final int status_bar_carrier_text;
         public static final int status_bar_container;
         public static final int status_bar_contents;
         public static final int status_bar_latest_event_content;
@@ -9695,6 +9693,7 @@ public final class R {
         public static final int doze_pulse_duration_out;
         public static final int doze_pulse_duration_visible;
         public static final int doze_small_icon_alpha;
+        public static final int flash_force_off_light_state;
         public static final int flash_on_value;
         public static final int heads_up_default_snooze_length_ms;
         public static final int heads_up_notification_decay;

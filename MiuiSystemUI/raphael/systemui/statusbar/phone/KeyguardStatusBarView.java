@@ -8,41 +8,31 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Pair;
 import android.view.DisplayCutout;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C0007R$array;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.ScreenDecorations;
-import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
-import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.qs.QSPanel;
-import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.KeyguardStatusBarView;
-import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.BatteryController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.KeyguardUserSwitcher;
 import com.android.systemui.statusbar.policy.UserInfoController;
 import com.android.systemui.statusbar.policy.UserInfoControllerImpl;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
-import com.android.systemui.statusbar.views.NetworkSpeedView;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 public class KeyguardStatusBarView extends RelativeLayout implements BatteryController.BatteryStateChangeCallback, UserInfoController.OnUserInfoChangedListener, ConfigurationController.ConfigurationListener {
     private boolean mBatteryCharging;
@@ -50,28 +40,20 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     private boolean mBatteryListening;
     protected MiuiBatteryMeterView mBatteryView;
     protected TextView mCarrierLabel;
-    private ControlPanelWindowManager mControlPanelWindowManager;
     private int mCutoutSideNudge = 0;
-    private View mCutoutSpace;
+    protected View mCutoutSpace;
     private DisplayCutout mDisplayCutout;
-    protected StatusBarIconController.MiuiLightDarkIconManager mDripLeftIconManager;
-    private MiuiDripLeftStatusIconContainer mDripLeftStatusIconContainer;
-    protected FrameLayout mDripLeftStatusIconFrameContainer;
-    protected StatusBarIconController.MiuiLightDarkIconManager mDripRightIconManager;
-    private MiuiStatusIconContainer mDripRightStatusIconContainer;
     protected final Rect mEmptyRect = new Rect(0, 0, 0, 0);
-    protected StatusBarIconController.MiuiLightDarkIconManager mIconManager;
+    protected MiuiLightDarkEndIconManager mIconManager;
     private KeyguardUserSwitcher mKeyguardUserSwitcher;
     private boolean mKeyguardUserSwitcherShowing;
     private int mLayoutState = 0;
     private ImageView mMultiUserAvatar;
     private MultiUserSwitch mMultiUserSwitch;
-    protected NetworkSpeedView mNetworkSpeedView;
     private Pair<Integer, Integer> mPadding = new Pair<>(0, 0);
     private int mRoundedCornerPadding = 0;
-    protected FrameLayout mStatusBarPromptContainer;
     protected ViewGroup mStatusIconArea;
-    private MiuiStatusIconContainer mStatusIconContainer;
+    protected MiuiStatusIconContainer mStatusIconContainer;
     private int mSystemIconsBaseMargin;
     private View mSystemIconsContainer;
     private int mSystemIconsSwitcherHiddenExpandedMargin;
@@ -86,6 +68,10 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
 
     public boolean hasOverlappingRendering() {
         return false;
+    }
+
+    /* access modifiers changed from: protected */
+    public void miuiOnAttachedToWindow() {
     }
 
     @Override // com.android.systemui.statusbar.policy.BatteryController.BatteryStateChangeCallback
@@ -113,16 +99,10 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         this.mBatteryView = (MiuiBatteryMeterView) this.mSystemIconsContainer.findViewById(C0014R$id.battery);
         this.mCutoutSpace = findViewById(C0014R$id.cutout_space_view);
         this.mStatusIconArea = (ViewGroup) findViewById(C0014R$id.status_icon_area);
-        this.mDripRightStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0014R$id.drip_right_statusIcons);
-        this.mDripLeftStatusIconFrameContainer = (FrameLayout) findViewById(C0014R$id.keyguard_drip_left_statusIcons_container);
-        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0014R$id.keyguard_drip_left_statusIcons);
-        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0014R$id.prompt_container);
-        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
         this.mStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0014R$id.statusIcons);
         loadDimens();
         updateUserSwitcher();
         this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
-        this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
     }
 
     /* access modifiers changed from: protected */
@@ -219,7 +199,8 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         setPadding(((Integer) pair2.first).intValue(), i, ((Integer) this.mPadding.second).intValue(), 0);
     }
 
-    private boolean updateLayoutParamsNoCutout() {
+    /* access modifiers changed from: protected */
+    public boolean updateLayoutParamsNoCutout() {
         if (this.mLayoutState == 2) {
             return false;
         }
@@ -228,16 +209,13 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         if (view != null) {
             view.setVisibility(8);
         }
-        this.mDripRightStatusIconContainer.setVisibility(8);
-        this.mDripLeftStatusIconFrameContainer.setVisibility(8);
-        this.mStatusIconContainer.setVisibility(0);
-        this.mNetworkSpeedView.setVisibilityByStatusBar(true);
-        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0014R$id.keyguard_carrier_text);
+        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(17, C0014R$id.keyguard_status_bar_left_side);
         ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(getResources().getDimensionPixelSize(C0011R$dimen.system_icons_super_container_margin_start));
         return true;
     }
 
-    private boolean updateLayoutParamsForCutout() {
+    /* access modifiers changed from: protected */
+    public boolean updateLayoutParamsForCutout() {
         if (this.mLayoutState == 1) {
             return false;
         }
@@ -245,10 +223,6 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         if (this.mCutoutSpace == null) {
             updateLayoutParamsNoCutout();
         }
-        this.mDripRightStatusIconContainer.setVisibility(0);
-        this.mDripLeftStatusIconFrameContainer.setVisibility(0);
-        this.mStatusIconContainer.setVisibility(8);
-        this.mNetworkSpeedView.setVisibilityByStatusBar(false);
         Rect rect = new Rect();
         ScreenDecorations.DisplayCutoutView.boundsFromDirection(this.mDisplayCutout, 48, rect);
         this.mCutoutSpace.setVisibility(0);
@@ -260,7 +234,9 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         layoutParams.width = rect.width();
         layoutParams.height = rect.height();
         layoutParams.addRule(13);
-        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(1, C0014R$id.cutout_space_view);
+        RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams();
+        layoutParams2.addRule(17, C0014R$id.cutout_space_view);
+        layoutParams2.width = -1;
         ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(0);
         return true;
     }
@@ -293,17 +269,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         this.mMultiUserSwitch.setUserSwitcherController(userSwitcherController);
         userInfoController.reloadUserInfo();
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
-        int lightModeIconColorSingleTone = ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).getLightModeIconColorSingleTone();
-        this.mIconManager = new StatusBarIconController.MiuiLightDarkIconManager((ViewGroup) findViewById(C0014R$id.statusIcons), (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mIconManager);
-        ArrayList arrayList = new ArrayList(Arrays.asList(getContext().getResources().getStringArray(C0007R$array.config_drip_right_block_statusBarIcons)));
-        StatusBarIconController.MiuiLightDarkIconManager miuiLightDarkIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripRightStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
-        this.mDripRightIconManager = miuiLightDarkIconManager;
-        miuiLightDarkIconManager.setDrip(true);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this.mDripRightIconManager, arrayList);
-        this.mDripLeftIconManager = new StatusBarIconController.MiuiLightDarkIconManager(this.mDripLeftStatusIconContainer, (CommandQueue) Dependency.get(CommandQueue.class), true, lightModeIconColorSingleTone);
-        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftIconManager);
-        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer(this.mStatusBarPromptContainer, 0);
+        miuiOnAttachedToWindow();
         onThemeChanged();
     }
 
@@ -311,10 +277,6 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         ((UserInfoController) Dependency.get(UserInfoController.class)).removeCallback(this);
-        ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).removeIconGroup(this.mDripLeftIconManager);
-        ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer(this.mStatusBarPromptContainer);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mDripRightIconManager);
-        ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).removeIconGroup(this.mIconManager);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
@@ -422,17 +384,5 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         printWriter.println("  mKeyguardUserSwitcherShowing: " + this.mKeyguardUserSwitcherShowing);
         printWriter.println("  mBatteryListening: " + this.mBatteryListening);
         printWriter.println("  mLayoutState: " + this.mLayoutState);
-    }
-
-    public boolean dispatchTouchEvent(MotionEvent motionEvent) {
-        if (motionEvent.getActionMasked() != 0) {
-            return super.dispatchTouchEvent(motionEvent);
-        }
-        if (!this.mControlPanelWindowManager.dispatchToControlPanel(motionEvent, (float) getWidth())) {
-            this.mControlPanelWindowManager.setTransToControlPanel(false);
-            return super.dispatchTouchEvent(motionEvent);
-        }
-        this.mControlPanelWindowManager.setTransToControlPanel(true);
-        return false;
     }
 }

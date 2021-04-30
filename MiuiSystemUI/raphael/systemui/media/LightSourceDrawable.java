@@ -97,7 +97,7 @@ public final class LightSourceDrawable extends Drawable {
         Intrinsics.checkParameterIsNotNull(canvas, "canvas");
         float lerp = MathUtils.lerp(this.rippleData.getMinSize(), this.rippleData.getMaxSize(), this.rippleData.getProgress());
         int alphaComponent = ColorUtils.setAlphaComponent(this.highlightColor, (int) (this.rippleData.getAlpha() * ((float) 255)));
-        this.paint.setShader(new RadialGradient(this.rippleData.getX(), this.rippleData.getY(), lerp, new int[]{alphaComponent, 0}, LightSourceDrawableKt.GRADIENT_STOPS, Shader.TileMode.CLAMP));
+        this.paint.setShader(new RadialGradient(this.rippleData.getX(), this.rippleData.getY(), lerp, new int[]{alphaComponent, 0}, LightSourceDrawableKt.access$getGRADIENT_STOPS$p(), Shader.TileMode.CLAMP));
         canvas.drawCircle(this.rippleData.getX(), this.rippleData.getY(), lerp, this.paint);
     }
 

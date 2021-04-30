@@ -187,6 +187,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         this.mOverlayManager = new OverlayManagerWrapper();
         register();
         setupDecorations();
+        setupForceBlackTopView();
         setupCameraListener();
         AnonymousClass2 r0 = new DisplayManager.DisplayListener() {
             /* class com.android.systemui.ScreenDecorations.AnonymousClass2 */
@@ -232,6 +233,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 public void onChange(boolean z) {
                     ScreenDecorations screenDecorations = ScreenDecorations.this;
                     screenDecorations.mForceBlack = MiuiSettings.Global.getBoolean(screenDecorations.mContext.getContentResolver(), "force_black");
+                    ScreenDecorations.this.setupForceBlackTopView();
                     ScreenDecorations.this.postUpdateScreenDecorationsFront();
                 }
             };
@@ -274,7 +276,6 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         } else {
             removeAllOverlays();
         }
-        setupForceBlackTopView();
         if (!hasOverlays()) {
             this.mMainHandler.post(new Runnable() {
                 /* class com.android.systemui.$$Lambda$ScreenDecorations$CTk_RNSSvwUoNV8CfAa6W3y0c0A */
@@ -409,7 +410,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
 
     private void setupForceBlackTopView() {
         View view;
-        if (CustomizeUtil.HAS_NOTCH && this.mForceBlackTopOverlay == null) {
+        if (CustomizeUtil.HAS_NOTCH && this.mForceBlackTopOverlay == null && this.mForceBlack) {
             ImageView imageView = new ImageView(this.mContext);
             this.mForceBlackTopOverlay = imageView;
             imageView.setSystemUiVisibility(256);
@@ -427,7 +428,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
                 }
             });
             this.mForceBlackTopOverlay.getViewTreeObserver().addOnPreDrawListener(new ValidatingPreDrawListener(this.mForceBlackTopOverlay));
-        } else if (!CustomizeUtil.HAS_NOTCH && (view = this.mForceBlackTopOverlay) != null) {
+        } else if ((!CustomizeUtil.HAS_NOTCH || !this.mForceBlack) && (view = this.mForceBlackTopOverlay) != null) {
             this.mWindowManager.removeViewImmediate(view);
             this.mForceBlackTopOverlay = null;
         }
@@ -616,6 +617,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         updateOrientation();
         Log.i("ScreenDecorations", "onConfigChanged from rot " + i + " to " + this.mRotation);
         setupDecorations();
+        setupForceBlackTopView();
         if (this.mOverlays != null || this.mForceBlackTopOverlay != null) {
             updateLayoutParams();
         }
