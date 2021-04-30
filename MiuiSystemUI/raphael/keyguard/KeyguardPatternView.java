@@ -342,7 +342,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
         if (i != 0) {
             String promptReasonString = getPromptReasonString(i);
             if (!TextUtils.isEmpty(promptReasonString)) {
-                this.mKeyguardBouncerMessageView.showMessage(((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_password_hint_text), promptReasonString);
+                this.mKeyguardBouncerMessageView.showMessage(((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_lockscreen_pattern_hint_text), promptReasonString);
             }
         }
     }

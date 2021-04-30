@@ -127,6 +127,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private LinearLayout mPreViewContainer;
     private FrameLayout.LayoutParams mPreViewContainerLayoutParams;
     private float mPreViewHeight;
+    private float mPreViewHeightWidthRatio;
     private float mPreViewInitRadius = 60.0f;
     private ViewOutlineProvider mPreViewOutlineProvider = new ViewOutlineProvider() {
         /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass3 */
@@ -217,6 +218,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         super(context);
         this.mCallBack = callBack;
         initViews();
+        initBitmapResource();
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         Vibrator vibrator = (Vibrator) this.mContext.getSystemService("vibrator");
         Paint paint = new Paint();
@@ -337,7 +339,9 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         Point point = this.mScreenSizePoint;
         this.mScreenHeight = Math.max(point.y, point.x);
         Point point2 = this.mScreenSizePoint;
-        this.mScreenWidth = Math.min(point2.y, point2.x);
+        int min = Math.min(point2.y, point2.x);
+        this.mScreenWidth = min;
+        this.mPreViewHeightWidthRatio = ((float) this.mScreenHeight) / ((float) min);
         this.mIconWidth = this.mContext.getResources().getDimensionPixelOffset(C0011R$dimen.keyguard_affordance_width);
         int dimensionPixelOffset = this.mContext.getResources().getDimensionPixelOffset(C0011R$dimen.keyguard_affordance_height);
         this.mIconHeight = dimensionPixelOffset;
@@ -416,7 +420,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             this.mActiveAnimPer = 0.0f;
             this.mTouchDownInitial = true;
             this.mIsBackAnimRunning = false;
-            initBitmapResource();
             show();
         }
     }
@@ -546,7 +549,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
         this.mVirY = valFromPer((float) Math.pow((double) f2, 3.0d), this.mIconInitCenterY, this.mIconActiveCenterY) + (this.mMoveYPer * 100.0f);
         float valFromPer = valFromPer(f, 0.0f, this.mIconActiveWidth);
         this.mVirWidth = valFromPer;
-        float min2 = valFromPer * (((this.mActiveAnimPer * Math.min(((float) this.mScreenHeight) / ((float) this.mScreenWidth), 2.0f)) / 2.0f) + 1.0f);
+        float min2 = valFromPer * (this.mIsActive ? this.mPreViewHeightWidthRatio : ((this.mActiveAnimPer * Math.min(((float) this.mScreenHeight) / ((float) this.mScreenWidth), 2.0f)) / 2.0f) + 1.0f);
         this.mVirHeight = min2;
         this.mIconCenterX = this.mVirX;
         this.mIconCenterY = (this.mVirY + (min2 * 0.15f)) - (this.mVirWidth / 2.0f);
@@ -1221,6 +1224,9 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
 
     public void setPreviewImageDrawable(Drawable drawable) {
         this.mPreView.setImageDrawable(drawable);
+        if (drawable != null && drawable.getIntrinsicWidth() > 0) {
+            this.mPreViewHeightWidthRatio = ((float) drawable.getIntrinsicHeight()) / ((float) drawable.getIntrinsicWidth());
+        }
     }
 
     public class PhysicBasedInterpolator implements Interpolator {

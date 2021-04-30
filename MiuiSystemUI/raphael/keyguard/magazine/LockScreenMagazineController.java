@@ -407,24 +407,19 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateLockScreenMagazineWallpaperInfo() {
-        if (Build.IS_INTERNATIONAL_BUILD) {
-            LockScreenMagazinePreView lockScreenMagazinePreView = this.mLockScreenMagazinePre;
-            if (lockScreenMagazinePreView != null) {
-                lockScreenMagazinePreView.refreshWallpaperInfo(this.mMainRemoteView, this.mFullScreenRemoteView);
-            }
-            this.mClockContainerView.post(new Runnable() {
-                /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$UhljPLpJ4Msw1GYTxusDmAfOVvM */
-
-                public final void run() {
-                    LockScreenMagazineController.this.lambda$updateLockScreenMagazineWallpaperInfo$1$LockScreenMagazineController();
-                }
-            });
+        LockScreenMagazinePreView lockScreenMagazinePreView;
+        if (Build.IS_INTERNATIONAL_BUILD && (lockScreenMagazinePreView = this.mLockScreenMagazinePre) != null) {
+            lockScreenMagazinePreView.resetRemoteView(this.mMainRemoteView, this.mFullScreenRemoteView);
+        }
+        LockScreenMagazinePreView lockScreenMagazinePreView2 = this.mLockScreenMagazinePre;
+        if (lockScreenMagazinePreView2 != null) {
+            lockScreenMagazinePreView2.refreshWallpaperInfo();
         }
         this.mClockContainerView.post(new Runnable() {
-            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$ErcK2OTRMKPoTm1GaKLKEJGetl4 */
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$UhljPLpJ4Msw1GYTxusDmAfOVvM */
 
             public final void run() {
-                LockScreenMagazineController.this.lambda$updateLockScreenMagazineWallpaperInfo$2$LockScreenMagazineController();
+                LockScreenMagazineController.this.lambda$updateLockScreenMagazineWallpaperInfo$1$LockScreenMagazineController();
             }
         });
     }
@@ -432,12 +427,6 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     /* access modifiers changed from: private */
     /* renamed from: lambda$updateLockScreenMagazineWallpaperInfo$1 */
     public /* synthetic */ void lambda$updateLockScreenMagazineWallpaperInfo$1$LockScreenMagazineController() {
-        this.mClockContainerView.updateClockMagazineInfo();
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$updateLockScreenMagazineWallpaperInfo$2 */
-    public /* synthetic */ void lambda$updateLockScreenMagazineWallpaperInfo$2$LockScreenMagazineController() {
         this.mClockContainerView.updateClockMagazineInfo();
     }
 
@@ -505,10 +494,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mFullScreenAnimator = ofFloat;
         ofFloat.setInterpolator(z ? Ease$Cubic.easeInOut : Ease$Quint.easeOut);
         this.mFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$c6JLNsSlAyuh4XtI1ZNxXkI59tA */
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$nfbY8hY4lnY8Zw7xypiR4c1iHo */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LockScreenMagazineController.this.lambda$startSwitchAnimator$3$LockScreenMagazineController(valueAnimator);
+                LockScreenMagazineController.this.lambda$startSwitchAnimator$2$LockScreenMagazineController(valueAnimator);
             }
         });
         float[] fArr2 = new float[2];
@@ -521,10 +510,10 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mNonFullScreenAnimator = ofFloat2;
         ofFloat2.setInterpolator(z ? Ease$Quint.easeOut : Ease$Cubic.easeInOut);
         this.mNonFullScreenAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$VnFm2qt7vjr1fZvpz2uAAbwfMk8 */
+            /* class com.android.keyguard.magazine.$$Lambda$LockScreenMagazineController$c6JLNsSlAyuh4XtI1ZNxXkI59tA */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                LockScreenMagazineController.this.lambda$startSwitchAnimator$4$LockScreenMagazineController(valueAnimator);
+                LockScreenMagazineController.this.lambda$startSwitchAnimator$3$LockScreenMagazineController(valueAnimator);
             }
         });
         this.mSwitchAnimator.setDuration(500L);
@@ -567,14 +556,14 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startSwitchAnimator$3 */
-    public /* synthetic */ void lambda$startSwitchAnimator$3$LockScreenMagazineController(ValueAnimator valueAnimator) {
+    /* renamed from: lambda$startSwitchAnimator$2 */
+    public /* synthetic */ void lambda$startSwitchAnimator$2$LockScreenMagazineController(ValueAnimator valueAnimator) {
         this.mLockScreenMagazinePre.setFullScreenLayoutAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$startSwitchAnimator$4 */
-    public /* synthetic */ void lambda$startSwitchAnimator$4$LockScreenMagazineController(ValueAnimator valueAnimator) {
+    /* renamed from: lambda$startSwitchAnimator$3 */
+    public /* synthetic */ void lambda$startSwitchAnimator$3$LockScreenMagazineController(ValueAnimator valueAnimator) {
         setViewsAlpha(((Float) valueAnimator.getAnimatedValue()).floatValue());
     }
 

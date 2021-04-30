@@ -16,6 +16,7 @@ import android.os.Looper;
 import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.Log;
+import codeinjection.CodeInjection;
 import com.android.keyguard.BaseKeyguardMoveController;
 import com.android.keyguard.MiuiKeyguardCameraView;
 import com.android.keyguard.utils.ContentProviderUtils;
@@ -24,7 +25,6 @@ import com.android.keyguard.utils.PackageUtils;
 import com.android.systemui.Dependency;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.graphics.DrawableUtils;
-import java.io.IOException;
 import miui.os.Build;
 
 public class KeyguardMoveRightController extends BaseKeyguardMoveController {
@@ -164,14 +164,14 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
                         return null;
                     }
                     if (!PackageUtils.IS_VELA_CAMERA) {
-                        return getDrawableExceptVela();
+                        return getDrawableExceptVela(true);
                     }
                     KeyguardMoveRightController keyguardMoveRightController = KeyguardMoveRightController.this;
                     Context context = keyguardMoveRightController.mContext;
                     return keyguardMoveRightController.getDrawableFromPackageBy565(context, PackageUtils.PACKAGE_NAME_CAMERA, MiuiKeyguardUtils.getCameraImageName(context, MiuiKeyguardUtils.isFullScreenGestureOpened()));
                 }
 
-                private Drawable getDrawableExceptVela() {
+                private Drawable getDrawableExceptVela(boolean z) {
                     if (TextUtils.isEmpty(KeyguardMoveRightController.this.mCameraPreviewUri)) {
                         Context context = KeyguardMoveRightController.this.mContext;
                         Bundle resultFromProvider = ContentProviderUtils.getResultFromProvider(context, "content://" + PackageUtils.PACKAGE_NAME_CAMERA + ".splashProvider", "getCameraSplash", (String) null, (Bundle) null);
@@ -184,8 +184,13 @@ public class KeyguardMoveRightController extends BaseKeyguardMoveController {
                     }
                     try {
                         return ImageDecoder.decodeDrawable(ImageDecoder.createSource(KeyguardMoveRightController.this.mContext.getContentResolver(), Uri.parse(KeyguardMoveRightController.this.mCameraPreviewUri), KeyguardMoveRightController.this.mContext.getResources()), $$Lambda$KeyguardMoveRightController$4$BLih8lMjXuQGgfkpxsSjkJl_48.INSTANCE);
-                    } catch (IOException unused) {
-                        Log.e("KeyguardMoveRightController", "updatePreViewBackground ContentProviderUtils.getResultFromProvider splashProvider失败");
+                    } catch (Exception e) {
+                        if (z) {
+                            KeyguardMoveRightController.this.mCameraPreviewUri = CodeInjection.MD5;
+                            Log.e("KeyguardMoveRightController", "updatePreViewBackground ContentProviderUtils.getResultFromProvider splashProvider fail,try again:" + e.getMessage() + e.getCause());
+                            return getDrawableExceptVela(false);
+                        }
+                        Log.e("KeyguardMoveRightController", "updatePreViewBackground ContentProviderUtils.getResultFromProvider splashProvider  fail , wont try again" + e.getMessage() + e.getCause());
                         return null;
                     }
                 }
