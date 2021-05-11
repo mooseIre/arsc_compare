@@ -83,7 +83,7 @@ public class MiuiNotificationInterruptStateProviderImpl extends NotificationInte
             Log.d("InterruptionStateProvider", "no peek: miui smart intercept: " + expandedNotification.getKey());
             return false;
         } else if (expandedNotification.getNotification().fullScreenIntent != null) {
-            if (NotificationUtil.isInCallNotification(expandedNotification)) {
+            if (NotificationUtil.isInCallNotification(expandedNotification) || NotificationUtil.isGlobalInCallNotification(this.mContext, expandedNotification)) {
                 if (!this.mStatusBarKeyguardViewManager.isShowing() && !((StatusBar) Dependency.get(StatusBar.class)).isPanelExpanded()) {
                     z = true;
                 }

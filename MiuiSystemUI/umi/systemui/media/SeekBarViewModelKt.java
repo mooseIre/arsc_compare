@@ -2,17 +2,13 @@ package com.android.systemui.media;
 
 import android.media.session.PlaybackState;
 import android.os.SystemClock;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: SeekBarViewModel.kt */
 public final class SeekBarViewModelKt {
-    /* access modifiers changed from: private */
-    public static final boolean isInMotion(@NotNull PlaybackState playbackState) {
+    public static final boolean isInMotion(PlaybackState playbackState) {
         return playbackState.getState() == 3 || playbackState.getState() == 4 || playbackState.getState() == 5;
     }
 
-    /* access modifiers changed from: private */
-    public static final long computePosition(@NotNull PlaybackState playbackState, long j) {
+    public static final long computePosition(PlaybackState playbackState, long j) {
         long position = playbackState.getPosition();
         if (!isInMotion(playbackState)) {
             return position;

@@ -77,6 +77,9 @@ public class MiuiVendorServices extends SystemUI {
             @Override // com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener
             public void onEntryBind(NotificationEntry notificationEntry, StatusBarNotification statusBarNotification) {
                 statusBarNotification.getNotification().extras.putBoolean("android.colorized", false);
+                if (statusBarNotification.getNotification().when > System.currentTimeMillis() + 31449600000L) {
+                    statusBarNotification.getNotification().when = 0;
+                }
             }
         });
         this.mMiuiFaceUnlockManager.start();

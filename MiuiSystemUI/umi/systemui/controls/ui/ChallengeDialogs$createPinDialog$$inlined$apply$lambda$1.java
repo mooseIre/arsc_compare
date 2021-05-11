@@ -21,7 +21,7 @@ final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$1 implements 
         if (dialogInterface instanceof Dialog) {
             Dialog dialog = (Dialog) dialogInterface;
             dialog.requireViewById(C0014R$id.controls_pin_input);
-            this.$cvh$inlined.action(ChallengeDialogs.access$addChallengeValue(ChallengeDialogs.INSTANCE, this.$lastAction$inlined, ((EditText) dialog.requireViewById(C0014R$id.controls_pin_input)).getText().toString()));
+            this.$cvh$inlined.action(ChallengeDialogs.INSTANCE.addChallengeValue(this.$lastAction$inlined, ((EditText) dialog.requireViewById(C0014R$id.controls_pin_input)).getText().toString()));
             dialogInterface.dismiss();
         }
     }

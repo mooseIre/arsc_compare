@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import codeinjection.CodeInjection;
+import com.android.settingslib.bluetooth.BluetoothCallback;
+import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.settingslib.bluetooth.LocalBluetoothManager;
 import com.android.settingslib.media.InfoMediaManager;
 import com.android.settingslib.media.LocalMediaManager;
@@ -23,10 +25,10 @@ import com.miui.systemui.util.ReflectUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MiuiMediaTransferManager {
+public class MiuiMediaTransferManager implements BluetoothCallback {
     private final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
-    private MediaDevice mCurDevice;
-    private LocalMediaManager mLocalMediaManager;
+    private String mCurRouteName = CodeInjection.MD5;
+    private final LocalMediaManager mLocalMediaManager;
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
         /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass3 */
 
@@ -40,16 +42,19 @@ public class MiuiMediaTransferManager {
         @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onDeviceListUpdate(List<MediaDevice> list) {
             MiuiMediaTransferManager.this.updatePhoneDevice((MiuiMediaTransferManager) list);
-            MiuiMediaTransferManager.this.updateCurrentDevice(CodeInjection.MD5);
-        }
-
-        @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
-        public void onSelectedDeviceStateChanged(MediaDevice mediaDevice, int i) {
-            MiuiMediaTransferManager.this.updatePhoneDevice((MiuiMediaTransferManager) mediaDevice);
-            MiuiMediaTransferManager.this.updateAllChips(mediaDevice.getName());
+            MediaDevice currentConnectedDevice = MiuiMediaTransferManager.this.mLocalMediaManager.getCurrentConnectedDevice();
+            if (currentConnectedDevice == null) {
+                return;
+            }
+            if (currentConnectedDevice instanceof PhoneMediaDevice) {
+                MiuiMediaTransferManager miuiMediaTransferManager = MiuiMediaTransferManager.this;
+                miuiMediaTransferManager.updateCurrentDevice(miuiMediaTransferManager.mPhoneRouteName);
+                return;
+            }
+            MiuiMediaTransferManager.this.updateCurrentDevice(currentConnectedDevice.getName());
         }
     };
-    private MediaRouter mMediaRouter;
+    private final MediaRouter mMediaRouter;
     private final View.OnClickListener mOnClickHandler = new View.OnClickListener() {
         /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass1 */
 
@@ -61,9 +66,14 @@ public class MiuiMediaTransferManager {
             MiuiMediaTransferManager.this.mActivityStarter.startActivity(new Intent().setAction("miui.bluetooth.mible.MiuiAudioRelayActivity"), false, true, 268435456);
         }
     };
-    private String mPhoneName;
+    private String mPhoneRouteName = CodeInjection.MD5;
     private List<ImageView> mViews = new ArrayList();
     private boolean sHasTransferComponent;
+
+    @Override // com.android.settingslib.bluetooth.BluetoothCallback
+    public void onActiveDeviceChanged(CachedBluetoothDevice cachedBluetoothDevice, int i) {
+        updateCurrentDevice(cachedBluetoothDevice == null ? this.mPhoneRouteName : cachedBluetoothDevice.getName());
+    }
 
     public MiuiMediaTransferManager(Context context) {
         LocalBluetoothManager localBluetoothManager = (LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class);
@@ -81,45 +91,45 @@ public class MiuiMediaTransferManager {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateCurrentDevice(String str) {
-        this.mCurDevice = getCurrentConnectedDevice();
-        if (TextUtils.isEmpty(str)) {
-            str = this.mCurDevice.getName();
+        checkLocalMediaManager();
+        this.mCurRouteName = str;
+        updateAllChips();
+    }
+
+    private boolean checkLocalMediaManager() {
+        if (TextUtils.isEmpty(this.mPhoneRouteName)) {
+            return false;
         }
-        updateAllChips(str);
+        this.mLocalMediaManager.stopScan();
+        return true;
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    /* JADX WARNING: Removed duplicated region for block: B:6:0x0013  */
+    /* JADX WARNING: Removed duplicated region for block: B:6:0x0011  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void updatePhoneDevice(java.util.List<com.android.settingslib.media.MediaDevice> r2) {
         /*
             r1 = this;
-            java.lang.String r0 = r1.mPhoneName
-            boolean r0 = android.text.TextUtils.isEmpty(r0)
-            if (r0 != 0) goto L_0x0009
+            boolean r0 = r1.checkLocalMediaManager()
+            if (r0 == 0) goto L_0x0007
             return
-        L_0x0009:
+        L_0x0007:
             java.util.Iterator r2 = r2.iterator()
-        L_0x000d:
+        L_0x000b:
             boolean r0 = r2.hasNext()
-            if (r0 == 0) goto L_0x001f
+            if (r0 == 0) goto L_0x001d
             java.lang.Object r0 = r2.next()
             com.android.settingslib.media.MediaDevice r0 = (com.android.settingslib.media.MediaDevice) r0
             boolean r0 = r1.updatePhoneDevice(r0)
-            if (r0 == 0) goto L_0x000d
-        L_0x001f:
+            if (r0 == 0) goto L_0x000b
+        L_0x001d:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.updatePhoneDevice(java.util.List):void");
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private boolean updatePhoneDevice(MediaDevice mediaDevice) {
-        if (!TextUtils.isEmpty(this.mPhoneName)) {
-            return true;
-        }
         if (!(mediaDevice instanceof PhoneMediaDevice)) {
             return false;
         }
@@ -128,19 +138,14 @@ public class MiuiMediaTransferManager {
             if (mediaRoute2Info == null) {
                 return false;
             }
-            this.mPhoneName = mediaRoute2Info.getName().toString();
-            return false;
+            this.mPhoneRouteName = mediaRoute2Info.getName().toString();
+            this.mLocalMediaManager.stopScan();
+            return true;
         } catch (IllegalAccessException e) {
             e.printStackTrace();
             Log.e("MiuiMediaTransferManager", "Can't find phone name!");
             return false;
         }
-    }
-
-    private MediaDevice getCurrentConnectedDevice() {
-        MediaDevice currentConnectedDevice = this.mLocalMediaManager.getCurrentConnectedDevice();
-        updatePhoneDevice(currentConnectedDevice);
-        return currentConnectedDevice;
     }
 
     public void setRemoved(View view) {
@@ -149,8 +154,10 @@ public class MiuiMediaTransferManager {
             if (!this.mViews.remove(imageView)) {
                 Log.e("MiuiMediaTransferManager", "Tried to remove unknown view " + imageView);
             } else if (this.mViews.size() == 0) {
+                ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().unregisterCallback(this);
                 this.mLocalMediaManager.unregisterCallback(this.mMediaDeviceCallback);
                 this.mMediaRouter.removeCallback(this.mMediaCallback);
+                this.mPhoneRouteName = CodeInjection.MD5;
             }
         }
     }
@@ -167,37 +174,32 @@ public class MiuiMediaTransferManager {
             if (!this.mViews.contains(imageView)) {
                 this.mViews.add(imageView);
                 if (this.mViews.size() == 1) {
+                    ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().registerCallback(this);
                     this.mLocalMediaManager.registerCallback(this.mMediaDeviceCallback);
                     this.mMediaRouter.addCallback(8388615, this.mMediaCallback, 3);
                 }
             }
-            this.mLocalMediaManager.startScan();
-            updatePhoneDevice(this.mLocalMediaManager.getSelectableMediaDevice());
-            this.mCurDevice = getCurrentConnectedDevice();
+            if (TextUtils.isEmpty(this.mPhoneRouteName)) {
+                this.mLocalMediaManager.startScan();
+            } else {
+                updateChip(imageView);
+            }
+        }
+    }
+
+    private void updateAllChips() {
+        for (ImageView imageView : this.mViews) {
             updateChip(imageView);
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateAllChips(String str) {
-        for (ImageView imageView : this.mViews) {
-            updateChip(imageView, str);
-        }
-    }
-
     private void updateChip(ImageView imageView) {
-        updateChip(imageView, null);
-    }
-
-    private void updateChip(ImageView imageView, String str) {
-        MediaDevice mediaDevice;
-        if (TextUtils.equals(this.mPhoneName, str) || (mediaDevice = this.mCurDevice) == null || (mediaDevice instanceof PhoneMediaDevice)) {
-            imageView.setImageResource(C0012R$drawable.ic_media_seamless);
-            imageView.setContentDescription(this.mPhoneName);
+        if (!TextUtils.equals(this.mPhoneRouteName, this.mCurRouteName)) {
+            imageView.setImageResource(C0012R$drawable.ic_media_seamless_others);
+            imageView.setContentDescription(this.mCurRouteName);
             return;
         }
-        imageView.setImageResource(C0012R$drawable.ic_media_seamless_others);
-        imageView.setContentDescription(str);
+        imageView.setImageResource(C0012R$drawable.ic_media_seamless);
+        imageView.setContentDescription(this.mPhoneRouteName);
     }
 }

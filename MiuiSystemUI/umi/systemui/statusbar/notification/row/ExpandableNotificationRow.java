@@ -2145,6 +2145,9 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
                 this.mPrivateLayout.updateExpandButtons(isExpandable());
                 updateShelfIconColor();
                 this.mShowingPublicInitialized = true;
+                if (getActualHeight() != getIntrinsicHeight()) {
+                    notifyHeightChanged(true);
+                }
             }
         }
     }

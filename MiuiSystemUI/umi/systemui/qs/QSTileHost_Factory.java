@@ -18,10 +18,12 @@ import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.tuner.TunerService;
 import dagger.internal.Factory;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 import javax.inject.Provider;
 
 public final class QSTileHost_Factory implements Factory<QSTileHost> {
     private final Provider<AutoTileManager> autoTilesProvider;
+    private final Provider<Executor> bgExecutorProvider;
     private final Provider<Looper> bgLooperProvider;
     private final Provider<BroadcastDispatcher> broadcastDispatcherProvider;
     private final Provider<Context> contextProvider;
@@ -38,35 +40,36 @@ public final class QSTileHost_Factory implements Factory<QSTileHost> {
     private final Provider<TunerService> tunerServiceProvider;
     private final Provider<UiEventLogger> uiEventLoggerProvider;
 
-    public QSTileHost_Factory(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<QSFactory> provider3, Provider<Handler> provider4, Provider<Looper> provider5, Provider<PluginManager> provider6, Provider<TunerService> provider7, Provider<AutoTileManager> provider8, Provider<DumpManager> provider9, Provider<BroadcastDispatcher> provider10, Provider<Optional<StatusBar>> provider11, Provider<QSLogger> provider12, Provider<UiEventLogger> provider13, Provider<StatusBarStateController> provider14, Provider<MiuiQSTileHostInjector> provider15, Provider<ControlPanelController> provider16) {
+    public QSTileHost_Factory(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<QSFactory> provider3, Provider<Handler> provider4, Provider<Looper> provider5, Provider<Executor> provider6, Provider<PluginManager> provider7, Provider<TunerService> provider8, Provider<AutoTileManager> provider9, Provider<DumpManager> provider10, Provider<BroadcastDispatcher> provider11, Provider<Optional<StatusBar>> provider12, Provider<QSLogger> provider13, Provider<UiEventLogger> provider14, Provider<StatusBarStateController> provider15, Provider<MiuiQSTileHostInjector> provider16, Provider<ControlPanelController> provider17) {
         this.contextProvider = provider;
         this.iconControllerProvider = provider2;
         this.defaultFactoryProvider = provider3;
         this.mainHandlerProvider = provider4;
         this.bgLooperProvider = provider5;
-        this.pluginManagerProvider = provider6;
-        this.tunerServiceProvider = provider7;
-        this.autoTilesProvider = provider8;
-        this.dumpManagerProvider = provider9;
-        this.broadcastDispatcherProvider = provider10;
-        this.statusBarOptionalProvider = provider11;
-        this.qsLoggerProvider = provider12;
-        this.uiEventLoggerProvider = provider13;
-        this.statusBarStateControllerProvider = provider14;
-        this.hostInjectorProvider = provider15;
-        this.controlPanelControllerProvider = provider16;
+        this.bgExecutorProvider = provider6;
+        this.pluginManagerProvider = provider7;
+        this.tunerServiceProvider = provider8;
+        this.autoTilesProvider = provider9;
+        this.dumpManagerProvider = provider10;
+        this.broadcastDispatcherProvider = provider11;
+        this.statusBarOptionalProvider = provider12;
+        this.qsLoggerProvider = provider13;
+        this.uiEventLoggerProvider = provider14;
+        this.statusBarStateControllerProvider = provider15;
+        this.hostInjectorProvider = provider16;
+        this.controlPanelControllerProvider = provider17;
     }
 
     @Override // javax.inject.Provider
     public QSTileHost get() {
-        return provideInstance(this.contextProvider, this.iconControllerProvider, this.defaultFactoryProvider, this.mainHandlerProvider, this.bgLooperProvider, this.pluginManagerProvider, this.tunerServiceProvider, this.autoTilesProvider, this.dumpManagerProvider, this.broadcastDispatcherProvider, this.statusBarOptionalProvider, this.qsLoggerProvider, this.uiEventLoggerProvider, this.statusBarStateControllerProvider, this.hostInjectorProvider, this.controlPanelControllerProvider);
+        return provideInstance(this.contextProvider, this.iconControllerProvider, this.defaultFactoryProvider, this.mainHandlerProvider, this.bgLooperProvider, this.bgExecutorProvider, this.pluginManagerProvider, this.tunerServiceProvider, this.autoTilesProvider, this.dumpManagerProvider, this.broadcastDispatcherProvider, this.statusBarOptionalProvider, this.qsLoggerProvider, this.uiEventLoggerProvider, this.statusBarStateControllerProvider, this.hostInjectorProvider, this.controlPanelControllerProvider);
     }
 
-    public static QSTileHost provideInstance(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<QSFactory> provider3, Provider<Handler> provider4, Provider<Looper> provider5, Provider<PluginManager> provider6, Provider<TunerService> provider7, Provider<AutoTileManager> provider8, Provider<DumpManager> provider9, Provider<BroadcastDispatcher> provider10, Provider<Optional<StatusBar>> provider11, Provider<QSLogger> provider12, Provider<UiEventLogger> provider13, Provider<StatusBarStateController> provider14, Provider<MiuiQSTileHostInjector> provider15, Provider<ControlPanelController> provider16) {
-        return new QSTileHost(provider.get(), provider2.get(), provider3.get(), provider4.get(), provider5.get(), provider6.get(), provider7.get(), provider8, provider9.get(), provider10.get(), provider11.get(), provider12.get(), provider13.get(), provider14.get(), provider15.get(), provider16.get());
+    public static QSTileHost provideInstance(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<QSFactory> provider3, Provider<Handler> provider4, Provider<Looper> provider5, Provider<Executor> provider6, Provider<PluginManager> provider7, Provider<TunerService> provider8, Provider<AutoTileManager> provider9, Provider<DumpManager> provider10, Provider<BroadcastDispatcher> provider11, Provider<Optional<StatusBar>> provider12, Provider<QSLogger> provider13, Provider<UiEventLogger> provider14, Provider<StatusBarStateController> provider15, Provider<MiuiQSTileHostInjector> provider16, Provider<ControlPanelController> provider17) {
+        return new QSTileHost(provider.get(), provider2.get(), provider3.get(), provider4.get(), provider5.get(), provider6.get(), provider7.get(), provider8.get(), provider9, provider10.get(), provider11.get(), provider12.get(), provider13.get(), provider14.get(), provider15.get(), provider16.get(), provider17.get());
     }
 
-    public static QSTileHost_Factory create(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<QSFactory> provider3, Provider<Handler> provider4, Provider<Looper> provider5, Provider<PluginManager> provider6, Provider<TunerService> provider7, Provider<AutoTileManager> provider8, Provider<DumpManager> provider9, Provider<BroadcastDispatcher> provider10, Provider<Optional<StatusBar>> provider11, Provider<QSLogger> provider12, Provider<UiEventLogger> provider13, Provider<StatusBarStateController> provider14, Provider<MiuiQSTileHostInjector> provider15, Provider<ControlPanelController> provider16) {
-        return new QSTileHost_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16);
+    public static QSTileHost_Factory create(Provider<Context> provider, Provider<StatusBarIconController> provider2, Provider<QSFactory> provider3, Provider<Handler> provider4, Provider<Looper> provider5, Provider<Executor> provider6, Provider<PluginManager> provider7, Provider<TunerService> provider8, Provider<AutoTileManager> provider9, Provider<DumpManager> provider10, Provider<BroadcastDispatcher> provider11, Provider<Optional<StatusBar>> provider12, Provider<QSLogger> provider13, Provider<UiEventLogger> provider14, Provider<StatusBarStateController> provider15, Provider<MiuiQSTileHostInjector> provider16, Provider<ControlPanelController> provider17) {
+        return new QSTileHost_Factory(provider, provider2, provider3, provider4, provider5, provider6, provider7, provider8, provider9, provider10, provider11, provider12, provider13, provider14, provider15, provider16, provider17);
     }
 }

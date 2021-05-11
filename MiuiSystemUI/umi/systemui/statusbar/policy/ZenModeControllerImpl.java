@@ -187,7 +187,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
 
     @Override // com.android.systemui.statusbar.policy.ZenModeController
     public void setZen(int i, Uri uri, String str) {
-        this.mNoMan.setZenMode(i, uri, str);
+        MiuiSettings.SoundMode.setZenModeOn(this.mContext, i != 0, str);
     }
 
     @Override // com.android.systemui.statusbar.policy.ZenModeController

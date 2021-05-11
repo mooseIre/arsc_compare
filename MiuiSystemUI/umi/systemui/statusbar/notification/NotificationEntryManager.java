@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.notification;
 import android.os.SystemClock;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.ArraySet;
 import android.util.Log;
@@ -416,6 +417,9 @@ public class NotificationEntryManager implements CommonNotifCollection, Dumpable
             activeNotificationUnfiltered.hideSensitiveByAppLock = ((NotificationSensitiveController) Dependency.get(NotificationSensitiveController.class)).showSensitiveByAppLock(activeNotificationUnfiltered);
             activeNotificationUnfiltered.setModalRow(null);
             activeNotificationUnfiltered.needUpdateBadgeNum = ((NotificationBadgeController) Dependency.get(NotificationBadgeController.class)).needRestatBadgeNum(activeNotificationUnfiltered.getSbn(), sbn);
+            if (!TextUtils.equals(sbn.getTargetPackageName(), activeNotificationUnfiltered.getSbn().getTargetPackageName())) {
+                ((NotificationBadgeController) Dependency.get(NotificationBadgeController.class)).updateAppBadgeNum(sbn);
+            }
             for (NotifCollectionListener notifCollectionListener : this.mNotifCollectionListeners) {
                 notifCollectionListener.onEntryBind(activeNotificationUnfiltered, statusBarNotification);
             }

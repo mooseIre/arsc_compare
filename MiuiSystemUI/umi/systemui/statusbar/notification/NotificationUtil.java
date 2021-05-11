@@ -33,6 +33,10 @@ public class NotificationUtil {
         return InCallUtils.isInCallNotification(expandedNotification);
     }
 
+    public static boolean isGlobalInCallNotification(Context context, ExpandedNotification expandedNotification) {
+        return InCallUtils.isGlobalInCallNotification(context, expandedNotification.getPackageName(), expandedNotification.getNotification());
+    }
+
     public static boolean containsVerifyCode(ExpandedNotification expandedNotification) {
         return expandedNotification.getNotification().extras.containsKey("verify_code");
     }

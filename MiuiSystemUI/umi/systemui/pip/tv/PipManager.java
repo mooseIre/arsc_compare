@@ -220,9 +220,9 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
     public void onPipTransitionStarted(ComponentName componentName, int i) {
     }
 
+    /* access modifiers changed from: private */
     public class PipManagerPinnedStackListener extends PinnedStackListenerForwarder.PinnedStackListener {
         private PipManagerPinnedStackListener() {
-            PipManager.this = r1;
         }
 
         @Override // com.android.systemui.shared.system.PinnedStackListenerForwarder.PinnedStackListener
@@ -250,7 +250,6 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
             });
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onMovementBoundsChanged$0 */
         public /* synthetic */ void lambda$onMovementBoundsChanged$0$PipManager$PipManagerPinnedStackListener() {
@@ -271,7 +270,6 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
             });
         }
 
-        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onActionsChanged$1 */
         public /* synthetic */ void lambda$onActionsChanged$1$PipManager$PipManagerPinnedStackListener() {
@@ -371,6 +369,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         closePipInternal(true);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void closePipInternal(boolean z) {
         if (DEBUG) {
             Log.d("PipManager", "closePipInternal() removePipStack=" + z + ", current state=" + getStateDescription());
@@ -397,6 +397,7 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         updatePipVisibility(false);
     }
 
+    /* access modifiers changed from: package-private */
     public void movePipToFullscreen() {
         if (DEBUG) {
             Log.d("PipManager", "movePipToFullscreen(), current state=" + getStateDescription());
@@ -426,6 +427,7 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         }
     }
 
+    /* access modifiers changed from: package-private */
     public void resizePinnedStack(int i) {
         if (DEBUG) {
             Log.d("PipManager", "resizePinnedStack() state=" + stateToName(i) + ", current state=" + getStateDescription(), new Exception());
@@ -461,6 +463,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private int getState() {
         if (this.mSuspendPipResizingReason != 0) {
             return this.mResumeResizePinnedStackRunnableState;
@@ -502,6 +506,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         return this.mState != 0;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private ActivityManager.StackInfo getPinnedStackInfo() {
         try {
             return ActivityTaskManager.getService().getStackInfo(2, 0);
@@ -511,6 +517,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void handleMediaResourceGranted(String[] strArr) {
         if (getState() == 0) {
             this.mLastPackagesResourceGranted = strArr;
@@ -542,6 +550,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     /* JADX WARNING: Removed duplicated region for block: B:13:0x0033  */
     /* JADX WARNING: Removed duplicated region for block: B:24:? A[RETURN, SYNTHETIC] */
     /* Code decompiled incorrectly, please refer to instructions dump. */
@@ -603,10 +613,12 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.pip.tv.PipManager.updateMediaController(java.util.List):void");
     }
 
+    /* access modifiers changed from: package-private */
     public MediaController getMediaController() {
         return this.mPipMediaController;
     }
 
+    /* access modifiers changed from: package-private */
     public int getPlaybackState() {
         MediaController mediaController = this.mPipMediaController;
         if (!(mediaController == null || mediaController.getPlaybackState() == null)) {
@@ -624,6 +636,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         return 2;
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private boolean isSettingsShown() {
         String str;
         try {
@@ -663,6 +677,8 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void updatePipVisibility(boolean z) {
         ((UiOffloadThread) Dependency.get(UiOffloadThread.class)).execute(new Runnable(z) {
             /* class com.android.systemui.pip.tv.$$Lambda$PipManager$B3cwmVrFFG3e6pUajgQn8FpuCeM */
@@ -676,6 +692,10 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
                 PipManager.lambda$updatePipVisibility$0(this.f$0);
             }
         });
+    }
+
+    static /* synthetic */ void lambda$updatePipVisibility$0(boolean z) {
+        WindowManagerWrapper.getInstance().setPipVisibility(z);
     }
 
     private String getStateDescription() {

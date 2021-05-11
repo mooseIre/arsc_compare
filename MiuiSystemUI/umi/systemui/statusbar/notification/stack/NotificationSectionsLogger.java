@@ -85,6 +85,10 @@ public final class NotificationSectionsLogger {
         logPosition(i, "Silent", z);
     }
 
+    public final void logImportant(int i, boolean z) {
+        logPosition(i, "Important", z);
+    }
+
     public final void logStr(@NotNull String str) {
         Intrinsics.checkParameterIsNotNull(str, "str");
         LogBuffer logBuffer2 = this.logBuffer;

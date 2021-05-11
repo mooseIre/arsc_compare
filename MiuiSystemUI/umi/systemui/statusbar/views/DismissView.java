@@ -36,4 +36,11 @@ public class DismissView extends CircleAndTickAnimView {
         layoutParams.gravity = getResources().getInteger(C0015R$integer.dismiss_button_layout_gravity);
         setLayoutParams(layoutParams);
     }
+
+    public int getPanelAdditionalInsetBottom() {
+        if (getVisibility() == 0 && getResources().getConfiguration().orientation == 1) {
+            return getHeight() + (((FrameLayout.LayoutParams) getLayoutParams()).bottomMargin * 2);
+        }
+        return 0;
+    }
 }
