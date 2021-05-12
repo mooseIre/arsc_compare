@@ -86,8 +86,8 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         }
     }
 
-    public void setBlurRatio(float f) {
-        applyBlurRatio(f);
+    public void setBlurRatio(float f, boolean z) {
+        applyBlurRatio(f, z);
     }
 
     public void collapsePanel(boolean z) {
@@ -167,9 +167,14 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         }
     }
 
-    private void applyBlurRatio(float f) {
+    private void applyBlurRatio(float f, boolean z) {
         if (hasAdded()) {
             Log.d("ControlPanelWindowManager", "setBlurRatio: " + f);
+            if (z) {
+                BlurUtil.setBlurWithWindowManager(this.mControlPanel.getViewRootImpl(), f, 0, this.mLpChanged);
+                apply();
+                return;
+            }
             BlurUtil.setBlur(this.mControlPanel.getViewRootImpl(), f, 0);
         }
     }

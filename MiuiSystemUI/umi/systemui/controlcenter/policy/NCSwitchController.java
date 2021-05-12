@@ -165,14 +165,12 @@ public final class NCSwitchController {
             MiuiNotificationPanelViewController miuiNotificationPanelViewController = (MiuiNotificationPanelViewController) panelController;
             ControlPanelWindowManager controlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
             if (z) {
-                Intrinsics.checkExpressionValueIsNotNull(controlPanelWindowManager, "controlPanelWindowManager");
-                controlPanelWindowManager.setBlurRatio(1.0f);
+                controlPanelWindowManager.setBlurRatio(1.0f, true);
                 miuiNotificationPanelViewController.setMBlurRatio(0.0f);
                 return;
             }
             miuiNotificationPanelViewController.setMBlurRatio(1.0f);
-            Intrinsics.checkExpressionValueIsNotNull(controlPanelWindowManager, "controlPanelWindowManager");
-            controlPanelWindowManager.setBlurRatio(0.0f);
+            controlPanelWindowManager.setBlurRatio(0.0f, true);
             return;
         }
         throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController");

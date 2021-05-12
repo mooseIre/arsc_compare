@@ -3,8 +3,7 @@ package com.android.systemui.util.leak;
 import java.util.Collection;
 import java.util.Iterator;
 
-/* access modifiers changed from: package-private */
-public abstract class AbstractCollection<T> implements Collection<T> {
+abstract class AbstractCollection<T> implements Collection<T> {
     AbstractCollection() {
     }
 

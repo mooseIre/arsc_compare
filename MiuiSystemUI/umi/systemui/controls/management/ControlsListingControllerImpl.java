@@ -56,6 +56,10 @@ public final class ControlsListingControllerImpl implements ControlsListingContr
         this.serviceListing.reload();
     }
 
+    public static final /* synthetic */ ServiceListing access$getServiceListing$p(ControlsListingControllerImpl controlsListingControllerImpl) {
+        return controlsListingControllerImpl.serviceListing;
+    }
+
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public ControlsListingControllerImpl(Context context2, Executor executor) {
         this(context2, executor, AnonymousClass1.INSTANCE);
