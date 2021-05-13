@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
+import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaScrollView;
 import com.miui.internal.vip.utils.Utils;
 import kotlin.jvm.internal.DefaultConstructorMarker;
@@ -19,6 +20,8 @@ public final class MiuiMediaHeaderView extends MediaHeaderView implements Swipea
     public static final Companion Companion = new Companion(null);
     private static final int mSidePaddings;
     private MiuiMediaScrollView mScrollView;
+    @Nullable
+    private MiuiNotificationSectionsManager notificationSectionsManager;
 
     @Override // com.android.systemui.statusbar.notification.stack.SwipeableView
     @Nullable
@@ -58,6 +61,15 @@ public final class MiuiMediaHeaderView extends MediaHeaderView implements Swipea
         mSidePaddings = context.getResources().getDimensionPixelSize(C0011R$dimen.notification_side_paddings);
     }
 
+    @Nullable
+    public final MiuiNotificationSectionsManager getNotificationSectionsManager() {
+        return this.notificationSectionsManager;
+    }
+
+    public final void setNotificationSectionsManager(@Nullable MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
+        this.notificationSectionsManager = miuiNotificationSectionsManager;
+    }
+
     @Override // com.android.systemui.statusbar.notification.stack.MediaHeaderView
     public void setContentView(@Nullable ViewGroup viewGroup) {
         super.setContentView(viewGroup);
@@ -75,9 +87,12 @@ public final class MiuiMediaHeaderView extends MediaHeaderView implements Swipea
     public void setVisibility(int i) {
         int visibility = getVisibility();
         super.setVisibility(i);
-        if (i == 0 && i != visibility) {
-            setTransitionAlpha(1.0f);
-            resetTranslation();
+        if (i != visibility) {
+            if (i == 0) {
+                setTransitionAlpha(1.0f);
+                resetTranslation();
+            }
+            post(new MiuiMediaHeaderView$setVisibility$1(this));
         }
     }
 

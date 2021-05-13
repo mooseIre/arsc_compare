@@ -92,7 +92,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 ControlPanelWindowView.this.mBlurRatio = f;
                 ControlPanelWindowView.this.setAlpha(f);
                 if (ControlPanelWindowView.this.mControlPanelWindowManager != null && !ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
-                    ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio);
+                    ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio, false);
                 }
             }
 
@@ -361,7 +361,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 this.mBlurAmin.setup("blurRatioSetup").to("blurRatio", Float.valueOf(max), this.mBlurAnimConfig);
             } else {
                 this.mBlurAmin.setup("blurRatioSetup").setTo("blurRatio", Float.valueOf(this.mBlurRatio));
-                this.mControlPanelWindowManager.setBlurRatio(max);
+                this.mControlPanelWindowManager.setBlurRatio(max, false);
             }
             float f2 = this.mExpandHeight;
             this.mExpandHeight = f;

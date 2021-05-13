@@ -12,7 +12,7 @@ import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificatio
 
 public class NotificationViewWrapperInjector {
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
-        if (view.getId() == C0014R$id.status_bar_latest_event_content && "oneLine".equals(view.getTag())) {
+        if (view.getId() == C0014R$id.status_bar_latest_event_content && MiuiNotificationOneLineViewWrapper.match(view.getTag())) {
             return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
         }
         if (NotificationSettingsHelper.showMiuiStyle()) {
@@ -26,7 +26,7 @@ public class NotificationViewWrapperInjector {
                     }
                 }
                 return getMiuiCustomViewWrapper(context, view, expandableNotificationRow);
-            } else if ("oneLine".equals(view.getTag())) {
+            } else if (MiuiNotificationOneLineViewWrapper.match(view.getTag())) {
                 return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
             } else {
                 if ("base".equals(view.getTag()) || "big".equals(view.getTag())) {

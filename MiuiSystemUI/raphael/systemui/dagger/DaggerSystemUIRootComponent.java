@@ -858,6 +858,8 @@ import com.android.systemui.util.concurrency.ConcurrencyModule_ProvideMainExecut
 import com.android.systemui.util.concurrency.ConcurrencyModule_ProvideMainHandlerFactory;
 import com.android.systemui.util.concurrency.ConcurrencyModule_ProvideMainLooperFactory;
 import com.android.systemui.util.concurrency.ConcurrencyModule_ProvideUiBackgroundExecutorFactory;
+import com.android.systemui.util.concurrency.ControlCenterConcurrencyModule_ProvideCCBackgroundExecutorFactory;
+import com.android.systemui.util.concurrency.ControlCenterConcurrencyModule_ProvideCCBgLooperFactory;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.concurrency.RepeatableExecutor;
 import com.android.systemui.util.io.Files;
@@ -1287,6 +1289,8 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     private ConcurrencyModule_ProvideBgHandlerFactory provideBgHandlerProvider;
     private Provider<Looper> provideBgLooperProvider;
     private Provider<LogBuffer> provideBroadcastDispatcherLogBufferProvider;
+    private Provider<Executor> provideCCBackgroundExecutorProvider;
+    private Provider<Looper> provideCCBgLooperProvider;
     private Provider<CommandQueue> provideCommandQueueProvider;
     private Provider<CommonNotifCollection> provideCommonNotifCollectionProvider;
     private Provider<ConfigurationController> provideConfigurationControllerProvider;
@@ -2115,7 +2119,11 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.uiModeNightTileProvider = UiModeNightTile_Factory.create(this.qSTileHostProvider, this.provideConfigurationControllerProvider, this.provideBatteryControllerProvider, this.locationControllerImplProvider);
         this.screenRecordTileProvider = ScreenRecordTile_Factory.create(this.qSTileHostProvider, this.recordingControllerProvider, this.keyguardDismissUtilProvider);
         this.autoBrightnessTileProvider = AutoBrightnessTile_Factory.create(this.qSTileHostProvider);
-        DriveModeControllerImpl_Factory create6 = DriveModeControllerImpl_Factory.create(this.provideContextProvider, this.provideBgLooperProvider, this.provideBackgroundExecutorProvider, this.provideMainExecutorProvider);
+        Provider<Looper> provider19 = DoubleCheck.provider(ControlCenterConcurrencyModule_ProvideCCBgLooperFactory.create());
+        this.provideCCBgLooperProvider = provider19;
+        Provider<Executor> provider20 = DoubleCheck.provider(ControlCenterConcurrencyModule_ProvideCCBackgroundExecutorFactory.create(provider19));
+        this.provideCCBackgroundExecutorProvider = provider20;
+        DriveModeControllerImpl_Factory create6 = DriveModeControllerImpl_Factory.create(this.provideContextProvider, this.provideCCBgLooperProvider, provider20, this.provideMainExecutorProvider);
         this.driveModeControllerImplProvider = create6;
         this.driveModeTileProvider = DriveModeTile_Factory.create(this.qSTileHostProvider, create6);
         this.editTileProvider = EditTile_Factory.create(this.qSTileHostProvider);
@@ -2123,12 +2131,12 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiHotspotTileProvider = MiuiHotspotTile_Factory.create(this.qSTileHostProvider, this.hotspotControllerImplProvider, this.networkControllerImplProvider);
         this.muteTileProvider = MuteTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
         this.nightModeTileProvider = NightModeTile_Factory.create(this.qSTileHostProvider);
-        PaperModeControllerImpl_Factory create7 = PaperModeControllerImpl_Factory.create(this.provideContextProvider, this.provideBgLooperProvider, this.providesBroadcastDispatcherProvider);
-        this.paperModeControllerImplProvider = create7;
-        this.paperModeTileProvider = PaperModeTile_Factory.create(this.qSTileHostProvider, create7);
     }
 
     private void initialize5(Builder builder) {
+        PaperModeControllerImpl_Factory create = PaperModeControllerImpl_Factory.create(this.provideContextProvider, this.provideCCBgLooperProvider, this.providesBroadcastDispatcherProvider);
+        this.paperModeControllerImplProvider = create;
+        this.paperModeTileProvider = PaperModeTile_Factory.create(this.qSTileHostProvider, create);
         this.powerModeTileProvider = PowerModeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverExtremeTileProvider = PowerSaverExtremeTile_Factory.create(this.qSTileHostProvider);
         this.powerSaverTileProvider = PowerSaverTile_Factory.create(this.qSTileHostProvider);
@@ -2138,9 +2146,9 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.screenShotTileProvider = ScreenShotTile_Factory.create(this.qSTileHostProvider);
         this.syncTileProvider = SyncTile_Factory.create(this.qSTileHostProvider);
         this.vibrateTileProvider = VibrateTile_Factory.create(this.qSTileHostProvider, this.zenModeControllerImplProvider);
-        MiuiAirplaneModeTile_Factory create = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider);
-        this.miuiAirplaneModeTileProvider = create;
-        Provider<QSFactoryInjectorImpl> provider = DoubleCheck.provider(QSFactoryInjectorImpl_Factory.create(this.qSTileHostProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, create, this.locationTileProvider));
+        MiuiAirplaneModeTile_Factory create2 = MiuiAirplaneModeTile_Factory.create(this.qSTileHostProvider, this.networkControllerImplProvider);
+        this.miuiAirplaneModeTileProvider = create2;
+        Provider<QSFactoryInjectorImpl> provider = DoubleCheck.provider(QSFactoryInjectorImpl_Factory.create(this.qSTileHostProvider, this.autoBrightnessTileProvider, this.driveModeTileProvider, this.editTileProvider, this.miuiCellularTileProvider, this.miuiHotspotTileProvider, this.muteTileProvider, this.nightModeTileProvider, this.paperModeTileProvider, this.powerModeTileProvider, this.powerSaverExtremeTileProvider, this.powerSaverTileProvider, this.quietModeTileProvider, this.screenButtonTileProvider, this.screenLockTileProvider, this.screenShotTileProvider, this.syncTileProvider, this.vibrateTileProvider, create2, this.locationTileProvider));
         this.qSFactoryInjectorImplProvider = provider;
         this.qSFactoryImplProvider = DoubleCheck.provider(QSFactoryImpl_Factory.create(this.qSTileHostProvider, this.wifiTileProvider, this.bluetoothTileProvider, this.cellularTileProvider, this.dndTileProvider, this.colorInversionTileProvider, this.airplaneModeTileProvider, this.workModeTileProvider, this.rotationLockTileProvider, this.flashlightTileProvider, this.locationTileProvider, this.castTileProvider, this.hotspotTileProvider, this.userTileProvider, this.batterySaverTileProvider, this.dataSaverTileProvider, this.nightDisplayTileProvider, this.nfcTileProvider, this.memoryTileProvider, this.uiModeNightTileProvider, this.screenRecordTileProvider, provider));
         this.builderProvider5 = AutoAddTracker_Builder_Factory.create(this.provideContextProvider);
@@ -2156,7 +2164,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         Provider<MiuiQSTileHostInjector> provider5 = DoubleCheck.provider(MiuiQSTileHostInjector_Factory.create(this.provideContextProvider, this.providePluginManagerProvider, this.tunerServiceImplProvider, this.controlPanelControllerProvider, this.superSaveModeControllerProvider, provider4, this.deviceProvisionedControllerImplProvider, this.provideBgHandlerProvider));
         this.miuiQSTileHostInjectorProvider = provider5;
         DelegateFactory delegateFactory = (DelegateFactory) this.qSTileHostProvider;
-        Provider<QSTileHost> provider6 = DoubleCheck.provider(QSTileHost_Factory.create(this.provideContextProvider, this.statusBarIconControllerImplProvider, this.qSFactoryImplProvider, this.provideMainHandlerProvider, this.provideBgLooperProvider, this.providePluginManagerProvider, this.tunerServiceImplProvider, this.autoTileManagerProvider, this.dumpManagerProvider, this.providesBroadcastDispatcherProvider, this.optionalOfStatusBarProvider, this.qSLoggerProvider, this.provideUiEventLoggerProvider, this.statusBarStateControllerImplProvider, provider5, this.controlPanelControllerProvider));
+        Provider<QSTileHost> provider6 = DoubleCheck.provider(QSTileHost_Factory.create(this.provideContextProvider, this.statusBarIconControllerImplProvider, this.qSFactoryImplProvider, this.provideMainHandlerProvider, this.provideCCBgLooperProvider, this.provideCCBackgroundExecutorProvider, this.providePluginManagerProvider, this.tunerServiceImplProvider, this.autoTileManagerProvider, this.dumpManagerProvider, this.providesBroadcastDispatcherProvider, this.optionalOfStatusBarProvider, this.qSLoggerProvider, this.provideUiEventLoggerProvider, this.statusBarStateControllerImplProvider, provider5, this.controlPanelControllerProvider));
         this.qSTileHostProvider = provider6;
         delegateFactory.setDelegatedProvider(provider6);
         Provider<MiuiNotificationShadePolicy> provider7 = DoubleCheck.provider(MiuiNotificationShadePolicy_Factory.create(this.provideContextProvider, this.provideBgHandlerProvider, this.provideHeadsUpManagerPhoneProvider, this.notificationShadeWindowControllerProvider, this.controlPanelControllerProvider));
@@ -2186,7 +2194,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.evilMethodMonitorProvider = DoubleCheck.provider(EvilMethodMonitor_Factory.create(this.provideContextProvider, this.provideBgLooperProvider));
         this.frameMonitorProvider = DoubleCheck.provider(FrameMonitor_Factory.create(this.provideContextProvider, this.provideBgLooperProvider));
         this.memoryMonitorProvider = DoubleCheck.provider(MemoryMonitor_Factory.create(this.provideContextProvider, this.provideBgLooperProvider));
-        this.messageMonitorProvider = DoubleCheck.provider(MessageMonitor_Factory.create());
+        this.messageMonitorProvider = DoubleCheck.provider(MessageMonitor_Factory.create(this.provideBgLooperProvider));
         Provider<ViewLeakMonitor> provider13 = DoubleCheck.provider(ViewLeakMonitor_Factory.create(this.provideContextProvider, this.provideBgLooperProvider, this.statusBarStateControllerImplProvider, this.provideNotificationEntryManagerProvider, this.provideConfigurationControllerProvider, this.controlPanelControllerProvider, this.settingsManagerProvider));
         this.viewLeakMonitorProvider = provider13;
         this.performanceToolsProvider = DoubleCheck.provider(PerformanceTools_Factory.create(this.provideContextProvider, this.binderMonitorProvider, this.evilMethodMonitorProvider, this.frameMonitorProvider, this.memoryMonitorProvider, this.messageMonitorProvider, provider13, this.dumpManagerProvider));
@@ -2249,9 +2257,9 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.powerNotificationWarningsProvider = DoubleCheck.provider(PowerNotificationWarnings_Factory.create(this.provideContextProvider, this.activityStarterDelegateProvider));
         this.provideNotificationBlockingHelperManagerProvider = DoubleCheck.provider(NotificationsModule_ProvideNotificationBlockingHelperManagerFactory.create(this.provideContextProvider, this.provideNotificationGutsManagerProvider, this.provideNotificationEntryManagerProvider, this.provideMetricsLoggerProvider));
         this.provideSensorPrivacyManagerProvider = DoubleCheck.provider(SystemServicesModule_ProvideSensorPrivacyManagerFactory.create(this.provideContextProvider));
-        ForegroundServiceLifetimeExtender_Factory create2 = ForegroundServiceLifetimeExtender_Factory.create(this.notificationInteractionTrackerProvider, this.bindSystemClockProvider);
-        this.foregroundServiceLifetimeExtenderProvider = create2;
-        this.foregroundServiceNotificationListenerProvider = DoubleCheck.provider(ForegroundServiceNotificationListener_Factory.create(this.provideContextProvider, this.foregroundServiceControllerProvider, this.provideNotificationEntryManagerProvider, this.notifPipelineProvider, create2, this.bindSystemClockProvider));
+        ForegroundServiceLifetimeExtender_Factory create3 = ForegroundServiceLifetimeExtender_Factory.create(this.notificationInteractionTrackerProvider, this.bindSystemClockProvider);
+        this.foregroundServiceLifetimeExtenderProvider = create3;
+        this.foregroundServiceNotificationListenerProvider = DoubleCheck.provider(ForegroundServiceNotificationListener_Factory.create(this.provideContextProvider, this.foregroundServiceControllerProvider, this.provideNotificationEntryManagerProvider, this.notifPipelineProvider, create3, this.bindSystemClockProvider));
         this.clockManagerProvider = DoubleCheck.provider(ClockManager_Factory.create(this.provideContextProvider, this.injectionInflationControllerProvider, this.providePluginManagerProvider, this.sysuiColorExtractorProvider, this.dockManagerImplProvider, this.providesBroadcastDispatcherProvider));
         this.provideDevicePolicyManagerWrapperProvider = DoubleCheck.provider(DependencyProvider_ProvideDevicePolicyManagerWrapperFactory.create(builder.dependencyProvider));
         this.keyguardSecurityModelProvider = DoubleCheck.provider(KeyguardSecurityModel_Factory.create(this.provideContextProvider));
@@ -2278,11 +2286,11 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
         this.keyguardViewMediatorInjectorProvider = DoubleCheck.provider(KeyguardViewMediatorInjector_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider));
         this.smartDarkObserverProvider = DoubleCheck.provider(SmartDarkObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
-        this.miuiStatusBarPromptControllerProvider = DoubleCheck.provider(MiuiStatusBarPromptController_Factory.create(this.provideContextProvider));
-        this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.provideContextProvider, this.provideBgLooperProvider));
     }
 
     private void initialize6(Builder builder) {
+        this.miuiStatusBarPromptControllerProvider = DoubleCheck.provider(MiuiStatusBarPromptController_Factory.create(this.provideContextProvider));
+        this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.provideContextProvider, this.provideBgLooperProvider));
         this.miuiDripLeftStatusBarIconControllerImplProvider = DoubleCheck.provider(MiuiDripLeftStatusBarIconControllerImpl_Factory.create(this.provideContextProvider));
         this.miuiKeyguardWallpaperControllerImplProvider = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider));
         this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
@@ -2706,7 +2714,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
 
         @Override // com.android.systemui.fragments.FragmentService.FragmentCreator
         public QSFragment createQSFragment() {
-            return new QSFragment((RemoteInputQuickSettingsDisabler) DaggerSystemUIRootComponent.this.remoteInputQuickSettingsDisablerProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (QSTileHost) DaggerSystemUIRootComponent.this.qSTileHostProvider.get(), (StatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (CommandQueue) DaggerSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (Looper) DaggerSystemUIRootComponent.this.provideBgLooperProvider.get(), DaggerSystemUIRootComponent.this.getMainExecutor());
+            return new QSFragment((RemoteInputQuickSettingsDisabler) DaggerSystemUIRootComponent.this.remoteInputQuickSettingsDisablerProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (QSTileHost) DaggerSystemUIRootComponent.this.qSTileHostProvider.get(), (StatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (CommandQueue) DaggerSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (Looper) DaggerSystemUIRootComponent.this.provideCCBgLooperProvider.get(), DaggerSystemUIRootComponent.this.getMainExecutor());
         }
     }
 
@@ -2732,11 +2740,11 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             }
 
             private TileQueryHelper getTileQueryHelper() {
-                return new TileQueryHelper(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), DaggerSystemUIRootComponent.this.getMainExecutor(), (Executor) DaggerSystemUIRootComponent.this.provideBackgroundExecutorProvider.get());
+                return new TileQueryHelper(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), DaggerSystemUIRootComponent.this.getMainExecutor(), (Executor) DaggerSystemUIRootComponent.this.provideCCBackgroundExecutorProvider.get());
             }
 
             private CCTileQueryHelper getCCTileQueryHelper() {
-                return new CCTileQueryHelper(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), DaggerSystemUIRootComponent.this.getMainExecutor(), (Executor) DaggerSystemUIRootComponent.this.provideBackgroundExecutorProvider.get());
+                return new CCTileQueryHelper(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), DaggerSystemUIRootComponent.this.getMainExecutor(), (Executor) DaggerSystemUIRootComponent.this.provideCCBackgroundExecutorProvider.get());
             }
 
             private NCSwitchController getNCSwitchController() {
@@ -2810,7 +2818,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
 
             @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
             public QSFooterDataUsage createQSFooterDataUsage() {
-                return new QSFooterDataUsage(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ActivityStarter) DaggerSystemUIRootComponent.this.activityStarterDelegateProvider.get(), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (Looper) DaggerSystemUIRootComponent.this.provideBgLooperProvider.get());
+                return new QSFooterDataUsage(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (ActivityStarter) DaggerSystemUIRootComponent.this.activityStarterDelegateProvider.get(), ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper(), (Looper) DaggerSystemUIRootComponent.this.provideCCBgLooperProvider.get());
             }
 
             @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator

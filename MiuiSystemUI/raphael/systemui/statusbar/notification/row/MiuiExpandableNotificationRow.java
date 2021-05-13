@@ -23,6 +23,7 @@ import com.android.systemui.statusbar.notification.RowAnimationUtils;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.policy.AppMiniWindowManager;
 import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
+import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.CommonExtensionsKt;
@@ -143,10 +144,10 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
     /* access modifiers changed from: private */
     public final void updateBackgroundBg() {
         if (isHeadsUpState()) {
-            boolean isTransparentAble = NotificationContentInflaterInjector.isTransparentAble();
             NotificationContentView showingLayout = getShowingLayout();
-            boolean z = isTransparentAble && ((showingLayout != null ? showingLayout.getVisibleWrapper(2) : null) instanceof MiuiNotificationOneLineViewWrapper);
-            if (z) {
+            NotificationViewWrapper visibleWrapper = showingLayout != null ? showingLayout.getVisibleWrapper(2) : null;
+            boolean isTransparentBg = visibleWrapper instanceof MiuiNotificationOneLineViewWrapper ? ((MiuiNotificationOneLineViewWrapper) visibleWrapper).isTransparentBg() : false;
+            if (isTransparentBg) {
                 this.mBackgroundNormal.setCustomBackground(C0012R$drawable.optimized_transparent_heads_up_notification_bg);
             } else {
                 this.mBackgroundNormal.setCustomBackground(C0012R$drawable.notification_heads_up_bg);
@@ -154,7 +155,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             View mMiniBar = getMMiniBar();
             Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
             if (mMiniBar.getBackground() instanceof GradientDrawable) {
-                int i = z ? C0010R$color.mini_window_bar_color_gamemode : C0010R$color.mini_window_bar_color;
+                int i = isTransparentBg ? C0010R$color.mini_window_bar_color_gamemode : C0010R$color.mini_window_bar_color;
                 View mMiniBar2 = getMMiniBar();
                 Intrinsics.checkExpressionValueIsNotNull(mMiniBar2, "mMiniBar");
                 Drawable background = mMiniBar2.getBackground();

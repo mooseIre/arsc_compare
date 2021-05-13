@@ -113,6 +113,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private FrameLayout mAwesomeLockScreenContainer;
     private int mBarState;
     private float mBlurRatio;
+    private boolean mBluring;
     private final float mBottomAreaCollapseHotZone;
     private ValueAnimator mBouncerFractionAnimator;
     private final MiuiNotificationPanelViewController$mChildPositionsChangedListener$1 mChildPositionsChangedListener;
@@ -234,6 +235,20 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Context context2 = notificationPanelView2.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "mView.context");
         context2.getResources().getDimensionPixelSize(C0011R$dimen.notification_sticky_group_header_height);
+        ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback((ControlPanelController.UseControlPanelChangeListener) new ControlPanelController.UseControlPanelChangeListener(this) {
+            /* class com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.AnonymousClass2 */
+            final /* synthetic */ MiuiNotificationPanelViewController this$0;
+
+            {
+                this.this$0 = r1;
+            }
+
+            @Override // com.android.systemui.controlcenter.phone.ControlPanelController.UseControlPanelChangeListener
+            public final void onUseControlPanelChange(boolean z) {
+                MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
+                miuiNotificationPanelViewController.mQsNotificationTopPadding = z ? miuiNotificationPanelViewController.mResources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding) : 0;
+            }
+        });
         this.mChildPositionsChangedListener = new MiuiNotificationPanelViewController$mChildPositionsChangedListener$1(this);
         this.mConfiguration = new Configuration();
     }
@@ -357,6 +372,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 AccessibilityUtils.hapticAccessibilityTransitionIfNeeded(((NotificationPanelViewController) this).mView.getContext(), 191);
             }
             if (mPanelAppeared != z) {
+                refreshNssCoveringQs();
                 QS qs = this.mQs;
                 if (qs != null) {
                     qs.animateAppearDisappear(z);
@@ -400,6 +416,18 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
                 f = RangesKt.coerceIn(floatValue, 0.0f, 1.0f);
             }
             miuiNotificationPanelViewController.setMBlurRatio(f);
+        }
+
+        @Override // miuix.animation.listener.TransitionListener
+        public void onComplete(@Nullable Object obj) {
+            super.onComplete(obj);
+            MiuiNotificationPanelViewController.this.mBluring = false;
+        }
+
+        @Override // miuix.animation.listener.TransitionListener
+        public void onCancel(@Nullable Object obj) {
+            super.onCancel(obj);
+            MiuiNotificationPanelViewController.this.mBluring = false;
         }
     }
 
@@ -722,7 +750,6 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         return ((((f3 * coerceAtMost) / ((float) 3)) - f3) + coerceAtMost) * f2;
     }
 
-    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public final boolean isOnKeyguard() {
         return this.statusBarStateController.getState() == 1;
     }
@@ -971,6 +998,15 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             }
             notificationsQuickSettingsContainer.setElevation(f + ((float) 1));
         }
+    }
+
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
+    public void loadDimens() {
+        super.loadDimens();
+        Object obj = Dependency.get(ControlPanelController.class);
+        Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(ControlPanelController::class.java)");
+        this.mQsNotificationTopPadding = ((ControlPanelController) obj).isUseControlCenter() ? this.mResources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding) : 0;
     }
 
     @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
@@ -1400,6 +1436,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             return;
         }
         this.mKeyguardPanelViewInjector.setVisibility(0);
+        this.mKeyguardPanelViewInjector.setAlpha(1.0f);
     }
 
     /* access modifiers changed from: private */
@@ -1548,6 +1585,14 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.updateDismissView():void");
+    }
+
+    public final int getAdditionalInsetBottom() {
+        DismissView dismissView = this.mDismissView;
+        if (dismissView != null) {
+            return dismissView.getPanelAdditionalInsetBottom();
+        }
+        return 0;
     }
 
     private final void initDismissView() {
@@ -1730,10 +1775,12 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final void cancelPanelBlur() {
         Folme.useValue("PanelBlur").setup("PanelBlurSetup").cancel();
         Folme.useValue("PanelBlur").setup("PanelBlurSetup").setTo("PanelBlurRatio", Float.valueOf(this.mBlurRatio));
+        this.mBluring = false;
     }
 
     private final void startPanelBlurIfNeed(float f) {
-        if (this.mBlurRatio != f) {
+        if (this.mBluring || this.mBlurRatio != f) {
+            this.mBluring = true;
             Folme.useValue("PanelBlur").setup("PanelBlurSetup").to("PanelBlurRatio", Float.valueOf(f), MiuiNotificationPanelViewControllerKt.access$getBLUR_ANIM_CONFIG$p());
         }
     }

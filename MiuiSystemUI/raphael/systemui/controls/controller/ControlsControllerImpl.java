@@ -47,7 +47,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     public static final Companion Companion = new Companion(null);
     private static final Uri URI = Settings.Secure.getUriFor("controls_enabled");
     private AuxiliaryPersistenceWrapper auxiliaryPersistenceWrapper;
-    private boolean available = Companion.isAvailable(getCurrentUserId(), getContentResolver());
+    private boolean available = Companion.access$isAvailable(Companion, getCurrentUserId(), getContentResolver());
     private final ControlsBindingController bindingController;
     private final BroadcastDispatcher broadcastDispatcher;
     private final Context context;
@@ -142,6 +142,10 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
             this();
         }
 
+        public static final /* synthetic */ boolean access$isAvailable(Companion companion, int i, ContentResolver contentResolver) {
+            return companion.isAvailable(i, contentResolver);
+        }
+
         private final boolean isAvailable(int i, ContentResolver contentResolver) {
             return Settings.Secure.getIntForUser(contentResolver, "controls_enabled", 1, i) != 0;
         }
@@ -170,7 +174,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return this.auxiliaryPersistenceWrapper;
     }
 
-    /* access modifiers changed from: public */
     private final void setValuesForUser(UserHandle userHandle) {
         Log.d("ControlsControllerImpl", "Changing to user: " + userHandle);
         this.currentUser = userHandle;
@@ -186,7 +189,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         File auxiliaryFile = this.userStructure.getAuxiliaryFile();
         Intrinsics.checkExpressionValueIsNotNull(auxiliaryFile, "userStructure.auxiliaryFile");
         auxiliaryPersistenceWrapper2.changeFile(auxiliaryFile);
-        this.available = Companion.isAvailable(userHandle.getIdentifier(), getContentResolver());
+        this.available = Companion.access$isAvailable(Companion, userHandle.getIdentifier(), getContentResolver());
         resetFavorites(getAvailable());
         this.bindingController.changeUser(userHandle);
         this.listingController.changeUser(userHandle);

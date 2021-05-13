@@ -97,7 +97,7 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public void setControlPanelWindowBlurRatio(float f) {
-        this.mControlPanelWindowManager.setBlurRatio(f);
+        this.mControlPanelWindowManager.setBlurRatio(f, false);
     }
 
     public void showExpandDetail(boolean z, MiuiQSPanel$MiuiRecord miuiQSPanel$MiuiRecord) {

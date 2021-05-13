@@ -246,50 +246,6 @@ public class NotificationSettingsHelper {
         }
     }
 
-    /* JADX WARNING: Can't wrap try/catch for region: R(6:3|4|5|6|7|9) */
-    /* JADX WARNING: Failed to process nested try/catch */
-    /* JADX WARNING: Missing exception handler attribute for start block: B:5:0x0037 */
-    /* Code decompiled incorrectly, please refer to instructions dump. */
-    public static boolean canShowBadge(com.android.systemui.statusbar.notification.ExpandedNotification r7) {
-        /*
-            java.lang.Class<com.android.systemui.statusbar.policy.UserSwitcherController> r0 = com.android.systemui.statusbar.policy.UserSwitcherController.class
-            java.lang.Object r0 = com.android.systemui.Dependency.get(r0)
-            com.android.systemui.statusbar.policy.UserSwitcherController r0 = (com.android.systemui.statusbar.policy.UserSwitcherController) r0
-            android.content.Context r0 = r0.getContextForUser()
-            android.app.Notification r1 = r7.getNotification()
-            java.lang.String r1 = r1.getChannelId()
-            java.lang.String r2 = "miscellaneous"
-            boolean r2 = r2.equals(r1)
-            boolean r3 = android.text.TextUtils.isEmpty(r1)
-            r4 = 0
-            if (r3 != 0) goto L_0x0052
-            if (r2 == 0) goto L_0x0024
-            goto L_0x0052
-        L_0x0024:
-            android.app.INotificationManager r2 = com.android.systemui.statusbar.notification.NotificationSettingsHelper.sINM     // Catch:{ Exception -> 0x0037 }
-            java.lang.String r3 = r0.getPackageName()     // Catch:{ Exception -> 0x0037 }
-            int r5 = r0.getUserId()     // Catch:{ Exception -> 0x0037 }
-            java.lang.String r6 = r7.getOpPkg()     // Catch:{ Exception -> 0x0037 }
-            android.app.NotificationChannel r4 = r2.getNotificationChannel(r3, r5, r6, r1)     // Catch:{ Exception -> 0x0037 }
-            goto L_0x0049
-        L_0x0037:
-            android.app.INotificationManager r2 = com.android.systemui.statusbar.notification.NotificationSettingsHelper.sINM     // Catch:{ Exception -> 0x0049 }
-            java.lang.String r3 = r0.getPackageName()     // Catch:{ Exception -> 0x0049 }
-            int r0 = r0.getUserId()     // Catch:{ Exception -> 0x0049 }
-            java.lang.String r5 = r7.getPackageName()     // Catch:{ Exception -> 0x0049 }
-            android.app.NotificationChannel r4 = r2.getNotificationChannel(r3, r0, r5, r1)     // Catch:{ Exception -> 0x0049 }
-        L_0x0049:
-            java.lang.String r7 = r7.getPackageName()
-            boolean r7 = canShowBadge(r7, r4)
-            return r7
-        L_0x0052:
-            java.lang.String r7 = r7.getPackageName()
-            boolean r7 = canShowBadge(r7, r4)
-            return r7
-        */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.notification.NotificationSettingsHelper.canShowBadge(com.android.systemui.statusbar.notification.ExpandedNotification):boolean");
-    }
-
     public static boolean canShowBadge(String str, NotificationChannel notificationChannel) {
         boolean z;
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();

@@ -48,6 +48,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import javax.inject.Provider;
@@ -79,7 +80,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     public void warn(String str, Throwable th) {
     }
 
-    public QSTileHost(Context context, StatusBarIconController statusBarIconController, QSFactory qSFactory, Handler handler, Looper looper, PluginManager pluginManager, TunerService tunerService, Provider<AutoTileManager> provider, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, Optional<StatusBar> optional, QSLogger qSLogger, UiEventLogger uiEventLogger, StatusBarStateController statusBarStateController, MiuiQSTileHostInjector miuiQSTileHostInjector, ControlPanelController controlPanelController) {
+    public QSTileHost(Context context, StatusBarIconController statusBarIconController, QSFactory qSFactory, Handler handler, Looper looper, Executor executor, PluginManager pluginManager, TunerService tunerService, Provider<AutoTileManager> provider, DumpManager dumpManager, BroadcastDispatcher broadcastDispatcher, Optional<StatusBar> optional, QSLogger qSLogger, UiEventLogger uiEventLogger, StatusBarStateController statusBarStateController, MiuiQSTileHostInjector miuiQSTileHostInjector, ControlPanelController controlPanelController) {
         ArrayList<QSFactory> arrayList = new ArrayList<>();
         this.mQsFactories = arrayList;
         this.mIconController = statusBarIconController;
@@ -93,7 +94,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mMiuiHostInjector = miuiQSTileHostInjector;
         miuiQSTileHostInjector.MiuiInit(this, arrayList, this.mTiles, this.mTileSpecs);
         this.mInstanceIdSequence = new InstanceIdSequence(1048576);
-        this.mServices = new TileServices(this, looper, this.mBroadcastDispatcher);
+        this.mServices = new TileServices(this, looper, this.mBroadcastDispatcher, executor);
         this.mStatusBarOptional = optional;
         this.mQsFactories.add(qSFactory);
         pluginManager.addPluginListener((PluginListener) this, QSFactory.class, true);

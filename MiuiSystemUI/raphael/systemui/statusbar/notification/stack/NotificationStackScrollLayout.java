@@ -1775,17 +1775,14 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     }
 
     private float getAppearStartPosition() {
-        int minExpansionHeight;
-        if (isHeadsUpTransition()) {
-            int i = 0;
-            if (!(getFirstVisibleSection() == null || getFirstVisibleSection().getFirstVisibleChild() == null)) {
-                i = getFirstVisibleSection().getFirstVisibleChild().getPinnedHeadsUpHeight();
-            }
-            minExpansionHeight = this.mHeadsUpInset + i;
-        } else {
-            minExpansionHeight = getMinExpansionHeight();
+        if (!isHeadsUpTransition()) {
+            return 0.0f;
         }
-        return (float) minExpansionHeight;
+        int i = 0;
+        if (!(getFirstVisibleSection() == null || getFirstVisibleSection().getFirstVisibleChild() == null)) {
+            i = getFirstVisibleSection().getFirstVisibleChild().getPinnedHeadsUpHeight();
+        }
+        return (float) (this.mHeadsUpInset + i);
     }
 
     private int getTopHeadsUpPinnedHeight() {
@@ -2227,8 +2224,8 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             i = this.mHeadsUpInset + getTopHeadsUpPinnedHeight();
         }
         int max = Math.max(0, i - this.mMaxLayoutHeight);
-        int imeInset = getImeInset();
-        return max + Math.min(imeInset, Math.max(0, i - (getHeight() - imeInset)));
+        int max2 = Math.max(((MiuiNotificationPanelViewController) this.mNotificationPanelController).getAdditionalInsetBottom(), getImeInset());
+        return max + Math.min(max2, Math.max(0, i - (getHeight() - max2)));
     }
 
     private int getImeInset() {

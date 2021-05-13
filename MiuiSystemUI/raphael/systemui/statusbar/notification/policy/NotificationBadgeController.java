@@ -95,7 +95,7 @@ public class NotificationBadgeController {
         int identifier = expandedNotification.getUser().getIdentifier();
         String packageName = expandedNotification.getPackageName();
         CharSequence messageClassName = getMessageClassName(expandedNotification);
-        boolean canShowBadge = NotificationSettingsHelper.canShowBadge(expandedNotification);
+        boolean canShowBadge = NotificationSettingsHelper.canShowBadge(packageName, null);
         int i2 = 0;
         if (canShowBadge) {
             List<NotificationEntry> list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate() {

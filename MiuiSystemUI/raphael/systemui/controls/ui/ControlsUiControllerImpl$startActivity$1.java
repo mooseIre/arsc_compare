@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import com.android.systemui.plugins.ActivityStarter;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsUiControllerImpl.kt */
-public final class ControlsUiControllerImpl$startActivity$1 implements ActivityStarter.OnDismissAction {
+final class ControlsUiControllerImpl$startActivity$1 implements ActivityStarter.OnDismissAction {
     final /* synthetic */ Context $context;
     final /* synthetic */ Intent $intent;
     final /* synthetic */ ControlsUiControllerImpl this$0;

@@ -26,6 +26,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.concurrent.Executor;
 
 public class TileServices extends IQSService.Stub {
     private static final Comparator<TileServiceManager> SERVICE_SORT = new Comparator<TileServiceManager>() {
@@ -37,6 +38,7 @@ public class TileServices extends IQSService.Stub {
     };
     private final BroadcastDispatcher mBroadcastDispatcher;
     private final Context mContext;
+    private final Executor mExecutor;
     private final Handler mHandler;
     private final QSTileHost mHost;
     private final Handler mMainHandler;
@@ -54,11 +56,12 @@ public class TileServices extends IQSService.Stub {
     private final ArrayMap<ComponentName, CustomTile> mTiles = new ArrayMap<>();
     private final ArrayMap<IBinder, CustomTile> mTokenMap = new ArrayMap<>();
 
-    public TileServices(QSTileHost qSTileHost, Looper looper, BroadcastDispatcher broadcastDispatcher) {
+    public TileServices(QSTileHost qSTileHost, Looper looper, BroadcastDispatcher broadcastDispatcher, Executor executor) {
         this.mHost = qSTileHost;
         this.mContext = qSTileHost.getContext();
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mHandler = new Handler(looper);
+        this.mExecutor = executor;
         this.mMainHandler = new Handler(Looper.getMainLooper());
         this.mBroadcastDispatcher.registerReceiver(this.mRequestListeningReceiver, new IntentFilter("android.service.quicksettings.action.REQUEST_LISTENING"), null, UserHandle.ALL);
     }
@@ -89,6 +92,25 @@ public class TileServices extends IQSService.Stub {
     }
 
     public void freeService(CustomTile customTile, TileServiceManager tileServiceManager) {
+        this.mExecutor.execute(new Runnable(tileServiceManager, customTile) {
+            /* class com.android.systemui.qs.external.$$Lambda$TileServices$ovbFZPyneKkWl1sq50iCLdrLoVg */
+            public final /* synthetic */ TileServiceManager f$1;
+            public final /* synthetic */ CustomTile f$2;
+
+            {
+                this.f$1 = r2;
+                this.f$2 = r3;
+            }
+
+            public final void run() {
+                TileServices.this.lambda$freeService$1$TileServices(this.f$1, this.f$2);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$freeService$1 */
+    public /* synthetic */ void lambda$freeService$1$TileServices(TileServiceManager tileServiceManager, CustomTile customTile) {
         synchronized (this.mServices) {
             tileServiceManager.setBindAllowed(false);
             tileServiceManager.handleDestroy();
@@ -117,6 +139,18 @@ public class TileServices extends IQSService.Stub {
     }
 
     public void recalculateBindAllowance() {
+        this.mExecutor.execute(new Runnable() {
+            /* class com.android.systemui.qs.external.$$Lambda$TileServices$o9aPjmtcX2u4_eRkYTFvDr4_EfQ */
+
+            public final void run() {
+                TileServices.this.lambda$recalculateBindAllowance$2$TileServices();
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$recalculateBindAllowance$2 */
+    public /* synthetic */ void lambda$recalculateBindAllowance$2$TileServices() {
         ArrayList arrayList;
         synchronized (this.mServices) {
             arrayList = new ArrayList(this.mServices.values());
@@ -153,6 +187,23 @@ public class TileServices extends IQSService.Stub {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void requestListening(ComponentName componentName) {
+        this.mExecutor.execute(new Runnable(componentName) {
+            /* class com.android.systemui.qs.external.$$Lambda$TileServices$zuaa8Sby4z44oxdYLlY7dlWeT20 */
+            public final /* synthetic */ ComponentName f$1;
+
+            {
+                this.f$1 = r2;
+            }
+
+            public final void run() {
+                TileServices.this.lambda$requestListening$3$TileServices(this.f$1);
+            }
+        });
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$requestListening$3 */
+    public /* synthetic */ void lambda$requestListening$3$TileServices(ComponentName componentName) {
         synchronized (this.mServices) {
             CustomTile tileForComponent = getTileForComponent(componentName);
             if (tileForComponent == null) {
@@ -174,19 +225,38 @@ public class TileServices extends IQSService.Stub {
         CustomTile tileForToken = getTileForToken(iBinder);
         if (tileForToken != null) {
             verifyCaller(tileForToken);
-            synchronized (this.mServices) {
-                TileServiceManager tileServiceManager = this.mServices.get(tileForToken);
-                if (tileServiceManager != null) {
-                    if (tileServiceManager.isLifecycleStarted()) {
-                        tileServiceManager.clearPendingBind();
-                        tileServiceManager.setLastUpdate(System.currentTimeMillis());
-                        tileForToken.updateState(tile);
-                        tileForToken.refreshState();
-                        return;
-                    }
+            this.mExecutor.execute(new Runnable(tileForToken, tile) {
+                /* class com.android.systemui.qs.external.$$Lambda$TileServices$CzYr9R8a8SrXZhyiFFeFglD619w */
+                public final /* synthetic */ CustomTile f$1;
+                public final /* synthetic */ Tile f$2;
+
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
                 }
-                Log.e("TileServices", "TileServiceManager not started for " + tileForToken.getComponent(), new IllegalStateException());
+
+                public final void run() {
+                    TileServices.this.lambda$updateQsTile$4$TileServices(this.f$1, this.f$2);
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateQsTile$4 */
+    public /* synthetic */ void lambda$updateQsTile$4$TileServices(CustomTile customTile, Tile tile) {
+        synchronized (this.mServices) {
+            TileServiceManager tileServiceManager = this.mServices.get(customTile);
+            if (tileServiceManager != null) {
+                if (tileServiceManager.isLifecycleStarted()) {
+                    tileServiceManager.clearPendingBind();
+                    tileServiceManager.setLastUpdate(System.currentTimeMillis());
+                    customTile.updateState(tile);
+                    customTile.refreshState();
+                    return;
+                }
             }
+            Log.e("TileServices", "TileServiceManager not started for " + customTile.getComponent(), new IllegalStateException());
         }
     }
 
@@ -194,17 +264,34 @@ public class TileServices extends IQSService.Stub {
         CustomTile tileForToken = getTileForToken(iBinder);
         if (tileForToken != null) {
             verifyCaller(tileForToken);
-            synchronized (this.mServices) {
-                TileServiceManager tileServiceManager = this.mServices.get(tileForToken);
-                if (tileServiceManager != null) {
-                    if (tileServiceManager.isLifecycleStarted()) {
-                        tileServiceManager.clearPendingBind();
-                        tileForToken.refreshState();
-                        return;
-                    }
+            this.mExecutor.execute(new Runnable(tileForToken) {
+                /* class com.android.systemui.qs.external.$$Lambda$TileServices$9WKgE8lZswiSfTCYjXVfTNVb_4 */
+                public final /* synthetic */ CustomTile f$1;
+
+                {
+                    this.f$1 = r2;
                 }
-                Log.e("TileServices", "TileServiceManager not started for " + tileForToken.getComponent(), new IllegalStateException());
+
+                public final void run() {
+                    TileServices.this.lambda$onStartSuccessful$5$TileServices(this.f$1);
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$onStartSuccessful$5 */
+    public /* synthetic */ void lambda$onStartSuccessful$5$TileServices(CustomTile customTile) {
+        synchronized (this.mServices) {
+            TileServiceManager tileServiceManager = this.mServices.get(customTile);
+            if (tileServiceManager != null) {
+                if (tileServiceManager.isLifecycleStarted()) {
+                    tileServiceManager.clearPendingBind();
+                    customTile.refreshState();
+                    return;
+                }
             }
+            Log.e("TileServices", "TileServiceManager not started for " + customTile.getComponent(), new IllegalStateException());
         }
     }
 
@@ -239,24 +326,45 @@ public class TileServices extends IQSService.Stub {
         CustomTile tileForToken = getTileForToken(iBinder);
         if (tileForToken != null) {
             verifyCaller(tileForToken);
-            try {
-                final ComponentName component = tileForToken.getComponent();
-                String packageName = component.getPackageName();
-                UserHandle callingUserHandle = IQSService.Stub.getCallingUserHandle();
-                if (this.mContext.getPackageManager().getPackageInfoAsUser(packageName, 0, callingUserHandle.getIdentifier()).applicationInfo.isSystemApp()) {
-                    final StatusBarIcon statusBarIcon = icon != null ? new StatusBarIcon(callingUserHandle, packageName, icon, 0, 0, str) : null;
-                    this.mMainHandler.post(new Runnable() {
-                        /* class com.android.systemui.qs.external.TileServices.AnonymousClass1 */
+            this.mExecutor.execute(new Runnable(tileForToken, icon, str) {
+                /* class com.android.systemui.qs.external.$$Lambda$TileServices$CIeT2k2nQroVdJV7no79sab8hg */
+                public final /* synthetic */ CustomTile f$1;
+                public final /* synthetic */ Icon f$2;
+                public final /* synthetic */ String f$3;
 
-                        public void run() {
-                            StatusBarIconController iconController = TileServices.this.mHost.getIconController();
-                            iconController.setIcon(component.getClassName(), statusBarIcon);
-                            iconController.setExternalIcon(component.getClassName());
-                        }
-                    });
+                {
+                    this.f$1 = r2;
+                    this.f$2 = r3;
+                    this.f$3 = r4;
                 }
-            } catch (PackageManager.NameNotFoundException unused) {
+
+                public final void run() {
+                    TileServices.this.lambda$updateStatusIcon$6$TileServices(this.f$1, this.f$2, this.f$3);
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateStatusIcon$6 */
+    public /* synthetic */ void lambda$updateStatusIcon$6$TileServices(CustomTile customTile, Icon icon, String str) {
+        try {
+            final ComponentName component = customTile.getComponent();
+            String packageName = component.getPackageName();
+            UserHandle callingUserHandle = IQSService.Stub.getCallingUserHandle();
+            if (this.mContext.getPackageManager().getPackageInfoAsUser(packageName, 0, callingUserHandle.getIdentifier()).applicationInfo.isSystemApp()) {
+                final StatusBarIcon statusBarIcon = icon != null ? new StatusBarIcon(callingUserHandle, packageName, icon, 0, 0, str) : null;
+                this.mMainHandler.post(new Runnable() {
+                    /* class com.android.systemui.qs.external.TileServices.AnonymousClass1 */
+
+                    public void run() {
+                        StatusBarIconController iconController = TileServices.this.mHost.getIconController();
+                        iconController.setIcon(component.getClassName(), statusBarIcon);
+                        iconController.setExternalIcon(component.getClassName());
+                    }
+                });
             }
+        } catch (PackageManager.NameNotFoundException unused) {
         }
     }
 

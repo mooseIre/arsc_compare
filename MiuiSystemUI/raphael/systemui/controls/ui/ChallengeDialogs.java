@@ -24,6 +24,10 @@ public final class ChallengeDialogs {
     private ChallengeDialogs() {
     }
 
+    public static final /* synthetic */ void access$setInputType(ChallengeDialogs challengeDialogs, EditText editText, boolean z) {
+        challengeDialogs.setInputType(editText, z);
+    }
+
     public final Dialog createPinDialog(ControlViewHolder controlViewHolder, boolean z, boolean z2, Function0<Unit> function0) {
         Pair pair;
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
@@ -71,7 +75,6 @@ public final class ChallengeDialogs {
         return create;
     }
 
-    /* access modifiers changed from: public */
     private final void setInputType(EditText editText, boolean z) {
         if (z) {
             editText.setInputType(129);
