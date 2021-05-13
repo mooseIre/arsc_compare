@@ -689,9 +689,13 @@ public class PipManager implements BasePipManager, PipTaskOrganizer.PipTransitio
             }
 
             public final void run() {
-                WindowManagerWrapper.getInstance().setPipVisibility(this.f$0);
+                PipManager.lambda$updatePipVisibility$0(this.f$0);
             }
         });
+    }
+
+    static /* synthetic */ void lambda$updatePipVisibility$0(boolean z) {
+        WindowManagerWrapper.getInstance().setPipVisibility(z);
     }
 
     private String getStateDescription() {

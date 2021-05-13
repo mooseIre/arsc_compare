@@ -9,9 +9,8 @@ import android.widget.Button;
 import android.widget.Toast;
 import com.android.systemui.C0020R$string;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 implements View.OnClickListener {
+final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$1 implements View.OnClickListener {
     final /* synthetic */ Button $this_apply;
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
@@ -28,6 +27,6 @@ public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$
         }
         ControlsFavoritingActivity controlsFavoritingActivity = this.this$0;
         controlsFavoritingActivity.startActivity(intent, ActivityOptions.makeSceneTransitionAnimation(controlsFavoritingActivity, new Pair[0]).toBundle());
-        this.this$0.animateExitAndFinish();
+        ControlsFavoritingActivity.access$animateExitAndFinish(this.this$0);
     }
 }
