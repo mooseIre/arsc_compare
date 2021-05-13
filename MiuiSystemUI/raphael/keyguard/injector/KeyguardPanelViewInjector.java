@@ -1072,4 +1072,11 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             view.setVisibility(i);
         }
     }
+
+    public final void setAlpha(float f) {
+        NotificationPanelView view = getView();
+        if (view != null) {
+            view.setAlpha(f);
+        }
+    }
 }

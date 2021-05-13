@@ -27,6 +27,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0020R$string;
@@ -755,6 +756,9 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
 
     private void processVendorSucess(int i) {
         if (i == 0) {
+            if (((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).shouldListenForFingerprintWhenUnlocked() && getKeyguardAuthen()) {
+                this.mHandler.post($$Lambda$MiuiGxzwManager$CwiMqWSzmARmfUO94Rp4D6BxC4E.INSTANCE);
+            }
             Handler handler = this.mHandler;
             MiuiGxzwIconView miuiGxzwIconView = this.mMiuiGxzwIconView;
             Objects.requireNonNull(miuiGxzwIconView);
@@ -780,10 +784,10 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
                 setGxzwUnlockMode(i2);
                 if (this.mDisableLockScreenFod) {
                     this.mHandler.post(new Runnable() {
-                        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwManager$gxRpTG63r0JItbfop_x0vVLPPwA */
+                        /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwManager$JspGneuugWT0lh9bbe0A3rJKDh4 */
 
                         public final void run() {
-                            MiuiGxzwManager.this.lambda$processVendorSucess$1$MiuiGxzwManager();
+                            MiuiGxzwManager.this.lambda$processVendorSucess$2$MiuiGxzwManager();
                         }
                     });
                 }
@@ -800,8 +804,8 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$processVendorSucess$1 */
-    public /* synthetic */ void lambda$processVendorSucess$1$MiuiGxzwManager() {
+    /* renamed from: lambda$processVendorSucess$2 */
+    public /* synthetic */ void lambda$processVendorSucess$2$MiuiGxzwManager() {
         disableLockScreenFod(false);
     }
 

@@ -2,10 +2,10 @@ package com.android.keyguard.faceunlock;
 
 import android.content.Context;
 import android.hardware.miuiface.BaseMiuiFaceManager;
-import android.miui.Shell;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
+import com.android.keyguard.MiuiDozeServiceHost;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
@@ -60,7 +60,7 @@ public class MiuiFaceUnlockUtils {
 
     public static void setScreenTurnOnDelayed(boolean z) {
         sIsScreenTurnOnDelayed = z;
-        Shell.setRuntimeSharedValue("KEYGUARD_TURN_ON_DELAYED", z ? 1 : 0);
+        ((MiuiDozeServiceHost) Dependency.get(MiuiDozeServiceHost.class)).onScreenTurnOnDelayed(sIsScreenTurnOnDelayed);
     }
 
     public static boolean isScreenTurnOnDelayed() {

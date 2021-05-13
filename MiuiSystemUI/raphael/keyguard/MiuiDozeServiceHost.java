@@ -5,7 +5,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.miui.Shell;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -188,13 +187,26 @@ public class MiuiDozeServiceHost extends DozeServiceHost {
     }
 
     public void onGxzwIconChanged(boolean z) {
-        Shell.setRuntimeSharedValue("KEYGUARD_GXZW_ICON_SHOWN", z ? 0 : 1);
         if (this.mSupportAod) {
             checkAodService();
             IMiuiAodService iMiuiAodService = this.mAodService;
             if (iMiuiAodService != null) {
                 try {
                     iMiuiAodService.onGxzwIconChanged(z);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void onScreenTurnOnDelayed(boolean z) {
+        if (this.mSupportAod) {
+            checkAodService();
+            IMiuiAodService iMiuiAodService = this.mAodService;
+            if (iMiuiAodService != null) {
+                try {
+                    iMiuiAodService.onScreenTurnOnDelayed(z);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

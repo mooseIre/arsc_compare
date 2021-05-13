@@ -336,6 +336,20 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
     }
 
     public void dismissGxzwIconView(boolean z) {
+        if (MiuiGxzwUtils.isSupportLowlight()) {
+            AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(z) {
+                /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwIconView$bdOR8FARweWaTFbGYNrK_ui3l5k */
+                public final /* synthetic */ boolean f$0;
+
+                {
+                    this.f$0 = r1;
+                }
+
+                public final void run() {
+                    MiuiGxzwIconView.lambda$dismissGxzwIconView$0(this.f$0);
+                }
+            });
+        }
         int i = 8;
         setVisibility(z ? 8 : 0);
         this.mHighlightView.setVisibility(z ? 8 : 0);
@@ -345,6 +359,10 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         }
         miuiGxzwAnimView.setVisibility(i);
         this.mMiuiGxzwAnimView.stopAnim();
+    }
+
+    static /* synthetic */ void lambda$dismissGxzwIconView$0(boolean z) {
+        MiuiGxzwUtils.setTouchMode(10, z ? 0 : 3);
     }
 
     public boolean isDozing() {
@@ -658,7 +676,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
         if (this.mCurrentNonUIMode != i) {
             this.mCurrentNonUIMode = i;
             AsyncTask.THREAD_POOL_EXECUTOR.execute(new Runnable(i) {
-                /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwIconView$NxZpQUHwHqav9lDJnltWfElEf64 */
+                /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwIconView$n9Z8lPZkimrMluZO9C41Rfngm0 */
                 public final /* synthetic */ int f$0;
 
                 {
@@ -666,7 +684,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
                 }
 
                 public final void run() {
-                    MiuiGxzwIconView.lambda$setNonUIMode$0(this.f$0);
+                    MiuiGxzwIconView.lambda$setNonUIMode$1(this.f$0);
                 }
             });
         }

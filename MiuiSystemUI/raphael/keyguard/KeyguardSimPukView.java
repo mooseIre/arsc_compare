@@ -12,6 +12,7 @@ import android.telephony.PinResult;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -137,35 +138,35 @@ public class KeyguardSimPukView extends KeyguardPinBasedInputView implements Pas
         }
 
         public void next() {
-            int i;
-            int i2 = this.state;
-            if (i2 == 0) {
+            String str;
+            int i = this.state;
+            if (i == 0) {
                 if (KeyguardSimPukView.this.checkPuk()) {
                     this.state = 1;
-                    i = C0020R$string.kg_puk_enter_pin_hint;
+                    str = KeyguardSimPukView.this.getResources().getString(C0020R$string.kg_puk_enter_pin_hint);
                 } else {
-                    i = C0020R$string.kg_invalid_sim_puk_hint;
+                    str = KeyguardSimPukView.this.getResources().getString(C0020R$string.kg_invalid_sim_puk_hint, 8);
                 }
-            } else if (i2 == 1) {
+            } else if (i == 1) {
                 if (KeyguardSimPukView.this.checkPin()) {
                     this.state = 2;
-                    i = C0020R$string.kg_enter_confirm_pin_hint;
+                    str = KeyguardSimPukView.this.getResources().getString(C0020R$string.kg_enter_confirm_pin_hint);
                 } else {
-                    i = C0020R$string.kg_invalid_sim_pin_hint;
+                    str = KeyguardSimPukView.this.getResources().getString(C0020R$string.kg_invalid_sim_pin_hint);
                 }
-            } else if (i2 != 2) {
-                i = 0;
+            } else if (i != 2) {
+                str = CodeInjection.MD5;
             } else if (KeyguardSimPukView.this.confirmPin()) {
                 this.state = 3;
-                i = C0020R$string.keyguard_sim_unlock_progress_dialog_message;
+                str = KeyguardSimPukView.this.getResources().getString(C0020R$string.keyguard_sim_unlock_progress_dialog_message);
                 KeyguardSimPukView.this.updateSim();
             } else {
                 this.state = 1;
-                i = C0020R$string.kg_invalid_confirm_pin_hint;
+                str = KeyguardSimPukView.this.getResources().getString(C0020R$string.kg_invalid_confirm_pin_hint);
             }
             KeyguardSimPukView.this.resetPasswordText(true, true);
-            if (i != 0) {
-                KeyguardSimPukView.this.mSecurityMessageDisplay.setMessage(i);
+            if (!TextUtils.isEmpty(str)) {
+                KeyguardSimPukView.this.mSecurityMessageDisplay.setMessage(str);
             }
         }
 
