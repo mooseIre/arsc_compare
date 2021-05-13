@@ -684,7 +684,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
                 }
 
                 public final void run() {
-                    MiuiGxzwUtils.setTouchMode(17, this.f$0);
+                    MiuiGxzwIconView.lambda$setNonUIMode$1(this.f$0);
                 }
             });
         }
