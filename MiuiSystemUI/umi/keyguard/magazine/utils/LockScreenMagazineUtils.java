@@ -151,9 +151,8 @@ public class LockScreenMagazineUtils {
         }
     }
 
-    /* access modifiers changed from: package-private */
     /* renamed from: com.android.keyguard.magazine.utils.LockScreenMagazineUtils$2  reason: invalid class name */
-    public static /* synthetic */ class AnonymousClass2 {
+    static /* synthetic */ class AnonymousClass2 {
         static final /* synthetic */ int[] $SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode;
 
         /* JADX WARNING: Can't wrap try/catch for region: R(6:0|1|2|3|4|(3:5|6|8)) */
