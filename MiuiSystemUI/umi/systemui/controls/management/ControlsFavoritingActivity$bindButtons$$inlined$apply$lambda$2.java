@@ -8,8 +8,9 @@ import com.android.systemui.controls.controller.StructureInfo;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2 implements View.OnClickListener {
+public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2 implements View.OnClickListener {
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
     ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2(ControlsFavoritingActivity controlsFavoritingActivity) {

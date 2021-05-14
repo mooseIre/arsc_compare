@@ -15,7 +15,7 @@ public final class MediaCarouselScrollHandler$gestureListener$1 extends GestureD
     }
 
     public boolean onFling(@Nullable MotionEvent motionEvent, @Nullable MotionEvent motionEvent2, float f, float f2) {
-        return this.this$0.onFling(f, f2);
+        return MediaCarouselScrollHandler.access$onFling(this.this$0, f, f2);
     }
 
     public boolean onScroll(@Nullable MotionEvent motionEvent, @Nullable MotionEvent motionEvent2, float f, float f2) {
@@ -35,7 +35,7 @@ public final class MediaCarouselScrollHandler$gestureListener$1 extends GestureD
         if (!this.this$0.getFalsingProtectionNeeded()) {
             return false;
         }
-        this.this$0.falsingManager.onNotificationStartDismissing();
+        MediaCarouselScrollHandler.access$getFalsingManager$p(this.this$0).onNotificationStartDismissing();
         return false;
     }
 }
