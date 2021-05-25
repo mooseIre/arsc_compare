@@ -4,5 +4,5 @@
     <TextView android:textAppearance="@style/TextAppearance.QSControl.DetailHeader" android:id="@android:id/title" android:layout_width="wrap_content" android:layout_height="wrap_content" />
     <View android:layout_width="0.0dip" android:layout_height="wrap_content" android:layout_weight="1.0" />
     <ImageView android:id="@id/settings" android:background="?android:selectableItemBackground" android:padding="@dimen/qs_detail_header_image_padding" android:visibility="gone" android:layout_width="@dimen/qs_detail_header_image_width" android:layout_height="@dimen/qs_detail_header_image_height" android:src="@drawable/ic_settings" />
-    <miui.widget.SlidingButton android:id="@android:id/toggle" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" />
+    <miuix.slidingwidget.widget.SlidingButton android:id="@android:id/toggle" android:clickable="false" android:layout_width="wrap_content" android:layout_height="wrap_content" />
 </com.android.keyguard.AlphaOptimizedLinearLayout>
