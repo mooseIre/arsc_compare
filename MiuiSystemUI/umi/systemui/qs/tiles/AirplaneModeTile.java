@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.sysprop.TelephonyProperties;
 import android.widget.Switch;
+import androidx.constraintlayout.widget.R$styleable;
 import com.android.internal.logging.MetricsLogger;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -34,7 +35,7 @@ public class AirplaneModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
-        return 112;
+        return R$styleable.Constraint_visibilityMode;
     }
 
     public AirplaneModeTile(QSHost qSHost, ActivityStarter activityStarter, BroadcastDispatcher broadcastDispatcher) {

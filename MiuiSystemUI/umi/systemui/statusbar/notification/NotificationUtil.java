@@ -180,7 +180,7 @@ public class NotificationUtil {
     }
 
     public static boolean shouldSubstituteSmallIcon(ExpandedNotification expandedNotification) {
-        if (NotificationSettingsHelper.showMiuiStyle()) {
+        if (!BuildConfig.IS_INTERNATIONAL || NotificationSettingsHelper.showMiuiStyle()) {
             return ((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled();
         }
         return expandedNotification.isSubstituteNotification() && !MiuiNotificationCompat.isGrayscaleIcon(expandedNotification.getNotification());

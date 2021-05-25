@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.util.Log;
 import android.widget.Switch;
+import androidx.constraintlayout.widget.R$styleable;
 import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.qs.QSTile;
@@ -24,7 +25,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
-        return 112;
+        return R$styleable.Constraint_visibilityMode;
     }
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */

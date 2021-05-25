@@ -6,7 +6,7 @@ import androidx.preference.PreferenceManager;
 import com.android.settingslib.wifi.AccessPoint;
 import com.android.systemui.statusbar.policy.NetworkController;
 import kotlin.TypeCastException;
-import miui.app.AlertDialog;
+import miuix.appcompat.app.AlertDialog;
 
 /* compiled from: SlaveWifiHelper.kt */
 final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClickListener {
@@ -32,6 +32,6 @@ final class SlaveWifiHelper$showAlertDialog$2 implements DialogInterface.OnClick
             dialogInterface.dismiss();
             return;
         }
-        throw new TypeCastException("null cannot be cast to non-null type miui.app.AlertDialog");
+        throw new TypeCastException("null cannot be cast to non-null type miuix.appcompat.app.AlertDialog");
     }
 }

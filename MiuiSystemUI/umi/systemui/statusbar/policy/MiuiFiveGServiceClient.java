@@ -364,8 +364,8 @@ public class MiuiFiveGServiceClient {
         this.mContext = context;
         this.mPackageName = context.getPackageName();
         try {
-            this.mIsCustForKrOps = ((Boolean) TelephonyManager.class.getMethod("isCustForKrOps", null).invoke(null, new Object[0])).booleanValue();
-            this.mIsCustForJpKd = ((Boolean) TelephonyManager.class.getMethod("isCustForJpKd", null).invoke(null, new Object[0])).booleanValue();
+            this.mIsCustForKrOps = ((Boolean) TelephonyManager.class.getMethod("isCustForKrOps", new Class[0]).invoke(null, new Object[0])).booleanValue();
+            this.mIsCustForJpKd = ((Boolean) TelephonyManager.class.getMethod("isCustForJpKd", new Class[0]).invoke(null, new Object[0])).booleanValue();
         } catch (Exception e) {
             Log.e("FiveGServiceClient", "isCustForKrOps or mIsCustForJpKd Exception" + e);
         }

@@ -28,6 +28,7 @@ import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSTileHost;
@@ -42,7 +43,7 @@ import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import miui.app.AlertDialog;
+import miuix.appcompat.app.AlertDialog;
 
 public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQueryHelper.TileStateListener {
     private int mAccessibilityFromIndex;
@@ -512,7 +513,9 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
     /* access modifiers changed from: public */
     private void showAccessibilityDialog(final int i, View view) {
         TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
-        AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setItems(new CharSequence[]{this.mContext.getString(C0020R$string.accessibility_qs_edit_move_tile, tileInfo.state.label), this.mContext.getString(C0020R$string.accessibility_qs_edit_remove_tile, tileInfo.state.label)}, new DialogInterface.OnClickListener() {
+        CharSequence[] charSequenceArr = {this.mContext.getString(C0020R$string.accessibility_qs_edit_move_tile, tileInfo.state.label), this.mContext.getString(C0020R$string.accessibility_qs_edit_remove_tile, tileInfo.state.label)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.AlertDialog_Theme_DayNight);
+        builder.setItems(charSequenceArr, new DialogInterface.OnClickListener() {
             /* class com.android.systemui.controlcenter.phone.customize.CCTileAdapter.AnonymousClass7 */
 
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -522,7 +525,9 @@ public class CCTileAdapter extends RecyclerView.Adapter<Holder> implements TileQ
                     CCTileAdapter.this.moveTileItemToOther(i);
                 }
             }
-        }).setNegativeButton(17039360, (DialogInterface.OnClickListener) null).create();
+        });
+        builder.setNegativeButton(17039360, (DialogInterface.OnClickListener) null);
+        AlertDialog create = builder.create();
         MiuiSystemUIDialog.setShowForAllUsers(create, true);
         MiuiSystemUIDialog.applyFlags(create);
         create.show();

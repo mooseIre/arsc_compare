@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.notification.row;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import com.miui.blur.sdk.backdrop.BlurStyle;
 import com.miui.systemui.views.BlurOnDefaultThemeView;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,5 +30,11 @@ public class BaseMiuiNotificationBackgroundView extends BlurOnDefaultThemeView {
             return 0;
         }
         return super.getRequestedSamplingPeriodNs();
+    }
+
+    @Override // com.miui.blur.sdk.backdrop.ViewBlurDrawInfo
+    @Nullable
+    public BlurStyle getBlurStyleDayMode() {
+        return BlurStyle.HEAVY_LIGHT;
     }
 }

@@ -29,7 +29,7 @@ import com.android.systemui.qs.QSAnimation;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.NotificationsQuickSettingsContainer;
 import java.util.List;
-import miui.widget.SlidingButton;
+import miuix.slidingwidget.widget.SlidingButton;
 
 public class MiuiQSDetail extends LinearLayout {
     private Animator.AnimatorListener mAnimInListener;
@@ -374,7 +374,7 @@ public class MiuiQSDetail extends LinearLayout {
             return;
         }
         if (this.mQsDetailHeaderSwitch == null) {
-            this.mQsDetailHeaderSwitch = this.mQsDetailHeaderSwitchStub.inflate();
+            this.mQsDetailHeaderSwitch = (SlidingButton) this.mQsDetailHeaderSwitchStub.inflate();
         }
         this.mQsDetailHeaderSwitch.setVisibility(0);
         this.mQsDetailHeaderSwitch.setClickable(true);
@@ -383,7 +383,7 @@ public class MiuiQSDetail extends LinearLayout {
             /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$AdNHpUBZdRe21F6S_5YM97n9iFM */
 
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                MiuiQSDetail.lambda$setupDetailHeader$2(DetailAdapter.this, compoundButton, z);
+                DetailAdapter.this.setToggleState(z);
             }
         });
     }

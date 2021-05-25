@@ -38,14 +38,6 @@ public final class ControlsEditingActivity extends LifecycleActivity {
     private CharSequence structure;
     private TextView subtitle;
 
-    public static final /* synthetic */ int access$getEMPTY_TEXT_ID$cp() {
-        return EMPTY_TEXT_ID;
-    }
-
-    public static final /* synthetic */ int access$getSUBTITLE_ID$cp() {
-        return SUBTITLE_ID;
-    }
-
     public static final /* synthetic */ View access$getSaveButton$p(ControlsEditingActivity controlsEditingActivity) {
         View view = controlsEditingActivity.saveButton;
         if (view != null) {

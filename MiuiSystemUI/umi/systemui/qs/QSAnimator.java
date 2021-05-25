@@ -3,6 +3,7 @@ package com.android.systemui.qs;
 import android.util.Log;
 import android.view.View;
 import com.android.systemui.Dependency;
+import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
@@ -77,6 +78,17 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         qSPanel.setPageListener(this);
     }
 
+    public void onDestroy() {
+        QSPanel qSPanel = this.mQsPanel;
+        if (qSPanel != null) {
+            qSPanel.removeOnAttachStateChangeListener(this);
+        }
+        if (this.mQs.getView() != null) {
+            this.mQs.getView().removeOnLayoutChangeListener(this);
+        }
+        onViewDetachedFromWindow(null);
+    }
+
     public void onRtlChanged() {
         miuiUpdateAnimators();
     }
@@ -122,7 +134,10 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
     }
 
     public void onViewDetachedFromWindow(View view) {
-        this.mQuickQsPanel.setQsAnimator(null);
+        QuickQSPanel quickQSPanel = this.mQuickQsPanel;
+        if (quickQSPanel != null) {
+            quickQSPanel.setQsAnimator(null);
+        }
         QSTileHost qSTileHost = this.mHost;
         if (qSTileHost != null) {
             qSTileHost.removeCallback(this);
@@ -162,132 +177,135 @@ public class QSAnimator implements QSHost.Callback, PagedTileLayout.PageListener
         Collection<QSTile> collection;
         Iterator<QSTile> it;
         int[] iArr;
-        this.mNeedsAnimatorUpdate = false;
-        TouchAnimator.Builder builder = new TouchAnimator.Builder();
-        TouchAnimator.Builder builder2 = new TouchAnimator.Builder();
-        TouchAnimator.Builder builder3 = new TouchAnimator.Builder();
-        if (this.mQsPanel.getHost() != null) {
-            Collection<QSTile> tiles = this.mQsPanel.getHost().getTiles();
-            int[] iArr2 = new int[2];
-            int[] iArr3 = new int[2];
-            clearAnimationState();
-            this.mAllViews.clear();
-            this.mQuickQsViews.clear();
-            QSPanel.QSTileLayout tileLayout = this.mQsPanel.getTileLayout();
-            this.mAllViews.add((View) tileLayout);
-            float measuredHeight = (float) (((this.mQs.getView() != null ? this.mQs.getView().getMeasuredHeight() : 0) - this.mQs.getHeader().getBottom()) + this.mQs.getHeader().getPaddingBottom());
-            builder.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
-            Iterator<QSTile> it2 = tiles.iterator();
-            int i2 = 0;
-            int i3 = 0;
-            while (it2.hasNext()) {
-                QSTile next = it2.next();
-                QSTileView tileView = this.mQsPanel.getTileView(next);
-                if (tileView == null) {
-                    Log.e("QSAnimator", "tileView is null " + next.getTileSpec());
-                    collection = tiles;
-                    it = it2;
-                } else {
-                    View iconView = tileView.getIcon().getIconView();
-                    it = it2;
-                    View view = this.mQs.getView();
-                    collection = tiles;
-                    if (i2 >= this.mQuickQsPanel.getTileLayout().getNumVisibleTiles() || !this.mAllowFancy) {
-                        iArr = iArr2;
-                        i3 = i3;
+        if (!((ControlPanelController) Dependency.get(ControlPanelController.class)).isUseControlCenter()) {
+            this.mNeedsAnimatorUpdate = false;
+            TouchAnimator.Builder builder = new TouchAnimator.Builder();
+            TouchAnimator.Builder builder2 = new TouchAnimator.Builder();
+            TouchAnimator.Builder builder3 = new TouchAnimator.Builder();
+            if (this.mQsPanel.getHost() != null) {
+                Collection<QSTile> tiles = this.mQsPanel.getHost().getTiles();
+                int[] iArr2 = new int[2];
+                int[] iArr3 = new int[2];
+                clearAnimationState();
+                this.mAllViews.clear();
+                this.mQuickQsViews.clear();
+                QSPanel.QSTileLayout tileLayout = this.mQsPanel.getTileLayout();
+                this.mAllViews.add((View) tileLayout);
+                float measuredHeight = (float) (((this.mQs.getView() != null ? this.mQs.getView().getMeasuredHeight() : 0) - this.mQs.getHeader().getBottom()) + this.mQs.getHeader().getPaddingBottom());
+                builder.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
+                Iterator<QSTile> it2 = tiles.iterator();
+                int i2 = 0;
+                int i3 = 0;
+                while (it2.hasNext()) {
+                    QSTile next = it2.next();
+                    QSTileView tileView = this.mQsPanel.getTileView(next);
+                    if (tileView == null) {
+                        Log.e("QSAnimator", "tileView is null " + next.getTileSpec());
+                        collection = tiles;
+                        it = it2;
                     } else {
-                        QSTileView tileView2 = this.mQuickQsPanel.getTileView(next);
-                        if (tileView2 != null) {
-                            getRelativePosition(iArr2, tileView2.getIcon().getIconView(), view);
-                            getRelativePosition(iArr3, iconView, view);
-                            int i4 = iArr3[0] - iArr2[0];
-                            int i5 = iArr3[1] - iArr2[1];
+                        View iconView = tileView.getIcon().getIconView();
+                        it = it2;
+                        View view = this.mQs.getView();
+                        collection = tiles;
+                        if (i2 >= this.mQuickQsPanel.getTileLayout().getNumVisibleTiles() || !this.mAllowFancy) {
                             iArr = iArr2;
-                            if (i2 < this.mPagedLayout.getColumnCount()) {
-                                builder2.addFloat(tileView2, "translationX", 0.0f, (float) i4);
-                                builder3.addFloat(tileView2, "translationY", 0.0f, (float) i5);
-                                builder2.addFloat(tileView, "translationX", (float) (-i4), 0.0f);
-                                this.mQuickQsViews.add(tileView.getIconWithBackground());
-                                i3 = i5;
-                            } else {
-                                builder2.addFloat(tileView2, "translationX", 0.0f, ((float) this.mQsPanel.getWidth()) - tileView2.getX());
-                                builder3.addFloat(tileView2, "translationY", 0.0f, (float) i3);
-                                builder.addFloat(tileView2, "alpha", 1.0f, 0.0f, 0.0f);
+                            i3 = i3;
+                        } else {
+                            QSTileView tileView2 = this.mQuickQsPanel.getTileView(next);
+                            if (tileView2 != null) {
+                                getRelativePosition(iArr2, tileView2.getIcon().getIconView(), view);
+                                getRelativePosition(iArr3, iconView, view);
+                                int i4 = iArr3[0] - iArr2[0];
+                                int i5 = iArr3[1] - iArr2[1];
+                                PagedTileLayout pagedTileLayout = this.mPagedLayout;
+                                iArr = iArr2;
+                                if (pagedTileLayout == null || i2 >= pagedTileLayout.getColumnCount()) {
+                                    builder2.addFloat(tileView2, "translationX", 0.0f, ((float) this.mQsPanel.getWidth()) - tileView2.getX());
+                                    builder3.addFloat(tileView2, "translationY", 0.0f, (float) i3);
+                                    builder.addFloat(tileView2, "alpha", 1.0f, 0.0f, 0.0f);
+                                } else {
+                                    builder2.addFloat(tileView2, "translationX", 0.0f, (float) i4);
+                                    builder3.addFloat(tileView2, "translationY", 0.0f, (float) i5);
+                                    builder2.addFloat(tileView, "translationX", (float) (-i4), 0.0f);
+                                    this.mQuickQsViews.add(tileView.getIconWithBackground());
+                                    i3 = i5;
+                                }
+                                this.mAllViews.add(tileView.getIcon());
+                                this.mAllViews.add(tileView2);
                             }
-                            this.mAllViews.add(tileView.getIcon());
-                            this.mAllViews.add(tileView2);
                         }
+                        this.mAllViews.add(tileView);
+                        i2++;
+                        it2 = it;
+                        tiles = collection;
+                        iArr2 = iArr;
                     }
-                    this.mAllViews.add(tileView);
-                    i2++;
                     it2 = it;
                     tiles = collection;
-                    iArr2 = iArr;
                 }
-                it2 = it;
-                tiles = collection;
+                if (this.mAllowFancy) {
+                    View brightnessView = this.mQsPanel.getBrightnessView();
+                    if (brightnessView != null) {
+                        builder.addFloat(brightnessView, "translationY", measuredHeight, 0.0f);
+                        TouchAnimator.Builder builder4 = new TouchAnimator.Builder();
+                        builder4.addFloat(brightnessView, "alpha", 0.0f, 1.0f);
+                        builder4.setStartDelay(0.5f);
+                        this.mBrightnessAnimator = builder4.build();
+                        this.mAllViews.add(brightnessView);
+                    } else {
+                        this.mBrightnessAnimator = null;
+                    }
+                    builder.setListener(this);
+                    this.mFirstPageAnimator = builder.build();
+                    TouchAnimator.Builder builder5 = new TouchAnimator.Builder();
+                    builder5.setStartDelay(0.5f);
+                    builder5.addFloat(tileLayout, "alpha", 0.0f, 0.0f, 1.0f);
+                    builder5.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
+                    this.mFirstPageDelayedAnimator = builder5.build();
+                    TouchAnimator.Builder builder6 = new TouchAnimator.Builder();
+                    builder6.setStartDelay(0.5f);
+                    if (this.mQsPanel.getSecurityFooter() != null) {
+                        i = 2;
+                        builder6.addFloat(this.mQsPanel.getSecurityFooter().getView(), "alpha", 0.0f, 1.0f);
+                    } else {
+                        i = 2;
+                    }
+                    if (this.mQsPanel.getDivider() != null) {
+                        float[] fArr = new float[i];
+                        // fill-array-data instruction
+                        fArr[0] = 0.0f;
+                        fArr[1] = 1.0f;
+                        builder6.addFloat(this.mQsPanel.getDivider(), "alpha", fArr);
+                    }
+                    this.mAllPagesDelayedAnimator = builder6.build();
+                    if (this.mQsPanel.getSecurityFooter() != null) {
+                        this.mAllViews.add(this.mQsPanel.getSecurityFooter().getView());
+                    }
+                    if (this.mQsPanel.getDivider() != null) {
+                        this.mAllViews.add(this.mQsPanel.getDivider());
+                    }
+                    if (tiles.size() <= 3) {
+                        f = 1.0f;
+                    } else {
+                        f = tiles.size() <= 6 ? 0.4f : 0.0f;
+                    }
+                    PathInterpolatorBuilder pathInterpolatorBuilder = new PathInterpolatorBuilder(0.0f, 0.0f, f, 1.0f);
+                    builder2.setInterpolator(pathInterpolatorBuilder.getXInterpolator());
+                    builder3.setInterpolator(pathInterpolatorBuilder.getYInterpolator());
+                    this.mTranslationXAnimator = builder2.build();
+                    this.mTranslationYAnimator = builder3.build();
+                }
+                TouchAnimator.Builder builder7 = new TouchAnimator.Builder();
+                builder7.addFloat(this.mQuickQsPanel, "alpha", 1.0f, 0.0f, 0.0f);
+                builder7.setListener(this.mNonFirstPageListener);
+                this.mNonfirstPageAnimator = builder7.build();
+                TouchAnimator.Builder builder8 = new TouchAnimator.Builder();
+                builder8.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
+                builder8.addFloat(tileLayout, "alpha", 0.0f, 0.0f, 1.0f);
+                builder8.setStartDelay(0.5f);
+                this.mNonfirstPageDelayedAnimator = builder8.build();
             }
-            if (this.mAllowFancy) {
-                View brightnessView = this.mQsPanel.getBrightnessView();
-                if (brightnessView != null) {
-                    builder.addFloat(brightnessView, "translationY", measuredHeight, 0.0f);
-                    TouchAnimator.Builder builder4 = new TouchAnimator.Builder();
-                    builder4.addFloat(brightnessView, "alpha", 0.0f, 1.0f);
-                    builder4.setStartDelay(0.5f);
-                    this.mBrightnessAnimator = builder4.build();
-                    this.mAllViews.add(brightnessView);
-                } else {
-                    this.mBrightnessAnimator = null;
-                }
-                builder.setListener(this);
-                this.mFirstPageAnimator = builder.build();
-                TouchAnimator.Builder builder5 = new TouchAnimator.Builder();
-                builder5.setStartDelay(0.5f);
-                builder5.addFloat(tileLayout, "alpha", 0.0f, 0.0f, 1.0f);
-                builder5.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
-                this.mFirstPageDelayedAnimator = builder5.build();
-                TouchAnimator.Builder builder6 = new TouchAnimator.Builder();
-                builder6.setStartDelay(0.5f);
-                if (this.mQsPanel.getSecurityFooter() != null) {
-                    i = 2;
-                    builder6.addFloat(this.mQsPanel.getSecurityFooter().getView(), "alpha", 0.0f, 1.0f);
-                } else {
-                    i = 2;
-                }
-                if (this.mQsPanel.getDivider() != null) {
-                    float[] fArr = new float[i];
-                    // fill-array-data instruction
-                    fArr[0] = 0.0f;
-                    fArr[1] = 1.0f;
-                    builder6.addFloat(this.mQsPanel.getDivider(), "alpha", fArr);
-                }
-                this.mAllPagesDelayedAnimator = builder6.build();
-                if (this.mQsPanel.getSecurityFooter() != null) {
-                    this.mAllViews.add(this.mQsPanel.getSecurityFooter().getView());
-                }
-                if (this.mQsPanel.getDivider() != null) {
-                    this.mAllViews.add(this.mQsPanel.getDivider());
-                }
-                if (tiles.size() <= 3) {
-                    f = 1.0f;
-                } else {
-                    f = tiles.size() <= 6 ? 0.4f : 0.0f;
-                }
-                PathInterpolatorBuilder pathInterpolatorBuilder = new PathInterpolatorBuilder(0.0f, 0.0f, f, 1.0f);
-                builder2.setInterpolator(pathInterpolatorBuilder.getXInterpolator());
-                builder3.setInterpolator(pathInterpolatorBuilder.getYInterpolator());
-                this.mTranslationXAnimator = builder2.build();
-                this.mTranslationYAnimator = builder3.build();
-            }
-            TouchAnimator.Builder builder7 = new TouchAnimator.Builder();
-            builder7.addFloat(this.mQuickQsPanel, "alpha", 1.0f, 0.0f, 0.0f);
-            builder7.setListener(this.mNonFirstPageListener);
-            this.mNonfirstPageAnimator = builder7.build();
-            TouchAnimator.Builder builder8 = new TouchAnimator.Builder();
-            builder8.addFloat(tileLayout, "translationY", measuredHeight, 0.0f);
-            builder8.addFloat(tileLayout, "alpha", 0.0f, 0.0f, 1.0f);
-            builder8.setStartDelay(0.5f);
-            this.mNonfirstPageDelayedAnimator = builder8.build();
         }
     }
 

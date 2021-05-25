@@ -13,22 +13,21 @@ import android.os.SystemProperties;
 import android.util.Log;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.C0021R$style;
-import miui.app.Activity;
-import miui.app.AlertDialog;
+import miuix.appcompat.app.AlertDialog;
+import miuix.appcompat.app.AppCompatActivity;
 
-public class UsbDebuggingActivity extends Activity {
+public class UsbDebuggingActivity extends AppCompatActivity {
     private AlertDialog mCheckBoxDialog;
     private UsbDisconnectedReceiver mDisconnectedReceiver;
     private String mKey;
     private DialogInterface.OnClickListener onClickListener;
     private DialogInterface.OnDismissListener onDismissListener;
 
-    /* JADX DEBUG: Multi-variable search result rejected for r6v0, resolved type: com.android.systemui.usb.UsbDebuggingActivity */
-    /* JADX WARN: Multi-variable type inference failed */
+    @Override // androidx.activity.ComponentActivity, miuix.appcompat.app.AppCompatActivity, androidx.core.app.ComponentActivity, androidx.fragment.app.FragmentActivity
     public void onCreate(Bundle bundle) {
-        UsbDebuggingActivity.super.onCreate(bundle);
-        if (getActionBar() != null) {
-            getActionBar().hide();
+        super.onCreate(bundle);
+        if (getAppCompatActionBar() != null) {
+            getAppCompatActionBar().hide();
         }
         getWindow().getDecorView().setAlpha(0.0f);
         if (SystemProperties.getInt("service.adb.tcp.port", 0) == 0) {
@@ -71,17 +70,23 @@ public class UsbDebuggingActivity extends Activity {
             }
         };
         AlertDialog.Builder builder = new AlertDialog.Builder(this, C0021R$style.Theme_Dialog_Alert);
-        builder.setTitle(getString(C0020R$string.usb_debugging_title)).setMessage(getString(C0020R$string.usb_debugging_message, new Object[]{stringExtra})).setCheckBox(true, getString(C0020R$string.usb_debugging_always)).setCancelable(true).setPositiveButton(getString(17039370), this.onClickListener).setNegativeButton(getString(17039360), this.onClickListener).setOnDismissListener(this.onDismissListener);
+        builder.setTitle(getString(C0020R$string.usb_debugging_title));
+        builder.setMessage(getString(C0020R$string.usb_debugging_message, new Object[]{stringExtra}));
+        builder.setCheckBox(true, getString(C0020R$string.usb_debugging_always));
+        builder.setCancelable(true);
+        builder.setPositiveButton(getString(17039370), this.onClickListener);
+        builder.setNegativeButton(getString(17039360), this.onClickListener);
+        builder.setOnDismissListener(this.onDismissListener);
         AlertDialog create = builder.create();
         this.mCheckBoxDialog = create;
         create.show();
     }
 
     private class UsbDisconnectedReceiver extends BroadcastReceiver {
-        private final Activity mActivity;
+        private final AppCompatActivity mActivity;
 
-        public UsbDisconnectedReceiver(UsbDebuggingActivity usbDebuggingActivity, Activity activity) {
-            this.mActivity = activity;
+        public UsbDisconnectedReceiver(UsbDebuggingActivity usbDebuggingActivity, AppCompatActivity appCompatActivity) {
+            this.mActivity = appCompatActivity;
         }
 
         public void onReceive(Context context, Intent intent) {
@@ -91,18 +96,20 @@ public class UsbDebuggingActivity extends Activity {
         }
     }
 
+    @Override // androidx.fragment.app.FragmentActivity
     public void onStart() {
-        UsbDebuggingActivity.super.onStart();
+        super.onStart();
         registerReceiver(this.mDisconnectedReceiver, new IntentFilter("android.hardware.usb.action.USB_STATE"));
     }
 
     /* access modifiers changed from: protected */
+    @Override // miuix.appcompat.app.AppCompatActivity, androidx.fragment.app.FragmentActivity
     public void onStop() {
         UsbDisconnectedReceiver usbDisconnectedReceiver = this.mDisconnectedReceiver;
         if (usbDisconnectedReceiver != null) {
             unregisterReceiver(usbDisconnectedReceiver);
         }
-        UsbDebuggingActivity.super.onStop();
+        super.onStop();
     }
 
     public static IAdbManager getService() {

@@ -338,10 +338,10 @@ import com.android.systemui.power.PowerNotificationWarnings_Factory;
 import com.android.systemui.power.PowerUI;
 import com.android.systemui.power.PowerUI_Factory;
 import com.android.systemui.qs.AutoAddTracker_Builder_Factory;
-import com.android.systemui.qs.QSContainerImpl;
+import com.android.systemui.qs.MiuiQSContainer;
+import com.android.systemui.qs.MiuiQSFragment;
 import com.android.systemui.qs.QSFooterDataUsage;
 import com.android.systemui.qs.QSFooterImpl;
-import com.android.systemui.qs.QSFragment;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.QSTileHost_Factory;
@@ -912,7 +912,6 @@ import com.miui.systemui.graphics.AppIconsManager;
 import com.miui.systemui.graphics.AppIconsManager_Factory;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
 import com.miui.systemui.statusbar.PanelExpansionObserver_Factory;
-import com.miui.systemui.statusbar.phone.DriveModeObserver_Factory;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver_Factory;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
@@ -1501,6 +1500,12 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     /* access modifiers changed from: public */
     private Handler getMainHandler() {
         return ConcurrencyModule_ProvideMainHandlerFactory.proxyProvideMainHandler(ConcurrencyModule_ProvideMainLooperFactory.proxyProvideMainLooper());
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private Handler getBackgroundHandler() {
+        return ConcurrencyModule_ProvideBgHandlerFactory.proxyProvideBgHandler(this.provideBgLooperProvider.get());
     }
 
     /* access modifiers changed from: private */
@@ -2281,7 +2286,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.keyguardUpdateMonitorInjectorProvider = DoubleCheck.provider(KeyguardUpdateMonitorInjector_Factory.create(this.provideContextProvider, this.superSaveModeControllerProvider));
         this.forceBlackObserverProvider = DoubleCheck.provider(ForceBlackObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.keyguardClockInjectorProvider = DoubleCheck.provider(KeyguardClockInjector_Factory.create(this.provideContextProvider));
-        this.keyguardBottomAreaInjectorProvider = DoubleCheck.provider(KeyguardBottomAreaInjector_Factory.create(this.provideContextProvider));
+        this.keyguardBottomAreaInjectorProvider = DoubleCheck.provider(KeyguardBottomAreaInjector_Factory.create(this.provideContextProvider, this.dumpManagerProvider));
         this.keyguardNegative1PageInjectorProvider = DoubleCheck.provider(KeyguardNegative1PageInjector_Factory.create(this.provideContextProvider));
         this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
         this.keyguardViewMediatorInjectorProvider = DoubleCheck.provider(KeyguardViewMediatorInjector_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider));
@@ -2496,7 +2501,6 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
 
     private final class DependencyInjectorImpl implements Dependency.DependencyInjector {
         private CarrierObserver_Factory carrierObserverProvider;
-        private DriveModeObserver_Factory driveModeObserverProvider;
         private GestureObserver_Factory gestureObserverProvider;
         private MiuiCarrierTextController_Factory miuiCarrierTextControllerProvider;
         private NCSwitchController_Factory nCSwitchControllerProvider;
@@ -2507,7 +2511,6 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         }
 
         private void initialize() {
-            this.driveModeObserverProvider = DriveModeObserver_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider, DaggerSystemUIRootComponent.this.provideBgHandlerProvider);
             this.carrierObserverProvider = CarrierObserver_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider, DaggerSystemUIRootComponent.this.provideBgHandlerProvider);
             this.miuiCarrierTextControllerProvider = MiuiCarrierTextController_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider, DaggerSystemUIRootComponent.this.provideBgHandlerProvider);
             this.notificationIconObserverProvider = NotificationIconObserver_Factory.create(DaggerSystemUIRootComponent.this.provideContextProvider, DaggerSystemUIRootComponent.this.provideMainHandlerProvider);
@@ -2666,7 +2669,6 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             Dependency_MembersInjector.injectMKeyguardViewMediatorInjector(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.keyguardViewMediatorInjectorProvider));
             Dependency_MembersInjector.injectMSmartDarkObserver(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.smartDarkObserverProvider));
             Dependency_MembersInjector.injectMMiuiStatusBarPromptController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiStatusBarPromptControllerProvider));
-            Dependency_MembersInjector.injectMDriveModeObserver(dependency, DoubleCheck.lazy(this.driveModeObserverProvider));
             Dependency_MembersInjector.injectMNetworkSpeedController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.networkSpeedControllerProvider));
             Dependency_MembersInjector.injectMMiuiDripLeftStatusBarIconControllerImpl(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiDripLeftStatusBarIconControllerImplProvider));
             Dependency_MembersInjector.injectMMiuiKeyguardWallpaperControllerImpl(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiKeyguardWallpaperControllerImplProvider));
@@ -2713,8 +2715,8 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         }
 
         @Override // com.android.systemui.fragments.FragmentService.FragmentCreator
-        public QSFragment createQSFragment() {
-            return new QSFragment((RemoteInputQuickSettingsDisabler) DaggerSystemUIRootComponent.this.remoteInputQuickSettingsDisablerProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (QSTileHost) DaggerSystemUIRootComponent.this.qSTileHostProvider.get(), (StatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (CommandQueue) DaggerSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), (Looper) DaggerSystemUIRootComponent.this.provideCCBgLooperProvider.get(), DaggerSystemUIRootComponent.this.getMainExecutor());
+        public MiuiQSFragment createQSFragment() {
+            return new MiuiQSFragment((RemoteInputQuickSettingsDisabler) DaggerSystemUIRootComponent.this.remoteInputQuickSettingsDisablerProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (QSTileHost) DaggerSystemUIRootComponent.this.qSTileHostProvider.get(), (StatusBarStateController) DaggerSystemUIRootComponent.this.statusBarStateControllerImplProvider.get(), (CommandQueue) DaggerSystemUIRootComponent.this.provideCommandQueueProvider.get(), (ControlPanelController) DaggerSystemUIRootComponent.this.controlPanelControllerProvider.get(), SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), DaggerSystemUIRootComponent.this.getBackgroundHandler(), DaggerSystemUIRootComponent.this.getMainExecutor(), (StatusBar) DaggerSystemUIRootComponent.this.provideStatusBarProvider.get());
         }
     }
 
@@ -2812,8 +2814,8 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             }
 
             @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator
-            public QSContainerImpl createQSContainerImpl() {
-                return new QSContainerImpl(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (TunerService) DaggerSystemUIRootComponent.this.tunerServiceImplProvider.get());
+            public MiuiQSContainer createMiuiQSContainer() {
+                return new MiuiQSContainer(SystemUIFactory_ContextHolder_ProvideContextFactory.proxyProvideContext(DaggerSystemUIRootComponent.this.contextHolder), InjectionInflationController_ViewAttributeProvider_ProvideAttributeSetFactory.proxyProvideAttributeSet(this.viewAttributeProvider), (BroadcastDispatcher) DaggerSystemUIRootComponent.this.providesBroadcastDispatcherProvider.get(), (InjectionInflationController) DaggerSystemUIRootComponent.this.injectionInflationControllerProvider.get(), (TunerService) DaggerSystemUIRootComponent.this.tunerServiceImplProvider.get());
             }
 
             @Override // com.android.systemui.util.InjectionInflationController.ViewInstanceCreator

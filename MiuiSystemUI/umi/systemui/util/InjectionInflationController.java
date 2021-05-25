@@ -13,7 +13,7 @@ import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.customize.QSControlCustomizer;
 import com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView;
 import com.android.systemui.dagger.SystemUIRootComponent;
-import com.android.systemui.qs.QSContainerImpl;
+import com.android.systemui.qs.MiuiQSContainer;
 import com.android.systemui.qs.QSFooterDataUsage;
 import com.android.systemui.qs.QSFooterImpl;
 import com.android.systemui.qs.QSPanel;
@@ -47,9 +47,9 @@ public class InjectionInflationController {
 
         KeyguardSliceView createKeyguardSliceView();
 
-        NotificationStackScrollLayout createNotificationStackScrollLayout();
+        MiuiQSContainer createMiuiQSContainer();
 
-        QSContainerImpl createQSContainerImpl();
+        NotificationStackScrollLayout createNotificationStackScrollLayout();
 
         QSControlCustomizer createQSControlCustomizer();
 

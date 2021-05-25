@@ -59,6 +59,7 @@ import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.injector.KeyguardPanelViewInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
 import com.android.systemui.C0009R$bool;
 import com.android.systemui.DejankUtils;
@@ -142,6 +143,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         /* class com.android.systemui.keyguard.KeyguardViewMediator.AnonymousClass6 */
 
         public void handleMessage(Message message) {
+            boolean z = true;
             switch (message.what) {
                 case 1:
                     KeyguardViewMediator.this.handleShow((Bundle) message.obj);
@@ -178,7 +180,6 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 case 9:
                     Trace.beginSection("KeyguardViewMediator#handleMessage SET_OCCLUDED");
                     KeyguardViewMediator keyguardViewMediator = KeyguardViewMediator.this;
-                    boolean z = true;
                     boolean z2 = message.arg1 != 0;
                     if (message.arg2 == 0) {
                         z = false;
@@ -228,6 +229,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                     return;
                 case 19:
                     Slog.w("KeyguardViewMediator", "fw call startKeyguardExitAnimation timeout");
+                    KeyguardViewMediator.this.mKeyguardGoingAwayTimeout = true;
                     KeyguardViewMediator.this.startKeyguardExitAnimation(SystemClock.uptimeMillis(), 0);
                     return;
                 case 20:
@@ -259,7 +261,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
         public void run() {
             Trace.beginSection("KeyguardViewMediator.mKeyGuardGoingAwayRunnable");
-            Log.d("KeyguardViewMediator", "keyguardGoingAway");
+            Slog.i("KeyguardViewMediator", "keyguardGoingAway");
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).keyguardGoingAway();
             KeyguardViewMediator.this.mUpdateMonitor.setKeyguardGoingAway(true);
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).setKeyguardGoingAwayState(true);
@@ -273,6 +275,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             Trace.endSection();
         }
     };
+    private boolean mKeyguardGoingAwayTimeout = false;
     private final ArrayList<IKeyguardStateCallback> mKeyguardStateCallbacks = new ArrayList<>();
     private final Lazy<KeyguardViewController> mKeyguardViewControllerLazy;
     private final SparseIntArray mLastSimStates = new SparseIntArray();
@@ -582,7 +585,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         @Override // com.android.keyguard.ViewMediatorCallback
         public void keyguardGone() {
             Trace.beginSection("KeyguardViewMediator.mViewMediatorCallback#keyguardGone");
-            Log.d("KeyguardViewMediator", "keyguardGone");
+            Slog.i("KeyguardViewMediator", "keyguardGone");
             ((KeyguardViewController) KeyguardViewMediator.this.mKeyguardViewControllerLazy.get()).setKeyguardGoingAwayState(false);
             KeyguardViewMediator.this.mKeyguardDisplayManager.hide();
             Trace.endSection();
@@ -825,7 +828,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 resetStateLocked();
                 this.mPendingReset = false;
             }
-            if (this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
+            if (!MiuiGxzwManager.isGxzwSensor() && this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
                 Slog.w("KeyguardViewMediator", "doKeyguard: not showing because canceling pending lock");
                 this.mPendingLock = false;
             }
@@ -1179,12 +1182,12 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                     return;
                 }
             }
-            if (this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
-                Slog.w("KeyguardViewMediator", "doKeyguard: not showing because canceling pending lock");
+            if (MiuiGxzwManager.isGxzwSensor() || !this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
+                Log.d("KeyguardViewMediator", "doKeyguard: showing the lock screen");
+                showLocked(bundle);
                 return;
             }
-            Log.d("KeyguardViewMediator", "doKeyguard: showing the lock screen");
-            showLocked(bundle);
+            Slog.w("KeyguardViewMediator", "doKeyguard: not showing because canceling pending lock");
         }
     }
 
@@ -1305,7 +1308,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void tryKeyguardDone() {
-        Log.d("KeyguardViewMediator", "tryKeyguardDone: pending - " + this.mKeyguardDonePending + ", animRan - " + this.mHideAnimationRun + " animRunning - " + this.mHideAnimationRunning);
+        Slog.i("KeyguardViewMediator", "tryKeyguardDone: pending - " + this.mKeyguardDonePending + ", animRan - " + this.mHideAnimationRun + " animRunning - " + this.mHideAnimationRunning);
         if (!this.mKeyguardDonePending && this.mHideAnimationRun && !this.mHideAnimationRunning) {
             handleKeyguardDone();
         } else if (!this.mHideAnimationRun) {
@@ -1583,6 +1586,10 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 if (!((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
                     setShowingLocked(this.mShowing, true);
                 }
+                this.mKeyguardGoingAwayTimeout = false;
+                if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() && !MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
+                    ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(true, ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock());
+                }
                 return;
             }
             this.mHiding = false;
@@ -1602,9 +1609,11 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
             this.mHideAnimationRun = false;
             adjustStatusBarLocked();
             sendUserPresentBroadcast();
-            if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
+            if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() && !this.mKeyguardGoingAwayTimeout) {
                 ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).setWallpaperAsTarget(false);
+                ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).notifyKeyguardShowingChanged(false);
             }
+            this.mKeyguardGoingAwayTimeout = false;
             Trace.endSection();
         }
     }
@@ -1771,6 +1780,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
 
     public void startKeyguardExitAnimation(long j, long j2) {
         Trace.beginSection("KeyguardViewMediator#startKeyguardExitAnimation");
+        this.mHandler.removeMessages(19);
         this.mHandler.sendMessage(this.mHandler.obtainMessage(12, new StartKeyguardExitAnimParams(j, j2)));
         Trace.endSection();
     }

@@ -156,6 +156,7 @@ public class KeyguardService extends Service {
         public void startKeyguardExitAnimation(long j, long j2) {
             Trace.beginSection("KeyguardService.mBinder#startKeyguardExitAnimation");
             KeyguardService.this.checkPermission();
+            Slog.i("KeyguardViewMediator", "handleStartKeyguardExitAnimation startTime=" + j + " fadeoutDuration=" + j2);
             KeyguardService.this.mKeyguardViewMediator.startKeyguardExitAnimation(j, j2);
             Trace.endSection();
         }

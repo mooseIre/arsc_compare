@@ -7,7 +7,6 @@ import com.miui.systemui.BuildConfig;
 import com.miui.systemui.DebugConfig;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.text.StringsKt__StringsJVMKt;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: CodeBlue.kt */
@@ -77,7 +76,8 @@ public final class CodeBlue {
         }
 
         /* access modifiers changed from: private */
-        public final void updateCrashHandler(Context context, Throwable th) {
+        /* access modifiers changed from: public */
+        private final void updateCrashHandler(Context context, Throwable th) {
             ExceptionHandler exceptionHandler = getExceptionHandler(th);
             String exceptionClues = getExceptionClues(exceptionHandler);
             if (DebugConfig.DEBUG_CODE_BLUE) {
@@ -88,18 +88,10 @@ public final class CodeBlue {
         }
 
         private final ExceptionHandler getExceptionHandler(Throwable th) {
-            Throwable th2 = th;
-            while (th2 != null) {
-                StackTraceElement[] stackTrace = th2.getStackTrace();
-                for (StackTraceElement stackTraceElement : stackTrace) {
-                    Intrinsics.checkExpressionValueIsNotNull(stackTraceElement, "element");
-                    String className = stackTraceElement.getClassName();
-                    Intrinsics.checkExpressionValueIsNotNull(className, "element.className");
-                    if (StringsKt__StringsJVMKt.startsWith$default(className, "com.android.systemui.statusbar.notification", false, 2, null)) {
-                        return ExceptionHandler.Notification;
-                    }
-                }
-                th2 = th.getCause();
+            long currentTimeMillis = System.currentTimeMillis();
+            CodeBlueService codeBlueService = (CodeBlueService) Dependency.get(CodeBlueService.class);
+            if (currentTimeMillis - (codeBlueService != null ? codeBlueService.getLatestNotificationTimeMillis() : 0) < CodeBlueConfig.Companion.getNOTIFICATION_TRIGGER_WINDOW_MS()) {
+                return ExceptionHandler.Notification;
             }
             return ExceptionHandler.Others;
         }
@@ -114,7 +106,8 @@ public final class CodeBlue {
         }
 
         /* access modifiers changed from: private */
-        public final void updateCrashInfo(Context context) {
+        /* access modifiers changed from: public */
+        private final void updateCrashInfo(Context context) {
             if (DebugConfig.DEBUG_CODE_BLUE) {
                 Log.d("CodeBlue", "updateCrashInfo");
             }

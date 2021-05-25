@@ -229,7 +229,7 @@ public class KeyguardBouncer {
                     }
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, i, i2, true);
                     KeyguardBouncer.this.mBgImageView.setBackgroundColor(0);
-                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), BitmapUtils.getBlurBackground(createScaledBitmap, null)));
+                    KeyguardBouncer.this.mBgImageView.setImageDrawable(new BitmapDrawable(KeyguardBouncer.this.mContext.getResources(), BitmapUtils.getBlurBackground(KeyguardBouncer.this.mContext, createScaledBitmap, null)));
                     createScaledBitmap.recycle();
                 }
             }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
@@ -433,6 +433,7 @@ public class KeyguardBouncer {
         if (viewGroup2 != null && viewGroup2.getParent() == (viewGroup = this.mContainer)) {
             viewGroup.removeView(this.mRoot);
             this.mRoot = null;
+            this.mKeyguardView = null;
         }
     }
 

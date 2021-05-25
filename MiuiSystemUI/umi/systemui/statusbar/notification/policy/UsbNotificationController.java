@@ -1,6 +1,5 @@
 package com.android.systemui.statusbar.notification.policy;
 
-import android.app.AlertDialog;
 import android.app.MiuiThemeHelper;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,6 +18,7 @@ import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.miui.systemui.BuildConfig;
 import miui.telephony.TelephonyManager;
 import miui.util.ResourceMapper;
+import miuix.appcompat.app.AlertDialog;
 
 public class UsbNotificationController {
     public static final boolean SUPPORT_DISABLE_USB_BY_SIM = (BuildConfig.IS_CM_CUSTOMIZATION_TEST || BuildConfig.IS_CM_CUSTOMIZATION);

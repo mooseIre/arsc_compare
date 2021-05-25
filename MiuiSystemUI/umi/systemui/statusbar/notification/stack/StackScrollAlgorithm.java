@@ -254,7 +254,6 @@ public class StackScrollAlgorithm {
         ExpandableView expandableView = stackScrollAlgorithmState.visibleChildren.get(i);
         boolean childNeedsGapHeight = childNeedsGapHeight(ambientState.getSectionProvider(), stackScrollAlgorithmState.anchorViewIndex, i, expandableView, i > 0 ? (ExpandableView) stackScrollAlgorithmState.visibleChildren.get(i - 1) : null);
         ExpandableViewState viewState = expandableView.getViewState();
-        boolean z2 = false;
         viewState.location = 0;
         float f3 = (!childNeedsGapHeight || z) ? f : f + ((float) this.mGapHeight);
         int paddingAfterChild = getPaddingAfterChild(stackScrollAlgorithmState, ambientState, expandableView, i);
@@ -267,8 +266,8 @@ public class StackScrollAlgorithm {
         } else {
             viewState.yTranslation = f3;
         }
-        boolean z3 = expandableView instanceof FooterView;
-        boolean z4 = expandableView instanceof EmptyShadeView;
+        boolean z2 = expandableView instanceof FooterView;
+        boolean z3 = expandableView instanceof EmptyShadeView;
         viewState.location = 4;
         float topPadding = ambientState.getTopPadding() + ambientState.getStackTranslation();
         if (i <= stackScrollAlgorithmState.getIndexOfExpandingNotification()) {
@@ -277,15 +276,12 @@ public class StackScrollAlgorithm {
         if (expandableView.mustStayOnScreen()) {
             float f4 = viewState.yTranslation;
             if (f4 >= 0.0f) {
-                if (f4 + ((float) viewState.height) + topPadding < ambientState.getMaxHeadsUpTranslation()) {
-                    z2 = true;
-                }
-                viewState.headsUpIsVisible = z2;
+                viewState.headsUpIsVisible = (f4 + ((float) viewState.height)) + topPadding < ambientState.getMaxHeadsUpTranslation();
             }
         }
-        if (z3) {
+        if (z2) {
             viewState.yTranslation = Math.min(viewState.yTranslation, (float) (ambientState.getInnerHeight() - maxAllowedChildHeight));
-        } else if (z4) {
+        } else if (z3) {
             viewState.yTranslation = ((float) (ambientState.getInnerHeight() - maxAllowedChildHeight)) + (ambientState.getStackTranslation() * 0.25f);
         } else if (expandableView != ambientState.getTrackedHeadsUpRow()) {
             clampPositionToShelf(expandableView, viewState, ambientState);
@@ -303,6 +299,9 @@ public class StackScrollAlgorithm {
         }
         if (viewState.location == 0) {
             Log.wtf("StackScrollAlgorithm", "Failed to assign location for child " + i);
+        }
+        if ((viewState.location & 2) != 0) {
+            viewState.hidden = true;
         }
         viewState.yTranslation += topPadding;
         return f2;

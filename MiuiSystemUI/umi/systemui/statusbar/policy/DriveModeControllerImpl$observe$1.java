@@ -16,6 +16,6 @@ public final class DriveModeControllerImpl$observe$1 extends ContentObserver {
 
     public void onChange(boolean z) {
         Log.d("DriveModeController", "Drive mode change detected.");
-        this.this$0.mUIExecutor.execute(new DriveModeControllerImpl$observe$1$onChange$1(this));
+        DriveModeControllerImpl.access$getMUIExecutor$p(this.this$0).execute(new DriveModeControllerImpl$observe$1$onChange$1(this));
     }
 }

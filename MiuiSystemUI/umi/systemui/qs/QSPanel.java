@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import androidx.constraintlayout.widget.R$styleable;
 import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
@@ -621,7 +622,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
                     ((PagedTileLayout) qSTileLayout).setCurrentItem(0, false);
                 }
             }
-            this.mMetricsLogger.visibility(111, this.mExpanded);
+            this.mMetricsLogger.visibility((int) R$styleable.Constraint_transitionPathRotate, this.mExpanded);
             if (!this.mExpanded) {
                 this.mUiEventLogger.log(closePanelEvent());
                 closeDetail();
@@ -929,7 +930,7 @@ public class QSPanel extends LinearLayout implements TunerService.Tunable, QSHos
         int i = z ? 0 : 4;
         setVisibility(i);
         if (this.mGridContentVisible != z) {
-            this.mMetricsLogger.visibility(111, i);
+            this.mMetricsLogger.visibility((int) R$styleable.Constraint_transitionPathRotate, i);
         }
         this.mGridContentVisible = z;
     }

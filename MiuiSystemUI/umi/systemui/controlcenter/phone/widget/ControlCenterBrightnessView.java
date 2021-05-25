@@ -165,4 +165,13 @@ public final class ControlCenterBrightnessView extends LinearLayout {
             throw null;
         }
     }
+
+    public final boolean isMirrorShowing() {
+        QCBrightnessMirrorController qCBrightnessMirrorController = this.brightnessMirrorController;
+        if (qCBrightnessMirrorController != null) {
+            return qCBrightnessMirrorController.isMirrorShowing();
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("brightnessMirrorController");
+        throw null;
+    }
 }

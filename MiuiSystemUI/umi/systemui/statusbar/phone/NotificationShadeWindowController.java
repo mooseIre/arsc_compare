@@ -194,8 +194,14 @@ public class NotificationShadeWindowController implements RemoteInputController.
             this.mLpChanged.flags |= 1048576;
         }
         if (state.mDozing) {
+            if (!state.mWallpaperSupportsAmbientMode) {
+                this.mLpChanged.flags &= -1048577;
+            }
             this.mLpChanged.privateFlags |= 524288;
         } else {
+            if (state.mKeyguardShowing) {
+                this.mLpChanged.flags |= 1048576;
+            }
             this.mLpChanged.privateFlags &= -524289;
         }
         if (this.mKeyguardDisplayMode != null) {

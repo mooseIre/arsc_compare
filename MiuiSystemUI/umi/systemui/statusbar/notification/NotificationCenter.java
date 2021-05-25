@@ -60,6 +60,7 @@ public class NotificationCenter extends SystemUI {
                 NotificationCenter.this.lambda$start$1$NotificationCenter(z);
             }
         });
+        disableComponent("com.android.settings", "com.android.settings.Settings$NotificationAppListActivity");
     }
 
     /* access modifiers changed from: private */
@@ -190,5 +191,9 @@ public class NotificationCenter extends SystemUI {
     /* access modifiers changed from: public */
     private boolean isLite(Context context) {
         return Build.IS_MIUI_LITE_VERSION && !(NotificationSettings.Companion.isNotifAggregateEnabled(context) || NotificationSettings.Companion.isNotifFoldEnabled(context));
+    }
+
+    private void disableComponent(String str, String str2) {
+        this.mContext.getPackageManager().setComponentEnabledSetting(new ComponentName(str, str2), 2, 1);
     }
 }

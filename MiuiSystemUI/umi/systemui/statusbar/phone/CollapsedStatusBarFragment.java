@@ -278,11 +278,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         view.setVisibility(0);
         if (!z) {
             view.setAlpha(1.0f);
-            return;
-        }
-        view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
-        if (this.mKeyguardStateController.isKeyguardFadingAway()) {
-            view.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
+        } else {
+            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
         }
     }
 

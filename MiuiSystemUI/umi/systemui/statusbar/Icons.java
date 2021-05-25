@@ -89,6 +89,7 @@ public class Icons {
         sTintIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_unverified, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_unverified_tint));
         sTintIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_near, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_tint));
         sTintIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_far, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_tint));
+        sTintIconMap.put(C0012R$drawable.stat_sys_stealth_mode, Integer.valueOf(C0012R$drawable.stat_sys_stealth_mode_tint));
         sTintIconMap.put(C0012R$drawable.stat_sys_alarm, Integer.valueOf(C0012R$drawable.stat_sys_alarm_tint));
         sTintIconMap.put(C0012R$drawable.stat_sys_alarm_dim_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_alarm_dim_tint));
         sTintIconMap.put(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2_tint));
@@ -169,6 +170,7 @@ public class Icons {
         sTintIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_unverified_dark, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_unverified_tint));
         sTintIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_dark, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_tint));
         sTintIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_dark, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_tint));
+        sTintIconMap.put(C0012R$drawable.stat_sys_stealth_mode_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_stealth_mode_tint));
         sLightIconMap.put(C0012R$drawable.stat_sys_alarm_tint, Integer.valueOf(C0012R$drawable.stat_sys_alarm));
         sLightIconMap.put(C0012R$drawable.stat_sys_alarm_dim_tint, Integer.valueOf(C0012R$drawable.stat_sys_alarm_dim));
         sLightIconMap.put(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2_tint, Integer.valueOf(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2));
@@ -249,6 +251,7 @@ public class Icons {
         sLightIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_unverified_tint, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_unverified));
         sLightIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_tint, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_near));
         sLightIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_tint, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_far));
+        sLightIconMap.put(C0012R$drawable.stat_sys_stealth_mode_tint, Integer.valueOf(C0012R$drawable.stat_sys_stealth_mode));
         sLightIconMap.put(C0012R$drawable.stat_sys_alarm_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_alarm));
         sLightIconMap.put(C0012R$drawable.stat_sys_alarm_dim_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_alarm_dim));
         sLightIconMap.put(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_1_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_1));
@@ -330,6 +333,7 @@ public class Icons {
         sLightIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_unverified_dark, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_unverified));
         sLightIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_dark, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_near));
         sLightIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_dark, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_far));
+        sLightIconMap.put(C0012R$drawable.stat_sys_stealth_mode_darkmode, Integer.valueOf(C0012R$drawable.stat_sys_stealth_mode));
         sDarkIconMap.put(C0012R$drawable.stat_sys_alarm, Integer.valueOf(C0012R$drawable.stat_sys_alarm_darkmode));
         sDarkIconMap.put(C0012R$drawable.stat_sys_alarm_dim, Integer.valueOf(C0012R$drawable.stat_sys_alarm_dim_darkmode));
         sDarkIconMap.put(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_1, Integer.valueOf(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_1_darkmode));
@@ -411,6 +415,7 @@ public class Icons {
         sDarkIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_unverified, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_unverified_dark));
         sDarkIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_near, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_dark));
         sDarkIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_far, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_dark));
+        sDarkIconMap.put(C0012R$drawable.stat_sys_stealth_mode, Integer.valueOf(C0012R$drawable.stat_sys_stealth_mode_darkmode));
         sDarkIconMap.put(C0012R$drawable.stat_sys_alarm_tint, Integer.valueOf(C0012R$drawable.stat_sys_alarm_darkmode));
         sDarkIconMap.put(C0012R$drawable.stat_sys_alarm_dim_tint, Integer.valueOf(C0012R$drawable.stat_sys_alarm_dim_darkmode));
         sDarkIconMap.put(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2_tint, Integer.valueOf(C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2_darkmode));
@@ -491,6 +496,7 @@ public class Icons {
         sDarkIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_unverified_tint, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_unverified_dark));
         sDarkIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_tint, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_near_dark));
         sDarkIconMap.put(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_tint, Integer.valueOf(C0012R$drawable.ble_unlock_statusbar_icon_verified_far_dark));
+        sDarkIconMap.put(C0012R$drawable.stat_sys_stealth_mode_tint, Integer.valueOf(C0012R$drawable.stat_sys_stealth_mode_darkmode));
     }
 
     public static int getLightDrawableId(int i) {

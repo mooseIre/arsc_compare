@@ -2152,6 +2152,10 @@ public class ExpandableNotificationRow extends ActivatableNotificationView imple
         }
     }
 
+    public void setHideSensitiveAnimIfInitialized(boolean z) {
+        setHideSensitive(z, this.mShowingPublicInitialized, 0, 300);
+    }
+
     private void animateShowingPublic(long j, long j2, boolean z) {
         View[] viewArr = this.mIsSummaryWithChildren ? new View[]{this.mChildrenContainer} : new View[]{this.mPrivateLayout};
         View[] viewArr2 = {this.mPublicLayout};

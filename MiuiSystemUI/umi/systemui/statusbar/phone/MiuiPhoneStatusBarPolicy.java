@@ -127,6 +127,8 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mStatusBarManager.setIconVisibility("speakerphone", false);
         this.mStatusBarManager.setIcon("call_record", C0012R$drawable.stat_sys_call_record, 0, null);
         this.mStatusBarManager.setIconVisibility("call_record", false);
+        this.mStatusBarManager.setIcon("stealth", C0012R$drawable.stat_sys_stealth_mode, 0, null);
+        this.mStatusBarManager.setIconVisibility("stealth", false);
         ((MiuiAlarmControllerImpl) Dependency.get(MiuiAlarmControllerImpl.class)).addCallback((MiuiAlarmController$MiuiAlarmChangeCallback) this);
     }
 
@@ -152,6 +154,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             boolean isBluetoothEnabled = bluetoothController.isBluetoothEnabled();
             boolean isBluetoothConnected = this.mBluetooth.isBluetoothConnected();
             if (!isBluetoothEnabled) {
+                Log.d("MiuiPhoneStatusBarPolicy", "hide bluetooth battery");
                 this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, false);
             }
             if (isBluetoothConnected) {

@@ -18,6 +18,7 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.net.DataUsageController;
 import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
@@ -29,10 +30,10 @@ import com.android.systemui.statusbar.policy.NetworkController;
 import com.miui.systemui.util.VirtualSimUtils;
 import java.util.ArrayList;
 import java.util.List;
-import miui.app.AlertDialog;
 import miui.securityspace.CrossUserUtils;
 import miui.telephony.SubscriptionManager;
 import miui.telephony.TelephonyManager;
+import miuix.appcompat.app.AlertDialog;
 
 public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     private static final boolean DETAIL_ADAPTER_ENABLED;
@@ -147,7 +148,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_config_mobile_networks");
         Resources resources = this.mContext.getResources();
-        booleanState.label = resources.getString(C0020R$string.mobile_data);
+        booleanState.label = resources.getString(C0020R$string.quick_settings_cellular_detail_title);
         boolean z = false;
         if (!this.mDataController.isMobileDataSupported() || callbackInfo.airplaneModeEnabled) {
             if (((QSTile.BooleanState) this.mState).state != 0) {
@@ -492,7 +493,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         int i;
         int i2;
         this.mHost.collapsePanels();
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, 8);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.AlertDialog_Theme_DayNight);
         builder.setCancelable(false);
         builder.setTitle(C0020R$string.quick_settings_cellular_detail_title);
         if (z) {

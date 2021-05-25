@@ -16,6 +16,7 @@ import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.PackageManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.statusbar.phone.StatusBar;
+import com.miui.systemui.util.CommonUtil;
 import dagger.Lazy;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -67,6 +68,7 @@ public final class PhoneStateMonitor {
 
             @Override // com.android.systemui.shared.system.TaskStackChangeListener
             public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
+                CommonUtil.topActivity = runningTaskInfo == null ? null : runningTaskInfo.topActivity;
                 PhoneStateMonitor phoneStateMonitor = PhoneStateMonitor.this;
                 phoneStateMonitor.mLauncherShowing = phoneStateMonitor.isLauncherShowing(runningTaskInfo);
             }

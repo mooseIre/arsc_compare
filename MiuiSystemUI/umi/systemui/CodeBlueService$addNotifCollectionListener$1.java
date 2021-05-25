@@ -19,5 +19,6 @@ public final class CodeBlueService$addNotifCollectionListener$1 implements Notif
     public void onEntryBind(@Nullable NotificationEntry notificationEntry, @Nullable StatusBarNotification statusBarNotification) {
         ExpandedNotification sbn;
         this.this$0.setLatestNotificationPkgName((notificationEntry == null || (sbn = notificationEntry.getSbn()) == null) ? null : sbn.getPackageName());
+        this.this$0.setLatestNotificationTimeMillis(System.currentTimeMillis());
     }
 }

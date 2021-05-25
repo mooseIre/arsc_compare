@@ -161,7 +161,6 @@ import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.graphics.AppIconsManager;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
-import com.miui.systemui.statusbar.phone.DriveModeObserver;
 import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
 import com.miui.systemui.util.GestureObserver;
@@ -747,10 +746,6 @@ public final class Dependency_MembersInjector {
 
     public static void injectMMiuiStatusBarPromptController(Dependency dependency, Lazy<MiuiStatusBarPromptController> lazy) {
         dependency.mMiuiStatusBarPromptController = lazy;
-    }
-
-    public static void injectMDriveModeObserver(Dependency dependency, Lazy<DriveModeObserver> lazy) {
-        dependency.mDriveModeObserver = lazy;
     }
 
     public static void injectMNetworkSpeedController(Dependency dependency, Lazy<NetworkSpeedController> lazy) {

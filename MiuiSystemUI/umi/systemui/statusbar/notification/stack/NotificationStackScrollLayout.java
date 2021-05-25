@@ -16,7 +16,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.os.ServiceManager;
-import android.provider.Settings;
 import android.service.notification.StatusBarNotification;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -194,7 +193,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
             return true;
         }
     };
-    protected boolean mClearAllEnabled;
     private HashSet<ExpandableView> mClearTransientViewsWhenFinished = new HashSet<>();
     private final Rect mClipRect;
     private int mCollapsedSize;
@@ -352,7 +350,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     private float mQsExpansionFraction;
     private Runnable mReclamp;
     private Runnable mReflingAndAnimateScroll;
-    private final NotificationRemoteInputManager mRemoteInputManager;
     private Rect mRequestedClipBounds;
     private final NotificationRoundnessManager mRoundnessManager;
     private ViewTreeObserver.OnPreDrawListener mRunningAnimationUpdater = new ViewTreeObserver.OnPreDrawListener() {
@@ -483,7 +480,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         this.mTmpRect = new Rect();
         this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
         this.mMetricsLogger = (MetricsLogger) Dependency.get(MetricsLogger.class);
-        this.mRemoteInputManager = (NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class);
+        NotificationRemoteInputManager notificationRemoteInputManager = (NotificationRemoteInputManager) Dependency.get(NotificationRemoteInputManager.class);
         this.mColorExtractor = (SysuiColorExtractor) Dependency.get(SysuiColorExtractor.class);
         this.mDisplayMetrics = (DisplayMetrics) Dependency.get(DisplayMetrics.class);
         this.mLockscreenGestureLogger = (LockscreenGestureLogger) Dependency.get(LockscreenGestureLogger.class);
@@ -983,7 +980,7 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
         });
         setWillNotDraw(!(this.mShouldDrawNotificationBackground ? true : z2));
         this.mBackgroundPaint.setAntiAlias(true);
-        this.mClearAllEnabled = resources.getBoolean(C0009R$bool.config_enableNotificationsClearAll);
+        resources.getBoolean(C0009R$bool.config_enableNotificationsClearAll);
         ((TunerService) Dependency.get(TunerService.class)).addTunable(new TunerService.Tunable() {
             /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$Jw0uVZk_QqBt9QukDWfY9zQ7BQU */
 
@@ -1181,10 +1178,6 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
     @VisibleForTesting
     public void updateFooter() {
         if (this.mFooterView != null) {
-            if (((this.mClearAllEnabled && hasActiveClearableNotifications(0)) || hasActiveNotifications()) && this.mStatusBarState != 1) {
-                this.mRemoteInputManager.getController().isRemoteInputActive();
-            }
-            Settings.Secure.getIntForUser(((ViewGroup) this).mContext.getContentResolver(), "notification_history_enabled", 0, -2);
             updateFooterView(false, false, false);
         }
     }

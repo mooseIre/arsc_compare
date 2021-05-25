@@ -8,9 +8,8 @@ import com.android.systemui.controls.controller.StructureInfo;
 import java.util.List;
 import kotlin.jvm.internal.Intrinsics;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsFavoritingActivity.kt */
-public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2 implements View.OnClickListener {
+final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2 implements View.OnClickListener {
     final /* synthetic */ ControlsFavoritingActivity this$0;
 
     ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$2(ControlsFavoritingActivity controlsFavoritingActivity) {
@@ -18,20 +17,20 @@ public final class ControlsFavoritingActivity$bindButtons$$inlined$apply$lambda$
     }
 
     public final void onClick(View view) {
-        if (this.this$0.component != null) {
-            for (StructureContainer structureContainer : this.this$0.listOfStructures) {
+        if (ControlsFavoritingActivity.access$getComponent$p(this.this$0) != null) {
+            for (StructureContainer structureContainer : ControlsFavoritingActivity.access$getListOfStructures$p(this.this$0)) {
                 List<ControlInfo> favorites = structureContainer.getModel().getFavorites();
-                ControlsControllerImpl controlsControllerImpl = this.this$0.controller;
-                ComponentName componentName = this.this$0.component;
-                if (componentName != null) {
-                    controlsControllerImpl.replaceFavoritesForStructure(new StructureInfo(componentName, structureContainer.getStructureName(), favorites));
+                ControlsControllerImpl access$getController$p = ControlsFavoritingActivity.access$getController$p(this.this$0);
+                ComponentName access$getComponent$p = ControlsFavoritingActivity.access$getComponent$p(this.this$0);
+                if (access$getComponent$p != null) {
+                    access$getController$p.replaceFavoritesForStructure(new StructureInfo(access$getComponent$p, structureContainer.getStructureName(), favorites));
                 } else {
                     Intrinsics.throwNpe();
                     throw null;
                 }
             }
-            this.this$0.animateExitAndFinish();
-            this.this$0.globalActionsComponent.handleShowGlobalActionsMenu();
+            ControlsFavoritingActivity.access$animateExitAndFinish(this.this$0);
+            ControlsFavoritingActivity.access$getGlobalActionsComponent$p(this.this$0).handleShowGlobalActionsMenu();
         }
     }
 }

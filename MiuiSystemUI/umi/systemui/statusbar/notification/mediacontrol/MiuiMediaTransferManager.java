@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.notification.mediacontrol;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.media.MediaRoute2Info;
 import android.media.MediaRouter;
 import android.text.TextUtils;
@@ -21,23 +22,37 @@ import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.util.ReflectUtil;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MiuiMediaTransferManager implements BluetoothCallback {
     private final ActivityStarter mActivityStarter = ((ActivityStarter) Dependency.get(ActivityStarter.class));
+    private ConfigurationController.ConfigurationListener mConfigurationListener = new ConfigurationController.ConfigurationListener() {
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass1 */
+
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+        public void onConfigChanged(Configuration configuration) {
+            MiuiMediaTransferManager.this.refreshPhoneRouteName();
+        }
+
+        @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+        public void onLocaleListChanged() {
+            MiuiMediaTransferManager.this.refreshPhoneRouteName();
+        }
+    };
     private String mCurRouteName = CodeInjection.MD5;
     private final LocalMediaManager mLocalMediaManager;
     private final MediaRouter.SimpleCallback mMediaCallback = new MediaRouter.SimpleCallback() {
-        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass3 */
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass4 */
 
         public void onRouteSelected(MediaRouter mediaRouter, int i, MediaRouter.RouteInfo routeInfo) {
             MiuiMediaTransferManager.this.updateCurrentDevice(routeInfo.getName().toString());
         }
     };
     private final LocalMediaManager.DeviceCallback mMediaDeviceCallback = new LocalMediaManager.DeviceCallback() {
-        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass2 */
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass3 */
 
         @Override // com.android.settingslib.media.LocalMediaManager.DeviceCallback
         public void onDeviceListUpdate(List<MediaDevice> list) {
@@ -56,7 +71,7 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
     };
     private final MediaRouter mMediaRouter;
     private final View.OnClickListener mOnClickHandler = new View.OnClickListener() {
-        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass1 */
+        /* class com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaTransferManager.AnonymousClass2 */
 
         public void onClick(View view) {
             handleMediaTransfer();
@@ -80,11 +95,23 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
         this.mLocalMediaManager = new LocalMediaManager(context, localBluetoothManager, new InfoMediaManager(context, context.getPackageName(), null, localBluetoothManager), null);
         this.mMediaRouter = (MediaRouter) context.getSystemService("media_router");
         checkForTransferComponent(context);
+        if (this.sHasTransferComponent) {
+            ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this.mConfigurationListener);
+        }
     }
 
     private void checkForTransferComponent(Context context) {
         if (context.getPackageManager().resolveActivity(new Intent("miui.bluetooth.mible.MiuiAudioRelayActivity"), 0) != null) {
             this.sHasTransferComponent = true;
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void refreshPhoneRouteName() {
+        this.mPhoneRouteName = CodeInjection.MD5;
+        if (!this.mViews.isEmpty()) {
+            this.mLocalMediaManager.startScan();
         }
     }
 
@@ -157,7 +184,6 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
                 ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().unregisterCallback(this);
                 this.mLocalMediaManager.unregisterCallback(this.mMediaDeviceCallback);
                 this.mMediaRouter.removeCallback(this.mMediaCallback);
-                this.mPhoneRouteName = CodeInjection.MD5;
             }
         }
     }
@@ -176,7 +202,7 @@ public class MiuiMediaTransferManager implements BluetoothCallback {
                 if (this.mViews.size() == 1) {
                     ((LocalBluetoothManager) Dependency.get(LocalBluetoothManager.class)).getEventManager().registerCallback(this);
                     this.mLocalMediaManager.registerCallback(this.mMediaDeviceCallback);
-                    this.mMediaRouter.addCallback(8388615, this.mMediaCallback, 3);
+                    this.mMediaRouter.addCallback(8388615, this.mMediaCallback, 2);
                 }
             }
             if (TextUtils.isEmpty(this.mPhoneRouteName)) {

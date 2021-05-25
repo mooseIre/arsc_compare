@@ -101,7 +101,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
                 Intrinsics.checkExpressionValueIsNotNull(t2, "child");
                 ExpandableViewState viewState = t2.getViewState();
                 if (panelStretching) {
-                    float f2 = ((float) 1) - ((((float) i) * 1.0f) / ((float) RangesKt___RangesKt.coerceAtMost(size, 10)));
+                    float f2 = ((float) 1) - ((((float) RangesKt___RangesKt.coerceAtMost(i, 10)) * 1.0f) / ((float) RangesKt___RangesKt.coerceAtMost(size, 10)));
                     f += 0.15f * f2 * f2 * ambientState.getSpringLength();
                     if (viewState != null) {
                         viewState.setSpringYOffset((int) (ambientState.getSpringLength() + f));

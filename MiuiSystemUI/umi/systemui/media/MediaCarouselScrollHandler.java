@@ -77,34 +77,6 @@ public class MediaCarouselScrollHandler {
         });
     }
 
-    public static final /* synthetic */ Function0 access$getDismissCallback$p(MediaCarouselScrollHandler mediaCarouselScrollHandler) {
-        return mediaCarouselScrollHandler.dismissCallback;
-    }
-
-    public static final /* synthetic */ FalsingManager access$getFalsingManager$p(MediaCarouselScrollHandler mediaCarouselScrollHandler) {
-        return mediaCarouselScrollHandler.falsingManager;
-    }
-
-    public static final /* synthetic */ boolean access$onFling(MediaCarouselScrollHandler mediaCarouselScrollHandler, float f, float f2) {
-        return mediaCarouselScrollHandler.onFling(f, f2);
-    }
-
-    public static final /* synthetic */ boolean access$onInterceptTouch(MediaCarouselScrollHandler mediaCarouselScrollHandler, MotionEvent motionEvent) {
-        return mediaCarouselScrollHandler.onInterceptTouch(motionEvent);
-    }
-
-    public static final /* synthetic */ void access$onMediaScrollingChanged(MediaCarouselScrollHandler mediaCarouselScrollHandler, int i, int i2) {
-        mediaCarouselScrollHandler.onMediaScrollingChanged(i, i2);
-    }
-
-    public static final /* synthetic */ boolean access$onTouch(MediaCarouselScrollHandler mediaCarouselScrollHandler, MotionEvent motionEvent) {
-        return mediaCarouselScrollHandler.onTouch(motionEvent);
-    }
-
-    public static final /* synthetic */ void access$setContentTranslation$p(MediaCarouselScrollHandler mediaCarouselScrollHandler, float f) {
-        mediaCarouselScrollHandler.setContentTranslation(f);
-    }
-
     public final MediaScrollView getScrollView() {
         return this.scrollView;
     }
@@ -129,6 +101,7 @@ public class MediaCarouselScrollHandler {
         return this.contentTranslation;
     }
 
+    /* access modifiers changed from: public */
     private final void setContentTranslation(float f) {
         this.contentTranslation = f;
         this.mediaContent.setTranslationX(f);
@@ -264,6 +237,7 @@ public class MediaCarouselScrollHandler {
         }
     }
 
+    /* access modifiers changed from: public */
     private final boolean onTouch(MotionEvent motionEvent) {
         float f;
         boolean z = true;
@@ -332,6 +306,7 @@ public class MediaCarouselScrollHandler {
         throw null;
     }
 
+    /* access modifiers changed from: public */
     private final boolean onInterceptTouch(MotionEvent motionEvent) {
         return this.gestureDetector.onTouchEvent(motionEvent);
     }
@@ -368,6 +343,7 @@ public class MediaCarouselScrollHandler {
         return true;
     }
 
+    /* access modifiers changed from: public */
     private final boolean onFling(float f, float f2) {
         float f3 = f * f;
         double d = (double) f2;
@@ -431,6 +407,7 @@ public class MediaCarouselScrollHandler {
         this.scrollView.setClipToOutline((this.contentTranslation == 0.0f && this.scrollIntoCurrentMedia == 0) ? false : true);
     }
 
+    /* access modifiers changed from: public */
     private final void onMediaScrollingChanged(int i, int i2) {
         boolean z = false;
         boolean z2 = this.scrollIntoCurrentMedia != 0;

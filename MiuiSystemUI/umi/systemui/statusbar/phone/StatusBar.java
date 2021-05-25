@@ -124,9 +124,8 @@ import com.android.systemui.plugins.PluginListener;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-import com.android.systemui.qs.QSContainerImpl;
-import com.android.systemui.qs.QSFragment;
-import com.android.systemui.qs.QSPanel;
+import com.android.systemui.qs.MiuiQSContainer;
+import com.android.systemui.qs.MiuiQSFragment;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.ScreenPinningRequest;
 import com.android.systemui.shared.plugins.PluginManager;
@@ -275,8 +274,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
                 StatusBar.this.finishBarAnimations();
                 StatusBar.this.resetUserExpandedStates();
-            } else if ("android.app.action.SHOW_DEVICE_MONITORING_DIALOG".equals(action)) {
-                StatusBar.this.mQSPanel.showDeviceMonitoringDialog();
+            } else if ("android.app.action.SHOW_DEVICE_MONITORING_DIALOG".equals(action) && StatusBar.this.mQSContainer != null && StatusBar.this.mQSContainer.getQsPanel() != null) {
+                StatusBar.this.mQSContainer.getQsPanel().showDeviceMonitoringDialog();
             }
         }
     };
@@ -408,8 +407,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     protected StatusBarNotificationPresenter mPresenter;
     private Configuration mPreviousConfig;
     private final PulseExpansionHandler mPulseExpansionHandler;
-    private QSContainerImpl mQSContainer;
-    private QSPanel mQSPanel;
+    private MiuiQSContainer mQSContainer;
     private final Object mQueueLock = new Object();
     private final Optional<Recents> mRecentsOptional;
     private final NotificationRemoteInputManager mRemoteInputManager;
@@ -1268,12 +1266,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     /* renamed from: lambda$makeStatusBarView$8 */
     public /* synthetic */ void lambda$makeStatusBarView$8$StatusBar(String str, Fragment fragment) {
         QS qs = (QS) fragment;
-        if (qs instanceof QSFragment) {
-            QSFragment qSFragment = (QSFragment) qs;
-            this.mQSPanel = qSFragment.getQsPanel();
-            QSContainerImpl qSContainer = qSFragment.getQSContainer();
-            this.mQSContainer = qSContainer;
-            qSContainer.setBrightnessMirror(this.mBrightnessMirrorController);
+        if (qs instanceof MiuiQSFragment) {
+            MiuiQSContainer qsContainer = ((MiuiQSFragment) qs).getQsContainer();
+            this.mQSContainer = qsContainer;
+            qsContainer.setBrightnessMirror(this.mBrightnessMirrorController);
         }
     }
 
@@ -1307,7 +1303,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: protected */
     public QS createDefaultQSFragment() {
-        return (QS) FragmentHostManager.get(this.mNotificationShadeWindowView).create(QSFragment.class);
+        return (QS) FragmentHostManager.get(this.mNotificationShadeWindowView).create(MiuiQSFragment.class);
     }
 
     private void setUpPresenter() {
@@ -1573,23 +1569,26 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void addQsTile(ComponentName componentName) {
-        QSPanel qSPanel = this.mQSPanel;
-        if (qSPanel != null && qSPanel.getHost() != null) {
-            this.mQSPanel.getHost().addTile(componentName);
+        MiuiQSContainer miuiQSContainer = this.mQSContainer;
+        if (miuiQSContainer != null && miuiQSContainer.getQsPanel() != null && this.mQSContainer.getQsPanel().getHost() != null) {
+            this.mQSContainer.getQsPanel().getHost().addTile(componentName);
         }
     }
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void remQsTile(ComponentName componentName) {
-        QSPanel qSPanel = this.mQSPanel;
-        if (qSPanel != null && qSPanel.getHost() != null) {
-            this.mQSPanel.getHost().removeTile(componentName);
+        MiuiQSContainer miuiQSContainer = this.mQSContainer;
+        if (miuiQSContainer != null && miuiQSContainer.getQsPanel() != null && this.mQSContainer.getQsPanel().getHost() != null) {
+            this.mQSContainer.getQsPanel().getHost().removeTile(componentName);
         }
     }
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void clickTile(ComponentName componentName) {
-        this.mQSPanel.clickTile(componentName);
+        MiuiQSContainer miuiQSContainer = this.mQSContainer;
+        if (miuiQSContainer != null && miuiQSContainer.getQsPanel() != null) {
+            this.mQSContainer.getQsPanel().clickTile(componentName);
+        }
     }
 
     public void requestNotificationUpdate(String str) {
@@ -2134,9 +2133,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
     public void animateExpandSettingsPanel(String str) {
+        MiuiQSContainer miuiQSContainer;
         if (this.mCommandQueue.panelsEnabled() && this.mUserSetup) {
-            if (str != null) {
-                this.mQSPanel.openDetails(str);
+            if (!(str == null || (miuiQSContainer = this.mQSContainer) == null || miuiQSContainer.getQsPanel() == null)) {
+                this.mQSContainer.getQsPanel().openDetails(str);
             }
             this.mNotificationPanelViewController.expandWithQs();
         }
@@ -2723,8 +2723,8 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: package-private */
     public void updateResources(boolean z) {
-        QSContainerImpl qSContainerImpl = this.mQSContainer;
-        if (!(qSContainerImpl == null || qSContainerImpl.getQuickQSPanel() == null)) {
+        MiuiQSContainer miuiQSContainer = this.mQSContainer;
+        if (!(miuiQSContainer == null || miuiQSContainer.getQuickQSPanel() == null)) {
             this.mQSContainer.getQuickQSPanel().updateResources();
         }
         StatusBarWindowController statusBarWindowController = this.mStatusBarWindowController;
@@ -3199,9 +3199,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         if (this.mControlPanelController.isUseControlCenter()) {
             this.mControlPanelController.refreshAllTiles();
         } else {
-            QSPanel qSPanel = this.mQSPanel;
-            if (qSPanel != null) {
-                qSPanel.refreshAllTiles();
+            MiuiQSContainer miuiQSContainer = this.mQSContainer;
+            if (!(miuiQSContainer == null || miuiQSContainer.getQsPanel() == null)) {
+                this.mQSContainer.getQsPanel().refreshAllTiles();
             }
         }
         this.mHandler.removeMessages(1003);

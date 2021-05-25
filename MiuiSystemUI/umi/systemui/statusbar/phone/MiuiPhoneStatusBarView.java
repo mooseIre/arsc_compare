@@ -37,6 +37,7 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
     protected View mFullscreenStatusBarNotificationIconArea;
     private GestureDetectorCompat mGestureDetector;
     private boolean mIsGiveAllEvent;
+    private MiuiClock mMiuiClock;
     private MiuiEndIconManager mMiuiEndIconManager;
     protected View mNotificationIconAreaInner;
     protected PhoneStatusBarTintController mPhoneStatusBarTintController = new PhoneStatusBarTintController(this, (MiuiLightBarController) Dependency.get(LightBarController.class));
@@ -67,11 +68,10 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         this.mFullscreenStatusBarNotificationIconArea = findViewById(C0014R$id.fullscreen_notification_icon_area);
         this.mStatusBarStatusIcons = (LinearLayout) findViewById(C0014R$id.statusIcons);
         this.mSystemIconArea = findViewById(C0014R$id.system_icon_area);
+        this.mMiuiClock = (MiuiClock) findViewById(C0014R$id.clock);
         this.mDripNetworkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.drip_network_speed_view);
         this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) findViewById(C0014R$id.drip_network_speed_splitter);
         this.mFullScreenNetworkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
-        this.mDripNetworkSpeedView.addVisibilityListener(this.mDripNetworkSpeedSplitter);
-        ((MiuiClock) findViewById(C0014R$id.clock)).addVisibilityListener(this.mDripNetworkSpeedSplitter);
         super.onFinishInflate();
     }
 
@@ -85,12 +85,16 @@ public class MiuiPhoneStatusBarView extends PhoneStatusBarView {
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mDripNetworkSpeedSplitter);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this.mFullScreenNetworkSpeedView);
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).addPromptContainer((FrameLayout) findViewById(C0014R$id.prompt_container), 0);
+        this.mDripNetworkSpeedView.addVisibilityListener(this.mDripNetworkSpeedSplitter);
+        this.mMiuiClock.addVisibilityListener(this.mDripNetworkSpeedSplitter);
         super.onAttachedToWindow();
     }
 
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.PhoneStatusBarView
     public void onDetachedFromWindow() {
+        this.mDripNetworkSpeedView.removeVisibilityListener(this.mDripNetworkSpeedSplitter);
+        this.mMiuiClock.removeVisibilityListener(this.mDripNetworkSpeedSplitter);
         ((MiuiStatusBarPromptController) Dependency.get(MiuiStatusBarPromptController.class)).removePromptContainer((FrameLayout) findViewById(C0014R$id.prompt_container));
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mDripNetworkSpeedView);
         ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this.mDripNetworkSpeedSplitter);

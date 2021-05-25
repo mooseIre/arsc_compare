@@ -348,7 +348,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                 }
                 Log.d(this.mTag, "notifyListeners mConfig.alwaysShowNetworkTypeIcon=" + this.mConfig.alwaysShowNetworkTypeIcon + "  getNetworkType:" + this.mTelephonyDisplayInfo.getNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(this.mTelephonyDisplayInfo.getNetworkType()) + " voiceNetType=" + getVoiceNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(getVoiceNetworkType()) + " showDataIcon=" + z4 + " mConfig.alwaysShowDataRatIcon=" + this.mConfig.alwaysShowDataRatIcon + " icons.mDataType=" + icons.mDataType + " mConfig.showVolteIcon=" + this.mConfig.showVolteIcon + " isVolteSwitchOn=" + isVolteSwitchOn() + " volteIcon=" + i4 + " mConfig.showVowifiIcon=" + this.mConfig.showVowifiIcon);
                 T t6 = this.mCurrentState;
-                MiuiMobileState miuiMobileState = new MiuiMobileState(((MobileState) t6).airplaneMode, ((MobileState) t6).dataConnected, ((MobileState) t6).volte, ((MobileState) t6).vowifi, ((MobileState) t6).hideVolte, ((MobileState) t6).hideVowifi, ((MobileState) t6).speedHd, ((MobileState) t6).volteNoService, ((MobileState) t6).showDataTypeWhenWifiOn, ((MobileState) t6).showDataTypeDataDisconnected, ((MobileState) t6).showMobileDataTypeInMMS, ((MobileState) t6).showMobileDataTypeSingle, ((MobileState) t6).showName, ((MobileState) t6).volteResId, ((MobileState) t6).vowifiResId, this.mSlotId, ((MobileState) t6).qcom5GDrawbleId);
+                MiuiMobileState miuiMobileState = new MiuiMobileState(((MobileState) t6).airplaneMode, ((MobileState) t6).dataConnected, ((MobileState) t6).volte, ((MobileState) t6).vowifi, ((MobileState) t6).hideVolte, ((MobileState) t6).hideVowifi, ((MobileState) t6).speedHd, ((MobileState) t6).volteNoService, ((MobileState) t6).showDataTypeWhenWifiOn, ((MobileState) t6).showDataTypeDataDisconnected, ((MobileState) t6).showMobileDataTypeInMMS, ((MobileState) t6).showMobileDataTypeSingle, ((MobileState) t6).showAccessTo5G, ((MobileState) t6).showName, ((MobileState) t6).volteResId, ((MobileState) t6).vowifiResId, this.mSlotId, ((MobileState) t6).qcom5GDrawbleId);
                 signalCallback.setIsDefaultDataSim(this.mSubscriptionInfo.getSimSlotIndex(), ((MobileState) this.mCurrentState).dataSim);
                 signalCallback.setMobileDataIndicators(iconState, iconState3, i3, i, z2, z3, i4, obj, textIfExists, str, icons.mIsWide, this.mSubscriptionInfo.getSubscriptionId(), ((MobileState) this.mCurrentState).roaming, miuiMobileState);
             }
@@ -362,7 +362,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         iconState = iconState2;
         Log.d(this.mTag, "notifyListeners mConfig.alwaysShowNetworkTypeIcon=" + this.mConfig.alwaysShowNetworkTypeIcon + "  getNetworkType:" + this.mTelephonyDisplayInfo.getNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(this.mTelephonyDisplayInfo.getNetworkType()) + " voiceNetType=" + getVoiceNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(getVoiceNetworkType()) + " showDataIcon=" + z4 + " mConfig.alwaysShowDataRatIcon=" + this.mConfig.alwaysShowDataRatIcon + " icons.mDataType=" + icons.mDataType + " mConfig.showVolteIcon=" + this.mConfig.showVolteIcon + " isVolteSwitchOn=" + isVolteSwitchOn() + " volteIcon=" + i4 + " mConfig.showVowifiIcon=" + this.mConfig.showVowifiIcon);
         T t62 = this.mCurrentState;
-        MiuiMobileState miuiMobileState2 = new MiuiMobileState(((MobileState) t62).airplaneMode, ((MobileState) t62).dataConnected, ((MobileState) t62).volte, ((MobileState) t62).vowifi, ((MobileState) t62).hideVolte, ((MobileState) t62).hideVowifi, ((MobileState) t62).speedHd, ((MobileState) t62).volteNoService, ((MobileState) t62).showDataTypeWhenWifiOn, ((MobileState) t62).showDataTypeDataDisconnected, ((MobileState) t62).showMobileDataTypeInMMS, ((MobileState) t62).showMobileDataTypeSingle, ((MobileState) t62).showName, ((MobileState) t62).volteResId, ((MobileState) t62).vowifiResId, this.mSlotId, ((MobileState) t62).qcom5GDrawbleId);
+        MiuiMobileState miuiMobileState2 = new MiuiMobileState(((MobileState) t62).airplaneMode, ((MobileState) t62).dataConnected, ((MobileState) t62).volte, ((MobileState) t62).vowifi, ((MobileState) t62).hideVolte, ((MobileState) t62).hideVowifi, ((MobileState) t62).speedHd, ((MobileState) t62).volteNoService, ((MobileState) t62).showDataTypeWhenWifiOn, ((MobileState) t62).showDataTypeDataDisconnected, ((MobileState) t62).showMobileDataTypeInMMS, ((MobileState) t62).showMobileDataTypeSingle, ((MobileState) t62).showAccessTo5G, ((MobileState) t62).showName, ((MobileState) t62).volteResId, ((MobileState) t62).vowifiResId, this.mSlotId, ((MobileState) t62).qcom5GDrawbleId);
         signalCallback.setIsDefaultDataSim(this.mSubscriptionInfo.getSimSlotIndex(), ((MobileState) this.mCurrentState).dataSim);
         signalCallback.setMobileDataIndicators(iconState, iconState3, i3, i, z2, z3, i4, obj, textIfExists, str, icons.mIsWide, this.mSubscriptionInfo.getSubscriptionId(), ((MobileState) this.mCurrentState).roaming, miuiMobileState2);
     }
@@ -953,6 +953,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         MobileIconGroup qcom5GIconGroup;
         boolean roaming;
         boolean roamingDataEnabled;
+        public boolean showAccessTo5G;
         public boolean showDataTypeDataDisconnected;
         public boolean showDataTypeWhenWifiOn;
         public boolean showMobileDataTypeInMMS;
@@ -1016,6 +1017,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             this.showDataTypeDataDisconnected = mobileState.showDataTypeDataDisconnected;
             this.showMobileDataTypeInMMS = mobileState.showMobileDataTypeInMMS;
             this.showMobileDataTypeSingle = mobileState.showMobileDataTypeSingle;
+            this.showAccessTo5G = mobileState.showAccessTo5G;
         }
 
         /* access modifiers changed from: protected */
@@ -1135,15 +1137,19 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             sb.append(',');
             sb.append("showMobileDataTypeInMMS=");
             sb.append(this.showMobileDataTypeInMMS);
+            sb.append(',');
             sb.append("showMobileDataTypeSingle=");
             sb.append(this.showMobileDataTypeSingle);
+            sb.append(',');
+            sb.append("showAccessTo5G");
+            sb.append(this.showAccessTo5G);
         }
 
         @Override // com.android.systemui.statusbar.policy.SignalController.State
         public boolean equals(Object obj) {
             if (super.equals(obj)) {
                 MobileState mobileState = (MobileState) obj;
-                return Objects.equals(mobileState.networkName, this.networkName) && Objects.equals(mobileState.networkNameData, this.networkNameData) && mobileState.dataSim == this.dataSim && mobileState.dataConnected == this.dataConnected && mobileState.isEmergency == this.isEmergency && mobileState.airplaneMode == this.airplaneMode && mobileState.carrierNetworkChangeMode == this.carrierNetworkChangeMode && mobileState.userSetup == this.userSetup && mobileState.isDefault == this.isDefault && mobileState.roaming == this.roaming && mobileState.defaultDataOff == this.defaultDataOff && mobileState.imsRegistered == this.imsRegistered && mobileState.voiceCapable == this.voiceCapable && mobileState.videoCapable == this.videoCapable && mobileState.mobileDataEnabled == this.mobileDataEnabled && mobileState.roamingDataEnabled == this.roamingDataEnabled && mobileState.fiveGConnected == this.fiveGConnected && mobileState.showQcom5GSignalStrength == this.showQcom5GSignalStrength && mobileState.qcom5GIconGroup == this.qcom5GIconGroup && mobileState.qcom5GDrawbleId == this.qcom5GDrawbleId && mobileState.phoneType == this.phoneType && mobileState.callState == this.callState && mobileState.volte == this.volte && mobileState.vowifi == this.vowifi && mobileState.volteNoService == this.volteNoService && mobileState.speedHd == this.speedHd && mobileState.miuiDataType == this.miuiDataType && mobileState.miuiVoiceType == this.miuiVoiceType && mobileState.showType == this.showType && Objects.equals(mobileState.showName, this.showName) && mobileState.CTSim == this.CTSim && mobileState.hideVolte == this.hideVolte && mobileState.hideVowifi == this.hideVowifi && mobileState.volteResId == this.volteResId && mobileState.vowifiResId == this.vowifiResId && mobileState.showDataTypeWhenWifiOn == this.showDataTypeWhenWifiOn && mobileState.showDataTypeDataDisconnected == this.showDataTypeDataDisconnected && mobileState.showMobileDataTypeInMMS == this.showMobileDataTypeInMMS && mobileState.showMobileDataTypeSingle == this.showMobileDataTypeSingle;
+                return Objects.equals(mobileState.networkName, this.networkName) && Objects.equals(mobileState.networkNameData, this.networkNameData) && mobileState.dataSim == this.dataSim && mobileState.dataConnected == this.dataConnected && mobileState.isEmergency == this.isEmergency && mobileState.airplaneMode == this.airplaneMode && mobileState.carrierNetworkChangeMode == this.carrierNetworkChangeMode && mobileState.userSetup == this.userSetup && mobileState.isDefault == this.isDefault && mobileState.roaming == this.roaming && mobileState.defaultDataOff == this.defaultDataOff && mobileState.imsRegistered == this.imsRegistered && mobileState.voiceCapable == this.voiceCapable && mobileState.videoCapable == this.videoCapable && mobileState.mobileDataEnabled == this.mobileDataEnabled && mobileState.roamingDataEnabled == this.roamingDataEnabled && mobileState.fiveGConnected == this.fiveGConnected && mobileState.showQcom5GSignalStrength == this.showQcom5GSignalStrength && mobileState.qcom5GIconGroup == this.qcom5GIconGroup && mobileState.qcom5GDrawbleId == this.qcom5GDrawbleId && mobileState.phoneType == this.phoneType && mobileState.callState == this.callState && mobileState.volte == this.volte && mobileState.vowifi == this.vowifi && mobileState.volteNoService == this.volteNoService && mobileState.speedHd == this.speedHd && mobileState.miuiDataType == this.miuiDataType && mobileState.miuiVoiceType == this.miuiVoiceType && mobileState.showType == this.showType && Objects.equals(mobileState.showName, this.showName) && mobileState.CTSim == this.CTSim && mobileState.hideVolte == this.hideVolte && mobileState.hideVowifi == this.hideVowifi && mobileState.volteResId == this.volteResId && mobileState.vowifiResId == this.vowifiResId && mobileState.showDataTypeWhenWifiOn == this.showDataTypeWhenWifiOn && mobileState.showDataTypeDataDisconnected == this.showDataTypeDataDisconnected && mobileState.showMobileDataTypeInMMS == this.showMobileDataTypeInMMS && mobileState.showMobileDataTypeSingle == this.showMobileDataTypeSingle && mobileState.showAccessTo5G == this.showAccessTo5G;
             }
         }
     }
@@ -1154,6 +1160,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         public boolean hideVolte;
         public boolean hideVowifi;
         public int qcom5GDrawableId;
+        public boolean showAccessTo5G;
         public boolean showDataTypeDataDisconnected;
         public boolean showDataTypeWhenWifiOn;
         public boolean showMobileDataTypeInMMS;
@@ -1167,7 +1174,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         public boolean vowifi;
         public int vowifiResId;
 
-        public MiuiMobileState(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, boolean z7, boolean z8, boolean z9, boolean z10, boolean z11, boolean z12, String str, int i, int i2, int i3, int i4) {
+        public MiuiMobileState(boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, boolean z7, boolean z8, boolean z9, boolean z10, boolean z11, boolean z12, boolean z13, String str, int i, int i2, int i3, int i4) {
             this.airplane = z;
             this.dataConnected = z2;
             this.volte = z3;
@@ -1180,6 +1187,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             this.showDataTypeDataDisconnected = z10;
             this.showMobileDataTypeInMMS = z11;
             this.showMobileDataTypeSingle = z12;
+            this.showAccessTo5G = z13;
             this.showName = str;
             this.volteResId = i;
             this.vowifiResId = i2;
@@ -1210,11 +1218,12 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         ((MobileState) this.mCurrentState).showDataTypeWhenWifiOn = resourcesForOperation.getBoolean(C0009R$bool.status_bar_show_mobile_type_when_wifi_on);
         ((MobileState) this.mCurrentState).showDataTypeDataDisconnected = (this.mIsSupportDoubleFiveG && Build.IS_DEVELOPMENT_VERSION) || !Build.IS_INTERNATIONAL_BUILD;
         ((MobileState) this.mCurrentState).showMobileDataTypeInMMS = resourcesForOperation.getBoolean(C0009R$bool.status_bar_show_mobile_type_in_mms) || resourcesForOperation2.getBoolean(C0009R$bool.status_bar_show_mobile_type_in_mms);
+        ((MobileState) this.mCurrentState).showMobileDataTypeSingle = resourcesForOperation.getBoolean(C0009R$bool.config_show_data_type_left_single) || resourcesForOperation2.getBoolean(C0009R$bool.config_show_data_type_left_single);
         MobileState mobileState = (MobileState) this.mCurrentState;
-        if (!resourcesForOperation.getBoolean(C0009R$bool.config_show_data_type_left_single) && !resourcesForOperation2.getBoolean(C0009R$bool.config_show_data_type_left_single)) {
+        if (!resourcesForOperation.getBoolean(C0009R$bool.config_show_access_to_5G) && !resourcesForOperation2.getBoolean(C0009R$bool.config_show_access_to_5G)) {
             z = false;
         }
-        mobileState.showMobileDataTypeSingle = z;
+        mobileState.showAccessTo5G = z;
         this.mMiuiMobileTypeNameArray = getMiuiMobileTypeNameArray(resourcesForOperation);
     }
 

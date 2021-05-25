@@ -4,6 +4,7 @@ import android.util.Log;
 import com.android.systemui.statusbar.notification.NotificationEntryListener;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.miui.systemui.DebugConfig;
 import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -21,7 +22,9 @@ public class NotificationCountLimitPolicy {
 
             @Override // com.android.systemui.statusbar.notification.NotificationEntryListener
             public void onNotificationAdded(NotificationEntry notificationEntry) {
-                NotificationCountLimitPolicy.this.checkNotificationCountLimit(notificationEntry.getSbn().getPackageName());
+                if (!DebugConfig.DEBUG_NOTIFICATION) {
+                    NotificationCountLimitPolicy.this.checkNotificationCountLimit(notificationEntry.getSbn().getPackageName());
+                }
             }
         });
     }

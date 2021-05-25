@@ -9,7 +9,7 @@ import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
-import miui.widget.ProgressBar;
+import miuix.androidbasewidget.widget.ProgressBar;
 
 public class MiuiNotificationTemplateViewWrapper extends MiuiNotificationViewWrapper {
     private View mMainColumn;

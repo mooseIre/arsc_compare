@@ -258,11 +258,11 @@ public class QSSecurityFooter implements View.OnClickListener, DialogInterface.O
         boolean isNetworkLoggingEnabled = this.mSecurityController.isNetworkLoggingEnabled();
         String primaryVpnName = this.mSecurityController.getPrimaryVpnName();
         String workProfileVpnName = this.mSecurityController.getWorkProfileVpnName();
-        SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext);
+        SystemUIDialog systemUIDialog = new SystemUIDialog(this.mContext, C0021R$style.Theme_Dialog_Alert);
         this.mDialog = systemUIDialog;
         systemUIDialog.requestWindowFeature(1);
         boolean z = false;
-        View inflate = LayoutInflater.from(new ContextThemeWrapper(this.mContext, C0021R$style.Theme_SystemUI_Dialog)).inflate(C0016R$layout.quick_settings_footer_dialog, (ViewGroup) null, false);
+        View inflate = LayoutInflater.from(new ContextThemeWrapper(this.mContext, C0021R$style.Theme_Dialog_Alert)).inflate(C0016R$layout.quick_settings_footer_dialog, (ViewGroup) null, false);
         this.mDialog.setView(inflate);
         this.mDialog.setButton(-1, getPositiveButton(), this);
         CharSequence managementMessage = getManagementMessage(isDeviceManaged, deviceOwnerOrganizationName, isProfileOwnerOfOrganizationOwnedDevice, workProfileOrganizationName);

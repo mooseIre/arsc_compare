@@ -833,7 +833,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void onStateChanged(int i) {
         this.mBarState = i;
         boolean z = true;
-        if ((1 > i || 2 < i) && (i != 0 || !this.mStatusBarStateController.leaveOpenOnKeyguardHide())) {
+        if ((1 > i || 2 < i) && (i != 0 || this.mExpandedHeight <= 0.0f)) {
             z = false;
         }
         setMPanelAppeared(z);

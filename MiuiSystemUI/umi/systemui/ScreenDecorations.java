@@ -219,6 +219,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         this.mDisplayListener = r0;
         this.mDisplayManager.registerDisplayListener(r0, this.mHandler);
         updateOrientation();
+        disableAllEmulation();
     }
 
     private void register() {
@@ -552,6 +553,15 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             return 80;
         }
         throw new IllegalArgumentException("unknown bound position: " + i);
+    }
+
+    private void disableAllEmulation() {
+        OverlayManagerWrapper overlayManagerWrapper = new OverlayManagerWrapper();
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.corner", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.double", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.waterfall", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.hole", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.tall", false, 0);
     }
 
     private void setupCameraListener() {

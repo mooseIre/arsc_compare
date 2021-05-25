@@ -33,7 +33,7 @@ public final class QSFooterDataUsage extends FrameLayout {
     private final Uri networkUri = Uri.parse("content://com.miui.networkassistant.provider/datausage_noti_status");
     private ImageView pieImage;
     private TextView purchase;
-    private QSContainerImpl qsContainer;
+    private MiuiQSContainer qsContainer;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public QSFooterDataUsage(@NotNull Context context, @Nullable AttributeSet attributeSet, @NotNull ActivityStarter activityStarter2, @NotNull Looper looper, @NotNull Looper looper2) {
@@ -83,8 +83,8 @@ public final class QSFooterDataUsage extends FrameLayout {
         throw null;
     }
 
-    public final void setQSContainer(@Nullable QSContainerImpl qSContainerImpl) {
-        this.qsContainer = qSContainerImpl;
+    public final void setQSContainer(@Nullable MiuiQSContainer miuiQSContainer) {
+        this.qsContainer = miuiQSContainer;
     }
 
     public final void updateDataUsageInfo() {
@@ -134,9 +134,9 @@ public final class QSFooterDataUsage extends FrameLayout {
         if (this.isAvailable == null || (!Intrinsics.areEqual(Boolean.valueOf(isDataUsageAvailable), this.isAvailable))) {
             this.isAvailable = Boolean.valueOf(isDataUsageAvailable);
             setVisibility(isDataUsageAvailable ? 0 : 8);
-            QSContainerImpl qSContainerImpl = this.qsContainer;
-            if (qSContainerImpl != null) {
-                qSContainerImpl.updateExpansion(true);
+            MiuiQSContainer miuiQSContainer = this.qsContainer;
+            if (miuiQSContainer != null) {
+                miuiQSContainer.updateExpansion(true);
             }
         }
     }

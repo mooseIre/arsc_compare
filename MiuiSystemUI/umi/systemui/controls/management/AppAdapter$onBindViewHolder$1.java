@@ -15,6 +15,6 @@ final class AppAdapter$onBindViewHolder$1 implements View.OnClickListener {
     }
 
     public final void onClick(View view) {
-        AppAdapter.access$getOnAppSelected$p(this.this$0).invoke(ComponentName.unflattenFromString(((ControlsServiceInfo) AppAdapter.access$getListOfServices$p(this.this$0).get(this.$index)).getKey()));
+        this.this$0.onAppSelected.invoke(ComponentName.unflattenFromString(((ControlsServiceInfo) this.this$0.listOfServices.get(this.$index)).getKey()));
     }
 }
