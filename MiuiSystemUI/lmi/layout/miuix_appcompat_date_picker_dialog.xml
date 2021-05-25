@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/date_picker_layout_padding" android:paddingEnd="@dimen/date_picker_layout_padding"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <miuix.pickerwidget.widget.DatePicker android:layout_gravity="center_horizontal" android:id="@id/datePicker" android:layout_width="fill_parent" android:layout_height="wrap_content" android:layout_marginBottom="@dimen/miuix_appcompat_date_picker_dialog_margin_bottom" android:spinnersShown="true" android:calendarViewShown="false" android:layout_marginStart="@dimen/miuix_appcompat_date_picker_dialog_margin_horizontal" android:layout_marginEnd="@dimen/miuix_appcompat_date_picker_dialog_margin_horizontal" />
+    <FrameLayout android:id="@id/lunarModePanel" android:paddingTop="@dimen/miuix_appcompat_date_picker_checkbox_padding_vertical" android:paddingBottom="@dimen/miuix_appcompat_date_picker_checkbox_padding_vertical" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/miuix_appcompat_date_picker_checkbox_padding_horizontal" android:paddingEnd="@dimen/miuix_appcompat_date_picker_checkbox_padding_horizontal">
+        <TextView android:textSize="@dimen/miuix_appcompat_date_picker_lunar_text_size" android:textColor="?android:textColorPrimary" android:layout_gravity="start|center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/date_picker_lunar" android:fontFamily="sans-serif-medium" />
+        <miuix.slidingwidget.widget.SlidingButton android:layout_gravity="end|center" android:id="@id/datePickerLunar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:contentDescription="@string/date_picker_lunar" />
+    </FrameLayout>
+</LinearLayout>
