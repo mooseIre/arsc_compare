@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:orientation="vertical" android:layout_width="fill_parent" android:layout_height="fill_parent" android:paddingStart="@dimen/date_picker_layout_padding" android:paddingEnd="@dimen/date_picker_layout_padding"
+  xmlns:android="http://schemas.android.com/apk/res/android">
+    <miuix.pickerwidget.widget.DateTimePicker android:orientation="vertical" android:id="@id/dateTimePicker" android:layout_width="fill_parent" android:layout_height="wrap_content" />
+    <FrameLayout android:id="@id/lunarModePanel" android:visibility="gone" android:layout_width="fill_parent" android:layout_height="wrap_content" android:paddingStart="@dimen/date_picker_checkbox_padding_horizontal" android:paddingEnd="@dimen/date_picker_checkbox_padding_horizontal">
+        <TextView android:textSize="@dimen/date_picker_lunar_text_size" android:textColor="?android:textColorPrimary" android:layout_gravity="start|center" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/date_picker_lunar" android:fontFamily="sans-serif-medium" />
+        <miuix.slidingwidget.widget.SlidingButton android:layout_gravity="end|center" android:id="@id/datePickerLunar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:contentDescription="@string/date_picker_lunar" />
+    </FrameLayout>
+</LinearLayout>
