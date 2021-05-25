@@ -1,6 +1,5 @@
 package com.android.keyguard.charge;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -23,6 +22,7 @@ import com.android.systemui.C0019R$raw;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.C0021R$style;
 import java.io.IOException;
+import miuix.appcompat.app.AlertDialog;
 
 public class MiuiWirelessChargeSlowlyView {
     private Context mContext;

@@ -22,8 +22,8 @@ import com.miui.systemui.graphics.DrawableUtils;
 import java.io.File;
 import java.io.IOException;
 import miui.content.res.ThemeResources;
-import miui.graphics.BitmapFactory;
 import miui.util.CustomizeUtil;
+import miuix.graphics.BitmapFactory;
 
 public class KeyguardWallpaperUtils {
     private static Pair<File, Drawable> sLockWallpaperCache;

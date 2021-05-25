@@ -42,8 +42,8 @@ public class MiuiKeyguardDualClock extends MiuiKeyguardBaseClock {
 
     @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void setDarkStyle(boolean z) {
-        super.setDarkStyle(z);
         if (this.mDarkStyle != z) {
+            super.setDarkStyle(z);
             this.mMiuiDualClock.setTextColorDark(z);
         }
     }

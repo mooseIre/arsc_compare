@@ -8,12 +8,17 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.systemui.Dependency;
+import com.android.systemui.Dumpable;
+import com.android.systemui.dump.DumpManager;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: KeyguardBottomAreaInjector.kt */
-public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorCallback implements IMiuiKeyguardWallpaperController.IWallpaperChangeCallback {
+public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorCallback implements IMiuiKeyguardWallpaperController.IWallpaperChangeCallback, Dumpable {
+    private final DumpManager dumpManager;
     @NotNull
     private final Context mContext;
     private KeyguardBottomAreaView mKeyguardBottomAreaView;
@@ -21,9 +26,11 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
     private float mTouchDownX;
     private float mTouchDownY;
 
-    public KeyguardBottomAreaInjector(@NotNull Context context) {
+    public KeyguardBottomAreaInjector(@NotNull Context context, @NotNull DumpManager dumpManager2) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
+        Intrinsics.checkParameterIsNotNull(dumpManager2, "dumpManager");
         this.mContext = context;
+        this.dumpManager = dumpManager2;
     }
 
     @NotNull
@@ -42,11 +49,19 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
     }
 
     public final void onAttachedToWindow() {
+        DumpManager dumpManager2 = this.dumpManager;
+        String name = KeyguardBottomAreaInjector.class.getName();
+        Intrinsics.checkExpressionValueIsNotNull(name, "javaClass.name");
+        dumpManager2.registerDumpable(name, this);
         ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).registerCallback(this);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this);
     }
 
     public final void onDetachedFromWindow() {
+        DumpManager dumpManager2 = this.dumpManager;
+        String name = KeyguardBottomAreaInjector.class.getName();
+        Intrinsics.checkExpressionValueIsNotNull(name, "javaClass.name");
+        dumpManager2.unregisterDumpable(name);
         ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).removeCallback(this);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this);
     }
@@ -128,5 +143,13 @@ public final class KeyguardBottomAreaInjector extends MiuiKeyguardUpdateMonitorC
         if (view != null) {
             view.setAlpha(f);
         }
+    }
+
+    @Override // com.android.systemui.Dumpable
+    public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
+        Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
+        Intrinsics.checkParameterIsNotNull(printWriter, "pw");
+        Intrinsics.checkParameterIsNotNull(strArr, "args");
+        getView().dump(printWriter);
     }
 }

@@ -69,7 +69,6 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     private TextView mForgetPasswordMethodNext;
     private InjectionInflationController mInjectionInflationController;
     private boolean mIsDragging;
-    private final KeyguardStateController mKeyguardStateController;
     private LockPatternUtils mLockPatternUtils;
     private View mLockoutView;
     private final MetricsLogger mMetricsLogger;
@@ -272,7 +271,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
         new SpringAnimation(this, DynamicAnimation.Y);
         this.mInjectionInflationController = new InjectionInflationController(SystemUIFactory.getInstance().getRootComponent());
         this.mViewConfiguration = ViewConfiguration.get(context);
-        this.mKeyguardStateController = (KeyguardStateController) Dependency.get(KeyguardStateController.class);
+        KeyguardStateController keyguardStateController = (KeyguardStateController) Dependency.get(KeyguardStateController.class);
         this.mSecondaryLockScreenController = new AdminSecondaryLockScreenController(context, this, this.mUpdateMonitor, this.mCallback, new Handler(Looper.myLooper()));
     }
 
@@ -405,8 +404,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
     }
 
     private void updateBiometricRetry() {
-        KeyguardSecurityModel.SecurityMode securityMode = getSecurityMode();
-        this.mSwipeUpToRetry = (!this.mKeyguardStateController.isFaceAuthEnabled() || securityMode == KeyguardSecurityModel.SecurityMode.SimPin || securityMode == KeyguardSecurityModel.SecurityMode.SimPuk || securityMode == KeyguardSecurityModel.SecurityMode.None) ? false : true;
+        this.mSwipeUpToRetry = false;
     }
 
     /* access modifiers changed from: protected */

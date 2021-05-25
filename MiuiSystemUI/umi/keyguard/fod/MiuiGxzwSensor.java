@@ -91,7 +91,7 @@ public class MiuiGxzwSensor {
                 /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwSensor$NwWCpZOTkkfzWBURlu7NhW1soPA */
 
                 public final void run() {
-                    MiuiGxzwSensor.lambda$NwWCpZOTkkfzWBURlu7NhW1soPA(MiuiGxzwSensor.this);
+                    MiuiGxzwSensor.this.doRegisterDozeSensor();
                 }
             });
         }
@@ -121,7 +121,7 @@ public class MiuiGxzwSensor {
                 /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwSensor$tytcQllx08Mrvnkbc0VdDWjTliQ */
 
                 public final void run() {
-                    MiuiGxzwSensor.lambda$tytcQllx08Mrvnkbc0VdDWjTliQ(MiuiGxzwSensor.this);
+                    MiuiGxzwSensor.this.doUnregisterSensor();
                 }
             });
         }

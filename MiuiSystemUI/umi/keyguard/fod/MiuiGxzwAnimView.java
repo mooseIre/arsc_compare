@@ -1048,7 +1048,7 @@ public class MiuiGxzwAnimView {
 
                 public void onAnimationEnd(Animator animator) {
                     MiuiGxzwAnimViewInternal.this.mAlphaAnimator = null;
-                    if (!this.cancel) {
+                    if (!this.cancel || !MiuiGxzwAnimViewInternal.this.mShowing) {
                         MiuiGxzwAnimViewInternal.this.removeAnimView();
                     }
                 }

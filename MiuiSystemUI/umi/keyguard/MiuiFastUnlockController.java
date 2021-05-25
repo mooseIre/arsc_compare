@@ -9,7 +9,6 @@ import android.util.Slog;
 import android.view.IWindowManager;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector;
-import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import java.lang.ref.WeakReference;
@@ -21,7 +20,6 @@ public class MiuiFastUnlockController {
     private Context mContext;
     private Method mDeclaredMethod;
     private volatile boolean mFastUnlock = false;
-    private KeyguardViewMediator mKeyguardViewMediator;
     private PowerManager mPowerManager;
     private IWindowManager mWindowManager;
 
@@ -36,34 +34,22 @@ public class MiuiFastUnlockController {
     public MiuiFastUnlockController(Context context, KeyguardViewMediator keyguardViewMediator) {
         this.mContext = context;
         this.mPowerManager = (PowerManager) context.getSystemService("power");
-        this.mKeyguardViewMediator = keyguardViewMediator;
     }
 
     public boolean fastUnlock() {
-        if (!supportFastUnlock() || this.mKeyguardViewMediator == null) {
-            return false;
-        }
         onStartFastUnlock();
         this.mFastUnlock = true;
-        hideKeygaurdFast(this.mKeyguardViewMediator);
+        hideKeygaurdFast();
         onFinishFashUnlock();
         return true;
     }
 
     public boolean wakeAndFastUnlock(String str) {
-        if (!supportFastUnlock() || this.mKeyguardViewMediator == null) {
-            return false;
-        }
         onStartFastUnlock();
         this.mFastUnlock = true;
         ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).setKeyguardUnlockWay("fp", true);
-        if (MiuiKeyguardUtils.isGxzwSensor()) {
-            hideKeygaurdFast(this.mKeyguardViewMediator);
-            wakeupIfNeed(str);
-        } else {
-            wakeupIfNeed(str);
-            hideKeygaurdFast(this.mKeyguardViewMediator);
-        }
+        hideKeygaurdFast();
+        wakeupIfNeed(str);
         onFinishFashUnlock();
         return true;
     }
@@ -112,7 +98,7 @@ public class MiuiFastUnlockController {
         }
     }
 
-    private void hideKeygaurdFast(KeyguardViewMediator keyguardViewMediator) {
+    private void hideKeygaurdFast() {
         ((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).preHideKeyguard();
     }
 
@@ -120,10 +106,6 @@ public class MiuiFastUnlockController {
         if (!((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isDeviceInteractive()) {
             this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), str);
         }
-    }
-
-    private boolean supportFastUnlock() {
-        return MiuiKeyguardUtils.isGxzwSensor() || MiuiKeyguardUtils.isBroadSideFingerprint();
     }
 
     public void setWallpaperAsTarget(boolean z) {

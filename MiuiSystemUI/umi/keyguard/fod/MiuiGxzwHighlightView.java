@@ -103,7 +103,7 @@ class MiuiGxzwHighlightView extends ImageView {
 
     public void setInvertColorStatus(boolean z) {
         this.mInvertColor = z;
-        if (!z || this.mGreenCircleColor != -1) {
+        if (!z || this.mGreenCircle) {
             this.mPaint.setColor(this.mGreenCircleColor);
         } else {
             this.mPaint.setColor(-16777216);

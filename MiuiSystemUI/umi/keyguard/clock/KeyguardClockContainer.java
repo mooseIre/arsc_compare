@@ -15,6 +15,7 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.injector.KeyguardClockInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.DualClockObserver;
 import java.util.TimeZone;
@@ -221,6 +222,7 @@ public class KeyguardClockContainer extends FrameLayout {
         }
         addView(miuiKeyguardBaseClock);
         this.mClockView = miuiKeyguardBaseClock;
+        miuiKeyguardBaseClock.setDarkStyle(((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).isWallpaperColorLight());
     }
 
     public void updateKeyguardClock() {
