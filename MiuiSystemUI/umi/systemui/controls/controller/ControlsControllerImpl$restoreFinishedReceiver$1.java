@@ -19,7 +19,7 @@ public final class ControlsControllerImpl$restoreFinishedReceiver$1 extends Broa
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
         if (intent.getIntExtra("android.intent.extra.USER_ID", -10000) == this.this$0.getCurrentUserId()) {
-            ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$restoreFinishedReceiver$1$onReceive$1(this));
+            this.this$0.executor.execute(new ControlsControllerImpl$restoreFinishedReceiver$1$onReceive$1(this));
         }
     }
 }

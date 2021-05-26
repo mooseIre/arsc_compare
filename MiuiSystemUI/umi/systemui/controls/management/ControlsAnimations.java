@@ -11,30 +11,27 @@ import android.view.Window;
 import androidx.lifecycle.LifecycleObserver;
 import com.android.systemui.Interpolators;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: ControlsAnimations.kt */
 public final class ControlsAnimations {
     public static final ControlsAnimations INSTANCE = new ControlsAnimations();
-    private static float translationY;
+    private static float translationY = -1.0f;
 
     private ControlsAnimations() {
     }
 
-    public static final /* synthetic */ float access$getTranslationY$p(ControlsAnimations controlsAnimations) {
-        return translationY;
-    }
-
-    public static final /* synthetic */ void access$setTranslationY$p(ControlsAnimations controlsAnimations, float f) {
-        translationY = f;
-    }
-
-    public final LifecycleObserver observerForAnimations(ViewGroup viewGroup, Window window, Intent intent) {
+    @NotNull
+    public final LifecycleObserver observerForAnimations(@NotNull ViewGroup viewGroup, @NotNull Window window, @NotNull Intent intent) {
         Intrinsics.checkParameterIsNotNull(viewGroup, "view");
         Intrinsics.checkParameterIsNotNull(window, "window");
         Intrinsics.checkParameterIsNotNull(intent, "intent");
         return new ControlsAnimations$observerForAnimations$1(this, window, viewGroup, intent);
     }
 
-    public final Animator enterAnimation(View view) {
+    @NotNull
+    public final Animator enterAnimation(@NotNull View view) {
         Intrinsics.checkParameterIsNotNull(view, "view");
         Log.d("ControlsUiController", "Enter animation for " + view);
         view.setTransitionAlpha(0.0f);
@@ -60,7 +57,8 @@ public final class ControlsAnimations {
         return exitAnimation(view, runnable);
     }
 
-    public static final Animator exitAnimation(View view, Runnable runnable) {
+    @NotNull
+    public static final Animator exitAnimation(@NotNull View view, @Nullable Runnable runnable) {
         Intrinsics.checkParameterIsNotNull(view, "view");
         Log.d("ControlsUiController", "Exit animation for " + view);
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(view, "transitionAlpha", 0.0f);
@@ -78,12 +76,14 @@ public final class ControlsAnimations {
         return animatorSet;
     }
 
+    @NotNull
     public final WindowTransition enterWindowTransition(int i) {
         WindowTransition windowTransition = new WindowTransition(ControlsAnimations$enterWindowTransition$1.INSTANCE);
         windowTransition.addTarget(i);
         return windowTransition;
     }
 
+    @NotNull
     public final WindowTransition exitWindowTransition(int i) {
         WindowTransition windowTransition = new WindowTransition(ControlsAnimations$exitWindowTransition$1.INSTANCE);
         windowTransition.addTarget(i);

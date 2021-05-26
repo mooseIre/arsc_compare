@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-class ZigZagClassifier extends FalsingClassifier {
+/* access modifiers changed from: package-private */
+public class ZigZagClassifier extends FalsingClassifier {
     private float mLastDevianceX;
     private float mLastDevianceY;
     private float mLastMaxXDeviance;

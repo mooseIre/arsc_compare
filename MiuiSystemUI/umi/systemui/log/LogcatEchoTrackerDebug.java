@@ -31,6 +31,10 @@ public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
         this(contentResolver2);
     }
 
+    public static final /* synthetic */ Map access$getCachedTagLevels$p(LogcatEchoTrackerDebug logcatEchoTrackerDebug) {
+        return logcatEchoTrackerDebug.cachedTagLevels;
+    }
+
     public static final class Factory {
         private Factory() {
         }
