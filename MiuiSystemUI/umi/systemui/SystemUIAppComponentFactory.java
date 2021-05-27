@@ -22,7 +22,7 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
     }
 
     @Override // androidx.core.app.AppComponentFactory
-    public Application instantiateApplicationCompat(ClassLoader classLoader, String str) {
+    public Application instantiateApplicationCompat(ClassLoader classLoader, String str) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         Application instantiateApplicationCompat = super.instantiateApplicationCompat(classLoader, str);
         if (instantiateApplicationCompat instanceof ContextInitializer) {
             ((ContextInitializer) instantiateApplicationCompat).setContextAvailableCallback(new ContextAvailableCallback() {
@@ -37,7 +37,6 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
         return instantiateApplicationCompat;
     }
 
-    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$instantiateApplicationCompat$0 */
     public /* synthetic */ void lambda$instantiateApplicationCompat$0$SystemUIAppComponentFactory(Context context) {
@@ -46,7 +45,7 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
     }
 
     @Override // androidx.core.app.AppComponentFactory
-    public ContentProvider instantiateProviderCompat(ClassLoader classLoader, String str) {
+    public ContentProvider instantiateProviderCompat(ClassLoader classLoader, String str) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         ContentProvider instantiateProviderCompat = super.instantiateProviderCompat(classLoader, str);
         if (instantiateProviderCompat instanceof ContextInitializer) {
             ((ContextInitializer) instantiateProviderCompat).setContextAvailableCallback(new ContextAvailableCallback(instantiateProviderCompat) {
@@ -72,7 +71,7 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
     }
 
     @Override // androidx.core.app.AppComponentFactory
-    public Activity instantiateActivityCompat(ClassLoader classLoader, String str, Intent intent) {
+    public Activity instantiateActivityCompat(ClassLoader classLoader, String str, Intent intent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (this.mComponentHelper == null) {
             SystemUIFactory.getInstance().getRootComponent().inject(this);
         }
@@ -84,7 +83,7 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
     }
 
     @Override // androidx.core.app.AppComponentFactory
-    public Service instantiateServiceCompat(ClassLoader classLoader, String str, Intent intent) {
+    public Service instantiateServiceCompat(ClassLoader classLoader, String str, Intent intent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (this.mComponentHelper == null) {
             SystemUIFactory.getInstance().getRootComponent().inject(this);
         }
@@ -96,7 +95,7 @@ public class SystemUIAppComponentFactory extends AppComponentFactory {
     }
 
     @Override // androidx.core.app.AppComponentFactory
-    public BroadcastReceiver instantiateReceiverCompat(ClassLoader classLoader, String str, Intent intent) {
+    public BroadcastReceiver instantiateReceiverCompat(ClassLoader classLoader, String str, Intent intent) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
         if (this.mComponentHelper == null) {
             SystemUIFactory.getInstance().getRootComponent().inject(this);
         }

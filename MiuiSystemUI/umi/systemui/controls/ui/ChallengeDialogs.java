@@ -79,6 +79,7 @@ public final class ChallengeDialogs {
         }
     }
 
+    /* access modifiers changed from: public */
     private final ControlAction addChallengeValue(ControlAction controlAction, String str) {
         String templateId = controlAction.getTemplateId();
         if (controlAction instanceof BooleanAction) {

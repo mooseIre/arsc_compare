@@ -12,24 +12,19 @@ import android.widget.TextView;
 import com.android.settingslib.Utils;
 import com.android.systemui.C0014R$id;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ChannelEditorListView.kt */
 public final class ChannelRow extends LinearLayout {
-    @Nullable
     private NotificationChannel channel;
     private TextView channelDescription;
     private TextView channelName;
-    @NotNull
     public ChannelEditorDialogController controller;
     private final int highlightColor = Utils.getColorAttrDefaultColor(getContext(), 16843820);
 
-    /* renamed from: switch  reason: not valid java name */
+    /* renamed from: switch */
     private Switch f1switch;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    public ChannelRow(@NotNull Context context, @NotNull AttributeSet attributeSet) {
+    public ChannelRow(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         Intrinsics.checkParameterIsNotNull(context, "c");
         Intrinsics.checkParameterIsNotNull(attributeSet, "attrs");
@@ -44,7 +39,6 @@ public final class ChannelRow extends LinearLayout {
         throw null;
     }
 
-    @NotNull
     public final ChannelEditorDialogController getController() {
         ChannelEditorDialogController channelEditorDialogController = this.controller;
         if (channelEditorDialogController != null) {
@@ -54,23 +48,21 @@ public final class ChannelRow extends LinearLayout {
         throw null;
     }
 
-    public final void setController(@NotNull ChannelEditorDialogController channelEditorDialogController) {
+    public final void setController(ChannelEditorDialogController channelEditorDialogController) {
         Intrinsics.checkParameterIsNotNull(channelEditorDialogController, "<set-?>");
         this.controller = channelEditorDialogController;
     }
 
-    @Nullable
     public final NotificationChannel getChannel() {
         return this.channel;
     }
 
-    public final void setChannel(@Nullable NotificationChannel notificationChannel) {
+    public final void setChannel(NotificationChannel notificationChannel) {
         this.channel = notificationChannel;
         updateImportance();
         updateViews();
     }
 
-    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         View findViewById = findViewById(C0014R$id.channel_name);

@@ -67,8 +67,8 @@ public final class BubbleDataRepository$loadBubbles$1 extends SuspendLambda impl
         Object unused = IntrinsicsKt__IntrinsicsKt.getCOROUTINE_SUSPENDED();
         if (this.label == 0) {
             ResultKt.throwOnFailure(obj);
-            List<BubbleEntity> readFromDisk = this.this$0.persistentRepository.readFromDisk();
-            this.this$0.volatileRepository.addBubbles(readFromDisk);
+            List<BubbleEntity> readFromDisk = BubbleDataRepository.access$getPersistentRepository$p(this.this$0).readFromDisk();
+            BubbleDataRepository.access$getVolatileRepository$p(this.this$0).addBubbles(readFromDisk);
             ArrayList arrayList = new ArrayList(CollectionsKt__IterablesKt.collectionSizeOrDefault(readFromDisk, 10));
             for (T t : readFromDisk) {
                 arrayList.add(new ShortcutKey(t.getUserId(), t.getPackageName()));
@@ -76,7 +76,7 @@ public final class BubbleDataRepository$loadBubbles$1 extends SuspendLambda impl
             Set<ShortcutKey> set = CollectionsKt___CollectionsKt.toSet(arrayList);
             ArrayList arrayList2 = new ArrayList();
             for (ShortcutKey shortcutKey : set) {
-                List<ShortcutInfo> shortcuts = this.this$0.launcherApps.getShortcuts(new LauncherApps.ShortcutQuery().setPackage(shortcutKey.getPkg()).setQueryFlags(1041), UserHandle.of(shortcutKey.getUserId()));
+                List<ShortcutInfo> shortcuts = BubbleDataRepository.access$getLauncherApps$p(this.this$0).getShortcuts(new LauncherApps.ShortcutQuery().setPackage(shortcutKey.getPkg()).setQueryFlags(1041), UserHandle.of(shortcutKey.getUserId()));
                 if (shortcuts == null) {
                     shortcuts = CollectionsKt__CollectionsKt.emptyList();
                 }
@@ -128,7 +128,7 @@ public final class BubbleDataRepository$loadBubbles$1 extends SuspendLambda impl
                         arrayList3.add(bubble);
                     }
                 } else {
-                    Job unused3 = BuildersKt__Builders_commonKt.launch$default(this.this$0.uiScope, null, null, new AnonymousClass1(this, null), 3, null);
+                    Job unused3 = BuildersKt__Builders_commonKt.launch$default(BubbleDataRepository.access$getUiScope$p(this.this$0), null, null, new AnonymousClass1(this, null), 3, null);
                     return Unit.INSTANCE;
                 }
             }

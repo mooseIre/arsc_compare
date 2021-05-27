@@ -1,6 +1,5 @@
 package com.android.systemui.bubbles;
 
-import android.annotation.SuppressLint;
 import android.content.pm.LauncherApps;
 import com.android.systemui.bubbles.storage.BubbleEntity;
 import com.android.systemui.bubbles.storage.BubblePersistentRepository;
@@ -16,9 +15,7 @@ import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.CoroutineScopeKt;
 import kotlinx.coroutines.Dispatchers;
 import kotlinx.coroutines.Job;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: BubbleDataRepository.kt */
 public final class BubbleDataRepository {
     private final CoroutineScope ioScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getIO());
     private Job job;
@@ -27,7 +24,7 @@ public final class BubbleDataRepository {
     private final CoroutineScope uiScope = CoroutineScopeKt.CoroutineScope(Dispatchers.getMain());
     private final BubbleVolatileRepository volatileRepository;
 
-    public BubbleDataRepository(@NotNull BubbleVolatileRepository bubbleVolatileRepository, @NotNull BubblePersistentRepository bubblePersistentRepository, @NotNull LauncherApps launcherApps2) {
+    public BubbleDataRepository(BubbleVolatileRepository bubbleVolatileRepository, BubblePersistentRepository bubblePersistentRepository, LauncherApps launcherApps2) {
         Intrinsics.checkParameterIsNotNull(bubbleVolatileRepository, "volatileRepository");
         Intrinsics.checkParameterIsNotNull(bubblePersistentRepository, "persistentRepository");
         Intrinsics.checkParameterIsNotNull(launcherApps2, "launcherApps");
@@ -36,12 +33,12 @@ public final class BubbleDataRepository {
         this.launcherApps = launcherApps2;
     }
 
-    public final void addBubble(int i, @NotNull Bubble bubble) {
+    public final void addBubble(int i, Bubble bubble) {
         Intrinsics.checkParameterIsNotNull(bubble, "bubble");
         addBubbles(i, CollectionsKt__CollectionsJVMKt.listOf(bubble));
     }
 
-    public final void addBubbles(int i, @NotNull List<? extends Bubble> list) {
+    public final void addBubbles(int i, List<? extends Bubble> list) {
         Intrinsics.checkParameterIsNotNull(list, "bubbles");
         List<BubbleEntity> transform = transform(i, list);
         this.volatileRepository.addBubbles(transform);
@@ -50,7 +47,7 @@ public final class BubbleDataRepository {
         }
     }
 
-    public final void removeBubbles(int i, @NotNull List<? extends Bubble> list) {
+    public final void removeBubbles(int i, List<? extends Bubble> list) {
         Intrinsics.checkParameterIsNotNull(list, "bubbles");
         List<BubbleEntity> transform = transform(i, list);
         this.volatileRepository.removeBubbles(transform);
@@ -63,9 +60,7 @@ public final class BubbleDataRepository {
         this.job = BuildersKt__Builders_commonKt.launch$default(this.ioScope, null, null, new BubbleDataRepository$persistToDisk$1(this, this.job, null), 3, null);
     }
 
-    @SuppressLint({"WrongConstant"})
-    @NotNull
-    public final Job loadBubbles(@NotNull Function1<? super List<? extends Bubble>, Unit> function1) {
+    public final Job loadBubbles(Function1<? super List<? extends Bubble>, Unit> function1) {
         Intrinsics.checkParameterIsNotNull(function1, "cb");
         return BuildersKt__Builders_commonKt.launch$default(this.ioScope, null, null, new BubbleDataRepository$loadBubbles$1(this, function1, null), 3, null);
     }
