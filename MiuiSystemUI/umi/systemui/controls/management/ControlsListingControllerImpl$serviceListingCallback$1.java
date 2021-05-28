@@ -44,7 +44,7 @@ public final class ControlsListingControllerImpl$serviceListingCallback$1 implem
                     this.this$0.this$0.availableComponents = linkedHashSet;
                     this.this$0.this$0.availableServices = list2;
                     List<ControlsServiceInfo> currentServices = this.this$0.this$0.getCurrentServices();
-                    for (ControlsListingController.ControlsListingCallback controlsListingCallback : this.this$0.this$0.callbacks) {
+                    for (ControlsListingController.ControlsListingCallback controlsListingCallback : ControlsListingControllerImpl.access$getCallbacks$p(this.this$0.this$0)) {
                         controlsListingCallback.onServicesUpdated(currentServices);
                     }
                 }

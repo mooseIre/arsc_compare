@@ -469,7 +469,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    public void showDismissTargetMaybe() {
+    private void showDismissTargetMaybe() {
         createOrUpdateDismissTarget();
         if (this.mTargetViewContainer.getVisibility() != 0) {
             this.mTargetView.setTranslationY((float) this.mTargetViewContainer.getHeight());
@@ -731,7 +731,7 @@ public class PipTouchHandler {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$K8tFYcJKtB3Bkuu5piDq01YhA */
 
                     public final void run() {
-                        PipTouchHandler.this.updateDismissFraction();
+                        PipTouchHandler.access$2000(PipTouchHandler.this);
                     }
                 }, new Runnable() {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$c8YgJLEypMoVYe3YjylatK650zk */
@@ -763,7 +763,8 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    public void updateMovementBounds() {
+    /* access modifiers changed from: public */
+    private void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
         this.mMotionHelper.setCurrentMovementBounds(this.mMovementBounds);
@@ -776,7 +777,8 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    public Rect getMovementBounds(Rect rect) {
+    /* access modifiers changed from: public */
+    private Rect getMovementBounds(Rect rect) {
         Rect rect2 = new Rect();
         this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
         return rect2;

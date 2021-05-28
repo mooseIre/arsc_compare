@@ -16,9 +16,10 @@ import kotlinx.coroutines.YieldKt;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/* access modifiers changed from: package-private */
 @DebugMetadata(c = "com.android.systemui.bubbles.BubbleDataRepository$persistToDisk$1", f = "BubbleDataRepository.kt", l = {R$styleable.Constraint_pathMotionArc, 109}, m = "invokeSuspend")
 /* compiled from: BubbleDataRepository.kt */
-final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
+public final class BubbleDataRepository$persistToDisk$1 extends SuspendLambda implements Function2<CoroutineScope, Continuation<? super Unit>, Object> {
     final /* synthetic */ Job $prev;
     Object L$0;
     int label;

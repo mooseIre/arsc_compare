@@ -33,8 +33,7 @@ public final class RowAnimationUtils {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void setTouchAnimatingState(ExpandableNotificationRow expandableNotificationRow, boolean z) {
+    public final void setTouchAnimatingState(ExpandableNotificationRow expandableNotificationRow, boolean z) {
         ExpandableViewState viewState;
         if (expandableNotificationRow != null && (viewState = expandableNotificationRow.getViewState()) != null) {
             viewState.setTouchAnimating(z);

@@ -10,17 +10,14 @@ import java.util.Map;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: LogcatEchoTrackerDebug.kt */
 public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
     public static final Factory Factory = new Factory(null);
     private final Map<String, LogLevel> cachedBufferLevels;
     private final Map<String, LogLevel> cachedTagLevels;
     private final ContentResolver contentResolver;
 
-    @NotNull
-    public static final LogcatEchoTrackerDebug create(@NotNull ContentResolver contentResolver2, @NotNull Looper looper) {
+    public static final LogcatEchoTrackerDebug create(ContentResolver contentResolver2, Looper looper) {
         return Factory.create(contentResolver2, looper);
     }
 
@@ -34,7 +31,10 @@ public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
         this(contentResolver2);
     }
 
-    /* compiled from: LogcatEchoTrackerDebug.kt */
+    public static final /* synthetic */ Map access$getCachedTagLevels$p(LogcatEchoTrackerDebug logcatEchoTrackerDebug) {
+        return logcatEchoTrackerDebug.cachedTagLevels;
+    }
+
     public static final class Factory {
         private Factory() {
         }
@@ -43,8 +43,7 @@ public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
             this();
         }
 
-        @NotNull
-        public final LogcatEchoTrackerDebug create(@NotNull ContentResolver contentResolver, @NotNull Looper looper) {
+        public final LogcatEchoTrackerDebug create(ContentResolver contentResolver, Looper looper) {
             Intrinsics.checkParameterIsNotNull(contentResolver, "contentResolver");
             Intrinsics.checkParameterIsNotNull(looper, "mainLooper");
             LogcatEchoTrackerDebug logcatEchoTrackerDebug = new LogcatEchoTrackerDebug(contentResolver, null);
@@ -53,22 +52,20 @@ public final class LogcatEchoTrackerDebug implements LogcatEchoTracker {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void attach(Looper looper) {
         this.contentResolver.registerContentObserver(Settings.Global.getUriFor("systemui/buffer"), true, new LogcatEchoTrackerDebug$attach$1(this, looper, new Handler(looper)));
         this.contentResolver.registerContentObserver(Settings.Global.getUriFor("systemui/tag"), true, new LogcatEchoTrackerDebug$attach$2(this, looper, new Handler(looper)));
     }
 
     @Override // com.android.systemui.log.LogcatEchoTracker
-    public synchronized boolean isBufferLoggable(@NotNull String str, @NotNull LogLevel logLevel) {
+    public synchronized boolean isBufferLoggable(String str, LogLevel logLevel) {
         Intrinsics.checkParameterIsNotNull(str, "bufferName");
         Intrinsics.checkParameterIsNotNull(logLevel, "level");
         return logLevel.ordinal() >= getLogLevel(str, "systemui/buffer", this.cachedBufferLevels).ordinal();
     }
 
     @Override // com.android.systemui.log.LogcatEchoTracker
-    public synchronized boolean isTagLoggable(@NotNull String str, @NotNull LogLevel logLevel) {
+    public synchronized boolean isTagLoggable(String str, LogLevel logLevel) {
         Intrinsics.checkParameterIsNotNull(str, "tagName");
         Intrinsics.checkParameterIsNotNull(logLevel, "level");
         return logLevel.compareTo(getLogLevel(str, "systemui/tag", this.cachedTagLevels)) >= 0;
