@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.widget.Switch;
+import android.widget.Toast;
 import androidx.appcompat.R$styleable;
 import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0020R$string;
@@ -49,6 +50,9 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleClick() {
         boolean z = !((QSTile.BooleanState) this.mState).value;
         this.mController.setRotationLockedAtAngle(z, -1);
+        if (z && !isCurrentOrientationLockPortrait(this.mController, this.mContext.getResources())) {
+            Toast.makeText(this.mContext, C0020R$string.miui_screen_rotation_freeze_message, 1).show();
+        }
         refreshState(Boolean.valueOf(z));
     }
 

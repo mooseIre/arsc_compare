@@ -101,7 +101,7 @@ public class NotificationViewHierarchyManager implements DynamicPrivacyControlle
                 }
                 notificationEntry.setSensitive(z3, isLockscreenPublicMode && !this.mLockscreenUserManager.userAllowsPrivateNotificationsInPublic(currentUserId));
                 notificationEntry.getRow().setNeedsRedaction(needsRedaction);
-                notificationEntry.getRow().setHideSensitive(this.mLockscreenUserManager.isAnyProfilePublicMode(), true, 0, 300);
+                notificationEntry.getRow().setHideSensitiveAnimIfInitialized(this.mLockscreenUserManager.isAnyProfilePublicMode());
                 this.mLowPriorityInflationHelper.recheckLowPriorityViewAndInflate(notificationEntry, notificationEntry.getRow());
                 boolean isChildInGroupWithSummary = this.mGroupManager.isChildInGroupWithSummary(notificationEntry.getSbn());
                 if (!this.mVisualStabilityManager.areGroupChangesAllowed() && notificationEntry.hasFinishedInitialization()) {

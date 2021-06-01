@@ -13,6 +13,7 @@ public final class CodeBlueConfig {
     private static final long CODE_BLUE_TRIGGER_WINDOW_MS = TimeUnit.SECONDS.toMillis(10);
     public static final Companion Companion = new Companion(null);
     private static final int FIX_CRASH_TRIGGER_COUNT = 2;
+    private static final long NOTIFICATION_TRIGGER_WINDOW_MS = TimeUnit.SECONDS.toMillis(1);
 
     /* compiled from: CodeBlue.kt */
     public static final class Companion {
@@ -33,6 +34,10 @@ public final class CodeBlueConfig {
 
         public final long getCODE_BLUE_TRIGGER_WINDOW_MS() {
             return CodeBlueConfig.CODE_BLUE_TRIGGER_WINDOW_MS;
+        }
+
+        public final long getNOTIFICATION_TRIGGER_WINDOW_MS() {
+            return CodeBlueConfig.NOTIFICATION_TRIGGER_WINDOW_MS;
         }
 
         public final void setCrashCount(@NotNull Context context, int i) {

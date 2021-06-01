@@ -1,6 +1,5 @@
 package com.android.systemui.pip.phone;
 
-import android.annotation.SuppressLint;
 import android.app.IActivityManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -24,7 +23,6 @@ import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0012R$drawable;
@@ -60,7 +58,6 @@ public class PipTouchHandler {
     private final boolean mEnableDismissDragToEdge;
     private final boolean mEnableResize;
     private Rect mExpandedBounds = new Rect();
-    @VisibleForTesting
     Rect mExpandedMovementBounds = new Rect();
     private int mExpandedShortestEdgeSize;
     private final FloatingContentCoordinator mFloatingContentCoordinator;
@@ -81,13 +78,11 @@ public class PipTouchHandler {
     private int mMovementBoundsExtraOffsets;
     private boolean mMovementWithinDismiss;
     private Rect mNormalBounds = new Rect();
-    @VisibleForTesting
     Rect mNormalMovementBounds = new Rect();
     private IPinnedStackController mPinnedStackController;
     private final PipBoundsHandler mPipBoundsHandler;
     private PipResizeGestureHandler mPipResizeGestureHandler;
     private final PipUiEventLogger mPipUiEventLogger;
-    @VisibleForTesting
     Rect mResizedBounds = new Rect();
     private float mSavedSnapFraction = -1.0f;
     private boolean mSendingHoverAccessibilityEvents;
@@ -108,8 +103,10 @@ public class PipTouchHandler {
     private final PipTouchState mTouchState;
     private final WindowManager mWindowManager;
 
-    private class PipMenuListener implements PipMenuActivityController.Listener {
+    /* access modifiers changed from: private */
+    public class PipMenuListener implements PipMenuActivityController.Listener {
         private PipMenuListener() {
+            PipTouchHandler.this = r1;
         }
 
         @Override // com.android.systemui.pip.phone.PipMenuActivityController.Listener
@@ -135,7 +132,6 @@ public class PipTouchHandler {
         }
     }
 
-    @SuppressLint({"InflateParams"})
     public PipTouchHandler(Context context, IActivityManager iActivityManager, PipMenuActivityController pipMenuActivityController, InputConsumerController inputConsumerController, PipBoundsHandler pipBoundsHandler, PipTaskOrganizer pipTaskOrganizer, FloatingContentCoordinator floatingContentCoordinator, DeviceConfigProxy deviceConfigProxy, PipSnapAlgorithm pipSnapAlgorithm, SysUiState sysUiState, PipUiEventLogger pipUiEventLogger) {
         this.mContext = context;
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
@@ -186,7 +182,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.shared.system.InputConsumerController.InputListener
             public final boolean onInputEvent(InputEvent inputEvent) {
-                return PipTouchHandler.this.handleTouchEvent(inputEvent);
+                return PipTouchHandler.lambda$A78OVgVs8H_2SG6WUxzMSclOdX0(PipTouchHandler.this, inputEvent);
             }
         });
         inputConsumerController.setRegistrationListener(new InputConsumerController.RegistrationListener() {
@@ -204,7 +200,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.pip.phone.PipAccessibilityInteractionConnection.AccessibilityCallbacks
             public final void onAccessibilityShowMenu() {
-                PipTouchHandler.this.onAccessibilityShowMenu();
+                PipTouchHandler.lambda$1nY3kLe318Fm3UtIAbDmSK80h7w(PipTouchHandler.this);
             }
         }, new Runnable() {
             /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$uINUOEMRLade2qxAeU4HH41XrU */
@@ -263,6 +259,7 @@ public class PipTouchHandler {
                 PipTouchHandler.this.mPipUiEventLogger.log(PipUiEventLogger.PipUiEventEnum.PICTURE_IN_PICTURE_DRAG_TO_REMOVE);
             }
 
+            /* access modifiers changed from: public */
             /* access modifiers changed from: private */
             /* renamed from: lambda$onReleasedInTarget$0 */
             public /* synthetic */ void lambda$onReleasedInTarget$0$PipTouchHandler$1() {
@@ -273,12 +270,14 @@ public class PipTouchHandler {
         this.mMagneticTargetAnimator = PhysicsAnimator.getInstance(this.mTargetView);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$0 */
     public /* synthetic */ void lambda$new$0$PipTouchHandler() {
         this.mMenuController.showMenuWithDelay(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$1 */
     public /* synthetic */ Unit lambda$new$1$PipTouchHandler(MagnetizedObject.MagneticTarget magneticTarget, Float f, Float f2, Boolean bool, Function0 function0) {
@@ -306,8 +305,6 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private boolean shouldShowResizeHandle() {
         return !this.mPipBoundsHandler.hasSaveReentryBounds();
     }
@@ -467,8 +464,6 @@ public class PipTouchHandler {
         return layoutParams;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void showDismissTargetMaybe() {
         createOrUpdateDismissTarget();
         if (this.mTargetViewContainer.getVisibility() != 0) {
@@ -482,8 +477,6 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void hideDismissTarget() {
         this.mHandler.removeCallbacks(this.mShowTargetAction);
         PhysicsAnimator<View> physicsAnimator = this.mMagneticTargetAnimator;
@@ -499,6 +492,7 @@ public class PipTouchHandler {
         ((TransitionDrawable) this.mTargetViewContainer.getBackground()).reverseTransition(200);
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$hideDismissTarget$2 */
     public /* synthetic */ void lambda$hideDismissTarget$2$PipTouchHandler() {
@@ -512,8 +506,6 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void onRegistrationChanged(boolean z) {
         this.mAccessibilityManager.setPictureInPictureActionReplacingConnection(z ? this.mConnection : null);
         if (!z && this.mTouchState.isUserInteracting()) {
@@ -521,13 +513,11 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void onAccessibilityShowMenu() {
         this.mMenuController.showMenu(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:57:0x00dc, code lost:
         if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x00fe;
@@ -550,8 +540,6 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void updateDismissFraction() {
         if (this.mMenuController != null && !this.mIsImeShowing) {
             Rect bounds = this.mMotionHelper.getBounds();
@@ -564,13 +552,10 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: package-private */
     public void setPinnedStackController(IPinnedStackController iPinnedStackController) {
         this.mPinnedStackController = iPinnedStackController;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void setMenuState(int i, boolean z, Runnable runnable) {
         if (this.mMenuState != i || z) {
             boolean z2 = false;
@@ -620,20 +605,14 @@ public class PipTouchHandler {
         return this.mMotionHelper;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public PipResizeGestureHandler getPipResizeGestureHandler() {
         return this.mPipResizeGestureHandler;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void setPipResizeGestureHandler(PipResizeGestureHandler pipResizeGestureHandler) {
         this.mPipResizeGestureHandler = pipResizeGestureHandler;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public void setPipMotionHelper(PipMotionHelper pipMotionHelper) {
         this.mMotionHelper = pipMotionHelper;
     }
@@ -642,13 +621,13 @@ public class PipTouchHandler {
         return this.mNormalBounds;
     }
 
-    /* access modifiers changed from: private */
     public class DefaultPipTouchGesture extends PipTouchGesture {
         private final PointF mDelta;
         private boolean mShouldHideMenuAfterFling;
         private final Point mStartPosition;
 
         private DefaultPipTouchGesture() {
+            PipTouchHandler.this = r1;
             this.mStartPosition = new Point();
             this.mDelta = new PointF();
         }
@@ -753,8 +732,6 @@ public class PipTouchHandler {
             return true;
         }
 
-        /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
         private void flingEndAction() {
             if (this.mShouldHideMenuAfterFling) {
                 PipTouchHandler.this.mMenuController.hideMenu();
@@ -762,8 +739,6 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
@@ -776,16 +751,12 @@ public class PipTouchHandler {
         pipBoundsHandler.setMinEdgeSize(i);
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private Rect getMovementBounds(Rect rect) {
         Rect rect2 = new Rect();
         this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
         return rect2;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private boolean willResizeMenu() {
         if (!this.mEnableResize) {
             return false;

@@ -94,11 +94,11 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.media.extra.AUDIO_MIC_PLUG_STATE");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mIntentReceiver, intentFilter, this.mHandler);
-        this.mIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_quiet_mode, null);
+        this.mIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_quiet_mode, this.mResources.getString(C0020R$string.quick_settings_quietmode_label));
         this.mIconController.setIconVisibility(this.mSlotZen, false);
         this.mIconController.setIcon(this.mSlotSyncActive, C0012R$drawable.stat_sys_sync, null);
         this.mIconController.setIconVisibility(this.mSlotSyncActive, false);
-        this.mIconController.setIcon(this.mSlotLocation, C0012R$drawable.stat_sys_gps_on, this.mResources.getString(C0020R$string.accessibility_location_active));
+        this.mIconController.setIcon(this.mSlotLocation, C0012R$drawable.stat_sys_gps_on, this.mContext.getString(C0020R$string.quick_settings_location_label));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
         this.mIconController.setIcon(this.mSlotRotate, C0012R$drawable.stat_sys_rotate_portrait, null);
         this.mIconController.setIconVisibility(this.mSlotRotate, false);
@@ -112,7 +112,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mIconController.setIconVisibility(this.mSlotMicphone, false);
         this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotVolume, C0012R$drawable.stat_sys_ringer_vibrate, this.mContext.getString(C0020R$string.accessibility_ringer_vibrate));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotVolume, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_quiet_mode, null);
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_quiet_mode, this.mResources.getString(C0020R$string.quick_settings_quietmode_label));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotZen, false);
         initVloumeZen();
         this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotHeadset, C0012R$drawable.stat_sys_headset, this.mResources.getString(C0020R$string.accessibility_status_bar_headset));
@@ -127,6 +127,8 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         this.mStatusBarManager.setIconVisibility("speakerphone", false);
         this.mStatusBarManager.setIcon("call_record", C0012R$drawable.stat_sys_call_record, 0, null);
         this.mStatusBarManager.setIconVisibility("call_record", false);
+        this.mStatusBarManager.setIcon("stealth", C0012R$drawable.stat_sys_stealth_mode, 0, null);
+        this.mStatusBarManager.setIconVisibility("stealth", false);
         ((MiuiAlarmControllerImpl) Dependency.get(MiuiAlarmControllerImpl.class)).addCallback((MiuiAlarmController$MiuiAlarmChangeCallback) this);
     }
 
@@ -152,6 +154,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             boolean isBluetoothEnabled = bluetoothController.isBluetoothEnabled();
             boolean isBluetoothConnected = this.mBluetooth.isBluetoothConnected();
             if (!isBluetoothEnabled) {
+                Log.d("MiuiPhoneStatusBarPolicy", "hide bluetooth battery");
                 this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, false);
             }
             if (isBluetoothConnected) {
@@ -363,7 +366,7 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             z = true;
         }
         if (i != 0) {
-            this.mIconController.setIcon(this.mSlotLocation, i, null);
+            this.mIconController.setIcon(this.mSlotLocation, i, this.mContext.getString(C0020R$string.quick_settings_location_label));
         }
         this.mIconController.setIconVisibility(this.mSlotLocation, z);
     }

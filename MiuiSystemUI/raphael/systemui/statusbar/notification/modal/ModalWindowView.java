@@ -467,8 +467,13 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             layoutParams.width = i2;
             setLayoutParams(layoutParams);
         }
-        removeModalDialogImmediately();
-        reAddEntry(this.mEntry);
+        NotificationEntry notificationEntry = this.mEntry;
+        if (notificationEntry == null || notificationEntry.getModalRow() != null) {
+            removeModalDialogImmediately();
+            reAddEntry(this.mEntry);
+            return;
+        }
+        ((ModalController) Dependency.get(ModalController.class)).exitModalImmediately();
     }
 
     private void reAddEntry(NotificationEntry notificationEntry) {

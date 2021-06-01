@@ -1,16 +1,18 @@
 package com.android.systemui.qs.tiles;
 
 import android.app.ActivityManager;
-import android.app.AlertDialog;
 import android.app.UiModeManager;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.os.SystemProperties;
+import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Switch;
+import com.android.settingslib.util.MiStatInterfaceUtils;
+import com.android.settingslib.util.OneTrackInterfaceUtils;
 import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0020R$string;
@@ -19,8 +21,10 @@ import com.android.systemui.Prefs;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
+import miuix.appcompat.app.AlertDialog;
 
 public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
+    private String DARK_MODE_OPEN_BEFORE_TIME_MODE = "dark_mode_open_before_time_mode";
     private ContentObserver mNightModeObserver = new ContentObserver(this.mHandler) {
         /* class com.android.systemui.qs.tiles.NightModeTile.AnonymousClass1 */
 
@@ -67,6 +71,9 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
             i = 2;
         }
         uiModeManager.setNightMode(i);
+        MiStatInterfaceUtils.trackSwitchEvent("darkMode", z);
+        OneTrackInterfaceUtils.trackSwitchEvent("darkMode", z);
+        MiuiSettings.System.putBoolean(this.mContext.getContentResolver(), this.DARK_MODE_OPEN_BEFORE_TIME_MODE, z);
         if (z && this.mShowAlert) {
             Prefs.putBoolean(this.mContext, "QsShowNightAlert", false);
             this.mShowAlert = false;
@@ -142,7 +149,10 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public void run() {
-            AlertDialog create = new AlertDialog.Builder(((QSTileImpl) NightModeTile.this).mContext, C0021R$style.Theme_Dialog_Alert).setMessage(C0020R$string.qs_open_night_mode_alert_summary).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+            AlertDialog.Builder builder = new AlertDialog.Builder(((QSTileImpl) NightModeTile.this).mContext, C0021R$style.Theme_Dialog_Alert);
+            builder.setMessage(C0020R$string.qs_open_night_mode_alert_summary);
+            builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
+            AlertDialog create = builder.create();
             create.getWindow().setType(2010);
             create.show();
         }

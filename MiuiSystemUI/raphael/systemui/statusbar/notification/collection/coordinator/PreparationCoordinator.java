@@ -17,12 +17,14 @@ import com.android.systemui.statusbar.notification.collection.listbuilder.OnBefo
 import com.android.systemui.statusbar.notification.collection.listbuilder.pluggable.NotifFilter;
 import com.android.systemui.statusbar.notification.collection.notifcollection.NotifCollectionListener;
 import com.android.systemui.statusbar.notification.row.NotifInflationErrorManager;
+import com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
 public class PreparationCoordinator implements Coordinator {
+    private static final int CHILD_BIND_CUTOFF = (NotificationChildrenContainer.NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED + 1);
     private final int mChildBindCutoff;
     private final Set<NotificationEntry> mInflatingNotifs;
     private final NotifInflationErrorManager.NotifInflationErrorListener mInflationErrorListener;
@@ -38,7 +40,7 @@ public class PreparationCoordinator implements Coordinator {
     private final NotifViewBarn mViewBarn;
 
     public PreparationCoordinator(PreparationCoordinatorLogger preparationCoordinatorLogger, NotifInflaterImpl notifInflaterImpl, NotifInflationErrorManager notifInflationErrorManager, NotifViewBarn notifViewBarn, IStatusBarService iStatusBarService) {
-        this(preparationCoordinatorLogger, notifInflaterImpl, notifInflationErrorManager, notifViewBarn, iStatusBarService, 9);
+        this(preparationCoordinatorLogger, notifInflaterImpl, notifInflationErrorManager, notifViewBarn, iStatusBarService, CHILD_BIND_CUTOFF);
     }
 
     @VisibleForTesting

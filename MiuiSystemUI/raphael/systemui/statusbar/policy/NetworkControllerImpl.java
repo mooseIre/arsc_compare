@@ -722,6 +722,9 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
                 }
             default:
                 int intExtra6 = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1);
+                if (intExtra6 == -1) {
+                    intExtra6 = intent.getIntExtra("subscription", -1);
+                }
                 if (!SubscriptionManager.isValidSubscriptionId(intExtra6)) {
                     this.mWifiSignalController.handleBroadcast(intent);
                     return;

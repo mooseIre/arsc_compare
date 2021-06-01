@@ -20,6 +20,7 @@ import com.android.systemui.statusbar.views.NetworkSpeedSplitter;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 
 public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment implements RegionController.Callback, ControlPanelWindowManager.OnExpandChangeListener {
+    private boolean mControlPanelExpand;
     private ControlPanelWindowManager mControlPanelWindowManager;
     private int mDisable1;
     private StatusBarIconController.DarkIconManager mDripLeftDarkIconManager;
@@ -71,6 +72,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_splitter);
         this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_view);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
+        this.mControlPanelExpand = this.mControlPanelWindowManager.isExpand();
         this.mControlPanelWindowManager.addExpandChangeListener(this);
     }
 
@@ -86,9 +88,6 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
 
     @Override // com.android.systemui.statusbar.CommandQueue.Callbacks, com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void disable(int i, int i2, int i3, boolean z) {
-        if (this.mControlPanelWindowManager.isPanelExpanded()) {
-            z = false;
-        }
         this.mDisable1 = i2;
         super.disable(i, i2, i3, z);
     }
@@ -97,16 +96,13 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public int adjustDisableFlags(int i) {
         int adjustDisableFlags = super.adjustDisableFlags(i);
-        return this.mControlPanelWindowManager.isWindowShow() ? 8388608 | 131072 | adjustDisableFlags | 1048576 : adjustDisableFlags;
+        return this.mControlPanelExpand ? 8388608 | 131072 | adjustDisableFlags | 1048576 : adjustDisableFlags;
     }
 
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public int clockHiddenMode() {
-        if ((this.mDisable1 & 8388608) != 0) {
-            return 8;
-        }
-        return super.clockHiddenMode();
+        return (this.mDisable1 & 8388608) != 0 ? 8 : 4;
     }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
@@ -153,40 +149,18 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
             networkSpeedSplitter.animate().cancel();
             if (!z) {
                 this.mDripNetworkSpeedSplitter.setAlpha(0.0f);
-                this.mDripNetworkSpeedSplitter.setVisibilityByDisableInfo(i);
-                return;
+            } else {
+                this.mDripNetworkSpeedSplitter.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT);
             }
-            this.mDripNetworkSpeedSplitter.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable(i) {
-                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiCollapsedStatusBarFragment$XgjLBVG_k9i0Qm6JCAVkLt9_8E */
-                public final /* synthetic */ int f$1;
-
-                {
-                    this.f$1 = r2;
-                }
-
-                public final void run() {
-                    MiuiCollapsedStatusBarFragment.this.lambda$hideNetworkSpeedSplitter$0$MiuiCollapsedStatusBarFragment(this.f$1);
-                }
-            });
         }
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$hideNetworkSpeedSplitter$0 */
-    public /* synthetic */ void lambda$hideNetworkSpeedSplitter$0$MiuiCollapsedStatusBarFragment(int i) {
-        this.mDripNetworkSpeedSplitter.setVisibilityByDisableInfo(i);
     }
 
     public void showNetworkSpeedSplitter(boolean z) {
         this.mDripNetworkSpeedSplitter.animate().cancel();
-        this.mDripNetworkSpeedSplitter.setVisibilityByDisableInfo(0);
         if (!z) {
             this.mDripNetworkSpeedSplitter.setAlpha(1.0f);
-            return;
-        }
-        this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
-        if (this.mKeyguardStateController.isKeyguardFadingAway()) {
-            this.mDripNetworkSpeedSplitter.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
+        } else {
+            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
         }
     }
 
@@ -214,7 +188,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
                 return;
             }
             this.mDripNetworkSpeedView.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).withEndAction(new Runnable(i) {
-                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiCollapsedStatusBarFragment$21ZiEwIBLGqXEQcYfaOr5QmZJI */
+                /* class com.android.systemui.statusbar.phone.$$Lambda$MiuiCollapsedStatusBarFragment$DnTL_J8vxJTRsAQew0NC20A9ieY */
                 public final /* synthetic */ int f$1;
 
                 {
@@ -222,15 +196,15 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
                 }
 
                 public final void run() {
-                    MiuiCollapsedStatusBarFragment.this.lambda$animateHideDripNetworkSpeedView$1$MiuiCollapsedStatusBarFragment(this.f$1);
+                    MiuiCollapsedStatusBarFragment.this.lambda$animateHideDripNetworkSpeedView$0$MiuiCollapsedStatusBarFragment(this.f$1);
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$animateHideDripNetworkSpeedView$1 */
-    public /* synthetic */ void lambda$animateHideDripNetworkSpeedView$1$MiuiCollapsedStatusBarFragment(int i) {
+    /* renamed from: lambda$animateHideDripNetworkSpeedView$0 */
+    public /* synthetic */ void lambda$animateHideDripNetworkSpeedView$0$MiuiCollapsedStatusBarFragment(int i) {
         this.mDripNetworkSpeedView.setVisibilityByDisableInfo(i);
     }
 
@@ -270,8 +244,11 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
 
     @Override // com.android.systemui.controlcenter.phone.ControlPanelWindowManager.OnExpandChangeListener
     public void onExpandChange(boolean z) {
-        if (getContext() != null && getContext().getDisplay() != null) {
-            this.mCommandQueue.recomputeDisableFlags(getContext().getDisplay().getDisplayId(), false);
+        if (this.mControlPanelExpand != z) {
+            this.mControlPanelExpand = z;
+            if (getContext() != null && getContext().getDisplay() != null) {
+                this.mCommandQueue.recomputeDisableFlags(getContext().getDisplay().getDisplayId(), false);
+            }
         }
     }
 }

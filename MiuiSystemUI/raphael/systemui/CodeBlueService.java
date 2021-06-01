@@ -23,6 +23,7 @@ public final class CodeBlueService {
     private final EventTracker eventTracker;
     @Nullable
     private String latestNotificationPkgName;
+    private long latestNotificationTimeMillis;
 
     public CodeBlueService(@NotNull Context context2, @NotNull Looper looper, @NotNull NotificationEntryManager notificationEntryManager, @NotNull EventTracker eventTracker2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
@@ -47,6 +48,14 @@ public final class CodeBlueService {
 
     public final void setLatestNotificationPkgName(@Nullable String str) {
         this.latestNotificationPkgName = str;
+    }
+
+    public final long getLatestNotificationTimeMillis() {
+        return this.latestNotificationTimeMillis;
+    }
+
+    public final void setLatestNotificationTimeMillis(long j) {
+        this.latestNotificationTimeMillis = j;
     }
 
     public final void start() {

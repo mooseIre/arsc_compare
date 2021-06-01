@@ -22,8 +22,9 @@ import android.widget.TextView;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.util.Utils;
-import miui.app.AlertDialog;
+import miuix.appcompat.app.AlertDialog;
 
 public class MediaProjectionPermissionActivity extends Activity implements DialogInterface.OnClickListener, DialogInterface.OnCancelListener {
     private AlertDialog mDialog;
@@ -94,7 +95,13 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 }
                 View inflate = View.inflate(this, C0016R$layout.media_projection_dialog_title, null);
                 ((TextView) inflate.findViewById(C0014R$id.dialog_title)).setText(str2);
-                AlertDialog create = new AlertDialog.Builder(this, 8).setCustomTitle(inflate).setMessage(str).setPositiveButton(C0020R$string.media_projection_action_text, this).setNegativeButton(17039360, this).setOnCancelListener(this).create();
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, C0021R$style.AlertDialog_Theme_DayNight);
+                builder.setCustomTitle(inflate);
+                builder.setMessage(str);
+                builder.setPositiveButton(C0020R$string.media_projection_action_text, this);
+                builder.setNegativeButton(17039360, this);
+                builder.setOnCancelListener(this);
+                AlertDialog create = builder.create();
                 this.mDialog = create;
                 create.create();
                 this.mDialog.getButton(-1).setFilterTouchesWhenObscured(true);
@@ -157,18 +164,18 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
             android.util.Log.e(r3, r0, r2)     // Catch:{ all -> 0x000f }
             r2 = 0
             r1.setResult(r2)     // Catch:{ all -> 0x000f }
-            miui.app.AlertDialog r2 = r1.mDialog
+            miuix.appcompat.app.AlertDialog r2 = r1.mDialog
             if (r2 == 0) goto L_0x0034
             goto L_0x0031
         L_0x0022:
-            miui.app.AlertDialog r3 = r1.mDialog
+            miuix.appcompat.app.AlertDialog r3 = r1.mDialog
             if (r3 == 0) goto L_0x0029
             r3.dismiss()
         L_0x0029:
             r1.finish()
             throw r2
         L_0x002d:
-            miui.app.AlertDialog r2 = r1.mDialog
+            miuix.appcompat.app.AlertDialog r2 = r1.mDialog
             if (r2 == 0) goto L_0x0034
         L_0x0031:
             r2.dismiss()

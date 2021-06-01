@@ -16,6 +16,7 @@ public class QCBrightnessMirrorController {
     private final View mContent;
     private final ControlPanelContentView mControlPanelContentView;
     private final int[] mInt2Cache = new int[2];
+    private boolean mIsMirror = false;
     private FrameLayout mMirrorContent;
     private View mQSBrightness;
 
@@ -28,6 +29,7 @@ public class QCBrightnessMirrorController {
     }
 
     public void showMirror() {
+        this.mIsMirror = true;
         if (this.mQSBrightness == null) {
             this.mQSBrightness = this.mContent.findViewById(C0014R$id.qs_brightness);
         }
@@ -44,6 +46,7 @@ public class QCBrightnessMirrorController {
     }
 
     public void hideMirror() {
+        this.mIsMirror = false;
         inAnimation(this.mContent.animate()).withLayer().withStartAction(new Runnable() {
             /* class com.android.systemui.controlcenter.qs.tileview.$$Lambda$QCBrightnessMirrorController$6x4k8CXt4z15SmXjJtzjW9FffXs */
 
@@ -73,6 +76,10 @@ public class QCBrightnessMirrorController {
     /* renamed from: lambda$hideMirror$0 */
     public /* synthetic */ void lambda$hideMirror$0$QCBrightnessMirrorController() {
         this.mQSBrightness.setVisibility(0);
+    }
+
+    public boolean isMirrorShowing() {
+        return this.mIsMirror;
     }
 
     private ViewPropertyAnimator outAnimation(ViewPropertyAnimator viewPropertyAnimator) {

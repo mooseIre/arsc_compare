@@ -211,8 +211,12 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         Intrinsics.checkExpressionValueIsNotNull(contentView2, "contentView");
         contentView2.setAlpha(f);
         ExpandableViewState viewState = getViewState();
+        int i = 0;
         if (viewState != null) {
-            setTranslationZ(viewState.zTranslation * f);
+            float f5 = viewState.zTranslation * f;
+            if (!Float.isInfinite(f5) && !Float.isNaN(f5)) {
+                setTranslationZ(f5);
+            }
         }
         ImageView mMiniWindowIcon = getMMiniWindowIcon();
         Intrinsics.checkExpressionValueIsNotNull(mMiniWindowIcon, "mMiniWindowIcon");
@@ -222,7 +226,6 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         mMiniWindowIcon2.setTransitionAlpha(f2);
         ImageView mMiniWindowIcon3 = getMMiniWindowIcon();
         Intrinsics.checkExpressionValueIsNotNull(mMiniWindowIcon3, "mMiniWindowIcon");
-        int i = 0;
         if (f > ((float) 0)) {
             i = 8;
         }

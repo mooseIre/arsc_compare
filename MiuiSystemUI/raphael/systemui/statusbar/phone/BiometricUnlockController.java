@@ -539,6 +539,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
     public void onBiometricAuthFailed(BiometricSourceType biometricSourceType) {
         if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
+            if (!MiuiKeyguardUtils.isBroadSideFingerprint() && ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceUnlockSuccessAndStayScreen()) {
+                showBouncer();
+            }
         }
         this.mMetricsLogger.write(new LogMaker(1697).setType(11).setSubtype(toSubtype(biometricSourceType)));
         Optional ofNullable = Optional.ofNullable(BiometricUiEvent.FAILURE_EVENT_BY_SOURCE_TYPE.get(biometricSourceType));
@@ -593,6 +596,9 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
         }
         if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
+            if (!MiuiKeyguardUtils.isBroadSideFingerprint() && ((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceUnlockSuccessAndStayScreen()) {
+                showBouncer();
+            }
         }
         if (biometricSourceType == BiometricSourceType.FACE && i == 3 && this.mHasFace) {
             showBouncer();

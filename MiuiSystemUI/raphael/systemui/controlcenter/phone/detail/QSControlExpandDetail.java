@@ -123,7 +123,7 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
 
         @Override // com.android.systemui.qs.MiuiQSDetailItems.Callback
         public void onDetailItemClick(MiuiQSDetailItems.Item item) {
-            if (item != null && item.tag != null) {
+            if (item != null && item.tag != null && this.mItems != null) {
                 ExpandInfoController.Info info = QSControlExpandDetail.this.mExpandInfoController.getInfosMap().get(item.tag);
                 if (info.initialized) {
                     this.mItems.setItemClicked(true);

@@ -80,10 +80,7 @@ public class Utils {
     }
 
     public static boolean useMediaResumption(Context context) {
-        int i = Settings.Secure.getInt(context.getContentResolver(), "qs_media_resumption", 1);
-        if (!useQsMediaPlayer(context) || i <= 0) {
-            return false;
-        }
-        return true;
+        Settings.Secure.getInt(context.getContentResolver(), "qs_media_resumption", 1);
+        return false;
     }
 }

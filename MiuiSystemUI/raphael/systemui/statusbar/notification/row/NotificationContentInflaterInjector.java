@@ -78,7 +78,7 @@ public class NotificationContentInflaterInjector {
         if ((i & 8) != 0) {
             inflationProgress.newPublicView = createMiuiPublicView(builder, context2);
         }
-        inflationProgress.packageContext = context2;
+        inflationProgress.packageContext = context;
         inflationProgress.headsUpStatusBarText = builder.getHeadsUpStatusBarText(false);
         inflationProgress.headsUpStatusBarTextPublic = builder.getHeadsUpStatusBarText(true);
         return inflationProgress;

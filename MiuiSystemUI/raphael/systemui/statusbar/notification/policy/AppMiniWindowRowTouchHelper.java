@@ -154,32 +154,34 @@ public final class AppMiniWindowRowTouchHelper {
     }
 
     private final void onMiniWindowTrackingStart() {
-        this.mMaxTriggerThreshold = this.mContext.getResources().getDimension(C0011R$dimen.mini_window_max_trigger_threshold);
-        this.mTriggerThreshold = this.mContext.getResources().getDimension(C0011R$dimen.mini_window_trigger_threshold);
-        MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
-        if (miuiExpandableNotificationRow != null) {
-            miuiExpandableNotificationRow.setExpandAnimationRunning(true);
-            this.mTrackingMiniWindowRow = true;
-            MiuiExpandableNotificationRow miuiExpandableNotificationRow2 = this.mPickedMiniWindowChild;
-            if (miuiExpandableNotificationRow2 != null) {
-                this.mExpandedParams.setStartPosition(miuiExpandableNotificationRow2.getLocationOnScreen());
-                this.mExpandedParams.setStartTranslationZ(miuiExpandableNotificationRow2.getTranslationZ());
-                this.mExpandedParams.setStartClipTopAmount(miuiExpandableNotificationRow2.getClipTopAmount());
-                this.mExpandedParams.setStartWidth(this.mPickedChildWidth);
-                this.mExpandedParams.setStartHeight(this.mPickedChildHeight);
-                this.mExpandedParams.setLeft(this.mPickedChildLeft);
-                this.mExpandedParams.setTop(this.mPickedChildTop);
-                this.mExpandedParams.setRight(this.mPickedChildRight);
-                this.mExpandedParams.setBackgroundAlpha(1.0f);
-                this.mExpandedParams.setIconAlpha(0.0f);
-                this.mTouchCallback.onMiniWindowTrackingStart();
-                return;
+        if (this.mPickedMiniWindowChild != null) {
+            this.mMaxTriggerThreshold = this.mContext.getResources().getDimension(C0011R$dimen.mini_window_max_trigger_threshold);
+            this.mTriggerThreshold = this.mContext.getResources().getDimension(C0011R$dimen.mini_window_trigger_threshold);
+            MiuiExpandableNotificationRow miuiExpandableNotificationRow = this.mPickedMiniWindowChild;
+            if (miuiExpandableNotificationRow != null) {
+                miuiExpandableNotificationRow.setExpandAnimationRunning(true);
+                this.mTrackingMiniWindowRow = true;
+                MiuiExpandableNotificationRow miuiExpandableNotificationRow2 = this.mPickedMiniWindowChild;
+                if (miuiExpandableNotificationRow2 != null) {
+                    this.mExpandedParams.setStartPosition(miuiExpandableNotificationRow2.getLocationOnScreen());
+                    this.mExpandedParams.setStartTranslationZ(miuiExpandableNotificationRow2.getTranslationZ());
+                    this.mExpandedParams.setStartClipTopAmount(miuiExpandableNotificationRow2.getClipTopAmount());
+                    this.mExpandedParams.setStartWidth(this.mPickedChildWidth);
+                    this.mExpandedParams.setStartHeight(this.mPickedChildHeight);
+                    this.mExpandedParams.setLeft(this.mPickedChildLeft);
+                    this.mExpandedParams.setTop(this.mPickedChildTop);
+                    this.mExpandedParams.setRight(this.mPickedChildRight);
+                    this.mExpandedParams.setBackgroundAlpha(1.0f);
+                    this.mExpandedParams.setIconAlpha(0.0f);
+                    this.mTouchCallback.onMiniWindowTrackingStart();
+                    return;
+                }
+                Intrinsics.throwNpe();
+                throw null;
             }
             Intrinsics.throwNpe();
             throw null;
         }
-        Intrinsics.throwNpe();
-        throw null;
     }
 
     private final void onMiniWindowTracking(float f) {

@@ -1,6 +1,5 @@
 package com.android.systemui.qs.tiles;
 
-import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +14,7 @@ import com.android.systemui.C0021R$style;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
+import miuix.appcompat.app.AlertDialog;
 
 public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
     protected boolean mHasButtons;
@@ -132,7 +132,10 @@ public class ScreenButtonTile extends QSTileImpl<QSTile.BooleanState> {
 
         public void run() {
             if (this.value == 0) {
-                AlertDialog create = new AlertDialog.Builder(((QSTileImpl) ScreenButtonTile.this).mContext, C0021R$style.Theme_Dialog_Alert).setMessage(286195790).setPositiveButton(17039370, (DialogInterface.OnClickListener) null).create();
+                AlertDialog.Builder builder = new AlertDialog.Builder(((QSTileImpl) ScreenButtonTile.this).mContext, C0021R$style.Theme_Dialog_Alert);
+                builder.setMessage(286195790);
+                builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
+                AlertDialog create = builder.create();
                 create.getWindow().setType(2010);
                 create.show();
             }

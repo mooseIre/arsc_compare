@@ -86,8 +86,8 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         }
     }
 
-    public void setBlurRatio(float f, boolean z) {
-        applyBlurRatio(f, z);
+    public void setBlurRatio(float f) {
+        applyBlurRatio(f);
     }
 
     public void collapsePanel(boolean z) {
@@ -146,6 +146,10 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         return this.added;
     }
 
+    public boolean isExpand() {
+        return this.mIsExpand;
+    }
+
     public void addExpandChangeListener(OnExpandChangeListener onExpandChangeListener) {
         this.mOnExpandChangeListeners.add(onExpandChangeListener);
     }
@@ -167,15 +171,13 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
         }
     }
 
-    private void applyBlurRatio(float f, boolean z) {
+    private void applyBlurRatio(float f) {
         if (hasAdded()) {
             Log.d("ControlPanelWindowManager", "setBlurRatio: " + f);
-            if (z) {
-                BlurUtil.setBlurWithWindowManager(this.mControlPanel.getViewRootImpl(), f, 0, this.mLpChanged);
+            BlurUtil.setBlurWithWindowManager(this.mControlPanel.getViewRootImpl(), f, 0, this.mLpChanged);
+            if (f == 0.0f || f == 1.0f) {
                 apply();
-                return;
             }
-            BlurUtil.setBlur(this.mControlPanel.getViewRootImpl(), f, 0);
         }
     }
 
@@ -221,10 +223,6 @@ public class ControlPanelWindowManager implements OnHeadsUpChangedListener {
             return controlPanelWindowView.isExpanded();
         }
         return false;
-    }
-
-    public boolean isWindowShow() {
-        return this.mIsExpand;
     }
 
     public void updateNavigationBarSlippery() {

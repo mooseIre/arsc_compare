@@ -199,7 +199,7 @@ public class PipMediaController {
 
                 @Override // java.util.function.Consumer
                 public final void accept(Object obj) {
-                    ((PipMediaController.ActionListener) obj).onMediaActionsChanged(this.f$0);
+                    PipMediaController.lambda$notifyActionsChanged$1(this.f$0, (PipMediaController.ActionListener) obj);
                 }
             });
         }

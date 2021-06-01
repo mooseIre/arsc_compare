@@ -38,7 +38,7 @@ public class NotificationBadgeController {
             boolean booleanExtra = intent.getBooleanExtra("com.miui.extra_update_request_first_time", false);
             Log.d("NotifBadge", "recevie broadbcast ACTION_APPLICATION_MESSAGE_QUERY, requestFirstTime=" + booleanExtra);
             if (booleanExtra) {
-                new ArrayList(NotificationBadgeController.this.mEntryManager.getVisibleNotifications()).stream().filter(new Predicate(ConcurrentHashMap.newKeySet()) {
+                new ArrayList(NotificationBadgeController.this.mEntryManager.getActiveNotificationsForCurrentUser()).stream().filter(new Predicate(ConcurrentHashMap.newKeySet()) {
                     /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationBadgeController$1$0mL3CghvQ1p7y9g_5i3XGE7mrBc */
                     public final /* synthetic */ Set f$0;
 
@@ -98,7 +98,7 @@ public class NotificationBadgeController {
         boolean canShowBadge = NotificationSettingsHelper.canShowBadge(packageName, null);
         int i2 = 0;
         if (canShowBadge) {
-            List<NotificationEntry> list = (List) this.mEntryManager.getVisibleNotifications().stream().filter(new Predicate() {
+            List<NotificationEntry> list = (List) this.mEntryManager.getActiveNotificationsForCurrentUser().stream().filter(new Predicate() {
                 /* class com.android.systemui.statusbar.notification.policy.$$Lambda$NotificationBadgeController$ZhLIvBsM7w4Mj28WNhyGMzN0h7w */
 
                 @Override // java.util.function.Predicate

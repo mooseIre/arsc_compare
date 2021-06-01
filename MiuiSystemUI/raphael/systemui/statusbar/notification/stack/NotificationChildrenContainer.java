@@ -28,11 +28,13 @@ import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
 import com.android.systemui.statusbar.notification.row.HybridGroupManager;
 import com.android.systemui.statusbar.notification.row.wrapper.NotificationHeaderViewWrapper;
 import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewWrapper;
+import com.miui.systemui.DebugConfig;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationChildrenContainer extends ViewGroup {
     private static final AnimationProperties ALPHA_FADE_IN;
+    public static final int NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED = (DebugConfig.DEBUG_NOTIFICATION ? 500 : 8);
     @VisibleForTesting
     public static final int NUMBER_OF_CHILDREN_WHEN_COLLAPSED = 3;
     @VisibleForTesting
@@ -168,7 +170,7 @@ public class NotificationChildrenContainer extends ViewGroup {
 
     /* access modifiers changed from: protected */
     public void onLayout(boolean z, int i, int i2, int i3, int i4) {
-        int min = Math.min(this.mAttachedChildren.size(), 8);
+        int min = Math.min(this.mAttachedChildren.size(), NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED);
         for (int i5 = 0; i5 < min; i5++) {
             ExpandableNotificationRow expandableNotificationRow = this.mAttachedChildren.get(i5);
             expandableNotificationRow.layout(0, 0, expandableNotificationRow.getMeasuredWidth(), expandableNotificationRow.getMeasuredHeight());
@@ -213,7 +215,7 @@ public class NotificationChildrenContainer extends ViewGroup {
         }
         int makeMeasureSpec = View.MeasureSpec.makeMeasureSpec(this.mDividerHeight, 1073741824);
         int i4 = this.mNotificationHeaderMargin + this.mNotificatonTopPadding;
-        int min = Math.min(this.mAttachedChildren.size(), 8);
+        int min = Math.min(this.mAttachedChildren.size(), NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED);
         int maxAllowedVisibleChildren = getMaxAllowedVisibleChildren(true);
         int i5 = min > maxAllowedVisibleChildren ? maxAllowedVisibleChildren - 1 : -1;
         int i6 = 0;
@@ -528,7 +530,7 @@ public class NotificationChildrenContainer extends ViewGroup {
     @VisibleForTesting
     public int getMaxAllowedVisibleChildren(boolean z) {
         if (!z && ((this.mChildrenExpanded || this.mContainingNotification.isUserLocked()) && !showingAsLowPriority())) {
-            return 8;
+            return NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED;
         }
         if (this.mIsLowPriority) {
             return 5;
@@ -819,7 +821,7 @@ public class NotificationChildrenContainer extends ViewGroup {
         int i2 = this.mNotificationHeaderMargin + this.mCurrentHeaderTranslation + this.mNotificatonTopPadding;
         int size = this.mAttachedChildren.size();
         int i3 = 0;
-        for (int i4 = 0; i4 < size && i3 < 8; i4++) {
+        for (int i4 = 0; i4 < size && i3 < NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED; i4++) {
             ExpandableNotificationRow expandableNotificationRow = this.mAttachedChildren.get(i4);
             if (expandableNotificationRow.isExpanded(true)) {
                 i = expandableNotificationRow.getMaxExpandHeight();

@@ -47,7 +47,7 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
     public static final Companion Companion = new Companion(null);
     private static final Uri URI = Settings.Secure.getUriFor("controls_enabled");
     private AuxiliaryPersistenceWrapper auxiliaryPersistenceWrapper;
-    private boolean available = Companion.access$isAvailable(Companion, getCurrentUserId(), getContentResolver());
+    private boolean available = Companion.isAvailable(getCurrentUserId(), getContentResolver());
     private final ControlsBindingController bindingController;
     private final BroadcastDispatcher broadcastDispatcher;
     private final Context context;
@@ -134,16 +134,16 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         this.listingController.addCallback(this.listingCallback);
     }
 
+    public static final /* synthetic */ ControlsFavoritePersistenceWrapper access$getPersistenceWrapper$p(ControlsControllerImpl controlsControllerImpl) {
+        return controlsControllerImpl.persistenceWrapper;
+    }
+
     public static final class Companion {
         private Companion() {
         }
 
         public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
             this();
-        }
-
-        public static final /* synthetic */ boolean access$isAvailable(Companion companion, int i, ContentResolver contentResolver) {
-            return companion.isAvailable(i, contentResolver);
         }
 
         private final boolean isAvailable(int i, ContentResolver contentResolver) {
@@ -158,7 +158,6 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         return userHandle.getIdentifier();
     }
 
-    /* access modifiers changed from: public */
     private final ContentResolver getContentResolver() {
         ContentResolver contentResolver = this.context.getContentResolver();
         Intrinsics.checkExpressionValueIsNotNull(contentResolver, "context.contentResolver");
@@ -189,14 +188,13 @@ public final class ControlsControllerImpl implements Dumpable, ControlsControlle
         File auxiliaryFile = this.userStructure.getAuxiliaryFile();
         Intrinsics.checkExpressionValueIsNotNull(auxiliaryFile, "userStructure.auxiliaryFile");
         auxiliaryPersistenceWrapper2.changeFile(auxiliaryFile);
-        this.available = Companion.access$isAvailable(Companion, userHandle.getIdentifier(), getContentResolver());
+        this.available = Companion.isAvailable(userHandle.getIdentifier(), getContentResolver());
         resetFavorites(getAvailable());
         this.bindingController.changeUser(userHandle);
         this.listingController.changeUser(userHandle);
         this.userChanging = false;
     }
 
-    /* access modifiers changed from: public */
     private final void resetFavorites(boolean z) {
         Favorites.INSTANCE.clear();
         if (z) {

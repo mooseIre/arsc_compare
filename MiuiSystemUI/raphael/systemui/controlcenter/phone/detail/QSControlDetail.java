@@ -39,7 +39,6 @@ import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.analytics.SystemUIStat;
 import com.miui.systemui.anim.PhysicBasedInterpolator;
 import java.util.Collection;
-import miui.widget.SlidingButton;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
 import miuix.animation.base.AnimConfig;
@@ -47,6 +46,7 @@ import miuix.animation.controller.AnimState;
 import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
 import miuix.animation.property.ViewProperty;
+import miuix.slidingwidget.widget.SlidingButton;
 
 public class QSControlDetail extends FrameLayout {
     private float detailCornerRadius;
@@ -206,9 +206,9 @@ public class QSControlDetail extends FrameLayout {
         View findViewById2 = findViewById(C0014R$id.qs_control_detail_header);
         this.mQsDetailHeader = findViewById2;
         this.mQsDetailHeaderTitle = (TextView) findViewById2.findViewById(16908310);
-        SlidingButton findViewById3 = this.mQsDetailHeader.findViewById(16908311);
-        this.mQsDetailHeaderSwitch = findViewById3;
-        findViewById3.setFocusable(true);
+        SlidingButton slidingButton = (SlidingButton) this.mQsDetailHeader.findViewById(16908311);
+        this.mQsDetailHeaderSwitch = slidingButton;
+        slidingButton.setFocusable(true);
         this.mQsDetailHeaderSwitch.setFocusableInTouchMode(true);
         this.mQsDetailHeaderSwitch.setImportantForAccessibility(1);
         this.mQsDetailHeaderSwitch.setContentDescription(this.mContext.getResources().getString(C0020R$string.accessibility_detail_switch));

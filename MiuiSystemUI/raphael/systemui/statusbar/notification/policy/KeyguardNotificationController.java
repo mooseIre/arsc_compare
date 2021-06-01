@@ -286,7 +286,7 @@ public class KeyguardNotificationController {
         contentValues.put("title", TextUtils.isEmpty(appName) ? str : appName.toString());
         contentValues.put("content", TextUtils.isEmpty(hiddenText) ? str : hiddenText.toString());
         contentValues.put("time", getTimeText(notificationEntry));
-        contentValues.put("info", this.mSortedKeys.toString());
+        contentValues.put("info", new ArrayList(this.mSortedKeys).toString());
         if (!TextUtils.isEmpty(charSequence)) {
             str = charSequence.toString();
         }

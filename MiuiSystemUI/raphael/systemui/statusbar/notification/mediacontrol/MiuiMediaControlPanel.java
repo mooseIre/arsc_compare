@@ -31,12 +31,9 @@ import miuix.animation.Folme;
 import miuix.animation.base.AnimConfig;
 
 public class MiuiMediaControlPanel extends MediaControlPanel {
-    private final int COLLAPSED_GAP;
-    private final int COLLAPSED_GAP_EXTRA;
-    private final int EXPANDED_GAP;
-    private int collapsedCount = 0;
-    private int direction;
-    private int expandedCount = 0;
+    private final int ACTION_GAP;
+    private int actionCount = 0;
+    private final int direction;
     private final MiuiMediaTransferManager mMediaTransferManager;
     private final Set<AsyncTask<?, ?, ?>> mProcessArtworkTasks = new ArraySet();
 
@@ -44,9 +41,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         super(context, executor, activityStarter, mediaViewController, seekBarViewModel);
         this.mMediaTransferManager = miuiMediaTransferManager;
         this.direction = this.mContext.getResources().getConfiguration().getLayoutDirection();
-        this.COLLAPSED_GAP_EXTRA = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_collapsed_extra);
-        this.COLLAPSED_GAP = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_collapsed_gap);
-        this.EXPANDED_GAP = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_expanded_gap);
+        this.ACTION_GAP = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_action_gap);
     }
 
     @Override // com.android.systemui.media.MediaControlPanel
@@ -143,18 +138,16 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
     private void setMediaActions(MediaData mediaData, PlayerViewHolder playerViewHolder, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
         boolean z;
         int[] iArr = MediaControlPanel.ACTION_IDS;
-        List<Integer> actionsToShowInCompact = mediaData.getActionsToShowInCompact();
         List<MediaAction> actions = mediaData.getActions();
         int i = 0;
-        int i2 = 0;
         while (true) {
             z = true;
             if (i >= actions.size() || i >= iArr.length) {
-                constraintSet2.constrainWidth(C0014R$id.actions, this.COLLAPSED_GAP_EXTRA + (this.COLLAPSED_GAP * i2));
-                constraintSet.constrainWidth(C0014R$id.actions, this.EXPANDED_GAP * i);
+                constraintSet2.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
+                constraintSet.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
             } else {
-                int i3 = iArr[i];
-                ImageButton action = playerViewHolder.getAction(i3);
+                int i2 = iArr[i];
+                ImageButton action = playerViewHolder.getAction(i2);
                 MediaAction mediaAction = actions.get(i);
                 action.setImageDrawable(mediaAction.getDrawable());
                 action.setContentDescription(mediaAction.getContentDescription());
@@ -192,22 +185,17 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
                 } else {
                     action.setEnabled(false);
                 }
-                boolean contains = actionsToShowInCompact.contains(Integer.valueOf(i));
-                if (contains) {
-                    i2++;
-                }
-                setVisibleAndAlpha(constraintSet2, i3, contains);
-                setVisibleAndAlpha(constraintSet, i3, true);
+                setVisibleAndAlpha(constraintSet2, i2, true);
+                setVisibleAndAlpha(constraintSet, i2, true);
                 i++;
             }
         }
-        constraintSet2.constrainWidth(C0014R$id.actions, this.COLLAPSED_GAP_EXTRA + (this.COLLAPSED_GAP * i2));
-        constraintSet.constrainWidth(C0014R$id.actions, this.EXPANDED_GAP * i);
-        if (this.collapsedCount == i2 && this.expandedCount == i) {
-            z = false;
+        constraintSet2.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
+        constraintSet.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
+        if (this.actionCount != i) {
+            this.actionCount = i;
         } else {
-            this.collapsedCount = i2;
-            this.expandedCount = i;
+            z = false;
         }
         while (i < iArr.length) {
             setVisibleAndAlpha(constraintSet, iArr[i], false);

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
@@ -20,7 +21,7 @@ import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.views.ClickableToast;
-import miui.app.AlertDialog;
+import miuix.appcompat.app.AlertDialog;
 
 public class HeadsUpManagerInjector {
     private static boolean sSnoozeNotify = false;
@@ -109,7 +110,10 @@ public class HeadsUpManagerInjector {
 
     private static void showDialog(Context context) {
         int i = Settings.Global.getInt(context.getContentResolver(), "miui_float_notification_snooze_strategy", 0);
-        AlertDialog create = new AlertDialog.Builder(context, 8).setTitle(context.getString(C0020R$string.float_notification_snooze_strategy)).setSingleChoiceItems(initSnoozeSummary(context), i, new DialogInterface.OnClickListener(context) {
+        String[] initSnoozeSummary = initSnoozeSummary(context);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context, C0021R$style.AlertDialog_Theme_DayNight);
+        builder.setTitle(context.getString(C0020R$string.float_notification_snooze_strategy));
+        builder.setSingleChoiceItems(initSnoozeSummary, i, new DialogInterface.OnClickListener(context) {
             /* class com.android.systemui.statusbar.policy.$$Lambda$HeadsUpManagerInjector$v1XSqS80ySw2ok_fG0cknhSyWzg */
             public final /* synthetic */ Context f$0;
 
@@ -120,7 +124,9 @@ public class HeadsUpManagerInjector {
             public final void onClick(DialogInterface dialogInterface, int i) {
                 HeadsUpManagerInjector.lambda$showDialog$1(this.f$0, dialogInterface, i);
             }
-        }).setNegativeButton(C0020R$string.miui_snooze_cancel, (DialogInterface.OnClickListener) null).setOnDismissListener(new DialogInterface.OnDismissListener(context) {
+        });
+        builder.setNegativeButton(C0020R$string.miui_snooze_cancel, (DialogInterface.OnClickListener) null);
+        builder.setOnDismissListener(new DialogInterface.OnDismissListener(context) {
             /* class com.android.systemui.statusbar.policy.$$Lambda$HeadsUpManagerInjector$KLmL1shOzZ9PNNSlPBgquT3Idg */
             public final /* synthetic */ Context f$0;
 
@@ -131,7 +137,8 @@ public class HeadsUpManagerInjector {
             public final void onDismiss(DialogInterface dialogInterface) {
                 HeadsUpManagerInjector.lambda$showDialog$2(this.f$0, dialogInterface);
             }
-        }).create();
+        });
+        AlertDialog create = builder.create();
         create.getWindow().setType(2003);
         create.show();
     }

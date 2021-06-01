@@ -14,64 +14,102 @@ import android.os.Looper;
 import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
-import androidx.constraintlayout.widget.R$styleable;
+import codeinjection.CodeInjection;
 import com.android.systemui.C0020R$string;
-import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
-import com.miui.systemui.statusbar.phone.DriveModeObserver;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.concurrent.CopyOnWriteArrayList;
 
-public class NetworkSpeedController implements DriveModeObserver.Callback {
+public class NetworkSpeedController {
     private Handler mBgHandler;
     private ConnectivityManager mConnectivityManager;
     private BroadcastReceiver mConnectivityReceiver = new BroadcastReceiver() {
-        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass2 */
+        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass4 */
 
         public void onReceive(Context context, Intent intent) {
             if ("android.net.conn.CONNECTIVITY_CHANGE".equals(intent.getAction())) {
-                NetworkSpeedController.this.mBgHandler.removeMessages(R$styleable.Constraint_layout_goneMarginTop);
-                NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R$styleable.Constraint_layout_goneMarginTop);
-                NetworkSpeedController.this.postUpdateNetworkSpeed();
+                NetworkSpeedController.this.updateNetworkConnected();
             } else if ("android.intent.action.USER_SWITCHED".equals(intent.getAction())) {
-                NetworkSpeedController.this.mBgHandler.removeMessages(100);
-                NetworkSpeedController.this.mBgHandler.sendEmptyMessage(100);
-                NetworkSpeedController.this.postUpdateNetworkSpeed();
+                NetworkSpeedController.this.updateShowNetworkSpeed();
             }
         }
     };
     private Context mContext;
-    private boolean mDisabled;
-    protected boolean mDriveMode;
+    private boolean mDriveMode;
+    private ContentObserver mDriveModeObserver;
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
-        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass3 */
+        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass5 */
 
         public void handleMessage(Message message) {
-            if (message.what == 200000) {
-                boolean z = message.arg1 != 0;
-                NetworkSpeedController.this.setVisibilityToViewList(z);
-                if (z) {
-                    long longValue = ((Long) message.obj).longValue();
-                    NetworkSpeedController networkSpeedController = NetworkSpeedController.this;
-                    networkSpeedController.setTextToViewList(NetworkSpeedController.formatSpeed(networkSpeedController.mContext, longValue));
-                }
+            boolean booleanValue;
+            boolean booleanValue2;
+            boolean booleanValue3;
+            switch (message.what) {
+                case 100001:
+                    Object obj = message.obj;
+                    if ((obj instanceof Boolean) && (booleanValue = ((Boolean) obj).booleanValue()) != NetworkSpeedController.this.mNetworkConnected) {
+                        NetworkSpeedController.this.mNetworkConnected = booleanValue;
+                        NetworkSpeedController.this.updateVisibility();
+                        if (NetworkSpeedController.this.mVisible) {
+                            NetworkSpeedController.this.postUpdateNetworkSpeed();
+                            return;
+                        } else {
+                            NetworkSpeedController.this.mBgHandler.removeMessages(200001);
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+                case 100002:
+                    Object obj2 = message.obj;
+                    if ((obj2 instanceof Boolean) && NetworkSpeedController.this.mShowNetworkSpeed != (booleanValue2 = ((Boolean) obj2).booleanValue())) {
+                        NetworkSpeedController.this.mShowNetworkSpeed = booleanValue2;
+                        NetworkSpeedController.this.updateVisibility();
+                        if (NetworkSpeedController.this.mVisible) {
+                            NetworkSpeedController.this.postUpdateNetworkSpeed();
+                            return;
+                        } else {
+                            NetworkSpeedController.this.mBgHandler.removeMessages(200001);
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+                case 100003:
+                    Object obj3 = message.obj;
+                    if ((obj3 instanceof Boolean) && NetworkSpeedController.this.mDriveMode != (booleanValue3 = ((Boolean) obj3).booleanValue())) {
+                        NetworkSpeedController.this.mDriveMode = booleanValue3;
+                        NetworkSpeedController.this.updateVisibility();
+                        if (NetworkSpeedController.this.mVisible) {
+                            NetworkSpeedController.this.postUpdateNetworkSpeed();
+                            return;
+                        } else {
+                            NetworkSpeedController.this.mBgHandler.removeMessages(200001);
+                            return;
+                        }
+                    } else {
+                        return;
+                    }
+                case 100004:
+                    if (message.obj instanceof Long) {
+                        NetworkSpeedController networkSpeedController = NetworkSpeedController.this;
+                        networkSpeedController.updateText(NetworkSpeedController.formatSpeed(networkSpeedController.mContext, ((Long) message.obj).longValue()));
+                        return;
+                    }
+                    return;
+                default:
+                    return;
             }
         }
     };
-    private boolean mIsNetworkConnected;
     private long mLastTime;
-    private ContentObserver mNetworkSpeedObserver = new ContentObserver(new Handler()) {
-        /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass1 */
-
-        public void onChange(boolean z) {
-            NetworkSpeedController.this.mBgHandler.removeMessages(R$styleable.Constraint_layout_goneMarginRight);
-            NetworkSpeedController.this.mBgHandler.sendEmptyMessage(R$styleable.Constraint_layout_goneMarginRight);
-            NetworkSpeedController.this.postUpdateNetworkSpeed();
-        }
-    };
-    private int mNetworkUpdateInterval;
+    private boolean mNetworkConnected;
+    private boolean mShowNetworkSpeed;
+    private ContentObserver mShowNetworkSpeedObserver;
+    private String mText = CodeInjection.MD5;
     private long mTotalBytes;
-    private CopyOnWriteArrayList<NetworkSpeedView> mViewList = new CopyOnWriteArrayList<>();
+    private ArrayList<NetworkSpeedView> mViewList = new ArrayList<>();
+    private boolean mVisible;
 
     public NetworkSpeedController(Context context, Looper looper) {
         this.mContext = context;
@@ -81,44 +119,66 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         intentFilter.addAction("android.intent.action.USER_SWITCHED");
         this.mContext.registerReceiverAsUser(this.mConnectivityReceiver, UserHandle.CURRENT, intentFilter, null, this.mBgHandler);
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_network_speed"), true, this.mNetworkSpeedObserver, -1);
-        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_network_speed_interval"), true, this.mNetworkSpeedObserver, -1);
-        this.mNetworkSpeedObserver.onChange(true);
-        ((DriveModeObserver) Dependency.get(DriveModeObserver.class)).addCallback(this);
+        this.mShowNetworkSpeedObserver = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass1 */
+
+            public void onChange(boolean z) {
+                NetworkSpeedController.this.updateShowNetworkSpeed();
+            }
+        };
+        this.mDriveModeObserver = new ContentObserver(this.mBgHandler) {
+            /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass2 */
+
+            public void onChange(boolean z) {
+                NetworkSpeedController.this.updateDriveMode();
+            }
+        };
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("status_bar_show_network_speed"), true, this.mShowNetworkSpeedObserver, -1);
+        this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("drive_mode_drive_mode"), true, this.mDriveModeObserver, -1);
+        this.mBgHandler.post(new Runnable() {
+            /* class com.android.systemui.statusbar.NetworkSpeedController.AnonymousClass3 */
+
+            public void run() {
+                NetworkSpeedController.this.updateDriveMode();
+                NetworkSpeedController.this.updateShowNetworkSpeed();
+                NetworkSpeedController.this.updateNetworkConnected();
+            }
+        });
     }
 
     public void addToViewList(NetworkSpeedView networkSpeedView) {
-        this.mViewList.add(networkSpeedView);
-        postUpdateNetworkSpeed();
+        if (this.mViewList.indexOf(networkSpeedView) == -1) {
+            this.mViewList.add(networkSpeedView);
+            networkSpeedView.setNetworkSpeed(this.mText);
+            networkSpeedView.setVisibilityByController(this.mVisible);
+        }
     }
 
     public void removeFromViewList(NetworkSpeedView networkSpeedView) {
         this.mViewList.remove(networkSpeedView);
-        postUpdateNetworkSpeed();
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void setTextToViewList(CharSequence charSequence) {
-        CopyOnWriteArrayList<NetworkSpeedView> copyOnWriteArrayList = this.mViewList;
-        if (copyOnWriteArrayList != null) {
-            Iterator<NetworkSpeedView> it = copyOnWriteArrayList.iterator();
-            while (it.hasNext()) {
-                it.next().setText(charSequence);
-            }
-        }
+    private void updateShowNetworkSpeed() {
+        this.mHandler.obtainMessage(100002, Boolean.valueOf(MiuiStatusBarManager.isShowNetworkSpeedForUser(this.mContext, -2))).sendToTarget();
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void setVisibilityToViewList(boolean z) {
-        CopyOnWriteArrayList<NetworkSpeedView> copyOnWriteArrayList = this.mViewList;
-        if (copyOnWriteArrayList != null) {
-            Iterator<NetworkSpeedView> it = copyOnWriteArrayList.iterator();
-            while (it.hasNext()) {
-                it.next().setVisibilityByController(z);
-            }
+    private void updateNetworkConnected() {
+        NetworkInfo activeNetworkInfo = this.mConnectivityManager.getActiveNetworkInfo();
+        this.mHandler.obtainMessage(100001, Boolean.valueOf(activeNetworkInfo != null && activeNetworkInfo.isConnected())).sendToTarget();
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void updateDriveMode() {
+        boolean z = false;
+        if (Settings.System.getIntForUser(this.mContext.getContentResolver(), "drive_mode_drive_mode", 0, -2) == 1) {
+            z = true;
         }
+        this.mHandler.obtainMessage(100003, Boolean.valueOf(z)).sendToTarget();
     }
 
     private long getTotalByte() {
@@ -130,68 +190,29 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
     }
 
     private void postUpdateNetworkSpeedDelay(long j) {
-        this.mBgHandler.removeMessages(R$styleable.Constraint_layout_goneMarginStart);
-        this.mBgHandler.sendEmptyMessageDelayed(R$styleable.Constraint_layout_goneMarginStart, j);
-    }
-
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateSwitchState() {
-        this.mDisabled = !MiuiStatusBarManager.isShowNetworkSpeedForUser(this.mContext, -2);
-    }
-
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateInterval() {
-        this.mNetworkUpdateInterval = Settings.System.getInt(this.mContext.getContentResolver(), "status_bar_network_speed_interval", 4000);
-    }
-
-    public boolean isDemoOrDrive() {
-        return this.mDriveMode;
+        this.mBgHandler.removeMessages(200001);
+        this.mBgHandler.sendEmptyMessageDelayed(200001, j);
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateNetworkSpeed() {
-        Message obtain = Message.obtain();
-        obtain.what = 200000;
-        long j = 0;
-        if (isDemoOrDrive() || this.mDisabled || !this.mIsNetworkConnected) {
-            obtain.arg1 = 0;
-            this.mHandler.removeMessages(200000);
-            this.mHandler.sendMessage(obtain);
-            this.mLastTime = 0;
-            this.mTotalBytes = 0;
-            return;
-        }
+        Message obtainMessage = this.mHandler.obtainMessage(100004);
         long currentTimeMillis = System.currentTimeMillis();
         long totalByte = getTotalByte();
-        if (totalByte == 0) {
-            this.mLastTime = 0;
-            this.mTotalBytes = 0;
-            totalByte = getTotalByte();
-        }
-        long j2 = this.mLastTime;
-        if (j2 != 0 && currentTimeMillis > j2) {
+        long j = this.mLastTime;
+        long j2 = 0;
+        if (j != 0 && currentTimeMillis > j) {
             long j3 = this.mTotalBytes;
             if (!(j3 == 0 || totalByte == 0 || totalByte <= j3)) {
-                j = ((totalByte - j3) * 1000) / (currentTimeMillis - j2);
+                j2 = ((totalByte - j3) * 1000) / (currentTimeMillis - j);
             }
         }
-        obtain.arg1 = 1;
-        obtain.obj = Long.valueOf(j);
-        this.mHandler.removeMessages(200000);
-        this.mHandler.sendMessage(obtain);
         this.mLastTime = currentTimeMillis;
         this.mTotalBytes = totalByte;
-        postUpdateNetworkSpeedDelay((long) this.mNetworkUpdateInterval);
-    }
-
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateConnectedState() {
-        NetworkInfo activeNetworkInfo = this.mConnectivityManager.getActiveNetworkInfo();
-        this.mIsNetworkConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        obtainMessage.obj = Long.valueOf(j2);
+        obtainMessage.sendToTarget();
+        postUpdateNetworkSpeedDelay(4000);
     }
 
     /* access modifiers changed from: private */
@@ -211,34 +232,49 @@ public class NetworkSpeedController implements DriveModeObserver.Callback {
         return context.getResources().getString(C0020R$string.network_speed_suffix, str, context.getString(i));
     }
 
-    @Override // com.miui.systemui.statusbar.phone.DriveModeObserver.Callback
-    public void onDriveModeChanged(boolean z) {
-        this.mDriveMode = z;
-        postUpdateNetworkSpeed();
+    private void clearNetworkSpeed() {
+        this.mHandler.removeMessages(100004);
+        this.mLastTime = 0;
+        this.mTotalBytes = 0;
+        updateText(CodeInjection.MD5);
     }
 
-    private final class WorkHandler extends Handler {
-        WorkHandler(Looper looper) {
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void updateVisibility() {
+        boolean z = !this.mDriveMode && this.mShowNetworkSpeed && this.mNetworkConnected;
+        if (this.mVisible != z) {
+            this.mVisible = z;
+            if (!z) {
+                clearNetworkSpeed();
+            }
+            Iterator<NetworkSpeedView> it = this.mViewList.iterator();
+            while (it.hasNext()) {
+                it.next().setVisibilityByController(z);
+            }
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private void updateText(String str) {
+        if (!this.mText.equals(str)) {
+            this.mText = str;
+            Iterator<NetworkSpeedView> it = this.mViewList.iterator();
+            while (it.hasNext()) {
+                it.next().setNetworkSpeed(str);
+            }
+        }
+    }
+
+    private class WorkHandler extends Handler {
+        public WorkHandler(Looper looper) {
             super(looper);
         }
 
         public void handleMessage(Message message) {
-            switch (message.what) {
-                case R$styleable.Constraint_layout_goneMarginLeft:
-                    NetworkSpeedController.this.updateSwitchState();
-                    return;
-                case R$styleable.Constraint_layout_goneMarginRight:
-                    NetworkSpeedController.this.updateSwitchState();
-                    NetworkSpeedController.this.updateInterval();
-                    return;
-                case R$styleable.Constraint_layout_goneMarginStart:
-                    NetworkSpeedController.this.updateNetworkSpeed();
-                    return;
-                case R$styleable.Constraint_layout_goneMarginTop:
-                    NetworkSpeedController.this.updateConnectedState();
-                    return;
-                default:
-                    return;
+            if (message.what == 200001) {
+                NetworkSpeedController.this.updateNetworkSpeed();
             }
         }
     }

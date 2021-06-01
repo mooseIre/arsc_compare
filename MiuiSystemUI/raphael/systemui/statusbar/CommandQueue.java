@@ -25,6 +25,7 @@ import com.android.systemui.statusbar.policy.CallbackController;
 import com.android.systemui.tracing.ProtoTracer;
 import java.util.ArrayList;
 import java.util.Iterator;
+import miui.os.Build;
 
 public class CommandQueue extends IStatusBar.Stub implements CallbackController<Callbacks>, DisplayManager.DisplayListener {
     private ArrayList<Callbacks> mCallbacks = new ArrayList<>();
@@ -290,7 +291,10 @@ public class CommandQueue extends IStatusBar.Stub implements CallbackController<
     }
 
     public void recomputeDisableFlags(int i, boolean z) {
-        disable(i, getDisabled1(i), getDisabled2(i), false);
+        if (Build.IS_MIUI_LITE_VERSION) {
+            z = false;
+        }
+        disable(i, getDisabled1(i), getDisabled2(i), z);
     }
 
     private void setDisabled(int i, int i2, int i3) {

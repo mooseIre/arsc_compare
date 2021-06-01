@@ -92,7 +92,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 ControlPanelWindowView.this.mBlurRatio = f;
                 ControlPanelWindowView.this.setAlpha(f);
                 if (ControlPanelWindowView.this.mControlPanelWindowManager != null && !ControlPanelWindowView.this.mControlPanelController.isNCSwitching()) {
-                    ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio, false);
+                    ControlPanelWindowView.this.mControlPanelWindowManager.setBlurRatio(ControlPanelWindowView.this.mBlurRatio);
                 }
             }
 
@@ -257,7 +257,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 z = true;
             }
             this.mIsSwipeCollapse = Boolean.valueOf(z);
-        } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing()) {
+        } else if (this.mContent.isDetailShowing() || this.mContent.isEditShowing() || this.mContent.isControlEditShowing() || this.mContent.isMirrorShowing()) {
             return this.mIsIntercept;
         } else {
             if (this.mIsMove && isBottomAreaTouchDown(this.mDownY) && motionEvent.getRawY() < this.mDownY && this.mIsMoveY && this.mControlCenterPanel.shouldCollapseByBottomTouch()) {
@@ -361,7 +361,7 @@ public class ControlPanelWindowView extends FrameLayout {
                 this.mBlurAmin.setup("blurRatioSetup").to("blurRatio", Float.valueOf(max), this.mBlurAnimConfig);
             } else {
                 this.mBlurAmin.setup("blurRatioSetup").setTo("blurRatio", Float.valueOf(this.mBlurRatio));
-                this.mControlPanelWindowManager.setBlurRatio(max, false);
+                this.mControlPanelWindowManager.setBlurRatio(max);
             }
             float f2 = this.mExpandHeight;
             this.mExpandHeight = f;

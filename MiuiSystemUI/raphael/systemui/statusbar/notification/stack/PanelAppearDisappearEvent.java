@@ -30,9 +30,20 @@ public final class PanelAppearDisappearEvent extends NotificationStackScrollLayo
             return PanelAppearDisappearEvent.INTERPOLATOR;
         }
 
-        public final void animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull View view, boolean z, @Nullable Animator.AnimatorListener animatorListener) {
+        public static /* synthetic */ void animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(Companion companion, View view, boolean z, Animator.AnimatorListener animatorListener, boolean z2, int i, Object obj) {
+            if ((i & 4) != 0) {
+                z2 = false;
+            }
+            companion.animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(view, z, animatorListener, z2);
+        }
+
+        public final void animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull View view, boolean z, @Nullable Animator.AnimatorListener animatorListener, boolean z2) {
             Intrinsics.checkParameterIsNotNull(view, "$this$animateAppearDisappear");
             ViewPropertyAnimator animate = view.animate();
+            if (z2) {
+                animate.cancel();
+                view.setVisibility(0);
+            }
             animate.setDuration(450);
             animate.setInterpolator(PanelAppearDisappearEvent.Companion.getINTERPOLATOR());
             float f = 0.8f;
@@ -54,7 +65,7 @@ public final class PanelAppearDisappearEvent extends NotificationStackScrollLayo
 
         public final void animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull View view, boolean z) {
             Intrinsics.checkParameterIsNotNull(view, "$this$animateAppearDisappear");
-            animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(view, z, null);
+            animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core$default(this, view, z, null, false, 4, null);
         }
     }
 

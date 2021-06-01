@@ -997,6 +997,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         if (!this.mVisible) {
             this.mChargeUIEntering = false;
             this.mUpArrowEntering = false;
+            this.mUpArrowIndication = this.mResources.getString(C0020R$string.default_lockscreen_unlock_hint_text);
             updateIndication(false);
         } else if (this.mPowerPluggedIn) {
             this.mUpArrowIndication = null;

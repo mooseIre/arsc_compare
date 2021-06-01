@@ -235,14 +235,16 @@ public final class ModalController {
 
     /* access modifiers changed from: private */
     public final void exitModal(String str) {
-        ((NotificationStat) Dependency.get(NotificationStat.class)).onExitModal(this.entry, str);
-        this.isModal = false;
-        this.modalWindowManager.hide();
-        this.modalRow = null;
-        this.entry = null;
-        Iterator<T> it = this.onModalChangeListeners.iterator();
-        while (it.hasNext()) {
-            it.next().onChange(false);
+        if (this.entry != null) {
+            ((NotificationStat) Dependency.get(NotificationStat.class)).onExitModal(this.entry, str);
+            this.isModal = false;
+            this.modalWindowManager.hide();
+            this.modalRow = null;
+            this.entry = null;
+            Iterator<T> it = this.onModalChangeListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onChange(false);
+            }
         }
     }
 

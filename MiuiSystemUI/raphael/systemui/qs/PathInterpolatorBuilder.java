@@ -79,7 +79,8 @@ public class PathInterpolatorBuilder {
         return new PathInterpolator(this.mDist, this.mY);
     }
 
-    private static class PathInterpolator extends BaseInterpolator {
+    /* access modifiers changed from: private */
+    public static class PathInterpolator extends BaseInterpolator {
         private final float[] mX;
         private final float[] mY;
 

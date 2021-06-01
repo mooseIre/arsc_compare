@@ -8,7 +8,7 @@ import android.view.View;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SystemUIRootComponent;
 import com.android.systemui.fragments.FragmentService;
-import com.android.systemui.qs.QSFragment;
+import com.android.systemui.qs.MiuiQSFragment;
 import com.android.systemui.statusbar.phone.NavigationBarFragment;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import java.io.FileDescriptor;
@@ -34,7 +34,7 @@ public class FragmentService implements Dumpable {
     public interface FragmentCreator {
         NavigationBarFragment createNavigationBarFragment();
 
-        QSFragment createQSFragment();
+        MiuiQSFragment createQSFragment();
     }
 
     public FragmentService(SystemUIRootComponent systemUIRootComponent, ConfigurationController configurationController) {

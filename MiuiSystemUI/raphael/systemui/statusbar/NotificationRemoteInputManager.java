@@ -131,7 +131,7 @@ public class NotificationRemoteInputManager implements Dumpable {
                 String key = sbn.getKey();
                 int indexOfChild = (view.getId() != 16908698 || parent == null || !(parent instanceof ViewGroup)) ? -1 : ((ViewGroup) parent).indexOfChild(view);
                 int activeNotificationsCount = NotificationRemoteInputManager.this.mEntryManager.getActiveNotificationsCount();
-                int rank = NotificationRemoteInputManager.this.mEntryManager.getActiveNotificationUnfiltered(key).getRanking().getRank();
+                int rank = notificationEntry.getRanking().getRank();
                 Notification.Action[] actionArr = sbn.getNotification().actions;
                 if (actionArr == null || num.intValue() >= actionArr.length) {
                     Log.w("NotifRemoteInputManager", "statusBarNotification.getNotification().actions is null or invalid");

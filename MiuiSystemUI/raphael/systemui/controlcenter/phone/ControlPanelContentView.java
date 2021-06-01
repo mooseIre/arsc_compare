@@ -12,6 +12,7 @@ import com.android.systemui.controlcenter.phone.controls.ControlsEditController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
 import com.android.systemui.controlcenter.phone.customize.QSControlCustomizer;
 import com.android.systemui.controlcenter.phone.detail.QSControlDetail;
+import com.android.systemui.controlcenter.phone.widget.ControlCenterBrightnessView;
 import com.android.systemui.controlcenter.phone.widget.MiuiQSPanel$MiuiRecord;
 import com.android.systemui.qs.QSTileHost;
 import com.miui.systemui.analytics.SystemUIStat;
@@ -20,6 +21,7 @@ import com.miui.systemui.events.QuickTilesEditEvent;
 
 public class ControlPanelContentView extends FrameLayout {
     private Context mContext;
+    private ControlCenterBrightnessView mControlCenterBrightnessView;
     private ControlCenterPanelView mControlCenterPanelView;
     private ControlPanelWindowManager mControlPanelWindowManager;
     private ControlsEditController mControlsEditController;
@@ -52,6 +54,7 @@ public class ControlPanelContentView extends FrameLayout {
         QSControlCustomizer qSControlCustomizer = (QSControlCustomizer) findViewById(C0014R$id.qs_customize);
         this.mQSCustomizer = qSControlCustomizer;
         qSControlCustomizer.setQSControlCenterPanel(this);
+        this.mControlCenterBrightnessView = (ControlCenterBrightnessView) findViewById(C0014R$id.brightness_container);
         ImageView imageView = (ImageView) findViewById(C0014R$id.tiles_edit);
         this.mTilesEdit = imageView;
         imageView.setOnClickListener(new View.OnClickListener() {
@@ -97,7 +100,7 @@ public class ControlPanelContentView extends FrameLayout {
     }
 
     public void setControlPanelWindowBlurRatio(float f) {
-        this.mControlPanelWindowManager.setBlurRatio(f, false);
+        this.mControlPanelWindowManager.setBlurRatio(f);
     }
 
     public void showExpandDetail(boolean z, MiuiQSPanel$MiuiRecord miuiQSPanel$MiuiRecord) {
@@ -115,6 +118,10 @@ public class ControlPanelContentView extends FrameLayout {
     public boolean isControlEditShowing() {
         ControlsEditController controlsEditController = this.mControlsEditController;
         return controlsEditController != null && controlsEditController.isShown();
+    }
+
+    public boolean isMirrorShowing() {
+        return this.mControlCenterBrightnessView.isMirrorShowing();
     }
 
     public QSControlDetail getDetailView() {

@@ -215,7 +215,7 @@ public class PipMenuActivity extends Activity {
             public boolean performAccessibilityAction(View view, int i, Bundle bundle) {
                 if (i == 16 && PipMenuActivity.this.mMenuState == 1) {
                     Message obtain = Message.obtain();
-                    obtain.what = R$styleable.Constraint_progress;
+                    obtain.what = R$styleable.Constraint_pathMotionArc;
                     PipMenuActivity.this.sendMessage(obtain, "Could not notify controller to show PIP menu");
                 }
                 return super.performAccessibilityAction(view, i, bundle);
@@ -583,7 +583,7 @@ public class PipMenuActivity extends Activity {
     /* access modifiers changed from: private */
     /* renamed from: lambda$expandPip$7 */
     public /* synthetic */ void lambda$expandPip$7$PipMenuActivity() {
-        sendEmptyMessage(R$styleable.Constraint_layout_goneMarginRight, "Could not notify controller to expand PIP");
+        sendEmptyMessage(R$styleable.Constraint_layout_goneMarginLeft, "Could not notify controller to expand PIP");
     }
 
     private void dismissPip() {
@@ -599,7 +599,7 @@ public class PipMenuActivity extends Activity {
     /* access modifiers changed from: private */
     /* renamed from: lambda$dismissPip$8 */
     public /* synthetic */ void lambda$dismissPip$8$PipMenuActivity() {
-        sendEmptyMessage(R$styleable.Constraint_layout_goneMarginTop, "Could not notify controller to dismiss PIP");
+        sendEmptyMessage(R$styleable.Constraint_layout_goneMarginStart, "Could not notify controller to dismiss PIP");
     }
 
     private void showSettings() {
@@ -615,7 +615,7 @@ public class PipMenuActivity extends Activity {
 
     private void notifyActivityCallback(Messenger messenger) {
         Message obtain = Message.obtain();
-        obtain.what = R$styleable.Constraint_motionStagger;
+        obtain.what = R$styleable.Constraint_layout_goneMarginTop;
         obtain.replyTo = messenger;
         obtain.arg1 = this.mResize ? 1 : 0;
         sendMessage(obtain, "Could not notify controller of activity finished");

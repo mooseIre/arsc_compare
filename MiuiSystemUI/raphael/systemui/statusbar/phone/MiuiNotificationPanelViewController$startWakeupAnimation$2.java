@@ -2,6 +2,7 @@ package com.android.systemui.statusbar.phone;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import com.miui.systemui.util.CommonUtil;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +17,7 @@ public final class MiuiNotificationPanelViewController$startWakeupAnimation$2 ex
 
     public void onAnimationStart(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animator");
-        if (this.this$0.wakefulnessLifecycle.getWakefulness() == 1 || this.this$0.wakefulnessLifecycle.getWakefulness() == 2) {
+        if (CommonUtil.isWakeUp(this.this$0.wakefulnessLifecycle)) {
             this.this$0.mKeyguardPanelViewInjector.setVisibility(0);
         }
     }

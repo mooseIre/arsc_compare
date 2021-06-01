@@ -9,9 +9,8 @@ import com.android.systemui.statusbar.policy.MiuiClock;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 
 public class NetworkSpeedSplitter extends TextView implements MiuiClock.ClockVisibilityListener, NetworkSpeedView.NetworkSpeedVisibilityListener, DarkIconDispatcher.DarkReceiver {
-    private boolean mClockVisible;
-    private boolean mNetworkSpeedVisible;
-    private int mVisibilityByDisableInfo;
+    private int mClockVisibility;
+    private int mNetworkSpeedVisibility;
 
     public NetworkSpeedSplitter(Context context) {
         this(context, null);
@@ -31,24 +30,26 @@ public class NetworkSpeedSplitter extends TextView implements MiuiClock.ClockVis
     }
 
     @Override // com.android.systemui.statusbar.policy.MiuiClock.ClockVisibilityListener
-    public void onClockVisibilityChanged(boolean z) {
-        this.mClockVisible = z;
+    public void onClockVisibilityChanged(int i) {
+        this.mClockVisibility = i;
         updateVisibility();
     }
 
     @Override // com.android.systemui.statusbar.views.NetworkSpeedView.NetworkSpeedVisibilityListener
-    public void onNetworkSpeedVisibilityChanged(boolean z) {
-        this.mNetworkSpeedVisible = z;
+    public void onNetworkSpeedVisibilityChanged(int i) {
+        this.mNetworkSpeedVisibility = i;
         updateVisibility();
     }
 
     private void updateVisibility() {
-        setVisibility((!this.mClockVisible || !this.mNetworkSpeedVisible) ? 8 : this.mVisibilityByDisableInfo);
-    }
-
-    public void setVisibilityByDisableInfo(int i) {
-        this.mVisibilityByDisableInfo = i;
-        updateVisibility();
+        int i = 4;
+        if (!(this.mNetworkSpeedVisibility == 4 || this.mClockVisibility == 4)) {
+            i = 0;
+        }
+        if (this.mNetworkSpeedVisibility == 8 || this.mClockVisibility == 8) {
+            i = 8;
+        }
+        setVisibility(i);
     }
 
     @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver

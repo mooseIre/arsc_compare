@@ -15,7 +15,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
-import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -64,6 +63,7 @@ import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.assist.AssistManager;
+import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.doze.util.BurnInHelperKt;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.IntentButtonProvider;
@@ -75,15 +75,16 @@ import com.android.systemui.statusbar.policy.FlashlightController;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.tuner.LockscreenFragment;
 import com.android.systemui.tuner.TunerService;
+import java.io.PrintWriter;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import miui.maml.animation.interpolater.SineEaseInOutInterpolater;
 import miui.os.Build;
+import org.jetbrains.annotations.NotNull;
 
 public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickListener, View.OnLongClickListener, KeyguardStateController.Callback, AccessibilityController.AccessibilityStateChangedCallback {
     public static final Intent INSECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA");
-    private static final Intent PHONE_INTENT = new Intent("android.intent.action.DIAL");
     private static final Intent SECURE_CAMERA_INTENT = new Intent("android.media.action.STILL_IMAGE_CAMERA_SECURE").addFlags(8388608);
     private AccessibilityController mAccessibilityController;
     private View.AccessibilityDelegate mAccessibilityDelegate;
@@ -131,7 +132,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     private AnimatorSet mRightButtonLayoutAnimatorSet;
     private String mRightButtonStr;
     private ExtensionController.Extension<IntentButtonProvider.IntentButton> mRightExtension;
-    private boolean mRightIntentAvailable;
     private boolean mShowCameraAffordance;
     private boolean mShowLeftAffordance;
     private StatusBar mStatusBar;
@@ -152,6 +152,10 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     }
 
     public void setAffordanceHelper(KeyguardAffordanceHelper keyguardAffordanceHelper) {
+    }
+
+    static {
+        new Intent("android.intent.action.DIAL");
     }
 
     public KeyguardBottomAreaView(Context context) {
@@ -255,6 +259,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
     }
 
     private void init() {
+        this.mIsSuperSavePowerMode = ((SuperSaveModeController) Dependency.get(SuperSaveModeController.class)).isActive();
         this.mShowLeftAffordance = getResources().getBoolean(C0009R$bool.config_keyguardShowLeftAffordance);
         this.mShowCameraAffordance = getResources().getBoolean(C0009R$bool.config_keyguardShowCameraAffordance);
         this.mKeyguardIndicationInjector = (KeyguardIndicationInjector) Dependency.get(KeyguardIndicationInjector.class);
@@ -386,8 +391,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
             /* class com.android.systemui.statusbar.phone.KeyguardBottomAreaView.AnonymousClass3 */
 
             public void run() {
-                KeyguardBottomAreaView keyguardBottomAreaView = KeyguardBottomAreaView.this;
-                keyguardBottomAreaView.mRightIntentAvailable = keyguardBottomAreaView.resolveCameraIntent() != null;
                 KeyguardBottomAreaView.this.post(new Runnable() {
                     /* class com.android.systemui.statusbar.phone.KeyguardBottomAreaView.AnonymousClass3.AnonymousClass1 */
 
@@ -612,16 +615,6 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         }
         this.mLeftAffordanceView.setContentDescription(icon.contentDescription);
         initTipsView(true);
-    }
-
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private boolean isPhoneVisible() {
-        PackageManager packageManager = ((FrameLayout) this).mContext.getPackageManager();
-        if (!packageManager.hasSystemFeature("android.hardware.telephony") || packageManager.resolveActivity(PHONE_INTENT, 0) == null) {
-            return false;
-        }
-        return true;
     }
 
     public void onClick(View view) {
@@ -948,7 +941,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                 this.mIconState.drawable = KeyguardBottomAreaView.this.getLockScreenMagazineMainEntryIcon();
                 this.mIconState.contentDescription = ((FrameLayout) KeyguardBottomAreaView.this).mContext.getString(C0020R$string.accessibility_left_lock_screen_magazine_button);
                 IntentButtonProvider.IntentButton.IconState iconState = this.mIconState;
-                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || MiuiKeyguardUtils.isPad() || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || !KeyguardBottomAreaView.this.isPhoneVisible() || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
+                if (!KeyguardBottomAreaView.this.mUserSetupComplete || !KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) || MiuiKeyguardUtils.isPad() || leftView == null || !leftView.isSupportRightMove() || !KeyguardBottomAreaView.this.mShowLeftAffordance || KeyguardBottomAreaView.this.mIsSuperSavePowerMode) {
                     z = false;
                 }
                 iconState.isVisible = z;
@@ -996,7 +989,7 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
         @Override // com.android.systemui.plugins.IntentButtonProvider.IntentButton
         public IntentButtonProvider.IntentButton.IconState getIcon() {
             Drawable drawable;
-            this.mIconState.isVisible = !KeyguardBottomAreaView.this.isCameraDisabledByDpm() && KeyguardBottomAreaView.this.mShowCameraAffordance && KeyguardBottomAreaView.this.mUserSetupComplete && KeyguardBottomAreaView.this.resolveCameraIntent() != null && KeyguardBottomAreaView.this.mRightIntentAvailable && KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) && KeyguardBottomAreaView.this.getResources().getConfiguration().orientation != 2;
+            this.mIconState.isVisible = KeyguardBottomAreaView.this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()) && KeyguardBottomAreaView.this.mShowCameraAffordance && KeyguardBottomAreaView.this.mUserSetupComplete && !KeyguardBottomAreaView.this.isCameraDisabledByDpm() && KeyguardBottomAreaView.this.resolveCameraIntent() != null && KeyguardBottomAreaView.this.getResources().getConfiguration().orientation != 2;
             IntentButtonProvider.IntentButton.IconState iconState = this.mIconState;
             if (KeyguardBottomAreaView.this.mDarkStyle) {
                 drawable = ((FrameLayout) KeyguardBottomAreaView.this).mContext.getDrawable(C0012R$drawable.keyguard_bottom_camera_img_dark);
@@ -1056,5 +1049,23 @@ public class KeyguardBottomAreaView extends FrameLayout implements View.OnClickL
                 Log.e("StatusBar/KeyguardBottomAreaView", "IndicationController == null");
             }
         }
+    }
+
+    public void dump(@NotNull PrintWriter printWriter) {
+        Object[] objArr = new Object[9];
+        boolean z = false;
+        objArr[0] = Boolean.valueOf(this.mLeftButton.getIcon().isVisible);
+        objArr[1] = Boolean.valueOf(this.mUserSetupComplete);
+        objArr[2] = Boolean.valueOf(this.mKeyguardUpdateMonitor.isUserUnlocked(KeyguardUpdateMonitor.getCurrentUser()));
+        objArr[3] = Boolean.valueOf(((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView() == null);
+        objArr[4] = Boolean.valueOf(((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView() != null && ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView().isSupportRightMove());
+        objArr[5] = Boolean.valueOf(this.mShowLeftAffordance);
+        objArr[6] = Boolean.valueOf(this.mIsSuperSavePowerMode);
+        objArr[7] = Boolean.valueOf(this.mRightButton.getIcon().isVisible);
+        if (resolveCameraIntent() != null) {
+            z = true;
+        }
+        objArr[8] = Boolean.valueOf(z);
+        printWriter.println(String.format("  KeyguardBottomAreaView: [leftIconVisible=%b mUserSetupComplete=%b unlock=%b isLeftViewNullable=%b isSupportRightMove=%b mShowLeftAffordance=%b mIsSuperSavePowerMode=%b] [rightIconVisible=%b resolveCameraIntent=%b]", objArr));
     }
 }

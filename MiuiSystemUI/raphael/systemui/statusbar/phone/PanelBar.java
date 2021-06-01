@@ -8,7 +8,10 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import codeinjection.CodeInjection;
+import com.android.systemui.Dependency;
+import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.miui.systemui.DebugConfig;
+import com.miui.systemui.util.CommonUtil;
 
 public abstract class PanelBar extends FrameLayout {
     public static final boolean DEBUG = DebugConfig.DEBUG_PANEL;
@@ -103,7 +106,7 @@ public abstract class PanelBar extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public boolean shouldPanelBeVisible() {
-        return !this.mPanel.isDozing() && (this.mExpanded || this.mBouncerShowing);
+        return !CommonUtil.isSleep((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)) && (this.mExpanded || this.mBouncerShowing);
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {

@@ -168,7 +168,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             /* class com.android.systemui.$$Lambda$ScreenDecorations$IfAux2ksmJXT9o9i38WaSEQXJTQ */
 
             public final void run() {
-                ScreenDecorations.this.startOnScreenDecorationsThread();
+                ScreenDecorations.lambda$IfAux2ksmJXT9o9i38WaSEQXJTQ(ScreenDecorations.this);
             }
         });
     }
@@ -181,8 +181,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void startOnScreenDecorationsThread() {
+    public void startOnScreenDecorationsThread() {
         this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0009R$bool.support_round_corner);
         this.mRotation = this.mContext.getDisplay().getRotation();
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
@@ -222,6 +221,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
         this.mDisplayListener = r0;
         this.mDisplayManager.registerDisplayListener(r0, this.mHandler);
         updateOrientation();
+        disableAllEmulation();
     }
 
     private void register() {
@@ -565,6 +565,15 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
             return 80;
         }
         throw new IllegalArgumentException("unknown bound position: " + i);
+    }
+
+    private void disableAllEmulation() {
+        OverlayManagerWrapper overlayManagerWrapper = new OverlayManagerWrapper();
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.corner", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.double", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.waterfall", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.hole", false, 0);
+        overlayManagerWrapper.setEnabled("com.android.internal.display.cutout.emulation.tall", false, 0);
     }
 
     private void setupCameraListener() {

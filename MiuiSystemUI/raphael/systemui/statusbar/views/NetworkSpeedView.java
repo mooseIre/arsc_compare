@@ -5,6 +5,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
+import codeinjection.CodeInjection;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.NetworkSpeedController;
@@ -13,13 +14,15 @@ import java.util.LinkedList;
 
 public class NetworkSpeedView extends TextView implements DarkIconDispatcher.DarkReceiver {
     private NetworkSpeedController mNetworkSpeedController = ((NetworkSpeedController) Dependency.get(NetworkSpeedController.class));
+    private boolean mShown = false;
+    private CharSequence mText = CodeInjection.MD5;
     private int mVisibilityByDisableInfo;
     private LinkedList<NetworkSpeedVisibilityListener> mVisibilityListeners = new LinkedList<>();
     private boolean mVisibleByController;
     private boolean mVisibleByStatusBar;
 
     public interface NetworkSpeedVisibilityListener {
-        void onNetworkSpeedVisibilityChanged(boolean z);
+        void onNetworkSpeedVisibilityChanged(int i);
     }
 
     public NetworkSpeedView(Context context, AttributeSet attributeSet) {
@@ -36,6 +39,21 @@ public class NetworkSpeedView extends TextView implements DarkIconDispatcher.Dar
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         this.mNetworkSpeedController.removeFromViewList(this);
+    }
+
+    public void onVisibilityAggregated(boolean z) {
+        super.onVisibilityAggregated(z);
+        this.mShown = z;
+        if (z) {
+            setText(this.mText);
+        }
+    }
+
+    public void setNetworkSpeed(String str) {
+        this.mText = str;
+        if (this.mShown) {
+            setText(str);
+        }
     }
 
     @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
@@ -78,13 +96,21 @@ public class NetworkSpeedView extends TextView implements DarkIconDispatcher.Dar
     /* access modifiers changed from: protected */
     public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        Iterator<NetworkSpeedVisibilityListener> it = this.mVisibilityListeners.iterator();
-        while (it.hasNext()) {
-            it.next().onNetworkSpeedVisibilityChanged(isShown());
+        if (view == this) {
+            int visibility = getVisibility();
+            Iterator<NetworkSpeedVisibilityListener> it = this.mVisibilityListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onNetworkSpeedVisibilityChanged(visibility);
+            }
         }
     }
 
     public void addVisibilityListener(NetworkSpeedVisibilityListener networkSpeedVisibilityListener) {
         this.mVisibilityListeners.add(networkSpeedVisibilityListener);
+        networkSpeedVisibilityListener.onNetworkSpeedVisibilityChanged(getVisibility());
+    }
+
+    public void removeVisibilityListener(NetworkSpeedVisibilityListener networkSpeedVisibilityListener) {
+        this.mVisibilityListeners.remove(networkSpeedVisibilityListener);
     }
 }

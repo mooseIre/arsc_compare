@@ -833,7 +833,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void onStateChanged(int i) {
         this.mBarState = i;
         boolean z = true;
-        if ((1 > i || 2 < i) && (i != 0 || !this.mStatusBarStateController.leaveOpenOnKeyguardHide())) {
+        if ((1 > i || 2 < i) && (i != 0 || this.mExpandedHeight <= 0.0f)) {
             z = false;
         }
         setMPanelAppeared(z);
@@ -1579,8 +1579,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             r2.<init>(r1, r3)
             com.android.systemui.statusbar.views.DismissView r5 = r5.mDismissView
             if (r5 == 0) goto L_0x0058
-            com.android.systemui.statusbar.notification.stack.PanelAppearDisappearEvent$Companion r1 = com.android.systemui.statusbar.notification.stack.PanelAppearDisappearEvent.Companion
-            r1.animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(r5, r0, r2)
+            com.android.systemui.statusbar.notification.stack.PanelAppearDisappearEvent$Companion r3 = com.android.systemui.statusbar.notification.stack.PanelAppearDisappearEvent.Companion
+            r3.animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(r5, r0, r2, r1)
         L_0x0058:
             return
         */

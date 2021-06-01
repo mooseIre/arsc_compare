@@ -13,7 +13,7 @@ public class DozeScreenState implements DozeMachine.Part {
         /* class com.android.systemui.doze.$$Lambda$DozeScreenState$eRrLSFQgxPfG2I_jJDfdCLwKzVE */
 
         public final void run() {
-            DozeScreenState.lambda$eRrLSFQgxPfG2I_jJDfdCLwKzVE(DozeScreenState.this);
+            DozeScreenState.this.applyPendingScreenState();
         }
     };
     private final DozeHost mDozeHost;

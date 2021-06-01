@@ -52,7 +52,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
                 BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage);
             } else if ("android.intent.action.BLUETOOTH_HANDSFREE_BATTERY_CHANGED".equals(action)) {
                 Message obtainMessage2 = BluetoothControllerImpl.this.mHandler.obtainMessage();
-                obtainMessage2.what = R$styleable.Constraint_layout_goneMarginRight;
+                obtainMessage2.what = R$styleable.Constraint_layout_goneMarginLeft;
                 obtainMessage2.obj = intent;
                 BluetoothControllerImpl.this.mHandler.sendMessage(obtainMessage2);
                 BluetoothControllerImpl.this.onDeviceAttributesChanged();
@@ -282,6 +282,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         if (DEBUG) {
             Log.d("BluetoothController", "BluetoothStateChanged=" + stateToString(i));
         }
+        Log.d("BluetoothController", "onBluetoothStateChanged: bluetoothState = " + i);
         this.mEnabled = i == 12 || i == 11;
         this.mState = i;
         updateConnected();

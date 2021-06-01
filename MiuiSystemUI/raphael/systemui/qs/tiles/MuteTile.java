@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.provider.MiuiSettings;
 import android.widget.Switch;
+import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.plugins.qs.QSTile;
@@ -14,6 +15,7 @@ import com.android.systemui.statusbar.policy.ZenModeController;
 import com.miui.systemui.util.CommonUtil;
 
 public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenModeController.Callback {
+    private final boolean mPlayRingtoneWhenSilentOff = this.mContext.getResources().getBoolean(C0009R$bool.config_play_ringtone_silent_mode_off);
     private final ZenModeController mZenModeController;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
@@ -49,7 +51,7 @@ public class MuteTile extends QSTileImpl<QSTile.BooleanState> implements ZenMode
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
-        if (this.mZenModeController.isRingerModeOn()) {
+        if (this.mZenModeController.isRingerModeOn() && this.mPlayRingtoneWhenSilentOff) {
             Context context = this.mContext;
             CommonUtil.playRingtoneAsync(context, RingtoneManager.getActualDefaultRingtoneUri(context, 2), 5);
         }

@@ -7,6 +7,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Rect;
 import android.view.SurfaceControl;
+import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.graphics.SfVsyncFrameCallbackProvider;
 import com.android.systemui.Interpolators;
 import com.android.systemui.pip.PipSurfaceTransactionHelper;
@@ -42,6 +43,7 @@ public class PipAnimationController {
         this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
     }
 
+    /* access modifiers changed from: package-private */
     public PipTransitionAnimator getAnimator(SurfaceControl surfaceControl, Rect rect, float f, float f2) {
         PipTransitionAnimator pipTransitionAnimator = this.mCurrentAnimator;
         if (pipTransitionAnimator == null) {
@@ -59,6 +61,7 @@ public class PipAnimationController {
         return this.mCurrentAnimator;
     }
 
+    /* access modifiers changed from: package-private */
     public PipTransitionAnimator getAnimator(SurfaceControl surfaceControl, Rect rect, Rect rect2, Rect rect3) {
         PipTransitionAnimator pipTransitionAnimator = this.mCurrentAnimator;
         if (pipTransitionAnimator == null) {
@@ -79,6 +82,7 @@ public class PipAnimationController {
         return this.mCurrentAnimator;
     }
 
+    /* access modifiers changed from: package-private */
     public PipTransitionAnimator getCurrentAnimator() {
         return this.mCurrentAnimator;
     }
@@ -109,9 +113,11 @@ public class PipAnimationController {
         public void onAnimationRepeat(Animator animator) {
         }
 
+        /* access modifiers changed from: package-private */
         public void onEndTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
         }
 
+        /* access modifiers changed from: package-private */
         public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
         }
 
@@ -159,19 +165,23 @@ public class PipAnimationController {
             }
         }
 
+        /* access modifiers changed from: package-private */
         public int getAnimationType() {
             return this.mAnimationType;
         }
 
+        /* access modifiers changed from: package-private */
         public PipTransitionAnimator<T> setPipAnimationCallback(PipAnimationCallback pipAnimationCallback) {
             this.mPipAnimationCallback = pipAnimationCallback;
             return this;
         }
 
+        /* access modifiers changed from: package-private */
         public int getTransitionDirection() {
             return this.mTransitionDirection;
         }
 
+        /* access modifiers changed from: package-private */
         public PipTransitionAnimator<T> setTransitionDirection(int i) {
             if (i != 1) {
                 this.mTransitionDirection = i;
@@ -179,18 +189,22 @@ public class PipAnimationController {
             return this;
         }
 
+        /* access modifiers changed from: package-private */
         public T getStartValue() {
             return this.mStartValue;
         }
 
+        /* access modifiers changed from: package-private */
         public T getEndValue() {
             return this.mEndValue;
         }
 
+        /* access modifiers changed from: package-private */
         public Rect getDestinationBounds() {
             return this.mDestinationBounds;
         }
 
+        /* access modifiers changed from: package-private */
         public void setDestinationBounds(Rect rect) {
             this.mDestinationBounds.set(rect);
             if (this.mAnimationType == 1) {
@@ -198,14 +212,17 @@ public class PipAnimationController {
             }
         }
 
+        /* access modifiers changed from: package-private */
         public void setCurrentValue(T t) {
             this.mCurrentValue = t;
         }
 
+        /* access modifiers changed from: package-private */
         public boolean shouldApplyCornerRadius() {
             return !PipAnimationController.isOutPipDirection(this.mTransitionDirection);
         }
 
+        /* access modifiers changed from: package-private */
         public boolean inScaleTransition() {
             if (this.mAnimationType != 0) {
                 return false;
@@ -213,22 +230,28 @@ public class PipAnimationController {
             return !PipAnimationController.isInPipDirection(getTransitionDirection());
         }
 
+        /* access modifiers changed from: package-private */
         public void updateEndValue(T t) {
             this.mEndValue = t;
         }
 
+        /* access modifiers changed from: package-private */
         public SurfaceControl.Transaction newSurfaceControlTransaction() {
             return this.mSurfaceControlTransactionFactory.getTransaction();
         }
 
+        /* access modifiers changed from: package-private */
+        @VisibleForTesting
         public void setSurfaceControlTransactionFactory(PipSurfaceTransactionHelper.SurfaceControlTransactionFactory surfaceControlTransactionFactory) {
             this.mSurfaceControlTransactionFactory = surfaceControlTransactionFactory;
         }
 
+        /* access modifiers changed from: package-private */
         public PipSurfaceTransactionHelper getSurfaceTransactionHelper() {
             return this.mSurfaceTransactionHelper;
         }
 
+        /* access modifiers changed from: package-private */
         public void setSurfaceTransactionHelper(PipSurfaceTransactionHelper pipSurfaceTransactionHelper) {
             this.mSurfaceTransactionHelper = pipSurfaceTransactionHelper;
         }
@@ -239,6 +262,7 @@ public class PipAnimationController {
 
                 /* JADX DEBUG: Multi-variable search result rejected for r2v0, resolved type: com.android.systemui.pip.PipAnimationController$PipTransitionAnimator$1 */
                 /* JADX WARN: Multi-variable type inference failed */
+                /* access modifiers changed from: package-private */
                 @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void applySurfaceControlTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, float f) {
                     float floatValue = (((Float) getStartValue()).floatValue() * (1.0f - f)) + (((Float) getEndValue()).floatValue() * f);
@@ -247,6 +271,7 @@ public class PipAnimationController {
                     transaction.apply();
                 }
 
+                /* access modifiers changed from: package-private */
                 @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
@@ -257,6 +282,7 @@ public class PipAnimationController {
                     transaction.apply();
                 }
 
+                /* access modifiers changed from: package-private */
                 public void updateEndValue(Float f) {
                     super.updateEndValue((Object) f);
                     this.mStartValue = this.mCurrentValue;
@@ -275,6 +301,7 @@ public class PipAnimationController {
 
                 /* JADX DEBUG: Multi-variable search result rejected for r9v0, resolved type: com.android.systemui.pip.PipAnimationController$PipTransitionAnimator$2 */
                 /* JADX WARN: Multi-variable type inference failed */
+                /* access modifiers changed from: package-private */
                 @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void applySurfaceControlTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction, float f) {
                     Rect rect = (Rect) getStartValue();
@@ -296,6 +323,7 @@ public class PipAnimationController {
                     transaction.apply();
                 }
 
+                /* access modifiers changed from: package-private */
                 @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void onStartTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
@@ -305,6 +333,7 @@ public class PipAnimationController {
                     transaction.apply();
                 }
 
+                /* access modifiers changed from: package-private */
                 @Override // com.android.systemui.pip.PipAnimationController.PipTransitionAnimator
                 public void onEndTransaction(SurfaceControl surfaceControl, SurfaceControl.Transaction transaction) {
                     PipSurfaceTransactionHelper surfaceTransactionHelper = getSurfaceTransactionHelper();
@@ -312,6 +341,7 @@ public class PipAnimationController {
                     surfaceTransactionHelper.crop(transaction, surfaceControl, getDestinationBounds());
                 }
 
+                /* access modifiers changed from: package-private */
                 public void updateEndValue(Rect rect) {
                     T t;
                     super.updateEndValue((Object) rect);

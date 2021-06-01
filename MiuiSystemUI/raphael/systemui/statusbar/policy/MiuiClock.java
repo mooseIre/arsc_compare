@@ -24,7 +24,6 @@ import com.android.systemui.R$styleable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.settings.CurrentUserTracker;
-import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.MiuiClock;
@@ -33,10 +32,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Locale;
 import java.util.TimeZone;
-import miui.date.Calendar;
-import miui.date.DateUtils;
+import miuix.pickerwidget.date.Calendar;
+import miuix.pickerwidget.date.DateUtils;
 
-public class MiuiClock extends TextView implements DemoMode, TunerService.Tunable, CommandQueue.Callbacks, DarkIconDispatcher.DarkReceiver, ConfigurationController.ConfigurationListener {
+public class MiuiClock extends TextView implements DemoMode, TunerService.Tunable, DarkIconDispatcher.DarkReceiver, ConfigurationController.ConfigurationListener {
     private final int mAmPmStyle;
     private boolean mAttached;
     private final BroadcastDispatcher mBroadcastDispatcher;
@@ -45,7 +44,6 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
     private boolean mClockVisibleByController;
     private boolean mClockVisibleByPolicy;
     private boolean mClockVisibleByUser;
-    private final CommandQueue mCommandQueue;
     private int mCurrentUserId;
     private final CurrentUserTracker mCurrentUserTracker;
     private boolean mDemoMode;
@@ -57,12 +55,11 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
     private Handler mSecondsHandler;
     private final boolean mShowDark;
     private boolean mShowSeconds;
-    private boolean mStatusBarClock;
     private boolean mUseWallpaperTextColor;
     private LinkedList<ClockVisibilityListener> mVisibilityListeners;
 
     public interface ClockVisibilityListener {
-        void onClockVisibilityChanged(boolean z);
+        void onClockVisibilityChanged(int i);
     }
 
     public boolean hasOverlappingRendering() {
@@ -169,13 +166,11 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
                 MiuiClock.this.mSecondsHandler.postAtTime(this, ((SystemClock.uptimeMillis() / 1000) * 1000) + 1000);
             }
         };
-        this.mCommandQueue = (CommandQueue) Dependency.get(CommandQueue.class);
         TypedArray obtainStyledAttributes = context.getTheme().obtainStyledAttributes(attributeSet, R$styleable.MiuiClock, 0, 0);
         try {
             this.mAmPmStyle = obtainStyledAttributes.getInt(R$styleable.MiuiClock_MiuiAmPmStyle, 2);
             this.mShowDark = obtainStyledAttributes.getBoolean(R$styleable.MiuiClock_MiuiClockShowDark, true);
             this.mClockMode = obtainStyledAttributes.getInt(R$styleable.MiuiClock_MiuiClockMode, 0);
-            this.mStatusBarClock = obtainStyledAttributes.getBoolean(R$styleable.MiuiClock_MiuiStatusBarClock, false);
             this.mNonAdaptedColor = getCurrentTextColor();
             obtainStyledAttributes.recycle();
             BroadcastDispatcher broadcastDispatcher = (BroadcastDispatcher) Dependency.get(BroadcastDispatcher.class);
@@ -236,9 +231,6 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             intentFilter.addAction("android.intent.action.USER_SWITCHED");
             this.mBroadcastDispatcher.registerReceiverWithHandler(this.mIntentReceiver, intentFilter, (Handler) Dependency.get(Dependency.TIME_TICK_HANDLER), UserHandle.ALL);
             ((TunerService) Dependency.get(TunerService.class)).addTunable(this, "clock_seconds", "icon_blacklist");
-            if (this.mStatusBarClock) {
-                this.mCommandQueue.addCallback((CommandQueue.Callbacks) this);
-            }
             if (this.mShowDark) {
                 ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).addDarkReceiver(this);
             }
@@ -260,9 +252,6 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             this.mBroadcastDispatcher.unregisterReceiver(this.mIntentReceiver);
             this.mAttached = false;
             ((TunerService) Dependency.get(TunerService.class)).removeTunable(this);
-            if (this.mStatusBarClock) {
-                this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);
-            }
             if (this.mShowDark) {
                 ((DarkIconDispatcher) Dependency.get(DarkIconDispatcher.class)).removeDarkReceiver(this);
             }
@@ -285,11 +274,6 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
 
     public void setClockVisibleByUser(boolean z) {
         this.mClockVisibleByUser = z;
-        updateClockVisibility();
-    }
-
-    public void setClockVisibilityByPolicy(boolean z) {
-        this.mClockVisibleByPolicy = z;
         updateClockVisibility();
     }
 
@@ -331,16 +315,6 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
         updateClockVisibility();
     }
 
-    @Override // com.android.systemui.statusbar.CommandQueue.Callbacks
-    public void disable(int i, int i2, int i3, boolean z) {
-        if (i == getDisplay().getDisplayId()) {
-            boolean z2 = (8388608 & i2) == 0;
-            if (z2 != this.mClockVisibleByPolicy) {
-                setClockVisibilityByPolicy(z2);
-            }
-        }
-    }
-
     @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     public void onDarkChanged(Rect rect, float f, int i, int i2, int i3, boolean z) {
         if (z) {
@@ -365,14 +339,22 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
     /* access modifiers changed from: protected */
     public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        Iterator<ClockVisibilityListener> it = this.mVisibilityListeners.iterator();
-        while (it.hasNext()) {
-            it.next().onClockVisibilityChanged(isShown());
+        if (view == this) {
+            int visibility = getVisibility();
+            Iterator<ClockVisibilityListener> it = this.mVisibilityListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onClockVisibilityChanged(visibility);
+            }
         }
     }
 
     public void addVisibilityListener(ClockVisibilityListener clockVisibilityListener) {
         this.mVisibilityListeners.add(clockVisibilityListener);
+        clockVisibilityListener.onClockVisibilityChanged(getVisibility());
+    }
+
+    public void removeVisibilityListener(ClockVisibilityListener clockVisibilityListener) {
+        this.mVisibilityListeners.remove(clockVisibilityListener);
     }
 
     private void updateShowSeconds() {
@@ -419,16 +401,16 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
                 } else {
                     i2 = C0020R$string.status_bar_clock_date_weekday_format;
                 }
-                setContentDescription(this.mCalendar.format(context.getString(i3 == 16 ? C0020R$string.status_bar_clock_date_format_12 : C0020R$string.status_bar_clock_date_format)));
+                setContentDescription(this.mCalendar.format(context, context.getString(i3 == 16 ? C0020R$string.status_bar_clock_date_format_12 : C0020R$string.status_bar_clock_date_format)));
                 i = i2;
             } else if (this.mAmPmStyle == 0) {
-                setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), i3 | 12));
+                setText(DateUtils.formatDateTime(context, this.mCalendar.getTimeInMillis(), i3 | 12));
                 return;
             } else {
-                setText(DateUtils.formatDateTime(this.mCalendar.getTimeInMillis(), i3 | 12 | 64));
+                setText(DateUtils.formatDateTime(context, this.mCalendar.getTimeInMillis(), i3 | 12 | 64));
                 return;
             }
-            setText(this.mCalendar.format(context.getString(i)));
+            setText(this.mCalendar.format(context, context.getString(i)));
         }
     }
 

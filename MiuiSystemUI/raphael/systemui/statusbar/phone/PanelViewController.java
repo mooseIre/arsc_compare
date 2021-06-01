@@ -9,6 +9,7 @@ import android.content.res.Resources;
 import android.os.SystemClock;
 import android.util.BoostFramework;
 import android.util.Log;
+import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
@@ -157,9 +158,6 @@ public abstract class PanelViewController {
 
     /* access modifiers changed from: protected */
     public abstract boolean isClearAllVisible();
-
-    /* access modifiers changed from: protected */
-    public abstract boolean isDozing();
 
     /* access modifiers changed from: protected */
     public abstract boolean isInContentBounds(float f, float f2);
@@ -429,6 +427,7 @@ public abstract class PanelViewController {
                 this.mLockscreenGestureLogger.write(186, (int) Math.abs((f2 - this.mInitialTouchY) / displayDensity), (int) Math.abs(yVelocity / displayDensity));
                 this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_UNLOCK);
             }
+            Slog.i("KeyguardViewMediator", "endMotionEvent");
             fling(yVelocity, z2, isFalseTouch(f, f2));
             onTrackingStopped(z2);
             if (this.mUpdateFlingOnLayout) {

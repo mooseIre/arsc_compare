@@ -56,7 +56,7 @@ import com.android.systemui.media.MediaHierarchyManager;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.qs.QS;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-import com.android.systemui.qs.QSFragment;
+import com.android.systemui.qs.MiuiQSFragment;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.FlingAnimationUtils;
 import com.android.systemui.statusbar.GestureRecorder;
@@ -488,8 +488,8 @@ public class NotificationPanelViewController extends PanelViewController {
                 NotificationPanelViewController.this.mNotificationStackScroller.setQsContainer((ViewGroup) NotificationPanelViewController.this.mQs.getView());
                 NotificationPanelViewController notificationPanelViewController6 = NotificationPanelViewController.this;
                 QS qs2 = notificationPanelViewController6.mQs;
-                if (qs2 instanceof QSFragment) {
-                    notificationPanelViewController6.mKeyguardStatusBar.setQSPanel(((QSFragment) qs2).getQsPanel());
+                if (qs2 instanceof MiuiQSFragment) {
+                    notificationPanelViewController6.mKeyguardStatusBar.setQSPanel(((MiuiQSFragment) qs2).getQsContainer().getQsPanel());
                 }
                 NotificationPanelViewController.this.updateQsExpansion();
             }
@@ -2186,7 +2186,6 @@ public class NotificationPanelViewController extends PanelViewController {
         }
     }
 
-    @Override // com.android.systemui.statusbar.phone.PanelViewController
     public boolean isDozing() {
         return this.mDozing;
     }

@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 /* compiled from: MiuiConfigurationControllerImpl.kt */
 public final class MiuiConfigurationControllerImpl extends ConfigurationControllerImpl {
+    private int density;
     private int themeChanged;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -23,7 +24,9 @@ public final class MiuiConfigurationControllerImpl extends ConfigurationControll
         Intrinsics.checkParameterIsNotNull(context, "context");
         Resources resources = context.getResources();
         Intrinsics.checkExpressionValueIsNotNull(resources, "context.resources");
-        this.themeChanged = resources.getConfiguration().extraConfig.themeChanged;
+        Configuration configuration = resources.getConfiguration();
+        this.themeChanged = configuration.extraConfig.themeChanged;
+        this.density = configuration.densityDpi;
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController, com.android.systemui.statusbar.phone.ConfigurationControllerImpl
@@ -37,12 +40,25 @@ public final class MiuiConfigurationControllerImpl extends ConfigurationControll
             MiuiThemeUtils.updateDefaultSysUiTheme(configuration);
             onMiuiThemeChanged(MiuiKeyguardUtils.isDefaultLockScreenTheme(), MiuiThemeUtils.isDefaultSysUiTheme());
         }
+        int i2 = configuration.densityDpi;
+        if (i2 != this.density) {
+            this.density = i2;
+            onDensityChanged();
+        }
     }
 
     public final void onMiuiThemeChanged(boolean z, boolean z2) {
         for (ConfigurationController.ConfigurationListener configurationListener : new ArrayList(getListeners())) {
             if (getListeners().contains(configurationListener)) {
                 configurationListener.onMiuiThemeChanged(z, z2);
+            }
+        }
+    }
+
+    public final void onDensityChanged() {
+        for (ConfigurationController.ConfigurationListener configurationListener : new ArrayList(getListeners())) {
+            if (getListeners().contains(configurationListener)) {
+                configurationListener.onDensityChanged();
             }
         }
     }

@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.MathUtils;
 import android.util.TimeUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -22,7 +21,6 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
     private final Context mContext;
     private float mDarkIntensity;
     private int mDisplayId;
-    private float mDozeAmount;
     private final Handler mHandler;
     private final KeyguardStateController mKeyguardStateController;
     private float mNextDarkIntensity;
@@ -60,7 +58,7 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
         this.mCommandQueue = commandQueue;
         commandQueue.addCallback((CommandQueue.Callbacks) this);
         this.mStatusBarStateController.addCallback(this);
-        this.mDozeAmount = this.mStatusBarStateController.getDozeAmount();
+        this.mStatusBarStateController.getDozeAmount();
         this.mContext = context;
         this.mDisplayId = context.getDisplayId();
     }
@@ -193,7 +191,7 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
     }
 
     private void dispatchDark() {
-        this.mApplier.applyDarkIntensity(MathUtils.lerp(this.mDarkIntensity, 0.0f, this.mDozeAmount));
+        this.mApplier.applyDarkIntensity(this.mDarkIntensity);
     }
 
     @Override // com.android.systemui.Dumpable
@@ -222,7 +220,6 @@ public class LightBarTransitionsController implements Dumpable, CommandQueue.Cal
 
     @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
     public void onDozeAmountChanged(float f, float f2) {
-        this.mDozeAmount = f2;
         dispatchDark();
     }
 }

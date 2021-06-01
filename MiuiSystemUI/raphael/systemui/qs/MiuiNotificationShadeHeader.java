@@ -19,7 +19,7 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
     private MiuiHeaderView mHeaderView;
     private Configuration mLastConfiguration;
     private int mOrientation;
-    private QSContainerImpl mQsContainerImpl;
+    private MiuiQSContainer mQsContainerImpl;
     private boolean mUseControlPanel;
 
     public MiuiNotificationShadeHeader(Context context, AttributeSet attributeSet) {
@@ -70,8 +70,8 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         }
     }
 
-    public void setQSContainer(QSContainerImpl qSContainerImpl) {
-        this.mQsContainerImpl = qSContainerImpl;
+    public void setQSContainer(MiuiQSContainer miuiQSContainer) {
+        this.mQsContainerImpl = miuiQSContainer;
     }
 
     public void updateEverything() {
@@ -135,9 +135,9 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
     }
 
     public void onLayoutChange(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
-        QSContainerImpl qSContainerImpl = this.mQsContainerImpl;
-        if (qSContainerImpl != null && i4 - i2 != i8 - i6) {
-            qSContainerImpl.updateResources();
+        MiuiQSContainer miuiQSContainer = this.mQsContainerImpl;
+        if (miuiQSContainer != null && i4 - i2 != i8 - i6) {
+            miuiQSContainer.updateResources();
         }
     }
 }

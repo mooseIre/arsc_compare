@@ -4,15 +4,17 @@ import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.RowContentBindParams;
 import com.android.systemui.statusbar.notification.row.RowContentBindStage;
+import com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer;
 import java.util.List;
 import java.util.Map;
 
 public class DynamicChildBindController {
+    private static final int CHILD_BIND_CUTOFF = (NotificationChildrenContainer.NUMBER_OF_CHILDREN_WHEN_CHILDREN_EXPANDED + 1);
     private final int mChildBindCutoff;
     private final RowContentBindStage mStage;
 
     public DynamicChildBindController(RowContentBindStage rowContentBindStage) {
-        this(rowContentBindStage, 9);
+        this(rowContentBindStage, CHILD_BIND_CUTOFF);
     }
 
     DynamicChildBindController(RowContentBindStage rowContentBindStage, int i) {

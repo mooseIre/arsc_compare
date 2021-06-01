@@ -20,6 +20,7 @@ import com.android.systemui.C0015R$integer;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.C0019R$raw;
 import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$style;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -34,7 +35,7 @@ import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.statusbar.phone.MiuiSystemUIDialog;
 import java.util.ArrayList;
 import java.util.List;
-import miui.app.AlertDialog;
+import miuix.appcompat.app.AlertDialog;
 
 public class ControlPanelController implements CallbackController<UseControlPanelChangeListener>, SettingsObserver.Callback {
     private BroadcastDispatcher mBroadcastDispatcher;
@@ -350,7 +351,12 @@ public class ControlPanelController implements CallbackController<UseControlPane
         if (!this.mNcSwitchGuideShown && isUseControlCenter()) {
             FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C0016R$layout.nc_switch_guide_dialog_content, (ViewGroup) null);
             ((CornerVideoView) frameLayout.findViewById(C0014R$id.guide_video)).play(C0019R$raw.nc_switch_guide_video, 0);
-            AlertDialog create = new AlertDialog.Builder(this.mContext, 8).setTitle(C0020R$string.control_center_notification_switch_guide).setPositiveButton(C0020R$string.bubbles_user_education_got_it, (DialogInterface.OnClickListener) null).setView(frameLayout).setCancelable(false).create();
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.AlertDialog_Theme_DayNight);
+            builder.setTitle(C0020R$string.control_center_notification_switch_guide);
+            builder.setPositiveButton(C0020R$string.bubbles_user_education_got_it, (DialogInterface.OnClickListener) null);
+            builder.setView(frameLayout);
+            builder.setCancelable(false);
+            AlertDialog create = builder.create();
             this.mDialog = create;
             MiuiSystemUIDialog.applyFlags(create);
             MiuiSystemUIDialog.setShowForAllUsers(this.mDialog, true);
