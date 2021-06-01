@@ -15,8 +15,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import java.util.Locale;
 
 public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
@@ -55,7 +55,7 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0016R$layout.fs_gesture_back_demo);
+        setContentView(C0017R$layout.fs_gesture_back_demo);
         DisplayMetrics displayMetrics = new DisplayMetrics();
         ((WindowManager) getSystemService("window")).getDefaultDisplay().getRealMetrics(displayMetrics);
         this.mDisplayWidth = displayMetrics.widthPixels;
@@ -80,12 +80,12 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
     }
 
     private void initView() {
-        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0014R$id.root_view);
-        this.mBgView = findViewById(C0014R$id.bg_view);
-        View findViewById = findViewById(C0014R$id.demo_activity);
+        RelativeLayout relativeLayout = (RelativeLayout) findViewById(C0015R$id.root_view);
+        this.mBgView = findViewById(C0015R$id.bg_view);
+        View findViewById = findViewById(C0015R$id.demo_activity);
         this.mDemoActivityView = findViewById;
         findViewById.setOnTouchListener(this.mDemoActivityTouchListener);
-        this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0014R$id.fsgesture_title_view);
+        this.mFsGestureDemoTitleView = (FsGestureDemoTitleView) findViewById(C0015R$id.fsgesture_title_view);
         if (TextUtils.getLayoutDirectionFromLocale(Locale.getDefault()) == 1) {
             this.mFsGestureDemoTitleView.setRTLParams();
         }
@@ -103,7 +103,7 @@ public class FsGestureBackDemoActivity extends FsGestureDemoBaseActiivy {
             }
         });
         GestureTitleViewUtil.setMargin(this, this.mFsGestureDemoTitleView);
-        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0014R$id.fsgesture_swipe_view);
+        this.mFsGestureDemoSwipeView = (FsGestureDemoSwipeView) findViewById(C0015R$id.fsgesture_swipe_view);
         if (this.mStatus == 1) {
             startSwipeViewAnimation(0);
         } else {

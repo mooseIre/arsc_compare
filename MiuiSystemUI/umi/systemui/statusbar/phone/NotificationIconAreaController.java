@@ -3,6 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
+import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,10 +12,10 @@ import androidx.collection.ArrayMap;
 import com.android.internal.statusbar.StatusBarIcon;
 import com.android.internal.util.ContrastColorUtil;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0008R$attr;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.bubbles.BubbleController;
@@ -103,7 +104,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     /* access modifiers changed from: protected */
     public View inflateIconArea(LayoutInflater layoutInflater) {
-        return layoutInflater.inflate(C0016R$layout.notification_icon_area, (ViewGroup) null);
+        return layoutInflater.inflate(C0017R$layout.notification_icon_area, (ViewGroup) null);
     }
 
     /* access modifiers changed from: protected */
@@ -112,15 +113,15 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         LayoutInflater from = LayoutInflater.from(context);
         View inflateIconArea = inflateIconArea(from);
         this.mNotificationIconArea = inflateIconArea;
-        this.mNotificationIcons = (NotificationIconContainer) inflateIconArea.findViewById(C0014R$id.notificationIcons);
+        this.mNotificationIcons = (NotificationIconContainer) inflateIconArea.findViewById(C0015R$id.notificationIcons);
         NotificationIconObserver notificationIconObserver = (NotificationIconObserver) Dependency.get(NotificationIconObserver.class);
         this.mNotificationIconObserver = notificationIconObserver;
         notificationIconObserver.addCallback(this);
         ((SettingsManager) Dependency.get(SettingsManager.class)).registerNotifStyleListener(this);
         this.mNotificationScrollLayout = this.mStatusBar.getNotificationScrollLayout();
-        View inflate = from.inflate(C0016R$layout.center_icon_area, (ViewGroup) null);
+        View inflate = from.inflate(C0017R$layout.center_icon_area, (ViewGroup) null);
         this.mCenteredIconArea = inflate;
-        this.mCenteredIcon = (NotificationIconContainer) inflate.findViewById(C0014R$id.centeredIcon);
+        this.mCenteredIcon = (NotificationIconContainer) inflate.findViewById(C0015R$id.centeredIcon);
         initAodIcons();
     }
 
@@ -130,7 +131,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
             this.mAodIcons.setAnimationsEnabled(false);
             this.mAodIcons.removeAllViews();
         }
-        NotificationIconContainer notificationIconContainer = (NotificationIconContainer) this.mStatusBar.getNotificationShadeWindowView().findViewById(C0014R$id.clock_notification_icon_container);
+        NotificationIconContainer notificationIconContainer = (NotificationIconContainer) this.mStatusBar.getNotificationShadeWindowView().findViewById(C0015R$id.clock_notification_icon_container);
         this.mAodIcons = notificationIconContainer;
         notificationIconContainer.setOnLockScreen(true);
         updateAodIconsVisibility(false);
@@ -169,9 +170,9 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     private void reloadDimens(Context context) {
         Resources resources = context.getResources();
-        this.mIconSize = resources.getDimensionPixelSize(C0011R$dimen.status_bar_icon_size);
-        this.mIconHPadding = resources.getDimensionPixelSize(C0011R$dimen.status_bar_notification_icon_padding);
-        this.mAodIconAppearTranslation = resources.getDimensionPixelSize(C0011R$dimen.shelf_appear_translation);
+        this.mIconSize = resources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
+        this.mIconHPadding = resources.getDimensionPixelSize(C0012R$dimen.status_bar_notification_icon_padding);
+        this.mAodIconAppearTranslation = resources.getDimensionPixelSize(C0012R$dimen.shelf_appear_translation);
     }
 
     public View getNotificationInnerAreaView() {
@@ -275,43 +276,54 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     }
 
     private void updateIconsForLayout(Function<NotificationEntry, StatusBarIconView> function, NotificationIconContainer notificationIconContainer, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, boolean z7, boolean z8) {
+        int i;
         ArrayList arrayList = new ArrayList(this.mNotificationScrollLayout.getChildCount());
-        for (int i = 0; i < this.mNotificationScrollLayout.getChildCount(); i++) {
-            View childAt = this.mNotificationScrollLayout.getChildAt(i);
+        ArraySet arraySet = new ArraySet(arrayList.size());
+        boolean z9 = notificationIconContainer == this.mNotificationIcons;
+        int i2 = 0;
+        while (i2 < this.mNotificationScrollLayout.getChildCount()) {
+            View childAt = this.mNotificationScrollLayout.getChildAt(i2);
             if (childAt instanceof ExpandableNotificationRow) {
                 NotificationEntry entry = ((ExpandableNotificationRow) childAt).getEntry();
+                i = i2;
                 if (shouldShowNotificationIcon(entry, z, z2, z3, z4, z5, z6, z7, z8)) {
                     StatusBarIconView apply = function.apply(entry);
-                    if (apply != null) {
+                    if (apply != null && !arraySet.contains(entry.getSbn().getTargetPackageName())) {
                         arrayList.add(apply);
+                        if (z9) {
+                            arraySet.add(entry.getSbn().getTargetPackageName());
+                        }
                     }
                 }
+            } else {
+                i = i2;
             }
+            i2 = i + 1;
         }
         ArrayMap<String, ArrayList<StatusBarIcon>> arrayMap = new ArrayMap<>();
         ArrayList arrayList2 = new ArrayList();
-        for (int i2 = 0; i2 < notificationIconContainer.getChildCount(); i2++) {
-            View childAt2 = notificationIconContainer.getChildAt(i2);
+        for (int i3 = 0; i3 < notificationIconContainer.getChildCount(); i3++) {
+            View childAt2 = notificationIconContainer.getChildAt(i3);
             if ((childAt2 instanceof StatusBarIconView) && !arrayList.contains(childAt2)) {
                 StatusBarIconView statusBarIconView = (StatusBarIconView) childAt2;
                 String groupKey = statusBarIconView.getNotification().getGroupKey();
-                int i3 = 0;
-                boolean z9 = false;
+                int i4 = 0;
+                boolean z10 = false;
                 while (true) {
-                    if (i3 >= arrayList.size()) {
+                    if (i4 >= arrayList.size()) {
                         break;
                     }
-                    StatusBarIconView statusBarIconView2 = (StatusBarIconView) arrayList.get(i3);
+                    StatusBarIconView statusBarIconView2 = (StatusBarIconView) arrayList.get(i4);
                     if (statusBarIconView2.getSourceIcon().sameAs(statusBarIconView.getSourceIcon()) && statusBarIconView2.getNotification().getGroupKey().equals(groupKey)) {
-                        if (z9) {
-                            z9 = false;
+                        if (z10) {
+                            z10 = false;
                             break;
                         }
-                        z9 = true;
+                        z10 = true;
                     }
-                    i3++;
+                    i4++;
                 }
-                if (z9) {
+                if (z10) {
                     ArrayList<StatusBarIcon> arrayList3 = arrayMap.get(groupKey);
                     if (arrayList3 == null) {
                         arrayList3 = new ArrayList<>();
@@ -331,28 +343,28 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         arrayMap.removeAll(arrayList4);
         notificationIconContainer.setReplacingIcons(arrayMap);
         int size = arrayList2.size();
-        for (int i4 = 0; i4 < size; i4++) {
-            notificationIconContainer.removeView((View) arrayList2.get(i4));
+        for (int i5 = 0; i5 < size; i5++) {
+            notificationIconContainer.removeView((View) arrayList2.get(i5));
         }
-        ViewGroup.LayoutParams generateIconLayoutParams = generateIconLayoutParams();
-        for (int i5 = 0; i5 < arrayList.size(); i5++) {
-            StatusBarIconView statusBarIconView3 = (StatusBarIconView) arrayList.get(i5);
+        FrameLayout.LayoutParams generateIconLayoutParams = generateIconLayoutParams();
+        for (int i6 = 0; i6 < arrayList.size(); i6++) {
+            StatusBarIconView statusBarIconView3 = (StatusBarIconView) arrayList.get(i6);
             notificationIconContainer.removeTransientView(statusBarIconView3);
             if (statusBarIconView3.getParent() == null) {
                 if (z3) {
                     statusBarIconView3.setOnDismissListener(this.mUpdateStatusBarIcons);
                 }
-                notificationIconContainer.addView(statusBarIconView3, i5, generateIconLayoutParams);
+                notificationIconContainer.addView(statusBarIconView3, i6, generateIconLayoutParams);
             }
         }
         notificationIconContainer.setChangingViewPositions(true);
         int childCount = notificationIconContainer.getChildCount();
-        for (int i6 = 0; i6 < childCount; i6++) {
-            View childAt3 = notificationIconContainer.getChildAt(i6);
-            View view = (StatusBarIconView) arrayList.get(i6);
-            if (childAt3 != view) {
-                notificationIconContainer.removeView(view);
-                notificationIconContainer.addView(view, i6);
+        for (int i7 = 0; i7 < childCount; i7++) {
+            View childAt3 = notificationIconContainer.getChildAt(i7);
+            StatusBarIconView statusBarIconView4 = (StatusBarIconView) arrayList.get(i7);
+            if (childAt3 != statusBarIconView4) {
+                notificationIconContainer.removeView(statusBarIconView4);
+                notificationIconContainer.addView(statusBarIconView4, i7);
             }
         }
         notificationIconContainer.setChangingViewPositions(false);
@@ -415,7 +427,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
 
     private void updateTintForIcon(StatusBarIconView statusBarIconView, int i) {
         int i2 = 0;
-        if (!Boolean.TRUE.equals(statusBarIconView.getTag(C0014R$id.icon_is_pre_L)) || NotificationUtils.isGrayscale(statusBarIconView, this.mContrastColorUtil)) {
+        if (!Boolean.TRUE.equals(statusBarIconView.getTag(C0015R$id.icon_is_pre_L)) || NotificationUtils.isGrayscale(statusBarIconView, this.mContrastColorUtil)) {
             i2 = DarkIconDispatcher.getTint(this.mTintArea, statusBarIconView, i);
         }
         statusBarIconView.setStaticDrawableColor(i2);
@@ -480,7 +492,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     }
 
     private void reloadAodColor() {
-        this.mAodIconTint = Utils.getColorAttrDefaultColor(this.mContext, C0008R$attr.wallpaperTextColor);
+        this.mAodIconTint = Utils.getColorAttrDefaultColor(this.mContext, C0009R$attr.wallpaperTextColor);
     }
 
     private void updateAodIconColors() {

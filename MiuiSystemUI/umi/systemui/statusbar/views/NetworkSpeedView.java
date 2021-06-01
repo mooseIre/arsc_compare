@@ -96,9 +96,12 @@ public class NetworkSpeedView extends TextView implements DarkIconDispatcher.Dar
     /* access modifiers changed from: protected */
     public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        Iterator<NetworkSpeedVisibilityListener> it = this.mVisibilityListeners.iterator();
-        while (it.hasNext()) {
-            it.next().onNetworkSpeedVisibilityChanged(i);
+        if (view == this) {
+            int visibility = getVisibility();
+            Iterator<NetworkSpeedVisibilityListener> it = this.mVisibilityListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onNetworkSpeedVisibilityChanged(visibility);
+            }
         }
     }
 

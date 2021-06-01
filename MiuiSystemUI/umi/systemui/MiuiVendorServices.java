@@ -91,7 +91,7 @@ public class MiuiVendorServices extends SystemUI {
         Settings.Secure.putIntForUser(contentResolver, "charging_sounds_enabled", 0, 0);
         Settings.Secure.putIntForUser(contentResolver, "charging_sounds_enabled", 0, 10);
         Settings.Global.putInt(contentResolver, "music_in_white_list", 0);
-        Settings.Secure.putInt(contentResolver, "in_call_notification_enabled", this.mContext.getResources().getBoolean(C0009R$bool.play_incall_notification) ? 1 : 0);
+        Settings.Secure.putInt(contentResolver, "in_call_notification_enabled", this.mContext.getResources().getBoolean(C0010R$bool.play_incall_notification) ? 1 : 0);
         Settings.Secure.putInt(contentResolver, "systemui_fsgesture_support_superpower", 0);
     }
 }

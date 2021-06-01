@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import kotlin.TypeCastException;
-import kotlin.collections.CollectionsKt;
+import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
-import kotlin.math.MathKt;
+import kotlin.math.MathKt__MathJVMKt;
 import kotlin.text.StringsKt__StringsKt;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,8 +51,8 @@ public final class CameraAvailabilityListener {
         this.executor = executor2;
         RectF rectF = new RectF();
         this.cutoutProtectionPath.computeBounds(rectF, false);
-        this.cutoutBounds.set(MathKt.roundToInt(rectF.left), MathKt.roundToInt(rectF.top), MathKt.roundToInt(rectF.right), MathKt.roundToInt(rectF.bottom));
-        this.excludedPackageIds = CollectionsKt.toSet(StringsKt__StringsKt.split$default(str2, new String[]{","}, false, 0, 6, null));
+        this.cutoutBounds.set(MathKt__MathJVMKt.roundToInt(rectF.left), MathKt__MathJVMKt.roundToInt(rectF.top), MathKt__MathJVMKt.roundToInt(rectF.right), MathKt__MathJVMKt.roundToInt(rectF.bottom));
+        this.excludedPackageIds = CollectionsKt___CollectionsKt.toSet(StringsKt__StringsKt.split$default(str2, new String[]{","}, false, 0, 6, null));
     }
 
     public final void startListening() {
@@ -106,9 +106,9 @@ public final class CameraAvailabilityListener {
             if (systemService != null) {
                 CameraManager cameraManager = (CameraManager) systemService;
                 Resources resources = context.getResources();
-                String string = resources.getString(C0020R$string.config_frontBuiltInDisplayCutoutProtection);
-                String string2 = resources.getString(C0020R$string.config_protectedCameraId);
-                String string3 = resources.getString(C0020R$string.config_cameraProtectionExcludedPackages);
+                String string = resources.getString(C0021R$string.config_frontBuiltInDisplayCutoutProtection);
+                String string2 = resources.getString(C0021R$string.config_protectedCameraId);
+                String string3 = resources.getString(C0021R$string.config_cameraProtectionExcludedPackages);
                 Intrinsics.checkExpressionValueIsNotNull(string, "pathString");
                 Path pathFromString = pathFromString(string);
                 Intrinsics.checkExpressionValueIsNotNull(string2, "cameraId");

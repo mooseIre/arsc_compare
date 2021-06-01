@@ -30,7 +30,7 @@ public final class ControlsListingControllerImpl$serviceListingCallback$1 implem
             Intrinsics.checkExpressionValueIsNotNull(componentName, "s.getComponentName()");
             linkedHashSet.add(componentName);
         }
-        this.this$0.backgroundExecutor.execute(new Runnable(this) {
+        ControlsListingControllerImpl.access$getBackgroundExecutor$p(this.this$0).execute(new Runnable(this) {
             /* class com.android.systemui.controls.management.ControlsListingControllerImpl$serviceListingCallback$1.AnonymousClass1 */
             final /* synthetic */ ControlsListingControllerImpl$serviceListingCallback$1 this$0;
 
@@ -39,10 +39,10 @@ public final class ControlsListingControllerImpl$serviceListingCallback$1 implem
             }
 
             public final void run() {
-                if (this.this$0.this$0.userChangeInProgress.get() <= 0 && !linkedHashSet.equals(this.this$0.this$0.availableComponents)) {
+                if (ControlsListingControllerImpl.access$getUserChangeInProgress$p(this.this$0.this$0).get() <= 0 && !linkedHashSet.equals(ControlsListingControllerImpl.access$getAvailableComponents$p(this.this$0.this$0))) {
                     Log.d("ControlsListingControllerImpl", "ServiceConfig reloaded, count: " + linkedHashSet.size());
-                    this.this$0.this$0.availableComponents = linkedHashSet;
-                    this.this$0.this$0.availableServices = list2;
+                    ControlsListingControllerImpl.access$setAvailableComponents$p(this.this$0.this$0, linkedHashSet);
+                    ControlsListingControllerImpl.access$setAvailableServices$p(this.this$0.this$0, list2);
                     List<ControlsServiceInfo> currentServices = this.this$0.this$0.getCurrentServices();
                     for (ControlsListingController.ControlsListingCallback controlsListingCallback : ControlsListingControllerImpl.access$getCallbacks$p(this.this$0.this$0)) {
                         controlsListingCallback.onServicesUpdated(currentServices);

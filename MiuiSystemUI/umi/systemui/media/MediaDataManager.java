@@ -20,8 +20,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import androidx.palette.graphics.Palette;
 import com.android.internal.graphics.ColorUtils;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.dump.DumpManager;
@@ -276,112 +276,132 @@ public final class MediaDataManager implements Dumpable {
         Icon icon;
         List list;
         Context context2;
+        String str3;
         Notification notification;
         Notification.Action[] actionArr;
         MediaSession.Token token = (MediaSession.Token) statusBarNotification.getNotification().extras.getParcelable("android.mediaSession");
         MediaController create = this.mediaControllerFactory.create(token);
         Intrinsics.checkExpressionValueIsNotNull(create, "mediaControllerFactory.create(token)");
         MediaMetadata metadata = create.getMetadata();
-        if (metadata != null) {
-            Notification notification2 = statusBarNotification.getNotification();
-            Intrinsics.checkExpressionValueIsNotNull(notification2, "sbn.notification");
-            Bitmap bitmap = metadata.getBitmap("android.media.metadata.ART");
-            if (bitmap == null) {
-                bitmap = metadata.getBitmap("android.media.metadata.ALBUM_ART");
-            }
-            if (bitmap == null) {
-                bitmap = loadBitmapFromUri(metadata);
-            }
-            if (bitmap == null) {
-                icon = notification2.getLargeIcon();
-            } else {
-                icon = Icon.createWithBitmap(bitmap);
-            }
-            int i = 0;
-            if (icon != null && bitmap == null) {
-                if (icon.getType() == 1 || icon.getType() == 5) {
-                    bitmap = icon.getBitmap();
-                } else {
-                    Drawable loadDrawable = icon.loadDrawable(this.context);
-                    Intrinsics.checkExpressionValueIsNotNull(loadDrawable, "artWorkIcon.loadDrawable(context)");
-                    Bitmap createBitmap = Bitmap.createBitmap(loadDrawable.getIntrinsicWidth(), loadDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-                    Canvas canvas = new Canvas(createBitmap);
-                    loadDrawable.setBounds(0, 0, loadDrawable.getIntrinsicWidth(), loadDrawable.getIntrinsicHeight());
-                    loadDrawable.draw(canvas);
-                    bitmap = createBitmap;
-                }
-            }
-            int computeBackgroundColor = computeBackgroundColor(bitmap);
-            String loadHeaderAppName = Notification.Builder.recoverBuilder(this.context, notification2).loadHeaderAppName();
-            Notification notification3 = statusBarNotification.getNotification();
-            Intrinsics.checkExpressionValueIsNotNull(notification3, "sbn.notification");
-            Drawable loadDrawableAsUser = notification3.getSmallIcon().loadDrawableAsUser(this.context, statusBarNotification.getUser().getIdentifier());
-            Intrinsics.checkExpressionValueIsNotNull(loadDrawableAsUser, "sbn.notification.smallIc…sbn.user.getIdentifier())");
-            Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
-            T t = (T) metadata.getString("android.media.metadata.DISPLAY_TITLE");
-            ref$ObjectRef.element = t;
-            if (t == null) {
-                ref$ObjectRef.element = (T) metadata.getString("android.media.metadata.TITLE");
-            }
-            if (ref$ObjectRef.element == null) {
-                ref$ObjectRef.element = (T) HybridGroupManager.resolveTitle(notification2);
-            }
-            Ref$ObjectRef ref$ObjectRef2 = new Ref$ObjectRef();
-            T t2 = (T) metadata.getString("android.media.metadata.ARTIST");
-            ref$ObjectRef2.element = t2;
-            if (t2 == null) {
-                ref$ObjectRef2.element = (T) HybridGroupManager.resolveText(notification2);
-            }
-            ArrayList arrayList = new ArrayList();
-            Notification.Action[] actionArr2 = notification2.actions;
-            int[] intArray = notification2.extras.getIntArray("android.compactActions");
-            if (intArray == null || (list = ArraysKt___ArraysKt.toMutableList(intArray)) == null) {
-                list = new ArrayList();
-            }
-            Context packageContext = statusBarNotification.getPackageContext(this.context);
-            Intrinsics.checkExpressionValueIsNotNull(packageContext, "sbn.getPackageContext(context)");
-            if (actionArr2 != null) {
-                int length = actionArr2.length;
-                while (i < length) {
-                    Notification.Action action = actionArr2[i];
-                    if (action.getIcon() == null) {
-                        actionArr = actionArr2;
-                        Log.i("MediaDataManager", "No icon for action " + i + ' ' + action.title);
-                        list.remove(Integer.valueOf(i));
-                        context2 = packageContext;
-                        notification = notification2;
-                    } else {
-                        actionArr = actionArr2;
-                        notification = notification2;
-                        context2 = packageContext;
-                        arrayList.add(new MediaAction(action.getIcon().loadDrawable(packageContext), action.actionIntent != null ? new MediaDataManager$loadMediaDataInBg$runnable$1(action) : null, action.title, action));
-                    }
-                    i++;
-                    length = length;
-                    actionArr2 = actionArr;
-                    notification2 = notification;
-                    packageContext = context2;
-                }
-            }
-            this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBg$1(this, str, str2, statusBarNotification, computeBackgroundColor, loadHeaderAppName, loadDrawableAsUser, ref$ObjectRef2, ref$ObjectRef, icon, arrayList, list, token, notification2));
+        String str4 = "MediaDataManager";
+        if (metadata == null) {
+            Log.e(str4, "loadMediaDataInBg: metadata is null, key = " + str);
         }
+        Notification notification2 = statusBarNotification.getNotification();
+        Intrinsics.checkExpressionValueIsNotNull(notification2, "sbn.notification");
+        Bitmap bitmap = metadata != null ? metadata.getBitmap("android.media.metadata.ART") : null;
+        if (bitmap == null) {
+            bitmap = metadata != null ? metadata.getBitmap("android.media.metadata.ALBUM_ART") : null;
+        }
+        if (bitmap == null) {
+            bitmap = loadBitmapFromUri(metadata);
+        }
+        if (bitmap == null) {
+            icon = notification2.getLargeIcon();
+        } else {
+            icon = Icon.createWithBitmap(bitmap);
+        }
+        if (icon != null && bitmap == null) {
+            if (icon.getType() == 1 || icon.getType() == 5) {
+                bitmap = icon.getBitmap();
+            } else {
+                Drawable loadDrawable = icon.loadDrawable(this.context);
+                Intrinsics.checkExpressionValueIsNotNull(loadDrawable, "artWorkIcon.loadDrawable(context)");
+                Bitmap createBitmap = Bitmap.createBitmap(loadDrawable.getIntrinsicWidth(), loadDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(createBitmap);
+                loadDrawable.setBounds(0, 0, loadDrawable.getIntrinsicWidth(), loadDrawable.getIntrinsicHeight());
+                loadDrawable.draw(canvas);
+                bitmap = createBitmap;
+            }
+        }
+        int computeBackgroundColor = computeBackgroundColor(bitmap);
+        String loadHeaderAppName = Notification.Builder.recoverBuilder(this.context, notification2).loadHeaderAppName();
+        Notification notification3 = statusBarNotification.getNotification();
+        Intrinsics.checkExpressionValueIsNotNull(notification3, "sbn.notification");
+        Drawable loadDrawableAsUser = notification3.getSmallIcon().loadDrawableAsUser(this.context, statusBarNotification.getUser().getIdentifier());
+        Intrinsics.checkExpressionValueIsNotNull(loadDrawableAsUser, "sbn.notification.smallIc…sbn.user.getIdentifier())");
+        Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
+        T t = metadata != null ? (T) metadata.getString("android.media.metadata.DISPLAY_TITLE") : null;
+        ref$ObjectRef.element = t;
+        if (t == null) {
+            ref$ObjectRef.element = metadata != null ? (T) metadata.getString("android.media.metadata.TITLE") : null;
+        }
+        if (ref$ObjectRef.element == null) {
+            ref$ObjectRef.element = (T) HybridGroupManager.resolveTitle(notification2);
+        }
+        Ref$ObjectRef ref$ObjectRef2 = new Ref$ObjectRef();
+        T t2 = metadata != null ? (T) metadata.getString("android.media.metadata.ARTIST") : null;
+        ref$ObjectRef2.element = t2;
+        if (t2 == null) {
+            ref$ObjectRef2.element = (T) HybridGroupManager.resolveText(notification2);
+        }
+        ArrayList arrayList = new ArrayList();
+        Notification.Action[] actionArr2 = notification2.actions;
+        int[] intArray = notification2.extras.getIntArray("android.compactActions");
+        if (intArray == null || (list = ArraysKt___ArraysKt.toMutableList(intArray)) == null) {
+            list = new ArrayList();
+        }
+        Context packageContext = statusBarNotification.getPackageContext(this.context);
+        Intrinsics.checkExpressionValueIsNotNull(packageContext, "sbn.getPackageContext(context)");
+        if (actionArr2 != null) {
+            int length = actionArr2.length;
+            int i = 0;
+            while (i < length) {
+                Notification.Action action = actionArr2[i];
+                if (action.getIcon() == null) {
+                    actionArr = actionArr2;
+                    StringBuilder sb = new StringBuilder();
+                    notification = notification2;
+                    sb.append("No icon for action ");
+                    sb.append(i);
+                    sb.append(' ');
+                    sb.append(action.title);
+                    Log.i(str4, sb.toString());
+                    list.remove(Integer.valueOf(i));
+                    str3 = str4;
+                    context2 = packageContext;
+                } else {
+                    actionArr = actionArr2;
+                    notification = notification2;
+                    str3 = str4;
+                    context2 = packageContext;
+                    arrayList.add(new MediaAction(action.getIcon().loadDrawable(packageContext), action.actionIntent != null ? new MediaDataManager$loadMediaDataInBg$runnable$1(action) : null, action.title, action));
+                }
+                i++;
+                length = length;
+                actionArr2 = actionArr;
+                notification2 = notification;
+                str4 = str3;
+                packageContext = context2;
+            }
+        }
+        this.foregroundExecutor.execute(new MediaDataManager$loadMediaDataInBg$1(this, str, str2, statusBarNotification, computeBackgroundColor, loadHeaderAppName, loadDrawableAsUser, ref$ObjectRef2, ref$ObjectRef, icon, arrayList, list, token, notification2));
     }
 
     private final Bitmap loadBitmapFromUri(MediaMetadata mediaMetadata) {
         String[] access$getART_URIS$p = MediaDataManagerKt.access$getART_URIS$p();
-        for (String str : access$getART_URIS$p) {
-            String string = mediaMetadata.getString(str);
-            if (!TextUtils.isEmpty(string)) {
-                Uri parse = Uri.parse(string);
+        int length = access$getART_URIS$p.length;
+        int i = 0;
+        while (true) {
+            String str = null;
+            if (i >= length) {
+                return null;
+            }
+            String str2 = access$getART_URIS$p[i];
+            if (mediaMetadata != null) {
+                str = mediaMetadata.getString(str2);
+            }
+            if (!TextUtils.isEmpty(str)) {
+                Uri parse = Uri.parse(str);
                 Intrinsics.checkExpressionValueIsNotNull(parse, "Uri.parse(uriString)");
                 Bitmap loadBitmapFromUri = loadBitmapFromUri(parse);
                 if (loadBitmapFromUri != null) {
-                    Log.d("MediaDataManager", "loaded art from " + str);
+                    Log.d("MediaDataManager", "loaded art from " + str2);
                     return loadBitmapFromUri;
                 }
             }
+            i++;
         }
-        return null;
     }
 
     private final Bitmap loadBitmapFromUri(Uri uri) {
@@ -422,7 +442,7 @@ public final class MediaDataManager implements Dumpable {
     }
 
     private final MediaAction getResumeMediaAction(Runnable runnable) {
-        return new MediaAction(this.context.getDrawable(C0012R$drawable.lb_ic_play), runnable, this.context.getString(C0020R$string.controls_media_resume), null, 8, null);
+        return new MediaAction(this.context.getDrawable(C0013R$drawable.lb_ic_play), runnable, this.context.getString(C0021R$string.controls_media_resume), null, 8, null);
     }
 
     public final void onMediaDataLoaded(@NotNull String str, @Nullable String str2, @NotNull MediaData mediaData) {

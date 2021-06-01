@@ -16,9 +16,9 @@ import android.widget.BaseAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.FontSizeUtils;
 import com.android.systemui.plugins.qs.QSTile;
 
@@ -56,7 +56,7 @@ public class QSDetailItems extends FrameLayout {
         new H();
         this.mContext = context;
         this.mTag = "QSDetailItems";
-        this.mQsDetailIconOverlaySize = (int) getResources().getDimension(C0011R$dimen.qs_detail_icon_overlay_size);
+        this.mQsDetailIconOverlaySize = (int) getResources().getDimension(C0012R$dimen.qs_detail_icon_overlay_size);
     }
 
     /* access modifiers changed from: protected */
@@ -76,12 +76,12 @@ public class QSDetailItems extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        FontSizeUtils.updateFontSize(this.mEmptyText, C0011R$dimen.qs_detail_empty_text_size);
+        FontSizeUtils.updateFontSize(this.mEmptyText, C0012R$dimen.qs_detail_empty_text_size);
         int childCount = this.mItemList.getChildCount();
         for (int i = 0; i < childCount; i++) {
             View childAt = this.mItemList.getChildAt(i);
-            FontSizeUtils.updateFontSize(childAt, 16908310, C0011R$dimen.qs_detail_item_primary_text_size);
-            FontSizeUtils.updateFontSize(childAt, 16908304, C0011R$dimen.qs_detail_item_secondary_text_size);
+            FontSizeUtils.updateFontSize(childAt, 16908310, C0012R$dimen.qs_detail_item_primary_text_size);
+            FontSizeUtils.updateFontSize(childAt, 16908304, C0012R$dimen.qs_detail_item_secondary_text_size);
         }
     }
 
@@ -159,7 +159,7 @@ public class QSDetailItems extends FrameLayout {
             QSDetailItems qSDetailItems = QSDetailItems.this;
             final Item item = qSDetailItems.mItems[i];
             if (view == null) {
-                view = LayoutInflater.from(qSDetailItems.mContext).inflate(C0016R$layout.miui_qs_detail_item, viewGroup, false);
+                view = LayoutInflater.from(qSDetailItems.mContext).inflate(C0017R$layout.miui_qs_detail_item, viewGroup, false);
             }
             view.setVisibility(QSDetailItems.this.mItemsVisible ? 0 : 4);
             ImageView imageView = (ImageView) view.findViewById(16908294);
@@ -194,7 +194,7 @@ public class QSDetailItems extends FrameLayout {
             });
             ImageView imageView2 = (ImageView) view.findViewById(16908296);
             if (item.canDisconnect) {
-                imageView2.setImageResource(C0012R$drawable.ic_qs_cancel);
+                imageView2.setImageResource(C0013R$drawable.ic_qs_cancel);
                 imageView2.setVisibility(0);
                 imageView2.setClickable(true);
                 imageView2.setOnClickListener(new View.OnClickListener() {

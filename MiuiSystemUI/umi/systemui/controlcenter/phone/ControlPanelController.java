@@ -15,12 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0019R$raw;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0020R$raw;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -117,7 +117,7 @@ public class ControlPanelController implements CallbackController<UseControlPane
     public ControlPanelController(Context context, KeyguardViewMediator keyguardViewMediator, BroadcastDispatcher broadcastDispatcher, SettingsObserver settingsObserver, KeyguardStateController keyguardStateController) {
         this.mContext = context;
         this.mListeners = new ArrayList();
-        this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0015R$integer.use_control_panel_setting_default);
+        this.mUseControlPanelSettingDefault = context.getResources().getInteger(C0016R$integer.use_control_panel_setting_default);
         this.mKeyguardViewMediator = keyguardViewMediator;
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mSettingsObserver = settingsObserver;
@@ -349,11 +349,11 @@ public class ControlPanelController implements CallbackController<UseControlPane
 
     private void showDialog() {
         if (!this.mNcSwitchGuideShown && isUseControlCenter()) {
-            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C0016R$layout.nc_switch_guide_dialog_content, (ViewGroup) null);
-            ((CornerVideoView) frameLayout.findViewById(C0014R$id.guide_video)).play(C0019R$raw.nc_switch_guide_video, 0);
-            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.AlertDialog_Theme_DayNight);
-            builder.setTitle(C0020R$string.control_center_notification_switch_guide);
-            builder.setPositiveButton(C0020R$string.bubbles_user_education_got_it, (DialogInterface.OnClickListener) null);
+            FrameLayout frameLayout = (FrameLayout) LayoutInflater.from(this.mContext).inflate(C0017R$layout.nc_switch_guide_dialog_content, (ViewGroup) null);
+            ((CornerVideoView) frameLayout.findViewById(C0015R$id.guide_video)).play(C0020R$raw.nc_switch_guide_video, 0);
+            AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0022R$style.AlertDialog_Theme_DayNight);
+            builder.setTitle(C0021R$string.control_center_notification_switch_guide);
+            builder.setPositiveButton(C0021R$string.bubbles_user_education_got_it, (DialogInterface.OnClickListener) null);
             builder.setView(frameLayout);
             builder.setCancelable(false);
             AlertDialog create = builder.create();
@@ -390,8 +390,8 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
         AlertDialog alertDialog = this.mDialog;
         if (alertDialog != null) {
-            FrameLayout frameLayout = (FrameLayout) alertDialog.findViewById(C0014R$id.guide_content);
-            if (!(frameLayout == null || (findViewById = frameLayout.findViewById(C0014R$id.guide_video)) == null)) {
+            FrameLayout frameLayout = (FrameLayout) alertDialog.findViewById(C0015R$id.guide_content);
+            if (!(frameLayout == null || (findViewById = frameLayout.findViewById(C0015R$id.guide_video)) == null)) {
                 frameLayout.removeView(findViewById);
             }
             frameLayout.postDelayed(new Runnable() {

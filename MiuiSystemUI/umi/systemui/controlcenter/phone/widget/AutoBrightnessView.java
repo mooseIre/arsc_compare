@@ -4,7 +4,6 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.controlcenter.qs.tileview.CCQSTileView;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSTileHost;
@@ -44,6 +43,11 @@ public class AutoBrightnessView extends FrameLayout {
             /* class com.android.systemui.controlcenter.phone.widget.AutoBrightnessView.AnonymousClass1 */
 
             @Override // com.android.systemui.plugins.qs.QSTile.Callback
+            public int getCallbackType() {
+                return 3;
+            }
+
+            @Override // com.android.systemui.plugins.qs.QSTile.Callback
             public void onAnnouncementRequested(CharSequence charSequence) {
             }
 
@@ -79,10 +83,10 @@ public class AutoBrightnessView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        this.mAutoBrightnessTile.removeCallbacks();
+        this.mAutoBrightnessTile.removeCallbacksByType(3);
     }
 
     public void updateResources() {
-        ((CCQSTileView) this.mAutoBrightnessView).getIcon().updateResources();
+        this.mAutoBrightnessView.getIcon().updateResources();
     }
 }

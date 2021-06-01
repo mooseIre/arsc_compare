@@ -9,7 +9,7 @@ import android.view.DisplayCutout;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dumpable;
 import com.android.systemui.ScreenDecorations;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
@@ -104,7 +104,7 @@ public final class StatusBarTouchableRegionManager implements Dumpable {
     public void setup(StatusBar statusBar, View view) {
         this.mStatusBar = statusBar;
         this.mNotificationShadeWindowView = view;
-        this.mNotificationPanelView = view.findViewById(C0014R$id.notification_panel);
+        this.mNotificationPanelView = view.findViewById(C0015R$id.notification_panel);
     }
 
     @Override // com.android.systemui.Dumpable

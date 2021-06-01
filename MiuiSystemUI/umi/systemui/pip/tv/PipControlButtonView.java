@@ -12,8 +12,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 
 public class PipControlButtonView extends RelativeLayout {
     private Animator mButtonFocusGainAnimator;
@@ -54,10 +54,10 @@ public class PipControlButtonView extends RelativeLayout {
                 }
             }
         };
-        ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(C0016R$layout.tv_pip_control_button, this);
-        this.mIconImageView = (ImageView) findViewById(C0014R$id.icon);
-        this.mButtonImageView = (ImageView) findViewById(C0014R$id.button);
-        this.mDescriptionTextView = (TextView) findViewById(C0014R$id.desc);
+        ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(C0017R$layout.tv_pip_control_button, this);
+        this.mIconImageView = (ImageView) findViewById(C0015R$id.icon);
+        this.mButtonImageView = (ImageView) findViewById(C0015R$id.button);
+        this.mDescriptionTextView = (TextView) findViewById(C0015R$id.desc);
         TypedArray obtainStyledAttributes = context.obtainStyledAttributes(attributeSet, new int[]{16843033, 16843087}, i, i2);
         setImageResource(obtainStyledAttributes.getResourceId(0, 0));
         setText(obtainStyledAttributes.getResourceId(1, 0));

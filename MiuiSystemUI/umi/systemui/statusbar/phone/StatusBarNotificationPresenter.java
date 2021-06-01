@@ -15,9 +15,9 @@ import com.android.internal.statusbar.NotificationVisibility;
 import com.android.internal.widget.MessagingGroup;
 import com.android.internal.widget.MessagingMessage;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.ForegroundServiceNotificationListener;
 import com.android.systemui.InitController;
@@ -158,12 +158,12 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
         AboveShelfObserver aboveShelfObserver = new AboveShelfObserver(viewGroup);
         this.mAboveShelfObserver = aboveShelfObserver;
         this.mActivityLaunchAnimator = activityLaunchAnimator;
-        aboveShelfObserver.setListener((AboveShelfObserver.HasViewAboveShelfChangedListener) notificationShadeWindowView.findViewById(C0014R$id.notification_container_parent));
+        aboveShelfObserver.setListener((AboveShelfObserver.HasViewAboveShelfChangedListener) notificationShadeWindowView.findViewById(C0015R$id.notification_container_parent));
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mDozeScrimController = dozeScrimController;
         this.mScrimController = scrimController;
         KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(KeyguardManager.class);
-        this.mMaxAllowedKeyguardNotifications = context.getResources().getInteger(C0015R$integer.keyguard_max_notification_count);
+        this.mMaxAllowedKeyguardNotifications = context.getResources().getInteger(C0016R$integer.keyguard_max_notification_count);
         this.mBarService = IStatusBarService.Stub.asInterface(ServiceManager.getService("statusbar"));
         IVrManager asInterface = IVrManager.Stub.asInterface(ServiceManager.getService("vrmanager"));
         if (asInterface != null) {
@@ -419,7 +419,7 @@ public class StatusBarNotificationPresenter implements NotificationPresenter, Co
     public void onActivated() {
         this.mLockscreenGestureLogger.write(192, 0, 0);
         this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_NOTIFICATION_FALSE_TOUCH);
-        this.mNotificationPanel.showTransientIndication(C0020R$string.notification_tap_again);
+        this.mNotificationPanel.showTransientIndication(C0021R$string.notification_tap_again);
         ActivatableNotificationView activatedChild = this.mNotificationPanel.getActivatedChild();
         if (activatedChild != null) {
             activatedChild.makeInactive(true);

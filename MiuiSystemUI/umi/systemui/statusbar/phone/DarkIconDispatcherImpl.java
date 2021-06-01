@@ -7,8 +7,8 @@ import android.graphics.Rect;
 import android.util.ArrayMap;
 import android.widget.ImageView;
 import androidx.appcompat.R$styleable;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0010R$color;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.CommandQueue;
@@ -36,8 +36,8 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
     }
 
     public DarkIconDispatcherImpl(Context context, CommandQueue commandQueue) {
-        this.mDarkModeIconColorSingleTone = context.getColor(C0010R$color.dark_mode_icon_color_single_tone);
-        this.mLightModeIconColorSingleTone = context.getColor(C0010R$color.light_mode_icon_color_single_tone);
+        this.mDarkModeIconColorSingleTone = context.getColor(C0011R$color.dark_mode_icon_color_single_tone);
+        this.mLightModeIconColorSingleTone = context.getColor(C0011R$color.light_mode_icon_color_single_tone);
         this.mTransitionsController = new LightBarTransitionsController(context, this, commandQueue);
         this.mContext = context;
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
@@ -66,14 +66,14 @@ public class DarkIconDispatcherImpl implements SysuiDarkIconDispatcher, LightBar
     /* access modifiers changed from: protected */
     public void updateResource() {
         int i;
-        this.mLightModeIconColorSingleTone = this.mContext.getColor(C0010R$color.light_mode_icon_color_single_tone);
+        this.mLightModeIconColorSingleTone = this.mContext.getColor(C0011R$color.light_mode_icon_color_single_tone);
         if (!((SettingsManager) Dependency.get(SettingsManager.class)).getMiuiOptimizationEnabled()) {
             i = -1728053248;
         } else {
-            i = this.mContext.getColor(C0010R$color.dark_mode_icon_color_single_tone);
+            i = this.mContext.getColor(C0011R$color.dark_mode_icon_color_single_tone);
         }
         this.mDarkModeIconColorSingleTone = i;
-        this.mUseTint = this.mContext.getResources().getBoolean(C0009R$bool.use_status_bar_tint);
+        this.mUseTint = this.mContext.getResources().getBoolean(C0010R$bool.use_status_bar_tint);
         applyDarkIntensity(this.mDarkIntensity);
     }
 

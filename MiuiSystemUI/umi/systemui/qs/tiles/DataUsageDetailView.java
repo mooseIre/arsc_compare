@@ -4,8 +4,8 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.FontSizeUtils;
 import java.text.DecimalFormat;
 
@@ -19,12 +19,12 @@ public class DataUsageDetailView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
-        FontSizeUtils.updateFontSize(this, 16908310, C0011R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0014R$id.usage_text, C0011R$dimen.qs_data_usage_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0014R$id.usage_carrier_text, C0011R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0014R$id.usage_info_top_text, C0011R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0014R$id.usage_period_text, C0011R$dimen.qs_data_usage_text_size);
-        FontSizeUtils.updateFontSize(this, C0014R$id.usage_info_bottom_text, C0011R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, 16908310, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_text, C0012R$dimen.qs_data_usage_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_carrier_text, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_info_top_text, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_period_text, C0012R$dimen.qs_data_usage_text_size);
+        FontSizeUtils.updateFontSize(this, C0015R$id.usage_info_bottom_text, C0012R$dimen.qs_data_usage_text_size);
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:10:0x0089  */

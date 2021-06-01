@@ -2,7 +2,7 @@ package com.android.systemui.plugins;
 
 import android.content.Context;
 import android.os.Looper;
-import com.android.systemui.C0007R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.shared.plugins.PluginEnabler;
 import com.android.systemui.shared.plugins.PluginInitializer;
@@ -27,7 +27,7 @@ public class PluginInitializerImpl implements PluginInitializer {
 
     @Override // com.android.systemui.shared.plugins.PluginInitializer
     public String[] getWhitelistedPlugins(Context context) {
-        return context.getResources().getStringArray(C0007R$array.config_pluginWhitelist);
+        return context.getResources().getStringArray(C0008R$array.config_pluginWhitelist);
     }
 
     @Override // com.android.systemui.shared.plugins.PluginInitializer

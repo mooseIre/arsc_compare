@@ -15,7 +15,7 @@ import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.animator.AdvancedAnimatorImpl;
 import com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator;
@@ -111,7 +111,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 this.this$0.configurationController.removeCallback(this.this$0);
             }
         });
-        this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_panel_margin_horizontal);
+        this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
     }
 
     public final boolean isPortrait() {
@@ -267,7 +267,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 ViewGroup.MarginLayoutParams marginLayoutParams2 = (ViewGroup.MarginLayoutParams) layoutParams3;
                 if (isPortrait()) {
                     QSControlCenterHeaderView header = this.panelView.getHeader();
-                    header.setPadding(this.paddingHorizontal, this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_center_header_paddingTop), this.paddingHorizontal, header.getPaddingBottom());
+                    header.setPadding(this.paddingHorizontal, this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_header_paddingTop), this.paddingHorizontal, header.getPaddingBottom());
                     ControlCenterPanelView controlCenterPanelView = this.panelView;
                     controlCenterPanelView.setPadding(0, 0, 0, controlCenterPanelView.getPaddingBottom());
                     LinearLayout container = this.panelView.getTileContainer().getContainer();
@@ -278,26 +278,26 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                     ControlCenterFooterPanel footer = this.panelView.getFooter();
                     footer.setPadding(this.paddingHorizontal, footer.getPaddingTop(), this.paddingHorizontal, footer.getPaddingBottom());
                     layoutParams.width = -1;
-                    marginLayoutParams2.bottomMargin = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_margin_bottom);
+                    marginLayoutParams2.bottomMargin = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_margin_bottom);
                     marginLayoutParams.width = -1;
                     marginLayoutParams.setMarginEnd(0);
                     marginLayoutParams.height = this.panelView.getBigTileLayout().calculateHeight() + marginLayoutParams2.bottomMargin + this.panelView.getTileLayout().getMinHeight();
                     return;
                 }
-                int dimensionPixelSize = ((CommonUtil.getScreenSize(this.context).x - (this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land) * 2)) - this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_land_tiles_margin_middle)) / 2;
+                int dimensionPixelSize = ((CommonUtil.getScreenSize(this.context).x - (this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land) * 2)) - this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_land_tiles_margin_middle)) / 2;
                 QSControlCenterHeaderView header2 = this.panelView.getHeader();
                 header2.setPadding(0, 0, 0, header2.getPaddingBottom());
                 LinearLayout container3 = this.panelView.getContentContainer().getContainer();
                 container3.setPadding(0, container3.getPaddingTop(), 0, container3.getPaddingBottom());
                 LinearLayout container4 = this.panelView.getTileContainer().getContainer();
-                container4.setPadding(0, this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_padding_top), 0, container4.getPaddingBottom());
+                container4.setPadding(0, this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_padding_top), 0, container4.getPaddingBottom());
                 ControlCenterFooterPanel footer2 = this.panelView.getFooter();
                 footer2.setPadding(0, footer2.getPaddingTop(), 0, footer2.getPaddingBottom());
                 ControlCenterPanelView controlCenterPanelView2 = this.panelView;
                 controlCenterPanelView2.setPadding(dimensionPixelSize, 0, dimensionPixelSize, controlCenterPanelView2.getPaddingBottom());
-                layoutParams.width = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land);
-                marginLayoutParams.width = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land);
-                marginLayoutParams.setMarginEnd(this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_land_tiles_margin_middle));
+                layoutParams.width = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
+                marginLayoutParams.width = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
+                marginLayoutParams.setMarginEnd(this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_land_tiles_margin_middle));
                 marginLayoutParams2.bottomMargin = 0;
                 marginLayoutParams.height = -1;
                 return;

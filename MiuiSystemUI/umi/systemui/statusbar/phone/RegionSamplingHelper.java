@@ -8,7 +8,7 @@ import android.view.SurfaceControl;
 import android.view.View;
 import android.view.ViewRootImpl;
 import android.view.ViewTreeObserver;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import java.io.PrintWriter;
 
 public class RegionSamplingHelper implements View.OnAttachStateChangeListener, View.OnLayoutChangeListener {
@@ -69,8 +69,8 @@ public class RegionSamplingHelper implements View.OnAttachStateChangeListener, V
         view.addOnAttachStateChangeListener(this);
         this.mSampledView.addOnLayoutChangeListener(this);
         Resources resources = view.getResources();
-        this.mLuminanceThreshold = resources.getFloat(C0011R$dimen.navigation_luminance_threshold);
-        this.mLuminanceChangeThreshold = resources.getFloat(C0011R$dimen.navigation_luminance_change_threshold);
+        this.mLuminanceThreshold = resources.getFloat(C0012R$dimen.navigation_luminance_threshold);
+        this.mLuminanceChangeThreshold = resources.getFloat(C0012R$dimen.navigation_luminance_change_threshold);
         this.mCallback = samplingCallback;
     }
 

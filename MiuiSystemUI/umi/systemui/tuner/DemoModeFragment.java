@@ -15,7 +15,7 @@ import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.SwitchPreference;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 
 public class DemoModeFragment extends PreferenceFragment implements Preference.OnPreferenceChangeListener {
     private static final String[] STATUS_ICONS = {"volume", "bluetooth", "location", "alarm", "zen", "sync", "tty", "eri", "mute", "speakerphone", "managed_profile"};
@@ -35,11 +35,11 @@ public class DemoModeFragment extends PreferenceFragment implements Preference.O
         Context context = getContext();
         SwitchPreference switchPreference = new SwitchPreference(context);
         this.mEnabledSwitch = switchPreference;
-        switchPreference.setTitle(C0020R$string.enable_demo_mode);
+        switchPreference.setTitle(C0021R$string.enable_demo_mode);
         this.mEnabledSwitch.setOnPreferenceChangeListener(this);
         SwitchPreference switchPreference2 = new SwitchPreference(context);
         this.mOnSwitch = switchPreference2;
-        switchPreference2.setTitle(C0020R$string.show_demo_mode);
+        switchPreference2.setTitle(C0021R$string.show_demo_mode);
         this.mOnSwitch.setEnabled(false);
         this.mOnSwitch.setOnPreferenceChangeListener(this);
         PreferenceScreen createPreferenceScreen = getPreferenceManager().createPreferenceScreen(context);

@@ -457,8 +457,13 @@ public class StatusBarKeyguardViewManager implements RemoteInputController.Callb
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onThemeChanged() {
-        hideBouncer(true);
-        this.mBouncer.prepare();
+        if (!isShowing()) {
+            return;
+        }
+        if (!isBouncerShowing() || !this.mKeyguardUpdateManager.isSimPinSecure()) {
+            hideBouncer(true);
+            this.mBouncer.prepare();
+        }
     }
 
     /* access modifiers changed from: private */

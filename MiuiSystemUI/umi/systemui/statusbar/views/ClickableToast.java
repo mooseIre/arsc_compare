@@ -12,8 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +27,7 @@ public final class ClickableToast implements IClickableToast {
     private Runnable mCancelRunnable;
     private WindowManager.LayoutParams mParams;
     private Runnable mShowRunnable;
-    private View mView = LayoutInflater.from(this.context).inflate(C0016R$layout.clickable_toast, (ViewGroup) null);
+    private View mView = LayoutInflater.from(this.context).inflate(C0017R$layout.clickable_toast, (ViewGroup) null);
     private WindowManager mWindowManager;
 
     @NotNull
@@ -145,7 +145,7 @@ public final class ClickableToast implements IClickableToast {
     public IClickableToast setClickListener(@NotNull View.OnClickListener onClickListener) {
         Intrinsics.checkParameterIsNotNull(onClickListener, "listener");
         View view = this.mView;
-        TextView textView = view != null ? (TextView) view.findViewById(C0014R$id.click_btn_text) : null;
+        TextView textView = view != null ? (TextView) view.findViewById(C0015R$id.click_btn_text) : null;
         if (textView != null) {
             textView.setVisibility(0);
         }
@@ -160,7 +160,7 @@ public final class ClickableToast implements IClickableToast {
     public IClickableToast setText(@NotNull CharSequence charSequence) {
         Intrinsics.checkParameterIsNotNull(charSequence, "text");
         View view = this.mView;
-        TextView textView = view != null ? (TextView) view.findViewById(C0014R$id.click_btn_text) : null;
+        TextView textView = view != null ? (TextView) view.findViewById(C0015R$id.click_btn_text) : null;
         if (textView != null) {
             textView.setText(charSequence);
         }

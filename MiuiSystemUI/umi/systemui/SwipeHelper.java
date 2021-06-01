@@ -109,8 +109,8 @@ public class SwipeHelper implements Gefingerpoken {
         this.mLongPressTimeout = (long) (((float) ViewConfiguration.getLongPressTimeout()) * 1.5f);
         Resources resources = context.getResources();
         this.mDensityScale = resources.getDisplayMetrics().density;
-        this.mFalsingThreshold = resources.getDimensionPixelSize(C0011R$dimen.swipe_helper_falsing_threshold);
-        this.mFadeDependingOnAmountSwiped = resources.getBoolean(C0009R$bool.config_fadeDependingOnAmountSwiped);
+        this.mFalsingThreshold = resources.getDimensionPixelSize(C0012R$dimen.swipe_helper_falsing_threshold);
+        this.mFadeDependingOnAmountSwiped = resources.getBoolean(C0010R$bool.config_fadeDependingOnAmountSwiped);
         this.mFalsingManager = falsingManager;
         this.mFlingAnimationUtils = new FlingAnimationUtils(resources.getDisplayMetrics(), ((float) getMaxEscapeAnimDuration()) / 1000.0f);
     }

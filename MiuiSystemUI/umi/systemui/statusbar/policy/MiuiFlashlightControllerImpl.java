@@ -17,8 +17,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Slog;
 import com.android.keyguard.charge.ChargeUtils;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.statusbar.policy.FlashlightController;
 import java.io.File;
@@ -126,8 +126,8 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
     public MiuiFlashlightControllerImpl(Context context) {
         this.mContext = context;
         this.mCameraManager = (CameraManager) context.getSystemService("camera");
-        this.mWaringToastString = this.mContext.getResources().getString(C0020R$string.torch_high_temperature_warning);
-        this.mForceOffLightState = this.mContext.getResources().getInteger(C0015R$integer.flash_force_off_light_state);
+        this.mWaringToastString = this.mContext.getResources().getString(C0021R$string.torch_high_temperature_warning);
+        this.mForceOffLightState = this.mContext.getResources().getInteger(C0016R$integer.flash_force_off_light_state);
         ensureHandler();
         this.mBgHandler.post(new Runnable() {
             /* class com.android.systemui.statusbar.policy.MiuiFlashlightControllerImpl.AnonymousClass1 */
@@ -168,8 +168,8 @@ public class MiuiFlashlightControllerImpl implements FlashlightController {
 
     private void initMiuiFlash() {
         Resources resources = this.mContext.getResources();
-        this.mValueOn = resources.getInteger(C0015R$integer.flash_on_value);
-        this.mFlashDevice = resources.getString(C0020R$string.flash_device);
+        this.mValueOn = resources.getInteger(C0016R$integer.flash_on_value);
+        this.mFlashDevice = resources.getString(C0021R$string.flash_device);
         int i = 0;
         while (!new File(this.mFlashDevice).exists()) {
             String[] strArr = FLASH_DEVICES;

@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
 import com.android.keyguard.charge.MiuiBatteryStatus;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.BatteryController;
@@ -78,16 +78,16 @@ public class BatteryIndicator extends ImageView implements DemoMode, BatteryCont
             this.mClipWidth = i2;
             invalidate();
         }
-        int i3 = C0012R$drawable.battery_indicator;
+        int i3 = C0013R$drawable.battery_indicator;
         if (!this.mIsCharging) {
             if (this.mIsPowerSave || this.mIsExtremePowerSave) {
-                i3 = C0012R$drawable.battery_indicator_power_save;
+                i3 = C0013R$drawable.battery_indicator_power_save;
             } else {
                 if (!this.mDemoMode) {
                     i = this.mPowerLevel;
                 }
                 if (i < this.mLowLevel) {
-                    i3 = C0012R$drawable.battery_indicator_low;
+                    i3 = C0013R$drawable.battery_indicator_low;
                 }
             }
         }

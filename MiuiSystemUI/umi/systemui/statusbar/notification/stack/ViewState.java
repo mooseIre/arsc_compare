@@ -8,7 +8,7 @@ import android.animation.ValueAnimator;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
@@ -35,17 +35,17 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationStartTag() {
-            return C0014R$id.scale_x_animator_start_value_tag;
+            return C0015R$id.scale_x_animator_start_value_tag;
         }
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationEndTag() {
-            return C0014R$id.scale_x_animator_end_value_tag;
+            return C0015R$id.scale_x_animator_end_value_tag;
         }
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimatorTag() {
-            return C0014R$id.scale_x_animator_tag;
+            return C0015R$id.scale_x_animator_tag;
         }
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
@@ -58,17 +58,17 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationStartTag() {
-            return C0014R$id.scale_y_animator_start_value_tag;
+            return C0015R$id.scale_y_animator_start_value_tag;
         }
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimationEndTag() {
-            return C0014R$id.scale_y_animator_end_value_tag;
+            return C0015R$id.scale_y_animator_end_value_tag;
         }
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
         public int getAnimatorTag() {
-            return C0014R$id.scale_y_animator_tag;
+            return C0015R$id.scale_y_animator_tag;
         }
 
         @Override // com.android.systemui.statusbar.notification.AnimatableProperty
@@ -76,18 +76,18 @@ public class ViewState extends MiuiViewStateBase implements Dumpable {
             return View.SCALE_Y;
         }
     };
-    private static final int TAG_ANIMATOR_ALPHA = C0014R$id.alpha_animator_tag;
-    private static final int TAG_ANIMATOR_TRANSLATION_X = C0014R$id.translation_x_animator_tag;
-    private static final int TAG_ANIMATOR_TRANSLATION_Y = C0014R$id.translation_y_animator_tag;
-    private static final int TAG_ANIMATOR_TRANSLATION_Z = C0014R$id.translation_z_animator_tag;
-    private static final int TAG_END_ALPHA = C0014R$id.alpha_animator_end_value_tag;
-    private static final int TAG_END_TRANSLATION_X = C0014R$id.translation_x_animator_end_value_tag;
-    private static final int TAG_END_TRANSLATION_Y = C0014R$id.translation_y_animator_end_value_tag;
-    private static final int TAG_END_TRANSLATION_Z = C0014R$id.translation_z_animator_end_value_tag;
-    private static final int TAG_START_ALPHA = C0014R$id.alpha_animator_start_value_tag;
-    private static final int TAG_START_TRANSLATION_X = C0014R$id.translation_x_animator_start_value_tag;
-    private static final int TAG_START_TRANSLATION_Y = C0014R$id.translation_y_animator_start_value_tag;
-    private static final int TAG_START_TRANSLATION_Z = C0014R$id.translation_z_animator_start_value_tag;
+    private static final int TAG_ANIMATOR_ALPHA = C0015R$id.alpha_animator_tag;
+    private static final int TAG_ANIMATOR_TRANSLATION_X = C0015R$id.translation_x_animator_tag;
+    private static final int TAG_ANIMATOR_TRANSLATION_Y = C0015R$id.translation_y_animator_tag;
+    private static final int TAG_ANIMATOR_TRANSLATION_Z = C0015R$id.translation_z_animator_tag;
+    private static final int TAG_END_ALPHA = C0015R$id.alpha_animator_end_value_tag;
+    private static final int TAG_END_TRANSLATION_X = C0015R$id.translation_x_animator_end_value_tag;
+    private static final int TAG_END_TRANSLATION_Y = C0015R$id.translation_y_animator_end_value_tag;
+    private static final int TAG_END_TRANSLATION_Z = C0015R$id.translation_z_animator_end_value_tag;
+    private static final int TAG_START_ALPHA = C0015R$id.alpha_animator_start_value_tag;
+    private static final int TAG_START_TRANSLATION_X = C0015R$id.translation_x_animator_start_value_tag;
+    private static final int TAG_START_TRANSLATION_Y = C0015R$id.translation_y_animator_start_value_tag;
+    private static final int TAG_START_TRANSLATION_Z = C0015R$id.translation_z_animator_start_value_tag;
     public float alpha;
     public boolean gone;
     public boolean hidden;

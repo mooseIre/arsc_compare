@@ -12,8 +12,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.Interpolator;
 import android.widget.ImageView;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.FakeShadowView;
@@ -148,14 +148,14 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             NotificationViewWrapper visibleWrapper = showingLayout != null ? showingLayout.getVisibleWrapper(2) : null;
             boolean isTransparentBg = visibleWrapper instanceof MiuiNotificationOneLineViewWrapper ? ((MiuiNotificationOneLineViewWrapper) visibleWrapper).isTransparentBg() : false;
             if (isTransparentBg) {
-                this.mBackgroundNormal.setCustomBackground(C0012R$drawable.optimized_transparent_heads_up_notification_bg);
+                this.mBackgroundNormal.setCustomBackground(C0013R$drawable.optimized_transparent_heads_up_notification_bg);
             } else {
-                this.mBackgroundNormal.setCustomBackground(C0012R$drawable.notification_heads_up_bg);
+                this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_heads_up_bg);
             }
             View mMiniBar = getMMiniBar();
             Intrinsics.checkExpressionValueIsNotNull(mMiniBar, "mMiniBar");
             if (mMiniBar.getBackground() instanceof GradientDrawable) {
-                int i = isTransparentBg ? C0010R$color.mini_window_bar_color_gamemode : C0010R$color.mini_window_bar_color;
+                int i = isTransparentBg ? C0011R$color.mini_window_bar_color_gamemode : C0011R$color.mini_window_bar_color;
                 View mMiniBar2 = getMMiniBar();
                 Intrinsics.checkExpressionValueIsNotNull(mMiniBar2, "mMiniBar");
                 Drawable background = mMiniBar2.getBackground();
@@ -166,7 +166,7 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
                 }
             }
         } else {
-            this.mBackgroundNormal.setCustomBackground(C0012R$drawable.notification_item_bg);
+            this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
         }
         this.mBackgroundNormal.setBlurDisable(!NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState()));
     }

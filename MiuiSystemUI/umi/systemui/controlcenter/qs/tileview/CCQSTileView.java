@@ -18,10 +18,10 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.widget.VisibleFocusedTextView;
@@ -58,11 +58,11 @@ public class CCQSTileView extends QSTileView {
         super(context);
         this.mHandler = new H();
         setOrientation(1);
-        context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_tile_label_padding_top);
+        context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_label_padding_top);
         FrameLayout frameLayout = new FrameLayout(context);
         this.mIconFrame = frameLayout;
         frameLayout.setForegroundGravity(17);
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_tile_icon_bg_size);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_icon_bg_size);
         addView(this.mIconFrame, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
         this.mIcon = qSIconView;
         this.mIconFrame.addView(qSIconView, new LinearLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize));
@@ -121,9 +121,9 @@ public class CCQSTileView extends QSTileView {
 
     private static VisibleFocusedTextView createQSStyleLabel(Context context) {
         VisibleFocusedTextView visibleFocusedTextView = new VisibleFocusedTextView(context);
-        visibleFocusedTextView.setTextAppearance(C0021R$style.TextAppearance_QSControl_CCTileLabel);
+        visibleFocusedTextView.setTextAppearance(C0022R$style.TextAppearance_QSControl_CCTileLabel);
         new LinearLayout.LayoutParams(-1, -2).gravity = 17;
-        visibleFocusedTextView.setPadding(0, context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_tile_label_padding_top), 0, 0);
+        visibleFocusedTextView.setPadding(0, context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_tile_label_padding_top), 0, 0);
         visibleFocusedTextView.setGravity(17);
         visibleFocusedTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         visibleFocusedTextView.setMarqueeRepeatLimit(2);
@@ -195,7 +195,7 @@ public class CCQSTileView extends QSTileView {
         }
         if (!Objects.equals(this.mLabel.getText(), state.label) || this.mState != state.state) {
             if (state.state == 0) {
-                state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(getContext().getColor(C0010R$color.qs_control_tile_text_unavailable_color)), 18);
+                state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(getContext().getColor(C0011R$color.qs_control_tile_text_unavailable_color)), 18);
             }
             this.mState = state.state;
             this.mLabel.setEnabled(true ^ state.disabledByPolicy);
@@ -205,7 +205,7 @@ public class CCQSTileView extends QSTileView {
 
     public void updateResources() {
         getIcon().updateResources();
-        getLabel().setTextAppearance(C0021R$style.TextAppearance_QSControl_CCTileLabel);
+        getLabel().setTextAppearance(C0022R$style.TextAppearance_QSControl_CCTileLabel);
     }
 
     @Override // com.android.systemui.plugins.qs.QSTileView
@@ -258,7 +258,7 @@ public class CCQSTileView extends QSTileView {
             accessibilityEvent.setClassName(this.mAccessibilityClass);
             if (Switch.class.getName().equals(this.mAccessibilityClass)) {
                 boolean z = this.mClicked ? !this.mTileState : this.mTileState;
-                accessibilityEvent.setContentDescription(getResources().getString(z ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
+                accessibilityEvent.setContentDescription(getResources().getString(z ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
                 accessibilityEvent.setChecked(z);
             }
         }
@@ -272,7 +272,7 @@ public class CCQSTileView extends QSTileView {
             }
             if (Switch.class.getName().equals(this.mAccessibilityClass)) {
                 boolean z = this.mClicked ? !this.mTileState : this.mTileState;
-                accessibilityNodeInfo.setText(getResources().getString(z ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
+                accessibilityNodeInfo.setText(getResources().getString(z ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
                 accessibilityNodeInfo.setChecked(z);
                 accessibilityNodeInfo.setCheckable(true);
             }

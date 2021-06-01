@@ -2,7 +2,7 @@ package com.android.systemui.stackdivider;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class DockedDividerUtils {
     public static int invertDockSide(int i) {
@@ -93,10 +93,10 @@ public class DockedDividerUtils {
     }
 
     public static int getDividerInsets(Resources resources) {
-        return resources.getDimensionPixelSize(C0011R$dimen.docked_stack_divider_insets);
+        return resources.getDimensionPixelSize(C0012R$dimen.docked_stack_divider_insets);
     }
 
     public static int getDividerSize(Resources resources, int i) {
-        return resources.getDimensionPixelSize(C0011R$dimen.docked_stack_divider_thickness) - (i * 2);
+        return resources.getDimensionPixelSize(C0012R$dimen.docked_stack_divider_thickness) - (i * 2);
     }
 }

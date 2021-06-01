@@ -7,8 +7,8 @@ import android.hardware.SensorEventListener;
 import android.util.Log;
 import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.util.concurrency.DelayableExecutor;
 import com.android.systemui.util.sensors.ProximitySensor;
 import java.util.ArrayList;
@@ -88,7 +88,7 @@ public class ProximitySensor {
     }
 
     private Sensor findCustomProxSensor(Resources resources) {
-        String string = resources.getString(C0020R$string.proximity_sensor_type);
+        String string = resources.getString(C0021R$string.proximity_sensor_type);
         if (string.isEmpty()) {
             return null;
         }
@@ -102,7 +102,7 @@ public class ProximitySensor {
 
     private float getCustomProxThreshold(Resources resources) {
         try {
-            return resources.getFloat(C0011R$dimen.proximity_sensor_threshold);
+            return resources.getFloat(C0012R$dimen.proximity_sensor_threshold);
         } catch (Resources.NotFoundException unused) {
             throw new IllegalStateException("R.dimen.proximity_sensor_threshold must be set.");
         }

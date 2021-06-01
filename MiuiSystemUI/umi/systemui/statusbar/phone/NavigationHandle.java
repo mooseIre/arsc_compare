@@ -10,8 +10,8 @@ import android.util.AttributeSet;
 import android.view.ContextThemeWrapper;
 import android.view.View;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0008R$attr;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
 
 public class NavigationHandle extends View implements ButtonInterface {
     protected final int mBottom;
@@ -45,13 +45,13 @@ public class NavigationHandle extends View implements ButtonInterface {
         super(context, attributeSet);
         this.mPaint = new Paint();
         Resources resources = context.getResources();
-        this.mRadius = resources.getDimensionPixelSize(C0011R$dimen.navigation_handle_radius);
-        this.mBottom = resources.getDimensionPixelSize(C0011R$dimen.navigation_handle_bottom);
-        int themeAttr = Utils.getThemeAttr(context, C0008R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0008R$attr.lightIconTheme));
+        this.mRadius = resources.getDimensionPixelSize(C0012R$dimen.navigation_handle_radius);
+        this.mBottom = resources.getDimensionPixelSize(C0012R$dimen.navigation_handle_bottom);
+        int themeAttr = Utils.getThemeAttr(context, C0009R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, themeAttr);
-        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.homeHandleColor);
-        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.homeHandleColor);
+        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.homeHandleColor);
+        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.homeHandleColor);
         this.mPaint.setAntiAlias(true);
         setFocusable(false);
     }

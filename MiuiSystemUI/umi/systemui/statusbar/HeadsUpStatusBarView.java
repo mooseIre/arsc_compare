@@ -13,8 +13,8 @@ import android.view.View;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.AlphaOptimizedLinearLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
 import java.util.Iterator;
@@ -65,7 +65,7 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
             }
         };
         Resources resources = getResources();
-        this.mAbsoluteStartPadding = resources.getDimensionPixelSize(C0011R$dimen.notification_side_paddings) + resources.getDimensionPixelSize(17105356);
+        this.mAbsoluteStartPadding = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings) + resources.getDimensionPixelSize(17105356);
         int dimensionPixelSize = resources.getDimensionPixelSize(17105355);
         this.mEndMargin = dimensionPixelSize;
         setPaddingRelative(this.mAbsoluteStartPadding, 0, dimensionPixelSize, 0);
@@ -73,7 +73,7 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
     }
 
     private void updateMaxWidth() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.qs_panel_width);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.qs_panel_width);
         if (dimensionPixelSize != this.mMaxWidth) {
             this.mMaxWidth = dimensionPixelSize;
             requestLayout();
@@ -129,8 +129,8 @@ public class HeadsUpStatusBarView extends AlphaOptimizedLinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mIconPlaceholder = findViewById(C0014R$id.icon_placeholder);
-        this.mTextView = (TextView) findViewById(C0014R$id.text);
+        this.mIconPlaceholder = findViewById(C0015R$id.icon_placeholder);
+        this.mTextView = (TextView) findViewById(C0015R$id.text);
     }
 
     public void setEntry(NotificationEntry notificationEntry) {

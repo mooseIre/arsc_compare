@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
-import com.android.systemui.C0007R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Prefs;
@@ -48,21 +48,21 @@ public class NotificationSettingsManager implements Dumpable {
     public NotificationSettingsManager(Context context, CloudDataManager cloudDataManager) {
         this.mContext = context;
         this.mBgHandler = new Handler((Looper) Dependency.get(Dependency.BG_LOOPER));
-        this.mPrioritizedPackages = getStringArray(C0007R$array.config_prioritizedPackages);
-        this.mSubstitutePackages = getStringArray(C0007R$array.config_canSendSubstituteNotificationPackages);
-        this.mCustomAppIconPackages = getStringArray(C0007R$array.config_canCustomNotificationAppIcon);
-        this.mDisableAutoGroupSummaryPackages = getStringArray(C0007R$array.config_disableAutoGroupSummaryPackages);
-        this.mHideForegroundWhitelist = getStringArray(C0007R$array.system_foreground_notification_whitelist);
-        this.mHideAlertWindowWhitelist = getStringArray(C0007R$array.system_alert_window_notification_whitelist);
-        this.mAvoidDisturbPackages = getStringArray(C0007R$array.avoid_disturb_app_whitelist);
-        this.mPreInstallPackages = getStringArray(C0007R$array.config_preInstalledPackages);
-        this.mCanShowBadgePackages = getStringArray(C0007R$array.config_canShowBadgePackages);
-        this.mAllowFloatPackages = getStringArray(C0007R$array.config_allowFloatPackages);
-        this.mAllowKeyguardPackages = getStringArray(C0007R$array.config_allowKeyguardPackages);
-        this.mBlockFloatPackages = getStringArray(C0007R$array.config_blockFloatPackages);
-        this.mBlockKeyguardPackages = getStringArray(C0007R$array.config_blockKeyguardPackages);
-        this.mAllowNotificationSlide = getStringArray(C0007R$array.config_allowNotificationSlide);
-        this.mImportantWhitelist = getStringArray(C0007R$array.important_section_whitelist);
+        this.mPrioritizedPackages = getStringArray(C0008R$array.config_prioritizedPackages);
+        this.mSubstitutePackages = getStringArray(C0008R$array.config_canSendSubstituteNotificationPackages);
+        this.mCustomAppIconPackages = getStringArray(C0008R$array.config_canCustomNotificationAppIcon);
+        this.mDisableAutoGroupSummaryPackages = getStringArray(C0008R$array.config_disableAutoGroupSummaryPackages);
+        this.mHideForegroundWhitelist = getStringArray(C0008R$array.system_foreground_notification_whitelist);
+        this.mHideAlertWindowWhitelist = getStringArray(C0008R$array.system_alert_window_notification_whitelist);
+        this.mAvoidDisturbPackages = getStringArray(C0008R$array.avoid_disturb_app_whitelist);
+        this.mPreInstallPackages = getStringArray(C0008R$array.config_preInstalledPackages);
+        this.mCanShowBadgePackages = getStringArray(C0008R$array.config_canShowBadgePackages);
+        this.mAllowFloatPackages = getStringArray(C0008R$array.config_allowFloatPackages);
+        this.mAllowKeyguardPackages = getStringArray(C0008R$array.config_allowKeyguardPackages);
+        this.mBlockFloatPackages = getStringArray(C0008R$array.config_blockFloatPackages);
+        this.mBlockKeyguardPackages = getStringArray(C0008R$array.config_blockKeyguardPackages);
+        this.mAllowNotificationSlide = getStringArray(C0008R$array.config_allowNotificationSlide);
+        this.mImportantWhitelist = getStringArray(C0008R$array.important_section_whitelist);
         cloudDataManager.registerListener(new CloudDataListener() {
             /* class com.android.systemui.statusbar.notification.$$Lambda$NotificationSettingsManager$d8gb7CE_AenvkjHLK6pCP4Go */
 

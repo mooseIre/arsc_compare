@@ -7,8 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.statusbar.policy.RegionController;
@@ -88,17 +88,17 @@ public class MiuiNotificationShadeHeader extends RelativeLayout implements Contr
         removeAllViews();
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
         if (!this.mUseControlPanel || this.mOrientation != 1) {
-            MiuiHeaderView miuiHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0016R$layout.miui_ns_qs_header_view, (ViewGroup) this, false);
+            MiuiHeaderView miuiHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0017R$layout.miui_ns_qs_header_view, (ViewGroup) this, false);
             this.mHeaderView = miuiHeaderView;
             if (this.mOrientation != 1) {
                 layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490);
             } else if (((MiuiQSHeaderView) miuiHeaderView).showCarrier()) {
-                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.notch_expanded_header_height_with_carrier);
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height_with_carrier);
             } else {
-                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.notch_expanded_header_height);
+                layoutParams.height = ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notch_expanded_header_height);
             }
         } else {
-            this.mHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0016R$layout.miui_ns_notification_header_view, (ViewGroup) this, false);
+            this.mHeaderView = (MiuiHeaderView) LayoutInflater.from(((RelativeLayout) this).mContext).inflate(C0017R$layout.miui_ns_notification_header_view, (ViewGroup) this, false);
             layoutParams.height = -2;
         }
         setLayoutParams(layoutParams);

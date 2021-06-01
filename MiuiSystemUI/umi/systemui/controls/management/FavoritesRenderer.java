@@ -2,7 +2,7 @@ package com.android.systemui.controls.management;
 
 import android.content.ComponentName;
 import android.content.res.Resources;
-import com.android.systemui.C0018R$plurals;
+import com.android.systemui.C0019R$plurals;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +29,6 @@ public final class FavoritesRenderer {
         if (intValue == 0) {
             return null;
         }
-        return this.resources.getQuantityString(C0018R$plurals.controls_number_of_favorites, intValue, Integer.valueOf(intValue));
+        return this.resources.getQuantityString(C0019R$plurals.controls_number_of_favorites, intValue, Integer.valueOf(intValue));
     }
 }

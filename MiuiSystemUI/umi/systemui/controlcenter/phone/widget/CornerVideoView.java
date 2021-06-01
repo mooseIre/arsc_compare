@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewOutlineProvider;
 import android.widget.VideoView;
-import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$color;
 import com.android.systemui.R$styleable;
 
 public class CornerVideoView extends VideoView {
@@ -67,7 +67,7 @@ public class CornerVideoView extends VideoView {
                                 return true;
                             }
                             CornerVideoView cornerVideoView = CornerVideoView.this;
-                            cornerVideoView.setBackgroundColor(cornerVideoView.getContext().getColor(C0010R$color.miuix_sbl_transparent));
+                            cornerVideoView.setBackgroundColor(cornerVideoView.getContext().getColor(C0011R$color.miuix_sbl_transparent));
                             return true;
                         }
                     });

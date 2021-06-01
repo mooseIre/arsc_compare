@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.RectF;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class QuickswitchOrientedNavHandle extends NavigationHandle {
     private int mDeltaRotation;
@@ -12,7 +12,7 @@ public class QuickswitchOrientedNavHandle extends NavigationHandle {
 
     public QuickswitchOrientedNavHandle(Context context) {
         super(context);
-        this.mWidth = context.getResources().getDimensionPixelSize(C0011R$dimen.navigation_home_handle_width);
+        this.mWidth = context.getResources().getDimensionPixelSize(C0012R$dimen.navigation_home_handle_width);
     }
 
     /* access modifiers changed from: package-private */

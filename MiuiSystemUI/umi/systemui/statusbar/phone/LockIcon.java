@@ -14,7 +14,7 @@ import android.util.SparseArray;
 import android.view.ViewTreeObserver;
 import com.android.internal.graphics.ColorUtils;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.KeyguardAffordanceView;
 
@@ -37,7 +37,7 @@ public class LockIcon extends KeyguardAffordanceView {
             LockIcon.this.setImageDrawable(icon, false);
             if (i == 2) {
                 LockIcon lockIcon = LockIcon.this;
-                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C0020R$string.accessibility_scanning_face));
+                lockIcon.announceForAccessibility(lockIcon.getResources().getString(C0021R$string.accessibility_scanning_face));
             }
             if (!(icon instanceof AnimatedVectorDrawable)) {
                 return true;

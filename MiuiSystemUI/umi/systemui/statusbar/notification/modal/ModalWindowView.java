@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
@@ -391,13 +391,13 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
 
     public void updateResource() {
         Resources resources = getResources();
-        this.mModalDialogMarginTopDelta = resources.getDimensionPixelOffset(C0011R$dimen.modal_dialog_d_margin_top);
-        this.mModalMenuMarginTop = resources.getDimensionPixelOffset(C0011R$dimen.notification_modal_menu_margin_top);
-        this.mLayoutWidth = resources.getDimensionPixelOffset(C0011R$dimen.notification_panel_width);
+        this.mModalDialogMarginTopDelta = resources.getDimensionPixelOffset(C0012R$dimen.modal_dialog_d_margin_top);
+        this.mModalMenuMarginTop = resources.getDimensionPixelOffset(C0012R$dimen.notification_modal_menu_margin_top);
+        this.mLayoutWidth = resources.getDimensionPixelOffset(C0012R$dimen.notification_panel_width);
         int i = resources.getDisplayMetrics().heightPixels;
         this.mScreenHeight = i;
-        this.mMaxModalBottom = i - resources.getDimensionPixelOffset(C0011R$dimen.notification_modal_menu_bottom_max);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.notification_side_paddings);
+        this.mMaxModalBottom = i - resources.getDimensionPixelOffset(C0012R$dimen.notification_modal_menu_bottom_max);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
         this.mSidePaddings = dimensionPixelSize;
         setPadding(dimensionPixelSize, 0, dimensionPixelSize, 0);
     }

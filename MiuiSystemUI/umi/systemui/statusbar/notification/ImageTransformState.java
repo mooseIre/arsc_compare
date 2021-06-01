@@ -4,7 +4,7 @@ import android.graphics.drawable.Icon;
 import android.util.Pools;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
@@ -12,7 +12,7 @@ import com.android.systemui.statusbar.notification.TransformState;
 import com.android.systemui.statusbar.notification.row.HybridNotificationView;
 
 public class ImageTransformState extends TransformState {
-    public static final int ICON_TAG = C0014R$id.image_icon_tag;
+    public static final int ICON_TAG = C0015R$id.image_icon_tag;
     private static Pools.SimplePool<ImageTransformState> sInstancePool = new Pools.SimplePool<>(40);
     private Icon mIcon;
 

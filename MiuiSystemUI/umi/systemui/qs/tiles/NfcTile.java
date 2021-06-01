@@ -5,10 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.nfc.NfcAdapter;
+import android.os.UserHandle;
 import android.util.Log;
 import android.widget.Switch;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -53,7 +54,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
         super.handleSetListening(z);
         this.mListening = z;
         if (z) {
-            this.mBroadcastDispatcher.registerReceiver(this.mNfcReceiver, new IntentFilter("android.nfc.action.ADAPTER_STATE_CHANGED"));
+            this.mBroadcastDispatcher.registerReceiver(this.mNfcReceiver, new IntentFilter("android.nfc.action.ADAPTER_STATE_CHANGED"), null, UserHandle.ALL);
         } else {
             this.mBroadcastDispatcher.unregisterReceiver(this.mNfcReceiver);
         }
@@ -102,7 +103,7 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.quick_settings_nfc_label);
+        return this.mContext.getString(C0021R$string.quick_settings_nfc_label);
     }
 
     /* access modifiers changed from: protected */
@@ -124,8 +125,8 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
             i = 2;
         }
         booleanState.state = i;
-        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C0012R$drawable.ic_qs_nfc_enabled : C0012R$drawable.ic_qs_nfc_disabled);
-        booleanState.label = this.mContext.getString(C0020R$string.quick_settings_nfc_label);
+        booleanState.icon = QSTileImpl.ResourceIcon.get(booleanState.value ? C0013R$drawable.ic_qs_nfc_enabled : C0013R$drawable.ic_qs_nfc_disabled);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_nfc_label);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
         booleanState.contentDescription = booleanState.label;
     }
@@ -134,9 +135,9 @@ public class NfcTile extends QSTileImpl<QSTile.BooleanState> {
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0020R$string.quick_settings_nfc_on);
+            return this.mContext.getString(C0021R$string.quick_settings_nfc_on);
         }
-        return this.mContext.getString(C0020R$string.quick_settings_nfc_off);
+        return this.mContext.getString(C0021R$string.quick_settings_nfc_off);
     }
 
     private NfcAdapter getAdapter() {

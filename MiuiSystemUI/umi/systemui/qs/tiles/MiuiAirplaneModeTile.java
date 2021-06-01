@@ -5,8 +5,8 @@ import android.net.ConnectivityManager;
 import android.util.Log;
 import android.widget.Switch;
 import androidx.constraintlayout.widget.R$styleable;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -72,7 +72,7 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
     @Override // com.android.systemui.plugins.qs.QSTile
     @NotNull
     public CharSequence getTileLabel() {
-        String string = this.mContext.getString(C0020R$string.airplane_mode);
+        String string = this.mContext.getString(C0021R$string.airplane_mode);
         Intrinsics.checkExpressionValueIsNotNull(string, "mContext.getString(R.string.airplane_mode)");
         return string;
     }
@@ -82,17 +82,17 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
         boolean z = this.mAirplane;
         if (booleanState != null) {
             booleanState.value = z;
-            booleanState.label = this.mContext.getString(C0020R$string.airplane_mode);
+            booleanState.label = this.mContext.getString(C0021R$string.airplane_mode);
             if (z) {
-                booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_signal_airplane_enable);
+                booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_signal_airplane_enable);
             } else {
-                booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_signal_airplane_disable);
+                booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_signal_airplane_disable);
             }
             booleanState.state = z ? 2 : 1;
             StringBuilder sb = new StringBuilder();
             sb.append(booleanState.label.toString());
             sb.append(",");
-            sb.append(this.mContext.getString(booleanState.value ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
+            sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
             booleanState.contentDescription = sb.toString();
             booleanState.expandedAccessibilityClassName = Switch.class.getName();
             return;
@@ -110,11 +110,11 @@ public final class MiuiAirplaneModeTile extends QSTileImpl<QSTile.BooleanState> 
             Intrinsics.throwNpe();
             throw null;
         } else if (((QSTile.BooleanState) tstate).value) {
-            String string = this.mContext.getString(C0020R$string.accessibility_quick_settings_airplane_changed_on);
+            String string = this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_on);
             Intrinsics.checkExpressionValueIsNotNull(string, "mContext.getString(R.str…ings_airplane_changed_on)");
             return string;
         } else {
-            String string2 = this.mContext.getString(C0020R$string.accessibility_quick_settings_airplane_changed_off);
+            String string2 = this.mContext.getString(C0021R$string.accessibility_quick_settings_airplane_changed_off);
             Intrinsics.checkExpressionValueIsNotNull(string2, "mContext.getString(R.str…ngs_airplane_changed_off)");
             return string2;
         }

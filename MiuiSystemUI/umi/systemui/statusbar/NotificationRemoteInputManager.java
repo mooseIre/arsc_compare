@@ -30,7 +30,7 @@ import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.statusbar.IStatusBarService;
 import com.android.internal.statusbar.NotificationVisibility;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -308,7 +308,7 @@ public class NotificationRemoteInputManager implements Dumpable {
                 View view2 = (View) parent;
                 if (view2.isRootNamespace()) {
                     remoteInputView2 = findRemoteInputView(view2);
-                    expandableNotificationRow = (ExpandableNotificationRow) view2.getTag(C0014R$id.row_tag_for_content_view);
+                    expandableNotificationRow = (ExpandableNotificationRow) view2.getTag(C0015R$id.row_tag_for_content_view);
                     break;
                 }
             }

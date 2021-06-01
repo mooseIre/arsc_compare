@@ -33,8 +33,4 @@ public class DualClockObserver {
             this.mCallbacks.get(i).onDualShowClockChanged(this.mShowDualClock);
         }
     }
-
-    public boolean isDualClock() {
-        return this.mShowDualClock;
-    }
 }

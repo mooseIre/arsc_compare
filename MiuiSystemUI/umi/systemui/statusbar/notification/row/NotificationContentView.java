@@ -21,11 +21,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.MediaTransferManager;
 import com.android.systemui.statusbar.RemoteInputController;
@@ -141,7 +141,7 @@ public class NotificationContentView extends FrameLayout {
     }
 
     public void initView() {
-        this.mMinContractedHeight = getResources().getDimensionPixelSize(C0011R$dimen.min_notification_layout_height);
+        this.mMinContractedHeight = getResources().getDimensionPixelSize(C0012R$dimen.min_notification_layout_height);
         this.mNotificationContentMarginEnd = getResources().getDimensionPixelSize(17105355);
     }
 
@@ -439,7 +439,7 @@ public class NotificationContentView extends FrameLayout {
 
     public void onViewAdded(View view) {
         super.onViewAdded(view);
-        view.setTag(C0014R$id.row_tag_for_content_view, this.mContainingNotification);
+        view.setTag(C0015R$id.row_tag_for_content_view, this.mContainingNotification);
     }
 
     /* access modifiers changed from: protected */
@@ -526,7 +526,7 @@ public class NotificationContentView extends FrameLayout {
         } else if (this.mExpandedChild != null) {
             i = getViewHeight(1);
         } else if (this.mContractedChild != null) {
-            i = getViewHeight(0) + ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_action_list_height);
+            i = getViewHeight(0) + ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_action_list_height);
         } else {
             i = getMinHeight();
         }
@@ -1097,7 +1097,7 @@ public class NotificationContentView extends FrameLayout {
     private RemoteInputView applyRemoteInput(View view, NotificationEntry notificationEntry, boolean z, PendingIntent pendingIntent, RemoteInputView remoteInputView, NotificationViewWrapper notificationViewWrapper) {
         View findViewById = view.findViewById(16908724);
         boolean z2 = false;
-        if (findViewById == null && (findViewById = view.findViewById(C0014R$id.actions_container)) != null) {
+        if (findViewById == null && (findViewById = view.findViewById(C0015R$id.actions_container)) != null) {
             z2 = true;
         }
         if (!(findViewById instanceof FrameLayout)) {
@@ -1124,10 +1124,10 @@ public class NotificationContentView extends FrameLayout {
         if (z) {
             int i = notificationEntry.getSbn().getNotification().color;
             if (i == 0) {
-                i = ((FrameLayout) this).mContext.getColor(C0010R$color.default_remote_input_background);
+                i = ((FrameLayout) this).mContext.getColor(C0011R$color.default_remote_input_background);
             }
             if (!z2) {
-                remoteInputView.setBackgroundColor(ContrastColorUtil.ensureTextBackgroundColor(i, ((FrameLayout) this).mContext.getColor(C0010R$color.remote_input_text_enabled), ((FrameLayout) this).mContext.getColor(C0010R$color.remote_input_hint)));
+                remoteInputView.setBackgroundColor(ContrastColorUtil.ensureTextBackgroundColor(i, ((FrameLayout) this).mContext.getColor(C0011R$color.remote_input_text_enabled), ((FrameLayout) this).mContext.getColor(C0011R$color.remote_input_hint)));
             }
             remoteInputView.setWrapper(notificationViewWrapper);
             remoteInputView.setOnVisibilityChangedListener(new Consumer() {
@@ -1179,18 +1179,18 @@ public class NotificationContentView extends FrameLayout {
                 if (z) {
                     Resources resources = ((FrameLayout) this).mContext.getResources();
                     if (notificationEntry.isBubble()) {
-                        i = C0012R$drawable.ic_stop_bubble;
+                        i = C0013R$drawable.ic_stop_bubble;
                     } else {
-                        i = C0012R$drawable.ic_create_bubble;
+                        i = C0013R$drawable.ic_create_bubble;
                     }
                     Drawable drawable = resources.getDrawable(i);
                     this.mContainingNotification.updateNotificationColor();
                     drawable.setTint(this.mContainingNotification.getNotificationColor());
                     Resources resources2 = ((FrameLayout) this).mContext.getResources();
                     if (notificationEntry.isBubble()) {
-                        i2 = C0020R$string.notification_conversation_unbubble;
+                        i2 = C0021R$string.notification_conversation_unbubble;
                     } else {
-                        i2 = C0020R$string.notification_conversation_bubble;
+                        i2 = C0021R$string.notification_conversation_bubble;
                     }
                     imageView.setContentDescription(resources2.getString(i2));
                     imageView.setImageDrawable(drawable);

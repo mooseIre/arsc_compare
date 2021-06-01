@@ -26,9 +26,9 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.DismissCallbackRegistry;
@@ -405,21 +405,21 @@ public class KeyguardBouncer {
     public void inflateView() {
         removeView();
         this.mHandler.removeCallbacks(this.mRemoveViewRunnable);
-        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C0016R$layout.keyguard_bouncer, (ViewGroup) null);
+        ViewGroup viewGroup = (ViewGroup) LayoutInflater.from(this.mContext).inflate(C0017R$layout.keyguard_bouncer, (ViewGroup) null);
         this.mRoot = viewGroup;
-        KeyguardHostView keyguardHostView = (KeyguardHostView) viewGroup.findViewById(C0014R$id.keyguard_host_view);
+        KeyguardHostView keyguardHostView = (KeyguardHostView) viewGroup.findViewById(C0015R$id.keyguard_host_view);
         this.mKeyguardView = keyguardHostView;
         keyguardHostView.setLockPatternUtils(this.mLockPatternUtils);
         this.mKeyguardView.setViewMediatorCallback(this.mCallback);
         ViewGroup viewGroup2 = this.mContainer;
         viewGroup2.addView(this.mRoot, viewGroup2.getChildCount());
-        this.mStatusBarHeight = this.mRoot.getResources().getDimensionPixelOffset(C0011R$dimen.status_bar_height);
+        this.mStatusBarHeight = this.mRoot.getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_height);
         this.mRoot.setVisibility(4);
         WindowInsets rootWindowInsets = this.mRoot.getRootWindowInsets();
         if (rootWindowInsets != null) {
             this.mRoot.dispatchApplyWindowInsets(rootWindowInsets);
         }
-        this.mBgImageView = (ImageView) this.mRoot.findViewById(C0014R$id.keyguard_bouncer_bg);
+        this.mBgImageView = (ImageView) this.mRoot.findViewById(C0015R$id.keyguard_bouncer_bg);
         boolean isDefaultLockScreenTheme = MiuiKeyguardUtils.isDefaultLockScreenTheme();
         this.isDefaultTheme = isDefaultLockScreenTheme;
         this.mBgImageView.setVisibility((!isDefaultLockScreenTheme || !KeyguardWallpaperUtils.isWallpaperShouldBlur()) ? 0 : 8);

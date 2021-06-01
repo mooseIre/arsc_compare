@@ -157,7 +157,11 @@ public class TileServiceManager {
 
     public void handleDestroy() {
         setBindAllowed(false);
-        this.mServices.getContext().unregisterReceiver(this.mUninstallReceiver);
+        try {
+            this.mServices.getContext().unregisterReceiver(this.mUninstallReceiver);
+        } catch (IllegalArgumentException e) {
+            Log.d("TileServiceManager", "uninstall receiver may not be registered: " + e.getMessage());
+        }
         this.mStateManager.handleDestroy();
     }
 

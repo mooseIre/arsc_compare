@@ -9,8 +9,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.android.internal.widget.ConversationLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 
 public class HybridConversationNotificationView extends HybridNotificationView {
     private View mConversationFacePile;
@@ -42,10 +42,10 @@ public class HybridConversationNotificationView extends HybridNotificationView {
         super.onFinishInflate();
         this.mConversationIconView = (ImageView) requireViewById(16908892);
         this.mConversationFacePile = requireViewById(16908887);
-        this.mConversationSenderName = (TextView) requireViewById(C0014R$id.conversation_notification_sender);
-        this.mFacePileSize = getResources().getDimensionPixelSize(C0011R$dimen.conversation_single_line_face_pile_size);
-        this.mConversationIconSize = getResources().getDimensionPixelSize(C0011R$dimen.conversation_single_line_avatar_size);
-        this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(C0011R$dimen.conversation_single_line_face_pile_protection_width);
+        this.mConversationSenderName = (TextView) requireViewById(C0015R$id.conversation_notification_sender);
+        this.mFacePileSize = getResources().getDimensionPixelSize(C0012R$dimen.conversation_single_line_face_pile_size);
+        this.mConversationIconSize = getResources().getDimensionPixelSize(C0012R$dimen.conversation_single_line_avatar_size);
+        this.mFacePileProtectionWidth = getResources().getDimensionPixelSize(C0012R$dimen.conversation_single_line_face_pile_protection_width);
         this.mTransformationHelper.addViewTransformingToSimilar(this.mConversationIconView);
         this.mTransformationHelper.addTransformedView(this.mConversationSenderName);
         MiuiStyleInjector.INSTANCE.alignConversationIcon(this.mConversationIconView, getResources());

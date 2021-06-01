@@ -35,10 +35,10 @@ import com.android.internal.util.UserIcons;
 import com.android.settingslib.R$string;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
@@ -232,7 +232,7 @@ public class UserSwitcherController implements Dumpable {
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return UserSwitcherController.this.mContext.getString(C0020R$string.quick_settings_user_title);
+            return UserSwitcherController.this.mContext.getString(C0021R$string.quick_settings_user_title);
         }
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
@@ -396,7 +396,7 @@ public class UserSwitcherController implements Dumpable {
                             } else if (userInfo2.supportsSwitchToByUser()) {
                                 Bitmap bitmap = sparseArray.get(userInfo2.id);
                                 if (bitmap == null && (bitmap = UserSwitcherController.this.mUserManager.getUserIcon(userInfo2.id)) != null) {
-                                    int dimensionPixelSize = UserSwitcherController.this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.max_avatar_size);
+                                    int dimensionPixelSize = UserSwitcherController.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.max_avatar_size);
                                     bitmap = Bitmap.createScaledBitmap(bitmap, dimensionPixelSize, dimensionPixelSize, true);
                                 }
                                 arrayList.add(new UserRecord(userInfo2, bitmap, false, z3, false, false, z4));
@@ -477,7 +477,7 @@ public class UserSwitcherController implements Dumpable {
         if (intValue != -1) {
             return intValue != 0;
         }
-        return this.mContext.getResources().getBoolean(C0009R$bool.config_enableFullscreenUserSwitcher);
+        return this.mContext.getResources().getBoolean(C0010R$bool.config_enableFullscreenUserSwitcher);
     }
 
     /* access modifiers changed from: private */
@@ -674,7 +674,7 @@ public class UserSwitcherController implements Dumpable {
                 }
                 return context.getString(i);
             } else if (userRecord.isAddUser) {
-                return context.getString(C0020R$string.user_add_user);
+                return context.getString(C0021R$string.user_add_user);
             } else {
                 return userRecord.info.name;
             }
@@ -689,11 +689,11 @@ public class UserSwitcherController implements Dumpable {
         protected static Drawable getIconDrawable(Context context, UserRecord userRecord) {
             int i;
             if (userRecord.isAddUser) {
-                i = C0012R$drawable.ic_add_circle;
+                i = C0013R$drawable.ic_add_circle;
             } else if (userRecord.isGuest) {
-                i = C0012R$drawable.ic_avatar_guest_user;
+                i = C0013R$drawable.ic_avatar_guest_user;
             } else {
-                i = C0012R$drawable.ic_avatar_user;
+                i = C0013R$drawable.ic_avatar_user;
             }
             return context.getDrawable(i);
         }
@@ -807,10 +807,10 @@ public class UserSwitcherController implements Dumpable {
 
         public ExitGuestDialog(Context context, int i, int i2) {
             super(context);
-            setTitle(C0020R$string.guest_exit_guest_dialog_title);
-            setMessage(context.getString(C0020R$string.guest_exit_guest_dialog_message));
+            setTitle(C0021R$string.guest_exit_guest_dialog_title);
+            setMessage(context.getString(C0021R$string.guest_exit_guest_dialog_message));
             setButton(-2, context.getString(17039360), this);
-            setButton(-1, context.getString(C0020R$string.guest_exit_guest_dialog_remove), this);
+            setButton(-1, context.getString(C0021R$string.guest_exit_guest_dialog_remove), this);
             SystemUIDialog.setWindowOnTop(this);
             setCanceledOnTouchOutside(false);
             this.mGuestId = i;
@@ -831,8 +831,8 @@ public class UserSwitcherController implements Dumpable {
     public final class AddUserDialog extends SystemUIDialog implements DialogInterface.OnClickListener {
         public AddUserDialog(Context context) {
             super(context);
-            setTitle(C0020R$string.user_add_user_title);
-            setMessage(context.getString(C0020R$string.user_add_user_message_short));
+            setTitle(C0021R$string.user_add_user_title);
+            setMessage(context.getString(C0021R$string.user_add_user_message_short));
             setButton(-2, context.getString(17039360), this);
             setButton(-1, context.getString(17039370), this);
             SystemUIDialog.setWindowOnTop(this);
@@ -846,7 +846,7 @@ public class UserSwitcherController implements Dumpable {
             dismiss();
             if (!ActivityManager.isUserAMonkey()) {
                 UserSwitcherController userSwitcherController = UserSwitcherController.this;
-                UserInfo createUser = userSwitcherController.mUserManager.createUser(userSwitcherController.mContext.getString(C0020R$string.user_new_user_name), 0);
+                UserInfo createUser = userSwitcherController.mUserManager.createUser(userSwitcherController.mContext.getString(C0021R$string.user_new_user_name), 0);
                 if (createUser != null) {
                     int i2 = createUser.id;
                     UserSwitcherController.this.mUserManager.setUserIcon(i2, UserIcons.convertToBitmap(UserIcons.getDefaultUserIcon(UserSwitcherController.this.mContext.getResources(), i2, false)));

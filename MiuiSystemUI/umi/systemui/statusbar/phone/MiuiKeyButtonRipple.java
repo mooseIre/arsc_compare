@@ -18,7 +18,7 @@ import android.view.RenderNodeAnimator;
 import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.animation.Interpolator;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Interpolators;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -123,7 +123,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         this(view);
         Intrinsics.checkParameterIsNotNull(context, "ctx");
         Intrinsics.checkParameterIsNotNull(view, "targetView");
-        this.mMaxWidth = context.getResources().getDimensionPixelSize(C0011R$dimen.key_button_ripple_max_width);
+        this.mMaxWidth = context.getResources().getDimensionPixelSize(C0012R$dimen.key_button_ripple_max_width);
         this.mTargetView = view;
     }
 

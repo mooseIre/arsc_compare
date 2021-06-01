@@ -10,7 +10,7 @@ import android.graphics.Rect;
 import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.view.View;
-import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$color;
 
 public class KeyguardUserSwitcherScrim extends Drawable implements View.OnLayoutChangeListener {
     private int mAlpha = 255;
@@ -27,7 +27,7 @@ public class KeyguardUserSwitcherScrim extends Drawable implements View.OnLayout
     }
 
     public KeyguardUserSwitcherScrim(Context context) {
-        this.mDarkColor = context.getColor(C0010R$color.keyguard_user_switcher_background_gradient_color);
+        this.mDarkColor = context.getColor(C0011R$color.keyguard_user_switcher_background_gradient_color);
     }
 
     public void draw(Canvas canvas) {

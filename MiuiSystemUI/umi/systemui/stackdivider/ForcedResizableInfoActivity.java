@@ -8,8 +8,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 
 public class ForcedResizableInfoActivity extends Activity implements View.OnTouchListener {
     private final Runnable mFinishRunnable = new Runnable() {
@@ -27,13 +27,13 @@ public class ForcedResizableInfoActivity extends Activity implements View.OnTouc
     public void onCreate(Bundle bundle) {
         String str;
         super.onCreate(bundle);
-        setContentView(C0016R$layout.forced_resizable_activity);
+        setContentView(C0017R$layout.forced_resizable_activity);
         TextView textView = (TextView) findViewById(16908299);
         int intExtra = getIntent().getIntExtra("extra_forced_resizeable_reason", -1);
         if (intExtra == 1) {
-            str = getString(C0020R$string.dock_forced_resizable);
+            str = getString(C0021R$string.dock_forced_resizable);
         } else if (intExtra == 2) {
-            str = getString(C0020R$string.forced_resizable_secondary_display);
+            str = getString(C0021R$string.forced_resizable_secondary_display);
         } else {
             throw new IllegalArgumentException("Unexpected forced resizeable reason: " + intExtra);
         }

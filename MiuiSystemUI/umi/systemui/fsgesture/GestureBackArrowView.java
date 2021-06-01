@@ -18,7 +18,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Interpolator;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.miui.systemui.util.HapticFeedBackImpl;
 
@@ -114,17 +114,17 @@ public class GestureBackArrowView extends View {
     }
 
     private void loadResources() {
-        this.mLeftBackground = BitmapFactory.decodeResource(getContext().getResources(), C0012R$drawable.gesture_back_background);
+        this.mLeftBackground = BitmapFactory.decodeResource(getContext().getResources(), C0013R$drawable.gesture_back_background);
         Matrix matrix = new Matrix();
         matrix.postScale(1.0f, 1.0f);
         matrix.postRotate(180.0f);
         Bitmap bitmap = this.mLeftBackground;
         this.mRightBackground = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), this.mLeftBackground.getHeight(), matrix, true);
-        Drawable drawable = getContext().getDrawable(C0012R$drawable.ic_quick_switch_empty);
+        Drawable drawable = getContext().getDrawable(C0013R$drawable.ic_quick_switch_empty);
         this.mNoneTaskIcon = drawable;
         this.mIconWidth = drawable.getIntrinsicWidth();
         this.mIconHeight = this.mNoneTaskIcon.getIntrinsicHeight();
-        Bitmap decodeResource = BitmapFactory.decodeResource(getContext().getResources(), C0012R$drawable.gesture_back_arrow);
+        Bitmap decodeResource = BitmapFactory.decodeResource(getContext().getResources(), C0013R$drawable.gesture_back_arrow);
         this.mArrow = decodeResource;
         this.mArrowHeight = decodeResource.getHeight();
         this.mArrowWidth = this.mArrow.getWidth();

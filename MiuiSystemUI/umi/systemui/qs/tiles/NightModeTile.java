@@ -13,10 +13,10 @@ import android.util.Log;
 import android.widget.Switch;
 import com.android.settingslib.util.MiStatInterfaceUtils;
 import com.android.settingslib.util.OneTrackInterfaceUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Prefs;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
@@ -92,7 +92,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
-        booleanState.label = this.mContext.getString(C0020R$string.quick_settings_nightmode_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_nightmode_label);
         if (obj instanceof Boolean) {
             boolean booleanValue = ((Boolean) obj).booleanValue();
             if (booleanValue != booleanState.value) {
@@ -104,16 +104,16 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.value = this.mUiModeManager.getNightMode() == 2;
         }
         if (booleanState.value) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_night_mode_on);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_night_mode_on);
             booleanState.state = 2;
         } else {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_night_mode_off);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_night_mode_off);
             booleanState.state = 1;
         }
         StringBuilder sb = new StringBuilder();
         sb.append((Object) booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -126,7 +126,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public boolean isAvailable() {
-        return ActivityManager.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(C0009R$bool.config_support_night_mode);
+        return ActivityManager.getCurrentUser() == 0 && this.mContext.getResources().getBoolean(C0010R$bool.config_support_night_mode);
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
@@ -136,7 +136,7 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.quick_settings_nightmode_label);
+        return this.mContext.getString(C0021R$string.quick_settings_nightmode_label);
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
@@ -149,8 +149,8 @@ public class NightModeTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         public void run() {
-            AlertDialog.Builder builder = new AlertDialog.Builder(((QSTileImpl) NightModeTile.this).mContext, C0021R$style.Theme_Dialog_Alert);
-            builder.setMessage(C0020R$string.qs_open_night_mode_alert_summary);
+            AlertDialog.Builder builder = new AlertDialog.Builder(((QSTileImpl) NightModeTile.this).mContext, C0022R$style.Theme_Dialog_Alert);
+            builder.setMessage(C0021R$string.qs_open_night_mode_alert_summary);
             builder.setPositiveButton(17039370, (DialogInterface.OnClickListener) null);
             AlertDialog create = builder.create();
             create.getWindow().setType(2010);

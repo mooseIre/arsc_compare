@@ -9,7 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.UserHandle;
 import android.provider.Settings;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.SystemUIDialog;
 
@@ -60,9 +60,9 @@ public abstract class TunerService {
     public static final void showResetRequest(final Context context, final Runnable runnable) {
         SystemUIDialog systemUIDialog = new SystemUIDialog(context);
         systemUIDialog.setShowForAllUsers(true);
-        systemUIDialog.setMessage(C0020R$string.remove_from_settings_prompt);
-        systemUIDialog.setButton(-2, context.getString(C0020R$string.cancel), (DialogInterface.OnClickListener) null);
-        systemUIDialog.setButton(-1, context.getString(C0020R$string.guest_exit_guest_dialog_remove), new DialogInterface.OnClickListener() {
+        systemUIDialog.setMessage(C0021R$string.remove_from_settings_prompt);
+        systemUIDialog.setButton(-2, context.getString(C0021R$string.cancel), (DialogInterface.OnClickListener) null);
+        systemUIDialog.setButton(-1, context.getString(C0021R$string.guest_exit_guest_dialog_remove), new DialogInterface.OnClickListener() {
             /* class com.android.systemui.tuner.TunerService.AnonymousClass1 */
 
             public void onClick(DialogInterface dialogInterface, int i) {

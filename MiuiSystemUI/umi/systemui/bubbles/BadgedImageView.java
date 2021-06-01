@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.util.PathParser;
 import android.widget.ImageView;
 import com.android.launcher3.icons.DotRenderer;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Interpolators;
 import java.util.EnumSet;
 
@@ -51,7 +51,7 @@ public class BadgedImageView extends ImageView {
         this.mAnimatingToDotScale = 0.0f;
         this.mDotIsAnimating = false;
         this.mTempBounds = new Rect();
-        this.mBubbleBitmapSize = getResources().getDimensionPixelSize(C0011R$dimen.bubble_bitmap_size);
+        this.mBubbleBitmapSize = getResources().getDimensionPixelSize(C0012R$dimen.bubble_bitmap_size);
         this.mDrawParams = new DotRenderer.DrawParams();
         this.mDotRenderer = new DotRenderer(this.mBubbleBitmapSize, PathParser.createPathFromPathData(getResources().getString(17039929)), 100);
         setFocusable(true);

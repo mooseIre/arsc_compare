@@ -7,8 +7,8 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 
 public class DemoFinishAct extends FsGestureDemoBaseActiivy {
     TextView finishView;
@@ -19,11 +19,11 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
     @Override // com.android.systemui.fsgesture.FsGestureDemoBaseActiivy
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0016R$layout.fs_gesture_demo_final_view);
+        setContentView(C0017R$layout.fs_gesture_demo_final_view);
         Intent intent = getIntent();
         final String stringExtra = intent.getStringExtra("DEMO_TYPE");
         this.isFromPro = intent.getBooleanExtra("IS_FROM_PROVISION", false);
-        TextView textView = (TextView) findViewById(C0014R$id.fs_gesture_final_restart);
+        TextView textView = (TextView) findViewById(C0015R$id.fs_gesture_final_restart);
         this.replayView = textView;
         textView.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.fsgesture.DemoFinishAct.AnonymousClass1 */
@@ -47,7 +47,7 @@ public class DemoFinishAct extends FsGestureDemoBaseActiivy {
                 DemoFinishAct.this.finish();
             }
         });
-        TextView textView2 = (TextView) findViewById(C0014R$id.fs_gesture_final_over);
+        TextView textView2 = (TextView) findViewById(C0015R$id.fs_gesture_final_over);
         this.finishView = textView2;
         textView2.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.fsgesture.DemoFinishAct.AnonymousClass2 */

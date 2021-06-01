@@ -14,9 +14,9 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.settingslib.core.lifecycle.Lifecycle;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlsController;
 import com.android.systemui.globalactions.GlobalActionsComponent;
@@ -64,32 +64,32 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     @Override // com.android.systemui.util.LifecycleActivity
     public void onCreate(@Nullable Bundle bundle) {
         super.onCreate(bundle);
-        setContentView(C0016R$layout.controls_management);
+        setContentView(C0017R$layout.controls_management);
         Lifecycle lifecycle = getLifecycle();
         ControlsAnimations controlsAnimations = ControlsAnimations.INSTANCE;
-        View requireViewById = requireViewById(C0014R$id.controls_management_root);
+        View requireViewById = requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById<ViewGrou…controls_management_root)");
         Window window = getWindow();
         Intrinsics.checkExpressionValueIsNotNull(window, "window");
         Intent intent = getIntent();
         Intrinsics.checkExpressionValueIsNotNull(intent, "intent");
         lifecycle.addObserver(controlsAnimations.observerForAnimations((ViewGroup) requireViewById, window, intent));
-        ViewStub viewStub = (ViewStub) requireViewById(C0014R$id.stub);
-        viewStub.setLayoutResource(C0016R$layout.controls_management_apps);
+        ViewStub viewStub = (ViewStub) requireViewById(C0015R$id.stub);
+        viewStub.setLayoutResource(C0017R$layout.controls_management_apps);
         viewStub.inflate();
-        View requireViewById2 = requireViewById(C0014R$id.list);
+        View requireViewById2 = requireViewById(C0015R$id.list);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.list)");
         RecyclerView recyclerView2 = (RecyclerView) requireViewById2;
         this.recyclerView = recyclerView2;
         if (recyclerView2 != null) {
             recyclerView2.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-            TextView textView = (TextView) requireViewById(C0014R$id.title);
-            textView.setText(textView.getResources().getText(C0020R$string.controls_providers_title));
-            Button button = (Button) requireViewById(C0014R$id.other_apps);
+            TextView textView = (TextView) requireViewById(C0015R$id.title);
+            textView.setText(textView.getResources().getText(C0021R$string.controls_providers_title));
+            Button button = (Button) requireViewById(C0015R$id.other_apps);
             button.setVisibility(0);
             button.setText(17039360);
             button.setOnClickListener(new ControlsProviderSelectorActivity$onCreate$$inlined$apply$lambda$1(this));
-            View requireViewById3 = requireViewById(C0014R$id.done);
+            View requireViewById3 = requireViewById(C0015R$id.done);
             Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById<View>(R.id.done)");
             requireViewById3.setVisibility(8);
             return;
@@ -156,7 +156,7 @@ public final class ControlsProviderSelectorActivity extends LifecycleActivity {
     }
 
     private final void animateExitAndFinish() {
-        ViewGroup viewGroup = (ViewGroup) requireViewById(C0014R$id.controls_management_root);
+        ViewGroup viewGroup = (ViewGroup) requireViewById(C0015R$id.controls_management_root);
         Intrinsics.checkExpressionValueIsNotNull(viewGroup, "rootView");
         ControlsAnimations.exitAnimation(viewGroup, new ControlsProviderSelectorActivity$animateExitAndFinish$1(this)).start();
     }

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Handler;
 import android.util.Log;
-import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.SystemUI;
 import com.android.systemui.qs.tiles.DndTile;
 import java.io.FileDescriptor;
@@ -23,8 +23,8 @@ public class VolumeUI extends SystemUI {
 
     @Override // com.android.systemui.SystemUI
     public void start() {
-        boolean z = this.mContext.getResources().getBoolean(C0009R$bool.enable_volume_ui);
-        boolean z2 = this.mContext.getResources().getBoolean(C0009R$bool.enable_safety_warning);
+        boolean z = this.mContext.getResources().getBoolean(C0010R$bool.enable_volume_ui);
+        boolean z2 = this.mContext.getResources().getBoolean(C0010R$bool.enable_safety_warning);
         boolean z3 = z || z2;
         this.mEnabled = z3;
         if (z3) {

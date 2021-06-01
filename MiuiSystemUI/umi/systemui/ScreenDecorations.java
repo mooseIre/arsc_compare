@@ -62,21 +62,21 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     private int mCurrentUserId;
     private DisplayManager.DisplayListener mDisplayListener;
     private DisplayManager mDisplayManager;
-    protected int[] mDripOverlayTopDrawables = {C0012R$drawable.overlay_screen_round_corner_top_rot90, C0012R$drawable.overlay_screen_round_corner_top, C0012R$drawable.overlay_screen_round_corner_top_rot270, C0012R$drawable.overlay_screen_round_corner_top_rot180};
+    protected int[] mDripOverlayTopDrawables = {C0013R$drawable.overlay_screen_round_corner_top_rot90, C0013R$drawable.overlay_screen_round_corner_top, C0013R$drawable.overlay_screen_round_corner_top_rot270, C0013R$drawable.overlay_screen_round_corner_top_rot180};
     private volatile boolean mEnableForceBlack;
     private boolean mForceBlack;
     private ContentObserver mForceBlackObserver;
-    protected int[] mForceBlackTopDrawables = {C0012R$drawable.force_black_screen_round_corner_top_rot90, C0012R$drawable.force_black_screen_round_corner_top, C0012R$drawable.force_black_screen_round_corner_top_rot270, C0012R$drawable.force_black_screen_round_corner_top_rot180};
+    protected int[] mForceBlackTopDrawables = {C0013R$drawable.force_black_screen_round_corner_top_rot90, C0013R$drawable.force_black_screen_round_corner_top, C0013R$drawable.force_black_screen_round_corner_top_rot270, C0013R$drawable.force_black_screen_round_corner_top_rot180};
     protected View mForceBlackTopOverlay;
     private boolean mForceBlackV2;
     private ContentObserver mForceBlackV2Observer;
-    protected int[] mForceBlackV2TopDrawables = {C0012R$drawable.force_black_top_corner_rot90, C0012R$drawable.force_black_top_corner, C0012R$drawable.force_black_top_corner_rot270, C0012R$drawable.force_black_top_corner_rot180};
+    protected int[] mForceBlackV2TopDrawables = {C0013R$drawable.force_black_top_corner_rot90, C0013R$drawable.force_black_top_corner, C0013R$drawable.force_black_top_corner_rot270, C0013R$drawable.force_black_top_corner_rot180};
     private Handler mHandler;
     private boolean mHandyMode;
     protected boolean mIsRegistered;
     private final Handler mMainHandler;
-    protected int[] mNormalBottomDrawables = {C0012R$drawable.screen_round_corner_bottom_rot270, C0012R$drawable.screen_round_corner_bottom_rot180, C0012R$drawable.screen_round_corner_bottom_rot90, C0012R$drawable.screen_round_corner_bottom};
-    protected int[] mNormalTopDrawables = {C0012R$drawable.screen_round_corner_top_rot90, C0012R$drawable.screen_round_corner_top, C0012R$drawable.screen_round_corner_top_rot270, C0012R$drawable.screen_round_corner_top_rot180};
+    protected int[] mNormalBottomDrawables = {C0013R$drawable.screen_round_corner_bottom_rot270, C0013R$drawable.screen_round_corner_bottom_rot180, C0013R$drawable.screen_round_corner_bottom_rot90, C0013R$drawable.screen_round_corner_bottom};
+    protected int[] mNormalTopDrawables = {C0013R$drawable.screen_round_corner_top_rot90, C0013R$drawable.screen_round_corner_top, C0013R$drawable.screen_round_corner_top_rot270, C0013R$drawable.screen_round_corner_top_rot180};
     private boolean mOverlayDrip;
     private ContentObserver mOverlayDripObserver;
     private OverlayManagerWrapper mOverlayManager;
@@ -180,7 +180,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
 
     /* access modifiers changed from: public */
     private void startOnScreenDecorationsThread() {
-        this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0009R$bool.support_round_corner);
+        this.mSupportRoundCorner = this.mContext.getResources().getBoolean(C0010R$bool.support_round_corner);
         this.mRotation = this.mContext.getDisplay().getRotation();
         this.mWindowManager = (WindowManager) this.mContext.getSystemService(WindowManager.class);
         this.mDisplayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
@@ -262,7 +262,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private boolean supportOverlayRoundedCorner() {
-        return this.mContext.getResources().getBoolean(C0009R$bool.support_drip_overlay);
+        return this.mContext.getResources().getBoolean(C0010R$bool.support_drip_overlay);
     }
 
     private void setupDecorations() {
@@ -565,7 +565,7 @@ public class ScreenDecorations extends SystemUI implements TunerService.Tunable,
     }
 
     private void setupCameraListener() {
-        if (this.mContext.getResources().getBoolean(C0009R$bool.config_enableDisplayCutoutProtection)) {
+        if (this.mContext.getResources().getBoolean(C0010R$bool.config_enableDisplayCutoutProtection)) {
             CameraAvailabilityListener.Factory factory = CameraAvailabilityListener.Factory;
             Context context = this.mContext;
             Handler handler = this.mHandler;

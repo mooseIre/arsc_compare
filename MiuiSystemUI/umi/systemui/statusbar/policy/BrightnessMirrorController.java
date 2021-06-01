@@ -5,9 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.NotificationShadeDepthController;
 import com.android.systemui.statusbar.phone.NotificationPanelViewController;
 import com.android.systemui.statusbar.phone.NotificationShadeWindowView;
@@ -30,7 +30,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
 
     public BrightnessMirrorController(NotificationShadeWindowView notificationShadeWindowView, NotificationPanelViewController notificationPanelViewController, NotificationShadeDepthController notificationShadeDepthController, Consumer<Boolean> consumer) {
         this.mStatusBarWindow = notificationShadeWindowView;
-        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C0014R$id.brightness_mirror);
+        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C0015R$id.brightness_mirror);
         this.mNotificationPanel = notificationPanelViewController;
         this.mDepthController = notificationShadeDepthController;
         notificationPanelViewController.setPanelAlphaEndAction(new Runnable() {
@@ -83,7 +83,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
 
     public void updateResources() {
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mBrightnessMirror.getLayoutParams();
-        layoutParams.width = this.mBrightnessMirror.getResources().getDimensionPixelSize(C0011R$dimen.qs_panel_width);
+        layoutParams.width = this.mBrightnessMirror.getResources().getDimensionPixelSize(C0012R$dimen.qs_panel_width);
         this.mBrightnessMirror.setLayoutParams(layoutParams);
     }
 
@@ -98,7 +98,7 @@ public class BrightnessMirrorController implements CallbackController<Brightness
     private void reinflate() {
         int indexOfChild = this.mStatusBarWindow.indexOfChild(this.mBrightnessMirror);
         this.mStatusBarWindow.removeView(this.mBrightnessMirror);
-        View inflate = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(C0016R$layout.brightness_mirror, (ViewGroup) this.mStatusBarWindow, false);
+        View inflate = LayoutInflater.from(this.mBrightnessMirror.getContext()).inflate(C0017R$layout.brightness_mirror, (ViewGroup) this.mStatusBarWindow, false);
         this.mBrightnessMirror = inflate;
         this.mStatusBarWindow.addView(inflate, indexOfChild);
         for (int i = 0; i < this.mBrightnessMirrorListeners.size(); i++) {

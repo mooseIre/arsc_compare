@@ -6,7 +6,7 @@ import android.animation.ValueAnimator;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -49,8 +49,8 @@ public class StackStateAnimator {
 
     public StackStateAnimator(NotificationStackScrollLayout notificationStackScrollLayout) {
         this.mHostLayout = notificationStackScrollLayout;
-        this.mGoToFullShadeAppearingTranslation = notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C0011R$dimen.go_to_full_shade_appearing_translation);
-        notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C0011R$dimen.pulsing_notification_appear_translation);
+        this.mGoToFullShadeAppearingTranslation = notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C0012R$dimen.go_to_full_shade_appearing_translation);
+        notificationStackScrollLayout.getContext().getResources().getDimensionPixelSize(C0012R$dimen.pulsing_notification_appear_translation);
         this.mAnimationProperties = new AnimationProperties() {
             /* class com.android.systemui.statusbar.notification.stack.StackStateAnimator.AnonymousClass1 */
 

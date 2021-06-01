@@ -25,9 +25,9 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.pip.PipBoundsHandler;
 import com.android.systemui.pip.PipSnapAlgorithm;
@@ -178,8 +178,8 @@ public class PipTouchHandler {
             }
         });
         Resources resources = context.getResources();
-        this.mEnableDismissDragToEdge = resources.getBoolean(C0009R$bool.config_pipEnableDismissDragToEdge);
-        this.mEnableResize = resources.getBoolean(C0009R$bool.config_pipEnableResizeForMenu);
+        this.mEnableDismissDragToEdge = resources.getBoolean(C0010R$bool.config_pipEnableDismissDragToEdge);
+        this.mEnableResize = resources.getBoolean(C0010R$bool.config_pipEnableResizeForMenu);
         reloadResources();
         inputConsumerController.setInputListener(new InputConsumerController.InputListener() {
             /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$A78OVgVs8H_2SG6WUxzMSclOdX0 */
@@ -217,7 +217,7 @@ public class PipTouchHandler {
         this.mTargetView = new DismissCircleView(context);
         FrameLayout frameLayout = new FrameLayout(context);
         this.mTargetViewContainer = frameLayout;
-        frameLayout.setBackgroundDrawable(context.getDrawable(C0012R$drawable.floating_dismiss_gradient_transition));
+        frameLayout.setBackgroundDrawable(context.getDrawable(C0013R$drawable.floating_dismiss_gradient_transition));
         this.mTargetViewContainer.setClipChildren(false);
         this.mTargetViewContainer.addView(this.mTargetView);
         MagnetizedObject<Rect> magnetizedPip = this.mMotionHelper.getMagnetizedPip();
@@ -288,19 +288,19 @@ public class PipTouchHandler {
 
     private void reloadResources() {
         Resources resources = this.mContext.getResources();
-        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C0011R$dimen.pip_bottom_offset_buffer);
-        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C0011R$dimen.pip_expanded_shortest_edge_size);
-        this.mImeOffset = resources.getDimensionPixelSize(C0011R$dimen.pip_ime_offset);
-        this.mDismissAreaHeight = resources.getDimensionPixelSize(C0011R$dimen.floating_dismiss_gradient_height);
+        this.mBottomOffsetBufferPx = resources.getDimensionPixelSize(C0012R$dimen.pip_bottom_offset_buffer);
+        this.mExpandedShortestEdgeSize = resources.getDimensionPixelSize(C0012R$dimen.pip_expanded_shortest_edge_size);
+        this.mImeOffset = resources.getDimensionPixelSize(C0012R$dimen.pip_ime_offset);
+        this.mDismissAreaHeight = resources.getDimensionPixelSize(C0012R$dimen.floating_dismiss_gradient_height);
         updateMagneticTargetSize();
     }
 
     private void updateMagneticTargetSize() {
         if (this.mTargetView != null) {
-            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.dismiss_circle_size);
+            int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.dismiss_circle_size);
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
             layoutParams.gravity = 81;
-            layoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.floating_dismiss_bottom_margin);
+            layoutParams.bottomMargin = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.floating_dismiss_bottom_margin);
             this.mTargetView.setLayoutParams(layoutParams);
             this.mMagneticTarget.setMagneticFieldRadiusPx((int) (((float) dimensionPixelSize) * 1.25f));
         }
@@ -469,7 +469,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void showDismissTargetMaybe() {
+    public void showDismissTargetMaybe() {
         createOrUpdateDismissTarget();
         if (this.mTargetViewContainer.getVisibility() != 0) {
             this.mTargetView.setTranslationY((float) this.mTargetViewContainer.getHeight());
@@ -513,8 +513,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onRegistrationChanged(boolean z) {
+    public void onRegistrationChanged(boolean z) {
         this.mAccessibilityManager.setPictureInPictureActionReplacingConnection(z ? this.mConnection : null);
         if (!z && this.mTouchState.isUserInteracting()) {
             cleanUpDismissTarget();
@@ -522,18 +521,16 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void onAccessibilityShowMenu() {
+    public void onAccessibilityShowMenu() {
         this.mMenuController.showMenu(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     /* JADX WARNING: Code restructure failed: missing block: B:57:0x00dc, code lost:
         if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x00fe;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    private boolean handleTouchEvent(android.view.InputEvent r12) {
+    public boolean handleTouchEvent(android.view.InputEvent r12) {
         /*
         // Method dump skipped, instructions count: 282
         */
@@ -552,7 +549,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private void updateDismissFraction() {
+    public void updateDismissFraction() {
         if (this.mMenuController != null && !this.mIsImeShowing) {
             Rect bounds = this.mMotionHelper.getBounds();
             float f = (float) this.mInsetBounds.bottom;
@@ -731,7 +728,7 @@ public class PipTouchHandler {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$K8tFYcJKtB3Bkuu5piDq01YhA */
 
                     public final void run() {
-                        PipTouchHandler.access$2000(PipTouchHandler.this);
+                        PipTouchHandler.this.updateDismissFraction();
                     }
                 }, new Runnable() {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$c8YgJLEypMoVYe3YjylatK650zk */
@@ -754,8 +751,7 @@ public class PipTouchHandler {
         }
 
         /* access modifiers changed from: private */
-        /* access modifiers changed from: public */
-        private void flingEndAction() {
+        public void flingEndAction() {
             if (this.mShouldHideMenuAfterFling) {
                 PipTouchHandler.this.mMenuController.hideMenu();
             }
@@ -763,8 +759,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateMovementBounds() {
+    public void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
         this.mMotionHelper.setCurrentMovementBounds(this.mMovementBounds);
@@ -777,8 +772,7 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private Rect getMovementBounds(Rect rect) {
+    public Rect getMovementBounds(Rect rect) {
         Rect rect2 = new Rect();
         this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
         return rect2;

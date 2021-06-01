@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.volume.Interaction;
 import java.util.Objects;
 
 public class SegmentedButtons extends LinearLayout {
-    private static final int LABEL_RES_KEY = C0014R$id.label;
+    private static final int LABEL_RES_KEY = C0015R$id.label;
     private static final Typeface MEDIUM = Typeface.create("sans-serif-medium", 0);
     private static final Typeface REGULAR = Typeface.create("sans-serif", 0);
     private Callback mCallback;
@@ -70,7 +70,7 @@ public class SegmentedButtons extends LinearLayout {
     }
 
     public Button inflateButton() {
-        return (Button) this.mInflater.inflate(C0016R$layout.segmented_button, (ViewGroup) this, false);
+        return (Button) this.mInflater.inflate(C0017R$layout.segmented_button, (ViewGroup) this, false);
     }
 
     public void addButton(int i, int i2, Object obj) {

@@ -27,6 +27,6 @@ final class TooltipManager$preferenceStorer$1 extends Lambda implements Function
     }
 
     public final void invoke(int i) {
-        Prefs.putInt(this.$context, this.this$0.preferenceName, i);
+        Prefs.putInt(this.$context, TooltipManager.access$getPreferenceName$p(this.this$0), i);
     }
 }

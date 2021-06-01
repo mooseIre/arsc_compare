@@ -11,6 +11,9 @@ public interface ConfigurationController extends CallbackController<Configuratio
         default void onConfigChanged(Configuration configuration) {
         }
 
+        default void onDensityChanged() {
+        }
+
         default void onDensityOrFontScaleChanged() {
         }
 

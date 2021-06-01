@@ -1,7 +1,7 @@
 package com.android.systemui.statusbar.phone;
 
 import android.widget.LinearLayout;
-import com.android.systemui.C0007R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.StatusBarMobileView;
@@ -31,7 +31,7 @@ public class MiuiLightDarkEndIconManager extends MiuiLightDarkIconManager {
             return;
         }
         if (this.mDripEnd) {
-            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this, new ArrayList(Arrays.asList(this.mContext.getResources().getStringArray(C0007R$array.config_drip_right_block_statusBarIcons))));
+            ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this, new ArrayList(Arrays.asList(this.mContext.getResources().getStringArray(C0008R$array.config_drip_right_block_statusBarIcons))));
             return;
         }
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).addIconGroup(this);

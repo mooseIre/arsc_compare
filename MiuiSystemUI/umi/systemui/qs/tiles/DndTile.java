@@ -21,9 +21,9 @@ import androidx.appcompat.R$styleable;
 import codeinjection.CodeInjection;
 import com.android.internal.logging.MetricsLogger;
 import com.android.settingslib.notification.EnableZenModeDialog;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Prefs;
 import com.android.systemui.SysUIToast;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -221,7 +221,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.quick_settings_dnd_label);
+        return this.mContext.getString(C0021R$string.quick_settings_dnd_label);
     }
 
     /* access modifiers changed from: protected */
@@ -243,18 +243,18 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
             booleanState.icon = QSTileImpl.ResourceIcon.get(17302822);
             checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_adjust_volume");
             if (intValue == 1) {
-                booleanState.contentDescription = this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd) + ", " + ((Object) booleanState.secondaryLabel);
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + ((Object) booleanState.secondaryLabel);
             } else if (intValue == 2) {
-                booleanState.contentDescription = this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd_none_on) + ", " + ((Object) booleanState.secondaryLabel);
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_none_on) + ", " + ((Object) booleanState.secondaryLabel);
             } else if (intValue != 3) {
-                booleanState.contentDescription = this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd);
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd);
             } else {
-                booleanState.contentDescription = this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd_alarms_on) + ", " + ((Object) booleanState.secondaryLabel);
+                booleanState.contentDescription = this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd) + ", " + this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_alarms_on) + ", " + ((Object) booleanState.secondaryLabel);
             }
             if (z2) {
                 fireToggleStateChanged(booleanState.value);
             }
-            booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C0020R$string.accessibility_quick_settings_open_settings, getTileLabel());
+            booleanState.dualLabelContentDescription = this.mContext.getResources().getString(C0021R$string.accessibility_quick_settings_open_settings, getTileLabel());
             booleanState.expandedAccessibilityClassName = Switch.class.getName();
         }
     }
@@ -263,9 +263,9 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_changed_on);
         }
-        return this.mContext.getString(C0020R$string.accessibility_quick_settings_dnd_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_dnd_changed_off);
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
@@ -300,7 +300,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return ((QSTileImpl) DndTile.this).mContext.getString(C0020R$string.quick_settings_dnd_label);
+            return ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.quick_settings_dnd_label);
         }
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
@@ -329,14 +329,14 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
             if (view != null) {
                 zenModePanel = (ZenModePanel) view;
             } else {
-                zenModePanel = (ZenModePanel) LayoutInflater.from(context).inflate(C0016R$layout.zen_mode_panel, viewGroup, false);
+                zenModePanel = (ZenModePanel) LayoutInflater.from(context).inflate(C0017R$layout.zen_mode_panel, viewGroup, false);
             }
             this.mZenPanel = zenModePanel;
             if (view == null) {
                 zenModePanel.init(DndTile.this.mController);
                 this.mZenPanel.addOnAttachStateChangeListener(this);
                 this.mZenPanel.setCallback(DndTile.this.mZenModePanelCallback);
-                this.mZenPanel.setEmptyState(C0012R$drawable.ic_qs_dnd_detail_empty, C0020R$string.dnd_is_off);
+                this.mZenPanel.setEmptyState(C0013R$drawable.ic_qs_dnd_detail_empty, C0021R$string.dnd_is_off);
             }
             updatePanel();
             return this.mZenPanel;
@@ -357,9 +357,9 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
                 for (ZenModeConfig.ZenRule zenRule2 : config.automaticRules.values()) {
                     if (zenRule2.isAutomaticActive()) {
                         if (ownerCaption.isEmpty()) {
-                            ownerCaption = ((QSTileImpl) DndTile.this).mContext.getString(C0020R$string.qs_dnd_prompt_auto_rule, zenRule2.name);
+                            ownerCaption = ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_auto_rule, zenRule2.name);
                         } else {
-                            ownerCaption = ((QSTileImpl) DndTile.this).mContext.getString(C0020R$string.qs_dnd_prompt_auto_rule_app);
+                            ownerCaption = ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_auto_rule_app);
                         }
                     }
                 }
@@ -380,7 +380,7 @@ public class DndTile extends QSTileImpl<QSTile.BooleanState> {
                 if (applicationInfo == null || (loadLabel = applicationInfo.loadLabel(packageManager)) == null) {
                     return CodeInjection.MD5;
                 }
-                return ((QSTileImpl) DndTile.this).mContext.getString(C0020R$string.qs_dnd_prompt_app, loadLabel.toString().trim());
+                return ((QSTileImpl) DndTile.this).mContext.getString(C0021R$string.qs_dnd_prompt_app, loadLabel.toString().trim());
             } catch (Throwable th) {
                 Slog.w(((QSTileImpl) DndTile.this).TAG, "Error loading owner caption", th);
                 return CodeInjection.MD5;

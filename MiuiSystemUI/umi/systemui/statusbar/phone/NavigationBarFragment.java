@@ -43,9 +43,9 @@ import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.internal.util.LatencyTracker;
 import com.android.internal.view.AppearanceRegion;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.accessibility.SystemActions;
 import com.android.systemui.assist.AssistHandleViewController;
 import com.android.systemui.assist.AssistManager;
@@ -455,7 +455,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(C0016R$layout.navigation_bar, viewGroup, false);
+        return layoutInflater.inflate(C0017R$layout.navigation_bar, viewGroup, false);
     }
 
     public void onViewCreated(View view, Bundle bundle) {
@@ -979,12 +979,12 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
 
     /* access modifiers changed from: private */
     public boolean onLongPressBackHome(View view) {
-        return onLongPressNavigationButtons(view, C0014R$id.back, C0014R$id.home);
+        return onLongPressNavigationButtons(view, C0015R$id.back, C0015R$id.home);
     }
 
     /* access modifiers changed from: private */
     public boolean onLongPressBackRecents(View view) {
-        return onLongPressNavigationButtons(view, C0014R$id.back, C0014R$id.recent_apps);
+        return onLongPressNavigationButtons(view, C0015R$id.back, C0015R$id.recent_apps);
     }
 
     private boolean onLongPressNavigationButtons(View view, int i, int i2) {
@@ -1002,7 +1002,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
                     return true;
                 }
                 if (view.getId() == i) {
-                    if (i2 == C0014R$id.recent_apps) {
+                    if (i2 == C0015R$id.recent_apps) {
                         buttonDispatcher = this.mNavigationBarView.getRecentsButton();
                     } else {
                         buttonDispatcher = this.mNavigationBarView.getHomeButton();
@@ -1022,7 +1022,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
                 return true;
             } else if (view.getId() != i2) {
                 z = false;
-            } else if (i2 == C0014R$id.recent_apps) {
+            } else if (i2 == C0015R$id.recent_apps) {
                 return onLongPressRecents();
             } else {
                 return onHomeLongClick(this.mNavigationBarView.getHomeButton().getCurrentView());
@@ -1259,10 +1259,10 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, -1, 2019, 545521768, -3);
         layoutParams.token = new Binder();
         layoutParams.setTitle("NavigationBar" + context.getDisplayId());
-        layoutParams.accessibilityTitle = context.getString(C0020R$string.nav_bar);
+        layoutParams.accessibilityTitle = context.getString(C0021R$string.nav_bar);
         layoutParams.windowAnimations = 0;
         layoutParams.privateFlags = layoutParams.privateFlags | 16777216;
-        final View inflate = LayoutInflater.from(context).inflate(C0016R$layout.navigation_bar_window, (ViewGroup) null);
+        final View inflate = LayoutInflater.from(context).inflate(C0017R$layout.navigation_bar_window, (ViewGroup) null);
         if (inflate == null) {
             return null;
         }
@@ -1271,7 +1271,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
 
             public void onViewAttachedToWindow(View view) {
                 FragmentHostManager fragmentHostManager = FragmentHostManager.get(view);
-                fragmentHostManager.getFragmentManager().beginTransaction().replace(C0014R$id.navigation_bar_frame, NavigationBarFragment.this, "NavigationBar").commit();
+                fragmentHostManager.getFragmentManager().beginTransaction().replace(C0015R$id.navigation_bar_frame, NavigationBarFragment.this, "NavigationBar").commit();
                 fragmentHostManager.addTagListener("NavigationBar", fragmentListener);
             }
 

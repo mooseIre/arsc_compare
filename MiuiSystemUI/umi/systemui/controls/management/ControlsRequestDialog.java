@@ -15,10 +15,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controls.controller.ControlInfo;
 import com.android.systemui.controls.controller.ControlsController;
@@ -155,8 +155,8 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
             Control control2 = this.control;
             if (control2 != null) {
                 RenderInfo lookup$default = RenderInfo.Companion.lookup$default(companion, this, componentName, control2.getDeviceType(), 0, 8, null);
-                View inflate = LayoutInflater.from(this).inflate(C0016R$layout.controls_dialog, (ViewGroup) null);
-                ImageView imageView = (ImageView) inflate.requireViewById(C0014R$id.icon);
+                View inflate = LayoutInflater.from(this).inflate(C0017R$layout.controls_dialog, (ViewGroup) null);
+                ImageView imageView = (ImageView) inflate.requireViewById(C0015R$id.icon);
                 imageView.setImageDrawable(lookup$default.getIcon());
                 Context context = imageView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "context");
@@ -165,22 +165,22 @@ public class ControlsRequestDialog extends LifecycleActivity implements DialogIn
                 Context context2 = imageView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context2, "context");
                 imageView.setImageTintList(resources.getColorStateList(foreground, context2.getTheme()));
-                View requireViewById = inflate.requireViewById(C0014R$id.title);
+                View requireViewById = inflate.requireViewById(C0015R$id.title);
                 Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById<TextView>(R.id.title)");
                 TextView textView = (TextView) requireViewById;
                 Control control3 = this.control;
                 if (control3 != null) {
                     textView.setText(control3.getTitle());
-                    View requireViewById2 = inflate.requireViewById(C0014R$id.subtitle);
+                    View requireViewById2 = inflate.requireViewById(C0015R$id.subtitle);
                     Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById<TextView>(R.id.subtitle)");
                     TextView textView2 = (TextView) requireViewById2;
                     Control control4 = this.control;
                     if (control4 != null) {
                         textView2.setText(control4.getSubtitle());
-                        View requireViewById3 = inflate.requireViewById(C0014R$id.control);
+                        View requireViewById3 = inflate.requireViewById(C0015R$id.control);
                         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById<View>(R.id.control)");
-                        requireViewById3.setElevation(inflate.getResources().getFloat(C0011R$dimen.control_card_elevation));
-                        AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0020R$string.controls_dialog_title)).setMessage(getString(C0020R$string.controls_dialog_message, new Object[]{charSequence})).setPositiveButton(C0020R$string.controls_dialog_ok, this).setNegativeButton(17039360, this).setOnCancelListener(this).setView(inflate).create();
+                        requireViewById3.setElevation(inflate.getResources().getFloat(C0012R$dimen.control_card_elevation));
+                        AlertDialog create = new AlertDialog.Builder(this).setTitle(getString(C0021R$string.controls_dialog_title)).setMessage(getString(C0021R$string.controls_dialog_message, new Object[]{charSequence})).setPositiveButton(C0021R$string.controls_dialog_ok, this).setNegativeButton(17039360, this).setOnCancelListener(this).setView(inflate).create();
                         SystemUIDialog.registerDismissListener(create);
                         create.setCanceledOnTouchOutside(true);
                         Intrinsics.checkExpressionValueIsNotNull(create, "dialog");

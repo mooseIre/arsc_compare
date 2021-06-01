@@ -95,11 +95,11 @@ public class GuestResumeSessionReceiver extends BroadcastReceiver {
 
         public ResetSessionDialog(Context context, int i) {
             super(context);
-            setTitle(context.getString(C0020R$string.guest_wipe_session_title));
-            setMessage(context.getString(C0020R$string.guest_wipe_session_message));
+            setTitle(context.getString(C0021R$string.guest_wipe_session_title));
+            setMessage(context.getString(C0021R$string.guest_wipe_session_message));
             setCanceledOnTouchOutside(false);
-            setButton(-2, context.getString(C0020R$string.guest_wipe_session_wipe), this);
-            setButton(-1, context.getString(C0020R$string.guest_wipe_session_dontwipe), this);
+            setButton(-2, context.getString(C0021R$string.guest_wipe_session_wipe), this);
+            setButton(-1, context.getString(C0021R$string.guest_wipe_session_dontwipe), this);
             this.mUserId = i;
         }
 

@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.QSControlCenterTileLayout;
 import com.android.systemui.qs.QSTileHost;
 import kotlin.jvm.internal.Intrinsics;
@@ -62,13 +62,13 @@ public final class ControlCenterTilesContainer extends SpringBackLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View requireViewById = requireViewById(C0014R$id.tiles_scroller);
+        View requireViewById = requireViewById(C0015R$id.tiles_scroller);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById, "requireViewById(R.id.tiles_scroller)");
         this.scroller = (NestedScrollView) requireViewById;
-        View requireViewById2 = requireViewById(C0014R$id.tiles_container);
+        View requireViewById2 = requireViewById(C0015R$id.tiles_container);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById2, "requireViewById(R.id.tiles_container)");
         this.container = (LinearLayout) requireViewById2;
-        View requireViewById3 = requireViewById(C0014R$id.tile_layout);
+        View requireViewById3 = requireViewById(C0015R$id.tile_layout);
         Intrinsics.checkExpressionValueIsNotNull(requireViewById3, "requireViewById(R.id.tile_layout)");
         this.tileLayout = (QSControlCenterTileLayout) requireViewById3;
     }

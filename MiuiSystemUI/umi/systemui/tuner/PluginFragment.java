@@ -20,8 +20,8 @@ import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreference;
 import codeinjection.CodeInjection;
 import com.android.internal.util.ArrayUtils;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.PluginEnablerImpl;
 import com.android.systemui.shared.plugins.PluginEnabler;
@@ -159,7 +159,7 @@ public class PluginFragment extends PreferenceFragment {
             this.mPluginEnabler = pluginEnabler;
             setTitle(packageInfo.applicationInfo.loadLabel(packageManager));
             setChecked(isPluginEnabled());
-            setWidgetLayoutResource(C0016R$layout.tuner_widget_settings_switch);
+            setWidgetLayoutResource(C0017R$layout.tuner_widget_settings_switch);
         }
 
         private boolean isPluginEnabled() {
@@ -210,13 +210,13 @@ public class PluginFragment extends PreferenceFragment {
         public void onBindViewHolder(PreferenceViewHolder preferenceViewHolder) {
             super.onBindViewHolder(preferenceViewHolder);
             int i = 0;
-            preferenceViewHolder.findViewById(C0014R$id.settings).setVisibility(this.mHasSettings ? 0 : 8);
-            View findViewById = preferenceViewHolder.findViewById(C0014R$id.divider);
+            preferenceViewHolder.findViewById(C0015R$id.settings).setVisibility(this.mHasSettings ? 0 : 8);
+            View findViewById = preferenceViewHolder.findViewById(C0015R$id.divider);
             if (!this.mHasSettings) {
                 i = 8;
             }
             findViewById.setVisibility(i);
-            preferenceViewHolder.findViewById(C0014R$id.settings).setOnClickListener(new View.OnClickListener() {
+            preferenceViewHolder.findViewById(C0015R$id.settings).setOnClickListener(new View.OnClickListener() {
                 /* class com.android.systemui.tuner.$$Lambda$PluginFragment$PluginPreference$Xt_y65tw1Tc7XykRWrNNbIDklTs */
 
                 public final void onClick(View view) {

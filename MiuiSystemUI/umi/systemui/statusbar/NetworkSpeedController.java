@@ -15,7 +15,7 @@ import android.os.Message;
 import android.os.UserHandle;
 import android.provider.Settings;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.statusbar.views.NetworkSpeedView;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -218,10 +218,10 @@ public class NetworkSpeedController {
     /* access modifiers changed from: private */
     public static String formatSpeed(Context context, long j) {
         String str;
-        int i = C0020R$string.kilobyte_per_second;
+        int i = C0021R$string.kilobyte_per_second;
         float f = ((float) j) / 1024.0f;
         if (f > 999.0f) {
-            i = C0020R$string.megabyte_per_second;
+            i = C0021R$string.megabyte_per_second;
             f /= 1024.0f;
         }
         if (f < 100.0f) {
@@ -229,7 +229,7 @@ public class NetworkSpeedController {
         } else {
             str = String.format("%.0f", Float.valueOf(f));
         }
-        return context.getResources().getString(C0020R$string.network_speed_suffix, str, context.getString(i));
+        return context.getResources().getString(C0021R$string.network_speed_suffix, str, context.getString(i));
     }
 
     private void clearNetworkSpeed() {

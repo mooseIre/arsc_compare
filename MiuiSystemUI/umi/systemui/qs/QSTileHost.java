@@ -18,7 +18,7 @@ import codeinjection.CodeInjection;
 import com.android.internal.logging.InstanceId;
 import com.android.internal.logging.InstanceIdSequence;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dumpable;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -133,6 +133,14 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         return this.mInstanceIdSequence.newInstanceId();
     }
 
+    public void destroyTiles() {
+        for (QSTile qSTile : this.mTiles.values()) {
+            if (!(qSTile instanceof CustomTile)) {
+                qSTile.destroy();
+            }
+        }
+    }
+
     public void onPluginConnected(QSFactory qSFactory, Context context) {
         this.mQsFactories.add(0, qSFactory);
         String value = this.mTunerService.getValue("sysui_qs_tiles");
@@ -210,7 +218,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         if ("sysui_qs_tiles".equals(str)) {
             Log.d("QSTileHost", "Recreating tiles");
             if (str2 == null && UserManager.isDeviceInDemoMode(this.mContext)) {
-                str2 = this.mContext.getResources().getString(C0020R$string.quick_settings_tiles_retail_mode);
+                str2 = this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_retail_mode);
             }
             List<String> loadTileSpecs = loadTileSpecs(this.mContext, str2);
             int currentUser = ActivityManager.getCurrentUser();
@@ -363,7 +371,6 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     private void saveTilesToSettings(List<String> list) {
         if (!this.mMiuiHostInjector.isSuperSaveMode()) {
             Settings.Secure.putStringForUser(this.mContext.getContentResolver(), "sysui_qs_tiles", TextUtils.join(",", list), null, false, this.mCurrentUser, true);
-            this.mMiuiHostInjector.setMiuiQSTilesEdited();
         }
     }
 
@@ -372,6 +379,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         this.mMiuiHostInjector.addIndependentTiles(loadTileSpecs);
         if (predicate.test(loadTileSpecs)) {
             saveTilesToSettings(loadTileSpecs);
+            this.mMiuiHostInjector.setMiuiQSTilesEdited();
         }
     }
 
@@ -442,7 +450,7 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
     public List<String> loadTileSpecs(Context context, String str) {
         Resources resources = context.getResources();
         if (TextUtils.isEmpty(str)) {
-            str = resources.getString(C0020R$string.quick_settings_tiles);
+            str = resources.getString(C0021R$string.quick_settings_tiles);
             if (DEBUG) {
                 Log.d("QSTileHost", "Loaded tile specs from config: " + str);
             }

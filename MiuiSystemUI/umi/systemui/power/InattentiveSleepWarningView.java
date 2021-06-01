@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0017R$layout;
 import java.util.Objects;
 
 public class InattentiveSleepWarningView extends FrameLayout {
@@ -27,7 +27,7 @@ public class InattentiveSleepWarningView extends FrameLayout {
 
     InattentiveSleepWarningView(Context context) {
         super(context);
-        LayoutInflater.from(((FrameLayout) this).mContext).inflate(C0016R$layout.inattentive_sleep_warning, (ViewGroup) this, true);
+        LayoutInflater.from(((FrameLayout) this).mContext).inflate(C0017R$layout.inattentive_sleep_warning, (ViewGroup) this, true);
         setFocusable(true);
         setOnKeyListener($$Lambda$InattentiveSleepWarningView$TZ7t_oJYmI3UsEhfACXbN6lQYjI.INSTANCE);
         Animator loadAnimator = AnimatorInflater.loadAnimator(getContext(), 17498113);

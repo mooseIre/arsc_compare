@@ -3,13 +3,13 @@ package com.android.systemui.statusbar.notification;
 import android.util.Pools;
 import android.view.View;
 import com.android.internal.widget.MessagingImageMessage;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.ViewTransformationHelper;
 import com.android.systemui.statusbar.notification.TransformState;
 
 public class MessagingImageTransformState extends ImageTransformState {
-    private static final int START_ACTUAL_HEIGHT = C0014R$id.transformation_start_actual_height;
-    private static final int START_ACTUAL_WIDTH = C0014R$id.transformation_start_actual_width;
+    private static final int START_ACTUAL_HEIGHT = C0015R$id.transformation_start_actual_height;
+    private static final int START_ACTUAL_WIDTH = C0015R$id.transformation_start_actual_width;
     private static Pools.SimplePool<MessagingImageTransformState> sInstancePool = new Pools.SimplePool<>(40);
     private MessagingImageMessage mImageMessage;
 

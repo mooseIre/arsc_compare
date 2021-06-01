@@ -7,7 +7,7 @@ import android.view.Window;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import kotlin.jvm.internal.Intrinsics;
 
 /* compiled from: ControlsAnimations.kt */
@@ -22,11 +22,12 @@ public final class ControlsAnimations$observerForAnimations$1 implements Lifecyc
         this.showAnimation = intent.getBooleanExtra("extra_animate", false);
         viewGroup.setTransitionGroup(true);
         viewGroup.setTransitionAlpha(0.0f);
-        if (ControlsAnimations.access$getTranslationY$p(ControlsAnimations.INSTANCE) == -1.0f) {
-            ControlsAnimations controlsAnimations2 = ControlsAnimations.INSTANCE;
+        ControlsAnimations controlsAnimations2 = ControlsAnimations.INSTANCE;
+        if (ControlsAnimations.translationY == -1.0f) {
+            ControlsAnimations controlsAnimations3 = ControlsAnimations.INSTANCE;
             Context context = viewGroup.getContext();
             Intrinsics.checkExpressionValueIsNotNull(context, "view.context");
-            ControlsAnimations.access$setTranslationY$p(controlsAnimations2, (float) context.getResources().getDimensionPixelSize(C0011R$dimen.global_actions_controls_y_translation));
+            ControlsAnimations.translationY = (float) context.getResources().getDimensionPixelSize(C0012R$dimen.global_actions_controls_y_translation);
         }
     }
 

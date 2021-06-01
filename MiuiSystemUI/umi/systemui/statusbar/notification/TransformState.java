@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.android.internal.widget.MessagingImageMessage;
 import com.android.internal.widget.MessagingPropertyAnimator;
 import com.android.internal.widget.ViewClippingUtil;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.TransformableView;
@@ -38,10 +38,10 @@ public class TransformState {
             }
         }
     };
-    private static final int TRANSFORMATION_START_SCLALE_X = C0014R$id.transformation_start_scale_x_tag;
-    private static final int TRANSFORMATION_START_SCLALE_Y = C0014R$id.transformation_start_scale_y_tag;
-    private static final int TRANSFORMATION_START_X = C0014R$id.transformation_start_x_tag;
-    private static final int TRANSFORMATION_START_Y = C0014R$id.transformation_start_y_tag;
+    private static final int TRANSFORMATION_START_SCLALE_X = C0015R$id.transformation_start_scale_x_tag;
+    private static final int TRANSFORMATION_START_SCLALE_Y = C0015R$id.transformation_start_scale_y_tag;
+    private static final int TRANSFORMATION_START_X = C0015R$id.transformation_start_x_tag;
+    private static final int TRANSFORMATION_START_Y = C0015R$id.transformation_start_y_tag;
     private static Pools.SimplePool<TransformState> sInstancePool = new Pools.SimplePool<>(40);
     protected Interpolator mDefaultInterpolator = Interpolators.FAST_OUT_SLOW_IN;
     private int[] mOwnPosition = new int[2];

@@ -24,8 +24,8 @@ import androidx.dynamicanimation.animation.FloatPropertyCompat;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0008R$attr;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.NavigationEdgeBackPlugin;
@@ -214,7 +214,7 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
         loadDimens();
         loadColors(context);
         updateArrowDirection();
-        this.mSwipeThreshold = context.getResources().getDimension(C0011R$dimen.navigation_edge_action_drag_threshold);
+        this.mSwipeThreshold = context.getResources().getDimension(C0012R$dimen.navigation_edge_action_drag_threshold);
         setVisibility(8);
         RegionSamplingHelper regionSamplingHelper = new RegionSamplingHelper(this, new RegionSamplingHelper.SamplingCallback() {
             /* class com.android.systemui.statusbar.phone.NavigationBarEdgePanel.AnonymousClass5 */
@@ -381,9 +381,9 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
 
     private void loadDimens() {
         Resources resources = getResources();
-        this.mArrowPaddingEnd = resources.getDimensionPixelSize(C0011R$dimen.navigation_edge_panel_padding);
-        this.mMinArrowPosition = resources.getDimensionPixelSize(C0011R$dimen.navigation_edge_arrow_min_y);
-        this.mFingerOffset = resources.getDimensionPixelSize(C0011R$dimen.navigation_edge_finger_offset);
+        this.mArrowPaddingEnd = resources.getDimensionPixelSize(C0012R$dimen.navigation_edge_panel_padding);
+        this.mMinArrowPosition = resources.getDimensionPixelSize(C0012R$dimen.navigation_edge_arrow_min_y);
+        this.mFingerOffset = resources.getDimensionPixelSize(C0012R$dimen.navigation_edge_finger_offset);
     }
 
     private void updateArrowDirection() {
@@ -392,11 +392,11 @@ public class NavigationBarEdgePanel extends View implements NavigationEdgeBackPl
     }
 
     private void loadColors(Context context) {
-        int themeAttr = Utils.getThemeAttr(context, C0008R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0008R$attr.lightIconTheme));
+        int themeAttr = Utils.getThemeAttr(context, C0009R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, themeAttr);
-        this.mArrowColorLight = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.singleToneColor);
-        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.singleToneColor);
+        this.mArrowColorLight = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.singleToneColor);
+        int colorAttrDefaultColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor);
         this.mArrowColorDark = colorAttrDefaultColor;
         this.mProtectionColorDark = this.mArrowColorLight;
         this.mProtectionColorLight = colorAttrDefaultColor;

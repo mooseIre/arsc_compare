@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dumpable;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.StatusBarIconView;
@@ -199,7 +199,7 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
     }
 
     private void initDimens() {
-        this.mContentShift = getResources().getDimensionPixelSize(C0011R$dimen.shelf_transform_content_shift);
+        this.mContentShift = getResources().getDimensionPixelSize(C0012R$dimen.shelf_transform_content_shift);
     }
 
     /* access modifiers changed from: protected */
@@ -319,10 +319,6 @@ public abstract class ExpandableView extends FrameLayout implements Dumpable {
         if (onHeightChangedListener != null) {
             onHeightChangedListener.onHeightChanged(this, z);
         }
-    }
-
-    public int getPinnedHeadsUpHeight() {
-        return getIntrinsicHeight();
     }
 
     public void setTranslation(float f) {

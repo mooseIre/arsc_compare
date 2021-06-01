@@ -15,8 +15,8 @@ import android.media.session.MediaController;
 import android.media.session.PlaybackState;
 import android.text.TextUtils;
 import android.util.Log;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.pip.tv.PipManager;
 import com.android.systemui.util.NotificationChannels;
@@ -139,8 +139,8 @@ public class PipNotification {
 
     /* access modifiers changed from: package-private */
     public void onConfigurationChanged(Context context) {
-        this.mDefaultTitle = context.getResources().getString(C0020R$string.pip_notification_unknown_title);
-        this.mDefaultIconResId = C0012R$drawable.pip_icon;
+        this.mDefaultTitle = context.getResources().getString(C0021R$string.pip_notification_unknown_title);
+        this.mDefaultIconResId = C0013R$drawable.pip_icon;
         if (this.mNotified) {
             notifyPipNotification();
         }

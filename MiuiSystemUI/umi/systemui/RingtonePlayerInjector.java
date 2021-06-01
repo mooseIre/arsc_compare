@@ -14,7 +14,7 @@ public class RingtonePlayerInjector {
     private static boolean sPlayInCallNotification;
 
     public static void init(Context context) {
-        sPlayInCallNotification = context.getResources().getBoolean(C0009R$bool.play_incall_notification);
+        sPlayInCallNotification = context.getResources().getBoolean(C0010R$bool.play_incall_notification);
         Log.d("MiuiRingtonePlayer", "RingtonePlayer sPlayInCallNotification=" + sPlayInCallNotification);
     }
 

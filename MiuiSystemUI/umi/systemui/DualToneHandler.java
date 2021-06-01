@@ -21,10 +21,10 @@ public final class DualToneHandler {
 
     public final void setColorsFromContext(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "context");
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0008R$attr.darkIconTheme));
-        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0008R$attr.lightIconTheme));
-        this.darkColor = new Color(Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.singleToneColor), Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.backgroundColor), Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.fillColor));
-        this.lightColor = new Color(Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.singleToneColor), Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.backgroundColor), Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.fillColor));
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.darkIconTheme));
+        ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.lightIconTheme));
+        this.darkColor = new Color(Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.singleToneColor), Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.backgroundColor), Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.fillColor));
+        this.lightColor = new Color(Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor), Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.backgroundColor), Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.fillColor));
     }
 
     private final int getColorForDarkIntensity(float f, int i, int i2) {

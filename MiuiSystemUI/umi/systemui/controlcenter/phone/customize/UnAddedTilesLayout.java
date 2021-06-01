@@ -9,10 +9,10 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.controlcenter.utils.Constants;
 import miuix.animation.Folme;
 import miuix.animation.IStateStyle;
@@ -53,17 +53,17 @@ public class UnAddedTilesLayout extends FrameLayout {
         setClickable(true);
         setFocusable(true);
         setFocusableInTouchMode(true);
-        LayoutInflater.from(this.mContext).inflate(C0016R$layout.qs_control_customize_unadded_tiles_layout, this);
+        LayoutInflater.from(this.mContext).inflate(C0017R$layout.qs_control_customize_unadded_tiles_layout, this);
     }
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mVelocityMonitor = new VelocityMonitor();
-        this.mContent = findViewById(C0014R$id.content);
-        this.mIndicator = (ImageView) findViewById(C0014R$id.indicator);
-        this.mHeader = findViewById(C0014R$id.header);
-        this.mTitle = (TextView) findViewById(C0014R$id.others_title);
+        this.mContent = findViewById(C0015R$id.content);
+        this.mIndicator = (ImageView) findViewById(C0015R$id.indicator);
+        this.mHeader = findViewById(C0015R$id.header);
+        this.mTitle = (TextView) findViewById(C0015R$id.others_title);
         this.mAnim = Folme.useValue("setMarginTop");
         AnimConfig animConfig = new AnimConfig();
         this.mMarginAnimConfig = animConfig;
@@ -101,8 +101,8 @@ public class UnAddedTilesLayout extends FrameLayout {
     }
 
     public void updateResources() {
-        this.mIndicator.setImageDrawable(this.mContext.getDrawable(C0012R$drawable.qs_control_tiles_indicator));
-        this.mTitle.setTextAppearance(C0021R$style.TextAppearance_QSControl_CustomizeOthersTitle);
+        this.mIndicator.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.qs_control_tiles_indicator));
+        this.mTitle.setTextAppearance(C0022R$style.TextAppearance_QSControl_CustomizeOthersTitle);
     }
 
     public void setAddedLayout(RecyclerView recyclerView) {

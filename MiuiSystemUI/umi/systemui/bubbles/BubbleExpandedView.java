@@ -34,10 +34,10 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import com.android.internal.policy.ScreenDecorationsUtils;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.bubbles.BubbleExpandedView;
 import com.android.systemui.recents.TriangleShape;
@@ -243,9 +243,9 @@ public class BubbleExpandedView extends LinearLayout {
         this.mWindowManager = windowManager;
         windowManager.getDefaultDisplay().getRealSize(this.mDisplaySize);
         Resources resources = getResources();
-        this.mMinHeight = resources.getDimensionPixelSize(C0011R$dimen.bubble_expanded_default_height);
-        this.mOverflowHeight = resources.getDimensionPixelSize(C0011R$dimen.bubble_overflow_height);
-        this.mPointerMargin = resources.getDimensionPixelSize(C0011R$dimen.bubble_pointer_margin);
+        this.mMinHeight = resources.getDimensionPixelSize(C0012R$dimen.bubble_expanded_default_height);
+        this.mOverflowHeight = resources.getDimensionPixelSize(C0012R$dimen.bubble_overflow_height);
+        this.mPointerMargin = resources.getDimensionPixelSize(C0012R$dimen.bubble_pointer_margin);
     }
 
     /* access modifiers changed from: protected */
@@ -253,13 +253,13 @@ public class BubbleExpandedView extends LinearLayout {
     public void onFinishInflate() {
         super.onFinishInflate();
         Resources resources = getResources();
-        this.mPointerView = findViewById(C0014R$id.pointer_view);
-        this.mPointerWidth = resources.getDimensionPixelSize(C0011R$dimen.bubble_pointer_width);
-        this.mPointerHeight = resources.getDimensionPixelSize(C0011R$dimen.bubble_pointer_height);
+        this.mPointerView = findViewById(C0015R$id.pointer_view);
+        this.mPointerWidth = resources.getDimensionPixelSize(C0012R$dimen.bubble_pointer_width);
+        this.mPointerHeight = resources.getDimensionPixelSize(C0012R$dimen.bubble_pointer_height);
         this.mPointerDrawable = new ShapeDrawable(TriangleShape.create((float) this.mPointerWidth, (float) this.mPointerHeight, true));
         this.mPointerView.setVisibility(4);
-        this.mSettingsIconHeight = getContext().getResources().getDimensionPixelSize(C0011R$dimen.bubble_manage_button_height);
-        this.mSettingsIcon = (AlphaOptimizedButton) findViewById(C0014R$id.settings_button);
+        this.mSettingsIconHeight = getContext().getResources().getDimensionPixelSize(C0012R$dimen.bubble_manage_button_height);
+        this.mSettingsIcon = (AlphaOptimizedButton) findViewById(C0015R$id.settings_button);
         this.mActivityView = new ActivityView(((LinearLayout) this).mContext, (AttributeSet) null, 0, true, false, true);
         setContentVisibility(false);
         this.mActivityViewContainer.setBackgroundColor(-1);
@@ -288,7 +288,7 @@ public class BubbleExpandedView extends LinearLayout {
                 return BubbleExpandedView.this.lambda$onFinishInflate$0$BubbleExpandedView(view, windowInsets);
             }
         });
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.bubble_expanded_view_padding);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.bubble_expanded_view_padding);
         this.mExpandedViewPadding = dimensionPixelSize;
         setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);
         setOnTouchListener(new View.OnTouchListener() {
@@ -358,7 +358,7 @@ public class BubbleExpandedView extends LinearLayout {
 
     /* access modifiers changed from: package-private */
     public void setManageClickListener(View.OnClickListener onClickListener) {
-        findViewById(C0014R$id.settings_button).setOnClickListener(onClickListener);
+        findViewById(C0015R$id.settings_button).setOnClickListener(onClickListener);
     }
 
     /* access modifiers changed from: package-private */
@@ -379,9 +379,9 @@ public class BubbleExpandedView extends LinearLayout {
         }
         int i = getResources().getConfiguration().uiMode & 48;
         if (i == 16) {
-            this.mPointerDrawable.setTint(getResources().getColor(C0010R$color.bubbles_light));
+            this.mPointerDrawable.setTint(getResources().getColor(C0011R$color.bubbles_light));
         } else if (i == 32) {
-            this.mPointerDrawable.setTint(getResources().getColor(C0010R$color.bubbles_dark));
+            this.mPointerDrawable.setTint(getResources().getColor(C0011R$color.bubbles_dark));
         }
         this.mPointerView.setBackground(this.mPointerDrawable);
     }
@@ -486,7 +486,7 @@ public class BubbleExpandedView extends LinearLayout {
         boolean z = this.mBubble == null || didBackingContentChange(bubble);
         if (z || (bubble != null && bubble.getKey().equals(this.mBubble.getKey()))) {
             this.mBubble = bubble;
-            this.mSettingsIcon.setContentDescription(getResources().getString(C0020R$string.bubbles_settings_button_description, bubble.getAppName()));
+            this.mSettingsIcon.setContentDescription(getResources().getString(C0021R$string.bubbles_settings_button_description, bubble.getAppName()));
             this.mSettingsIcon.setAccessibilityDelegate(new View.AccessibilityDelegate() {
                 /* class com.android.systemui.bubbles.BubbleExpandedView.AnonymousClass3 */
 

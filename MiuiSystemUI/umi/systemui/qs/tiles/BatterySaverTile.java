@@ -3,7 +3,7 @@ package com.android.systemui.qs.tiles;
 import android.content.Intent;
 import android.widget.Switch;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.SecureSetting;
@@ -77,7 +77,7 @@ public class BatterySaverTile extends QSTileImpl<QSTile.BooleanState> implements
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.battery_detail_switch_title);
+        return this.mContext.getString(C0021R$string.battery_detail_switch_title);
     }
 
     /* access modifiers changed from: protected */
@@ -91,7 +91,7 @@ public class BatterySaverTile extends QSTileImpl<QSTile.BooleanState> implements
         }
         booleanState.state = i;
         booleanState.icon = this.mIcon;
-        String string = this.mContext.getString(C0020R$string.battery_detail_switch_title);
+        String string = this.mContext.getString(C0021R$string.battery_detail_switch_title);
         booleanState.label = string;
         booleanState.contentDescription = string;
         booleanState.value = this.mPowerSave;

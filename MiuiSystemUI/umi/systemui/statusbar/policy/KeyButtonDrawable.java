@@ -17,9 +17,9 @@ import android.graphics.drawable.Drawable;
 import android.util.FloatProperty;
 import android.view.ContextThemeWrapper;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0008R$attr;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.miui.systemui.SettingsManager;
 
@@ -374,7 +374,7 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public static KeyButtonDrawable create(Context context, int i, boolean z, Color color) {
-        return create(new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0008R$attr.lightIconTheme)), new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0008R$attr.darkIconTheme)), i, z, color);
+        return create(new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.lightIconTheme)), new ContextThemeWrapper(context, Utils.getThemeAttr(context, C0009R$attr.darkIconTheme)), i, z, color);
     }
 
     public static KeyButtonDrawable create(Context context, int i, boolean z) {
@@ -382,7 +382,7 @@ public class KeyButtonDrawable extends Drawable {
     }
 
     public static KeyButtonDrawable create(Context context, Context context2, int i, boolean z, Color color) {
-        return create(context, Utils.getColorAttrDefaultColor(context, C0008R$attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C0008R$attr.singleToneColor), i, z, color);
+        return create(context, Utils.getColorAttrDefaultColor(context, C0009R$attr.singleToneColor), Utils.getColorAttrDefaultColor(context2, C0009R$attr.singleToneColor), i, z, color);
     }
 
     public static KeyButtonDrawable create(Context context, int i, int i2, int i3, boolean z, Color color) {
@@ -391,7 +391,7 @@ public class KeyButtonDrawable extends Drawable {
         Drawable drawable = context.getDrawable(i3);
         KeyButtonDrawable keyButtonDrawable = new KeyButtonDrawable(drawable, i, i2, z2 && drawable.isAutoMirrored(), color);
         if (z) {
-            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C0011R$dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C0011R$dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C0011R$dimen.nav_key_button_shadow_radius), context.getColor(C0010R$color.nav_key_button_shadow_color));
+            keyButtonDrawable.setShadowProperties(resources.getDimensionPixelSize(C0012R$dimen.nav_key_button_shadow_offset_x), resources.getDimensionPixelSize(C0012R$dimen.nav_key_button_shadow_offset_y), resources.getDimensionPixelSize(C0012R$dimen.nav_key_button_shadow_radius), context.getColor(C0011R$color.nav_key_button_shadow_color));
         }
         return keyButtonDrawable;
     }

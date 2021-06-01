@@ -15,8 +15,8 @@ import android.text.format.DateFormat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.FontSizeUtils;
@@ -332,16 +332,19 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityOrFontScaleChanged() {
-        FontSizeUtils.updateFontSize(this, C0011R$dimen.status_bar_clock_size);
-        setPaddingRelative(((TextView) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_clock_starting_padding), 0, ((TextView) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_clock_end_padding), 0);
+        FontSizeUtils.updateFontSize(this, C0012R$dimen.status_bar_clock_size);
+        setPaddingRelative(((TextView) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_starting_padding), 0, ((TextView) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_end_padding), 0);
     }
 
     /* access modifiers changed from: protected */
     public void onVisibilityChanged(View view, int i) {
         super.onVisibilityChanged(view, i);
-        Iterator<ClockVisibilityListener> it = this.mVisibilityListeners.iterator();
-        while (it.hasNext()) {
-            it.next().onClockVisibilityChanged(i);
+        if (view == this) {
+            int visibility = getVisibility();
+            Iterator<ClockVisibilityListener> it = this.mVisibilityListeners.iterator();
+            while (it.hasNext()) {
+                it.next().onClockVisibilityChanged(visibility);
+            }
         }
     }
 
@@ -382,23 +385,23 @@ public class MiuiClock extends TextView implements DemoMode, TunerService.Tunabl
             int i4 = this.mClockMode;
             if (i4 == 2) {
                 if (i3 == 16) {
-                    i = C0020R$string.status_bar_clock_date_time_format_12;
+                    i = C0021R$string.status_bar_clock_date_time_format_12;
                 } else {
-                    i = C0020R$string.status_bar_clock_date_time_format;
+                    i = C0021R$string.status_bar_clock_date_time_format;
                 }
             } else if (i4 == 1) {
                 if (i3 == 16) {
-                    i = C0020R$string.status_bar_clock_date_format_12;
+                    i = C0021R$string.status_bar_clock_date_format_12;
                 } else {
-                    i = C0020R$string.status_bar_clock_date_format;
+                    i = C0021R$string.status_bar_clock_date_format;
                 }
             } else if (i4 == 3) {
                 if (i3 == 16) {
-                    i2 = C0020R$string.status_bar_clock_date_weekday_format_12;
+                    i2 = C0021R$string.status_bar_clock_date_weekday_format_12;
                 } else {
-                    i2 = C0020R$string.status_bar_clock_date_weekday_format;
+                    i2 = C0021R$string.status_bar_clock_date_weekday_format;
                 }
-                setContentDescription(this.mCalendar.format(context, context.getString(i3 == 16 ? C0020R$string.status_bar_clock_date_format_12 : C0020R$string.status_bar_clock_date_format)));
+                setContentDescription(this.mCalendar.format(context, context.getString(i3 == 16 ? C0021R$string.status_bar_clock_date_format_12 : C0021R$string.status_bar_clock_date_format)));
                 i = i2;
             } else if (this.mAmPmStyle == 0) {
                 setText(DateUtils.formatDateTime(context, this.mCalendar.getTimeInMillis(), i3 | 12));

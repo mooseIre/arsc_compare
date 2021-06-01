@@ -31,9 +31,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.settingslib.notification.ConversationIconFactory;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.Prefs;
 import com.android.systemui.bubbles.BubbleController;
@@ -221,7 +221,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             }
             bindHeader();
             bindActions();
-            View findViewById = findViewById(C0014R$id.done);
+            View findViewById = findViewById(C0015R$id.done);
             findViewById.setOnClickListener(this.mOnDone);
             findViewById.setAccessibilityDelegate(this.mGutsContainer.getAccessibilityDelegate());
             return;
@@ -231,12 +231,12 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
 
     private void bindActions() {
         if (this.mAppBubble == 1) {
-            ((TextView) findViewById(C0014R$id.default_summary)).setText(getResources().getString(C0020R$string.notification_channel_summary_default_with_bubbles, this.mAppName));
+            ((TextView) findViewById(C0015R$id.default_summary)).setText(getResources().getString(C0021R$string.notification_channel_summary_default_with_bubbles, this.mAppName));
         }
-        findViewById(C0014R$id.priority).setOnClickListener(this.mOnFavoriteClick);
-        findViewById(C0014R$id.default_behavior).setOnClickListener(this.mOnDefaultClick);
-        findViewById(C0014R$id.silence).setOnClickListener(this.mOnMuteClick);
-        View findViewById = findViewById(C0014R$id.info);
+        findViewById(C0015R$id.priority).setOnClickListener(this.mOnFavoriteClick);
+        findViewById(C0015R$id.default_behavior).setOnClickListener(this.mOnDefaultClick);
+        findViewById(C0015R$id.silence).setOnClickListener(this.mOnMuteClick);
+        View findViewById = findViewById(C0015R$id.info);
         findViewById.setOnClickListener(getSettingsOnClickListener());
         findViewById.setVisibility(findViewById.hasOnClickListeners() ? 0 : 8);
         updateToggleActions(getSelectedAction(), false);
@@ -273,14 +273,14 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     }
 
     private void bindConversationDetails() {
-        ((TextView) findViewById(C0014R$id.parent_channel_name)).setText(this.mNotificationChannel.getName());
+        ((TextView) findViewById(C0015R$id.parent_channel_name)).setText(this.mNotificationChannel.getName());
         bindGroup();
         bindPackage();
         bindIcon(this.mNotificationChannel.isImportantConversation());
     }
 
     private void bindIcon(boolean z) {
-        ((ImageView) findViewById(C0014R$id.conversation_icon)).setImageDrawable(this.mIconFactory.getConversationDrawable(this.mShortcutInfo, this.mPackageName, this.mAppUid, z));
+        ((ImageView) findViewById(C0015R$id.conversation_icon)).setImageDrawable(this.mIconFactory.getConversationDrawable(this.mShortcutInfo, this.mPackageName, this.mAppUid, z));
     }
 
     private void bindPackage() {
@@ -291,11 +291,11 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             }
         } catch (PackageManager.NameNotFoundException unused) {
         }
-        ((TextView) findViewById(C0014R$id.pkg_name)).setText(this.mAppName);
+        ((TextView) findViewById(C0015R$id.pkg_name)).setText(this.mAppName);
     }
 
     private void bindDelegate() {
-        TextView textView = (TextView) findViewById(C0014R$id.delegate_name);
+        TextView textView = (TextView) findViewById(C0015R$id.delegate_name);
         if (!TextUtils.equals(this.mPackageName, this.mDelegatePkg)) {
             textView.setVisibility(0);
         } else {
@@ -315,7 +315,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             } catch (RemoteException unused) {
             }
         }
-        TextView textView = (TextView) findViewById(C0014R$id.group_name);
+        TextView textView = (TextView) findViewById(C0015R$id.group_name);
         if (charSequence != null) {
             textView.setText(charSequence);
             textView.setVisibility(0);
@@ -335,19 +335,19 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mPriorityDescriptionView = (TextView) findViewById(C0014R$id.priority_summary);
-        this.mDefaultDescriptionView = (TextView) findViewById(C0014R$id.default_summary);
-        this.mSilentDescriptionView = (TextView) findViewById(C0014R$id.silence_summary);
+        this.mPriorityDescriptionView = (TextView) findViewById(C0015R$id.priority_summary);
+        this.mDefaultDescriptionView = (TextView) findViewById(C0015R$id.default_summary);
+        this.mSilentDescriptionView = (TextView) findViewById(C0015R$id.silence_summary);
     }
 
     public void onInitializeAccessibilityEvent(AccessibilityEvent accessibilityEvent) {
         super.onInitializeAccessibilityEvent(accessibilityEvent);
         if (this.mGutsContainer != null && accessibilityEvent.getEventType() == 32) {
             if (this.mGutsContainer.isExposed()) {
-                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0020R$string.notification_channel_controls_opened_accessibility, this.mAppName));
+                accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_opened_accessibility, this.mAppName));
                 return;
             }
-            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0020R$string.notification_channel_controls_closed_accessibility, this.mAppName));
+            accessibilityEvent.getText().add(((LinearLayout) this).mContext.getString(C0021R$string.notification_channel_controls_closed_accessibility, this.mAppName));
         }
     }
 
@@ -362,9 +362,9 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             transitionSet.setInterpolator((TimeInterpolator) Interpolators.FAST_OUT_SLOW_IN);
             TransitionManager.beginDelayedTransition(this, transitionSet);
         }
-        View findViewById = findViewById(C0014R$id.priority);
-        View findViewById2 = findViewById(C0014R$id.default_behavior);
-        View findViewById3 = findViewById(C0014R$id.silence);
+        View findViewById = findViewById(C0015R$id.priority);
+        View findViewById2 = findViewById(C0015R$id.default_behavior);
+        View findViewById3 = findViewById(C0015R$id.silence);
         if (i == 0) {
             this.mDefaultDescriptionView.setVisibility(0);
             this.mSilentDescriptionView.setVisibility(8);
@@ -429,11 +429,11 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
             throw new IllegalArgumentException("Unrecognized behavior: " + this.mSelectedAction);
         }
         boolean z3 = getSelectedAction() != i;
-        TextView textView = (TextView) findViewById(C0014R$id.done);
+        TextView textView = (TextView) findViewById(C0015R$id.done);
         if (z3) {
-            i2 = C0020R$string.inline_ok_button;
+            i2 = C0021R$string.inline_ok_button;
         } else {
-            i2 = C0020R$string.inline_done_button;
+            i2 = C0021R$string.inline_done_button;
         }
         textView.setText(i2);
         if (i != 2) {
@@ -492,7 +492,7 @@ public class NotificationConversationInfo extends LinearLayout implements Notifi
 
     private void showPriorityOnboarding() {
         boolean z;
-        View inflate = LayoutInflater.from(((LinearLayout) this).mContext).inflate(C0016R$layout.priority_onboarding_half_shell, (ViewGroup) null);
+        View inflate = LayoutInflater.from(((LinearLayout) this).mContext).inflate(C0017R$layout.priority_onboarding_half_shell, (ViewGroup) null);
         boolean z2 = true;
         try {
             if (this.mINotificationManager.getConsolidatedNotificationPolicy().priorityConversationSenders == 2) {
