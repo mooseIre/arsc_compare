@@ -31,13 +31,14 @@ import com.android.systemui.plugins.IntentButtonProvider;
 import com.android.systemui.statusbar.KeyguardAffordanceView;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
 import com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.DebugConfig;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import miui.view.animation.CubicEaseOutInterpolator;
 
-public class KeyguardMoveHelper extends BaseKeyguardMoveHelper {
+public class KeyguardMoveHelper extends BaseKeyguardMoveHelper implements ConfigurationController.ConfigurationListener {
     private Runnable mAnimationEndRunnable = new Runnable() {
         /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass4 */
 
@@ -185,14 +186,12 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper {
         updateIcon(keyguardAffordanceView, keyguardAffordanceView.getRestingAlpha(), false, true);
         KeyguardAffordanceView keyguardAffordanceView2 = this.mRightIcon;
         updateIcon(keyguardAffordanceView2, keyguardAffordanceView2.getRestingAlpha(), false, true);
-        initDimens();
         this.mLeftMoveController = new KeyguardMoveLeftController(context, this.mMoveViewCallBack);
         this.mRightMoveController = new KeyguardMoveRightController(context, this.mMoveViewCallBack);
         this.mLeftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
         this.mLeftViewBg = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftBackgroundView();
-        float f = -getScreenWidth();
-        this.mLeftView.setTranslationX(f);
-        this.mLeftViewBg.setTranslationX(f);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
+        initDimens();
     }
 
     private void initDimens() {
@@ -200,6 +199,7 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper {
         this.mCenterScreenTouchSlopTranslation = (float) (viewConfiguration.getScaledPagingTouchSlop() * 2);
         this.mMinFlingVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
         this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.keyguard_min_swipe_amount);
+        this.mLeftView.setTranslationX(-getScreenWidth());
     }
 
     public void updateBottomIcons(KeyguardBottomAreaView keyguardBottomAreaView) {
@@ -690,5 +690,11 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper {
         if (keyguardMoveLeftController != null) {
             keyguardMoveLeftController.onFinishedGoingToSleep();
         }
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onDensityChanged() {
+        initDimens();
+        updateBottomIcons(this.mBottomAreaView);
     }
 }

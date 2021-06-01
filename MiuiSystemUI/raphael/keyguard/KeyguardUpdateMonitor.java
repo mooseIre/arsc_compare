@@ -355,6 +355,13 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private boolean mSecureCameraLaunched;
     HashMap<Integer, ServiceState> mServiceStates = new HashMap<>();
     HashMap<Integer, SimData> mSimDatas = new HashMap<>();
+    private Runnable mStartListeningForFingerprintRunnable = new Runnable() {
+        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass17 */
+
+        public void run() {
+            KeyguardUpdateMonitor.this.startListeningForFingerprint();
+        }
+    };
     private final StatusBarStateController mStatusBarStateController;
     private StrongAuthTracker mStrongAuthTracker;
     private List<SubscriptionInfo> mSubscriptionInfo;
@@ -368,7 +375,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private SubscriptionManager mSubscriptionManager;
     private boolean mSwitchingUser;
     private final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
-        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass18 */
+        /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass19 */
 
         @Override // com.android.systemui.shared.system.TaskStackChangeListener
         public void onTaskStackChangedBackground() {
@@ -591,7 +598,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     public void setKeyguardGoingAway(boolean z) {
         this.mKeyguardGoingAway = z;
         updateBiometricListeningState();
-        if (!((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() || !MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
+        if (!((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
             ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(z, ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock());
         }
     }
@@ -679,20 +686,14 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     private void handleFingerprintAuthenticated(int i, boolean z) {
         Trace.beginSection("KeyGuardUpdateMonitor#handlerFingerPrintAuthenticated");
         try {
-            int i2 = ActivityManager.getService().getCurrentUser().id;
-            try {
-                if (isFingerprintDisabled(i)) {
-                    Log.d("KeyguardUpdateMonitor", "Fingerprint disabled by DPM for authUserId: " + i);
-                    return;
-                }
-                onFingerprintAuthenticated(i, z);
-                setFingerprintRunningState(0);
-                Trace.endSection();
-            } finally {
-                setFingerprintRunningState(0);
+            if (isFingerprintDisabled(i)) {
+                Log.d("KeyguardUpdateMonitor", "Fingerprint disabled by DPM for authUserId: " + i);
+                return;
             }
-        } catch (RemoteException e) {
-            Log.e("KeyguardUpdateMonitor", "Failed to get current user id: ", e);
+            onFingerprintAuthenticated(i, z);
+            setFingerprintRunningState(0);
+            Trace.endSection();
+        } finally {
             setFingerprintRunningState(0);
         }
     }
@@ -1604,9 +1605,15 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
                 z = false;
             }
             if (z && !shouldListenForFingerprint) {
+                this.mHandler.removeCallbacks(this.mStartListeningForFingerprintRunnable);
                 stopListeningForFingerprint();
             } else if (!z && shouldListenForFingerprint) {
-                startListeningForFingerprint();
+                if (getStrongAuthTracker().hasUserAuthenticatedSinceBoot()) {
+                    startListeningForFingerprint();
+                    return;
+                }
+                this.mHandler.removeCallbacks(this.mStartListeningForFingerprintRunnable);
+                this.mHandler.postDelayed(this.mStartListeningForFingerprintRunnable, 100);
             }
         }
     }
@@ -1654,7 +1661,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     public boolean shouldListenForFingerprint() {
-        boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || ((this.mUpdateMonitorInjector.isKeyguardShowing() && this.mKeyguardOccluded) || this.mGoingToSleep))) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && !this.mUpdateMonitorInjector.isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && (!this.mUpdateMonitorInjector.isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint()) && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isSimLocked() && getCurrentUser() != UserSwitcherController.getMaintenanceModeId();
+        boolean z = (this.mKeyguardIsVisible || !this.mDeviceInteractive || ((this.mBouncer && !this.mKeyguardGoingAway) || ((this.mUpdateMonitorInjector.isKeyguardShowing() && this.mKeyguardOccluded) || this.mGoingToSleep))) && !this.mSwitchingUser && !isFingerprintDisabled(getCurrentUser()) && !this.mUpdateMonitorInjector.isFingerprintUnlock() && MiuiKeyguardUtils.isSystemProcess() && (!this.mUpdateMonitorInjector.isFaceUnlock() || !MiuiKeyguardUtils.isBroadSideFingerprint()) && !((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isSimLocked() && getCurrentUser() != UserSwitcherController.getMaintenanceModeId() && this.mMiuiFaceUnlockManager.isFingerApplyForKeyguard();
         if (MiuiKeyguardUtils.isGxzwSensor() && MiuiKeyguardUtils.isInvertColorsEnable(this.mContext)) {
             z = z && this.mDeviceInteractive;
         }
@@ -1697,21 +1704,22 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         this.mStrongAuthTracker.onStrongAuthRequiredChanged(currentUser);
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private void startListeningForFingerprint() {
         int i = this.mFingerprintRunningState;
         if (i == 2) {
             setFingerprintRunningState(3);
         } else if (i != 3) {
-            Log.v("KeyguardUpdateMonitor", "startListeningForFingerprint()");
             int currentUser = getCurrentUser();
             if (isUnlockWithFingerprintPossible(currentUser)) {
                 CancellationSignal cancellationSignal = this.mFingerprintCancelSignal;
                 if (cancellationSignal != null) {
                     cancellationSignal.cancel();
                 }
-                CancellationSignal cancellationSignal2 = new CancellationSignal();
-                this.mFingerprintCancelSignal = cancellationSignal2;
-                this.mFpm.authenticate(null, cancellationSignal2, 0, this.mFingerprintAuthenticationCallback, null, currentUser);
+                this.mFingerprintCancelSignal = new CancellationSignal();
+                Slog.v("KeyguardUpdateMonitor", "startListeningForFingerprint()");
+                this.mFpm.authenticate(null, this.mFingerprintCancelSignal, 0, this.mFingerprintAuthenticationCallback, null, currentUser);
                 setFingerprintRunningState(1);
             }
         }
@@ -1776,11 +1784,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
     }
 
     private void stopListeningForFingerprint() {
-        Log.v("KeyguardUpdateMonitor", "stopListeningForFingerprint()");
         if (this.mFingerprintRunningState == 1) {
-            CancellationSignal cancellationSignal = this.mFingerprintCancelSignal;
-            if (cancellationSignal != null) {
-                cancellationSignal.cancel();
+            if (this.mFingerprintCancelSignal != null) {
+                Slog.v("KeyguardUpdateMonitor", "stopListeningForFingerprint()");
+                this.mFingerprintCancelSignal.cancel();
                 this.mFingerprintCancelSignal = null;
                 if (!this.mHandler.hasCallbacks(this.mCancelNotReceived)) {
                     this.mHandler.postDelayed(this.mCancelNotReceived, 3000);
@@ -1819,7 +1826,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
 
     private void watchForDeviceProvisioning() {
         this.mDeviceProvisionedObserver = new ContentObserver(this.mHandler) {
-            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass17 */
+            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass18 */
 
             public void onChange(boolean z) {
                 super.onChange(z);
@@ -2522,7 +2529,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             this.mKeyguardOccluded = z2;
         }
         this.mUpdateMonitorInjector.setKeyguardShowingAndOccluded(this.mTaskStackListener, z, z2, new MiuiKeyguardUpdateMonitorCallback(this) {
-            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass19 */
+            /* class com.android.keyguard.KeyguardUpdateMonitor.AnonymousClass20 */
         });
     }
 

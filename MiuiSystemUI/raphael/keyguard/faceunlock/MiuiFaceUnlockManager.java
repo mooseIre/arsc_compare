@@ -87,12 +87,26 @@ public class MiuiFaceUnlockManager {
         }
     };
     private final ArrayList<WeakReference<MiuiKeyguardFaceUnlockView>> mFaceViewList = new ArrayList<>();
+    private boolean mFingerApplyForKeyguard;
+    ContentObserver mFingerApplyForKeyguardObserver = new ContentObserver(new Handler()) {
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass5 */
+
+        public void onChange(boolean z) {
+            super.onChange(z);
+            MiuiFaceUnlockManager miuiFaceUnlockManager = MiuiFaceUnlockManager.this;
+            boolean z2 = false;
+            if (Settings.Secure.getIntForUser(miuiFaceUnlockManager.mContext.getContentResolver(), "miui_keyguard", 2, 0) == 2) {
+                z2 = true;
+            }
+            miuiFaceUnlockManager.mFingerApplyForKeyguard = z2;
+        }
+    };
     protected HandlerThread mHandlerThread = new HandlerThread("face_unlock");
     protected boolean mHasFace;
     private boolean mKeyguardOccluded;
     private boolean mKeyguardShowing;
     private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback = new MiuiKeyguardUpdateMonitorCallback() {
-        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass6 */
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass7 */
 
         @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
         public void onRegionChanged() {
@@ -167,9 +181,15 @@ public class MiuiFaceUnlockManager {
                 MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
             }
         }
+
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
+        public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
+            MiuiFaceUnlockManager.this.mLockScreenMagazinePreViewVisibility = z;
+        }
     };
+    private boolean mLockScreenMagazinePreViewVisibility;
     FaceManager.RemovalCallback mRemovalCallback = new FaceManager.RemovalCallback() {
-        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass5 */
+        /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass6 */
 
         public void onRemovalError(Face face, int i, CharSequence charSequence) {
             Slog.i("miui_face", "mRemovalCallback, onRemovalError code:" + i + " msg:" + ((Object) charSequence) + ";id=" + face.getBiometricId());
@@ -217,6 +237,12 @@ public class MiuiFaceUnlockManager {
         this.mFaceUnlockSuccessShowMessageObserver.onChange(false);
         this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("face_unlock_by_notification_screen_on"), false, this.mFaceUnlockStartByNotificationScreenOnObserver, 0);
         this.mFaceUnlockStartByNotificationScreenOnObserver.onChange(false);
+        this.mContext.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("miui_keyguard"), false, this.mFingerApplyForKeyguardObserver, 0);
+        this.mFingerApplyForKeyguardObserver.onChange(false);
+    }
+
+    public boolean isFingerApplyForKeyguard() {
+        return this.mFingerApplyForKeyguard;
     }
 
     public boolean isFaceUnlockApplyForKeyguard() {
@@ -409,7 +435,18 @@ public class MiuiFaceUnlockManager {
     }
 
     public boolean shouldShowFaceUnlockRetryMessageInBouncer() {
-        return !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFaceDetectionRunning() && isFaceAuthEnabled() && ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).shouldListenForFace();
+        boolean z = isFaceAuthEnabled() && !this.mUpdateMonitor.userNeedsStrongAuth() && ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardShowing() && !isFaceTemporarilyLockout() && !this.mUpdateMonitor.isSimPinSecure() && !isDisableLockScreenFaceUnlockAnim();
+        boolean isKeyguardOccluded = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardOccluded();
+        if (this.mUpdateMonitor.isBouncerShowing()) {
+            if (z) {
+                return !isKeyguardOccluded || !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext);
+            }
+            return false;
+        } else if (!z || isKeyguardOccluded || MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext)) {
+            return false;
+        } else {
+            return (this.mUpdateMonitor.isFaceDetectionRunning() || ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock()) && !this.mLockScreenMagazinePreViewVisibility && this.mUpdateMonitor.getStatusBarState() == 1;
+        }
     }
 
     public void printCannotListenFaceLog(boolean z, boolean z2) {

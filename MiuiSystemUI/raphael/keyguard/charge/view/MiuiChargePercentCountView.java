@@ -185,7 +185,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
             setTranslationY((float) this.mChargeNumberTranslateSmall);
         }
         if (ChargeUtils.supportWaveChargeAnimation()) {
-            setTextSize(265, R$styleable.Constraint_layout_goneMarginStart, R$styleable.Constraint_layout_goneMarginStart);
+            setTextSize(265, R$styleable.Constraint_layout_goneMarginRight, R$styleable.Constraint_layout_goneMarginRight);
             if (z) {
                 setTranslationY(-100.0f);
             } else {

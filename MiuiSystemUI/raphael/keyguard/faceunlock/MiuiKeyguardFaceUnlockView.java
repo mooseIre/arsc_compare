@@ -20,7 +20,6 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.systemui.C0011R$dimen;
 import com.android.systemui.C0012R$drawable;
@@ -303,7 +302,7 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
 
     public void updateFaceUnlockIconStatus() {
         if (MiuiFaceUnlockUtils.isHardwareDetected(this.mContext)) {
-            if (!shouldFaceUnlockViewExecuteAnimation() || !shouldShowFaceUnlockImage()) {
+            if (!shouldFaceUnlockViewExecuteAnimation() || !this.mFaceUnlockManager.shouldShowFaceUnlockRetryMessageInBouncer()) {
                 clearAnimation();
                 setVisibility(4);
             } else {
@@ -315,21 +314,6 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
             } else {
                 setBackground(getResources().getDrawable(isFaceUnlock ? C0012R$drawable.face_unlock_black_success20 : C0012R$drawable.face_unlock_black_error1));
             }
-        }
-    }
-
-    private boolean shouldShowFaceUnlockImage() {
-        boolean z = this.mFaceUnlockManager.isFaceAuthEnabled() && !this.mUpdateMonitor.userNeedsStrongAuth() && ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardShowing() && !this.mFaceUnlockManager.isFaceTemporarilyLockout() && !this.mUpdateMonitor.isSimPinSecure() && !this.mFaceUnlockManager.isDisableLockScreenFaceUnlockAnim();
-        boolean isKeyguardOccluded = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardOccluded();
-        if (this.mUpdateMonitor.isBouncerShowing()) {
-            if (z) {
-                return !isKeyguardOccluded || !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext);
-            }
-            return false;
-        } else if (!z || isKeyguardOccluded || MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext)) {
-            return false;
-        } else {
-            return (this.mUpdateMonitor.isFaceDetectionRunning() || ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock()) && !this.mLockScreenMagazinePreViewVisibility && this.mUpdateMonitor.getStatusBarState() == 1;
         }
     }
 }

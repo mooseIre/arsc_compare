@@ -15,9 +15,11 @@ import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.injector.KeyguardClockInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
+import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.DualClockObserver;
 import java.util.TimeZone;
+import miui.os.Build;
 
 public class KeyguardClockContainer extends FrameLayout {
     ContentObserver mClockPositionObserver;
@@ -213,14 +215,17 @@ public class KeyguardClockContainer extends FrameLayout {
             miuiKeyguardBaseClock = new MiuiKeyguardCenterVerticalClock(((FrameLayout) this).mContext);
         } else {
             int i = this.mSelectedClockPosition;
-            if (i != 1) {
-                miuiKeyguardBaseClock = i != 2 ? new MiuiKeyguardLeftTopLargeClock(((FrameLayout) this).mContext) : new MiuiKeyguardLeftTopClock(((FrameLayout) this).mContext);
-            } else {
+            if (i == 2) {
+                miuiKeyguardBaseClock = new MiuiKeyguardLeftTopClock(((FrameLayout) this).mContext);
+            } else if (i == 1 || (i == 0 && Build.IS_INTERNATIONAL_BUILD)) {
                 miuiKeyguardBaseClock = new MiuiKeyguardCenterHorizontalClock(((FrameLayout) this).mContext);
+            } else {
+                miuiKeyguardBaseClock = new MiuiKeyguardLeftTopLargeClock(((FrameLayout) this).mContext);
             }
         }
         addView(miuiKeyguardBaseClock);
         this.mClockView = miuiKeyguardBaseClock;
+        miuiKeyguardBaseClock.setDarkStyle(((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).isWallpaperColorLight());
     }
 
     public void updateKeyguardClock() {

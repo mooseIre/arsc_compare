@@ -183,11 +183,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
             }
             super.show();
             this.mMiuiGxzwAnimView.show(z);
-            if (!this.mKeyguardAuthen || !MiuiGxzwQuickOpenUtil.isQuickOpenEnable(getContext())) {
-                this.mLayoutParams.screenOrientation = -1;
-            } else {
-                this.mLayoutParams.screenOrientation = 5;
-            }
+            this.mLayoutParams.screenOrientation = -1;
             if (this.mDozing) {
                 this.mMiuiGxzwSensor.registerDozeSensor(this);
                 scheduleSetIconTransparen();
@@ -316,6 +312,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
     @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        MiuiGxzwUtils.caculateGxzwIconSize(getContext());
         this.mHighlightView.onConfigurationChanged(configuration);
     }
 

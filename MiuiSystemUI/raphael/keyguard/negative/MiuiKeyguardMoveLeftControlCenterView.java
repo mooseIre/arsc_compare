@@ -22,6 +22,7 @@ import androidx.preference.PreferenceManager;
 import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
+import com.android.keyguard.injector.KeyguardBottomAreaInjector;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
@@ -235,6 +236,7 @@ public class MiuiKeyguardMoveLeftControlCenterView extends MiuiKeyguardMoveLeftB
                     layoutParams.setMargins(MiuiKeyguardMoveLeftControlCenterView.this.mTwoOrOneItemLeftMargin, MiuiKeyguardMoveLeftControlCenterView.this.mItemNums <= 2 ? MiuiKeyguardMoveLeftControlCenterView.this.mTwoOrOneItemTopMargin : MiuiKeyguardMoveLeftControlCenterView.this.mFourOrThreeItemTopMargin, MiuiKeyguardMoveLeftControlCenterView.this.mTwoOrOneItemRightMargin, 0);
                     MiuiKeyguardMoveLeftControlCenterView.this.mAllFourLinearLayout.setLayoutParams(layoutParams);
                 }
+                ((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).getView().updateLeftAffordance();
             }
         }.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, new Void[0]);
     }

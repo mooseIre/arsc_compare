@@ -65,10 +65,12 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
     protected String mCurrentCarrier;
     protected String[] mCustomCarrier;
     protected CustomCarrierObserver mCustomCarrierObserver;
+    private boolean[] mDataConnected;
     protected boolean mEmergencyOnly;
     protected KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     protected Handler mMainHandler;
     protected String[] mMiuiMobileTypeName;
+    private boolean mNeedShowAccessTo5G = false;
     protected TelephonyManager mPhone;
     protected final int mPhoneCount;
     protected boolean[] mSimError;
@@ -127,6 +129,7 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         this.mMiuiMobileTypeName = new String[activeModemCount];
         this.mSimError = new boolean[activeModemCount];
         this.mVowifi = new boolean[activeModemCount];
+        this.mDataConnected = new boolean[activeModemCount];
         this.mSubscriptionManager = SubscriptionManager.from(context);
         this.mCustomCarrierObserver = (CustomCarrierObserver) Dependency.get(CustomCarrierObserver.class);
         this.mCarrierObserver = (CarrierObserver) Dependency.get(CarrierObserver.class);
@@ -154,13 +157,17 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
 
     @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
     public void setMobileDataIndicators(NetworkController.IconState iconState, NetworkController.IconState iconState2, int i, int i2, boolean z, boolean z2, int i3, CharSequence charSequence, CharSequence charSequence2, CharSequence charSequence3, boolean z3, int i4, boolean z4, MobileSignalController.MiuiMobileState miuiMobileState) {
-        if (isCustomizationTest()) {
+        if (isCustomizationTest() || miuiMobileState.showAccessTo5G) {
             int i5 = miuiMobileState.slotId;
-            if (i5 >= 0) {
-                String[] strArr = this.mMiuiMobileTypeName;
-                if (i5 < strArr.length) {
-                    strArr[i5] = miuiMobileState.showName;
+            if (i5 >= 0 && i5 < this.mMiuiMobileTypeName.length) {
+                Log.v("MiuiCarrierTextController", "miuiMobileState.showName: " + miuiMobileState.showName + " mMiuiMobileTypeName[miuiMobileState.slotId]: " + this.mMiuiMobileTypeName[miuiMobileState.slotId]);
+                if (miuiMobileState.showAccessTo5G && "5G".equals(miuiMobileState.showName) && !this.mNeedShowAccessTo5G && !TextUtils.equals(miuiMobileState.showName, this.mMiuiMobileTypeName[miuiMobileState.slotId])) {
+                    this.mNeedShowAccessTo5G = true;
                 }
+                boolean[] zArr = this.mDataConnected;
+                int i6 = miuiMobileState.slotId;
+                zArr[i6] = miuiMobileState.dataConnected;
+                this.mMiuiMobileTypeName[i6] = miuiMobileState.showName;
             }
             this.updateCarrierTextRunnable.run();
         }
@@ -190,18 +197,33 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         }
         dealCarrierNameForDisableCard(strArr);
         if (!this.mAirplane || !dealCarrierNameForAirplane(strArr)) {
-            boolean z = true;
+            boolean z = false;
+            boolean z2 = true;
             for (int i3 = 0; i3 < this.mPhoneCount; i3++) {
                 if (!TextUtils.isEmpty(strArr[i3])) {
-                    if (z) {
+                    if (z2) {
                         str = strArr[i3];
-                        z = false;
+                        z2 = false;
                     } else {
                         str = str + " | " + strArr[i3];
                     }
                 }
+                if (this.mDataConnected[i3]) {
+                    z = true;
+                }
             }
-            str2 = str;
+            if (!z || !this.mNeedShowAccessTo5G) {
+                str2 = str;
+            } else {
+                str2 = this.mContext.getResources().getString(C0020R$string.lock_screen_access_to_5G);
+                this.mMainHandler.postDelayed(new Runnable() {
+                    /* class com.android.keyguard.$$Lambda$MiuiCarrierTextController$jAbdwWCowGd4J7_8o7d6zCL7bg */
+
+                    public final void run() {
+                        MiuiCarrierTextController.this.lambda$updateCarrierText$0$MiuiCarrierTextController();
+                    }
+                }, 6000);
+            }
         } else {
             str2 = getAirplaneModeMessage();
         }
@@ -212,6 +234,13 @@ public class MiuiCarrierTextController implements CustomCarrierObserver.Callback
         }
         Log.d("MiuiCarrierTextController", "updateCarrierText: " + str2);
         fireCarrierTextChanged(str2);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$updateCarrierText$0 */
+    public /* synthetic */ void lambda$updateCarrierText$0$MiuiCarrierTextController() {
+        this.mNeedShowAccessTo5G = false;
+        updateCarrierText();
     }
 
     private void dealCarrierNameForDisableCard(String[] strArr) {

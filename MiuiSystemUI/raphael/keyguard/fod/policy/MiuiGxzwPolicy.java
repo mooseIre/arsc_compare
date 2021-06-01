@@ -8,7 +8,7 @@ import com.android.systemui.statusbar.phone.StatusBar;
 import com.miui.systemui.statusbar.NotificationPanelExpansionListener;
 import com.miui.systemui.statusbar.PanelExpansionObserver;
 import kotlin.Lazy;
-import kotlin.LazyKt__LazyJVMKt;
+import kotlin.LazyKt;
 import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.PropertyReference1Impl;
@@ -43,7 +43,7 @@ public final class MiuiGxzwPolicy implements NotificationPanelExpansionListener,
         Intrinsics.checkParameterIsNotNull(lazy, "statusBarLazy");
         this.panelExpansionObserver = panelExpansionObserver2;
         this.statusBarStateController = statusBarStateController2;
-        this.mStatusBar$delegate = LazyKt__LazyJVMKt.lazy(new MiuiGxzwPolicy$mStatusBar$2(lazy));
+        this.mStatusBar$delegate = LazyKt.lazy(new MiuiGxzwPolicy$mStatusBar$2(lazy));
         StatusBarStateController statusBarStateController3 = this.statusBarStateController;
         if (statusBarStateController3 != null) {
             this.mStatusBarStateController = (SysuiStatusBarStateController) statusBarStateController3;

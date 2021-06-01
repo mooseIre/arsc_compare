@@ -1,13 +1,13 @@
 package com.android.keyguard.settings;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -44,19 +44,20 @@ import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.android.settingslib.RestrictedLockUtils;
 import com.android.settingslib.RestrictedLockUtilsInternal;
+import com.android.systemui.C0012R$drawable;
 import com.android.systemui.C0014R$id;
 import com.android.systemui.C0016R$layout;
 import com.android.systemui.C0020R$string;
 import com.android.systemui.Dependency;
-import com.android.systemui.statusbar.policy.DualClockObserver;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.File;
 import java.util.Locale;
-import miui.R;
-import miui.widget.SlidingButton;
+import miui.os.Build;
 import miuix.animation.Folme;
 import miuix.animation.base.AnimConfig;
+import miuix.appcompat.app.AlertDialog;
 import miuix.recyclerview.widget.RecyclerView;
+import miuix.slidingwidget.widget.SlidingButton;
 
 public class ChooseKeyguardClockActivity extends Activity {
     private ImageView mBackImage;
@@ -96,6 +97,9 @@ public class ChooseKeyguardClockActivity extends Activity {
         window.clearFlags(134217728);
         window.addFlags(Integer.MIN_VALUE);
         window.setNavigationBarColor(this.mIsNightMode ? -16777216 : -1);
+        if (Build.IS_MIUI_LITE_VERSION) {
+            window.setBackgroundDrawable(this.mIsNightMode ? new ColorDrawable(-16777216) : new ColorDrawable(-1));
+        }
         if (WallpaperAuthorityUtils.isThemeLockLiveWallpaper()) {
             window.addFlags(1048576);
             overridePendingTransition(0, 0);
@@ -142,10 +146,9 @@ public class ChooseKeyguardClockActivity extends Activity {
         BottomSheetBehavior from = BottomSheetBehavior.from(linearLayout);
         this.mBottomSheetBehavior = from;
         from.setState(3);
-        boolean isDualClock = ((DualClockObserver) Dependency.get(DualClockObserver.class)).isDualClock();
-        if (!MiuiKeyguardUtils.isDefaultLockScreenTheme() || isDualClock) {
+        if (!MiuiKeyguardUtils.isDefaultLockScreenTheme() || this.mClockView.isDualClock()) {
             this.mPanelView.setVisibility(8);
-            if (isDualClock) {
+            if (this.mClockView.isDualClock()) {
                 ((TextView) findViewById(C0014R$id.third_theme_hint)).setText(getResources().getString(C0020R$string.choose_clock_dual_clock_hint_text));
             }
         } else {
@@ -157,7 +160,7 @@ public class ChooseKeyguardClockActivity extends Activity {
         this.mClockList.setLayoutManager(linearLayoutManager);
         this.mClockList.setAdapter(new ClockAdapter(this));
         this.mLunarCalendarLayout = (FrameLayout) findViewById(C0014R$id.lunar_calendar_layout);
-        this.mLunarBtn = findViewById(C0014R$id.lunar_calendar_button);
+        this.mLunarBtn = (SlidingButton) findViewById(C0014R$id.lunar_calendar_button);
         if (!Locale.CHINESE.getLanguage().equals(Locale.getDefault().getLanguage())) {
             this.mLunarCalendarLayout.setVisibility(8);
             this.mClockView.setShowLunarCalendar(0);
@@ -214,6 +217,8 @@ public class ChooseKeyguardClockActivity extends Activity {
             imageView2.setVisibility(0);
             imageView3.setVisibility(8);
         }
+        findViewById(C0014R$id.lunar_calendar_layout).setBackgroundResource(this.mIsNightMode ? C0012R$drawable.miuix_preference_item_background_dark_local : C0012R$drawable.miuix_preference_item_background_light_local);
+        findViewById(C0014R$id.owner_info_layout).setBackgroundResource(this.mIsNightMode ? C0012R$drawable.miuix_preference_item_background_dark_local : C0012R$drawable.miuix_preference_item_background_light_local);
     }
 
     private void sendSuperWallpaperBroadcast(boolean z) {
@@ -281,15 +286,15 @@ public class ChooseKeyguardClockActivity extends Activity {
     private AlertDialog showOwnerInfoDialog() {
         this.mBottomSheetBehavior.setState(4);
         View inflate = LayoutInflater.from(this).inflate(C0016R$layout.owner_info_dialog, (ViewGroup) null, false);
-        final SlidingButton findViewById = inflate.findViewById(C0014R$id.owner_info_button);
-        findViewById.setChecked(this.mLockPatternUtils.isOwnerInfoEnabled(this.mUserId));
+        final SlidingButton slidingButton = (SlidingButton) inflate.findViewById(C0014R$id.owner_info_button);
+        slidingButton.setChecked(this.mLockPatternUtils.isOwnerInfoEnabled(this.mUserId));
         final EditText editText = (EditText) inflate.findViewById(C0014R$id.owner_info_edit_text);
         editText.setText(getOwnerInfo());
         ((LinearLayout) inflate.findViewById(C0014R$id.owner_info_container)).setOnClickListener(new View.OnClickListener(this) {
             /* class com.android.keyguard.settings.ChooseKeyguardClockActivity.AnonymousClass5 */
 
             public void onClick(View view) {
-                SlidingButton slidingButton = findViewById;
+                SlidingButton slidingButton = slidingButton;
                 slidingButton.setChecked(!slidingButton.isChecked());
             }
         });
@@ -302,7 +307,7 @@ public class ChooseKeyguardClockActivity extends Activity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 ChooseKeyguardClockActivity.this.expandBottomSheet(editText.getWindowToken());
                 ChooseKeyguardClockActivity.this.mLockPatternUtils.setOwnerInfo(editText.getText().toString(), ChooseKeyguardClockActivity.this.mUserId);
-                ChooseKeyguardClockActivity.this.mLockPatternUtils.setOwnerInfoEnabled(findViewById.isChecked(), ChooseKeyguardClockActivity.this.mUserId);
+                ChooseKeyguardClockActivity.this.mLockPatternUtils.setOwnerInfoEnabled(slidingButton.isChecked(), ChooseKeyguardClockActivity.this.mUserId);
                 ChooseKeyguardClockActivity.this.sendBroadcast(new Intent("owner_info_changed"));
                 ChooseKeyguardClockActivity chooseKeyguardClockActivity = ChooseKeyguardClockActivity.this;
                 chooseKeyguardClockActivity.mClockView.setOwnerInfo(chooseKeyguardClockActivity.getOwnerInfo());
@@ -339,6 +344,7 @@ public class ChooseKeyguardClockActivity extends Activity {
             });
             return;
         }
+        this.mInputMethodManager.hideSoftInputFromWindow(iBinder, 0);
         this.mBottomSheetBehavior.setState(3);
     }
 
@@ -365,7 +371,7 @@ public class ChooseKeyguardClockActivity extends Activity {
                     Bitmap bitmap = ((BitmapDrawable) lockWallpaperPreview).getBitmap();
                     boolean z = true;
                     Bitmap createScaledBitmap = Bitmap.createScaledBitmap(bitmap, 1080, (bitmap.getHeight() * 1080) / bitmap.getWidth(), true);
-                    Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, (int) R$styleable.AppCompatTheme_windowMinWidthMinor, (int) androidx.constraintlayout.widget.R$styleable.Constraint_visibilityMode, (int) androidx.constraintlayout.widget.R$styleable.Constraint_visibilityMode);
+                    Bitmap createBitmap = Bitmap.createBitmap(createScaledBitmap, 80, (int) R$styleable.AppCompatTheme_windowMinWidthMinor, (int) androidx.constraintlayout.widget.R$styleable.Constraint_transitionEasing, (int) androidx.constraintlayout.widget.R$styleable.Constraint_transitionEasing);
                     if (createBitmap != null) {
                         ChooseKeyguardClockActivity.this.mBackImageLight = MiuiKeyguardUtils.getBitmapColorMode(createBitmap) != 0;
                         createBitmap.recycle();
@@ -396,9 +402,9 @@ public class ChooseKeyguardClockActivity extends Activity {
                 ChooseKeyguardClockActivity.this.mWallPaper.setImageDrawable(drawable);
                 ImageView imageView = ChooseKeyguardClockActivity.this.mBackImage;
                 if (ChooseKeyguardClockActivity.this.mBackImageLight) {
-                    i = R.drawable.action_bar_back_light;
+                    i = C0012R$drawable.miuix_appcompat_action_bar_back_light;
                 } else {
-                    i = R.drawable.action_bar_back_dark;
+                    i = C0012R$drawable.miuix_appcompat_action_bar_back_dark;
                 }
                 imageView.setImageResource(i);
                 ChooseKeyguardClockActivity.this.setMainClockTextColor();
@@ -563,9 +569,12 @@ public class ChooseKeyguardClockActivity extends Activity {
     }
 
     private int getClockStyleByConfiguration(int i) {
-        if (i == 0) {
-            return MiuiKeyguardUtils.isBlackGoldenTheme(this) ? 3 : 4;
+        if (i != 0) {
+            return i;
         }
-        return i;
+        if (MiuiKeyguardUtils.isBlackGoldenTheme(this)) {
+            return 3;
+        }
+        return Build.IS_INTERNATIONAL_BUILD ? 1 : 4;
     }
 }

@@ -119,10 +119,6 @@ public class MiuiGxzwUtils {
                 e.printStackTrace();
                 resetDefaultValue();
             }
-            if (isLargeFod()) {
-                GXZW_ANIM_WIDTH += GXZW_ICON_WIDTH;
-                GXZW_ANIM_HEIGHT += GXZW_ICON_HEIGHT;
-            }
         }
     }
 

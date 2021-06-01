@@ -41,6 +41,7 @@ public class MiuiBleUnlockHelper {
             }
             if (b == 2) {
                 MiuiBleUnlockHelper.this.setBLEUnlockState(BLEUnlockState.SUCCEED);
+                MiuiBleUnlockHelper.this.mUpdateMonitor.cancelFaceAuth();
             } else {
                 MiuiBleUnlockHelper.this.setBLEUnlockState(BLEUnlockState.FAILED);
             }

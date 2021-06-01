@@ -40,6 +40,7 @@ import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Objects;
+import miui.os.Build;
 
 public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, Dumpable {
     private static volatile MiuiGxzwManager sService;
@@ -705,7 +706,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     }
 
     private int dealCallback(int i, int i2) {
-        Log.i("MiuiGxzwManager", "dealCallback, cmd: " + i + " param: " + i2);
+        Slog.i("MiuiGxzwManager", "dealCallback, cmd: " + i + " param: " + i2);
         if (i == 101) {
             this.mHandler.removeMessages(1005);
             this.mHandler.sendEmptyMessage(1005);
@@ -965,19 +966,22 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
     }
 
     public Bitmap getGxzwAnimBitmap() {
+        if (Build.IS_MIUI_LITE_VERSION) {
+            return null;
+        }
         int i = 0;
         switch (Settings.System.getIntForUser(this.mContext.getContentResolver(), "fod_animation_type", MiuiGxzwAnimManager.getDefaultAnimType(), 0)) {
             case 6:
-                i = C0012R$drawable.gxzw_light_recognizing_anim_11;
+                i = C0012R$drawable.gxzw_light_recognizing_anim;
                 break;
             case 7:
-                i = C0012R$drawable.gxzw_star_recognizing_anim_15;
+                i = C0012R$drawable.gxzw_star_recognizing_anim;
                 break;
             case 8:
-                i = C0012R$drawable.gxzw_aurora_recognizing_anim_15;
+                i = C0012R$drawable.gxzw_aurora_recognizing_anim;
                 break;
             case 9:
-                i = C0012R$drawable.gxzw_pulse_recognizing_anim_10;
+                i = C0012R$drawable.gxzw_pulse_recognizing_anim;
                 break;
         }
         return BitmapFactory.decodeResource(this.mContext.getResources(), i);

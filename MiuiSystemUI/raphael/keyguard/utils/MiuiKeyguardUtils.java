@@ -1,8 +1,8 @@
 package com.android.keyguard.utils;
 
-import android.app.ActivityManager;
 import android.app.UiModeManager;
 import android.app.WallpaperColors;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ResolveInfo;
@@ -314,15 +314,11 @@ public class MiuiKeyguardUtils {
     }
 
     public static boolean isTopActivityLauncher(Context context) {
-        try {
-            List<ActivityManager.RunningTaskInfo> runningTasks = ((ActivityManager) context.getSystemService("activity")).getRunningTasks(1);
-            if (runningTasks != null && !runningTasks.isEmpty()) {
-                return TextUtils.equals(HOME_LAUCNHER_PACKAGE_NAME, runningTasks.get(0).topActivity.getPackageName());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        ComponentName componentName = CommonUtil.topActivity;
+        if (componentName == null) {
+            return false;
         }
-        return false;
+        return TextUtils.equals(HOME_LAUCNHER_PACKAGE_NAME, componentName.getPackageName());
     }
 
     public static void handleBleUnlockSucceed(Context context) {

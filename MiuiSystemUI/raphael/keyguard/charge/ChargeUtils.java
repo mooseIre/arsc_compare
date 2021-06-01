@@ -3,7 +3,6 @@ package com.android.keyguard.charge;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -22,6 +21,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import miui.os.Build;
 import miui.util.FeatureParser;
 
 public class ChargeUtils {
@@ -30,6 +30,8 @@ public class ChargeUtils {
     public static String PROVIDER_POWER_CENTER = "content://com.miui.powercenter.provider";
     private static final boolean SUPPORT_WIRELESS_CHARGE = new File("/sys/class/power_supply/wireless/signal_strength").exists();
     private static int WAVE_DELAY_TIME = 1000;
+    private static List<String> mIsExceptLiteChargeList = new ArrayList();
+    private static List<String> mIsSupportLiteChargeList = new ArrayList();
     private static List<String> mIsSupportStrongSuperRapidChargeList = new ArrayList();
     public static MiuiBatteryStatus sBatteryStatus = null;
     private static boolean sChargeAnimationDisabled = false;
@@ -94,11 +96,16 @@ public class ChargeUtils {
     }
 
     private static int getChargeAnimationType() {
+        int i = 1;
+        boolean z = (Build.IS_MIUI_LITE_VERSION || supportLiteChargeAnimation()) && !exceptLiteChargeAnimation();
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (contextForUser != null) {
-            return contextForUser.getResources().getInteger(C0015R$integer.keyguard_charge_animation_type);
+            i = contextForUser.getResources().getInteger(C0015R$integer.keyguard_charge_animation_type);
         }
-        return 0;
+        if (z) {
+            return 0;
+        }
+        return i;
     }
 
     public static boolean supportWaveChargeAnimation() {
@@ -210,7 +217,23 @@ public class ChargeUtils {
         if (mIsSupportStrongSuperRapidChargeList.isEmpty() && contextForUser != null) {
             mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_charge_supportWirelessStrongSuper));
         }
-        return mIsSupportStrongSuperRapidChargeList.contains(Build.DEVICE);
+        return mIsSupportStrongSuperRapidChargeList.contains(android.os.Build.DEVICE);
+    }
+
+    private static boolean supportLiteChargeAnimation() {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (mIsSupportLiteChargeList.isEmpty() && contextForUser != null) {
+            mIsSupportLiteChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_charge_support_lite));
+        }
+        return mIsSupportLiteChargeList.contains(android.os.Build.DEVICE);
+    }
+
+    private static boolean exceptLiteChargeAnimation() {
+        Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
+        if (mIsExceptLiteChargeList.isEmpty() && contextForUser != null) {
+            mIsExceptLiteChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_except_charge_support_lite));
+        }
+        return mIsExceptLiteChargeList.contains(android.os.Build.DEVICE);
     }
 
     public static int getChargeSpeed(int i, int i2) {

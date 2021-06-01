@@ -42,7 +42,7 @@ public class MiuiFaceUnlockUtils {
     public static boolean isSupportLiftingCamera(Context context) {
         try {
             Class<?> cls = Class.forName("miui.os.DeviceFeature");
-            return ((Boolean) cls.getDeclaredMethod("hasPopupCameraSupport", null).invoke(cls, new Object[0])).booleanValue();
+            return ((Boolean) cls.getDeclaredMethod("hasPopupCameraSupport", new Class[0]).invoke(cls, new Object[0])).booleanValue();
         } catch (Exception e) {
             Log.e("miui_face", "reflect error when get hasPopupCameraSupport state", e);
             return false;

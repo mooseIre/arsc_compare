@@ -57,6 +57,7 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
 import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.google.gson.Gson;
 import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.util.CommonExtensionsKt;
@@ -65,7 +66,7 @@ import miui.os.Build;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-public class LockScreenMagazineController implements SettingsObserver.Callback {
+public class LockScreenMagazineController implements SettingsObserver.Callback, ConfigurationController.ConfigurationListener {
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass2 */
 
@@ -310,8 +311,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void onAttachedToWindow() {
         registerBroadcastReceivers();
-        this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mHasAttachedToWindow = true;
+        this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         if (this.mIsCompleteInitiation) {
             this.mIsCompleteInitiation = false;
             this.mUpdateMonitorInjector.onMagazineResourceInited();
@@ -320,13 +321,16 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mSettingsObserver.addCallback(this, 1, new String[0]);
         this.mSettingsObserver.addCallback(this, "lock_wallpaper_provider_authority");
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 
     public void onDetachedFromWindow() {
         this.mHasAttachedToWindow = false;
+        this.mUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
         this.mSettingsObserver.removeCallback(this);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
     private void registerBroadcastReceivers() {
@@ -702,6 +706,11 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         } catch (Exception e) {
             Log.e("miui_keyguard", "start to download lockscreen wallpaper", e);
         }
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onDensityChanged() {
+        initAntiMistakeOperation();
     }
 
     /* access modifiers changed from: package-private */

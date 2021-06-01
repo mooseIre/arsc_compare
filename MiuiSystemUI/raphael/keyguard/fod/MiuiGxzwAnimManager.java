@@ -10,6 +10,7 @@ import com.android.systemui.C0012R$drawable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import miui.os.Build;
 
 /* access modifiers changed from: package-private */
 public class MiuiGxzwAnimManager {
@@ -37,10 +38,6 @@ public class MiuiGxzwAnimManager {
     private MiuiGxzwFrameAnimation mMiuiGxzwFrameAnimation;
     private int mTranslateX;
     private int mTranslateY;
-
-    public static int getDefaultAnimType() {
-        return 6;
-    }
 
     public MiuiGxzwAnimManager(Context context, MiuiGxzwFrameAnimation miuiGxzwFrameAnimation) {
         this.mContext = context;
@@ -296,7 +293,15 @@ public class MiuiGxzwAnimManager {
         return this.mAnimItemMap.keySet();
     }
 
+    public static int getDefaultAnimType() {
+        return Build.IS_MIUI_LITE_VERSION ? 8 : 6;
+    }
+
     private void initAnimItemMap() {
+        if (Build.IS_MIUI_LITE_VERSION) {
+            this.mAnimItemMap.put(8, new MiuiGxzwAinmItemAurora());
+            return;
+        }
         this.mAnimItemMap.put(6, new MiuiGxzwAnimItemLight());
         this.mAnimItemMap.put(7, new MiuiGxzwAnimItemStar());
         this.mAnimItemMap.put(8, new MiuiGxzwAinmItemAurora());

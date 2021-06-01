@@ -448,6 +448,7 @@ public class MiuiGxzwAnimView {
         private boolean mAnimFeedback;
         private boolean mBouncer;
         private boolean mCollecting = false;
+        private Context mContext;
         private boolean mDisableLockScreenFodAnim = false;
         private DisplayManager mDisplayManager;
         private int mDisplayState = 2;
@@ -566,6 +567,7 @@ public class MiuiGxzwAnimView {
             };
             this.mMainHandler = new Handler();
             this.mSystemUIHandler = handler;
+            this.mContext = context;
             initView();
         }
 
@@ -729,7 +731,7 @@ public class MiuiGxzwAnimView {
                 super.dismiss();
                 unregisterCallback();
                 this.mMiuiGxzwTipView.setVisibility(8);
-                if (!this.mKeyguardAuthen || !((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() || !z) {
+                if (!this.mKeyguardAuthen || !((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() || !z || !MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
                     removeAnimView();
                 } else {
                     startFadeAniamtion();
@@ -1048,7 +1050,7 @@ public class MiuiGxzwAnimView {
 
                 public void onAnimationEnd(Animator animator) {
                     MiuiGxzwAnimViewInternal.this.mAlphaAnimator = null;
-                    if (!this.cancel) {
+                    if (!this.cancel || !MiuiGxzwAnimViewInternal.this.mShowing) {
                         MiuiGxzwAnimViewInternal.this.removeAnimView();
                     }
                 }

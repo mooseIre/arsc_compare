@@ -8,7 +8,9 @@ import android.os.RemoteException;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.MiuiFastUnlockController;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
+import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.miui.miwallpaper.IMiuiKeyguardWallpaperService;
@@ -24,6 +26,8 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlinx.coroutines.BuildersKt;
 import kotlinx.coroutines.CoroutineScope;
 import kotlinx.coroutines.CoroutineScopeKt;
+import kotlinx.coroutines.Dispatchers;
+import kotlinx.coroutines.GlobalScope;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -112,6 +116,12 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
         }
     }
 
+    public final void unBindService() {
+        Log.d(this.TAG, "unBind service");
+        this.mContext.unbindService(this.mServiceConnection);
+        this.mBinding = false;
+    }
+
     @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
     public void onScreenTurnedOff() {
         try {
@@ -141,11 +151,29 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
     @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
     public void onKeyguardShowingChanged(boolean z) {
         try {
+            Object obj = Dependency.get(MiuiFastUnlockController.class);
+            Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(MiuiFastU…ckController::class.java)");
+            if (!((MiuiFastUnlockController) obj).isFastUnlock() || MiuiKeyguardUtils.isTopActivityLauncher(this.mContext) || z) {
+                IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
+                if (iMiuiKeyguardWallpaperService != null) {
+                    iMiuiKeyguardWallpaperService.onKeyguardShowingChanged(z);
+                } else {
+                    bindService(new MiuiWallpaperClient$onKeyguardShowingChanged$1(this, z));
+                }
+            }
+        } catch (RemoteException e) {
+            String str = this.TAG;
+            Log.e(str, "onKeyguardShowingChanged: " + e.getMessage());
+        }
+    }
+
+    public final void notifyKeyguardShowingChanged(boolean z) {
+        try {
             IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.mWallpaperService;
             if (iMiuiKeyguardWallpaperService != null) {
                 iMiuiKeyguardWallpaperService.onKeyguardShowingChanged(z);
             } else {
-                bindService(new MiuiWallpaperClient$onKeyguardShowingChanged$1(this, z));
+                bindService(new MiuiWallpaperClient$notifyKeyguardShowingChanged$1(this, z));
             }
         } catch (RemoteException e) {
             String str = this.TAG;
@@ -187,6 +215,11 @@ public final class MiuiWallpaperClient extends MiuiKeyguardUpdateMonitorCallback
             String str = this.TAG;
             Log.e(str, "updateWallpaper: " + e.getMessage());
         }
+    }
+
+    @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+    public void onUserSwitchComplete(int i) {
+        BuildersKt.launch$default(GlobalScope.INSTANCE, Dispatchers.getIO(), null, new MiuiWallpaperClient$onUserSwitchComplete$1(this, null), 2, null);
     }
 
     @Nullable

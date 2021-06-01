@@ -3,9 +3,9 @@ package com.android.keyguard.fod;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Slog;
 import android.widget.ImageView;
 import com.android.systemui.C0009R$bool;
 import com.android.systemui.C0010R$color;
@@ -17,13 +17,8 @@ class MiuiGxzwHighlightView extends ImageView {
     private int mGreenCircleColor;
     private boolean mGreenHalo = false;
     private boolean mInvertColor = false;
-    private float mOvalAngle;
-    private float mOvalMajor;
-    private float mOvalMinor;
     private Paint mPaint;
     private boolean mSupportHalo = false;
-    private float mTouchCenterX = 0.0f;
-    private float mTouchCenterY = 0.0f;
 
     public MiuiGxzwHighlightView(Context context) {
         super(context);
@@ -38,15 +33,10 @@ class MiuiGxzwHighlightView extends ImageView {
     }
 
     public void setTouchCenter(float f, float f2) {
-        this.mTouchCenterX = f;
-        this.mTouchCenterY = f2;
         invalidate();
     }
 
     public void setOvalInfo(float f, float f2, float f3) {
-        this.mOvalAngle = f;
-        this.mOvalMajor = f2;
-        this.mOvalMinor = f3;
         invalidate();
     }
 
@@ -61,21 +51,12 @@ class MiuiGxzwHighlightView extends ImageView {
         if (this.mGradualGreenCircle) {
             return;
         }
-        if ((this.mSupportHalo && !this.mInvertColor) || this.mGreenHalo) {
-            return;
+        if ((!this.mSupportHalo || this.mInvertColor) && !this.mGreenHalo) {
+            int width = getWidth();
+            int height = getHeight();
+            Slog.i("MiuiGxzwHighlightView", "MiuiGxzwHighlightView: onDraw GXZW_ICON_WIDTH= " + MiuiGxzwUtils.GXZW_ICON_WIDTH + ";GXZW_ICON_HEIGHT=" + MiuiGxzwUtils.GXZW_ICON_HEIGHT + ";width=" + width + ";heigth=" + height);
+            canvas.drawCircle((float) (width / 2), (float) (height / 2), (float) (Math.min(MiuiGxzwUtils.GXZW_ICON_WIDTH, MiuiGxzwUtils.GXZW_ICON_HEIGHT) / 2), this.mPaint);
         }
-        if (MiuiGxzwUtils.isLargeFod()) {
-            canvas.save();
-            canvas.rotate((float) ((int) (((double) (this.mOvalAngle * 180.0f)) / 3.141592653589793d)), this.mTouchCenterX, this.mTouchCenterY);
-            float f = this.mTouchCenterX;
-            float f2 = this.mOvalMinor;
-            float f3 = this.mTouchCenterY;
-            float f4 = this.mOvalMajor;
-            canvas.drawOval(new RectF(f - (f2 / 2.0f), f3 - (f4 / 2.0f), f + (f2 / 2.0f), f3 + (f4 / 2.0f)), this.mPaint);
-            canvas.restore();
-            return;
-        }
-        canvas.drawCircle((float) (getWidth() / 2), (float) (getHeight() / 2), (float) (Math.min(MiuiGxzwUtils.GXZW_ICON_WIDTH, MiuiGxzwUtils.GXZW_ICON_HEIGHT) / 2), this.mPaint);
     }
 
     /* access modifiers changed from: protected */
@@ -103,7 +84,7 @@ class MiuiGxzwHighlightView extends ImageView {
 
     public void setInvertColorStatus(boolean z) {
         this.mInvertColor = z;
-        if (!z || this.mGreenCircleColor != -1) {
+        if (!z || this.mGreenCircle) {
             this.mPaint.setColor(this.mGreenCircleColor);
         } else {
             this.mPaint.setColor(-16777216);

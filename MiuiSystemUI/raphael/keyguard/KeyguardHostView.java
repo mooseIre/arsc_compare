@@ -9,7 +9,6 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.widget.FrameLayout;
-import androidx.constraintlayout.widget.R$styleable;
 import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardSecurityContainer;
@@ -245,7 +244,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                         case 87:
                         case 88:
                         case 89:
-                        case R$styleable.Constraint_layout_constraintVertical_chainStyle:
+                        case 90:
                         case 91:
                             break;
                         default:
@@ -268,7 +267,7 @@ public class KeyguardHostView extends FrameLayout implements KeyguardSecurityCon
                     case 87:
                     case 88:
                     case 89:
-                    case R$styleable.Constraint_layout_constraintVertical_chainStyle:
+                    case 90:
                     case 91:
                         break;
                     default:

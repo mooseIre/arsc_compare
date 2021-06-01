@@ -31,8 +31,9 @@ import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.RegionController;
 import java.util.Locale;
 import java.util.TimeZone;
-import miui.date.Calendar;
 import miui.keyguard.clock.MiuiBaseClock;
+import miui.os.Build;
+import miuix.pickerwidget.date.Calendar;
 
 public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements RegionController.Callback {
     protected Calendar mCalendar;
@@ -369,7 +370,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         int i4 = this.mSelectedClockPosition;
         boolean z = true;
         int i5 = 0;
-        if (i4 != 1 && !MiuiKeyguardUtils.isSupportVerticalClock(i4, this.mContext)) {
+        if (i4 != 1 && ((!Build.IS_INTERNATIONAL_BUILD || i4 != 0) && !MiuiKeyguardUtils.isSupportVerticalClock(this.mSelectedClockPosition, this.mContext))) {
             z = false;
         }
         LinearLayout linearLayout = this.mClockExtraInfo;

@@ -7,6 +7,7 @@ import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.systemui.C0010R$color;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.google.android.collect.Lists;
 import com.miui.systemui.SettingsObserver;
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: MiuiKeyguardWallpaperControllerImpl.kt */
-public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardWallpaperController {
+public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardWallpaperController, ConfigurationController.ConfigurationListener {
     private static final String KEY_IS_WALLPAPER_COLOR_LIGHT = "is_wallpaper_color_light";
     private static final String KEY_WALLPAPER_BLUR_COLOR = "key_wallpaper_blur_color";
     private static final String KEY_WALLPAPER_INFO = "wallpaper_info";
@@ -44,9 +45,9 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
         ArrayList<IMiuiKeyguardWallpaperController.IWallpaperChangeCallback> newArrayList = Lists.newArrayList();
         Intrinsics.checkExpressionValueIsNotNull(newArrayList, "Lists.newArrayList()");
         this.mWallpaperChangeCallbacks = newArrayList;
-        MiuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1 miuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1 = new MiuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1(this);
-        this.mWallpaperReceiver = miuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1;
-        BroadcastDispatcher.registerReceiver$default(this.mBroadcastDispatcher, miuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1, new IntentFilter("miui.intent.action.LOCK_WALLPAPER_CHANGED"), null, null, 12, null);
+        this.mWallpaperReceiver = new MiuiKeyguardWallpaperControllerImpl$mWallpaperReceiver$1(this);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
+        BroadcastDispatcher.registerReceiver$default(this.mBroadcastDispatcher, this.mWallpaperReceiver, new IntentFilter("miui.intent.action.LOCK_WALLPAPER_CHANGED"), null, null, 12, null);
         SettingsObserver.Callback callback = this.mAODCallback;
         String str = MiuiKeyguardUtils.AOD_MODE;
         Intrinsics.checkExpressionValueIsNotNull(str, "MiuiKeyguardUtils.AOD_MODE");
@@ -99,5 +100,10 @@ public final class MiuiKeyguardWallpaperControllerImpl implements IMiuiKeyguardW
 
     public final boolean isAodUsingSuperWallpaper() {
         return this.mAodEnable && this.mAodUsingSuperWallpaperStyle;
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onDensityChanged() {
+        KeyguardWallpaperUtils.clearCache();
     }
 }
