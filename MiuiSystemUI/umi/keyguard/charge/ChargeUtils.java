@@ -9,11 +9,11 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.android.systemui.C0007R$array;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0018R$plurals;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.phone.StatusBar;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
@@ -29,7 +29,6 @@ public class ChargeUtils {
     public static String METHOD_GET_POWER_SUPPLY_INFO = "getPowerSupplyInfo";
     public static String PROVIDER_POWER_CENTER = "content://com.miui.powercenter.provider";
     private static final boolean SUPPORT_WIRELESS_CHARGE = new File("/sys/class/power_supply/wireless/signal_strength").exists();
-    private static int WAVE_DELAY_TIME = 1000;
     private static List<String> mIsExceptLiteChargeList = new ArrayList();
     private static List<String> mIsSupportLiteChargeList = new ArrayList();
     private static List<String> mIsSupportStrongSuperRapidChargeList = new ArrayList();
@@ -100,7 +99,7 @@ public class ChargeUtils {
         boolean z = (Build.IS_MIUI_LITE_VERSION || supportLiteChargeAnimation()) && !exceptLiteChargeAnimation();
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (contextForUser != null) {
-            i = contextForUser.getResources().getInteger(C0015R$integer.keyguard_charge_animation_type);
+            i = contextForUser.getResources().getInteger(C0016R$integer.keyguard_charge_animation_type);
         }
         if (z) {
             return 0;
@@ -122,6 +121,13 @@ public class ChargeUtils {
         return SUPPORT_WIRELESS_CHARGE;
     }
 
+    public static boolean supportParticleChargeAnimation() {
+        if (getChargeAnimationType() == 3) {
+            return true;
+        }
+        return SUPPORT_WIRELESS_CHARGE;
+    }
+
     public static void setNeedRepositionDevice(boolean z) {
         sNeedRepositionDevice = z;
     }
@@ -132,7 +138,7 @@ public class ChargeUtils {
             return null;
         }
         if (supportWirelessCharge() && sNeedRepositionDevice) {
-            return context.getString(C0020R$string.wireless_charge_reset_device);
+            return context.getString(C0021R$string.wireless_charge_reset_device);
         }
         Bundle batteryInfo = getBatteryInfo(context);
         Resources resources = context.getResources();
@@ -142,27 +148,27 @@ public class ChargeUtils {
             long mins = getMins(j);
             int i2 = (hours > 0 ? 1 : (hours == 0 ? 0 : -1));
             if (i2 > 0 && mins > 0) {
-                str = resources.getQuantityString(C0018R$plurals.keyguard_charging_info_could_use_time_text, (int) hours, Long.valueOf(hours), Long.valueOf(mins));
+                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_time_text, (int) hours, Long.valueOf(hours), Long.valueOf(mins));
             } else if (i2 > 0) {
-                str = resources.getQuantityString(C0018R$plurals.keyguard_charging_info_could_use_hour_time_text, (int) hours, Long.valueOf(hours));
+                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_hour_time_text, (int) hours, Long.valueOf(hours));
             } else if (mins > 0) {
-                str = resources.getQuantityString(C0018R$plurals.keyguard_charging_info_could_use_min_time_text, (int) mins, Long.valueOf(mins));
+                str = resources.getQuantityString(C0019R$plurals.keyguard_charging_info_could_use_min_time_text, (int) mins, Long.valueOf(mins));
             }
         }
         if (!TextUtils.isEmpty(str)) {
             return str;
         }
         if (i == 100) {
-            return resources.getString(C0020R$string.keyguard_charged);
+            return resources.getString(C0021R$string.keyguard_charged);
         }
         if (isStrongSuperQuickCharging()) {
-            return resources.getString(C0020R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isSuperQuickCharging()) {
-            return resources.getString(C0020R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0021R$string.keyguard_charging_super_quick_and_level_tip, Integer.valueOf(i));
         } else if (isQuickCharging()) {
-            return resources.getString(C0020R$string.keyguard_charging_quick_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0021R$string.keyguard_charging_quick_and_level_tip, Integer.valueOf(i));
         } else {
-            return resources.getString(C0020R$string.keyguard_charging_normal_and_level_tip, Integer.valueOf(i));
+            return resources.getString(C0021R$string.keyguard_charging_normal_and_level_tip, Integer.valueOf(i));
         }
     }
 
@@ -193,7 +199,7 @@ public class ChargeUtils {
 
     public static boolean isSupportWirelessStrongChargeSsw() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
-        boolean z = contextForUser != null ? contextForUser.getResources().getBoolean(C0009R$bool.keyguard_wireless_strong_charge_ssw) : false;
+        boolean z = contextForUser != null ? contextForUser.getResources().getBoolean(C0010R$bool.keyguard_wireless_strong_charge_ssw) : false;
         if (((MiuiChargeManager) Dependency.get(MiuiChargeManager.class)).getCurrentChargeDeviceType() != 15 || !z) {
             return SUPPORT_WIRELESS_CHARGE;
         }
@@ -215,7 +221,7 @@ public class ChargeUtils {
     private static boolean supportStrongSuperRapidCharge() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (mIsSupportStrongSuperRapidChargeList.isEmpty() && contextForUser != null) {
-            mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_charge_supportWirelessStrongSuper));
+            mIsSupportStrongSuperRapidChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.config_charge_supportWirelessStrongSuper));
         }
         return mIsSupportStrongSuperRapidChargeList.contains(android.os.Build.DEVICE);
     }
@@ -223,7 +229,7 @@ public class ChargeUtils {
     private static boolean supportLiteChargeAnimation() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (mIsSupportLiteChargeList.isEmpty() && contextForUser != null) {
-            mIsSupportLiteChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_charge_support_lite));
+            mIsSupportLiteChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.config_charge_support_lite));
         }
         return mIsSupportLiteChargeList.contains(android.os.Build.DEVICE);
     }
@@ -231,7 +237,7 @@ public class ChargeUtils {
     private static boolean exceptLiteChargeAnimation() {
         Context contextForUser = ((UserSwitcherController) Dependency.get(UserSwitcherController.class)).getContextForUser();
         if (mIsExceptLiteChargeList.isEmpty() && contextForUser != null) {
-            mIsExceptLiteChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0007R$array.config_except_charge_support_lite));
+            mIsExceptLiteChargeList = Arrays.asList(contextForUser.getResources().getStringArray(C0008R$array.config_except_charge_support_lite));
         }
         return mIsExceptLiteChargeList.contains(android.os.Build.DEVICE);
     }
@@ -260,18 +266,15 @@ public class ChargeUtils {
         return 2;
     }
 
-    public static int getWaveTextDelayTime() {
+    public static int getTextDelayTime() {
         if (supportWaveChargeAnimation()) {
-            return WAVE_DELAY_TIME;
+            return 1000;
         }
-        return 0;
+        return supportParticleChargeAnimation() ? 1300 : 0;
     }
 
     public static int getWaveItemDelayTime() {
-        if (supportWaveChargeAnimation()) {
-            return WAVE_DELAY_TIME - 200;
-        }
-        return 0;
+        return supportWaveChargeAnimation() ? 800 : 0;
     }
 
     public static void showSystemOverlayToast(Context context, int i, int i2) {

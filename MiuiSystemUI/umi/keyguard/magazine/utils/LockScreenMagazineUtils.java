@@ -50,26 +50,26 @@ public class LockScreenMagazineUtils {
     }
 
     public static void sendLockScreenMagazineEventBroadcast(Context context, String str) {
-        if (isGlobalNeedFeature(context)) {
-            sendLockScreenMagazineEventBroadcast(context, str, null);
-        }
+        sendLockScreenMagazineEventBroadcast(context, str, null);
     }
 
     private static void sendLockScreenMagazineEventBroadcast(Context context, String str, Bundle bundle) {
-        String str2 = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getLockScreenMagazineWallpaperInfo().wallpaperUri;
-        Intent intent = new Intent("com.miui.systemui.LOCKSCREEN_WALLPAPER_EVENTS");
-        intent.putExtra("wallpaper_uri", str2);
-        intent.putExtra("wallpaper_view_event", str);
-        if (bundle != null) {
-            intent.putExtras(bundle);
+        if (isGlobalNeedFeature(context)) {
+            String str2 = ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).getLockScreenMagazineWallpaperInfo().wallpaperUri;
+            Intent intent = new Intent("com.miui.systemui.LOCKSCREEN_WALLPAPER_EVENTS");
+            intent.putExtra("wallpaper_uri", str2);
+            intent.putExtra("wallpaper_view_event", str);
+            if (bundle != null) {
+                intent.putExtras(bundle);
+            }
+            intent.setPackage(LOCK_SCREEN_MAGAZINE_PACKAGE_NAME);
+            context.sendBroadcast(intent);
         }
-        intent.setPackage(LOCK_SCREEN_MAGAZINE_PACKAGE_NAME);
-        context.sendBroadcast(intent);
     }
 
     public static void sendLockScreenMagazineScreenOnBroadcast(Context context) {
-        StatusBar statusBar = (StatusBar) Dependency.get(StatusBar.class);
-        if (statusBar != null) {
+        StatusBar statusBar;
+        if (isGlobalNeedFeature(context) && (statusBar = (StatusBar) Dependency.get(StatusBar.class)) != null) {
             Bundle bundle = new Bundle();
             bundle.putInt("notification_count", statusBar.getKeyguardNotifications());
             sendLockScreenMagazineEventBroadcast(context, "Screen_ON", bundle);

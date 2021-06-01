@@ -21,7 +21,7 @@ import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
-import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
@@ -292,7 +292,7 @@ public final class KeyguardUpdateMonitorInjector implements SuperSaveModeControl
     }
 
     private final boolean isSupportShowSimLockedTips() {
-        return this.mContext.getResources().getBoolean(C0009R$bool.config_switch_sim_locked_tips);
+        return this.mContext.getResources().getBoolean(C0010R$bool.config_switch_sim_locked_tips);
     }
 
     public final void handleSimLocked(int i, int i2, int i3) {

@@ -181,7 +181,13 @@ public class MiuiFaceUnlockManager {
                 MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
             }
         }
+
+        @Override // com.android.keyguard.MiuiKeyguardUpdateMonitorCallback
+        public void onLockScreenMagazinePreViewVisibilityChanged(boolean z) {
+            MiuiFaceUnlockManager.this.mLockScreenMagazinePreViewVisibility = z;
+        }
     };
+    private boolean mLockScreenMagazinePreViewVisibility;
     FaceManager.RemovalCallback mRemovalCallback = new FaceManager.RemovalCallback() {
         /* class com.android.keyguard.faceunlock.MiuiFaceUnlockManager.AnonymousClass6 */
 
@@ -429,7 +435,18 @@ public class MiuiFaceUnlockManager {
     }
 
     public boolean shouldShowFaceUnlockRetryMessageInBouncer() {
-        return !((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).isFaceDetectionRunning() && isFaceAuthEnabled() && ((KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class)).shouldListenForFace();
+        boolean z = isFaceAuthEnabled() && !this.mUpdateMonitor.userNeedsStrongAuth() && ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardShowing() && !isFaceTemporarilyLockout() && !this.mUpdateMonitor.isSimPinSecure() && !isDisableLockScreenFaceUnlockAnim();
+        boolean isKeyguardOccluded = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isKeyguardOccluded();
+        if (this.mUpdateMonitor.isBouncerShowing()) {
+            if (z) {
+                return !isKeyguardOccluded || !MiuiKeyguardUtils.isTopActivityCameraApp(this.mContext);
+            }
+            return false;
+        } else if (!z || isKeyguardOccluded || MiuiFaceUnlockUtils.isSupportLiftingCamera(this.mContext)) {
+            return false;
+        } else {
+            return (this.mUpdateMonitor.isFaceDetectionRunning() || ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock()) && !this.mLockScreenMagazinePreViewVisibility && this.mUpdateMonitor.getStatusBarState() == 1;
+        }
     }
 
     public void printCannotListenFaceLog(boolean z, boolean z2) {

@@ -7,6 +7,7 @@ import android.os.RemoteException;
 import android.util.Log;
 import com.miui.miwallpaper.IMiuiKeyguardWallpaperService;
 import kotlin.jvm.internal.Intrinsics;
+import miui.os.Build;
 import org.jetbrains.annotations.NotNull;
 
 /* compiled from: MiuiWallpaperClient.kt */
@@ -24,11 +25,13 @@ public final class MiuiWallpaperClient$mServiceConnection$1 implements ServiceCo
         Log.d(this.this$0.getTAG(), "on MiuiKeyguardWallpaperRemoteStateService connected");
         try {
             this.this$0.mWallpaperService = IMiuiKeyguardWallpaperService.Stub.asInterface(iBinder);
-            IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.this$0.mWallpaperService;
-            if (iMiuiKeyguardWallpaperService != null) {
-                iMiuiKeyguardWallpaperService.bindSystemUIProxy(new MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1(this));
-            } else {
-                Log.d(this.this$0.getTAG(), "mWallpaperService == null");
+            if (Build.IS_INTERNATIONAL_BUILD) {
+                IMiuiKeyguardWallpaperService iMiuiKeyguardWallpaperService = this.this$0.mWallpaperService;
+                if (iMiuiKeyguardWallpaperService != null) {
+                    iMiuiKeyguardWallpaperService.bindSystemUIProxy(new MiuiWallpaperClient$mServiceConnection$1$onServiceConnected$1(this));
+                } else {
+                    Log.d(this.this$0.getTAG(), "mWallpaperService == null");
+                }
             }
             this.this$0.mBinding = true;
             this.this$0.mFunctionCallbacks.invoke();

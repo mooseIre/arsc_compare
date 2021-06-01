@@ -7,7 +7,7 @@ import android.provider.Settings;
 import android.util.Log;
 import com.android.keyguard.MiuiDozeServiceHost;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import java.lang.ref.WeakReference;
 import miui.util.FeatureParser;
@@ -83,7 +83,7 @@ public class MiuiFaceUnlockUtils {
 
     private static void updateRgbAuthenticationHelpInfo(int i) {
         if (i == 0) {
-            mHelpStringResId = C0020R$string.face_unlock_success;
+            mHelpStringResId = C0021R$string.face_unlock_success;
         } else if (i != 3) {
             if (i != 4) {
                 if (i != 5) {
@@ -94,36 +94,36 @@ public class MiuiFaceUnlockUtils {
                         case 11:
                             break;
                         case 12:
-                            mHelpStringResId = C0020R$string.face_unlock_check_failed;
+                            mHelpStringResId = C0021R$string.face_unlock_check_failed;
                             return;
                         case 13:
                         case 14:
-                            mHelpStringResId = C0020R$string.face_unlock_check_failed;
+                            mHelpStringResId = C0021R$string.face_unlock_check_failed;
                             return;
                         default:
                             switch (i) {
                                 case 21:
-                                    mHelpStringResId = C0020R$string.face_unlock_reveal_eye;
+                                    mHelpStringResId = C0021R$string.face_unlock_reveal_eye;
                                     return;
                                 case 22:
-                                    mHelpStringResId = C0020R$string.face_unlock_open_eye;
+                                    mHelpStringResId = C0021R$string.face_unlock_open_eye;
                                     return;
                                 case 23:
-                                    mHelpStringResId = C0020R$string.face_unlock_reveal_mouth;
+                                    mHelpStringResId = C0021R$string.face_unlock_reveal_mouth;
                                     return;
                                 default:
-                                    mHelpStringResId = C0020R$string.face_unlock_check_failed;
+                                    mHelpStringResId = C0021R$string.face_unlock_check_failed;
                                     return;
                             }
                     }
                 } else {
-                    mHelpStringResId = C0020R$string.face_unlock_not_found;
+                    mHelpStringResId = C0021R$string.face_unlock_not_found;
                     return;
                 }
             }
-            mHelpStringResId = C0020R$string.face_unlock_be_on_the_screen;
+            mHelpStringResId = C0021R$string.face_unlock_be_on_the_screen;
         } else {
-            mHelpStringResId = C0020R$string.unlock_failed;
+            mHelpStringResId = C0021R$string.unlock_failed;
         }
     }
 }

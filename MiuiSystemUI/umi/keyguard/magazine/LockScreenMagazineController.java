@@ -51,12 +51,13 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
 import com.android.systemui.statusbar.phone.StatusBar;
+import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.google.gson.Gson;
 import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.util.CommonExtensionsKt;
@@ -65,7 +66,7 @@ import miui.os.Build;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-public class LockScreenMagazineController implements SettingsObserver.Callback {
+public class LockScreenMagazineController implements SettingsObserver.Callback, ConfigurationController.ConfigurationListener {
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass2 */
 
@@ -310,8 +311,8 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
 
     public void onAttachedToWindow() {
         registerBroadcastReceivers();
-        this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         this.mHasAttachedToWindow = true;
+        this.mUpdateMonitor.registerCallback(this.mKeyguardUpdateMonitorCallback);
         if (this.mIsCompleteInitiation) {
             this.mIsCompleteInitiation = false;
             this.mUpdateMonitorInjector.onMagazineResourceInited();
@@ -320,13 +321,16 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         this.mSettingsObserver.addCallback(this, 1, new String[0]);
         this.mSettingsObserver.addCallback(this, "lock_wallpaper_provider_authority");
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
     }
 
     public void onDetachedFromWindow() {
         this.mHasAttachedToWindow = false;
+        this.mUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
         this.mContext.unregisterReceiver(this.mBroadcastReceiver);
         this.mSettingsObserver.removeCallback(this);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
+        ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
     }
 
     private void registerBroadcastReceivers() {
@@ -383,15 +387,15 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         display.getRealSize(point);
         this.mScreenWidth = (float) Math.min(point.x, point.y);
         this.mScreenHeight = (float) Math.max(point.x, point.y);
-        this.mUninvalidTopAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_top_area_height);
-        this.mUninvalidBottomAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_bottom_area_height);
-        this.mUninvalidStartEndAreaWidth = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_start_end_area_width);
+        this.mUninvalidTopAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_top_area_height);
+        this.mUninvalidBottomAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_bottom_area_height);
+        this.mUninvalidStartEndAreaWidth = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_start_end_area_width);
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             Rect fodPosition = MiuiGxzwManager.getFodPosition(this.mContext);
             int width = fodPosition.width() / 2;
             this.mGXZWIconCenterX = fodPosition.left + width;
             this.mGXZWIconCenterY = fodPosition.top + width;
-            this.mUninvalidGXZWAreaRadius = width + this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_gxzw_icon_area_margin);
+            this.mUninvalidGXZWAreaRadius = width + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_gxzw_icon_area_margin);
         }
     }
 
@@ -400,7 +404,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
     public /* synthetic */ void lambda$new$0$LockScreenMagazineController(boolean z) {
         TextView switchSystemUserEntrance = ((KeyguardPanelViewInjector) Dependency.get(KeyguardPanelViewInjector.class)).getSwitchSystemUserEntrance();
         switchSystemUserEntrance.setTextColor(z ? -1308622848 : -1);
-        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0012R$drawable.logout_light : C0012R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
+        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0013R$drawable.logout_light : C0013R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
         queryLockScreenMagazineWallpaperInfo();
     }
 
@@ -702,6 +706,11 @@ public class LockScreenMagazineController implements SettingsObserver.Callback {
         } catch (Exception e) {
             Log.e("miui_keyguard", "start to download lockscreen wallpaper", e);
         }
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onDensityChanged() {
+        initAntiMistakeOperation();
     }
 
     /* access modifiers changed from: package-private */

@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.PasswordTextView;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 
 public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView implements View.OnKeyListener, View.OnTouchListener {
     private View mButton0;
@@ -171,7 +171,7 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
                 KeyguardPinBasedInputView.this.onUserInput();
             }
         });
-        View findViewById = findViewById(C0014R$id.key_enter);
+        View findViewById = findViewById(C0015R$id.key_enter);
         this.mOkButton = findViewById;
         if (findViewById != null) {
             findViewById.setOnTouchListener(this);
@@ -216,16 +216,16 @@ public abstract class KeyguardPinBasedInputView extends KeyguardAbsKeyInputView 
                 return true;
             }
         });
-        this.mButton0 = findViewById(C0014R$id.key0);
-        this.mButton1 = findViewById(C0014R$id.key1);
-        this.mButton2 = findViewById(C0014R$id.key2);
-        this.mButton3 = findViewById(C0014R$id.key3);
-        this.mButton4 = findViewById(C0014R$id.key4);
-        this.mButton5 = findViewById(C0014R$id.key5);
-        this.mButton6 = findViewById(C0014R$id.key6);
-        this.mButton7 = findViewById(C0014R$id.key7);
-        this.mButton8 = findViewById(C0014R$id.key8);
-        this.mButton9 = findViewById(C0014R$id.key9);
+        this.mButton0 = findViewById(C0015R$id.key0);
+        this.mButton1 = findViewById(C0015R$id.key1);
+        this.mButton2 = findViewById(C0015R$id.key2);
+        this.mButton3 = findViewById(C0015R$id.key3);
+        this.mButton4 = findViewById(C0015R$id.key4);
+        this.mButton5 = findViewById(C0015R$id.key5);
+        this.mButton6 = findViewById(C0015R$id.key6);
+        this.mButton7 = findViewById(C0015R$id.key7);
+        this.mButton8 = findViewById(C0015R$id.key8);
+        this.mButton9 = findViewById(C0015R$id.key9);
         this.mPasswordEntry.requestFocus();
     }
 

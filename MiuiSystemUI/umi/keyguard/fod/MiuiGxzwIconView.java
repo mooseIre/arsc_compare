@@ -23,7 +23,7 @@ import com.android.keyguard.fod.MiuiGxzwSensor;
 import com.android.keyguard.fod.MiuiGxzwTransparentTimer;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -183,11 +183,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
             }
             super.show();
             this.mMiuiGxzwAnimView.show(z);
-            if (!this.mKeyguardAuthen || !MiuiGxzwQuickOpenUtil.isQuickOpenEnable(getContext())) {
-                this.mLayoutParams.screenOrientation = -1;
-            } else {
-                this.mLayoutParams.screenOrientation = 5;
-            }
+            this.mLayoutParams.screenOrientation = -1;
             if (this.mDozing) {
                 this.mMiuiGxzwSensor.registerDozeSensor(this);
                 scheduleSetIconTransparen();
@@ -316,6 +312,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
     @Override // com.android.keyguard.fod.GxzwNoRotateFrameLayout
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
+        MiuiGxzwUtils.caculateGxzwIconSize(getContext());
         this.mHighlightView.onConfigurationChanged(configuration);
     }
 
@@ -390,7 +387,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
             motionEvent.setAction(2);
         } else if (action == 9) {
             motionEvent.setAction(0);
-            setTalkbackDescription(getContext().getString(C0020R$string.gxzw_area));
+            setTalkbackDescription(getContext().getString(C0021R$string.gxzw_area));
         } else if (action == 10) {
             motionEvent.setAction(1);
         }

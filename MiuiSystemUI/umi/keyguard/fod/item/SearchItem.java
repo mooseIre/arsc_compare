@@ -7,8 +7,8 @@ import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class SearchItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -22,7 +22,7 @@ public class SearchItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(C0012R$drawable.gxzw_quick_open_search);
+        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_search);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -49,12 +49,12 @@ public class SearchItem extends IQuickOpenItem {
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
-        return this.mContext.getString(C0020R$string.gxzw_quick_open_search);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_search);
     }
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
-        return this.mContext.getString(C0020R$string.gxzw_quick_open_search_sub);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_search_sub);
     }
 
     private boolean isGoogleQuickSearchExit() {

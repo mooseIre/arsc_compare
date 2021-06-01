@@ -23,8 +23,8 @@ import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.charge.container.MiuiChargeAnimationView;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.KeyguardIndicationController;
@@ -180,7 +180,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         this.mChargeDeviceType = -1;
         this.mStateInitialized = false;
         this.mWireState = -1;
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         SensorManager sensorManager = (SensorManager) this.mContext.getSystemService(SensorManager.class);
         this.mSensorManager = sensorManager;
         this.mAngleSensor = sensorManager.getDefaultSensor(33171087);
@@ -400,7 +400,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     private void dealWithBadlyCharge(boolean z, int i) {
         if (this.mWirelessOnline && !z) {
             if (i == 11) {
-                showToast(C0020R$string.wireless_change_to_ac_charging);
+                showToast(C0021R$string.wireless_change_to_ac_charging);
             }
             setNeedRepositionDevice(false);
             this.mHandler.removeCallbacks(this.mScreenOffRunnable);

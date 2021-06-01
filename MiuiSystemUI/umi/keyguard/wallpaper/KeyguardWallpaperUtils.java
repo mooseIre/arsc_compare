@@ -26,9 +26,10 @@ import miui.util.CustomizeUtil;
 import miuix.graphics.BitmapFactory;
 
 public class KeyguardWallpaperUtils {
-    private static Pair<File, Drawable> sLockWallpaperCache;
-    private static boolean sLockWallpaperChangedForSleep;
-    private static long sLockWallpaperModifiedTime;
+    private static Pair<File, Drawable> sLockWallpaperCache = null;
+    private static boolean sLockWallpaperChangedForSleep = false;
+    private static long sLockWallpaperModifiedTime = 0;
+    private static boolean sUseCache = true;
     private static Object sWallpaperLock = new Object();
 
     public static boolean isWallpaperShouldBlur() {
@@ -122,8 +123,9 @@ public class KeyguardWallpaperUtils {
 
     private static final Pair<File, Drawable> getLockWallpaperCache(Context context, File file, File file2) {
         synchronized (sWallpaperLock) {
-            if (sLockWallpaperModifiedTime != file.lastModified() || sLockWallpaperChangedForSleep || sLockWallpaperCache == null || sLockWallpaperCache.first == null || !((File) sLockWallpaperCache.first).exists() || !file.equals(sLockWallpaperCache.first)) {
+            if (!sUseCache || sLockWallpaperModifiedTime != file.lastModified() || sLockWallpaperChangedForSleep || sLockWallpaperCache == null || sLockWallpaperCache.first == null || !((File) sLockWallpaperCache.first).exists() || !file.equals(sLockWallpaperCache.first)) {
                 sLockWallpaperCache = null;
+                sUseCache = true;
                 try {
                     Display defaultDisplay = ((WindowManager) context.getSystemService("window")).getDefaultDisplay();
                     Point point = new Point();
@@ -153,5 +155,9 @@ public class KeyguardWallpaperUtils {
             }
             return sLockWallpaperCache;
         }
+    }
+
+    public static void clearCache() {
+        sUseCache = false;
     }
 }

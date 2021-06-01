@@ -102,4 +102,12 @@ public class MiuiClockView extends FrameLayout {
         }
         return null;
     }
+
+    public boolean isDualClock() {
+        KeyguardClockController keyguardClockController = this.mMiuiClockController;
+        if (keyguardClockController != null) {
+            return keyguardClockController.isDualClock();
+        }
+        return false;
+    }
 }

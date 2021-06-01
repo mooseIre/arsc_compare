@@ -20,7 +20,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import codeinjection.CodeInjection;
 import com.android.keyguard.PasswordTextView;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.R$styleable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -73,9 +73,9 @@ public class PasswordTextViewForPIN extends PasswordTextView {
         try {
             this.mTextHeightRaw = obtainStyledAttributes.getInt(R$styleable.PasswordTextView_scaledTextSize, 0);
             this.mGravity = obtainStyledAttributes.getInt(R$styleable.PasswordTextView_android_gravity, 17);
-            this.mDotSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_dotSize, getContext().getResources().getDimensionPixelSize(C0011R$dimen.password_dot_size));
-            this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_charPadding, getContext().getResources().getDimensionPixelSize(C0011R$dimen.password_char_padding));
-            this.mStrokeWidth = (float) getContext().getResources().getDimensionPixelSize(C0011R$dimen.keyboard_password_dot_stroke_width);
+            this.mDotSize = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_dotSize, getContext().getResources().getDimensionPixelSize(C0012R$dimen.password_dot_size));
+            this.mCharPadding = obtainStyledAttributes.getDimensionPixelSize(R$styleable.PasswordTextView_charPadding, getContext().getResources().getDimensionPixelSize(C0012R$dimen.password_char_padding));
+            this.mStrokeWidth = (float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.keyboard_password_dot_stroke_width);
             obtainStyledAttributes.recycle();
             Settings.System.getInt(((View) this).mContext.getContentResolver(), "show_password", 1);
             AnimationUtils.loadInterpolator(((View) this).mContext, 17563662);
@@ -90,7 +90,7 @@ public class PasswordTextViewForPIN extends PasswordTextView {
             for (int i3 = 0; i3 < this.mPasswordLength; i3++) {
                 this.mTextChars.add(new CharState());
             }
-            this.mWidth = getResources().getDimensionPixelSize(C0011R$dimen.keyguard_security_pin_entry_width);
+            this.mWidth = getResources().getDimensionPixelSize(C0012R$dimen.keyguard_security_pin_entry_width);
             initPaints();
             initCharPadding();
         } catch (Throwable th) {

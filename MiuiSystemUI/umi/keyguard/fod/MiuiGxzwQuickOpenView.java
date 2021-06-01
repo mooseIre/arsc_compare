@@ -30,9 +30,9 @@ import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.analytics.AnalyticsHelper;
 import com.android.keyguard.fod.item.IQuickOpenItem;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.UiOffloadThread;
 import com.miui.systemui.statusbar.phone.AppLockHelper;
@@ -242,7 +242,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         float f2 = this.mItemRadius;
         float f3 = (float) i2;
         this.mFingerRect = new RectF(f - f2, f3 - f2, f + f2, f2 + f3);
-        float dimension = getResources().getDimension(C0011R$dimen.gxzw_quick_open_region_samll);
+        float dimension = getResources().getDimension(C0012R$dimen.gxzw_quick_open_region_samll);
         this.mFastRect = new RectF(f - dimension, f3 - dimension, f + dimension, f3 + dimension);
         Paint paint = new Paint();
         this.mPaint = paint;
@@ -285,7 +285,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
         textView3.setTextColor(-16777216);
         this.mTipView.setGravity(17);
         this.mTipView.setVisibility(4);
-        this.mTipView.setBackgroundResource(C0012R$drawable.gxzw_quick_tip_background);
+        this.mTipView.setBackgroundResource(C0013R$drawable.gxzw_quick_tip_background);
         FrameLayout.LayoutParams layoutParams4 = new FrameLayout.LayoutParams(-2, -2);
         this.mTipLayoutParams = layoutParams4;
         layoutParams4.gravity = 81;
@@ -298,28 +298,28 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updateTextSize() {
-        this.mTitleView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.gxzw_quick_open_title_size));
-        this.mSubTitleView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.gxzw_quick_open_subtitle_size));
-        this.mTipView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.gxzw_quick_open_tip_size));
+        this.mTitleView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_title_size));
+        this.mSubTitleView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_subtitle_size));
+        this.mTipView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_tip_size));
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void updatePixelSize() {
-        float dimension = getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_item_radius);
+        float dimension = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_item_radius);
         this.mItemRadius = dimension;
         this.mItemRadius = dimension + MiuiGxzwQuickOpenUtil.getLargeItemDetal(getContext());
-        this.mItemScaleRadius = getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_item_scale_radius);
-        this.mSelectBackgroundRadius = getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_item_background_radius);
-        this.mCicleRadius = getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_circle_radius);
-        this.mTitleMargin = (int) getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_title_margin);
-        this.mTipPressMargin = (int) getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_tip_press_margin);
-        this.mTipSlideMargin = (int) getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_tip_slide_margin);
+        this.mItemScaleRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_item_scale_radius);
+        this.mSelectBackgroundRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_item_background_radius);
+        this.mCicleRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_circle_radius);
+        this.mTitleMargin = (int) getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_title_margin);
+        this.mTipPressMargin = (int) getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_tip_press_margin);
+        this.mTipSlideMargin = (int) getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_tip_slide_margin);
         float f = (float) (MiuiGxzwUtils.GXZW_ICON_X + (MiuiGxzwUtils.GXZW_ICON_WIDTH / 2));
         float f2 = this.mItemRadius;
         float f3 = (float) (MiuiGxzwUtils.GXZW_ICON_Y + (MiuiGxzwUtils.GXZW_ICON_HEIGHT / 2));
         this.mFingerRect = new RectF(f - f2, f3 - f2, f + f2, f2 + f3);
-        float dimension2 = getResources().getDimension(C0011R$dimen.gxzw_quick_open_region_samll);
+        float dimension2 = getResources().getDimension(C0012R$dimen.gxzw_quick_open_region_samll);
         this.mFastRect = new RectF(f - dimension2, f3 - dimension2, f + dimension2, f3 + dimension2);
     }
 
@@ -644,7 +644,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void initTalkbackInfo() {
-        announceForAccessibility(getResources().getString(C0020R$string.gxzw_quick_open_title));
+        announceForAccessibility(getResources().getString(C0021R$string.gxzw_quick_open_title));
         for (final IQuickOpenItem iQuickOpenItem : this.mQuickOpenItemList) {
             String title = iQuickOpenItem.getTitle();
             String subTitle = iQuickOpenItem.getSubTitle();
@@ -673,7 +673,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
 
             public void run() {
                 if (MiuiGxzwQuickOpenView.this.mCloseView != null) {
-                    MiuiGxzwQuickOpenView.this.mCloseView.setContentDescription(MiuiGxzwQuickOpenView.this.getResources().getString(C0020R$string.gxzw_quick_close));
+                    MiuiGxzwQuickOpenView.this.mCloseView.setContentDescription(MiuiGxzwQuickOpenView.this.getResources().getString(C0021R$string.gxzw_quick_close));
                     MiuiGxzwQuickOpenView.this.mCloseView.setOnClickListener(new View.OnClickListener() {
                         /* class com.android.keyguard.fod.MiuiGxzwQuickOpenView.AnonymousClass8.AnonymousClass1 */
 
@@ -763,7 +763,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             updateViewLayout(this.mTipView, layoutParams);
             this.mTipView.setTranslationY(0.0f);
             this.mTipView.setVisibility(0);
-            this.mTipView.setText(C0020R$string.gxzw_quick_tip_press);
+            this.mTipView.setText(C0021R$string.gxzw_quick_tip_press);
             MiuiGxzwQuickOpenUtil.increaseShowQuickOpenPressCount(getContext());
         }
     }
@@ -781,7 +781,7 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             ofFloat.setDuration(100L);
             ofFloat.start();
             this.mTipView.setVisibility(0);
-            this.mTipView.setText(C0020R$string.gxzw_quick_tip_slide);
+            this.mTipView.setText(C0021R$string.gxzw_quick_tip_slide);
             MiuiGxzwQuickOpenUtil.disableShowQuickOpenSlide(getContext());
         }
     }
@@ -792,11 +792,11 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             TextView textView = new TextView(getContext());
             this.mSkipTeach = textView;
             textView.setTextColor(-1694498817);
-            this.mSkipTeach.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.gxzw_quick_open_skip_teach));
-            this.mSkipTeach.setText(C0020R$string.gxzw_quick_open_skip_teach);
-            this.mSkipTeach.setBackgroundResource(C0012R$drawable.gxzw_quick_open_skip_teach_b);
-            int dimension = (int) getResources().getDimension(C0011R$dimen.gxzw_quick_open_skip_teach_padding_horizontal);
-            int dimension2 = (int) getResources().getDimension(C0011R$dimen.gxzw_quick_open_skip_teach_padding_vertical);
+            this.mSkipTeach.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.gxzw_quick_open_skip_teach));
+            this.mSkipTeach.setText(C0021R$string.gxzw_quick_open_skip_teach);
+            this.mSkipTeach.setBackgroundResource(C0013R$drawable.gxzw_quick_open_skip_teach_b);
+            int dimension = (int) getResources().getDimension(C0012R$dimen.gxzw_quick_open_skip_teach_padding_horizontal);
+            int dimension2 = (int) getResources().getDimension(C0012R$dimen.gxzw_quick_open_skip_teach_padding_vertical);
             this.mSkipTeach.setPadding(dimension, dimension2, dimension, dimension2);
             this.mSkipTeach.setGravity(17);
             this.mSkipTeach.setOnClickListener(new View.OnClickListener() {
@@ -808,8 +808,8 @@ public class MiuiGxzwQuickOpenView extends GxzwWindowFrameLayout {
             });
             FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(-2, -2);
             layoutParams.gravity = 8388661;
-            layoutParams.setMarginEnd((int) getResources().getDimension(C0011R$dimen.gxzw_quick_open_skip_teach_margin_end));
-            layoutParams.topMargin = (int) getResources().getDimension(C0011R$dimen.gxzw_quick_open_skip_teach_margin_top);
+            layoutParams.setMarginEnd((int) getResources().getDimension(C0012R$dimen.gxzw_quick_open_skip_teach_margin_end));
+            layoutParams.topMargin = (int) getResources().getDimension(C0012R$dimen.gxzw_quick_open_skip_teach_margin_top);
             addView(this.mSkipTeach, layoutParams);
         }
         if (this.mMiuiGxzwQuickTeachView == null) {
