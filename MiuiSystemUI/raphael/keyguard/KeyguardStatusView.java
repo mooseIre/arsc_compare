@@ -21,10 +21,10 @@ import android.widget.TextView;
 import androidx.core.graphics.ColorUtils;
 import codeinjection.CodeInjection;
 import com.android.internal.widget.LockPatternUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.android.systemui.statusbar.policy.DateView;
@@ -173,9 +173,9 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        LinearLayout linearLayout = (LinearLayout) findViewById(C0014R$id.status_view_container);
-        this.mLogoutView = (TextView) findViewById(C0014R$id.logout);
-        this.mNotificationIcons = findViewById(C0014R$id.clock_notification_icon_container);
+        LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.status_view_container);
+        this.mLogoutView = (TextView) findViewById(C0015R$id.logout);
+        this.mNotificationIcons = findViewById(C0015R$id.clock_notification_icon_container);
         TextView textView = this.mLogoutView;
         if (textView != null) {
             textView.setOnClickListener(new View.OnClickListener() {
@@ -186,16 +186,16 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
                 }
             });
         }
-        KeyguardClockSwitch keyguardClockSwitch = (KeyguardClockSwitch) findViewById(C0014R$id.keyguard_clock_container);
+        KeyguardClockSwitch keyguardClockSwitch = (KeyguardClockSwitch) findViewById(C0015R$id.keyguard_clock_container);
         this.mClockView = keyguardClockSwitch;
         keyguardClockSwitch.setShowCurrentUserTime(true);
         if (KeyguardClockAccessibilityDelegate.isNeeded(((GridLayout) this).mContext)) {
             this.mClockView.setAccessibilityDelegate(new KeyguardClockAccessibilityDelegate(((GridLayout) this).mContext));
         }
-        this.mOwnerInfo = (TextView) findViewById(C0014R$id.owner_info);
-        this.mKeyguardSlice = (KeyguardSliceView) findViewById(C0014R$id.keyguard_status_area);
+        this.mOwnerInfo = (TextView) findViewById(C0015R$id.owner_info);
+        this.mKeyguardSlice = (KeyguardSliceView) findViewById(C0015R$id.keyguard_status_area);
         this.mTextColor = this.mClockView.getCurrentTextColor();
-        this.mDateView = (DateView) findViewById(C0014R$id.date_view);
+        this.mDateView = (DateView) findViewById(C0015R$id.date_view);
         this.mKeyguardSlice.setContentChangeListener(new Runnable() {
             /* class com.android.keyguard.$$Lambda$KeyguardStatusView$Xo7rGDTjuOiD9nJpe80IUZ1ddFw */
 
@@ -236,16 +236,16 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     public void onDensityOrFontScaleChanged() {
         KeyguardClockSwitch keyguardClockSwitch = this.mClockView;
         if (keyguardClockSwitch != null) {
-            keyguardClockSwitch.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.widget_big_font_size));
+            keyguardClockSwitch.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_big_font_size));
         }
         if (this.mDateView != null) {
-            float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0011R$dimen.widget_label_font_size);
+            float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size);
             this.mDateViewTextSize = dimensionPixelSize;
             this.mDateView.setTextSize(0, dimensionPixelSize);
         }
         TextView textView = this.mOwnerInfo;
         if (textView != null) {
-            textView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0011R$dimen.widget_label_font_size));
+            textView.setTextSize(0, (float) getResources().getDimensionPixelSize(C0012R$dimen.widget_label_font_size));
         }
         loadBottomMargin();
     }
@@ -375,8 +375,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     }
 
     private void loadBottomMargin() {
-        this.mIconTopMargin = getResources().getDimensionPixelSize(C0011R$dimen.widget_vertical_padding);
-        this.mIconTopMarginWithHeader = getResources().getDimensionPixelSize(C0011R$dimen.widget_vertical_padding_with_header);
+        this.mIconTopMargin = getResources().getDimensionPixelSize(C0012R$dimen.widget_vertical_padding);
+        this.mIconTopMarginWithHeader = getResources().getDimensionPixelSize(C0012R$dimen.widget_vertical_padding_with_header);
     }
 
     /* access modifiers changed from: private */
@@ -391,17 +391,17 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
             Locale locale = Locale.getDefault();
             Resources resources = context.getResources();
             if (z) {
-                i = C0020R$string.abbrev_wday_month_day_no_year_alarm;
+                i = C0021R$string.abbrev_wday_month_day_no_year_alarm;
             } else {
-                i = C0020R$string.abbrev_wday_month_day_no_year;
+                i = C0021R$string.abbrev_wday_month_day_no_year;
             }
             dateViewSkel = resources.getString(i);
-            String string = resources.getString(C0020R$string.clock_12hr_format);
-            String string2 = resources.getString(C0020R$string.clock_24hr_format);
+            String string = resources.getString(C0021R$string.clock_12hr_format);
+            String string2 = resources.getString(C0021R$string.clock_24hr_format);
             String str = locale.toString() + string + string2;
             if (!str.equals(cacheKey)) {
                 clockView12 = DateFormat.getBestDateTimePattern(locale, string);
-                if (!context.getResources().getBoolean(C0009R$bool.config_showAmpm) && !string.contains("a")) {
+                if (!context.getResources().getBoolean(C0010R$bool.config_showAmpm) && !string.contains("a")) {
                     clockView12 = clockView12.replaceAll("a", CodeInjection.MD5).trim();
                 }
                 String bestDateTimePattern = DateFormat.getBestDateTimePattern(locale, string2);

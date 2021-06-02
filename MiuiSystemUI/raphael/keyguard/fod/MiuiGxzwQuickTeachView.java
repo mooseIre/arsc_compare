@@ -9,10 +9,11 @@ import android.graphics.RectF;
 import android.graphics.Shader;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 
-class MiuiGxzwQuickTeachView extends View {
-    private float mCicleRadius = getContext().getResources().getDimension(C0011R$dimen.gxzw_quick_open_circle_radius);
+/* access modifiers changed from: package-private */
+public class MiuiGxzwQuickTeachView extends View {
+    private float mCicleRadius = getContext().getResources().getDimension(C0012R$dimen.gxzw_quick_open_circle_radius);
     private float mItemRadius;
     private Paint mPaint;
     private ValueAnimator mValueAnimator;

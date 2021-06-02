@@ -6,7 +6,7 @@ import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import com.android.keyguard.fod.MiuiGxzwFrameAnimation;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0013R$drawable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -130,16 +130,16 @@ public class MiuiGxzwAnimManager {
         Log.i("MiuiGxzwAnimManager", "getFingerIconResource: mKeyguardAuthen = " + this.mKeyguardAuthen + ", mLightWallpaperGxzw = " + this.mLightWallpaperGxzw + ", mEnrolling = " + this.mEnrolling + ", mLightIcon = " + this.mLightIcon);
         if (this.mKeyguardAuthen) {
             if (z) {
-                return C0012R$drawable.finger_image_aod;
+                return C0013R$drawable.finger_image_aod;
             }
             if (isLightResource()) {
-                return C0012R$drawable.finger_image_light;
+                return C0013R$drawable.finger_image_light;
             }
-            return C0012R$drawable.finger_image_normal;
+            return C0013R$drawable.finger_image_normal;
         } else if (this.mEnrolling) {
-            return C0012R$drawable.finger_image_normal;
+            return C0013R$drawable.finger_image_normal;
         } else {
-            return this.mLightIcon ? C0012R$drawable.finger_image_normal : C0012R$drawable.finger_image_grey;
+            return this.mLightIcon ? C0013R$drawable.finger_image_normal : C0013R$drawable.finger_image_grey;
         }
     }
 

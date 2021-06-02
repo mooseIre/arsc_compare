@@ -7,8 +7,8 @@ import android.graphics.RectF;
 import android.graphics.Region;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 
 public class QrCodeItem extends IQuickOpenItem {
     private final ImageView mView;
@@ -22,7 +22,7 @@ public class QrCodeItem extends IQuickOpenItem {
         super(rectF, region, context);
         ImageView imageView = new ImageView(context);
         this.mView = imageView;
-        imageView.setImageResource(C0012R$drawable.gxzw_quick_open_qr_code);
+        imageView.setImageResource(C0013R$drawable.gxzw_quick_open_qr_code);
         this.mView.setScaleType(ImageView.ScaleType.FIT_XY);
     }
 
@@ -42,11 +42,11 @@ public class QrCodeItem extends IQuickOpenItem {
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getTitle() {
-        return this.mContext.getString(C0020R$string.gxzw_quick_open_qr_code);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_qr_code);
     }
 
     @Override // com.android.keyguard.fod.item.IQuickOpenItem
     public String getSubTitle() {
-        return this.mContext.getString(C0020R$string.gxzw_quick_open_qr_code_sub);
+        return this.mContext.getString(C0021R$string.gxzw_quick_open_qr_code_sub);
     }
 }

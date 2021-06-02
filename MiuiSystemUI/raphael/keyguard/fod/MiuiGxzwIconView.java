@@ -23,7 +23,7 @@ import com.android.keyguard.fod.MiuiGxzwSensor;
 import com.android.keyguard.fod.MiuiGxzwTransparentTimer;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -387,7 +387,7 @@ public class MiuiGxzwIconView extends GxzwNoRotateFrameLayout implements View.On
             motionEvent.setAction(2);
         } else if (action == 9) {
             motionEvent.setAction(0);
-            setTalkbackDescription(getContext().getString(C0020R$string.gxzw_area));
+            setTalkbackDescription(getContext().getString(C0021R$string.gxzw_area));
         } else if (action == 10) {
             motionEvent.setAction(1);
         }

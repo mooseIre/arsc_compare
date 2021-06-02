@@ -1,12 +1,13 @@
 package com.android.keyguard.faceunlock;
 
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.AnimationDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.biometrics.BiometricSourceType;
 import android.os.Handler;
 import android.os.PowerManager;
@@ -14,15 +15,19 @@ import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat$AnimationCallback;
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat;
 import com.android.keyguard.Ease$Sine;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0007R$animator;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -30,20 +35,26 @@ import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import com.miui.systemui.util.MiuiAnimationUtils;
 
-public class MiuiKeyguardFaceUnlockView extends LinearLayout {
-    private Handler mAnimationHandler;
-    private Context mContext;
+public class MiuiKeyguardFaceUnlockView extends ConstraintLayout {
+    private final Handler mAnimationHandler;
+    private final Context mContext;
     private final Runnable mDelayedHide;
+    private ImageView mFaceIV;
+    private AnimatorSet mFaceUnlockAnimation;
     private boolean mFaceUnlockAnimationRuning;
-    private View.OnClickListener mFaceUnlockClickListener;
-    private MiuiFaceUnlockManager mFaceUnlockManager;
+    private final View.OnClickListener mFaceUnlockClickListener;
+    private final MiuiFaceUnlockManager mFaceUnlockManager;
     private boolean mIsKeyguardFaceUnlockView;
-    private MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
+    private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
     private boolean mLightClock;
     private boolean mLockScreenMagazinePreViewVisibility;
     private final PowerManager mPowerManager;
+    private ImageView mRingIV;
     public StatusBarStateController.StateListener mStatusBarStateListener;
-    private KeyguardUpdateMonitor mUpdateMonitor;
+    private boolean mSuccessAniRunning;
+    private final Animatable2Compat$AnimationCallback mSuccessAnimationListener;
+    private AnimatedVectorDrawableCompat mSuccessfulAnimation;
+    private final KeyguardUpdateMonitor mUpdateMonitor;
     private boolean mWaitWakeupAimation;
     protected final WakefulnessLifecycle.Observer mWakefulnessObserver;
     private final IMiuiKeyguardWallpaperController.IWallpaperChangeCallback mWallpaperChangeCallback;
@@ -63,6 +74,7 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
         super(context, attributeSet);
         this.mAnimationHandler = new Handler();
         this.mLightClock = false;
+        this.mSuccessAniRunning = false;
         this.mWakefulnessObserver = new WakefulnessLifecycle.Observer() {
             /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass1 */
 
@@ -127,16 +139,6 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
             public void onBiometricError(int i, String str, BiometricSourceType biometricSourceType) {
                 MiuiKeyguardFaceUnlockView.this.stopShakeHeadAnimation();
                 MiuiKeyguardFaceUnlockView.this.updateFaceUnlockIconStatus();
-                if (biometricSourceType != BiometricSourceType.FACE) {
-                    return;
-                }
-                if (i == 9) {
-                    MiuiKeyguardFaceUnlockView.this.stopShakeHeadAnimation();
-                    MiuiKeyguardFaceUnlockView.this.updateFaceUnlockIconStatus();
-                } else if (i == 10002) {
-                    MiuiKeyguardFaceUnlockView.this.stopShakeHeadAnimation();
-                    MiuiKeyguardFaceUnlockView.this.updateFaceUnlockIconStatus();
-                }
             }
 
             @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
@@ -185,14 +187,29 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
             }
         };
         this.mDelayedHide = new Runnable() {
-            /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass4 */
+            /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass5 */
 
             public void run() {
                 MiuiKeyguardFaceUnlockView.this.mFaceUnlockAnimationRuning = false;
             }
         };
+        this.mSuccessAnimationListener = new Animatable2Compat$AnimationCallback() {
+            /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass6 */
+
+            @Override // androidx.vectordrawable.graphics.drawable.Animatable2Compat$AnimationCallback
+            public void onAnimationStart(Drawable drawable) {
+                super.onAnimationStart(drawable);
+                MiuiKeyguardFaceUnlockView.this.mSuccessAniRunning = true;
+            }
+
+            @Override // androidx.vectordrawable.graphics.drawable.Animatable2Compat$AnimationCallback
+            public void onAnimationEnd(Drawable drawable) {
+                super.onAnimationEnd(drawable);
+                MiuiKeyguardFaceUnlockView.this.mSuccessAniRunning = false;
+            }
+        };
         this.mStatusBarStateListener = new StatusBarStateController.StateListener() {
-            /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass5 */
+            /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass7 */
 
             @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
             public void onStateChanged(int i) {
@@ -203,6 +220,25 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
         this.mUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
         this.mFaceUnlockManager = (MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class);
         this.mPowerManager = (PowerManager) this.mContext.getSystemService("power");
+        initView();
+    }
+
+    private void initView() {
+        ImageView imageView = new ImageView(getContext());
+        this.mFaceIV = imageView;
+        imageView.setImageResource(C0013R$drawable.face_unlock_face);
+        int id = getId();
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(-2, -2);
+        layoutParams.startToStart = id;
+        layoutParams.endToEnd = id;
+        layoutParams.topToTop = id;
+        layoutParams.bottomToBottom = id;
+        addView(this.mFaceIV, layoutParams);
+        ImageView imageView2 = new ImageView(getContext());
+        this.mRingIV = imageView2;
+        imageView2.setAlpha(0.0f);
+        this.mRingIV.setImageResource(C0013R$drawable.face_unlock_ring);
+        addView(this.mRingIV, layoutParams);
     }
 
     /* access modifiers changed from: protected */
@@ -227,6 +263,10 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
         super.onDetachedFromWindow();
         this.mUpdateMonitor.removeCallback(this.mKeyguardUpdateMonitorCallback);
         this.mFaceUnlockManager.removeFaceUnlockView(this);
+        AnimatedVectorDrawableCompat animatedVectorDrawableCompat = this.mSuccessfulAnimation;
+        if (animatedVectorDrawableCompat != null) {
+            animatedVectorDrawableCompat.unregisterAnimationCallback(this.mSuccessAnimationListener);
+        }
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).removeObserver(this.mWakefulnessObserver);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
         ((StatusBarStateController) Dependency.get(StatusBarStateController.class)).removeCallback(this.mStatusBarStateListener);
@@ -237,9 +277,9 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
         Resources resources = this.mContext.getResources();
         if (DeviceConfig.IS_NOTCH) {
-            i = C0011R$dimen.miui_face_unlock_view_notch_top;
+            i = C0012R$dimen.miui_face_unlock_view_notch_top;
         } else {
-            i = C0011R$dimen.miui_face_unlock_view_top;
+            i = C0012R$dimen.miui_face_unlock_view_top;
         }
         marginLayoutParams.topMargin = resources.getDimensionPixelSize(i);
         setLayoutParams(marginLayoutParams);
@@ -258,18 +298,34 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void startFaceUnlockAnimation() {
-        if (!this.mFaceUnlockAnimationRuning) {
+        if (shouldFaceUnlockViewExecuteAnimation() && !this.mFaceUnlockAnimationRuning) {
+            boolean z = !this.mUpdateMonitor.isBouncerShowing() && this.mLightClock;
+            this.mFaceIV.setImageResource(z ? C0013R$drawable.face_unlock_face_black : C0013R$drawable.face_unlock_face);
+            this.mRingIV.setImageResource(z ? C0013R$drawable.face_unlock_ring_black : C0013R$drawable.face_unlock_ring);
             this.mFaceUnlockAnimationRuning = true;
-            AnimationDrawable animationDrawable = new AnimationDrawable();
-            for (int i = 1; i <= 30; i++) {
-                String str = (this.mUpdateMonitor.isBouncerShowing() || !this.mLightClock) ? "face_unlock_error" : "face_unlock_black_error";
-                animationDrawable.addFrame(getResources().getDrawable(this.mContext.getResources().getIdentifier(str + i, "drawable", this.mContext.getPackageName())), 16);
-            }
-            setBackground(animationDrawable);
-            animationDrawable.setOneShot(true);
-            animationDrawable.start();
+            AnimatorSet faceUnlockAnimation = getFaceUnlockAnimation();
+            this.mFaceUnlockAnimation = faceUnlockAnimation;
+            faceUnlockAnimation.addListener(new AnimatorListenerAdapter() {
+                /* class com.android.keyguard.faceunlock.MiuiKeyguardFaceUnlockView.AnonymousClass4 */
+
+                public void onAnimationStart(Animator animator) {
+                    super.onAnimationStart(animator);
+                    MiuiKeyguardFaceUnlockView.this.mRingIV.setAlpha(1.0f);
+                }
+            });
+            this.mFaceUnlockAnimation.start();
             this.mAnimationHandler.postDelayed(this.mDelayedHide, 1480);
         }
+    }
+
+    private AnimatorSet getFaceUnlockAnimation() {
+        AnimatorSet animatorSet = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), C0007R$animator.keyguard_face_unlock_error_face_rotate);
+        AnimatorSet animatorSet2 = (AnimatorSet) AnimatorInflater.loadAnimator(getContext(), C0007R$animator.keyguard_face_unlock_error_ring_rotate);
+        animatorSet.setTarget(this.mFaceIV);
+        animatorSet2.setTarget(this.mRingIV);
+        AnimatorSet animatorSet3 = new AnimatorSet();
+        animatorSet3.playTogether(animatorSet, animatorSet2);
+        return animatorSet3;
     }
 
     /* access modifiers changed from: private */
@@ -282,14 +338,26 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void startFaceUnlockSuccessAnimation() {
-        AnimationDrawable animationDrawable = new AnimationDrawable();
-        for (int i = 1; i <= 20; i++) {
-            String str = (this.mUpdateMonitor.isBouncerShowing() || !this.mLightClock) ? "face_unlock_success" : "face_unlock_black_success";
-            animationDrawable.addFrame(getResources().getDrawable(this.mContext.getResources().getIdentifier(str + i, "drawable", this.mContext.getPackageName())), 16);
+        int i;
+        AnimatorSet animatorSet = this.mFaceUnlockAnimation;
+        if (animatorSet != null && animatorSet.isRunning()) {
+            this.mFaceUnlockAnimation.cancel();
         }
-        animationDrawable.setOneShot(true);
-        setBackground(animationDrawable);
-        animationDrawable.start();
+        this.mRingIV.setAlpha(0.0f);
+        this.mRingIV.setRotationY(0.0f);
+        this.mRingIV.setTranslationX(0.0f);
+        this.mFaceIV.setRotationY(0.0f);
+        this.mFaceIV.setTranslationX(0.0f);
+        if (this.mUpdateMonitor.isBouncerShowing() || !this.mLightClock) {
+            i = C0013R$drawable.face_unlock_success_ani;
+        } else {
+            i = C0013R$drawable.face_unlock_black_success_ani;
+        }
+        AnimatedVectorDrawableCompat create = AnimatedVectorDrawableCompat.create(getContext(), i);
+        this.mSuccessfulAnimation = create;
+        create.registerAnimationCallback(this.mSuccessAnimationListener);
+        this.mFaceIV.setImageDrawable(this.mSuccessfulAnimation);
+        this.mSuccessfulAnimation.start();
     }
 
     public void setVisibility(int i) {
@@ -301,6 +369,8 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
     }
 
     public void updateFaceUnlockIconStatus() {
+        int i;
+        int i2;
         if (MiuiFaceUnlockUtils.isHardwareDetected(this.mContext)) {
             if (!shouldFaceUnlockViewExecuteAnimation() || !this.mFaceUnlockManager.shouldShowFaceUnlockRetryMessageInBouncer()) {
                 clearAnimation();
@@ -308,11 +378,28 @@ public class MiuiKeyguardFaceUnlockView extends LinearLayout {
             } else {
                 setVisibility(0);
             }
-            boolean isFaceUnlock = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock();
-            if (this.mUpdateMonitor.isBouncerShowing() || !this.mLightClock) {
-                setBackground(getResources().getDrawable(isFaceUnlock ? C0012R$drawable.face_unlock_success20 : C0012R$drawable.face_unlock_error1));
-            } else {
-                setBackground(getResources().getDrawable(isFaceUnlock ? C0012R$drawable.face_unlock_black_success20 : C0012R$drawable.face_unlock_black_error1));
+            if (!this.mSuccessAniRunning) {
+                this.mRingIV.setAlpha(0.0f);
+                boolean isFaceUnlock = ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).isFaceUnlock();
+                if (this.mUpdateMonitor.isBouncerShowing() || !this.mLightClock) {
+                    ImageView imageView = this.mFaceIV;
+                    Resources resources = getResources();
+                    if (isFaceUnlock) {
+                        i = C0013R$drawable.face_unlock_success;
+                    } else {
+                        i = C0013R$drawable.face_unlock_error;
+                    }
+                    imageView.setImageDrawable(resources.getDrawable(i));
+                    return;
+                }
+                ImageView imageView2 = this.mFaceIV;
+                Resources resources2 = getResources();
+                if (isFaceUnlock) {
+                    i2 = C0013R$drawable.face_unlock_black_success;
+                } else {
+                    i2 = C0013R$drawable.face_unlock_black_error;
+                }
+                imageView2.setImageDrawable(resources2.getDrawable(i2));
             }
         }
     }

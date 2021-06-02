@@ -51,8 +51,8 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PackageUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
@@ -387,15 +387,15 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
         display.getRealSize(point);
         this.mScreenWidth = (float) Math.min(point.x, point.y);
         this.mScreenHeight = (float) Math.max(point.x, point.y);
-        this.mUninvalidTopAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_top_area_height);
-        this.mUninvalidBottomAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_bottom_area_height);
-        this.mUninvalidStartEndAreaWidth = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_start_end_area_width);
+        this.mUninvalidTopAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_top_area_height);
+        this.mUninvalidBottomAreaHeight = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_bottom_area_height);
+        this.mUninvalidStartEndAreaWidth = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_start_end_area_width);
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             Rect fodPosition = MiuiGxzwManager.getFodPosition(this.mContext);
             int width = fodPosition.width() / 2;
             this.mGXZWIconCenterX = fodPosition.left + width;
             this.mGXZWIconCenterY = fodPosition.top + width;
-            this.mUninvalidGXZWAreaRadius = width + this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.lock_screen_magazine_click_uninvalid_gxzw_icon_area_margin);
+            this.mUninvalidGXZWAreaRadius = width + this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.lock_screen_magazine_click_uninvalid_gxzw_icon_area_margin);
         }
     }
 
@@ -404,7 +404,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
     public /* synthetic */ void lambda$new$0$LockScreenMagazineController(boolean z) {
         TextView switchSystemUserEntrance = ((KeyguardPanelViewInjector) Dependency.get(KeyguardPanelViewInjector.class)).getSwitchSystemUserEntrance();
         switchSystemUserEntrance.setTextColor(z ? -1308622848 : -1);
-        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0012R$drawable.logout_light : C0012R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
+        switchSystemUserEntrance.setCompoundDrawablesWithIntrinsicBounds(this.mContext.getResources().getDrawable(z ? C0013R$drawable.logout_light : C0013R$drawable.logout_dark), (Drawable) null, (Drawable) null, (Drawable) null);
         queryLockScreenMagazineWallpaperInfo();
     }
 

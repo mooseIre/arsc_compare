@@ -17,8 +17,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.view.MiuiChargeTurboView;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0021R$string;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeLogoView extends RelativeLayout {
@@ -26,7 +26,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
     private int mChargeSpeed;
     private int mChargeTipTranslateSmall;
     private MiuiChargeTurboView mChargeTurboView;
-    private Interpolator mCubicInterpolator;
+    private final Interpolator mCubicInterpolator;
     private boolean mIsFoldChargeVideo;
     private Point mScreenSize;
     private int mSpeedTipTextSizePx;
@@ -57,7 +57,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -65,11 +65,12 @@ public class MiuiChargeLogoView extends RelativeLayout {
         updateSizeForScreenSizeChange();
         AccessibilityDisableTextView accessibilityDisableTextView = new AccessibilityDisableTextView(context);
         this.mStateTip = accessibilityDisableTextView;
-        accessibilityDisableTextView.setTextSize(0, (float) this.mSpeedTipTextSizePx);
+        accessibilityDisableTextView.setAlpha(0.0f);
+        this.mStateTip.setTextSize(0, (float) this.mSpeedTipTextSizePx);
         this.mStateTip.setIncludeFontPadding(false);
         this.mStateTip.setTextColor(Color.parseColor("#8CFFFFFF"));
         this.mStateTip.setGravity(17);
-        this.mStateTip.setText(getResources().getString(C0020R$string.rapid_charge_mode_tip));
+        this.mStateTip.setText(getResources().getString(C0021R$string.rapid_charge_mode_tip));
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams.addRule(14);
         layoutParams.topMargin = this.mTipTopMargin;
@@ -119,6 +120,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
                 this.mTurboViewAlpha = 1;
             }
         } else {
+            this.mStateTip.setText(C0021R$string.rapid_charge_mode_tip);
             this.mStateTipTranslationY = this.mChargeTipTranslateSmall;
             this.mStateTipAlpha = 1;
         }
@@ -220,7 +222,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
     /* access modifiers changed from: protected */
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
-        this.mStateTip.setText(getResources().getString(C0020R$string.rapid_charge_mode_tip));
+        this.mStateTip.setText(getResources().getString(C0021R$string.rapid_charge_mode_tip));
         checkScreenSize();
     }
 
@@ -251,7 +253,7 @@ public class MiuiChargeLogoView extends RelativeLayout {
             min = f;
         }
         this.mSpeedTipTextSizePx = (int) (34.485f * min);
-        this.mTipTopMargin = (int) (90.0f * min);
+        this.mTipTopMargin = (int) (139.0f * min);
         this.mChargeTipTranslateSmall = (int) (min * 0.0f);
     }
 

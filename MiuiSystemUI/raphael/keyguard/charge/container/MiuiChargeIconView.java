@@ -16,8 +16,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeIconView extends RelativeLayout {
@@ -72,11 +72,11 @@ public class MiuiChargeIconView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
-        this.mSingleLightningDrawable = context.getDrawable(C0012R$drawable.charge_animation_rapid_charge_icon);
-        this.mDoubleLightningDrawable = context.getDrawable(C0012R$drawable.charge_animation_super_rapid_charge_icon);
-        this.mSpecialDoubleLightningDrawable = context.getDrawable(C0012R$drawable.charge_animation_strong_super_rapid_charge_icon);
-        this.mCarIconDrawable = context.getDrawable(C0012R$drawable.charge_animation_car_mode_icon);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
+        this.mSingleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_rapid_charge_icon);
+        this.mDoubleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_super_rapid_charge_icon);
+        this.mSpecialDoubleLightningDrawable = context.getDrawable(C0013R$drawable.charge_animation_strong_super_rapid_charge_icon);
+        this.mCarIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_car_mode_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);

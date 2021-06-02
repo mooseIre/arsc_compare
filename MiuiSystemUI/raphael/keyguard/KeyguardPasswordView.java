@@ -31,9 +31,9 @@ import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.widget.MiuiKeyBoardView;
 import com.android.settingslib.animation.AppearAnimationUtils;
 import com.android.settingslib.animation.DisappearAnimationUtils;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.miui.systemui.anim.PhysicBasedInterpolator;
 import miui.os.Build;
 import miui.view.animation.SineEaseInOutInterpolator;
@@ -64,7 +64,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         super(context, attributeSet);
         new AppearAnimationUtils(context);
         new DisappearAnimationUtils(context, 125, 0.6f, 0.45f, AnimationUtils.loadInterpolator(((LinearLayout) this).mContext, 17563663));
-        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0011R$dimen.miui_disappear_y_translation);
+        this.mDisappearYTranslation = getResources().getDimensionPixelSize(C0012R$dimen.miui_disappear_y_translation);
         this.mLinearOutSlowInInterpolator = AnimationUtils.loadInterpolator(context, 17563662);
         AnimationUtils.loadInterpolator(context, 17563663);
         this.mScreenHeight = context.getResources().getConfiguration().screenHeightDp;
@@ -83,7 +83,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     /* access modifiers changed from: protected */
     @Override // com.android.keyguard.KeyguardAbsKeyInputView
     public int getPasswordTextViewId() {
-        return C0014R$id.passwordEntry;
+        return C0015R$id.passwordEntry;
     }
 
     @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
@@ -98,7 +98,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
                 }
             }
         });
-        this.mPasswordEntry.setHint(C0020R$string.input_password_hint_text);
+        this.mPasswordEntry.setHint(C0021R$string.input_password_hint_text);
     }
 
     @Override // com.android.keyguard.KeyguardSecurityView, com.android.keyguard.KeyguardAbsKeyInputView
@@ -129,7 +129,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
         });
         this.mPasswordEntry.setSelected(true);
         this.mPasswordEntry.requestFocus();
-        MiuiKeyBoardView miuiKeyBoardView = (MiuiKeyBoardView) findViewById(C0014R$id.mixed_password_keyboard_view);
+        MiuiKeyBoardView miuiKeyBoardView = (MiuiKeyBoardView) findViewById(C0015R$id.mixed_password_keyboard_view);
         this.mKeyboardView = miuiKeyBoardView;
         miuiKeyBoardView.addKeyboardListener(new MiuiKeyBoardView.OnKeyboardActionListener() {
             /* class com.android.keyguard.KeyguardPasswordView.AnonymousClass3 */
@@ -137,7 +137,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             @Override // com.android.keyguard.widget.MiuiKeyBoardView.OnKeyboardActionListener
             public void onText(CharSequence charSequence) {
                 if (TextUtils.isEmpty(KeyguardPasswordView.this.mPasswordEntry.getText().toString())) {
-                    KeyguardPasswordView.this.mPasswordEntry.setHint(C0020R$string.input_password_hint_text);
+                    KeyguardPasswordView.this.mPasswordEntry.setHint(C0021R$string.input_password_hint_text);
                 }
                 KeyguardPasswordView.this.mCallback.userActivity();
                 KeyguardPasswordView.this.mPasswordEntry.append(charSequence);
@@ -158,10 +158,10 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
                 KeyguardPasswordView.this.verifyPasswordAndUnlock();
             }
         });
-        Space space = (Space) findViewById(C0014R$id.empty_space);
+        Space space = (Space) findViewById(C0015R$id.empty_space);
         this.mEmptySpace = space;
         space.setVisibility(8);
-        this.mKeyboardViewLayout = (ViewGroup) findViewById(C0014R$id.mixed_password_keyboard_view_layout);
+        this.mKeyboardViewLayout = (ViewGroup) findViewById(C0015R$id.mixed_password_keyboard_view_layout);
         setPositionForFod();
     }
 
@@ -175,7 +175,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     public void resetPasswordText(boolean z, boolean z2) {
         this.mPasswordEntry.setText(CodeInjection.MD5);
         if (z2) {
-            this.mPasswordEntry.setHint(C0020R$string.wrong_password);
+            this.mPasswordEntry.setHint(C0021R$string.wrong_password);
         }
     }
 
@@ -284,7 +284,7 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     /* access modifiers changed from: protected */
     @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationFontScaleChanged() {
-        float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0011R$dimen.miui_keyguard_view_eca_text_size);
+        float dimensionPixelSize = (float) getResources().getDimensionPixelSize(C0012R$dimen.miui_keyguard_view_eca_text_size);
         this.mEmergencyButton.setTextSize(0, dimensionPixelSize);
         this.mBackButton.setTextSize(0, dimensionPixelSize);
     }
@@ -293,16 +293,16 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationOrientationChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mPasswordEntry.getLayoutParams();
-        layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_password_margin_bottom);
+        layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_margin_bottom);
         this.mPasswordEntry.setLayoutParams(layoutParams);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
-        layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_bouncer_message_view_margin_top);
+        layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_bouncer_message_view_margin_top);
         this.mKeyguardBouncerMessageView.setLayoutParams(layoutParams2);
         LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mKeyboardViewLayout.getLayoutParams();
-        layoutParams3.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_layout_height);
+        layoutParams3.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_layout_height);
         this.mKeyboardViewLayout.setLayoutParams(layoutParams3);
         LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) this.mKeyboardView.getLayoutParams();
-        layoutParams4.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_key_board_view_height);
+        layoutParams4.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_key_board_view_height);
         this.mKeyboardView.setLayoutParams(layoutParams4);
         setPositionForFod();
     }
@@ -311,18 +311,18 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
     @Override // com.android.keyguard.MiuiKeyguardPasswordView
     public void handleConfigurationSmallWidthChanged() {
         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mPasswordEntry.getLayoutParams();
-        layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_password_margin_bottom);
-        layoutParams.width = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_password_entry_width);
-        layoutParams.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_password_entry_height);
+        layoutParams.bottomMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_margin_bottom);
+        layoutParams.width = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_entry_width);
+        layoutParams.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_entry_height);
         this.mPasswordEntry.setLayoutParams(layoutParams);
         LinearLayout.LayoutParams layoutParams2 = (LinearLayout.LayoutParams) this.mKeyguardBouncerMessageView.getLayoutParams();
-        layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_bouncer_message_view_margin_top);
+        layoutParams2.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_bouncer_message_view_margin_top);
         this.mKeyguardBouncerMessageView.setLayoutParams(layoutParams2);
         LinearLayout.LayoutParams layoutParams3 = (LinearLayout.LayoutParams) this.mKeyboardViewLayout.getLayoutParams();
-        layoutParams3.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_layout_height);
+        layoutParams3.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_layout_height);
         this.mKeyboardViewLayout.setLayoutParams(layoutParams3);
         LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) this.mKeyboardView.getLayoutParams();
-        layoutParams4.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_key_board_view_height);
+        layoutParams4.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_key_board_view_height);
         this.mKeyboardView.setLayoutParams(layoutParams4);
         setPositionForFod();
     }
@@ -333,18 +333,18 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             Point point = new Point();
             display.getRealSize(point);
             int max = Math.max(point.x, point.y);
-            int dimensionPixelOffset = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_key_board_view_height);
-            int dimensionPixelOffset2 = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_eca_fod_margin_top);
-            int dimensionPixelOffset3 = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_eca_margin_bottom);
-            int dimensionPixelOffset4 = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_layout_padingTop);
-            int dimensionPixelOffset5 = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_password_margin_bottom);
-            int dimensionPixelOffset6 = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_password_entry_fod_margin);
-            int dimensionPixelOffset7 = (((((getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_layout_height) + dimensionPixelOffset2) + dimensionPixelOffset3) - dimensionPixelOffset) - dimensionPixelOffset4) - dimensionPixelOffset2) - dimensionPixelOffset3;
-            int dimensionPixelOffset8 = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_em_btm_height);
+            int dimensionPixelOffset = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_key_board_view_height);
+            int dimensionPixelOffset2 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_eca_fod_margin_top);
+            int dimensionPixelOffset3 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_eca_margin_bottom);
+            int dimensionPixelOffset4 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_layout_padingTop);
+            int dimensionPixelOffset5 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_margin_bottom);
+            int dimensionPixelOffset6 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_password_entry_fod_margin);
+            int dimensionPixelOffset7 = (((((getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_layout_height) + dimensionPixelOffset2) + dimensionPixelOffset3) - dimensionPixelOffset) - dimensionPixelOffset4) - dimensionPixelOffset2) - dimensionPixelOffset3;
+            int dimensionPixelOffset8 = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_em_btm_height);
             int i = (max - (dimensionPixelOffset7 / 2)) - dimensionPixelOffset3;
             Rect fodPosition = MiuiGxzwManager.getFodPosition(getContext());
             int height = fodPosition.top + (fodPosition.height() / 2);
-            int dimensionPixelOffset9 = (((max - dimensionPixelOffset7) - dimensionPixelOffset3) - fodPosition.bottom) - getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_em_fod_top_margin);
+            int dimensionPixelOffset9 = (((max - dimensionPixelOffset7) - dimensionPixelOffset3) - fodPosition.bottom) - getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_em_fod_top_margin);
             LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mKeyboardViewLayout.getLayoutParams();
             if (MiuiKeyguardUtils.isGlobalAndFingerprintEnable()) {
                 layoutParams.bottomMargin = dimensionPixelOffset9;
@@ -364,20 +364,20 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
                 layoutParams3.topMargin = dimensionPixelOffset2 - i2;
                 layoutParams3.height = dimensionPixelOffset7;
                 this.mBackButton.setLayoutParams(layoutParams3);
-                View findViewById = findViewById(C0014R$id.passwordEntry);
+                View findViewById = findViewById(C0015R$id.passwordEntry);
                 LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) findViewById.getLayoutParams();
                 layoutParams4.bottomMargin = ((dimensionPixelOffset5 + dimensionPixelOffset6) - dimensionPixelOffset2) - dimensionPixelOffset3;
                 findViewById.setLayoutParams(layoutParams4);
                 return;
             }
-            View findViewById2 = findViewById(C0014R$id.keyguard_selector_fade_container);
+            View findViewById2 = findViewById(C0015R$id.keyguard_selector_fade_container);
             LinearLayout.LayoutParams layoutParams5 = (LinearLayout.LayoutParams) findViewById2.getLayoutParams();
             layoutParams5.topMargin = dimensionPixelOffset2;
             findViewById2.setLayoutParams(layoutParams5);
             LinearLayout.LayoutParams layoutParams6 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
             layoutParams6.height = dimensionPixelOffset8;
             this.mEmergencyButton.setLayoutParams(layoutParams6);
-            View findViewById3 = findViewById(C0014R$id.passwordEntry);
+            View findViewById3 = findViewById(C0015R$id.passwordEntry);
             LinearLayout.LayoutParams layoutParams7 = (LinearLayout.LayoutParams) findViewById3.getLayoutParams();
             layoutParams7.bottomMargin = ((dimensionPixelOffset5 + dimensionPixelOffset6) - dimensionPixelOffset2) - dimensionPixelOffset3;
             findViewById3.setLayoutParams(layoutParams7);
@@ -386,8 +386,8 @@ public class KeyguardPasswordView extends KeyguardAbsKeyInputView implements Key
             }
         } else if (Build.IS_INTERNATIONAL_BUILD) {
             LinearLayout.LayoutParams layoutParams8 = (LinearLayout.LayoutParams) this.mEmergencyButton.getLayoutParams();
-            layoutParams8.height = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_em_btm_height);
-            layoutParams8.topMargin = getResources().getDimensionPixelOffset(C0011R$dimen.miui_keyguard_password_view_em_btm_height) / 10;
+            layoutParams8.height = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_em_btm_height);
+            layoutParams8.topMargin = getResources().getDimensionPixelOffset(C0012R$dimen.miui_keyguard_password_view_em_btm_height) / 10;
             this.mEmergencyButton.setLayoutParams(layoutParams8);
         }
     }

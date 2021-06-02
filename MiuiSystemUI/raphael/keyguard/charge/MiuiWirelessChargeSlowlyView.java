@@ -14,13 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0019R$raw;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0020R$raw;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import java.io.IOException;
 import miuix.appcompat.app.AlertDialog;
 
@@ -130,7 +130,7 @@ public class MiuiWirelessChargeSlowlyView {
         if (button != null) {
             button.setTextColor(-16777216);
             ViewGroup.LayoutParams layoutParams = button.getLayoutParams();
-            layoutParams.height = (int) this.mContext.getResources().getDimension(C0011R$dimen.wireless_chagre_slowly_dialog_button_height);
+            layoutParams.height = (int) this.mContext.getResources().getDimension(C0012R$dimen.wireless_chagre_slowly_dialog_button_height);
             button.setLayoutParams(layoutParams);
         }
     }
@@ -146,12 +146,12 @@ public class MiuiWirelessChargeSlowlyView {
 
     private void initView() {
         AnonymousClass1 r2 = null;
-        View inflate = View.inflate(this.mContext, C0016R$layout.miui_keyguard_wireless_charge_slowly, null);
-        this.mImageView = (ImageView) inflate.findViewById(C0014R$id.wireless_charge_picture);
-        TextureView textureView = (TextureView) inflate.findViewById(C0014R$id.wireless_charge_slowly_video);
+        View inflate = View.inflate(this.mContext, C0017R$layout.miui_keyguard_wireless_charge_slowly, null);
+        this.mImageView = (ImageView) inflate.findViewById(C0015R$id.wireless_charge_picture);
+        TextureView textureView = (TextureView) inflate.findViewById(C0015R$id.wireless_charge_slowly_video);
         this.mTextureView = textureView;
         textureView.setSurfaceTextureListener(this.mSurfaceTextureListener);
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.wireless_charge_slowly_dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0022R$style.wireless_charge_slowly_dialog);
         builder.setCancelable(false);
         builder.setView(inflate);
         if (this.mTipOnlyOnce) {
@@ -165,17 +165,17 @@ public class MiuiWirelessChargeSlowlyView {
                 }
             };
         }
-        builder.setNegativeButton(C0020R$string.wireless_charge_dialog_cancel, r2);
+        builder.setNegativeButton(C0021R$string.wireless_charge_dialog_cancel, r2);
         AlertDialog create = builder.create();
         this.mDialog = create;
         create.getWindow().setType(2010);
         this.mDialog.getWindow().requestFeature(1);
-        this.mDialog.getWindow().setBackgroundDrawableResource(C0012R$drawable.dialog_bg_light);
+        this.mDialog.getWindow().setBackgroundDrawableResource(C0013R$drawable.dialog_bg_light);
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private Uri getVideoUri() {
-        return Uri.parse("android.resource://" + this.mContext.getPackageName() + "/" + C0019R$raw.wireless_charge_slowly_video);
+        return Uri.parse("android.resource://" + this.mContext.getPackageName() + "/" + C0020R$raw.wireless_charge_slowly_video);
     }
 }

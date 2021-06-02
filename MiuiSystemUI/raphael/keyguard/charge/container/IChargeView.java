@@ -15,10 +15,11 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiBatteryStatus;
-import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$bool;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
 public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUpdateListener {
+    protected int mChargeLevel;
     protected int mChargeSpeed;
     protected ViewGroup mContentContainer;
     protected Context mContext;
@@ -92,7 +93,7 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
 
     /* access modifiers changed from: protected */
     public void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         this.mContext = context;
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -121,6 +122,7 @@ public class IChargeView extends FrameLayout implements ValueAnimator.AnimatorUp
         MiuiBatteryStatus miuiBatteryStatus = ChargeUtils.sBatteryStatus;
         this.mWireState = miuiBatteryStatus.wireState;
         this.mChargeSpeed = miuiBatteryStatus.chargeSpeed;
+        this.mChargeLevel = miuiBatteryStatus.level;
         AnimatorSet animatorSet = this.mDismissAnimatorSet;
         if (animatorSet != null && this.mStartingDismissAnim) {
             animatorSet.cancel();

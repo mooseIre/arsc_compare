@@ -15,8 +15,8 @@ import android.view.animation.Interpolator;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
 
 public class MiuiChargeTurboView extends RelativeLayout {
@@ -64,14 +64,14 @@ public class MiuiChargeTurboView extends RelativeLayout {
     }
 
     private void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         setLayoutDirection(0);
-        this.mChargeIconDrawable = context.getDrawable(C0012R$drawable.charge_animation_charge_icon);
-        this.mTurboIconDrawable = context.getDrawable(C0012R$drawable.charge_animation_turbo_icon);
-        this.mTurboTailIconDrawable = context.getDrawable(C0012R$drawable.charge_animation_turbo_tail_icon);
-        this.mWiredStrongChargeIconDrawable = context.getDrawable(C0012R$drawable.charge_animation_wired_strong_charge_icon);
-        this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0012R$drawable.charge_animation_wireless_strong_charge_icon);
-        this.mWirelessStrongChargeIconSswDrawable = context.getDrawable(C0012R$drawable.charge_animation_wireless_strong_charge_ssw_icon);
+        this.mChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_charge_icon);
+        this.mTurboIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_icon);
+        this.mTurboTailIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_turbo_tail_icon);
+        this.mWiredStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wired_strong_charge_icon);
+        this.mWirelessStrongChargeIconDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_icon);
+        this.mWirelessStrongChargeIconSswDrawable = context.getDrawable(C0013R$drawable.charge_animation_wireless_strong_charge_ssw_icon);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);

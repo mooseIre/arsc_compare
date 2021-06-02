@@ -17,8 +17,8 @@ import com.android.internal.widget.LockPatternUtils;
 import com.android.internal.widget.LockscreenCredential;
 import com.android.keyguard.EmergencyButton;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.systemui.C0018R$plurals;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0019R$plurals;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
 import com.miui.systemui.util.HapticFeedBackImpl;
@@ -315,12 +315,12 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
     private String getPromptTitle() {
         int i = AnonymousClass4.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
         if (i == 1) {
-            return ((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_lockscreen_pin_hint_text);
+            return ((LinearLayout) this).mContext.getResources().getString(C0021R$string.input_lockscreen_pin_hint_text);
         }
         if (i != 2) {
-            return ((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_password_hint_text);
+            return ((LinearLayout) this).mContext.getResources().getString(C0021R$string.input_password_hint_text);
         }
-        return ((LinearLayout) this).mContext.getResources().getString(C0020R$string.input_lockscreen_password_hint_text);
+        return ((LinearLayout) this).mContext.getResources().getString(C0021R$string.input_lockscreen_password_hint_text);
     }
 
     /* access modifiers changed from: protected */
@@ -330,18 +330,18 @@ public abstract class KeyguardAbsKeyInputView extends MiuiKeyguardPasswordView i
             return CodeInjection.MD5;
         }
         if (i == 1) {
-            return resources.getString(C0020R$string.input_password_after_boot_msg);
+            return resources.getString(C0021R$string.input_password_after_boot_msg);
         }
         if (i == 2) {
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
-            return resources.getQuantityString(C0018R$plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout)));
+            return resources.getQuantityString(C0019R$plurals.input_password_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout)));
         } else if (i == 3) {
-            return resources.getString(C0020R$string.kg_prompt_reason_device_admin);
+            return resources.getString(C0021R$string.kg_prompt_reason_device_admin);
         } else {
             if (i != 4) {
-                return resources.getString(C0020R$string.kg_prompt_reason_timeout_password);
+                return resources.getString(C0021R$string.kg_prompt_reason_timeout_password);
             }
-            return resources.getString(C0020R$string.kg_prompt_reason_user_request);
+            return resources.getString(C0021R$string.kg_prompt_reason_user_request);
         }
     }
 

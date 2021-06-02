@@ -22,11 +22,11 @@ import com.android.keyguard.CarrierText;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.magazine.LockScreenMagazineClockView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.policy.RegionController;
 import java.util.Locale;
@@ -132,14 +132,14 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
         this.mUserId = KeyguardUpdateMonitor.getCurrentUser();
         this.mLockPatternUtils = new MiuiLockPatternUtils(this.mContext);
         this.mSelectedClockPosition = Settings.System.getIntForUser(this.mContext.getContentResolver(), "selected_keyguard_clock_position", MiuiKeyguardUtils.getDefaultKeyguardClockPosition(this.mContext), this.mUserId);
-        View inflate = this.mLayoutInflater.inflate(C0016R$layout.keyguard_base_clock_layout, (ViewGroup) this, false);
-        this.mClockContainer = (FrameLayout) inflate.findViewById(C0014R$id.clock_container1);
-        this.mClockExtraInfo = (LinearLayout) inflate.findViewById(C0014R$id.miui_keyguard_clock_extra_info);
-        this.mSimCardInfo = (CarrierText) inflate.findViewById(C0014R$id.unlock_screen_sim_info);
-        this.mLeftHoleDevice = this.mResources.getBoolean(C0009R$bool.left_hole_device);
-        this.mShowCarrierUnderLeftHoleKeyguard = this.mResources.getBoolean(C0009R$bool.show_carrier_under_left_hole_keyguard);
-        this.mOwnerInfo = (TextView) inflate.findViewById(C0014R$id.unlock_screen_owner_info);
-        this.mMagazineClockView = (LockScreenMagazineClockView) inflate.findViewById(C0014R$id.unlock_screen_lock_screen_magazine_info);
+        View inflate = this.mLayoutInflater.inflate(C0017R$layout.keyguard_base_clock_layout, (ViewGroup) this, false);
+        this.mClockContainer = (FrameLayout) inflate.findViewById(C0015R$id.clock_container1);
+        this.mClockExtraInfo = (LinearLayout) inflate.findViewById(C0015R$id.miui_keyguard_clock_extra_info);
+        this.mSimCardInfo = (CarrierText) inflate.findViewById(C0015R$id.unlock_screen_sim_info);
+        this.mLeftHoleDevice = this.mResources.getBoolean(C0010R$bool.left_hole_device);
+        this.mShowCarrierUnderLeftHoleKeyguard = this.mResources.getBoolean(C0010R$bool.show_carrier_under_left_hole_keyguard);
+        this.mOwnerInfo = (TextView) inflate.findViewById(C0015R$id.unlock_screen_owner_info);
+        this.mMagazineClockView = (LockScreenMagazineClockView) inflate.findViewById(C0015R$id.unlock_screen_lock_screen_magazine_info);
         addView(inflate);
         this.mCalendar = new Calendar();
         updateOwnerInfo();
@@ -297,11 +297,11 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
 
     private void setInfoDarkMode() {
         int i;
-        this.mSimCardInfo.setTextColor(this.mDarkStyle ? getContext().getResources().getColor(C0010R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1);
+        this.mSimCardInfo.setTextColor(this.mDarkStyle ? getContext().getResources().getColor(C0011R$color.miui_common_unlock_screen_common_time_dark_text_color) : -1);
         if (this.mDarkStyle) {
-            i = getContext().getResources().getColor(C0010R$color.miui_owner_info_dark_text_color);
+            i = getContext().getResources().getColor(C0011R$color.miui_owner_info_dark_text_color);
         } else {
-            i = getContext().getResources().getColor(C0010R$color.miui_owner_info_light_text_color);
+            i = getContext().getResources().getColor(C0011R$color.miui_owner_info_light_text_color);
         }
         this.mOwnerInfo.setTextColor(i);
         this.mMagazineClockView.setTextColor(i);
@@ -355,7 +355,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
     /* access modifiers changed from: protected */
     @Override // com.android.keyguard.clock.MiuiKeyguardBaseClock
     public void updateViewsTextSize() {
-        float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.miui_clock_date_text_size);
+        float dimensionPixelSize = (float) this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.miui_clock_date_text_size);
         this.mOwnerInfo.setTextSize(0, dimensionPixelSize);
         this.mSimCardInfo.setTextSize(0, dimensionPixelSize);
         this.mMagazineClockView.setTextSize();
@@ -381,7 +381,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             if (z) {
                 i3 = 0;
             } else {
-                i3 = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.miui_left_top_clock_margin_left);
+                i3 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.miui_left_top_clock_margin_left);
             }
             layoutParams.setMarginStart(i3);
             this.mClockExtraInfo.setLayoutParams(layoutParams);
@@ -393,7 +393,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             if (z) {
                 i2 = 0;
             } else {
-                i2 = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.left_top_clock_date_margin_extra);
+                i2 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.left_top_clock_date_margin_extra);
             }
             layoutParams2.setMarginStart(i2);
             this.mOwnerInfo.setLayoutParams(layoutParams2);
@@ -406,7 +406,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             if (z) {
                 i = 0;
             } else {
-                i = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.left_top_clock_date_margin_extra);
+                i = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.left_top_clock_date_margin_extra);
             }
             layoutParams3.setMarginStart(i);
             this.mSimCardInfo.setLayoutParams(layoutParams3);
@@ -417,7 +417,7 @@ public class MiuiKeyguardSingleClock extends MiuiKeyguardBaseClock implements Re
             LinearLayout.LayoutParams layoutParams4 = (LinearLayout.LayoutParams) lockScreenMagazineClockView.getLayoutParams();
             layoutParams4.gravity = z ? 17 : 8388611;
             if (!z) {
-                i5 = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.left_top_clock_date_margin_extra);
+                i5 = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.left_top_clock_date_margin_extra);
             }
             layoutParams4.setMarginStart(i5);
             this.mMagazineClockView.setLayoutParams(layoutParams4);

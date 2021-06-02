@@ -25,10 +25,10 @@ import android.widget.Toast;
 import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.fod.MiuiGxzwManager;
-import com.android.systemui.C0007R$array;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.CommonUtil;
@@ -107,7 +107,7 @@ public class MiuiKeyguardUtils {
         if (context == null) {
             return false;
         }
-        return context.getResources().getBoolean(C0009R$bool.keyguard_show_vertical_time);
+        return context.getResources().getBoolean(C0010R$bool.keyguard_show_vertical_time);
     }
 
     public static boolean isSupportVerticalClock(int i, Context context) {
@@ -115,7 +115,7 @@ public class MiuiKeyguardUtils {
     }
 
     public static int getDefaultKeyguardClockPosition(Context context) {
-        return context.getResources().getInteger(C0015R$integer.default_keyguard_clock_position);
+        return context.getResources().getInteger(C0016R$integer.default_keyguard_clock_position);
     }
 
     public static boolean isPad() {
@@ -170,7 +170,7 @@ public class MiuiKeyguardUtils {
 
     public static boolean isRegionSupportMiHome(Context context) {
         if (sRegionSupportMiHomeList.isEmpty()) {
-            sRegionSupportMiHomeList = Arrays.asList(context.getResources().getStringArray(C0007R$array.region_support_mihome));
+            sRegionSupportMiHomeList = Arrays.asList(context.getResources().getStringArray(C0008R$array.region_support_mihome));
         }
         return sRegionSupportMiHomeList.contains(miui.os.Build.getRegion());
     }
@@ -189,7 +189,7 @@ public class MiuiKeyguardUtils {
 
     public static boolean keepScreenOnWhenLargeAreaTouch(Context context) {
         if (sKeepScreenOnWhenLargeAreaTouchList.isEmpty()) {
-            sKeepScreenOnWhenLargeAreaTouchList = Arrays.asList(context.getResources().getStringArray(C0007R$array.keep_screen_on_when_large_area_touch));
+            sKeepScreenOnWhenLargeAreaTouchList = Arrays.asList(context.getResources().getStringArray(C0008R$array.keep_screen_on_when_large_area_touch));
         }
         return isTopActivityPkgInList(context, sKeepScreenOnWhenLargeAreaTouchList);
     }
@@ -322,6 +322,6 @@ public class MiuiKeyguardUtils {
     }
 
     public static void handleBleUnlockSucceed(Context context) {
-        Toast.makeText(context, C0020R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
+        Toast.makeText(context, C0021R$string.miui_keyguard_ble_unlock_succeed_msg, 0).show();
     }
 }

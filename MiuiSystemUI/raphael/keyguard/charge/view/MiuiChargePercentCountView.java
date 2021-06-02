@@ -19,7 +19,7 @@ import android.widget.LinearLayout;
 import androidx.constraintlayout.widget.R$styleable;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.MiuiChargeManager;
-import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import java.util.Locale;
 import miui.maml.animation.interpolater.CubicEaseOutInterpolater;
@@ -65,7 +65,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
     }
 
     private void init(Context context) {
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         setLayoutDirection(0);
         this.mWindowManager = (WindowManager) context.getSystemService("window");
         this.mScreenSize = new Point();
@@ -211,15 +211,17 @@ public class MiuiChargePercentCountView extends LinearLayout {
             f2 = 0.75f;
             f = -100.0f;
         } else {
-            int i2 = this.mChargeSpeed;
-            if (i2 == 0) {
-                setScaleX(1.0f);
-                setScaleY(1.0f);
-                setTranslationY((float) this.mChargeNumberTranslateInit);
-                f = (float) this.mChargeNumberTranslateInit;
-                f2 = 1.0f;
+            if (ChargeUtils.supportParticleChargeAnimation()) {
+                i = this.mChargeNumberTranslateSmall;
             } else {
-                if (i2 == 1) {
+                int i2 = this.mChargeSpeed;
+                if (i2 == 0) {
+                    setScaleX(1.0f);
+                    setScaleY(1.0f);
+                    setTranslationY((float) this.mChargeNumberTranslateInit);
+                    f = (float) this.mChargeNumberTranslateInit;
+                    f2 = 1.0f;
+                } else if (i2 == 1) {
                     setScaleX(1.0f);
                     setScaleY(1.0f);
                     setTranslationY((float) this.mChargeNumberTranslateInit);
@@ -227,8 +229,8 @@ public class MiuiChargePercentCountView extends LinearLayout {
                 } else {
                     i = this.mChargeNumberTranslateSmall;
                 }
-                f = (float) i;
             }
+            f = (float) i;
         }
         ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat(LinearLayout.SCALE_X, getScaleX(), f2), PropertyValuesHolder.ofFloat(LinearLayout.SCALE_Y, getScaleY(), f2), PropertyValuesHolder.ofFloat(LinearLayout.TRANSLATION_Y, getTranslationY(), f)).setDuration(500L);
         AnimatorSet animatorSet2 = new AnimatorSet();
@@ -242,7 +244,7 @@ public class MiuiChargePercentCountView extends LinearLayout {
         Log.d("MiuiChargePercentCountView", "startWaveTextAnimation: chargeSpeed= " + this.mChargeSpeed);
         ObjectAnimator duration = ObjectAnimator.ofPropertyValuesHolder(this, PropertyValuesHolder.ofFloat(LinearLayout.ALPHA, getAlpha(), 1.0f)).setDuration(800L);
         duration.setInterpolator(this.mQuartOutInterpolator);
-        duration.setStartDelay((long) ChargeUtils.getWaveTextDelayTime());
+        duration.setStartDelay((long) ChargeUtils.getTextDelayTime());
         duration.addListener(new Animator.AnimatorListener() {
             /* class com.android.keyguard.charge.view.MiuiChargePercentCountView.AnonymousClass3 */
 
@@ -307,5 +309,8 @@ public class MiuiChargePercentCountView extends LinearLayout {
         this.mPercentTextSizePx = (int) (64.0f * min);
         this.mChargeNumberTranslateSmall = (int) (-70.0f * min);
         this.mChargeNumberTranslateInit = (int) (min * -10.0f);
+        if (ChargeUtils.supportParticleChargeAnimation()) {
+            setPadding(0, -this.mChargeNumberTranslateSmall, 0, 0);
+        }
     }
 }

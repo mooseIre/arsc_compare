@@ -20,6 +20,7 @@ import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.WindowManagerGlobal;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -30,7 +31,7 @@ import com.android.keyguard.charge.OrientationEventListenerWrapper;
 import com.android.keyguard.charge.view.IChargeAnimationListener;
 import com.android.keyguard.charge.view.MiuiChargePercentCountView;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
-import com.android.systemui.C0009R$bool;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.Dependency;
 import miui.maml.animation.interpolater.QuartEaseOutInterpolater;
 
@@ -99,7 +100,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void init(Context context) {
         this.mWindowManager = (WindowManager) context.getSystemService("window");
-        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0009R$bool.config_folding_charge_video);
+        this.mIsFoldChargeVideo = context.getResources().getBoolean(C0010R$bool.config_folding_charge_video);
         this.mScreenSize = new Point();
         updateSizeForScreenSizeChange();
         RelativeLayout relativeLayout = new RelativeLayout(context);
@@ -121,11 +122,13 @@ public class MiuiChargeAnimationView extends FrameLayout {
         RelativeLayout.LayoutParams layoutParams4 = new RelativeLayout.LayoutParams(-2, -2);
         layoutParams4.addRule(13);
         this.itemContainer.addView(this.mChargeLogoView, layoutParams4);
-        this.mChargeIconView = new MiuiChargeIconView(context);
-        RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(-2, -2);
-        layoutParams5.addRule(13);
-        this.mChargeIconView.setPadding(0, this.mIconPaddingTop, 0, 0);
-        this.itemContainer.addView(this.mChargeIconView, layoutParams5);
+        if (!ChargeUtils.supportParticleChargeAnimation()) {
+            this.mChargeIconView = new MiuiChargeIconView(context);
+            RelativeLayout.LayoutParams layoutParams5 = new RelativeLayout.LayoutParams(-2, -2);
+            layoutParams5.addRule(13);
+            this.mChargeIconView.setPadding(0, this.mIconPaddingTop, 0, 0);
+            this.itemContainer.addView(this.mChargeIconView, layoutParams5);
+        }
         this.mParentContainer.addView(this.itemContainer, layoutParams2);
         addView(this.mParentContainer, getContainerLayoutParams());
         if (ChargeUtils.supportWaveChargeAnimation()) {
@@ -199,7 +202,13 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     /* access modifiers changed from: protected */
     public void updateLayoutParamForScreenSizeChange() {
-        this.mChargeIconView.setPadding(0, this.mIconPaddingTop, 0, 0);
+        MiuiChargeIconView miuiChargeIconView = this.mChargeIconView;
+        if (miuiChargeIconView != null) {
+            miuiChargeIconView.setPadding(0, this.mIconPaddingTop, 0, 0);
+        }
+        if (!this.mIsFoldChargeVideo) {
+            this.itemContainer.setTranslationY(this.mChargeContainerView.getVideoTranslationY());
+        }
     }
 
     public void setChargeAnimationListener(IChargeAnimationListener iChargeAnimationListener) {
@@ -234,13 +243,13 @@ public class MiuiChargeAnimationView extends FrameLayout {
         }
         ((KeyguardUpdateMonitorInjector) Dependency.get(KeyguardUpdateMonitorInjector.class)).handleChargeAnimationShowingChanged(true, false);
         setComponentTransparent(false);
-        int i = ChargeUtils.sBatteryStatus.wireState;
-        this.mWireState = i;
-        if (i != 10 || this.mSupportWaveChargeAnimation) {
+        this.itemContainer.setAlpha(0.0f);
+        this.mWireState = ChargeUtils.sBatteryStatus.wireState;
+        if (shouldEnableOrientation()) {
+            enableOrientation();
+        } else {
             this.itemContainer.setRotation(0.0f);
             this.mChargeContainerView.setRotation(0.0f);
-        } else {
-            enableOrientation();
         }
         ValueAnimator ofInt = ValueAnimator.ofInt(0, 1);
         ofInt.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -251,7 +260,7 @@ public class MiuiChargeAnimationView extends FrameLayout {
             }
         });
         ValueAnimator ofInt2 = ValueAnimator.ofInt(0, 1);
-        ofInt2.setStartDelay((long) ChargeUtils.getWaveTextDelayTime());
+        ofInt2.setStartDelay((long) ChargeUtils.getTextDelayTime());
         ofInt2.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass3 */
 
@@ -262,7 +271,11 @@ public class MiuiChargeAnimationView extends FrameLayout {
         AnimatorSet animatorSet2 = new AnimatorSet();
         this.mShowingAnimatorSet = animatorSet2;
         animatorSet2.setDuration(800L);
-        this.mShowingAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
+        if (ChargeUtils.supportParticleChargeAnimation()) {
+            this.mShowingAnimatorSet.setInterpolator(new AccelerateDecelerateInterpolator());
+        } else {
+            this.mShowingAnimatorSet.setInterpolator(this.mQuartOutInterpolator);
+        }
         this.mShowingAnimatorSet.addListener(new AnimatorListenerAdapter() {
             /* class com.android.keyguard.charge.container.MiuiChargeAnimationView.AnonymousClass4 */
 
@@ -276,7 +289,10 @@ public class MiuiChargeAnimationView extends FrameLayout {
         this.mChargeContainerView.startContainerAnimation(z);
         this.mChargePercentView.startPercentViewAnimation(z2);
         this.mChargeLogoView.startLogoAnimation(z2);
-        this.mChargeIconView.startLightningAnimation();
+        MiuiChargeIconView miuiChargeIconView = this.mChargeIconView;
+        if (miuiChargeIconView != null) {
+            miuiChargeIconView.startLightningAnimation();
+        }
     }
 
     public void switchChargeItemViewAnimation(boolean z, int i) {
@@ -284,7 +300,10 @@ public class MiuiChargeAnimationView extends FrameLayout {
         this.mChargeContainerView.switchContainerViewAnimation(i);
         this.mChargePercentView.switchPercentViewAnimation(i);
         this.mChargeLogoView.switchLogoAnimation(i);
-        this.mChargeIconView.switchLightningAnimation(i);
+        MiuiChargeIconView miuiChargeIconView = this.mChargeIconView;
+        if (miuiChargeIconView != null) {
+            miuiChargeIconView.switchLightningAnimation(i);
+        }
     }
 
     public void startDismiss(final String str) {
@@ -455,10 +474,14 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
     private void enableOrientation() {
         OrientationEventListenerWrapper orientationEventListenerWrapper = this.mOrientationListener;
-        if (orientationEventListenerWrapper != null && orientationEventListenerWrapper.canDetectOrientation() && !ChargeUtils.isOrientationLocked(getContext())) {
+        if (orientationEventListenerWrapper != null && orientationEventListenerWrapper.canDetectOrientation()) {
             Slog.i("MiuiChargeAnimationView", "enable orientation sensor");
             this.mOrientationListener.enable();
         }
+    }
+
+    private boolean shouldEnableOrientation() {
+        return this.mWireState == 10 && !this.mSupportWaveChargeAnimation && !ChargeUtils.isOrientationLocked(getContext()) && !ChargeUtils.supportParticleChargeAnimation();
     }
 
     private void disableOrientation() {

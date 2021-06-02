@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.container.IChargeView;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0019R$raw;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0020R$raw;
 
 public class VideoChargeView extends IChargeView {
     private VideoView mVideoView;
@@ -108,15 +108,15 @@ public class VideoChargeView extends IChargeView {
     private void startWiredAnimation() {
         int i = this.mChargeSpeed;
         if (i == 0) {
-            this.mVideoView.setDefaultImage(C0012R$drawable.wired_charge_video_bg_img);
+            this.mVideoView.setDefaultImage(C0013R$drawable.wired_charge_video_bg_img);
             this.mVideoView.setChargeUri(getChargeUri());
             this.mVideoView.addChargeView();
         } else if (i == 3) {
-            this.mVideoView.setDefaultImage(C0012R$drawable.wired_strong_super_charge_video_bg_img);
+            this.mVideoView.setDefaultImage(C0013R$drawable.wired_strong_super_charge_video_bg_img);
             this.mVideoView.setStrongRapidChargeUri(getChargeUri());
             this.mVideoView.addStrongRapidChargeView();
         } else {
-            this.mVideoView.setDefaultImage(C0012R$drawable.wired_super_charge_video_bg_img);
+            this.mVideoView.setDefaultImage(C0013R$drawable.wired_super_charge_video_bg_img);
             this.mVideoView.setRapidChargeUri(getChargeUri());
             this.mVideoView.addRapidChargeView();
         }
@@ -131,48 +131,48 @@ public class VideoChargeView extends IChargeView {
         if (i == 11) {
             int i2 = this.mChargeSpeed;
             if (i2 == 3) {
-                return C0012R$drawable.wired_strong_super_charge_video_bg_img;
+                return C0013R$drawable.wired_strong_super_charge_video_bg_img;
             }
             if (i2 == 0) {
-                return C0012R$drawable.wired_charge_video_bg_img;
+                return C0013R$drawable.wired_charge_video_bg_img;
             }
-            return C0012R$drawable.wired_super_charge_video_bg_img;
+            return C0013R$drawable.wired_super_charge_video_bg_img;
         } else if (i != 10) {
             return 0;
         } else {
             int i3 = this.mChargeSpeed;
             if (i3 == 3) {
-                return C0012R$drawable.wireless_strong_super_charge_video_bg_img;
+                return C0013R$drawable.wireless_strong_super_charge_video_bg_img;
             }
             if (i3 == 2) {
-                return C0012R$drawable.wireless_super_charge_video_bg_img;
+                return C0013R$drawable.wireless_super_charge_video_bg_img;
             }
-            return C0012R$drawable.wireless_charge_video_bg_img;
+            return C0013R$drawable.wireless_charge_video_bg_img;
         }
     }
 
     private String getChargeUri() {
-        String str = getResourcePath() + C0019R$raw.wired_quick_charge_video;
+        String str = getResourcePath() + C0020R$raw.wired_quick_charge_video;
         int i = this.mWireState;
         if (i == 11) {
             int i2 = this.mChargeSpeed;
             if (i2 == 3) {
-                return getResourcePath() + C0019R$raw.wired_strong;
+                return getResourcePath() + C0020R$raw.wired_strong;
             } else if (i2 == 0) {
-                return getResourcePath() + C0019R$raw.wired_charge_video;
+                return getResourcePath() + C0020R$raw.wired_charge_video;
             } else {
-                return getResourcePath() + C0019R$raw.wired_quick_charge_video;
+                return getResourcePath() + C0020R$raw.wired_quick_charge_video;
             }
         } else if (i != 10) {
             return str;
         } else {
             int i3 = this.mChargeSpeed;
             if (i3 == 3) {
-                return getResourcePath() + C0019R$raw.wireless_strong;
+                return getResourcePath() + C0020R$raw.wireless_strong;
             } else if (i3 == 2) {
-                return getResourcePath() + C0019R$raw.wireless_quick_charge_video;
+                return getResourcePath() + C0020R$raw.wireless_quick_charge_video;
             } else {
-                return getResourcePath() + C0019R$raw.wireless_charge_video;
+                return getResourcePath() + C0020R$raw.wireless_charge_video;
             }
         }
     }
@@ -180,15 +180,15 @@ public class VideoChargeView extends IChargeView {
     private void startWirelessAnimation() {
         int i = this.mChargeSpeed;
         if (i == 3) {
-            this.mVideoView.setDefaultImage(C0012R$drawable.wireless_strong_super_charge_video_bg_img);
+            this.mVideoView.setDefaultImage(C0013R$drawable.wireless_strong_super_charge_video_bg_img);
             this.mVideoView.setStrongRapidChargeUri(getChargeUri());
             this.mVideoView.addStrongRapidChargeView();
         } else if (i == 2) {
-            this.mVideoView.setDefaultImage(C0012R$drawable.wireless_super_charge_video_bg_img);
+            this.mVideoView.setDefaultImage(C0013R$drawable.wireless_super_charge_video_bg_img);
             this.mVideoView.setRapidChargeUri(getChargeUri());
             this.mVideoView.addRapidChargeView();
         } else {
-            this.mVideoView.setDefaultImage(C0012R$drawable.wireless_charge_video_bg_img);
+            this.mVideoView.setDefaultImage(C0013R$drawable.wireless_charge_video_bg_img);
             this.mVideoView.setChargeUri(getChargeUri());
             this.mVideoView.addChargeView();
         }

@@ -15,7 +15,7 @@ import android.util.Log;
 import android.util.Slog;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
@@ -234,11 +234,11 @@ public class MiuiBleUnlockHelper {
     private void setBLEStatusBarIcon(int i) {
         int i2;
         if (i == 0) {
-            i2 = C0012R$drawable.ble_unlock_statusbar_icon_unverified;
+            i2 = C0013R$drawable.ble_unlock_statusbar_icon_unverified;
         } else if (i == 2) {
-            i2 = C0012R$drawable.ble_unlock_statusbar_icon_verified_near;
+            i2 = C0013R$drawable.ble_unlock_statusbar_icon_verified_near;
         } else {
-            i2 = C0012R$drawable.ble_unlock_statusbar_icon_verified_far;
+            i2 = C0013R$drawable.ble_unlock_statusbar_icon_verified_far;
         }
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).setIcon("ble_unlock_mode", i2, null);
         ((StatusBarIconController) Dependency.get(StatusBarIconController.class)).setIconVisibility("ble_unlock_mode", true);

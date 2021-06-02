@@ -24,7 +24,7 @@ import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.LockScreenMagazinePreView;
 import com.android.keyguard.magazine.utils.LockScreenMagazineUtils;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.FalsingManager;
 import com.android.systemui.plugins.IntentButtonProvider;
@@ -178,7 +178,7 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper implements Config
         this.mFalsingManager = miuiNotificationPanelViewController.getFalsingManager();
         this.mFaceUnlockView = miuiNotificationPanelViewController.getKeyguardFaceUnlockView();
         this.mKeyguardUpdateMonitor = (KeyguardUpdateMonitor) Dependency.get(KeyguardUpdateMonitor.class);
-        this.mKeyguardHorizontalGestureSlop = context.getResources().getDimensionPixelSize(C0011R$dimen.keyguard_horizontal_gesture_slop);
+        this.mKeyguardHorizontalGestureSlop = context.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_horizontal_gesture_slop);
         KeyguardBottomAreaView view = ((KeyguardBottomAreaInjector) Dependency.get(KeyguardBottomAreaInjector.class)).getView();
         this.mBottomAreaView = view;
         updateBottomIcons(view);
@@ -198,7 +198,7 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper implements Config
         ViewConfiguration viewConfiguration = ViewConfiguration.get(this.mContext);
         this.mCenterScreenTouchSlopTranslation = (float) (viewConfiguration.getScaledPagingTouchSlop() * 2);
         this.mMinFlingVelocity = viewConfiguration.getScaledMinimumFlingVelocity();
-        this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.keyguard_min_swipe_amount);
+        this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_min_swipe_amount);
         this.mLeftView.setTranslationX(-getScreenWidth());
     }
 

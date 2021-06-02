@@ -16,10 +16,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0007R$array;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.NavigationBarController;
 import com.android.systemui.statusbar.phone.NavigationBarView;
@@ -99,7 +99,7 @@ public class KeyguardDisplayManager {
         DisplayManager displayManager = (DisplayManager) this.mContext.getSystemService(DisplayManager.class);
         this.mDisplayService = displayManager;
         displayManager.registerDisplayListener(this.mDisplayListener, null);
-        this.mDeviceHidePresentationIds = (List) Arrays.stream(this.mContext.getResources().getIntArray(C0007R$array.miui_config_hideKeyguardPresentationDisplayIds)).boxed().collect(Collectors.toList());
+        this.mDeviceHidePresentationIds = (List) Arrays.stream(this.mContext.getResources().getIntArray(C0008R$array.miui_config_hideKeyguardPresentationDisplayIds)).boxed().collect(Collectors.toList());
     }
 
     private boolean isKeyguardShowable(Display display) {
@@ -273,7 +273,7 @@ public class KeyguardDisplayManager {
         }
 
         KeyguardPresentation(Context context, Display display, LayoutInflater layoutInflater) {
-            super(context, display, C0021R$style.Theme_SystemUI_KeyguardPresentation);
+            super(context, display, C0022R$style.Theme_SystemUI_KeyguardPresentation);
             this.mInjectableLayoutInflater = layoutInflater;
             getWindow().setType(2009);
             setCancelable(false);
@@ -294,12 +294,12 @@ public class KeyguardDisplayManager {
             this.mUsableHeight = (i2 * 80) / 100;
             this.mMarginLeft = (i * 20) / 200;
             this.mMarginTop = (i2 * 20) / 200;
-            setContentView(this.mInjectableLayoutInflater.inflate(C0016R$layout.keyguard_presentation, (ViewGroup) null));
+            setContentView(this.mInjectableLayoutInflater.inflate(C0017R$layout.keyguard_presentation, (ViewGroup) null));
             getWindow().getDecorView().setSystemUiVisibility(1792);
             getWindow().getAttributes().setFitInsetsTypes(0);
             getWindow().setNavigationBarContrastEnforced(false);
             getWindow().setNavigationBarColor(0);
-            View findViewById = findViewById(C0014R$id.clock);
+            View findViewById = findViewById(C0015R$id.clock);
             this.mClock = findViewById;
             findViewById.post(this.mMoveTextRunnable);
         }
