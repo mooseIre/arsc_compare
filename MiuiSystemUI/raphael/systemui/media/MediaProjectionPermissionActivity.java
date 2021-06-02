@@ -19,10 +19,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.util.Utils;
 import miuix.appcompat.app.AlertDialog;
 
@@ -61,8 +61,8 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                 TextPaint textPaint = new TextPaint();
                 textPaint.setTextSize(42.0f);
                 if (Utils.isHeadlessRemoteDisplayProvider(packageManager, this.mPackageName)) {
-                    str = getString(C0020R$string.media_projection_dialog_service_text);
-                    str2 = getString(C0020R$string.media_projection_dialog_service_title);
+                    str = getString(C0021R$string.media_projection_dialog_service_text);
+                    str2 = getString(C0021R$string.media_projection_dialog_service_title);
                 } else {
                     String charSequence = applicationInfoAsUser.loadLabel(packageManager).toString();
                     int length = charSequence.length();
@@ -84,21 +84,21 @@ public class MediaProjectionPermissionActivity extends Activity implements Dialo
                         charSequence = this.mPackageName;
                     }
                     String unicodeWrap = BidiFormatter.getInstance().unicodeWrap(TextUtils.ellipsize(charSequence, textPaint, 500.0f, TextUtils.TruncateAt.END).toString());
-                    String string = getString(C0020R$string.media_projection_dialog_text, new Object[]{unicodeWrap});
+                    String string = getString(C0021R$string.media_projection_dialog_text, new Object[]{unicodeWrap});
                     SpannableString spannableString = new SpannableString(string);
                     int indexOf = string.indexOf(unicodeWrap);
                     if (indexOf >= 0) {
                         spannableString.setSpan(new StyleSpan(1), indexOf, unicodeWrap.length() + indexOf, 0);
                     }
-                    str2 = getString(C0020R$string.media_projection_dialog_title, new Object[]{unicodeWrap});
+                    str2 = getString(C0021R$string.media_projection_dialog_title, new Object[]{unicodeWrap});
                     str = spannableString;
                 }
-                View inflate = View.inflate(this, C0016R$layout.media_projection_dialog_title, null);
-                ((TextView) inflate.findViewById(C0014R$id.dialog_title)).setText(str2);
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, C0021R$style.AlertDialog_Theme_DayNight);
+                View inflate = View.inflate(this, C0017R$layout.media_projection_dialog_title, null);
+                ((TextView) inflate.findViewById(C0015R$id.dialog_title)).setText(str2);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, C0022R$style.AlertDialog_Theme_DayNight);
                 builder.setCustomTitle(inflate);
                 builder.setMessage(str);
-                builder.setPositiveButton(C0020R$string.media_projection_action_text, this);
+                builder.setPositiveButton(C0021R$string.media_projection_action_text, this);
                 builder.setNegativeButton(17039360, this);
                 builder.setOnCancelListener(this);
                 AlertDialog create = builder.create();

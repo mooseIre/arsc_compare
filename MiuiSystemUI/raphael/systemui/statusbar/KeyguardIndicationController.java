@@ -39,10 +39,10 @@ import com.android.keyguard.injector.KeyguardIndicationInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
@@ -172,7 +172,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         this.mContext = context;
         Resources resources = context.getResources();
         this.mResources = resources;
-        this.mUpArrowIndication = resources.getString(C0020R$string.default_lockscreen_unlock_hint_text);
+        this.mUpArrowIndication = resources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
         this.mSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
         this.mBroadcastDispatcher = broadcastDispatcher;
         this.mDevicePolicyManager = devicePolicyManager;
@@ -195,14 +195,14 @@ public class KeyguardIndicationController implements StatusBarStateController.St
 
     public void setIndicationArea(ViewGroup viewGroup) {
         this.mIndicationArea = viewGroup;
-        MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = (MiuiKeyguardIndicationTextView) viewGroup.findViewById(C0014R$id.keyguard_indication_text);
+        MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView = (MiuiKeyguardIndicationTextView) viewGroup.findViewById(C0015R$id.keyguard_indication_text);
         this.mTextView = miuiKeyguardIndicationTextView;
         miuiKeyguardIndicationTextView.setTextColor(getTextColor());
-        this.mUpArrow = (ImageView) viewGroup.getRootView().findViewById(C0014R$id.keyguard_up_arrow);
+        this.mUpArrow = (ImageView) viewGroup.getRootView().findViewById(C0015R$id.keyguard_up_arrow);
         ((KeyguardIndicationInjector) Dependency.get(KeyguardIndicationInjector.class)).setDoubleClickListener(this.mTextView);
         MiuiKeyguardIndicationTextView miuiKeyguardIndicationTextView2 = this.mTextView;
         this.mInitialTextColorState = miuiKeyguardIndicationTextView2 != null ? miuiKeyguardIndicationTextView2.getTextColors() : ColorStateList.valueOf(-1);
-        KeyguardIndicationTextView keyguardIndicationTextView = (KeyguardIndicationTextView) viewGroup.findViewById(C0014R$id.keyguard_indication_enterprise_disclosure);
+        KeyguardIndicationTextView keyguardIndicationTextView = (KeyguardIndicationTextView) viewGroup.findViewById(C0015R$id.keyguard_indication_enterprise_disclosure);
         this.mDisclosure = keyguardIndicationTextView;
         this.mDisclosureMaxAlpha = keyguardIndicationTextView.getAlpha();
         updateIndication(false);
@@ -247,9 +247,9 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         })).booleanValue()) {
             CharSequence organizationOwnedDeviceOrganizationName = getOrganizationOwnedDeviceOrganizationName();
             if (organizationOwnedDeviceOrganizationName != null) {
-                this.mDisclosure.switchIndication(this.mContext.getResources().getString(C0020R$string.do_disclosure_with_name, organizationOwnedDeviceOrganizationName));
+                this.mDisclosure.switchIndication(this.mContext.getResources().getString(C0021R$string.do_disclosure_with_name, organizationOwnedDeviceOrganizationName));
             } else {
-                this.mDisclosure.switchIndication(C0020R$string.do_disclosure_generic);
+                this.mDisclosure.switchIndication(C0021R$string.do_disclosure_generic);
             }
             this.mDisclosure.setVisibility(0);
             return;
@@ -305,7 +305,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public String getTrustGrantedIndication() {
-        return this.mContext.getString(C0020R$string.keyguard_indication_trust_unlocked);
+        return this.mContext.getString(C0021R$string.keyguard_indication_trust_unlocked);
     }
 
     /* access modifiers changed from: package-private */
@@ -388,9 +388,9 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                         ImageView imageView = this.mUpArrow;
                         if (imageView != null) {
                             if (this.mDarkStyle) {
-                                i = C0012R$drawable.miui_default_lock_screen_up_arrow_dark;
+                                i = C0013R$drawable.miui_default_lock_screen_up_arrow_dark;
                             } else {
-                                i = C0012R$drawable.miui_default_lock_screen_up_arrow;
+                                i = C0013R$drawable.miui_default_lock_screen_up_arrow;
                             }
                             imageView.setImageResource(i);
                         }
@@ -401,7 +401,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     this.mTextView.switchIndication(str);
                 }
             } else if (str != null) {
-                this.mTextView.switchIndication(this.mContext.getResources().getString(C0020R$string.keyguard_indication_trust_unlocked_plugged_in, trustGrantedIndication, str));
+                this.mTextView.switchIndication(this.mContext.getResources().getString(C0021R$string.keyguard_indication_trust_unlocked_plugged_in, trustGrantedIndication, str));
             } else {
                 this.mTextView.switchIndication(trustGrantedIndication);
             }
@@ -413,7 +413,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     public String computePowerIndication() {
         int i;
         if (this.mPowerCharged) {
-            return this.mContext.getResources().getString(C0020R$string.keyguard_charged);
+            return this.mContext.getResources().getString(C0021R$string.keyguard_charged);
         }
         boolean z = this.mChargingTimeRemaining > 0;
         if (this.mPowerPluggedInWired) {
@@ -421,24 +421,24 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             if (i2 != 0) {
                 if (i2 != 2) {
                     if (z) {
-                        i = C0020R$string.keyguard_indication_charging_time;
+                        i = C0021R$string.keyguard_indication_charging_time;
                     } else {
-                        i = C0020R$string.keyguard_plugged_in;
+                        i = C0021R$string.keyguard_plugged_in;
                     }
                 } else if (z) {
-                    i = C0020R$string.keyguard_indication_charging_time_fast;
+                    i = C0021R$string.keyguard_indication_charging_time_fast;
                 } else {
-                    i = C0020R$string.keyguard_plugged_in_charging_fast;
+                    i = C0021R$string.keyguard_plugged_in_charging_fast;
                 }
             } else if (z) {
-                i = C0020R$string.keyguard_indication_charging_time_slowly;
+                i = C0021R$string.keyguard_indication_charging_time_slowly;
             } else {
-                i = C0020R$string.keyguard_plugged_in_charging_slowly;
+                i = C0021R$string.keyguard_plugged_in_charging_slowly;
             }
         } else if (z) {
-            i = C0020R$string.keyguard_indication_charging_time_wireless;
+            i = C0021R$string.keyguard_indication_charging_time_wireless;
         } else {
-            i = C0020R$string.keyguard_plugged_in_wireless;
+            i = C0021R$string.keyguard_plugged_in_wireless;
         }
         String format = NumberFormat.getPercentInstance().format((double) (((float) this.mBatteryLevel) / 100.0f));
         if (z) {
@@ -465,7 +465,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: public */
     private void showSwipeUpToUnlock() {
         if (!this.mDozing && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
-            this.mStatusBarKeyguardViewManager.showBouncerMessage(this.mContext.getString(C0020R$string.face_unlock_fail_retry), this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+            this.mStatusBarKeyguardViewManager.showBouncerMessage(this.mContext.getString(C0021R$string.face_unlock_fail_retry), this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
         }
     }
 
@@ -539,7 +539,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                 if (keyguardIndicationController2.mWasPluggedIn) {
                     keyguardIndicationController2.clearPowerIndication();
                     KeyguardIndicationController keyguardIndicationController3 = KeyguardIndicationController.this;
-                    keyguardIndicationController3.mUpArrowIndication = keyguardIndicationController3.mResources.getString(C0020R$string.default_lockscreen_unlock_hint_text);
+                    keyguardIndicationController3.mUpArrowIndication = keyguardIndicationController3.mResources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
                     if (KeyguardIndicationController.this.mTextView != null) {
                         KeyguardIndicationController.this.mTextView.clearAnimation();
                         KeyguardIndicationController.this.updateIndication(false);
@@ -635,7 +635,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                 }
                 if (KeyguardIndicationController.this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
                     if (!TextUtils.isEmpty(str) && !MiuiKeyguardUtils.isGxzwSensor()) {
-                        KeyguardIndicationController.this.mStatusBarKeyguardViewManager.showBouncerMessage(str, KeyguardIndicationController.this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+                        KeyguardIndicationController.this.mStatusBarKeyguardViewManager.showBouncerMessage(str, KeyguardIndicationController.this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
                     }
                 } else if (KeyguardIndicationController.this.mKeyguardUpdateMonitor.isDeviceInteractive() || (KeyguardIndicationController.this.mDozing && KeyguardIndicationController.this.mKeyguardUpdateMonitor.isScreenOn())) {
                     KeyguardIndicationController.this.showTransientIndication(str, false, false);
@@ -782,14 +782,14 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         int i;
         if (this.mDarkStyle) {
             if (this.mPowerPluggedIn) {
-                i = C0010R$color.miui_common_unlock_screen_charge_dark_text_color;
+                i = C0011R$color.miui_common_unlock_screen_charge_dark_text_color;
             } else {
-                i = C0010R$color.miui_common_unlock_screen_common_dark_text_color;
+                i = C0011R$color.miui_common_unlock_screen_common_dark_text_color;
             }
         } else if (this.mPowerPluggedIn) {
-            i = C0010R$color.miui_charge_lock_screen_unlock_hint_text_color;
+            i = C0011R$color.miui_charge_lock_screen_unlock_hint_text_color;
         } else {
-            i = C0010R$color.miui_default_lock_screen_unlock_hint_text_color;
+            i = C0011R$color.miui_default_lock_screen_unlock_hint_text_color;
         }
         return this.mResources.getColor(i);
     }
@@ -808,12 +808,12 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
         if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
             if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
-                str = this.mResources.getString(C0020R$string.face_unlock_fail);
+                str = this.mResources.getString(C0021R$string.face_unlock_fail);
             } else if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).shouldShowFaceUnlockRetryMessageInBouncer()) {
-                str = this.mResources.getString(C0020R$string.face_unlock_fail_retry_global);
+                str = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
             }
         }
-        this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
     }
 
     /* access modifiers changed from: private */
@@ -829,35 +829,35 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState2 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED;
         String str2 = CodeInjection.MD5;
         if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == miuiKeyguardFingerprintUtils$FingerprintIdentificationState2) {
-            str2 = this.mResources.getString(C0020R$string.fingerprint_try_again_text);
-            str = this.mResources.getString(C0020R$string.fingerprint_try_again_msg);
+            str2 = this.mResources.getString(C0021R$string.fingerprint_try_again_text);
+            str = this.mResources.getString(C0021R$string.fingerprint_try_again_msg);
         } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
             str2 = getTitle();
-            str = this.mResources.getString(C0020R$string.fingerprint_not_identified_msg);
+            str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
         } else {
             if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
                 if (this.mFingerprintAuthUserId != KeyguardUpdateMonitor.getCurrentUser()) {
                     if (MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
-                        string = this.mResources.getString(C0020R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
+                        string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
                     } else if (PhoneUtils.isInCall(this.mContext)) {
-                        string = this.mResources.getString(C0020R$string.input_password_after_boot_msg_can_not_switch_when_calling);
+                        string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
                     } else if (MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
-                        string = this.mResources.getString(C0020R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
+                        string = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
                     } else if (!this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot(this.mFingerprintAuthUserId)) {
-                        str2 = this.mResources.getString(C0020R$string.fingerprint_enter_second_psw_title);
-                        str = this.mResources.getString(C0020R$string.fingerprint_enter_second_psw_msg);
+                        str2 = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_title);
+                        str = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_msg);
                     }
                     str2 = string;
                     str = str2;
                 }
             } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
                 str2 = getTitle();
-                str = this.mResources.getString(C0020R$string.fingerprint_again_identified_msg);
+                str = this.mResources.getString(C0021R$string.fingerprint_again_identified_msg);
             }
             str = str2;
         }
         getTextColor();
-        this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(str2, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
         MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 = this.mFpiState;
         MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState4 = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
         if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState3 == miuiKeyguardFingerprintUtils$FingerprintIdentificationState4 && this.mLastFpiState != miuiKeyguardFingerprintUtils$FingerprintIdentificationState4 && this.mStatusBarKeyguardViewManager.isBouncerShowing()) {
@@ -868,7 +868,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         }
         if (this.mFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED && this.mKeyguardUpdateMonitor.isDeviceInteractive() && !MiuiKeyguardUtils.isGxzwSensor()) {
             this.mHandler.removeMessages(1);
-            showTransientIndication(this.mContext.getString(C0020R$string.fingerprint_try_again_text), false, false);
+            showTransientIndication(this.mContext.getString(C0021R$string.fingerprint_try_again_text), false, false);
             hideTransientIndicationDelayed(5000);
         }
         this.mMessageToShowOnScreenOn = str2;
@@ -881,18 +881,18 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         String str;
         String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
         if (this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout()) {
-            str = this.mResources.getString(C0020R$string.fingerprint_not_identified_msg);
+            str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
         } else {
             if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
                 if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
-                    str = this.mResources.getString(C0020R$string.face_unlock_fail);
+                    str = this.mResources.getString(C0021R$string.face_unlock_fail);
                 } else if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).shouldShowFaceUnlockRetryMessageInBouncer()) {
-                    str = this.mResources.getString(C0020R$string.face_unlock_fail_retry_global);
+                    str = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
                 }
             }
             str = CodeInjection.MD5;
         }
-        this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0010R$color.secure_keyguard_bouncer_message_content_text_color));
+        this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
     }
 
     /* access modifiers changed from: package-private */
@@ -965,23 +965,23 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     private String getTitleWithFingerprint() {
         int i = AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
         if (i == 1) {
-            return this.mContext.getResources().getString(C0020R$string.face_unlock_pattern_and_fingerprint);
+            return this.mContext.getResources().getString(C0021R$string.face_unlock_pattern_and_fingerprint);
         }
         if (i != 2) {
-            return i != 3 ? this.mContext.getResources().getString(C0020R$string.face_unlock_passwork_and_fingerprint) : this.mContext.getResources().getString(C0020R$string.face_unlock_password_and_fingerprint);
+            return i != 3 ? this.mContext.getResources().getString(C0021R$string.face_unlock_passwork_and_fingerprint) : this.mContext.getResources().getString(C0021R$string.face_unlock_password_and_fingerprint);
         }
-        return this.mContext.getResources().getString(C0020R$string.face_unlock_pin_and_fingerprint);
+        return this.mContext.getResources().getString(C0021R$string.face_unlock_pin_and_fingerprint);
     }
 
     private String getTitle() {
         int i = AnonymousClass6.$SwitchMap$com$android$keyguard$KeyguardSecurityModel$SecurityMode[this.mSecurityModel.getSecurityMode(KeyguardUpdateMonitor.getCurrentUser()).ordinal()];
         if (i == 1) {
-            return this.mContext.getResources().getString(C0020R$string.input_lockscreen_pattern_hint_text);
+            return this.mContext.getResources().getString(C0021R$string.input_lockscreen_pattern_hint_text);
         }
         if (i != 2) {
-            return i != 3 ? this.mContext.getResources().getString(C0020R$string.input_password_hint_text) : this.mContext.getResources().getString(C0020R$string.input_lockscreen_password_hint_text);
+            return i != 3 ? this.mContext.getResources().getString(C0021R$string.input_password_hint_text) : this.mContext.getResources().getString(C0021R$string.input_lockscreen_password_hint_text);
         }
-        return this.mContext.getResources().getString(C0020R$string.input_lockscreen_pin_hint_text);
+        return this.mContext.getResources().getString(C0021R$string.input_lockscreen_pin_hint_text);
     }
 
     public void onStartedWakingUp() {
@@ -997,13 +997,13 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         if (!this.mVisible) {
             this.mChargeUIEntering = false;
             this.mUpArrowEntering = false;
-            this.mUpArrowIndication = this.mResources.getString(C0020R$string.default_lockscreen_unlock_hint_text);
+            this.mUpArrowIndication = this.mResources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
             updateIndication(false);
         } else if (this.mPowerPluggedIn) {
             this.mUpArrowIndication = null;
             updatePowerIndication(false);
         } else {
-            this.mUpArrowIndication = this.mResources.getString(C0020R$string.default_lockscreen_unlock_hint_text);
+            this.mUpArrowIndication = this.mResources.getString(C0021R$string.default_lockscreen_unlock_hint_text);
             this.mUpArrowEntering = true;
             this.mHandler.postDelayed(new Runnable() {
                 /* class com.android.systemui.statusbar.$$Lambda$KeyguardIndicationController$6cD5tA_RZkYFgVYHndgGL5szGwc */

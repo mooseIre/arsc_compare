@@ -11,7 +11,7 @@ import android.util.Property;
 import android.view.View;
 import androidx.collection.ArrayMap;
 import com.android.internal.statusbar.StatusBarIcon;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.AlphaOptimizedFrameLayout;
 import com.android.systemui.statusbar.StatusBarIconView;
 import com.android.systemui.statusbar.notification.stack.AnimationFilter;
@@ -167,8 +167,8 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
     }
 
     private void initDimens() {
-        this.mDotPadding = getResources().getDimensionPixelSize(C0011R$dimen.overflow_icon_dot_padding);
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.overflow_dot_radius);
+        this.mDotPadding = getResources().getDimensionPixelSize(C0012R$dimen.overflow_icon_dot_padding);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.overflow_dot_radius);
         this.mStaticDotRadius = dimensionPixelSize;
         this.mStaticDotDiameter = dimensionPixelSize * 2;
     }

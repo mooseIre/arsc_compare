@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.HardwareBgDrawable;
 import com.android.systemui.MultiListLayout;
 import com.android.systemui.util.leak.RotationUtils;
@@ -27,11 +27,11 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
     private void setBackgrounds() {
         HardwareBgDrawable backgroundDrawable;
         ViewGroup listView = getListView();
-        HardwareBgDrawable backgroundDrawable2 = getBackgroundDrawable(getResources().getColor(C0010R$color.global_actions_grid_background, null));
+        HardwareBgDrawable backgroundDrawable2 = getBackgroundDrawable(getResources().getColor(C0011R$color.global_actions_grid_background, null));
         if (backgroundDrawable2 != null) {
             listView.setBackground(backgroundDrawable2);
         }
-        if (getSeparatedView() != null && (backgroundDrawable = getBackgroundDrawable(getResources().getColor(C0010R$color.global_actions_separated_background, null))) != null) {
+        if (getSeparatedView() != null && (backgroundDrawable = getBackgroundDrawable(getResources().getColor(C0011R$color.global_actions_separated_background, null))) != null) {
             getSeparatedView().setBackground(backgroundDrawable);
         }
     }
@@ -109,7 +109,7 @@ public abstract class GlobalActionsLayout extends MultiListLayout {
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.MultiListLayout
     public ViewGroup getSeparatedView() {
-        return (ViewGroup) findViewById(C0014R$id.separated_button);
+        return (ViewGroup) findViewById(C0015R$id.separated_button);
     }
 
     /* access modifiers changed from: protected */

@@ -9,8 +9,8 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C0007R$array;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.policy.OldModeController;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
@@ -118,9 +118,9 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         ArrayList arrayList3 = new ArrayList();
         this.mControlIndependentTiles = arrayList3;
         if (Constants.IS_INTERNATIONAL) {
-            arrayList3.addAll(Arrays.asList(this.mContext.getResources().getStringArray(C0007R$array.qs_control_independent_tiles_global)));
+            arrayList3.addAll(Arrays.asList(this.mContext.getResources().getStringArray(C0008R$array.qs_control_independent_tiles_global)));
         } else {
-            arrayList3.addAll(Arrays.asList(this.mContext.getResources().getStringArray(C0007R$array.qs_control_independent_tiles)));
+            arrayList3.addAll(Arrays.asList(this.mContext.getResources().getStringArray(C0008R$array.qs_control_independent_tiles)));
         }
         initQSTiles(this.mContext);
         this.mPluginManager.addPluginListener(this.mMiuiTilePluginListener, MiuiQSTilePlugin.class, true);
@@ -142,8 +142,8 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void initQSTiles(Context context) {
-        this.mQsDefaultTiles = context.getString(C0020R$string.miui_quick_settings_tiles_default);
-        this.mQsStockTiles = context.getString(C0020R$string.miui_quick_settings_tiles_stock);
+        this.mQsDefaultTiles = context.getString(C0021R$string.miui_quick_settings_tiles_default);
+        this.mQsStockTiles = context.getString(C0021R$string.miui_quick_settings_tiles_stock);
         filterIndependentTiles();
     }
 
@@ -225,12 +225,12 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         Resources resources = context.getResources();
         if (this.mSuperSaveModeOn) {
             if (this.mUseControlCenter) {
-                str = resources.getString(C0020R$string.control_quick_settings_tiles_super_save);
+                str = resources.getString(C0021R$string.control_quick_settings_tiles_super_save);
             } else {
-                str = resources.getString(C0020R$string.quick_settings_tiles_super_save);
+                str = resources.getString(C0021R$string.quick_settings_tiles_super_save);
             }
         } else if (this.mOldModeOn && !this.mUseControlCenter) {
-            str = resources.getString(C0020R$string.quick_settings_tiles_old_mode);
+            str = resources.getString(C0021R$string.quick_settings_tiles_old_mode);
         } else if (this.mMiuiQSTilsplugin == null || TextUtils.isEmpty(this.mPluginDefaultTiles)) {
             str = this.mQsDefaultTiles;
         } else {
@@ -250,7 +250,7 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
         if (this.mTileListKey.equals("sysui_qs_old_mode_tiles") && !this.mUseControlCenter) {
             String value = this.mTunerService.getValue("sysui_qs_old_mode_tiles");
             if (TextUtils.isEmpty(value)) {
-                return this.mContext.getResources().getString(C0020R$string.quick_settings_tiles_old_mode);
+                return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_old_mode);
             }
             return value;
         } else if (!this.mTileListKey.equals("sysui_qs_tiles")) {
@@ -265,9 +265,9 @@ public class MiuiQSTileHostInjector implements SuperSaveModeController.SuperSave
 
     private String getUltraBatteryList() {
         if (!this.mUseControlCenter) {
-            return this.mContext.getResources().getString(C0020R$string.quick_settings_tiles_super_save);
+            return this.mContext.getResources().getString(C0021R$string.quick_settings_tiles_super_save);
         }
-        String string = this.mContext.getResources().getString(C0020R$string.control_quick_settings_tiles_super_save);
+        String string = this.mContext.getResources().getString(C0021R$string.control_quick_settings_tiles_super_save);
         return !this.mContext.getPackageManager().hasSystemFeature("android.hardware.nfc") ? string.replace("nfc", "mute") : string;
     }
 

@@ -10,10 +10,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -38,7 +38,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     private TextView mWifiStandardView;
 
     public static StatusBarWifiView fromContext(Context context, String str) {
-        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C0016R$layout.miui_status_bar_wifi_group, (ViewGroup) null);
+        StatusBarWifiView statusBarWifiView = (StatusBarWifiView) LayoutInflater.from(context).inflate(C0017R$layout.miui_status_bar_wifi_group, (ViewGroup) null);
         statusBarWifiView.setSlot(str);
         statusBarWifiView.init();
         statusBarWifiView.setVisibleState(0);
@@ -148,10 +148,10 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     private void init() {
-        this.mWifiGroup = (FrameLayout) findViewById(C0014R$id.wifi_group);
-        this.mWifiIcon = (ImageView) findViewById(C0014R$id.wifi_signal);
-        this.mWifiActivityView = (ImageView) findViewById(C0014R$id.wifi_activity);
-        this.mWifiStandardView = (TextView) findViewById(C0014R$id.wifi_standard);
+        this.mWifiGroup = (FrameLayout) findViewById(C0015R$id.wifi_group);
+        this.mWifiIcon = (ImageView) findViewById(C0015R$id.wifi_signal);
+        this.mWifiActivityView = (ImageView) findViewById(C0015R$id.wifi_activity);
+        this.mWifiStandardView = (TextView) findViewById(C0015R$id.wifi_standard);
         initDotView();
     }
 
@@ -159,7 +159,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         StatusBarIconView statusBarIconView = new StatusBarIconView(((FrameLayout) this).mContext, this.mSlot, null);
         this.mDotView = statusBarIconView;
         statusBarIconView.setVisibleState(1);
-        int dimensionPixelSize = ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_icon_size);
+        int dimensionPixelSize = ((FrameLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
         FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(dimensionPixelSize, dimensionPixelSize);
         layoutParams.gravity = 8388627;
         addView(this.mDotView, layoutParams);
@@ -187,7 +187,7 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     private void updateState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
         setContentDescription(wifiIconState.contentDescription);
         if (wifiIconState.wifiNoNetwork) {
-            this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0012R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
+            this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
         } else {
             int i = wifiIconState.resId;
             if (i > 0) {

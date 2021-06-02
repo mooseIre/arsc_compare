@@ -18,8 +18,8 @@ import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.telecom.TelecomManager;
 import android.util.Log;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.screenrecord.RecordingController;
@@ -94,40 +94,40 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.media.extra.AUDIO_MIC_PLUG_STATE");
         this.mBroadcastDispatcher.registerReceiverWithHandler(this.mIntentReceiver, intentFilter, this.mHandler);
-        this.mIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_quiet_mode, this.mResources.getString(C0020R$string.quick_settings_quietmode_label));
+        this.mIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_quiet_mode, this.mResources.getString(C0021R$string.quick_settings_quietmode_label));
         this.mIconController.setIconVisibility(this.mSlotZen, false);
-        this.mIconController.setIcon(this.mSlotSyncActive, C0012R$drawable.stat_sys_sync, null);
+        this.mIconController.setIcon(this.mSlotSyncActive, C0013R$drawable.stat_sys_sync, null);
         this.mIconController.setIconVisibility(this.mSlotSyncActive, false);
-        this.mIconController.setIcon(this.mSlotLocation, C0012R$drawable.stat_sys_gps_on, this.mContext.getString(C0020R$string.quick_settings_location_label));
+        this.mIconController.setIcon(this.mSlotLocation, C0013R$drawable.stat_sys_gps_on, this.mContext.getString(C0021R$string.quick_settings_location_label));
         this.mIconController.setIconVisibility(this.mSlotLocation, false);
-        this.mIconController.setIcon(this.mSlotRotate, C0012R$drawable.stat_sys_rotate_portrait, null);
+        this.mIconController.setIcon(this.mSlotRotate, C0013R$drawable.stat_sys_rotate_portrait, null);
         this.mIconController.setIconVisibility(this.mSlotRotate, false);
-        this.mIconController.setIcon(this.mSlotHotspot, C0012R$drawable.stat_sys_wifi_ap_on, this.mResources.getString(C0020R$string.accessibility_status_bar_hotspot));
+        this.mIconController.setIcon(this.mSlotHotspot, C0013R$drawable.stat_sys_wifi_ap_on, this.mResources.getString(C0021R$string.accessibility_status_bar_hotspot));
         this.mIconController.setIconVisibility(this.mSlotHotspot, false);
-        this.mIconController.setIcon(this.mSlotVolume, C0012R$drawable.stat_sys_ringer_vibrate, this.mContext.getString(C0020R$string.accessibility_ringer_vibrate));
+        this.mIconController.setIcon(this.mSlotVolume, C0013R$drawable.stat_sys_ringer_vibrate, this.mContext.getString(C0021R$string.accessibility_ringer_vibrate));
         this.mIconController.setIconVisibility(this.mSlotVolume, false);
-        this.mIconController.setIcon(this.mSlotHeadset, C0012R$drawable.stat_sys_headset, this.mResources.getString(C0020R$string.accessibility_status_bar_headset));
+        this.mIconController.setIcon(this.mSlotHeadset, C0013R$drawable.stat_sys_headset, this.mResources.getString(C0021R$string.accessibility_status_bar_headset));
         this.mIconController.setIconVisibility(this.mSlotHeadset, false);
-        this.mIconController.setIcon(this.mSlotMicphone, C0012R$drawable.stat_sys_micphone, null);
+        this.mIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, null);
         this.mIconController.setIconVisibility(this.mSlotMicphone, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotVolume, C0012R$drawable.stat_sys_ringer_vibrate, this.mContext.getString(C0020R$string.accessibility_ringer_vibrate));
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotVolume, C0013R$drawable.stat_sys_ringer_vibrate, this.mContext.getString(C0021R$string.accessibility_ringer_vibrate));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotVolume, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotZen, C0012R$drawable.stat_sys_quiet_mode, this.mResources.getString(C0020R$string.quick_settings_quietmode_label));
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotZen, C0013R$drawable.stat_sys_quiet_mode, this.mResources.getString(C0021R$string.quick_settings_quietmode_label));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotZen, false);
         initVloumeZen();
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotHeadset, C0012R$drawable.stat_sys_headset, this.mResources.getString(C0020R$string.accessibility_status_bar_headset));
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotHeadset, C0013R$drawable.stat_sys_headset, this.mResources.getString(C0021R$string.accessibility_status_bar_headset));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotHeadset, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotAlarmClock, C0012R$drawable.stat_sys_alarm, this.mResources.getString(C0020R$string.status_bar_alarm));
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotAlarmClock, C0013R$drawable.stat_sys_alarm, this.mResources.getString(C0021R$string.status_bar_alarm));
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotAlarmClock, false);
-        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotMicphone, C0012R$drawable.stat_sys_micphone, null);
+        this.miuiDripLeftStatusBarIconController.setIcon(this.mSlotMicphone, C0013R$drawable.stat_sys_micphone, null);
         this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotMicphone, false);
-        this.mStatusBarManager.setIcon("mute", C0012R$drawable.stat_notify_call_mute, 0, null);
+        this.mStatusBarManager.setIcon("mute", C0013R$drawable.stat_notify_call_mute, 0, null);
         this.mStatusBarManager.setIconVisibility("mute", false);
-        this.mStatusBarManager.setIcon("speakerphone", C0012R$drawable.stat_sys_speakerphone, 0, null);
+        this.mStatusBarManager.setIcon("speakerphone", C0013R$drawable.stat_sys_speakerphone, 0, null);
         this.mStatusBarManager.setIconVisibility("speakerphone", false);
-        this.mStatusBarManager.setIcon("call_record", C0012R$drawable.stat_sys_call_record, 0, null);
+        this.mStatusBarManager.setIcon("call_record", C0013R$drawable.stat_sys_call_record, 0, null);
         this.mStatusBarManager.setIconVisibility("call_record", false);
-        this.mStatusBarManager.setIcon("stealth", C0012R$drawable.stat_sys_stealth_mode, 0, null);
+        this.mStatusBarManager.setIcon("stealth", C0013R$drawable.stat_sys_stealth_mode, 0, null);
         this.mStatusBarManager.setIconVisibility("stealth", false);
         ((MiuiAlarmControllerImpl) Dependency.get(MiuiAlarmControllerImpl.class)).addCallback((MiuiAlarmController$MiuiAlarmChangeCallback) this);
     }
@@ -146,8 +146,8 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
     public void updateBluetooth(String str) {
         int i;
         Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: action = " + str);
-        int i2 = C0012R$drawable.stat_sys_data_bluetooth;
-        String string = this.mResources.getString(C0020R$string.accessibility_quick_settings_bluetooth_on);
+        int i2 = C0013R$drawable.stat_sys_data_bluetooth;
+        String string = this.mResources.getString(C0021R$string.accessibility_quick_settings_bluetooth_on);
         BluetoothController bluetoothController = this.mBluetooth;
         boolean z = false;
         if (bluetoothController != null) {
@@ -158,8 +158,8 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
                 this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, false);
             }
             if (isBluetoothConnected) {
-                i2 = C0012R$drawable.stat_sys_data_bluetooth_connected;
-                string = this.mResources.getString(C0020R$string.accessibility_bluetooth_connected);
+                i2 = C0013R$drawable.stat_sys_data_bluetooth_connected;
+                string = this.mResources.getString(C0021R$string.accessibility_bluetooth_connected);
             }
             if ("com.android.bluetooth.opp.BLUETOOTH_OPP_INBOUND_START".equals(str)) {
                 this.mBluetoothFlowState = (byte) (this.mBluetoothFlowState | 1);
@@ -172,12 +172,12 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             }
             byte b = this.mBluetoothFlowState;
             if (b == 1) {
-                i = C0012R$drawable.stat_sys_data_bluetooth_in;
+                i = C0013R$drawable.stat_sys_data_bluetooth_in;
             } else if (b == 2) {
-                i = C0012R$drawable.stat_sys_data_bluetooth_out;
+                i = C0013R$drawable.stat_sys_data_bluetooth_out;
             } else {
                 if (b == 3) {
-                    i = C0012R$drawable.stat_sys_data_bluetooth_inout;
+                    i = C0013R$drawable.stat_sys_data_bluetooth_inout;
                 }
                 Log.d("MiuiPhoneStatusBarPolicy", "updateBluetooth: BluetoothFlowState = " + ((int) this.mBluetoothFlowState));
                 z = isBluetoothEnabled;
@@ -247,12 +247,12 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         boolean z4 = false;
         if (!z) {
             if (z2 && !this.mKeyguardStateController.isShowing()) {
-                this.mIconController.setIcon(this.mSlotManagedProfile, C0012R$drawable.stat_sys_managed_profile_status, this.mContext.getString(C0020R$string.accessibility_managed_profile));
+                this.mIconController.setIcon(this.mSlotManagedProfile, C0013R$drawable.stat_sys_managed_profile_status, this.mContext.getString(C0021R$string.accessibility_managed_profile));
             } else if (this.mManagedProfileInQuietMode) {
-                this.mIconController.setIcon(this.mSlotManagedProfile, C0012R$drawable.stat_sys_managed_profile_status_off, this.mContext.getString(C0020R$string.accessibility_managed_profile));
+                this.mIconController.setIcon(this.mSlotManagedProfile, C0013R$drawable.stat_sys_managed_profile_status_off, this.mContext.getString(C0021R$string.accessibility_managed_profile));
             } else if (z3) {
                 z4 = !this.mKeyguardStateController.isShowing();
-                this.mIconController.setIcon(this.mSlotManagedProfile, C0012R$drawable.stat_sys_managed_profile_not_owner_user, this.mContext.getString(C0020R$string.accessibility_managed_profile));
+                this.mIconController.setIcon(this.mSlotManagedProfile, C0013R$drawable.stat_sys_managed_profile_not_owner_user, this.mContext.getString(C0021R$string.accessibility_managed_profile));
             }
             z4 = true;
         }
@@ -275,22 +275,22 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         switch (intExtra) {
             case 1:
             case 2:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0012R$drawable.stat_sys_bluetooth_handsfree_battery_1, this.mContext.getString(C0020R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_1, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             case 3:
             case 4:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0012R$drawable.stat_sys_bluetooth_handsfree_battery_2, this.mContext.getString(C0020R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_2, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             case 5:
             case 6:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0012R$drawable.stat_sys_bluetooth_handsfree_battery_3, this.mContext.getString(C0020R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_3, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             case 7:
             case 8:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0012R$drawable.stat_sys_bluetooth_handsfree_battery_4, this.mContext.getString(C0020R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_4, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
             default:
-                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0012R$drawable.stat_sys_bluetooth_handsfree_battery_5, this.mContext.getString(C0020R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
+                this.mIconController.setIcon(this.mSlotBluetoothBattery, C0013R$drawable.stat_sys_bluetooth_handsfree_battery_5, this.mContext.getString(C0021R$string.accessibility_quick_settings_bluetooth_handsfree_battery_level, Integer.valueOf(intExtra * 10)));
                 break;
         }
         this.mIconController.setIconVisibility(this.mSlotBluetoothBattery, true);
@@ -333,11 +333,11 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             return;
         }
         if (this.mZenController.isVibrateOn()) {
-            i = C0012R$drawable.stat_sys_ringer_vibrate;
-            str = this.mContext.getString(C0020R$string.accessibility_ringer_vibrate);
+            i = C0013R$drawable.stat_sys_ringer_vibrate;
+            str = this.mContext.getString(C0021R$string.accessibility_ringer_vibrate);
         } else {
-            i = C0012R$drawable.stat_sys_ringer_silent;
-            str = this.mContext.getString(C0020R$string.accessibility_ringer_silent);
+            i = C0013R$drawable.stat_sys_ringer_silent;
+            str = this.mContext.getString(C0021R$string.accessibility_ringer_silent);
         }
         this.mIconController.setIcon(this.mSlotVolume, i, str);
         this.mIconController.setIconVisibility(this.mSlotVolume, true);
@@ -362,11 +362,11 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
             action.equals("android.location.GPS_ENABLED_CHANGE");
             z = false;
         } else {
-            i = C0012R$drawable.stat_sys_gps_on;
+            i = C0013R$drawable.stat_sys_gps_on;
             z = true;
         }
         if (i != 0) {
-            this.mIconController.setIcon(this.mSlotLocation, i, this.mContext.getString(C0020R$string.quick_settings_location_label));
+            this.mIconController.setIcon(this.mSlotLocation, i, this.mContext.getString(C0021R$string.quick_settings_location_label));
         }
         this.mIconController.setIconVisibility(this.mSlotLocation, z);
     }
@@ -395,26 +395,26 @@ public class MiuiPhoneStatusBarPolicy extends PhoneStatusBarPolicy implements Mi
         if (z) {
             Resources resources = this.mResources;
             if (z2) {
-                i = C0020R$string.accessibility_status_bar_headset;
+                i = C0021R$string.accessibility_status_bar_headset;
             } else {
-                i = C0020R$string.accessibility_status_bar_headphones;
+                i = C0021R$string.accessibility_status_bar_headphones;
             }
             String string = resources.getString(i);
             StatusBarIconController statusBarIconController = this.mIconController;
             String str = this.mSlotHeadset;
             if (z2) {
-                i2 = C0012R$drawable.stat_sys_headset;
+                i2 = C0013R$drawable.stat_sys_headset;
             } else {
-                i2 = C0012R$drawable.stat_sys_headset_without_mic;
+                i2 = C0013R$drawable.stat_sys_headset_without_mic;
             }
             statusBarIconController.setIcon(str, i2, string);
             this.mIconController.setIconVisibility(this.mSlotHeadset, true);
             MiuiDripLeftStatusBarIconControllerImpl miuiDripLeftStatusBarIconControllerImpl = this.miuiDripLeftStatusBarIconController;
             String str2 = this.mSlotHeadset;
             if (z2) {
-                i3 = C0012R$drawable.stat_sys_headset;
+                i3 = C0013R$drawable.stat_sys_headset;
             } else {
-                i3 = C0012R$drawable.stat_sys_headset_without_mic;
+                i3 = C0013R$drawable.stat_sys_headset_without_mic;
             }
             miuiDripLeftStatusBarIconControllerImpl.setIcon(str2, i3, string);
             this.miuiDripLeftStatusBarIconController.setIconVisibility(this.mSlotHeadset, true);

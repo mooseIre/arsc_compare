@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 import android.widget.FrameLayout;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.ControlCenter;
 import com.android.systemui.controlcenter.policy.BoostHelper;
@@ -148,12 +148,12 @@ public class ControlPanelWindowView extends FrameLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mContent = (ControlPanelContentView) findViewById(C0014R$id.control_panel_content);
-        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0014R$id.control_center_panel);
+        this.mContent = (ControlPanelContentView) findViewById(C0015R$id.control_panel_content);
+        ControlCenterPanelView controlCenterPanelView = (ControlCenterPanelView) findViewById(C0015R$id.control_center_panel);
         this.mControlCenterPanel = controlCenterPanelView;
         controlCenterPanelView.setControlPanelWindowView(this);
-        this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0014R$id.tile_layout);
-        this.mBottomArea = findViewById(C0014R$id.control_center_bottom_area);
+        this.mControlCenterTileLayout = (QSControlCenterTileLayout) findViewById(C0015R$id.tile_layout);
+        this.mBottomArea = findViewById(C0015R$id.control_center_bottom_area);
     }
 
     /* access modifiers changed from: protected */

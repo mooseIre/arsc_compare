@@ -1,6 +1,6 @@
 package com.android.systemui.statusbar.notification.row;
 
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
@@ -17,6 +17,6 @@ final class MiuiExpandableNotificationRow$mMiniBarMarginBottom$2 extends Lambda 
     /* Return type fixed from 'float' to match base method */
     @Override // kotlin.jvm.functions.Function0
     public final Float invoke() {
-        return this.this$0.getResources().getDimension(C0011R$dimen.mini_window_bar_marginBottom);
+        return this.this$0.getResources().getDimension(C0012R$dimen.mini_window_bar_marginBottom);
     }
 }

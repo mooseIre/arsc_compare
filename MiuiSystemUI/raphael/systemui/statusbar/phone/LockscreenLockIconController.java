@@ -10,9 +10,9 @@ import android.view.accessibility.AccessibilityNodeInfo;
 import com.android.internal.widget.LockPatternUtils;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C0008R$attr;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0009R$attr;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.dock.DockManager;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.KeyguardIndicationController;
@@ -35,11 +35,11 @@ public class LockscreenLockIconController {
             boolean isFingerprintDetectionRunning = LockscreenLockIconController.this.mKeyguardUpdateMonitor.isFingerprintDetectionRunning();
             boolean isUnlockingWithBiometricAllowed = LockscreenLockIconController.this.mKeyguardUpdateMonitor.isUnlockingWithBiometricAllowed(true);
             if (isFingerprintDetectionRunning && isUnlockingWithBiometricAllowed) {
-                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, LockscreenLockIconController.this.mResources.getString(C0020R$string.accessibility_unlock_without_fingerprint)));
-                accessibilityNodeInfo.setHintText(LockscreenLockIconController.this.mResources.getString(C0020R$string.accessibility_waiting_for_fingerprint));
+                accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, LockscreenLockIconController.this.mResources.getString(C0021R$string.accessibility_unlock_without_fingerprint)));
+                accessibilityNodeInfo.setHintText(LockscreenLockIconController.this.mResources.getString(C0021R$string.accessibility_waiting_for_fingerprint));
             } else if (LockscreenLockIconController.this.getState() == 2) {
                 accessibilityNodeInfo.setClassName(LockIcon.class.getName());
-                accessibilityNodeInfo.setContentDescription(LockscreenLockIconController.this.mResources.getString(C0020R$string.accessibility_scanning_face));
+                accessibilityNodeInfo.setContentDescription(LockscreenLockIconController.this.mResources.getString(C0021R$string.accessibility_scanning_face));
             }
         }
     };
@@ -53,7 +53,7 @@ public class LockscreenLockIconController {
         @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onThemeChanged() {
             if (LockscreenLockIconController.this.mLockIcon != null) {
-                TypedArray obtainStyledAttributes = LockscreenLockIconController.this.mLockIcon.getContext().getTheme().obtainStyledAttributes(null, new int[]{C0008R$attr.wallpaperTextColor}, 0, 0);
+                TypedArray obtainStyledAttributes = LockscreenLockIconController.this.mLockIcon.getContext().getTheme().obtainStyledAttributes(null, new int[]{C0009R$attr.wallpaperTextColor}, 0, 0);
                 int color = obtainStyledAttributes.getColor(0, -1);
                 obtainStyledAttributes.recycle();
                 LockscreenLockIconController.this.mLockIcon.onThemeChange(color);
@@ -64,8 +64,8 @@ public class LockscreenLockIconController {
         public void onDensityOrFontScaleChanged() {
             ViewGroup.LayoutParams layoutParams;
             if (LockscreenLockIconController.this.mLockIcon != null && (layoutParams = LockscreenLockIconController.this.mLockIcon.getLayoutParams()) != null) {
-                layoutParams.width = LockscreenLockIconController.this.mLockIcon.getResources().getDimensionPixelSize(C0011R$dimen.keyguard_lock_width);
-                layoutParams.height = LockscreenLockIconController.this.mLockIcon.getResources().getDimensionPixelSize(C0011R$dimen.keyguard_lock_height);
+                layoutParams.width = LockscreenLockIconController.this.mLockIcon.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_lock_width);
+                layoutParams.height = LockscreenLockIconController.this.mLockIcon.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_lock_height);
                 LockscreenLockIconController.this.mLockIcon.setLayoutParams(layoutParams);
                 LockscreenLockIconController.this.update(true);
             }
@@ -74,7 +74,7 @@ public class LockscreenLockIconController {
         @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
         public void onLocaleListChanged() {
             if (LockscreenLockIconController.this.mLockIcon != null) {
-                LockscreenLockIconController.this.mLockIcon.setContentDescription(LockscreenLockIconController.this.mLockIcon.getResources().getText(C0020R$string.accessibility_unlock_button));
+                LockscreenLockIconController.this.mLockIcon.setContentDescription(LockscreenLockIconController.this.mLockIcon.getResources().getText(C0021R$string.accessibility_unlock_button));
                 LockscreenLockIconController.this.update(true);
             }
         }
@@ -352,7 +352,7 @@ public class LockscreenLockIconController {
     public boolean handleLongClick(View view) {
         this.mLockscreenGestureLogger.write(191, 0, 0);
         this.mLockscreenGestureLogger.log(LockscreenGestureLogger.LockscreenUiEvent.LOCKSCREEN_LOCK_TAP);
-        this.mKeyguardIndicationController.showTransientIndication(C0020R$string.keyguard_indication_trust_disabled);
+        this.mKeyguardIndicationController.showTransientIndication(C0021R$string.keyguard_indication_trust_disabled);
         this.mKeyguardUpdateMonitor.onLockIconPressed();
         this.mLockPatternUtils.requireCredentialEntry(KeyguardUpdateMonitor.getCurrentUser());
         return true;

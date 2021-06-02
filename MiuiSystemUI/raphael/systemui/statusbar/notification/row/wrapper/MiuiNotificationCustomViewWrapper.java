@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.row.wrapper;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 
@@ -51,7 +51,7 @@ public class MiuiNotificationCustomViewWrapper extends NotificationViewWrapper {
         if (MiuiNotificationCompat.isCustomHideBorder(this.mRow.getEntry().getSbn().getNotification())) {
             return 0;
         }
-        return this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_custom_view_margin);
+        return this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_custom_view_margin);
     }
 
     private static boolean hasExtraMeasureHeight(NotificationViewWrapper notificationViewWrapper) {

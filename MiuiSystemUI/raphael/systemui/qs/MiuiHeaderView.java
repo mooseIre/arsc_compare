@@ -6,9 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.statusbar.policy.MiuiClock;
@@ -44,23 +44,23 @@ public abstract class MiuiHeaderView extends RelativeLayout implements View.OnCl
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        MiuiClock miuiClock = (MiuiClock) findViewById(C0014R$id.date_time);
+        MiuiClock miuiClock = (MiuiClock) findViewById(C0015R$id.date_time);
         this.mDateView = miuiClock;
         miuiClock.setOnClickListener(this);
-        MiuiClock miuiClock2 = (MiuiClock) findViewById(C0014R$id.big_time);
+        MiuiClock miuiClock2 = (MiuiClock) findViewById(C0015R$id.big_time);
         this.mClock = miuiClock2;
         miuiClock2.setOnClickListener(this);
         try {
-            if (!getContext().getResources().getBoolean(C0009R$bool.header_big_time_use_system_font)) {
+            if (!getContext().getResources().getBoolean(C0010R$bool.header_big_time_use_system_font)) {
                 this.mClock.setTypeface(Typeface.createFromAsset(getContext().getAssets(), "fonts/MiClock-Light.otf"));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        ImageView imageView = (ImageView) findViewById(C0014R$id.notification_shade_shortcut);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.notification_shade_shortcut);
         this.mShortcut = imageView;
         imageView.setOnClickListener(this);
-        this.mShortcut.setContentDescription(getResources().getString(C0020R$string.accessibility_settings));
+        this.mShortcut.setContentDescription(getResources().getString(C0021R$string.accessibility_settings));
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:24:0x0079  */

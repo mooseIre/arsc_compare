@@ -8,9 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.controlcenter.qs.tileview.QCBrightnessMirrorController;
 import com.android.systemui.settings.ToggleSeekBar;
 import com.android.systemui.settings.ToggleSlider;
@@ -83,16 +83,16 @@ public class QCToggleSliderView extends RelativeLayout implements ToggleSlider {
                 }
             }
         };
-        View.inflate(context, C0016R$layout.qs_control_toggle_slider, this);
-        this.mSlider = (ToggleSeekBar) findViewById(C0014R$id.slider);
-        this.mLow = (ImageView) findViewById(C0014R$id.low);
+        View.inflate(context, C0017R$layout.qs_control_toggle_slider, this);
+        this.mSlider = (ToggleSeekBar) findViewById(C0015R$id.slider);
+        this.mLow = (ImageView) findViewById(C0015R$id.low);
         this.mSlider.setOnSeekBarChangeListener(this.mSeekListener);
         this.mSlider.setAccessibilityLabel(getContentDescription().toString());
     }
 
     public void updateResources() {
-        this.mSlider.setProgressDrawable(((RelativeLayout) this).mContext.getDrawable(C0012R$drawable.qs_control_brightness_toggle_progress));
-        this.mLow.setImageDrawable(((RelativeLayout) this).mContext.getDrawable(C0012R$drawable.qs_control_low_brightness));
+        this.mSlider.setProgressDrawable(((RelativeLayout) this).mContext.getDrawable(C0013R$drawable.qs_control_brightness_toggle_progress));
+        this.mLow.setImageDrawable(((RelativeLayout) this).mContext.getDrawable(C0013R$drawable.qs_control_low_brightness));
         QCToggleSliderView qCToggleSliderView = this.mMirror;
         if (qCToggleSliderView != null) {
             qCToggleSliderView.updateResources();

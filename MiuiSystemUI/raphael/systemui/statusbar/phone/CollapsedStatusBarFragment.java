@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -28,13 +28,11 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private NetworkController mNetworkController;
     protected View mNotificationIconAreaInner;
     protected View mOperatorNameFrame;
-    private NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback() {
+    private NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback(this) {
         /* class com.android.systemui.statusbar.phone.CollapsedStatusBarFragment.AnonymousClass1 */
 
         @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsAirplaneMode(NetworkController.IconState iconState) {
-            CollapsedStatusBarFragment collapsedStatusBarFragment = CollapsedStatusBarFragment.this;
-            collapsedStatusBarFragment.mCommandQueue.recomputeDisableFlags(collapsedStatusBarFragment.getContext().getDisplayId(), true);
         }
     };
     protected PhoneStatusBarView mStatusBar;
@@ -76,7 +74,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(C0016R$layout.status_bar, viewGroup, false);
+        return layoutInflater.inflate(C0017R$layout.status_bar, viewGroup, false);
     }
 
     public void onViewCreated(View view, Bundle bundle) {
@@ -85,9 +83,9 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         if (bundle != null && bundle.containsKey("panel_state")) {
             this.mStatusBar.restoreHierarchyState(bundle.getSparseParcelableArray("panel_state"));
         }
-        this.mSystemIconArea = this.mStatusBar.findViewById(C0014R$id.system_icon_area);
+        this.mSystemIconArea = this.mStatusBar.findViewById(C0015R$id.system_icon_area);
         initMiuiViewsOnViewCreated(view);
-        this.mClockView = this.mStatusBar.findViewById(C0014R$id.clock);
+        this.mClockView = this.mStatusBar.findViewById(C0015R$id.clock);
         showSystemIconArea(false);
         showClock(false);
         initEmergencyCryptkeeperText();
@@ -121,14 +119,14 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     }
 
     public void initNotificationIconArea(NotificationIconAreaController notificationIconAreaController) {
-        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0014R$id.notification_icon_area);
+        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.notification_icon_area);
         View notificationInnerAreaView = notificationIconAreaController.getNotificationInnerAreaView();
         this.mNotificationIconAreaInner = notificationInnerAreaView;
         if (notificationInnerAreaView.getParent() != null) {
             ((ViewGroup) this.mNotificationIconAreaInner.getParent()).removeView(this.mNotificationIconAreaInner);
         }
         viewGroup.addView(this.mNotificationIconAreaInner);
-        ViewGroup viewGroup2 = (ViewGroup) this.mStatusBar.findViewById(C0014R$id.centered_icon_area);
+        ViewGroup viewGroup2 = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.centered_icon_area);
         View centeredNotificationAreaView = notificationIconAreaController.getCenteredNotificationAreaView();
         this.mCenteredIconArea = centeredNotificationAreaView;
         if (centeredNotificationAreaView.getParent() != null) {
@@ -279,12 +277,12 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         if (!z) {
             view.setAlpha(1.0f);
         } else {
-            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
+            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
         }
     }
 
     private void initEmergencyCryptkeeperText() {
-        View findViewById = this.mStatusBar.findViewById(C0014R$id.emergency_cryptkeeper_text);
+        View findViewById = this.mStatusBar.findViewById(C0015R$id.emergency_cryptkeeper_text);
         if (this.mNetworkController.hasEmergencyCryptKeeperText()) {
             if (findViewById != null) {
                 ((ViewStub) findViewById).inflate();
@@ -297,8 +295,8 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
 
     /* access modifiers changed from: protected */
     public void initOperatorName() {
-        if (getResources().getBoolean(C0009R$bool.config_showOperatorNameInStatusBar)) {
-            this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0014R$id.operator_name)).inflate();
+        if (getResources().getBoolean(C0010R$bool.config_showOperatorNameInStatusBar)) {
+            this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0015R$id.operator_name)).inflate();
         }
     }
 

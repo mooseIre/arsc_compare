@@ -27,8 +27,8 @@ import codeinjection.CodeInjection;
 import com.android.internal.annotations.VisibleForTesting;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.KeyguardUpdateMonitorCallback;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIAppComponentFactory;
 import com.android.systemui.SystemUIFactory;
@@ -186,7 +186,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
 
     /* access modifiers changed from: protected */
     public void addPrimaryActionLocked(ListBuilder listBuilder) {
-        SliceAction createDeeplink = SliceAction.createDeeplink(this.mPendingIntent, IconCompat.createWithResource(getContext(), C0012R$drawable.ic_access_alarms_big), 0, this.mLastText);
+        SliceAction createDeeplink = SliceAction.createDeeplink(this.mPendingIntent, IconCompat.createWithResource(getContext(), C0013R$drawable.ic_access_alarms_big), 0, this.mLastText);
         ListBuilder.RowBuilder rowBuilder = new ListBuilder.RowBuilder(Uri.parse("content://com.android.systemui.keyguard/action"));
         rowBuilder.setPrimaryAction(createDeeplink);
         listBuilder.addRow(rowBuilder);
@@ -195,7 +195,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     /* access modifiers changed from: protected */
     public void addNextAlarmLocked(ListBuilder listBuilder) {
         if (!TextUtils.isEmpty(this.mNextAlarm)) {
-            IconCompat createWithResource = IconCompat.createWithResource(getContext(), C0012R$drawable.ic_access_alarms_big);
+            IconCompat createWithResource = IconCompat.createWithResource(getContext(), C0013R$drawable.ic_access_alarms_big);
             ListBuilder.RowBuilder rowBuilder = new ListBuilder.RowBuilder(this.mAlarmUri);
             rowBuilder.setTitle(this.mNextAlarm);
             rowBuilder.addEndItem(createWithResource, 0);
@@ -207,8 +207,8 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
     public void addZenModeLocked(ListBuilder listBuilder) {
         if (isDndOn()) {
             ListBuilder.RowBuilder rowBuilder = new ListBuilder.RowBuilder(this.mDndUri);
-            rowBuilder.setContentDescription(getContext().getResources().getString(C0020R$string.accessibility_quick_settings_dnd));
-            rowBuilder.addEndItem(IconCompat.createWithResource(getContext(), C0012R$drawable.stat_sys_dnd), 0);
+            rowBuilder.setContentDescription(getContext().getResources().getString(C0021R$string.accessibility_quick_settings_dnd));
+            rowBuilder.addEndItem(IconCompat.createWithResource(getContext(), C0013R$drawable.stat_sys_dnd), 0);
             listBuilder.addRow(rowBuilder);
         }
     }
@@ -227,7 +227,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
             if (keyguardSliceProvider != null) {
                 keyguardSliceProvider.onDestroy();
             }
-            this.mDatePattern = getContext().getString(C0020R$string.system_ui_aod_date_pattern);
+            this.mDatePattern = getContext().getString(C0021R$string.system_ui_aod_date_pattern);
             this.mPendingIntent = PendingIntent.getActivity(getContext(), 0, new Intent(getContext(), KeyguardSliceProvider.class), 0);
             this.mMediaManager.addCallback(this);
             this.mStatusBarStateController.addCallback(this);
@@ -408,7 +408,7 @@ public class KeyguardSliceProvider extends SliceProvider implements NextAlarmCon
         if (mediaMetadata != null) {
             charSequence = mediaMetadata.getText("android.media.metadata.TITLE");
             if (TextUtils.isEmpty(charSequence)) {
-                charSequence = getContext().getResources().getString(C0020R$string.music_controls_no_title);
+                charSequence = getContext().getResources().getString(C0021R$string.music_controls_no_title);
             }
         } else {
             charSequence = null;

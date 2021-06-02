@@ -22,13 +22,13 @@ public interface BluetoothController extends CallbackController<Callback>, Dumpa
 
     boolean canConfigBluetooth();
 
+    void clearNonBondedDevices();
+
     void connect(CachedBluetoothDevice cachedBluetoothDevice);
 
     void disconnect(CachedBluetoothDevice cachedBluetoothDevice);
 
     int getBluetoothState();
-
-    int getBondState(CachedBluetoothDevice cachedBluetoothDevice);
 
     Collection<CachedBluetoothDevice> getDevices();
 

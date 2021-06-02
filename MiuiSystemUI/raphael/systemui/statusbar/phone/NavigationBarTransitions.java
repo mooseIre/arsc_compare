@@ -8,9 +8,9 @@ import android.view.IWallpaperVisibilityListener;
 import android.view.IWindowManager;
 import android.view.View;
 import androidx.appcompat.R$styleable;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.LightBarTransitionsController;
@@ -56,10 +56,10 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
     }
 
     public NavigationBarTransitions(NavigationBarView navigationBarView, CommandQueue commandQueue) {
-        super(navigationBarView, C0012R$drawable.nav_background);
+        super(navigationBarView, C0013R$drawable.nav_background);
         this.mView = navigationBarView;
         this.mLightTransitionsController = new LightBarTransitionsController(navigationBarView.getContext(), this, commandQueue);
-        this.mAllowAutoDimWallpaperNotVisible = navigationBarView.getContext().getResources().getBoolean(C0009R$bool.config_navigation_bar_enable_auto_dim_no_visible_wallpaper);
+        this.mAllowAutoDimWallpaperNotVisible = navigationBarView.getContext().getResources().getBoolean(C0010R$bool.config_navigation_bar_enable_auto_dim_no_visible_wallpaper);
         this.mDarkIntensityListeners = new ArrayList();
         try {
             this.mWallpaperVisible = ((IWindowManager) Dependency.get(IWindowManager.class)).registerWallpaperVisibilityListener(this.mWallpaperVisibilityListener, 0);
@@ -74,7 +74,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
         });
         View currentView = this.mView.getCurrentView();
         if (currentView != null) {
-            this.mNavButtons = currentView.findViewById(C0014R$id.nav_buttons);
+            this.mNavButtons = currentView.findViewById(C0015R$id.nav_buttons);
         }
     }
 
@@ -83,7 +83,7 @@ public final class NavigationBarTransitions extends BarTransitions implements Li
     public /* synthetic */ void lambda$new$0$NavigationBarTransitions(View view, int i, int i2, int i3, int i4, int i5, int i6, int i7, int i8) {
         View currentView = this.mView.getCurrentView();
         if (currentView != null) {
-            this.mNavButtons = currentView.findViewById(C0014R$id.nav_buttons);
+            this.mNavButtons = currentView.findViewById(C0015R$id.nav_buttons);
             applyLightsOut(false, true);
         }
     }

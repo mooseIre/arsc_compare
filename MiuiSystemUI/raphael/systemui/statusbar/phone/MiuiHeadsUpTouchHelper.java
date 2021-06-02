@@ -79,6 +79,7 @@ public final class MiuiHeadsUpTouchHelper extends HeadsUpTouchHelper implements 
     @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback
     public void onMiniWindowReset() {
         this.mContainer.applyExpandAnimationParams(null);
+        this.mPanel.notifyListenersTrackingHeadsUp(null);
         setTrackingHeadsUp(false);
     }
 

@@ -2,13 +2,12 @@ package com.android.systemui.statusbar.phone;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.hardware.display.ColorDisplayManager;
 import android.hardware.display.NightDisplayListener;
 import android.os.Handler;
 import android.os.UserHandle;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0007R$array;
+import com.android.systemui.C0008R$array;
 import com.android.systemui.qs.AutoAddTracker;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.qs.SecureSetting;
@@ -199,20 +198,8 @@ public class AutoTileManager implements UserAwareController {
 
     /* access modifiers changed from: protected */
     public void startControllersAndSettingsListeners() {
-        if (!this.mAutoTracker.isAdded("hotspot")) {
-            this.mHotspotController.addCallback(this.mHotspotCallback);
-        }
-        if (!this.mAutoTracker.isAdded("saver")) {
-            this.mDataSaverController.addCallback(this.mDataSaverListener);
-        }
         if (!this.mAutoTracker.isAdded("work")) {
             this.mManagedProfileController.addCallback(this.mProfileCallback);
-        }
-        if (!this.mAutoTracker.isAdded("night") && ColorDisplayManager.isNightDisplayAvailable(this.mContext)) {
-            this.mNightDisplayListener.setCallback(this.mNightDisplayCallback);
-        }
-        if (!this.mAutoTracker.isAdded("cast")) {
-            this.mCastController.addCallback(this.mCastCallback);
         }
         int size = this.mAutoAddSettingList.size();
         for (int i = 0; i < size; i++) {
@@ -224,13 +211,7 @@ public class AutoTileManager implements UserAwareController {
 
     /* access modifiers changed from: protected */
     public void stopListening() {
-        this.mHotspotController.removeCallback(this.mHotspotCallback);
-        this.mDataSaverController.removeCallback(this.mDataSaverListener);
         this.mManagedProfileController.removeCallback(this.mProfileCallback);
-        if (ColorDisplayManager.isNightDisplayAvailable(this.mContext)) {
-            this.mNightDisplayListener.setCallback((NightDisplayListener.Callback) null);
-        }
-        this.mCastController.removeCallback(this.mCastCallback);
         int size = this.mAutoAddSettingList.size();
         for (int i = 0; i < size; i++) {
             this.mAutoAddSettingList.get(i).setListening(false);
@@ -239,7 +220,7 @@ public class AutoTileManager implements UserAwareController {
 
     private void populateSettingsList() {
         try {
-            String[] addMiuiSettings = addMiuiSettings(this.mContext.getResources().getStringArray(C0007R$array.config_quickSettingsAutoAdd));
+            String[] addMiuiSettings = addMiuiSettings(this.mContext.getResources().getStringArray(C0008R$array.config_quickSettingsAutoAdd));
             for (String str : addMiuiSettings) {
                 String[] split = str.split(":");
                 if (split.length == 2) {
@@ -255,7 +236,7 @@ public class AutoTileManager implements UserAwareController {
 
     private String[] addMiuiSettings(String[] strArr) {
         try {
-            return (String[]) ArrayUtils.addAll(strArr, this.mContext.getResources().getStringArray(C0007R$array.miui_config_quickSettingsAutoAdd));
+            return (String[]) ArrayUtils.addAll(strArr, this.mContext.getResources().getStringArray(C0008R$array.miui_config_quickSettingsAutoAdd));
         } catch (Resources.NotFoundException unused) {
             Log.w("AutoTileManager", "Missing MIUI config resource");
             return strArr;

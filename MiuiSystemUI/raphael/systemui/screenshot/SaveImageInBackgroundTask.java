@@ -29,8 +29,8 @@ import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Slog;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.SystemUIFactory;
 import com.android.systemui.screenshot.GlobalScreenshot;
 import java.io.File;
@@ -158,7 +158,7 @@ public class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         } catch (Exception e2) {
             Slog.e("SaveImageInBackgroundTask", "unable to save screenshot", e2);
             this.mParams.clearImage();
-            this.mParams.errorMsgResId = C0020R$string.screenshot_failed_to_save_text;
+            this.mParams.errorMsgResId = C0021R$string.screenshot_failed_to_save_text;
             this.mImageData.reset();
             this.mParams.mActionsReadyListener.onActionsReady(this.mImageData);
             this.mParams.finisher.accept(null);
@@ -191,13 +191,13 @@ public class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         intent.putExtra("android.intent.extra.SUBJECT", format);
         intent.addFlags(1);
         int userId = context.getUserId();
-        return new Notification.Action.Builder(Icon.createWithResource(resources, C0012R$drawable.ic_screenshot_share), resources.getString(17041327), PendingIntent.getBroadcastAsUser(context, userId, new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", PendingIntent.getActivityAsUser(context, 0, Intent.createChooser(intent, null, PendingIntent.getBroadcast(context, userId, new Intent(context, GlobalScreenshot.TargetChosenReceiver.class), 1342177280).getIntentSender()).addFlags(268468224).addFlags(1), 268435456, null, UserHandle.CURRENT)).putExtra("android:screenshot_disallow_enter_pip", true).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.SEND").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
+        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_share), resources.getString(17041327), PendingIntent.getBroadcastAsUser(context, userId, new Intent(context, GlobalScreenshot.ActionProxyReceiver.class).putExtra("android:screenshot_action_intent", PendingIntent.getActivityAsUser(context, 0, Intent.createChooser(intent, null, PendingIntent.getBroadcast(context, userId, new Intent(context, GlobalScreenshot.TargetChosenReceiver.class), 1342177280).getIntentSender()).addFlags(268468224).addFlags(1), 268435456, null, UserHandle.CURRENT)).putExtra("android:screenshot_disallow_enter_pip", true).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.SEND").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
     }
 
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public Notification.Action createEditAction(Context context, Resources resources, Uri uri) {
-        String string = context.getString(C0020R$string.config_screenshotEditor);
+        String string = context.getString(C0021R$string.config_screenshotEditor);
         Intent intent = new Intent("android.intent.action.EDIT");
         if (!TextUtils.isEmpty(string)) {
             intent.setComponent(ComponentName.unflattenFromString(string));
@@ -214,13 +214,13 @@ public class SaveImageInBackgroundTask extends AsyncTask<Void, Void, Void> {
         if (intent.getComponent() == null) {
             z = false;
         }
-        return new Notification.Action.Builder(Icon.createWithResource(resources, C0012R$drawable.ic_screenshot_edit), resources.getString(17041288), PendingIntent.getBroadcastAsUser(context, userId, putExtra.putExtra("android:screenshot_cancel_notification", z).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.EDIT").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
+        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_edit), resources.getString(17041288), PendingIntent.getBroadcastAsUser(context, userId, putExtra.putExtra("android:screenshot_cancel_notification", z).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).setAction("android.intent.action.EDIT").addFlags(268435456), 268435456, UserHandle.SYSTEM)).build();
     }
 
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public Notification.Action createDeleteAction(Context context, Resources resources, Uri uri) {
-        return new Notification.Action.Builder(Icon.createWithResource(resources, C0012R$drawable.ic_screenshot_delete), resources.getString(17040076), PendingIntent.getBroadcast(context, this.mContext.getUserId(), new Intent(context, GlobalScreenshot.DeleteScreenshotReceiver.class).putExtra("android:screenshot_uri_id", uri.toString()).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).addFlags(268435456), 1342177280)).build();
+        return new Notification.Action.Builder(Icon.createWithResource(resources, C0013R$drawable.ic_screenshot_delete), resources.getString(17040076), PendingIntent.getBroadcast(context, this.mContext.getUserId(), new Intent(context, GlobalScreenshot.DeleteScreenshotReceiver.class).putExtra("android:screenshot_uri_id", uri.toString()).putExtra("android:screenshot_id", this.mScreenshotId).putExtra("android:smart_actions_enabled", this.mSmartActionsEnabled).addFlags(268435456), 1342177280)).build();
     }
 
     private int getUserHandleOfForegroundApplication(Context context) {

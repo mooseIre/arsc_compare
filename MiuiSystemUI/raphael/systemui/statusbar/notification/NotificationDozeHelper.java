@@ -8,12 +8,12 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import java.util.function.Consumer;
 
 public class NotificationDozeHelper {
-    private static final int DOZE_ANIMATOR_TAG = C0014R$id.doze_intensity_tag;
+    private static final int DOZE_ANIMATOR_TAG = C0015R$id.doze_intensity_tag;
     private final ColorMatrix mGrayscaleColorMatrix = new ColorMatrix();
 
     public void updateGrayscale(ImageView imageView, float f) {

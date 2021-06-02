@@ -5,8 +5,8 @@ import android.view.View;
 import android.widget.Switch;
 import androidx.core.view.AccessibilityDelegateCompat;
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.controls.management.ControlsModel;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.functions.Function1;
@@ -17,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 /* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
 public final class ControlHolderAccessibilityDelegate extends AccessibilityDelegateCompat {
-    private static final int MOVE_AFTER_ID = C0014R$id.accessibility_action_controls_move_after;
-    private static final int MOVE_BEFORE_ID = C0014R$id.accessibility_action_controls_move_before;
+    private static final int MOVE_AFTER_ID = C0015R$id.accessibility_action_controls_move_after;
+    private static final int MOVE_BEFORE_ID = C0015R$id.accessibility_action_controls_move_before;
     private boolean isFavorite;
     @Nullable
     private final ControlsModel.MoveHelper moveHelper;
@@ -82,9 +82,9 @@ public final class ControlHolderAccessibilityDelegate extends AccessibilityDeleg
     private final void addClickAction(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         String str;
         if (this.isFavorite) {
-            str = view.getContext().getString(C0020R$string.accessibility_control_change_unfavorite);
+            str = view.getContext().getString(C0021R$string.accessibility_control_change_unfavorite);
         } else {
-            str = view.getContext().getString(C0020R$string.accessibility_control_change_favorite);
+            str = view.getContext().getString(C0021R$string.accessibility_control_change_favorite);
         }
         accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(16, str));
     }
@@ -92,7 +92,7 @@ public final class ControlHolderAccessibilityDelegate extends AccessibilityDeleg
     private final void maybeAddMoveBeforeAction(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         ControlsModel.MoveHelper moveHelper2 = this.moveHelper;
         if (moveHelper2 != null ? moveHelper2.canMoveBefore(this.positionRetriever.invoke().intValue()) : false) {
-            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_BEFORE_ID, view.getContext().getString(C0020R$string.accessibility_control_move, Integer.valueOf((this.positionRetriever.invoke().intValue() + 1) - 1))));
+            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_BEFORE_ID, view.getContext().getString(C0021R$string.accessibility_control_move, Integer.valueOf((this.positionRetriever.invoke().intValue() + 1) - 1))));
             accessibilityNodeInfoCompat.setContextClickable(true);
         }
     }
@@ -100,7 +100,7 @@ public final class ControlHolderAccessibilityDelegate extends AccessibilityDeleg
     private final void maybeAddMoveAfterAction(View view, AccessibilityNodeInfoCompat accessibilityNodeInfoCompat) {
         ControlsModel.MoveHelper moveHelper2 = this.moveHelper;
         if (moveHelper2 != null ? moveHelper2.canMoveAfter(this.positionRetriever.invoke().intValue()) : false) {
-            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_AFTER_ID, view.getContext().getString(C0020R$string.accessibility_control_move, Integer.valueOf(this.positionRetriever.invoke().intValue() + 1 + 1))));
+            accessibilityNodeInfoCompat.addAction(new AccessibilityNodeInfoCompat.AccessibilityActionCompat(MOVE_AFTER_ID, view.getContext().getString(C0021R$string.accessibility_control_move, Integer.valueOf(this.positionRetriever.invoke().intValue() + 1 + 1))));
             accessibilityNodeInfoCompat.setContextClickable(true);
         }
     }

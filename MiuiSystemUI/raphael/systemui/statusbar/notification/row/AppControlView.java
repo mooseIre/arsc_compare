@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,13 +61,13 @@ public final class AppControlView extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
-        View findViewById = findViewById(C0014R$id.icon);
+        View findViewById = findViewById(C0015R$id.icon);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.icon)");
         this.iconView = (ImageView) findViewById;
-        View findViewById2 = findViewById(C0014R$id.app_name);
+        View findViewById2 = findViewById(C0015R$id.app_name);
         Intrinsics.checkExpressionValueIsNotNull(findViewById2, "findViewById(R.id.app_name)");
         this.channelName = (TextView) findViewById2;
-        View findViewById3 = findViewById(C0014R$id.toggle);
+        View findViewById3 = findViewById(C0015R$id.toggle);
         Intrinsics.checkExpressionValueIsNotNull(findViewById3, "findViewById(R.id.toggle)");
         this.f0switch = (Switch) findViewById3;
         setOnClickListener(new AppControlView$onFinishInflate$1(this));

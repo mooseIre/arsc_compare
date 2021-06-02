@@ -7,7 +7,7 @@ import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.bubbles.BubbleLogger;
 import com.android.systemui.statusbar.notification.NotificationEntryManager;
@@ -90,8 +90,8 @@ public class BubbleData {
         this.mOverflowBubbles = new ArrayList();
         this.mPendingBubbles = new HashMap<>();
         this.mStateChange = new Update(this.mBubbles, this.mOverflowBubbles);
-        this.mMaxBubbles = this.mContext.getResources().getInteger(C0015R$integer.bubbles_max_rendered);
-        this.mMaxOverflowBubbles = this.mContext.getResources().getInteger(C0015R$integer.bubbles_max_overflow);
+        this.mMaxBubbles = this.mContext.getResources().getInteger(C0016R$integer.bubbles_max_rendered);
+        this.mMaxOverflowBubbles = this.mContext.getResources().getInteger(C0016R$integer.bubbles_max_overflow);
     }
 
     public void setSuppressionChangedListener(BubbleController.NotificationSuppressionChangedListener notificationSuppressionChangedListener) {

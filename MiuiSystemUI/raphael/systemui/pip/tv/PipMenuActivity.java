@@ -7,8 +7,8 @@ import android.content.Intent;
 import android.content.pm.ParceledListSlice;
 import android.os.Bundle;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.pip.tv.PipManager;
 import com.android.systemui.pip.tv.dagger.TvPipComponent;
 import java.util.Collections;
@@ -41,8 +41,8 @@ public class PipMenuActivity extends Activity implements PipManager.Listener {
         if (!this.mPipManager.isPipShown()) {
             finish();
         }
-        setContentView(C0016R$layout.tv_pip_menu);
-        TvPipComponent build = this.mPipComponentBuilder.pipControlsView((PipControlsView) findViewById(C0014R$id.pip_controls)).build();
+        setContentView(C0017R$layout.tv_pip_menu);
+        TvPipComponent build = this.mPipComponentBuilder.pipControlsView((PipControlsView) findViewById(C0015R$id.pip_controls)).build();
         this.mTvPipComponent = build;
         this.mPipControlsViewController = build.getPipControlsViewController();
         this.mPipManager.addListener(this);

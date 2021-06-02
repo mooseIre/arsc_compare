@@ -5,8 +5,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.detail.QSControlExpandTileView;
 import com.android.systemui.controlcenter.qs.tileview.QSBigTileView;
@@ -84,13 +84,13 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
 
     public final void init(@NotNull ControlCenterPanelView controlCenterPanelView) {
         Intrinsics.checkParameterIsNotNull(controlCenterPanelView, "panelView");
-        QSControlExpandTileView qSControlExpandTileView = (QSControlExpandTileView) findViewById(C0014R$id.expand_tile);
+        QSControlExpandTileView qSControlExpandTileView = (QSControlExpandTileView) findViewById(C0015R$id.expand_tile);
         this.expandTileView = qSControlExpandTileView;
         if (Constants.IS_INTERNATIONAL) {
             if (qSControlExpandTileView != null) {
                 qSControlExpandTileView.setVisibility(8);
             }
-            QSBigTileView qSBigTileView = (QSBigTileView) findViewById(C0014R$id.big_tile_0);
+            QSBigTileView qSBigTileView = (QSBigTileView) findViewById(C0015R$id.big_tile_0);
             this.bigTile0 = qSBigTileView;
             if (qSBigTileView != null) {
                 qSBigTileView.setVisibility(0);
@@ -100,17 +100,17 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
             if (qSBigTileView2 != null) {
                 qSBigTileView2.init(controlCenterPanelView, "cell", 0);
             }
-            QSBigTileView qSBigTileView3 = (QSBigTileView) findViewById(C0014R$id.big_tile_1);
+            QSBigTileView qSBigTileView3 = (QSBigTileView) findViewById(C0015R$id.big_tile_1);
             this.bigTile1 = qSBigTileView3;
             if (qSBigTileView3 != null) {
                 qSBigTileView3.init(controlCenterPanelView, "wifi", 1);
             }
-            QSBigTileView qSBigTileView4 = (QSBigTileView) findViewById(C0014R$id.big_tile_2);
+            QSBigTileView qSBigTileView4 = (QSBigTileView) findViewById(C0015R$id.big_tile_2);
             this.bigTile2 = qSBigTileView4;
             if (qSBigTileView4 != null) {
                 qSBigTileView4.init(controlCenterPanelView, "bt", 2);
             }
-            QSBigTileView qSBigTileView5 = (QSBigTileView) findViewById(C0014R$id.big_tile_3);
+            QSBigTileView qSBigTileView5 = (QSBigTileView) findViewById(C0015R$id.big_tile_3);
             this.bigTile3 = qSBigTileView5;
             if (qSBigTileView5 != null) {
                 qSBigTileView5.init(controlCenterPanelView, "flashlight", 3);
@@ -119,17 +119,17 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
             return;
         }
         this.tileView0 = qSControlExpandTileView;
-        QSBigTileView qSBigTileView6 = (QSBigTileView) findViewById(C0014R$id.big_tile_1);
+        QSBigTileView qSBigTileView6 = (QSBigTileView) findViewById(C0015R$id.big_tile_1);
         this.bigTile1 = qSBigTileView6;
         if (qSBigTileView6 != null) {
             qSBigTileView6.init(controlCenterPanelView, "bt", 1);
         }
-        QSBigTileView qSBigTileView7 = (QSBigTileView) findViewById(C0014R$id.big_tile_2);
+        QSBigTileView qSBigTileView7 = (QSBigTileView) findViewById(C0015R$id.big_tile_2);
         this.bigTile2 = qSBigTileView7;
         if (qSBigTileView7 != null) {
             qSBigTileView7.init(controlCenterPanelView, "cell", 2);
         }
-        QSBigTileView qSBigTileView8 = (QSBigTileView) findViewById(C0014R$id.big_tile_3);
+        QSBigTileView qSBigTileView8 = (QSBigTileView) findViewById(C0015R$id.big_tile_3);
         this.bigTile3 = qSBigTileView8;
         if (qSBigTileView8 != null) {
             qSBigTileView8.init(controlCenterPanelView, "wifi", 3);
@@ -200,10 +200,10 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
     public final void updateLayout() {
         Context context = getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "context");
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tile_height);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_height);
         Context context2 = getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "context");
-        int dimensionPixelSize2 = context2.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_interval_vertical);
+        int dimensionPixelSize2 = context2.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_interval_vertical);
         Ref$ObjectRef ref$ObjectRef = new Ref$ObjectRef();
         QSBigTileView qSBigTileView = this.bigTile0;
         if (qSBigTileView == null) {
@@ -282,12 +282,12 @@ public final class ControlCenterBigTileGroup extends RelativeLayout {
     public final int calculateHeight() {
         Context context = getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "context");
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tile_height);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_height);
         Context context2 = getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "context");
-        int dimensionPixelSize2 = context2.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_interval_vertical);
+        int dimensionPixelSize2 = context2.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_interval_vertical);
         Context context3 = getContext();
         Intrinsics.checkExpressionValueIsNotNull(context3, "context");
-        return (dimensionPixelSize * 2) + dimensionPixelSize2 + context3.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_padding_top);
+        return (dimensionPixelSize * 2) + dimensionPixelSize2 + context3.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_padding_top);
     }
 }

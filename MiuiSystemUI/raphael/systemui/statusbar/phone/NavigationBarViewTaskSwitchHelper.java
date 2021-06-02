@@ -5,7 +5,7 @@ import android.content.Intent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ViewConfiguration;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +24,7 @@ public final class NavigationBarViewTaskSwitchHelper extends GestureDetector.Sim
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(navigationBarView, "navBar");
         this.mTaskSwitcherDetector = new GestureDetector(context2, this);
-        this.mScrollTouchSlop = context2.getResources().getDimensionPixelSize(C0011R$dimen.navigation_bar_size);
+        this.mScrollTouchSlop = context2.getResources().getDimensionPixelSize(C0012R$dimen.navigation_bar_size);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context2);
         Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "ViewConfiguration.get(context)");
         this.mMinFlingVelocity = viewConfiguration.getScaledMinimumFlingVelocity();

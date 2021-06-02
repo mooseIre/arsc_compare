@@ -25,11 +25,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.R$styleable;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.shared.system.QuickStepContract;
@@ -102,7 +102,7 @@ public class ScreenPinningRequest implements View.OnClickListener, NavigationMod
     }
 
     public void onClick(View view) {
-        if (view.getId() == C0014R$id.screen_pinning_ok_button || this.mRequestWindow == view) {
+        if (view.getId() == C0015R$id.screen_pinning_ok_button || this.mRequestWindow == view) {
             try {
                 ActivityTaskManager.getService().startSystemLockTaskMode(this.taskId);
             } catch (RemoteException unused) {
@@ -160,7 +160,7 @@ public class ScreenPinningRequest implements View.OnClickListener, NavigationMod
             float f = displayMetrics.density;
             int rotation = RotationUtils.getRotation(((FrameLayout) this).mContext);
             inflateView(rotation);
-            int color = ((FrameLayout) this).mContext.getColor(C0010R$color.screen_pinning_request_window_bg);
+            int color = ((FrameLayout) this).mContext.getColor(C0011R$color.screen_pinning_request_window_bg);
             if (ActivityManager.isHighEndGfx()) {
                 this.mLayout.setAlpha(0.0f);
                 if (rotation == 2) {
@@ -197,19 +197,19 @@ public class ScreenPinningRequest implements View.OnClickListener, NavigationMod
             Context context = getContext();
             boolean z = true;
             if (i == 2) {
-                i2 = C0016R$layout.screen_pinning_request_sea_phone;
+                i2 = C0017R$layout.screen_pinning_request_sea_phone;
             } else if (i == 1) {
-                i2 = C0016R$layout.screen_pinning_request_land_phone;
+                i2 = C0017R$layout.screen_pinning_request_land_phone;
             } else {
-                i2 = C0016R$layout.screen_pinning_request;
+                i2 = C0017R$layout.screen_pinning_request;
             }
             ViewGroup viewGroup = (ViewGroup) View.inflate(context, i2, null);
             this.mLayout = viewGroup;
             viewGroup.setClickable(true);
             int i4 = 0;
             this.mLayout.setLayoutDirection(0);
-            this.mLayout.findViewById(C0014R$id.screen_pinning_text_area).setLayoutDirection(3);
-            View findViewById = this.mLayout.findViewById(C0014R$id.screen_pinning_buttons);
+            this.mLayout.findViewById(C0015R$id.screen_pinning_text_area).setLayoutDirection(3);
+            View findViewById = this.mLayout.findViewById(C0015R$id.screen_pinning_buttons);
             WindowManagerWrapper instance = WindowManagerWrapper.getInstance();
             if (QuickStepContract.isGesturalMode(ScreenPinningRequest.this.mNavBarMode) || !instance.hasSoftNavigationBar(((FrameLayout) this).mContext.getDisplayId())) {
                 findViewById.setVisibility(8);
@@ -217,11 +217,11 @@ public class ScreenPinningRequest implements View.OnClickListener, NavigationMod
                 findViewById.setLayoutDirection(3);
                 swapChildrenIfRtlAndVertical(findViewById);
             }
-            ((Button) this.mLayout.findViewById(C0014R$id.screen_pinning_ok_button)).setOnClickListener(ScreenPinningRequest.this);
+            ((Button) this.mLayout.findViewById(C0015R$id.screen_pinning_ok_button)).setOnClickListener(ScreenPinningRequest.this);
             if (this.mShowCancel) {
-                ((Button) this.mLayout.findViewById(C0014R$id.screen_pinning_cancel_button)).setOnClickListener(ScreenPinningRequest.this);
+                ((Button) this.mLayout.findViewById(C0015R$id.screen_pinning_cancel_button)).setOnClickListener(ScreenPinningRequest.this);
             } else {
-                ((Button) this.mLayout.findViewById(C0014R$id.screen_pinning_cancel_button)).setVisibility(4);
+                ((Button) this.mLayout.findViewById(C0015R$id.screen_pinning_cancel_button)).setVisibility(4);
             }
             NavigationBarView navigationBarView = (NavigationBarView) ScreenPinningRequest.this.mStatusBarOptionalLazy.map($$Lambda$ScreenPinningRequest$RequestWindowView$iq7_kF2IL9FTwkRZM6zjXuxpxgs.INSTANCE).orElse(null);
             if (navigationBarView == null || !navigationBarView.isRecentsButtonVisible()) {
@@ -229,43 +229,43 @@ public class ScreenPinningRequest implements View.OnClickListener, NavigationMod
             }
             boolean isTouchExplorationEnabled = ScreenPinningRequest.this.mAccessibilityService.isTouchExplorationEnabled();
             if (QuickStepContract.isGesturalMode(ScreenPinningRequest.this.mNavBarMode)) {
-                i3 = C0020R$string.screen_pinning_description_gestural;
+                i3 = C0021R$string.screen_pinning_description_gestural;
             } else if (z) {
-                this.mLayout.findViewById(C0014R$id.screen_pinning_recents_group).setVisibility(0);
-                this.mLayout.findViewById(C0014R$id.screen_pinning_home_bg_light).setVisibility(4);
-                this.mLayout.findViewById(C0014R$id.screen_pinning_home_bg).setVisibility(4);
+                this.mLayout.findViewById(C0015R$id.screen_pinning_recents_group).setVisibility(0);
+                this.mLayout.findViewById(C0015R$id.screen_pinning_home_bg_light).setVisibility(4);
+                this.mLayout.findViewById(C0015R$id.screen_pinning_home_bg).setVisibility(4);
                 if (isTouchExplorationEnabled) {
-                    i3 = C0020R$string.screen_pinning_description_accessible;
+                    i3 = C0021R$string.screen_pinning_description_accessible;
                 } else {
-                    i3 = C0020R$string.screen_pinning_description;
+                    i3 = C0021R$string.screen_pinning_description;
                 }
             } else {
-                this.mLayout.findViewById(C0014R$id.screen_pinning_recents_group).setVisibility(4);
-                this.mLayout.findViewById(C0014R$id.screen_pinning_home_bg_light).setVisibility(0);
-                this.mLayout.findViewById(C0014R$id.screen_pinning_home_bg).setVisibility(0);
+                this.mLayout.findViewById(C0015R$id.screen_pinning_recents_group).setVisibility(4);
+                this.mLayout.findViewById(C0015R$id.screen_pinning_home_bg_light).setVisibility(0);
+                this.mLayout.findViewById(C0015R$id.screen_pinning_home_bg).setVisibility(0);
                 if (isTouchExplorationEnabled) {
-                    i3 = C0020R$string.screen_pinning_description_recents_invisible_accessible;
+                    i3 = C0021R$string.screen_pinning_description_recents_invisible_accessible;
                 } else {
-                    i3 = C0020R$string.screen_pinning_description_recents_invisible;
+                    i3 = C0021R$string.screen_pinning_description_recents_invisible;
                 }
             }
             if (navigationBarView != null) {
-                ((ImageView) this.mLayout.findViewById(C0014R$id.screen_pinning_back_icon)).setImageDrawable(navigationBarView.getBackDrawable());
-                ((ImageView) this.mLayout.findViewById(C0014R$id.screen_pinning_home_icon)).setImageDrawable(navigationBarView.getHomeDrawable());
+                ((ImageView) this.mLayout.findViewById(C0015R$id.screen_pinning_back_icon)).setImageDrawable(navigationBarView.getBackDrawable());
+                ((ImageView) this.mLayout.findViewById(C0015R$id.screen_pinning_home_icon)).setImageDrawable(navigationBarView.getHomeDrawable());
             }
-            int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.screen_pinning_description_bullet_gap_width);
+            int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.screen_pinning_description_bullet_gap_width);
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder();
             spannableStringBuilder.append(getContext().getText(i3), new BulletSpan(dimensionPixelSize), 0);
             spannableStringBuilder.append((CharSequence) System.lineSeparator());
-            spannableStringBuilder.append(getContext().getText(C0020R$string.screen_pinning_exposes_personal_data), new BulletSpan(dimensionPixelSize), 0);
+            spannableStringBuilder.append(getContext().getText(C0021R$string.screen_pinning_exposes_personal_data), new BulletSpan(dimensionPixelSize), 0);
             spannableStringBuilder.append((CharSequence) System.lineSeparator());
-            spannableStringBuilder.append(getContext().getText(C0020R$string.screen_pinning_can_open_other_apps), new BulletSpan(dimensionPixelSize), 0);
-            ((TextView) this.mLayout.findViewById(C0014R$id.screen_pinning_description)).setText(spannableStringBuilder);
+            spannableStringBuilder.append(getContext().getText(C0021R$string.screen_pinning_can_open_other_apps), new BulletSpan(dimensionPixelSize), 0);
+            ((TextView) this.mLayout.findViewById(C0015R$id.screen_pinning_description)).setText(spannableStringBuilder);
             if (isTouchExplorationEnabled) {
                 i4 = 4;
             }
-            this.mLayout.findViewById(C0014R$id.screen_pinning_back_bg).setVisibility(i4);
-            this.mLayout.findViewById(C0014R$id.screen_pinning_back_bg_light).setVisibility(i4);
+            this.mLayout.findViewById(C0015R$id.screen_pinning_back_bg).setVisibility(i4);
+            this.mLayout.findViewById(C0015R$id.screen_pinning_back_bg_light).setVisibility(i4);
             addView(this.mLayout, ScreenPinningRequest.this.getRequestLayoutParams(i));
         }
 

@@ -1,6 +1,5 @@
 package com.android.systemui.controlcenter.phone;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -16,7 +15,7 @@ import android.view.WindowInsets;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Space;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.animator.AdvancedAnimatorImpl;
 import com.android.systemui.controlcenter.phone.animator.ControlCenterPanelAnimator;
@@ -44,10 +43,7 @@ import miuix.animation.controller.AnimState;
 import miuix.animation.property.ViewProperty;
 import miuix.animation.utils.EaseManager;
 import miuix.animation.utils.VelocityMonitor;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-/* compiled from: ControlCenterPanelViewController.kt */
 public final class ControlCenterPanelViewController implements ConfigurationController.ConfigurationListener, GestureObserver.Callback {
     private boolean animatingToCollapse;
     private final ControlPanelController ccController;
@@ -63,7 +59,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     private final NCSwitchController ncSwitchController;
     private int orientation = 1;
     private int paddingHorizontal;
-    @NotNull
     private final ControlCenterPanelAnimator panelAnimator = createPanelAnimator();
     private final ControlCenterPanelView panelView;
     private int screenHeight;
@@ -79,7 +74,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     private final VelocityMonitor velocityMonitor = new VelocityMonitor();
     private final VelocityTracker velocityTracker;
 
-    public ControlCenterPanelViewController(@NotNull Context context2, @NotNull ControlCenterPanelView controlCenterPanelView, @NotNull ConfigurationController configurationController2, @NotNull ControlPanelController controlPanelController, @NotNull NCSwitchController nCSwitchController, @NotNull StatusBarStateController statusBarStateController2) {
+    public ControlCenterPanelViewController(Context context2, ControlCenterPanelView controlCenterPanelView, ConfigurationController configurationController2, ControlPanelController controlPanelController, NCSwitchController nCSwitchController, StatusBarStateController statusBarStateController2) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(controlCenterPanelView, "panelView");
         Intrinsics.checkParameterIsNotNull(configurationController2, "configurationController");
@@ -102,22 +97,21 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
             /* class com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.AnonymousClass1 */
             final /* synthetic */ ControlCenterPanelViewController this$0;
 
-            /* JADX WARN: Incorrect args count in method signature: ()V */
             {
                 this.this$0 = r1;
             }
 
-            public void onViewAttachedToWindow(@Nullable View view) {
+            public void onViewAttachedToWindow(View view) {
                 this.this$0.configurationController.addCallback(this.this$0);
                 this.this$0.gestureObserver.addCallback(this.this$0);
             }
 
-            public void onViewDetachedFromWindow(@Nullable View view) {
+            public void onViewDetachedFromWindow(View view) {
                 this.this$0.gestureObserver.removeCallback(this.this$0);
                 this.this$0.configurationController.removeCallback(this.this$0);
             }
         });
-        this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_panel_margin_horizontal);
+        this.paddingHorizontal = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_panel_margin_horizontal);
     }
 
     public final boolean isPortrait() {
@@ -128,7 +122,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.ccController.isSuperPowerMode();
     }
 
-    @NotNull
     public final ControlCenterPanelAnimator getPanelAnimator() {
         return this.panelAnimator;
     }
@@ -187,7 +180,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return this.transRatio;
     }
 
-    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
@@ -275,7 +267,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                 ViewGroup.MarginLayoutParams marginLayoutParams2 = (ViewGroup.MarginLayoutParams) layoutParams3;
                 if (isPortrait()) {
                     QSControlCenterHeaderView header = this.panelView.getHeader();
-                    header.setPadding(this.paddingHorizontal, this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_center_header_paddingTop), this.paddingHorizontal, header.getPaddingBottom());
+                    header.setPadding(this.paddingHorizontal, this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_center_header_paddingTop), this.paddingHorizontal, header.getPaddingBottom());
                     ControlCenterPanelView controlCenterPanelView = this.panelView;
                     controlCenterPanelView.setPadding(0, 0, 0, controlCenterPanelView.getPaddingBottom());
                     LinearLayout container = this.panelView.getTileContainer().getContainer();
@@ -286,26 +278,26 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
                     ControlCenterFooterPanel footer = this.panelView.getFooter();
                     footer.setPadding(this.paddingHorizontal, footer.getPaddingTop(), this.paddingHorizontal, footer.getPaddingBottom());
                     layoutParams.width = -1;
-                    marginLayoutParams2.bottomMargin = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_margin_bottom);
+                    marginLayoutParams2.bottomMargin = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_margin_bottom);
                     marginLayoutParams.width = -1;
                     marginLayoutParams.setMarginEnd(0);
                     marginLayoutParams.height = this.panelView.getBigTileLayout().calculateHeight() + marginLayoutParams2.bottomMargin + this.panelView.getTileLayout().getMinHeight();
                     return;
                 }
-                int dimensionPixelSize = ((CommonUtil.getScreenSize(this.context).x - (this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land) * 2)) - this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_land_tiles_margin_middle)) / 2;
+                int dimensionPixelSize = ((CommonUtil.getScreenSize(this.context).x - (this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land) * 2)) - this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_land_tiles_margin_middle)) / 2;
                 QSControlCenterHeaderView header2 = this.panelView.getHeader();
                 header2.setPadding(0, 0, 0, header2.getPaddingBottom());
                 LinearLayout container3 = this.panelView.getContentContainer().getContainer();
                 container3.setPadding(0, container3.getPaddingTop(), 0, container3.getPaddingBottom());
                 LinearLayout container4 = this.panelView.getTileContainer().getContainer();
-                container4.setPadding(0, this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tiles_padding_top), 0, container4.getPaddingBottom());
+                container4.setPadding(0, this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tiles_padding_top), 0, container4.getPaddingBottom());
                 ControlCenterFooterPanel footer2 = this.panelView.getFooter();
                 footer2.setPadding(0, footer2.getPaddingTop(), 0, footer2.getPaddingBottom());
                 ControlCenterPanelView controlCenterPanelView2 = this.panelView;
                 controlCenterPanelView2.setPadding(dimensionPixelSize, 0, dimensionPixelSize, controlCenterPanelView2.getPaddingBottom());
-                layoutParams.width = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land);
-                marginLayoutParams.width = this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_width_land);
-                marginLayoutParams.setMarginEnd(this.context.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_land_tiles_margin_middle));
+                layoutParams.width = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
+                marginLayoutParams.width = this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_width_land);
+                marginLayoutParams.setMarginEnd(this.context.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_land_tiles_margin_middle));
                 marginLayoutParams2.bottomMargin = 0;
                 marginLayoutParams.height = -1;
                 return;
@@ -361,14 +353,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         return (!this.isFsgEnabled || !this.isFsgLineEnabled || this.statusBarStateController.getState() == 1 || this.statusBarStateController.getState() == 2 || this.stableInsetBottom == 0) ? false : true;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final boolean isExpandable() {
         return !isSuperPowerMode();
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
-    public void onConfigChanged(@NotNull Configuration configuration) {
+    public void onConfigChanged(Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
         this.panelView.updateResources();
         onOrientationChanged(configuration.orientation, false);
@@ -377,13 +367,12 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
     }
 
-    public final void onApplyWindowInsets(@NotNull WindowInsets windowInsets) {
+    public final void onApplyWindowInsets(WindowInsets windowInsets) {
         Intrinsics.checkParameterIsNotNull(windowInsets, "insets");
         this.stableInsetBottom = windowInsets.getStableInsetBottom();
         this.panelView.getContentContainer().getNavigationBarSpace().getLayoutParams().height = this.stableInsetBottom;
     }
 
-    /* compiled from: ControlCenterPanelViewController.kt */
     public final class TouchHandler implements View.OnTouchListener {
         private Boolean eventAborted;
         private int initialScrollY;
@@ -400,12 +389,11 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         private float transX = -1.0f;
         private float transY = -1.0f;
 
-        /* JADX WARN: Incorrect args count in method signature: ()V */
         public TouchHandler() {
+            ControlCenterPanelViewController.this = r1;
         }
 
-        @Nullable
-        public final Boolean dispatchTouchEvent(@NotNull MotionEvent motionEvent) {
+        public final Boolean dispatchTouchEvent(MotionEvent motionEvent) {
             ControlPanelWindowView controlPanelWindowView;
             Boolean bool = Boolean.TRUE;
             Boolean bool2 = Boolean.FALSE;
@@ -475,17 +463,15 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         /* JADX WARNING: Code restructure failed: missing block: B:18:0x0049, code lost:
             if (r4 != 3) goto L_0x014f;
          */
-        @org.jetbrains.annotations.Nullable
         /* Code decompiled incorrectly, please refer to instructions dump. */
-        public final java.lang.Boolean onInterceptTouchEvent(@org.jetbrains.annotations.NotNull android.view.MotionEvent r9) {
+        public final java.lang.Boolean onInterceptTouchEvent(android.view.MotionEvent r9) {
             /*
             // Method dump skipped, instructions count: 336
             */
             throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.controlcenter.phone.ControlCenterPanelViewController.TouchHandler.onInterceptTouchEvent(android.view.MotionEvent):java.lang.Boolean");
         }
 
-        @SuppressLint({"ClickableViewAccessibility"})
-        public boolean onTouch(@NotNull View view, @NotNull MotionEvent motionEvent) {
+        public boolean onTouch(View view, MotionEvent motionEvent) {
             Intrinsics.checkParameterIsNotNull(view, "v");
             Intrinsics.checkParameterIsNotNull(motionEvent, "event");
             boolean z = ControlCenterPanelViewController.this.panelView.isExpanded() && !ControlCenterPanelViewController.this.ccController.isNCSwitching();
@@ -597,8 +583,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void calculateTransitionValues() {
         int height = this.panelView.getBigTileLayout().getHeight();
         ViewGroup.LayoutParams layoutParams = this.panelView.getBigTileLayout().getLayoutParams();
@@ -623,8 +607,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         throw new TypeCastException("null cannot be cast to non-null type android.view.ViewGroup.MarginLayoutParams");
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void toExpandAnimation() {
         IStateStyle iStateStyle = this.expandTransAnim;
         if (iStateStyle != null) {
@@ -648,8 +630,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void toCollapseAnimation() {
         IStateStyle iStateStyle = this.expandTransAnim;
         if (iStateStyle != null) {
@@ -673,8 +653,6 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
         throw null;
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private final void updateTransRatioByTouch(float f, float f2) {
         float f3 = ((this.tileLayoutLastHeight - ((float) this.tileLayoutMinHeight)) + f) / ((float) this.expandThreshold);
         if (f3 < 0.0f) {

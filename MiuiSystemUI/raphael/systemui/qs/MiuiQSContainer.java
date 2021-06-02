@@ -15,10 +15,10 @@ import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import androidx.dynamicanimation.animation.FloatPropertyCompat;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Interpolators;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.qs.customize.MiuiQSCustomizer;
@@ -167,7 +167,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
 
     private final LayoutInflater getLayoutInflater() {
         if (this.layoutInflater == null) {
-            this.layoutInflater = this.inflationController.injectable(LayoutInflater.from(getContext()).cloneInContext(new ContextThemeWrapper(getContext(), C0021R$style.qs_theme)));
+            this.layoutInflater = this.inflationController.injectable(LayoutInflater.from(getContext()).cloneInContext(new ContextThemeWrapper(getContext(), C0022R$style.qs_theme)));
         }
         return this.layoutInflater;
     }
@@ -197,17 +197,17 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0014R$id.header);
+        View findViewById = findViewById(C0015R$id.header);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.header)");
         MiuiNotificationShadeHeader miuiNotificationShadeHeader = (MiuiNotificationShadeHeader) findViewById;
         this.header = miuiNotificationShadeHeader;
         if (miuiNotificationShadeHeader != null) {
             miuiNotificationShadeHeader.setQSContainer(this);
             this.caretInterpolator = Interpolators.FAST_OUT_SLOW_IN;
-            View findViewById2 = findViewById(C0014R$id.quick_settings_status_bar_background);
+            View findViewById2 = findViewById(C0015R$id.quick_settings_status_bar_background);
             Intrinsics.checkExpressionValueIsNotNull(findViewById2, "findViewById(R.id.quick_…gs_status_bar_background)");
             this.statusBarBackground = findViewById2;
-            View findViewById3 = findViewById(C0014R$id.quick_settings_gradient_view);
+            View findViewById3 = findViewById(C0015R$id.quick_settings_gradient_view);
             Intrinsics.checkExpressionValueIsNotNull(findViewById3, "findViewById(R.id.quick_settings_gradient_view)");
             this.backgroundGradient = findViewById3;
             setImportantForAccessibility(2);
@@ -221,30 +221,30 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         if (!this.contentAdded) {
             LayoutInflater layoutInflater2 = getLayoutInflater();
             if (layoutInflater2 != null) {
-                layoutInflater2.inflate(C0016R$layout.qs_content, (ViewGroup) this, true);
+                layoutInflater2.inflate(C0017R$layout.qs_content, (ViewGroup) this, true);
                 LayoutInflater layoutInflater3 = getLayoutInflater();
                 if (layoutInflater3 != null) {
-                    layoutInflater3.inflate(C0016R$layout.qs_detail, (ViewGroup) this, true);
+                    layoutInflater3.inflate(C0017R$layout.qs_detail, (ViewGroup) this, true);
                     LayoutInflater layoutInflater4 = getLayoutInflater();
                     if (layoutInflater4 != null) {
-                        layoutInflater4.inflate(C0016R$layout.qs_customize_panel, (ViewGroup) this, true);
-                        this.qsContent = (QSContent) findViewById(C0014R$id.qs_content);
-                        this.qsDetail = (MiuiQSDetail) findViewById(C0014R$id.qs_detail);
-                        this.qsCustomizer = (MiuiQSCustomizer) findViewById(C0014R$id.qs_customize);
-                        this.qsPanel = (QSPanel) findViewById(C0014R$id.quick_settings_panel);
-                        this.quickQSPanel = (QuickQSPanel) findViewById(C0014R$id.quick_qs_panel);
-                        this.brightnessView = (ToggleSliderView) findViewById(C0014R$id.brightness_slider);
+                        layoutInflater4.inflate(C0017R$layout.qs_customize_panel, (ViewGroup) this, true);
+                        this.qsContent = (QSContent) findViewById(C0015R$id.qs_content);
+                        this.qsDetail = (MiuiQSDetail) findViewById(C0015R$id.qs_detail);
+                        this.qsCustomizer = (MiuiQSCustomizer) findViewById(C0015R$id.qs_customize);
+                        this.qsPanel = (QSPanel) findViewById(C0015R$id.quick_settings_panel);
+                        this.quickQSPanel = (QuickQSPanel) findViewById(C0015R$id.quick_qs_panel);
+                        this.brightnessView = (ToggleSliderView) findViewById(C0015R$id.brightness_slider);
                         this.brightnessController = new MiuiBrightnessController(getContext(), this.brightnessView, this.broadcastDispatcher);
-                        View findViewById = findViewById(C0014R$id.qs_footer);
+                        View findViewById = findViewById(C0015R$id.qs_footer);
                         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.qs_footer)");
                         if (findViewById instanceof QSFooter) {
                             this.footer = (QSFooter) findViewById;
                         }
-                        this.footerBundle = (ViewGroup) findViewById(C0014R$id.qs_footer_bundle);
-                        this.qsPanelScrollView = findViewById(C0014R$id.expanded_qs_scroll_view);
-                        this.qsDetail = (MiuiQSDetail) findViewById(C0014R$id.qs_detail);
-                        this.qsCustomizer = (MiuiQSCustomizer) findViewById(C0014R$id.qs_customize);
-                        this.dragHandle = (ImageView) findViewById(C0014R$id.qs_expand_indicator);
+                        this.footerBundle = (ViewGroup) findViewById(C0015R$id.qs_footer_bundle);
+                        this.qsPanelScrollView = findViewById(C0015R$id.expanded_qs_scroll_view);
+                        this.qsDetail = (MiuiQSDetail) findViewById(C0015R$id.qs_detail);
+                        this.qsCustomizer = (MiuiQSCustomizer) findViewById(C0015R$id.qs_customize);
+                        this.dragHandle = (ImageView) findViewById(C0015R$id.qs_expand_indicator);
                         Context context = getContext();
                         Intrinsics.checkExpressionValueIsNotNull(context, "context");
                         IndicatorDrawable indicatorDrawable2 = new IndicatorDrawable(context);
@@ -253,7 +253,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                         if (imageView != null) {
                             imageView.setImageDrawable(indicatorDrawable2);
                         }
-                        View findViewById2 = findViewById(C0014R$id.quick_settings_background);
+                        View findViewById2 = findViewById(C0015R$id.quick_settings_background);
                         this.qsBackground = findViewById2;
                         int i = this.backgroundBottom;
                         if (i > 0 && findViewById2 != null) {
@@ -373,7 +373,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
                     ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) layoutParams;
                     int displayHeight = ((getDisplayHeight() - marginLayoutParams.topMargin) - marginLayoutParams.bottomMargin) - getPaddingBottom();
                     if (z) {
-                        displayHeight -= getResources().getDimensionPixelSize(C0011R$dimen.navigation_bar_height);
+                        displayHeight -= getResources().getDimensionPixelSize(C0012R$dimen.navigation_bar_height);
                     }
                     int paddingLeft = getPaddingLeft() + getPaddingRight() + marginLayoutParams.leftMargin + marginLayoutParams.rightMargin;
                     int childMeasureSpec = ViewGroup.getChildMeasureSpec(i, paddingLeft, marginLayoutParams.width);
@@ -504,7 +504,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
             if (miuiQSCustomizer != null) {
                 miuiQSCustomizer.updateResources(height);
             }
-            this.sideMargins = getResources().getDimensionPixelSize(C0011R$dimen.notification_side_paddings);
+            this.sideMargins = getResources().getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
             this.contentPaddingStart = getResources().getDimensionPixelSize(17105356);
             int dimensionPixelSize = getResources().getDimensionPixelSize(17105355);
             boolean z2 = dimensionPixelSize != this.contentPaddingEnd;
@@ -788,7 +788,7 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         } else if (this.dataUsage == null && this.footerBundle != null) {
             LayoutInflater layoutInflater2 = getLayoutInflater();
             if (layoutInflater2 != null) {
-                View inflate = layoutInflater2.inflate(C0016R$layout.qs_footer_data_usage, this.footerBundle, false);
+                View inflate = layoutInflater2.inflate(C0017R$layout.qs_footer_data_usage, this.footerBundle, false);
                 if (inflate != null) {
                     QSFooterDataUsage qSFooterDataUsage3 = (QSFooterDataUsage) inflate;
                     this.dataUsage = qSFooterDataUsage3;
@@ -856,8 +856,8 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
     private final void updateBrightnessMirror() {
         BrightnessMirrorController brightnessMirrorController2 = this.brightnessMirrorController;
         if (brightnessMirrorController2 != null) {
-            ToggleSliderView toggleSliderView = (ToggleSliderView) findViewById(C0014R$id.brightness_slider);
-            ToggleSliderView toggleSliderView2 = (ToggleSliderView) brightnessMirrorController2.getMirror().findViewById(C0014R$id.brightness_slider);
+            ToggleSliderView toggleSliderView = (ToggleSliderView) findViewById(C0015R$id.brightness_slider);
+            ToggleSliderView toggleSliderView2 = (ToggleSliderView) brightnessMirrorController2.getMirror().findViewById(C0015R$id.brightness_slider);
             if (toggleSliderView != null) {
                 toggleSliderView.setMirror(toggleSliderView2);
             }

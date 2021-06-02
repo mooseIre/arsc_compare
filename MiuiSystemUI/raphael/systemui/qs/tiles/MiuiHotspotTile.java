@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Switch;
 import androidx.appcompat.R$styleable;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -88,7 +88,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> implements 
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.quick_settings_hotspot_label);
+        return this.mContext.getString(C0021R$string.quick_settings_hotspot_label);
     }
 
     /* access modifiers changed from: protected */
@@ -98,24 +98,24 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> implements 
         boolean z = obj == QSTileImpl.ARG_SHOW_TRANSIENT_ENABLING;
         checkIfRestrictionEnforcedByAdminOnly(booleanState, "no_config_tethering");
         booleanState.value = z || this.mHotspotController.isHotspotEnabled();
-        booleanState.label = this.mContext.getString(C0020R$string.quick_settings_hotspot_label);
+        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_hotspot_label);
         if (!booleanState.value) {
-            icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_hotspot_disabled);
+            icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_hotspot_disabled);
         } else if (booleanState.isTransient) {
-            icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_hotspot_enabled);
+            icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_hotspot_enabled);
         } else {
-            icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_hotspot_enabled);
+            icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_hotspot_enabled);
         }
         booleanState.icon = icon;
         boolean z2 = this.mIsAirplaneMode;
         boolean isHotspotTransient = this.mHotspotController.isHotspotTransient();
         booleanState.isTransient = isHotspotTransient;
         if (isHotspotTransient) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_hotspot_enabled);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_hotspot_enabled);
         } else if (this.mIsAirplaneMode) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_hotspot_disabled);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_hotspot_disabled);
         } else if (z2) {
-            booleanState.icon = QSTileImpl.ResourceIcon.get(C0012R$drawable.ic_qs_hotspot_disabled);
+            booleanState.icon = QSTileImpl.ResourceIcon.get(C0013R$drawable.ic_qs_hotspot_disabled);
         }
         if (this.mIsAirplaneMode) {
             i = 0;
@@ -126,7 +126,7 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> implements 
         StringBuilder sb = new StringBuilder();
         sb.append((Object) booleanState.label);
         sb.append(",");
-        sb.append(this.mContext.getString(booleanState.value ? C0020R$string.switch_bar_on : C0020R$string.switch_bar_off));
+        sb.append(this.mContext.getString(booleanState.value ? C0021R$string.switch_bar_on : C0021R$string.switch_bar_off));
         booleanState.contentDescription = sb.toString();
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
     }
@@ -135,9 +135,9 @@ public class MiuiHotspotTile extends QSTileImpl<QSTile.BooleanState> implements 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0020R$string.accessibility_quick_settings_hotspot_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_on);
         }
-        return this.mContext.getString(C0020R$string.accessibility_quick_settings_hotspot_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_hotspot_changed_off);
     }
 
     @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback

@@ -29,8 +29,8 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import com.android.systemui.C0006R$anim;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
 import miui.util.CustomizeUtil;
 
 public class NavStubDemoView extends View {
@@ -223,7 +223,7 @@ public class NavStubDemoView extends View {
             }
         });
         this.mRecentsAnimator.setDuration(300L);
-        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0012R$drawable.app_note);
+        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0013R$drawable.app_note);
         this.mFakeBitmap = decodeResource;
         int min = Math.min(decodeResource.getHeight(), (int) (((float) this.mFakeBitmap.getWidth()) * ((((float) this.mShowHeight) * 1.0f) / ((float) this.mShowWidth))));
         Bitmap bitmap = this.mFakeBitmap;
@@ -235,7 +235,7 @@ public class NavStubDemoView extends View {
         this.mDragBitmap = createRoundCornerBmp;
         createRoundCornerBmp.setHasAlpha(false);
         this.mDragBitmap.prepareToDraw();
-        this.mAppIcon = BitmapFactory.decodeResource(getResources(), C0012R$drawable.note_icon);
+        this.mAppIcon = BitmapFactory.decodeResource(getResources(), C0013R$drawable.note_icon);
     }
 
     private Bitmap createRoundCornerBmp(Bitmap bitmap) {
@@ -540,7 +540,7 @@ public class NavStubDemoView extends View {
     }
 
     private void startRecentTaskAnim() {
-        this.mShowHeight -= CustomizeUtil.HAS_NOTCH ? getContext().getResources().getDimensionPixelSize(C0011R$dimen.status_bar_height) : 0;
+        this.mShowHeight -= CustomizeUtil.HAS_NOTCH ? getContext().getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height) : 0;
         this.mIsAppToRecents = true;
         float width = (((float) this.mRecentsFirstCardBound.width()) * 1.0f) / ((float) this.mShowWidth);
         ValueAnimator ofPropertyValuesHolder = ValueAnimator.ofPropertyValuesHolder(PropertyValuesHolder.ofFloat("scale", this.mCurScale, width), PropertyValuesHolder.ofInt("bottomDec", (int) (this.mCurScale * ((float) this.mShowHeight)), (int) (((float) this.mRecentsFirstCardBound.height()) / width)));

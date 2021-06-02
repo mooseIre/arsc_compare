@@ -13,8 +13,8 @@ import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.ScreenDecorations;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -67,9 +67,9 @@ public class PhoneStatusBarView extends PanelBar {
 
     @Override // com.android.systemui.statusbar.phone.PanelBar
     public void onFinishInflate() {
-        this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C0014R$id.battery);
-        this.mCutoutSpace = findViewById(C0014R$id.cutout_space_view);
-        this.mCenterIconSpace = findViewById(C0014R$id.centered_icon_area);
+        this.mBattery = (DarkIconDispatcher.DarkReceiver) findViewById(C0015R$id.battery);
+        this.mCutoutSpace = findViewById(C0015R$id.cutout_space_view);
+        this.mCenterIconSpace = findViewById(C0015R$id.centered_icon_area);
         updateResources();
     }
 
@@ -229,8 +229,8 @@ public class PhoneStatusBarView extends PanelBar {
     }
 
     public void updateResources() {
-        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0011R$dimen.display_cutout_margin_consumption);
-        this.mRoundedCornerPadding = getResources().getDimensionPixelSize(C0011R$dimen.rounded_corner_content_padding);
+        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0012R$dimen.display_cutout_margin_consumption);
+        this.mRoundedCornerPadding = getResources().getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding);
         updateStatusBarHeight();
     }
 
@@ -238,13 +238,13 @@ public class PhoneStatusBarView extends PanelBar {
         DisplayCutout displayCutout = this.mDisplayCutout;
         int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_height);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height);
         this.mStatusBarHeight = dimensionPixelSize;
         layoutParams.height = dimensionPixelSize - i;
-        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_padding_top);
-        int dimensionPixelSize3 = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_padding_start);
-        findViewById(C0014R$id.status_bar_contents).setPaddingRelative(dimensionPixelSize3, dimensionPixelSize2, getResources().getDimensionPixelSize(C0011R$dimen.status_bar_padding_end), 0);
-        findViewById(C0014R$id.notification_lights_out).setPaddingRelative(0, dimensionPixelSize3, 0, 0);
+        int dimensionPixelSize2 = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_padding_top);
+        int dimensionPixelSize3 = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_padding_start);
+        findViewById(C0015R$id.status_bar_contents).setPaddingRelative(dimensionPixelSize3, dimensionPixelSize2, getResources().getDimensionPixelSize(C0012R$dimen.status_bar_padding_end), 0);
+        findViewById(C0015R$id.notification_lights_out).setPaddingRelative(0, dimensionPixelSize3, 0, 0);
         setLayoutParams(layoutParams);
     }
 

@@ -15,8 +15,8 @@ import android.view.WindowManager;
 import com.android.keyguard.fod.MiuiGxzwManager;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.Dumpable;
 import com.android.systemui.colorextraction.SysuiColorExtractor;
@@ -101,10 +101,10 @@ public class NotificationShadeWindowController implements RemoteInputController.
         this.mKeyguardBypassController = keyguardBypassController;
         this.mColorExtractor = sysuiColorExtractor;
         dumpManager.registerDumpable(NotificationShadeWindowController.class.getName(), this);
-        context.getResources().getInteger(C0015R$integer.config_lockScreenDisplayTimeout);
+        context.getResources().getInteger(C0016R$integer.config_lockScreenDisplayTimeout);
         ((SysuiStatusBarStateController) statusBarStateController).addCallback(this.mStateListener, 1);
         configurationController.addCallback(this);
-        this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(context.getDisplay().getSupportedModes()).filter(new Predicate(context.getResources().getInteger(C0015R$integer.config_keyguardRefreshRate), context.getDisplay().getMode()) {
+        this.mKeyguardDisplayMode = (Display.Mode) Arrays.stream(context.getDisplay().getSupportedModes()).filter(new Predicate(context.getResources().getInteger(C0016R$integer.config_keyguardRefreshRate), context.getDisplay().getMode()) {
             /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationShadeWindowController$eZhKF4qxAkYFnq9gGQ6_QkkGic4 */
             public final /* synthetic */ int f$0;
             public final /* synthetic */ Display.Mode f$1;
@@ -143,7 +143,7 @@ public class NotificationShadeWindowController implements RemoteInputController.
 
     private boolean shouldEnableKeyguardScreenRotation() {
         Resources resources = this.mContext.getResources();
-        if (SystemProperties.getBoolean("lockscreen.rot_override", false) || resources.getBoolean(C0009R$bool.config_enableLockScreenRotation)) {
+        if (SystemProperties.getBoolean("lockscreen.rot_override", false) || resources.getBoolean(C0010R$bool.config_enableLockScreenRotation)) {
             return true;
         }
         return false;

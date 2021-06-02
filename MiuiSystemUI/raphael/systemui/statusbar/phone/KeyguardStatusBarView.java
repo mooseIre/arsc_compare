@@ -17,8 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.MiuiBatteryMeterView;
@@ -92,14 +92,14 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mSystemIconsContainer = findViewById(C0014R$id.system_icons_container);
-        this.mMultiUserSwitch = (MultiUserSwitch) findViewById(C0014R$id.multi_user_switch);
-        this.mMultiUserAvatar = (ImageView) findViewById(C0014R$id.multi_user_avatar);
-        this.mCarrierLabel = (TextView) findViewById(C0014R$id.keyguard_carrier_text);
-        this.mBatteryView = (MiuiBatteryMeterView) this.mSystemIconsContainer.findViewById(C0014R$id.battery);
-        this.mCutoutSpace = findViewById(C0014R$id.cutout_space_view);
-        this.mStatusIconArea = (ViewGroup) findViewById(C0014R$id.status_icon_area);
-        this.mStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0014R$id.statusIcons);
+        this.mSystemIconsContainer = findViewById(C0015R$id.system_icons_container);
+        this.mMultiUserSwitch = (MultiUserSwitch) findViewById(C0015R$id.multi_user_switch);
+        this.mMultiUserAvatar = (ImageView) findViewById(C0015R$id.multi_user_avatar);
+        this.mCarrierLabel = (TextView) findViewById(C0015R$id.keyguard_carrier_text);
+        this.mBatteryView = (MiuiBatteryMeterView) this.mSystemIconsContainer.findViewById(C0015R$id.battery);
+        this.mCutoutSpace = findViewById(C0015R$id.cutout_space_view);
+        this.mStatusIconArea = (ViewGroup) findViewById(C0015R$id.status_icon_area);
+        this.mStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0015R$id.statusIcons);
         loadDimens();
         updateUserSwitcher();
         this.mBatteryController = (BatteryController) Dependency.get(BatteryController.class);
@@ -109,19 +109,19 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) this.mMultiUserAvatar.getLayoutParams();
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.multi_user_avatar_keyguard_size);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.multi_user_avatar_keyguard_size);
         marginLayoutParams.height = dimensionPixelSize;
         marginLayoutParams.width = dimensionPixelSize;
         this.mMultiUserAvatar.setLayoutParams(marginLayoutParams);
         ViewGroup.MarginLayoutParams marginLayoutParams2 = (ViewGroup.MarginLayoutParams) this.mMultiUserSwitch.getLayoutParams();
-        marginLayoutParams2.width = getResources().getDimensionPixelSize(C0011R$dimen.multi_user_switch_width_keyguard);
-        marginLayoutParams2.setMarginEnd(getResources().getDimensionPixelSize(C0011R$dimen.multi_user_switch_keyguard_margin));
+        marginLayoutParams2.width = getResources().getDimensionPixelSize(C0012R$dimen.multi_user_switch_width_keyguard);
+        marginLayoutParams2.setMarginEnd(getResources().getDimensionPixelSize(C0012R$dimen.multi_user_switch_keyguard_margin));
         this.mMultiUserSwitch.setLayoutParams(marginLayoutParams2);
         ViewGroup.MarginLayoutParams marginLayoutParams3 = (ViewGroup.MarginLayoutParams) this.mSystemIconsContainer.getLayoutParams();
-        marginLayoutParams3.setMarginStart(getResources().getDimensionPixelSize(C0011R$dimen.system_icons_super_container_margin_start));
+        marginLayoutParams3.setMarginStart(getResources().getDimensionPixelSize(C0012R$dimen.system_icons_super_container_margin_start));
         this.mSystemIconsContainer.setLayoutParams(marginLayoutParams3);
         View view = this.mSystemIconsContainer;
-        view.setPaddingRelative(view.getPaddingStart(), this.mSystemIconsContainer.getPaddingTop(), getResources().getDimensionPixelSize(C0011R$dimen.system_icons_keyguard_padding_end), this.mSystemIconsContainer.getPaddingBottom());
+        view.setPaddingRelative(view.getPaddingStart(), this.mSystemIconsContainer.getPaddingTop(), getResources().getDimensionPixelSize(C0012R$dimen.system_icons_keyguard_padding_end), this.mSystemIconsContainer.getPaddingBottom());
         updateKeyguardStatusBarHeight();
     }
 
@@ -129,17 +129,17 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         DisplayCutout displayCutout = this.mDisplayCutout;
         int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
         ViewGroup.MarginLayoutParams marginLayoutParams = (ViewGroup.MarginLayoutParams) getLayoutParams();
-        marginLayoutParams.height = getResources().getDimensionPixelSize(C0011R$dimen.status_bar_height) + i;
+        marginLayoutParams.height = getResources().getDimensionPixelSize(C0012R$dimen.status_bar_height) + i;
         setLayoutParams(marginLayoutParams);
     }
 
     private void loadDimens() {
         Resources resources = getResources();
-        this.mSystemIconsSwitcherHiddenExpandedMargin = resources.getDimensionPixelSize(C0011R$dimen.system_icons_switcher_hidden_expanded_margin);
-        this.mSystemIconsBaseMargin = resources.getDimensionPixelSize(C0011R$dimen.system_icons_super_container_avatarless_margin_end);
-        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0011R$dimen.display_cutout_margin_consumption);
+        this.mSystemIconsSwitcherHiddenExpandedMargin = resources.getDimensionPixelSize(C0012R$dimen.system_icons_switcher_hidden_expanded_margin);
+        this.mSystemIconsBaseMargin = resources.getDimensionPixelSize(C0012R$dimen.system_icons_super_container_avatarless_margin_end);
+        this.mCutoutSideNudge = getResources().getDimensionPixelSize(C0012R$dimen.display_cutout_margin_consumption);
         getContext().getResources().getBoolean(17891375);
-        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0011R$dimen.rounded_corner_content_padding);
+        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding);
     }
 
     private void updateVisibilities() {
@@ -194,7 +194,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         DisplayCutout displayCutout = this.mDisplayCutout;
         int i = displayCutout == null ? 0 : displayCutout.getWaterfallInsets().top;
         this.mPadding = StatusBarWindowView.paddingNeededForCutoutAndRoundedCorner(this.mDisplayCutout, pair, this.mRoundedCornerPadding);
-        Pair<Integer, Integer> pair2 = new Pair<>(Integer.valueOf(((Integer) this.mPadding.first).intValue() + getResources().getDimensionPixelOffset(C0011R$dimen.status_bar_padding_start)), Integer.valueOf(((Integer) this.mPadding.second).intValue() + getResources().getDimensionPixelOffset(C0011R$dimen.status_bar_padding_end)));
+        Pair<Integer, Integer> pair2 = new Pair<>(Integer.valueOf(((Integer) this.mPadding.first).intValue() + getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_padding_start)), Integer.valueOf(((Integer) this.mPadding.second).intValue() + getResources().getDimensionPixelOffset(C0012R$dimen.status_bar_padding_end)));
         this.mPadding = pair2;
         setPadding(((Integer) pair2.first).intValue(), i, ((Integer) this.mPadding.second).intValue(), 0);
     }
@@ -209,8 +209,8 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         if (view != null) {
             view.setVisibility(8);
         }
-        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(17, C0014R$id.keyguard_status_bar_left_side);
-        ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(getResources().getDimensionPixelSize(C0011R$dimen.system_icons_super_container_margin_start));
+        ((RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams()).addRule(17, C0015R$id.keyguard_status_bar_left_side);
+        ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(getResources().getDimensionPixelSize(C0012R$dimen.system_icons_super_container_margin_start));
         return true;
     }
 
@@ -235,7 +235,7 @@ public class KeyguardStatusBarView extends RelativeLayout implements BatteryCont
         layoutParams.height = rect.height();
         layoutParams.addRule(13);
         RelativeLayout.LayoutParams layoutParams2 = (RelativeLayout.LayoutParams) this.mStatusIconArea.getLayoutParams();
-        layoutParams2.addRule(17, C0014R$id.cutout_space_view);
+        layoutParams2.addRule(17, C0015R$id.cutout_space_view);
         layoutParams2.width = -1;
         ((LinearLayout.LayoutParams) this.mSystemIconsContainer.getLayoutParams()).setMarginStart(0);
         return true;

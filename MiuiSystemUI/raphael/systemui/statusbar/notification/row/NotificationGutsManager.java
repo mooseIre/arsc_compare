@@ -21,7 +21,7 @@ import com.android.internal.annotations.VisibleForTesting;
 import com.android.internal.logging.MetricsLogger;
 import com.android.internal.logging.UiEventLogger;
 import com.android.settingslib.notification.ConversationIconFactory;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Dependency;
 import com.android.systemui.Dumpable;
 import com.android.systemui.bubbles.BubbleController;
@@ -469,7 +469,7 @@ public class NotificationGutsManager implements Dumpable, NotificationLifetimeEx
             r16 = null;
         }
         Context context = this.mContext;
-        notificationConversationInfo.bindNotification(this.mShortcutManager, packageManagerForUser, this.mNotificationManager, this.mVisualStabilityManager, packageName, entry.getChannel(), entry, entry.getBubbleMetadata(), r16, r7, new ConversationIconFactory(context, this.mLauncherApps, packageManagerForUser, IconDrawableFactory.newInstance(context, false), this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_guts_conversation_icon_size)), this.mContextTracker.getCurrentUserContext(), this.mBuilderProvider, this.mDeviceProvisionedController.isDeviceProvisioned(), this.mMainHandler, this.mBgHandler, r15, this.mBubbleController);
+        notificationConversationInfo.bindNotification(this.mShortcutManager, packageManagerForUser, this.mNotificationManager, this.mVisualStabilityManager, packageName, entry.getChannel(), entry, entry.getBubbleMetadata(), r16, r7, new ConversationIconFactory(context, this.mLauncherApps, packageManagerForUser, IconDrawableFactory.newInstance(context, false), this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_guts_conversation_icon_size)), this.mContextTracker.getCurrentUserContext(), this.mBuilderProvider, this.mDeviceProvisionedController.isDeviceProvisioned(), this.mMainHandler, this.mBgHandler, r15, this.mBubbleController);
     }
 
     /* access modifiers changed from: private */

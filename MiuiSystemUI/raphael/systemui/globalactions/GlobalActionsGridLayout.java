@@ -5,7 +5,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class GlobalActionsGridLayout extends GlobalActionsLayout {
     public GlobalActionsGridLayout(Context context, AttributeSet attributeSet) {
@@ -104,7 +104,7 @@ public class GlobalActionsGridLayout extends GlobalActionsLayout {
     /* access modifiers changed from: protected */
     @VisibleForTesting
     public float getAnimationDistance() {
-        return (((float) getListView().getRowCount()) * getContext().getResources().getDimension(C0011R$dimen.global_actions_grid_item_height)) / 2.0f;
+        return (((float) getListView().getRowCount()) * getContext().getResources().getDimension(C0012R$dimen.global_actions_grid_item_height)) / 2.0f;
     }
 
     @Override // com.android.systemui.MultiListLayout

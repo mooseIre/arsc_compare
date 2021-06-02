@@ -18,12 +18,12 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.android.internal.logging.UiEventLogger;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSEditEvent;
 import com.android.systemui.qs.QSTileHost;
@@ -160,7 +160,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         this.mAccessibilityManager = (AccessibilityManager) context.getSystemService(AccessibilityManager.class);
         this.mItemTouchHelper = new ItemTouchHelper(this.mCallbacks);
         this.mDecoration = new TileItemDecoration(context);
-        this.mMinNumTiles = context.getResources().getInteger(C0015R$integer.quick_settings_min_num_tiles);
+        this.mMinNumTiles = context.getResources().getInteger(C0016R$integer.quick_settings_min_num_tiles);
         this.mParent = recyclerView;
     }
 
@@ -303,12 +303,12 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         Context context = viewGroup.getContext();
         LayoutInflater from = LayoutInflater.from(context);
         if (i == 3) {
-            return new Holder(this, from.inflate(C0016R$layout.qs_customize_tile_divider, viewGroup, false));
+            return new Holder(this, from.inflate(C0017R$layout.qs_customize_tile_divider, viewGroup, false));
         }
         if (i == 1) {
-            return new Holder(this, from.inflate(C0016R$layout.qs_customize_tile_divider, viewGroup, false));
+            return new Holder(this, from.inflate(C0017R$layout.qs_customize_tile_divider, viewGroup, false));
         }
-        FrameLayout frameLayout = (FrameLayout) from.inflate(C0016R$layout.qs_customize_tile_frame, viewGroup, false);
+        FrameLayout frameLayout = (FrameLayout) from.inflate(C0017R$layout.qs_customize_tile_frame, viewGroup, false);
         frameLayout.addView(new MiuiCustomizeTileView(context, new MiuiQSIconViewImpl(context)));
         return new Holder(this, frameLayout);
     }
@@ -339,7 +339,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                 holder.mTileView.setFocusableInTouchMode(true);
                 holder.mTileView.setVisibility(0);
                 holder.mTileView.setImportantForAccessibility(1);
-                holder.mTileView.setContentDescription(this.mContext.getString(C0020R$string.accessibility_qs_edit_tile_add, this.mAccessibilityFromLabel, Integer.valueOf(i)));
+                holder.mTileView.setContentDescription(this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_add, this.mAccessibilityFromLabel, Integer.valueOf(i)));
                 holder.mTileView.setOnClickListener(new View.OnClickListener(holder) {
                     /* class com.android.systemui.qs.customize.$$Lambda$MiuiTileAdapter$T8sU63Oe85g4tAMwUk91lvHL7P8 */
                     public final /* synthetic */ MiuiTileAdapter.Holder f$1;
@@ -360,15 +360,15 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
                 holder.mTileView.getIcon().setIsCustomTile(!tileInfo.isSystem);
                 if (i > this.mEditIndex) {
                     QSTile.State state = tileInfo.state;
-                    state.contentDescription = this.mContext.getString(C0020R$string.accessibility_qs_edit_add_tile_label, state.label);
+                    state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_add_tile_label, state.label);
                 } else {
                     int i3 = this.mAccessibilityAction;
                     if (i3 == 1) {
-                        tileInfo.state.contentDescription = this.mContext.getString(C0020R$string.accessibility_qs_edit_tile_add, this.mAccessibilityFromLabel, Integer.valueOf(i));
+                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_add, this.mAccessibilityFromLabel, Integer.valueOf(i));
                     } else if (i3 == 2) {
-                        tileInfo.state.contentDescription = this.mContext.getString(C0020R$string.accessibility_qs_edit_tile_move, this.mAccessibilityFromLabel, Integer.valueOf(i));
+                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_move, this.mAccessibilityFromLabel, Integer.valueOf(i));
                     } else {
-                        tileInfo.state.contentDescription = this.mContext.getString(C0020R$string.accessibility_qs_edit_tile_label, Integer.valueOf(i), tileInfo.state.label);
+                        tileInfo.state.contentDescription = this.mContext.getString(C0021R$string.accessibility_qs_edit_tile_label, Integer.valueOf(i), tileInfo.state.label);
                     }
                 }
                 holder.mTileView.handleStateChanged(tileInfo.state);
@@ -459,7 +459,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         if (qSTile != null) {
             qSTile.click(true);
         } else if (isCustomTile(tileInfo)) {
-            Toast.makeText(view.getContext(), C0020R$string.quick_settings_toast_drag_to_enable_custom_tile, 0).show();
+            Toast.makeText(view.getContext(), C0021R$string.quick_settings_toast_drag_to_enable_custom_tile, 0).show();
         }
     }
 
@@ -499,8 +499,8 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
 
     private void showAccessibilityDialog(int i, View view) {
         TileQueryHelper.TileInfo tileInfo = this.mTiles.get(i);
-        CharSequence[] charSequenceArr = {this.mContext.getString(C0020R$string.accessibility_qs_edit_move_tile, tileInfo.state.label), this.mContext.getString(C0020R$string.accessibility_qs_edit_remove_tile, tileInfo.state.label)};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0021R$style.AlertDialog_Theme_DayNight);
+        CharSequence[] charSequenceArr = {this.mContext.getString(C0021R$string.accessibility_qs_edit_move_tile, tileInfo.state.label), this.mContext.getString(C0021R$string.accessibility_qs_edit_remove_tile, tileInfo.state.label)};
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.mContext, C0022R$style.AlertDialog_Theme_DayNight);
         builder.setItems(charSequenceArr, new DialogInterface.OnClickListener(i, tileInfo, view) {
             /* class com.android.systemui.qs.customize.$$Lambda$MiuiTileAdapter$uJrbW1k8KwvErcje5El9R0opaUs */
             public final /* synthetic */ int f$1;
@@ -630,21 +630,21 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
 
         public void clearDrag() {
             this.itemView.clearAnimation();
-            this.mTileView.findViewById(C0014R$id.tile_label).clearAnimation();
-            this.mTileView.findViewById(C0014R$id.tile_label).setAlpha(1.0f);
+            this.mTileView.findViewById(C0015R$id.tile_label).clearAnimation();
+            this.mTileView.findViewById(C0015R$id.tile_label).setAlpha(1.0f);
             this.mTileView.getAppLabel().clearAnimation();
             this.mTileView.getAppLabel().setAlpha(0.6f);
         }
 
         public void startDrag() {
             this.itemView.animate().setDuration(100).scaleX(1.2f).scaleY(1.2f);
-            this.mTileView.findViewById(C0014R$id.tile_label).animate().setDuration(100).alpha(0.0f);
+            this.mTileView.findViewById(C0015R$id.tile_label).animate().setDuration(100).alpha(0.0f);
             this.mTileView.getAppLabel().animate().setDuration(100).alpha(0.0f);
         }
 
         public void stopDrag() {
             this.itemView.animate().setDuration(100).scaleX(1.0f).scaleY(1.0f);
-            this.mTileView.findViewById(C0014R$id.tile_label).animate().setDuration(100).alpha(1.0f);
+            this.mTileView.findViewById(C0015R$id.tile_label).animate().setDuration(100).alpha(1.0f);
             this.mTileView.getAppLabel().animate().setDuration(100).alpha(0.6f);
         }
     }
@@ -653,7 +653,7 @@ public class MiuiTileAdapter extends RecyclerView.Adapter<Holder> implements Til
         private final Drawable mDrawable;
 
         private TileItemDecoration(Context context) {
-            this.mDrawable = context.getDrawable(C0012R$drawable.qs_customize_tile_decoration);
+            this.mDrawable = context.getDrawable(C0013R$drawable.qs_customize_tile_decoration);
         }
 
         @Override // androidx.recyclerview.widget.RecyclerView.ItemDecoration

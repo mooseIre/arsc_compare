@@ -13,6 +13,9 @@ public interface StatusIconDisplayable extends DarkIconDispatcher.DarkReceiver {
 
     boolean isIconVisible();
 
+    default void onDensityOrFontScaleChanged() {
+    }
+
     void setDecorColor(int i);
 
     void setStaticDrawableColor(int i);

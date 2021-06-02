@@ -14,10 +14,10 @@ import android.view.ViewTreeObserver;
 import android.view.WindowInsets;
 import android.view.accessibility.AccessibilityNodeInfo;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -35,7 +35,7 @@ import com.android.systemui.statusbar.phone.NotificationIconContainer;
 
 public class NotificationShelf extends ActivatableNotificationView implements View.OnLayoutChangeListener, StatusBarStateController.StateListener {
     private static final boolean ICON_ANMATIONS_WHILE_SCROLLING = SystemProperties.getBoolean("debug.icon_scroll_animations", true);
-    private static final int TAG_CONTINUOUS_CLIPPING = C0014R$id.continuous_clipping_tag;
+    private static final int TAG_CONTINUOUS_CLIPPING = C0015R$id.continuous_clipping_tag;
     private static final boolean USE_ANIMATIONS_WHEN_OPENING = SystemProperties.getBoolean("debug.icon_opening_animations", true);
     private AmbientState mAmbientState;
     private boolean mAnimationsEnabled = true;
@@ -92,7 +92,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
     @VisibleForTesting
     public void onFinishInflate() {
         super.onFinishInflate();
-        NotificationIconContainer notificationIconContainer = (NotificationIconContainer) findViewById(C0014R$id.content);
+        NotificationIconContainer notificationIconContainer = (NotificationIconContainer) findViewById(C0015R$id.content);
         this.mShelfIcons = notificationIconContainer;
         notificationIconContainer.setClipChildren(false);
         this.mShelfIcons.setClipToPadding(false);
@@ -124,20 +124,20 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
 
     private void initDimens() {
         Resources resources = getResources();
-        this.mIconAppearTopPadding = resources.getDimensionPixelSize(C0011R$dimen.notification_icon_appear_padding);
-        this.mStatusBarHeight = resources.getDimensionPixelOffset(C0011R$dimen.status_bar_height);
-        resources.getDimensionPixelOffset(C0011R$dimen.status_bar_padding_start);
-        this.mPaddingBetweenElements = resources.getDimensionPixelSize(C0011R$dimen.notification_divider_height);
+        this.mIconAppearTopPadding = resources.getDimensionPixelSize(C0012R$dimen.notification_icon_appear_padding);
+        this.mStatusBarHeight = resources.getDimensionPixelOffset(C0012R$dimen.status_bar_height);
+        resources.getDimensionPixelOffset(C0012R$dimen.status_bar_padding_start);
+        this.mPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height);
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
-        layoutParams.height = resources.getDimensionPixelOffset(C0011R$dimen.notification_shelf_height);
+        layoutParams.height = resources.getDimensionPixelOffset(C0012R$dimen.notification_shelf_height);
         setLayoutParams(layoutParams);
-        int dimensionPixelOffset = resources.getDimensionPixelOffset(C0011R$dimen.shelf_icon_container_padding);
+        int dimensionPixelOffset = resources.getDimensionPixelOffset(C0012R$dimen.shelf_icon_container_padding);
         this.mShelfIcons.setPadding(dimensionPixelOffset, 0, dimensionPixelOffset, 0);
-        this.mScrollFastThreshold = resources.getDimensionPixelOffset(C0011R$dimen.scroll_fast_threshold);
-        this.mShowNotificationShelf = resources.getBoolean(C0009R$bool.config_showNotificationShelf);
+        this.mScrollFastThreshold = resources.getDimensionPixelOffset(C0012R$dimen.scroll_fast_threshold);
+        this.mShowNotificationShelf = resources.getBoolean(C0010R$bool.config_showNotificationShelf);
         this.mIconSize = resources.getDimensionPixelSize(17105493);
-        this.mHiddenShelfIconSize = (float) resources.getDimensionPixelOffset(C0011R$dimen.hidden_shelf_icon_size);
-        this.mGapHeight = resources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding);
+        this.mHiddenShelfIconSize = (float) resources.getDimensionPixelOffset(C0012R$dimen.hidden_shelf_icon_size);
+        this.mGapHeight = resources.getDimensionPixelSize(C0012R$dimen.qs_notification_padding);
         if (!this.mShowNotificationShelf) {
             setVisibility(8);
         }
@@ -657,7 +657,7 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         super.onInitializeAccessibilityNodeInfo(accessibilityNodeInfo);
         if (this.mInteractive) {
             accessibilityNodeInfo.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_EXPAND);
-            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, getContext().getString(C0020R$string.accessibility_overflow_action)));
+            accessibilityNodeInfo.addAction(new AccessibilityNodeInfo.AccessibilityAction(16, getContext().getString(C0021R$string.accessibility_overflow_action)));
         }
     }
 

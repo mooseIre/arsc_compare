@@ -16,12 +16,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.statusbar.AlphaOptimizedImageView;
@@ -83,7 +83,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
 
     public NotificationMenuRow(Context context, PeopleNotificationIdentifier peopleNotificationIdentifier) {
         this.mContext = context;
-        this.mShouldShowMenu = context.getResources().getBoolean(C0009R$bool.config_showNotificationGear);
+        this.mShouldShowMenu = context.getResources().getBoolean(C0010R$bool.config_showNotificationGear);
         this.mHandler = new Handler(Looper.getMainLooper());
         this.mLeftMenuItems = new ArrayList<>();
         this.mRightMenuItems = new ArrayList<>();
@@ -221,8 +221,8 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
     private void createMenuViews(boolean z, boolean z2) {
         this.mIsForeground = z2;
         Resources resources = this.mContext.getResources();
-        this.mHorizSpaceForIcon = resources.getDimensionPixelSize(C0011R$dimen.notification_menu_icon_size);
-        this.mVertSpaceForIcons = resources.getDimensionPixelSize(C0011R$dimen.notification_min_height);
+        this.mHorizSpaceForIcon = resources.getDimensionPixelSize(C0012R$dimen.notification_menu_icon_size);
+        this.mVertSpaceForIcons = resources.getDimensionPixelSize(C0012R$dimen.notification_min_height);
         this.mLeftMenuItems.clear();
         this.mRightMenuItems.clear();
         boolean z3 = Settings.Secure.getInt(this.mContext.getContentResolver(), "show_notification_snooze", 0) == 1;
@@ -394,7 +394,7 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
         int size = arrayList.size();
         for (int i = 0; i < size; i++) {
             NotificationMenuRowPlugin.MenuItem menuItem = arrayList.get(i);
-            String format = String.format(resources.getString(C0020R$string.notification_menu_accessibility), str, menuItem.getContentDescription());
+            String format = String.format(resources.getString(C0021R$string.notification_menu_accessibility), str, menuItem.getContentDescription());
             View menuView = menuItem.getMenuView();
             if (menuView != null) {
                 menuView.setContentDescription(format);
@@ -580,23 +580,23 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
     }
 
     static NotificationMenuRowPlugin.MenuItem createSnoozeItem(Context context) {
-        return new NotificationMenuItem(context, context.getResources().getString(C0020R$string.notification_menu_snooze_description), (NotificationSnooze) LayoutInflater.from(context).inflate(C0016R$layout.notification_snooze, (ViewGroup) null, false), C0012R$drawable.ic_snooze);
+        return new NotificationMenuItem(context, context.getResources().getString(C0021R$string.notification_menu_snooze_description), (NotificationSnooze) LayoutInflater.from(context).inflate(C0017R$layout.notification_snooze, (ViewGroup) null, false), C0013R$drawable.ic_snooze);
     }
 
     static NotificationMenuItem createConversationItem(Context context) {
-        return new NotificationMenuItem(context, context.getResources().getString(C0020R$string.notification_menu_gear_description), (NotificationConversationInfo) LayoutInflater.from(context).inflate(C0016R$layout.notification_conversation_info, (ViewGroup) null, false), C0012R$drawable.ic_settings);
+        return new NotificationMenuItem(context, context.getResources().getString(C0021R$string.notification_menu_gear_description), (NotificationConversationInfo) LayoutInflater.from(context).inflate(C0017R$layout.notification_conversation_info, (ViewGroup) null, false), C0013R$drawable.ic_settings);
     }
 
     static NotificationMenuItem createPartialConversationItem(Context context) {
-        return new NotificationMenuItem(context, context.getResources().getString(C0020R$string.notification_menu_gear_description), (PartialConversationInfo) LayoutInflater.from(context).inflate(C0016R$layout.partial_conversation_info, (ViewGroup) null, false), C0012R$drawable.ic_settings);
+        return new NotificationMenuItem(context, context.getResources().getString(C0021R$string.notification_menu_gear_description), (PartialConversationInfo) LayoutInflater.from(context).inflate(C0017R$layout.partial_conversation_info, (ViewGroup) null, false), C0013R$drawable.ic_settings);
     }
 
     static NotificationMenuItem createInfoItem(Context context) {
-        return new NotificationMenuItem(context, context.getResources().getString(C0020R$string.notification_menu_gear_description), (NotificationInfo) LayoutInflater.from(context).inflate(C0016R$layout.notification_info, (ViewGroup) null, false), C0012R$drawable.ic_settings);
+        return new NotificationMenuItem(context, context.getResources().getString(C0021R$string.notification_menu_gear_description), (NotificationInfo) LayoutInflater.from(context).inflate(C0017R$layout.notification_info, (ViewGroup) null, false), C0013R$drawable.ic_settings);
     }
 
     static NotificationMenuRowPlugin.MenuItem createAppOpsItem(Context context) {
-        return new NotificationMenuItem(context, null, (AppOpsInfo) LayoutInflater.from(context).inflate(C0016R$layout.app_ops_info, (ViewGroup) null, false), -1);
+        return new NotificationMenuItem(context, null, (AppOpsInfo) LayoutInflater.from(context).inflate(C0017R$layout.app_ops_info, (ViewGroup) null, false), -1);
     }
 
     private void addMenuView(NotificationMenuRowPlugin.MenuItem menuItem, ViewGroup viewGroup) {
@@ -693,8 +693,8 @@ public class NotificationMenuRow implements NotificationMenuRowPlugin, View.OnCl
 
         public NotificationMenuItem(Context context, String str, NotificationGuts.GutsContent gutsContent, int i) {
             Resources resources = context.getResources();
-            int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.notification_menu_icon_padding);
-            int color = resources.getColor(C0010R$color.notification_gear_color);
+            int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.notification_menu_icon_padding);
+            int color = resources.getColor(C0011R$color.notification_gear_color);
             if (i >= 0) {
                 AlphaOptimizedImageView alphaOptimizedImageView = new AlphaOptimizedImageView(context);
                 alphaOptimizedImageView.setPadding(dimensionPixelSize, dimensionPixelSize, dimensionPixelSize, dimensionPixelSize);

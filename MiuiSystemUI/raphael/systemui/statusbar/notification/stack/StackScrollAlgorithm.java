@@ -6,8 +6,8 @@ import android.util.Log;
 import android.util.MathUtils;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.NotificationShelf;
 import com.android.systemui.statusbar.notification.NotificationUtils;
@@ -23,7 +23,7 @@ public class StackScrollAlgorithm {
     private boolean mClipNotificationScrollToTop;
     private int mCollapsedSize;
     private int mGapHeight;
-    protected float mHeadsUpInset;
+    private float mHeadsUpInset;
     private final ViewGroup mHostView;
     private int mIncreasedPaddingBetweenElements;
     private boolean mIsExpanded;
@@ -50,14 +50,17 @@ public class StackScrollAlgorithm {
 
     private void initConstants(Context context) {
         Resources resources = context.getResources();
-        this.mPaddingBetweenElements = resources.getDimensionPixelSize(C0011R$dimen.notification_divider_height);
-        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0011R$dimen.notification_divider_height_increased);
-        this.mCollapsedSize = resources.getDimensionPixelSize(C0011R$dimen.notification_min_height);
-        this.mStatusBarHeight = resources.getDimensionPixelSize(C0011R$dimen.status_bar_height);
-        this.mClipNotificationScrollToTop = resources.getBoolean(C0009R$bool.config_clipNotificationScrollToTop);
-        this.mHeadsUpInset = (float) (this.mStatusBarHeight + resources.getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding));
-        this.mPinnedZTranslationExtra = resources.getDimensionPixelSize(C0011R$dimen.heads_up_pinned_elevation);
-        this.mGapHeight = resources.getDimensionPixelSize(C0011R$dimen.notification_section_divider_height);
+        this.mPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height);
+        this.mIncreasedPaddingBetweenElements = resources.getDimensionPixelSize(C0012R$dimen.notification_divider_height_increased);
+        this.mCollapsedSize = resources.getDimensionPixelSize(C0012R$dimen.notification_min_height);
+        this.mStatusBarHeight = resources.getDimensionPixelSize(C0012R$dimen.status_bar_height);
+        this.mClipNotificationScrollToTop = resources.getBoolean(C0010R$bool.config_clipNotificationScrollToTop);
+        this.mHeadsUpInset = (float) (this.mStatusBarHeight + resources.getDimensionPixelSize(C0012R$dimen.heads_up_status_bar_padding));
+        if (resources.getConfiguration().orientation == 2) {
+            this.mHeadsUpInset -= (float) this.mStatusBarHeight;
+        }
+        this.mPinnedZTranslationExtra = resources.getDimensionPixelSize(C0012R$dimen.heads_up_pinned_elevation);
+        this.mGapHeight = resources.getDimensionPixelSize(C0012R$dimen.notification_section_divider_height);
     }
 
     public void resetViewStates(AmbientState ambientState) {

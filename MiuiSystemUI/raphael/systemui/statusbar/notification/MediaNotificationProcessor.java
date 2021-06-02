@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import androidx.palette.graphics.Palette;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0010R$color;
+import com.android.systemui.C0011R$color;
 
 public class MediaNotificationProcessor {
     private final Palette.Filter mBlackWhiteFilter;
@@ -73,7 +73,7 @@ public class MediaNotificationProcessor {
                 generateArtworkPaletteBuilder.addFilter(this.mBlackWhiteFilter);
                 builder.setColorPalette(i, selectForegroundColor(i, generateArtworkPaletteBuilder.generate()));
             } else {
-                i = this.mContext.getColor(C0010R$color.notification_material_background_color);
+                i = this.mContext.getColor(C0011R$color.notification_material_background_color);
             }
             ImageGradientColorizer imageGradientColorizer = this.mColorizer;
             if (this.mContext.getResources().getConfiguration().getLayoutDirection() != 1) {

@@ -22,12 +22,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import codeinjection.CodeInjection;
 import com.android.keyguard.KeyguardUpdateMonitor;
-import com.android.systemui.C0010R$color;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0011R$color;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
@@ -117,14 +117,14 @@ public class QSBigTileView extends QSTileView {
         this.mTileCallBack = new QSTileCallback();
         this.mContext = context;
         this.mPanelController = (ControlPanelController) Dependency.get(ControlPanelController.class);
-        context.getResources().getColor(C0010R$color.qs_control_tile_icon_disabled_color);
-        context.getResources().getColor(C0010R$color.qs_control_tile_icon_unavailable_color);
-        this.mConnectedString = this.mContext.getString(C0020R$string.qs_control_big_tile_state_connected);
-        this.mActiveString = this.mContext.getString(C0020R$string.qs_control_big_tile_state_opened);
-        this.mInActiveString = this.mContext.getString(C0020R$string.qs_control_big_tile_state_closed);
-        this.mUnavailableString = this.mContext.getString(C0020R$string.qs_control_big_tile_state_unavailable);
-        this.mOpeningString = this.mContext.getString(C0020R$string.qs_control_big_tile_state_opening);
-        this.mClosingString = this.mContext.getString(C0020R$string.qs_control_big_tile_state_closing);
+        context.getResources().getColor(C0011R$color.qs_control_tile_icon_disabled_color);
+        context.getResources().getColor(C0011R$color.qs_control_tile_icon_unavailable_color);
+        this.mConnectedString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_connected);
+        this.mActiveString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_opened);
+        this.mInActiveString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_closed);
+        this.mUnavailableString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_unavailable);
+        this.mOpeningString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_opening);
+        this.mClosingString = this.mContext.getString(C0021R$string.qs_control_big_tile_state_closing);
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(this.mStatusIconView, "alpha", 0.5f);
         this.mBreathAnimator = ofFloat;
         ofFloat.setDuration(400L);
@@ -146,15 +146,15 @@ public class QSBigTileView extends QSTileView {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        TextView textView = (TextView) findViewById(C0014R$id.title);
+        TextView textView = (TextView) findViewById(C0015R$id.title);
         this.mTitleView = textView;
         textView.setImportantForAccessibility(2);
-        this.mStatusView = (TextView) findViewById(C0014R$id.status);
-        this.mStatusIconView = (QSIconView) findViewById(C0014R$id.status_icon);
+        this.mStatusView = (TextView) findViewById(C0015R$id.status);
+        this.mStatusIconView = (QSIconView) findViewById(C0015R$id.status_icon);
         ControlCenterUtils.createCardFolmeTouchStyle(this);
-        ImageView imageView = (ImageView) findViewById(C0014R$id.indicator);
+        ImageView imageView = (ImageView) findViewById(C0015R$id.indicator);
         this.mExpandIndicator = imageView;
-        imageView.setContentDescription(this.mContext.getResources().getString(C0020R$string.accessibility_expand_button));
+        imageView.setContentDescription(this.mContext.getResources().getString(C0021R$string.accessibility_expand_button));
         updateIndicatorTouch();
     }
 
@@ -173,8 +173,8 @@ public class QSBigTileView extends QSTileView {
             /* class com.android.systemui.controlcenter.qs.tileview.QSBigTileView.AnonymousClass2 */
 
             public void run() {
-                int dimensionPixelSize = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tile_indicator_touch_h);
-                int dimensionPixelSize2 = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tile_indicator_touch_v);
+                int dimensionPixelSize = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_h);
+                int dimensionPixelSize2 = QSBigTileView.this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_indicator_touch_v);
                 Rect rect = new Rect();
                 QSBigTileView.this.mExpandIndicator.getHitRect(rect);
                 rect.top -= dimensionPixelSize2;
@@ -194,15 +194,15 @@ public class QSBigTileView extends QSTileView {
     }
 
     public void updateResources() {
-        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_control_big_tile_width);
+        int dimensionPixelSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_control_big_tile_width);
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
         if (layoutParams.width != dimensionPixelSize) {
             layoutParams.width = dimensionPixelSize;
             setLayoutParams(layoutParams);
         }
-        this.mTitleView.setTextAppearance(C0021R$style.TextAppearance_QSControl_BigTileTitle);
-        this.mStatusView.setTextAppearance(C0021R$style.TextAppearance_QSControl_BigTileSubTitle);
-        this.mExpandIndicator.setImageDrawable(this.mContext.getDrawable(C0012R$drawable.qs_big_tile_expand_indicator));
+        this.mTitleView.setTextAppearance(C0022R$style.TextAppearance_QSControl_BigTileTitle);
+        this.mStatusView.setTextAppearance(C0022R$style.TextAppearance_QSControl_BigTileSubTitle);
+        this.mExpandIndicator.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.qs_big_tile_expand_indicator));
         updateBackground();
         QSTile.State state = this.mQSTileState;
         if (state != null) {
@@ -224,38 +224,38 @@ public class QSBigTileView extends QSTileView {
         if (this.mTag.equals("cell")) {
             int i = this.mState;
             if (i == 2) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_1);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_1);
             } else if (i == 1) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_inactive_1);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_inactive_1);
             } else if (i == 0) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_unavailable_1);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_unavailable_1);
             }
         } else if (this.mTag.equals("wifi")) {
             int i2 = this.mState;
             if (i2 == 2) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_2);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_2);
             } else if (i2 == 1) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_inactive_2);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_inactive_2);
             } else if (i2 == 0) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_unavailable_2);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_unavailable_2);
             }
         } else if (this.mTag.equals("bt")) {
             int i3 = this.mState;
             if (i3 == 2) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_3);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_3);
             } else if (i3 == 1) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_inactive_3);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_inactive_3);
             } else if (i3 == 0) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_unavailable_3);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_unavailable_3);
             }
         } else if (this.mTag.equals("flashlight")) {
             int i4 = this.mState;
             if (i4 == 2) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_4);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_4);
             } else if (i4 == 1) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_inactive_4);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_inactive_4);
             } else if (i4 == 0) {
-                setSmoothBackground(C0012R$drawable.ic_qs_big_tile_bg_unavailable_4);
+                setSmoothBackground(C0013R$drawable.ic_qs_big_tile_bg_unavailable_4);
             }
         }
     }
@@ -301,7 +301,7 @@ public class QSBigTileView extends QSTileView {
     public void onDetachedFromWindow() {
         QSTile qSTile = this.mQSTile;
         if (qSTile != null) {
-            qSTile.removeCallbacks();
+            qSTile.removeCallbacksByType(3);
         }
         super.onDetachedFromWindow();
     }
@@ -358,22 +358,22 @@ public class QSBigTileView extends QSTileView {
         }
         int i5 = this.mState;
         if (i5 == 0) {
-            int color = getContext().getColor(C0010R$color.qs_control_tile_text_unavailable_color);
+            int color = getContext().getColor(C0011R$color.qs_control_tile_text_unavailable_color);
             state.label = new SpannableStringBuilder().append(state.label, new ForegroundColorSpan(color), 18);
             spannableStringBuilder = new SpannableStringBuilder().append(spannableStringBuilder, new ForegroundColorSpan(color), 18);
         } else {
             TextView textView = this.mTitleView;
             if (i5 == 2) {
-                i = this.mContext.getColor(C0010R$color.qs_control_big_tile_title_color);
+                i = this.mContext.getColor(C0011R$color.qs_control_big_tile_title_color);
             } else {
-                i = this.mContext.getColor(C0010R$color.qs_control_big_tile_title_color_off);
+                i = this.mContext.getColor(C0011R$color.qs_control_big_tile_title_color_off);
             }
             textView.setTextColor(i);
             TextView textView2 = this.mStatusView;
             if (this.mState == 2) {
-                i2 = this.mContext.getColor(C0010R$color.qs_control_big_tile_sub_title_color);
+                i2 = this.mContext.getColor(C0011R$color.qs_control_big_tile_sub_title_color);
             } else {
-                i2 = this.mContext.getColor(C0010R$color.qs_control_big_tile_sub_title_color_off);
+                i2 = this.mContext.getColor(C0011R$color.qs_control_big_tile_sub_title_color_off);
             }
             textView2.setTextColor(i2);
         }
@@ -561,6 +561,11 @@ public class QSBigTileView extends QSTileView {
     }
 
     private class QSTileCallback implements QSTile.Callback {
+        @Override // com.android.systemui.plugins.qs.QSTile.Callback
+        public int getCallbackType() {
+            return 3;
+        }
+
         @Override // com.android.systemui.plugins.qs.QSTile.Callback
         public void onAnnouncementRequested(CharSequence charSequence) {
         }

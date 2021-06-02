@@ -13,9 +13,9 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
@@ -67,8 +67,8 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
 
     public MiuiKeyguardStatusBarView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        this.mLeftHoleDevice = context.getResources().getBoolean(C0009R$bool.left_hole_device);
-        this.mShowCarrierUnderLeftHoleKeyguard = context.getResources().getBoolean(C0009R$bool.show_carrier_under_left_hole_keyguard);
+        this.mLeftHoleDevice = context.getResources().getBoolean(C0010R$bool.left_hole_device);
+        this.mShowCarrierUnderLeftHoleKeyguard = context.getResources().getBoolean(C0010R$bool.show_carrier_under_left_hole_keyguard);
         this.mControlPanelWindowManager = (ControlPanelWindowManager) Dependency.get(ControlPanelWindowManager.class);
     }
 
@@ -116,7 +116,7 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
             this.mIconManager.setDripEnd(true);
             this.mDripLeftStatusIconContainer.setVisibility(0);
             this.mNetworkSpeedView.setVisibilityByStatusBar(false);
-            ((RelativeLayout.LayoutParams) this.mKeyguardLeftSide.getLayoutParams()).addRule(16, C0014R$id.cutout_space_view);
+            ((RelativeLayout.LayoutParams) this.mKeyguardLeftSide.getLayoutParams()).addRule(16, C0015R$id.cutout_space_view);
         }
         return updateLayoutParamsForCutout;
     }
@@ -124,14 +124,14 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     /* access modifiers changed from: protected */
     public void updateViewStatusBarPaddingTop(View view) {
         if (view != null) {
-            view.setPadding(view.getPaddingLeft(), getResources().getDimensionPixelSize(C0011R$dimen.status_bar_padding_top), view.getPaddingRight(), view.getPaddingBottom());
+            view.setPadding(view.getPaddingLeft(), getResources().getDimensionPixelSize(C0012R$dimen.status_bar_padding_top), view.getPaddingRight(), view.getPaddingBottom());
         }
     }
 
     /* access modifiers changed from: protected */
     public void updateTextViewClockSize(TextView textView) {
         if (textView != null) {
-            textView.setTextSize(0, (float) getContext().getResources().getDimensionPixelSize(C0011R$dimen.status_bar_clock_size));
+            textView.setTextSize(0, (float) getContext().getResources().getDimensionPixelSize(C0012R$dimen.status_bar_clock_size));
         }
     }
 
@@ -139,10 +139,10 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
     @Override // com.android.systemui.statusbar.phone.KeyguardStatusBarView
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0014R$id.keyguard_drip_left_statusIcons);
-        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0014R$id.prompt_container);
-        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0014R$id.fullscreen_network_speed_view);
-        this.mKeyguardLeftSide = findViewById(C0014R$id.keyguard_status_bar_left_side);
+        this.mDripLeftStatusIconContainer = (MiuiDripLeftStatusIconContainer) findViewById(C0015R$id.keyguard_drip_left_statusIcons);
+        this.mStatusBarPromptContainer = (FrameLayout) findViewById(C0015R$id.prompt_container);
+        this.mNetworkSpeedView = (NetworkSpeedView) findViewById(C0015R$id.fullscreen_network_speed_view);
+        this.mKeyguardLeftSide = findViewById(C0015R$id.keyguard_status_bar_left_side);
     }
 
     /* access modifiers changed from: protected */
@@ -204,9 +204,9 @@ public class MiuiKeyguardStatusBarView extends KeyguardStatusBarView implements 
         if (miuiLightDarkIconManager != null) {
             miuiLightDarkIconManager.setLight(!z, i);
         }
-        applyDarkness(C0014R$id.fullscreen_network_speed_view, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
-        applyDarkness(C0014R$id.battery, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
-        applyDarkness(C0014R$id.clock, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
+        applyDarkness(C0015R$id.fullscreen_network_speed_view, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
+        applyDarkness(C0015R$id.battery, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
+        applyDarkness(C0015R$id.clock, this.mEmptyRect, f, i, lightModeIconColorSingleTone, darkModeIconColorSingleTone);
     }
 
     /* access modifiers changed from: private */

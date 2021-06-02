@@ -6,7 +6,7 @@ import android.text.format.DateUtils;
 import android.widget.SeekBar;
 import androidx.lifecycle.Observer;
 import codeinjection.CodeInjection;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.media.SeekBarViewModel;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
@@ -24,12 +24,12 @@ public final class SeekBarObserver implements Observer<SeekBarViewModel.Progress
         Intrinsics.checkExpressionValueIsNotNull(seekBar, "holder.seekBar");
         Context context = seekBar.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "holder.seekBar.context");
-        this.seekBarDefaultMaxHeight = context.getResources().getDimensionPixelSize(C0011R$dimen.qs_media_enabled_seekbar_height);
+        this.seekBarDefaultMaxHeight = context.getResources().getDimensionPixelSize(C0012R$dimen.qs_media_enabled_seekbar_height);
         SeekBar seekBar2 = this.holder.getSeekBar();
         Intrinsics.checkExpressionValueIsNotNull(seekBar2, "holder.seekBar");
         Context context2 = seekBar2.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "holder.seekBar.context");
-        this.seekBarDisabledHeight = context2.getResources().getDimensionPixelSize(C0011R$dimen.qs_media_disabled_seekbar_height);
+        this.seekBarDisabledHeight = context2.getResources().getDimensionPixelSize(C0012R$dimen.qs_media_disabled_seekbar_height);
     }
 
     public void onChanged(@NotNull SeekBarViewModel.Progress progress) {

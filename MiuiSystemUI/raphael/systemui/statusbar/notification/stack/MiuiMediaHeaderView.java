@@ -4,8 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.plugins.statusbar.NotificationMenuRowPlugin;
 import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager;
 import com.android.systemui.statusbar.notification.mediacontrol.MiuiMediaScrollView;
@@ -58,7 +58,7 @@ public final class MiuiMediaHeaderView extends MediaHeaderView implements Swipea
     static {
         Context context = Utils.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "Utils.getContext()");
-        mSidePaddings = context.getResources().getDimensionPixelSize(C0011R$dimen.notification_side_paddings);
+        mSidePaddings = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_side_paddings);
     }
 
     @Nullable
@@ -73,7 +73,7 @@ public final class MiuiMediaHeaderView extends MediaHeaderView implements Swipea
     @Override // com.android.systemui.statusbar.notification.stack.MediaHeaderView
     public void setContentView(@Nullable ViewGroup viewGroup) {
         super.setContentView(viewGroup);
-        this.mScrollView = (MiuiMediaScrollView) findViewById(C0014R$id.media_carousel_scroller);
+        this.mScrollView = (MiuiMediaScrollView) findViewById(C0015R$id.media_carousel_scroller);
     }
 
     public final boolean canMediaScrollHorizontally(int i) {

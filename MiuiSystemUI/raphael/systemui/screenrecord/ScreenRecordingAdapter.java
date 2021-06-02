@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import java.util.List;
 
 public class ScreenRecordingAdapter extends ArrayAdapter<ScreenRecordingAudioSource> {
@@ -26,30 +26,30 @@ public class ScreenRecordingAdapter extends ArrayAdapter<ScreenRecordingAudioSou
     }
 
     private void initViews() {
-        this.mSelectedInternal = getSelected(C0020R$string.screenrecord_device_audio_label);
-        this.mSelectedMic = getSelected(C0020R$string.screenrecord_mic_label);
-        this.mSelectedMicAndInternal = getSelected(C0020R$string.screenrecord_device_audio_and_mic_label);
-        LinearLayout option = getOption(C0020R$string.screenrecord_mic_label, 0);
+        this.mSelectedInternal = getSelected(C0021R$string.screenrecord_device_audio_label);
+        this.mSelectedMic = getSelected(C0021R$string.screenrecord_mic_label);
+        this.mSelectedMicAndInternal = getSelected(C0021R$string.screenrecord_device_audio_and_mic_label);
+        LinearLayout option = getOption(C0021R$string.screenrecord_mic_label, 0);
         this.mMicOption = option;
         option.removeViewAt(1);
-        LinearLayout option2 = getOption(C0020R$string.screenrecord_device_audio_and_mic_label, 0);
+        LinearLayout option2 = getOption(C0021R$string.screenrecord_device_audio_and_mic_label, 0);
         this.mMicAndInternalOption = option2;
         option2.removeViewAt(1);
-        this.mInternalOption = getOption(C0020R$string.screenrecord_device_audio_label, C0020R$string.screenrecord_device_audio_description);
+        this.mInternalOption = getOption(C0021R$string.screenrecord_device_audio_label, C0021R$string.screenrecord_device_audio_description);
     }
 
     private LinearLayout getOption(int i, int i2) {
-        LinearLayout linearLayout = (LinearLayout) ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(C0016R$layout.screen_record_dialog_audio_source, (ViewGroup) null, false);
-        ((TextView) linearLayout.findViewById(C0014R$id.screen_recording_dialog_source_text)).setText(i);
+        LinearLayout linearLayout = (LinearLayout) ((LayoutInflater) getContext().getSystemService("layout_inflater")).inflate(C0017R$layout.screen_record_dialog_audio_source, (ViewGroup) null, false);
+        ((TextView) linearLayout.findViewById(C0015R$id.screen_recording_dialog_source_text)).setText(i);
         if (i2 != 0) {
-            ((TextView) linearLayout.findViewById(C0014R$id.screen_recording_dialog_source_description)).setText(i2);
+            ((TextView) linearLayout.findViewById(C0015R$id.screen_recording_dialog_source_description)).setText(i2);
         }
         return linearLayout;
     }
 
     private LinearLayout getSelected(int i) {
-        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(getContext()).inflate(C0016R$layout.screen_record_dialog_audio_source_selected, (ViewGroup) null, false);
-        ((TextView) linearLayout.findViewById(C0014R$id.screen_recording_dialog_source_text)).setText(i);
+        LinearLayout linearLayout = (LinearLayout) LayoutInflater.from(getContext()).inflate(C0017R$layout.screen_record_dialog_audio_source_selected, (ViewGroup) null, false);
+        ((TextView) linearLayout.findViewById(C0015R$id.screen_recording_dialog_source_text)).setText(i);
         return linearLayout;
     }
 

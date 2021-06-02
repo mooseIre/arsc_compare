@@ -18,9 +18,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.view.ViewTreeObserver;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.plugins.qs.QS;
@@ -127,13 +127,13 @@ public final class MiuiQSFragment extends LifecycleFragment implements QS, Comma
     @Nullable
     public View onCreateView(@NotNull LayoutInflater layoutInflater, @Nullable ViewGroup viewGroup, @Nullable Bundle bundle) {
         Intrinsics.checkParameterIsNotNull(layoutInflater, "inflater");
-        return this.injectionInflaterController.injectable(layoutInflater.cloneInContext(new ContextThemeWrapper(getContext(), C0021R$style.qs_theme))).inflate(C0016R$layout.qs_panel, viewGroup, false);
+        return this.injectionInflaterController.injectable(layoutInflater.cloneInContext(new ContextThemeWrapper(getContext(), C0022R$style.qs_theme))).inflate(C0017R$layout.qs_panel, viewGroup, false);
     }
 
     public void onViewCreated(@NotNull View view, @Nullable Bundle bundle) {
         Intrinsics.checkParameterIsNotNull(view, "view");
         super.onViewCreated(view, bundle);
-        View findViewById = view.findViewById(C0014R$id.quick_settings_container);
+        View findViewById = view.findViewById(C0015R$id.quick_settings_container);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "view.findViewById(R.id.quick_settings_container)");
         this.qsContainer = (MiuiQSContainer) findViewById;
         this.statusBarStateController.addCallback(this);
@@ -170,7 +170,7 @@ public final class MiuiQSFragment extends LifecycleFragment implements QS, Comma
                         }
                         View view = getView();
                         if (view != null) {
-                            ViewGroup viewGroup = (ViewGroup) view.findViewById(C0014R$id.header_text_container);
+                            ViewGroup viewGroup = (ViewGroup) view.findViewById(C0015R$id.header_text_container);
                             MiuiQSContainer miuiQSContainer5 = this.qsContainer;
                             if (miuiQSContainer5 != null) {
                                 QSPanel qsPanel = miuiQSContainer5.getQsPanel();

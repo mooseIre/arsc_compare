@@ -7,9 +7,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.widget.LinearLayout;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
@@ -38,7 +38,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle bundle) {
-        return layoutInflater.inflate(C0016R$layout.miui_status_bar, viewGroup, false);
+        return layoutInflater.inflate(C0017R$layout.miui_status_bar, viewGroup, false);
     }
 
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
@@ -49,7 +49,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (phoneStatusBarView instanceof MiuiPhoneStatusBarView) {
             ((MiuiPhoneStatusBarView) phoneStatusBarView).setNotificationIconAreaInnner(notificationInnerAreaView);
         }
-        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0014R$id.centered_icon_area);
+        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.centered_icon_area);
         View centeredNotificationAreaView = notificationIconAreaController.getCenteredNotificationAreaView();
         this.mCenteredIconArea = centeredNotificationAreaView;
         if (centeredNotificationAreaView.getParent() != null) {
@@ -63,14 +63,14 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
     public void initMiuiViewsOnViewCreated(View view) {
         super.initMiuiViewsOnViewCreated(view);
-        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0014R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
+        StatusBarIconController.DarkIconManager darkIconManager = new StatusBarIconController.DarkIconManager((LinearLayout) view.findViewById(C0015R$id.drip_left_statusIcons), (CommandQueue) Dependency.get(CommandQueue.class));
         this.mDripLeftDarkIconManager = darkIconManager;
         darkIconManager.setShouldLog(true);
         ((MiuiDripLeftStatusBarIconControllerImpl) Dependency.get(MiuiDripLeftStatusBarIconControllerImpl.class)).addIconGroup(this.mDripLeftDarkIconManager);
-        this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0014R$id.drip_left_statusIcons);
-        this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0014R$id.prompt_container);
-        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_splitter);
-        this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0014R$id.drip_network_speed_view);
+        this.mDripSystemIconArea = (LinearLayout) this.mStatusBar.findViewById(C0015R$id.drip_left_statusIcons);
+        this.mStatusBarPromptContainer = this.mStatusBar.findViewById(C0015R$id.prompt_container);
+        this.mDripNetworkSpeedSplitter = (NetworkSpeedSplitter) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_splitter);
+        this.mDripNetworkSpeedView = (NetworkSpeedView) this.mStatusBar.findViewById(C0015R$id.drip_network_speed_view);
         ((RegionController) Dependency.get(RegionController.class)).addCallback(this);
         this.mControlPanelExpand = this.mControlPanelWindowManager.isExpand();
         this.mControlPanelWindowManager.addExpandChangeListener(this);
@@ -160,7 +160,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (!z) {
             this.mDripNetworkSpeedSplitter.setAlpha(1.0f);
         } else {
-            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
+            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
         }
     }
 
@@ -215,11 +215,8 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
             this.mDripNetworkSpeedView.setVisibilityByDisableInfo(0);
             if (!z) {
                 this.mDripNetworkSpeedView.setAlpha(1.0f);
-                return;
-            }
-            this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
-            if (this.mKeyguardStateController.isKeyguardFadingAway()) {
-                this.mDripNetworkSpeedView.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
+            } else {
+                this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
             }
         }
     }
@@ -235,9 +232,9 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
     public void initOperatorName() {
         PhoneStatusBarView phoneStatusBarView;
         if (this.mOperatorNameFrame == null && (phoneStatusBarView = this.mStatusBar) != null) {
-            if (phoneStatusBarView.getContext().getResources().getBoolean(C0009R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) {
+            if (phoneStatusBarView.getContext().getResources().getBoolean(C0010R$bool.config_showOperatorNameInStatusBar) || "SA".equals(this.mRegion)) {
                 Log.d("CollapsedStatusBarFragment", "initOperatorName: ");
-                this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0014R$id.operator_name)).inflate();
+                this.mOperatorNameFrame = ((ViewStub) this.mStatusBar.findViewById(C0015R$id.operator_name)).inflate();
             }
         }
     }

@@ -12,7 +12,7 @@ import android.util.ArrayMap;
 import android.util.Log;
 import codeinjection.CodeInjection;
 import com.android.internal.annotations.GuardedBy;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.statusbar.policy.CastController;
 import com.android.systemui.util.Utils;
 import java.io.FileDescriptor;
@@ -211,7 +211,7 @@ public class CastControllerImpl implements CastController {
                 CastController.CastDevice castDevice2 = new CastController.CastDevice();
                 castDevice2.id = this.mProjection.getPackageName();
                 castDevice2.name = getAppName(this.mProjection.getPackageName());
-                this.mContext.getString(C0020R$string.quick_settings_casting);
+                this.mContext.getString(C0021R$string.quick_settings_casting);
                 castDevice2.state = 2;
                 castDevice2.tag = this.mProjection;
                 arrayList.add(castDevice2);

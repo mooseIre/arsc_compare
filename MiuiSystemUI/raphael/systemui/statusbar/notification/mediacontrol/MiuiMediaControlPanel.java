@@ -12,8 +12,8 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.RemoteViews;
 import androidx.constraintlayout.widget.ConstraintSet;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.media.MediaAction;
 import com.android.systemui.media.MediaControlPanel;
@@ -41,7 +41,7 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         super(context, executor, activityStarter, mediaViewController, seekBarViewModel);
         this.mMediaTransferManager = miuiMediaTransferManager;
         this.direction = this.mContext.getResources().getConfiguration().getLayoutDirection();
-        this.ACTION_GAP = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.media_control_action_gap);
+        this.ACTION_GAP = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.media_control_action_gap);
     }
 
     @Override // com.android.systemui.media.MediaControlPanel
@@ -126,8 +126,8 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
 
     private void setSeamless(MediaData mediaData, PlayerViewHolder playerViewHolder, ConstraintSet constraintSet, ConstraintSet constraintSet2) {
         playerViewHolder.getSeamless().setVisibility(0);
-        setVisibleAndAlpha(constraintSet2, C0014R$id.media_seamless, true);
-        setVisibleAndAlpha(constraintSet, C0014R$id.media_seamless, true);
+        setVisibleAndAlpha(constraintSet2, C0015R$id.media_seamless, true);
+        setVisibleAndAlpha(constraintSet, C0015R$id.media_seamless, true);
         int id = playerViewHolder.getSeamless().getId();
         float f = mediaData.getResumption() ? 0.38f : 1.0f;
         constraintSet.setAlpha(id, f);
@@ -143,8 +143,8 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
         while (true) {
             z = true;
             if (i >= actions.size() || i >= iArr.length) {
-                constraintSet2.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
-                constraintSet.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
+                constraintSet2.constrainWidth(C0015R$id.actions, this.ACTION_GAP * i);
+                constraintSet.constrainWidth(C0015R$id.actions, this.ACTION_GAP * i);
             } else {
                 int i2 = iArr[i];
                 ImageButton action = playerViewHolder.getAction(i2);
@@ -190,8 +190,8 @@ public class MiuiMediaControlPanel extends MediaControlPanel {
                 i++;
             }
         }
-        constraintSet2.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
-        constraintSet.constrainWidth(C0014R$id.actions, this.ACTION_GAP * i);
+        constraintSet2.constrainWidth(C0015R$id.actions, this.ACTION_GAP * i);
+        constraintSet.constrainWidth(C0015R$id.actions, this.ACTION_GAP * i);
         if (this.actionCount != i) {
             this.actionCount = i;
         } else {

@@ -12,9 +12,9 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.statusbar.notification.ExpandedNotification;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.NotificationUtil;
@@ -53,9 +53,9 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
 
     private final void initResources() {
         Resources resources = getResources();
-        this.mMiuiAppIconSize = resources.getDimensionPixelSize(C0011R$dimen.notification_app_icon_size);
-        this.mMiuiAppIconMargin = resources.getDimensionPixelSize(C0011R$dimen.notification_app_icon_margin);
-        this.mOverflowNumberMarginEnd = resources.getDimensionPixelSize(C0011R$dimen.miui_notification_content_margin_end);
+        this.mMiuiAppIconSize = resources.getDimensionPixelSize(C0012R$dimen.notification_app_icon_size);
+        this.mMiuiAppIconMargin = resources.getDimensionPixelSize(C0012R$dimen.notification_app_icon_margin);
+        this.mOverflowNumberMarginEnd = resources.getDimensionPixelSize(C0012R$dimen.miui_notification_content_margin_end);
     }
 
     /* access modifiers changed from: protected */
@@ -242,13 +242,13 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                 removeView(view2);
                 this.mGroupHeader = null;
             }
-            View inflate = LayoutInflater.from(getContext()).inflate(C0016R$layout.notification_group_header, (ViewGroup) this, false);
+            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_group_header, (ViewGroup) this, false);
             this.mGroupHeader = inflate;
             if (inflate != null) {
-                this.mCollapsedButton = (ImageView) inflate.findViewById(C0014R$id.collapse_button);
+                this.mCollapsedButton = (ImageView) inflate.findViewById(C0015R$id.collapse_button);
                 View view3 = this.mGroupHeader;
                 if (view3 != null) {
-                    this.mGroupInfo = (TextView) view3.findViewById(C0014R$id.group_info);
+                    this.mGroupInfo = (TextView) view3.findViewById(C0015R$id.group_info);
                     ImageView imageView = this.mCollapsedButton;
                     if (imageView != null) {
                         imageView.setOnClickListener(this.mHeaderClickListener);
@@ -433,7 +433,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getDividerHeight();
         }
-        return getResources().getDimensionPixelSize(C0011R$dimen.notification_divider_height);
+        return getResources().getDimensionPixelSize(C0012R$dimen.notification_divider_height);
     }
 
     /* access modifiers changed from: protected */
@@ -442,7 +442,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getNotificationHeaderMargin();
         }
-        return getResources().getDimensionPixelSize(C0011R$dimen.notification_children_container_margin_top_miui);
+        return getResources().getDimensionPixelSize(C0012R$dimen.notification_children_container_margin_top_miui);
     }
 
     /* access modifiers changed from: protected */
@@ -451,7 +451,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
         if (NotificationSettingsHelper.showGoogleStyle()) {
             return super.getNotificationTopPadding();
         }
-        return getResources().getDimensionPixelSize(C0011R$dimen.notification_children_container_top_padding_miui);
+        return getResources().getDimensionPixelSize(C0012R$dimen.notification_children_container_top_padding_miui);
     }
 
     @Override // com.android.systemui.statusbar.notification.stack.NotificationChildrenContainer
@@ -476,7 +476,7 @@ public final class MiuiNotificationChildrenContainer extends NotificationChildre
                 removeView(imageView2);
                 this.mAppIcon = null;
             }
-            View inflate = LayoutInflater.from(getContext()).inflate(C0016R$layout.notification_template_part_app_icon, (ViewGroup) this, false);
+            View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.notification_template_part_app_icon, (ViewGroup) this, false);
             if (inflate != null) {
                 this.mAppIcon = (ImageView) inflate;
                 Context context = getContext();

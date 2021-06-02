@@ -8,9 +8,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.RemoteViews;
 import android.widget.TextView;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.CommandQueue;
 import com.miui.system.internal.R;
@@ -68,7 +68,7 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
     public void addPromptContainer(FrameLayout frameLayout, int i) {
         if (frameLayout != null) {
             frameLayout.removeAllViews();
-            LayoutInflater.from(this.mContext).inflate(C0016R$layout.miui_status_bar_prompt, (ViewGroup) frameLayout, true);
+            LayoutInflater.from(this.mContext).inflate(C0017R$layout.miui_status_bar_prompt, (ViewGroup) frameLayout, true);
             this.mPromptContainers.put(frameLayout, Integer.valueOf(i));
             updateMiuiStatusBarPrompt(frameLayout, i);
         }
@@ -115,17 +115,17 @@ public class MiuiStatusBarPromptController implements CommandQueue.Callbacks {
 
     /* access modifiers changed from: protected */
     public void updateMiuiStatusBarPrompt(FrameLayout frameLayout, int i) {
-        FrameLayout frameLayout2 = (FrameLayout) frameLayout.findViewById(C0014R$id.mini_state_container);
+        FrameLayout frameLayout2 = (FrameLayout) frameLayout.findViewById(C0015R$id.mini_state_container);
         ViewGroup viewGroup = null;
         if (this.mCurrentPromptState != null) {
             frameLayout2.removeAllViews();
             try {
                 ViewGroup viewGroup2 = (ViewGroup) this.mCurrentPromptState.mMiniStateViews.apply(this.mContext, frameLayout2);
-                viewGroup2.setMinimumWidth(this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_prompt_min_width));
+                viewGroup2.setMinimumWidth(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_prompt_min_width));
                 TextView textView = (TextView) viewGroup2.findViewById(R.id.chronometer);
                 TextView textView2 = (TextView) viewGroup2.findViewById(16908310);
-                textView.setMinimumWidth(this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_prompt_content_min_width));
-                textView2.setMinimumWidth(this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.status_bar_prompt_content_min_width));
+                textView.setMinimumWidth(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_prompt_content_min_width));
+                textView2.setMinimumWidth(this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_prompt_content_min_width));
                 textView.setTextAlignment(4);
                 textView2.setTextAlignment(4);
                 viewGroup = viewGroup2;

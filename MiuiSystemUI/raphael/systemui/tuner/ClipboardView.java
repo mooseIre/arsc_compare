@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0012R$drawable;
+import com.android.systemui.C0013R$drawable;
 
 public class ClipboardView extends ImageView implements ClipboardManager.OnPrimaryClipChangedListener {
     private final ClipboardManager mClipboardManager;
@@ -91,6 +91,6 @@ public class ClipboardView extends ImageView implements ClipboardManager.OnPrima
     public void onPrimaryClipChanged() {
         ClipData primaryClip = this.mClipboardManager.getPrimaryClip();
         this.mCurrentClip = primaryClip;
-        setImageResource(primaryClip != null ? C0012R$drawable.clipboard_full : C0012R$drawable.clipboard_empty);
+        setImageResource(primaryClip != null ? C0013R$drawable.clipboard_full : C0013R$drawable.clipboard_empty);
     }
 }

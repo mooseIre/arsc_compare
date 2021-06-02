@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.policy.NCSwitchController;
@@ -76,14 +76,14 @@ public class NotificationShadeWindowViewController {
         this.mNotificationPanelViewController = miuiNotificationPanelViewController;
         this.mDepthController = notificationShadeDepthController;
         this.mStatusBarViewFactory = superStatusBarViewFactory;
-        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C0014R$id.brightness_mirror);
+        this.mBrightnessMirror = notificationShadeWindowView.findViewById(C0015R$id.brightness_mirror);
         this.mControlPanelWindowManager = controlPanelWindowManager;
         this.mNCSwitchController = nCSwitchController;
         this.mKeyguardMediaController = miuiKeyguardMediaController;
     }
 
     public void setupExpandedStatusBar() {
-        this.mStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C0014R$id.notification_stack_scroller);
+        this.mStackScrollLayout = (NotificationStackScrollLayout) this.mView.findViewById(C0015R$id.notification_stack_scroller);
         this.mTunerService.addTunable(new TunerService.Tunable() {
             /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationShadeWindowViewController$Glv885_kOTqMlucxR_8golqdvI */
 
@@ -270,7 +270,7 @@ public class NotificationShadeWindowViewController {
             }
 
             public void onChildViewAdded(View view, View view2) {
-                if (view2.getId() == C0014R$id.brightness_mirror) {
+                if (view2.getId() == C0015R$id.brightness_mirror) {
                     NotificationShadeWindowViewController.this.mBrightnessMirror = view2;
                 }
             }
@@ -389,7 +389,7 @@ public class NotificationShadeWindowViewController {
         SuperStatusBarViewFactory superStatusBarViewFactory;
         this.mStatusBarView = phoneStatusBarView;
         if (phoneStatusBarView != null && (superStatusBarViewFactory = this.mStatusBarViewFactory) != null) {
-            this.mBarTransitions = new PhoneStatusBarTransitions(phoneStatusBarView, superStatusBarViewFactory.getStatusBarWindowView().findViewById(C0014R$id.status_bar_container));
+            this.mBarTransitions = new PhoneStatusBarTransitions(phoneStatusBarView, superStatusBarViewFactory.getStatusBarWindowView().findViewById(C0015R$id.status_bar_container));
         }
     }
 

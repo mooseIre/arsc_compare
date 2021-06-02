@@ -1,6 +1,6 @@
 package com.android.systemui.statusbar.notification.row;
 
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
@@ -16,6 +16,6 @@ final class MiuiExpandableNotificationRow$mBackgroundDimmed$2 extends Lambda imp
 
     @Override // kotlin.jvm.functions.Function0
     public final NotificationBackgroundView invoke() {
-        return (NotificationBackgroundView) this.this$0.findViewById(C0014R$id.backgroundDimmed);
+        return (NotificationBackgroundView) this.this$0.findViewById(C0015R$id.backgroundDimmed);
     }
 }

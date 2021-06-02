@@ -104,6 +104,10 @@ public class ActivityStarterDelegate implements ActivityStarter {
         });
     }
 
+    static /* synthetic */ void lambda$startActivity$3(Intent intent, boolean z, boolean z2, int i, Lazy lazy) {
+        ((StatusBar) lazy.get()).startActivity(intent, z, z2, i);
+    }
+
     @Override // com.android.systemui.plugins.ActivityStarter
     public void startActivity(Intent intent, boolean z) {
         this.mActualStarter.ifPresent(new Consumer(intent, z) {

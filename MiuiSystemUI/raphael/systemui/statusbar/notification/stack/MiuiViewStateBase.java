@@ -2,7 +2,7 @@ package com.android.systemui.statusbar.notification.stack;
 
 import android.util.FloatProperty;
 import android.view.View;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.PropertyAnimator;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -47,7 +47,7 @@ public class MiuiViewStateBase {
                     ExpandableViewState viewState = ((ExpandableView) view).getViewState();
                     int i = 0;
                     if (!Intrinsics.areEqual(viewState != null ? Float.valueOf((float) viewState.getSpringYOffset()) : 0, Float.valueOf(0.0f))) {
-                        Object tag = view.getTag(C0014R$id.miui_child_index_hint);
+                        Object tag = view.getTag(C0015R$id.miui_child_index_hint);
                         if (tag instanceof Integer) {
                             i = ((Number) tag).intValue();
                         }

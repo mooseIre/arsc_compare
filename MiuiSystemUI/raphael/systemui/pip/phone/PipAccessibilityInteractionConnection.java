@@ -10,8 +10,8 @@ import android.view.MagnificationSpec;
 import android.view.accessibility.AccessibilityNodeInfo;
 import android.view.accessibility.IAccessibilityInteractionConnection;
 import android.view.accessibility.IAccessibilityInteractionConnectionCallback;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.pip.PipSnapAlgorithm;
 import com.android.systemui.pip.PipTaskOrganizer;
 import java.util.ArrayList;
@@ -63,7 +63,7 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
     public void performAccessibilityAction(long j, int i, Bundle bundle, int i2, IAccessibilityInteractionConnectionCallback iAccessibilityInteractionConnectionCallback, int i3, int i4, long j2) {
         boolean z = true;
         if (j == AccessibilityNodeInfo.ROOT_NODE_ID) {
-            if (i == C0014R$id.action_pip_resize) {
+            if (i == C0015R$id.action_pip_resize) {
                 if (this.mMotionHelper.getBounds().width() == this.mNormalBounds.width() && this.mMotionHelper.getBounds().height() == this.mNormalBounds.height()) {
                     setToExpandedBounds();
                 } else {
@@ -184,7 +184,7 @@ public class PipAccessibilityInteractionConnection extends IAccessibilityInterac
         obtain.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_DISMISS);
         obtain.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_MOVE_WINDOW);
         obtain.addAction(AccessibilityNodeInfo.AccessibilityAction.ACTION_EXPAND);
-        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0014R$id.action_pip_resize, context.getString(C0020R$string.accessibility_action_pip_resize)));
+        obtain.addAction(new AccessibilityNodeInfo.AccessibilityAction(C0015R$id.action_pip_resize, context.getString(C0021R$string.accessibility_action_pip_resize)));
         obtain.setImportantForAccessibility(true);
         obtain.setClickable(true);
         obtain.setVisibleToUser(true);

@@ -4,7 +4,7 @@ import android.animation.ValueAnimator;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.controlcenter.phone.ControlCenterPanelView;
 import com.android.systemui.controlcenter.phone.ControlPanelContentView;
 import com.miui.systemui.util.MiuiInterpolators;
@@ -22,16 +22,16 @@ public class QCBrightnessMirrorController {
 
     public QCBrightnessMirrorController(ControlPanelContentView controlPanelContentView) {
         this.mControlPanelContentView = controlPanelContentView;
-        View findViewById = controlPanelContentView.findViewById(C0014R$id.brightness_mirror);
+        View findViewById = controlPanelContentView.findViewById(C0015R$id.brightness_mirror);
         this.mBrightnessMirror = findViewById;
-        this.mMirrorContent = (FrameLayout) findViewById.findViewById(C0014R$id.mirror_content);
-        this.mContent = this.mControlPanelContentView.findViewById(C0014R$id.control_center_panel);
+        this.mMirrorContent = (FrameLayout) findViewById.findViewById(C0015R$id.mirror_content);
+        this.mContent = this.mControlPanelContentView.findViewById(C0015R$id.control_center_panel);
     }
 
     public void showMirror() {
         this.mIsMirror = true;
         if (this.mQSBrightness == null) {
-            this.mQSBrightness = this.mContent.findViewById(C0014R$id.qs_brightness);
+            this.mQSBrightness = this.mContent.findViewById(C0015R$id.qs_brightness);
         }
         this.mQSBrightness.setVisibility(4);
         this.mBrightnessMirror.setVisibility(0);
@@ -42,7 +42,7 @@ public class QCBrightnessMirrorController {
                 QCBrightnessMirrorController.this.mControlPanelContentView.setControlPanelWindowBlurRatio(1.0f - valueAnimator.getAnimatedFraction());
             }
         });
-        ((ControlCenterPanelView) this.mControlPanelContentView.findViewById(C0014R$id.control_center_panel)).setTouchable(false);
+        ((ControlCenterPanelView) this.mControlPanelContentView.findViewById(C0015R$id.control_center_panel)).setTouchable(false);
     }
 
     public void hideMirror() {
@@ -69,7 +69,7 @@ public class QCBrightnessMirrorController {
                 QCBrightnessMirrorController.this.mBrightnessMirror.setVisibility(4);
             }
         });
-        ((ControlCenterPanelView) this.mControlPanelContentView.findViewById(C0014R$id.control_center_panel)).setTouchable(true);
+        ((ControlCenterPanelView) this.mControlPanelContentView.findViewById(C0015R$id.control_center_panel)).setTouchable(true);
     }
 
     /* access modifiers changed from: private */

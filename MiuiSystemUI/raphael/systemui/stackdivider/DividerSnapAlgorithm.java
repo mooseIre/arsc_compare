@@ -2,10 +2,10 @@ package com.android.systemui.stackdivider;
 
 import android.content.res.Resources;
 import android.graphics.Rect;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0013R$fraction;
-import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0014R$fraction;
+import com.android.systemui.C0016R$integer;
 import java.util.ArrayList;
 
 public class DividerSnapAlgorithm {
@@ -54,13 +54,13 @@ public class DividerSnapAlgorithm {
         if (z2) {
             i5 = 3;
         } else {
-            i5 = resources.getInteger(C0015R$integer.config_dockedStackDividerSnapMode);
+            i5 = resources.getInteger(C0016R$integer.config_dockedStackDividerSnapMode);
         }
         this.mSnapMode = i5;
-        this.mFreeSnapMode = resources.getBoolean(C0009R$bool.config_dockedStackDividerFreeSnapMode);
-        this.mFixedRatio = resources.getFraction(C0013R$fraction.docked_stack_divider_fixed_ratio, 1, 1);
-        this.mMinimalSizeResizableTask = resources.getDimensionPixelSize(C0011R$dimen.default_minimal_size_resizable_task);
-        this.mTaskHeightInMinimizedMode = z3 ? resources.getDimensionPixelSize(C0011R$dimen.task_height_of_minimized_mode) : 0;
+        this.mFreeSnapMode = resources.getBoolean(C0010R$bool.config_dockedStackDividerFreeSnapMode);
+        this.mFixedRatio = resources.getFraction(C0014R$fraction.docked_stack_divider_fixed_ratio, 1, 1);
+        this.mMinimalSizeResizableTask = resources.getDimensionPixelSize(C0012R$dimen.default_minimal_size_resizable_task);
+        this.mTaskHeightInMinimizedMode = z3 ? resources.getDimensionPixelSize(C0012R$dimen.task_height_of_minimized_mode) : 0;
         calculateTargets(this.mIsHorizontalDivision, i4);
         this.mFirstSplitTarget = this.mTargets.get(1);
         ArrayList<SnapTarget> arrayList = this.mTargets;

@@ -25,8 +25,8 @@ import com.android.internal.app.IVoiceInteractionSessionShowCallback;
 import com.android.internal.logging.MetricsLogger;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.settingslib.applications.InterestingConfigChanges;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.assist.ui.DefaultUiController;
 import com.android.systemui.model.SysUiState;
 import com.android.systemui.recents.OverviewProxyService;
@@ -54,7 +54,7 @@ public class AssistManager {
                     z = false;
                 }
                 AssistManager assistManager = AssistManager.this;
-                assistManager.mView = (AssistOrbContainer) LayoutInflater.from(assistManager.mContext).inflate(C0016R$layout.assist_orb, (ViewGroup) null);
+                assistManager.mView = (AssistOrbContainer) LayoutInflater.from(assistManager.mContext).inflate(C0017R$layout.assist_orb, (ViewGroup) null);
                 AssistManager.this.mView.setVisibility(8);
                 AssistManager.this.mView.setSystemUiVisibility(1792);
                 AssistManager.this.mWindowManager.addView(AssistManager.this.mView, AssistManager.this.getLayoutParams());
@@ -207,7 +207,7 @@ public class AssistManager {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private WindowManager.LayoutParams getLayoutParams() {
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.assist_orb_scrim_height), 2033, 280, -3);
+        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(-1, this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.assist_orb_scrim_height), 2033, 280, -3);
         layoutParams.token = new Binder();
         layoutParams.gravity = 8388691;
         layoutParams.setTitle("AssistPreviewPanel");

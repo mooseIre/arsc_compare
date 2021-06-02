@@ -40,9 +40,9 @@ import com.android.keyguard.magazine.LockScreenMagazinePreView;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.wallpaper.KeyguardWallpaperUtils;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.Interpolators;
 import com.android.systemui.controlcenter.phone.ControlPanelController;
@@ -170,6 +170,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void setOverScrolling(boolean z) {
     }
 
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
+    public void updateStatusBarIcons() {
+    }
+
     @NotNull
     public final NotificationPanelView getPanelView() {
         return this.panelView;
@@ -197,8 +202,8 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         this.mTouchSlop = viewConfiguration.getScaledTouchSlop();
         Context context = this.panelView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "panelView.context");
-        this.mBottomAreaCollapseHotZone = context.getResources().getDimension(C0011R$dimen.miui_notification_swipe_area_height);
-        View findViewById = this.panelView.findViewById(C0014R$id.notification_stack_scroller);
+        this.mBottomAreaCollapseHotZone = context.getResources().getDimension(C0012R$dimen.miui_notification_swipe_area_height);
+        View findViewById = this.panelView.findViewById(C0015R$id.notification_stack_scroller);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "panelView.findViewById(R…ification_stack_scroller)");
         this.mNotificationStackScroller = (NotificationStackScrollLayout) findViewById;
         Object obj = Dependency.get(KeyguardPanelViewInjector.class);
@@ -234,7 +239,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Intrinsics.checkExpressionValueIsNotNull(notificationPanelView2, "mView");
         Context context2 = notificationPanelView2.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context2, "mView.context");
-        context2.getResources().getDimensionPixelSize(C0011R$dimen.notification_sticky_group_header_height);
+        context2.getResources().getDimensionPixelSize(C0012R$dimen.notification_sticky_group_header_height);
         ((ControlPanelController) Dependency.get(ControlPanelController.class)).addCallback((ControlPanelController.UseControlPanelChangeListener) new ControlPanelController.UseControlPanelChangeListener(this) {
             /* class com.android.systemui.statusbar.phone.MiuiNotificationPanelViewController.AnonymousClass2 */
             final /* synthetic */ MiuiNotificationPanelViewController this$0;
@@ -246,7 +251,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             @Override // com.android.systemui.controlcenter.phone.ControlPanelController.UseControlPanelChangeListener
             public final void onUseControlPanelChange(boolean z) {
                 MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-                miuiNotificationPanelViewController.mQsNotificationTopPadding = z ? miuiNotificationPanelViewController.mResources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding) : 0;
+                miuiNotificationPanelViewController.mQsNotificationTopPadding = z ? miuiNotificationPanelViewController.mResources.getDimensionPixelSize(C0012R$dimen.qs_notification_padding) : 0;
             }
         });
         this.mChildPositionsChangedListener = new MiuiNotificationPanelViewController$mChildPositionsChangedListener$1(this);
@@ -589,7 +594,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             float height = (calculateQsTopPadding - f) / (calculateQsTopPadding - ((float) header.getHeight()));
             QS qs2 = this.mQs;
             Intrinsics.checkExpressionValueIsNotNull(qs2, "mQs");
-            View findViewById = qs2.getView().findViewById(C0014R$id.qs_content);
+            View findViewById = qs2.getView().findViewById(C0015R$id.qs_content);
             if (findViewById != null && findViewById.isShown()) {
                 findViewById.setPivotX(((float) findViewById.getWidth()) * 0.5f);
                 QS qs3 = this.mQs;
@@ -978,10 +983,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mThemeBackgroundView = ((NotificationPanelViewController) this).mView.findViewById(C0014R$id.theme_background);
-        this.mAwesomeLockScreenContainer = (FrameLayout) ((NotificationPanelViewController) this).mView.findViewById(C0014R$id.awesome_lock_screen_container);
-        this.mDismissView = (DismissView) ((NotificationPanelViewController) this).mView.findViewById(C0014R$id.dismiss_view);
-        this.mStickyGroupHeader = ((NotificationPanelViewController) this).mView.findViewById(C0014R$id.group_header);
+        this.mThemeBackgroundView = ((NotificationPanelViewController) this).mView.findViewById(C0015R$id.theme_background);
+        this.mAwesomeLockScreenContainer = (FrameLayout) ((NotificationPanelViewController) this).mView.findViewById(C0015R$id.awesome_lock_screen_container);
+        this.mDismissView = (DismissView) ((NotificationPanelViewController) this).mView.findViewById(C0015R$id.dismiss_view);
+        this.mStickyGroupHeader = ((NotificationPanelViewController) this).mView.findViewById(C0015R$id.group_header);
         updateThemeBackground();
         NotificationPanelView notificationPanelView = ((NotificationPanelViewController) this).mView;
         Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
@@ -1006,7 +1011,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         super.loadDimens();
         Object obj = Dependency.get(ControlPanelController.class);
         Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(ControlPanelController::class.java)");
-        this.mQsNotificationTopPadding = ((ControlPanelController) obj).isUseControlCenter() ? this.mResources.getDimensionPixelSize(C0011R$dimen.qs_notification_padding) : 0;
+        this.mQsNotificationTopPadding = ((ControlPanelController) obj).isUseControlCenter() ? this.mResources.getDimensionPixelSize(C0012R$dimen.qs_notification_padding) : 0;
     }
 
     @Override // com.android.systemui.statusbar.phone.PanelViewController, com.android.systemui.statusbar.phone.NotificationPanelViewController
@@ -1123,7 +1128,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
         Context context = notificationPanelView.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "mView.context");
-        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0011R$dimen.notification_left_right_margin);
+        int dimensionPixelSize = context.getResources().getDimensionPixelSize(C0012R$dimen.notification_left_right_margin);
         FrameLayout frameLayout = this.mQsFrame;
         if (frameLayout != null) {
             ViewGroup.LayoutParams layoutParams = frameLayout.getLayoutParams();
@@ -1194,7 +1199,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         if (view != null) {
             NotificationPanelView notificationPanelView = ((NotificationPanelViewController) this).mView;
             Intrinsics.checkExpressionValueIsNotNull(notificationPanelView, "mView");
-            view.setBackground(notificationPanelView.getContext().getDrawable(C0012R$drawable.notification_panel_window_bg));
+            view.setBackground(notificationPanelView.getContext().getDrawable(C0013R$drawable.notification_panel_window_bg));
             view.setVisibility((this.mIsDefaultTheme || !isOnShade()) ? 8 : 0);
         }
     }
@@ -1404,7 +1409,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
             if (this.mIsDefaultTheme) {
                 Context context = this.panelView.getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "panelView.context");
-                float dimension = context.getResources().getDimension(C0011R$dimen.keyguard_clock_tranlation_y);
+                float dimension = context.getResources().getDimension(C0012R$dimen.keyguard_clock_tranlation_y);
                 if (DeviceConfig.isLowEndDevice()) {
                     view.startAnimation(MiuiAnimationUtils.INSTANCE.generalWakeupAlphaAnimation());
                 } else {
@@ -1598,7 +1603,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private final void initDismissView() {
         DismissView dismissView = this.mDismissView;
         if (dismissView != null) {
-            dismissView.setDrawables(C0012R$drawable.notifications_clear_all, C0012R$drawable.btn_clear_all);
+            dismissView.setDrawables(C0013R$drawable.notifications_clear_all, C0013R$drawable.btn_clear_all);
         }
         DismissView dismissView2 = this.mDismissView;
         if (dismissView2 != null) {
@@ -1607,13 +1612,13 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         setDismissView(this.mDismissView);
         DismissView dismissView3 = this.mDismissView;
         if (dismissView3 != null) {
-            dismissView3.setAccessibilityTraversalAfter(C0014R$id.notification_stack_scroller);
+            dismissView3.setAccessibilityTraversalAfter(C0015R$id.notification_stack_scroller);
         }
         DismissView dismissView4 = this.mDismissView;
         if (dismissView4 != null) {
             PanelAppearDisappearEvent.Companion.animateAppearDisappear$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(dismissView4, false);
         }
-        this.mNotificationStackScroller.setAccessibilityTraversalBefore(C0014R$id.dismiss_view);
+        this.mNotificationStackScroller.setAccessibilityTraversalBefore(C0015R$id.dismiss_view);
         this.mNotificationStackScroller.setImportantForAccessibility(1);
         updateDismissView();
     }

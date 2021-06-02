@@ -6,7 +6,7 @@ import android.view.DisplayCutout;
 import android.view.View;
 import android.view.WindowInsets;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
@@ -28,7 +28,6 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     @VisibleForTesting
     float mAppearFraction;
     private final KeyguardBypassController mBypassController;
-    private final CommandQueue mCommandQueue;
     private final DarkIconDispatcher mDarkIconDispatcher;
     @VisibleForTesting
     float mExpandedHeight;
@@ -62,7 +61,7 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     }
 
     public HeadsUpAppearanceController(NotificationIconAreaController notificationIconAreaController, HeadsUpManagerPhone headsUpManagerPhone, View view, SysuiStatusBarStateController sysuiStatusBarStateController, KeyguardBypassController keyguardBypassController, KeyguardStateController keyguardStateController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, CommandQueue commandQueue, NotificationPanelViewController notificationPanelViewController, View view2) {
-        this(notificationIconAreaController, headsUpManagerPhone, sysuiStatusBarStateController, keyguardBypassController, notificationWakeUpCoordinator, keyguardStateController, commandQueue, (HeadsUpStatusBarView) view2.findViewById(C0014R$id.heads_up_status_bar_view), (NotificationStackScrollLayout) view.findViewById(C0014R$id.notification_stack_scroller), notificationPanelViewController, view2.findViewById(C0014R$id.clock), view2.findViewById(C0014R$id.operator_name_frame), view2.findViewById(C0014R$id.centered_icon_area));
+        this(notificationIconAreaController, headsUpManagerPhone, sysuiStatusBarStateController, keyguardBypassController, notificationWakeUpCoordinator, keyguardStateController, commandQueue, (HeadsUpStatusBarView) view2.findViewById(C0015R$id.heads_up_status_bar_view), (NotificationStackScrollLayout) view.findViewById(C0015R$id.notification_stack_scroller), notificationPanelViewController, view2.findViewById(C0015R$id.clock), view2.findViewById(C0015R$id.operator_name_frame), view2.findViewById(C0015R$id.centered_icon_area));
     }
 
     @VisibleForTesting
@@ -134,7 +133,6 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         this.mStatusBarStateController = statusBarStateController;
         this.mWakeUpCoordinator = notificationWakeUpCoordinator;
         notificationWakeUpCoordinator.addListener(this);
-        this.mCommandQueue = commandQueue;
         this.mKeyguardStateController = keyguardStateController;
     }
 
@@ -252,8 +250,8 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     }
 
     private void setShown(boolean z) {
-        if (this.mShown != z && this.mStatusBarStateController.getState() != 0) {
-            this.mCommandQueue.recomputeDisableFlags(this.mHeadsUpStatusBarView.getContext().getDisplayId(), false);
+        if (this.mShown != z) {
+            this.mShown = z;
         }
     }
 

@@ -12,8 +12,8 @@ import android.widget.Button;
 import codeinjection.CodeInjection;
 import com.android.internal.app.MediaRouteDialogPresenter;
 import com.android.internal.logging.MetricsLogger;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
@@ -217,14 +217,14 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.quick_settings_cast_title);
+        return this.mContext.getString(C0021R$string.quick_settings_cast_title);
     }
 
     /* access modifiers changed from: protected */
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         int i;
         int i2;
-        String string = this.mContext.getString(C0020R$string.quick_settings_cast_title);
+        String string = this.mContext.getString(C0021R$string.quick_settings_cast_title);
         booleanState.label = string;
         booleanState.contentDescription = string;
         booleanState.stateDescription = CodeInjection.MD5;
@@ -242,7 +242,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             if (i3 == 2) {
                 booleanState.value = true;
                 booleanState.secondaryLabel = getDeviceName(next);
-                booleanState.stateDescription = ((Object) booleanState.stateDescription) + "," + this.mContext.getString(C0020R$string.accessibility_cast_name, booleanState.label);
+                booleanState.stateDescription = ((Object) booleanState.stateDescription) + "," + this.mContext.getString(C0021R$string.accessibility_cast_name, booleanState.label);
                 z = false;
                 break;
             } else if (i3 == 1) {
@@ -250,12 +250,12 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             }
         }
         if (z && !booleanState.value) {
-            booleanState.secondaryLabel = this.mContext.getString(C0020R$string.quick_settings_connecting);
+            booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_connecting);
         }
         if (booleanState.value) {
-            i2 = C0012R$drawable.ic_cast_connected;
+            i2 = C0013R$drawable.ic_cast_connected;
         } else {
-            i2 = C0012R$drawable.ic_cast;
+            i2 = C0013R$drawable.ic_cast;
         }
         booleanState.icon = QSTileImpl.ResourceIcon.get(i2);
         if (this.mWifiConnected || booleanState.value) {
@@ -266,11 +266,11 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
             if (!booleanState.value) {
                 booleanState.secondaryLabel = CodeInjection.MD5;
             }
-            booleanState.contentDescription = ((Object) booleanState.contentDescription) + "," + this.mContext.getString(C0020R$string.accessibility_quick_settings_open_details);
+            booleanState.contentDescription = ((Object) booleanState.contentDescription) + "," + this.mContext.getString(C0021R$string.accessibility_quick_settings_open_details);
             booleanState.expandedAccessibilityClassName = Button.class.getName();
         } else {
             booleanState.state = 0;
-            booleanState.secondaryLabel = this.mContext.getString(C0020R$string.quick_settings_cast_no_wifi);
+            booleanState.secondaryLabel = this.mContext.getString(C0021R$string.quick_settings_cast_no_wifi);
         }
         booleanState.stateDescription = ((Object) booleanState.stateDescription) + ", " + ((Object) booleanState.secondaryLabel);
         this.mDetailAdapter.updateItems(castDevices);
@@ -280,7 +280,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (!((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0020R$string.accessibility_casting_turned_off);
+            return this.mContext.getString(C0021R$string.accessibility_casting_turned_off);
         }
         return null;
     }
@@ -289,7 +289,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: public */
     private String getDeviceName(CastController.CastDevice castDevice) {
         String str = castDevice.name;
-        return str != null ? str : this.mContext.getString(C0020R$string.quick_settings_cast_device_default_name);
+        return str != null ? str : this.mContext.getString(C0021R$string.quick_settings_cast_device_default_name);
     }
 
     private final class Callback implements CastController.Callback, KeyguardStateController.Callback {
@@ -332,7 +332,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
         public CharSequence getTitle() {
-            return ((QSTileImpl) CastTile.this).mContext.getString(C0020R$string.quick_settings_cast_title);
+            return ((QSTileImpl) CastTile.this).mContext.getString(C0021R$string.quick_settings_cast_title);
         }
 
         @Override // com.android.systemui.plugins.qs.DetailAdapter
@@ -366,7 +366,7 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
                     }
                 });
             }
-            this.mItems.setEmptyState(C0012R$drawable.ic_qs_cast_detail_empty, C0020R$string.quick_settings_cast_detail_empty_text);
+            this.mItems.setEmptyState(C0013R$drawable.ic_qs_cast_detail_empty, C0021R$string.quick_settings_cast_detail_empty_text);
             this.mItems.setCallback(this);
             updateItems(CastTile.this.mController.getCastDevices());
             CastTile.this.mController.setDiscovering(true);
@@ -389,9 +389,9 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
                         CastController.CastDevice next = it.next();
                         if (next.state == 2) {
                             MiuiQSDetailItems.Item item = new MiuiQSDetailItems.Item();
-                            item.icon = C0012R$drawable.ic_cast_connected;
+                            item.icon = C0013R$drawable.ic_cast_connected;
                             item.line1 = CastTile.this.getDeviceName(next);
-                            item.line2 = ((QSTileImpl) CastTile.this).mContext.getString(C0020R$string.quick_settings_connected);
+                            item.line2 = ((QSTileImpl) CastTile.this).mContext.getString(C0021R$string.quick_settings_connected);
                             item.tag = next;
                             item.canDisconnect = true;
                             itemArr = new MiuiQSDetailItems.Item[]{item};
@@ -407,10 +407,10 @@ public class CastTile extends QSTileImpl<QSTile.BooleanState> {
                             CastController.CastDevice castDevice2 = this.mVisibleOrder.get(str);
                             if (list.contains(castDevice2)) {
                                 MiuiQSDetailItems.Item item2 = new MiuiQSDetailItems.Item();
-                                item2.icon = C0012R$drawable.ic_cast;
+                                item2.icon = C0013R$drawable.ic_cast;
                                 item2.line1 = CastTile.this.getDeviceName(castDevice2);
                                 if (castDevice2.state == 1) {
-                                    item2.line2 = ((QSTileImpl) CastTile.this).mContext.getString(C0020R$string.quick_settings_connecting);
+                                    item2.line2 = ((QSTileImpl) CastTile.this).mContext.getString(C0021R$string.quick_settings_connecting);
                                 }
                                 item2.tag = castDevice2;
                                 itemArr[i] = item2;

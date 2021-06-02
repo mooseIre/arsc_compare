@@ -29,9 +29,9 @@ import androidx.lifecycle.LifecycleRegistry;
 import androidx.lifecycle.Observer;
 import codeinjection.CodeInjection;
 import com.android.settingslib.Utils;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.DualToneHandler;
 import com.android.systemui.MiuiBatteryMeterView;
 import com.android.systemui.plugins.ActivityStarter;
@@ -98,7 +98,7 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
         this.mZenController = zenModeController;
         this.mStatusBarIconController = statusBarIconController;
         this.mActivityStarter = activityStarter;
-        this.mDualToneHandler = new DualToneHandler(new ContextThemeWrapper(context, C0021R$style.QSHeaderTheme));
+        this.mDualToneHandler = new DualToneHandler(new ContextThemeWrapper(context, C0022R$style.QSHeaderTheme));
         this.mCommandQueue = commandQueue;
         this.mRingerModeTracker = ringerModeTracker;
     }
@@ -106,17 +106,17 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        this.mSystemIconsView = findViewById(C0014R$id.quick_status_bar_system_icons);
-        findViewById(C0014R$id.quick_qs_status_icons);
-        MiuiStatusIconContainer miuiStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0014R$id.statusIcons);
+        this.mSystemIconsView = findViewById(C0015R$id.quick_status_bar_system_icons);
+        findViewById(C0015R$id.quick_qs_status_icons);
+        MiuiStatusIconContainer miuiStatusIconContainer = (MiuiStatusIconContainer) findViewById(C0015R$id.statusIcons);
         miuiStatusIconContainer.addIgnoredSlots(getIgnoredIconSlots());
         miuiStatusIconContainer.setShouldRestrictIcons(false);
         this.mIconManager = new StatusBarIconController.TintedIconManager(miuiStatusIconContainer, this.mCommandQueue);
-        this.mHeaderTextContainerView = findViewById(C0014R$id.header_text_container);
-        this.mStatusSeparator = findViewById(C0014R$id.status_separator);
-        this.mNextAlarmIcon = (ImageView) findViewById(C0014R$id.next_alarm_icon);
-        this.mNextAlarmTextView = (TextView) findViewById(C0014R$id.next_alarm_text);
-        View findViewById = findViewById(C0014R$id.alarm_container);
+        this.mHeaderTextContainerView = findViewById(C0015R$id.header_text_container);
+        this.mStatusSeparator = findViewById(C0015R$id.status_separator);
+        this.mNextAlarmIcon = (ImageView) findViewById(C0015R$id.next_alarm_icon);
+        this.mNextAlarmTextView = (TextView) findViewById(C0015R$id.next_alarm_text);
+        View findViewById = findViewById(C0015R$id.alarm_container);
         this.mNextAlarmContainer = findViewById;
         findViewById.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.qs.$$Lambda$p8TkVReSUo0LsQ3y9iKja9mJXE */
@@ -125,9 +125,9 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
                 QuickStatusBarHeader.this.onClick(view);
             }
         });
-        this.mRingerModeIcon = (ImageView) findViewById(C0014R$id.ringer_mode_icon);
-        this.mRingerModeTextView = (TextView) findViewById(C0014R$id.ringer_mode_text);
-        View findViewById2 = findViewById(C0014R$id.ringer_container);
+        this.mRingerModeIcon = (ImageView) findViewById(C0015R$id.ringer_mode_icon);
+        this.mRingerModeTextView = (TextView) findViewById(C0015R$id.ringer_mode_text);
+        View findViewById2 = findViewById(C0015R$id.ringer_container);
         this.mRingerContainer = findViewById2;
         findViewById2.setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.qs.$$Lambda$p8TkVReSUo0LsQ3y9iKja9mJXE */
@@ -136,18 +136,18 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
                 QuickStatusBarHeader.this.onClick(view);
             }
         });
-        QSCarrierGroup qSCarrierGroup = (QSCarrierGroup) findViewById(C0014R$id.carrier_group);
+        QSCarrierGroup qSCarrierGroup = (QSCarrierGroup) findViewById(C0015R$id.carrier_group);
         updateResources();
         new Rect(0, 0, 0, 0);
         int singleColor = this.mDualToneHandler.getSingleColor(getColorIntensity(Utils.getColorAttrDefaultColor(getContext(), 16842800)));
         this.mIconManager.setTint(singleColor);
         this.mNextAlarmIcon.setImageTintList(ColorStateList.valueOf(singleColor));
         this.mRingerModeIcon.setImageTintList(ColorStateList.valueOf(singleColor));
-        Clock clock = (Clock) findViewById(C0014R$id.clock);
+        Clock clock = (Clock) findViewById(C0015R$id.clock);
         this.mClockView = clock;
         clock.setOnClickListener(this);
-        DateView dateView = (DateView) findViewById(C0014R$id.date);
-        MiuiBatteryMeterView miuiBatteryMeterView = (MiuiBatteryMeterView) findViewById(C0014R$id.batteryRemainingIcon);
+        DateView dateView = (DateView) findViewById(C0015R$id.date);
+        MiuiBatteryMeterView miuiBatteryMeterView = (MiuiBatteryMeterView) findViewById(C0015R$id.batteryRemainingIcon);
         this.mRingerModeTextView.setSelected(true);
         this.mNextAlarmTextView.setSelected(true);
     }
@@ -223,15 +223,15 @@ public class QuickStatusBarHeader extends RelativeLayout implements View.OnClick
     }
 
     private void updateMinimumHeight() {
-        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_quick_header_panel_height));
+        setMinimumHeight(((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(17105490) + ((RelativeLayout) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_quick_header_panel_height));
     }
 
     private void updateResources() {
         Resources resources = ((RelativeLayout) this).mContext.getResources();
         updateMinimumHeight();
-        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0011R$dimen.rounded_corner_content_padding);
-        this.mStatusBarPaddingTop = resources.getDimensionPixelSize(C0011R$dimen.status_bar_padding_top);
-        this.mHeaderTextContainerView.getLayoutParams().height = resources.getDimensionPixelSize(C0011R$dimen.qs_header_tooltip_height);
+        this.mRoundedCornerPadding = resources.getDimensionPixelSize(C0012R$dimen.rounded_corner_content_padding);
+        this.mStatusBarPaddingTop = resources.getDimensionPixelSize(C0012R$dimen.status_bar_padding_top);
+        this.mHeaderTextContainerView.getLayoutParams().height = resources.getDimensionPixelSize(C0012R$dimen.qs_header_tooltip_height);
         View view = this.mHeaderTextContainerView;
         view.setLayoutParams(view.getLayoutParams());
         this.mSystemIconsView.getLayoutParams().height = resources.getDimensionPixelSize(17105441);

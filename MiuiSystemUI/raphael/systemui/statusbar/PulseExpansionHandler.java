@@ -8,7 +8,7 @@ import android.os.SystemClock;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.ViewConfiguration;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 import com.android.systemui.Gefingerpoken;
 import com.android.systemui.Interpolators;
 import com.android.systemui.plugins.FalsingManager;
@@ -79,7 +79,7 @@ public final class PulseExpansionHandler implements Gefingerpoken {
         this.roundnessManager = notificationRoundnessManager;
         this.statusBarStateController = statusBarStateController2;
         this.falsingManager = falsingManager2;
-        context.getResources().getDimensionPixelSize(C0011R$dimen.keyguard_drag_down_min_distance);
+        context.getResources().getDimensionPixelSize(C0012R$dimen.keyguard_drag_down_min_distance);
         ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         Intrinsics.checkExpressionValueIsNotNull(viewConfiguration, "ViewConfiguration.get(context)");
         this.mTouchSlop = (float) viewConfiguration.getScaledTouchSlop();

@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.phone;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import com.android.systemui.C0011R$dimen;
+import com.android.systemui.C0012R$dimen;
 
 public class DoubleTapHelper {
     private boolean mActivated;
@@ -55,7 +55,7 @@ public class DoubleTapHelper {
             }
         };
         this.mTouchSlop = (float) ViewConfiguration.get(view.getContext()).getScaledTouchSlop();
-        this.mDoubleTapSlop = view.getResources().getDimension(C0011R$dimen.double_tap_slop);
+        this.mDoubleTapSlop = view.getResources().getDimension(C0012R$dimen.double_tap_slop);
         this.mView = view;
         this.mDoubleTapTimeOutMs = j;
         this.mActivationListener = activationListener;

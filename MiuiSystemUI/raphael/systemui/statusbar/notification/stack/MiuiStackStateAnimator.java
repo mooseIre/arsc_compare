@@ -3,7 +3,7 @@ package com.android.systemui.statusbar.notification.stack;
 import android.util.Property;
 import android.view.View;
 import android.view.animation.Interpolator;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 import com.android.systemui.statusbar.notification.AnimatableProperty;
 import com.android.systemui.statusbar.notification.row.ExpandableView;
@@ -165,7 +165,7 @@ public final class MiuiStackStateAnimator extends StackStateAnimator {
         AnimatableProperty animatableProperty = MiuiNotificationAnimationExtensionsKt.PROPERTY_SPRING_Y_OFFSET;
         Intrinsics.checkExpressionValueIsNotNull(animatableProperty, "PROPERTY_SPRING_Y_OFFSET");
         if (Intrinsics.areEqual(animatableProperty.getProperty(), property)) {
-            Object tag = view != null ? view.getTag(C0014R$id.miui_child_index_hint) : null;
+            Object tag = view != null ? view.getTag(C0015R$id.miui_child_index_hint) : null;
             return SpringAnimationEvent.Companion.getInterpolatorForIndex$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(tag instanceof Integer ? ((Number) tag).intValue() : 0);
         } else if (this.mHasPanelAppearDisappearEvent && (Intrinsics.areEqual(property, View.ALPHA) || Intrinsics.areEqual(property, View.SCALE_X) || Intrinsics.areEqual(property, View.SCALE_Y))) {
             return PanelAppearDisappearEvent.Companion.getINTERPOLATOR();

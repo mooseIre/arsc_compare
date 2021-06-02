@@ -87,12 +87,12 @@ import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.keyguard.wallpaper.WallpaperCommandSender;
 import com.android.systemui.ActivityIntentHelper;
 import com.android.systemui.AutoReinflateContainer;
-import com.android.systemui.C0007R$array;
-import com.android.systemui.C0009R$bool;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0015R$integer;
-import com.android.systemui.C0020R$string;
-import com.android.systemui.C0021R$style;
+import com.android.systemui.C0008R$array;
+import com.android.systemui.C0010R$bool;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0016R$integer;
+import com.android.systemui.C0021R$string;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.DejankUtils;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
@@ -816,7 +816,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mDisplay = defaultDisplay;
         this.mDisplayId = defaultDisplay.getDisplayId();
         updateDisplaySize();
-        this.mVibrateOnOpening = this.mContext.getResources().getBoolean(C0009R$bool.config_vibrateOnIconAnimation);
+        this.mVibrateOnOpening = this.mContext.getResources().getBoolean(C0010R$bool.config_vibrateOnIconAnimation);
         WindowManagerGlobal.getWindowManagerService();
         this.mDevicePolicyManager = (DevicePolicyManager) this.mContext.getSystemService("device_policy");
         AccessibilityManager accessibilityManager = (AccessibilityManager) this.mContext.getSystemService("accessibility");
@@ -1018,7 +1018,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         inflateStatusBarWindow();
         this.mNotificationShadeWindowViewController.setService(this, this.mNotificationShadeWindowController);
         this.mNotificationShadeWindowView.setOnTouchListener(getStatusBarWindowTouchListener());
-        ViewGroup viewGroup = (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0014R$id.notification_stack_scroller);
+        ViewGroup viewGroup = (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0015R$id.notification_stack_scroller);
         this.mStackScroller = viewGroup;
         this.mNotificationLogger.setUpWithContainer((NotificationListContainer) viewGroup);
         NotificationIconAreaController createNotificationIconAreaController = SystemUIFactory.getInstance().createNotificationIconAreaController(context, this, this.mWakeUpCoordinator, this.mKeyguardBypassController, this.mStatusBarStateController);
@@ -1049,7 +1049,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 StatusBar.this.lambda$makeStatusBarView$4$StatusBar(str, fragment);
             }
         });
-        fragmentHostManager.getFragmentManager().beginTransaction().replace(C0014R$id.status_bar_container, new MiuiCollapsedStatusBarFragment(), "CollapsedStatusBarFragment").commit();
+        fragmentHostManager.getFragmentManager().beginTransaction().replace(C0015R$id.status_bar_container, new MiuiCollapsedStatusBarFragment(), "CollapsedStatusBarFragment").commit();
         this.mHeadsUpManager.setup(this.mVisualStabilityManager);
         this.mStatusBarTouchableRegionManager.setup(this, this.mNotificationShadeWindowView);
         this.mHeadsUpManager.addListener(this);
@@ -1058,9 +1058,9 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationPanelViewController.setHeadsUpManager(this.mHeadsUpManager);
         this.mNotificationLogger.setHeadsUpManager(this.mHeadsUpManager);
         createNavigationBar(registerStatusBarResult);
-        this.mKeyguardIndicationController.setIndicationArea((ViewGroup) this.mNotificationShadeWindowView.findViewById(C0014R$id.keyguard_indication_area));
+        this.mKeyguardIndicationController.setIndicationArea((ViewGroup) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_indication_area));
         this.mNotificationPanelViewController.setKeyguardIndicationController(this.mKeyguardIndicationController);
-        this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C0014R$id.ambient_indication_container);
+        this.mAmbientIndicationContainer = this.mNotificationShadeWindowView.findViewById(C0015R$id.ambient_indication_container);
         this.mBatteryController.addCallback(new BatteryController.BatteryStateChangeCallback() {
             /* class com.android.systemui.statusbar.phone.StatusBar.AnonymousClass6 */
 
@@ -1110,10 +1110,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 StatusBar.this.lambda$makeStatusBarView$5$StatusBar((Integer) obj);
             }
         });
-        this.mScrimController.attachViews((ScrimView) this.mNotificationShadeWindowView.findViewById(C0014R$id.scrim_behind), (ScrimView) this.mNotificationShadeWindowView.findViewById(C0014R$id.scrim_in_front), scrimForBubble);
+        this.mScrimController.attachViews((ScrimView) this.mNotificationShadeWindowView.findViewById(C0015R$id.scrim_behind), (ScrimView) this.mNotificationShadeWindowView.findViewById(C0015R$id.scrim_in_front), scrimForBubble);
         this.mNotificationPanelViewController.initDependencies(this, this.mGroupManager, this.mNotificationShelf, this.mNotificationIconAreaController, this.mScrimController);
-        BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C0014R$id.backdrop);
-        this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C0014R$id.backdrop_front), (ImageView) backDropView.findViewById(C0014R$id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
+        BackDropView backDropView = (BackDropView) this.mNotificationShadeWindowView.findViewById(C0015R$id.backdrop);
+        this.mMediaManager.setup(backDropView, (ImageView) backDropView.findViewById(C0015R$id.backdrop_front), (ImageView) backDropView.findViewById(C0015R$id.backdrop_back), this.mScrimController, this.mLockscreenWallpaper);
         this.mNotificationShadeDepthControllerLazy.get().addListener(new NotificationShadeDepthController.DepthListener(this.mContext.getResources().getFloat(17105099), backDropView) {
             /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$W_OHXSTtWfSDBaVhSdiHPl7N8Fg */
             public final /* synthetic */ float f$0;
@@ -1144,10 +1144,10 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 LockscreenLockIconController.this.onShowingLaunchAffordanceChanged((Boolean) obj);
             }
         });
-        View findViewById = this.mNotificationShadeWindowView.findViewById(C0014R$id.qs_frame);
+        View findViewById = this.mNotificationShadeWindowView.findViewById(C0015R$id.qs_frame);
         if (findViewById != null) {
             FragmentHostManager fragmentHostManager2 = FragmentHostManager.get(findViewById);
-            int i = C0014R$id.qs_frame;
+            int i = C0015R$id.qs_frame;
             ExtensionController.ExtensionBuilder newExtension = this.mExtensionController.newExtension(QS.class);
             newExtension.withPlugin(QS.class);
             newExtension.withDefault(new Supplier() {
@@ -1176,7 +1176,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
             });
         }
-        View findViewById2 = this.mNotificationShadeWindowView.findViewById(C0014R$id.report_rejected_touch);
+        View findViewById2 = this.mNotificationShadeWindowView.findViewById(C0015R$id.report_rejected_touch);
         this.mReportRejectedTouch = findViewById2;
         if (findViewById2 != null) {
             updateReportRejectedTouchVisibility();
@@ -1193,7 +1193,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
         this.mGestureWakeLock = this.mPowerManager.newWakeLock(10, "GestureWakeLock");
         this.mVibrator = (Vibrator) this.mContext.getSystemService(Vibrator.class);
-        int[] intArray = this.mContext.getResources().getIntArray(C0007R$array.config_cameraLaunchGestureVibePattern);
+        int[] intArray = this.mContext.getResources().getIntArray(C0008R$array.config_cameraLaunchGestureVibePattern);
         this.mCameraLaunchGestureVibePattern = new long[intArray.length];
         for (int i2 = 0; i2 < intArray.length; i2++) {
             this.mCameraLaunchGestureVibePattern[i2] = (long) intArray[i2];
@@ -1206,7 +1206,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mUserSetupObserver.onUserSetupChanged();
         ThreadedRenderer.overrideProperty("disableProfileBars", "true");
         ThreadedRenderer.overrideProperty("ambientRatio", String.valueOf(1.5f));
-        KeyguardBottomAreaView keyguardBottomAreaView = (KeyguardBottomAreaView) this.mNotificationShadeWindowView.findViewById(C0014R$id.keyguard_bottom_area);
+        KeyguardBottomAreaView keyguardBottomAreaView = (KeyguardBottomAreaView) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_bottom_area);
     }
 
     /* access modifiers changed from: private */
@@ -1234,7 +1234,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         HeadsUpAppearanceController headsUpAppearanceController2 = new HeadsUpAppearanceController(this.mNotificationIconAreaController, this.mHeadsUpManager, this.mNotificationShadeWindowView, this.mStatusBarStateController, this.mKeyguardBypassController, this.mKeyguardStateController, this.mWakeUpCoordinator, this.mCommandQueue, this.mNotificationPanelViewController, this.mStatusBarView);
         this.mHeadsUpAppearanceController = headsUpAppearanceController2;
         headsUpAppearanceController2.readFrom(headsUpAppearanceController);
-        this.mLightsOutNotifController.setLightsOutNotifView(this.mStatusBarView.findViewById(C0014R$id.notification_lights_out));
+        this.mLightsOutNotifController.setLightsOutNotifView(this.mStatusBarView.findViewById(C0015R$id.notification_lights_out));
         this.mNotificationShadeWindowViewController.setStatusBarView(this.mStatusBarView);
         checkBarModes();
     }
@@ -1427,7 +1427,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: protected */
     public void createUserSwitcher() {
-        this.mKeyguardUserSwitcher = new KeyguardUserSwitcher(this.mContext, (ViewStub) this.mNotificationShadeWindowView.findViewById(C0014R$id.keyguard_user_switcher), (KeyguardStatusBarView) this.mNotificationShadeWindowView.findViewById(C0014R$id.keyguard_header), this.mNotificationPanelViewController);
+        this.mKeyguardUserSwitcher = new KeyguardUserSwitcher(this.mContext, (ViewStub) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_user_switcher), (KeyguardStatusBarView) this.mNotificationShadeWindowView.findViewById(C0015R$id.keyguard_header), this.mNotificationPanelViewController);
     }
 
     private void inflateStatusBarWindow() {
@@ -1445,7 +1445,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     public void startKeyguard() {
         Trace.beginSection("StatusBar#startKeyguard");
         this.mBiometricUnlockController = this.mBiometricUnlockControllerLazy.get();
-        this.mStatusBarKeyguardViewManager.registerStatusBar(this, getBouncerContainer(), this.mNotificationPanelViewController, this.mBiometricUnlockController, this.mDismissCallbackRegistry, (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0014R$id.lock_icon_container), this.mStackScroller, this.mKeyguardBypassController, this.mFalsingManager);
+        this.mStatusBarKeyguardViewManager.registerStatusBar(this, getBouncerContainer(), this.mNotificationPanelViewController, this.mBiometricUnlockController, this.mDismissCallbackRegistry, (ViewGroup) this.mNotificationShadeWindowView.findViewById(C0015R$id.lock_icon_container), this.mStackScroller, this.mKeyguardBypassController, this.mFalsingManager);
         this.mKeyguardIndicationController.setStatusBarKeyguardViewManager(this.mStatusBarKeyguardViewManager);
         this.mBiometricUnlockController.setKeyguardViewController(this.mStatusBarKeyguardViewManager);
         this.mRemoteInputManager.getController().addCallback(this.mStatusBarKeyguardViewManager);
@@ -2454,7 +2454,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         sb.append(1);
         sb.append(")");
         printWriter.println(sb.toString());
-        if (this.mContext.getThemeResId() == C0021R$style.Theme_SystemUI_Light) {
+        if (this.mContext.getThemeResId() == C0022R$style.Theme_SystemUI_Light) {
             z = true;
         }
         printWriter.println("    light wallpaper theme: " + z);
@@ -2946,7 +2946,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 volumeComponent.dispatchDemoCommand(str, bundle);
             }
             if (z || str.equals("clock")) {
-                dispatchDemoCommandToView(str, bundle, C0014R$id.clock);
+                dispatchDemoCommandToView(str, bundle, C0015R$id.clock);
             }
             if (z || str.equals("battery")) {
                 this.mBatteryController.dispatchDemoCommand(str, bundle);
@@ -2962,7 +2962,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 if (phoneStatusBarView == null) {
                     view = null;
                 } else {
-                    view = phoneStatusBarView.findViewById(C0014R$id.fullscreen_notification_icon_area);
+                    view = phoneStatusBarView.findViewById(C0015R$id.fullscreen_notification_icon_area);
                 }
                 if (view != null) {
                     view.setVisibility((!this.mDemoMode || !"false".equals(bundle.getString("visible"))) ? 0 : 4);
@@ -2987,7 +2987,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
             }
             if (z || str.equals("operator")) {
-                dispatchDemoCommandToView(str, bundle, C0014R$id.operator_name);
+                dispatchDemoCommandToView(str, bundle, C0015R$id.operator_name);
             }
         }
     }
@@ -3243,7 +3243,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     /* access modifiers changed from: protected */
     public void updateTheme() {
-        int i = this.mColorExtractor.getNeutralColors().supportsDarkText() ? C0021R$style.Theme_SystemUI_Light : C0021R$style.Theme_SystemUI;
+        int i = this.mColorExtractor.getNeutralColors().supportsDarkText() ? C0022R$style.Theme_SystemUI_Light : C0022R$style.Theme_SystemUI;
         if (this.mContext.getThemeResId() != i) {
             this.mContext.setTheme(i);
             this.mConfigurationController.notifyThemeChanged();
@@ -3438,7 +3438,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public void onUnlockHintStarted() {
         this.mFalsingManager.onUnlockHintStarted();
-        this.mKeyguardIndicationController.showTransientIndication(C0020R$string.keyguard_unlock);
+        this.mKeyguardIndicationController.showTransientIndication(C0021R$string.keyguard_unlock);
     }
 
     public void onHintFinished() {
@@ -3957,7 +3957,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
 
     public int getKeyguardNotifications() {
         if (this.mKeyguardNotifications == -1) {
-            this.mKeyguardNotifications = this.mNotificationPanelViewController.computeMaxKeyguardNotifications(this.mContext.getResources().getInteger(C0015R$integer.keyguard_max_notification_count));
+            this.mKeyguardNotifications = this.mNotificationPanelViewController.computeMaxKeyguardNotifications(this.mContext.getResources().getInteger(C0016R$integer.keyguard_max_notification_count));
         }
         return this.mKeyguardNotifications;
     }

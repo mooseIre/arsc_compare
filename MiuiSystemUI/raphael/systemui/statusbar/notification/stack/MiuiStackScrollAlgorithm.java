@@ -1,10 +1,9 @@
 package com.android.systemui.statusbar.notification.stack;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.view.ViewGroup;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.Dependency;
 import com.android.systemui.statusbar.EmptyShadeView;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
@@ -26,9 +25,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     private final Context mContext;
     private int mGroupMinusBottom;
     private int mGroupMinusTop;
-    private int mHeadsUpMarginTop;
     private int mLatestVisibleChildrenCount;
-    private int mStatusBarHeight;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
     public MiuiStackScrollAlgorithm(@NotNull Context context, @NotNull ViewGroup viewGroup) {
@@ -56,10 +53,8 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
     }
 
     public final void updateResources() {
-        this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_top_minus);
-        this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.notification_section_group_divider_bottom_minus);
-        this.mStatusBarHeight = this.mContext.getResources().getDimensionPixelSize(17105490);
-        this.mHeadsUpMarginTop = this.mContext.getResources().getDimensionPixelSize(C0011R$dimen.heads_up_status_bar_padding);
+        this.mGroupMinusTop = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_top_minus);
+        this.mGroupMinusBottom = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.notification_section_group_divider_bottom_minus);
     }
 
     /* access modifiers changed from: protected */
@@ -68,23 +63,10 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
         Intrinsics.checkParameterIsNotNull(stackScrollAlgorithmState, "algorithmState");
         Intrinsics.checkParameterIsNotNull(ambientState, "ambientState");
         this.mLatestVisibleChildrenCount = stackScrollAlgorithmState.visibleChildren.size();
-        evaluateHeadsUpInsets();
         updateChildrenSpringYOffset(stackScrollAlgorithmState, ambientState);
         updateChildrenAppearDisappearState(stackScrollAlgorithmState, ambientState);
         updateHeadsUpAnimatingAwayState(stackScrollAlgorithmState);
         super.updatePositionsForState(stackScrollAlgorithmState, ambientState);
-    }
-
-    private final void evaluateHeadsUpInsets() {
-        Resources resources = this.mContext.getResources();
-        Intrinsics.checkExpressionValueIsNotNull(resources, "mContext.resources");
-        int i = 0;
-        boolean z = resources.getConfiguration().orientation == 2;
-        int i2 = this.mHeadsUpMarginTop;
-        if (!z) {
-            i = this.mStatusBarHeight;
-        }
-        this.mHeadsUpInset = (float) (i2 + i);
     }
 
     private final void updateChildrenSpringYOffset(StackScrollAlgorithm.StackScrollAlgorithmState stackScrollAlgorithmState, AmbientState ambientState) {
@@ -107,7 +89,7 @@ public final class MiuiStackScrollAlgorithm extends StackScrollAlgorithm {
                         viewState.setSpringYOffset((int) (ambientState.getSpringLength() + f));
                     }
                 }
-                t2.setTag(C0014R$id.miui_child_index_hint, Integer.valueOf(i));
+                t2.setTag(C0015R$id.miui_child_index_hint, Integer.valueOf(i));
                 i = i2;
             } else {
                 CollectionsKt.throwIndexOverflow();

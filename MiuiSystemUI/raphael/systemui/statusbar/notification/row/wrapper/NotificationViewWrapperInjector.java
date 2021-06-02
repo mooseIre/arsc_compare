@@ -5,18 +5,18 @@ import android.content.Context;
 import android.view.NotificationHeaderView;
 import android.view.View;
 import com.android.internal.widget.ConversationLayout;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.notification.NotificationSettingsHelper;
 import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 
 public class NotificationViewWrapperInjector {
     public static NotificationViewWrapper wrap(Context context, View view, ExpandableNotificationRow expandableNotificationRow) {
-        if (view.getId() == C0014R$id.status_bar_latest_event_content && MiuiNotificationOneLineViewWrapper.match(view.getTag())) {
+        if (view.getId() == C0015R$id.status_bar_latest_event_content && MiuiNotificationOneLineViewWrapper.match(view.getTag())) {
             return new MiuiNotificationOneLineViewWrapper(context, view, expandableNotificationRow);
         }
         if (NotificationSettingsHelper.showMiuiStyle()) {
-            if (view.getId() != C0014R$id.status_bar_latest_event_content) {
+            if (view.getId() != C0015R$id.status_bar_latest_event_content) {
                 if (view.getId() == 16909496) {
                     if ("conversation".equals(view.getTag())) {
                         return new MiuiNotificationConversationTemplateViewWrapper(context, (ConversationLayout) view, expandableNotificationRow);

@@ -6,7 +6,7 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.ImageView;
 import com.android.internal.util.ContrastColorUtil;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.SystemUIApplication;
 
 public class NotificationUtils {
@@ -19,12 +19,12 @@ public class NotificationUtils {
     }
 
     public static boolean isGrayscale(ImageView imageView, ContrastColorUtil contrastColorUtil) {
-        Object tag = imageView.getTag(C0014R$id.icon_is_grayscale);
+        Object tag = imageView.getTag(C0015R$id.icon_is_grayscale);
         if (tag != null) {
             return Boolean.TRUE.equals(tag);
         }
         boolean isGrayscaleIcon = contrastColorUtil.isGrayscaleIcon(imageView.getDrawable());
-        imageView.setTag(C0014R$id.icon_is_grayscale, Boolean.valueOf(isGrayscaleIcon));
+        imageView.setTag(C0015R$id.icon_is_grayscale, Boolean.valueOf(isGrayscaleIcon));
         return isGrayscaleIcon;
     }
 

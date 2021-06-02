@@ -10,8 +10,8 @@ import android.widget.Toolbar;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragment;
 import androidx.preference.PreferenceScreen;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
 import com.android.systemui.fragments.FragmentService;
 
@@ -26,8 +26,8 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
         getWindow().addFlags(Integer.MIN_VALUE);
         boolean z = true;
         requestWindowFeature(1);
-        setContentView(C0016R$layout.tuner_activity);
-        Toolbar toolbar = (Toolbar) findViewById(C0014R$id.action_bar);
+        setContentView(C0017R$layout.tuner_activity);
+        Toolbar toolbar = (Toolbar) findViewById(C0015R$id.action_bar);
         if (toolbar != null) {
             setActionBar(toolbar);
         }
@@ -41,7 +41,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
             } else {
                 fragment = new TunerFragment();
             }
-            getFragmentManager().beginTransaction().replace(C0014R$id.content_frame, fragment, "tuner").commit();
+            getFragmentManager().beginTransaction().replace(C0015R$id.content_frame, fragment, "tuner").commit();
         }
     }
 
@@ -74,7 +74,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
             fragment.setArguments(bundle);
             FragmentTransaction beginTransaction = getFragmentManager().beginTransaction();
             setTitle(preference.getTitle());
-            beginTransaction.replace(C0014R$id.content_frame, fragment);
+            beginTransaction.replace(C0015R$id.content_frame, fragment);
             beginTransaction.addToBackStack("PreferenceFragment");
             beginTransaction.commit();
             return true;
@@ -92,7 +92,7 @@ public class TunerActivity extends Activity implements PreferenceFragment.OnPref
         bundle.putString("androidx.preference.PreferenceFragmentCompat.PREFERENCE_ROOT", preferenceScreen.getKey());
         subSettingsFragment.setArguments(bundle);
         subSettingsFragment.setTargetFragment(preferenceFragment, 0);
-        beginTransaction.replace(C0014R$id.content_frame, subSettingsFragment);
+        beginTransaction.replace(C0015R$id.content_frame, subSettingsFragment);
         beginTransaction.addToBackStack("PreferenceFragment");
         beginTransaction.commit();
         return true;

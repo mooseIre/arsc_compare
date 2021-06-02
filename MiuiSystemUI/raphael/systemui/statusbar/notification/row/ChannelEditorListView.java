@@ -12,9 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.android.systemui.C0014R$id;
-import com.android.systemui.C0016R$layout;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0015R$id;
+import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.util.Assert;
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +75,7 @@ public final class ChannelEditorListView extends LinearLayout {
     /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
-        View findViewById = findViewById(C0014R$id.app_control);
+        View findViewById = findViewById(C0015R$id.app_control);
         Intrinsics.checkExpressionValueIsNotNull(findViewById, "findViewById(R.id.app_control)");
         this.appControlRow = (AppControlView) findViewById;
     }
@@ -119,7 +119,7 @@ public final class ChannelEditorListView extends LinearLayout {
     }
 
     private final void addChannelRow(NotificationChannel notificationChannel, LayoutInflater layoutInflater) {
-        View inflate = layoutInflater.inflate(C0016R$layout.notif_half_shelf_row, (ViewGroup) null);
+        View inflate = layoutInflater.inflate(C0017R$layout.notif_half_shelf_row, (ViewGroup) null);
         if (inflate != null) {
             ChannelRow channelRow = (ChannelRow) inflate;
             ChannelEditorDialogController channelEditorDialogController = this.controller;
@@ -145,7 +145,7 @@ public final class ChannelEditorListView extends LinearLayout {
                 TextView channelName = appControlView2.getChannelName();
                 Context context = getContext();
                 Intrinsics.checkExpressionValueIsNotNull(context, "context");
-                channelName.setText(context.getResources().getString(C0020R$string.notification_channel_dialog_title, this.appName));
+                channelName.setText(context.getResources().getString(C0021R$string.notification_channel_dialog_title, this.appName));
                 AppControlView appControlView3 = this.appControlRow;
                 if (appControlView3 != null) {
                     appControlView3.getSwitch().setChecked(z);

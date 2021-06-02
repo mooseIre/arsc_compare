@@ -40,6 +40,7 @@ import com.android.systemui.qs.logging.QSLogger;
 import com.miui.systemui.analytics.SystemUIStat;
 import java.io.FileDescriptor;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -125,6 +126,18 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
         this.mTmpState = newTileState();
         this.mQSLogger = qSHost.getQSLogger();
         this.mUiEventLogger = qSHost.getUiEventLogger();
+        try {
+            Field declaredField = LifecycleRegistry.class.getDeclaredField("mEnforceMainThread");
+            declaredField.setAccessible(true);
+            if (((Boolean) declaredField.get(this.mLifecycle)).booleanValue()) {
+                Log.d(this.TAG, "lifecycle is enforced main thread, so make it not.");
+                declaredField.set(this.mLifecycle, Boolean.FALSE);
+            }
+        } catch (NoSuchFieldException e) {
+            Log.d(this.TAG, "check enforce main thread of lifecycle failed.", e);
+        } catch (Exception e2) {
+            Log.e(this.TAG, "set enforce main thread of lifecycle failed.", e2);
+        }
     }
 
     /* access modifiers changed from: protected */
@@ -306,12 +319,14 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
     /* access modifiers changed from: public */
     private void handleRemoveCallback(QSTile.Callback callback) {
         this.mCallbacks.remove(callback);
+        this.mHandler.removeMessages(14);
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleRemoveCallbacks() {
         this.mCallbacks.clear();
+        this.mHandler.removeMessages(14);
     }
 
     /* access modifiers changed from: private */
@@ -324,6 +339,7 @@ public abstract class QSTileImpl<TState extends QSTile.State> implements QSTile,
                     it.remove();
                 }
             }
+            this.mHandler.removeMessages(14);
         }
     }
 

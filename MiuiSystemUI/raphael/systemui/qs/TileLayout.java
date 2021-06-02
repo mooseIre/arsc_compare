@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import com.android.systemui.C0011R$dimen;
-import com.android.systemui.C0015R$integer;
+import com.android.systemui.C0012R$dimen;
+import com.android.systemui.C0016R$integer;
 import com.android.systemui.plugins.qs.QSTileView;
 import com.android.systemui.qs.QSPanel;
 import java.util.ArrayList;
@@ -111,13 +111,13 @@ public class TileLayout extends ViewGroup implements QSPanel.QSTileLayout {
     @Override // com.android.systemui.qs.QSPanel.QSTileLayout
     public boolean updateResources() {
         Resources resources = ((ViewGroup) this).mContext.getResources();
-        this.mResourceColumns = Math.max(1, resources.getInteger(C0015R$integer.quick_settings_num_columns));
-        this.mCellHeight = ((ViewGroup) this).mContext.getResources().getDimensionPixelSize(C0011R$dimen.qs_tile_height);
-        int dimensionPixelSize = resources.getDimensionPixelSize(C0011R$dimen.qs_tile_content_margin_top);
-        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0011R$dimen.qs_tile_content_margin_horizontal);
+        this.mResourceColumns = Math.max(1, resources.getInteger(C0016R$integer.quick_settings_num_columns));
+        this.mCellHeight = ((ViewGroup) this).mContext.getResources().getDimensionPixelSize(C0012R$dimen.qs_tile_height);
+        int dimensionPixelSize = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_content_margin_top);
+        int dimensionPixelSize2 = resources.getDimensionPixelSize(C0012R$dimen.qs_tile_content_margin_horizontal);
         setPadding(dimensionPixelSize2, dimensionPixelSize, dimensionPixelSize2, getPaddingBottom());
         setClipToPadding(false);
-        int max = Math.max(1, getResources().getInteger(C0015R$integer.quick_settings_num_rows));
+        int max = Math.max(1, getResources().getInteger(C0016R$integer.quick_settings_num_rows));
         this.mMaxAllowedRows = max;
         if (this.mLessRows) {
             this.mMaxAllowedRows = Math.max(this.mMinRows, max - 1);

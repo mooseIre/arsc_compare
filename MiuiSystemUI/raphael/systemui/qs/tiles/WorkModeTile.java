@@ -2,8 +2,8 @@ package com.android.systemui.qs.tiles;
 
 import android.content.Intent;
 import android.widget.Switch;
-import com.android.systemui.C0012R$drawable;
-import com.android.systemui.C0020R$string;
+import com.android.systemui.C0013R$drawable;
+import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
@@ -11,7 +11,7 @@ import com.android.systemui.statusbar.phone.ManagedProfileController;
 import miuix.os.Build;
 
 public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements ManagedProfileController.Callback {
-    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C0012R$drawable.stat_sys_managed_profile_status);
+    private final QSTile.Icon mIcon = QSTileImpl.ResourceIcon.get(C0013R$drawable.stat_sys_managed_profile_status);
     private final ManagedProfileController mProfileController;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
@@ -58,7 +58,7 @@ public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements Man
 
     @Override // com.android.systemui.plugins.qs.QSTile
     public CharSequence getTileLabel() {
-        return this.mContext.getString(C0020R$string.quick_settings_work_mode_label);
+        return this.mContext.getString(C0021R$string.quick_settings_work_mode_label);
     }
 
     /* access modifiers changed from: protected */
@@ -81,7 +81,7 @@ public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements Man
         } else {
             booleanState.slash.isSlashed = true;
         }
-        String string = this.mContext.getString(C0020R$string.quick_settings_work_mode_label);
+        String string = this.mContext.getString(C0021R$string.quick_settings_work_mode_label);
         booleanState.label = string;
         booleanState.contentDescription = string;
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
@@ -95,8 +95,8 @@ public class WorkModeTile extends QSTileImpl<QSTile.BooleanState> implements Man
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public String composeChangeAnnouncement() {
         if (((QSTile.BooleanState) this.mState).value) {
-            return this.mContext.getString(C0020R$string.accessibility_quick_settings_work_mode_changed_on);
+            return this.mContext.getString(C0021R$string.accessibility_quick_settings_work_mode_changed_on);
         }
-        return this.mContext.getString(C0020R$string.accessibility_quick_settings_work_mode_changed_off);
+        return this.mContext.getString(C0021R$string.accessibility_quick_settings_work_mode_changed_off);
     }
 }

@@ -16,7 +16,7 @@ import android.widget.FrameLayout;
 import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.bubbles.animation.PhysicsAnimationLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,12 +86,12 @@ public class PhysicsAnimationLayout extends FrameLayout {
 
         /* access modifiers changed from: protected */
         public PhysicsPropertyAnimator animationForChild(View view) {
-            PhysicsPropertyAnimator physicsPropertyAnimator = (PhysicsPropertyAnimator) view.getTag(C0014R$id.physics_animator_tag);
+            PhysicsPropertyAnimator physicsPropertyAnimator = (PhysicsPropertyAnimator) view.getTag(C0015R$id.physics_animator_tag);
             if (physicsPropertyAnimator == null) {
                 PhysicsAnimationLayout physicsAnimationLayout = this.mLayout;
                 Objects.requireNonNull(physicsAnimationLayout);
                 physicsPropertyAnimator = new PhysicsPropertyAnimator(view);
-                view.setTag(C0014R$id.physics_animator_tag, physicsPropertyAnimator);
+                view.setTag(C0015R$id.physics_animator_tag, physicsPropertyAnimator);
             }
             physicsPropertyAnimator.clearAnimator();
             physicsPropertyAnimator.setAssociatedController(this);
@@ -381,7 +381,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private ObjectAnimator getTargetAnimatorFromView(View view) {
-        return (ObjectAnimator) view.getTag(C0014R$id.target_animator_tag);
+        return (ObjectAnimator) view.getTag(C0015R$id.target_animator_tag);
     }
 
     private void setUpAnimationsForProperty(DynamicAnimation.ViewProperty viewProperty) {
@@ -430,19 +430,19 @@ public class PhysicsAnimationLayout extends FrameLayout {
     /* access modifiers changed from: public */
     private int getTagIdForProperty(DynamicAnimation.ViewProperty viewProperty) {
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_X)) {
-            return C0014R$id.translation_x_dynamicanimation_tag;
+            return C0015R$id.translation_x_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.TRANSLATION_Y)) {
-            return C0014R$id.translation_y_dynamicanimation_tag;
+            return C0015R$id.translation_y_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.SCALE_X)) {
-            return C0014R$id.scale_x_dynamicanimation_tag;
+            return C0015R$id.scale_x_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.SCALE_Y)) {
-            return C0014R$id.scale_y_dynamicanimation_tag;
+            return C0015R$id.scale_y_dynamicanimation_tag;
         }
         if (viewProperty.equals(DynamicAnimation.ALPHA)) {
-            return C0014R$id.alpha_dynamicanimation_tag;
+            return C0015R$id.alpha_dynamicanimation_tag;
         }
         return -1;
     }
@@ -832,7 +832,7 @@ public class PhysicsAnimationLayout extends FrameLayout {
             if (targetAnimatorFromView != null) {
                 targetAnimatorFromView.cancel();
             }
-            this.mView.setTag(C0014R$id.target_animator_tag, this.mPathAnimator);
+            this.mView.setTag(C0015R$id.target_animator_tag, this.mPathAnimator);
             this.mPathAnimator.start();
         }
 

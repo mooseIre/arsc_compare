@@ -38,16 +38,16 @@ public class HardwareBgDrawable extends LayerDrawable {
     private static Drawable[] getLayers(Context context, boolean z, boolean z2) {
         Drawable[] drawableArr;
         int i;
-        int i2 = z2 ? C0012R$drawable.rounded_bg_full : C0012R$drawable.rounded_bg;
+        int i2 = z2 ? C0013R$drawable.rounded_bg_full : C0013R$drawable.rounded_bg;
         if (z) {
             drawableArr = new Drawable[]{context.getDrawable(i2).mutate(), context.getDrawable(i2).mutate()};
         } else {
             drawableArr = new Drawable[2];
             drawableArr[0] = context.getDrawable(i2).mutate();
             if (z2) {
-                i = C0012R$drawable.rounded_full_bg_bottom;
+                i = C0013R$drawable.rounded_full_bg_bottom;
             } else {
-                i = C0012R$drawable.rounded_bg_bottom;
+                i = C0013R$drawable.rounded_bg_bottom;
             }
             drawableArr[1] = context.getDrawable(i).mutate();
         }

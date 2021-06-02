@@ -9,7 +9,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0014R$id;
+import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.NavigationBarController;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
@@ -182,7 +182,7 @@ public final class NavigationModeControllerExt {
         if (!mIsFsgMode) {
             getNavigationBarController().addDefaultNavigationBar();
             NavigationBarView defaultNavigationBarView = getNavigationBarController().getDefaultNavigationBarView();
-            if (defaultNavigationBarView != null && (findViewById = defaultNavigationBarView.findViewById(C0014R$id.home_handle)) != null) {
+            if (defaultNavigationBarView != null && (findViewById = defaultNavigationBarView.findViewById(C0015R$id.home_handle)) != null) {
                 findViewById.setVisibility(8);
             }
         } else if (mHideGestureLine) {
@@ -190,7 +190,7 @@ public final class NavigationModeControllerExt {
         } else {
             getNavigationBarController().addDefaultNavigationBar();
             NavigationBarView defaultNavigationBarView2 = getNavigationBarController().getDefaultNavigationBarView();
-            if (defaultNavigationBarView2 != null && (findViewById2 = defaultNavigationBarView2.findViewById(C0014R$id.home_handle)) != null) {
+            if (defaultNavigationBarView2 != null && (findViewById2 = defaultNavigationBarView2.findViewById(C0015R$id.home_handle)) != null) {
                 findViewById2.setVisibility(0);
             }
         }

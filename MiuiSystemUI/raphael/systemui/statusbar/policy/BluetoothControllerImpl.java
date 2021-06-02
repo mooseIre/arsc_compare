@@ -142,11 +142,6 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
     }
 
     @Override // com.android.systemui.statusbar.policy.BluetoothController
-    public int getBondState(CachedBluetoothDevice cachedBluetoothDevice) {
-        return getCachedState(cachedBluetoothDevice).mBondState;
-    }
-
-    @Override // com.android.systemui.statusbar.policy.BluetoothController
     public int getMaxConnectionState(CachedBluetoothDevice cachedBluetoothDevice) {
         return getCachedState(cachedBluetoothDevice).mMaxConnectionState;
     }
@@ -214,6 +209,27 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
             return localBluetoothManager.getCachedDeviceManager().getCachedDevicesCopy();
         }
         return null;
+    }
+
+    @Override // com.android.systemui.statusbar.policy.BluetoothController
+    public void clearNonBondedDevices() {
+        if (this.mLocalBluetoothManager != null) {
+            this.mBgHandler.post(new Runnable() {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$BluetoothControllerImpl$ka6yIy44RKP2fGudVZN7I3Vp4YU */
+
+                public final void run() {
+                    BluetoothControllerImpl.this.lambda$clearNonBondedDevices$0$BluetoothControllerImpl();
+                }
+            });
+        }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$clearNonBondedDevices$0 */
+    public /* synthetic */ void lambda$clearNonBondedDevices$0$BluetoothControllerImpl() {
+        this.mLocalBluetoothManager.getCachedDeviceManager().clearNonBondedDevices();
+        this.mHandler.removeMessages(1);
+        this.mHandler.sendEmptyMessage(1);
     }
 
     private void updateConnected() {
@@ -392,13 +408,11 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
 
     /* access modifiers changed from: private */
     public static class ActuallyCachedState implements Runnable {
-        private int mBondState;
         private final WeakReference<CachedBluetoothDevice> mDevice;
         private int mMaxConnectionState;
         private final Handler mUiHandler;
 
         private ActuallyCachedState(CachedBluetoothDevice cachedBluetoothDevice, Handler handler) {
-            this.mBondState = 10;
             this.mMaxConnectionState = 0;
             this.mDevice = new WeakReference<>(cachedBluetoothDevice);
             this.mUiHandler = handler;
@@ -407,7 +421,7 @@ public class BluetoothControllerImpl implements BluetoothController, BluetoothCa
         public void run() {
             CachedBluetoothDevice cachedBluetoothDevice = this.mDevice.get();
             if (cachedBluetoothDevice != null) {
-                this.mBondState = cachedBluetoothDevice.getBondState();
+                cachedBluetoothDevice.getBondState();
                 this.mMaxConnectionState = cachedBluetoothDevice.getMaxConnectionState();
                 this.mUiHandler.removeMessages(1);
                 this.mUiHandler.sendEmptyMessage(1);

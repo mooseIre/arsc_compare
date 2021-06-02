@@ -28,11 +28,11 @@ public class CornerHandleView extends View {
         this.mPaint.setStyle(Paint.Style.STROKE);
         this.mPaint.setStrokeCap(Paint.Cap.ROUND);
         this.mPaint.setStrokeWidth(getStrokePx());
-        int themeAttr = Utils.getThemeAttr(((View) this).mContext, C0008R$attr.darkIconTheme);
-        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(((View) this).mContext, Utils.getThemeAttr(((View) this).mContext, C0008R$attr.lightIconTheme));
+        int themeAttr = Utils.getThemeAttr(((View) this).mContext, C0009R$attr.darkIconTheme);
+        ContextThemeWrapper contextThemeWrapper = new ContextThemeWrapper(((View) this).mContext, Utils.getThemeAttr(((View) this).mContext, C0009R$attr.lightIconTheme));
         ContextThemeWrapper contextThemeWrapper2 = new ContextThemeWrapper(((View) this).mContext, themeAttr);
-        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0008R$attr.singleToneColor);
-        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0008R$attr.singleToneColor);
+        this.mLightColor = Utils.getColorAttrDefaultColor(contextThemeWrapper, C0009R$attr.singleToneColor);
+        this.mDarkColor = Utils.getColorAttrDefaultColor(contextThemeWrapper2, C0009R$attr.singleToneColor);
         updatePath();
     }
 
@@ -110,12 +110,12 @@ public class CornerHandleView extends View {
     }
 
     private float getOuterRadiusPx() {
-        int dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.config_rounded_mask_size_bottom);
+        int dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.config_rounded_mask_size_bottom);
         if (dimensionPixelSize == 0 && mDisableRoundedCorner == 0) {
-            dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.config_rounded_mask_size);
+            dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.config_rounded_mask_size);
         }
         if (dimensionPixelSize == 0) {
-            dimensionPixelSize = getResources().getDimensionPixelSize(C0011R$dimen.config_rounded_mask_size_top);
+            dimensionPixelSize = getResources().getDimensionPixelSize(C0012R$dimen.config_rounded_mask_size_top);
         }
         if (dimensionPixelSize == 0) {
             dimensionPixelSize = (int) convertDpToPixel(15.0f, ((View) this).mContext);

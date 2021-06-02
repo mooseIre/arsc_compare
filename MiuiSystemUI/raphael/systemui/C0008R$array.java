@@ -556,11 +556,14 @@ public final class R {
         public static final int wireless_charging_null_1_animation;
     }
 
-    public static final class animator {
+    /* renamed from: com.android.systemui.R$animator */
+    public final class C0007R$animator {
         public static final int anim_connecting;
         public static final int design_appbar_state_list_animator;
         public static final int design_fab_hide_motion_spec;
         public static final int design_fab_show_motion_spec;
+        public static final int keyguard_face_unlock_error_face_rotate;
+        public static final int keyguard_face_unlock_error_ring_rotate;
         public static final int lb_guidedactions_item_pressed;
         public static final int lb_guidedactions_item_unpressed;
         public static final int lb_guidedstep_slide_down;
@@ -598,7 +601,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$array */
-    public final class C0007R$array {
+    public final class C0008R$array {
         public static final int alphabet_table;
         public static final int alphabet_table_with_starred;
         public static final int am_pms;
@@ -758,7 +761,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$attr */
-    public final class C0008R$attr {
+    public final class C0009R$attr {
         public static final int MiuiAmPmStyle;
         public static final int MiuiClockMode;
         public static final int MiuiClockShowDark;
@@ -2264,7 +2267,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$bool */
-    public final class C0009R$bool {
+    public final class C0010R$bool {
         public static final int abc_action_bar_embed_tabs;
         public static final int abc_action_bar_expanded_action_views_exclusive;
         public static final int abc_allow_stacked_button_bar;
@@ -2381,7 +2384,6 @@ public final class R {
         public static final int show_battery_digit_full;
         public static final int show_carrier_in_status_bar_header;
         public static final int show_carrier_under_left_hole_keyguard;
-        public static final int show_plmn_and_spn_in_carrier;
         public static final int simple_cache_enable_im_memory;
         public static final int spinner_popup_item_bg_enable_variablePadding;
         public static final int status_bar_hide_volte;
@@ -2397,7 +2399,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$color */
-    public final class C0010R$color {
+    public final class C0011R$color {
         public static final int GM2_blue_200;
         public static final int GM2_blue_300;
         public static final int GM2_blue_50;
@@ -2665,6 +2667,7 @@ public final class R {
         public static final int keyguard_charging_info_text_dark_color;
         public static final int keyguard_charging_info_text_middle_color;
         public static final int keyguard_charging_info_vertical_separator_color;
+        public static final int keyguard_charging_particle_color;
         public static final int keyguard_charging_view_bg_color;
         public static final int keyguard_charging_view_bg_color_dark;
         public static final int keyguard_charging_view_color;
@@ -3694,7 +3697,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$dimen */
-    public final class C0011R$dimen {
+    public final class C0012R$dimen {
         public static final int G;
         public static final int abc_action_bar_content_inset_material;
         public static final int abc_action_bar_content_inset_with_nav;
@@ -6217,7 +6220,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$drawable */
-    public final class C0012R$drawable {
+    public final class C0013R$drawable {
         public static final int $$face_dialog_dark_to_checkmark__10__0;
         public static final int $$face_dialog_dark_to_checkmark__11__0;
         public static final int $$face_dialog_dark_to_checkmark__11__1;
@@ -6346,6 +6349,22 @@ public final class R {
         public static final int $$face_dialog_wink_from_dark__3__1;
         public static final int $$face_dialog_wink_from_dark__3__2;
         public static final int $$face_dialog_wink_from_dark__3__3;
+        public static final int $$face_unlock_black_success_ani__0__0;
+        public static final int $$face_unlock_black_success_ani__0__1;
+        public static final int $$face_unlock_black_success_ani__1__0;
+        public static final int $$face_unlock_black_success_ani__1__1;
+        public static final int $$face_unlock_black_success_ani__2__0;
+        public static final int $$face_unlock_black_success_ani__2__1;
+        public static final int $$face_unlock_black_success_ani__3__0;
+        public static final int $$face_unlock_black_success_ani__3__1;
+        public static final int $$face_unlock_success_ani__0__0;
+        public static final int $$face_unlock_success_ani__0__1;
+        public static final int $$face_unlock_success_ani__1__0;
+        public static final int $$face_unlock_success_ani__1__1;
+        public static final int $$face_unlock_success_ani__2__0;
+        public static final int $$face_unlock_success_ani__2__1;
+        public static final int $$face_unlock_success_ani__3__0;
+        public static final int $$face_unlock_success_ani__3__1;
         public static final int $$fingerprint_dialog_error_to_fp__1__0;
         public static final int $$fingerprint_dialog_error_to_fp__1__1;
         public static final int $$fingerprint_dialog_error_to_fp__2__0;
@@ -6663,6 +6682,18 @@ public final class R {
         public static final int $face_dialog_wink_from_dark__2;
         public static final int $face_dialog_wink_from_dark__3;
         public static final int $face_dialog_wink_from_dark__4;
+        public static final int $face_unlock_black_success_ani__0;
+        public static final int $face_unlock_black_success_ani__1;
+        public static final int $face_unlock_black_success_ani__2;
+        public static final int $face_unlock_black_success_ani__3;
+        public static final int $face_unlock_black_success_ani__4;
+        public static final int $face_unlock_black_success_ani__5;
+        public static final int $face_unlock_success_ani__0;
+        public static final int $face_unlock_success_ani__1;
+        public static final int $face_unlock_success_ani__2;
+        public static final int $face_unlock_success_ani__3;
+        public static final int $face_unlock_success_ani__4;
+        public static final int $face_unlock_success_ani__5;
         public static final int $fingerprint_dialog_error_to_fp__0;
         public static final int $fingerprint_dialog_error_to_fp__1;
         public static final int $fingerprint_dialog_error_to_fp__2;
@@ -7334,7 +7365,11 @@ public final class R {
         public static final int charge_animation_car_mode_icon;
         public static final int charge_animation_charge_icon;
         public static final int charge_animation_fire_light_icon;
+        public static final int charge_animation_particel_lightning;
         public static final int charge_animation_particle_circle_icon;
+        public static final int charge_animation_particle_lightning_edge;
+        public static final int charge_animation_particle_lightning_inner;
+        public static final int charge_animation_particle_ring_glow;
         public static final int charge_animation_rapid_charge_icon;
         public static final int charge_animation_strong_super_rapid_charge_icon;
         public static final int charge_animation_super_rapid_charge_icon;
@@ -7405,108 +7440,18 @@ public final class R {
         public static final int face_dialog_pulse_dark_to_light;
         public static final int face_dialog_pulse_light_to_dark;
         public static final int face_dialog_wink_from_dark;
-        public static final int face_unlock_black_error1;
-        public static final int face_unlock_black_error10;
-        public static final int face_unlock_black_error11;
-        public static final int face_unlock_black_error12;
-        public static final int face_unlock_black_error13;
-        public static final int face_unlock_black_error14;
-        public static final int face_unlock_black_error15;
-        public static final int face_unlock_black_error16;
-        public static final int face_unlock_black_error17;
-        public static final int face_unlock_black_error18;
-        public static final int face_unlock_black_error19;
-        public static final int face_unlock_black_error2;
-        public static final int face_unlock_black_error20;
-        public static final int face_unlock_black_error21;
-        public static final int face_unlock_black_error22;
-        public static final int face_unlock_black_error23;
-        public static final int face_unlock_black_error24;
-        public static final int face_unlock_black_error25;
-        public static final int face_unlock_black_error26;
-        public static final int face_unlock_black_error27;
-        public static final int face_unlock_black_error28;
-        public static final int face_unlock_black_error29;
-        public static final int face_unlock_black_error3;
-        public static final int face_unlock_black_error30;
-        public static final int face_unlock_black_error4;
-        public static final int face_unlock_black_error5;
-        public static final int face_unlock_black_error6;
-        public static final int face_unlock_black_error7;
-        public static final int face_unlock_black_error8;
-        public static final int face_unlock_black_error9;
-        public static final int face_unlock_black_success1;
-        public static final int face_unlock_black_success10;
-        public static final int face_unlock_black_success11;
-        public static final int face_unlock_black_success12;
-        public static final int face_unlock_black_success13;
-        public static final int face_unlock_black_success14;
-        public static final int face_unlock_black_success15;
-        public static final int face_unlock_black_success16;
-        public static final int face_unlock_black_success17;
-        public static final int face_unlock_black_success18;
-        public static final int face_unlock_black_success19;
-        public static final int face_unlock_black_success2;
-        public static final int face_unlock_black_success20;
-        public static final int face_unlock_black_success3;
-        public static final int face_unlock_black_success4;
-        public static final int face_unlock_black_success5;
-        public static final int face_unlock_black_success6;
-        public static final int face_unlock_black_success7;
-        public static final int face_unlock_black_success8;
-        public static final int face_unlock_black_success9;
-        public static final int face_unlock_error1;
-        public static final int face_unlock_error10;
-        public static final int face_unlock_error11;
-        public static final int face_unlock_error12;
-        public static final int face_unlock_error13;
-        public static final int face_unlock_error14;
-        public static final int face_unlock_error15;
-        public static final int face_unlock_error16;
-        public static final int face_unlock_error17;
-        public static final int face_unlock_error18;
-        public static final int face_unlock_error19;
-        public static final int face_unlock_error2;
-        public static final int face_unlock_error20;
-        public static final int face_unlock_error21;
-        public static final int face_unlock_error22;
-        public static final int face_unlock_error23;
-        public static final int face_unlock_error24;
-        public static final int face_unlock_error25;
-        public static final int face_unlock_error26;
-        public static final int face_unlock_error27;
-        public static final int face_unlock_error28;
-        public static final int face_unlock_error29;
-        public static final int face_unlock_error3;
-        public static final int face_unlock_error30;
-        public static final int face_unlock_error4;
-        public static final int face_unlock_error5;
-        public static final int face_unlock_error6;
-        public static final int face_unlock_error7;
-        public static final int face_unlock_error8;
-        public static final int face_unlock_error9;
+        public static final int face_unlock_black_error;
+        public static final int face_unlock_black_success;
+        public static final int face_unlock_black_success_ani;
+        public static final int face_unlock_error;
+        public static final int face_unlock_face;
+        public static final int face_unlock_face_black;
         public static final int face_unlock_icon;
         public static final int face_unlock_icon_dark;
-        public static final int face_unlock_success1;
-        public static final int face_unlock_success10;
-        public static final int face_unlock_success11;
-        public static final int face_unlock_success12;
-        public static final int face_unlock_success13;
-        public static final int face_unlock_success14;
-        public static final int face_unlock_success15;
-        public static final int face_unlock_success16;
-        public static final int face_unlock_success17;
-        public static final int face_unlock_success18;
-        public static final int face_unlock_success19;
-        public static final int face_unlock_success2;
-        public static final int face_unlock_success20;
-        public static final int face_unlock_success3;
-        public static final int face_unlock_success4;
-        public static final int face_unlock_success5;
-        public static final int face_unlock_success6;
-        public static final int face_unlock_success7;
-        public static final int face_unlock_success8;
-        public static final int face_unlock_success9;
+        public static final int face_unlock_ring;
+        public static final int face_unlock_ring_black;
+        public static final int face_unlock_success;
+        public static final int face_unlock_success_ani;
         public static final int file_icon_3gpp;
         public static final int file_icon_aac;
         public static final int file_icon_amr;
@@ -10029,7 +9974,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$fraction */
-    public final class C0013R$fraction {
+    public final class C0014R$fraction {
         public static final int battery_button_height_fraction;
         public static final int battery_subpixel_smoothing_left;
         public static final int battery_subpixel_smoothing_right;
@@ -10056,7 +10001,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$id */
-    public final class C0014R$id {
+    public final class C0015R$id {
         public static final int ALT;
         public static final int CTRL;
         public static final int Content;
@@ -11831,7 +11776,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$integer */
-    public final class C0015R$integer {
+    public final class C0016R$integer {
         public static final int abc_config_activityDefaultDur;
         public static final int abc_config_activityShortDur;
         public static final int abc_max_action_buttons;
@@ -11911,6 +11856,7 @@ public final class R {
         public static final int immersion_menu_enter_duration;
         public static final int immersion_menu_exit_duration;
         public static final int keyguard_charge_animation_type;
+        public static final int keyguard_face_unlock_error_ani_duration;
         public static final int keyguard_max_notification_count;
         public static final int keyguard_status_bar_color_mode;
         public static final int kg_selector_gravity;
@@ -12065,7 +12011,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$layout */
-    public final class C0016R$layout {
+    public final class C0017R$layout {
         public static final int abc_action_bar_title_item;
         public static final int abc_action_bar_up_container;
         public static final int abc_action_menu_item_layout;
@@ -12733,13 +12679,13 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$mipmap */
-    public final class C0017R$mipmap {
+    public final class C0018R$mipmap {
         public static final int ic_daydreams;
         public static final int ic_launcher_dreams;
     }
 
     /* renamed from: com.android.systemui.R$plurals */
-    public final class C0018R$plurals {
+    public final class C0019R$plurals {
         public static final int a_hour_ago;
         public static final int abbrev_a_hour_ago;
         public static final int abbrev_half_hour_ago;
@@ -12796,7 +12742,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$raw */
-    public final class C0019R$raw {
+    public final class C0020R$raw {
         public static final int image_wallpaper_fragment_shader;
         public static final int image_wallpaper_vertex_shader;
         public static final int lb_voice_failure;
@@ -12807,6 +12753,7 @@ public final class R {
         public static final int miui_facea_input_success;
         public static final int nc_switch_guide_video;
         public static final int number_picker_value_change;
+        public static final int rotator;
         public static final int stat_sys_battery;
         public static final int stat_sys_battery_charge;
         public static final int stat_sys_battery_charge_darkmode;
@@ -12829,7 +12776,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$string */
-    public final class C0020R$string {
+    public final class C0021R$string {
         public static final int abbrev_wday_month_day_no_year;
         public static final int abbrev_wday_month_day_no_year_alarm;
         public static final int abc_action_bar_home_description;
@@ -15419,7 +15366,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$style */
-    public final class C0021R$style {
+    public final class C0022R$style {
         public static final int AlertDialog;
         public static final int AlertDialog_AppCompat;
         public static final int AlertDialog_AppCompat_Light;
@@ -16782,7 +16729,7 @@ public final class R {
     }
 
     /* renamed from: com.android.systemui.R$xml */
-    public final class C0022R$xml {
+    public final class C0023R$xml {
         public static final int fileprovider;
         public static final int lockscreen_settings;
         public static final int media_collapsed;
