@@ -2362,7 +2362,8 @@ public class NotificationPanelViewController extends PanelViewController {
         return this.mIsFullWidth;
     }
 
-    private void updateStatusBarIcons() {
+    /* access modifiers changed from: protected */
+    public void updateStatusBarIcons() {
         boolean z = (isPanelVisibleBecauseOfHeadsUp() || isFullWidth()) && getExpandedHeight() < getOpeningHeight();
         if (z && isOnKeyguard()) {
             z = false;
@@ -2537,15 +2538,6 @@ public class NotificationPanelViewController extends PanelViewController {
     public void applyExpandAnimationParams(ActivityLaunchAnimator.ExpandAnimationParameters expandAnimationParameters) {
         this.mExpandOffset = expandAnimationParameters != null ? (float) expandAnimationParameters.getTopChange() : 0.0f;
         updateQsExpansion();
-        if (expandAnimationParameters != null) {
-            boolean z = expandAnimationParameters.getProgress(14, 100) == 0.0f;
-            if (z != this.mHideIconsDuringNotificationLaunch) {
-                this.mHideIconsDuringNotificationLaunch = z;
-                if (!z) {
-                    this.mCommandQueue.recomputeDisableFlags(this.mDisplayId, true);
-                }
-            }
-        }
     }
 
     public void addTrackingHeadsUpListener(Consumer<ExpandableNotificationRow> consumer) {

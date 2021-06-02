@@ -135,6 +135,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     private final Lazy<StatusBar> mStatusBarLazy;
     private final StatusBarStateController mStatusBarStateController;
     private SysUiState mSysUiFlagsContainer;
+    private final boolean[] mSystemActionRegistration;
     private final SystemActions mSystemActions;
     private boolean mTransientShown;
     private UiEventLogger mUiEventLogger;
@@ -204,6 +205,7 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
         this.mNavigationIconHints = 0;
         this.mNavBarMode = 0;
         this.mKeyOrderObserver = new KeyOrderObserver();
+        this.mSystemActionRegistration = new boolean[32];
         this.mStartingQuickSwitchRotation = -1;
         this.mAutoHideUiElement = new AutoHideUiElement() {
             /* class com.android.systemui.statusbar.phone.NavigationBarFragment.AnonymousClass1 */
@@ -1093,10 +1095,14 @@ public class NavigationBarFragment extends LifecycleFragment implements CommandQ
     }
 
     private void registerAction(boolean z, int i) {
-        if (z) {
-            this.mSystemActions.register(i);
-        } else {
-            this.mSystemActions.unregister(i);
+        boolean[] zArr = this.mSystemActionRegistration;
+        if (zArr[i] != z) {
+            zArr[i] = z;
+            if (z) {
+                this.mSystemActions.register(i);
+            } else {
+                this.mSystemActions.unregister(i);
+            }
         }
     }
 

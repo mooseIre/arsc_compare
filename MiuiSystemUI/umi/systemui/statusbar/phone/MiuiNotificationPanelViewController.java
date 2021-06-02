@@ -170,6 +170,11 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     public void setOverScrolling(boolean z) {
     }
 
+    /* access modifiers changed from: protected */
+    @Override // com.android.systemui.statusbar.phone.NotificationPanelViewController
+    public void updateStatusBarIcons() {
+    }
+
     @NotNull
     public final NotificationPanelView getPanelView() {
         return this.panelView;

@@ -2,9 +2,8 @@ package com.android.systemui.statusbar.notification.row;
 
 import android.widget.CompoundButton;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ChannelEditorListView.kt */
-public final class ChannelEditorListView$updateAppControlRow$1 implements CompoundButton.OnCheckedChangeListener {
+final class ChannelEditorListView$updateAppControlRow$1 implements CompoundButton.OnCheckedChangeListener {
     final /* synthetic */ ChannelEditorListView this$0;
 
     ChannelEditorListView$updateAppControlRow$1(ChannelEditorListView channelEditorListView) {

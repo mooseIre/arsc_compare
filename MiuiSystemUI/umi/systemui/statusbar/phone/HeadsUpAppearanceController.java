@@ -28,7 +28,6 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     @VisibleForTesting
     float mAppearFraction;
     private final KeyguardBypassController mBypassController;
-    private final CommandQueue mCommandQueue;
     private final DarkIconDispatcher mDarkIconDispatcher;
     @VisibleForTesting
     float mExpandedHeight;
@@ -134,7 +133,6 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
         this.mStatusBarStateController = statusBarStateController;
         this.mWakeUpCoordinator = notificationWakeUpCoordinator;
         notificationWakeUpCoordinator.addListener(this);
-        this.mCommandQueue = commandQueue;
         this.mKeyguardStateController = keyguardStateController;
     }
 
@@ -252,8 +250,8 @@ public class HeadsUpAppearanceController implements OnHeadsUpChangedListener, Da
     }
 
     private void setShown(boolean z) {
-        if (this.mShown != z && this.mStatusBarStateController.getState() != 0) {
-            this.mCommandQueue.recomputeDisableFlags(this.mHeadsUpStatusBarView.getContext().getDisplayId(), false);
+        if (this.mShown != z) {
+            this.mShown = z;
         }
     }
 

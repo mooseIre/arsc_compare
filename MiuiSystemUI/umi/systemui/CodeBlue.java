@@ -76,7 +76,8 @@ public final class CodeBlue {
         }
 
         /* access modifiers changed from: private */
-        public final void updateCrashHandler(Context context, Throwable th) {
+        /* access modifiers changed from: public */
+        private final void updateCrashHandler(Context context, Throwable th) {
             ExceptionHandler exceptionHandler = getExceptionHandler(th);
             String exceptionClues = getExceptionClues(exceptionHandler);
             if (DebugConfig.DEBUG_CODE_BLUE) {
@@ -105,7 +106,8 @@ public final class CodeBlue {
         }
 
         /* access modifiers changed from: private */
-        public final void updateCrashInfo(Context context) {
+        /* access modifiers changed from: public */
+        private final void updateCrashInfo(Context context) {
             if (DebugConfig.DEBUG_CODE_BLUE) {
                 Log.d("CodeBlue", "updateCrashInfo");
             }

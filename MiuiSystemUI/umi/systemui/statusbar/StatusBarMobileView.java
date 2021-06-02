@@ -21,6 +21,7 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
+import com.android.systemui.C0022R$style;
 import com.android.systemui.DemoMode;
 import com.android.systemui.Dependency;
 import com.android.systemui.plugins.DarkIconDispatcher;
@@ -116,6 +117,20 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         rect.right = (int) (((float) rect.right) + translationX);
         rect.top = (int) (((float) rect.top) + translationY);
         rect.bottom = (int) (((float) rect.bottom) + translationY);
+    }
+
+    @Override // com.android.systemui.statusbar.StatusIconDisplayable
+    public void onDensityOrFontScaleChanged() {
+        TextView textView = this.mMobileType;
+        if (textView != null) {
+            textView.setTextAppearance(C0022R$style.TextAppearance_StatusBar_Signal);
+            updateMobileTypeLayout(this.mState.networkName, true);
+        }
+        TextView textView2 = this.mMobileTypeSingle;
+        if (textView2 != null) {
+            textView2.setTextAppearance(C0022R$style.TextAppearance_StatusBar_Clock);
+        }
+        requestLayout();
     }
 
     private void init() {
@@ -226,7 +241,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
                 this.mMobileTypeSingle.setVisibility(0);
             } else {
                 this.mMobileType.setText(mobileIconState.networkName);
-                updateMobileTypeLayout(mobileIconState.networkName);
+                updateMobileTypeLayout(mobileIconState.networkName, false);
                 this.mMobileTypeImage.setVisibility(8);
                 this.mMobileTypeSingle.setVisibility(8);
                 this.mMobileType.setVisibility(0);
@@ -484,8 +499,8 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
         return "StatusBarMobileView(slot=" + this.mSlot + " state=" + this.mState + ") , " + super.toString();
     }
 
-    private boolean updateMobileTypeLayout(String str) {
-        if (str != null && !Objects.equals(str, this.mLastShowName)) {
+    private boolean updateMobileTypeLayout(String str, boolean z) {
+        if (str != null && (!Objects.equals(str, this.mLastShowName) || z)) {
             this.mLastShowName = str;
             TextPaint paint = this.mMobileType.getPaint();
             Paint.FontMetrics fontMetrics = paint.getFontMetrics();
@@ -506,7 +521,7 @@ public class StatusBarMobileView extends LinearLayout implements DarkIconDispatc
             layoutParams3.rightMargin = (int) (-(f2 + f3));
             this.mMobileLeftContainer.setLayoutParams(layoutParams3);
         }
-        return !Objects.equals(str, this.mLastShowName);
+        return !Objects.equals(str, this.mLastShowName) || z;
     }
 
     @Override // com.android.systemui.DemoMode

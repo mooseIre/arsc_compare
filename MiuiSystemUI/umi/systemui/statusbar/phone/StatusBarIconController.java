@@ -260,7 +260,11 @@ public interface StatusBarIconController {
         public void onDensityOrFontScaleChanged() {
             this.mIconSize = this.mContext.getResources().getDimensionPixelSize(C0012R$dimen.status_bar_icon_height);
             for (int i = 0; i < this.mGroup.getChildCount(); i++) {
-                this.mGroup.getChildAt(i).setLayoutParams(new LinearLayout.LayoutParams(-2, this.mIconSize));
+                View childAt = this.mGroup.getChildAt(i);
+                childAt.setLayoutParams(new LinearLayout.LayoutParams(-2, this.mIconSize));
+                if (childAt instanceof StatusIconDisplayable) {
+                    ((StatusIconDisplayable) childAt).onDensityOrFontScaleChanged();
+                }
             }
         }
 

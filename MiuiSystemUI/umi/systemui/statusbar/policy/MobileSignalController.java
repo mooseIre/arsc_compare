@@ -1217,7 +1217,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         ((MobileState) this.mCurrentState).vowifiResId = getVowifiResId(resourcesForOperation2, resourcesForOperation, this.mSlotId, this.mNetworkController);
         this.mIsSupportDoubleFiveG = TelephonyManagerEx.getDefault().isDualNrSupported();
         ((MobileState) this.mCurrentState).showDataTypeWhenWifiOn = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_when_wifi_on);
-        ((MobileState) this.mCurrentState).showDataTypeDataDisconnected = (this.mIsSupportDoubleFiveG && Build.IS_DEVELOPMENT_VERSION) || !Build.IS_INTERNATIONAL_BUILD;
+        ((MobileState) this.mCurrentState).showDataTypeDataDisconnected = (this.mIsSupportDoubleFiveG && Build.IS_DEVELOPMENT_VERSION) || !Build.IS_INTERNATIONAL_BUILD || resourcesForOperation2.getBoolean(C0010R$bool.config_show_mobile_type);
         ((MobileState) this.mCurrentState).showMobileDataTypeInMMS = resourcesForOperation.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms) || resourcesForOperation2.getBoolean(C0010R$bool.status_bar_show_mobile_type_in_mms);
         ((MobileState) this.mCurrentState).showMobileDataTypeSingle = resourcesForOperation.getBoolean(C0010R$bool.config_show_data_type_left_single) || resourcesForOperation2.getBoolean(C0010R$bool.config_show_data_type_left_single);
         MobileState mobileState = (MobileState) this.mCurrentState;

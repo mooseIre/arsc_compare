@@ -160,7 +160,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (!z) {
             this.mDripNetworkSpeedSplitter.setAlpha(1.0f);
         } else {
-            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
+            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
         }
     }
 
@@ -215,11 +215,8 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
             this.mDripNetworkSpeedView.setVisibilityByDisableInfo(0);
             if (!z) {
                 this.mDripNetworkSpeedView.setAlpha(1.0f);
-                return;
-            }
-            this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
-            if (this.mKeyguardStateController.isKeyguardFadingAway()) {
-                this.mDripNetworkSpeedView.animate().setDuration(this.mKeyguardStateController.getKeyguardFadingAwayDuration()).setInterpolator(Interpolators.LINEAR_OUT_SLOW_IN).setStartDelay(this.mKeyguardStateController.getKeyguardFadingAwayDelay()).start();
+            } else {
+                this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
             }
         }
     }

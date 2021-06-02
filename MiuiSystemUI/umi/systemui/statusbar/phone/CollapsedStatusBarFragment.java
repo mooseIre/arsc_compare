@@ -28,13 +28,11 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
     private NetworkController mNetworkController;
     protected View mNotificationIconAreaInner;
     protected View mOperatorNameFrame;
-    private NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback() {
+    private NetworkController.SignalCallback mSignalCallback = new NetworkController.SignalCallback(this) {
         /* class com.android.systemui.statusbar.phone.CollapsedStatusBarFragment.AnonymousClass1 */
 
         @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
         public void setIsAirplaneMode(NetworkController.IconState iconState) {
-            CollapsedStatusBarFragment collapsedStatusBarFragment = CollapsedStatusBarFragment.this;
-            collapsedStatusBarFragment.mCommandQueue.recomputeDisableFlags(collapsedStatusBarFragment.getContext().getDisplayId(), true);
         }
     };
     protected PhoneStatusBarView mStatusBar;
@@ -279,7 +277,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         if (!z) {
             view.setAlpha(1.0f);
         } else {
-            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).setStartDelay(50).withEndAction(null);
+            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
         }
     }
 

@@ -76,6 +76,10 @@ public final class TooltipManager {
         throw new TypeCastException("null cannot be cast to non-null type android.view.ViewGroup");
     }
 
+    public static final /* synthetic */ boolean access$getBelow$p(TooltipManager tooltipManager) {
+        return tooltipManager.below;
+    }
+
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public /* synthetic */ TooltipManager(Context context, String str, int i, boolean z, int i2, DefaultConstructorMarker defaultConstructorMarker) {
         this(context, str, (i2 & 4) != 0 ? 2 : i, (i2 & 8) != 0 ? true : z);
