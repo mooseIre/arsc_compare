@@ -133,14 +133,6 @@ public class QSTileHost implements QSHost, TunerService.Tunable, PluginListener<
         return this.mInstanceIdSequence.newInstanceId();
     }
 
-    public void destroyTiles() {
-        for (QSTile qSTile : this.mTiles.values()) {
-            if (!(qSTile instanceof CustomTile)) {
-                qSTile.destroy();
-            }
-        }
-    }
-
     public void onPluginConnected(QSFactory qSFactory, Context context) {
         this.mQsFactories.add(0, qSFactory);
         String value = this.mTunerService.getValue("sysui_qs_tiles");

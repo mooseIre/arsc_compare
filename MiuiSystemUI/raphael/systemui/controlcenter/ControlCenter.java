@@ -235,7 +235,6 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     /* access modifiers changed from: protected */
     public void removeControlPanelWindow() {
         if (this.mControlPanelWindowView != null) {
-            this.mQSControlTileHost.destroyTiles();
             this.mControlCenterActivityStarter.setControlCenter(null);
             this.mControlPanelController.setControlCenter(null);
             this.mCommandQueue.removeCallback((CommandQueue.Callbacks) this);

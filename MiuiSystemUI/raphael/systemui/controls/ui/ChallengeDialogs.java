@@ -17,14 +17,22 @@ import kotlin.Pair;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+/* compiled from: ChallengeDialogs.kt */
 public final class ChallengeDialogs {
     public static final ChallengeDialogs INSTANCE = new ChallengeDialogs();
 
     private ChallengeDialogs() {
     }
 
-    public final Dialog createPinDialog(ControlViewHolder controlViewHolder, boolean z, boolean z2, Function0<Unit> function0) {
+    public static final /* synthetic */ ControlAction access$addChallengeValue(ChallengeDialogs challengeDialogs, ControlAction controlAction, String str) {
+        return challengeDialogs.addChallengeValue(controlAction, str);
+    }
+
+    @Nullable
+    public final Dialog createPinDialog(@NotNull ControlViewHolder controlViewHolder, boolean z, boolean z2, @NotNull Function0<Unit> function0) {
         Pair pair;
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         Intrinsics.checkParameterIsNotNull(function0, "onCancel");
@@ -54,7 +62,8 @@ public final class ChallengeDialogs {
         return create;
     }
 
-    public final Dialog createConfirmationDialog(ControlViewHolder controlViewHolder, Function0<Unit> function0) {
+    @Nullable
+    public final Dialog createConfirmationDialog(@NotNull ControlViewHolder controlViewHolder, @NotNull Function0<Unit> function0) {
         Intrinsics.checkParameterIsNotNull(controlViewHolder, "cvh");
         Intrinsics.checkParameterIsNotNull(function0, "onCancel");
         ControlAction lastAction = controlViewHolder.getLastAction();
@@ -71,6 +80,7 @@ public final class ChallengeDialogs {
         return create;
     }
 
+    /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void setInputType(EditText editText, boolean z) {
         if (z) {
@@ -80,7 +90,6 @@ public final class ChallengeDialogs {
         }
     }
 
-    /* access modifiers changed from: public */
     private final ControlAction addChallengeValue(ControlAction controlAction, String str) {
         String templateId = controlAction.getTemplateId();
         if (controlAction instanceof BooleanAction) {
