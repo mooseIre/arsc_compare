@@ -1,8 +1,7 @@
 package com.android.systemui;
 
-/* access modifiers changed from: package-private */
 /* compiled from: CodeBlueService.kt */
-public final class CodeBlueService$trackCodeBlue$1 implements Runnable {
+final class CodeBlueService$trackCodeBlue$1 implements Runnable {
     final /* synthetic */ CodeBlueService this$0;
 
     CodeBlueService$trackCodeBlue$1(CodeBlueService codeBlueService) {
@@ -11,7 +10,7 @@ public final class CodeBlueService$trackCodeBlue$1 implements Runnable {
 
     public final void run() {
         if (CodeBlueConfig.Companion.getTrackCodeBlue(this.this$0.getContext())) {
-            this.this$0.trackCodeBlueEvent();
+            CodeBlueService.access$trackCodeBlueEvent(this.this$0);
             CodeBlueConfig.Companion.setTrackCodeBlue(this.this$0.getContext(), false);
         }
     }

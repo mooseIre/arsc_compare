@@ -27,14 +27,14 @@ public final class NotificationRankingManager$rankingComparator$1<T> implements 
         NotificationListenerService.Ranking ranking2 = notificationEntry2.getRanking();
         Intrinsics.checkExpressionValueIsNotNull(ranking2, "b.ranking");
         ranking2.getRank();
-        boolean access$isColorizedForegroundService = NotificationRankingManagerKt.access$isColorizedForegroundService(notificationEntry);
-        boolean access$isColorizedForegroundService2 = NotificationRankingManagerKt.access$isColorizedForegroundService(notificationEntry2);
+        boolean z = NotificationRankingManagerKt.isColorizedForegroundService(notificationEntry);
+        boolean z2 = NotificationRankingManagerKt.isColorizedForegroundService(notificationEntry2);
         int i = this.this$0.getPeopleNotificationType(notificationEntry);
         int i2 = this.this$0.getPeopleNotificationType(notificationEntry2);
-        boolean z = this.this$0.isImportantMedia(notificationEntry);
-        boolean z2 = this.this$0.isImportantMedia(notificationEntry2);
-        boolean access$isSystemMax = NotificationRankingManagerKt.access$isSystemMax(notificationEntry);
-        boolean access$isSystemMax2 = NotificationRankingManagerKt.access$isSystemMax(notificationEntry2);
+        boolean z3 = this.this$0.isImportantMedia(notificationEntry);
+        boolean z4 = this.this$0.isImportantMedia(notificationEntry2);
+        boolean z5 = NotificationRankingManagerKt.isSystemMax(notificationEntry);
+        boolean z6 = NotificationRankingManagerKt.isSystemMax(notificationEntry2);
         boolean isRowHeadsUp = notificationEntry.isRowHeadsUp();
         boolean isRowHeadsUp2 = notificationEntry2.isRowHeadsUp();
         boolean unused = this.this$0.isHighPriority(notificationEntry);
@@ -52,8 +52,8 @@ public final class NotificationRankingManager$rankingComparator$1<T> implements 
         } else if (isRowHeadsUp) {
             return this.this$0.headsUpManager.compare(notificationEntry, notificationEntry2);
         } else {
-            if (access$isColorizedForegroundService != access$isColorizedForegroundService2) {
-                if (access$isColorizedForegroundService) {
+            if (z != z2) {
+                if (z) {
                     return -1;
                 }
             } else if ((this.this$0.getUsePeopleFiltering()) && i != i2) {
@@ -63,14 +63,14 @@ public final class NotificationRankingManager$rankingComparator$1<T> implements 
                     if (isImportant) {
                         return -1;
                     }
-                } else if (z != z2) {
-                    if (z) {
+                } else if (z3 != z4) {
+                    if (z3) {
                         return -1;
                     }
-                } else if (access$isSystemMax == access$isSystemMax2) {
+                } else if (z5 == z6) {
                     return (sbn2.getNotification().when > sbn.getNotification().when ? 1 : (sbn2.getNotification().when == sbn.getNotification().when ? 0 : -1));
                 } else {
-                    if (access$isSystemMax) {
+                    if (z5) {
                         return -1;
                     }
                 }

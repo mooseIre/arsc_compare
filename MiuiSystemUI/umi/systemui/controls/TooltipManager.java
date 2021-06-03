@@ -19,18 +19,22 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
+import org.jetbrains.annotations.NotNull;
 
+/* compiled from: TooltipManager.kt */
 public final class TooltipManager {
     private final View arrowView;
     private final boolean below;
+    @NotNull
     private final ViewGroup layout;
     private final int maxTimesShown;
     private final String preferenceName;
+    @NotNull
     private final Function1<Integer, Unit> preferenceStorer;
     private int shown;
     private final TextView textView;
 
-    public TooltipManager(Context context, String str, int i, boolean z) {
+    public TooltipManager(@NotNull Context context, @NotNull String str, int i, boolean z) {
         Intrinsics.checkParameterIsNotNull(context, "context");
         Intrinsics.checkParameterIsNotNull(str, "preferenceName");
         this.preferenceName = str;
@@ -76,15 +80,12 @@ public final class TooltipManager {
         throw new TypeCastException("null cannot be cast to non-null type android.view.ViewGroup");
     }
 
-    public static final /* synthetic */ boolean access$getBelow$p(TooltipManager tooltipManager) {
-        return tooltipManager.below;
-    }
-
     /* JADX INFO: this call moved to the top of the method (can break code semantics) */
     public /* synthetic */ TooltipManager(Context context, String str, int i, boolean z, int i2, DefaultConstructorMarker defaultConstructorMarker) {
         this(context, str, (i2 & 4) != 0 ? 2 : i, (i2 & 8) != 0 ? true : z);
     }
 
+    @NotNull
     public final ViewGroup getLayout() {
         return this.layout;
     }

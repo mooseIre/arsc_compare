@@ -1,8 +1,7 @@
 package com.android.systemui.controls.ui;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlActionCoordinatorImpl.kt */
-public final class ControlActionCoordinatorImpl$shouldRunAction$1 implements Runnable {
+final class ControlActionCoordinatorImpl$shouldRunAction$1 implements Runnable {
     final /* synthetic */ String $controlId;
     final /* synthetic */ ControlActionCoordinatorImpl this$0;
 
