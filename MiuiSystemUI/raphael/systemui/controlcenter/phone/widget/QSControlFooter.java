@@ -375,8 +375,7 @@ public class QSControlFooter extends LinearLayout implements View.OnClickListene
         return spannableStringBuilder;
     }
 
-    /* access modifiers changed from: private */
-    public class Callback implements SecurityController.SecurityControllerCallback {
+    private class Callback implements SecurityController.SecurityControllerCallback {
         private Callback() {
         }
 

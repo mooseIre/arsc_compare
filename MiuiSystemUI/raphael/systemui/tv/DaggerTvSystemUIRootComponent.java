@@ -2377,17 +2377,18 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.forceBlackObserverProvider = DoubleCheck.provider(ForceBlackObserver_Factory.create(this.contextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.keyguardClockInjectorProvider = DoubleCheck.provider(KeyguardClockInjector_Factory.create(this.contextProvider));
         this.keyguardBottomAreaInjectorProvider = DoubleCheck.provider(KeyguardBottomAreaInjector_Factory.create(this.contextProvider, this.dumpManagerProvider));
-        this.keyguardNegative1PageInjectorProvider = DoubleCheck.provider(KeyguardNegative1PageInjector_Factory.create(this.contextProvider));
-        this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.contextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
+        Provider<MiuiKeyguardWallpaperControllerImpl> provider18 = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
+        this.miuiKeyguardWallpaperControllerImplProvider = provider18;
+        this.keyguardNegative1PageInjectorProvider = DoubleCheck.provider(KeyguardNegative1PageInjector_Factory.create(this.contextProvider, provider18));
     }
 
     private void initialize6(Builder builder) {
+        this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.contextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
         this.keyguardViewMediatorInjectorProvider = DoubleCheck.provider(KeyguardViewMediatorInjector_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider));
         this.smartDarkObserverProvider = DoubleCheck.provider(SmartDarkObserver_Factory.create(this.contextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.miuiStatusBarPromptControllerProvider = DoubleCheck.provider(MiuiStatusBarPromptController_Factory.create(this.contextProvider));
         this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.contextProvider, this.provideBgLooperProvider));
         this.miuiDripLeftStatusBarIconControllerImplProvider = DoubleCheck.provider(MiuiDripLeftStatusBarIconControllerImpl_Factory.create(this.contextProvider));
-        this.miuiKeyguardWallpaperControllerImplProvider = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.contextProvider, this.providesBroadcastDispatcherProvider));
         this.wallpaperCommandSenderProvider = DoubleCheck.provider(WallpaperCommandSender_Factory.create());
         this.miuiWallpaperClientProvider = DoubleCheck.provider(MiuiWallpaperClient_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
         Provider<ModalRowInflater> provider = DoubleCheck.provider(ModalRowInflater_Factory.create(this.notificationContentInflaterProvider, this.provideNotificationRemoteInputManagerProvider));

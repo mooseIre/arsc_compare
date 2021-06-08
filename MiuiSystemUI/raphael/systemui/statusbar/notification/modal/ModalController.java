@@ -24,7 +24,9 @@ import com.miui.systemui.events.ModalExitMode;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
 import java.util.Iterator;
+import kotlin.TypeCastException;
 import kotlin.jvm.internal.Intrinsics;
+import miuix.view.animation.CubicEaseInInterpolator;
 import miuix.view.animation.CubicEaseInOutInterpolator;
 import org.jetbrains.annotations.NotNull;
 
@@ -155,13 +157,18 @@ public final class ModalController {
             ModalWindowView modalWindowView3 = this.modalWindowView;
             if (modalWindowView3 != null) {
                 modalWindowView3.enterModal(this.entry);
-                this.modalWindowManager.show();
-                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).longPress();
-                if (expandableNotificationRow instanceof MiuiExpandableNotificationRow) {
-                    ((MiuiExpandableNotificationRow) expandableNotificationRow).setIsInModal(true);
+                ExpandableNotificationRow expandableNotificationRow2 = this.modalRow;
+                if (expandableNotificationRow2 != null) {
+                    ((MiuiExpandableNotificationRow) expandableNotificationRow2).setAlpha(1.0f);
+                    this.modalWindowManager.show();
+                    ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).longPress();
+                    if (expandableNotificationRow instanceof MiuiExpandableNotificationRow) {
+                        ((MiuiExpandableNotificationRow) expandableNotificationRow).setIsInModal(true);
+                        return;
+                    }
                     return;
                 }
-                return;
+                throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow");
             }
             Intrinsics.throwUninitializedPropertyAccessException("modalWindowView");
             throw null;
@@ -171,7 +178,7 @@ public final class ModalController {
     }
 
     public final void animExitModelCollapsePanels() {
-        animExitModal(ModalExitMode.MORE.name());
+        animExitModal(50, true, ModalExitMode.MORE.name());
         this.statusBar.animateCollapsePanels(0, false);
     }
 
@@ -210,6 +217,13 @@ public final class ModalController {
                     modalController$animExitModal$animatorListener$1 = modalController$animExitModal$animatorListener$12;
                 }
                 startAnimator(modalController$animExitModal$updateListener$1, modalController$animExitModal$animatorListener$1, j);
+                ValueAnimator ofFloat = ValueAnimator.ofFloat(1.0f, 0.0f);
+                Intrinsics.checkExpressionValueIsNotNull(ofFloat, "this");
+                ofFloat.setStartDelay(j - 150);
+                ofFloat.setDuration(150L);
+                ofFloat.setInterpolator(new CubicEaseInInterpolator());
+                ofFloat.addUpdateListener(new ModalController$animExitModal$$inlined$apply$lambda$1(this, j));
+                ofFloat.start();
                 this.isAnimating = true;
                 return;
             }

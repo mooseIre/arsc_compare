@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.RemoteException;
 import android.os.ServiceManager;
 import com.android.internal.statusbar.IStatusBarService;
+import com.android.keyguard.fod.MiuiGxzwManager;
+import com.android.systemui.Dependency;
 import com.android.systemui.SystemUI;
 import com.android.systemui.plugins.GlobalActions;
 import com.android.systemui.statusbar.CommandQueue;
@@ -100,6 +102,7 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
     @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void shutdown() {
         try {
+            ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).onGlobalActionsHidden();
             this.mBarService.shutdown();
         } catch (RemoteException unused) {
         }
@@ -108,6 +111,7 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
     @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void reboot(boolean z) {
         try {
+            ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).onGlobalActionsHidden();
             this.mBarService.reboot(z);
         } catch (RemoteException unused) {
         }

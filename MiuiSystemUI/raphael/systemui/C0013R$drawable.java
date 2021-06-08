@@ -781,6 +781,7 @@ public final class R {
         public static final int actionBarEmbedTabs;
         public static final int actionBarEmbededTabsBackground;
         public static final int actionBarExpandBackground;
+        public static final int actionBarExpandState;
         public static final int actionBarExpandTabBarStyle;
         public static final int actionBarFavoriteIcon;
         public static final int actionBarIndeterminateProgressStyle;
@@ -795,6 +796,7 @@ public final class R {
         public static final int actionBarRemoveBlacklistIcon;
         public static final int actionBarRemoveSecretIcon;
         public static final int actionBarRenameIcon;
+        public static final int actionBarResizable;
         public static final int actionBarSaveIcon;
         public static final int actionBarSearchIcon;
         public static final int actionBarSecondaryTabBarStyle;
@@ -1302,6 +1304,7 @@ public final class R {
         public static final int errorTextColor;
         public static final int expandActivityOverflowButtonDrawable;
         public static final int expandBackground;
+        public static final int expandState;
         public static final int expandSubtitleTextStyle;
         public static final int expandTitleTextStyle;
         public static final int expanded;
@@ -1905,6 +1908,7 @@ public final class R {
         public static final int regularTextAppearance;
         public static final int repeat;
         public static final int repeat_one;
+        public static final int resizable;
         public static final int resizeTrigger;
         public static final int resizedPaddingAdjustmentBottom;
         public static final int resizedPaddingAdjustmentTop;
@@ -5101,6 +5105,7 @@ public final class R {
         public static final int miuix_appcompat_list_preferred_item_height_small;
         public static final int miuix_appcompat_list_preferred_item_padding_left;
         public static final int miuix_appcompat_list_preferred_item_padding_right;
+        public static final int miuix_appcompat_menu_popup_max_height;
         public static final int miuix_appcompat_message_view_bg_height;
         public static final int miuix_appcompat_message_view_bg_radius;
         public static final int miuix_appcompat_message_view_icon_height;
@@ -5251,6 +5256,8 @@ public final class R {
         public static final int miuix_preference_item_seekbar_parent_padding_top;
         public static final int miuix_preference_normal_text_size;
         public static final int miuix_preference_right_text_size;
+        public static final int miuix_preference_rv_bottom_padding;
+        public static final int miuix_preference_rv_top_padding;
         public static final int miuix_preference_secondary_text_size;
         public static final int miuix_preference_summary_margin_top;
         public static final int miuix_preference_text_max_width;
@@ -10364,6 +10371,7 @@ public final class R {
         public static final int clock_view;
         public static final int close;
         public static final int close_button;
+        public static final int collapse;
         public static final int collapseActionView;
         public static final int collapse_button;
         public static final int column;
@@ -12152,6 +12160,7 @@ public final class R {
         public static final int drawer_item;
         public static final int drawer_spacer;
         public static final int edit_dialog;
+        public static final int edit_dialog_content;
         public static final int emergency_cryptkeeper_text;
         public static final int expand_button;
         public static final int forced_resizable_activity;
@@ -12361,6 +12370,7 @@ public final class R {
         public static final int miuix_appcompat_action_mode_menu_item_layout;
         public static final int miuix_appcompat_action_mode_title_item;
         public static final int miuix_appcompat_alert_dialog;
+        public static final int miuix_appcompat_alert_dialog_content;
         public static final int miuix_appcompat_alert_dialog_progress;
         public static final int miuix_appcompat_arrow_popup_view;
         public static final int miuix_appcompat_date_picker;

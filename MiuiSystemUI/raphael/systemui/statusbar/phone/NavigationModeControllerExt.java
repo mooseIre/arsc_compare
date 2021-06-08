@@ -4,12 +4,13 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.om.IOverlayManager;
 import android.content.om.OverlayInfo;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MiuiSettings;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import com.android.systemui.C0015R$id;
 import com.android.systemui.statusbar.NavigationBarController;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
@@ -26,6 +27,7 @@ public final class NavigationModeControllerExt {
     private static Context mContext;
     private static NavigationModeControllerExt$mElderlyModeObserver$1 mElderlyModeObserver = new NavigationModeControllerExt$mElderlyModeObserver$1(null);
     private static final NavigationModeControllerExt$mFullScreenGestureListener$1 mFullScreenGestureListener = new NavigationModeControllerExt$mFullScreenGestureListener$1(null);
+    private static final Handler mHandler = new NavigationModeControllerExt$mHandler$1(Looper.getMainLooper());
     private static boolean mHideGestureLine;
     private static NavigationModeControllerExt$mHideGestureLineObserver$1 mHideGestureLineObserver = new NavigationModeControllerExt$mHideGestureLineObserver$1(null);
     private static boolean mIsFsgMode;
@@ -38,7 +40,8 @@ public final class NavigationModeControllerExt {
         return (IOverlayManager) lazy.getValue();
     }
 
-    private final NavigationBarController getNavigationBarController() {
+    /* access modifiers changed from: private */
+    public final NavigationBarController getNavigationBarController() {
         Lazy lazy = navigationBarController$delegate;
         KProperty kProperty = $$delegatedProperties[0];
         return (NavigationBarController) lazy.getValue();
@@ -177,23 +180,11 @@ public final class NavigationModeControllerExt {
     }
 
     private final void updateNavigationBarFragment() {
-        View findViewById;
-        View findViewById2;
-        if (!mIsFsgMode) {
-            getNavigationBarController().addDefaultNavigationBar();
-            NavigationBarView defaultNavigationBarView = getNavigationBarController().getDefaultNavigationBarView();
-            if (defaultNavigationBarView != null && (findViewById = defaultNavigationBarView.findViewById(C0015R$id.home_handle)) != null) {
-                findViewById.setVisibility(8);
-            }
-        } else if (mHideGestureLine) {
-            getNavigationBarController().removeDefaultNavigationBar();
-        } else {
-            getNavigationBarController().addDefaultNavigationBar();
-            NavigationBarView defaultNavigationBarView2 = getNavigationBarController().getDefaultNavigationBarView();
-            if (defaultNavigationBarView2 != null && (findViewById2 = defaultNavigationBarView2.findViewById(C0015R$id.home_handle)) != null) {
-                findViewById2.setVisibility(0);
-            }
+        int i = (!mIsFsgMode || !mHideGestureLine) ? 0 : 1;
+        if (mHandler.hasMessages(i)) {
+            mHandler.removeMessages(i);
         }
+        mHandler.sendEmptyMessage(i);
     }
 
     /* access modifiers changed from: private */

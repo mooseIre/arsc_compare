@@ -109,13 +109,13 @@ public class UsbNotificationController {
         this.mEnableUsbModeSelection = this.mContext.getResources().getBoolean(285474847);
         this.mContext.getContentResolver().registerContentObserver(Settings.System.getUriFor("disable_usb_by_sim"), false, this.mDisableUsbObserver);
         this.mDisableUsbObserver.onChange(false);
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction("android.intent.action.BATTERY_CHANGED");
-        intentFilter.addAction("android.hardware.usb.action.USB_STATE");
         if (SUPPORT_DISABLE_USB_BY_SIM) {
+            IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction("android.intent.action.BATTERY_CHANGED");
+            intentFilter.addAction("android.hardware.usb.action.USB_STATE");
             intentFilter.addAction("android.intent.action.SIM_STATE_CHANGED");
+            this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
         }
-        this.mContext.registerReceiver(this.mBroadcastReceiver, intentFilter);
     }
 
     /* access modifiers changed from: private */

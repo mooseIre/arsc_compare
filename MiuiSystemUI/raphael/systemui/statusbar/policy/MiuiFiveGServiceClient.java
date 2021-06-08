@@ -564,7 +564,7 @@ public class MiuiFiveGServiceClient {
     }
 
     private void setFiveGIndicatorProperties(MobileSignalController.MobileIconGroup mobileIconGroup, int i) {
-        if (mobileIconGroup == TelephonyIcons.FIVE_G_BASIC || mobileIconGroup == TelephonyIcons.FIVE_G_UWB) {
+        if (mobileIconGroup == TelephonyIcons.FIVE_G_BASIC || mobileIconGroup == TelephonyIcons.FIVE_G_UWB || mobileIconGroup == TelephonyIcons.FIVE_G_SA) {
             SystemProperties.set("persist.sys.5g.indicator" + i, 20);
             return;
         }

@@ -188,8 +188,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void setTransRatio(float f) {
+    public final void setTransRatio(float f) {
         if (this.transRatio != f && isExpandable()) {
             this.transRatio = f;
             this.panelView.getContentContainer().suppressLayout(true);

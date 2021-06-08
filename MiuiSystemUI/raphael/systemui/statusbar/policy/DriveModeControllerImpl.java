@@ -75,10 +75,6 @@ public final class DriveModeControllerImpl implements DriveModeController {
         throw null;
     }
 
-    public static final /* synthetic */ Executor access$getMUIExecutor$p(DriveModeControllerImpl driveModeControllerImpl) {
-        return driveModeControllerImpl.mUIExecutor;
-    }
-
     static {
         Log.isLoggable("DriveModeController", 3);
     }
@@ -175,8 +171,7 @@ public final class DriveModeControllerImpl implements DriveModeController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void leaveDriveMode() {
+    public final void leaveDriveMode() {
         this.mDriveModeValue = -1;
         Settings.System.putIntForUser(this.mResolver, "drive_mode_drive_mode", -1, -2);
         Intent intent = new Intent();

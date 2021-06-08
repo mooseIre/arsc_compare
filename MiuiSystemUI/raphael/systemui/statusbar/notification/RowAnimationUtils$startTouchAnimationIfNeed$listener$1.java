@@ -10,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: RowAnimationUtils.kt */
-public final class RowAnimationUtils$startTouchAnimationIfNeed$1 extends AutoCleanFloatTransitionListener {
+public final class RowAnimationUtils$startTouchAnimationIfNeed$listener$1 extends AutoCleanFloatTransitionListener {
     final /* synthetic */ ExpandableNotificationRow $row;
     final /* synthetic */ float $scale;
     final /* synthetic */ String $scaleAnimName;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    RowAnimationUtils$startTouchAnimationIfNeed$1(float f, ExpandableNotificationRow expandableNotificationRow, String str, int i, Object obj) {
+    RowAnimationUtils$startTouchAnimationIfNeed$listener$1(float f, ExpandableNotificationRow expandableNotificationRow, String str, int i, Object obj) {
         super(obj);
         this.$scale = f;
         this.$row = expandableNotificationRow;

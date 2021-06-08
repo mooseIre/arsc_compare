@@ -82,7 +82,6 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     private final DockManager mDockManager;
     private boolean mDozing;
     private int mFingerprintAuthUserId;
-    private int mFingerprintErrorMsgId;
     private MiuiKeyguardFingerprintUtils$FingerprintIdentificationState mFpiState;
     private final Handler mHandler = new Handler(Looper.getMainLooper()) {
         /* class com.android.systemui.statusbar.KeyguardIndicationController.AnonymousClass5 */
@@ -651,7 +650,6 @@ public class KeyguardIndicationController implements StatusBarStateController.St
                     KeyguardIndicationController.this.handleFaceUnlockBouncerMessage(CodeInjection.MD5);
                     return;
                 }
-                KeyguardIndicationController.this.mFingerprintErrorMsgId = i;
                 KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
                 KeyguardIndicationController.this.handleFingerprintStateChanged();
             }
@@ -691,9 +689,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricAuthenticated(int i, BiometricSourceType biometricSourceType, boolean z) {
             super.onBiometricAuthenticated(i, biometricSourceType, z);
-            if (biometricSourceType == BiometricSourceType.FACE) {
-                KeyguardIndicationController.this.handleFaceUnlockBouncerMessage(CodeInjection.MD5);
-            } else if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
                 KeyguardIndicationController.this.mFingerprintAuthUserId = i;
                 KeyguardIndicationController.this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED;
                 KeyguardIndicationController.this.handleFingerprintStateChanged();

@@ -7,1030 +7,1032 @@ package com.android.systemui;
 /* JADX WARNING: Not found resource field with id: 2130968579, name: attr.MiuiMaxWidth */
 /* JADX WARNING: Not found resource field with id: 2130968589, name: attr.actionBarDivider */
 /* JADX WARNING: Not found resource field with id: 2130968593, name: attr.actionBarEmbededTabsBackground */
-/* JADX WARNING: Not found resource field with id: 2130968598, name: attr.actionBarItemBackground */
-/* JADX WARNING: Not found resource field with id: 2130968604, name: attr.actionBarPopupTheme */
-/* JADX WARNING: Not found resource field with id: 2130968615, name: attr.actionBarSize */
-/* JADX WARNING: Not found resource field with id: 2130968617, name: attr.actionBarSplitStyle */
-/* JADX WARNING: Not found resource field with id: 2130968619, name: attr.actionBarStackedBackground */
-/* JADX WARNING: Not found resource field with id: 2130968622, name: attr.actionBarStyle */
-/* JADX WARNING: Not found resource field with id: 2130968625, name: attr.actionBarTabBarStyle */
-/* JADX WARNING: Not found resource field with id: 2130968628, name: attr.actionBarTabStyle */
-/* JADX WARNING: Not found resource field with id: 2130968632, name: attr.actionBarTabTextStyle */
-/* JADX WARNING: Not found resource field with id: 2130968633, name: attr.actionBarTheme */
-/* JADX WARNING: Not found resource field with id: 2130968639, name: attr.actionBarWidgetTheme */
-/* JADX WARNING: Not found resource field with id: 2130968640, name: attr.actionButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968641, name: attr.actionDividerHeight */
-/* JADX WARNING: Not found resource field with id: 2130968642, name: attr.actionDropDownStyle */
-/* JADX WARNING: Not found resource field with id: 2130968643, name: attr.actionLayout */
-/* JADX WARNING: Not found resource field with id: 2130968644, name: attr.actionMenuTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130968645, name: attr.actionMenuTextColor */
-/* JADX WARNING: Not found resource field with id: 2130968646, name: attr.actionModeAnim */
-/* JADX WARNING: Not found resource field with id: 2130968647, name: attr.actionModeBackground */
-/* JADX WARNING: Not found resource field with id: 2130968650, name: attr.actionModeCloseButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968651, name: attr.actionModeCloseContentDescription */
-/* JADX WARNING: Not found resource field with id: 2130968652, name: attr.actionModeCloseDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968654, name: attr.actionModeCopyDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968655, name: attr.actionModeCutDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968656, name: attr.actionModeFindDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968658, name: attr.actionModePasteDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968659, name: attr.actionModePopupWindowStyle */
-/* JADX WARNING: Not found resource field with id: 2130968660, name: attr.actionModeSelectAllDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968662, name: attr.actionModeShareDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968663, name: attr.actionModeSplitBackground */
-/* JADX WARNING: Not found resource field with id: 2130968664, name: attr.actionModeStyle */
-/* JADX WARNING: Not found resource field with id: 2130968665, name: attr.actionModeTheme */
-/* JADX WARNING: Not found resource field with id: 2130968667, name: attr.actionModeWebSearchDrawable */
-/* JADX WARNING: Not found resource field with id: 2130968668, name: attr.actionOverflowButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968669, name: attr.actionOverflowMenuStyle */
-/* JADX WARNING: Not found resource field with id: 2130968670, name: attr.actionProviderClass */
-/* JADX WARNING: Not found resource field with id: 2130968671, name: attr.actionTextColorAlpha */
-/* JADX WARNING: Not found resource field with id: 2130968672, name: attr.actionViewClass */
-/* JADX WARNING: Not found resource field with id: 2130968675, name: attr.activatedAnimationDuration */
-/* JADX WARNING: Not found resource field with id: 2130968676, name: attr.activatedTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130968677, name: attr.activeFrameColor */
-/* JADX WARNING: Not found resource field with id: 2130968678, name: attr.activityChooserViewStyle */
-/* JADX WARNING: Not found resource field with id: 2130968679, name: attr.adapter */
-/* JADX WARNING: Not found resource field with id: 2130968680, name: attr.adjustable */
-/* JADX WARNING: Not found resource field with id: 2130968681, name: attr.alertDialogButtonGroupStyle */
-/* JADX WARNING: Not found resource field with id: 2130968682, name: attr.alertDialogCenterButtons */
-/* JADX WARNING: Not found resource field with id: 2130968683, name: attr.alertDialogStyle */
-/* JADX WARNING: Not found resource field with id: 2130968684, name: attr.alertDialogTheme */
-/* JADX WARNING: Not found resource field with id: 2130968685, name: attr.allCaps */
-/* JADX WARNING: Not found resource field with id: 2130968686, name: attr.allowDividerAbove */
-/* JADX WARNING: Not found resource field with id: 2130968687, name: attr.allowDividerAfterLastItem */
-/* JADX WARNING: Not found resource field with id: 2130968688, name: attr.allowDividerBelow */
-/* JADX WARNING: Not found resource field with id: 2130968689, name: attr.allowStacking */
-/* JADX WARNING: Not found resource field with id: 2130968690, name: attr.alpha */
-/* JADX WARNING: Not found resource field with id: 2130968691, name: attr.alphabeticModifiers */
-/* JADX WARNING: Not found resource field with id: 2130968692, name: attr.altSrc */
-/* JADX WARNING: Not found resource field with id: 2130968693, name: attr.amPmStyle */
-/* JADX WARNING: Not found resource field with id: 2130968694, name: attr.animate_relativeTo */
-/* JADX WARNING: Not found resource field with id: 2130968695, name: attr.animationMode */
-/* JADX WARNING: Not found resource field with id: 2130968696, name: attr.applyMotionScene */
-/* JADX WARNING: Not found resource field with id: 2130968698, name: attr.arrowBgColor */
-/* JADX WARNING: Not found resource field with id: 2130968699, name: attr.arrowColor */
-/* JADX WARNING: Not found resource field with id: 2130968700, name: attr.arrowFilterSortTabView */
-/* JADX WARNING: Not found resource field with id: 2130968703, name: attr.arrowRadius */
-/* JADX WARNING: Not found resource field with id: 2130968707, name: attr.attributeName */
-/* JADX WARNING: Not found resource field with id: 2130968708, name: attr.autoCompleteTextViewStyle */
-/* JADX WARNING: Not found resource field with id: 2130968709, name: attr.autoSizeMaxTextSize */
-/* JADX WARNING: Not found resource field with id: 2130968710, name: attr.autoSizeMinTextSize */
-/* JADX WARNING: Not found resource field with id: 2130968711, name: attr.autoSizePresetSizes */
-/* JADX WARNING: Not found resource field with id: 2130968712, name: attr.autoSizeStepGranularity */
-/* JADX WARNING: Not found resource field with id: 2130968713, name: attr.autoSizeTextType */
-/* JADX WARNING: Not found resource field with id: 2130968714, name: attr.autoTransition */
-/* JADX WARNING: Not found resource field with id: 2130968715, name: attr.avatarPadding */
-/* JADX WARNING: Not found resource field with id: 2130968716, name: attr.background */
-/* JADX WARNING: Not found resource field with id: 2130968722, name: attr.backgroundLeft */
-/* JADX WARNING: Not found resource field with id: 2130968723, name: attr.backgroundOverlayColorAlpha */
-/* JADX WARNING: Not found resource field with id: 2130968725, name: attr.backgroundRight */
-/* JADX WARNING: Not found resource field with id: 2130968726, name: attr.backgroundSplit */
-/* JADX WARNING: Not found resource field with id: 2130968727, name: attr.backgroundStacked */
-/* JADX WARNING: Not found resource field with id: 2130968728, name: attr.backgroundTint */
-/* JADX WARNING: Not found resource field with id: 2130968729, name: attr.backgroundTintMode */
-/* JADX WARNING: Not found resource field with id: 2130968730, name: attr.badgeDiameter */
-/* JADX WARNING: Not found resource field with id: 2130968731, name: attr.badgeMargin */
-/* JADX WARNING: Not found resource field with id: 2130968732, name: attr.bar */
-/* JADX WARNING: Not found resource field with id: 2130968734, name: attr.barOff */
-/* JADX WARNING: Not found resource field with id: 2130968735, name: attr.barOn */
-/* JADX WARNING: Not found resource field with id: 2130968736, name: attr.barrierAllowsGoneWidgets */
-/* JADX WARNING: Not found resource field with id: 2130968737, name: attr.barrierDirection */
-/* JADX WARNING: Not found resource field with id: 2130968738, name: attr.barrierMargin */
-/* JADX WARNING: Not found resource field with id: 2130968740, name: attr.behavior_autoHide */
-/* JADX WARNING: Not found resource field with id: 2130968741, name: attr.behavior_autoShrink */
-/* JADX WARNING: Not found resource field with id: 2130968742, name: attr.behavior_fitToContents */
-/* JADX WARNING: Not found resource field with id: 2130968743, name: attr.behavior_halfExpandedRatio */
-/* JADX WARNING: Not found resource field with id: 2130968744, name: attr.behavior_hideable */
-/* JADX WARNING: Not found resource field with id: 2130968745, name: attr.behavior_overlapTop */
-/* JADX WARNING: Not found resource field with id: 2130968746, name: attr.behavior_peekHeight */
-/* JADX WARNING: Not found resource field with id: 2130968747, name: attr.behavior_saveFlags */
-/* JADX WARNING: Not found resource field with id: 2130968748, name: attr.behavior_skipCollapsed */
-/* JADX WARNING: Not found resource field with id: 2130968749, name: attr.borderWidth */
-/* JADX WARNING: Not found resource field with id: 2130968750, name: attr.borderlessButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968752, name: attr.bottomArrow */
-/* JADX WARNING: Not found resource field with id: 2130968753, name: attr.bottomDividerEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130968754, name: attr.bottomDividerStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130968755, name: attr.bottomLeftArrow */
-/* JADX WARNING: Not found resource field with id: 2130968757, name: attr.bottomRightArrow */
-/* JADX WARNING: Not found resource field with id: 2130968760, name: attr.boxBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968761, name: attr.boxBackgroundMode */
-/* JADX WARNING: Not found resource field with id: 2130968762, name: attr.boxCollapsedPaddingTop */
-/* JADX WARNING: Not found resource field with id: 2130968763, name: attr.boxCornerRadiusBottomEnd */
-/* JADX WARNING: Not found resource field with id: 2130968764, name: attr.boxCornerRadiusBottomStart */
-/* JADX WARNING: Not found resource field with id: 2130968765, name: attr.boxCornerRadiusTopEnd */
-/* JADX WARNING: Not found resource field with id: 2130968766, name: attr.boxCornerRadiusTopStart */
-/* JADX WARNING: Not found resource field with id: 2130968767, name: attr.boxStrokeColor */
-/* JADX WARNING: Not found resource field with id: 2130968768, name: attr.boxStrokeWidth */
-/* JADX WARNING: Not found resource field with id: 2130968769, name: attr.brightness */
-/* JADX WARNING: Not found resource field with id: 2130968783, name: attr.buttonBarButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968785, name: attr.buttonBarNegativeButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968786, name: attr.buttonBarNeutralButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968787, name: attr.buttonBarPositiveButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968789, name: attr.buttonBarStyle */
-/* JADX WARNING: Not found resource field with id: 2130968790, name: attr.buttonCompat */
-/* JADX WARNING: Not found resource field with id: 2130968791, name: attr.buttonGravity */
-/* JADX WARNING: Not found resource field with id: 2130968792, name: attr.buttonIconDimen */
-/* JADX WARNING: Not found resource field with id: 2130968797, name: attr.buttonPanelSideLayout */
-/* JADX WARNING: Not found resource field with id: 2130968799, name: attr.buttonStrokeWidth */
-/* JADX WARNING: Not found resource field with id: 2130968800, name: attr.buttonStyle */
-/* JADX WARNING: Not found resource field with id: 2130968801, name: attr.buttonStyleSmall */
-/* JADX WARNING: Not found resource field with id: 2130968802, name: attr.buttonTint */
-/* JADX WARNING: Not found resource field with id: 2130968803, name: attr.buttonTintMode */
-/* JADX WARNING: Not found resource field with id: 2130968804, name: attr.calendarViewShown */
-/* JADX WARNING: Not found resource field with id: 2130968805, name: attr.cardBackground */
-/* JADX WARNING: Not found resource field with id: 2130968806, name: attr.cardBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968807, name: attr.cardCornerRadius */
-/* JADX WARNING: Not found resource field with id: 2130968808, name: attr.cardElevation */
-/* JADX WARNING: Not found resource field with id: 2130968809, name: attr.cardForeground */
-/* JADX WARNING: Not found resource field with id: 2130968810, name: attr.cardForegroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968811, name: attr.cardMaxElevation */
-/* JADX WARNING: Not found resource field with id: 2130968812, name: attr.cardPreventCornerOverlap */
-/* JADX WARNING: Not found resource field with id: 2130968813, name: attr.cardType */
-/* JADX WARNING: Not found resource field with id: 2130968814, name: attr.cardUseCompatPadding */
-/* JADX WARNING: Not found resource field with id: 2130968816, name: attr.chainUseRtl */
-/* JADX WARNING: Not found resource field with id: 2130968817, name: attr.charPadding */
-/* JADX WARNING: Not found resource field with id: 2130968824, name: attr.checkMarkCompat */
-/* JADX WARNING: Not found resource field with id: 2130968839, name: attr.checkboxStyle */
-/* JADX WARNING: Not found resource field with id: 2130968840, name: attr.checkedButton */
-/* JADX WARNING: Not found resource field with id: 2130968841, name: attr.checkedChip */
-/* JADX WARNING: Not found resource field with id: 2130968842, name: attr.checkedIcon */
-/* JADX WARNING: Not found resource field with id: 2130968843, name: attr.checkedIconEnabled */
-/* JADX WARNING: Not found resource field with id: 2130968844, name: attr.checkedIconTint */
-/* JADX WARNING: Not found resource field with id: 2130968845, name: attr.checkedIconVisible */
-/* JADX WARNING: Not found resource field with id: 2130968846, name: attr.checkedTextViewStyle */
-/* JADX WARNING: Not found resource field with id: 2130968847, name: attr.checkwidget_backgroundDisableAlpha */
-/* JADX WARNING: Not found resource field with id: 2130968848, name: attr.checkwidget_backgroundNormalAlpha */
-/* JADX WARNING: Not found resource field with id: 2130968849, name: attr.checkwidget_checkOnAlphaBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968850, name: attr.checkwidget_checkOnBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968851, name: attr.checkwidget_checkOnForegroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968852, name: attr.checkwidget_disableBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968853, name: attr.checkwidget_strokeColor */
-/* JADX WARNING: Not found resource field with id: 2130968854, name: attr.checkwidget_strokeDisableAlpha */
-/* JADX WARNING: Not found resource field with id: 2130968855, name: attr.checkwidget_strokeNormalAlpha */
-/* JADX WARNING: Not found resource field with id: 2130968856, name: attr.checkwidget_touchAnimEnable */
-/* JADX WARNING: Not found resource field with id: 2130968858, name: attr.chipBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130968859, name: attr.chipCornerRadius */
-/* JADX WARNING: Not found resource field with id: 2130968860, name: attr.chipEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130968862, name: attr.chipIcon */
-/* JADX WARNING: Not found resource field with id: 2130968863, name: attr.chipIconEnabled */
-/* JADX WARNING: Not found resource field with id: 2130968864, name: attr.chipIconSize */
-/* JADX WARNING: Not found resource field with id: 2130968865, name: attr.chipIconTint */
-/* JADX WARNING: Not found resource field with id: 2130968866, name: attr.chipIconVisible */
-/* JADX WARNING: Not found resource field with id: 2130968867, name: attr.chipMinHeight */
-/* JADX WARNING: Not found resource field with id: 2130968868, name: attr.chipMinTouchTargetSize */
-/* JADX WARNING: Not found resource field with id: 2130968869, name: attr.chipSpacing */
-/* JADX WARNING: Not found resource field with id: 2130968870, name: attr.chipSpacingHorizontal */
-/* JADX WARNING: Not found resource field with id: 2130968871, name: attr.chipSpacingVertical */
-/* JADX WARNING: Not found resource field with id: 2130968873, name: attr.chipStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130968874, name: attr.chipStrokeColor */
-/* JADX WARNING: Not found resource field with id: 2130968875, name: attr.chipStrokeWidth */
-/* JADX WARNING: Not found resource field with id: 2130968877, name: attr.chipSurfaceColor */
-/* JADX WARNING: Not found resource field with id: 2130968882, name: attr.clickAction */
-/* JADX WARNING: Not found resource field with id: 2130968883, name: attr.clipEdge */
-/* JADX WARNING: Not found resource field with id: 2130968884, name: attr.clipEnd */
-/* JADX WARNING: Not found resource field with id: 2130968885, name: attr.closable */
-/* JADX WARNING: Not found resource field with id: 2130968886, name: attr.closeBackground */
-/* JADX WARNING: Not found resource field with id: 2130968887, name: attr.closeIcon */
-/* JADX WARNING: Not found resource field with id: 2130968888, name: attr.closeIconEnabled */
-/* JADX WARNING: Not found resource field with id: 2130968889, name: attr.closeIconEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130968890, name: attr.closeIconSize */
-/* JADX WARNING: Not found resource field with id: 2130968891, name: attr.closeIconStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130968892, name: attr.closeIconTint */
-/* JADX WARNING: Not found resource field with id: 2130968893, name: attr.closeIconVisible */
-/* JADX WARNING: Not found resource field with id: 2130968894, name: attr.closeItemLayout */
-/* JADX WARNING: Not found resource field with id: 2130968896, name: attr.collapseContentDescription */
-/* JADX WARNING: Not found resource field with id: 2130968897, name: attr.collapseIcon */
-/* JADX WARNING: Not found resource field with id: 2130968898, name: attr.collapsedTitleGravity */
-/* JADX WARNING: Not found resource field with id: 2130968899, name: attr.collapsedTitleTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130968901, name: attr.colorAccent */
-/* JADX WARNING: Not found resource field with id: 2130968902, name: attr.colorBackgroundFloating */
-/* JADX WARNING: Not found resource field with id: 2130968903, name: attr.colorButtonNormal */
-/* JADX WARNING: Not found resource field with id: 2130968904, name: attr.colorControlActivated */
-/* JADX WARNING: Not found resource field with id: 2130968905, name: attr.colorControlHighlight */
-/* JADX WARNING: Not found resource field with id: 2130968906, name: attr.colorControlNormal */
-/* JADX WARNING: Not found resource field with id: 2130968908, name: attr.colorError */
-/* JADX WARNING: Not found resource field with id: 2130968920, name: attr.colorPrimary */
-/* JADX WARNING: Not found resource field with id: 2130968921, name: attr.colorPrimaryDark */
-/* JADX WARNING: Not found resource field with id: 2130968926, name: attr.colorSwitchThumbNormal */
-/* JADX WARNING: Not found resource field with id: 2130968927, name: attr.columnCount */
-/* JADX WARNING: Not found resource field with id: 2130968928, name: attr.columnWidth */
-/* JADX WARNING: Not found resource field with id: 2130968929, name: attr.commitIcon */
-/* JADX WARNING: Not found resource field with id: 2130968937, name: attr.constraintSet */
-/* JADX WARNING: Not found resource field with id: 2130968938, name: attr.constraintSetEnd */
-/* JADX WARNING: Not found resource field with id: 2130968939, name: attr.constraintSetStart */
-/* JADX WARNING: Not found resource field with id: 2130968940, name: attr.constraint_referenced_ids */
-/* JADX WARNING: Not found resource field with id: 2130968941, name: attr.constraint_referenced_tags */
-/* JADX WARNING: Not found resource field with id: 2130968942, name: attr.constraints */
-/* JADX WARNING: Not found resource field with id: 2130968943, name: attr.content */
-/* JADX WARNING: Not found resource field with id: 2130968944, name: attr.contentAutoFitSystemWindow */
-/* JADX WARNING: Not found resource field with id: 2130968945, name: attr.contentBackground */
-/* JADX WARNING: Not found resource field with id: 2130968946, name: attr.contentDescription */
-/* JADX WARNING: Not found resource field with id: 2130968947, name: attr.contentEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130968948, name: attr.contentHeaderBackground */
-/* JADX WARNING: Not found resource field with id: 2130968949, name: attr.contentInsetEnd */
-/* JADX WARNING: Not found resource field with id: 2130968950, name: attr.contentInsetEndWithActions */
-/* JADX WARNING: Not found resource field with id: 2130968951, name: attr.contentInsetLeft */
-/* JADX WARNING: Not found resource field with id: 2130968952, name: attr.contentInsetRight */
-/* JADX WARNING: Not found resource field with id: 2130968953, name: attr.contentInsetStart */
-/* JADX WARNING: Not found resource field with id: 2130968954, name: attr.contentInsetStartWithNavigation */
-/* JADX WARNING: Not found resource field with id: 2130968955, name: attr.contentPadding */
-/* JADX WARNING: Not found resource field with id: 2130968956, name: attr.contentPaddingBottom */
-/* JADX WARNING: Not found resource field with id: 2130968957, name: attr.contentPaddingLeft */
-/* JADX WARNING: Not found resource field with id: 2130968958, name: attr.contentPaddingRight */
-/* JADX WARNING: Not found resource field with id: 2130968959, name: attr.contentPaddingTop */
-/* JADX WARNING: Not found resource field with id: 2130968960, name: attr.contentScrim */
-/* JADX WARNING: Not found resource field with id: 2130968961, name: attr.contentStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130968962, name: attr.contextMenuSeparateItemBackground */
-/* JADX WARNING: Not found resource field with id: 2130968963, name: attr.contrast */
-/* JADX WARNING: Not found resource field with id: 2130968964, name: attr.controlBackground */
-/* JADX WARNING: Not found resource field with id: 2130968966, name: attr.cornerFamily */
-/* JADX WARNING: Not found resource field with id: 2130968967, name: attr.cornerFamilyBottomLeft */
-/* JADX WARNING: Not found resource field with id: 2130968968, name: attr.cornerFamilyBottomRight */
-/* JADX WARNING: Not found resource field with id: 2130968969, name: attr.cornerFamilyTopLeft */
-/* JADX WARNING: Not found resource field with id: 2130968970, name: attr.cornerFamilyTopRight */
-/* JADX WARNING: Not found resource field with id: 2130968971, name: attr.cornerRadius */
-/* JADX WARNING: Not found resource field with id: 2130968972, name: attr.cornerSize */
-/* JADX WARNING: Not found resource field with id: 2130968973, name: attr.cornerSizeBottomLeft */
-/* JADX WARNING: Not found resource field with id: 2130968974, name: attr.cornerSizeBottomRight */
-/* JADX WARNING: Not found resource field with id: 2130968975, name: attr.cornerSizeTopLeft */
-/* JADX WARNING: Not found resource field with id: 2130968976, name: attr.cornerSizeTopRight */
-/* JADX WARNING: Not found resource field with id: 2130968977, name: attr.counterEnabled */
-/* JADX WARNING: Not found resource field with id: 2130968978, name: attr.counterMaxLength */
-/* JADX WARNING: Not found resource field with id: 2130968979, name: attr.counterOverflowTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130968980, name: attr.counterOverflowTextColor */
-/* JADX WARNING: Not found resource field with id: 2130968981, name: attr.counterTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130968982, name: attr.counterTextColor */
-/* JADX WARNING: Not found resource field with id: 2130968983, name: attr.crossfade */
-/* JADX WARNING: Not found resource field with id: 2130968984, name: attr.currentState */
-/* JADX WARNING: Not found resource field with id: 2130968985, name: attr.curveFit */
-/* JADX WARNING: Not found resource field with id: 2130968986, name: attr.customBoolean */
-/* JADX WARNING: Not found resource field with id: 2130968987, name: attr.customColorDrawableValue */
-/* JADX WARNING: Not found resource field with id: 2130968988, name: attr.customColorValue */
-/* JADX WARNING: Not found resource field with id: 2130968989, name: attr.customDimension */
-/* JADX WARNING: Not found resource field with id: 2130968990, name: attr.customFloatValue */
-/* JADX WARNING: Not found resource field with id: 2130968991, name: attr.customIntegerValue */
-/* JADX WARNING: Not found resource field with id: 2130968992, name: attr.customNavigationLayout */
-/* JADX WARNING: Not found resource field with id: 2130968993, name: attr.customPixelDimension */
-/* JADX WARNING: Not found resource field with id: 2130968994, name: attr.customStringValue */
-/* JADX WARNING: Not found resource field with id: 2130968995, name: attr.customViewAutoFitSystemWindow */
-/* JADX WARNING: Not found resource field with id: 2130968997, name: attr.datePattern */
-/* JADX WARNING: Not found resource field with id: 2130968998, name: attr.datePickerFormat */
-/* JADX WARNING: Not found resource field with id: 2130969002, name: attr.defValue */
-/* JADX WARNING: Not found resource field with id: 2130969005, name: attr.defaultDuration */
-/* JADX WARNING: Not found resource field with id: 2130969006, name: attr.defaultQueryHint */
-/* JADX WARNING: Not found resource field with id: 2130969012, name: attr.defaultState */
-/* JADX WARNING: Not found resource field with id: 2130969013, name: attr.defaultValue */
-/* JADX WARNING: Not found resource field with id: 2130969016, name: attr.dependency */
-/* JADX WARNING: Not found resource field with id: 2130969018, name: attr.deriveConstraintsFrom */
-/* JADX WARNING: Not found resource field with id: 2130969019, name: attr.descending */
-/* JADX WARNING: Not found resource field with id: 2130969029, name: attr.dialogCornerRadius */
-/* JADX WARNING: Not found resource field with id: 2130969030, name: attr.dialogIcon */
-/* JADX WARNING: Not found resource field with id: 2130969031, name: attr.dialogLayout */
-/* JADX WARNING: Not found resource field with id: 2130969036, name: attr.dialogMessage */
-/* JADX WARNING: Not found resource field with id: 2130969039, name: attr.dialogPreferredPadding */
-/* JADX WARNING: Not found resource field with id: 2130969041, name: attr.dialogTheme */
-/* JADX WARNING: Not found resource field with id: 2130969042, name: attr.dialogTitle */
-/* JADX WARNING: Not found resource field with id: 2130969045, name: attr.digit */
-/* JADX WARNING: Not found resource field with id: 2130969046, name: attr.disableDependentsState */
-/* JADX WARNING: Not found resource field with id: 2130969047, name: attr.disableRecyclerViewItemAnimator */
-/* JADX WARNING: Not found resource field with id: 2130969048, name: attr.disabledProgressAlpha */
-/* JADX WARNING: Not found resource field with id: 2130969049, name: attr.displayOptions */
-/* JADX WARNING: Not found resource field with id: 2130969050, name: attr.divider */
-/* JADX WARNING: Not found resource field with id: 2130969051, name: attr.dividerHorizontal */
-/* JADX WARNING: Not found resource field with id: 2130969052, name: attr.dividerPadding */
-/* JADX WARNING: Not found resource field with id: 2130969053, name: attr.dividerVertical */
-/* JADX WARNING: Not found resource field with id: 2130969054, name: attr.dotBgColor */
-/* JADX WARNING: Not found resource field with id: 2130969055, name: attr.dotSize */
-/* JADX WARNING: Not found resource field with id: 2130969056, name: attr.dotToArrowGap */
-/* JADX WARNING: Not found resource field with id: 2130969057, name: attr.dotToDotGap */
-/* JADX WARNING: Not found resource field with id: 2130969058, name: attr.doubleLineButtonPaddingHorizontal */
-/* JADX WARNING: Not found resource field with id: 2130969059, name: attr.dragDirection */
-/* JADX WARNING: Not found resource field with id: 2130969060, name: attr.dragScale */
-/* JADX WARNING: Not found resource field with id: 2130969061, name: attr.dragThreshold */
-/* JADX WARNING: Not found resource field with id: 2130969062, name: attr.drawPath */
-/* JADX WARNING: Not found resource field with id: 2130969063, name: attr.drawableBottomCompat */
-/* JADX WARNING: Not found resource field with id: 2130969064, name: attr.drawableEndCompat */
-/* JADX WARNING: Not found resource field with id: 2130969065, name: attr.drawableLeftCompat */
-/* JADX WARNING: Not found resource field with id: 2130969066, name: attr.drawableRightCompat */
-/* JADX WARNING: Not found resource field with id: 2130969068, name: attr.drawableStartCompat */
-/* JADX WARNING: Not found resource field with id: 2130969069, name: attr.drawableTint */
-/* JADX WARNING: Not found resource field with id: 2130969070, name: attr.drawableTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969071, name: attr.drawableTopCompat */
-/* JADX WARNING: Not found resource field with id: 2130969074, name: attr.dropDownListViewStyle */
-/* JADX WARNING: Not found resource field with id: 2130969075, name: attr.dropDownMaxWidth */
-/* JADX WARNING: Not found resource field with id: 2130969076, name: attr.dropDownMinWidth */
-/* JADX WARNING: Not found resource field with id: 2130969077, name: attr.dropdownListPreferredItemHeight */
-/* JADX WARNING: Not found resource field with id: 2130969079, name: attr.duration */
-/* JADX WARNING: Not found resource field with id: 2130969080, name: attr.editTextBackground */
-/* JADX WARNING: Not found resource field with id: 2130969081, name: attr.editTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969088, name: attr.editTextStyle */
-/* JADX WARNING: Not found resource field with id: 2130969089, name: attr.elevation */
-/* JADX WARNING: Not found resource field with id: 2130969092, name: attr.enableAutoSizing */
-/* JADX WARNING: Not found resource field with id: 2130969093, name: attr.enableCopying */
-/* JADX WARNING: Not found resource field with id: 2130969094, name: attr.enabled */
-/* JADX WARNING: Not found resource field with id: 2130969095, name: attr.endIconContentDescription */
-/* JADX WARNING: Not found resource field with id: 2130969096, name: attr.endIconDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969097, name: attr.endIconMode */
-/* JADX WARNING: Not found resource field with id: 2130969098, name: attr.endIconTint */
-/* JADX WARNING: Not found resource field with id: 2130969099, name: attr.endIconTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969100, name: attr.endItemEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969101, name: attr.endItemStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130969102, name: attr.endYear */
-/* JADX WARNING: Not found resource field with id: 2130969103, name: attr.enforceMaterialTheme */
-/* JADX WARNING: Not found resource field with id: 2130969104, name: attr.enforceTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969105, name: attr.ensureMinTouchTargetSize */
-/* JADX WARNING: Not found resource field with id: 2130969106, name: attr.entries */
-/* JADX WARNING: Not found resource field with id: 2130969107, name: attr.entryIcons */
-/* JADX WARNING: Not found resource field with id: 2130969108, name: attr.entrySummaries */
-/* JADX WARNING: Not found resource field with id: 2130969109, name: attr.entryValues */
-/* JADX WARNING: Not found resource field with id: 2130969110, name: attr.errorEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969112, name: attr.errorTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969113, name: attr.errorTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969114, name: attr.expandActivityOverflowButtonDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969116, name: attr.expandSubtitleTextStyle */
-/* JADX WARNING: Not found resource field with id: 2130969117, name: attr.expandTitleTextStyle */
-/* JADX WARNING: Not found resource field with id: 2130969118, name: attr.expanded */
-/* JADX WARNING: Not found resource field with id: 2130969119, name: attr.expandedTitleGravity */
-/* JADX WARNING: Not found resource field with id: 2130969120, name: attr.expandedTitleMargin */
-/* JADX WARNING: Not found resource field with id: 2130969121, name: attr.expandedTitleMarginBottom */
-/* JADX WARNING: Not found resource field with id: 2130969122, name: attr.expandedTitleMarginEnd */
-/* JADX WARNING: Not found resource field with id: 2130969123, name: attr.expandedTitleMarginStart */
-/* JADX WARNING: Not found resource field with id: 2130969124, name: attr.expandedTitleMarginTop */
-/* JADX WARNING: Not found resource field with id: 2130969125, name: attr.expandedTitleTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969126, name: attr.extendMotionSpec */
-/* JADX WARNING: Not found resource field with id: 2130969128, name: attr.externalRouteEnabledDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969129, name: attr.externalRouteEnabledDrawableStatic */
-/* JADX WARNING: Not found resource field with id: 2130969130, name: attr.extraVisibility */
-/* JADX WARNING: Not found resource field with id: 2130969131, name: attr.fabAlignmentMode */
-/* JADX WARNING: Not found resource field with id: 2130969132, name: attr.fabAnimationMode */
-/* JADX WARNING: Not found resource field with id: 2130969133, name: attr.fabColor */
-/* JADX WARNING: Not found resource field with id: 2130969134, name: attr.fabCradleMargin */
-/* JADX WARNING: Not found resource field with id: 2130969135, name: attr.fabCradleRoundedCornerRadius */
-/* JADX WARNING: Not found resource field with id: 2130969136, name: attr.fabCradleVerticalOffset */
-/* JADX WARNING: Not found resource field with id: 2130969137, name: attr.fabCustomSize */
-/* JADX WARNING: Not found resource field with id: 2130969138, name: attr.fabShadowEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969139, name: attr.fabSize */
-/* JADX WARNING: Not found resource field with id: 2130969140, name: attr.fastScrollEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969141, name: attr.fastScrollHorizontalThumbDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969142, name: attr.fastScrollHorizontalTrackDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969143, name: attr.fastScrollVerticalThumbDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969144, name: attr.fastScrollVerticalTrackDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969147, name: attr.filterSortTabViewCoverBg */
-/* JADX WARNING: Not found resource field with id: 2130969148, name: attr.filterSortTabViewFollowTouch */
-/* JADX WARNING: Not found resource field with id: 2130969149, name: attr.filterSortTabViewTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969150, name: attr.filterSortViewBackground */
-/* JADX WARNING: Not found resource field with id: 2130969151, name: attr.firstBaselineToTopHeight */
-/* JADX WARNING: Not found resource field with id: 2130969153, name: attr.flow_firstHorizontalBias */
-/* JADX WARNING: Not found resource field with id: 2130969154, name: attr.flow_firstHorizontalStyle */
-/* JADX WARNING: Not found resource field with id: 2130969155, name: attr.flow_firstVerticalBias */
-/* JADX WARNING: Not found resource field with id: 2130969156, name: attr.flow_firstVerticalStyle */
-/* JADX WARNING: Not found resource field with id: 2130969157, name: attr.flow_horizontalAlign */
-/* JADX WARNING: Not found resource field with id: 2130969158, name: attr.flow_horizontalBias */
-/* JADX WARNING: Not found resource field with id: 2130969159, name: attr.flow_horizontalGap */
-/* JADX WARNING: Not found resource field with id: 2130969160, name: attr.flow_horizontalStyle */
-/* JADX WARNING: Not found resource field with id: 2130969161, name: attr.flow_lastHorizontalBias */
-/* JADX WARNING: Not found resource field with id: 2130969162, name: attr.flow_lastHorizontalStyle */
-/* JADX WARNING: Not found resource field with id: 2130969163, name: attr.flow_lastVerticalBias */
-/* JADX WARNING: Not found resource field with id: 2130969164, name: attr.flow_lastVerticalStyle */
-/* JADX WARNING: Not found resource field with id: 2130969165, name: attr.flow_maxElementsWrap */
-/* JADX WARNING: Not found resource field with id: 2130969167, name: attr.flow_verticalAlign */
-/* JADX WARNING: Not found resource field with id: 2130969168, name: attr.flow_verticalBias */
-/* JADX WARNING: Not found resource field with id: 2130969169, name: attr.flow_verticalGap */
-/* JADX WARNING: Not found resource field with id: 2130969170, name: attr.flow_verticalStyle */
-/* JADX WARNING: Not found resource field with id: 2130969171, name: attr.flow_wrapMode */
-/* JADX WARNING: Not found resource field with id: 2130969172, name: attr.focusOutEnd */
-/* JADX WARNING: Not found resource field with id: 2130969173, name: attr.focusOutFront */
-/* JADX WARNING: Not found resource field with id: 2130969174, name: attr.focusOutSideEnd */
-/* JADX WARNING: Not found resource field with id: 2130969175, name: attr.focusOutSideStart */
-/* JADX WARNING: Not found resource field with id: 2130969176, name: attr.font */
-/* JADX WARNING: Not found resource field with id: 2130969177, name: attr.fontFamily */
-/* JADX WARNING: Not found resource field with id: 2130969178, name: attr.fontProviderAuthority */
-/* JADX WARNING: Not found resource field with id: 2130969179, name: attr.fontProviderCerts */
-/* JADX WARNING: Not found resource field with id: 2130969180, name: attr.fontProviderFetchStrategy */
-/* JADX WARNING: Not found resource field with id: 2130969181, name: attr.fontProviderFetchTimeout */
-/* JADX WARNING: Not found resource field with id: 2130969182, name: attr.fontProviderPackage */
-/* JADX WARNING: Not found resource field with id: 2130969183, name: attr.fontProviderQuery */
-/* JADX WARNING: Not found resource field with id: 2130969184, name: attr.fontStyle */
-/* JADX WARNING: Not found resource field with id: 2130969185, name: attr.fontVariationSettings */
-/* JADX WARNING: Not found resource field with id: 2130969186, name: attr.fontWeight */
-/* JADX WARNING: Not found resource field with id: 2130969188, name: attr.foregroundInsidePadding */
-/* JADX WARNING: Not found resource field with id: 2130969189, name: attr.foregroundPrimaryColor */
-/* JADX WARNING: Not found resource field with id: 2130969190, name: attr.foregroundPrimaryDisableColor */
-/* JADX WARNING: Not found resource field with id: 2130969191, name: attr.fragment */
-/* JADX WARNING: Not found resource field with id: 2130969192, name: attr.frame */
-/* JADX WARNING: Not found resource field with id: 2130969193, name: attr.frameColor */
-/* JADX WARNING: Not found resource field with id: 2130969194, name: attr.framePadding */
-/* JADX WARNING: Not found resource field with id: 2130969195, name: attr.framePosition */
-/* JADX WARNING: Not found resource field with id: 2130969196, name: attr.frameWidth */
-/* JADX WARNING: Not found resource field with id: 2130969198, name: attr.goIcon */
-/* JADX WARNING: Not found resource field with id: 2130969199, name: attr.gridBottomPadding */
-/* JADX WARNING: Not found resource field with id: 2130969200, name: attr.gridSubtitleSize */
-/* JADX WARNING: Not found resource field with id: 2130969201, name: attr.gridTextVerticalPadding */
-/* JADX WARNING: Not found resource field with id: 2130969202, name: attr.gridTitleSize */
-/* JADX WARNING: Not found resource field with id: 2130969203, name: attr.gridTopPadding */
-/* JADX WARNING: Not found resource field with id: 2130969204, name: attr.guidanceBreadcrumbStyle */
-/* JADX WARNING: Not found resource field with id: 2130969205, name: attr.guidanceContainerStyle */
-/* JADX WARNING: Not found resource field with id: 2130969206, name: attr.guidanceDescriptionStyle */
-/* JADX WARNING: Not found resource field with id: 2130969207, name: attr.guidanceEntryAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969208, name: attr.guidanceIconStyle */
-/* JADX WARNING: Not found resource field with id: 2130969209, name: attr.guidanceTitleStyle */
-/* JADX WARNING: Not found resource field with id: 2130969211, name: attr.guidedActionCheckedAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969212, name: attr.guidedActionContentWidth */
-/* JADX WARNING: Not found resource field with id: 2130969213, name: attr.guidedActionContentWidthNoIcon */
-/* JADX WARNING: Not found resource field with id: 2130969214, name: attr.guidedActionContentWidthWeight */
-/* JADX WARNING: Not found resource field with id: 2130969215, name: attr.guidedActionContentWidthWeightTwoPanels */
-/* JADX WARNING: Not found resource field with id: 2130969216, name: attr.guidedActionDescriptionMinLines */
-/* JADX WARNING: Not found resource field with id: 2130969217, name: attr.guidedActionDisabledChevronAlpha */
-/* JADX WARNING: Not found resource field with id: 2130969218, name: attr.guidedActionEnabledChevronAlpha */
-/* JADX WARNING: Not found resource field with id: 2130969219, name: attr.guidedActionItemCheckmarkStyle */
-/* JADX WARNING: Not found resource field with id: 2130969220, name: attr.guidedActionItemChevronStyle */
-/* JADX WARNING: Not found resource field with id: 2130969221, name: attr.guidedActionItemContainerStyle */
-/* JADX WARNING: Not found resource field with id: 2130969222, name: attr.guidedActionItemContentStyle */
-/* JADX WARNING: Not found resource field with id: 2130969223, name: attr.guidedActionItemDescriptionStyle */
-/* JADX WARNING: Not found resource field with id: 2130969224, name: attr.guidedActionItemIconStyle */
-/* JADX WARNING: Not found resource field with id: 2130969225, name: attr.guidedActionItemTitleStyle */
-/* JADX WARNING: Not found resource field with id: 2130969226, name: attr.guidedActionPressedAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969227, name: attr.guidedActionTitleMaxLines */
-/* JADX WARNING: Not found resource field with id: 2130969228, name: attr.guidedActionTitleMinLines */
-/* JADX WARNING: Not found resource field with id: 2130969229, name: attr.guidedActionUncheckedAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969230, name: attr.guidedActionUnpressedAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969231, name: attr.guidedActionVerticalPadding */
-/* JADX WARNING: Not found resource field with id: 2130969232, name: attr.guidedActionsBackground */
-/* JADX WARNING: Not found resource field with id: 2130969233, name: attr.guidedActionsBackgroundDark */
-/* JADX WARNING: Not found resource field with id: 2130969234, name: attr.guidedActionsContainerStyle */
-/* JADX WARNING: Not found resource field with id: 2130969235, name: attr.guidedActionsElevation */
-/* JADX WARNING: Not found resource field with id: 2130969236, name: attr.guidedActionsEntryAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969237, name: attr.guidedActionsListStyle */
-/* JADX WARNING: Not found resource field with id: 2130969238, name: attr.guidedActionsSelectorDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969239, name: attr.guidedActionsSelectorHideAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969240, name: attr.guidedActionsSelectorShowAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969241, name: attr.guidedActionsSelectorStyle */
-/* JADX WARNING: Not found resource field with id: 2130969242, name: attr.guidedButtonActionsListStyle */
-/* JADX WARNING: Not found resource field with id: 2130969243, name: attr.guidedButtonActionsWidthWeight */
-/* JADX WARNING: Not found resource field with id: 2130969244, name: attr.guidedStepBackground */
-/* JADX WARNING: Not found resource field with id: 2130969245, name: attr.guidedStepEntryAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969246, name: attr.guidedStepExitAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969247, name: attr.guidedStepHeightWeight */
-/* JADX WARNING: Not found resource field with id: 2130969248, name: attr.guidedStepImeAppearingAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969249, name: attr.guidedStepImeDisappearingAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969250, name: attr.guidedStepKeyline */
-/* JADX WARNING: Not found resource field with id: 2130969251, name: attr.guidedStepReentryAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969252, name: attr.guidedStepReturnAnimation */
-/* JADX WARNING: Not found resource field with id: 2130969253, name: attr.guidedStepTheme */
-/* JADX WARNING: Not found resource field with id: 2130969254, name: attr.guidedStepThemeFlag */
-/* JADX WARNING: Not found resource field with id: 2130969255, name: attr.guidedSubActionsListStyle */
-/* JADX WARNING: Not found resource field with id: 2130969256, name: attr.hasOverlappingRendering */
-/* JADX WARNING: Not found resource field with id: 2130969257, name: attr.headerLayout */
-/* JADX WARNING: Not found resource field with id: 2130969259, name: attr.headerSubtitleSize */
-/* JADX WARNING: Not found resource field with id: 2130969260, name: attr.headerTextVerticalPadding */
-/* JADX WARNING: Not found resource field with id: 2130969261, name: attr.headerTitleSize */
-/* JADX WARNING: Not found resource field with id: 2130969263, name: attr.height */
-/* JADX WARNING: Not found resource field with id: 2130969264, name: attr.helperText */
-/* JADX WARNING: Not found resource field with id: 2130969265, name: attr.helperTextEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969266, name: attr.helperTextTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969267, name: attr.helperTextTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969268, name: attr.hideMotionSpec */
-/* JADX WARNING: Not found resource field with id: 2130969269, name: attr.hideOnContentScroll */
-/* JADX WARNING: Not found resource field with id: 2130969270, name: attr.hideOnScroll */
-/* JADX WARNING: Not found resource field with id: 2130969272, name: attr.highlight */
-/* JADX WARNING: Not found resource field with id: 2130969273, name: attr.hintAnimationEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969274, name: attr.hintEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969275, name: attr.hintTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969276, name: attr.hintTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969278, name: attr.homeAsUpIndicator */
-/* JADX WARNING: Not found resource field with id: 2130969280, name: attr.homeLayout */
-/* JADX WARNING: Not found resource field with id: 2130969281, name: attr.horizontalMargin */
-/* JADX WARNING: Not found resource field with id: 2130969282, name: attr.horizontalProgressLayout */
-/* JADX WARNING: Not found resource field with id: 2130969283, name: attr.horizontalSpacing */
-/* JADX WARNING: Not found resource field with id: 2130969284, name: attr.hoveredFocusedTranslationZ */
-/* JADX WARNING: Not found resource field with id: 2130969288, name: attr.icon */
-/* JADX WARNING: Not found resource field with id: 2130969289, name: attr.iconEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969290, name: attr.iconGravity */
-/* JADX WARNING: Not found resource field with id: 2130969291, name: attr.iconPadding */
-/* JADX WARNING: Not found resource field with id: 2130969292, name: attr.iconPrimaryColor */
-/* JADX WARNING: Not found resource field with id: 2130969293, name: attr.iconSize */
-/* JADX WARNING: Not found resource field with id: 2130969294, name: attr.iconSpaceReserved */
-/* JADX WARNING: Not found resource field with id: 2130969295, name: attr.iconStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130969296, name: attr.iconTint */
-/* JADX WARNING: Not found resource field with id: 2130969297, name: attr.iconTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969298, name: attr.iconifiedByDefault */
-/* JADX WARNING: Not found resource field with id: 2130969299, name: attr.ignoreRightInset */
-/* JADX WARNING: Not found resource field with id: 2130969300, name: attr.imageButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130969307, name: attr.immersionButtonMoreBackground */
-/* JADX WARNING: Not found resource field with id: 2130969308, name: attr.immersionMenuEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969309, name: attr.immersionMenuLayout */
-/* JADX WARNING: Not found resource field with id: 2130969310, name: attr.immersionTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969311, name: attr.immersionViewItemBackground */
-/* JADX WARNING: Not found resource field with id: 2130969312, name: attr.immersionWindowBackground */
-/* JADX WARNING: Not found resource field with id: 2130969313, name: attr.indeterminateFramesCount */
-/* JADX WARNING: Not found resource field with id: 2130969314, name: attr.indeterminateFramesDuration */
-/* JADX WARNING: Not found resource field with id: 2130969315, name: attr.indeterminateProgressStyle */
-/* JADX WARNING: Not found resource field with id: 2130969316, name: attr.indicatorVisibility */
-/* JADX WARNING: Not found resource field with id: 2130969317, name: attr.infoAreaBackground */
-/* JADX WARNING: Not found resource field with id: 2130969318, name: attr.infoVisibility */
-/* JADX WARNING: Not found resource field with id: 2130969319, name: attr.initialActivityCount */
-/* JADX WARNING: Not found resource field with id: 2130969320, name: attr.initialExpandedChildrenCount */
-/* JADX WARNING: Not found resource field with id: 2130969321, name: attr.insetForeground */
-/* JADX WARNING: Not found resource field with id: 2130969323, name: attr.is24HourFormat */
-/* JADX WARNING: Not found resource field with id: 2130969326, name: attr.isPreferenceVisible */
-/* JADX WARNING: Not found resource field with id: 2130969327, name: attr.itemBackground */
-/* JADX WARNING: Not found resource field with id: 2130969328, name: attr.itemHeight */
-/* JADX WARNING: Not found resource field with id: 2130969329, name: attr.itemHorizontalPadding */
-/* JADX WARNING: Not found resource field with id: 2130969330, name: attr.itemHorizontalTranslationEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969331, name: attr.itemIconPadding */
-/* JADX WARNING: Not found resource field with id: 2130969332, name: attr.itemIconSize */
-/* JADX WARNING: Not found resource field with id: 2130969333, name: attr.itemIconTint */
-/* JADX WARNING: Not found resource field with id: 2130969334, name: attr.itemPadding */
-/* JADX WARNING: Not found resource field with id: 2130969335, name: attr.itemRippleColor */
-/* JADX WARNING: Not found resource field with id: 2130969336, name: attr.itemSpacing */
-/* JADX WARNING: Not found resource field with id: 2130969337, name: attr.itemTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969338, name: attr.itemTextAppearanceActive */
-/* JADX WARNING: Not found resource field with id: 2130969339, name: attr.itemTextAppearanceInactive */
-/* JADX WARNING: Not found resource field with id: 2130969340, name: attr.itemTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969342, name: attr.key */
-/* JADX WARNING: Not found resource field with id: 2130969343, name: attr.keyCode */
-/* JADX WARNING: Not found resource field with id: 2130969344, name: attr.keyPositionType */
-/* JADX WARNING: Not found resource field with id: 2130969345, name: attr.keylines */
-/* JADX WARNING: Not found resource field with id: 2130969346, name: attr.labelPadding */
-/* JADX WARNING: Not found resource field with id: 2130969347, name: attr.labelTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969348, name: attr.labelVisibilityMode */
-/* JADX WARNING: Not found resource field with id: 2130969349, name: attr.lastBaselineToBottomHeight */
-/* JADX WARNING: Not found resource field with id: 2130969350, name: attr.layout */
-/* JADX WARNING: Not found resource field with id: 2130969351, name: attr.layoutDescription */
-/* JADX WARNING: Not found resource field with id: 2130969352, name: attr.layoutDuringTransition */
-/* JADX WARNING: Not found resource field with id: 2130969353, name: attr.layoutManager */
-/* JADX WARNING: Not found resource field with id: 2130969354, name: attr.layout_anchor */
-/* JADX WARNING: Not found resource field with id: 2130969355, name: attr.layout_anchorGravity */
-/* JADX WARNING: Not found resource field with id: 2130969356, name: attr.layout_behavior */
-/* JADX WARNING: Not found resource field with id: 2130969357, name: attr.layout_collapseMode */
-/* JADX WARNING: Not found resource field with id: 2130969358, name: attr.layout_collapseParallaxMultiplier */
-/* JADX WARNING: Not found resource field with id: 2130969359, name: attr.layout_constrainedHeight */
-/* JADX WARNING: Not found resource field with id: 2130969360, name: attr.layout_constrainedWidth */
-/* JADX WARNING: Not found resource field with id: 2130969361, name: attr.layout_constraintBaseline_creator */
-/* JADX WARNING: Not found resource field with id: 2130969362, name: attr.layout_constraintBaseline_toBaselineOf */
-/* JADX WARNING: Not found resource field with id: 2130969363, name: attr.layout_constraintBottom_creator */
-/* JADX WARNING: Not found resource field with id: 2130969364, name: attr.layout_constraintBottom_toBottomOf */
-/* JADX WARNING: Not found resource field with id: 2130969365, name: attr.layout_constraintBottom_toTopOf */
-/* JADX WARNING: Not found resource field with id: 2130969366, name: attr.layout_constraintCircle */
-/* JADX WARNING: Not found resource field with id: 2130969367, name: attr.layout_constraintCircleAngle */
-/* JADX WARNING: Not found resource field with id: 2130969368, name: attr.layout_constraintCircleRadius */
-/* JADX WARNING: Not found resource field with id: 2130969369, name: attr.layout_constraintDimensionRatio */
-/* JADX WARNING: Not found resource field with id: 2130969370, name: attr.layout_constraintEnd_toEndOf */
-/* JADX WARNING: Not found resource field with id: 2130969371, name: attr.layout_constraintEnd_toStartOf */
-/* JADX WARNING: Not found resource field with id: 2130969372, name: attr.layout_constraintGuide_begin */
-/* JADX WARNING: Not found resource field with id: 2130969373, name: attr.layout_constraintGuide_end */
-/* JADX WARNING: Not found resource field with id: 2130969374, name: attr.layout_constraintGuide_percent */
-/* JADX WARNING: Not found resource field with id: 2130969375, name: attr.layout_constraintHeight_default */
-/* JADX WARNING: Not found resource field with id: 2130969376, name: attr.layout_constraintHeight_max */
-/* JADX WARNING: Not found resource field with id: 2130969377, name: attr.layout_constraintHeight_min */
-/* JADX WARNING: Not found resource field with id: 2130969378, name: attr.layout_constraintHeight_percent */
-/* JADX WARNING: Not found resource field with id: 2130969379, name: attr.layout_constraintHorizontal_bias */
-/* JADX WARNING: Not found resource field with id: 2130969380, name: attr.layout_constraintHorizontal_chainStyle */
-/* JADX WARNING: Not found resource field with id: 2130969381, name: attr.layout_constraintHorizontal_weight */
-/* JADX WARNING: Not found resource field with id: 2130969382, name: attr.layout_constraintLeft_creator */
-/* JADX WARNING: Not found resource field with id: 2130969383, name: attr.layout_constraintLeft_toLeftOf */
-/* JADX WARNING: Not found resource field with id: 2130969384, name: attr.layout_constraintLeft_toRightOf */
-/* JADX WARNING: Not found resource field with id: 2130969385, name: attr.layout_constraintRight_creator */
-/* JADX WARNING: Not found resource field with id: 2130969386, name: attr.layout_constraintRight_toLeftOf */
-/* JADX WARNING: Not found resource field with id: 2130969387, name: attr.layout_constraintRight_toRightOf */
-/* JADX WARNING: Not found resource field with id: 2130969388, name: attr.layout_constraintStart_toEndOf */
-/* JADX WARNING: Not found resource field with id: 2130969389, name: attr.layout_constraintStart_toStartOf */
-/* JADX WARNING: Not found resource field with id: 2130969390, name: attr.layout_constraintTag */
-/* JADX WARNING: Not found resource field with id: 2130969391, name: attr.layout_constraintTop_creator */
-/* JADX WARNING: Not found resource field with id: 2130969392, name: attr.layout_constraintTop_toBottomOf */
-/* JADX WARNING: Not found resource field with id: 2130969393, name: attr.layout_constraintTop_toTopOf */
-/* JADX WARNING: Not found resource field with id: 2130969394, name: attr.layout_constraintVertical_bias */
-/* JADX WARNING: Not found resource field with id: 2130969395, name: attr.layout_constraintVertical_chainStyle */
-/* JADX WARNING: Not found resource field with id: 2130969396, name: attr.layout_constraintVertical_weight */
-/* JADX WARNING: Not found resource field with id: 2130969397, name: attr.layout_constraintWidth_default */
-/* JADX WARNING: Not found resource field with id: 2130969398, name: attr.layout_constraintWidth_max */
-/* JADX WARNING: Not found resource field with id: 2130969399, name: attr.layout_constraintWidth_min */
-/* JADX WARNING: Not found resource field with id: 2130969400, name: attr.layout_constraintWidth_percent */
-/* JADX WARNING: Not found resource field with id: 2130969401, name: attr.layout_dodgeInsetEdges */
-/* JADX WARNING: Not found resource field with id: 2130969402, name: attr.layout_editor_absoluteX */
-/* JADX WARNING: Not found resource field with id: 2130969403, name: attr.layout_editor_absoluteY */
-/* JADX WARNING: Not found resource field with id: 2130969404, name: attr.layout_goneMarginBottom */
-/* JADX WARNING: Not found resource field with id: 2130969405, name: attr.layout_goneMarginEnd */
-/* JADX WARNING: Not found resource field with id: 2130969406, name: attr.layout_goneMarginLeft */
-/* JADX WARNING: Not found resource field with id: 2130969407, name: attr.layout_goneMarginRight */
-/* JADX WARNING: Not found resource field with id: 2130969408, name: attr.layout_goneMarginStart */
-/* JADX WARNING: Not found resource field with id: 2130969409, name: attr.layout_goneMarginTop */
-/* JADX WARNING: Not found resource field with id: 2130969410, name: attr.layout_insetEdge */
-/* JADX WARNING: Not found resource field with id: 2130969411, name: attr.layout_keyline */
-/* JADX WARNING: Not found resource field with id: 2130969412, name: attr.layout_maxHeight */
-/* JADX WARNING: Not found resource field with id: 2130969413, name: attr.layout_maxWidth */
-/* JADX WARNING: Not found resource field with id: 2130969414, name: attr.layout_optimizationLevel */
-/* JADX WARNING: Not found resource field with id: 2130969415, name: attr.layout_scrollFlags */
-/* JADX WARNING: Not found resource field with id: 2130969416, name: attr.layout_scrollInterpolator */
-/* JADX WARNING: Not found resource field with id: 2130969417, name: attr.layout_viewType */
-/* JADX WARNING: Not found resource field with id: 2130969418, name: attr.lbDotRadius */
-/* JADX WARNING: Not found resource field with id: 2130969419, name: attr.lbImageCardViewType */
-/* JADX WARNING: Not found resource field with id: 2130969420, name: attr.lb_slideEdge */
-/* JADX WARNING: Not found resource field with id: 2130969421, name: attr.leftArrow */
-/* JADX WARNING: Not found resource field with id: 2130969423, name: attr.liftOnScroll */
-/* JADX WARNING: Not found resource field with id: 2130969424, name: attr.liftOnScrollTargetViewId */
-/* JADX WARNING: Not found resource field with id: 2130969426, name: attr.limitBoundsTo */
-/* JADX WARNING: Not found resource field with id: 2130969427, name: attr.lineHeight */
-/* JADX WARNING: Not found resource field with id: 2130969428, name: attr.lineLength */
-/* JADX WARNING: Not found resource field with id: 2130969429, name: attr.lineSpacing */
-/* JADX WARNING: Not found resource field with id: 2130969430, name: attr.listChoiceBackgroundIndicator */
-/* JADX WARNING: Not found resource field with id: 2130969431, name: attr.listChoiceIndicatorMultipleAnimated */
-/* JADX WARNING: Not found resource field with id: 2130969432, name: attr.listChoiceIndicatorSingleAnimated */
-/* JADX WARNING: Not found resource field with id: 2130969433, name: attr.listDividerAlertDialog */
-/* JADX WARNING: Not found resource field with id: 2130969434, name: attr.listItemLayout */
-/* JADX WARNING: Not found resource field with id: 2130969435, name: attr.listLayout */
-/* JADX WARNING: Not found resource field with id: 2130969438, name: attr.listMenuViewStyle */
-/* JADX WARNING: Not found resource field with id: 2130969440, name: attr.listPopupWindowStyle */
-/* JADX WARNING: Not found resource field with id: 2130969441, name: attr.listPreferredItemHeight */
-/* JADX WARNING: Not found resource field with id: 2130969442, name: attr.listPreferredItemHeightLarge */
-/* JADX WARNING: Not found resource field with id: 2130969443, name: attr.listPreferredItemHeightSmall */
-/* JADX WARNING: Not found resource field with id: 2130969444, name: attr.listPreferredItemPaddingEnd */
-/* JADX WARNING: Not found resource field with id: 2130969445, name: attr.listPreferredItemPaddingLeft */
-/* JADX WARNING: Not found resource field with id: 2130969446, name: attr.listPreferredItemPaddingRight */
-/* JADX WARNING: Not found resource field with id: 2130969447, name: attr.listPreferredItemPaddingStart */
-/* JADX WARNING: Not found resource field with id: 2130969452, name: attr.logo */
-/* JADX WARNING: Not found resource field with id: 2130969453, name: attr.logoDescription */
-/* JADX WARNING: Not found resource field with id: 2130969454, name: attr.lunarCalendar */
-/* JADX WARNING: Not found resource field with id: 2130969455, name: attr.maintainLineSpacing */
-/* JADX WARNING: Not found resource field with id: 2130969470, name: attr.maxAcceleration */
-/* JADX WARNING: Not found resource field with id: 2130969471, name: attr.maxActionInlineWidth */
-/* JADX WARNING: Not found resource field with id: 2130969472, name: attr.maxButtonHeight */
-/* JADX WARNING: Not found resource field with id: 2130969473, name: attr.maxDate */
-/* JADX WARNING: Not found resource field with id: 2130969474, name: attr.maxHeight */
-/* JADX WARNING: Not found resource field with id: 2130969475, name: attr.maxImageSize */
-/* JADX WARNING: Not found resource field with id: 2130969477, name: attr.maxMiddle */
-/* JADX WARNING: Not found resource field with id: 2130969479, name: attr.maxVelocity */
-/* JADX WARNING: Not found resource field with id: 2130969480, name: attr.maxWidth */
-/* JADX WARNING: Not found resource field with id: 2130969483, name: attr.measureWithLargestChild */
-/* JADX WARNING: Not found resource field with id: 2130969487, name: attr.mediaRouteButtonTint */
-/* JADX WARNING: Not found resource field with id: 2130969500, name: attr.menu */
-/* JADX WARNING: Not found resource field with id: 2130969501, name: attr.metricsAction */
-/* JADX WARNING: Not found resource field with id: 2130969502, name: attr.middleEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969503, name: attr.min */
-/* JADX WARNING: Not found resource field with id: 2130969504, name: attr.minDate */
-/* JADX WARNING: Not found resource field with id: 2130969505, name: attr.minHeight */
-/* JADX WARNING: Not found resource field with id: 2130969507, name: attr.minMiddle */
-/* JADX WARNING: Not found resource field with id: 2130969510, name: attr.minWidth */
-/* JADX WARNING: Not found resource field with id: 2130969515, name: attr.miuixAppCompatOverlayTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969520, name: attr.miuixAppcompatDrawOverlay */
-/* JADX WARNING: Not found resource field with id: 2130969522, name: attr.miuixAppcompatIndexerMinWidth */
-/* JADX WARNING: Not found resource field with id: 2130969523, name: attr.miuixAppcompatIndexerTable */
-/* JADX WARNING: Not found resource field with id: 2130969524, name: attr.miuixAppcompatIndexerTextColorList */
-/* JADX WARNING: Not found resource field with id: 2130969525, name: attr.miuixAppcompatIndexerTextSize */
-/* JADX WARNING: Not found resource field with id: 2130969527, name: attr.miuixAppcompatLabel */
-/* JADX WARNING: Not found resource field with id: 2130969528, name: attr.miuixAppcompatLabelMaxWidth */
-/* JADX WARNING: Not found resource field with id: 2130969529, name: attr.miuixAppcompatOverlayBackground */
-/* JADX WARNING: Not found resource field with id: 2130969530, name: attr.miuixAppcompatOverlayTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969531, name: attr.miuixAppcompatOverlayTextSize */
-/* JADX WARNING: Not found resource field with id: 2130969538, name: attr.miuixAppcompatWidgetManager */
-/* JADX WARNING: Not found resource field with id: 2130969539, name: attr.miuixAppcompatWidgetPadding */
-/* JADX WARNING: Not found resource field with id: 2130969541, name: attr.miuix_strokeColor */
-/* JADX WARNING: Not found resource field with id: 2130969542, name: attr.miuix_strokeWidth */
-/* JADX WARNING: Not found resource field with id: 2130969543, name: attr.mock_diagonalsColor */
-/* JADX WARNING: Not found resource field with id: 2130969544, name: attr.mock_label */
-/* JADX WARNING: Not found resource field with id: 2130969545, name: attr.mock_labelBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130969546, name: attr.mock_labelColor */
-/* JADX WARNING: Not found resource field with id: 2130969547, name: attr.mock_showDiagonals */
-/* JADX WARNING: Not found resource field with id: 2130969548, name: attr.mock_showLabel */
-/* JADX WARNING: Not found resource field with id: 2130969550, name: attr.motionDebug */
-/* JADX WARNING: Not found resource field with id: 2130969551, name: attr.motionInterpolator */
-/* JADX WARNING: Not found resource field with id: 2130969552, name: attr.motionPathRotate */
-/* JADX WARNING: Not found resource field with id: 2130969553, name: attr.motionProgress */
-/* JADX WARNING: Not found resource field with id: 2130969554, name: attr.motionStagger */
-/* JADX WARNING: Not found resource field with id: 2130969555, name: attr.motionTarget */
-/* JADX WARNING: Not found resource field with id: 2130969556, name: attr.motion_postLayoutCollision */
-/* JADX WARNING: Not found resource field with id: 2130969557, name: attr.motion_triggerOnCollision */
-/* JADX WARNING: Not found resource field with id: 2130969558, name: attr.moveWhenScrollAtTop */
-/* JADX WARNING: Not found resource field with id: 2130969559, name: attr.multiChoiceItemLayout */
-/* JADX WARNING: Not found resource field with id: 2130969561, name: attr.navigationContentDescription */
-/* JADX WARNING: Not found resource field with id: 2130969562, name: attr.navigationIcon */
-/* JADX WARNING: Not found resource field with id: 2130969563, name: attr.navigationMode */
-/* JADX WARNING: Not found resource field with id: 2130969565, name: attr.negativeButtonText */
-/* JADX WARNING: Not found resource field with id: 2130969566, name: attr.nestedScrollFlags */
-/* JADX WARNING: Not found resource field with id: 2130969567, name: attr.numColumns */
-/* JADX WARNING: Not found resource field with id: 2130969568, name: attr.numberOfColumns */
-/* JADX WARNING: Not found resource field with id: 2130969569, name: attr.numberOfRows */
-/* JADX WARNING: Not found resource field with id: 2130969571, name: attr.numericModifiers */
-/* JADX WARNING: Not found resource field with id: 2130969572, name: attr.onCross */
-/* JADX WARNING: Not found resource field with id: 2130969573, name: attr.onHide */
-/* JADX WARNING: Not found resource field with id: 2130969574, name: attr.onNegativeCross */
-/* JADX WARNING: Not found resource field with id: 2130969575, name: attr.onPositiveCross */
-/* JADX WARNING: Not found resource field with id: 2130969576, name: attr.onShow */
-/* JADX WARNING: Not found resource field with id: 2130969577, name: attr.onTouchUp */
-/* JADX WARNING: Not found resource field with id: 2130969588, name: attr.order */
-/* JADX WARNING: Not found resource field with id: 2130969589, name: attr.orderingFromXml */
-/* JADX WARNING: Not found resource field with id: 2130969591, name: attr.overScrollRange */
-/* JADX WARNING: Not found resource field with id: 2130969592, name: attr.overlapAnchor */
-/* JADX WARNING: Not found resource field with id: 2130969593, name: attr.overlay */
-/* JADX WARNING: Not found resource field with id: 2130969597, name: attr.paddingBottomNoButtons */
-/* JADX WARNING: Not found resource field with id: 2130969598, name: attr.paddingEnd */
-/* JADX WARNING: Not found resource field with id: 2130969599, name: attr.paddingStart */
-/* JADX WARNING: Not found resource field with id: 2130969600, name: attr.paddingTopNoTitle */
-/* JADX WARNING: Not found resource field with id: 2130969601, name: attr.paintColor */
-/* JADX WARNING: Not found resource field with id: 2130969602, name: attr.panelBackground */
-/* JADX WARNING: Not found resource field with id: 2130969603, name: attr.panelMenuListTheme */
-/* JADX WARNING: Not found resource field with id: 2130969604, name: attr.panelMenuListWidth */
-/* JADX WARNING: Not found resource field with id: 2130969606, name: attr.passwordToggleContentDescription */
-/* JADX WARNING: Not found resource field with id: 2130969607, name: attr.passwordToggleDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969608, name: attr.passwordToggleEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969609, name: attr.passwordToggleTint */
-/* JADX WARNING: Not found resource field with id: 2130969610, name: attr.passwordToggleTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969611, name: attr.pathMotionArc */
-/* JADX WARNING: Not found resource field with id: 2130969614, name: attr.percentHeight */
-/* JADX WARNING: Not found resource field with id: 2130969615, name: attr.percentWidth */
-/* JADX WARNING: Not found resource field with id: 2130969616, name: attr.percentX */
-/* JADX WARNING: Not found resource field with id: 2130969617, name: attr.percentY */
-/* JADX WARNING: Not found resource field with id: 2130969619, name: attr.persistent */
-/* JADX WARNING: Not found resource field with id: 2130969620, name: attr.pickerItemLayout */
-/* JADX WARNING: Not found resource field with id: 2130969621, name: attr.pickerItemTextViewId */
-/* JADX WARNING: Not found resource field with id: 2130969625, name: attr.pivotAnchor */
-/* JADX WARNING: Not found resource field with id: 2130969626, name: attr.pivotX */
-/* JADX WARNING: Not found resource field with id: 2130969627, name: attr.pivotY */
-/* JADX WARNING: Not found resource field with id: 2130969628, name: attr.placeholder_emptyVisibility */
-/* JADX WARNING: Not found resource field with id: 2130969630, name: attr.playSound */
-/* JADX WARNING: Not found resource field with id: 2130969653, name: attr.popupMenuStyle */
-/* JADX WARNING: Not found resource field with id: 2130969654, name: attr.popupTheme */
-/* JADX WARNING: Not found resource field with id: 2130969658, name: attr.popupWindowStyle */
-/* JADX WARNING: Not found resource field with id: 2130969659, name: attr.positiveButtonText */
-/* JADX WARNING: Not found resource field with id: 2130969680, name: attr.preserveIconSpacing */
-/* JADX WARNING: Not found resource field with id: 2130969681, name: attr.pressedTranslationZ */
-/* JADX WARNING: Not found resource field with id: 2130969684, name: attr.primaryKey */
-/* JADX WARNING: Not found resource field with id: 2130969685, name: attr.progress */
-/* JADX WARNING: Not found resource field with id: 2130969686, name: attr.progressBackgroundDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969689, name: attr.progressBarEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969691, name: attr.progressBarInlineWidth */
-/* JADX WARNING: Not found resource field with id: 2130969692, name: attr.progressBarPadding */
-/* JADX WARNING: Not found resource field with id: 2130969693, name: attr.progressBarStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130969694, name: attr.progressBarStyle */
-/* JADX WARNING: Not found resource field with id: 2130969696, name: attr.progressLayout */
-/* JADX WARNING: Not found resource field with id: 2130969697, name: attr.queryBackground */
-/* JADX WARNING: Not found resource field with id: 2130969698, name: attr.queryHint */
-/* JADX WARNING: Not found resource field with id: 2130969704, name: attr.radioButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130969707, name: attr.radius */
-/* JADX WARNING: Not found resource field with id: 2130969708, name: attr.ratingBarStyle */
-/* JADX WARNING: Not found resource field with id: 2130969709, name: attr.ratingBarStyleIndicator */
-/* JADX WARNING: Not found resource field with id: 2130969710, name: attr.ratingBarStyleSmall */
-/* JADX WARNING: Not found resource field with id: 2130969712, name: attr.region_heightLessThan */
-/* JADX WARNING: Not found resource field with id: 2130969713, name: attr.region_heightMoreThan */
-/* JADX WARNING: Not found resource field with id: 2130969714, name: attr.region_widthLessThan */
-/* JADX WARNING: Not found resource field with id: 2130969715, name: attr.region_widthMoreThan */
-/* JADX WARNING: Not found resource field with id: 2130969716, name: attr.regularTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969719, name: attr.resizeTrigger */
-/* JADX WARNING: Not found resource field with id: 2130969720, name: attr.resizedPaddingAdjustmentBottom */
-/* JADX WARNING: Not found resource field with id: 2130969721, name: attr.resizedPaddingAdjustmentTop */
-/* JADX WARNING: Not found resource field with id: 2130969722, name: attr.resizedTextSize */
-/* JADX WARNING: Not found resource field with id: 2130969723, name: attr.restrictedSwitchSummary */
-/* JADX WARNING: Not found resource field with id: 2130969724, name: attr.reverseLayout */
-/* JADX WARNING: Not found resource field with id: 2130969726, name: attr.rightArrow */
-/* JADX WARNING: Not found resource field with id: 2130969727, name: attr.rippleColor */
-/* JADX WARNING: Not found resource field with id: 2130969728, name: attr.rippleMaxSize */
-/* JADX WARNING: Not found resource field with id: 2130969729, name: attr.rippleMinSize */
-/* JADX WARNING: Not found resource field with id: 2130969733, name: attr.round */
-/* JADX WARNING: Not found resource field with id: 2130969734, name: attr.roundPercent */
-/* JADX WARNING: Not found resource field with id: 2130969738, name: attr.rowHeight */
-/* JADX WARNING: Not found resource field with id: 2130969742, name: attr.rowMaxHeight */
-/* JADX WARNING: Not found resource field with id: 2130969743, name: attr.rowRangeHeight */
-/* JADX WARNING: Not found resource field with id: 2130969744, name: attr.rowRangeSingleTextHeight */
-/* JADX WARNING: Not found resource field with id: 2130969745, name: attr.rowStyle */
-/* JADX WARNING: Not found resource field with id: 2130969747, name: attr.saturation */
-/* JADX WARNING: Not found resource field with id: 2130969748, name: attr.scaledTextSize */
-/* JADX WARNING: Not found resource field with id: 2130969749, name: attr.scrimAnimationDuration */
-/* JADX WARNING: Not found resource field with id: 2130969751, name: attr.scrimVisibleHeightTrigger */
-/* JADX WARNING: Not found resource field with id: 2130969752, name: attr.scrollOrientation */
-/* JADX WARNING: Not found resource field with id: 2130969753, name: attr.scrollRange */
-/* JADX WARNING: Not found resource field with id: 2130969754, name: attr.scrollStart */
-/* JADX WARNING: Not found resource field with id: 2130969755, name: attr.scrollableView */
-/* JADX WARNING: Not found resource field with id: 2130969762, name: attr.searchHintIcon */
-/* JADX WARNING: Not found resource field with id: 2130969763, name: attr.searchIcon */
-/* JADX WARNING: Not found resource field with id: 2130969764, name: attr.searchOrbBrightColor */
-/* JADX WARNING: Not found resource field with id: 2130969765, name: attr.searchOrbColor */
-/* JADX WARNING: Not found resource field with id: 2130969766, name: attr.searchOrbIcon */
-/* JADX WARNING: Not found resource field with id: 2130969767, name: attr.searchOrbIconColor */
-/* JADX WARNING: Not found resource field with id: 2130969769, name: attr.searchViewStyle */
-/* JADX WARNING: Not found resource field with id: 2130969771, name: attr.seekBarIncrement */
-/* JADX WARNING: Not found resource field with id: 2130969772, name: attr.seekBarInlineWidth */
-/* JADX WARNING: Not found resource field with id: 2130969775, name: attr.seekBarStyle */
-/* JADX WARNING: Not found resource field with id: 2130969776, name: attr.selectable */
-/* JADX WARNING: Not found resource field with id: 2130969777, name: attr.selectableItemBackground */
-/* JADX WARNING: Not found resource field with id: 2130969778, name: attr.selectableItemBackgroundBorderless */
-/* JADX WARNING: Not found resource field with id: 2130969779, name: attr.selectedAnimationDelay */
-/* JADX WARNING: Not found resource field with id: 2130969780, name: attr.selectedAnimationDuration */
-/* JADX WARNING: Not found resource field with id: 2130969782, name: attr.shapeAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969785, name: attr.shapeAppearanceOverlay */
-/* JADX WARNING: Not found resource field with id: 2130969787, name: attr.shouldDisableView */
-/* JADX WARNING: Not found resource field with id: 2130969788, name: attr.showAirplaneMode */
-/* JADX WARNING: Not found resource field with id: 2130969789, name: attr.showAsAction */
-/* JADX WARNING: Not found resource field with id: 2130969790, name: attr.showDark */
-/* JADX WARNING: Not found resource field with id: 2130969791, name: attr.showDay */
-/* JADX WARNING: Not found resource field with id: 2130969792, name: attr.showDividers */
-/* JADX WARNING: Not found resource field with id: 2130969793, name: attr.showMissingSim */
-/* JADX WARNING: Not found resource field with id: 2130969794, name: attr.showMonth */
-/* JADX WARNING: Not found resource field with id: 2130969795, name: attr.showMotionSpec */
-/* JADX WARNING: Not found resource field with id: 2130969796, name: attr.showPaths */
-/* JADX WARNING: Not found resource field with id: 2130969797, name: attr.showRightArrow */
-/* JADX WARNING: Not found resource field with id: 2130969798, name: attr.showSeekBarValue */
-/* JADX WARNING: Not found resource field with id: 2130969799, name: attr.showText */
-/* JADX WARNING: Not found resource field with id: 2130969800, name: attr.showTitle */
-/* JADX WARNING: Not found resource field with id: 2130969801, name: attr.showYear */
-/* JADX WARNING: Not found resource field with id: 2130969802, name: attr.shrinkMotionSpec */
-/* JADX WARNING: Not found resource field with id: 2130969804, name: attr.singleChoiceItemLayout */
-/* JADX WARNING: Not found resource field with id: 2130969805, name: attr.singleLine */
-/* JADX WARNING: Not found resource field with id: 2130969806, name: attr.singleLineButtonPaddingHorizontal */
-/* JADX WARNING: Not found resource field with id: 2130969807, name: attr.singleLineTitle */
-/* JADX WARNING: Not found resource field with id: 2130969808, name: attr.singleSelection */
-/* JADX WARNING: Not found resource field with id: 2130969810, name: attr.sizePercent */
-/* JADX WARNING: Not found resource field with id: 2130969814, name: attr.sliderOff */
-/* JADX WARNING: Not found resource field with id: 2130969815, name: attr.sliderOn */
-/* JADX WARNING: Not found resource field with id: 2130969816, name: attr.slidingBarColor */
-/* JADX WARNING: Not found resource field with id: 2130969820, name: attr.spacing */
-/* JADX WARNING: Not found resource field with id: 2130969821, name: attr.spanCount */
-/* JADX WARNING: Not found resource field with id: 2130969825, name: attr.spinnerDropDownItemStyle */
-/* JADX WARNING: Not found resource field with id: 2130969827, name: attr.spinnerModeCompat */
-/* JADX WARNING: Not found resource field with id: 2130969828, name: attr.spinnerStyle */
-/* JADX WARNING: Not found resource field with id: 2130969829, name: attr.spinnersShown */
-/* JADX WARNING: Not found resource field with id: 2130969831, name: attr.splitTrack */
-/* JADX WARNING: Not found resource field with id: 2130969832, name: attr.springBackMode */
-/* JADX WARNING: Not found resource field with id: 2130969833, name: attr.srcCompat */
-/* JADX WARNING: Not found resource field with id: 2130969834, name: attr.stackFromEnd */
-/* JADX WARNING: Not found resource field with id: 2130969835, name: attr.staggered */
-/* JADX WARNING: Not found resource field with id: 2130969836, name: attr.startIconContentDescription */
-/* JADX WARNING: Not found resource field with id: 2130969837, name: attr.startIconDrawable */
-/* JADX WARNING: Not found resource field with id: 2130969838, name: attr.startIconTint */
-/* JADX WARNING: Not found resource field with id: 2130969839, name: attr.startIconTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969840, name: attr.startPointRadius */
-/* JADX WARNING: Not found resource field with id: 2130969841, name: attr.startYear */
-/* JADX WARNING: Not found resource field with id: 2130969842, name: attr.startingWindowOverlay */
-/* JADX WARNING: Not found resource field with id: 2130969848, name: attr.state_dragged */
-/* JADX WARNING: Not found resource field with id: 2130969863, name: attr.statusBarBackground */
-/* JADX WARNING: Not found resource field with id: 2130969864, name: attr.statusBarScrim */
-/* JADX WARNING: Not found resource field with id: 2130969865, name: attr.strokeColor */
-/* JADX WARNING: Not found resource field with id: 2130969866, name: attr.strokeWidth */
-/* JADX WARNING: Not found resource field with id: 2130969867, name: attr.subContentEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969868, name: attr.subContentStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130969869, name: attr.subMenuArrow */
-/* JADX WARNING: Not found resource field with id: 2130969871, name: attr.submitBackground */
-/* JADX WARNING: Not found resource field with id: 2130969872, name: attr.subtitle */
-/* JADX WARNING: Not found resource field with id: 2130969873, name: attr.subtitleColor */
-/* JADX WARNING: Not found resource field with id: 2130969874, name: attr.subtitleSize */
-/* JADX WARNING: Not found resource field with id: 2130969875, name: attr.subtitleTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969876, name: attr.subtitleTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969877, name: attr.subtitleTextStyle */
-/* JADX WARNING: Not found resource field with id: 2130969878, name: attr.suggestionRowLayout */
-/* JADX WARNING: Not found resource field with id: 2130969879, name: attr.summary */
-/* JADX WARNING: Not found resource field with id: 2130969880, name: attr.summaryOff */
-/* JADX WARNING: Not found resource field with id: 2130969881, name: attr.summaryOn */
-/* JADX WARNING: Not found resource field with id: 2130969882, name: attr.swipeRefreshLayoutProgressSpinnerBackgroundColor */
-/* JADX WARNING: Not found resource field with id: 2130969883, name: attr.switchMinWidth */
-/* JADX WARNING: Not found resource field with id: 2130969884, name: attr.switchPadding */
-/* JADX WARNING: Not found resource field with id: 2130969887, name: attr.switchStyle */
-/* JADX WARNING: Not found resource field with id: 2130969888, name: attr.switchTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969889, name: attr.switchTextOff */
-/* JADX WARNING: Not found resource field with id: 2130969890, name: attr.switchTextOn */
-/* JADX WARNING: Not found resource field with id: 2130969891, name: attr.tabBackground */
-/* JADX WARNING: Not found resource field with id: 2130969892, name: attr.tabContentStart */
-/* JADX WARNING: Not found resource field with id: 2130969893, name: attr.tabGravity */
-/* JADX WARNING: Not found resource field with id: 2130969894, name: attr.tabIconTint */
-/* JADX WARNING: Not found resource field with id: 2130969895, name: attr.tabIconTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969896, name: attr.tabIndicator */
-/* JADX WARNING: Not found resource field with id: 2130969897, name: attr.tabIndicatorAnimationDuration */
-/* JADX WARNING: Not found resource field with id: 2130969898, name: attr.tabIndicatorColor */
-/* JADX WARNING: Not found resource field with id: 2130969899, name: attr.tabIndicatorFullWidth */
-/* JADX WARNING: Not found resource field with id: 2130969900, name: attr.tabIndicatorGravity */
-/* JADX WARNING: Not found resource field with id: 2130969901, name: attr.tabIndicatorHeight */
-/* JADX WARNING: Not found resource field with id: 2130969902, name: attr.tabInlineLabel */
-/* JADX WARNING: Not found resource field with id: 2130969903, name: attr.tabMaxWidth */
-/* JADX WARNING: Not found resource field with id: 2130969904, name: attr.tabMinWidth */
-/* JADX WARNING: Not found resource field with id: 2130969905, name: attr.tabMode */
-/* JADX WARNING: Not found resource field with id: 2130969906, name: attr.tabPadding */
-/* JADX WARNING: Not found resource field with id: 2130969907, name: attr.tabPaddingBottom */
-/* JADX WARNING: Not found resource field with id: 2130969908, name: attr.tabPaddingEnd */
-/* JADX WARNING: Not found resource field with id: 2130969909, name: attr.tabPaddingStart */
-/* JADX WARNING: Not found resource field with id: 2130969910, name: attr.tabPaddingTop */
-/* JADX WARNING: Not found resource field with id: 2130969911, name: attr.tabRippleColor */
-/* JADX WARNING: Not found resource field with id: 2130969912, name: attr.tabSelectedTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969914, name: attr.tabTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969915, name: attr.tabTextColor */
-/* JADX WARNING: Not found resource field with id: 2130969916, name: attr.tabUnboundedRipple */
-/* JADX WARNING: Not found resource field with id: 2130969917, name: attr.targetId */
-/* JADX WARNING: Not found resource field with id: 2130969919, name: attr.telltales_tailColor */
-/* JADX WARNING: Not found resource field with id: 2130969920, name: attr.telltales_tailScale */
-/* JADX WARNING: Not found resource field with id: 2130969921, name: attr.telltales_velocityMode */
-/* JADX WARNING: Not found resource field with id: 2130969922, name: attr.text */
-/* JADX WARNING: Not found resource field with id: 2130969923, name: attr.textAllCaps */
-/* JADX WARNING: Not found resource field with id: 2130969924, name: attr.textAppearance */
-/* JADX WARNING: Not found resource field with id: 2130969935, name: attr.textAppearanceLargePopupMenu */
-/* JADX WARNING: Not found resource field with id: 2130969936, name: attr.textAppearanceListItem */
-/* JADX WARNING: Not found resource field with id: 2130969937, name: attr.textAppearanceListItemSecondary */
-/* JADX WARNING: Not found resource field with id: 2130969938, name: attr.textAppearanceListItemSmall */
-/* JADX WARNING: Not found resource field with id: 2130969940, name: attr.textAppearancePopupMenuHeader */
-/* JADX WARNING: Not found resource field with id: 2130969941, name: attr.textAppearanceSearchResultSubtitle */
-/* JADX WARNING: Not found resource field with id: 2130969942, name: attr.textAppearanceSearchResultTitle */
-/* JADX WARNING: Not found resource field with id: 2130969943, name: attr.textAppearanceSmallPopupMenu */
-/* JADX WARNING: Not found resource field with id: 2130969946, name: attr.textCircleRadius */
-/* JADX WARNING: Not found resource field with id: 2130969947, name: attr.textColorAlertDialogListItem */
-/* JADX WARNING: Not found resource field with id: 2130969957, name: attr.textColorSearchUrl */
-/* JADX WARNING: Not found resource field with id: 2130969959, name: attr.textEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969960, name: attr.textHandleAndCursorColor */
-/* JADX WARNING: Not found resource field with id: 2130969962, name: attr.textLocale */
-/* JADX WARNING: Not found resource field with id: 2130969964, name: attr.textSizeHighlight */
-/* JADX WARNING: Not found resource field with id: 2130969965, name: attr.textSizeHint */
-/* JADX WARNING: Not found resource field with id: 2130969966, name: attr.textStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130969967, name: attr.textVerticalPadding */
-/* JADX WARNING: Not found resource field with id: 2130969968, name: attr.textView */
-/* JADX WARNING: Not found resource field with id: 2130969969, name: attr.theme */
-/* JADX WARNING: Not found resource field with id: 2130969971, name: attr.thumbTextPadding */
-/* JADX WARNING: Not found resource field with id: 2130969972, name: attr.thumbTint */
-/* JADX WARNING: Not found resource field with id: 2130969973, name: attr.thumbTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969978, name: attr.tickMark */
-/* JADX WARNING: Not found resource field with id: 2130969979, name: attr.tickMarkTint */
-/* JADX WARNING: Not found resource field with id: 2130969980, name: attr.tickMarkTintMode */
-/* JADX WARNING: Not found resource field with id: 2130969983, name: attr.tint */
-/* JADX WARNING: Not found resource field with id: 2130969984, name: attr.tintColor */
-/* JADX WARNING: Not found resource field with id: 2130969985, name: attr.tintMode */
-/* JADX WARNING: Not found resource field with id: 2130969986, name: attr.title */
-/* JADX WARNING: Not found resource field with id: 2130969987, name: attr.titleBackground */
-/* JADX WARNING: Not found resource field with id: 2130969988, name: attr.titleCenter */
-/* JADX WARNING: Not found resource field with id: 2130969989, name: attr.titleColor */
-/* JADX WARNING: Not found resource field with id: 2130969990, name: attr.titleEnabled */
-/* JADX WARNING: Not found resource field with id: 2130969991, name: attr.titleEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969992, name: attr.titleItemEndPadding */
-/* JADX WARNING: Not found resource field with id: 2130969993, name: attr.titleItemStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130969994, name: attr.titleMargin */
-/* JADX WARNING: Not found resource field with id: 2130969995, name: attr.titleMarginBottom */
-/* JADX WARNING: Not found resource field with id: 2130969996, name: attr.titleMarginEnd */
-/* JADX WARNING: Not found resource field with id: 2130969997, name: attr.titleMarginStart */
-/* JADX WARNING: Not found resource field with id: 2130969998, name: attr.titleMarginTop */
-/* JADX WARNING: Not found resource field with id: 2130969999, name: attr.titleMargins */
-/* JADX WARNING: Not found resource field with id: 2130970000, name: attr.titleSize */
-/* JADX WARNING: Not found resource field with id: 2130970001, name: attr.titleStartPadding */
-/* JADX WARNING: Not found resource field with id: 2130970002, name: attr.titleTextAppearance */
-/* JADX WARNING: Not found resource field with id: 2130970003, name: attr.titleTextColor */
-/* JADX WARNING: Not found resource field with id: 2130970004, name: attr.titleTextStyle */
-/* JADX WARNING: Not found resource field with id: 2130970005, name: attr.toolbarId */
-/* JADX WARNING: Not found resource field with id: 2130970006, name: attr.toolbarNavigationButtonStyle */
-/* JADX WARNING: Not found resource field with id: 2130970007, name: attr.toolbarStyle */
-/* JADX WARNING: Not found resource field with id: 2130970008, name: attr.tooltipForegroundColor */
-/* JADX WARNING: Not found resource field with id: 2130970009, name: attr.tooltipFrameBackground */
-/* JADX WARNING: Not found resource field with id: 2130970010, name: attr.tooltipText */
-/* JADX WARNING: Not found resource field with id: 2130970011, name: attr.topArrow */
-/* JADX WARNING: Not found resource field with id: 2130970012, name: attr.topArrowWithTitle */
-/* JADX WARNING: Not found resource field with id: 2130970013, name: attr.topLeftArrow */
-/* JADX WARNING: Not found resource field with id: 2130970014, name: attr.topRightArrow */
-/* JADX WARNING: Not found resource field with id: 2130970015, name: attr.touchAnchorId */
-/* JADX WARNING: Not found resource field with id: 2130970016, name: attr.touchAnchorSide */
-/* JADX WARNING: Not found resource field with id: 2130970017, name: attr.touchRegionId */
-/* JADX WARNING: Not found resource field with id: 2130970018, name: attr.track */
-/* JADX WARNING: Not found resource field with id: 2130970019, name: attr.trackTint */
-/* JADX WARNING: Not found resource field with id: 2130970020, name: attr.trackTintMode */
-/* JADX WARNING: Not found resource field with id: 2130970021, name: attr.transitionDisable */
-/* JADX WARNING: Not found resource field with id: 2130970022, name: attr.transitionEasing */
-/* JADX WARNING: Not found resource field with id: 2130970023, name: attr.transitionFlags */
-/* JADX WARNING: Not found resource field with id: 2130970024, name: attr.transitionPathRotate */
-/* JADX WARNING: Not found resource field with id: 2130970025, name: attr.translucentTabIndicator */
-/* JADX WARNING: Not found resource field with id: 2130970026, name: attr.triggerId */
-/* JADX WARNING: Not found resource field with id: 2130970027, name: attr.triggerReceiver */
-/* JADX WARNING: Not found resource field with id: 2130970028, name: attr.triggerSlack */
-/* JADX WARNING: Not found resource field with id: 2130970029, name: attr.ttcIndex */
-/* JADX WARNING: Not found resource field with id: 2130970030, name: attr.updatesContinuously */
-/* JADX WARNING: Not found resource field with id: 2130970031, name: attr.useAdditionalSummary */
-/* JADX WARNING: Not found resource field with id: 2130970032, name: attr.useAdminDisabledSummary */
-/* JADX WARNING: Not found resource field with id: 2130970033, name: attr.useCompatPadding */
-/* JADX WARNING: Not found resource field with id: 2130970034, name: attr.useCurrentTime */
-/* JADX WARNING: Not found resource field with id: 2130970035, name: attr.useMaterialThemeColors */
-/* JADX WARNING: Not found resource field with id: 2130970036, name: attr.useSimpleSummaryProvider */
-/* JADX WARNING: Not found resource field with id: 2130970037, name: attr.userRestriction */
-/* JADX WARNING: Not found resource field with id: 2130970038, name: attr.verticalMargin */
-/* JADX WARNING: Not found resource field with id: 2130970039, name: attr.verticalSpacing */
-/* JADX WARNING: Not found resource field with id: 2130970040, name: attr.viewInflaterClass */
-/* JADX WARNING: Not found resource field with id: 2130970041, name: attr.viewType */
-/* JADX WARNING: Not found resource field with id: 2130970042, name: attr.visibilityMode */
-/* JADX WARNING: Not found resource field with id: 2130970043, name: attr.voiceIcon */
-/* JADX WARNING: Not found resource field with id: 2130970046, name: attr.warmth */
-/* JADX WARNING: Not found resource field with id: 2130970047, name: attr.waveDecay */
-/* JADX WARNING: Not found resource field with id: 2130970048, name: attr.waveOffset */
-/* JADX WARNING: Not found resource field with id: 2130970049, name: attr.wavePeriod */
-/* JADX WARNING: Not found resource field with id: 2130970050, name: attr.waveShape */
-/* JADX WARNING: Not found resource field with id: 2130970051, name: attr.waveVariesBy */
-/* JADX WARNING: Not found resource field with id: 2130970052, name: attr.widgetLayout */
-/* JADX WARNING: Not found resource field with id: 2130970055, name: attr.windowActionBar */
-/* JADX WARNING: Not found resource field with id: 2130970056, name: attr.windowActionBarMovable */
-/* JADX WARNING: Not found resource field with id: 2130970057, name: attr.windowActionBarOverlay */
-/* JADX WARNING: Not found resource field with id: 2130970058, name: attr.windowActionModeOverlay */
-/* JADX WARNING: Not found resource field with id: 2130970060, name: attr.windowDisablePreview */
-/* JADX WARNING: Not found resource field with id: 2130970061, name: attr.windowFixedHeightMajor */
-/* JADX WARNING: Not found resource field with id: 2130970062, name: attr.windowFixedHeightMinor */
-/* JADX WARNING: Not found resource field with id: 2130970063, name: attr.windowFixedWidthMajor */
-/* JADX WARNING: Not found resource field with id: 2130970064, name: attr.windowFixedWidthMinor */
-/* JADX WARNING: Not found resource field with id: 2130970065, name: attr.windowLayoutMode */
-/* JADX WARNING: Not found resource field with id: 2130970066, name: attr.windowMaxHeightMajor */
-/* JADX WARNING: Not found resource field with id: 2130970067, name: attr.windowMaxHeightMinor */
-/* JADX WARNING: Not found resource field with id: 2130970068, name: attr.windowMaxWidthMajor */
-/* JADX WARNING: Not found resource field with id: 2130970069, name: attr.windowMaxWidthMinor */
-/* JADX WARNING: Not found resource field with id: 2130970070, name: attr.windowMinWidthMajor */
-/* JADX WARNING: Not found resource field with id: 2130970071, name: attr.windowMinWidthMinor */
-/* JADX WARNING: Not found resource field with id: 2130970072, name: attr.windowNoTitle */
-/* JADX WARNING: Not found resource field with id: 2130970074, name: attr.windowSplitActionBar */
-/* JADX WARNING: Not found resource field with id: 2130970075, name: attr.windowTranslucentStatus */
+/* JADX WARNING: Not found resource field with id: 2130968599, name: attr.actionBarItemBackground */
+/* JADX WARNING: Not found resource field with id: 2130968605, name: attr.actionBarPopupTheme */
+/* JADX WARNING: Not found resource field with id: 2130968617, name: attr.actionBarSize */
+/* JADX WARNING: Not found resource field with id: 2130968619, name: attr.actionBarSplitStyle */
+/* JADX WARNING: Not found resource field with id: 2130968621, name: attr.actionBarStackedBackground */
+/* JADX WARNING: Not found resource field with id: 2130968624, name: attr.actionBarStyle */
+/* JADX WARNING: Not found resource field with id: 2130968627, name: attr.actionBarTabBarStyle */
+/* JADX WARNING: Not found resource field with id: 2130968630, name: attr.actionBarTabStyle */
+/* JADX WARNING: Not found resource field with id: 2130968634, name: attr.actionBarTabTextStyle */
+/* JADX WARNING: Not found resource field with id: 2130968635, name: attr.actionBarTheme */
+/* JADX WARNING: Not found resource field with id: 2130968641, name: attr.actionBarWidgetTheme */
+/* JADX WARNING: Not found resource field with id: 2130968642, name: attr.actionButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968643, name: attr.actionDividerHeight */
+/* JADX WARNING: Not found resource field with id: 2130968644, name: attr.actionDropDownStyle */
+/* JADX WARNING: Not found resource field with id: 2130968645, name: attr.actionLayout */
+/* JADX WARNING: Not found resource field with id: 2130968646, name: attr.actionMenuTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130968647, name: attr.actionMenuTextColor */
+/* JADX WARNING: Not found resource field with id: 2130968648, name: attr.actionModeAnim */
+/* JADX WARNING: Not found resource field with id: 2130968649, name: attr.actionModeBackground */
+/* JADX WARNING: Not found resource field with id: 2130968652, name: attr.actionModeCloseButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968653, name: attr.actionModeCloseContentDescription */
+/* JADX WARNING: Not found resource field with id: 2130968654, name: attr.actionModeCloseDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968656, name: attr.actionModeCopyDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968657, name: attr.actionModeCutDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968658, name: attr.actionModeFindDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968660, name: attr.actionModePasteDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968661, name: attr.actionModePopupWindowStyle */
+/* JADX WARNING: Not found resource field with id: 2130968662, name: attr.actionModeSelectAllDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968664, name: attr.actionModeShareDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968665, name: attr.actionModeSplitBackground */
+/* JADX WARNING: Not found resource field with id: 2130968666, name: attr.actionModeStyle */
+/* JADX WARNING: Not found resource field with id: 2130968667, name: attr.actionModeTheme */
+/* JADX WARNING: Not found resource field with id: 2130968669, name: attr.actionModeWebSearchDrawable */
+/* JADX WARNING: Not found resource field with id: 2130968670, name: attr.actionOverflowButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968671, name: attr.actionOverflowMenuStyle */
+/* JADX WARNING: Not found resource field with id: 2130968672, name: attr.actionProviderClass */
+/* JADX WARNING: Not found resource field with id: 2130968673, name: attr.actionTextColorAlpha */
+/* JADX WARNING: Not found resource field with id: 2130968674, name: attr.actionViewClass */
+/* JADX WARNING: Not found resource field with id: 2130968677, name: attr.activatedAnimationDuration */
+/* JADX WARNING: Not found resource field with id: 2130968678, name: attr.activatedTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130968679, name: attr.activeFrameColor */
+/* JADX WARNING: Not found resource field with id: 2130968680, name: attr.activityChooserViewStyle */
+/* JADX WARNING: Not found resource field with id: 2130968681, name: attr.adapter */
+/* JADX WARNING: Not found resource field with id: 2130968682, name: attr.adjustable */
+/* JADX WARNING: Not found resource field with id: 2130968683, name: attr.alertDialogButtonGroupStyle */
+/* JADX WARNING: Not found resource field with id: 2130968684, name: attr.alertDialogCenterButtons */
+/* JADX WARNING: Not found resource field with id: 2130968685, name: attr.alertDialogStyle */
+/* JADX WARNING: Not found resource field with id: 2130968686, name: attr.alertDialogTheme */
+/* JADX WARNING: Not found resource field with id: 2130968687, name: attr.allCaps */
+/* JADX WARNING: Not found resource field with id: 2130968688, name: attr.allowDividerAbove */
+/* JADX WARNING: Not found resource field with id: 2130968689, name: attr.allowDividerAfterLastItem */
+/* JADX WARNING: Not found resource field with id: 2130968690, name: attr.allowDividerBelow */
+/* JADX WARNING: Not found resource field with id: 2130968691, name: attr.allowStacking */
+/* JADX WARNING: Not found resource field with id: 2130968692, name: attr.alpha */
+/* JADX WARNING: Not found resource field with id: 2130968693, name: attr.alphabeticModifiers */
+/* JADX WARNING: Not found resource field with id: 2130968694, name: attr.altSrc */
+/* JADX WARNING: Not found resource field with id: 2130968695, name: attr.amPmStyle */
+/* JADX WARNING: Not found resource field with id: 2130968696, name: attr.animate_relativeTo */
+/* JADX WARNING: Not found resource field with id: 2130968697, name: attr.animationMode */
+/* JADX WARNING: Not found resource field with id: 2130968698, name: attr.applyMotionScene */
+/* JADX WARNING: Not found resource field with id: 2130968700, name: attr.arrowBgColor */
+/* JADX WARNING: Not found resource field with id: 2130968701, name: attr.arrowColor */
+/* JADX WARNING: Not found resource field with id: 2130968702, name: attr.arrowFilterSortTabView */
+/* JADX WARNING: Not found resource field with id: 2130968705, name: attr.arrowRadius */
+/* JADX WARNING: Not found resource field with id: 2130968709, name: attr.attributeName */
+/* JADX WARNING: Not found resource field with id: 2130968710, name: attr.autoCompleteTextViewStyle */
+/* JADX WARNING: Not found resource field with id: 2130968711, name: attr.autoSizeMaxTextSize */
+/* JADX WARNING: Not found resource field with id: 2130968712, name: attr.autoSizeMinTextSize */
+/* JADX WARNING: Not found resource field with id: 2130968713, name: attr.autoSizePresetSizes */
+/* JADX WARNING: Not found resource field with id: 2130968714, name: attr.autoSizeStepGranularity */
+/* JADX WARNING: Not found resource field with id: 2130968715, name: attr.autoSizeTextType */
+/* JADX WARNING: Not found resource field with id: 2130968716, name: attr.autoTransition */
+/* JADX WARNING: Not found resource field with id: 2130968717, name: attr.avatarPadding */
+/* JADX WARNING: Not found resource field with id: 2130968718, name: attr.background */
+/* JADX WARNING: Not found resource field with id: 2130968724, name: attr.backgroundLeft */
+/* JADX WARNING: Not found resource field with id: 2130968725, name: attr.backgroundOverlayColorAlpha */
+/* JADX WARNING: Not found resource field with id: 2130968727, name: attr.backgroundRight */
+/* JADX WARNING: Not found resource field with id: 2130968728, name: attr.backgroundSplit */
+/* JADX WARNING: Not found resource field with id: 2130968729, name: attr.backgroundStacked */
+/* JADX WARNING: Not found resource field with id: 2130968730, name: attr.backgroundTint */
+/* JADX WARNING: Not found resource field with id: 2130968731, name: attr.backgroundTintMode */
+/* JADX WARNING: Not found resource field with id: 2130968732, name: attr.badgeDiameter */
+/* JADX WARNING: Not found resource field with id: 2130968733, name: attr.badgeMargin */
+/* JADX WARNING: Not found resource field with id: 2130968734, name: attr.bar */
+/* JADX WARNING: Not found resource field with id: 2130968736, name: attr.barOff */
+/* JADX WARNING: Not found resource field with id: 2130968737, name: attr.barOn */
+/* JADX WARNING: Not found resource field with id: 2130968738, name: attr.barrierAllowsGoneWidgets */
+/* JADX WARNING: Not found resource field with id: 2130968739, name: attr.barrierDirection */
+/* JADX WARNING: Not found resource field with id: 2130968740, name: attr.barrierMargin */
+/* JADX WARNING: Not found resource field with id: 2130968742, name: attr.behavior_autoHide */
+/* JADX WARNING: Not found resource field with id: 2130968743, name: attr.behavior_autoShrink */
+/* JADX WARNING: Not found resource field with id: 2130968744, name: attr.behavior_fitToContents */
+/* JADX WARNING: Not found resource field with id: 2130968745, name: attr.behavior_halfExpandedRatio */
+/* JADX WARNING: Not found resource field with id: 2130968746, name: attr.behavior_hideable */
+/* JADX WARNING: Not found resource field with id: 2130968747, name: attr.behavior_overlapTop */
+/* JADX WARNING: Not found resource field with id: 2130968748, name: attr.behavior_peekHeight */
+/* JADX WARNING: Not found resource field with id: 2130968749, name: attr.behavior_saveFlags */
+/* JADX WARNING: Not found resource field with id: 2130968750, name: attr.behavior_skipCollapsed */
+/* JADX WARNING: Not found resource field with id: 2130968751, name: attr.borderWidth */
+/* JADX WARNING: Not found resource field with id: 2130968752, name: attr.borderlessButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968754, name: attr.bottomArrow */
+/* JADX WARNING: Not found resource field with id: 2130968755, name: attr.bottomDividerEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130968756, name: attr.bottomDividerStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130968757, name: attr.bottomLeftArrow */
+/* JADX WARNING: Not found resource field with id: 2130968759, name: attr.bottomRightArrow */
+/* JADX WARNING: Not found resource field with id: 2130968762, name: attr.boxBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968763, name: attr.boxBackgroundMode */
+/* JADX WARNING: Not found resource field with id: 2130968764, name: attr.boxCollapsedPaddingTop */
+/* JADX WARNING: Not found resource field with id: 2130968765, name: attr.boxCornerRadiusBottomEnd */
+/* JADX WARNING: Not found resource field with id: 2130968766, name: attr.boxCornerRadiusBottomStart */
+/* JADX WARNING: Not found resource field with id: 2130968767, name: attr.boxCornerRadiusTopEnd */
+/* JADX WARNING: Not found resource field with id: 2130968768, name: attr.boxCornerRadiusTopStart */
+/* JADX WARNING: Not found resource field with id: 2130968769, name: attr.boxStrokeColor */
+/* JADX WARNING: Not found resource field with id: 2130968770, name: attr.boxStrokeWidth */
+/* JADX WARNING: Not found resource field with id: 2130968771, name: attr.brightness */
+/* JADX WARNING: Not found resource field with id: 2130968785, name: attr.buttonBarButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968787, name: attr.buttonBarNegativeButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968788, name: attr.buttonBarNeutralButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968789, name: attr.buttonBarPositiveButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968791, name: attr.buttonBarStyle */
+/* JADX WARNING: Not found resource field with id: 2130968792, name: attr.buttonCompat */
+/* JADX WARNING: Not found resource field with id: 2130968793, name: attr.buttonGravity */
+/* JADX WARNING: Not found resource field with id: 2130968794, name: attr.buttonIconDimen */
+/* JADX WARNING: Not found resource field with id: 2130968799, name: attr.buttonPanelSideLayout */
+/* JADX WARNING: Not found resource field with id: 2130968801, name: attr.buttonStrokeWidth */
+/* JADX WARNING: Not found resource field with id: 2130968802, name: attr.buttonStyle */
+/* JADX WARNING: Not found resource field with id: 2130968803, name: attr.buttonStyleSmall */
+/* JADX WARNING: Not found resource field with id: 2130968804, name: attr.buttonTint */
+/* JADX WARNING: Not found resource field with id: 2130968805, name: attr.buttonTintMode */
+/* JADX WARNING: Not found resource field with id: 2130968806, name: attr.calendarViewShown */
+/* JADX WARNING: Not found resource field with id: 2130968807, name: attr.cardBackground */
+/* JADX WARNING: Not found resource field with id: 2130968808, name: attr.cardBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968809, name: attr.cardCornerRadius */
+/* JADX WARNING: Not found resource field with id: 2130968810, name: attr.cardElevation */
+/* JADX WARNING: Not found resource field with id: 2130968811, name: attr.cardForeground */
+/* JADX WARNING: Not found resource field with id: 2130968812, name: attr.cardForegroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968813, name: attr.cardMaxElevation */
+/* JADX WARNING: Not found resource field with id: 2130968814, name: attr.cardPreventCornerOverlap */
+/* JADX WARNING: Not found resource field with id: 2130968815, name: attr.cardType */
+/* JADX WARNING: Not found resource field with id: 2130968816, name: attr.cardUseCompatPadding */
+/* JADX WARNING: Not found resource field with id: 2130968818, name: attr.chainUseRtl */
+/* JADX WARNING: Not found resource field with id: 2130968819, name: attr.charPadding */
+/* JADX WARNING: Not found resource field with id: 2130968826, name: attr.checkMarkCompat */
+/* JADX WARNING: Not found resource field with id: 2130968841, name: attr.checkboxStyle */
+/* JADX WARNING: Not found resource field with id: 2130968842, name: attr.checkedButton */
+/* JADX WARNING: Not found resource field with id: 2130968843, name: attr.checkedChip */
+/* JADX WARNING: Not found resource field with id: 2130968844, name: attr.checkedIcon */
+/* JADX WARNING: Not found resource field with id: 2130968845, name: attr.checkedIconEnabled */
+/* JADX WARNING: Not found resource field with id: 2130968846, name: attr.checkedIconTint */
+/* JADX WARNING: Not found resource field with id: 2130968847, name: attr.checkedIconVisible */
+/* JADX WARNING: Not found resource field with id: 2130968848, name: attr.checkedTextViewStyle */
+/* JADX WARNING: Not found resource field with id: 2130968849, name: attr.checkwidget_backgroundDisableAlpha */
+/* JADX WARNING: Not found resource field with id: 2130968850, name: attr.checkwidget_backgroundNormalAlpha */
+/* JADX WARNING: Not found resource field with id: 2130968851, name: attr.checkwidget_checkOnAlphaBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968852, name: attr.checkwidget_checkOnBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968853, name: attr.checkwidget_checkOnForegroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968854, name: attr.checkwidget_disableBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968855, name: attr.checkwidget_strokeColor */
+/* JADX WARNING: Not found resource field with id: 2130968856, name: attr.checkwidget_strokeDisableAlpha */
+/* JADX WARNING: Not found resource field with id: 2130968857, name: attr.checkwidget_strokeNormalAlpha */
+/* JADX WARNING: Not found resource field with id: 2130968858, name: attr.checkwidget_touchAnimEnable */
+/* JADX WARNING: Not found resource field with id: 2130968860, name: attr.chipBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130968861, name: attr.chipCornerRadius */
+/* JADX WARNING: Not found resource field with id: 2130968862, name: attr.chipEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130968864, name: attr.chipIcon */
+/* JADX WARNING: Not found resource field with id: 2130968865, name: attr.chipIconEnabled */
+/* JADX WARNING: Not found resource field with id: 2130968866, name: attr.chipIconSize */
+/* JADX WARNING: Not found resource field with id: 2130968867, name: attr.chipIconTint */
+/* JADX WARNING: Not found resource field with id: 2130968868, name: attr.chipIconVisible */
+/* JADX WARNING: Not found resource field with id: 2130968869, name: attr.chipMinHeight */
+/* JADX WARNING: Not found resource field with id: 2130968870, name: attr.chipMinTouchTargetSize */
+/* JADX WARNING: Not found resource field with id: 2130968871, name: attr.chipSpacing */
+/* JADX WARNING: Not found resource field with id: 2130968872, name: attr.chipSpacingHorizontal */
+/* JADX WARNING: Not found resource field with id: 2130968873, name: attr.chipSpacingVertical */
+/* JADX WARNING: Not found resource field with id: 2130968875, name: attr.chipStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130968876, name: attr.chipStrokeColor */
+/* JADX WARNING: Not found resource field with id: 2130968877, name: attr.chipStrokeWidth */
+/* JADX WARNING: Not found resource field with id: 2130968879, name: attr.chipSurfaceColor */
+/* JADX WARNING: Not found resource field with id: 2130968884, name: attr.clickAction */
+/* JADX WARNING: Not found resource field with id: 2130968885, name: attr.clipEdge */
+/* JADX WARNING: Not found resource field with id: 2130968886, name: attr.clipEnd */
+/* JADX WARNING: Not found resource field with id: 2130968887, name: attr.closable */
+/* JADX WARNING: Not found resource field with id: 2130968888, name: attr.closeBackground */
+/* JADX WARNING: Not found resource field with id: 2130968889, name: attr.closeIcon */
+/* JADX WARNING: Not found resource field with id: 2130968890, name: attr.closeIconEnabled */
+/* JADX WARNING: Not found resource field with id: 2130968891, name: attr.closeIconEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130968892, name: attr.closeIconSize */
+/* JADX WARNING: Not found resource field with id: 2130968893, name: attr.closeIconStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130968894, name: attr.closeIconTint */
+/* JADX WARNING: Not found resource field with id: 2130968895, name: attr.closeIconVisible */
+/* JADX WARNING: Not found resource field with id: 2130968896, name: attr.closeItemLayout */
+/* JADX WARNING: Not found resource field with id: 2130968898, name: attr.collapseContentDescription */
+/* JADX WARNING: Not found resource field with id: 2130968899, name: attr.collapseIcon */
+/* JADX WARNING: Not found resource field with id: 2130968900, name: attr.collapsedTitleGravity */
+/* JADX WARNING: Not found resource field with id: 2130968901, name: attr.collapsedTitleTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130968903, name: attr.colorAccent */
+/* JADX WARNING: Not found resource field with id: 2130968904, name: attr.colorBackgroundFloating */
+/* JADX WARNING: Not found resource field with id: 2130968905, name: attr.colorButtonNormal */
+/* JADX WARNING: Not found resource field with id: 2130968906, name: attr.colorControlActivated */
+/* JADX WARNING: Not found resource field with id: 2130968907, name: attr.colorControlHighlight */
+/* JADX WARNING: Not found resource field with id: 2130968908, name: attr.colorControlNormal */
+/* JADX WARNING: Not found resource field with id: 2130968910, name: attr.colorError */
+/* JADX WARNING: Not found resource field with id: 2130968922, name: attr.colorPrimary */
+/* JADX WARNING: Not found resource field with id: 2130968923, name: attr.colorPrimaryDark */
+/* JADX WARNING: Not found resource field with id: 2130968928, name: attr.colorSwitchThumbNormal */
+/* JADX WARNING: Not found resource field with id: 2130968929, name: attr.columnCount */
+/* JADX WARNING: Not found resource field with id: 2130968930, name: attr.columnWidth */
+/* JADX WARNING: Not found resource field with id: 2130968931, name: attr.commitIcon */
+/* JADX WARNING: Not found resource field with id: 2130968939, name: attr.constraintSet */
+/* JADX WARNING: Not found resource field with id: 2130968940, name: attr.constraintSetEnd */
+/* JADX WARNING: Not found resource field with id: 2130968941, name: attr.constraintSetStart */
+/* JADX WARNING: Not found resource field with id: 2130968942, name: attr.constraint_referenced_ids */
+/* JADX WARNING: Not found resource field with id: 2130968943, name: attr.constraint_referenced_tags */
+/* JADX WARNING: Not found resource field with id: 2130968944, name: attr.constraints */
+/* JADX WARNING: Not found resource field with id: 2130968945, name: attr.content */
+/* JADX WARNING: Not found resource field with id: 2130968946, name: attr.contentAutoFitSystemWindow */
+/* JADX WARNING: Not found resource field with id: 2130968947, name: attr.contentBackground */
+/* JADX WARNING: Not found resource field with id: 2130968948, name: attr.contentDescription */
+/* JADX WARNING: Not found resource field with id: 2130968949, name: attr.contentEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130968950, name: attr.contentHeaderBackground */
+/* JADX WARNING: Not found resource field with id: 2130968951, name: attr.contentInsetEnd */
+/* JADX WARNING: Not found resource field with id: 2130968952, name: attr.contentInsetEndWithActions */
+/* JADX WARNING: Not found resource field with id: 2130968953, name: attr.contentInsetLeft */
+/* JADX WARNING: Not found resource field with id: 2130968954, name: attr.contentInsetRight */
+/* JADX WARNING: Not found resource field with id: 2130968955, name: attr.contentInsetStart */
+/* JADX WARNING: Not found resource field with id: 2130968956, name: attr.contentInsetStartWithNavigation */
+/* JADX WARNING: Not found resource field with id: 2130968957, name: attr.contentPadding */
+/* JADX WARNING: Not found resource field with id: 2130968958, name: attr.contentPaddingBottom */
+/* JADX WARNING: Not found resource field with id: 2130968959, name: attr.contentPaddingLeft */
+/* JADX WARNING: Not found resource field with id: 2130968960, name: attr.contentPaddingRight */
+/* JADX WARNING: Not found resource field with id: 2130968961, name: attr.contentPaddingTop */
+/* JADX WARNING: Not found resource field with id: 2130968962, name: attr.contentScrim */
+/* JADX WARNING: Not found resource field with id: 2130968963, name: attr.contentStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130968964, name: attr.contextMenuSeparateItemBackground */
+/* JADX WARNING: Not found resource field with id: 2130968965, name: attr.contrast */
+/* JADX WARNING: Not found resource field with id: 2130968966, name: attr.controlBackground */
+/* JADX WARNING: Not found resource field with id: 2130968968, name: attr.cornerFamily */
+/* JADX WARNING: Not found resource field with id: 2130968969, name: attr.cornerFamilyBottomLeft */
+/* JADX WARNING: Not found resource field with id: 2130968970, name: attr.cornerFamilyBottomRight */
+/* JADX WARNING: Not found resource field with id: 2130968971, name: attr.cornerFamilyTopLeft */
+/* JADX WARNING: Not found resource field with id: 2130968972, name: attr.cornerFamilyTopRight */
+/* JADX WARNING: Not found resource field with id: 2130968973, name: attr.cornerRadius */
+/* JADX WARNING: Not found resource field with id: 2130968974, name: attr.cornerSize */
+/* JADX WARNING: Not found resource field with id: 2130968975, name: attr.cornerSizeBottomLeft */
+/* JADX WARNING: Not found resource field with id: 2130968976, name: attr.cornerSizeBottomRight */
+/* JADX WARNING: Not found resource field with id: 2130968977, name: attr.cornerSizeTopLeft */
+/* JADX WARNING: Not found resource field with id: 2130968978, name: attr.cornerSizeTopRight */
+/* JADX WARNING: Not found resource field with id: 2130968979, name: attr.counterEnabled */
+/* JADX WARNING: Not found resource field with id: 2130968980, name: attr.counterMaxLength */
+/* JADX WARNING: Not found resource field with id: 2130968981, name: attr.counterOverflowTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130968982, name: attr.counterOverflowTextColor */
+/* JADX WARNING: Not found resource field with id: 2130968983, name: attr.counterTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130968984, name: attr.counterTextColor */
+/* JADX WARNING: Not found resource field with id: 2130968985, name: attr.crossfade */
+/* JADX WARNING: Not found resource field with id: 2130968986, name: attr.currentState */
+/* JADX WARNING: Not found resource field with id: 2130968987, name: attr.curveFit */
+/* JADX WARNING: Not found resource field with id: 2130968988, name: attr.customBoolean */
+/* JADX WARNING: Not found resource field with id: 2130968989, name: attr.customColorDrawableValue */
+/* JADX WARNING: Not found resource field with id: 2130968990, name: attr.customColorValue */
+/* JADX WARNING: Not found resource field with id: 2130968991, name: attr.customDimension */
+/* JADX WARNING: Not found resource field with id: 2130968992, name: attr.customFloatValue */
+/* JADX WARNING: Not found resource field with id: 2130968993, name: attr.customIntegerValue */
+/* JADX WARNING: Not found resource field with id: 2130968994, name: attr.customNavigationLayout */
+/* JADX WARNING: Not found resource field with id: 2130968995, name: attr.customPixelDimension */
+/* JADX WARNING: Not found resource field with id: 2130968996, name: attr.customStringValue */
+/* JADX WARNING: Not found resource field with id: 2130968997, name: attr.customViewAutoFitSystemWindow */
+/* JADX WARNING: Not found resource field with id: 2130968999, name: attr.datePattern */
+/* JADX WARNING: Not found resource field with id: 2130969000, name: attr.datePickerFormat */
+/* JADX WARNING: Not found resource field with id: 2130969004, name: attr.defValue */
+/* JADX WARNING: Not found resource field with id: 2130969007, name: attr.defaultDuration */
+/* JADX WARNING: Not found resource field with id: 2130969008, name: attr.defaultQueryHint */
+/* JADX WARNING: Not found resource field with id: 2130969014, name: attr.defaultState */
+/* JADX WARNING: Not found resource field with id: 2130969015, name: attr.defaultValue */
+/* JADX WARNING: Not found resource field with id: 2130969018, name: attr.dependency */
+/* JADX WARNING: Not found resource field with id: 2130969020, name: attr.deriveConstraintsFrom */
+/* JADX WARNING: Not found resource field with id: 2130969021, name: attr.descending */
+/* JADX WARNING: Not found resource field with id: 2130969031, name: attr.dialogCornerRadius */
+/* JADX WARNING: Not found resource field with id: 2130969032, name: attr.dialogIcon */
+/* JADX WARNING: Not found resource field with id: 2130969033, name: attr.dialogLayout */
+/* JADX WARNING: Not found resource field with id: 2130969038, name: attr.dialogMessage */
+/* JADX WARNING: Not found resource field with id: 2130969041, name: attr.dialogPreferredPadding */
+/* JADX WARNING: Not found resource field with id: 2130969043, name: attr.dialogTheme */
+/* JADX WARNING: Not found resource field with id: 2130969044, name: attr.dialogTitle */
+/* JADX WARNING: Not found resource field with id: 2130969047, name: attr.digit */
+/* JADX WARNING: Not found resource field with id: 2130969048, name: attr.disableDependentsState */
+/* JADX WARNING: Not found resource field with id: 2130969049, name: attr.disableRecyclerViewItemAnimator */
+/* JADX WARNING: Not found resource field with id: 2130969050, name: attr.disabledProgressAlpha */
+/* JADX WARNING: Not found resource field with id: 2130969051, name: attr.displayOptions */
+/* JADX WARNING: Not found resource field with id: 2130969052, name: attr.divider */
+/* JADX WARNING: Not found resource field with id: 2130969053, name: attr.dividerHorizontal */
+/* JADX WARNING: Not found resource field with id: 2130969054, name: attr.dividerPadding */
+/* JADX WARNING: Not found resource field with id: 2130969055, name: attr.dividerVertical */
+/* JADX WARNING: Not found resource field with id: 2130969056, name: attr.dotBgColor */
+/* JADX WARNING: Not found resource field with id: 2130969057, name: attr.dotSize */
+/* JADX WARNING: Not found resource field with id: 2130969058, name: attr.dotToArrowGap */
+/* JADX WARNING: Not found resource field with id: 2130969059, name: attr.dotToDotGap */
+/* JADX WARNING: Not found resource field with id: 2130969060, name: attr.doubleLineButtonPaddingHorizontal */
+/* JADX WARNING: Not found resource field with id: 2130969061, name: attr.dragDirection */
+/* JADX WARNING: Not found resource field with id: 2130969062, name: attr.dragScale */
+/* JADX WARNING: Not found resource field with id: 2130969063, name: attr.dragThreshold */
+/* JADX WARNING: Not found resource field with id: 2130969064, name: attr.drawPath */
+/* JADX WARNING: Not found resource field with id: 2130969065, name: attr.drawableBottomCompat */
+/* JADX WARNING: Not found resource field with id: 2130969066, name: attr.drawableEndCompat */
+/* JADX WARNING: Not found resource field with id: 2130969067, name: attr.drawableLeftCompat */
+/* JADX WARNING: Not found resource field with id: 2130969068, name: attr.drawableRightCompat */
+/* JADX WARNING: Not found resource field with id: 2130969070, name: attr.drawableStartCompat */
+/* JADX WARNING: Not found resource field with id: 2130969071, name: attr.drawableTint */
+/* JADX WARNING: Not found resource field with id: 2130969072, name: attr.drawableTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969073, name: attr.drawableTopCompat */
+/* JADX WARNING: Not found resource field with id: 2130969076, name: attr.dropDownListViewStyle */
+/* JADX WARNING: Not found resource field with id: 2130969077, name: attr.dropDownMaxWidth */
+/* JADX WARNING: Not found resource field with id: 2130969078, name: attr.dropDownMinWidth */
+/* JADX WARNING: Not found resource field with id: 2130969079, name: attr.dropdownListPreferredItemHeight */
+/* JADX WARNING: Not found resource field with id: 2130969081, name: attr.duration */
+/* JADX WARNING: Not found resource field with id: 2130969082, name: attr.editTextBackground */
+/* JADX WARNING: Not found resource field with id: 2130969083, name: attr.editTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969090, name: attr.editTextStyle */
+/* JADX WARNING: Not found resource field with id: 2130969091, name: attr.elevation */
+/* JADX WARNING: Not found resource field with id: 2130969094, name: attr.enableAutoSizing */
+/* JADX WARNING: Not found resource field with id: 2130969095, name: attr.enableCopying */
+/* JADX WARNING: Not found resource field with id: 2130969096, name: attr.enabled */
+/* JADX WARNING: Not found resource field with id: 2130969097, name: attr.endIconContentDescription */
+/* JADX WARNING: Not found resource field with id: 2130969098, name: attr.endIconDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969099, name: attr.endIconMode */
+/* JADX WARNING: Not found resource field with id: 2130969100, name: attr.endIconTint */
+/* JADX WARNING: Not found resource field with id: 2130969101, name: attr.endIconTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969102, name: attr.endItemEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969103, name: attr.endItemStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130969104, name: attr.endYear */
+/* JADX WARNING: Not found resource field with id: 2130969105, name: attr.enforceMaterialTheme */
+/* JADX WARNING: Not found resource field with id: 2130969106, name: attr.enforceTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969107, name: attr.ensureMinTouchTargetSize */
+/* JADX WARNING: Not found resource field with id: 2130969108, name: attr.entries */
+/* JADX WARNING: Not found resource field with id: 2130969109, name: attr.entryIcons */
+/* JADX WARNING: Not found resource field with id: 2130969110, name: attr.entrySummaries */
+/* JADX WARNING: Not found resource field with id: 2130969111, name: attr.entryValues */
+/* JADX WARNING: Not found resource field with id: 2130969112, name: attr.errorEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969114, name: attr.errorTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969115, name: attr.errorTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969116, name: attr.expandActivityOverflowButtonDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969118, name: attr.expandState */
+/* JADX WARNING: Not found resource field with id: 2130969119, name: attr.expandSubtitleTextStyle */
+/* JADX WARNING: Not found resource field with id: 2130969120, name: attr.expandTitleTextStyle */
+/* JADX WARNING: Not found resource field with id: 2130969121, name: attr.expanded */
+/* JADX WARNING: Not found resource field with id: 2130969122, name: attr.expandedTitleGravity */
+/* JADX WARNING: Not found resource field with id: 2130969123, name: attr.expandedTitleMargin */
+/* JADX WARNING: Not found resource field with id: 2130969124, name: attr.expandedTitleMarginBottom */
+/* JADX WARNING: Not found resource field with id: 2130969125, name: attr.expandedTitleMarginEnd */
+/* JADX WARNING: Not found resource field with id: 2130969126, name: attr.expandedTitleMarginStart */
+/* JADX WARNING: Not found resource field with id: 2130969127, name: attr.expandedTitleMarginTop */
+/* JADX WARNING: Not found resource field with id: 2130969128, name: attr.expandedTitleTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969129, name: attr.extendMotionSpec */
+/* JADX WARNING: Not found resource field with id: 2130969131, name: attr.externalRouteEnabledDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969132, name: attr.externalRouteEnabledDrawableStatic */
+/* JADX WARNING: Not found resource field with id: 2130969133, name: attr.extraVisibility */
+/* JADX WARNING: Not found resource field with id: 2130969134, name: attr.fabAlignmentMode */
+/* JADX WARNING: Not found resource field with id: 2130969135, name: attr.fabAnimationMode */
+/* JADX WARNING: Not found resource field with id: 2130969136, name: attr.fabColor */
+/* JADX WARNING: Not found resource field with id: 2130969137, name: attr.fabCradleMargin */
+/* JADX WARNING: Not found resource field with id: 2130969138, name: attr.fabCradleRoundedCornerRadius */
+/* JADX WARNING: Not found resource field with id: 2130969139, name: attr.fabCradleVerticalOffset */
+/* JADX WARNING: Not found resource field with id: 2130969140, name: attr.fabCustomSize */
+/* JADX WARNING: Not found resource field with id: 2130969141, name: attr.fabShadowEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969142, name: attr.fabSize */
+/* JADX WARNING: Not found resource field with id: 2130969143, name: attr.fastScrollEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969144, name: attr.fastScrollHorizontalThumbDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969145, name: attr.fastScrollHorizontalTrackDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969146, name: attr.fastScrollVerticalThumbDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969147, name: attr.fastScrollVerticalTrackDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969150, name: attr.filterSortTabViewCoverBg */
+/* JADX WARNING: Not found resource field with id: 2130969151, name: attr.filterSortTabViewFollowTouch */
+/* JADX WARNING: Not found resource field with id: 2130969152, name: attr.filterSortTabViewTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969153, name: attr.filterSortViewBackground */
+/* JADX WARNING: Not found resource field with id: 2130969154, name: attr.firstBaselineToTopHeight */
+/* JADX WARNING: Not found resource field with id: 2130969156, name: attr.flow_firstHorizontalBias */
+/* JADX WARNING: Not found resource field with id: 2130969157, name: attr.flow_firstHorizontalStyle */
+/* JADX WARNING: Not found resource field with id: 2130969158, name: attr.flow_firstVerticalBias */
+/* JADX WARNING: Not found resource field with id: 2130969159, name: attr.flow_firstVerticalStyle */
+/* JADX WARNING: Not found resource field with id: 2130969160, name: attr.flow_horizontalAlign */
+/* JADX WARNING: Not found resource field with id: 2130969161, name: attr.flow_horizontalBias */
+/* JADX WARNING: Not found resource field with id: 2130969162, name: attr.flow_horizontalGap */
+/* JADX WARNING: Not found resource field with id: 2130969163, name: attr.flow_horizontalStyle */
+/* JADX WARNING: Not found resource field with id: 2130969164, name: attr.flow_lastHorizontalBias */
+/* JADX WARNING: Not found resource field with id: 2130969165, name: attr.flow_lastHorizontalStyle */
+/* JADX WARNING: Not found resource field with id: 2130969166, name: attr.flow_lastVerticalBias */
+/* JADX WARNING: Not found resource field with id: 2130969167, name: attr.flow_lastVerticalStyle */
+/* JADX WARNING: Not found resource field with id: 2130969168, name: attr.flow_maxElementsWrap */
+/* JADX WARNING: Not found resource field with id: 2130969170, name: attr.flow_verticalAlign */
+/* JADX WARNING: Not found resource field with id: 2130969171, name: attr.flow_verticalBias */
+/* JADX WARNING: Not found resource field with id: 2130969172, name: attr.flow_verticalGap */
+/* JADX WARNING: Not found resource field with id: 2130969173, name: attr.flow_verticalStyle */
+/* JADX WARNING: Not found resource field with id: 2130969174, name: attr.flow_wrapMode */
+/* JADX WARNING: Not found resource field with id: 2130969175, name: attr.focusOutEnd */
+/* JADX WARNING: Not found resource field with id: 2130969176, name: attr.focusOutFront */
+/* JADX WARNING: Not found resource field with id: 2130969177, name: attr.focusOutSideEnd */
+/* JADX WARNING: Not found resource field with id: 2130969178, name: attr.focusOutSideStart */
+/* JADX WARNING: Not found resource field with id: 2130969179, name: attr.font */
+/* JADX WARNING: Not found resource field with id: 2130969180, name: attr.fontFamily */
+/* JADX WARNING: Not found resource field with id: 2130969181, name: attr.fontProviderAuthority */
+/* JADX WARNING: Not found resource field with id: 2130969182, name: attr.fontProviderCerts */
+/* JADX WARNING: Not found resource field with id: 2130969183, name: attr.fontProviderFetchStrategy */
+/* JADX WARNING: Not found resource field with id: 2130969184, name: attr.fontProviderFetchTimeout */
+/* JADX WARNING: Not found resource field with id: 2130969185, name: attr.fontProviderPackage */
+/* JADX WARNING: Not found resource field with id: 2130969186, name: attr.fontProviderQuery */
+/* JADX WARNING: Not found resource field with id: 2130969187, name: attr.fontStyle */
+/* JADX WARNING: Not found resource field with id: 2130969188, name: attr.fontVariationSettings */
+/* JADX WARNING: Not found resource field with id: 2130969189, name: attr.fontWeight */
+/* JADX WARNING: Not found resource field with id: 2130969191, name: attr.foregroundInsidePadding */
+/* JADX WARNING: Not found resource field with id: 2130969192, name: attr.foregroundPrimaryColor */
+/* JADX WARNING: Not found resource field with id: 2130969193, name: attr.foregroundPrimaryDisableColor */
+/* JADX WARNING: Not found resource field with id: 2130969194, name: attr.fragment */
+/* JADX WARNING: Not found resource field with id: 2130969195, name: attr.frame */
+/* JADX WARNING: Not found resource field with id: 2130969196, name: attr.frameColor */
+/* JADX WARNING: Not found resource field with id: 2130969197, name: attr.framePadding */
+/* JADX WARNING: Not found resource field with id: 2130969198, name: attr.framePosition */
+/* JADX WARNING: Not found resource field with id: 2130969199, name: attr.frameWidth */
+/* JADX WARNING: Not found resource field with id: 2130969201, name: attr.goIcon */
+/* JADX WARNING: Not found resource field with id: 2130969202, name: attr.gridBottomPadding */
+/* JADX WARNING: Not found resource field with id: 2130969203, name: attr.gridSubtitleSize */
+/* JADX WARNING: Not found resource field with id: 2130969204, name: attr.gridTextVerticalPadding */
+/* JADX WARNING: Not found resource field with id: 2130969205, name: attr.gridTitleSize */
+/* JADX WARNING: Not found resource field with id: 2130969206, name: attr.gridTopPadding */
+/* JADX WARNING: Not found resource field with id: 2130969207, name: attr.guidanceBreadcrumbStyle */
+/* JADX WARNING: Not found resource field with id: 2130969208, name: attr.guidanceContainerStyle */
+/* JADX WARNING: Not found resource field with id: 2130969209, name: attr.guidanceDescriptionStyle */
+/* JADX WARNING: Not found resource field with id: 2130969210, name: attr.guidanceEntryAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969211, name: attr.guidanceIconStyle */
+/* JADX WARNING: Not found resource field with id: 2130969212, name: attr.guidanceTitleStyle */
+/* JADX WARNING: Not found resource field with id: 2130969214, name: attr.guidedActionCheckedAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969215, name: attr.guidedActionContentWidth */
+/* JADX WARNING: Not found resource field with id: 2130969216, name: attr.guidedActionContentWidthNoIcon */
+/* JADX WARNING: Not found resource field with id: 2130969217, name: attr.guidedActionContentWidthWeight */
+/* JADX WARNING: Not found resource field with id: 2130969218, name: attr.guidedActionContentWidthWeightTwoPanels */
+/* JADX WARNING: Not found resource field with id: 2130969219, name: attr.guidedActionDescriptionMinLines */
+/* JADX WARNING: Not found resource field with id: 2130969220, name: attr.guidedActionDisabledChevronAlpha */
+/* JADX WARNING: Not found resource field with id: 2130969221, name: attr.guidedActionEnabledChevronAlpha */
+/* JADX WARNING: Not found resource field with id: 2130969222, name: attr.guidedActionItemCheckmarkStyle */
+/* JADX WARNING: Not found resource field with id: 2130969223, name: attr.guidedActionItemChevronStyle */
+/* JADX WARNING: Not found resource field with id: 2130969224, name: attr.guidedActionItemContainerStyle */
+/* JADX WARNING: Not found resource field with id: 2130969225, name: attr.guidedActionItemContentStyle */
+/* JADX WARNING: Not found resource field with id: 2130969226, name: attr.guidedActionItemDescriptionStyle */
+/* JADX WARNING: Not found resource field with id: 2130969227, name: attr.guidedActionItemIconStyle */
+/* JADX WARNING: Not found resource field with id: 2130969228, name: attr.guidedActionItemTitleStyle */
+/* JADX WARNING: Not found resource field with id: 2130969229, name: attr.guidedActionPressedAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969230, name: attr.guidedActionTitleMaxLines */
+/* JADX WARNING: Not found resource field with id: 2130969231, name: attr.guidedActionTitleMinLines */
+/* JADX WARNING: Not found resource field with id: 2130969232, name: attr.guidedActionUncheckedAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969233, name: attr.guidedActionUnpressedAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969234, name: attr.guidedActionVerticalPadding */
+/* JADX WARNING: Not found resource field with id: 2130969235, name: attr.guidedActionsBackground */
+/* JADX WARNING: Not found resource field with id: 2130969236, name: attr.guidedActionsBackgroundDark */
+/* JADX WARNING: Not found resource field with id: 2130969237, name: attr.guidedActionsContainerStyle */
+/* JADX WARNING: Not found resource field with id: 2130969238, name: attr.guidedActionsElevation */
+/* JADX WARNING: Not found resource field with id: 2130969239, name: attr.guidedActionsEntryAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969240, name: attr.guidedActionsListStyle */
+/* JADX WARNING: Not found resource field with id: 2130969241, name: attr.guidedActionsSelectorDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969242, name: attr.guidedActionsSelectorHideAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969243, name: attr.guidedActionsSelectorShowAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969244, name: attr.guidedActionsSelectorStyle */
+/* JADX WARNING: Not found resource field with id: 2130969245, name: attr.guidedButtonActionsListStyle */
+/* JADX WARNING: Not found resource field with id: 2130969246, name: attr.guidedButtonActionsWidthWeight */
+/* JADX WARNING: Not found resource field with id: 2130969247, name: attr.guidedStepBackground */
+/* JADX WARNING: Not found resource field with id: 2130969248, name: attr.guidedStepEntryAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969249, name: attr.guidedStepExitAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969250, name: attr.guidedStepHeightWeight */
+/* JADX WARNING: Not found resource field with id: 2130969251, name: attr.guidedStepImeAppearingAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969252, name: attr.guidedStepImeDisappearingAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969253, name: attr.guidedStepKeyline */
+/* JADX WARNING: Not found resource field with id: 2130969254, name: attr.guidedStepReentryAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969255, name: attr.guidedStepReturnAnimation */
+/* JADX WARNING: Not found resource field with id: 2130969256, name: attr.guidedStepTheme */
+/* JADX WARNING: Not found resource field with id: 2130969257, name: attr.guidedStepThemeFlag */
+/* JADX WARNING: Not found resource field with id: 2130969258, name: attr.guidedSubActionsListStyle */
+/* JADX WARNING: Not found resource field with id: 2130969259, name: attr.hasOverlappingRendering */
+/* JADX WARNING: Not found resource field with id: 2130969260, name: attr.headerLayout */
+/* JADX WARNING: Not found resource field with id: 2130969262, name: attr.headerSubtitleSize */
+/* JADX WARNING: Not found resource field with id: 2130969263, name: attr.headerTextVerticalPadding */
+/* JADX WARNING: Not found resource field with id: 2130969264, name: attr.headerTitleSize */
+/* JADX WARNING: Not found resource field with id: 2130969266, name: attr.height */
+/* JADX WARNING: Not found resource field with id: 2130969267, name: attr.helperText */
+/* JADX WARNING: Not found resource field with id: 2130969268, name: attr.helperTextEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969269, name: attr.helperTextTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969270, name: attr.helperTextTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969271, name: attr.hideMotionSpec */
+/* JADX WARNING: Not found resource field with id: 2130969272, name: attr.hideOnContentScroll */
+/* JADX WARNING: Not found resource field with id: 2130969273, name: attr.hideOnScroll */
+/* JADX WARNING: Not found resource field with id: 2130969275, name: attr.highlight */
+/* JADX WARNING: Not found resource field with id: 2130969276, name: attr.hintAnimationEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969277, name: attr.hintEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969278, name: attr.hintTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969279, name: attr.hintTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969281, name: attr.homeAsUpIndicator */
+/* JADX WARNING: Not found resource field with id: 2130969283, name: attr.homeLayout */
+/* JADX WARNING: Not found resource field with id: 2130969284, name: attr.horizontalMargin */
+/* JADX WARNING: Not found resource field with id: 2130969285, name: attr.horizontalProgressLayout */
+/* JADX WARNING: Not found resource field with id: 2130969286, name: attr.horizontalSpacing */
+/* JADX WARNING: Not found resource field with id: 2130969287, name: attr.hoveredFocusedTranslationZ */
+/* JADX WARNING: Not found resource field with id: 2130969291, name: attr.icon */
+/* JADX WARNING: Not found resource field with id: 2130969292, name: attr.iconEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969293, name: attr.iconGravity */
+/* JADX WARNING: Not found resource field with id: 2130969294, name: attr.iconPadding */
+/* JADX WARNING: Not found resource field with id: 2130969295, name: attr.iconPrimaryColor */
+/* JADX WARNING: Not found resource field with id: 2130969296, name: attr.iconSize */
+/* JADX WARNING: Not found resource field with id: 2130969297, name: attr.iconSpaceReserved */
+/* JADX WARNING: Not found resource field with id: 2130969298, name: attr.iconStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130969299, name: attr.iconTint */
+/* JADX WARNING: Not found resource field with id: 2130969300, name: attr.iconTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969301, name: attr.iconifiedByDefault */
+/* JADX WARNING: Not found resource field with id: 2130969302, name: attr.ignoreRightInset */
+/* JADX WARNING: Not found resource field with id: 2130969303, name: attr.imageButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130969310, name: attr.immersionButtonMoreBackground */
+/* JADX WARNING: Not found resource field with id: 2130969311, name: attr.immersionMenuEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969312, name: attr.immersionMenuLayout */
+/* JADX WARNING: Not found resource field with id: 2130969313, name: attr.immersionTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969314, name: attr.immersionViewItemBackground */
+/* JADX WARNING: Not found resource field with id: 2130969315, name: attr.immersionWindowBackground */
+/* JADX WARNING: Not found resource field with id: 2130969316, name: attr.indeterminateFramesCount */
+/* JADX WARNING: Not found resource field with id: 2130969317, name: attr.indeterminateFramesDuration */
+/* JADX WARNING: Not found resource field with id: 2130969318, name: attr.indeterminateProgressStyle */
+/* JADX WARNING: Not found resource field with id: 2130969319, name: attr.indicatorVisibility */
+/* JADX WARNING: Not found resource field with id: 2130969320, name: attr.infoAreaBackground */
+/* JADX WARNING: Not found resource field with id: 2130969321, name: attr.infoVisibility */
+/* JADX WARNING: Not found resource field with id: 2130969322, name: attr.initialActivityCount */
+/* JADX WARNING: Not found resource field with id: 2130969323, name: attr.initialExpandedChildrenCount */
+/* JADX WARNING: Not found resource field with id: 2130969324, name: attr.insetForeground */
+/* JADX WARNING: Not found resource field with id: 2130969326, name: attr.is24HourFormat */
+/* JADX WARNING: Not found resource field with id: 2130969329, name: attr.isPreferenceVisible */
+/* JADX WARNING: Not found resource field with id: 2130969330, name: attr.itemBackground */
+/* JADX WARNING: Not found resource field with id: 2130969331, name: attr.itemHeight */
+/* JADX WARNING: Not found resource field with id: 2130969332, name: attr.itemHorizontalPadding */
+/* JADX WARNING: Not found resource field with id: 2130969333, name: attr.itemHorizontalTranslationEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969334, name: attr.itemIconPadding */
+/* JADX WARNING: Not found resource field with id: 2130969335, name: attr.itemIconSize */
+/* JADX WARNING: Not found resource field with id: 2130969336, name: attr.itemIconTint */
+/* JADX WARNING: Not found resource field with id: 2130969337, name: attr.itemPadding */
+/* JADX WARNING: Not found resource field with id: 2130969338, name: attr.itemRippleColor */
+/* JADX WARNING: Not found resource field with id: 2130969339, name: attr.itemSpacing */
+/* JADX WARNING: Not found resource field with id: 2130969340, name: attr.itemTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969341, name: attr.itemTextAppearanceActive */
+/* JADX WARNING: Not found resource field with id: 2130969342, name: attr.itemTextAppearanceInactive */
+/* JADX WARNING: Not found resource field with id: 2130969343, name: attr.itemTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969345, name: attr.key */
+/* JADX WARNING: Not found resource field with id: 2130969346, name: attr.keyCode */
+/* JADX WARNING: Not found resource field with id: 2130969347, name: attr.keyPositionType */
+/* JADX WARNING: Not found resource field with id: 2130969348, name: attr.keylines */
+/* JADX WARNING: Not found resource field with id: 2130969349, name: attr.labelPadding */
+/* JADX WARNING: Not found resource field with id: 2130969350, name: attr.labelTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969351, name: attr.labelVisibilityMode */
+/* JADX WARNING: Not found resource field with id: 2130969352, name: attr.lastBaselineToBottomHeight */
+/* JADX WARNING: Not found resource field with id: 2130969353, name: attr.layout */
+/* JADX WARNING: Not found resource field with id: 2130969354, name: attr.layoutDescription */
+/* JADX WARNING: Not found resource field with id: 2130969355, name: attr.layoutDuringTransition */
+/* JADX WARNING: Not found resource field with id: 2130969356, name: attr.layoutManager */
+/* JADX WARNING: Not found resource field with id: 2130969357, name: attr.layout_anchor */
+/* JADX WARNING: Not found resource field with id: 2130969358, name: attr.layout_anchorGravity */
+/* JADX WARNING: Not found resource field with id: 2130969359, name: attr.layout_behavior */
+/* JADX WARNING: Not found resource field with id: 2130969360, name: attr.layout_collapseMode */
+/* JADX WARNING: Not found resource field with id: 2130969361, name: attr.layout_collapseParallaxMultiplier */
+/* JADX WARNING: Not found resource field with id: 2130969362, name: attr.layout_constrainedHeight */
+/* JADX WARNING: Not found resource field with id: 2130969363, name: attr.layout_constrainedWidth */
+/* JADX WARNING: Not found resource field with id: 2130969364, name: attr.layout_constraintBaseline_creator */
+/* JADX WARNING: Not found resource field with id: 2130969365, name: attr.layout_constraintBaseline_toBaselineOf */
+/* JADX WARNING: Not found resource field with id: 2130969366, name: attr.layout_constraintBottom_creator */
+/* JADX WARNING: Not found resource field with id: 2130969367, name: attr.layout_constraintBottom_toBottomOf */
+/* JADX WARNING: Not found resource field with id: 2130969368, name: attr.layout_constraintBottom_toTopOf */
+/* JADX WARNING: Not found resource field with id: 2130969369, name: attr.layout_constraintCircle */
+/* JADX WARNING: Not found resource field with id: 2130969370, name: attr.layout_constraintCircleAngle */
+/* JADX WARNING: Not found resource field with id: 2130969371, name: attr.layout_constraintCircleRadius */
+/* JADX WARNING: Not found resource field with id: 2130969372, name: attr.layout_constraintDimensionRatio */
+/* JADX WARNING: Not found resource field with id: 2130969373, name: attr.layout_constraintEnd_toEndOf */
+/* JADX WARNING: Not found resource field with id: 2130969374, name: attr.layout_constraintEnd_toStartOf */
+/* JADX WARNING: Not found resource field with id: 2130969375, name: attr.layout_constraintGuide_begin */
+/* JADX WARNING: Not found resource field with id: 2130969376, name: attr.layout_constraintGuide_end */
+/* JADX WARNING: Not found resource field with id: 2130969377, name: attr.layout_constraintGuide_percent */
+/* JADX WARNING: Not found resource field with id: 2130969378, name: attr.layout_constraintHeight_default */
+/* JADX WARNING: Not found resource field with id: 2130969379, name: attr.layout_constraintHeight_max */
+/* JADX WARNING: Not found resource field with id: 2130969380, name: attr.layout_constraintHeight_min */
+/* JADX WARNING: Not found resource field with id: 2130969381, name: attr.layout_constraintHeight_percent */
+/* JADX WARNING: Not found resource field with id: 2130969382, name: attr.layout_constraintHorizontal_bias */
+/* JADX WARNING: Not found resource field with id: 2130969383, name: attr.layout_constraintHorizontal_chainStyle */
+/* JADX WARNING: Not found resource field with id: 2130969384, name: attr.layout_constraintHorizontal_weight */
+/* JADX WARNING: Not found resource field with id: 2130969385, name: attr.layout_constraintLeft_creator */
+/* JADX WARNING: Not found resource field with id: 2130969386, name: attr.layout_constraintLeft_toLeftOf */
+/* JADX WARNING: Not found resource field with id: 2130969387, name: attr.layout_constraintLeft_toRightOf */
+/* JADX WARNING: Not found resource field with id: 2130969388, name: attr.layout_constraintRight_creator */
+/* JADX WARNING: Not found resource field with id: 2130969389, name: attr.layout_constraintRight_toLeftOf */
+/* JADX WARNING: Not found resource field with id: 2130969390, name: attr.layout_constraintRight_toRightOf */
+/* JADX WARNING: Not found resource field with id: 2130969391, name: attr.layout_constraintStart_toEndOf */
+/* JADX WARNING: Not found resource field with id: 2130969392, name: attr.layout_constraintStart_toStartOf */
+/* JADX WARNING: Not found resource field with id: 2130969393, name: attr.layout_constraintTag */
+/* JADX WARNING: Not found resource field with id: 2130969394, name: attr.layout_constraintTop_creator */
+/* JADX WARNING: Not found resource field with id: 2130969395, name: attr.layout_constraintTop_toBottomOf */
+/* JADX WARNING: Not found resource field with id: 2130969396, name: attr.layout_constraintTop_toTopOf */
+/* JADX WARNING: Not found resource field with id: 2130969397, name: attr.layout_constraintVertical_bias */
+/* JADX WARNING: Not found resource field with id: 2130969398, name: attr.layout_constraintVertical_chainStyle */
+/* JADX WARNING: Not found resource field with id: 2130969399, name: attr.layout_constraintVertical_weight */
+/* JADX WARNING: Not found resource field with id: 2130969400, name: attr.layout_constraintWidth_default */
+/* JADX WARNING: Not found resource field with id: 2130969401, name: attr.layout_constraintWidth_max */
+/* JADX WARNING: Not found resource field with id: 2130969402, name: attr.layout_constraintWidth_min */
+/* JADX WARNING: Not found resource field with id: 2130969403, name: attr.layout_constraintWidth_percent */
+/* JADX WARNING: Not found resource field with id: 2130969404, name: attr.layout_dodgeInsetEdges */
+/* JADX WARNING: Not found resource field with id: 2130969405, name: attr.layout_editor_absoluteX */
+/* JADX WARNING: Not found resource field with id: 2130969406, name: attr.layout_editor_absoluteY */
+/* JADX WARNING: Not found resource field with id: 2130969407, name: attr.layout_goneMarginBottom */
+/* JADX WARNING: Not found resource field with id: 2130969408, name: attr.layout_goneMarginEnd */
+/* JADX WARNING: Not found resource field with id: 2130969409, name: attr.layout_goneMarginLeft */
+/* JADX WARNING: Not found resource field with id: 2130969410, name: attr.layout_goneMarginRight */
+/* JADX WARNING: Not found resource field with id: 2130969411, name: attr.layout_goneMarginStart */
+/* JADX WARNING: Not found resource field with id: 2130969412, name: attr.layout_goneMarginTop */
+/* JADX WARNING: Not found resource field with id: 2130969413, name: attr.layout_insetEdge */
+/* JADX WARNING: Not found resource field with id: 2130969414, name: attr.layout_keyline */
+/* JADX WARNING: Not found resource field with id: 2130969415, name: attr.layout_maxHeight */
+/* JADX WARNING: Not found resource field with id: 2130969416, name: attr.layout_maxWidth */
+/* JADX WARNING: Not found resource field with id: 2130969417, name: attr.layout_optimizationLevel */
+/* JADX WARNING: Not found resource field with id: 2130969418, name: attr.layout_scrollFlags */
+/* JADX WARNING: Not found resource field with id: 2130969419, name: attr.layout_scrollInterpolator */
+/* JADX WARNING: Not found resource field with id: 2130969420, name: attr.layout_viewType */
+/* JADX WARNING: Not found resource field with id: 2130969421, name: attr.lbDotRadius */
+/* JADX WARNING: Not found resource field with id: 2130969422, name: attr.lbImageCardViewType */
+/* JADX WARNING: Not found resource field with id: 2130969423, name: attr.lb_slideEdge */
+/* JADX WARNING: Not found resource field with id: 2130969424, name: attr.leftArrow */
+/* JADX WARNING: Not found resource field with id: 2130969426, name: attr.liftOnScroll */
+/* JADX WARNING: Not found resource field with id: 2130969427, name: attr.liftOnScrollTargetViewId */
+/* JADX WARNING: Not found resource field with id: 2130969429, name: attr.limitBoundsTo */
+/* JADX WARNING: Not found resource field with id: 2130969430, name: attr.lineHeight */
+/* JADX WARNING: Not found resource field with id: 2130969431, name: attr.lineLength */
+/* JADX WARNING: Not found resource field with id: 2130969432, name: attr.lineSpacing */
+/* JADX WARNING: Not found resource field with id: 2130969433, name: attr.listChoiceBackgroundIndicator */
+/* JADX WARNING: Not found resource field with id: 2130969434, name: attr.listChoiceIndicatorMultipleAnimated */
+/* JADX WARNING: Not found resource field with id: 2130969435, name: attr.listChoiceIndicatorSingleAnimated */
+/* JADX WARNING: Not found resource field with id: 2130969436, name: attr.listDividerAlertDialog */
+/* JADX WARNING: Not found resource field with id: 2130969437, name: attr.listItemLayout */
+/* JADX WARNING: Not found resource field with id: 2130969438, name: attr.listLayout */
+/* JADX WARNING: Not found resource field with id: 2130969441, name: attr.listMenuViewStyle */
+/* JADX WARNING: Not found resource field with id: 2130969443, name: attr.listPopupWindowStyle */
+/* JADX WARNING: Not found resource field with id: 2130969444, name: attr.listPreferredItemHeight */
+/* JADX WARNING: Not found resource field with id: 2130969445, name: attr.listPreferredItemHeightLarge */
+/* JADX WARNING: Not found resource field with id: 2130969446, name: attr.listPreferredItemHeightSmall */
+/* JADX WARNING: Not found resource field with id: 2130969447, name: attr.listPreferredItemPaddingEnd */
+/* JADX WARNING: Not found resource field with id: 2130969448, name: attr.listPreferredItemPaddingLeft */
+/* JADX WARNING: Not found resource field with id: 2130969449, name: attr.listPreferredItemPaddingRight */
+/* JADX WARNING: Not found resource field with id: 2130969450, name: attr.listPreferredItemPaddingStart */
+/* JADX WARNING: Not found resource field with id: 2130969455, name: attr.logo */
+/* JADX WARNING: Not found resource field with id: 2130969456, name: attr.logoDescription */
+/* JADX WARNING: Not found resource field with id: 2130969457, name: attr.lunarCalendar */
+/* JADX WARNING: Not found resource field with id: 2130969458, name: attr.maintainLineSpacing */
+/* JADX WARNING: Not found resource field with id: 2130969473, name: attr.maxAcceleration */
+/* JADX WARNING: Not found resource field with id: 2130969474, name: attr.maxActionInlineWidth */
+/* JADX WARNING: Not found resource field with id: 2130969475, name: attr.maxButtonHeight */
+/* JADX WARNING: Not found resource field with id: 2130969476, name: attr.maxDate */
+/* JADX WARNING: Not found resource field with id: 2130969477, name: attr.maxHeight */
+/* JADX WARNING: Not found resource field with id: 2130969478, name: attr.maxImageSize */
+/* JADX WARNING: Not found resource field with id: 2130969480, name: attr.maxMiddle */
+/* JADX WARNING: Not found resource field with id: 2130969482, name: attr.maxVelocity */
+/* JADX WARNING: Not found resource field with id: 2130969483, name: attr.maxWidth */
+/* JADX WARNING: Not found resource field with id: 2130969486, name: attr.measureWithLargestChild */
+/* JADX WARNING: Not found resource field with id: 2130969490, name: attr.mediaRouteButtonTint */
+/* JADX WARNING: Not found resource field with id: 2130969503, name: attr.menu */
+/* JADX WARNING: Not found resource field with id: 2130969504, name: attr.metricsAction */
+/* JADX WARNING: Not found resource field with id: 2130969505, name: attr.middleEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969506, name: attr.min */
+/* JADX WARNING: Not found resource field with id: 2130969507, name: attr.minDate */
+/* JADX WARNING: Not found resource field with id: 2130969508, name: attr.minHeight */
+/* JADX WARNING: Not found resource field with id: 2130969510, name: attr.minMiddle */
+/* JADX WARNING: Not found resource field with id: 2130969513, name: attr.minWidth */
+/* JADX WARNING: Not found resource field with id: 2130969518, name: attr.miuixAppCompatOverlayTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969523, name: attr.miuixAppcompatDrawOverlay */
+/* JADX WARNING: Not found resource field with id: 2130969525, name: attr.miuixAppcompatIndexerMinWidth */
+/* JADX WARNING: Not found resource field with id: 2130969526, name: attr.miuixAppcompatIndexerTable */
+/* JADX WARNING: Not found resource field with id: 2130969527, name: attr.miuixAppcompatIndexerTextColorList */
+/* JADX WARNING: Not found resource field with id: 2130969528, name: attr.miuixAppcompatIndexerTextSize */
+/* JADX WARNING: Not found resource field with id: 2130969530, name: attr.miuixAppcompatLabel */
+/* JADX WARNING: Not found resource field with id: 2130969531, name: attr.miuixAppcompatLabelMaxWidth */
+/* JADX WARNING: Not found resource field with id: 2130969532, name: attr.miuixAppcompatOverlayBackground */
+/* JADX WARNING: Not found resource field with id: 2130969533, name: attr.miuixAppcompatOverlayTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969534, name: attr.miuixAppcompatOverlayTextSize */
+/* JADX WARNING: Not found resource field with id: 2130969541, name: attr.miuixAppcompatWidgetManager */
+/* JADX WARNING: Not found resource field with id: 2130969542, name: attr.miuixAppcompatWidgetPadding */
+/* JADX WARNING: Not found resource field with id: 2130969544, name: attr.miuix_strokeColor */
+/* JADX WARNING: Not found resource field with id: 2130969545, name: attr.miuix_strokeWidth */
+/* JADX WARNING: Not found resource field with id: 2130969546, name: attr.mock_diagonalsColor */
+/* JADX WARNING: Not found resource field with id: 2130969547, name: attr.mock_label */
+/* JADX WARNING: Not found resource field with id: 2130969548, name: attr.mock_labelBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130969549, name: attr.mock_labelColor */
+/* JADX WARNING: Not found resource field with id: 2130969550, name: attr.mock_showDiagonals */
+/* JADX WARNING: Not found resource field with id: 2130969551, name: attr.mock_showLabel */
+/* JADX WARNING: Not found resource field with id: 2130969553, name: attr.motionDebug */
+/* JADX WARNING: Not found resource field with id: 2130969554, name: attr.motionInterpolator */
+/* JADX WARNING: Not found resource field with id: 2130969555, name: attr.motionPathRotate */
+/* JADX WARNING: Not found resource field with id: 2130969556, name: attr.motionProgress */
+/* JADX WARNING: Not found resource field with id: 2130969557, name: attr.motionStagger */
+/* JADX WARNING: Not found resource field with id: 2130969558, name: attr.motionTarget */
+/* JADX WARNING: Not found resource field with id: 2130969559, name: attr.motion_postLayoutCollision */
+/* JADX WARNING: Not found resource field with id: 2130969560, name: attr.motion_triggerOnCollision */
+/* JADX WARNING: Not found resource field with id: 2130969561, name: attr.moveWhenScrollAtTop */
+/* JADX WARNING: Not found resource field with id: 2130969562, name: attr.multiChoiceItemLayout */
+/* JADX WARNING: Not found resource field with id: 2130969564, name: attr.navigationContentDescription */
+/* JADX WARNING: Not found resource field with id: 2130969565, name: attr.navigationIcon */
+/* JADX WARNING: Not found resource field with id: 2130969566, name: attr.navigationMode */
+/* JADX WARNING: Not found resource field with id: 2130969568, name: attr.negativeButtonText */
+/* JADX WARNING: Not found resource field with id: 2130969569, name: attr.nestedScrollFlags */
+/* JADX WARNING: Not found resource field with id: 2130969570, name: attr.numColumns */
+/* JADX WARNING: Not found resource field with id: 2130969571, name: attr.numberOfColumns */
+/* JADX WARNING: Not found resource field with id: 2130969572, name: attr.numberOfRows */
+/* JADX WARNING: Not found resource field with id: 2130969574, name: attr.numericModifiers */
+/* JADX WARNING: Not found resource field with id: 2130969575, name: attr.onCross */
+/* JADX WARNING: Not found resource field with id: 2130969576, name: attr.onHide */
+/* JADX WARNING: Not found resource field with id: 2130969577, name: attr.onNegativeCross */
+/* JADX WARNING: Not found resource field with id: 2130969578, name: attr.onPositiveCross */
+/* JADX WARNING: Not found resource field with id: 2130969579, name: attr.onShow */
+/* JADX WARNING: Not found resource field with id: 2130969580, name: attr.onTouchUp */
+/* JADX WARNING: Not found resource field with id: 2130969591, name: attr.order */
+/* JADX WARNING: Not found resource field with id: 2130969592, name: attr.orderingFromXml */
+/* JADX WARNING: Not found resource field with id: 2130969594, name: attr.overScrollRange */
+/* JADX WARNING: Not found resource field with id: 2130969595, name: attr.overlapAnchor */
+/* JADX WARNING: Not found resource field with id: 2130969596, name: attr.overlay */
+/* JADX WARNING: Not found resource field with id: 2130969600, name: attr.paddingBottomNoButtons */
+/* JADX WARNING: Not found resource field with id: 2130969601, name: attr.paddingEnd */
+/* JADX WARNING: Not found resource field with id: 2130969602, name: attr.paddingStart */
+/* JADX WARNING: Not found resource field with id: 2130969603, name: attr.paddingTopNoTitle */
+/* JADX WARNING: Not found resource field with id: 2130969604, name: attr.paintColor */
+/* JADX WARNING: Not found resource field with id: 2130969605, name: attr.panelBackground */
+/* JADX WARNING: Not found resource field with id: 2130969606, name: attr.panelMenuListTheme */
+/* JADX WARNING: Not found resource field with id: 2130969607, name: attr.panelMenuListWidth */
+/* JADX WARNING: Not found resource field with id: 2130969609, name: attr.passwordToggleContentDescription */
+/* JADX WARNING: Not found resource field with id: 2130969610, name: attr.passwordToggleDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969611, name: attr.passwordToggleEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969612, name: attr.passwordToggleTint */
+/* JADX WARNING: Not found resource field with id: 2130969613, name: attr.passwordToggleTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969614, name: attr.pathMotionArc */
+/* JADX WARNING: Not found resource field with id: 2130969617, name: attr.percentHeight */
+/* JADX WARNING: Not found resource field with id: 2130969618, name: attr.percentWidth */
+/* JADX WARNING: Not found resource field with id: 2130969619, name: attr.percentX */
+/* JADX WARNING: Not found resource field with id: 2130969620, name: attr.percentY */
+/* JADX WARNING: Not found resource field with id: 2130969622, name: attr.persistent */
+/* JADX WARNING: Not found resource field with id: 2130969623, name: attr.pickerItemLayout */
+/* JADX WARNING: Not found resource field with id: 2130969624, name: attr.pickerItemTextViewId */
+/* JADX WARNING: Not found resource field with id: 2130969628, name: attr.pivotAnchor */
+/* JADX WARNING: Not found resource field with id: 2130969629, name: attr.pivotX */
+/* JADX WARNING: Not found resource field with id: 2130969630, name: attr.pivotY */
+/* JADX WARNING: Not found resource field with id: 2130969631, name: attr.placeholder_emptyVisibility */
+/* JADX WARNING: Not found resource field with id: 2130969633, name: attr.playSound */
+/* JADX WARNING: Not found resource field with id: 2130969656, name: attr.popupMenuStyle */
+/* JADX WARNING: Not found resource field with id: 2130969657, name: attr.popupTheme */
+/* JADX WARNING: Not found resource field with id: 2130969661, name: attr.popupWindowStyle */
+/* JADX WARNING: Not found resource field with id: 2130969662, name: attr.positiveButtonText */
+/* JADX WARNING: Not found resource field with id: 2130969683, name: attr.preserveIconSpacing */
+/* JADX WARNING: Not found resource field with id: 2130969684, name: attr.pressedTranslationZ */
+/* JADX WARNING: Not found resource field with id: 2130969687, name: attr.primaryKey */
+/* JADX WARNING: Not found resource field with id: 2130969688, name: attr.progress */
+/* JADX WARNING: Not found resource field with id: 2130969689, name: attr.progressBackgroundDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969692, name: attr.progressBarEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969694, name: attr.progressBarInlineWidth */
+/* JADX WARNING: Not found resource field with id: 2130969695, name: attr.progressBarPadding */
+/* JADX WARNING: Not found resource field with id: 2130969696, name: attr.progressBarStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130969697, name: attr.progressBarStyle */
+/* JADX WARNING: Not found resource field with id: 2130969699, name: attr.progressLayout */
+/* JADX WARNING: Not found resource field with id: 2130969700, name: attr.queryBackground */
+/* JADX WARNING: Not found resource field with id: 2130969701, name: attr.queryHint */
+/* JADX WARNING: Not found resource field with id: 2130969707, name: attr.radioButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130969710, name: attr.radius */
+/* JADX WARNING: Not found resource field with id: 2130969711, name: attr.ratingBarStyle */
+/* JADX WARNING: Not found resource field with id: 2130969712, name: attr.ratingBarStyleIndicator */
+/* JADX WARNING: Not found resource field with id: 2130969713, name: attr.ratingBarStyleSmall */
+/* JADX WARNING: Not found resource field with id: 2130969715, name: attr.region_heightLessThan */
+/* JADX WARNING: Not found resource field with id: 2130969716, name: attr.region_heightMoreThan */
+/* JADX WARNING: Not found resource field with id: 2130969717, name: attr.region_widthLessThan */
+/* JADX WARNING: Not found resource field with id: 2130969718, name: attr.region_widthMoreThan */
+/* JADX WARNING: Not found resource field with id: 2130969719, name: attr.regularTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969722, name: attr.resizable */
+/* JADX WARNING: Not found resource field with id: 2130969723, name: attr.resizeTrigger */
+/* JADX WARNING: Not found resource field with id: 2130969724, name: attr.resizedPaddingAdjustmentBottom */
+/* JADX WARNING: Not found resource field with id: 2130969725, name: attr.resizedPaddingAdjustmentTop */
+/* JADX WARNING: Not found resource field with id: 2130969726, name: attr.resizedTextSize */
+/* JADX WARNING: Not found resource field with id: 2130969727, name: attr.restrictedSwitchSummary */
+/* JADX WARNING: Not found resource field with id: 2130969728, name: attr.reverseLayout */
+/* JADX WARNING: Not found resource field with id: 2130969730, name: attr.rightArrow */
+/* JADX WARNING: Not found resource field with id: 2130969731, name: attr.rippleColor */
+/* JADX WARNING: Not found resource field with id: 2130969732, name: attr.rippleMaxSize */
+/* JADX WARNING: Not found resource field with id: 2130969733, name: attr.rippleMinSize */
+/* JADX WARNING: Not found resource field with id: 2130969737, name: attr.round */
+/* JADX WARNING: Not found resource field with id: 2130969738, name: attr.roundPercent */
+/* JADX WARNING: Not found resource field with id: 2130969742, name: attr.rowHeight */
+/* JADX WARNING: Not found resource field with id: 2130969746, name: attr.rowMaxHeight */
+/* JADX WARNING: Not found resource field with id: 2130969747, name: attr.rowRangeHeight */
+/* JADX WARNING: Not found resource field with id: 2130969748, name: attr.rowRangeSingleTextHeight */
+/* JADX WARNING: Not found resource field with id: 2130969749, name: attr.rowStyle */
+/* JADX WARNING: Not found resource field with id: 2130969751, name: attr.saturation */
+/* JADX WARNING: Not found resource field with id: 2130969752, name: attr.scaledTextSize */
+/* JADX WARNING: Not found resource field with id: 2130969753, name: attr.scrimAnimationDuration */
+/* JADX WARNING: Not found resource field with id: 2130969755, name: attr.scrimVisibleHeightTrigger */
+/* JADX WARNING: Not found resource field with id: 2130969756, name: attr.scrollOrientation */
+/* JADX WARNING: Not found resource field with id: 2130969757, name: attr.scrollRange */
+/* JADX WARNING: Not found resource field with id: 2130969758, name: attr.scrollStart */
+/* JADX WARNING: Not found resource field with id: 2130969759, name: attr.scrollableView */
+/* JADX WARNING: Not found resource field with id: 2130969766, name: attr.searchHintIcon */
+/* JADX WARNING: Not found resource field with id: 2130969767, name: attr.searchIcon */
+/* JADX WARNING: Not found resource field with id: 2130969768, name: attr.searchOrbBrightColor */
+/* JADX WARNING: Not found resource field with id: 2130969769, name: attr.searchOrbColor */
+/* JADX WARNING: Not found resource field with id: 2130969770, name: attr.searchOrbIcon */
+/* JADX WARNING: Not found resource field with id: 2130969771, name: attr.searchOrbIconColor */
+/* JADX WARNING: Not found resource field with id: 2130969773, name: attr.searchViewStyle */
+/* JADX WARNING: Not found resource field with id: 2130969775, name: attr.seekBarIncrement */
+/* JADX WARNING: Not found resource field with id: 2130969776, name: attr.seekBarInlineWidth */
+/* JADX WARNING: Not found resource field with id: 2130969779, name: attr.seekBarStyle */
+/* JADX WARNING: Not found resource field with id: 2130969780, name: attr.selectable */
+/* JADX WARNING: Not found resource field with id: 2130969781, name: attr.selectableItemBackground */
+/* JADX WARNING: Not found resource field with id: 2130969782, name: attr.selectableItemBackgroundBorderless */
+/* JADX WARNING: Not found resource field with id: 2130969783, name: attr.selectedAnimationDelay */
+/* JADX WARNING: Not found resource field with id: 2130969784, name: attr.selectedAnimationDuration */
+/* JADX WARNING: Not found resource field with id: 2130969786, name: attr.shapeAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969789, name: attr.shapeAppearanceOverlay */
+/* JADX WARNING: Not found resource field with id: 2130969791, name: attr.shouldDisableView */
+/* JADX WARNING: Not found resource field with id: 2130969792, name: attr.showAirplaneMode */
+/* JADX WARNING: Not found resource field with id: 2130969793, name: attr.showAsAction */
+/* JADX WARNING: Not found resource field with id: 2130969794, name: attr.showDark */
+/* JADX WARNING: Not found resource field with id: 2130969795, name: attr.showDay */
+/* JADX WARNING: Not found resource field with id: 2130969796, name: attr.showDividers */
+/* JADX WARNING: Not found resource field with id: 2130969797, name: attr.showMissingSim */
+/* JADX WARNING: Not found resource field with id: 2130969798, name: attr.showMonth */
+/* JADX WARNING: Not found resource field with id: 2130969799, name: attr.showMotionSpec */
+/* JADX WARNING: Not found resource field with id: 2130969800, name: attr.showPaths */
+/* JADX WARNING: Not found resource field with id: 2130969801, name: attr.showRightArrow */
+/* JADX WARNING: Not found resource field with id: 2130969802, name: attr.showSeekBarValue */
+/* JADX WARNING: Not found resource field with id: 2130969803, name: attr.showText */
+/* JADX WARNING: Not found resource field with id: 2130969804, name: attr.showTitle */
+/* JADX WARNING: Not found resource field with id: 2130969805, name: attr.showYear */
+/* JADX WARNING: Not found resource field with id: 2130969806, name: attr.shrinkMotionSpec */
+/* JADX WARNING: Not found resource field with id: 2130969808, name: attr.singleChoiceItemLayout */
+/* JADX WARNING: Not found resource field with id: 2130969809, name: attr.singleLine */
+/* JADX WARNING: Not found resource field with id: 2130969810, name: attr.singleLineButtonPaddingHorizontal */
+/* JADX WARNING: Not found resource field with id: 2130969811, name: attr.singleLineTitle */
+/* JADX WARNING: Not found resource field with id: 2130969812, name: attr.singleSelection */
+/* JADX WARNING: Not found resource field with id: 2130969814, name: attr.sizePercent */
+/* JADX WARNING: Not found resource field with id: 2130969818, name: attr.sliderOff */
+/* JADX WARNING: Not found resource field with id: 2130969819, name: attr.sliderOn */
+/* JADX WARNING: Not found resource field with id: 2130969820, name: attr.slidingBarColor */
+/* JADX WARNING: Not found resource field with id: 2130969824, name: attr.spacing */
+/* JADX WARNING: Not found resource field with id: 2130969825, name: attr.spanCount */
+/* JADX WARNING: Not found resource field with id: 2130969829, name: attr.spinnerDropDownItemStyle */
+/* JADX WARNING: Not found resource field with id: 2130969831, name: attr.spinnerModeCompat */
+/* JADX WARNING: Not found resource field with id: 2130969832, name: attr.spinnerStyle */
+/* JADX WARNING: Not found resource field with id: 2130969833, name: attr.spinnersShown */
+/* JADX WARNING: Not found resource field with id: 2130969835, name: attr.splitTrack */
+/* JADX WARNING: Not found resource field with id: 2130969836, name: attr.springBackMode */
+/* JADX WARNING: Not found resource field with id: 2130969837, name: attr.srcCompat */
+/* JADX WARNING: Not found resource field with id: 2130969838, name: attr.stackFromEnd */
+/* JADX WARNING: Not found resource field with id: 2130969839, name: attr.staggered */
+/* JADX WARNING: Not found resource field with id: 2130969840, name: attr.startIconContentDescription */
+/* JADX WARNING: Not found resource field with id: 2130969841, name: attr.startIconDrawable */
+/* JADX WARNING: Not found resource field with id: 2130969842, name: attr.startIconTint */
+/* JADX WARNING: Not found resource field with id: 2130969843, name: attr.startIconTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969844, name: attr.startPointRadius */
+/* JADX WARNING: Not found resource field with id: 2130969845, name: attr.startYear */
+/* JADX WARNING: Not found resource field with id: 2130969846, name: attr.startingWindowOverlay */
+/* JADX WARNING: Not found resource field with id: 2130969852, name: attr.state_dragged */
+/* JADX WARNING: Not found resource field with id: 2130969867, name: attr.statusBarBackground */
+/* JADX WARNING: Not found resource field with id: 2130969868, name: attr.statusBarScrim */
+/* JADX WARNING: Not found resource field with id: 2130969869, name: attr.strokeColor */
+/* JADX WARNING: Not found resource field with id: 2130969870, name: attr.strokeWidth */
+/* JADX WARNING: Not found resource field with id: 2130969871, name: attr.subContentEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969872, name: attr.subContentStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130969873, name: attr.subMenuArrow */
+/* JADX WARNING: Not found resource field with id: 2130969875, name: attr.submitBackground */
+/* JADX WARNING: Not found resource field with id: 2130969876, name: attr.subtitle */
+/* JADX WARNING: Not found resource field with id: 2130969877, name: attr.subtitleColor */
+/* JADX WARNING: Not found resource field with id: 2130969878, name: attr.subtitleSize */
+/* JADX WARNING: Not found resource field with id: 2130969879, name: attr.subtitleTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969880, name: attr.subtitleTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969881, name: attr.subtitleTextStyle */
+/* JADX WARNING: Not found resource field with id: 2130969882, name: attr.suggestionRowLayout */
+/* JADX WARNING: Not found resource field with id: 2130969883, name: attr.summary */
+/* JADX WARNING: Not found resource field with id: 2130969884, name: attr.summaryOff */
+/* JADX WARNING: Not found resource field with id: 2130969885, name: attr.summaryOn */
+/* JADX WARNING: Not found resource field with id: 2130969886, name: attr.swipeRefreshLayoutProgressSpinnerBackgroundColor */
+/* JADX WARNING: Not found resource field with id: 2130969887, name: attr.switchMinWidth */
+/* JADX WARNING: Not found resource field with id: 2130969888, name: attr.switchPadding */
+/* JADX WARNING: Not found resource field with id: 2130969891, name: attr.switchStyle */
+/* JADX WARNING: Not found resource field with id: 2130969892, name: attr.switchTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969893, name: attr.switchTextOff */
+/* JADX WARNING: Not found resource field with id: 2130969894, name: attr.switchTextOn */
+/* JADX WARNING: Not found resource field with id: 2130969895, name: attr.tabBackground */
+/* JADX WARNING: Not found resource field with id: 2130969896, name: attr.tabContentStart */
+/* JADX WARNING: Not found resource field with id: 2130969897, name: attr.tabGravity */
+/* JADX WARNING: Not found resource field with id: 2130969898, name: attr.tabIconTint */
+/* JADX WARNING: Not found resource field with id: 2130969899, name: attr.tabIconTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969900, name: attr.tabIndicator */
+/* JADX WARNING: Not found resource field with id: 2130969901, name: attr.tabIndicatorAnimationDuration */
+/* JADX WARNING: Not found resource field with id: 2130969902, name: attr.tabIndicatorColor */
+/* JADX WARNING: Not found resource field with id: 2130969903, name: attr.tabIndicatorFullWidth */
+/* JADX WARNING: Not found resource field with id: 2130969904, name: attr.tabIndicatorGravity */
+/* JADX WARNING: Not found resource field with id: 2130969905, name: attr.tabIndicatorHeight */
+/* JADX WARNING: Not found resource field with id: 2130969906, name: attr.tabInlineLabel */
+/* JADX WARNING: Not found resource field with id: 2130969907, name: attr.tabMaxWidth */
+/* JADX WARNING: Not found resource field with id: 2130969908, name: attr.tabMinWidth */
+/* JADX WARNING: Not found resource field with id: 2130969909, name: attr.tabMode */
+/* JADX WARNING: Not found resource field with id: 2130969910, name: attr.tabPadding */
+/* JADX WARNING: Not found resource field with id: 2130969911, name: attr.tabPaddingBottom */
+/* JADX WARNING: Not found resource field with id: 2130969912, name: attr.tabPaddingEnd */
+/* JADX WARNING: Not found resource field with id: 2130969913, name: attr.tabPaddingStart */
+/* JADX WARNING: Not found resource field with id: 2130969914, name: attr.tabPaddingTop */
+/* JADX WARNING: Not found resource field with id: 2130969915, name: attr.tabRippleColor */
+/* JADX WARNING: Not found resource field with id: 2130969916, name: attr.tabSelectedTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969918, name: attr.tabTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969919, name: attr.tabTextColor */
+/* JADX WARNING: Not found resource field with id: 2130969920, name: attr.tabUnboundedRipple */
+/* JADX WARNING: Not found resource field with id: 2130969921, name: attr.targetId */
+/* JADX WARNING: Not found resource field with id: 2130969923, name: attr.telltales_tailColor */
+/* JADX WARNING: Not found resource field with id: 2130969924, name: attr.telltales_tailScale */
+/* JADX WARNING: Not found resource field with id: 2130969925, name: attr.telltales_velocityMode */
+/* JADX WARNING: Not found resource field with id: 2130969926, name: attr.text */
+/* JADX WARNING: Not found resource field with id: 2130969927, name: attr.textAllCaps */
+/* JADX WARNING: Not found resource field with id: 2130969928, name: attr.textAppearance */
+/* JADX WARNING: Not found resource field with id: 2130969939, name: attr.textAppearanceLargePopupMenu */
+/* JADX WARNING: Not found resource field with id: 2130969940, name: attr.textAppearanceListItem */
+/* JADX WARNING: Not found resource field with id: 2130969941, name: attr.textAppearanceListItemSecondary */
+/* JADX WARNING: Not found resource field with id: 2130969942, name: attr.textAppearanceListItemSmall */
+/* JADX WARNING: Not found resource field with id: 2130969944, name: attr.textAppearancePopupMenuHeader */
+/* JADX WARNING: Not found resource field with id: 2130969945, name: attr.textAppearanceSearchResultSubtitle */
+/* JADX WARNING: Not found resource field with id: 2130969946, name: attr.textAppearanceSearchResultTitle */
+/* JADX WARNING: Not found resource field with id: 2130969947, name: attr.textAppearanceSmallPopupMenu */
+/* JADX WARNING: Not found resource field with id: 2130969950, name: attr.textCircleRadius */
+/* JADX WARNING: Not found resource field with id: 2130969951, name: attr.textColorAlertDialogListItem */
+/* JADX WARNING: Not found resource field with id: 2130969961, name: attr.textColorSearchUrl */
+/* JADX WARNING: Not found resource field with id: 2130969963, name: attr.textEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969964, name: attr.textHandleAndCursorColor */
+/* JADX WARNING: Not found resource field with id: 2130969966, name: attr.textLocale */
+/* JADX WARNING: Not found resource field with id: 2130969968, name: attr.textSizeHighlight */
+/* JADX WARNING: Not found resource field with id: 2130969969, name: attr.textSizeHint */
+/* JADX WARNING: Not found resource field with id: 2130969970, name: attr.textStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130969971, name: attr.textVerticalPadding */
+/* JADX WARNING: Not found resource field with id: 2130969972, name: attr.textView */
+/* JADX WARNING: Not found resource field with id: 2130969973, name: attr.theme */
+/* JADX WARNING: Not found resource field with id: 2130969975, name: attr.thumbTextPadding */
+/* JADX WARNING: Not found resource field with id: 2130969976, name: attr.thumbTint */
+/* JADX WARNING: Not found resource field with id: 2130969977, name: attr.thumbTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969982, name: attr.tickMark */
+/* JADX WARNING: Not found resource field with id: 2130969983, name: attr.tickMarkTint */
+/* JADX WARNING: Not found resource field with id: 2130969984, name: attr.tickMarkTintMode */
+/* JADX WARNING: Not found resource field with id: 2130969987, name: attr.tint */
+/* JADX WARNING: Not found resource field with id: 2130969988, name: attr.tintColor */
+/* JADX WARNING: Not found resource field with id: 2130969989, name: attr.tintMode */
+/* JADX WARNING: Not found resource field with id: 2130969990, name: attr.title */
+/* JADX WARNING: Not found resource field with id: 2130969991, name: attr.titleBackground */
+/* JADX WARNING: Not found resource field with id: 2130969992, name: attr.titleCenter */
+/* JADX WARNING: Not found resource field with id: 2130969993, name: attr.titleColor */
+/* JADX WARNING: Not found resource field with id: 2130969994, name: attr.titleEnabled */
+/* JADX WARNING: Not found resource field with id: 2130969995, name: attr.titleEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969996, name: attr.titleItemEndPadding */
+/* JADX WARNING: Not found resource field with id: 2130969997, name: attr.titleItemStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130969998, name: attr.titleMargin */
+/* JADX WARNING: Not found resource field with id: 2130969999, name: attr.titleMarginBottom */
+/* JADX WARNING: Not found resource field with id: 2130970000, name: attr.titleMarginEnd */
+/* JADX WARNING: Not found resource field with id: 2130970001, name: attr.titleMarginStart */
+/* JADX WARNING: Not found resource field with id: 2130970002, name: attr.titleMarginTop */
+/* JADX WARNING: Not found resource field with id: 2130970003, name: attr.titleMargins */
+/* JADX WARNING: Not found resource field with id: 2130970004, name: attr.titleSize */
+/* JADX WARNING: Not found resource field with id: 2130970005, name: attr.titleStartPadding */
+/* JADX WARNING: Not found resource field with id: 2130970006, name: attr.titleTextAppearance */
+/* JADX WARNING: Not found resource field with id: 2130970007, name: attr.titleTextColor */
+/* JADX WARNING: Not found resource field with id: 2130970008, name: attr.titleTextStyle */
+/* JADX WARNING: Not found resource field with id: 2130970009, name: attr.toolbarId */
+/* JADX WARNING: Not found resource field with id: 2130970010, name: attr.toolbarNavigationButtonStyle */
+/* JADX WARNING: Not found resource field with id: 2130970011, name: attr.toolbarStyle */
+/* JADX WARNING: Not found resource field with id: 2130970012, name: attr.tooltipForegroundColor */
+/* JADX WARNING: Not found resource field with id: 2130970013, name: attr.tooltipFrameBackground */
+/* JADX WARNING: Not found resource field with id: 2130970014, name: attr.tooltipText */
+/* JADX WARNING: Not found resource field with id: 2130970015, name: attr.topArrow */
+/* JADX WARNING: Not found resource field with id: 2130970016, name: attr.topArrowWithTitle */
+/* JADX WARNING: Not found resource field with id: 2130970017, name: attr.topLeftArrow */
+/* JADX WARNING: Not found resource field with id: 2130970018, name: attr.topRightArrow */
+/* JADX WARNING: Not found resource field with id: 2130970019, name: attr.touchAnchorId */
+/* JADX WARNING: Not found resource field with id: 2130970020, name: attr.touchAnchorSide */
+/* JADX WARNING: Not found resource field with id: 2130970021, name: attr.touchRegionId */
+/* JADX WARNING: Not found resource field with id: 2130970022, name: attr.track */
+/* JADX WARNING: Not found resource field with id: 2130970023, name: attr.trackTint */
+/* JADX WARNING: Not found resource field with id: 2130970024, name: attr.trackTintMode */
+/* JADX WARNING: Not found resource field with id: 2130970025, name: attr.transitionDisable */
+/* JADX WARNING: Not found resource field with id: 2130970026, name: attr.transitionEasing */
+/* JADX WARNING: Not found resource field with id: 2130970027, name: attr.transitionFlags */
+/* JADX WARNING: Not found resource field with id: 2130970028, name: attr.transitionPathRotate */
+/* JADX WARNING: Not found resource field with id: 2130970029, name: attr.translucentTabIndicator */
+/* JADX WARNING: Not found resource field with id: 2130970030, name: attr.triggerId */
+/* JADX WARNING: Not found resource field with id: 2130970031, name: attr.triggerReceiver */
+/* JADX WARNING: Not found resource field with id: 2130970032, name: attr.triggerSlack */
+/* JADX WARNING: Not found resource field with id: 2130970033, name: attr.ttcIndex */
+/* JADX WARNING: Not found resource field with id: 2130970034, name: attr.updatesContinuously */
+/* JADX WARNING: Not found resource field with id: 2130970035, name: attr.useAdditionalSummary */
+/* JADX WARNING: Not found resource field with id: 2130970036, name: attr.useAdminDisabledSummary */
+/* JADX WARNING: Not found resource field with id: 2130970037, name: attr.useCompatPadding */
+/* JADX WARNING: Not found resource field with id: 2130970038, name: attr.useCurrentTime */
+/* JADX WARNING: Not found resource field with id: 2130970039, name: attr.useMaterialThemeColors */
+/* JADX WARNING: Not found resource field with id: 2130970040, name: attr.useSimpleSummaryProvider */
+/* JADX WARNING: Not found resource field with id: 2130970041, name: attr.userRestriction */
+/* JADX WARNING: Not found resource field with id: 2130970042, name: attr.verticalMargin */
+/* JADX WARNING: Not found resource field with id: 2130970043, name: attr.verticalSpacing */
+/* JADX WARNING: Not found resource field with id: 2130970044, name: attr.viewInflaterClass */
+/* JADX WARNING: Not found resource field with id: 2130970045, name: attr.viewType */
+/* JADX WARNING: Not found resource field with id: 2130970046, name: attr.visibilityMode */
+/* JADX WARNING: Not found resource field with id: 2130970047, name: attr.voiceIcon */
+/* JADX WARNING: Not found resource field with id: 2130970050, name: attr.warmth */
+/* JADX WARNING: Not found resource field with id: 2130970051, name: attr.waveDecay */
+/* JADX WARNING: Not found resource field with id: 2130970052, name: attr.waveOffset */
+/* JADX WARNING: Not found resource field with id: 2130970053, name: attr.wavePeriod */
+/* JADX WARNING: Not found resource field with id: 2130970054, name: attr.waveShape */
+/* JADX WARNING: Not found resource field with id: 2130970055, name: attr.waveVariesBy */
+/* JADX WARNING: Not found resource field with id: 2130970056, name: attr.widgetLayout */
+/* JADX WARNING: Not found resource field with id: 2130970059, name: attr.windowActionBar */
+/* JADX WARNING: Not found resource field with id: 2130970060, name: attr.windowActionBarMovable */
+/* JADX WARNING: Not found resource field with id: 2130970061, name: attr.windowActionBarOverlay */
+/* JADX WARNING: Not found resource field with id: 2130970062, name: attr.windowActionModeOverlay */
+/* JADX WARNING: Not found resource field with id: 2130970064, name: attr.windowDisablePreview */
+/* JADX WARNING: Not found resource field with id: 2130970065, name: attr.windowFixedHeightMajor */
+/* JADX WARNING: Not found resource field with id: 2130970066, name: attr.windowFixedHeightMinor */
+/* JADX WARNING: Not found resource field with id: 2130970067, name: attr.windowFixedWidthMajor */
+/* JADX WARNING: Not found resource field with id: 2130970068, name: attr.windowFixedWidthMinor */
+/* JADX WARNING: Not found resource field with id: 2130970069, name: attr.windowLayoutMode */
+/* JADX WARNING: Not found resource field with id: 2130970070, name: attr.windowMaxHeightMajor */
+/* JADX WARNING: Not found resource field with id: 2130970071, name: attr.windowMaxHeightMinor */
+/* JADX WARNING: Not found resource field with id: 2130970072, name: attr.windowMaxWidthMajor */
+/* JADX WARNING: Not found resource field with id: 2130970073, name: attr.windowMaxWidthMinor */
+/* JADX WARNING: Not found resource field with id: 2130970074, name: attr.windowMinWidthMajor */
+/* JADX WARNING: Not found resource field with id: 2130970075, name: attr.windowMinWidthMinor */
+/* JADX WARNING: Not found resource field with id: 2130970076, name: attr.windowNoTitle */
+/* JADX WARNING: Not found resource field with id: 2130970078, name: attr.windowSplitActionBar */
+/* JADX WARNING: Not found resource field with id: 2130970079, name: attr.windowTranslucentStatus */
 public final class R {
 
     /* renamed from: com.android.systemui.R$anim  reason: case insensitive filesystem */
@@ -1812,1489 +1814,1493 @@ public final class R {
         public static final int actionBarEmbedTabs = 2130968592;
         public static final int actionBarEmbededTabsBackground = 2130968593;
         public static final int actionBarExpandBackground = 2130968594;
-        public static final int actionBarExpandTabBarStyle = 2130968595;
-        public static final int actionBarFavoriteIcon = 2130968596;
-        public static final int actionBarIndeterminateProgressStyle = 2130968597;
-        public static final int actionBarItemBackground = 2130968598;
-        public static final int actionBarMovableLayoutStyle = 2130968599;
-        public static final int actionBarMoveIcon = 2130968600;
-        public static final int actionBarNewIcon = 2130968601;
-        public static final int actionBarPasteIcon = 2130968602;
-        public static final int actionBarPauseIcon = 2130968603;
-        public static final int actionBarPopupTheme = 2130968604;
-        public static final int actionBarRefreshIcon = 2130968605;
-        public static final int actionBarRemoveBlacklistIcon = 2130968606;
-        public static final int actionBarRemoveSecretIcon = 2130968607;
-        public static final int actionBarRenameIcon = 2130968608;
-        public static final int actionBarSaveIcon = 2130968609;
-        public static final int actionBarSearchIcon = 2130968610;
-        public static final int actionBarSecondaryTabBarStyle = 2130968611;
-        public static final int actionBarSendIcon = 2130968612;
-        public static final int actionBarSettingIcon = 2130968613;
-        public static final int actionBarShareIcon = 2130968614;
-        public static final int actionBarSize = 2130968615;
-        public static final int actionBarSplitBackground = 2130968616;
-        public static final int actionBarSplitStyle = 2130968617;
-        public static final int actionBarStackBackground = 2130968618;
-        public static final int actionBarStackedBackground = 2130968619;
-        public static final int actionBarStartIcon = 2130968620;
-        public static final int actionBarStickIcon = 2130968621;
-        public static final int actionBarStyle = 2130968622;
-        public static final int actionBarSubtitleColor = 2130968623;
-        public static final int actionBarTabBadgeIcon = 2130968624;
-        public static final int actionBarTabBarStyle = 2130968625;
-        public static final int actionBarTabExpandStyle = 2130968626;
-        public static final int actionBarTabSecondaryStyle = 2130968627;
-        public static final int actionBarTabStyle = 2130968628;
-        public static final int actionBarTabTextExpandStyle = 2130968629;
-        public static final int actionBarTabTextSecondaryExpandStyle = 2130968630;
-        public static final int actionBarTabTextSecondaryStyle = 2130968631;
-        public static final int actionBarTabTextStyle = 2130968632;
-        public static final int actionBarTheme = 2130968633;
-        public static final int actionBarTightTitle = 2130968634;
-        public static final int actionBarTitleColor = 2130968635;
-        public static final int actionBarUnStickIcon = 2130968636;
-        public static final int actionBarUnfavoriteIcon = 2130968637;
-        public static final int actionBarUpdateIcon = 2130968638;
-        public static final int actionBarWidgetTheme = 2130968639;
-        public static final int actionButtonStyle = 2130968640;
-        public static final int actionDividerHeight = 2130968641;
-        public static final int actionDropDownStyle = 2130968642;
-        public static final int actionLayout = 2130968643;
-        public static final int actionMenuTextAppearance = 2130968644;
-        public static final int actionMenuTextColor = 2130968645;
-        public static final int actionModeAnim = 2130968646;
-        public static final int actionModeBackground = 2130968647;
-        public static final int actionModeButtonStyle = 2130968648;
-        public static final int actionModeCancelButtonStyle = 2130968649;
-        public static final int actionModeCloseButtonStyle = 2130968650;
-        public static final int actionModeCloseContentDescription = 2130968651;
-        public static final int actionModeCloseDrawable = 2130968652;
-        public static final int actionModeConfirmButtonStyle = 2130968653;
-        public static final int actionModeCopyDrawable = 2130968654;
-        public static final int actionModeCutDrawable = 2130968655;
-        public static final int actionModeFindDrawable = 2130968656;
-        public static final int actionModeOverflowButtonStyle = 2130968657;
-        public static final int actionModePasteDrawable = 2130968658;
-        public static final int actionModePopupWindowStyle = 2130968659;
-        public static final int actionModeSelectAllDrawable = 2130968660;
-        public static final int actionModeSelectButtonStyle = 2130968661;
-        public static final int actionModeShareDrawable = 2130968662;
-        public static final int actionModeSplitBackground = 2130968663;
-        public static final int actionModeStyle = 2130968664;
-        public static final int actionModeTheme = 2130968665;
-        public static final int actionModeTitleColor = 2130968666;
-        public static final int actionModeWebSearchDrawable = 2130968667;
-        public static final int actionOverflowButtonStyle = 2130968668;
-        public static final int actionOverflowMenuStyle = 2130968669;
-        public static final int actionProviderClass = 2130968670;
-        public static final int actionTextColorAlpha = 2130968671;
-        public static final int actionViewClass = 2130968672;
-        public static final int actionbarOverlayMaskColorOled = 2130968673;
-        public static final int actionbarSearchMaskColor = 2130968674;
-        public static final int activatedAnimationDuration = 2130968675;
-        public static final int activatedTextAppearance = 2130968676;
-        public static final int activeFrameColor = 2130968677;
-        public static final int activityChooserViewStyle = 2130968678;
-        public static final int adapter = 2130968679;
-        public static final int adjustable = 2130968680;
-        public static final int alertDialogButtonGroupStyle = 2130968681;
-        public static final int alertDialogCenterButtons = 2130968682;
-        public static final int alertDialogStyle = 2130968683;
-        public static final int alertDialogTheme = 2130968684;
-        public static final int allCaps = 2130968685;
-        public static final int allowDividerAbove = 2130968686;
-        public static final int allowDividerAfterLastItem = 2130968687;
-        public static final int allowDividerBelow = 2130968688;
-        public static final int allowStacking = 2130968689;
-        public static final int alpha = 2130968690;
-        public static final int alphabeticModifiers = 2130968691;
-        public static final int altSrc = 2130968692;
-        public static final int amPmStyle = 2130968693;
-        public static final int animate_relativeTo = 2130968694;
-        public static final int animationMode = 2130968695;
-        public static final int applyMotionScene = 2130968696;
-        public static final int arcMode = 2130968697;
-        public static final int arrowBgColor = 2130968698;
-        public static final int arrowColor = 2130968699;
-        public static final int arrowFilterSortTabView = 2130968700;
-        public static final int arrowHeadLength = 2130968701;
-        public static final int arrowPopupViewStyle = 2130968702;
-        public static final int arrowRadius = 2130968703;
-        public static final int arrowRightFillColor = 2130968704;
-        public static final int arrowRightStrokeColor = 2130968705;
-        public static final int arrowShaftLength = 2130968706;
-        public static final int attributeName = 2130968707;
-        public static final int autoCompleteTextViewStyle = 2130968708;
-        public static final int autoSizeMaxTextSize = 2130968709;
-        public static final int autoSizeMinTextSize = 2130968710;
-        public static final int autoSizePresetSizes = 2130968711;
-        public static final int autoSizeStepGranularity = 2130968712;
-        public static final int autoSizeTextType = 2130968713;
-        public static final int autoTransition = 2130968714;
-        public static final int avatarPadding = 2130968715;
-        public static final int background = 2130968716;
-        public static final int backgroundColor = 2130968717;
-        public static final int backgroundInsetBottom = 2130968718;
-        public static final int backgroundInsetEnd = 2130968719;
-        public static final int backgroundInsetStart = 2130968720;
-        public static final int backgroundInsetTop = 2130968721;
-        public static final int backgroundLeft = 2130968722;
-        public static final int backgroundOverlayColorAlpha = 2130968723;
-        public static final int backgroundProtectedStyle = 2130968724;
-        public static final int backgroundRight = 2130968725;
-        public static final int backgroundSplit = 2130968726;
-        public static final int backgroundStacked = 2130968727;
-        public static final int backgroundTint = 2130968728;
-        public static final int backgroundTintMode = 2130968729;
-        public static final int badgeDiameter = 2130968730;
-        public static final int badgeMargin = 2130968731;
-        public static final int bar = 2130968732;
-        public static final int barLength = 2130968733;
-        public static final int barOff = 2130968734;
-        public static final int barOn = 2130968735;
-        public static final int barrierAllowsGoneWidgets = 2130968736;
-        public static final int barrierDirection = 2130968737;
-        public static final int barrierMargin = 2130968738;
-        public static final int baseCardViewStyle = 2130968739;
-        public static final int behavior_autoHide = 2130968740;
-        public static final int behavior_autoShrink = 2130968741;
-        public static final int behavior_fitToContents = 2130968742;
-        public static final int behavior_halfExpandedRatio = 2130968743;
-        public static final int behavior_hideable = 2130968744;
-        public static final int behavior_overlapTop = 2130968745;
-        public static final int behavior_peekHeight = 2130968746;
-        public static final int behavior_saveFlags = 2130968747;
-        public static final int behavior_skipCollapsed = 2130968748;
-        public static final int borderWidth = 2130968749;
-        public static final int borderlessButtonStyle = 2130968750;
-        public static final int bottomAppBarStyle = 2130968751;
-        public static final int bottomArrow = 2130968752;
-        public static final int bottomDividerEndPadding = 2130968753;
-        public static final int bottomDividerStartPadding = 2130968754;
-        public static final int bottomLeftArrow = 2130968755;
-        public static final int bottomNavigationStyle = 2130968756;
-        public static final int bottomRightArrow = 2130968757;
-        public static final int bottomSheetDialogTheme = 2130968758;
-        public static final int bottomSheetStyle = 2130968759;
-        public static final int boxBackgroundColor = 2130968760;
-        public static final int boxBackgroundMode = 2130968761;
-        public static final int boxCollapsedPaddingTop = 2130968762;
-        public static final int boxCornerRadiusBottomEnd = 2130968763;
-        public static final int boxCornerRadiusBottomStart = 2130968764;
-        public static final int boxCornerRadiusTopEnd = 2130968765;
-        public static final int boxCornerRadiusTopStart = 2130968766;
-        public static final int boxStrokeColor = 2130968767;
-        public static final int boxStrokeWidth = 2130968768;
-        public static final int brightness = 2130968769;
-        public static final int browsePaddingBottom = 2130968770;
-        public static final int browsePaddingEnd = 2130968771;
-        public static final int browsePaddingStart = 2130968772;
-        public static final int browsePaddingTop = 2130968773;
-        public static final int browseRowsFadingEdgeLength = 2130968774;
-        public static final int browseRowsMarginStart = 2130968775;
-        public static final int browseRowsMarginTop = 2130968776;
-        public static final int browseTitleIconStyle = 2130968777;
-        public static final int browseTitleTextStyle = 2130968778;
-        public static final int browseTitleViewLayout = 2130968779;
-        public static final int browseTitleViewStyle = 2130968780;
-        public static final int buttonBackground = 2130968781;
-        public static final int buttonBackgroundWarning = 2130968782;
-        public static final int buttonBarButtonStyle = 2130968783;
-        public static final int buttonBarDefaultButtonStyle = 2130968784;
-        public static final int buttonBarNegativeButtonStyle = 2130968785;
-        public static final int buttonBarNeutralButtonStyle = 2130968786;
-        public static final int buttonBarPositiveButtonStyle = 2130968787;
-        public static final int buttonBarPrimaryButtonStyle = 2130968788;
-        public static final int buttonBarStyle = 2130968789;
-        public static final int buttonCompat = 2130968790;
-        public static final int buttonGravity = 2130968791;
-        public static final int buttonIconDimen = 2130968792;
-        public static final int buttonInlineDeleteBackground = 2130968793;
-        public static final int buttonInlineDetailBackground = 2130968794;
-        public static final int buttonInlineExpandBackground = 2130968795;
-        public static final int buttonInlineShrinkBackground = 2130968796;
-        public static final int buttonPanelSideLayout = 2130968797;
-        public static final int buttonRectStyleBackground = 2130968798;
-        public static final int buttonStrokeWidth = 2130968799;
-        public static final int buttonStyle = 2130968800;
-        public static final int buttonStyleSmall = 2130968801;
-        public static final int buttonTint = 2130968802;
-        public static final int buttonTintMode = 2130968803;
-        public static final int calendarViewShown = 2130968804;
-        public static final int cardBackground = 2130968805;
-        public static final int cardBackgroundColor = 2130968806;
-        public static final int cardCornerRadius = 2130968807;
-        public static final int cardElevation = 2130968808;
-        public static final int cardForeground = 2130968809;
-        public static final int cardForegroundColor = 2130968810;
-        public static final int cardMaxElevation = 2130968811;
-        public static final int cardPreventCornerOverlap = 2130968812;
-        public static final int cardType = 2130968813;
-        public static final int cardUseCompatPadding = 2130968814;
-        public static final int cardViewStyle = 2130968815;
-        public static final int chainUseRtl = 2130968816;
-        public static final int charPadding = 2130968817;
-        public static final int chargingAnimColor = 2130968818;
-        public static final int checkBoxButtonCompat = 2130968819;
-        public static final int checkBoxDrawableTouchAnimEnable = 2130968820;
-        public static final int checkBoxOnDrawableBackgroundColor = 2130968821;
-        public static final int checkBoxOnDrawableForegroundColor = 2130968822;
-        public static final int checkBoxPreferenceStyle = 2130968823;
-        public static final int checkMarkCompat = 2130968824;
-        public static final int checkWidgetBackgroundDisableAlpha = 2130968825;
-        public static final int checkWidgetBackgroundNormalAlpha = 2130968826;
-        public static final int checkWidgetDisableDrawableBackgroundColor = 2130968827;
-        public static final int checkWidgetOnAlphaDrawableBackgroundColor = 2130968828;
-        public static final int checkWidgetStrokeColor = 2130968829;
-        public static final int checkWidgetStrokeDisableAlpha = 2130968830;
-        public static final int checkWidgetStrokeNormalAlpha = 2130968831;
-        public static final int checkableButtonTextColor = 2130968832;
-        public static final int checkableButtonTextColorMultiple = 2130968833;
-        public static final int checkableButtonTextColorSingle = 2130968834;
-        public static final int checkablePreferenceItemColorFilterChecked = 2130968835;
-        public static final int checkablePreferenceItemColorFilterNormal = 2130968836;
-        public static final int checkablePreferenceItemColorPressed = 2130968837;
-        public static final int checkablePreferenceItemColorPressedChecked = 2130968838;
-        public static final int checkboxStyle = 2130968839;
-        public static final int checkedButton = 2130968840;
-        public static final int checkedChip = 2130968841;
-        public static final int checkedIcon = 2130968842;
-        public static final int checkedIconEnabled = 2130968843;
-        public static final int checkedIconTint = 2130968844;
-        public static final int checkedIconVisible = 2130968845;
-        public static final int checkedTextViewStyle = 2130968846;
-        public static final int checkwidget_backgroundDisableAlpha = 2130968847;
-        public static final int checkwidget_backgroundNormalAlpha = 2130968848;
-        public static final int checkwidget_checkOnAlphaBackgroundColor = 2130968849;
-        public static final int checkwidget_checkOnBackgroundColor = 2130968850;
-        public static final int checkwidget_checkOnForegroundColor = 2130968851;
-        public static final int checkwidget_disableBackgroundColor = 2130968852;
-        public static final int checkwidget_strokeColor = 2130968853;
-        public static final int checkwidget_strokeDisableAlpha = 2130968854;
-        public static final int checkwidget_strokeNormalAlpha = 2130968855;
-        public static final int checkwidget_touchAnimEnable = 2130968856;
-        public static final int children_sequence_state = 2130968857;
-        public static final int chipBackgroundColor = 2130968858;
-        public static final int chipCornerRadius = 2130968859;
-        public static final int chipEndPadding = 2130968860;
-        public static final int chipGroupStyle = 2130968861;
-        public static final int chipIcon = 2130968862;
-        public static final int chipIconEnabled = 2130968863;
-        public static final int chipIconSize = 2130968864;
-        public static final int chipIconTint = 2130968865;
-        public static final int chipIconVisible = 2130968866;
-        public static final int chipMinHeight = 2130968867;
-        public static final int chipMinTouchTargetSize = 2130968868;
-        public static final int chipSpacing = 2130968869;
-        public static final int chipSpacingHorizontal = 2130968870;
-        public static final int chipSpacingVertical = 2130968871;
-        public static final int chipStandaloneStyle = 2130968872;
-        public static final int chipStartPadding = 2130968873;
-        public static final int chipStrokeColor = 2130968874;
-        public static final int chipStrokeWidth = 2130968875;
-        public static final int chipStyle = 2130968876;
-        public static final int chipSurfaceColor = 2130968877;
-        public static final int circleProgressBarColor = 2130968878;
-        public static final int circleRadius = 2130968879;
-        public static final int clearableEditTextIcon = 2130968880;
-        public static final int clearableEditTextStyle = 2130968881;
-        public static final int clickAction = 2130968882;
-        public static final int clipEdge = 2130968883;
-        public static final int clipEnd = 2130968884;
-        public static final int closable = 2130968885;
-        public static final int closeBackground = 2130968886;
-        public static final int closeIcon = 2130968887;
-        public static final int closeIconEnabled = 2130968888;
-        public static final int closeIconEndPadding = 2130968889;
-        public static final int closeIconSize = 2130968890;
-        public static final int closeIconStartPadding = 2130968891;
-        public static final int closeIconTint = 2130968892;
-        public static final int closeIconVisible = 2130968893;
-        public static final int closeItemLayout = 2130968894;
-        public static final int closed_captioning = 2130968895;
-        public static final int collapseContentDescription = 2130968896;
-        public static final int collapseIcon = 2130968897;
-        public static final int collapsedTitleGravity = 2130968898;
-        public static final int collapsedTitleTextAppearance = 2130968899;
-        public static final int color = 2130968900;
-        public static final int colorAccent = 2130968901;
-        public static final int colorBackgroundFloating = 2130968902;
-        public static final int colorButtonNormal = 2130968903;
-        public static final int colorControlActivated = 2130968904;
-        public static final int colorControlHighlight = 2130968905;
-        public static final int colorControlNormal = 2130968906;
-        public static final int colorDividerLine = 2130968907;
-        public static final int colorError = 2130968908;
-        public static final int colorOnBackground = 2130968909;
-        public static final int colorOnError = 2130968910;
-        public static final int colorOnPrimary = 2130968911;
-        public static final int colorOnPrimaryDisabled = 2130968912;
-        public static final int colorOnPrimaryEmphasisHighType = 2130968913;
-        public static final int colorOnPrimaryEmphasisMedium = 2130968914;
-        public static final int colorOnSecondary = 2130968915;
-        public static final int colorOnSurface = 2130968916;
-        public static final int colorOnSurfaceDisabled = 2130968917;
-        public static final int colorOnSurfaceEmphasisHighType = 2130968918;
-        public static final int colorOnSurfaceEmphasisMedium = 2130968919;
-        public static final int colorPrimary = 2130968920;
-        public static final int colorPrimaryDark = 2130968921;
-        public static final int colorPrimaryVariant = 2130968922;
-        public static final int colorSecondary = 2130968923;
-        public static final int colorSecondaryVariant = 2130968924;
-        public static final int colorSurface = 2130968925;
-        public static final int colorSwitchThumbNormal = 2130968926;
-        public static final int columnCount = 2130968927;
-        public static final int columnWidth = 2130968928;
-        public static final int commitIcon = 2130968929;
-        public static final int compoundButtonCheckboxExpandDrawable = 2130968930;
-        public static final int connectDetailDisconnectedDrawable = 2130968931;
-        public static final int connectPreferenceBgConnectedColor = 2130968932;
-        public static final int connectPreferenceBgDisconnectedColor = 2130968933;
-        public static final int connectPreferenceIconDisconnectedColor = 2130968934;
-        public static final int connectPreferenceSummaryDisconnectedColor = 2130968935;
-        public static final int connectPreferenceTitleDisconnectedColor = 2130968936;
-        public static final int constraintSet = 2130968937;
-        public static final int constraintSetEnd = 2130968938;
-        public static final int constraintSetStart = 2130968939;
-        public static final int constraint_referenced_ids = 2130968940;
-        public static final int constraint_referenced_tags = 2130968941;
-        public static final int constraints = 2130968942;
-        public static final int content = 2130968943;
-        public static final int contentAutoFitSystemWindow = 2130968944;
-        public static final int contentBackground = 2130968945;
-        public static final int contentDescription = 2130968946;
-        public static final int contentEndPadding = 2130968947;
-        public static final int contentHeaderBackground = 2130968948;
-        public static final int contentInsetEnd = 2130968949;
-        public static final int contentInsetEndWithActions = 2130968950;
-        public static final int contentInsetLeft = 2130968951;
-        public static final int contentInsetRight = 2130968952;
-        public static final int contentInsetStart = 2130968953;
-        public static final int contentInsetStartWithNavigation = 2130968954;
-        public static final int contentPadding = 2130968955;
-        public static final int contentPaddingBottom = 2130968956;
-        public static final int contentPaddingLeft = 2130968957;
-        public static final int contentPaddingRight = 2130968958;
-        public static final int contentPaddingTop = 2130968959;
-        public static final int contentScrim = 2130968960;
-        public static final int contentStartPadding = 2130968961;
-        public static final int contextMenuSeparateItemBackground = 2130968962;
-        public static final int contrast = 2130968963;
-        public static final int controlBackground = 2130968964;
-        public static final int coordinatorLayoutStyle = 2130968965;
-        public static final int cornerFamily = 2130968966;
-        public static final int cornerFamilyBottomLeft = 2130968967;
-        public static final int cornerFamilyBottomRight = 2130968968;
-        public static final int cornerFamilyTopLeft = 2130968969;
-        public static final int cornerFamilyTopRight = 2130968970;
-        public static final int cornerRadius = 2130968971;
-        public static final int cornerSize = 2130968972;
-        public static final int cornerSizeBottomLeft = 2130968973;
-        public static final int cornerSizeBottomRight = 2130968974;
-        public static final int cornerSizeTopLeft = 2130968975;
-        public static final int cornerSizeTopRight = 2130968976;
-        public static final int counterEnabled = 2130968977;
-        public static final int counterMaxLength = 2130968978;
-        public static final int counterOverflowTextAppearance = 2130968979;
-        public static final int counterOverflowTextColor = 2130968980;
-        public static final int counterTextAppearance = 2130968981;
-        public static final int counterTextColor = 2130968982;
-        public static final int crossfade = 2130968983;
-        public static final int currentState = 2130968984;
-        public static final int curveFit = 2130968985;
-        public static final int customBoolean = 2130968986;
-        public static final int customColorDrawableValue = 2130968987;
-        public static final int customColorValue = 2130968988;
-        public static final int customDimension = 2130968989;
-        public static final int customFloatValue = 2130968990;
-        public static final int customIntegerValue = 2130968991;
-        public static final int customNavigationLayout = 2130968992;
-        public static final int customPixelDimension = 2130968993;
-        public static final int customStringValue = 2130968994;
-        public static final int customViewAutoFitSystemWindow = 2130968995;
-        public static final int darkIconTheme = 2130968996;
-        public static final int datePattern = 2130968997;
-        public static final int datePickerFormat = 2130968998;
-        public static final int datePickerStyle = 2130968999;
-        public static final int dateTimePickerStyle = 2130969000;
-        public static final int decayTime = 2130969001;
-        public static final int defValue = 2130969002;
-        public static final int defaultBrandColor = 2130969003;
-        public static final int defaultBrandColorDark = 2130969004;
-        public static final int defaultDuration = 2130969005;
-        public static final int defaultQueryHint = 2130969006;
-        public static final int defaultSearchBrightColor = 2130969007;
-        public static final int defaultSearchColor = 2130969008;
-        public static final int defaultSearchIcon = 2130969009;
-        public static final int defaultSearchIconColor = 2130969010;
-        public static final int defaultSectionHeaderColor = 2130969011;
-        public static final int defaultState = 2130969012;
-        public static final int defaultValue = 2130969013;
-        public static final int deltaPolarAngle = 2130969014;
-        public static final int deltaPolarRadius = 2130969015;
-        public static final int dependency = 2130969016;
-        public static final int dependencyType = 2130969017;
-        public static final int deriveConstraintsFrom = 2130969018;
-        public static final int descending = 2130969019;
-        public static final int detailsActionButtonStyle = 2130969020;
-        public static final int detailsDescriptionBodyStyle = 2130969021;
-        public static final int detailsDescriptionSubtitleStyle = 2130969022;
-        public static final int detailsDescriptionTitleStyle = 2130969023;
-        public static final int dialogBgColor = 2130969024;
-        public static final int dialogCheckBoxDrawableStart = 2130969025;
-        public static final int dialogCheckBoxStyle = 2130969026;
-        public static final int dialogCheckBoxTextAppearance = 2130969027;
-        public static final int dialogCheckBoxTextColor = 2130969028;
-        public static final int dialogCornerRadius = 2130969029;
-        public static final int dialogIcon = 2130969030;
-        public static final int dialogLayout = 2130969031;
-        public static final int dialogListItemBackground = 2130969032;
-        public static final int dialogListPreferredItemHeight = 2130969033;
-        public static final int dialogListPreferredItemHeightLarge = 2130969034;
-        public static final int dialogListPreferredItemHeightSmall = 2130969035;
-        public static final int dialogMessage = 2130969036;
-        public static final int dialogMultiChoiceListItemBackground = 2130969037;
-        public static final int dialogPreferenceStyle = 2130969038;
-        public static final int dialogPreferredPadding = 2130969039;
-        public static final int dialogSimpleListTitleColor = 2130969040;
-        public static final int dialogTheme = 2130969041;
-        public static final int dialogTitle = 2130969042;
-        public static final int dialogTitleBackground = 2130969043;
-        public static final int dialogTitleTextColor = 2130969044;
-        public static final int digit = 2130969045;
-        public static final int disableDependentsState = 2130969046;
-        public static final int disableRecyclerViewItemAnimator = 2130969047;
-        public static final int disabledProgressAlpha = 2130969048;
-        public static final int displayOptions = 2130969049;
-        public static final int divider = 2130969050;
-        public static final int dividerHorizontal = 2130969051;
-        public static final int dividerPadding = 2130969052;
-        public static final int dividerVertical = 2130969053;
-        public static final int dotBgColor = 2130969054;
-        public static final int dotSize = 2130969055;
-        public static final int dotToArrowGap = 2130969056;
-        public static final int dotToDotGap = 2130969057;
-        public static final int doubleLineButtonPaddingHorizontal = 2130969058;
-        public static final int dragDirection = 2130969059;
-        public static final int dragScale = 2130969060;
-        public static final int dragThreshold = 2130969061;
-        public static final int drawPath = 2130969062;
-        public static final int drawableBottomCompat = 2130969063;
-        public static final int drawableEndCompat = 2130969064;
-        public static final int drawableLeftCompat = 2130969065;
-        public static final int drawableRightCompat = 2130969066;
-        public static final int drawableSize = 2130969067;
-        public static final int drawableStartCompat = 2130969068;
-        public static final int drawableTint = 2130969069;
-        public static final int drawableTintMode = 2130969070;
-        public static final int drawableTopCompat = 2130969071;
-        public static final int drawerArrowStyle = 2130969072;
-        public static final int drawerLayoutStyle = 2130969073;
-        public static final int dropDownListViewStyle = 2130969074;
-        public static final int dropDownMaxWidth = 2130969075;
-        public static final int dropDownMinWidth = 2130969076;
-        public static final int dropdownListPreferredItemHeight = 2130969077;
-        public static final int dropdownPreferenceStyle = 2130969078;
-        public static final int duration = 2130969079;
-        public static final int editTextBackground = 2130969080;
-        public static final int editTextColor = 2130969081;
-        public static final int editTextColorDialog = 2130969082;
-        public static final int editTextColorDialogBackground = 2130969083;
-        public static final int editTextColorHint = 2130969084;
-        public static final int editTextColorHintDialog = 2130969085;
-        public static final int editTextPreferenceStyle = 2130969086;
-        public static final int editTextSearchStyle = 2130969087;
-        public static final int editTextStyle = 2130969088;
-        public static final int elevation = 2130969089;
-        public static final int elevationOverlaysColor = 2130969090;
-        public static final int elevationOverlaysEnabled = 2130969091;
-        public static final int enableAutoSizing = 2130969092;
-        public static final int enableCopying = 2130969093;
-        public static final int enabled = 2130969094;
-        public static final int endIconContentDescription = 2130969095;
-        public static final int endIconDrawable = 2130969096;
-        public static final int endIconMode = 2130969097;
-        public static final int endIconTint = 2130969098;
-        public static final int endIconTintMode = 2130969099;
-        public static final int endItemEndPadding = 2130969100;
-        public static final int endItemStartPadding = 2130969101;
-        public static final int endYear = 2130969102;
-        public static final int enforceMaterialTheme = 2130969103;
-        public static final int enforceTextAppearance = 2130969104;
-        public static final int ensureMinTouchTargetSize = 2130969105;
-        public static final int entries = 2130969106;
-        public static final int entryIcons = 2130969107;
-        public static final int entrySummaries = 2130969108;
-        public static final int entryValues = 2130969109;
-        public static final int errorEnabled = 2130969110;
-        public static final int errorMessageStyle = 2130969111;
-        public static final int errorTextAppearance = 2130969112;
-        public static final int errorTextColor = 2130969113;
-        public static final int expandActivityOverflowButtonDrawable = 2130969114;
-        public static final int expandBackground = 2130969115;
-        public static final int expandSubtitleTextStyle = 2130969116;
-        public static final int expandTitleTextStyle = 2130969117;
-        public static final int expanded = 2130969118;
-        public static final int expandedTitleGravity = 2130969119;
-        public static final int expandedTitleMargin = 2130969120;
-        public static final int expandedTitleMarginBottom = 2130969121;
-        public static final int expandedTitleMarginEnd = 2130969122;
-        public static final int expandedTitleMarginStart = 2130969123;
-        public static final int expandedTitleMarginTop = 2130969124;
-        public static final int expandedTitleTextAppearance = 2130969125;
-        public static final int extendMotionSpec = 2130969126;
-        public static final int extendedFloatingActionButtonStyle = 2130969127;
-        public static final int externalRouteEnabledDrawable = 2130969128;
-        public static final int externalRouteEnabledDrawableStatic = 2130969129;
-        public static final int extraVisibility = 2130969130;
-        public static final int fabAlignmentMode = 2130969131;
-        public static final int fabAnimationMode = 2130969132;
-        public static final int fabColor = 2130969133;
-        public static final int fabCradleMargin = 2130969134;
-        public static final int fabCradleRoundedCornerRadius = 2130969135;
-        public static final int fabCradleVerticalOffset = 2130969136;
-        public static final int fabCustomSize = 2130969137;
-        public static final int fabShadowEnabled = 2130969138;
-        public static final int fabSize = 2130969139;
-        public static final int fastScrollEnabled = 2130969140;
-        public static final int fastScrollHorizontalThumbDrawable = 2130969141;
-        public static final int fastScrollHorizontalTrackDrawable = 2130969142;
-        public static final int fastScrollVerticalThumbDrawable = 2130969143;
-        public static final int fastScrollVerticalTrackDrawable = 2130969144;
-        public static final int fast_forward = 2130969145;
-        public static final int fillColor = 2130969146;
-        public static final int filterSortTabViewCoverBg = 2130969147;
-        public static final int filterSortTabViewFollowTouch = 2130969148;
-        public static final int filterSortTabViewTextColor = 2130969149;
-        public static final int filterSortViewBackground = 2130969150;
-        public static final int firstBaselineToTopHeight = 2130969151;
-        public static final int floatingActionButtonStyle = 2130969152;
-        public static final int flow_firstHorizontalBias = 2130969153;
-        public static final int flow_firstHorizontalStyle = 2130969154;
-        public static final int flow_firstVerticalBias = 2130969155;
-        public static final int flow_firstVerticalStyle = 2130969156;
-        public static final int flow_horizontalAlign = 2130969157;
-        public static final int flow_horizontalBias = 2130969158;
-        public static final int flow_horizontalGap = 2130969159;
-        public static final int flow_horizontalStyle = 2130969160;
-        public static final int flow_lastHorizontalBias = 2130969161;
-        public static final int flow_lastHorizontalStyle = 2130969162;
-        public static final int flow_lastVerticalBias = 2130969163;
-        public static final int flow_lastVerticalStyle = 2130969164;
-        public static final int flow_maxElementsWrap = 2130969165;
-        public static final int flow_padding = 2130969166;
-        public static final int flow_verticalAlign = 2130969167;
-        public static final int flow_verticalBias = 2130969168;
-        public static final int flow_verticalGap = 2130969169;
-        public static final int flow_verticalStyle = 2130969170;
-        public static final int flow_wrapMode = 2130969171;
-        public static final int focusOutEnd = 2130969172;
-        public static final int focusOutFront = 2130969173;
-        public static final int focusOutSideEnd = 2130969174;
-        public static final int focusOutSideStart = 2130969175;
-        public static final int font = 2130969176;
-        public static final int fontFamily = 2130969177;
-        public static final int fontProviderAuthority = 2130969178;
-        public static final int fontProviderCerts = 2130969179;
-        public static final int fontProviderFetchStrategy = 2130969180;
-        public static final int fontProviderFetchTimeout = 2130969181;
-        public static final int fontProviderPackage = 2130969182;
-        public static final int fontProviderQuery = 2130969183;
-        public static final int fontStyle = 2130969184;
-        public static final int fontVariationSettings = 2130969185;
-        public static final int fontWeight = 2130969186;
-        public static final int footerPreferenceStyle = 2130969187;
-        public static final int foregroundInsidePadding = 2130969188;
-        public static final int foregroundPrimaryColor = 2130969189;
-        public static final int foregroundPrimaryDisableColor = 2130969190;
-        public static final int fragment = 2130969191;
-        public static final int frame = 2130969192;
-        public static final int frameColor = 2130969193;
-        public static final int framePadding = 2130969194;
-        public static final int framePosition = 2130969195;
-        public static final int frameWidth = 2130969196;
-        public static final int gapBetweenBars = 2130969197;
-        public static final int goIcon = 2130969198;
-        public static final int gridBottomPadding = 2130969199;
-        public static final int gridSubtitleSize = 2130969200;
-        public static final int gridTextVerticalPadding = 2130969201;
-        public static final int gridTitleSize = 2130969202;
-        public static final int gridTopPadding = 2130969203;
-        public static final int guidanceBreadcrumbStyle = 2130969204;
-        public static final int guidanceContainerStyle = 2130969205;
-        public static final int guidanceDescriptionStyle = 2130969206;
-        public static final int guidanceEntryAnimation = 2130969207;
-        public static final int guidanceIconStyle = 2130969208;
-        public static final int guidanceTitleStyle = 2130969209;
-        public static final int guidePopupViewStyle = 2130969210;
-        public static final int guidedActionCheckedAnimation = 2130969211;
-        public static final int guidedActionContentWidth = 2130969212;
-        public static final int guidedActionContentWidthNoIcon = 2130969213;
-        public static final int guidedActionContentWidthWeight = 2130969214;
-        public static final int guidedActionContentWidthWeightTwoPanels = 2130969215;
-        public static final int guidedActionDescriptionMinLines = 2130969216;
-        public static final int guidedActionDisabledChevronAlpha = 2130969217;
-        public static final int guidedActionEnabledChevronAlpha = 2130969218;
-        public static final int guidedActionItemCheckmarkStyle = 2130969219;
-        public static final int guidedActionItemChevronStyle = 2130969220;
-        public static final int guidedActionItemContainerStyle = 2130969221;
-        public static final int guidedActionItemContentStyle = 2130969222;
-        public static final int guidedActionItemDescriptionStyle = 2130969223;
-        public static final int guidedActionItemIconStyle = 2130969224;
-        public static final int guidedActionItemTitleStyle = 2130969225;
-        public static final int guidedActionPressedAnimation = 2130969226;
-        public static final int guidedActionTitleMaxLines = 2130969227;
-        public static final int guidedActionTitleMinLines = 2130969228;
-        public static final int guidedActionUncheckedAnimation = 2130969229;
-        public static final int guidedActionUnpressedAnimation = 2130969230;
-        public static final int guidedActionVerticalPadding = 2130969231;
-        public static final int guidedActionsBackground = 2130969232;
-        public static final int guidedActionsBackgroundDark = 2130969233;
-        public static final int guidedActionsContainerStyle = 2130969234;
-        public static final int guidedActionsElevation = 2130969235;
-        public static final int guidedActionsEntryAnimation = 2130969236;
-        public static final int guidedActionsListStyle = 2130969237;
-        public static final int guidedActionsSelectorDrawable = 2130969238;
-        public static final int guidedActionsSelectorHideAnimation = 2130969239;
-        public static final int guidedActionsSelectorShowAnimation = 2130969240;
-        public static final int guidedActionsSelectorStyle = 2130969241;
-        public static final int guidedButtonActionsListStyle = 2130969242;
-        public static final int guidedButtonActionsWidthWeight = 2130969243;
-        public static final int guidedStepBackground = 2130969244;
-        public static final int guidedStepEntryAnimation = 2130969245;
-        public static final int guidedStepExitAnimation = 2130969246;
-        public static final int guidedStepHeightWeight = 2130969247;
-        public static final int guidedStepImeAppearingAnimation = 2130969248;
-        public static final int guidedStepImeDisappearingAnimation = 2130969249;
-        public static final int guidedStepKeyline = 2130969250;
-        public static final int guidedStepReentryAnimation = 2130969251;
-        public static final int guidedStepReturnAnimation = 2130969252;
-        public static final int guidedStepTheme = 2130969253;
-        public static final int guidedStepThemeFlag = 2130969254;
-        public static final int guidedSubActionsListStyle = 2130969255;
-        public static final int hasOverlappingRendering = 2130969256;
-        public static final int headerLayout = 2130969257;
-        public static final int headerStyle = 2130969258;
-        public static final int headerSubtitleSize = 2130969259;
-        public static final int headerTextVerticalPadding = 2130969260;
-        public static final int headerTitleSize = 2130969261;
-        public static final int headersVerticalGridStyle = 2130969262;
-        public static final int height = 2130969263;
-        public static final int helperText = 2130969264;
-        public static final int helperTextEnabled = 2130969265;
-        public static final int helperTextTextAppearance = 2130969266;
-        public static final int helperTextTextColor = 2130969267;
-        public static final int hideMotionSpec = 2130969268;
-        public static final int hideOnContentScroll = 2130969269;
-        public static final int hideOnScroll = 2130969270;
-        public static final int high_quality = 2130969271;
-        public static final int highlight = 2130969272;
-        public static final int hintAnimationEnabled = 2130969273;
-        public static final int hintEnabled = 2130969274;
-        public static final int hintTextAppearance = 2130969275;
-        public static final int hintTextColor = 2130969276;
-        public static final int holdTime = 2130969277;
-        public static final int homeAsUpIndicator = 2130969278;
-        public static final int homeHandleColor = 2130969279;
-        public static final int homeLayout = 2130969280;
-        public static final int horizontalMargin = 2130969281;
-        public static final int horizontalProgressLayout = 2130969282;
-        public static final int horizontalSpacing = 2130969283;
-        public static final int hoveredFocusedTranslationZ = 2130969284;
-        public static final int hybridNotificationStyle = 2130969285;
-        public static final int hybridNotificationTextStyle = 2130969286;
-        public static final int hybridNotificationTitleStyle = 2130969287;
-        public static final int icon = 2130969288;
-        public static final int iconEndPadding = 2130969289;
-        public static final int iconGravity = 2130969290;
-        public static final int iconPadding = 2130969291;
-        public static final int iconPrimaryColor = 2130969292;
-        public static final int iconSize = 2130969293;
-        public static final int iconSpaceReserved = 2130969294;
-        public static final int iconStartPadding = 2130969295;
-        public static final int iconTint = 2130969296;
-        public static final int iconTintMode = 2130969297;
-        public static final int iconifiedByDefault = 2130969298;
-        public static final int ignoreRightInset = 2130969299;
-        public static final int imageButtonStyle = 2130969300;
-        public static final int imageCardViewBadgeStyle = 2130969301;
-        public static final int imageCardViewContentStyle = 2130969302;
-        public static final int imageCardViewImageStyle = 2130969303;
-        public static final int imageCardViewInfoAreaStyle = 2130969304;
-        public static final int imageCardViewStyle = 2130969305;
-        public static final int imageCardViewTitleStyle = 2130969306;
-        public static final int immersionButtonMoreBackground = 2130969307;
-        public static final int immersionMenuEnabled = 2130969308;
-        public static final int immersionMenuLayout = 2130969309;
-        public static final int immersionTextColor = 2130969310;
-        public static final int immersionViewItemBackground = 2130969311;
-        public static final int immersionWindowBackground = 2130969312;
-        public static final int indeterminateFramesCount = 2130969313;
-        public static final int indeterminateFramesDuration = 2130969314;
-        public static final int indeterminateProgressStyle = 2130969315;
-        public static final int indicatorVisibility = 2130969316;
-        public static final int infoAreaBackground = 2130969317;
-        public static final int infoVisibility = 2130969318;
-        public static final int initialActivityCount = 2130969319;
-        public static final int initialExpandedChildrenCount = 2130969320;
-        public static final int insetForeground = 2130969321;
-        public static final int insetLeft = 2130969322;
-        public static final int is24HourFormat = 2130969323;
-        public static final int isLightTheme = 2130969324;
-        public static final int isMaterialTheme = 2130969325;
-        public static final int isPreferenceVisible = 2130969326;
-        public static final int itemBackground = 2130969327;
-        public static final int itemHeight = 2130969328;
-        public static final int itemHorizontalPadding = 2130969329;
-        public static final int itemHorizontalTranslationEnabled = 2130969330;
-        public static final int itemIconPadding = 2130969331;
-        public static final int itemIconSize = 2130969332;
-        public static final int itemIconTint = 2130969333;
-        public static final int itemPadding = 2130969334;
-        public static final int itemRippleColor = 2130969335;
-        public static final int itemSpacing = 2130969336;
-        public static final int itemTextAppearance = 2130969337;
-        public static final int itemTextAppearanceActive = 2130969338;
-        public static final int itemTextAppearanceInactive = 2130969339;
-        public static final int itemTextColor = 2130969340;
-        public static final int itemsVerticalGridStyle = 2130969341;
-        public static final int key = 2130969342;
-        public static final int keyCode = 2130969343;
-        public static final int keyPositionType = 2130969344;
-        public static final int keylines = 2130969345;
-        public static final int labelPadding = 2130969346;
-        public static final int labelTextColor = 2130969347;
-        public static final int labelVisibilityMode = 2130969348;
-        public static final int lastBaselineToBottomHeight = 2130969349;
-        public static final int layout = 2130969350;
-        public static final int layoutDescription = 2130969351;
-        public static final int layoutDuringTransition = 2130969352;
-        public static final int layoutManager = 2130969353;
-        public static final int layout_anchor = 2130969354;
-        public static final int layout_anchorGravity = 2130969355;
-        public static final int layout_behavior = 2130969356;
-        public static final int layout_collapseMode = 2130969357;
-        public static final int layout_collapseParallaxMultiplier = 2130969358;
-        public static final int layout_constrainedHeight = 2130969359;
-        public static final int layout_constrainedWidth = 2130969360;
-        public static final int layout_constraintBaseline_creator = 2130969361;
-        public static final int layout_constraintBaseline_toBaselineOf = 2130969362;
-        public static final int layout_constraintBottom_creator = 2130969363;
-        public static final int layout_constraintBottom_toBottomOf = 2130969364;
-        public static final int layout_constraintBottom_toTopOf = 2130969365;
-        public static final int layout_constraintCircle = 2130969366;
-        public static final int layout_constraintCircleAngle = 2130969367;
-        public static final int layout_constraintCircleRadius = 2130969368;
-        public static final int layout_constraintDimensionRatio = 2130969369;
-        public static final int layout_constraintEnd_toEndOf = 2130969370;
-        public static final int layout_constraintEnd_toStartOf = 2130969371;
-        public static final int layout_constraintGuide_begin = 2130969372;
-        public static final int layout_constraintGuide_end = 2130969373;
-        public static final int layout_constraintGuide_percent = 2130969374;
-        public static final int layout_constraintHeight_default = 2130969375;
-        public static final int layout_constraintHeight_max = 2130969376;
-        public static final int layout_constraintHeight_min = 2130969377;
-        public static final int layout_constraintHeight_percent = 2130969378;
-        public static final int layout_constraintHorizontal_bias = 2130969379;
-        public static final int layout_constraintHorizontal_chainStyle = 2130969380;
-        public static final int layout_constraintHorizontal_weight = 2130969381;
-        public static final int layout_constraintLeft_creator = 2130969382;
-        public static final int layout_constraintLeft_toLeftOf = 2130969383;
-        public static final int layout_constraintLeft_toRightOf = 2130969384;
-        public static final int layout_constraintRight_creator = 2130969385;
-        public static final int layout_constraintRight_toLeftOf = 2130969386;
-        public static final int layout_constraintRight_toRightOf = 2130969387;
-        public static final int layout_constraintStart_toEndOf = 2130969388;
-        public static final int layout_constraintStart_toStartOf = 2130969389;
-        public static final int layout_constraintTag = 2130969390;
-        public static final int layout_constraintTop_creator = 2130969391;
-        public static final int layout_constraintTop_toBottomOf = 2130969392;
-        public static final int layout_constraintTop_toTopOf = 2130969393;
-        public static final int layout_constraintVertical_bias = 2130969394;
-        public static final int layout_constraintVertical_chainStyle = 2130969395;
-        public static final int layout_constraintVertical_weight = 2130969396;
-        public static final int layout_constraintWidth_default = 2130969397;
-        public static final int layout_constraintWidth_max = 2130969398;
-        public static final int layout_constraintWidth_min = 2130969399;
-        public static final int layout_constraintWidth_percent = 2130969400;
-        public static final int layout_dodgeInsetEdges = 2130969401;
-        public static final int layout_editor_absoluteX = 2130969402;
-        public static final int layout_editor_absoluteY = 2130969403;
-        public static final int layout_goneMarginBottom = 2130969404;
-        public static final int layout_goneMarginEnd = 2130969405;
-        public static final int layout_goneMarginLeft = 2130969406;
-        public static final int layout_goneMarginRight = 2130969407;
-        public static final int layout_goneMarginStart = 2130969408;
-        public static final int layout_goneMarginTop = 2130969409;
-        public static final int layout_insetEdge = 2130969410;
-        public static final int layout_keyline = 2130969411;
-        public static final int layout_maxHeight = 2130969412;
-        public static final int layout_maxWidth = 2130969413;
-        public static final int layout_optimizationLevel = 2130969414;
-        public static final int layout_scrollFlags = 2130969415;
-        public static final int layout_scrollInterpolator = 2130969416;
-        public static final int layout_viewType = 2130969417;
-        public static final int lbDotRadius = 2130969418;
-        public static final int lbImageCardViewType = 2130969419;
-        public static final int lb_slideEdge = 2130969420;
-        public static final int leftArrow = 2130969421;
-        public static final int level = 2130969422;
-        public static final int liftOnScroll = 2130969423;
-        public static final int liftOnScrollTargetViewId = 2130969424;
-        public static final int lightIconTheme = 2130969425;
-        public static final int limitBoundsTo = 2130969426;
-        public static final int lineHeight = 2130969427;
-        public static final int lineLength = 2130969428;
-        public static final int lineSpacing = 2130969429;
-        public static final int listChoiceBackgroundIndicator = 2130969430;
-        public static final int listChoiceIndicatorMultipleAnimated = 2130969431;
-        public static final int listChoiceIndicatorSingleAnimated = 2130969432;
-        public static final int listDividerAlertDialog = 2130969433;
-        public static final int listItemLayout = 2130969434;
-        public static final int listLayout = 2130969435;
-        public static final int listMenuBackground = 2130969436;
-        public static final int listMenuItemStyle = 2130969437;
-        public static final int listMenuViewStyle = 2130969438;
-        public static final int listPopupItemBackground = 2130969439;
-        public static final int listPopupWindowStyle = 2130969440;
-        public static final int listPreferredItemHeight = 2130969441;
-        public static final int listPreferredItemHeightLarge = 2130969442;
-        public static final int listPreferredItemHeightSmall = 2130969443;
-        public static final int listPreferredItemPaddingEnd = 2130969444;
-        public static final int listPreferredItemPaddingLeft = 2130969445;
-        public static final int listPreferredItemPaddingRight = 2130969446;
-        public static final int listPreferredItemPaddingStart = 2130969447;
-        public static final int listViewGroupHeaderBackground = 2130969448;
-        public static final int listViewGroupHeaderTextColor = 2130969449;
-        public static final int listViewItemBackground = 2130969450;
-        public static final int list_secondary_text_shadow = 2130969451;
-        public static final int logo = 2130969452;
-        public static final int logoDescription = 2130969453;
-        public static final int lunarCalendar = 2130969454;
-        public static final int maintainLineSpacing = 2130969455;
-        public static final int materialAlertDialogBodyTextStyle = 2130969456;
-        public static final int materialAlertDialogTheme = 2130969457;
-        public static final int materialAlertDialogTitleIconStyle = 2130969458;
-        public static final int materialAlertDialogTitlePanelStyle = 2130969459;
-        public static final int materialAlertDialogTitleTextStyle = 2130969460;
-        public static final int materialButtonOutlinedStyle = 2130969461;
-        public static final int materialButtonStyle = 2130969462;
-        public static final int materialButtonToggleGroupStyle = 2130969463;
-        public static final int materialCardViewStyle = 2130969464;
-        public static final int materialDatePickerDialogTheme = 2130969465;
-        public static final int materialDatePickerStyle = 2130969466;
-        public static final int materialDateRangePickerDialogTheme = 2130969467;
-        public static final int materialDateRangePickerStyle = 2130969468;
-        public static final int materialThemeOverlay = 2130969469;
-        public static final int maxAcceleration = 2130969470;
-        public static final int maxActionInlineWidth = 2130969471;
-        public static final int maxButtonHeight = 2130969472;
-        public static final int maxDate = 2130969473;
-        public static final int maxHeight = 2130969474;
-        public static final int maxImageSize = 2130969475;
-        public static final int maxLevel = 2130969476;
-        public static final int maxMiddle = 2130969477;
-        public static final int maxSize = 2130969478;
-        public static final int maxVelocity = 2130969479;
-        public static final int maxWidth = 2130969480;
-        public static final int maximumHeight = 2130969481;
-        public static final int maximumWidth = 2130969482;
-        public static final int measureWithLargestChild = 2130969483;
-        public static final int mediaRouteAudioTrackDrawable = 2130969484;
-        public static final int mediaRouteBodyTextAppearance = 2130969485;
-        public static final int mediaRouteButtonStyle = 2130969486;
-        public static final int mediaRouteButtonTint = 2130969487;
-        public static final int mediaRouteCloseDrawable = 2130969488;
-        public static final int mediaRouteControlPanelThemeOverlay = 2130969489;
-        public static final int mediaRouteDefaultIconDrawable = 2130969490;
-        public static final int mediaRouteDividerColor = 2130969491;
-        public static final int mediaRouteHeaderTextAppearance = 2130969492;
-        public static final int mediaRoutePauseDrawable = 2130969493;
-        public static final int mediaRoutePlayDrawable = 2130969494;
-        public static final int mediaRouteSpeakerGroupIconDrawable = 2130969495;
-        public static final int mediaRouteSpeakerIconDrawable = 2130969496;
-        public static final int mediaRouteStopDrawable = 2130969497;
-        public static final int mediaRouteTheme = 2130969498;
-        public static final int mediaRouteTvIconDrawable = 2130969499;
-        public static final int menu = 2130969500;
-        public static final int metricsAction = 2130969501;
-        public static final int middleEnabled = 2130969502;
-        public static final int min = 2130969503;
-        public static final int minDate = 2130969504;
-        public static final int minHeight = 2130969505;
-        public static final int minLevel = 2130969506;
-        public static final int minMiddle = 2130969507;
-        public static final int minSize = 2130969508;
-        public static final int minTouchTargetSize = 2130969509;
-        public static final int minWidth = 2130969510;
-        public static final int miuiAlertDialogTheme = 2130969511;
-        public static final int miuiPopupMenuStyle = 2130969512;
-        public static final int miuiPopupTheme = 2130969513;
-        public static final int miuiSpinnerStyle = 2130969514;
-        public static final int miuixAppCompatOverlayTextAppearance = 2130969515;
-        public static final int miuixAppcompatAlphabetIndexerStyle = 2130969516;
-        public static final int miuixAppcompatArrowUpDownColor = 2130969517;
-        public static final int miuixAppcompatColorAccent = 2130969518;
-        public static final int miuixAppcompatColorPrimary = 2130969519;
-        public static final int miuixAppcompatDrawOverlay = 2130969520;
-        public static final int miuixAppcompatEditTextSearchIcon = 2130969521;
-        public static final int miuixAppcompatIndexerMinWidth = 2130969522;
-        public static final int miuixAppcompatIndexerTable = 2130969523;
-        public static final int miuixAppcompatIndexerTextColorList = 2130969524;
-        public static final int miuixAppcompatIndexerTextSize = 2130969525;
-        public static final int miuixAppcompatIntegratedSpinnerTextColor = 2130969526;
-        public static final int miuixAppcompatLabel = 2130969527;
-        public static final int miuixAppcompatLabelMaxWidth = 2130969528;
-        public static final int miuixAppcompatOverlayBackground = 2130969529;
-        public static final int miuixAppcompatOverlayTextColor = 2130969530;
-        public static final int miuixAppcompatOverlayTextSize = 2130969531;
-        public static final int miuixAppcompatSearchModeBackground = 2130969532;
-        public static final int miuixAppcompatSearchModeEditTextBackground = 2130969533;
-        public static final int miuixAppcompatSpinnerArrowColor = 2130969534;
-        public static final int miuixAppcompatSpinnerTextColor = 2130969535;
-        public static final int miuixAppcompatStateEditTextStyle = 2130969536;
-        public static final int miuixAppcompatVisibilityIcon = 2130969537;
-        public static final int miuixAppcompatWidgetManager = 2130969538;
-        public static final int miuixAppcompatWidgetPadding = 2130969539;
-        public static final int miuixDialogRoundWindowBg = 2130969540;
-        public static final int miuix_strokeColor = 2130969541;
-        public static final int miuix_strokeWidth = 2130969542;
-        public static final int mock_diagonalsColor = 2130969543;
-        public static final int mock_label = 2130969544;
-        public static final int mock_labelBackgroundColor = 2130969545;
-        public static final int mock_labelColor = 2130969546;
-        public static final int mock_showDiagonals = 2130969547;
-        public static final int mock_showLabel = 2130969548;
-        public static final int moduleContent = 2130969549;
-        public static final int motionDebug = 2130969550;
-        public static final int motionInterpolator = 2130969551;
-        public static final int motionPathRotate = 2130969552;
-        public static final int motionProgress = 2130969553;
-        public static final int motionStagger = 2130969554;
-        public static final int motionTarget = 2130969555;
-        public static final int motion_postLayoutCollision = 2130969556;
-        public static final int motion_triggerOnCollision = 2130969557;
-        public static final int moveWhenScrollAtTop = 2130969558;
-        public static final int multiChoiceItemLayout = 2130969559;
-        public static final int name = 2130969560;
-        public static final int navigationContentDescription = 2130969561;
-        public static final int navigationIcon = 2130969562;
-        public static final int navigationMode = 2130969563;
-        public static final int navigationViewStyle = 2130969564;
-        public static final int negativeButtonText = 2130969565;
-        public static final int nestedScrollFlags = 2130969566;
-        public static final int numColumns = 2130969567;
-        public static final int numberOfColumns = 2130969568;
-        public static final int numberOfRows = 2130969569;
-        public static final int numberPickerStyle = 2130969570;
-        public static final int numericModifiers = 2130969571;
-        public static final int onCross = 2130969572;
-        public static final int onHide = 2130969573;
-        public static final int onNegativeCross = 2130969574;
-        public static final int onPositiveCross = 2130969575;
-        public static final int onShow = 2130969576;
-        public static final int onTouchUp = 2130969577;
-        public static final int onboardingDescriptionStyle = 2130969578;
-        public static final int onboardingHeaderStyle = 2130969579;
-        public static final int onboardingLogoStyle = 2130969580;
-        public static final int onboardingMainIconStyle = 2130969581;
-        public static final int onboardingNavigatorContainerStyle = 2130969582;
-        public static final int onboardingPageIndicatorStyle = 2130969583;
-        public static final int onboardingStartButtonStyle = 2130969584;
-        public static final int onboardingTheme = 2130969585;
-        public static final int onboardingTitleStyle = 2130969586;
-        public static final int optedOut = 2130969587;
-        public static final int order = 2130969588;
-        public static final int orderingFromXml = 2130969589;
-        public static final int orientation = 2130969590;
-        public static final int overScrollRange = 2130969591;
-        public static final int overlapAnchor = 2130969592;
-        public static final int overlay = 2130969593;
-        public static final int overlayDimActiveLevel = 2130969594;
-        public static final int overlayDimDimmedLevel = 2130969595;
-        public static final int overlayDimMaskColor = 2130969596;
-        public static final int paddingBottomNoButtons = 2130969597;
-        public static final int paddingEnd = 2130969598;
-        public static final int paddingStart = 2130969599;
-        public static final int paddingTopNoTitle = 2130969600;
-        public static final int paintColor = 2130969601;
-        public static final int panelBackground = 2130969602;
-        public static final int panelMenuListTheme = 2130969603;
-        public static final int panelMenuListWidth = 2130969604;
-        public static final int passwordStyle = 2130969605;
-        public static final int passwordToggleContentDescription = 2130969606;
-        public static final int passwordToggleDrawable = 2130969607;
-        public static final int passwordToggleEnabled = 2130969608;
-        public static final int passwordToggleTint = 2130969609;
-        public static final int passwordToggleTintMode = 2130969610;
-        public static final int pathMotionArc = 2130969611;
-        public static final int path_percent = 2130969612;
-        public static final int pause = 2130969613;
-        public static final int percentHeight = 2130969614;
-        public static final int percentWidth = 2130969615;
-        public static final int percentX = 2130969616;
-        public static final int percentY = 2130969617;
-        public static final int perpendicularPath_percent = 2130969618;
-        public static final int persistent = 2130969619;
-        public static final int pickerItemLayout = 2130969620;
-        public static final int pickerItemTextViewId = 2130969621;
-        public static final int pickerStyle = 2130969622;
-        public static final int picture_in_picture = 2130969623;
-        public static final int pinPickerStyle = 2130969624;
-        public static final int pivotAnchor = 2130969625;
-        public static final int pivotX = 2130969626;
-        public static final int pivotY = 2130969627;
-        public static final int placeholder_emptyVisibility = 2130969628;
-        public static final int play = 2130969629;
-        public static final int playSound = 2130969630;
-        public static final int playbackControlButtonLabelStyle = 2130969631;
-        public static final int playbackControlsActionIcons = 2130969632;
-        public static final int playbackControlsAutoHideTickleTimeout = 2130969633;
-        public static final int playbackControlsAutoHideTimeout = 2130969634;
-        public static final int playbackControlsButtonStyle = 2130969635;
-        public static final int playbackControlsIconHighlightColor = 2130969636;
-        public static final int playbackControlsTimeStyle = 2130969637;
-        public static final int playbackMediaItemDetailsStyle = 2130969638;
-        public static final int playbackMediaItemDurationStyle = 2130969639;
-        public static final int playbackMediaItemNameStyle = 2130969640;
-        public static final int playbackMediaItemNumberStyle = 2130969641;
-        public static final int playbackMediaItemNumberViewFlipperLayout = 2130969642;
-        public static final int playbackMediaItemNumberViewFlipperStyle = 2130969643;
-        public static final int playbackMediaItemPaddingStart = 2130969644;
-        public static final int playbackMediaItemRowStyle = 2130969645;
-        public static final int playbackMediaItemSeparatorStyle = 2130969646;
-        public static final int playbackMediaListHeaderStyle = 2130969647;
-        public static final int playbackMediaListHeaderTitleStyle = 2130969648;
-        public static final int playbackPaddingEnd = 2130969649;
-        public static final int playbackPaddingStart = 2130969650;
-        public static final int playbackProgressPrimaryColor = 2130969651;
-        public static final int playbackProgressSecondaryColor = 2130969652;
-        public static final int popupMenuStyle = 2130969653;
-        public static final int popupTheme = 2130969654;
-        public static final int popupWindowElevation = 2130969655;
-        public static final int popupWindowMinWidth = 2130969656;
-        public static final int popupWindowShadowAlpha = 2130969657;
-        public static final int popupWindowStyle = 2130969658;
-        public static final int positiveButtonText = 2130969659;
-        public static final int preferenceCategoryBackground = 2130969660;
-        public static final int preferenceCategoryCheckableStyle = 2130969661;
-        public static final int preferenceCategoryRadioStyle = 2130969662;
-        public static final int preferenceCategoryStyle = 2130969663;
-        public static final int preferenceCategoryTextColor = 2130969664;
-        public static final int preferenceCategoryTitleTextAppearance = 2130969665;
-        public static final int preferenceCategoryTitleTextColor = 2130969666;
-        public static final int preferenceCheckableMaskColor = 2130969667;
-        public static final int preferenceChoiceIndicatorSingle = 2130969668;
-        public static final int preferenceFragmentCompatStyle = 2130969669;
-        public static final int preferenceFragmentListStyle = 2130969670;
-        public static final int preferenceFragmentStyle = 2130969671;
-        public static final int preferenceInformationStyle = 2130969672;
-        public static final int preferenceItemBackground = 2130969673;
-        public static final int preferencePrimaryTextColor = 2130969674;
-        public static final int preferenceRightTextColor = 2130969675;
-        public static final int preferenceScreenStyle = 2130969676;
-        public static final int preferenceSecondaryTextColor = 2130969677;
-        public static final int preferenceStyle = 2130969678;
-        public static final int preferenceTheme = 2130969679;
-        public static final int preserveIconSpacing = 2130969680;
-        public static final int pressedTranslationZ = 2130969681;
-        public static final int primaryButtonBackground = 2130969682;
-        public static final int primaryButtonTextColor = 2130969683;
-        public static final int primaryKey = 2130969684;
-        public static final int progress = 2130969685;
-        public static final int progressBackgroundDrawable = 2130969686;
-        public static final int progressBarBackground = 2130969687;
-        public static final int progressBarColorHorizontal = 2130969688;
-        public static final int progressBarEndPadding = 2130969689;
-        public static final int progressBarHorizontalStyle = 2130969690;
-        public static final int progressBarInlineWidth = 2130969691;
-        public static final int progressBarPadding = 2130969692;
-        public static final int progressBarStartPadding = 2130969693;
-        public static final int progressBarStyle = 2130969694;
-        public static final int progressBarStyleSmall = 2130969695;
-        public static final int progressLayout = 2130969696;
-        public static final int queryBackground = 2130969697;
-        public static final int queryHint = 2130969698;
-        public static final int radioButtonDrawable = 2130969699;
-        public static final int radioButtonDrawableTouchAnimEnable = 2130969700;
-        public static final int radioButtonOnDrawableBackgroundColor = 2130969701;
-        public static final int radioButtonOnDrawableForegroundColor = 2130969702;
-        public static final int radioButtonPreferenceStyle = 2130969703;
-        public static final int radioButtonStyle = 2130969704;
-        public static final int radioPreferenceItemBackground = 2130969705;
-        public static final int radioPreferenceItemTwoStateBackground = 2130969706;
-        public static final int radius = 2130969707;
-        public static final int ratingBarStyle = 2130969708;
-        public static final int ratingBarStyleIndicator = 2130969709;
-        public static final int ratingBarStyleSmall = 2130969710;
-        public static final int recyclerViewStyle = 2130969711;
-        public static final int region_heightLessThan = 2130969712;
-        public static final int region_heightMoreThan = 2130969713;
-        public static final int region_widthLessThan = 2130969714;
-        public static final int region_widthMoreThan = 2130969715;
-        public static final int regularTextAppearance = 2130969716;
-        public static final int repeat = 2130969717;
-        public static final int repeat_one = 2130969718;
-        public static final int resizeTrigger = 2130969719;
-        public static final int resizedPaddingAdjustmentBottom = 2130969720;
-        public static final int resizedPaddingAdjustmentTop = 2130969721;
-        public static final int resizedTextSize = 2130969722;
-        public static final int restrictedSwitchSummary = 2130969723;
-        public static final int reverseLayout = 2130969724;
-        public static final int rewind = 2130969725;
-        public static final int rightArrow = 2130969726;
-        public static final int rippleColor = 2130969727;
-        public static final int rippleMaxSize = 2130969728;
-        public static final int rippleMinSize = 2130969729;
-        public static final int rotateButtonEndAngle = 2130969730;
-        public static final int rotateButtonScaleX = 2130969731;
-        public static final int rotateButtonStartAngle = 2130969732;
-        public static final int round = 2130969733;
-        public static final int roundPercent = 2130969734;
-        public static final int rowHeaderDescriptionStyle = 2130969735;
-        public static final int rowHeaderDockStyle = 2130969736;
-        public static final int rowHeaderStyle = 2130969737;
-        public static final int rowHeight = 2130969738;
-        public static final int rowHorizontalGridStyle = 2130969739;
-        public static final int rowHoverCardDescriptionStyle = 2130969740;
-        public static final int rowHoverCardTitleStyle = 2130969741;
-        public static final int rowMaxHeight = 2130969742;
-        public static final int rowRangeHeight = 2130969743;
-        public static final int rowRangeSingleTextHeight = 2130969744;
-        public static final int rowStyle = 2130969745;
-        public static final int rowsVerticalGridStyle = 2130969746;
-        public static final int saturation = 2130969747;
-        public static final int scaledTextSize = 2130969748;
-        public static final int scrimAnimationDuration = 2130969749;
-        public static final int scrimBackground = 2130969750;
-        public static final int scrimVisibleHeightTrigger = 2130969751;
-        public static final int scrollOrientation = 2130969752;
-        public static final int scrollRange = 2130969753;
-        public static final int scrollStart = 2130969754;
-        public static final int scrollableView = 2130969755;
-        public static final int searchActionModeInputBackground = 2130969756;
-        public static final int searchEditTextBackground = 2130969757;
-        public static final int searchEditTextColor = 2130969758;
-        public static final int searchEditTextHintColor = 2130969759;
-        public static final int searchEditTextIconStart = 2130969760;
-        public static final int searchEditTextStyle = 2130969761;
-        public static final int searchHintIcon = 2130969762;
-        public static final int searchIcon = 2130969763;
-        public static final int searchOrbBrightColor = 2130969764;
-        public static final int searchOrbColor = 2130969765;
-        public static final int searchOrbIcon = 2130969766;
-        public static final int searchOrbIconColor = 2130969767;
-        public static final int searchOrbViewStyle = 2130969768;
-        public static final int searchViewStyle = 2130969769;
-        public static final int sectionHeaderStyle = 2130969770;
-        public static final int seekBarIncrement = 2130969771;
-        public static final int seekBarInlineWidth = 2130969772;
-        public static final int seekBarPreferenceStyle = 2130969773;
-        public static final int seekBarProgressDrawable = 2130969774;
-        public static final int seekBarStyle = 2130969775;
-        public static final int selectable = 2130969776;
-        public static final int selectableItemBackground = 2130969777;
-        public static final int selectableItemBackgroundBorderless = 2130969778;
-        public static final int selectedAnimationDelay = 2130969779;
-        public static final int selectedAnimationDuration = 2130969780;
-        public static final int shadowRadius = 2130969781;
-        public static final int shapeAppearance = 2130969782;
-        public static final int shapeAppearanceLargeComponent = 2130969783;
-        public static final int shapeAppearanceMediumComponent = 2130969784;
-        public static final int shapeAppearanceOverlay = 2130969785;
-        public static final int shapeAppearanceSmallComponent = 2130969786;
-        public static final int shouldDisableView = 2130969787;
-        public static final int showAirplaneMode = 2130969788;
-        public static final int showAsAction = 2130969789;
-        public static final int showDark = 2130969790;
-        public static final int showDay = 2130969791;
-        public static final int showDividers = 2130969792;
-        public static final int showMissingSim = 2130969793;
-        public static final int showMonth = 2130969794;
-        public static final int showMotionSpec = 2130969795;
-        public static final int showPaths = 2130969796;
-        public static final int showRightArrow = 2130969797;
-        public static final int showSeekBarValue = 2130969798;
-        public static final int showText = 2130969799;
-        public static final int showTitle = 2130969800;
-        public static final int showYear = 2130969801;
-        public static final int shrinkMotionSpec = 2130969802;
-        public static final int shuffle = 2130969803;
-        public static final int singleChoiceItemLayout = 2130969804;
-        public static final int singleLine = 2130969805;
-        public static final int singleLineButtonPaddingHorizontal = 2130969806;
-        public static final int singleLineTitle = 2130969807;
-        public static final int singleSelection = 2130969808;
-        public static final int singleToneColor = 2130969809;
-        public static final int sizePercent = 2130969810;
-        public static final int skip_next = 2130969811;
-        public static final int skip_previous = 2130969812;
-        public static final int sliceViewStyle = 2130969813;
-        public static final int sliderOff = 2130969814;
-        public static final int sliderOn = 2130969815;
-        public static final int slidingBarColor = 2130969816;
-        public static final int slidingButtonStyle = 2130969817;
-        public static final int snackbarButtonStyle = 2130969818;
-        public static final int snackbarStyle = 2130969819;
-        public static final int spacing = 2130969820;
-        public static final int spanCount = 2130969821;
-        public static final int spinBars = 2130969822;
-        public static final int spinnerBackground = 2130969823;
-        public static final int spinnerDropDownItemBackground = 2130969824;
-        public static final int spinnerDropDownItemStyle = 2130969825;
-        public static final int spinnerDropDownItemTextColor = 2130969826;
-        public static final int spinnerModeCompat = 2130969827;
-        public static final int spinnerStyle = 2130969828;
-        public static final int spinnersShown = 2130969829;
-        public static final int splitActionBarOverlayHeight = 2130969830;
-        public static final int splitTrack = 2130969831;
-        public static final int springBackMode = 2130969832;
-        public static final int srcCompat = 2130969833;
-        public static final int stackFromEnd = 2130969834;
-        public static final int staggered = 2130969835;
-        public static final int startIconContentDescription = 2130969836;
-        public static final int startIconDrawable = 2130969837;
-        public static final int startIconTint = 2130969838;
-        public static final int startIconTintMode = 2130969839;
-        public static final int startPointRadius = 2130969840;
-        public static final int startYear = 2130969841;
-        public static final int startingWindowOverlay = 2130969842;
-        public static final int stateDrawable = 2130969843;
-        public static final int state_above_anchor = 2130969844;
-        public static final int state_collapsed = 2130969845;
-        public static final int state_collapsible = 2130969846;
-        public static final int state_connected = 2130969847;
-        public static final int state_dragged = 2130969848;
-        public static final int state_encrypted = 2130969849;
-        public static final int state_first_h = 2130969850;
-        public static final int state_first_v = 2130969851;
-        public static final int state_last_h = 2130969852;
-        public static final int state_last_v = 2130969853;
-        public static final int state_liftable = 2130969854;
-        public static final int state_lifted = 2130969855;
-        public static final int state_metered = 2130969856;
-        public static final int state_middle_h = 2130969857;
-        public static final int state_middle_v = 2130969858;
-        public static final int state_no_title = 2130969859;
-        public static final int state_saved = 2130969860;
-        public static final int state_single_h = 2130969861;
-        public static final int state_single_v = 2130969862;
-        public static final int statusBarBackground = 2130969863;
-        public static final int statusBarScrim = 2130969864;
-        public static final int strokeColor = 2130969865;
-        public static final int strokeWidth = 2130969866;
-        public static final int subContentEndPadding = 2130969867;
-        public static final int subContentStartPadding = 2130969868;
-        public static final int subMenuArrow = 2130969869;
-        public static final int subTitle = 2130969870;
-        public static final int submitBackground = 2130969871;
-        public static final int subtitle = 2130969872;
-        public static final int subtitleColor = 2130969873;
-        public static final int subtitleSize = 2130969874;
-        public static final int subtitleTextAppearance = 2130969875;
-        public static final int subtitleTextColor = 2130969876;
-        public static final int subtitleTextStyle = 2130969877;
-        public static final int suggestionRowLayout = 2130969878;
-        public static final int summary = 2130969879;
-        public static final int summaryOff = 2130969880;
-        public static final int summaryOn = 2130969881;
-        public static final int swipeRefreshLayoutProgressSpinnerBackgroundColor = 2130969882;
-        public static final int switchMinWidth = 2130969883;
-        public static final int switchPadding = 2130969884;
-        public static final int switchPreferenceCompatStyle = 2130969885;
-        public static final int switchPreferenceStyle = 2130969886;
-        public static final int switchStyle = 2130969887;
-        public static final int switchTextAppearance = 2130969888;
-        public static final int switchTextOff = 2130969889;
-        public static final int switchTextOn = 2130969890;
-        public static final int tabBackground = 2130969891;
-        public static final int tabContentStart = 2130969892;
-        public static final int tabGravity = 2130969893;
-        public static final int tabIconTint = 2130969894;
-        public static final int tabIconTintMode = 2130969895;
-        public static final int tabIndicator = 2130969896;
-        public static final int tabIndicatorAnimationDuration = 2130969897;
-        public static final int tabIndicatorColor = 2130969898;
-        public static final int tabIndicatorFullWidth = 2130969899;
-        public static final int tabIndicatorGravity = 2130969900;
-        public static final int tabIndicatorHeight = 2130969901;
-        public static final int tabInlineLabel = 2130969902;
-        public static final int tabMaxWidth = 2130969903;
-        public static final int tabMinWidth = 2130969904;
-        public static final int tabMode = 2130969905;
-        public static final int tabPadding = 2130969906;
-        public static final int tabPaddingBottom = 2130969907;
-        public static final int tabPaddingEnd = 2130969908;
-        public static final int tabPaddingStart = 2130969909;
-        public static final int tabPaddingTop = 2130969910;
-        public static final int tabRippleColor = 2130969911;
-        public static final int tabSelectedTextColor = 2130969912;
-        public static final int tabStyle = 2130969913;
-        public static final int tabTextAppearance = 2130969914;
-        public static final int tabTextColor = 2130969915;
-        public static final int tabUnboundedRipple = 2130969916;
-        public static final int targetId = 2130969917;
-        public static final int targetLevel = 2130969918;
-        public static final int telltales_tailColor = 2130969919;
-        public static final int telltales_tailScale = 2130969920;
-        public static final int telltales_velocityMode = 2130969921;
-        public static final int text = 2130969922;
-        public static final int textAllCaps = 2130969923;
-        public static final int textAppearance = 2130969924;
-        public static final int textAppearanceBody1 = 2130969925;
-        public static final int textAppearanceBody2 = 2130969926;
-        public static final int textAppearanceButton = 2130969927;
-        public static final int textAppearanceCaption = 2130969928;
-        public static final int textAppearanceHeadline1 = 2130969929;
-        public static final int textAppearanceHeadline2 = 2130969930;
-        public static final int textAppearanceHeadline3 = 2130969931;
-        public static final int textAppearanceHeadline4 = 2130969932;
-        public static final int textAppearanceHeadline5 = 2130969933;
-        public static final int textAppearanceHeadline6 = 2130969934;
-        public static final int textAppearanceLargePopupMenu = 2130969935;
-        public static final int textAppearanceListItem = 2130969936;
-        public static final int textAppearanceListItemSecondary = 2130969937;
-        public static final int textAppearanceListItemSmall = 2130969938;
-        public static final int textAppearanceOverline = 2130969939;
-        public static final int textAppearancePopupMenuHeader = 2130969940;
-        public static final int textAppearanceSearchResultSubtitle = 2130969941;
-        public static final int textAppearanceSearchResultTitle = 2130969942;
-        public static final int textAppearanceSmallPopupMenu = 2130969943;
-        public static final int textAppearanceSubtitle1 = 2130969944;
-        public static final int textAppearanceSubtitle2 = 2130969945;
-        public static final int textCircleRadius = 2130969946;
-        public static final int textColorAlertDialogListItem = 2130969947;
-        public static final int textColorBlankPage = 2130969948;
-        public static final int textColorButton = 2130969949;
-        public static final int textColorDialogSingleChoiceItem = 2130969950;
-        public static final int textColorList = 2130969951;
-        public static final int textColorListSecondary = 2130969952;
-        public static final int textColorMenuListItem = 2130969953;
-        public static final int textColorNormal = 2130969954;
-        public static final int textColorPopupMenuListItem = 2130969955;
-        public static final int textColorSearchBarCancel = 2130969956;
-        public static final int textColorSearchUrl = 2130969957;
-        public static final int textColorSpinnerDropdownSelector = 2130969958;
-        public static final int textEndPadding = 2130969959;
-        public static final int textHandleAndCursorColor = 2130969960;
-        public static final int textInputStyle = 2130969961;
-        public static final int textLocale = 2130969962;
-        public static final int textPreferenceStyle = 2130969963;
-        public static final int textSizeHighlight = 2130969964;
-        public static final int textSizeHint = 2130969965;
-        public static final int textStartPadding = 2130969966;
-        public static final int textVerticalPadding = 2130969967;
-        public static final int textView = 2130969968;
-        public static final int theme = 2130969969;
-        public static final int thickness = 2130969970;
-        public static final int thumbTextPadding = 2130969971;
-        public static final int thumbTint = 2130969972;
-        public static final int thumbTintMode = 2130969973;
-        public static final int thumb_down = 2130969974;
-        public static final int thumb_down_outline = 2130969975;
-        public static final int thumb_up = 2130969976;
-        public static final int thumb_up_outline = 2130969977;
-        public static final int tickMark = 2130969978;
-        public static final int tickMarkTint = 2130969979;
-        public static final int tickMarkTintMode = 2130969980;
-        public static final int timePickerStyle = 2130969981;
-        public static final int timeSegments = 2130969982;
-        public static final int tint = 2130969983;
-        public static final int tintColor = 2130969984;
-        public static final int tintMode = 2130969985;
-        public static final int title = 2130969986;
-        public static final int titleBackground = 2130969987;
-        public static final int titleCenter = 2130969988;
-        public static final int titleColor = 2130969989;
-        public static final int titleEnabled = 2130969990;
-        public static final int titleEndPadding = 2130969991;
-        public static final int titleItemEndPadding = 2130969992;
-        public static final int titleItemStartPadding = 2130969993;
-        public static final int titleMargin = 2130969994;
-        public static final int titleMarginBottom = 2130969995;
-        public static final int titleMarginEnd = 2130969996;
-        public static final int titleMarginStart = 2130969997;
-        public static final int titleMarginTop = 2130969998;
-        public static final int titleMargins = 2130969999;
-        public static final int titleSize = 2130970000;
-        public static final int titleStartPadding = 2130970001;
-        public static final int titleTextAppearance = 2130970002;
-        public static final int titleTextColor = 2130970003;
-        public static final int titleTextStyle = 2130970004;
-        public static final int toolbarId = 2130970005;
-        public static final int toolbarNavigationButtonStyle = 2130970006;
-        public static final int toolbarStyle = 2130970007;
-        public static final int tooltipForegroundColor = 2130970008;
-        public static final int tooltipFrameBackground = 2130970009;
-        public static final int tooltipText = 2130970010;
-        public static final int topArrow = 2130970011;
-        public static final int topArrowWithTitle = 2130970012;
-        public static final int topLeftArrow = 2130970013;
-        public static final int topRightArrow = 2130970014;
-        public static final int touchAnchorId = 2130970015;
-        public static final int touchAnchorSide = 2130970016;
-        public static final int touchRegionId = 2130970017;
-        public static final int track = 2130970018;
-        public static final int trackTint = 2130970019;
-        public static final int trackTintMode = 2130970020;
-        public static final int transitionDisable = 2130970021;
-        public static final int transitionEasing = 2130970022;
-        public static final int transitionFlags = 2130970023;
-        public static final int transitionPathRotate = 2130970024;
-        public static final int translucentTabIndicator = 2130970025;
-        public static final int triggerId = 2130970026;
-        public static final int triggerReceiver = 2130970027;
-        public static final int triggerSlack = 2130970028;
-        public static final int ttcIndex = 2130970029;
-        public static final int updatesContinuously = 2130970030;
-        public static final int useAdditionalSummary = 2130970031;
-        public static final int useAdminDisabledSummary = 2130970032;
-        public static final int useCompatPadding = 2130970033;
-        public static final int useCurrentTime = 2130970034;
-        public static final int useMaterialThemeColors = 2130970035;
-        public static final int useSimpleSummaryProvider = 2130970036;
-        public static final int userRestriction = 2130970037;
-        public static final int verticalMargin = 2130970038;
-        public static final int verticalSpacing = 2130970039;
-        public static final int viewInflaterClass = 2130970040;
-        public static final int viewType = 2130970041;
-        public static final int visibilityMode = 2130970042;
-        public static final int voiceIcon = 2130970043;
-        public static final int wallpaperTextColor = 2130970044;
-        public static final int wallpaperTextColorSecondary = 2130970045;
-        public static final int warmth = 2130970046;
-        public static final int waveDecay = 2130970047;
-        public static final int waveOffset = 2130970048;
-        public static final int wavePeriod = 2130970049;
-        public static final int waveShape = 2130970050;
-        public static final int waveVariesBy = 2130970051;
-        public static final int widgetLayout = 2130970052;
-        public static final int wifi_friction = 2130970053;
-        public static final int wifi_signal = 2130970054;
-        public static final int windowActionBar = 2130970055;
-        public static final int windowActionBarMovable = 2130970056;
-        public static final int windowActionBarOverlay = 2130970057;
-        public static final int windowActionModeOverlay = 2130970058;
-        public static final int windowContentMask = 2130970059;
-        public static final int windowDisablePreview = 2130970060;
-        public static final int windowFixedHeightMajor = 2130970061;
-        public static final int windowFixedHeightMinor = 2130970062;
-        public static final int windowFixedWidthMajor = 2130970063;
-        public static final int windowFixedWidthMinor = 2130970064;
-        public static final int windowLayoutMode = 2130970065;
-        public static final int windowMaxHeightMajor = 2130970066;
-        public static final int windowMaxHeightMinor = 2130970067;
-        public static final int windowMaxWidthMajor = 2130970068;
-        public static final int windowMaxWidthMinor = 2130970069;
-        public static final int windowMinWidthMajor = 2130970070;
-        public static final int windowMinWidthMinor = 2130970071;
-        public static final int windowNoTitle = 2130970072;
-        public static final int windowSearchMask = 2130970073;
-        public static final int windowSplitActionBar = 2130970074;
-        public static final int windowTranslucentStatus = 2130970075;
-        public static final int wordPhotoBackground = 2130970076;
-        public static final int wordPhotoTextColor = 2130970077;
+        public static final int actionBarExpandState = 2130968595;
+        public static final int actionBarExpandTabBarStyle = 2130968596;
+        public static final int actionBarFavoriteIcon = 2130968597;
+        public static final int actionBarIndeterminateProgressStyle = 2130968598;
+        public static final int actionBarItemBackground = 2130968599;
+        public static final int actionBarMovableLayoutStyle = 2130968600;
+        public static final int actionBarMoveIcon = 2130968601;
+        public static final int actionBarNewIcon = 2130968602;
+        public static final int actionBarPasteIcon = 2130968603;
+        public static final int actionBarPauseIcon = 2130968604;
+        public static final int actionBarPopupTheme = 2130968605;
+        public static final int actionBarRefreshIcon = 2130968606;
+        public static final int actionBarRemoveBlacklistIcon = 2130968607;
+        public static final int actionBarRemoveSecretIcon = 2130968608;
+        public static final int actionBarRenameIcon = 2130968609;
+        public static final int actionBarResizable = 2130968610;
+        public static final int actionBarSaveIcon = 2130968611;
+        public static final int actionBarSearchIcon = 2130968612;
+        public static final int actionBarSecondaryTabBarStyle = 2130968613;
+        public static final int actionBarSendIcon = 2130968614;
+        public static final int actionBarSettingIcon = 2130968615;
+        public static final int actionBarShareIcon = 2130968616;
+        public static final int actionBarSize = 2130968617;
+        public static final int actionBarSplitBackground = 2130968618;
+        public static final int actionBarSplitStyle = 2130968619;
+        public static final int actionBarStackBackground = 2130968620;
+        public static final int actionBarStackedBackground = 2130968621;
+        public static final int actionBarStartIcon = 2130968622;
+        public static final int actionBarStickIcon = 2130968623;
+        public static final int actionBarStyle = 2130968624;
+        public static final int actionBarSubtitleColor = 2130968625;
+        public static final int actionBarTabBadgeIcon = 2130968626;
+        public static final int actionBarTabBarStyle = 2130968627;
+        public static final int actionBarTabExpandStyle = 2130968628;
+        public static final int actionBarTabSecondaryStyle = 2130968629;
+        public static final int actionBarTabStyle = 2130968630;
+        public static final int actionBarTabTextExpandStyle = 2130968631;
+        public static final int actionBarTabTextSecondaryExpandStyle = 2130968632;
+        public static final int actionBarTabTextSecondaryStyle = 2130968633;
+        public static final int actionBarTabTextStyle = 2130968634;
+        public static final int actionBarTheme = 2130968635;
+        public static final int actionBarTightTitle = 2130968636;
+        public static final int actionBarTitleColor = 2130968637;
+        public static final int actionBarUnStickIcon = 2130968638;
+        public static final int actionBarUnfavoriteIcon = 2130968639;
+        public static final int actionBarUpdateIcon = 2130968640;
+        public static final int actionBarWidgetTheme = 2130968641;
+        public static final int actionButtonStyle = 2130968642;
+        public static final int actionDividerHeight = 2130968643;
+        public static final int actionDropDownStyle = 2130968644;
+        public static final int actionLayout = 2130968645;
+        public static final int actionMenuTextAppearance = 2130968646;
+        public static final int actionMenuTextColor = 2130968647;
+        public static final int actionModeAnim = 2130968648;
+        public static final int actionModeBackground = 2130968649;
+        public static final int actionModeButtonStyle = 2130968650;
+        public static final int actionModeCancelButtonStyle = 2130968651;
+        public static final int actionModeCloseButtonStyle = 2130968652;
+        public static final int actionModeCloseContentDescription = 2130968653;
+        public static final int actionModeCloseDrawable = 2130968654;
+        public static final int actionModeConfirmButtonStyle = 2130968655;
+        public static final int actionModeCopyDrawable = 2130968656;
+        public static final int actionModeCutDrawable = 2130968657;
+        public static final int actionModeFindDrawable = 2130968658;
+        public static final int actionModeOverflowButtonStyle = 2130968659;
+        public static final int actionModePasteDrawable = 2130968660;
+        public static final int actionModePopupWindowStyle = 2130968661;
+        public static final int actionModeSelectAllDrawable = 2130968662;
+        public static final int actionModeSelectButtonStyle = 2130968663;
+        public static final int actionModeShareDrawable = 2130968664;
+        public static final int actionModeSplitBackground = 2130968665;
+        public static final int actionModeStyle = 2130968666;
+        public static final int actionModeTheme = 2130968667;
+        public static final int actionModeTitleColor = 2130968668;
+        public static final int actionModeWebSearchDrawable = 2130968669;
+        public static final int actionOverflowButtonStyle = 2130968670;
+        public static final int actionOverflowMenuStyle = 2130968671;
+        public static final int actionProviderClass = 2130968672;
+        public static final int actionTextColorAlpha = 2130968673;
+        public static final int actionViewClass = 2130968674;
+        public static final int actionbarOverlayMaskColorOled = 2130968675;
+        public static final int actionbarSearchMaskColor = 2130968676;
+        public static final int activatedAnimationDuration = 2130968677;
+        public static final int activatedTextAppearance = 2130968678;
+        public static final int activeFrameColor = 2130968679;
+        public static final int activityChooserViewStyle = 2130968680;
+        public static final int adapter = 2130968681;
+        public static final int adjustable = 2130968682;
+        public static final int alertDialogButtonGroupStyle = 2130968683;
+        public static final int alertDialogCenterButtons = 2130968684;
+        public static final int alertDialogStyle = 2130968685;
+        public static final int alertDialogTheme = 2130968686;
+        public static final int allCaps = 2130968687;
+        public static final int allowDividerAbove = 2130968688;
+        public static final int allowDividerAfterLastItem = 2130968689;
+        public static final int allowDividerBelow = 2130968690;
+        public static final int allowStacking = 2130968691;
+        public static final int alpha = 2130968692;
+        public static final int alphabeticModifiers = 2130968693;
+        public static final int altSrc = 2130968694;
+        public static final int amPmStyle = 2130968695;
+        public static final int animate_relativeTo = 2130968696;
+        public static final int animationMode = 2130968697;
+        public static final int applyMotionScene = 2130968698;
+        public static final int arcMode = 2130968699;
+        public static final int arrowBgColor = 2130968700;
+        public static final int arrowColor = 2130968701;
+        public static final int arrowFilterSortTabView = 2130968702;
+        public static final int arrowHeadLength = 2130968703;
+        public static final int arrowPopupViewStyle = 2130968704;
+        public static final int arrowRadius = 2130968705;
+        public static final int arrowRightFillColor = 2130968706;
+        public static final int arrowRightStrokeColor = 2130968707;
+        public static final int arrowShaftLength = 2130968708;
+        public static final int attributeName = 2130968709;
+        public static final int autoCompleteTextViewStyle = 2130968710;
+        public static final int autoSizeMaxTextSize = 2130968711;
+        public static final int autoSizeMinTextSize = 2130968712;
+        public static final int autoSizePresetSizes = 2130968713;
+        public static final int autoSizeStepGranularity = 2130968714;
+        public static final int autoSizeTextType = 2130968715;
+        public static final int autoTransition = 2130968716;
+        public static final int avatarPadding = 2130968717;
+        public static final int background = 2130968718;
+        public static final int backgroundColor = 2130968719;
+        public static final int backgroundInsetBottom = 2130968720;
+        public static final int backgroundInsetEnd = 2130968721;
+        public static final int backgroundInsetStart = 2130968722;
+        public static final int backgroundInsetTop = 2130968723;
+        public static final int backgroundLeft = 2130968724;
+        public static final int backgroundOverlayColorAlpha = 2130968725;
+        public static final int backgroundProtectedStyle = 2130968726;
+        public static final int backgroundRight = 2130968727;
+        public static final int backgroundSplit = 2130968728;
+        public static final int backgroundStacked = 2130968729;
+        public static final int backgroundTint = 2130968730;
+        public static final int backgroundTintMode = 2130968731;
+        public static final int badgeDiameter = 2130968732;
+        public static final int badgeMargin = 2130968733;
+        public static final int bar = 2130968734;
+        public static final int barLength = 2130968735;
+        public static final int barOff = 2130968736;
+        public static final int barOn = 2130968737;
+        public static final int barrierAllowsGoneWidgets = 2130968738;
+        public static final int barrierDirection = 2130968739;
+        public static final int barrierMargin = 2130968740;
+        public static final int baseCardViewStyle = 2130968741;
+        public static final int behavior_autoHide = 2130968742;
+        public static final int behavior_autoShrink = 2130968743;
+        public static final int behavior_fitToContents = 2130968744;
+        public static final int behavior_halfExpandedRatio = 2130968745;
+        public static final int behavior_hideable = 2130968746;
+        public static final int behavior_overlapTop = 2130968747;
+        public static final int behavior_peekHeight = 2130968748;
+        public static final int behavior_saveFlags = 2130968749;
+        public static final int behavior_skipCollapsed = 2130968750;
+        public static final int borderWidth = 2130968751;
+        public static final int borderlessButtonStyle = 2130968752;
+        public static final int bottomAppBarStyle = 2130968753;
+        public static final int bottomArrow = 2130968754;
+        public static final int bottomDividerEndPadding = 2130968755;
+        public static final int bottomDividerStartPadding = 2130968756;
+        public static final int bottomLeftArrow = 2130968757;
+        public static final int bottomNavigationStyle = 2130968758;
+        public static final int bottomRightArrow = 2130968759;
+        public static final int bottomSheetDialogTheme = 2130968760;
+        public static final int bottomSheetStyle = 2130968761;
+        public static final int boxBackgroundColor = 2130968762;
+        public static final int boxBackgroundMode = 2130968763;
+        public static final int boxCollapsedPaddingTop = 2130968764;
+        public static final int boxCornerRadiusBottomEnd = 2130968765;
+        public static final int boxCornerRadiusBottomStart = 2130968766;
+        public static final int boxCornerRadiusTopEnd = 2130968767;
+        public static final int boxCornerRadiusTopStart = 2130968768;
+        public static final int boxStrokeColor = 2130968769;
+        public static final int boxStrokeWidth = 2130968770;
+        public static final int brightness = 2130968771;
+        public static final int browsePaddingBottom = 2130968772;
+        public static final int browsePaddingEnd = 2130968773;
+        public static final int browsePaddingStart = 2130968774;
+        public static final int browsePaddingTop = 2130968775;
+        public static final int browseRowsFadingEdgeLength = 2130968776;
+        public static final int browseRowsMarginStart = 2130968777;
+        public static final int browseRowsMarginTop = 2130968778;
+        public static final int browseTitleIconStyle = 2130968779;
+        public static final int browseTitleTextStyle = 2130968780;
+        public static final int browseTitleViewLayout = 2130968781;
+        public static final int browseTitleViewStyle = 2130968782;
+        public static final int buttonBackground = 2130968783;
+        public static final int buttonBackgroundWarning = 2130968784;
+        public static final int buttonBarButtonStyle = 2130968785;
+        public static final int buttonBarDefaultButtonStyle = 2130968786;
+        public static final int buttonBarNegativeButtonStyle = 2130968787;
+        public static final int buttonBarNeutralButtonStyle = 2130968788;
+        public static final int buttonBarPositiveButtonStyle = 2130968789;
+        public static final int buttonBarPrimaryButtonStyle = 2130968790;
+        public static final int buttonBarStyle = 2130968791;
+        public static final int buttonCompat = 2130968792;
+        public static final int buttonGravity = 2130968793;
+        public static final int buttonIconDimen = 2130968794;
+        public static final int buttonInlineDeleteBackground = 2130968795;
+        public static final int buttonInlineDetailBackground = 2130968796;
+        public static final int buttonInlineExpandBackground = 2130968797;
+        public static final int buttonInlineShrinkBackground = 2130968798;
+        public static final int buttonPanelSideLayout = 2130968799;
+        public static final int buttonRectStyleBackground = 2130968800;
+        public static final int buttonStrokeWidth = 2130968801;
+        public static final int buttonStyle = 2130968802;
+        public static final int buttonStyleSmall = 2130968803;
+        public static final int buttonTint = 2130968804;
+        public static final int buttonTintMode = 2130968805;
+        public static final int calendarViewShown = 2130968806;
+        public static final int cardBackground = 2130968807;
+        public static final int cardBackgroundColor = 2130968808;
+        public static final int cardCornerRadius = 2130968809;
+        public static final int cardElevation = 2130968810;
+        public static final int cardForeground = 2130968811;
+        public static final int cardForegroundColor = 2130968812;
+        public static final int cardMaxElevation = 2130968813;
+        public static final int cardPreventCornerOverlap = 2130968814;
+        public static final int cardType = 2130968815;
+        public static final int cardUseCompatPadding = 2130968816;
+        public static final int cardViewStyle = 2130968817;
+        public static final int chainUseRtl = 2130968818;
+        public static final int charPadding = 2130968819;
+        public static final int chargingAnimColor = 2130968820;
+        public static final int checkBoxButtonCompat = 2130968821;
+        public static final int checkBoxDrawableTouchAnimEnable = 2130968822;
+        public static final int checkBoxOnDrawableBackgroundColor = 2130968823;
+        public static final int checkBoxOnDrawableForegroundColor = 2130968824;
+        public static final int checkBoxPreferenceStyle = 2130968825;
+        public static final int checkMarkCompat = 2130968826;
+        public static final int checkWidgetBackgroundDisableAlpha = 2130968827;
+        public static final int checkWidgetBackgroundNormalAlpha = 2130968828;
+        public static final int checkWidgetDisableDrawableBackgroundColor = 2130968829;
+        public static final int checkWidgetOnAlphaDrawableBackgroundColor = 2130968830;
+        public static final int checkWidgetStrokeColor = 2130968831;
+        public static final int checkWidgetStrokeDisableAlpha = 2130968832;
+        public static final int checkWidgetStrokeNormalAlpha = 2130968833;
+        public static final int checkableButtonTextColor = 2130968834;
+        public static final int checkableButtonTextColorMultiple = 2130968835;
+        public static final int checkableButtonTextColorSingle = 2130968836;
+        public static final int checkablePreferenceItemColorFilterChecked = 2130968837;
+        public static final int checkablePreferenceItemColorFilterNormal = 2130968838;
+        public static final int checkablePreferenceItemColorPressed = 2130968839;
+        public static final int checkablePreferenceItemColorPressedChecked = 2130968840;
+        public static final int checkboxStyle = 2130968841;
+        public static final int checkedButton = 2130968842;
+        public static final int checkedChip = 2130968843;
+        public static final int checkedIcon = 2130968844;
+        public static final int checkedIconEnabled = 2130968845;
+        public static final int checkedIconTint = 2130968846;
+        public static final int checkedIconVisible = 2130968847;
+        public static final int checkedTextViewStyle = 2130968848;
+        public static final int checkwidget_backgroundDisableAlpha = 2130968849;
+        public static final int checkwidget_backgroundNormalAlpha = 2130968850;
+        public static final int checkwidget_checkOnAlphaBackgroundColor = 2130968851;
+        public static final int checkwidget_checkOnBackgroundColor = 2130968852;
+        public static final int checkwidget_checkOnForegroundColor = 2130968853;
+        public static final int checkwidget_disableBackgroundColor = 2130968854;
+        public static final int checkwidget_strokeColor = 2130968855;
+        public static final int checkwidget_strokeDisableAlpha = 2130968856;
+        public static final int checkwidget_strokeNormalAlpha = 2130968857;
+        public static final int checkwidget_touchAnimEnable = 2130968858;
+        public static final int children_sequence_state = 2130968859;
+        public static final int chipBackgroundColor = 2130968860;
+        public static final int chipCornerRadius = 2130968861;
+        public static final int chipEndPadding = 2130968862;
+        public static final int chipGroupStyle = 2130968863;
+        public static final int chipIcon = 2130968864;
+        public static final int chipIconEnabled = 2130968865;
+        public static final int chipIconSize = 2130968866;
+        public static final int chipIconTint = 2130968867;
+        public static final int chipIconVisible = 2130968868;
+        public static final int chipMinHeight = 2130968869;
+        public static final int chipMinTouchTargetSize = 2130968870;
+        public static final int chipSpacing = 2130968871;
+        public static final int chipSpacingHorizontal = 2130968872;
+        public static final int chipSpacingVertical = 2130968873;
+        public static final int chipStandaloneStyle = 2130968874;
+        public static final int chipStartPadding = 2130968875;
+        public static final int chipStrokeColor = 2130968876;
+        public static final int chipStrokeWidth = 2130968877;
+        public static final int chipStyle = 2130968878;
+        public static final int chipSurfaceColor = 2130968879;
+        public static final int circleProgressBarColor = 2130968880;
+        public static final int circleRadius = 2130968881;
+        public static final int clearableEditTextIcon = 2130968882;
+        public static final int clearableEditTextStyle = 2130968883;
+        public static final int clickAction = 2130968884;
+        public static final int clipEdge = 2130968885;
+        public static final int clipEnd = 2130968886;
+        public static final int closable = 2130968887;
+        public static final int closeBackground = 2130968888;
+        public static final int closeIcon = 2130968889;
+        public static final int closeIconEnabled = 2130968890;
+        public static final int closeIconEndPadding = 2130968891;
+        public static final int closeIconSize = 2130968892;
+        public static final int closeIconStartPadding = 2130968893;
+        public static final int closeIconTint = 2130968894;
+        public static final int closeIconVisible = 2130968895;
+        public static final int closeItemLayout = 2130968896;
+        public static final int closed_captioning = 2130968897;
+        public static final int collapseContentDescription = 2130968898;
+        public static final int collapseIcon = 2130968899;
+        public static final int collapsedTitleGravity = 2130968900;
+        public static final int collapsedTitleTextAppearance = 2130968901;
+        public static final int color = 2130968902;
+        public static final int colorAccent = 2130968903;
+        public static final int colorBackgroundFloating = 2130968904;
+        public static final int colorButtonNormal = 2130968905;
+        public static final int colorControlActivated = 2130968906;
+        public static final int colorControlHighlight = 2130968907;
+        public static final int colorControlNormal = 2130968908;
+        public static final int colorDividerLine = 2130968909;
+        public static final int colorError = 2130968910;
+        public static final int colorOnBackground = 2130968911;
+        public static final int colorOnError = 2130968912;
+        public static final int colorOnPrimary = 2130968913;
+        public static final int colorOnPrimaryDisabled = 2130968914;
+        public static final int colorOnPrimaryEmphasisHighType = 2130968915;
+        public static final int colorOnPrimaryEmphasisMedium = 2130968916;
+        public static final int colorOnSecondary = 2130968917;
+        public static final int colorOnSurface = 2130968918;
+        public static final int colorOnSurfaceDisabled = 2130968919;
+        public static final int colorOnSurfaceEmphasisHighType = 2130968920;
+        public static final int colorOnSurfaceEmphasisMedium = 2130968921;
+        public static final int colorPrimary = 2130968922;
+        public static final int colorPrimaryDark = 2130968923;
+        public static final int colorPrimaryVariant = 2130968924;
+        public static final int colorSecondary = 2130968925;
+        public static final int colorSecondaryVariant = 2130968926;
+        public static final int colorSurface = 2130968927;
+        public static final int colorSwitchThumbNormal = 2130968928;
+        public static final int columnCount = 2130968929;
+        public static final int columnWidth = 2130968930;
+        public static final int commitIcon = 2130968931;
+        public static final int compoundButtonCheckboxExpandDrawable = 2130968932;
+        public static final int connectDetailDisconnectedDrawable = 2130968933;
+        public static final int connectPreferenceBgConnectedColor = 2130968934;
+        public static final int connectPreferenceBgDisconnectedColor = 2130968935;
+        public static final int connectPreferenceIconDisconnectedColor = 2130968936;
+        public static final int connectPreferenceSummaryDisconnectedColor = 2130968937;
+        public static final int connectPreferenceTitleDisconnectedColor = 2130968938;
+        public static final int constraintSet = 2130968939;
+        public static final int constraintSetEnd = 2130968940;
+        public static final int constraintSetStart = 2130968941;
+        public static final int constraint_referenced_ids = 2130968942;
+        public static final int constraint_referenced_tags = 2130968943;
+        public static final int constraints = 2130968944;
+        public static final int content = 2130968945;
+        public static final int contentAutoFitSystemWindow = 2130968946;
+        public static final int contentBackground = 2130968947;
+        public static final int contentDescription = 2130968948;
+        public static final int contentEndPadding = 2130968949;
+        public static final int contentHeaderBackground = 2130968950;
+        public static final int contentInsetEnd = 2130968951;
+        public static final int contentInsetEndWithActions = 2130968952;
+        public static final int contentInsetLeft = 2130968953;
+        public static final int contentInsetRight = 2130968954;
+        public static final int contentInsetStart = 2130968955;
+        public static final int contentInsetStartWithNavigation = 2130968956;
+        public static final int contentPadding = 2130968957;
+        public static final int contentPaddingBottom = 2130968958;
+        public static final int contentPaddingLeft = 2130968959;
+        public static final int contentPaddingRight = 2130968960;
+        public static final int contentPaddingTop = 2130968961;
+        public static final int contentScrim = 2130968962;
+        public static final int contentStartPadding = 2130968963;
+        public static final int contextMenuSeparateItemBackground = 2130968964;
+        public static final int contrast = 2130968965;
+        public static final int controlBackground = 2130968966;
+        public static final int coordinatorLayoutStyle = 2130968967;
+        public static final int cornerFamily = 2130968968;
+        public static final int cornerFamilyBottomLeft = 2130968969;
+        public static final int cornerFamilyBottomRight = 2130968970;
+        public static final int cornerFamilyTopLeft = 2130968971;
+        public static final int cornerFamilyTopRight = 2130968972;
+        public static final int cornerRadius = 2130968973;
+        public static final int cornerSize = 2130968974;
+        public static final int cornerSizeBottomLeft = 2130968975;
+        public static final int cornerSizeBottomRight = 2130968976;
+        public static final int cornerSizeTopLeft = 2130968977;
+        public static final int cornerSizeTopRight = 2130968978;
+        public static final int counterEnabled = 2130968979;
+        public static final int counterMaxLength = 2130968980;
+        public static final int counterOverflowTextAppearance = 2130968981;
+        public static final int counterOverflowTextColor = 2130968982;
+        public static final int counterTextAppearance = 2130968983;
+        public static final int counterTextColor = 2130968984;
+        public static final int crossfade = 2130968985;
+        public static final int currentState = 2130968986;
+        public static final int curveFit = 2130968987;
+        public static final int customBoolean = 2130968988;
+        public static final int customColorDrawableValue = 2130968989;
+        public static final int customColorValue = 2130968990;
+        public static final int customDimension = 2130968991;
+        public static final int customFloatValue = 2130968992;
+        public static final int customIntegerValue = 2130968993;
+        public static final int customNavigationLayout = 2130968994;
+        public static final int customPixelDimension = 2130968995;
+        public static final int customStringValue = 2130968996;
+        public static final int customViewAutoFitSystemWindow = 2130968997;
+        public static final int darkIconTheme = 2130968998;
+        public static final int datePattern = 2130968999;
+        public static final int datePickerFormat = 2130969000;
+        public static final int datePickerStyle = 2130969001;
+        public static final int dateTimePickerStyle = 2130969002;
+        public static final int decayTime = 2130969003;
+        public static final int defValue = 2130969004;
+        public static final int defaultBrandColor = 2130969005;
+        public static final int defaultBrandColorDark = 2130969006;
+        public static final int defaultDuration = 2130969007;
+        public static final int defaultQueryHint = 2130969008;
+        public static final int defaultSearchBrightColor = 2130969009;
+        public static final int defaultSearchColor = 2130969010;
+        public static final int defaultSearchIcon = 2130969011;
+        public static final int defaultSearchIconColor = 2130969012;
+        public static final int defaultSectionHeaderColor = 2130969013;
+        public static final int defaultState = 2130969014;
+        public static final int defaultValue = 2130969015;
+        public static final int deltaPolarAngle = 2130969016;
+        public static final int deltaPolarRadius = 2130969017;
+        public static final int dependency = 2130969018;
+        public static final int dependencyType = 2130969019;
+        public static final int deriveConstraintsFrom = 2130969020;
+        public static final int descending = 2130969021;
+        public static final int detailsActionButtonStyle = 2130969022;
+        public static final int detailsDescriptionBodyStyle = 2130969023;
+        public static final int detailsDescriptionSubtitleStyle = 2130969024;
+        public static final int detailsDescriptionTitleStyle = 2130969025;
+        public static final int dialogBgColor = 2130969026;
+        public static final int dialogCheckBoxDrawableStart = 2130969027;
+        public static final int dialogCheckBoxStyle = 2130969028;
+        public static final int dialogCheckBoxTextAppearance = 2130969029;
+        public static final int dialogCheckBoxTextColor = 2130969030;
+        public static final int dialogCornerRadius = 2130969031;
+        public static final int dialogIcon = 2130969032;
+        public static final int dialogLayout = 2130969033;
+        public static final int dialogListItemBackground = 2130969034;
+        public static final int dialogListPreferredItemHeight = 2130969035;
+        public static final int dialogListPreferredItemHeightLarge = 2130969036;
+        public static final int dialogListPreferredItemHeightSmall = 2130969037;
+        public static final int dialogMessage = 2130969038;
+        public static final int dialogMultiChoiceListItemBackground = 2130969039;
+        public static final int dialogPreferenceStyle = 2130969040;
+        public static final int dialogPreferredPadding = 2130969041;
+        public static final int dialogSimpleListTitleColor = 2130969042;
+        public static final int dialogTheme = 2130969043;
+        public static final int dialogTitle = 2130969044;
+        public static final int dialogTitleBackground = 2130969045;
+        public static final int dialogTitleTextColor = 2130969046;
+        public static final int digit = 2130969047;
+        public static final int disableDependentsState = 2130969048;
+        public static final int disableRecyclerViewItemAnimator = 2130969049;
+        public static final int disabledProgressAlpha = 2130969050;
+        public static final int displayOptions = 2130969051;
+        public static final int divider = 2130969052;
+        public static final int dividerHorizontal = 2130969053;
+        public static final int dividerPadding = 2130969054;
+        public static final int dividerVertical = 2130969055;
+        public static final int dotBgColor = 2130969056;
+        public static final int dotSize = 2130969057;
+        public static final int dotToArrowGap = 2130969058;
+        public static final int dotToDotGap = 2130969059;
+        public static final int doubleLineButtonPaddingHorizontal = 2130969060;
+        public static final int dragDirection = 2130969061;
+        public static final int dragScale = 2130969062;
+        public static final int dragThreshold = 2130969063;
+        public static final int drawPath = 2130969064;
+        public static final int drawableBottomCompat = 2130969065;
+        public static final int drawableEndCompat = 2130969066;
+        public static final int drawableLeftCompat = 2130969067;
+        public static final int drawableRightCompat = 2130969068;
+        public static final int drawableSize = 2130969069;
+        public static final int drawableStartCompat = 2130969070;
+        public static final int drawableTint = 2130969071;
+        public static final int drawableTintMode = 2130969072;
+        public static final int drawableTopCompat = 2130969073;
+        public static final int drawerArrowStyle = 2130969074;
+        public static final int drawerLayoutStyle = 2130969075;
+        public static final int dropDownListViewStyle = 2130969076;
+        public static final int dropDownMaxWidth = 2130969077;
+        public static final int dropDownMinWidth = 2130969078;
+        public static final int dropdownListPreferredItemHeight = 2130969079;
+        public static final int dropdownPreferenceStyle = 2130969080;
+        public static final int duration = 2130969081;
+        public static final int editTextBackground = 2130969082;
+        public static final int editTextColor = 2130969083;
+        public static final int editTextColorDialog = 2130969084;
+        public static final int editTextColorDialogBackground = 2130969085;
+        public static final int editTextColorHint = 2130969086;
+        public static final int editTextColorHintDialog = 2130969087;
+        public static final int editTextPreferenceStyle = 2130969088;
+        public static final int editTextSearchStyle = 2130969089;
+        public static final int editTextStyle = 2130969090;
+        public static final int elevation = 2130969091;
+        public static final int elevationOverlaysColor = 2130969092;
+        public static final int elevationOverlaysEnabled = 2130969093;
+        public static final int enableAutoSizing = 2130969094;
+        public static final int enableCopying = 2130969095;
+        public static final int enabled = 2130969096;
+        public static final int endIconContentDescription = 2130969097;
+        public static final int endIconDrawable = 2130969098;
+        public static final int endIconMode = 2130969099;
+        public static final int endIconTint = 2130969100;
+        public static final int endIconTintMode = 2130969101;
+        public static final int endItemEndPadding = 2130969102;
+        public static final int endItemStartPadding = 2130969103;
+        public static final int endYear = 2130969104;
+        public static final int enforceMaterialTheme = 2130969105;
+        public static final int enforceTextAppearance = 2130969106;
+        public static final int ensureMinTouchTargetSize = 2130969107;
+        public static final int entries = 2130969108;
+        public static final int entryIcons = 2130969109;
+        public static final int entrySummaries = 2130969110;
+        public static final int entryValues = 2130969111;
+        public static final int errorEnabled = 2130969112;
+        public static final int errorMessageStyle = 2130969113;
+        public static final int errorTextAppearance = 2130969114;
+        public static final int errorTextColor = 2130969115;
+        public static final int expandActivityOverflowButtonDrawable = 2130969116;
+        public static final int expandBackground = 2130969117;
+        public static final int expandState = 2130969118;
+        public static final int expandSubtitleTextStyle = 2130969119;
+        public static final int expandTitleTextStyle = 2130969120;
+        public static final int expanded = 2130969121;
+        public static final int expandedTitleGravity = 2130969122;
+        public static final int expandedTitleMargin = 2130969123;
+        public static final int expandedTitleMarginBottom = 2130969124;
+        public static final int expandedTitleMarginEnd = 2130969125;
+        public static final int expandedTitleMarginStart = 2130969126;
+        public static final int expandedTitleMarginTop = 2130969127;
+        public static final int expandedTitleTextAppearance = 2130969128;
+        public static final int extendMotionSpec = 2130969129;
+        public static final int extendedFloatingActionButtonStyle = 2130969130;
+        public static final int externalRouteEnabledDrawable = 2130969131;
+        public static final int externalRouteEnabledDrawableStatic = 2130969132;
+        public static final int extraVisibility = 2130969133;
+        public static final int fabAlignmentMode = 2130969134;
+        public static final int fabAnimationMode = 2130969135;
+        public static final int fabColor = 2130969136;
+        public static final int fabCradleMargin = 2130969137;
+        public static final int fabCradleRoundedCornerRadius = 2130969138;
+        public static final int fabCradleVerticalOffset = 2130969139;
+        public static final int fabCustomSize = 2130969140;
+        public static final int fabShadowEnabled = 2130969141;
+        public static final int fabSize = 2130969142;
+        public static final int fastScrollEnabled = 2130969143;
+        public static final int fastScrollHorizontalThumbDrawable = 2130969144;
+        public static final int fastScrollHorizontalTrackDrawable = 2130969145;
+        public static final int fastScrollVerticalThumbDrawable = 2130969146;
+        public static final int fastScrollVerticalTrackDrawable = 2130969147;
+        public static final int fast_forward = 2130969148;
+        public static final int fillColor = 2130969149;
+        public static final int filterSortTabViewCoverBg = 2130969150;
+        public static final int filterSortTabViewFollowTouch = 2130969151;
+        public static final int filterSortTabViewTextColor = 2130969152;
+        public static final int filterSortViewBackground = 2130969153;
+        public static final int firstBaselineToTopHeight = 2130969154;
+        public static final int floatingActionButtonStyle = 2130969155;
+        public static final int flow_firstHorizontalBias = 2130969156;
+        public static final int flow_firstHorizontalStyle = 2130969157;
+        public static final int flow_firstVerticalBias = 2130969158;
+        public static final int flow_firstVerticalStyle = 2130969159;
+        public static final int flow_horizontalAlign = 2130969160;
+        public static final int flow_horizontalBias = 2130969161;
+        public static final int flow_horizontalGap = 2130969162;
+        public static final int flow_horizontalStyle = 2130969163;
+        public static final int flow_lastHorizontalBias = 2130969164;
+        public static final int flow_lastHorizontalStyle = 2130969165;
+        public static final int flow_lastVerticalBias = 2130969166;
+        public static final int flow_lastVerticalStyle = 2130969167;
+        public static final int flow_maxElementsWrap = 2130969168;
+        public static final int flow_padding = 2130969169;
+        public static final int flow_verticalAlign = 2130969170;
+        public static final int flow_verticalBias = 2130969171;
+        public static final int flow_verticalGap = 2130969172;
+        public static final int flow_verticalStyle = 2130969173;
+        public static final int flow_wrapMode = 2130969174;
+        public static final int focusOutEnd = 2130969175;
+        public static final int focusOutFront = 2130969176;
+        public static final int focusOutSideEnd = 2130969177;
+        public static final int focusOutSideStart = 2130969178;
+        public static final int font = 2130969179;
+        public static final int fontFamily = 2130969180;
+        public static final int fontProviderAuthority = 2130969181;
+        public static final int fontProviderCerts = 2130969182;
+        public static final int fontProviderFetchStrategy = 2130969183;
+        public static final int fontProviderFetchTimeout = 2130969184;
+        public static final int fontProviderPackage = 2130969185;
+        public static final int fontProviderQuery = 2130969186;
+        public static final int fontStyle = 2130969187;
+        public static final int fontVariationSettings = 2130969188;
+        public static final int fontWeight = 2130969189;
+        public static final int footerPreferenceStyle = 2130969190;
+        public static final int foregroundInsidePadding = 2130969191;
+        public static final int foregroundPrimaryColor = 2130969192;
+        public static final int foregroundPrimaryDisableColor = 2130969193;
+        public static final int fragment = 2130969194;
+        public static final int frame = 2130969195;
+        public static final int frameColor = 2130969196;
+        public static final int framePadding = 2130969197;
+        public static final int framePosition = 2130969198;
+        public static final int frameWidth = 2130969199;
+        public static final int gapBetweenBars = 2130969200;
+        public static final int goIcon = 2130969201;
+        public static final int gridBottomPadding = 2130969202;
+        public static final int gridSubtitleSize = 2130969203;
+        public static final int gridTextVerticalPadding = 2130969204;
+        public static final int gridTitleSize = 2130969205;
+        public static final int gridTopPadding = 2130969206;
+        public static final int guidanceBreadcrumbStyle = 2130969207;
+        public static final int guidanceContainerStyle = 2130969208;
+        public static final int guidanceDescriptionStyle = 2130969209;
+        public static final int guidanceEntryAnimation = 2130969210;
+        public static final int guidanceIconStyle = 2130969211;
+        public static final int guidanceTitleStyle = 2130969212;
+        public static final int guidePopupViewStyle = 2130969213;
+        public static final int guidedActionCheckedAnimation = 2130969214;
+        public static final int guidedActionContentWidth = 2130969215;
+        public static final int guidedActionContentWidthNoIcon = 2130969216;
+        public static final int guidedActionContentWidthWeight = 2130969217;
+        public static final int guidedActionContentWidthWeightTwoPanels = 2130969218;
+        public static final int guidedActionDescriptionMinLines = 2130969219;
+        public static final int guidedActionDisabledChevronAlpha = 2130969220;
+        public static final int guidedActionEnabledChevronAlpha = 2130969221;
+        public static final int guidedActionItemCheckmarkStyle = 2130969222;
+        public static final int guidedActionItemChevronStyle = 2130969223;
+        public static final int guidedActionItemContainerStyle = 2130969224;
+        public static final int guidedActionItemContentStyle = 2130969225;
+        public static final int guidedActionItemDescriptionStyle = 2130969226;
+        public static final int guidedActionItemIconStyle = 2130969227;
+        public static final int guidedActionItemTitleStyle = 2130969228;
+        public static final int guidedActionPressedAnimation = 2130969229;
+        public static final int guidedActionTitleMaxLines = 2130969230;
+        public static final int guidedActionTitleMinLines = 2130969231;
+        public static final int guidedActionUncheckedAnimation = 2130969232;
+        public static final int guidedActionUnpressedAnimation = 2130969233;
+        public static final int guidedActionVerticalPadding = 2130969234;
+        public static final int guidedActionsBackground = 2130969235;
+        public static final int guidedActionsBackgroundDark = 2130969236;
+        public static final int guidedActionsContainerStyle = 2130969237;
+        public static final int guidedActionsElevation = 2130969238;
+        public static final int guidedActionsEntryAnimation = 2130969239;
+        public static final int guidedActionsListStyle = 2130969240;
+        public static final int guidedActionsSelectorDrawable = 2130969241;
+        public static final int guidedActionsSelectorHideAnimation = 2130969242;
+        public static final int guidedActionsSelectorShowAnimation = 2130969243;
+        public static final int guidedActionsSelectorStyle = 2130969244;
+        public static final int guidedButtonActionsListStyle = 2130969245;
+        public static final int guidedButtonActionsWidthWeight = 2130969246;
+        public static final int guidedStepBackground = 2130969247;
+        public static final int guidedStepEntryAnimation = 2130969248;
+        public static final int guidedStepExitAnimation = 2130969249;
+        public static final int guidedStepHeightWeight = 2130969250;
+        public static final int guidedStepImeAppearingAnimation = 2130969251;
+        public static final int guidedStepImeDisappearingAnimation = 2130969252;
+        public static final int guidedStepKeyline = 2130969253;
+        public static final int guidedStepReentryAnimation = 2130969254;
+        public static final int guidedStepReturnAnimation = 2130969255;
+        public static final int guidedStepTheme = 2130969256;
+        public static final int guidedStepThemeFlag = 2130969257;
+        public static final int guidedSubActionsListStyle = 2130969258;
+        public static final int hasOverlappingRendering = 2130969259;
+        public static final int headerLayout = 2130969260;
+        public static final int headerStyle = 2130969261;
+        public static final int headerSubtitleSize = 2130969262;
+        public static final int headerTextVerticalPadding = 2130969263;
+        public static final int headerTitleSize = 2130969264;
+        public static final int headersVerticalGridStyle = 2130969265;
+        public static final int height = 2130969266;
+        public static final int helperText = 2130969267;
+        public static final int helperTextEnabled = 2130969268;
+        public static final int helperTextTextAppearance = 2130969269;
+        public static final int helperTextTextColor = 2130969270;
+        public static final int hideMotionSpec = 2130969271;
+        public static final int hideOnContentScroll = 2130969272;
+        public static final int hideOnScroll = 2130969273;
+        public static final int high_quality = 2130969274;
+        public static final int highlight = 2130969275;
+        public static final int hintAnimationEnabled = 2130969276;
+        public static final int hintEnabled = 2130969277;
+        public static final int hintTextAppearance = 2130969278;
+        public static final int hintTextColor = 2130969279;
+        public static final int holdTime = 2130969280;
+        public static final int homeAsUpIndicator = 2130969281;
+        public static final int homeHandleColor = 2130969282;
+        public static final int homeLayout = 2130969283;
+        public static final int horizontalMargin = 2130969284;
+        public static final int horizontalProgressLayout = 2130969285;
+        public static final int horizontalSpacing = 2130969286;
+        public static final int hoveredFocusedTranslationZ = 2130969287;
+        public static final int hybridNotificationStyle = 2130969288;
+        public static final int hybridNotificationTextStyle = 2130969289;
+        public static final int hybridNotificationTitleStyle = 2130969290;
+        public static final int icon = 2130969291;
+        public static final int iconEndPadding = 2130969292;
+        public static final int iconGravity = 2130969293;
+        public static final int iconPadding = 2130969294;
+        public static final int iconPrimaryColor = 2130969295;
+        public static final int iconSize = 2130969296;
+        public static final int iconSpaceReserved = 2130969297;
+        public static final int iconStartPadding = 2130969298;
+        public static final int iconTint = 2130969299;
+        public static final int iconTintMode = 2130969300;
+        public static final int iconifiedByDefault = 2130969301;
+        public static final int ignoreRightInset = 2130969302;
+        public static final int imageButtonStyle = 2130969303;
+        public static final int imageCardViewBadgeStyle = 2130969304;
+        public static final int imageCardViewContentStyle = 2130969305;
+        public static final int imageCardViewImageStyle = 2130969306;
+        public static final int imageCardViewInfoAreaStyle = 2130969307;
+        public static final int imageCardViewStyle = 2130969308;
+        public static final int imageCardViewTitleStyle = 2130969309;
+        public static final int immersionButtonMoreBackground = 2130969310;
+        public static final int immersionMenuEnabled = 2130969311;
+        public static final int immersionMenuLayout = 2130969312;
+        public static final int immersionTextColor = 2130969313;
+        public static final int immersionViewItemBackground = 2130969314;
+        public static final int immersionWindowBackground = 2130969315;
+        public static final int indeterminateFramesCount = 2130969316;
+        public static final int indeterminateFramesDuration = 2130969317;
+        public static final int indeterminateProgressStyle = 2130969318;
+        public static final int indicatorVisibility = 2130969319;
+        public static final int infoAreaBackground = 2130969320;
+        public static final int infoVisibility = 2130969321;
+        public static final int initialActivityCount = 2130969322;
+        public static final int initialExpandedChildrenCount = 2130969323;
+        public static final int insetForeground = 2130969324;
+        public static final int insetLeft = 2130969325;
+        public static final int is24HourFormat = 2130969326;
+        public static final int isLightTheme = 2130969327;
+        public static final int isMaterialTheme = 2130969328;
+        public static final int isPreferenceVisible = 2130969329;
+        public static final int itemBackground = 2130969330;
+        public static final int itemHeight = 2130969331;
+        public static final int itemHorizontalPadding = 2130969332;
+        public static final int itemHorizontalTranslationEnabled = 2130969333;
+        public static final int itemIconPadding = 2130969334;
+        public static final int itemIconSize = 2130969335;
+        public static final int itemIconTint = 2130969336;
+        public static final int itemPadding = 2130969337;
+        public static final int itemRippleColor = 2130969338;
+        public static final int itemSpacing = 2130969339;
+        public static final int itemTextAppearance = 2130969340;
+        public static final int itemTextAppearanceActive = 2130969341;
+        public static final int itemTextAppearanceInactive = 2130969342;
+        public static final int itemTextColor = 2130969343;
+        public static final int itemsVerticalGridStyle = 2130969344;
+        public static final int key = 2130969345;
+        public static final int keyCode = 2130969346;
+        public static final int keyPositionType = 2130969347;
+        public static final int keylines = 2130969348;
+        public static final int labelPadding = 2130969349;
+        public static final int labelTextColor = 2130969350;
+        public static final int labelVisibilityMode = 2130969351;
+        public static final int lastBaselineToBottomHeight = 2130969352;
+        public static final int layout = 2130969353;
+        public static final int layoutDescription = 2130969354;
+        public static final int layoutDuringTransition = 2130969355;
+        public static final int layoutManager = 2130969356;
+        public static final int layout_anchor = 2130969357;
+        public static final int layout_anchorGravity = 2130969358;
+        public static final int layout_behavior = 2130969359;
+        public static final int layout_collapseMode = 2130969360;
+        public static final int layout_collapseParallaxMultiplier = 2130969361;
+        public static final int layout_constrainedHeight = 2130969362;
+        public static final int layout_constrainedWidth = 2130969363;
+        public static final int layout_constraintBaseline_creator = 2130969364;
+        public static final int layout_constraintBaseline_toBaselineOf = 2130969365;
+        public static final int layout_constraintBottom_creator = 2130969366;
+        public static final int layout_constraintBottom_toBottomOf = 2130969367;
+        public static final int layout_constraintBottom_toTopOf = 2130969368;
+        public static final int layout_constraintCircle = 2130969369;
+        public static final int layout_constraintCircleAngle = 2130969370;
+        public static final int layout_constraintCircleRadius = 2130969371;
+        public static final int layout_constraintDimensionRatio = 2130969372;
+        public static final int layout_constraintEnd_toEndOf = 2130969373;
+        public static final int layout_constraintEnd_toStartOf = 2130969374;
+        public static final int layout_constraintGuide_begin = 2130969375;
+        public static final int layout_constraintGuide_end = 2130969376;
+        public static final int layout_constraintGuide_percent = 2130969377;
+        public static final int layout_constraintHeight_default = 2130969378;
+        public static final int layout_constraintHeight_max = 2130969379;
+        public static final int layout_constraintHeight_min = 2130969380;
+        public static final int layout_constraintHeight_percent = 2130969381;
+        public static final int layout_constraintHorizontal_bias = 2130969382;
+        public static final int layout_constraintHorizontal_chainStyle = 2130969383;
+        public static final int layout_constraintHorizontal_weight = 2130969384;
+        public static final int layout_constraintLeft_creator = 2130969385;
+        public static final int layout_constraintLeft_toLeftOf = 2130969386;
+        public static final int layout_constraintLeft_toRightOf = 2130969387;
+        public static final int layout_constraintRight_creator = 2130969388;
+        public static final int layout_constraintRight_toLeftOf = 2130969389;
+        public static final int layout_constraintRight_toRightOf = 2130969390;
+        public static final int layout_constraintStart_toEndOf = 2130969391;
+        public static final int layout_constraintStart_toStartOf = 2130969392;
+        public static final int layout_constraintTag = 2130969393;
+        public static final int layout_constraintTop_creator = 2130969394;
+        public static final int layout_constraintTop_toBottomOf = 2130969395;
+        public static final int layout_constraintTop_toTopOf = 2130969396;
+        public static final int layout_constraintVertical_bias = 2130969397;
+        public static final int layout_constraintVertical_chainStyle = 2130969398;
+        public static final int layout_constraintVertical_weight = 2130969399;
+        public static final int layout_constraintWidth_default = 2130969400;
+        public static final int layout_constraintWidth_max = 2130969401;
+        public static final int layout_constraintWidth_min = 2130969402;
+        public static final int layout_constraintWidth_percent = 2130969403;
+        public static final int layout_dodgeInsetEdges = 2130969404;
+        public static final int layout_editor_absoluteX = 2130969405;
+        public static final int layout_editor_absoluteY = 2130969406;
+        public static final int layout_goneMarginBottom = 2130969407;
+        public static final int layout_goneMarginEnd = 2130969408;
+        public static final int layout_goneMarginLeft = 2130969409;
+        public static final int layout_goneMarginRight = 2130969410;
+        public static final int layout_goneMarginStart = 2130969411;
+        public static final int layout_goneMarginTop = 2130969412;
+        public static final int layout_insetEdge = 2130969413;
+        public static final int layout_keyline = 2130969414;
+        public static final int layout_maxHeight = 2130969415;
+        public static final int layout_maxWidth = 2130969416;
+        public static final int layout_optimizationLevel = 2130969417;
+        public static final int layout_scrollFlags = 2130969418;
+        public static final int layout_scrollInterpolator = 2130969419;
+        public static final int layout_viewType = 2130969420;
+        public static final int lbDotRadius = 2130969421;
+        public static final int lbImageCardViewType = 2130969422;
+        public static final int lb_slideEdge = 2130969423;
+        public static final int leftArrow = 2130969424;
+        public static final int level = 2130969425;
+        public static final int liftOnScroll = 2130969426;
+        public static final int liftOnScrollTargetViewId = 2130969427;
+        public static final int lightIconTheme = 2130969428;
+        public static final int limitBoundsTo = 2130969429;
+        public static final int lineHeight = 2130969430;
+        public static final int lineLength = 2130969431;
+        public static final int lineSpacing = 2130969432;
+        public static final int listChoiceBackgroundIndicator = 2130969433;
+        public static final int listChoiceIndicatorMultipleAnimated = 2130969434;
+        public static final int listChoiceIndicatorSingleAnimated = 2130969435;
+        public static final int listDividerAlertDialog = 2130969436;
+        public static final int listItemLayout = 2130969437;
+        public static final int listLayout = 2130969438;
+        public static final int listMenuBackground = 2130969439;
+        public static final int listMenuItemStyle = 2130969440;
+        public static final int listMenuViewStyle = 2130969441;
+        public static final int listPopupItemBackground = 2130969442;
+        public static final int listPopupWindowStyle = 2130969443;
+        public static final int listPreferredItemHeight = 2130969444;
+        public static final int listPreferredItemHeightLarge = 2130969445;
+        public static final int listPreferredItemHeightSmall = 2130969446;
+        public static final int listPreferredItemPaddingEnd = 2130969447;
+        public static final int listPreferredItemPaddingLeft = 2130969448;
+        public static final int listPreferredItemPaddingRight = 2130969449;
+        public static final int listPreferredItemPaddingStart = 2130969450;
+        public static final int listViewGroupHeaderBackground = 2130969451;
+        public static final int listViewGroupHeaderTextColor = 2130969452;
+        public static final int listViewItemBackground = 2130969453;
+        public static final int list_secondary_text_shadow = 2130969454;
+        public static final int logo = 2130969455;
+        public static final int logoDescription = 2130969456;
+        public static final int lunarCalendar = 2130969457;
+        public static final int maintainLineSpacing = 2130969458;
+        public static final int materialAlertDialogBodyTextStyle = 2130969459;
+        public static final int materialAlertDialogTheme = 2130969460;
+        public static final int materialAlertDialogTitleIconStyle = 2130969461;
+        public static final int materialAlertDialogTitlePanelStyle = 2130969462;
+        public static final int materialAlertDialogTitleTextStyle = 2130969463;
+        public static final int materialButtonOutlinedStyle = 2130969464;
+        public static final int materialButtonStyle = 2130969465;
+        public static final int materialButtonToggleGroupStyle = 2130969466;
+        public static final int materialCardViewStyle = 2130969467;
+        public static final int materialDatePickerDialogTheme = 2130969468;
+        public static final int materialDatePickerStyle = 2130969469;
+        public static final int materialDateRangePickerDialogTheme = 2130969470;
+        public static final int materialDateRangePickerStyle = 2130969471;
+        public static final int materialThemeOverlay = 2130969472;
+        public static final int maxAcceleration = 2130969473;
+        public static final int maxActionInlineWidth = 2130969474;
+        public static final int maxButtonHeight = 2130969475;
+        public static final int maxDate = 2130969476;
+        public static final int maxHeight = 2130969477;
+        public static final int maxImageSize = 2130969478;
+        public static final int maxLevel = 2130969479;
+        public static final int maxMiddle = 2130969480;
+        public static final int maxSize = 2130969481;
+        public static final int maxVelocity = 2130969482;
+        public static final int maxWidth = 2130969483;
+        public static final int maximumHeight = 2130969484;
+        public static final int maximumWidth = 2130969485;
+        public static final int measureWithLargestChild = 2130969486;
+        public static final int mediaRouteAudioTrackDrawable = 2130969487;
+        public static final int mediaRouteBodyTextAppearance = 2130969488;
+        public static final int mediaRouteButtonStyle = 2130969489;
+        public static final int mediaRouteButtonTint = 2130969490;
+        public static final int mediaRouteCloseDrawable = 2130969491;
+        public static final int mediaRouteControlPanelThemeOverlay = 2130969492;
+        public static final int mediaRouteDefaultIconDrawable = 2130969493;
+        public static final int mediaRouteDividerColor = 2130969494;
+        public static final int mediaRouteHeaderTextAppearance = 2130969495;
+        public static final int mediaRoutePauseDrawable = 2130969496;
+        public static final int mediaRoutePlayDrawable = 2130969497;
+        public static final int mediaRouteSpeakerGroupIconDrawable = 2130969498;
+        public static final int mediaRouteSpeakerIconDrawable = 2130969499;
+        public static final int mediaRouteStopDrawable = 2130969500;
+        public static final int mediaRouteTheme = 2130969501;
+        public static final int mediaRouteTvIconDrawable = 2130969502;
+        public static final int menu = 2130969503;
+        public static final int metricsAction = 2130969504;
+        public static final int middleEnabled = 2130969505;
+        public static final int min = 2130969506;
+        public static final int minDate = 2130969507;
+        public static final int minHeight = 2130969508;
+        public static final int minLevel = 2130969509;
+        public static final int minMiddle = 2130969510;
+        public static final int minSize = 2130969511;
+        public static final int minTouchTargetSize = 2130969512;
+        public static final int minWidth = 2130969513;
+        public static final int miuiAlertDialogTheme = 2130969514;
+        public static final int miuiPopupMenuStyle = 2130969515;
+        public static final int miuiPopupTheme = 2130969516;
+        public static final int miuiSpinnerStyle = 2130969517;
+        public static final int miuixAppCompatOverlayTextAppearance = 2130969518;
+        public static final int miuixAppcompatAlphabetIndexerStyle = 2130969519;
+        public static final int miuixAppcompatArrowUpDownColor = 2130969520;
+        public static final int miuixAppcompatColorAccent = 2130969521;
+        public static final int miuixAppcompatColorPrimary = 2130969522;
+        public static final int miuixAppcompatDrawOverlay = 2130969523;
+        public static final int miuixAppcompatEditTextSearchIcon = 2130969524;
+        public static final int miuixAppcompatIndexerMinWidth = 2130969525;
+        public static final int miuixAppcompatIndexerTable = 2130969526;
+        public static final int miuixAppcompatIndexerTextColorList = 2130969527;
+        public static final int miuixAppcompatIndexerTextSize = 2130969528;
+        public static final int miuixAppcompatIntegratedSpinnerTextColor = 2130969529;
+        public static final int miuixAppcompatLabel = 2130969530;
+        public static final int miuixAppcompatLabelMaxWidth = 2130969531;
+        public static final int miuixAppcompatOverlayBackground = 2130969532;
+        public static final int miuixAppcompatOverlayTextColor = 2130969533;
+        public static final int miuixAppcompatOverlayTextSize = 2130969534;
+        public static final int miuixAppcompatSearchModeBackground = 2130969535;
+        public static final int miuixAppcompatSearchModeEditTextBackground = 2130969536;
+        public static final int miuixAppcompatSpinnerArrowColor = 2130969537;
+        public static final int miuixAppcompatSpinnerTextColor = 2130969538;
+        public static final int miuixAppcompatStateEditTextStyle = 2130969539;
+        public static final int miuixAppcompatVisibilityIcon = 2130969540;
+        public static final int miuixAppcompatWidgetManager = 2130969541;
+        public static final int miuixAppcompatWidgetPadding = 2130969542;
+        public static final int miuixDialogRoundWindowBg = 2130969543;
+        public static final int miuix_strokeColor = 2130969544;
+        public static final int miuix_strokeWidth = 2130969545;
+        public static final int mock_diagonalsColor = 2130969546;
+        public static final int mock_label = 2130969547;
+        public static final int mock_labelBackgroundColor = 2130969548;
+        public static final int mock_labelColor = 2130969549;
+        public static final int mock_showDiagonals = 2130969550;
+        public static final int mock_showLabel = 2130969551;
+        public static final int moduleContent = 2130969552;
+        public static final int motionDebug = 2130969553;
+        public static final int motionInterpolator = 2130969554;
+        public static final int motionPathRotate = 2130969555;
+        public static final int motionProgress = 2130969556;
+        public static final int motionStagger = 2130969557;
+        public static final int motionTarget = 2130969558;
+        public static final int motion_postLayoutCollision = 2130969559;
+        public static final int motion_triggerOnCollision = 2130969560;
+        public static final int moveWhenScrollAtTop = 2130969561;
+        public static final int multiChoiceItemLayout = 2130969562;
+        public static final int name = 2130969563;
+        public static final int navigationContentDescription = 2130969564;
+        public static final int navigationIcon = 2130969565;
+        public static final int navigationMode = 2130969566;
+        public static final int navigationViewStyle = 2130969567;
+        public static final int negativeButtonText = 2130969568;
+        public static final int nestedScrollFlags = 2130969569;
+        public static final int numColumns = 2130969570;
+        public static final int numberOfColumns = 2130969571;
+        public static final int numberOfRows = 2130969572;
+        public static final int numberPickerStyle = 2130969573;
+        public static final int numericModifiers = 2130969574;
+        public static final int onCross = 2130969575;
+        public static final int onHide = 2130969576;
+        public static final int onNegativeCross = 2130969577;
+        public static final int onPositiveCross = 2130969578;
+        public static final int onShow = 2130969579;
+        public static final int onTouchUp = 2130969580;
+        public static final int onboardingDescriptionStyle = 2130969581;
+        public static final int onboardingHeaderStyle = 2130969582;
+        public static final int onboardingLogoStyle = 2130969583;
+        public static final int onboardingMainIconStyle = 2130969584;
+        public static final int onboardingNavigatorContainerStyle = 2130969585;
+        public static final int onboardingPageIndicatorStyle = 2130969586;
+        public static final int onboardingStartButtonStyle = 2130969587;
+        public static final int onboardingTheme = 2130969588;
+        public static final int onboardingTitleStyle = 2130969589;
+        public static final int optedOut = 2130969590;
+        public static final int order = 2130969591;
+        public static final int orderingFromXml = 2130969592;
+        public static final int orientation = 2130969593;
+        public static final int overScrollRange = 2130969594;
+        public static final int overlapAnchor = 2130969595;
+        public static final int overlay = 2130969596;
+        public static final int overlayDimActiveLevel = 2130969597;
+        public static final int overlayDimDimmedLevel = 2130969598;
+        public static final int overlayDimMaskColor = 2130969599;
+        public static final int paddingBottomNoButtons = 2130969600;
+        public static final int paddingEnd = 2130969601;
+        public static final int paddingStart = 2130969602;
+        public static final int paddingTopNoTitle = 2130969603;
+        public static final int paintColor = 2130969604;
+        public static final int panelBackground = 2130969605;
+        public static final int panelMenuListTheme = 2130969606;
+        public static final int panelMenuListWidth = 2130969607;
+        public static final int passwordStyle = 2130969608;
+        public static final int passwordToggleContentDescription = 2130969609;
+        public static final int passwordToggleDrawable = 2130969610;
+        public static final int passwordToggleEnabled = 2130969611;
+        public static final int passwordToggleTint = 2130969612;
+        public static final int passwordToggleTintMode = 2130969613;
+        public static final int pathMotionArc = 2130969614;
+        public static final int path_percent = 2130969615;
+        public static final int pause = 2130969616;
+        public static final int percentHeight = 2130969617;
+        public static final int percentWidth = 2130969618;
+        public static final int percentX = 2130969619;
+        public static final int percentY = 2130969620;
+        public static final int perpendicularPath_percent = 2130969621;
+        public static final int persistent = 2130969622;
+        public static final int pickerItemLayout = 2130969623;
+        public static final int pickerItemTextViewId = 2130969624;
+        public static final int pickerStyle = 2130969625;
+        public static final int picture_in_picture = 2130969626;
+        public static final int pinPickerStyle = 2130969627;
+        public static final int pivotAnchor = 2130969628;
+        public static final int pivotX = 2130969629;
+        public static final int pivotY = 2130969630;
+        public static final int placeholder_emptyVisibility = 2130969631;
+        public static final int play = 2130969632;
+        public static final int playSound = 2130969633;
+        public static final int playbackControlButtonLabelStyle = 2130969634;
+        public static final int playbackControlsActionIcons = 2130969635;
+        public static final int playbackControlsAutoHideTickleTimeout = 2130969636;
+        public static final int playbackControlsAutoHideTimeout = 2130969637;
+        public static final int playbackControlsButtonStyle = 2130969638;
+        public static final int playbackControlsIconHighlightColor = 2130969639;
+        public static final int playbackControlsTimeStyle = 2130969640;
+        public static final int playbackMediaItemDetailsStyle = 2130969641;
+        public static final int playbackMediaItemDurationStyle = 2130969642;
+        public static final int playbackMediaItemNameStyle = 2130969643;
+        public static final int playbackMediaItemNumberStyle = 2130969644;
+        public static final int playbackMediaItemNumberViewFlipperLayout = 2130969645;
+        public static final int playbackMediaItemNumberViewFlipperStyle = 2130969646;
+        public static final int playbackMediaItemPaddingStart = 2130969647;
+        public static final int playbackMediaItemRowStyle = 2130969648;
+        public static final int playbackMediaItemSeparatorStyle = 2130969649;
+        public static final int playbackMediaListHeaderStyle = 2130969650;
+        public static final int playbackMediaListHeaderTitleStyle = 2130969651;
+        public static final int playbackPaddingEnd = 2130969652;
+        public static final int playbackPaddingStart = 2130969653;
+        public static final int playbackProgressPrimaryColor = 2130969654;
+        public static final int playbackProgressSecondaryColor = 2130969655;
+        public static final int popupMenuStyle = 2130969656;
+        public static final int popupTheme = 2130969657;
+        public static final int popupWindowElevation = 2130969658;
+        public static final int popupWindowMinWidth = 2130969659;
+        public static final int popupWindowShadowAlpha = 2130969660;
+        public static final int popupWindowStyle = 2130969661;
+        public static final int positiveButtonText = 2130969662;
+        public static final int preferenceCategoryBackground = 2130969663;
+        public static final int preferenceCategoryCheckableStyle = 2130969664;
+        public static final int preferenceCategoryRadioStyle = 2130969665;
+        public static final int preferenceCategoryStyle = 2130969666;
+        public static final int preferenceCategoryTextColor = 2130969667;
+        public static final int preferenceCategoryTitleTextAppearance = 2130969668;
+        public static final int preferenceCategoryTitleTextColor = 2130969669;
+        public static final int preferenceCheckableMaskColor = 2130969670;
+        public static final int preferenceChoiceIndicatorSingle = 2130969671;
+        public static final int preferenceFragmentCompatStyle = 2130969672;
+        public static final int preferenceFragmentListStyle = 2130969673;
+        public static final int preferenceFragmentStyle = 2130969674;
+        public static final int preferenceInformationStyle = 2130969675;
+        public static final int preferenceItemBackground = 2130969676;
+        public static final int preferencePrimaryTextColor = 2130969677;
+        public static final int preferenceRightTextColor = 2130969678;
+        public static final int preferenceScreenStyle = 2130969679;
+        public static final int preferenceSecondaryTextColor = 2130969680;
+        public static final int preferenceStyle = 2130969681;
+        public static final int preferenceTheme = 2130969682;
+        public static final int preserveIconSpacing = 2130969683;
+        public static final int pressedTranslationZ = 2130969684;
+        public static final int primaryButtonBackground = 2130969685;
+        public static final int primaryButtonTextColor = 2130969686;
+        public static final int primaryKey = 2130969687;
+        public static final int progress = 2130969688;
+        public static final int progressBackgroundDrawable = 2130969689;
+        public static final int progressBarBackground = 2130969690;
+        public static final int progressBarColorHorizontal = 2130969691;
+        public static final int progressBarEndPadding = 2130969692;
+        public static final int progressBarHorizontalStyle = 2130969693;
+        public static final int progressBarInlineWidth = 2130969694;
+        public static final int progressBarPadding = 2130969695;
+        public static final int progressBarStartPadding = 2130969696;
+        public static final int progressBarStyle = 2130969697;
+        public static final int progressBarStyleSmall = 2130969698;
+        public static final int progressLayout = 2130969699;
+        public static final int queryBackground = 2130969700;
+        public static final int queryHint = 2130969701;
+        public static final int radioButtonDrawable = 2130969702;
+        public static final int radioButtonDrawableTouchAnimEnable = 2130969703;
+        public static final int radioButtonOnDrawableBackgroundColor = 2130969704;
+        public static final int radioButtonOnDrawableForegroundColor = 2130969705;
+        public static final int radioButtonPreferenceStyle = 2130969706;
+        public static final int radioButtonStyle = 2130969707;
+        public static final int radioPreferenceItemBackground = 2130969708;
+        public static final int radioPreferenceItemTwoStateBackground = 2130969709;
+        public static final int radius = 2130969710;
+        public static final int ratingBarStyle = 2130969711;
+        public static final int ratingBarStyleIndicator = 2130969712;
+        public static final int ratingBarStyleSmall = 2130969713;
+        public static final int recyclerViewStyle = 2130969714;
+        public static final int region_heightLessThan = 2130969715;
+        public static final int region_heightMoreThan = 2130969716;
+        public static final int region_widthLessThan = 2130969717;
+        public static final int region_widthMoreThan = 2130969718;
+        public static final int regularTextAppearance = 2130969719;
+        public static final int repeat = 2130969720;
+        public static final int repeat_one = 2130969721;
+        public static final int resizable = 2130969722;
+        public static final int resizeTrigger = 2130969723;
+        public static final int resizedPaddingAdjustmentBottom = 2130969724;
+        public static final int resizedPaddingAdjustmentTop = 2130969725;
+        public static final int resizedTextSize = 2130969726;
+        public static final int restrictedSwitchSummary = 2130969727;
+        public static final int reverseLayout = 2130969728;
+        public static final int rewind = 2130969729;
+        public static final int rightArrow = 2130969730;
+        public static final int rippleColor = 2130969731;
+        public static final int rippleMaxSize = 2130969732;
+        public static final int rippleMinSize = 2130969733;
+        public static final int rotateButtonEndAngle = 2130969734;
+        public static final int rotateButtonScaleX = 2130969735;
+        public static final int rotateButtonStartAngle = 2130969736;
+        public static final int round = 2130969737;
+        public static final int roundPercent = 2130969738;
+        public static final int rowHeaderDescriptionStyle = 2130969739;
+        public static final int rowHeaderDockStyle = 2130969740;
+        public static final int rowHeaderStyle = 2130969741;
+        public static final int rowHeight = 2130969742;
+        public static final int rowHorizontalGridStyle = 2130969743;
+        public static final int rowHoverCardDescriptionStyle = 2130969744;
+        public static final int rowHoverCardTitleStyle = 2130969745;
+        public static final int rowMaxHeight = 2130969746;
+        public static final int rowRangeHeight = 2130969747;
+        public static final int rowRangeSingleTextHeight = 2130969748;
+        public static final int rowStyle = 2130969749;
+        public static final int rowsVerticalGridStyle = 2130969750;
+        public static final int saturation = 2130969751;
+        public static final int scaledTextSize = 2130969752;
+        public static final int scrimAnimationDuration = 2130969753;
+        public static final int scrimBackground = 2130969754;
+        public static final int scrimVisibleHeightTrigger = 2130969755;
+        public static final int scrollOrientation = 2130969756;
+        public static final int scrollRange = 2130969757;
+        public static final int scrollStart = 2130969758;
+        public static final int scrollableView = 2130969759;
+        public static final int searchActionModeInputBackground = 2130969760;
+        public static final int searchEditTextBackground = 2130969761;
+        public static final int searchEditTextColor = 2130969762;
+        public static final int searchEditTextHintColor = 2130969763;
+        public static final int searchEditTextIconStart = 2130969764;
+        public static final int searchEditTextStyle = 2130969765;
+        public static final int searchHintIcon = 2130969766;
+        public static final int searchIcon = 2130969767;
+        public static final int searchOrbBrightColor = 2130969768;
+        public static final int searchOrbColor = 2130969769;
+        public static final int searchOrbIcon = 2130969770;
+        public static final int searchOrbIconColor = 2130969771;
+        public static final int searchOrbViewStyle = 2130969772;
+        public static final int searchViewStyle = 2130969773;
+        public static final int sectionHeaderStyle = 2130969774;
+        public static final int seekBarIncrement = 2130969775;
+        public static final int seekBarInlineWidth = 2130969776;
+        public static final int seekBarPreferenceStyle = 2130969777;
+        public static final int seekBarProgressDrawable = 2130969778;
+        public static final int seekBarStyle = 2130969779;
+        public static final int selectable = 2130969780;
+        public static final int selectableItemBackground = 2130969781;
+        public static final int selectableItemBackgroundBorderless = 2130969782;
+        public static final int selectedAnimationDelay = 2130969783;
+        public static final int selectedAnimationDuration = 2130969784;
+        public static final int shadowRadius = 2130969785;
+        public static final int shapeAppearance = 2130969786;
+        public static final int shapeAppearanceLargeComponent = 2130969787;
+        public static final int shapeAppearanceMediumComponent = 2130969788;
+        public static final int shapeAppearanceOverlay = 2130969789;
+        public static final int shapeAppearanceSmallComponent = 2130969790;
+        public static final int shouldDisableView = 2130969791;
+        public static final int showAirplaneMode = 2130969792;
+        public static final int showAsAction = 2130969793;
+        public static final int showDark = 2130969794;
+        public static final int showDay = 2130969795;
+        public static final int showDividers = 2130969796;
+        public static final int showMissingSim = 2130969797;
+        public static final int showMonth = 2130969798;
+        public static final int showMotionSpec = 2130969799;
+        public static final int showPaths = 2130969800;
+        public static final int showRightArrow = 2130969801;
+        public static final int showSeekBarValue = 2130969802;
+        public static final int showText = 2130969803;
+        public static final int showTitle = 2130969804;
+        public static final int showYear = 2130969805;
+        public static final int shrinkMotionSpec = 2130969806;
+        public static final int shuffle = 2130969807;
+        public static final int singleChoiceItemLayout = 2130969808;
+        public static final int singleLine = 2130969809;
+        public static final int singleLineButtonPaddingHorizontal = 2130969810;
+        public static final int singleLineTitle = 2130969811;
+        public static final int singleSelection = 2130969812;
+        public static final int singleToneColor = 2130969813;
+        public static final int sizePercent = 2130969814;
+        public static final int skip_next = 2130969815;
+        public static final int skip_previous = 2130969816;
+        public static final int sliceViewStyle = 2130969817;
+        public static final int sliderOff = 2130969818;
+        public static final int sliderOn = 2130969819;
+        public static final int slidingBarColor = 2130969820;
+        public static final int slidingButtonStyle = 2130969821;
+        public static final int snackbarButtonStyle = 2130969822;
+        public static final int snackbarStyle = 2130969823;
+        public static final int spacing = 2130969824;
+        public static final int spanCount = 2130969825;
+        public static final int spinBars = 2130969826;
+        public static final int spinnerBackground = 2130969827;
+        public static final int spinnerDropDownItemBackground = 2130969828;
+        public static final int spinnerDropDownItemStyle = 2130969829;
+        public static final int spinnerDropDownItemTextColor = 2130969830;
+        public static final int spinnerModeCompat = 2130969831;
+        public static final int spinnerStyle = 2130969832;
+        public static final int spinnersShown = 2130969833;
+        public static final int splitActionBarOverlayHeight = 2130969834;
+        public static final int splitTrack = 2130969835;
+        public static final int springBackMode = 2130969836;
+        public static final int srcCompat = 2130969837;
+        public static final int stackFromEnd = 2130969838;
+        public static final int staggered = 2130969839;
+        public static final int startIconContentDescription = 2130969840;
+        public static final int startIconDrawable = 2130969841;
+        public static final int startIconTint = 2130969842;
+        public static final int startIconTintMode = 2130969843;
+        public static final int startPointRadius = 2130969844;
+        public static final int startYear = 2130969845;
+        public static final int startingWindowOverlay = 2130969846;
+        public static final int stateDrawable = 2130969847;
+        public static final int state_above_anchor = 2130969848;
+        public static final int state_collapsed = 2130969849;
+        public static final int state_collapsible = 2130969850;
+        public static final int state_connected = 2130969851;
+        public static final int state_dragged = 2130969852;
+        public static final int state_encrypted = 2130969853;
+        public static final int state_first_h = 2130969854;
+        public static final int state_first_v = 2130969855;
+        public static final int state_last_h = 2130969856;
+        public static final int state_last_v = 2130969857;
+        public static final int state_liftable = 2130969858;
+        public static final int state_lifted = 2130969859;
+        public static final int state_metered = 2130969860;
+        public static final int state_middle_h = 2130969861;
+        public static final int state_middle_v = 2130969862;
+        public static final int state_no_title = 2130969863;
+        public static final int state_saved = 2130969864;
+        public static final int state_single_h = 2130969865;
+        public static final int state_single_v = 2130969866;
+        public static final int statusBarBackground = 2130969867;
+        public static final int statusBarScrim = 2130969868;
+        public static final int strokeColor = 2130969869;
+        public static final int strokeWidth = 2130969870;
+        public static final int subContentEndPadding = 2130969871;
+        public static final int subContentStartPadding = 2130969872;
+        public static final int subMenuArrow = 2130969873;
+        public static final int subTitle = 2130969874;
+        public static final int submitBackground = 2130969875;
+        public static final int subtitle = 2130969876;
+        public static final int subtitleColor = 2130969877;
+        public static final int subtitleSize = 2130969878;
+        public static final int subtitleTextAppearance = 2130969879;
+        public static final int subtitleTextColor = 2130969880;
+        public static final int subtitleTextStyle = 2130969881;
+        public static final int suggestionRowLayout = 2130969882;
+        public static final int summary = 2130969883;
+        public static final int summaryOff = 2130969884;
+        public static final int summaryOn = 2130969885;
+        public static final int swipeRefreshLayoutProgressSpinnerBackgroundColor = 2130969886;
+        public static final int switchMinWidth = 2130969887;
+        public static final int switchPadding = 2130969888;
+        public static final int switchPreferenceCompatStyle = 2130969889;
+        public static final int switchPreferenceStyle = 2130969890;
+        public static final int switchStyle = 2130969891;
+        public static final int switchTextAppearance = 2130969892;
+        public static final int switchTextOff = 2130969893;
+        public static final int switchTextOn = 2130969894;
+        public static final int tabBackground = 2130969895;
+        public static final int tabContentStart = 2130969896;
+        public static final int tabGravity = 2130969897;
+        public static final int tabIconTint = 2130969898;
+        public static final int tabIconTintMode = 2130969899;
+        public static final int tabIndicator = 2130969900;
+        public static final int tabIndicatorAnimationDuration = 2130969901;
+        public static final int tabIndicatorColor = 2130969902;
+        public static final int tabIndicatorFullWidth = 2130969903;
+        public static final int tabIndicatorGravity = 2130969904;
+        public static final int tabIndicatorHeight = 2130969905;
+        public static final int tabInlineLabel = 2130969906;
+        public static final int tabMaxWidth = 2130969907;
+        public static final int tabMinWidth = 2130969908;
+        public static final int tabMode = 2130969909;
+        public static final int tabPadding = 2130969910;
+        public static final int tabPaddingBottom = 2130969911;
+        public static final int tabPaddingEnd = 2130969912;
+        public static final int tabPaddingStart = 2130969913;
+        public static final int tabPaddingTop = 2130969914;
+        public static final int tabRippleColor = 2130969915;
+        public static final int tabSelectedTextColor = 2130969916;
+        public static final int tabStyle = 2130969917;
+        public static final int tabTextAppearance = 2130969918;
+        public static final int tabTextColor = 2130969919;
+        public static final int tabUnboundedRipple = 2130969920;
+        public static final int targetId = 2130969921;
+        public static final int targetLevel = 2130969922;
+        public static final int telltales_tailColor = 2130969923;
+        public static final int telltales_tailScale = 2130969924;
+        public static final int telltales_velocityMode = 2130969925;
+        public static final int text = 2130969926;
+        public static final int textAllCaps = 2130969927;
+        public static final int textAppearance = 2130969928;
+        public static final int textAppearanceBody1 = 2130969929;
+        public static final int textAppearanceBody2 = 2130969930;
+        public static final int textAppearanceButton = 2130969931;
+        public static final int textAppearanceCaption = 2130969932;
+        public static final int textAppearanceHeadline1 = 2130969933;
+        public static final int textAppearanceHeadline2 = 2130969934;
+        public static final int textAppearanceHeadline3 = 2130969935;
+        public static final int textAppearanceHeadline4 = 2130969936;
+        public static final int textAppearanceHeadline5 = 2130969937;
+        public static final int textAppearanceHeadline6 = 2130969938;
+        public static final int textAppearanceLargePopupMenu = 2130969939;
+        public static final int textAppearanceListItem = 2130969940;
+        public static final int textAppearanceListItemSecondary = 2130969941;
+        public static final int textAppearanceListItemSmall = 2130969942;
+        public static final int textAppearanceOverline = 2130969943;
+        public static final int textAppearancePopupMenuHeader = 2130969944;
+        public static final int textAppearanceSearchResultSubtitle = 2130969945;
+        public static final int textAppearanceSearchResultTitle = 2130969946;
+        public static final int textAppearanceSmallPopupMenu = 2130969947;
+        public static final int textAppearanceSubtitle1 = 2130969948;
+        public static final int textAppearanceSubtitle2 = 2130969949;
+        public static final int textCircleRadius = 2130969950;
+        public static final int textColorAlertDialogListItem = 2130969951;
+        public static final int textColorBlankPage = 2130969952;
+        public static final int textColorButton = 2130969953;
+        public static final int textColorDialogSingleChoiceItem = 2130969954;
+        public static final int textColorList = 2130969955;
+        public static final int textColorListSecondary = 2130969956;
+        public static final int textColorMenuListItem = 2130969957;
+        public static final int textColorNormal = 2130969958;
+        public static final int textColorPopupMenuListItem = 2130969959;
+        public static final int textColorSearchBarCancel = 2130969960;
+        public static final int textColorSearchUrl = 2130969961;
+        public static final int textColorSpinnerDropdownSelector = 2130969962;
+        public static final int textEndPadding = 2130969963;
+        public static final int textHandleAndCursorColor = 2130969964;
+        public static final int textInputStyle = 2130969965;
+        public static final int textLocale = 2130969966;
+        public static final int textPreferenceStyle = 2130969967;
+        public static final int textSizeHighlight = 2130969968;
+        public static final int textSizeHint = 2130969969;
+        public static final int textStartPadding = 2130969970;
+        public static final int textVerticalPadding = 2130969971;
+        public static final int textView = 2130969972;
+        public static final int theme = 2130969973;
+        public static final int thickness = 2130969974;
+        public static final int thumbTextPadding = 2130969975;
+        public static final int thumbTint = 2130969976;
+        public static final int thumbTintMode = 2130969977;
+        public static final int thumb_down = 2130969978;
+        public static final int thumb_down_outline = 2130969979;
+        public static final int thumb_up = 2130969980;
+        public static final int thumb_up_outline = 2130969981;
+        public static final int tickMark = 2130969982;
+        public static final int tickMarkTint = 2130969983;
+        public static final int tickMarkTintMode = 2130969984;
+        public static final int timePickerStyle = 2130969985;
+        public static final int timeSegments = 2130969986;
+        public static final int tint = 2130969987;
+        public static final int tintColor = 2130969988;
+        public static final int tintMode = 2130969989;
+        public static final int title = 2130969990;
+        public static final int titleBackground = 2130969991;
+        public static final int titleCenter = 2130969992;
+        public static final int titleColor = 2130969993;
+        public static final int titleEnabled = 2130969994;
+        public static final int titleEndPadding = 2130969995;
+        public static final int titleItemEndPadding = 2130969996;
+        public static final int titleItemStartPadding = 2130969997;
+        public static final int titleMargin = 2130969998;
+        public static final int titleMarginBottom = 2130969999;
+        public static final int titleMarginEnd = 2130970000;
+        public static final int titleMarginStart = 2130970001;
+        public static final int titleMarginTop = 2130970002;
+        public static final int titleMargins = 2130970003;
+        public static final int titleSize = 2130970004;
+        public static final int titleStartPadding = 2130970005;
+        public static final int titleTextAppearance = 2130970006;
+        public static final int titleTextColor = 2130970007;
+        public static final int titleTextStyle = 2130970008;
+        public static final int toolbarId = 2130970009;
+        public static final int toolbarNavigationButtonStyle = 2130970010;
+        public static final int toolbarStyle = 2130970011;
+        public static final int tooltipForegroundColor = 2130970012;
+        public static final int tooltipFrameBackground = 2130970013;
+        public static final int tooltipText = 2130970014;
+        public static final int topArrow = 2130970015;
+        public static final int topArrowWithTitle = 2130970016;
+        public static final int topLeftArrow = 2130970017;
+        public static final int topRightArrow = 2130970018;
+        public static final int touchAnchorId = 2130970019;
+        public static final int touchAnchorSide = 2130970020;
+        public static final int touchRegionId = 2130970021;
+        public static final int track = 2130970022;
+        public static final int trackTint = 2130970023;
+        public static final int trackTintMode = 2130970024;
+        public static final int transitionDisable = 2130970025;
+        public static final int transitionEasing = 2130970026;
+        public static final int transitionFlags = 2130970027;
+        public static final int transitionPathRotate = 2130970028;
+        public static final int translucentTabIndicator = 2130970029;
+        public static final int triggerId = 2130970030;
+        public static final int triggerReceiver = 2130970031;
+        public static final int triggerSlack = 2130970032;
+        public static final int ttcIndex = 2130970033;
+        public static final int updatesContinuously = 2130970034;
+        public static final int useAdditionalSummary = 2130970035;
+        public static final int useAdminDisabledSummary = 2130970036;
+        public static final int useCompatPadding = 2130970037;
+        public static final int useCurrentTime = 2130970038;
+        public static final int useMaterialThemeColors = 2130970039;
+        public static final int useSimpleSummaryProvider = 2130970040;
+        public static final int userRestriction = 2130970041;
+        public static final int verticalMargin = 2130970042;
+        public static final int verticalSpacing = 2130970043;
+        public static final int viewInflaterClass = 2130970044;
+        public static final int viewType = 2130970045;
+        public static final int visibilityMode = 2130970046;
+        public static final int voiceIcon = 2130970047;
+        public static final int wallpaperTextColor = 2130970048;
+        public static final int wallpaperTextColorSecondary = 2130970049;
+        public static final int warmth = 2130970050;
+        public static final int waveDecay = 2130970051;
+        public static final int waveOffset = 2130970052;
+        public static final int wavePeriod = 2130970053;
+        public static final int waveShape = 2130970054;
+        public static final int waveVariesBy = 2130970055;
+        public static final int widgetLayout = 2130970056;
+        public static final int wifi_friction = 2130970057;
+        public static final int wifi_signal = 2130970058;
+        public static final int windowActionBar = 2130970059;
+        public static final int windowActionBarMovable = 2130970060;
+        public static final int windowActionBarOverlay = 2130970061;
+        public static final int windowActionModeOverlay = 2130970062;
+        public static final int windowContentMask = 2130970063;
+        public static final int windowDisablePreview = 2130970064;
+        public static final int windowFixedHeightMajor = 2130970065;
+        public static final int windowFixedHeightMinor = 2130970066;
+        public static final int windowFixedWidthMajor = 2130970067;
+        public static final int windowFixedWidthMinor = 2130970068;
+        public static final int windowLayoutMode = 2130970069;
+        public static final int windowMaxHeightMajor = 2130970070;
+        public static final int windowMaxHeightMinor = 2130970071;
+        public static final int windowMaxWidthMajor = 2130970072;
+        public static final int windowMaxWidthMinor = 2130970073;
+        public static final int windowMinWidthMajor = 2130970074;
+        public static final int windowMinWidthMinor = 2130970075;
+        public static final int windowNoTitle = 2130970076;
+        public static final int windowSearchMask = 2130970077;
+        public static final int windowSplitActionBar = 2130970078;
+        public static final int windowTranslucentStatus = 2130970079;
+        public static final int wordPhotoBackground = 2130970080;
+        public static final int wordPhotoTextColor = 2130970081;
     }
 
     /* renamed from: com.android.systemui.R$bool  reason: case insensitive filesystem */
@@ -6132,1122 +6138,1125 @@ public final class R {
         public static final int miuix_appcompat_list_preferred_item_height_small = 2131166585;
         public static final int miuix_appcompat_list_preferred_item_padding_left = 2131166586;
         public static final int miuix_appcompat_list_preferred_item_padding_right = 2131166587;
-        public static final int miuix_appcompat_message_view_bg_height = 2131166588;
-        public static final int miuix_appcompat_message_view_bg_radius = 2131166589;
-        public static final int miuix_appcompat_message_view_icon_height = 2131166590;
-        public static final int miuix_appcompat_message_view_icon_width = 2131166591;
-        public static final int miuix_appcompat_message_view_margin_end = 2131166592;
-        public static final int miuix_appcompat_message_view_margin_start = 2131166593;
-        public static final int miuix_appcompat_message_view_padding_end = 2131166594;
-        public static final int miuix_appcompat_message_view_padding_start = 2131166595;
-        public static final int miuix_appcompat_message_view_padding_vertical = 2131166596;
-        public static final int miuix_appcompat_message_view_text_margin_right = 2131166597;
-        public static final int miuix_appcompat_message_view_text_size = 2131166598;
-        public static final int miuix_appcompat_normal_text_size = 2131166599;
-        public static final int miuix_appcompat_number_picker_highlight_region_height = 2131166600;
-        public static final int miuix_appcompat_number_picker_label_margin_left = 2131166601;
-        public static final int miuix_appcompat_number_picker_label_margin_top = 2131166602;
-        public static final int miuix_appcompat_number_picker_label_padding = 2131166603;
-        public static final int miuix_appcompat_number_picker_label_text_size = 2131166604;
-        public static final int miuix_appcompat_number_picker_text_size_highlight_large = 2131166605;
-        public static final int miuix_appcompat_number_picker_text_size_highlight_medium = 2131166606;
-        public static final int miuix_appcompat_number_picker_text_size_highlight_normal = 2131166607;
-        public static final int miuix_appcompat_number_picker_text_size_hint_large = 2131166608;
-        public static final int miuix_appcompat_number_picker_text_size_hint_medium = 2131166609;
-        public static final int miuix_appcompat_number_picker_text_size_hint_normal = 2131166610;
-        public static final int miuix_appcompat_overflow_popup_menu_item_min_width = 2131166611;
-        public static final int miuix_appcompat_overflow_popup_menu_item_padding_horizontal = 2131166612;
-        public static final int miuix_appcompat_picker_horizontal_padding = 2131166613;
-        public static final int miuix_appcompat_picker_vertical_padding_bottom = 2131166614;
-        public static final int miuix_appcompat_picker_vertical_padding_top = 2131166615;
-        public static final int miuix_appcompat_popup_menu_item_min_width = 2131166616;
-        public static final int miuix_appcompat_popup_menu_item_padding_horizontal = 2131166617;
-        public static final int miuix_appcompat_progress_bar_height = 2131166618;
-        public static final int miuix_appcompat_progress_bar_line_radius = 2131166619;
-        public static final int miuix_appcompat_progress_bar_line_width = 2131166620;
-        public static final int miuix_appcompat_progress_indeterminate_size = 2131166621;
-        public static final int miuix_appcompat_progressbar_size = 2131166622;
-        public static final int miuix_appcompat_progressbar_size_small = 2131166623;
-        public static final int miuix_appcompat_radio_button_drawable_padding = 2131166624;
-        public static final int miuix_appcompat_radio_button_height = 2131166625;
-        public static final int miuix_appcompat_radio_button_width = 2131166626;
-        public static final int miuix_appcompat_ratingbar_icon_size_large = 2131166627;
-        public static final int miuix_appcompat_ratingbar_icon_size_small = 2131166628;
-        public static final int miuix_appcompat_ratingbar_size = 2131166629;
-        public static final int miuix_appcompat_ratingbar_size_indicator = 2131166630;
-        public static final int miuix_appcompat_ratingbar_size_large = 2131166631;
-        public static final int miuix_appcompat_ratingbar_size_small = 2131166632;
-        public static final int miuix_appcompat_round_corner_radius = 2131166633;
-        public static final int miuix_appcompat_search_action_mode_cancel_text_padding_end = 2131166634;
-        public static final int miuix_appcompat_search_action_mode_cancel_text_padding_start = 2131166635;
-        public static final int miuix_appcompat_search_action_mode_cancel_text_size = 2131166636;
-        public static final int miuix_appcompat_search_action_mode_cancel_width = 2131166637;
-        public static final int miuix_appcompat_search_edit_text_size = 2131166638;
-        public static final int miuix_appcompat_search_mode_bg_padding = 2131166639;
-        public static final int miuix_appcompat_search_mode_bg_padding_bottom = 2131166640;
-        public static final int miuix_appcompat_search_mode_bg_padding_top = 2131166641;
-        public static final int miuix_appcompat_search_mode_bg_radius = 2131166642;
-        public static final int miuix_appcompat_search_mode_bg_size = 2131166643;
-        public static final int miuix_appcompat_searchbar_bg_height = 2131166644;
-        public static final int miuix_appcompat_secondary_text_size = 2131166645;
-        public static final int miuix_appcompat_seekbar_height = 2131166646;
-        public static final int miuix_appcompat_seekbar_icon_size = 2131166647;
-        public static final int miuix_appcompat_seekbar_progress_bg_radius = 2131166648;
-        public static final int miuix_appcompat_select_dialog_item_padding_horizontal = 2131166649;
-        public static final int miuix_appcompat_sliding_button_frame_corner_radius = 2131166650;
-        public static final int miuix_appcompat_sliding_button_frame_vertical_padding = 2131166651;
-        public static final int miuix_appcompat_sliding_button_height = 2131166652;
-        public static final int miuix_appcompat_sliding_button_mask_vertical_padding = 2131166653;
-        public static final int miuix_appcompat_sliding_button_slider_horizontal_padding = 2131166654;
-        public static final int miuix_appcompat_sliding_button_slider_size = 2131166655;
-        public static final int miuix_appcompat_sliding_button_slider_vertical_padding = 2131166656;
-        public static final int miuix_appcompat_sliding_button_width = 2131166657;
-        public static final int miuix_appcompat_small_text_size = 2131166658;
-        public static final int miuix_appcompat_spinner_bg_padding = 2131166659;
-        public static final int miuix_appcompat_spinner_double_line_summary_size = 2131166660;
-        public static final int miuix_appcompat_spinner_double_line_title_size = 2131166661;
-        public static final int miuix_appcompat_spinner_dropdown_item_icon_margin = 2131166662;
-        public static final int miuix_appcompat_spinner_dropdown_item_padding_end = 2131166663;
-        public static final int miuix_appcompat_spinner_dropdown_item_padding_start = 2131166664;
-        public static final int miuix_appcompat_spinner_dropdown_item_text_margin = 2131166665;
-        public static final int miuix_appcompat_spinner_dropdown_maximum_width = 2131166666;
-        public static final int miuix_appcompat_spinner_dropdown_minimum_width = 2131166667;
-        public static final int miuix_appcompat_spinner_dropdown_selector_padding = 2131166668;
-        public static final int miuix_appcompat_spinner_dropdown_selector_padding_bottom = 2131166669;
-        public static final int miuix_appcompat_spinner_dropdown_selector_padding_top = 2131166670;
-        public static final int miuix_appcompat_spinner_icon_padding = 2131166671;
-        public static final int miuix_appcompat_spinner_icon_padding_integrated = 2131166672;
-        public static final int miuix_appcompat_spinner_popup_item_bg_padding_vertical = 2131166673;
-        public static final int miuix_appcompat_spinner_right_widget_height = 2131166674;
-        public static final int miuix_appcompat_spinner_right_widget_width = 2131166675;
-        public static final int miuix_appcompat_spinner_text_max_width_integrated = 2131166676;
-        public static final int miuix_appcompat_spinner_text_size = 2131166677;
-        public static final int miuix_appcompat_spinner_text_size_integrated = 2131166678;
-        public static final int miuix_appcompat_split_action_bar_default_height = 2131166679;
-        public static final int miuix_appcompat_state_edit_widget_padding = 2131166680;
-        public static final int miuix_appcompat_subtitle_text_size = 2131166681;
-        public static final int miuix_appcompat_title_text_size = 2131166682;
-        public static final int miuix_appcompat_triangle_arrow_size = 2131166683;
-        public static final int miuix_appcompat_window_dialog_radius = 2131166684;
-        public static final int miuix_popup_dropdown_item_min_width = 2131166685;
-        public static final int miuix_preference_btn_radio_height = 2131166686;
-        public static final int miuix_preference_btn_radio_width = 2131166687;
-        public static final int miuix_preference_category_divider_gap_height = 2131166688;
-        public static final int miuix_preference_category_gap_height = 2131166689;
-        public static final int miuix_preference_category_height = 2131166690;
-        public static final int miuix_preference_category_no_title_height = 2131166691;
-        public static final int miuix_preference_category_text_size = 2131166692;
-        public static final int miuix_preference_category_title_height = 2131166693;
-        public static final int miuix_preference_checkable_item_bg_padding_end = 2131166694;
-        public static final int miuix_preference_checkable_item_mask_padding_bottom = 2131166695;
-        public static final int miuix_preference_checkable_item_mask_padding_end = 2131166696;
-        public static final int miuix_preference_checkable_item_mask_padding_start = 2131166697;
-        public static final int miuix_preference_checkable_item_mask_padding_top = 2131166698;
-        public static final int miuix_preference_checkable_item_mask_radius = 2131166699;
-        public static final int miuix_preference_connect_detail_height = 2131166700;
-        public static final int miuix_preference_connect_detail_padding_horizontal = 2131166701;
-        public static final int miuix_preference_connect_detail_width = 2131166702;
-        public static final int miuix_preference_connect_translation_height = 2131166703;
-        public static final int miuix_preference_connect_translation_width = 2131166704;
-        public static final int miuix_preference_dialog_edittext_margin = 2131166705;
-        public static final int miuix_preference_dialog_edittext_margin_horizontal = 2131166706;
-        public static final int miuix_preference_dialog_edittext_padding_top = 2131166707;
-        public static final int miuix_preference_high_light_radius = 2131166708;
-        public static final int miuix_preference_horizontal_extra_padding = 2131166709;
-        public static final int miuix_preference_icon_arrow_right_height = 2131166710;
-        public static final int miuix_preference_icon_arrow_right_width = 2131166711;
-        public static final int miuix_preference_icon_max_height = 2131166712;
-        public static final int miuix_preference_icon_min_width = 2131166713;
-        public static final int miuix_preference_icon_padding_end = 2131166714;
-        public static final int miuix_preference_item_icon_margin_end = 2131166715;
-        public static final int miuix_preference_item_min_height = 2131166716;
-        public static final int miuix_preference_item_padding_bottom = 2131166717;
-        public static final int miuix_preference_item_padding_end = 2131166718;
-        public static final int miuix_preference_item_padding_inner = 2131166719;
-        public static final int miuix_preference_item_padding_side_zero = 2131166720;
-        public static final int miuix_preference_item_padding_start = 2131166721;
-        public static final int miuix_preference_item_padding_top = 2131166722;
-        public static final int miuix_preference_item_radio_padding_bottom = 2131166723;
-        public static final int miuix_preference_item_radio_padding_end = 2131166724;
-        public static final int miuix_preference_item_radio_padding_start = 2131166725;
-        public static final int miuix_preference_item_radio_padding_top = 2131166726;
-        public static final int miuix_preference_item_radio_two_state_bg_padding_end = 2131166727;
-        public static final int miuix_preference_item_radio_two_state_bg_padding_start = 2131166728;
-        public static final int miuix_preference_item_seekbar_icon_height = 2131166729;
-        public static final int miuix_preference_item_seekbar_icon_margin_end = 2131166730;
-        public static final int miuix_preference_item_seekbar_icon_width = 2131166731;
-        public static final int miuix_preference_item_seekbar_padding_bottom = 2131166732;
-        public static final int miuix_preference_item_seekbar_padding_top = 2131166733;
-        public static final int miuix_preference_item_seekbar_parent_padding_bottom = 2131166734;
-        public static final int miuix_preference_item_seekbar_parent_padding_top = 2131166735;
-        public static final int miuix_preference_normal_text_size = 2131166736;
-        public static final int miuix_preference_right_text_size = 2131166737;
-        public static final int miuix_preference_secondary_text_size = 2131166738;
-        public static final int miuix_preference_summary_margin_top = 2131166739;
-        public static final int miuix_preference_text_max_width = 2131166740;
-        public static final int miuix_preference_text_padding_bottom = 2131166741;
-        public static final int miuix_preference_text_padding_top = 2131166742;
-        public static final int miuix_preference_widget_width = 2131166743;
-        public static final int miuix_sbl_action_indeterminate_distance = 2131166744;
-        public static final int miuix_sbl_action_simple_enter = 2131166745;
-        public static final int miuix_sbl_action_simple_trigger = 2131166746;
-        public static final int miuix_sbl_action_upindeterminate_distance = 2131166747;
-        public static final int miuix_sbl_indicator_locked_body_height = 2131166748;
-        public static final int miuix_sbl_indicator_locked_body_margintop = 2131166749;
-        public static final int miuix_sbl_indicator_locked_body_width = 2131166750;
-        public static final int miuix_sbl_indicator_locked_header_height = 2131166751;
-        public static final int miuix_sbl_indicator_locked_header_width = 2131166752;
-        public static final int miuix_sbl_indicator_locked_labe_margintop = 2131166753;
-        public static final int miuix_sbl_indicator_locked_labe_textsize = 2131166754;
-        public static final int miuix_sbl_indicator_locked_layout_padding_bottom = 2131166755;
-        public static final int miuix_sbl_tracking_progress_bg_height = 2131166756;
-        public static final int miuix_sbl_tracking_progress_bg_marginbottom = 2131166757;
-        public static final int miuix_sbl_tracking_progress_bg_marginleft = 2131166758;
-        public static final int miuix_sbl_tracking_progress_bg_marginright = 2131166759;
-        public static final int miuix_sbl_tracking_progress_bg_margintop = 2131166760;
-        public static final int miuix_sbl_tracking_progress_bg_radius_width = 2131166761;
-        public static final int miuix_sbl_tracking_progress_bg_stroke_width = 2131166762;
-        public static final int miuix_sbl_tracking_progress_bg_width = 2131166763;
-        public static final int miuix_sbl_tracking_progress_labe_marginbottom = 2131166764;
-        public static final int miuix_sbl_tracking_progress_labe_margintop = 2131166765;
-        public static final int miuix_sbl_tracking_progress_labe_textsize = 2131166766;
-        public static final int miuix_sbl_tracking_uo_progress_labe_margintleft = 2131166767;
-        public static final int miuix_sbl_tracking_up_progress_bg_marginbottom = 2131166768;
-        public static final int miuix_sbl_tracking_up_progress_bg_margintop = 2131166769;
-        public static final int mixed_password_emergency_call_text_size = 2131166770;
-        public static final int mobile_data_icon_start_padding = 2131166772;
-        public static final int mobile_signal_group_end_padding = 2131166773;
-        public static final int modal_dialog_button_height = 2131166774;
-        public static final int modal_dialog_button_margin_bottom = 2131166775;
-        public static final int modal_dialog_button_margin_center = 2131166776;
-        public static final int modal_dialog_button_margin_left_right = 2131166777;
-        public static final int modal_dialog_button_margin_top_list = 2131166778;
-        public static final int modal_dialog_button_margin_top_msg = 2131166779;
-        public static final int modal_dialog_d_margin_top = 2131166780;
-        public static final int modal_dialog_icon_margin_left = 2131166781;
-        public static final int modal_dialog_icon_margin_top = 2131166782;
-        public static final int modal_dialog_icon_size = 2131166783;
-        public static final int modal_dialog_list_margin_top = 2131166784;
-        public static final int modal_dialog_margin_left_right = 2131166785;
-        public static final int modal_dialog_message_margin_right = 2131166786;
-        public static final int modal_dialog_message_margin_top = 2131166787;
-        public static final int moon_size = 2131166788;
-        public static final int mr_cast_group_volume_seekbar_height = 2131166789;
-        public static final int mr_cast_meta_art_size = 2131166790;
-        public static final int mr_cast_meta_subtitle_text_size = 2131166791;
-        public static final int mr_cast_route_volume_seekbar_height = 2131166792;
-        public static final int mr_cast_seekbar_thumb_size = 2131166793;
-        public static final int mr_controller_volume_group_list_item_height = 2131166794;
-        public static final int mr_controller_volume_group_list_item_icon_size = 2131166795;
-        public static final int mr_controller_volume_group_list_max_height = 2131166796;
-        public static final int mr_controller_volume_group_list_padding_top = 2131166797;
-        public static final int mr_dialog_fixed_width_major = 2131166798;
-        public static final int mr_dialog_fixed_width_minor = 2131166799;
-        public static final int mr_dynamic_dialog_header_text_size = 2131166800;
-        public static final int mr_dynamic_dialog_route_text_size = 2131166801;
-        public static final int mr_dynamic_dialog_row_height = 2131166802;
-        public static final int mr_dynamic_volume_group_list_item_height = 2131166803;
-        public static final int mtrl_alert_dialog_background_inset_bottom = 2131166804;
-        public static final int mtrl_alert_dialog_background_inset_end = 2131166805;
-        public static final int mtrl_alert_dialog_background_inset_start = 2131166806;
-        public static final int mtrl_alert_dialog_background_inset_top = 2131166807;
-        public static final int mtrl_alert_dialog_picker_background_inset = 2131166808;
-        public static final int mtrl_bottomappbar_fabOffsetEndMode = 2131166809;
-        public static final int mtrl_bottomappbar_fab_bottom_margin = 2131166810;
-        public static final int mtrl_bottomappbar_fab_cradle_margin = 2131166811;
-        public static final int mtrl_bottomappbar_fab_cradle_rounded_corner_radius = 2131166812;
-        public static final int mtrl_bottomappbar_fab_cradle_vertical_offset = 2131166813;
-        public static final int mtrl_bottomappbar_height = 2131166814;
-        public static final int mtrl_btn_corner_radius = 2131166815;
-        public static final int mtrl_btn_dialog_btn_min_width = 2131166816;
-        public static final int mtrl_btn_disabled_elevation = 2131166817;
-        public static final int mtrl_btn_disabled_z = 2131166818;
-        public static final int mtrl_btn_elevation = 2131166819;
-        public static final int mtrl_btn_focused_z = 2131166820;
-        public static final int mtrl_btn_hovered_z = 2131166821;
-        public static final int mtrl_btn_icon_btn_padding_left = 2131166822;
-        public static final int mtrl_btn_icon_padding = 2131166823;
-        public static final int mtrl_btn_inset = 2131166824;
-        public static final int mtrl_btn_letter_spacing = 2131166825;
-        public static final int mtrl_btn_padding_bottom = 2131166826;
-        public static final int mtrl_btn_padding_left = 2131166827;
-        public static final int mtrl_btn_padding_right = 2131166828;
-        public static final int mtrl_btn_padding_top = 2131166829;
-        public static final int mtrl_btn_pressed_z = 2131166830;
-        public static final int mtrl_btn_stroke_size = 2131166831;
-        public static final int mtrl_btn_text_btn_icon_padding = 2131166832;
-        public static final int mtrl_btn_text_btn_padding_left = 2131166833;
-        public static final int mtrl_btn_text_btn_padding_right = 2131166834;
-        public static final int mtrl_btn_text_size = 2131166835;
-        public static final int mtrl_btn_z = 2131166836;
-        public static final int mtrl_card_checked_icon_margin = 2131166837;
-        public static final int mtrl_card_checked_icon_size = 2131166838;
-        public static final int mtrl_card_corner_radius = 2131166839;
-        public static final int mtrl_card_dragged_z = 2131166840;
-        public static final int mtrl_card_elevation = 2131166841;
-        public static final int mtrl_card_spacing = 2131166842;
-        public static final int mtrl_chip_pressed_translation_z = 2131166843;
-        public static final int mtrl_chip_text_size = 2131166844;
-        public static final int mtrl_emphasis_disabled = 2131166845;
-        public static final int mtrl_emphasis_high_type = 2131166846;
-        public static final int mtrl_emphasis_medium = 2131166847;
-        public static final int mtrl_extended_fab_bottom_padding = 2131166848;
-        public static final int mtrl_extended_fab_corner_radius = 2131166849;
-        public static final int mtrl_extended_fab_disabled_elevation = 2131166850;
-        public static final int mtrl_extended_fab_disabled_translation_z = 2131166851;
-        public static final int mtrl_extended_fab_elevation = 2131166852;
-        public static final int mtrl_extended_fab_end_padding = 2131166853;
-        public static final int mtrl_extended_fab_end_padding_icon = 2131166854;
-        public static final int mtrl_extended_fab_icon_size = 2131166855;
-        public static final int mtrl_extended_fab_icon_text_spacing = 2131166856;
-        public static final int mtrl_extended_fab_min_height = 2131166857;
-        public static final int mtrl_extended_fab_min_width = 2131166858;
-        public static final int mtrl_extended_fab_start_padding = 2131166859;
-        public static final int mtrl_extended_fab_start_padding_icon = 2131166860;
-        public static final int mtrl_extended_fab_top_padding = 2131166861;
-        public static final int mtrl_extended_fab_translation_z_base = 2131166862;
-        public static final int mtrl_extended_fab_translation_z_hovered_focused = 2131166863;
-        public static final int mtrl_extended_fab_translation_z_pressed = 2131166864;
-        public static final int mtrl_fab_elevation = 2131166865;
-        public static final int mtrl_fab_min_touch_target = 2131166866;
-        public static final int mtrl_fab_translation_z_hovered_focused = 2131166867;
-        public static final int mtrl_fab_translation_z_pressed = 2131166868;
-        public static final int mtrl_large_touch_target = 2131166869;
-        public static final int mtrl_min_touch_target_size = 2131166870;
-        public static final int mtrl_navigation_elevation = 2131166871;
-        public static final int mtrl_navigation_item_horizontal_padding = 2131166872;
-        public static final int mtrl_navigation_item_icon_padding = 2131166873;
-        public static final int mtrl_shape_corner_size_large_component = 2131166874;
-        public static final int mtrl_shape_corner_size_medium_component = 2131166875;
-        public static final int mtrl_shape_corner_size_small_component = 2131166876;
-        public static final int mtrl_snackbar_action_text_color_alpha = 2131166877;
-        public static final int mtrl_snackbar_background_corner_radius = 2131166878;
-        public static final int mtrl_snackbar_background_overlay_color_alpha = 2131166879;
-        public static final int mtrl_snackbar_margin = 2131166880;
-        public static final int mtrl_switch_thumb_elevation = 2131166881;
-        public static final int mtrl_textinput_box_corner_radius_medium = 2131166882;
-        public static final int mtrl_textinput_box_corner_radius_small = 2131166883;
-        public static final int mtrl_textinput_box_label_cutout_padding = 2131166884;
-        public static final int mtrl_textinput_box_padding_end = 2131166885;
-        public static final int mtrl_textinput_box_stroke_width_default = 2131166886;
-        public static final int mtrl_textinput_box_stroke_width_focused = 2131166887;
-        public static final int mtrl_textinput_end_icon_padding_end = 2131166888;
-        public static final int mtrl_textinput_end_icon_padding_start = 2131166889;
-        public static final int mtrl_textinput_outline_box_expanded_padding = 2131166890;
-        public static final int mtrl_textinput_start_icon_padding_end = 2131166891;
-        public static final int mtrl_textinput_start_icon_padding_start = 2131166892;
-        public static final int mtrl_toolbar_default_height = 2131166893;
-        public static final int multi_user_avatar_collapsed_size = 2131166894;
-        public static final int multi_user_avatar_expanded_size = 2131166895;
-        public static final int multi_user_avatar_keyguard_size = 2131166896;
-        public static final int multi_user_switch_collapsed_margin = 2131166897;
-        public static final int multi_user_switch_expanded_margin = 2131166898;
-        public static final int multi_user_switch_keyguard_margin = 2131166899;
-        public static final int multi_user_switch_width_collapsed = 2131166900;
-        public static final int multi_user_switch_width_expanded = 2131166901;
-        public static final int multi_user_switch_width_keyguard = 2131166902;
-        public static final int nav_content_padding = 2131166903;
-        public static final int nav_key_button_shadow_offset_x = 2131166904;
-        public static final int nav_key_button_shadow_offset_y = 2131166905;
-        public static final int nav_key_button_shadow_radius = 2131166906;
-        public static final int nav_quick_scrub_track_edge_padding = 2131166907;
-        public static final int nav_quick_scrub_track_thickness = 2131166908;
-        public static final int navbar_back_button_ime_offset = 2131166909;
-        public static final int navbar_search_outerring_diameter = 2131166910;
-        public static final int navbar_search_outerring_radius = 2131166911;
-        public static final int navbar_search_panel_height = 2131166912;
-        public static final int navbar_search_snap_margin = 2131166913;
-        public static final int navigation_bar_deadzone_size = 2131166914;
-        public static final int navigation_bar_deadzone_size_max = 2131166915;
-        public static final int navigation_bar_default_edge_height = 2131166916;
-        public static final int navigation_bar_frame_height = 2131166917;
-        public static final int navigation_bar_guide_height = 2131166918;
-        public static final int navigation_bar_height = 2131166919;
-        public static final int navigation_bar_height_car_mode = 2131166920;
-        public static final int navigation_bar_min_swipe_distance = 2131166921;
-        public static final int navigation_bar_size = 2131166922;
-        public static final int navigation_edge_action_drag_threshold = 2131166923;
-        public static final int navigation_edge_arrow_min_y = 2131166924;
-        public static final int navigation_edge_finger_offset = 2131166925;
-        public static final int navigation_edge_panel_height = 2131166926;
-        public static final int navigation_edge_panel_padding = 2131166927;
-        public static final int navigation_edge_panel_width = 2131166928;
-        public static final int navigation_extra_key_width = 2131166929;
-        public static final int navigation_gesture_line_height = 2131166930;
-        public static final int navigation_gesture_line_radius = 2131166931;
-        public static final int navigation_gesture_line_width = 2131166932;
-        public static final int navigation_handle_bottom = 2131166933;
-        public static final int navigation_handle_horizontal_margin = 2131166934;
-        public static final int navigation_handle_radius = 2131166935;
-        public static final int navigation_handle_sample_horizontal_margin = 2131166936;
-        public static final int navigation_home_handle_width = 2131166937;
-        public static final int navigation_icon_size = 2131166938;
-        public static final int navigation_key_padding = 2131166939;
-        public static final int navigation_key_width = 2131166940;
-        public static final int navigation_luminance_change_threshold = 2131166941;
-        public static final int navigation_luminance_threshold = 2131166942;
-        public static final int navigation_side_padding = 2131166943;
-        public static final int nc_switch_guide_video_corner_radius = 2131166944;
-        public static final int nc_switch_guide_video_height = 2131166945;
-        public static final int nc_switch_guide_video_width = 2131166946;
-        public static final int new_qs_vertical_margin = 2131166947;
-        public static final int no_signal_cluster_battery_padding = 2131166948;
-        public static final int notch_expanded_header_carrier_margin = 2131166949;
-        public static final int notch_expanded_header_height = 2131166950;
-        public static final int notch_expanded_header_height_with_carrier = 2131166951;
-        public static final int notch_height = 2131166952;
-        public static final int notch_settings_button_margin = 2131166953;
-        public static final int notch_width = 2131166954;
-        public static final int notification_action_height = 2131166955;
-        public static final int notification_action_icon_size = 2131166956;
-        public static final int notification_action_list_height = 2131166957;
-        public static final int notification_action_text_size = 2131166958;
-        public static final int notification_app_icon_margin = 2131166959;
-        public static final int notification_app_icon_size = 2131166960;
-        public static final int notification_bg_radius = 2131166961;
-        public static final int notification_big_circle_margin = 2131166962;
-        public static final int notification_big_picture_max_height = 2131166963;
-        public static final int notification_children_container_divider_height = 2131166964;
-        public static final int notification_children_container_margin_top = 2131166965;
-        public static final int notification_children_container_margin_top_miui = 2131166966;
-        public static final int notification_children_container_top_padding = 2131166967;
-        public static final int notification_children_container_top_padding_miui = 2131166968;
-        public static final int notification_children_padding = 2131166969;
-        public static final int notification_clear_all_bottom_margin = 2131166970;
-        public static final int notification_clear_all_end_margin = 2131166971;
-        public static final int notification_clear_all_size = 2131166972;
-        public static final int notification_collapsed_button_padding = 2131166973;
-        public static final int notification_content_margin_start = 2131166974;
-        public static final int notification_custom_view_corner_radius = 2131166975;
-        public static final int notification_custom_view_margin = 2131166976;
-        public static final int notification_divider_alpha = 2131166977;
-        public static final int notification_divider_height = 2131166978;
-        public static final int notification_divider_height_increased = 2131166979;
-        public static final int notification_expand_button_size = 2131166980;
-        public static final int notification_group_overflow_bg_radius = 2131166981;
-        public static final int notification_group_overflow_padding_bottom = 2131166982;
-        public static final int notification_group_overflow_padding_horizontal = 2131166983;
-        public static final int notification_group_overflow_padding_top = 2131166984;
-        public static final int notification_guts_button_horizontal_padding = 2131166985;
-        public static final int notification_guts_button_horizontal_spacing = 2131166986;
-        public static final int notification_guts_button_side_margin = 2131166987;
-        public static final int notification_guts_button_spacing = 2131166988;
-        public static final int notification_guts_button_vertical_padding = 2131166989;
-        public static final int notification_guts_conversation_action_height = 2131166990;
-        public static final int notification_guts_conversation_action_text_padding_start = 2131166991;
-        public static final int notification_guts_conversation_header_height = 2131166992;
-        public static final int notification_guts_conversation_icon_size = 2131166993;
-        public static final int notification_guts_header_height = 2131166994;
-        public static final int notification_guts_header_text_size = 2131166995;
-        public static final int notification_guts_option_horizontal_padding = 2131166996;
-        public static final int notification_guts_option_vertical_margin = 2131166997;
-        public static final int notification_guts_option_vertical_padding = 2131166998;
-        public static final int notification_header_height = 2131166999;
-        public static final int notification_heads_up_bg_radius = 2131167000;
-        public static final int notification_heads_up_bg_stroke_width = 2131167001;
-        public static final int notification_heads_up_z_translation = 2131167002;
-        public static final int notification_hybrid_icon_margin_start = 2131167003;
-        public static final int notification_icon_appear_padding = 2131167004;
-        public static final int notification_importance_button_description_top_margin = 2131167005;
-        public static final int notification_importance_button_horiz_padding = 2131167006;
-        public static final int notification_importance_button_padding = 2131167007;
-        public static final int notification_importance_button_separation = 2131167008;
-        public static final int notification_importance_button_text = 2131167009;
-        public static final int notification_importance_button_width = 2131167010;
-        public static final int notification_importance_channel_group_text = 2131167011;
-        public static final int notification_importance_channel_text = 2131167012;
-        public static final int notification_importance_description_padding = 2131167013;
-        public static final int notification_importance_description_text = 2131167014;
-        public static final int notification_importance_drawable_padding = 2131167015;
-        public static final int notification_importance_header_text = 2131167016;
-        public static final int notification_importance_text_marginTop = 2131167017;
-        public static final int notification_importance_toggle_marginBottom = 2131167018;
-        public static final int notification_importance_toggle_marginTop = 2131167019;
-        public static final int notification_importance_toggle_size = 2131167020;
-        public static final int notification_item_bg_radius = 2131167021;
-        public static final int notification_large_icon_height = 2131167022;
-        public static final int notification_large_icon_width = 2131167023;
-        public static final int notification_left_right_margin = 2131167024;
-        public static final int notification_main_column_padding_top = 2131167025;
-        public static final int notification_main_column_right_margin = 2131167026;
-        public static final int notification_max_heads_up_height = 2131167027;
-        public static final int notification_max_heads_up_height_before_p = 2131167028;
-        public static final int notification_max_heads_up_height_increased = 2131167029;
-        public static final int notification_max_heads_up_height_legacy = 2131167030;
-        public static final int notification_max_height = 2131167031;
-        public static final int notification_media_narrow_margin = 2131167032;
-        public static final int notification_menu_icon_padding = 2131167033;
-        public static final int notification_menu_icon_size = 2131167034;
-        public static final int notification_messaging_actions_min_height = 2131167035;
-        public static final int notification_min_height = 2131167036;
-        public static final int notification_min_height_before_p = 2131167037;
-        public static final int notification_min_height_increased = 2131167038;
-        public static final int notification_min_height_legacy = 2131167039;
-        public static final int notification_min_height_media = 2131167040;
-        public static final int notification_min_interaction_height = 2131167041;
-        public static final int notification_modal_menu_bottom_max = 2131167042;
-        public static final int notification_modal_menu_margin_top = 2131167043;
-        public static final int notification_one_line_height = 2131167044;
-        public static final int notification_panel_clock_bottom_margin = 2131167045;
-        public static final int notification_panel_date_clock_line_height = 2131167046;
-        public static final int notification_panel_date_clock_text_size = 2131167047;
-        public static final int notification_panel_empty_text_size = 2131167048;
-        public static final int notification_panel_header_height = 2131167049;
-        public static final int notification_panel_manage_icon_bottom_margin = 2131167050;
-        public static final int notification_panel_manage_icon_end_margin = 2131167051;
-        public static final int notification_panel_margin_bottom = 2131167052;
-        public static final int notification_panel_margin_top = 2131167053;
-        public static final int notification_panel_min_height_frac = 2131167055;
-        public static final int notification_panel_min_side_margin = 2131167056;
-        public static final int notification_panel_shortcut_size = 2131167057;
-        public static final int notification_panel_time_clock_text_size = 2131167058;
-        public static final int notification_panel_time_date_space = 2131167059;
-        public static final int notification_panel_time_left_margin = 2131167060;
-        public static final int notification_panel_width = 2131167061;
-        public static final int notification_progress_bar_height = 2131167062;
-        public static final int notification_progress_margin_bottom = 2131167063;
-        public static final int notification_progress_margin_top = 2131167064;
-        public static final int notification_right_icon_corner_radius = 2131167065;
-        public static final int notification_right_icon_margin_top = 2131167066;
-        public static final int notification_right_icon_size = 2131167067;
-        public static final int notification_right_side_padding_top = 2131167068;
-        public static final int notification_section_divider_height = 2131167069;
-        public static final int notification_section_group_divider_bottom_minus = 2131167070;
-        public static final int notification_section_group_divider_top_minus = 2131167071;
-        public static final int notification_section_header_height = 2131167072;
-        public static final int notification_section_header_icon_margin_bottom = 2131167073;
-        public static final int notification_section_header_icon_size = 2131167074;
-        public static final int notification_section_header_margin_bottom_miui = 2131167075;
-        public static final int notification_section_header_margin_start_miui = 2131167076;
-        public static final int notification_section_header_margin_top_miui = 2131167077;
-        public static final int notification_section_header_padding_left = 2131167078;
-        public static final int notification_section_header_text_size_miui = 2131167079;
-        public static final int notification_shadow_radius = 2131167080;
-        public static final int notification_shelf_height = 2131167081;
-        public static final int notification_side_paddings = 2131167082;
-        public static final int notification_small_icon_background_padding = 2131167083;
-        public static final int notification_small_icon_size_as_large = 2131167084;
-        public static final int notification_stack_scroller_bg_radius = 2131167085;
-        public static final int notification_sticky_group_header_height = 2131167086;
-        public static final int notification_subtext_size = 2131167087;
-        public static final int notification_text_text_size = 2131167088;
-        public static final int notification_title_text_size = 2131167089;
-        public static final int notification_top_pad = 2131167090;
-        public static final int notification_top_pad_large_text = 2131167091;
-        public static final int notification_transparent_app_icon_margin = 2131167092;
-        public static final int notification_transparent_app_icon_size = 2131167093;
-        public static final int notification_transparent_one_line_height = 2131167094;
-        public static final int notification_transparent_title_text_size = 2131167095;
-        public static final int ns_notification_header_statusbar_height = 2131167096;
-        public static final int numeric_cell_horizontal_margin = 2131167097;
-        public static final int numeric_cell_padding = 2131167098;
-        public static final int numeric_cell_vertical_margin = 2131167099;
-        public static final int numeric_encrypt_dot_size = 2131167100;
-        public static final int numeric_password_screen_dots_bottom_margin = 2131167101;
-        public static final int numeric_password_screen_dots_padding = 2131167102;
-        public static final int numeric_password_screen_dots_top_margin = 2131167103;
-        public static final int obstacle_gap = 2131167104;
-        public static final int obstacle_height_min = 2131167105;
-        public static final int obstacle_spacing = 2131167106;
-        public static final int obstacle_stem_width = 2131167107;
-        public static final int obstacle_width = 2131167108;
-        public static final int obstacle_z = 2131167109;
-        public static final int one_finger_pop_limit = 2131167110;
-        public static final int overflow_dot_radius = 2131167111;
-        public static final int overflow_icon_dot_padding = 2131167112;
-        public static final int owner_info_title_text_size = 2131167113;
-        public static final int panel_content_corner_radius = 2131167114;
-        public static final int panel_content_margin = 2131167115;
-        public static final int panel_content_margin_horizontal = 2131167116;
-        public static final int password_char_padding = 2131167118;
-        public static final int password_dot_size = 2131167119;
-        public static final int password_unlock_screen_bottom_margin = 2131167120;
-        public static final int password_unlock_screen_input_pad_horizontal_margin = 2131167121;
-        public static final int pattern_unlock_screen_bottom_margin = 2131167122;
-        public static final int pattern_unlock_screen_emergency_text_size = 2131167123;
-        public static final int peek_window_y_offset = 2131167125;
-        public static final int phone_status_bar_luminance_change_threshold = 2131167126;
-        public static final int phone_status_bar_luminance_threshold = 2131167127;
-        public static final int picker_column_horizontal_padding = 2131167128;
-        public static final int picker_item_height = 2131167129;
-        public static final int picker_item_spacing = 2131167130;
-        public static final int picker_separator_horizontal_padding = 2131167131;
-        public static final int picture_in_picture_button_start_margin = 2131167132;
-        public static final int picture_in_picture_button_width = 2131167133;
-        public static final int pinpicker_text_size = 2131167134;
-        public static final int pip_action_padding = 2131167135;
-        public static final int pip_action_size = 2131167136;
-        public static final int pip_between_action_padding_land = 2131167137;
-        public static final int pip_bottom_offset_buffer = 2131167138;
-        public static final int pip_corner_radius = 2131167139;
-        public static final int pip_dismiss_text_bottom_margin = 2131167140;
-        public static final int pip_expand_container_edge_margin = 2131167141;
-        public static final int pip_expanded_shortest_edge_size = 2131167142;
-        public static final int pip_ime_offset = 2131167143;
-        public static final int pip_resize_edge_size = 2131167144;
-        public static final int pip_resize_handle_margin = 2131167145;
-        public static final int pip_resize_handle_size = 2131167146;
-        public static final int player_hit_size = 2131167147;
-        public static final int player_size = 2131167148;
-        public static final int player_z = 2131167149;
-        public static final int player_z_boost = 2131167150;
-        public static final int preference_dropdown_padding_start = 2131167151;
-        public static final int preference_icon_minWidth = 2131167152;
-        public static final int preference_no_icon_padding_start = 2131167153;
-        public static final int preference_seekbar_padding_horizontal = 2131167154;
-        public static final int preference_seekbar_padding_vertical = 2131167155;
-        public static final int preference_seekbar_value_minWidth = 2131167156;
-        public static final int profile_badge_size = 2131167157;
-        public static final int proximity_sensor_threshold = 2131167158;
-        public static final int pull_span_min = 2131167159;
-        public static final int pulsing_notification_appear_translation = 2131167160;
-        public static final int qqs_media_spacing = 2131167161;
-        public static final int qs_battery_padding = 2131167162;
-        public static final int qs_bluetooth_detail_height = 2131167163;
-        public static final int qs_brightness_dialog_height = 2131167164;
-        public static final int qs_brightness_icon_margin = 2131167165;
-        public static final int qs_brightness_mirror_bg_stroke_width = 2131167166;
-        public static final int qs_brightness_mirror_elevation = 2131167167;
-        public static final int qs_brightness_top_margin = 2131167169;
-        public static final int qs_carrier_margin_width = 2131167170;
-        public static final int qs_center_guideline_padding = 2131167171;
-        public static final int qs_control_big_tile_corner_radius = 2131167172;
-        public static final int qs_control_big_tile_height = 2131167173;
-        public static final int qs_control_big_tile_icon_margin_left = 2131167174;
-        public static final int qs_control_big_tile_icon_size = 2131167175;
-        public static final int qs_control_big_tile_indicator_padding = 2131167176;
-        public static final int qs_control_big_tile_indicator_size = 2131167177;
-        public static final int qs_control_big_tile_indicator_touch_h = 2131167178;
-        public static final int qs_control_big_tile_indicator_touch_v = 2131167179;
-        public static final int qs_control_big_tile_label_margin_Left = 2131167180;
-        public static final int qs_control_big_tile_label_margin_Right = 2131167181;
-        public static final int qs_control_big_tile_label_margin_top = 2131167182;
-        public static final int qs_control_big_tile_status_margin_top = 2131167183;
-        public static final int qs_control_big_tile_status_width = 2131167184;
-        public static final int qs_control_big_tile_sub_title_size = 2131167185;
-        public static final int qs_control_big_tile_title_size = 2131167186;
-        public static final int qs_control_big_tile_title_width = 2131167187;
-        public static final int qs_control_big_tile_width = 2131167188;
-        public static final int qs_control_big_tiles_interval_vertical = 2131167189;
-        public static final int qs_control_big_tiles_margin_bottom = 2131167190;
-        public static final int qs_control_big_tiles_padding_top = 2131167191;
-        public static final int qs_control_bottom_expand_height = 2131167192;
-        public static final int qs_control_bottom_indicator_height = 2131167193;
-        public static final int qs_control_bottom_indicator_padding_vertical = 2131167194;
-        public static final int qs_control_brightness_corner_radius = 2131167195;
-        public static final int qs_control_brightness_dialog_height = 2131167196;
-        public static final int qs_control_brightness_icon_margin = 2131167197;
-        public static final int qs_control_brightness_icon_size = 2131167198;
-        public static final int qs_control_brightness_margin_top = 2131167199;
-        public static final int qs_control_brightness_width = 2131167200;
-        public static final int qs_control_button_margin_end = 2131167201;
-        public static final int qs_control_center_header_paddingTop = 2131167202;
-        public static final int qs_control_center_tile_height = 2131167203;
-        public static final int qs_control_center_tile_margin_start = 2131167204;
-        public static final int qs_control_center_tile_margin_top = 2131167205;
-        public static final int qs_control_center_tile_width = 2131167206;
-        public static final int qs_control_content_view_margin_right = 2131167207;
-        public static final int qs_control_corner_general_radius = 2131167208;
-        public static final int qs_control_custom_tile_icon_inner_size = 2131167209;
-        public static final int qs_control_customizer_marker_height = 2131167210;
-        public static final int qs_control_customizer_marker_width = 2131167211;
-        public static final int qs_control_customizer_others_bg_radius = 2131167212;
-        public static final int qs_control_customizer_others_padding_bottom = 2131167213;
-        public static final int qs_control_customizer_others_padding_top = 2131167214;
-        public static final int qs_control_customizer_others_title_height = 2131167215;
-        public static final int qs_control_customizer_others_title_margin_top = 2131167216;
-        public static final int qs_control_customizer_others_title_size = 2131167217;
-        public static final int qs_control_customizer_tile_height = 2131167218;
-        public static final int qs_control_customizer_tile_width = 2131167219;
-        public static final int qs_control_customizer_tiles_content_margin_top = 2131167220;
-        public static final int qs_control_customizer_tiles_margin_bottom = 2131167221;
-        public static final int qs_control_customizer_tiles_margin_top = 2131167222;
-        public static final int qs_control_customizer_tiles_save_height = 2131167223;
-        public static final int qs_control_customizer_tiles_save_text_size = 2131167224;
-        public static final int qs_control_customizer_tiles_save_width = 2131167225;
-        public static final int qs_control_customizer_tiles_sub_title_height = 2131167226;
-        public static final int qs_control_customizer_tiles_sub_title_size = 2131167227;
-        public static final int qs_control_customizer_tiles_title_height = 2131167228;
-        public static final int qs_control_customizer_tiles_title_size = 2131167229;
-        public static final int qs_control_detail_header_height = 2131167230;
-        public static final int qs_control_detail_header_padding = 2131167231;
-        public static final int qs_control_detail_header_text_size = 2131167232;
-        public static final int qs_control_detail_item_height = 2131167233;
-        public static final int qs_control_detail_more_button_margin = 2131167234;
-        public static final int qs_control_detail_more_button_text_size = 2131167235;
-        public static final int qs_control_detail_width = 2131167236;
-        public static final int qs_control_detail_wifi_bt_height = 2131167237;
-        public static final int qs_control_expand_detail_items_height = 2131167238;
-        public static final int qs_control_expand_indicator_margin_top = 2131167239;
-        public static final int qs_control_expand_tile_detail_margin_left = 2131167240;
-        public static final int qs_control_expand_tile_icon_margin_left = 2131167241;
-        public static final int qs_control_expand_tile_icon_size = 2131167242;
-        public static final int qs_control_expand_tile_label_margin_Left = 2131167243;
-        public static final int qs_control_expand_tile_label_margin_top = 2131167244;
-        public static final int qs_control_expand_tile_sub_title_size = 2131167245;
-        public static final int qs_control_expand_tile_title_size = 2131167246;
-        public static final int qs_control_expand_tile_unit_size = 2131167247;
-        public static final int qs_control_foot_panel_brightness_height = 2131167248;
-        public static final int qs_control_foot_panel_margin_top = 2131167249;
-        public static final int qs_control_foot_panel_to_top = 2131167250;
-        public static final int qs_control_footer_height = 2131167251;
-        public static final int qs_control_footer_icon_margin_end = 2131167252;
-        public static final int qs_control_footer_icon_size = 2131167253;
-        public static final int qs_control_footer_text_size = 2131167254;
-        public static final int qs_control_header_button_size = 2131167255;
-        public static final int qs_control_header_clock_size = 2131167256;
-        public static final int qs_control_header_date_size = 2131167257;
-        public static final int qs_control_header_statusbar_height = 2131167258;
-        public static final int qs_control_header_tiles_height = 2131167259;
-        public static final int qs_control_header_tiles_margin_top = 2131167260;
-        public static final int qs_control_header_tiles_title_size = 2131167261;
-        public static final int qs_control_land_tiles_margin_middle = 2131167262;
-        public static final int qs_control_panel_margin_horizontal = 2131167263;
-        public static final int qs_control_scrollview_overfling_distance = 2131167264;
-        public static final int qs_control_smart_tile_height = 2131167265;
-        public static final int qs_control_smart_tile_icon_margin_bottom = 2131167266;
-        public static final int qs_control_smart_tile_icon_margin_left = 2131167267;
-        public static final int qs_control_smart_tile_text_margin_left = 2131167268;
-        public static final int qs_control_smart_tile_text_margin_top = 2131167269;
-        public static final int qs_control_smart_tile_width = 2131167270;
-        public static final int qs_control_tile_icon_bg_size = 2131167271;
-        public static final int qs_control_tile_label_padding_top = 2131167272;
-        public static final int qs_control_tile_label_text_size = 2131167273;
-        public static final int qs_control_tiles_columns = 2131167274;
-        public static final int qs_control_tiles_container_margin_bottom = 2131167275;
-        public static final int qs_control_tiles_container_margin_top = 2131167276;
-        public static final int qs_control_tiles_indicator_height = 2131167277;
-        public static final int qs_control_tiles_indicator_width = 2131167278;
-        public static final int qs_control_tiles_min_rows = 2131167279;
-        public static final int qs_control_title_margin_end = 2131167280;
-        public static final int qs_control_width_land = 2131167281;
-        public static final int qs_customize_content_padding_horizontal = 2131167282;
-        public static final int qs_customize_content_padding_top = 2131167283;
-        public static final int qs_customize_divider_padding_horizontal = 2131167284;
-        public static final int qs_customize_header_min_height = 2131167285;
-        public static final int qs_customize_padding_bottom = 2131167286;
-        public static final int qs_customize_padding_top = 2131167287;
-        public static final int qs_customize_sub_title_margin_bottom = 2131167288;
-        public static final int qs_customize_sub_title_text_size = 2131167289;
-        public static final int qs_customize_tile_height = 2131167290;
-        public static final int qs_customize_title_margin_bottom = 2131167291;
-        public static final int qs_customize_title_text_size = 2131167292;
-        public static final int qs_data_usage_divider_margin_horizontal = 2131167293;
-        public static final int qs_data_usage_text_size = 2131167294;
-        public static final int qs_data_usage_usage_text_size = 2131167295;
-        public static final int qs_date_collapsed_size = 2131167296;
-        public static final int qs_date_time_translation = 2131167297;
-        public static final int qs_detail_back_margin_end = 2131167298;
-        public static final int qs_detail_bottom_buttons_text_size = 2131167299;
-        public static final int qs_detail_button_text_size = 2131167300;
-        public static final int qs_detail_buttons_container_height = 2131167301;
-        public static final int qs_detail_empty_text_size = 2131167302;
-        public static final int qs_detail_header_height = 2131167303;
-        public static final int qs_detail_header_image_height = 2131167304;
-        public static final int qs_detail_header_image_padding = 2131167305;
-        public static final int qs_detail_header_image_width = 2131167306;
-        public static final int qs_detail_header_padding = 2131167307;
-        public static final int qs_detail_header_paddingStart = 2131167308;
-        public static final int qs_detail_header_text_padding = 2131167309;
-        public static final int qs_detail_header_text_size = 2131167310;
-        public static final int qs_detail_icon_overlay_size = 2131167311;
-        public static final int qs_detail_image_height = 2131167312;
-        public static final int qs_detail_image_padding = 2131167313;
-        public static final int qs_detail_image_width = 2131167314;
-        public static final int qs_detail_item_height = 2131167315;
-        public static final int qs_detail_item_icon_marginEnd = 2131167316;
-        public static final int qs_detail_item_icon_marginStart = 2131167317;
-        public static final int qs_detail_item_icon_size = 2131167318;
-        public static final int qs_detail_item_icon_width = 2131167319;
-        public static final int qs_detail_item_padding_horizontal = 2131167320;
-        public static final int qs_detail_item_primary_text_size = 2131167321;
-        public static final int qs_detail_item_secondary_text_margin_top = 2131167322;
-        public static final int qs_detail_item_secondary_text_size = 2131167323;
-        public static final int qs_detail_item_text_margin_bottom = 2131167324;
-        public static final int qs_detail_item_text_margin_start = 2131167325;
-        public static final int qs_detail_item_text_margin_top = 2131167326;
-        public static final int qs_detail_items_min_height = 2131167327;
-        public static final int qs_detail_items_padding_top = 2131167328;
-        public static final int qs_detail_margin_bottom = 2131167329;
-        public static final int qs_detail_margin_top = 2131167330;
-        public static final int qs_detail_padding_start = 2131167331;
-        public static final int qs_divider_size = 2131167332;
-        public static final int qs_dual_tile_height = 2131167333;
-        public static final int qs_dual_tile_padding_horizontal = 2131167334;
-        public static final int qs_dual_tile_padding_vertical = 2131167335;
-        public static final int qs_emergency_calls_only_text_size = 2131167336;
-        public static final int qs_falsing_threshold = 2131167337;
-        public static final int qs_footer_action_button_size = 2131167338;
-        public static final int qs_footer_data_usage_icon_size = 2131167339;
-        public static final int qs_footer_dialog_icon_margin = 2131167340;
-        public static final int qs_footer_dialog_icon_size = 2131167341;
-        public static final int qs_footer_dialog_subtitle_padding = 2131167342;
-        public static final int qs_footer_height = 2131167343;
-        public static final int qs_footer_horizontal_margin = 2131167344;
-        public static final int qs_footer_icon_padding = 2131167345;
-        public static final int qs_footer_icon_size = 2131167346;
-        public static final int qs_footer_line_margin_start = 2131167347;
-        public static final int qs_footer_margin = 2131167348;
-        public static final int qs_footer_padding_end = 2131167349;
-        public static final int qs_footer_padding_start = 2131167350;
-        public static final int qs_framed_avatar_size = 2131167351;
-        public static final int qs_header_alarm_icon_size = 2131167352;
-        public static final int qs_header_alarm_text_margin_start = 2131167353;
-        public static final int qs_header_bottom_padding = 2131167354;
-        public static final int qs_header_carrier_separator_width = 2131167355;
-        public static final int qs_header_gear_translation = 2131167356;
-        public static final int qs_header_mobile_icon_size = 2131167357;
-        public static final int qs_header_separator_width = 2131167358;
-        public static final int qs_header_system_icons_area_height = 2131167359;
-        public static final int qs_header_tile_margin_bottom = 2131167360;
-        public static final int qs_header_tooltip_height = 2131167361;
-        public static final int qs_header_top_padding = 2131167362;
-        public static final int qs_media_album_size = 2131167363;
-        public static final int qs_media_disabled_seekbar_height = 2131167364;
-        public static final int qs_media_enabled_seekbar_height = 2131167365;
-        public static final int qs_media_icon_size = 2131167366;
-        public static final int qs_media_padding = 2131167367;
-        public static final int qs_media_panel_outer_padding = 2131167368;
-        public static final int qs_media_width = 2131167369;
-        public static final int qs_notif_collapsed_space = 2131167370;
-        public static final int qs_notification_padding = 2131167371;
-        public static final int qs_page_indicator_dot_size = 2131167372;
-        public static final int qs_page_indicator_dot_space = 2131167373;
-        public static final int qs_page_indicator_height = 2131167374;
-        public static final int qs_page_indicator_width = 2131167375;
-        public static final int qs_paged_tile_layout_padding_bottom = 2131167376;
-        public static final int qs_panel_expand_indicator_height = 2131167377;
-        public static final int qs_panel_expand_indicator_shadow_spread = 2131167378;
-        public static final int qs_panel_expand_indicator_stroke_width = 2131167379;
-        public static final int qs_panel_expand_indicator_width = 2131167380;
-        public static final int qs_panel_padding = 2131167381;
-        public static final int qs_panel_padding_bottom = 2131167382;
-        public static final int qs_panel_padding_top = 2131167383;
-        public static final int qs_panel_width = 2131167384;
-        public static final int qs_peek_height = 2131167385;
-        public static final int qs_quick_header_panel_height = 2131167386;
-        public static final int qs_quick_panel_content_padding_bottom = 2131167387;
-        public static final int qs_quick_panel_content_padding_horizontal = 2131167388;
-        public static final int qs_quick_panel_content_padding_top = 2131167389;
-        public static final int qs_quick_tile_icon_bg_size = 2131167390;
-        public static final int qs_quick_tile_padding = 2131167391;
-        public static final int qs_quick_tile_size = 2131167392;
-        public static final int qs_seamless_fallback_end_margin = 2131167393;
-        public static final int qs_seamless_fallback_icon_size = 2131167394;
-        public static final int qs_seamless_icon_size = 2131167395;
-        public static final int qs_status_bar_header_alpha = 2131167396;
-        public static final int qs_status_separator = 2131167397;
-        public static final int qs_tile_app_label_text_size = 2131167398;
-        public static final int qs_tile_background_size = 2131167399;
-        public static final int qs_tile_content_height = 2131167400;
-        public static final int qs_tile_content_margin_bottom = 2131167401;
-        public static final int qs_tile_content_margin_horizontal = 2131167402;
-        public static final int qs_tile_content_margin_top = 2131167403;
-        public static final int qs_tile_divider_height = 2131167404;
-        public static final int qs_tile_height = 2131167405;
-        public static final int qs_tile_icon_bg_size = 2131167406;
-        public static final int qs_tile_icon_size = 2131167407;
-        public static final int qs_tile_label_indicator_size = 2131167408;
-        public static final int qs_tile_label_margin_horizontal = 2131167409;
-        public static final int qs_tile_label_min_height = 2131167410;
-        public static final int qs_tile_label_padding_top = 2131167411;
-        public static final int qs_tile_label_text_size = 2131167412;
-        public static final int qs_tile_layout_margin_side = 2131167413;
-        public static final int qs_tile_margin_horizontal = 2131167414;
-        public static final int qs_tile_margin_horizontal_two_line = 2131167415;
-        public static final int qs_tile_margin_top = 2131167416;
-        public static final int qs_tile_margin_top_bottom = 2131167417;
-        public static final int qs_tile_margin_top_bottom_negative = 2131167418;
-        public static final int qs_tile_margin_vertical = 2131167419;
-        public static final int qs_tile_padding_below_icon = 2131167420;
-        public static final int qs_tile_padding_bottom = 2131167421;
-        public static final int qs_tile_padding_top = 2131167422;
-        public static final int qs_tile_padding_top_large_text = 2131167423;
-        public static final int qs_tile_spacing = 2131167424;
-        public static final int qs_tile_text_size = 2131167425;
-        public static final int qs_time_collapsed_size = 2131167426;
-        public static final int qs_time_expanded_size = 2131167427;
-        public static final int quick_setting_header_big_time_text_size = 2131167428;
-        public static final int quick_setting_header_shortcut_height = 2131167429;
-        public static final int quick_setting_header_shortcut_width = 2131167430;
-        public static final int quick_setting_header_system_icon_container_height = 2131167431;
-        public static final int quick_settings_bottom_margin_media = 2131167432;
-        public static final int quick_switch_demo_app_gap = 2131167433;
-        public static final int recents_onboarding_toast_arrow_corner_radius = 2131167434;
-        public static final int recents_quick_scrub_onboarding_margin_start = 2131167435;
-        public static final int recents_task_view_header_height = 2131167436;
-        public static final int rect_button_radius = 2131167437;
-        public static final int remote_input_history_extra_height = 2131167438;
-        public static final int restricted_icon_padding = 2131167439;
-        public static final int restricted_padlock_pading = 2131167440;
-        public static final int roaming_icon_start_padding = 2131167441;
-        public static final int rounded_corner_content_padding = 2131167442;
-        public static final int scenery_z = 2131167443;
-        public static final int screen_pinning_description_bullet_gap_width = 2131167444;
-        public static final int screen_pinning_nav_highlight_outer_size = 2131167445;
-        public static final int screen_pinning_nav_highlight_size = 2131167446;
-        public static final int screen_pinning_request_button_height = 2131167447;
-        public static final int screen_pinning_request_button_width = 2131167448;
-        public static final int screen_pinning_request_frame_padding = 2131167449;
-        public static final int screen_pinning_request_inner_padding = 2131167450;
-        public static final int screen_pinning_request_nav_icon_padding = 2131167451;
-        public static final int screen_pinning_request_nav_side_padding = 2131167452;
-        public static final int screen_pinning_request_seascape_button_offset = 2131167453;
-        public static final int screen_pinning_request_seascape_padding_negative = 2131167454;
-        public static final int screen_pinning_request_side_width = 2131167455;
-        public static final int screen_pinning_request_width = 2131167456;
-        public static final int screenrecord_dialog_padding = 2131167457;
-        public static final int screenrecord_logo_size = 2131167458;
-        public static final int screenrecord_status_icon_bg_radius = 2131167459;
-        public static final int screenrecord_status_icon_height = 2131167460;
-        public static final int screenrecord_status_icon_radius = 2131167461;
-        public static final int screenrecord_status_icon_width = 2131167462;
-        public static final int screenrecord_status_text_size = 2131167463;
-        public static final int screenshot_action_chip_icon_size = 2131167464;
-        public static final int screenshot_action_chip_margin_right = 2131167465;
-        public static final int screenshot_action_chip_margin_vertical = 2131167466;
-        public static final int screenshot_action_chip_padding_end = 2131167467;
-        public static final int screenshot_action_chip_padding_middle = 2131167468;
-        public static final int screenshot_action_chip_padding_start = 2131167469;
-        public static final int screenshot_action_chip_padding_vertical = 2131167470;
-        public static final int screenshot_action_chip_text_size = 2131167471;
-        public static final int screenshot_action_container_corner_radius = 2131167472;
-        public static final int screenshot_action_container_margin_horizontal = 2131167473;
-        public static final int screenshot_action_container_offset_y = 2131167474;
-        public static final int screenshot_action_container_padding_left = 2131167475;
-        public static final int screenshot_action_container_padding_right = 2131167476;
-        public static final int screenshot_action_container_padding_vertical = 2131167477;
-        public static final int screenshot_bg_protection_height = 2131167478;
-        public static final int screenshot_button_corner_radius = 2131167479;
-        public static final int screenshot_dismiss_button_margin = 2131167480;
-        public static final int screenshot_dismiss_button_tappable_size = 2131167481;
-        public static final int screenshot_dismissal_height_delta = 2131167482;
-        public static final int screenshot_offset_x = 2131167483;
-        public static final int screenshot_offset_y = 2131167484;
-        public static final int screenshot_preview_elevation = 2131167485;
-        public static final int scrim_behind_alpha = 2131167486;
-        public static final int scroll_fast_threshold = 2131167487;
-        public static final int secondary_app_icon_size = 2131167488;
-        public static final int secondary_telephony_padding = 2131167489;
-        public static final int secure_keyguard_bouncer_message_content_text_size = 2131167490;
-        public static final int secure_keyguard_bouncer_message_content_top_margin = 2131167491;
-        public static final int secure_keyguard_bouncer_message_margin_start_end = 2131167492;
-        public static final int secure_keyguard_bouncer_message_title_text_size = 2131167493;
-        public static final int secure_keyguard_bouncer_message_title_top_margin = 2131167494;
-        public static final int seek_bar_corner_radius = 2131167495;
-        public static final int seek_bar_height = 2131167496;
-        public static final int segmented_button_spacing = 2131167497;
-        public static final int shelf_appear_translation = 2131167498;
-        public static final int shelf_icon_container_padding = 2131167499;
-        public static final int shelf_transform_content_shift = 2131167500;
-        public static final int shutdown_scrim_behind_alpha = 2131167501;
-        public static final int signal_cluster_battery_padding = 2131167502;
-        public static final int signal_cluster_margin_start = 2131167503;
-        public static final int signal_icon_size = 2131167504;
-        public static final int signal_indicator_to_icon_frame_spacing = 2131167505;
-        public static final int sliding_button_border = 2131167506;
-        public static final int smart_action_button_icon_padding = 2131167507;
-        public static final int smart_action_button_icon_size = 2131167508;
-        public static final int smart_cover_battery_padding = 2131167509;
-        public static final int smart_cover_battery_text_size = 2131167510;
-        public static final int smart_cover_num_size = 2131167511;
-        public static final int smart_cover_time_size = 2131167512;
-        public static final int smart_reply_button_corner_radius = 2131167513;
-        public static final int smart_reply_button_font_size = 2131167514;
-        public static final int smart_reply_button_line_spacing_extra = 2131167515;
-        public static final int smart_reply_button_max_height = 2131167516;
-        public static final int smart_reply_button_min_height = 2131167517;
-        public static final int smart_reply_button_padding_horizontal_double_line = 2131167518;
-        public static final int smart_reply_button_padding_horizontal_single_line = 2131167519;
-        public static final int smart_reply_button_padding_vertical = 2131167520;
-        public static final int smart_reply_button_spacing = 2131167521;
-        public static final int smart_reply_button_stroke_width = 2131167522;
-        public static final int snooze_option_padding = 2131167523;
-        public static final int snooze_option_text_size = 2131167524;
-        public static final int snooze_snackbar_min_height = 2131167525;
-        public static final int speed_bump_height = 2131167526;
-        public static final int split_action_bar_overlay_height = 2131167527;
-        public static final int star_size_max = 2131167528;
-        public static final int star_size_min = 2131167529;
-        public static final int status_bar_airplane_spacer_width = 2131167530;
-        public static final int status_bar_battery_icon_height = 2131167531;
-        public static final int status_bar_battery_icon_width = 2131167532;
-        public static final int status_bar_clock_end_padding = 2131167533;
-        public static final int status_bar_clock_size = 2131167534;
-        public static final int status_bar_clock_starting_padding = 2131167535;
-        public static final int status_bar_connected_device_bt_indicator_size = 2131167536;
-        public static final int status_bar_connected_device_signal_margin_end = 2131167537;
-        public static final int status_bar_header_height_expanded = 2131167538;
-        public static final int status_bar_header_height_keyguard = 2131167539;
-        public static final int status_bar_header_padding_bottom = 2131167540;
-        public static final int status_bar_height = 2131167541;
-        public static final int status_bar_horizontal_padding = 2131167542;
-        public static final int status_bar_icon_drawing_alpha = 2131167543;
-        public static final int status_bar_icon_drawing_size = 2131167544;
-        public static final int status_bar_icon_drawing_size_dark = 2131167545;
-        public static final int status_bar_icon_height = 2131167546;
-        public static final int status_bar_icon_padding = 2131167547;
-        public static final int status_bar_icon_scale_factor = 2131167548;
-        public static final int status_bar_icon_size = 2131167549;
-        public static final int status_bar_left_clock_end_padding = 2131167550;
-        public static final int status_bar_left_clock_starting_padding = 2131167551;
-        public static final int status_bar_mobile_left_inout_over_strength = 2131167552;
-        public static final int status_bar_mobile_right_inout_margin_start = 2131167553;
-        public static final int status_bar_mobile_type_half_to_top_distance = 2131167554;
-        public static final int status_bar_mobile_type_middle_to_strength_start = 2131167555;
-        public static final int status_bar_notification_icon_padding = 2131167556;
-        public static final int status_bar_padding_end = 2131167557;
-        public static final int status_bar_padding_start = 2131167558;
-        public static final int status_bar_padding_top = 2131167559;
-        public static final int status_bar_prompt_content_min_width = 2131167560;
-        public static final int status_bar_prompt_max_width = 2131167561;
-        public static final int status_bar_prompt_min_width = 2131167562;
-        public static final int status_bar_system_icon_spacing = 2131167563;
-        public static final int status_bar_wifi_signal_size = 2131167564;
-        public static final int status_bar_wifi_signal_spacer_width = 2131167565;
-        public static final int status_bar_wifi_standard_height = 2131167566;
-        public static final int status_bar_wifi_standard_width = 2131167567;
-        public static final int statusbar_battery_digit_size = 2131167568;
-        public static final int statusbar_battery_percent_margin_end = 2131167569;
-        public static final int statusbar_battery_percent_margin_start = 2131167570;
-        public static final int statusbar_battery_size = 2131167571;
-        public static final int statusbar_battery_text_bottom_padding = 2131167572;
-        public static final int statusbar_battery_text_top_padding = 2131167573;
-        public static final int statusbar_carrier_max_width = 2131167574;
-        public static final int statusbar_carrier_size = 2131167575;
-        public static final int statusbar_signal_size = 2131167576;
-        public static final int statusbar_wifi_generation_size = 2131167577;
-        public static final int statusbar_wifi_standard_size = 2131167578;
-        public static final int style_choose_clock_title_text_size = 2131167579;
-        public static final int style_select_panel_bg_corner_radius = 2131167580;
-        public static final int subtitle_clock_padding = 2131167581;
-        public static final int sun_size = 2131167582;
-        public static final int swipe_helper_falsing_threshold = 2131167583;
-        public static final int system_icons_keyguard_padding_end = 2131167584;
-        public static final int system_icons_super_container_avatarless_margin_end = 2131167585;
-        public static final int system_icons_super_container_margin_start = 2131167586;
-        public static final int system_icons_switcher_hidden_expanded_margin = 2131167587;
-        public static final int task_height_of_minimized_mode = 2131167588;
-        public static final int title_clock_padding = 2131167589;
-        public static final int tooltip_corner_radius = 2131167590;
-        public static final int tooltip_horizontal_padding = 2131167591;
-        public static final int tooltip_margin = 2131167592;
-        public static final int tooltip_precise_anchor_extra_offset = 2131167593;
-        public static final int tooltip_precise_anchor_threshold = 2131167594;
-        public static final int tooltip_vertical_padding = 2131167595;
-        public static final int tooltip_y_offset_non_touch = 2131167596;
-        public static final int tooltip_y_offset_touch = 2131167597;
-        public static final int top_padding = 2131167598;
-        public static final int translation_per_sec = 2131167599;
-        public static final int trust_circle_inner_radius_enter = 2131167600;
-        public static final int trust_circle_inner_radius_exit = 2131167601;
-        public static final int trust_circle_inner_radius_visible_max = 2131167602;
-        public static final int trust_circle_inner_radius_visible_min = 2131167603;
-        public static final int trust_circle_thickness = 2131167604;
-        public static final int two_target_pref_medium_icon_size = 2131167605;
-        public static final int two_target_pref_small_icon_size = 2131167606;
-        public static final int unlock_falsing_threshold = 2131167607;
-        public static final int unlock_move_distance = 2131167608;
-        public static final int unlock_pattern_view_diameter_factor = 2131167609;
-        public static final int usage_graph_area_height = 2131167610;
-        public static final int usage_graph_divider_size = 2131167611;
-        public static final int usage_graph_dot_interval = 2131167612;
-        public static final int usage_graph_dot_size = 2131167613;
-        public static final int usage_graph_labels_padding = 2131167614;
-        public static final int usage_graph_labels_width = 2131167615;
-        public static final int usage_graph_line_corner_radius = 2131167616;
-        public static final int usage_graph_line_width = 2131167617;
-        public static final int usage_graph_margin_top_bottom = 2131167618;
-        public static final int user_icon_view_height = 2131167619;
-        public static final int user_spinner_height = 2131167620;
-        public static final int user_spinner_item_height = 2131167621;
-        public static final int user_spinner_padding = 2131167622;
-        public static final int user_spinner_padding_sides = 2131167623;
-        public static final int vertical_clock_date_translate_extra = 2131167624;
-        public static final int vertical_clock_sim_card_magin_top = 2131167625;
-        public static final int volume_button_size = 2131167626;
-        public static final int volume_dialog_caption_size = 2131167627;
-        public static final int volume_dialog_elevation = 2131167628;
-        public static final int volume_dialog_margin_bottom = 2131167629;
-        public static final int volume_dialog_padding_end = 2131167630;
-        public static final int volume_dialog_padding_top = 2131167631;
-        public static final int volume_dialog_panel_transparent_padding = 2131167632;
-        public static final int volume_dialog_panel_transparent_padding_right = 2131167633;
-        public static final int volume_dialog_panel_width = 2131167634;
-        public static final int volume_dialog_ringer_icon_padding = 2131167635;
-        public static final int volume_dialog_ringer_size = 2131167636;
-        public static final int volume_dialog_row_margin_bottom = 2131167637;
-        public static final int volume_dialog_row_width = 2131167638;
-        public static final int volume_dialog_slider_height = 2131167639;
-        public static final int volume_dialog_slider_margin_bottom = 2131167640;
-        public static final int volume_dialog_slider_margin_top = 2131167641;
-        public static final int volume_dialog_spacer = 2131167642;
-        public static final int volume_dialog_stream_padding = 2131167643;
-        public static final int volume_dialog_tap_target_size = 2131167644;
-        public static final int volume_expander_margin_end = 2131167645;
-        public static final int volume_expander_margin_top = 2131167646;
-        public static final int volume_offset_top = 2131167647;
-        public static final int volume_row_header_padding_start = 2131167648;
-        public static final int volume_row_height = 2131167649;
-        public static final int volume_row_padding_bottom = 2131167650;
-        public static final int volume_row_padding_start = 2131167651;
-        public static final int volume_row_slider_height = 2131167652;
-        public static final int volume_row_slider_padding_start = 2131167653;
-        public static final int volume_slider_interspacing = 2131167654;
-        public static final int volume_tool_tip_arrow_corner_radius = 2131167655;
-        public static final int volume_tool_tip_bottom_margin = 2131167656;
-        public static final int volume_tool_tip_right_margin = 2131167657;
-        public static final int volume_tool_tip_top_margin = 2131167658;
-        public static final int wallpaper_bottom_region_height = 2131167659;
-        public static final int wallpaper_carousel_region_height = 2131167660;
-        public static final int wallpaper_gxzw_region_margin = 2131167661;
-        public static final int wallpaper_horizontal_clock_region_height = 2131167662;
-        public static final int wallpaper_horizontal_clock_region_margin_top = 2131167663;
-        public static final int wallpaper_horizontal_clock_region_width = 2131167664;
-        public static final int wallpaper_left_top_clock_region_height = 2131167665;
-        public static final int wallpaper_left_top_clock_region_margin_start = 2131167666;
-        public static final int wallpaper_left_top_clock_region_margin_top = 2131167667;
-        public static final int wallpaper_left_top_clock_region_width = 2131167668;
-        public static final int wallpaper_magazine_pre_setting_region_width = 2131167669;
-        public static final int wide_type_icon_start_padding = 2131167670;
-        public static final int wide_type_icon_start_padding_qs = 2131167671;
-        public static final int widget_big_font_size = 2131167672;
-        public static final int widget_bottom_separator_padding = 2131167673;
-        public static final int widget_horizontal_padding = 2131167674;
-        public static final int widget_icon_padding = 2131167675;
-        public static final int widget_icon_size = 2131167676;
-        public static final int widget_label_font_size = 2131167677;
-        public static final int widget_small_font_size = 2131167678;
-        public static final int widget_title_font_size = 2131167679;
-        public static final int widget_vertical_padding = 2131167680;
-        public static final int widget_vertical_padding_clock = 2131167681;
-        public static final int widget_vertical_padding_with_header = 2131167682;
-        public static final int wifi_preference_badge_padding = 2131167683;
-        public static final int wireless_chagre_slowly_dialog_button_height = 2131167684;
-        public static final int wireless_charging_anim_battery_level_text_size_end = 2131167685;
-        public static final int wireless_charging_anim_battery_level_text_size_start = 2131167686;
-        public static final int wireless_charging_circle_radius_end = 2131167687;
-        public static final int wireless_charging_circle_radius_start = 2131167688;
-        public static final int wireless_charging_dots_radius_end = 2131167689;
-        public static final int wireless_charging_dots_radius_start = 2131167690;
-        public static final int word_photo_border_size = 2131167691;
-        public static final int word_photo_size = 2131167692;
-        public static final int z_distance_between_notifications = 2131167693;
-        public static final int zen_mode_bg_radius = 2131167694;
-        public static final int zen_mode_condition_detail_bottom_padding = 2131167695;
-        public static final int zen_mode_condition_detail_button_padding = 2131167696;
-        public static final int zen_mode_condition_detail_item_interline_spacing = 2131167697;
-        public static final int zen_mode_condition_detail_item_spacing = 2131167698;
-        public static final int zen_mode_content_size = 2131167699;
-        public static final int zen_mode_content_top_margin = 2131167700;
-        public static final int zen_mode_icon_size = 2131167701;
-        public static final int zen_mode_icon_start_margin = 2131167702;
-        public static final int zen_mode_icon_top_margin = 2131167703;
-        public static final int zen_mode_quit_size = 2131167704;
-        public static final int zen_mode_quit_start_margin = 2131167705;
-        public static final int zen_mode_title_end_margin = 2131167706;
-        public static final int zen_mode_title_size = 2131167707;
-        public static final int zen_mode_title_start_margin = 2131167708;
+        public static final int miuix_appcompat_menu_popup_max_height = 2131166588;
+        public static final int miuix_appcompat_message_view_bg_height = 2131166589;
+        public static final int miuix_appcompat_message_view_bg_radius = 2131166590;
+        public static final int miuix_appcompat_message_view_icon_height = 2131166591;
+        public static final int miuix_appcompat_message_view_icon_width = 2131166592;
+        public static final int miuix_appcompat_message_view_margin_end = 2131166593;
+        public static final int miuix_appcompat_message_view_margin_start = 2131166594;
+        public static final int miuix_appcompat_message_view_padding_end = 2131166595;
+        public static final int miuix_appcompat_message_view_padding_start = 2131166596;
+        public static final int miuix_appcompat_message_view_padding_vertical = 2131166597;
+        public static final int miuix_appcompat_message_view_text_margin_right = 2131166598;
+        public static final int miuix_appcompat_message_view_text_size = 2131166599;
+        public static final int miuix_appcompat_normal_text_size = 2131166600;
+        public static final int miuix_appcompat_number_picker_highlight_region_height = 2131166601;
+        public static final int miuix_appcompat_number_picker_label_margin_left = 2131166602;
+        public static final int miuix_appcompat_number_picker_label_margin_top = 2131166603;
+        public static final int miuix_appcompat_number_picker_label_padding = 2131166604;
+        public static final int miuix_appcompat_number_picker_label_text_size = 2131166605;
+        public static final int miuix_appcompat_number_picker_text_size_highlight_large = 2131166606;
+        public static final int miuix_appcompat_number_picker_text_size_highlight_medium = 2131166607;
+        public static final int miuix_appcompat_number_picker_text_size_highlight_normal = 2131166608;
+        public static final int miuix_appcompat_number_picker_text_size_hint_large = 2131166609;
+        public static final int miuix_appcompat_number_picker_text_size_hint_medium = 2131166610;
+        public static final int miuix_appcompat_number_picker_text_size_hint_normal = 2131166611;
+        public static final int miuix_appcompat_overflow_popup_menu_item_min_width = 2131166612;
+        public static final int miuix_appcompat_overflow_popup_menu_item_padding_horizontal = 2131166613;
+        public static final int miuix_appcompat_picker_horizontal_padding = 2131166614;
+        public static final int miuix_appcompat_picker_vertical_padding_bottom = 2131166615;
+        public static final int miuix_appcompat_picker_vertical_padding_top = 2131166616;
+        public static final int miuix_appcompat_popup_menu_item_min_width = 2131166617;
+        public static final int miuix_appcompat_popup_menu_item_padding_horizontal = 2131166618;
+        public static final int miuix_appcompat_progress_bar_height = 2131166619;
+        public static final int miuix_appcompat_progress_bar_line_radius = 2131166620;
+        public static final int miuix_appcompat_progress_bar_line_width = 2131166621;
+        public static final int miuix_appcompat_progress_indeterminate_size = 2131166622;
+        public static final int miuix_appcompat_progressbar_size = 2131166623;
+        public static final int miuix_appcompat_progressbar_size_small = 2131166624;
+        public static final int miuix_appcompat_radio_button_drawable_padding = 2131166625;
+        public static final int miuix_appcompat_radio_button_height = 2131166626;
+        public static final int miuix_appcompat_radio_button_width = 2131166627;
+        public static final int miuix_appcompat_ratingbar_icon_size_large = 2131166628;
+        public static final int miuix_appcompat_ratingbar_icon_size_small = 2131166629;
+        public static final int miuix_appcompat_ratingbar_size = 2131166630;
+        public static final int miuix_appcompat_ratingbar_size_indicator = 2131166631;
+        public static final int miuix_appcompat_ratingbar_size_large = 2131166632;
+        public static final int miuix_appcompat_ratingbar_size_small = 2131166633;
+        public static final int miuix_appcompat_round_corner_radius = 2131166634;
+        public static final int miuix_appcompat_search_action_mode_cancel_text_padding_end = 2131166635;
+        public static final int miuix_appcompat_search_action_mode_cancel_text_padding_start = 2131166636;
+        public static final int miuix_appcompat_search_action_mode_cancel_text_size = 2131166637;
+        public static final int miuix_appcompat_search_action_mode_cancel_width = 2131166638;
+        public static final int miuix_appcompat_search_edit_text_size = 2131166639;
+        public static final int miuix_appcompat_search_mode_bg_padding = 2131166640;
+        public static final int miuix_appcompat_search_mode_bg_padding_bottom = 2131166641;
+        public static final int miuix_appcompat_search_mode_bg_padding_top = 2131166642;
+        public static final int miuix_appcompat_search_mode_bg_radius = 2131166643;
+        public static final int miuix_appcompat_search_mode_bg_size = 2131166644;
+        public static final int miuix_appcompat_searchbar_bg_height = 2131166645;
+        public static final int miuix_appcompat_secondary_text_size = 2131166646;
+        public static final int miuix_appcompat_seekbar_height = 2131166647;
+        public static final int miuix_appcompat_seekbar_icon_size = 2131166648;
+        public static final int miuix_appcompat_seekbar_progress_bg_radius = 2131166649;
+        public static final int miuix_appcompat_select_dialog_item_padding_horizontal = 2131166650;
+        public static final int miuix_appcompat_sliding_button_frame_corner_radius = 2131166651;
+        public static final int miuix_appcompat_sliding_button_frame_vertical_padding = 2131166652;
+        public static final int miuix_appcompat_sliding_button_height = 2131166653;
+        public static final int miuix_appcompat_sliding_button_mask_vertical_padding = 2131166654;
+        public static final int miuix_appcompat_sliding_button_slider_horizontal_padding = 2131166655;
+        public static final int miuix_appcompat_sliding_button_slider_size = 2131166656;
+        public static final int miuix_appcompat_sliding_button_slider_vertical_padding = 2131166657;
+        public static final int miuix_appcompat_sliding_button_width = 2131166658;
+        public static final int miuix_appcompat_small_text_size = 2131166659;
+        public static final int miuix_appcompat_spinner_bg_padding = 2131166660;
+        public static final int miuix_appcompat_spinner_double_line_summary_size = 2131166661;
+        public static final int miuix_appcompat_spinner_double_line_title_size = 2131166662;
+        public static final int miuix_appcompat_spinner_dropdown_item_icon_margin = 2131166663;
+        public static final int miuix_appcompat_spinner_dropdown_item_padding_end = 2131166664;
+        public static final int miuix_appcompat_spinner_dropdown_item_padding_start = 2131166665;
+        public static final int miuix_appcompat_spinner_dropdown_item_text_margin = 2131166666;
+        public static final int miuix_appcompat_spinner_dropdown_maximum_width = 2131166667;
+        public static final int miuix_appcompat_spinner_dropdown_minimum_width = 2131166668;
+        public static final int miuix_appcompat_spinner_dropdown_selector_padding = 2131166669;
+        public static final int miuix_appcompat_spinner_dropdown_selector_padding_bottom = 2131166670;
+        public static final int miuix_appcompat_spinner_dropdown_selector_padding_top = 2131166671;
+        public static final int miuix_appcompat_spinner_icon_padding = 2131166672;
+        public static final int miuix_appcompat_spinner_icon_padding_integrated = 2131166673;
+        public static final int miuix_appcompat_spinner_popup_item_bg_padding_vertical = 2131166674;
+        public static final int miuix_appcompat_spinner_right_widget_height = 2131166675;
+        public static final int miuix_appcompat_spinner_right_widget_width = 2131166676;
+        public static final int miuix_appcompat_spinner_text_max_width_integrated = 2131166677;
+        public static final int miuix_appcompat_spinner_text_size = 2131166678;
+        public static final int miuix_appcompat_spinner_text_size_integrated = 2131166679;
+        public static final int miuix_appcompat_split_action_bar_default_height = 2131166680;
+        public static final int miuix_appcompat_state_edit_widget_padding = 2131166681;
+        public static final int miuix_appcompat_subtitle_text_size = 2131166682;
+        public static final int miuix_appcompat_title_text_size = 2131166683;
+        public static final int miuix_appcompat_triangle_arrow_size = 2131166684;
+        public static final int miuix_appcompat_window_dialog_radius = 2131166685;
+        public static final int miuix_popup_dropdown_item_min_width = 2131166686;
+        public static final int miuix_preference_btn_radio_height = 2131166687;
+        public static final int miuix_preference_btn_radio_width = 2131166688;
+        public static final int miuix_preference_category_divider_gap_height = 2131166689;
+        public static final int miuix_preference_category_gap_height = 2131166690;
+        public static final int miuix_preference_category_height = 2131166691;
+        public static final int miuix_preference_category_no_title_height = 2131166692;
+        public static final int miuix_preference_category_text_size = 2131166693;
+        public static final int miuix_preference_category_title_height = 2131166694;
+        public static final int miuix_preference_checkable_item_bg_padding_end = 2131166695;
+        public static final int miuix_preference_checkable_item_mask_padding_bottom = 2131166696;
+        public static final int miuix_preference_checkable_item_mask_padding_end = 2131166697;
+        public static final int miuix_preference_checkable_item_mask_padding_start = 2131166698;
+        public static final int miuix_preference_checkable_item_mask_padding_top = 2131166699;
+        public static final int miuix_preference_checkable_item_mask_radius = 2131166700;
+        public static final int miuix_preference_connect_detail_height = 2131166701;
+        public static final int miuix_preference_connect_detail_padding_horizontal = 2131166702;
+        public static final int miuix_preference_connect_detail_width = 2131166703;
+        public static final int miuix_preference_connect_translation_height = 2131166704;
+        public static final int miuix_preference_connect_translation_width = 2131166705;
+        public static final int miuix_preference_dialog_edittext_margin = 2131166706;
+        public static final int miuix_preference_dialog_edittext_margin_horizontal = 2131166707;
+        public static final int miuix_preference_dialog_edittext_padding_top = 2131166708;
+        public static final int miuix_preference_high_light_radius = 2131166709;
+        public static final int miuix_preference_horizontal_extra_padding = 2131166710;
+        public static final int miuix_preference_icon_arrow_right_height = 2131166711;
+        public static final int miuix_preference_icon_arrow_right_width = 2131166712;
+        public static final int miuix_preference_icon_max_height = 2131166713;
+        public static final int miuix_preference_icon_min_width = 2131166714;
+        public static final int miuix_preference_icon_padding_end = 2131166715;
+        public static final int miuix_preference_item_icon_margin_end = 2131166716;
+        public static final int miuix_preference_item_min_height = 2131166717;
+        public static final int miuix_preference_item_padding_bottom = 2131166718;
+        public static final int miuix_preference_item_padding_end = 2131166719;
+        public static final int miuix_preference_item_padding_inner = 2131166720;
+        public static final int miuix_preference_item_padding_side_zero = 2131166721;
+        public static final int miuix_preference_item_padding_start = 2131166722;
+        public static final int miuix_preference_item_padding_top = 2131166723;
+        public static final int miuix_preference_item_radio_padding_bottom = 2131166724;
+        public static final int miuix_preference_item_radio_padding_end = 2131166725;
+        public static final int miuix_preference_item_radio_padding_start = 2131166726;
+        public static final int miuix_preference_item_radio_padding_top = 2131166727;
+        public static final int miuix_preference_item_radio_two_state_bg_padding_end = 2131166728;
+        public static final int miuix_preference_item_radio_two_state_bg_padding_start = 2131166729;
+        public static final int miuix_preference_item_seekbar_icon_height = 2131166730;
+        public static final int miuix_preference_item_seekbar_icon_margin_end = 2131166731;
+        public static final int miuix_preference_item_seekbar_icon_width = 2131166732;
+        public static final int miuix_preference_item_seekbar_padding_bottom = 2131166733;
+        public static final int miuix_preference_item_seekbar_padding_top = 2131166734;
+        public static final int miuix_preference_item_seekbar_parent_padding_bottom = 2131166735;
+        public static final int miuix_preference_item_seekbar_parent_padding_top = 2131166736;
+        public static final int miuix_preference_normal_text_size = 2131166737;
+        public static final int miuix_preference_right_text_size = 2131166738;
+        public static final int miuix_preference_rv_bottom_padding = 2131166739;
+        public static final int miuix_preference_rv_top_padding = 2131166740;
+        public static final int miuix_preference_secondary_text_size = 2131166741;
+        public static final int miuix_preference_summary_margin_top = 2131166742;
+        public static final int miuix_preference_text_max_width = 2131166743;
+        public static final int miuix_preference_text_padding_bottom = 2131166744;
+        public static final int miuix_preference_text_padding_top = 2131166745;
+        public static final int miuix_preference_widget_width = 2131166746;
+        public static final int miuix_sbl_action_indeterminate_distance = 2131166747;
+        public static final int miuix_sbl_action_simple_enter = 2131166748;
+        public static final int miuix_sbl_action_simple_trigger = 2131166749;
+        public static final int miuix_sbl_action_upindeterminate_distance = 2131166750;
+        public static final int miuix_sbl_indicator_locked_body_height = 2131166751;
+        public static final int miuix_sbl_indicator_locked_body_margintop = 2131166752;
+        public static final int miuix_sbl_indicator_locked_body_width = 2131166753;
+        public static final int miuix_sbl_indicator_locked_header_height = 2131166754;
+        public static final int miuix_sbl_indicator_locked_header_width = 2131166755;
+        public static final int miuix_sbl_indicator_locked_labe_margintop = 2131166756;
+        public static final int miuix_sbl_indicator_locked_labe_textsize = 2131166757;
+        public static final int miuix_sbl_indicator_locked_layout_padding_bottom = 2131166758;
+        public static final int miuix_sbl_tracking_progress_bg_height = 2131166759;
+        public static final int miuix_sbl_tracking_progress_bg_marginbottom = 2131166760;
+        public static final int miuix_sbl_tracking_progress_bg_marginleft = 2131166761;
+        public static final int miuix_sbl_tracking_progress_bg_marginright = 2131166762;
+        public static final int miuix_sbl_tracking_progress_bg_margintop = 2131166763;
+        public static final int miuix_sbl_tracking_progress_bg_radius_width = 2131166764;
+        public static final int miuix_sbl_tracking_progress_bg_stroke_width = 2131166765;
+        public static final int miuix_sbl_tracking_progress_bg_width = 2131166766;
+        public static final int miuix_sbl_tracking_progress_labe_marginbottom = 2131166767;
+        public static final int miuix_sbl_tracking_progress_labe_margintop = 2131166768;
+        public static final int miuix_sbl_tracking_progress_labe_textsize = 2131166769;
+        public static final int miuix_sbl_tracking_uo_progress_labe_margintleft = 2131166770;
+        public static final int miuix_sbl_tracking_up_progress_bg_marginbottom = 2131166771;
+        public static final int miuix_sbl_tracking_up_progress_bg_margintop = 2131166772;
+        public static final int mixed_password_emergency_call_text_size = 2131166773;
+        public static final int mobile_data_icon_start_padding = 2131166775;
+        public static final int mobile_signal_group_end_padding = 2131166776;
+        public static final int modal_dialog_button_height = 2131166777;
+        public static final int modal_dialog_button_margin_bottom = 2131166778;
+        public static final int modal_dialog_button_margin_center = 2131166779;
+        public static final int modal_dialog_button_margin_left_right = 2131166780;
+        public static final int modal_dialog_button_margin_top_list = 2131166781;
+        public static final int modal_dialog_button_margin_top_msg = 2131166782;
+        public static final int modal_dialog_d_margin_top = 2131166783;
+        public static final int modal_dialog_icon_margin_left = 2131166784;
+        public static final int modal_dialog_icon_margin_top = 2131166785;
+        public static final int modal_dialog_icon_size = 2131166786;
+        public static final int modal_dialog_list_margin_top = 2131166787;
+        public static final int modal_dialog_margin_left_right = 2131166788;
+        public static final int modal_dialog_message_margin_right = 2131166789;
+        public static final int modal_dialog_message_margin_top = 2131166790;
+        public static final int moon_size = 2131166791;
+        public static final int mr_cast_group_volume_seekbar_height = 2131166792;
+        public static final int mr_cast_meta_art_size = 2131166793;
+        public static final int mr_cast_meta_subtitle_text_size = 2131166794;
+        public static final int mr_cast_route_volume_seekbar_height = 2131166795;
+        public static final int mr_cast_seekbar_thumb_size = 2131166796;
+        public static final int mr_controller_volume_group_list_item_height = 2131166797;
+        public static final int mr_controller_volume_group_list_item_icon_size = 2131166798;
+        public static final int mr_controller_volume_group_list_max_height = 2131166799;
+        public static final int mr_controller_volume_group_list_padding_top = 2131166800;
+        public static final int mr_dialog_fixed_width_major = 2131166801;
+        public static final int mr_dialog_fixed_width_minor = 2131166802;
+        public static final int mr_dynamic_dialog_header_text_size = 2131166803;
+        public static final int mr_dynamic_dialog_route_text_size = 2131166804;
+        public static final int mr_dynamic_dialog_row_height = 2131166805;
+        public static final int mr_dynamic_volume_group_list_item_height = 2131166806;
+        public static final int mtrl_alert_dialog_background_inset_bottom = 2131166807;
+        public static final int mtrl_alert_dialog_background_inset_end = 2131166808;
+        public static final int mtrl_alert_dialog_background_inset_start = 2131166809;
+        public static final int mtrl_alert_dialog_background_inset_top = 2131166810;
+        public static final int mtrl_alert_dialog_picker_background_inset = 2131166811;
+        public static final int mtrl_bottomappbar_fabOffsetEndMode = 2131166812;
+        public static final int mtrl_bottomappbar_fab_bottom_margin = 2131166813;
+        public static final int mtrl_bottomappbar_fab_cradle_margin = 2131166814;
+        public static final int mtrl_bottomappbar_fab_cradle_rounded_corner_radius = 2131166815;
+        public static final int mtrl_bottomappbar_fab_cradle_vertical_offset = 2131166816;
+        public static final int mtrl_bottomappbar_height = 2131166817;
+        public static final int mtrl_btn_corner_radius = 2131166818;
+        public static final int mtrl_btn_dialog_btn_min_width = 2131166819;
+        public static final int mtrl_btn_disabled_elevation = 2131166820;
+        public static final int mtrl_btn_disabled_z = 2131166821;
+        public static final int mtrl_btn_elevation = 2131166822;
+        public static final int mtrl_btn_focused_z = 2131166823;
+        public static final int mtrl_btn_hovered_z = 2131166824;
+        public static final int mtrl_btn_icon_btn_padding_left = 2131166825;
+        public static final int mtrl_btn_icon_padding = 2131166826;
+        public static final int mtrl_btn_inset = 2131166827;
+        public static final int mtrl_btn_letter_spacing = 2131166828;
+        public static final int mtrl_btn_padding_bottom = 2131166829;
+        public static final int mtrl_btn_padding_left = 2131166830;
+        public static final int mtrl_btn_padding_right = 2131166831;
+        public static final int mtrl_btn_padding_top = 2131166832;
+        public static final int mtrl_btn_pressed_z = 2131166833;
+        public static final int mtrl_btn_stroke_size = 2131166834;
+        public static final int mtrl_btn_text_btn_icon_padding = 2131166835;
+        public static final int mtrl_btn_text_btn_padding_left = 2131166836;
+        public static final int mtrl_btn_text_btn_padding_right = 2131166837;
+        public static final int mtrl_btn_text_size = 2131166838;
+        public static final int mtrl_btn_z = 2131166839;
+        public static final int mtrl_card_checked_icon_margin = 2131166840;
+        public static final int mtrl_card_checked_icon_size = 2131166841;
+        public static final int mtrl_card_corner_radius = 2131166842;
+        public static final int mtrl_card_dragged_z = 2131166843;
+        public static final int mtrl_card_elevation = 2131166844;
+        public static final int mtrl_card_spacing = 2131166845;
+        public static final int mtrl_chip_pressed_translation_z = 2131166846;
+        public static final int mtrl_chip_text_size = 2131166847;
+        public static final int mtrl_emphasis_disabled = 2131166848;
+        public static final int mtrl_emphasis_high_type = 2131166849;
+        public static final int mtrl_emphasis_medium = 2131166850;
+        public static final int mtrl_extended_fab_bottom_padding = 2131166851;
+        public static final int mtrl_extended_fab_corner_radius = 2131166852;
+        public static final int mtrl_extended_fab_disabled_elevation = 2131166853;
+        public static final int mtrl_extended_fab_disabled_translation_z = 2131166854;
+        public static final int mtrl_extended_fab_elevation = 2131166855;
+        public static final int mtrl_extended_fab_end_padding = 2131166856;
+        public static final int mtrl_extended_fab_end_padding_icon = 2131166857;
+        public static final int mtrl_extended_fab_icon_size = 2131166858;
+        public static final int mtrl_extended_fab_icon_text_spacing = 2131166859;
+        public static final int mtrl_extended_fab_min_height = 2131166860;
+        public static final int mtrl_extended_fab_min_width = 2131166861;
+        public static final int mtrl_extended_fab_start_padding = 2131166862;
+        public static final int mtrl_extended_fab_start_padding_icon = 2131166863;
+        public static final int mtrl_extended_fab_top_padding = 2131166864;
+        public static final int mtrl_extended_fab_translation_z_base = 2131166865;
+        public static final int mtrl_extended_fab_translation_z_hovered_focused = 2131166866;
+        public static final int mtrl_extended_fab_translation_z_pressed = 2131166867;
+        public static final int mtrl_fab_elevation = 2131166868;
+        public static final int mtrl_fab_min_touch_target = 2131166869;
+        public static final int mtrl_fab_translation_z_hovered_focused = 2131166870;
+        public static final int mtrl_fab_translation_z_pressed = 2131166871;
+        public static final int mtrl_large_touch_target = 2131166872;
+        public static final int mtrl_min_touch_target_size = 2131166873;
+        public static final int mtrl_navigation_elevation = 2131166874;
+        public static final int mtrl_navigation_item_horizontal_padding = 2131166875;
+        public static final int mtrl_navigation_item_icon_padding = 2131166876;
+        public static final int mtrl_shape_corner_size_large_component = 2131166877;
+        public static final int mtrl_shape_corner_size_medium_component = 2131166878;
+        public static final int mtrl_shape_corner_size_small_component = 2131166879;
+        public static final int mtrl_snackbar_action_text_color_alpha = 2131166880;
+        public static final int mtrl_snackbar_background_corner_radius = 2131166881;
+        public static final int mtrl_snackbar_background_overlay_color_alpha = 2131166882;
+        public static final int mtrl_snackbar_margin = 2131166883;
+        public static final int mtrl_switch_thumb_elevation = 2131166884;
+        public static final int mtrl_textinput_box_corner_radius_medium = 2131166885;
+        public static final int mtrl_textinput_box_corner_radius_small = 2131166886;
+        public static final int mtrl_textinput_box_label_cutout_padding = 2131166887;
+        public static final int mtrl_textinput_box_padding_end = 2131166888;
+        public static final int mtrl_textinput_box_stroke_width_default = 2131166889;
+        public static final int mtrl_textinput_box_stroke_width_focused = 2131166890;
+        public static final int mtrl_textinput_end_icon_padding_end = 2131166891;
+        public static final int mtrl_textinput_end_icon_padding_start = 2131166892;
+        public static final int mtrl_textinput_outline_box_expanded_padding = 2131166893;
+        public static final int mtrl_textinput_start_icon_padding_end = 2131166894;
+        public static final int mtrl_textinput_start_icon_padding_start = 2131166895;
+        public static final int mtrl_toolbar_default_height = 2131166896;
+        public static final int multi_user_avatar_collapsed_size = 2131166897;
+        public static final int multi_user_avatar_expanded_size = 2131166898;
+        public static final int multi_user_avatar_keyguard_size = 2131166899;
+        public static final int multi_user_switch_collapsed_margin = 2131166900;
+        public static final int multi_user_switch_expanded_margin = 2131166901;
+        public static final int multi_user_switch_keyguard_margin = 2131166902;
+        public static final int multi_user_switch_width_collapsed = 2131166903;
+        public static final int multi_user_switch_width_expanded = 2131166904;
+        public static final int multi_user_switch_width_keyguard = 2131166905;
+        public static final int nav_content_padding = 2131166906;
+        public static final int nav_key_button_shadow_offset_x = 2131166907;
+        public static final int nav_key_button_shadow_offset_y = 2131166908;
+        public static final int nav_key_button_shadow_radius = 2131166909;
+        public static final int nav_quick_scrub_track_edge_padding = 2131166910;
+        public static final int nav_quick_scrub_track_thickness = 2131166911;
+        public static final int navbar_back_button_ime_offset = 2131166912;
+        public static final int navbar_search_outerring_diameter = 2131166913;
+        public static final int navbar_search_outerring_radius = 2131166914;
+        public static final int navbar_search_panel_height = 2131166915;
+        public static final int navbar_search_snap_margin = 2131166916;
+        public static final int navigation_bar_deadzone_size = 2131166917;
+        public static final int navigation_bar_deadzone_size_max = 2131166918;
+        public static final int navigation_bar_default_edge_height = 2131166919;
+        public static final int navigation_bar_frame_height = 2131166920;
+        public static final int navigation_bar_guide_height = 2131166921;
+        public static final int navigation_bar_height = 2131166922;
+        public static final int navigation_bar_height_car_mode = 2131166923;
+        public static final int navigation_bar_min_swipe_distance = 2131166924;
+        public static final int navigation_bar_size = 2131166925;
+        public static final int navigation_edge_action_drag_threshold = 2131166926;
+        public static final int navigation_edge_arrow_min_y = 2131166927;
+        public static final int navigation_edge_finger_offset = 2131166928;
+        public static final int navigation_edge_panel_height = 2131166929;
+        public static final int navigation_edge_panel_padding = 2131166930;
+        public static final int navigation_edge_panel_width = 2131166931;
+        public static final int navigation_extra_key_width = 2131166932;
+        public static final int navigation_gesture_line_height = 2131166933;
+        public static final int navigation_gesture_line_radius = 2131166934;
+        public static final int navigation_gesture_line_width = 2131166935;
+        public static final int navigation_handle_bottom = 2131166936;
+        public static final int navigation_handle_horizontal_margin = 2131166937;
+        public static final int navigation_handle_radius = 2131166938;
+        public static final int navigation_handle_sample_horizontal_margin = 2131166939;
+        public static final int navigation_home_handle_width = 2131166940;
+        public static final int navigation_icon_size = 2131166941;
+        public static final int navigation_key_padding = 2131166942;
+        public static final int navigation_key_width = 2131166943;
+        public static final int navigation_luminance_change_threshold = 2131166944;
+        public static final int navigation_luminance_threshold = 2131166945;
+        public static final int navigation_side_padding = 2131166946;
+        public static final int nc_switch_guide_video_corner_radius = 2131166947;
+        public static final int nc_switch_guide_video_height = 2131166948;
+        public static final int nc_switch_guide_video_width = 2131166949;
+        public static final int new_qs_vertical_margin = 2131166950;
+        public static final int no_signal_cluster_battery_padding = 2131166951;
+        public static final int notch_expanded_header_carrier_margin = 2131166952;
+        public static final int notch_expanded_header_height = 2131166953;
+        public static final int notch_expanded_header_height_with_carrier = 2131166954;
+        public static final int notch_height = 2131166955;
+        public static final int notch_settings_button_margin = 2131166956;
+        public static final int notch_width = 2131166957;
+        public static final int notification_action_height = 2131166958;
+        public static final int notification_action_icon_size = 2131166959;
+        public static final int notification_action_list_height = 2131166960;
+        public static final int notification_action_text_size = 2131166961;
+        public static final int notification_app_icon_margin = 2131166962;
+        public static final int notification_app_icon_size = 2131166963;
+        public static final int notification_bg_radius = 2131166964;
+        public static final int notification_big_circle_margin = 2131166965;
+        public static final int notification_big_picture_max_height = 2131166966;
+        public static final int notification_children_container_divider_height = 2131166967;
+        public static final int notification_children_container_margin_top = 2131166968;
+        public static final int notification_children_container_margin_top_miui = 2131166969;
+        public static final int notification_children_container_top_padding = 2131166970;
+        public static final int notification_children_container_top_padding_miui = 2131166971;
+        public static final int notification_children_padding = 2131166972;
+        public static final int notification_clear_all_bottom_margin = 2131166973;
+        public static final int notification_clear_all_end_margin = 2131166974;
+        public static final int notification_clear_all_size = 2131166975;
+        public static final int notification_collapsed_button_padding = 2131166976;
+        public static final int notification_content_margin_start = 2131166977;
+        public static final int notification_custom_view_corner_radius = 2131166978;
+        public static final int notification_custom_view_margin = 2131166979;
+        public static final int notification_divider_alpha = 2131166980;
+        public static final int notification_divider_height = 2131166981;
+        public static final int notification_divider_height_increased = 2131166982;
+        public static final int notification_expand_button_size = 2131166983;
+        public static final int notification_group_overflow_bg_radius = 2131166984;
+        public static final int notification_group_overflow_padding_bottom = 2131166985;
+        public static final int notification_group_overflow_padding_horizontal = 2131166986;
+        public static final int notification_group_overflow_padding_top = 2131166987;
+        public static final int notification_guts_button_horizontal_padding = 2131166988;
+        public static final int notification_guts_button_horizontal_spacing = 2131166989;
+        public static final int notification_guts_button_side_margin = 2131166990;
+        public static final int notification_guts_button_spacing = 2131166991;
+        public static final int notification_guts_button_vertical_padding = 2131166992;
+        public static final int notification_guts_conversation_action_height = 2131166993;
+        public static final int notification_guts_conversation_action_text_padding_start = 2131166994;
+        public static final int notification_guts_conversation_header_height = 2131166995;
+        public static final int notification_guts_conversation_icon_size = 2131166996;
+        public static final int notification_guts_header_height = 2131166997;
+        public static final int notification_guts_header_text_size = 2131166998;
+        public static final int notification_guts_option_horizontal_padding = 2131166999;
+        public static final int notification_guts_option_vertical_margin = 2131167000;
+        public static final int notification_guts_option_vertical_padding = 2131167001;
+        public static final int notification_header_height = 2131167002;
+        public static final int notification_heads_up_bg_radius = 2131167003;
+        public static final int notification_heads_up_bg_stroke_width = 2131167004;
+        public static final int notification_heads_up_z_translation = 2131167005;
+        public static final int notification_hybrid_icon_margin_start = 2131167006;
+        public static final int notification_icon_appear_padding = 2131167007;
+        public static final int notification_importance_button_description_top_margin = 2131167008;
+        public static final int notification_importance_button_horiz_padding = 2131167009;
+        public static final int notification_importance_button_padding = 2131167010;
+        public static final int notification_importance_button_separation = 2131167011;
+        public static final int notification_importance_button_text = 2131167012;
+        public static final int notification_importance_button_width = 2131167013;
+        public static final int notification_importance_channel_group_text = 2131167014;
+        public static final int notification_importance_channel_text = 2131167015;
+        public static final int notification_importance_description_padding = 2131167016;
+        public static final int notification_importance_description_text = 2131167017;
+        public static final int notification_importance_drawable_padding = 2131167018;
+        public static final int notification_importance_header_text = 2131167019;
+        public static final int notification_importance_text_marginTop = 2131167020;
+        public static final int notification_importance_toggle_marginBottom = 2131167021;
+        public static final int notification_importance_toggle_marginTop = 2131167022;
+        public static final int notification_importance_toggle_size = 2131167023;
+        public static final int notification_item_bg_radius = 2131167024;
+        public static final int notification_large_icon_height = 2131167025;
+        public static final int notification_large_icon_width = 2131167026;
+        public static final int notification_left_right_margin = 2131167027;
+        public static final int notification_main_column_padding_top = 2131167028;
+        public static final int notification_main_column_right_margin = 2131167029;
+        public static final int notification_max_heads_up_height = 2131167030;
+        public static final int notification_max_heads_up_height_before_p = 2131167031;
+        public static final int notification_max_heads_up_height_increased = 2131167032;
+        public static final int notification_max_heads_up_height_legacy = 2131167033;
+        public static final int notification_max_height = 2131167034;
+        public static final int notification_media_narrow_margin = 2131167035;
+        public static final int notification_menu_icon_padding = 2131167036;
+        public static final int notification_menu_icon_size = 2131167037;
+        public static final int notification_messaging_actions_min_height = 2131167038;
+        public static final int notification_min_height = 2131167039;
+        public static final int notification_min_height_before_p = 2131167040;
+        public static final int notification_min_height_increased = 2131167041;
+        public static final int notification_min_height_legacy = 2131167042;
+        public static final int notification_min_height_media = 2131167043;
+        public static final int notification_min_interaction_height = 2131167044;
+        public static final int notification_modal_menu_bottom_max = 2131167045;
+        public static final int notification_modal_menu_margin_top = 2131167046;
+        public static final int notification_one_line_height = 2131167047;
+        public static final int notification_panel_clock_bottom_margin = 2131167048;
+        public static final int notification_panel_date_clock_line_height = 2131167049;
+        public static final int notification_panel_date_clock_text_size = 2131167050;
+        public static final int notification_panel_empty_text_size = 2131167051;
+        public static final int notification_panel_header_height = 2131167052;
+        public static final int notification_panel_manage_icon_bottom_margin = 2131167053;
+        public static final int notification_panel_manage_icon_end_margin = 2131167054;
+        public static final int notification_panel_margin_bottom = 2131167055;
+        public static final int notification_panel_margin_top = 2131167056;
+        public static final int notification_panel_min_height_frac = 2131167058;
+        public static final int notification_panel_min_side_margin = 2131167059;
+        public static final int notification_panel_shortcut_size = 2131167060;
+        public static final int notification_panel_time_clock_text_size = 2131167061;
+        public static final int notification_panel_time_date_space = 2131167062;
+        public static final int notification_panel_time_left_margin = 2131167063;
+        public static final int notification_panel_width = 2131167064;
+        public static final int notification_progress_bar_height = 2131167065;
+        public static final int notification_progress_margin_bottom = 2131167066;
+        public static final int notification_progress_margin_top = 2131167067;
+        public static final int notification_right_icon_corner_radius = 2131167068;
+        public static final int notification_right_icon_margin_top = 2131167069;
+        public static final int notification_right_icon_size = 2131167070;
+        public static final int notification_right_side_padding_top = 2131167071;
+        public static final int notification_section_divider_height = 2131167072;
+        public static final int notification_section_group_divider_bottom_minus = 2131167073;
+        public static final int notification_section_group_divider_top_minus = 2131167074;
+        public static final int notification_section_header_height = 2131167075;
+        public static final int notification_section_header_icon_margin_bottom = 2131167076;
+        public static final int notification_section_header_icon_size = 2131167077;
+        public static final int notification_section_header_margin_bottom_miui = 2131167078;
+        public static final int notification_section_header_margin_start_miui = 2131167079;
+        public static final int notification_section_header_margin_top_miui = 2131167080;
+        public static final int notification_section_header_padding_left = 2131167081;
+        public static final int notification_section_header_text_size_miui = 2131167082;
+        public static final int notification_shadow_radius = 2131167083;
+        public static final int notification_shelf_height = 2131167084;
+        public static final int notification_side_paddings = 2131167085;
+        public static final int notification_small_icon_background_padding = 2131167086;
+        public static final int notification_small_icon_size_as_large = 2131167087;
+        public static final int notification_stack_scroller_bg_radius = 2131167088;
+        public static final int notification_sticky_group_header_height = 2131167089;
+        public static final int notification_subtext_size = 2131167090;
+        public static final int notification_text_text_size = 2131167091;
+        public static final int notification_title_text_size = 2131167092;
+        public static final int notification_top_pad = 2131167093;
+        public static final int notification_top_pad_large_text = 2131167094;
+        public static final int notification_transparent_app_icon_margin = 2131167095;
+        public static final int notification_transparent_app_icon_size = 2131167096;
+        public static final int notification_transparent_one_line_height = 2131167097;
+        public static final int notification_transparent_title_text_size = 2131167098;
+        public static final int ns_notification_header_statusbar_height = 2131167099;
+        public static final int numeric_cell_horizontal_margin = 2131167100;
+        public static final int numeric_cell_padding = 2131167101;
+        public static final int numeric_cell_vertical_margin = 2131167102;
+        public static final int numeric_encrypt_dot_size = 2131167103;
+        public static final int numeric_password_screen_dots_bottom_margin = 2131167104;
+        public static final int numeric_password_screen_dots_padding = 2131167105;
+        public static final int numeric_password_screen_dots_top_margin = 2131167106;
+        public static final int obstacle_gap = 2131167107;
+        public static final int obstacle_height_min = 2131167108;
+        public static final int obstacle_spacing = 2131167109;
+        public static final int obstacle_stem_width = 2131167110;
+        public static final int obstacle_width = 2131167111;
+        public static final int obstacle_z = 2131167112;
+        public static final int one_finger_pop_limit = 2131167113;
+        public static final int overflow_dot_radius = 2131167114;
+        public static final int overflow_icon_dot_padding = 2131167115;
+        public static final int owner_info_title_text_size = 2131167116;
+        public static final int panel_content_corner_radius = 2131167117;
+        public static final int panel_content_margin = 2131167118;
+        public static final int panel_content_margin_horizontal = 2131167119;
+        public static final int password_char_padding = 2131167121;
+        public static final int password_dot_size = 2131167122;
+        public static final int password_unlock_screen_bottom_margin = 2131167123;
+        public static final int password_unlock_screen_input_pad_horizontal_margin = 2131167124;
+        public static final int pattern_unlock_screen_bottom_margin = 2131167125;
+        public static final int pattern_unlock_screen_emergency_text_size = 2131167126;
+        public static final int peek_window_y_offset = 2131167128;
+        public static final int phone_status_bar_luminance_change_threshold = 2131167129;
+        public static final int phone_status_bar_luminance_threshold = 2131167130;
+        public static final int picker_column_horizontal_padding = 2131167131;
+        public static final int picker_item_height = 2131167132;
+        public static final int picker_item_spacing = 2131167133;
+        public static final int picker_separator_horizontal_padding = 2131167134;
+        public static final int picture_in_picture_button_start_margin = 2131167135;
+        public static final int picture_in_picture_button_width = 2131167136;
+        public static final int pinpicker_text_size = 2131167137;
+        public static final int pip_action_padding = 2131167138;
+        public static final int pip_action_size = 2131167139;
+        public static final int pip_between_action_padding_land = 2131167140;
+        public static final int pip_bottom_offset_buffer = 2131167141;
+        public static final int pip_corner_radius = 2131167142;
+        public static final int pip_dismiss_text_bottom_margin = 2131167143;
+        public static final int pip_expand_container_edge_margin = 2131167144;
+        public static final int pip_expanded_shortest_edge_size = 2131167145;
+        public static final int pip_ime_offset = 2131167146;
+        public static final int pip_resize_edge_size = 2131167147;
+        public static final int pip_resize_handle_margin = 2131167148;
+        public static final int pip_resize_handle_size = 2131167149;
+        public static final int player_hit_size = 2131167150;
+        public static final int player_size = 2131167151;
+        public static final int player_z = 2131167152;
+        public static final int player_z_boost = 2131167153;
+        public static final int preference_dropdown_padding_start = 2131167154;
+        public static final int preference_icon_minWidth = 2131167155;
+        public static final int preference_no_icon_padding_start = 2131167156;
+        public static final int preference_seekbar_padding_horizontal = 2131167157;
+        public static final int preference_seekbar_padding_vertical = 2131167158;
+        public static final int preference_seekbar_value_minWidth = 2131167159;
+        public static final int profile_badge_size = 2131167160;
+        public static final int proximity_sensor_threshold = 2131167161;
+        public static final int pull_span_min = 2131167162;
+        public static final int pulsing_notification_appear_translation = 2131167163;
+        public static final int qqs_media_spacing = 2131167164;
+        public static final int qs_battery_padding = 2131167165;
+        public static final int qs_bluetooth_detail_height = 2131167166;
+        public static final int qs_brightness_dialog_height = 2131167167;
+        public static final int qs_brightness_icon_margin = 2131167168;
+        public static final int qs_brightness_mirror_bg_stroke_width = 2131167169;
+        public static final int qs_brightness_mirror_elevation = 2131167170;
+        public static final int qs_brightness_top_margin = 2131167172;
+        public static final int qs_carrier_margin_width = 2131167173;
+        public static final int qs_center_guideline_padding = 2131167174;
+        public static final int qs_control_big_tile_corner_radius = 2131167175;
+        public static final int qs_control_big_tile_height = 2131167176;
+        public static final int qs_control_big_tile_icon_margin_left = 2131167177;
+        public static final int qs_control_big_tile_icon_size = 2131167178;
+        public static final int qs_control_big_tile_indicator_padding = 2131167179;
+        public static final int qs_control_big_tile_indicator_size = 2131167180;
+        public static final int qs_control_big_tile_indicator_touch_h = 2131167181;
+        public static final int qs_control_big_tile_indicator_touch_v = 2131167182;
+        public static final int qs_control_big_tile_label_margin_Left = 2131167183;
+        public static final int qs_control_big_tile_label_margin_Right = 2131167184;
+        public static final int qs_control_big_tile_label_margin_top = 2131167185;
+        public static final int qs_control_big_tile_status_margin_top = 2131167186;
+        public static final int qs_control_big_tile_status_width = 2131167187;
+        public static final int qs_control_big_tile_sub_title_size = 2131167188;
+        public static final int qs_control_big_tile_title_size = 2131167189;
+        public static final int qs_control_big_tile_title_width = 2131167190;
+        public static final int qs_control_big_tile_width = 2131167191;
+        public static final int qs_control_big_tiles_interval_vertical = 2131167192;
+        public static final int qs_control_big_tiles_margin_bottom = 2131167193;
+        public static final int qs_control_big_tiles_padding_top = 2131167194;
+        public static final int qs_control_bottom_expand_height = 2131167195;
+        public static final int qs_control_bottom_indicator_height = 2131167196;
+        public static final int qs_control_bottom_indicator_padding_vertical = 2131167197;
+        public static final int qs_control_brightness_corner_radius = 2131167198;
+        public static final int qs_control_brightness_dialog_height = 2131167199;
+        public static final int qs_control_brightness_icon_margin = 2131167200;
+        public static final int qs_control_brightness_icon_size = 2131167201;
+        public static final int qs_control_brightness_margin_top = 2131167202;
+        public static final int qs_control_brightness_width = 2131167203;
+        public static final int qs_control_button_margin_end = 2131167204;
+        public static final int qs_control_center_header_paddingTop = 2131167205;
+        public static final int qs_control_center_tile_height = 2131167206;
+        public static final int qs_control_center_tile_margin_start = 2131167207;
+        public static final int qs_control_center_tile_margin_top = 2131167208;
+        public static final int qs_control_center_tile_width = 2131167209;
+        public static final int qs_control_content_view_margin_right = 2131167210;
+        public static final int qs_control_corner_general_radius = 2131167211;
+        public static final int qs_control_custom_tile_icon_inner_size = 2131167212;
+        public static final int qs_control_customizer_marker_height = 2131167213;
+        public static final int qs_control_customizer_marker_width = 2131167214;
+        public static final int qs_control_customizer_others_bg_radius = 2131167215;
+        public static final int qs_control_customizer_others_padding_bottom = 2131167216;
+        public static final int qs_control_customizer_others_padding_top = 2131167217;
+        public static final int qs_control_customizer_others_title_height = 2131167218;
+        public static final int qs_control_customizer_others_title_margin_top = 2131167219;
+        public static final int qs_control_customizer_others_title_size = 2131167220;
+        public static final int qs_control_customizer_tile_height = 2131167221;
+        public static final int qs_control_customizer_tile_width = 2131167222;
+        public static final int qs_control_customizer_tiles_content_margin_top = 2131167223;
+        public static final int qs_control_customizer_tiles_margin_bottom = 2131167224;
+        public static final int qs_control_customizer_tiles_margin_top = 2131167225;
+        public static final int qs_control_customizer_tiles_save_height = 2131167226;
+        public static final int qs_control_customizer_tiles_save_text_size = 2131167227;
+        public static final int qs_control_customizer_tiles_save_width = 2131167228;
+        public static final int qs_control_customizer_tiles_sub_title_height = 2131167229;
+        public static final int qs_control_customizer_tiles_sub_title_size = 2131167230;
+        public static final int qs_control_customizer_tiles_title_height = 2131167231;
+        public static final int qs_control_customizer_tiles_title_size = 2131167232;
+        public static final int qs_control_detail_header_height = 2131167233;
+        public static final int qs_control_detail_header_padding = 2131167234;
+        public static final int qs_control_detail_header_text_size = 2131167235;
+        public static final int qs_control_detail_item_height = 2131167236;
+        public static final int qs_control_detail_more_button_margin = 2131167237;
+        public static final int qs_control_detail_more_button_text_size = 2131167238;
+        public static final int qs_control_detail_width = 2131167239;
+        public static final int qs_control_detail_wifi_bt_height = 2131167240;
+        public static final int qs_control_expand_detail_items_height = 2131167241;
+        public static final int qs_control_expand_indicator_margin_top = 2131167242;
+        public static final int qs_control_expand_tile_detail_margin_left = 2131167243;
+        public static final int qs_control_expand_tile_icon_margin_left = 2131167244;
+        public static final int qs_control_expand_tile_icon_size = 2131167245;
+        public static final int qs_control_expand_tile_label_margin_Left = 2131167246;
+        public static final int qs_control_expand_tile_label_margin_top = 2131167247;
+        public static final int qs_control_expand_tile_sub_title_size = 2131167248;
+        public static final int qs_control_expand_tile_title_size = 2131167249;
+        public static final int qs_control_expand_tile_unit_size = 2131167250;
+        public static final int qs_control_foot_panel_brightness_height = 2131167251;
+        public static final int qs_control_foot_panel_margin_top = 2131167252;
+        public static final int qs_control_foot_panel_to_top = 2131167253;
+        public static final int qs_control_footer_height = 2131167254;
+        public static final int qs_control_footer_icon_margin_end = 2131167255;
+        public static final int qs_control_footer_icon_size = 2131167256;
+        public static final int qs_control_footer_text_size = 2131167257;
+        public static final int qs_control_header_button_size = 2131167258;
+        public static final int qs_control_header_clock_size = 2131167259;
+        public static final int qs_control_header_date_size = 2131167260;
+        public static final int qs_control_header_statusbar_height = 2131167261;
+        public static final int qs_control_header_tiles_height = 2131167262;
+        public static final int qs_control_header_tiles_margin_top = 2131167263;
+        public static final int qs_control_header_tiles_title_size = 2131167264;
+        public static final int qs_control_land_tiles_margin_middle = 2131167265;
+        public static final int qs_control_panel_margin_horizontal = 2131167266;
+        public static final int qs_control_scrollview_overfling_distance = 2131167267;
+        public static final int qs_control_smart_tile_height = 2131167268;
+        public static final int qs_control_smart_tile_icon_margin_bottom = 2131167269;
+        public static final int qs_control_smart_tile_icon_margin_left = 2131167270;
+        public static final int qs_control_smart_tile_text_margin_left = 2131167271;
+        public static final int qs_control_smart_tile_text_margin_top = 2131167272;
+        public static final int qs_control_smart_tile_width = 2131167273;
+        public static final int qs_control_tile_icon_bg_size = 2131167274;
+        public static final int qs_control_tile_label_padding_top = 2131167275;
+        public static final int qs_control_tile_label_text_size = 2131167276;
+        public static final int qs_control_tiles_columns = 2131167277;
+        public static final int qs_control_tiles_container_margin_bottom = 2131167278;
+        public static final int qs_control_tiles_container_margin_top = 2131167279;
+        public static final int qs_control_tiles_indicator_height = 2131167280;
+        public static final int qs_control_tiles_indicator_width = 2131167281;
+        public static final int qs_control_tiles_min_rows = 2131167282;
+        public static final int qs_control_title_margin_end = 2131167283;
+        public static final int qs_control_width_land = 2131167284;
+        public static final int qs_customize_content_padding_horizontal = 2131167285;
+        public static final int qs_customize_content_padding_top = 2131167286;
+        public static final int qs_customize_divider_padding_horizontal = 2131167287;
+        public static final int qs_customize_header_min_height = 2131167288;
+        public static final int qs_customize_padding_bottom = 2131167289;
+        public static final int qs_customize_padding_top = 2131167290;
+        public static final int qs_customize_sub_title_margin_bottom = 2131167291;
+        public static final int qs_customize_sub_title_text_size = 2131167292;
+        public static final int qs_customize_tile_height = 2131167293;
+        public static final int qs_customize_title_margin_bottom = 2131167294;
+        public static final int qs_customize_title_text_size = 2131167295;
+        public static final int qs_data_usage_divider_margin_horizontal = 2131167296;
+        public static final int qs_data_usage_text_size = 2131167297;
+        public static final int qs_data_usage_usage_text_size = 2131167298;
+        public static final int qs_date_collapsed_size = 2131167299;
+        public static final int qs_date_time_translation = 2131167300;
+        public static final int qs_detail_back_margin_end = 2131167301;
+        public static final int qs_detail_bottom_buttons_text_size = 2131167302;
+        public static final int qs_detail_button_text_size = 2131167303;
+        public static final int qs_detail_buttons_container_height = 2131167304;
+        public static final int qs_detail_empty_text_size = 2131167305;
+        public static final int qs_detail_header_height = 2131167306;
+        public static final int qs_detail_header_image_height = 2131167307;
+        public static final int qs_detail_header_image_padding = 2131167308;
+        public static final int qs_detail_header_image_width = 2131167309;
+        public static final int qs_detail_header_padding = 2131167310;
+        public static final int qs_detail_header_paddingStart = 2131167311;
+        public static final int qs_detail_header_text_padding = 2131167312;
+        public static final int qs_detail_header_text_size = 2131167313;
+        public static final int qs_detail_icon_overlay_size = 2131167314;
+        public static final int qs_detail_image_height = 2131167315;
+        public static final int qs_detail_image_padding = 2131167316;
+        public static final int qs_detail_image_width = 2131167317;
+        public static final int qs_detail_item_height = 2131167318;
+        public static final int qs_detail_item_icon_marginEnd = 2131167319;
+        public static final int qs_detail_item_icon_marginStart = 2131167320;
+        public static final int qs_detail_item_icon_size = 2131167321;
+        public static final int qs_detail_item_icon_width = 2131167322;
+        public static final int qs_detail_item_padding_horizontal = 2131167323;
+        public static final int qs_detail_item_primary_text_size = 2131167324;
+        public static final int qs_detail_item_secondary_text_margin_top = 2131167325;
+        public static final int qs_detail_item_secondary_text_size = 2131167326;
+        public static final int qs_detail_item_text_margin_bottom = 2131167327;
+        public static final int qs_detail_item_text_margin_start = 2131167328;
+        public static final int qs_detail_item_text_margin_top = 2131167329;
+        public static final int qs_detail_items_min_height = 2131167330;
+        public static final int qs_detail_items_padding_top = 2131167331;
+        public static final int qs_detail_margin_bottom = 2131167332;
+        public static final int qs_detail_margin_top = 2131167333;
+        public static final int qs_detail_padding_start = 2131167334;
+        public static final int qs_divider_size = 2131167335;
+        public static final int qs_dual_tile_height = 2131167336;
+        public static final int qs_dual_tile_padding_horizontal = 2131167337;
+        public static final int qs_dual_tile_padding_vertical = 2131167338;
+        public static final int qs_emergency_calls_only_text_size = 2131167339;
+        public static final int qs_falsing_threshold = 2131167340;
+        public static final int qs_footer_action_button_size = 2131167341;
+        public static final int qs_footer_data_usage_icon_size = 2131167342;
+        public static final int qs_footer_dialog_icon_margin = 2131167343;
+        public static final int qs_footer_dialog_icon_size = 2131167344;
+        public static final int qs_footer_dialog_subtitle_padding = 2131167345;
+        public static final int qs_footer_height = 2131167346;
+        public static final int qs_footer_horizontal_margin = 2131167347;
+        public static final int qs_footer_icon_padding = 2131167348;
+        public static final int qs_footer_icon_size = 2131167349;
+        public static final int qs_footer_line_margin_start = 2131167350;
+        public static final int qs_footer_margin = 2131167351;
+        public static final int qs_footer_padding_end = 2131167352;
+        public static final int qs_footer_padding_start = 2131167353;
+        public static final int qs_framed_avatar_size = 2131167354;
+        public static final int qs_header_alarm_icon_size = 2131167355;
+        public static final int qs_header_alarm_text_margin_start = 2131167356;
+        public static final int qs_header_bottom_padding = 2131167357;
+        public static final int qs_header_carrier_separator_width = 2131167358;
+        public static final int qs_header_gear_translation = 2131167359;
+        public static final int qs_header_mobile_icon_size = 2131167360;
+        public static final int qs_header_separator_width = 2131167361;
+        public static final int qs_header_system_icons_area_height = 2131167362;
+        public static final int qs_header_tile_margin_bottom = 2131167363;
+        public static final int qs_header_tooltip_height = 2131167364;
+        public static final int qs_header_top_padding = 2131167365;
+        public static final int qs_media_album_size = 2131167366;
+        public static final int qs_media_disabled_seekbar_height = 2131167367;
+        public static final int qs_media_enabled_seekbar_height = 2131167368;
+        public static final int qs_media_icon_size = 2131167369;
+        public static final int qs_media_padding = 2131167370;
+        public static final int qs_media_panel_outer_padding = 2131167371;
+        public static final int qs_media_width = 2131167372;
+        public static final int qs_notif_collapsed_space = 2131167373;
+        public static final int qs_notification_padding = 2131167374;
+        public static final int qs_page_indicator_dot_size = 2131167375;
+        public static final int qs_page_indicator_dot_space = 2131167376;
+        public static final int qs_page_indicator_height = 2131167377;
+        public static final int qs_page_indicator_width = 2131167378;
+        public static final int qs_paged_tile_layout_padding_bottom = 2131167379;
+        public static final int qs_panel_expand_indicator_height = 2131167380;
+        public static final int qs_panel_expand_indicator_shadow_spread = 2131167381;
+        public static final int qs_panel_expand_indicator_stroke_width = 2131167382;
+        public static final int qs_panel_expand_indicator_width = 2131167383;
+        public static final int qs_panel_padding = 2131167384;
+        public static final int qs_panel_padding_bottom = 2131167385;
+        public static final int qs_panel_padding_top = 2131167386;
+        public static final int qs_panel_width = 2131167387;
+        public static final int qs_peek_height = 2131167388;
+        public static final int qs_quick_header_panel_height = 2131167389;
+        public static final int qs_quick_panel_content_padding_bottom = 2131167390;
+        public static final int qs_quick_panel_content_padding_horizontal = 2131167391;
+        public static final int qs_quick_panel_content_padding_top = 2131167392;
+        public static final int qs_quick_tile_icon_bg_size = 2131167393;
+        public static final int qs_quick_tile_padding = 2131167394;
+        public static final int qs_quick_tile_size = 2131167395;
+        public static final int qs_seamless_fallback_end_margin = 2131167396;
+        public static final int qs_seamless_fallback_icon_size = 2131167397;
+        public static final int qs_seamless_icon_size = 2131167398;
+        public static final int qs_status_bar_header_alpha = 2131167399;
+        public static final int qs_status_separator = 2131167400;
+        public static final int qs_tile_app_label_text_size = 2131167401;
+        public static final int qs_tile_background_size = 2131167402;
+        public static final int qs_tile_content_height = 2131167403;
+        public static final int qs_tile_content_margin_bottom = 2131167404;
+        public static final int qs_tile_content_margin_horizontal = 2131167405;
+        public static final int qs_tile_content_margin_top = 2131167406;
+        public static final int qs_tile_divider_height = 2131167407;
+        public static final int qs_tile_height = 2131167408;
+        public static final int qs_tile_icon_bg_size = 2131167409;
+        public static final int qs_tile_icon_size = 2131167410;
+        public static final int qs_tile_label_indicator_size = 2131167411;
+        public static final int qs_tile_label_margin_horizontal = 2131167412;
+        public static final int qs_tile_label_min_height = 2131167413;
+        public static final int qs_tile_label_padding_top = 2131167414;
+        public static final int qs_tile_label_text_size = 2131167415;
+        public static final int qs_tile_layout_margin_side = 2131167416;
+        public static final int qs_tile_margin_horizontal = 2131167417;
+        public static final int qs_tile_margin_horizontal_two_line = 2131167418;
+        public static final int qs_tile_margin_top = 2131167419;
+        public static final int qs_tile_margin_top_bottom = 2131167420;
+        public static final int qs_tile_margin_top_bottom_negative = 2131167421;
+        public static final int qs_tile_margin_vertical = 2131167422;
+        public static final int qs_tile_padding_below_icon = 2131167423;
+        public static final int qs_tile_padding_bottom = 2131167424;
+        public static final int qs_tile_padding_top = 2131167425;
+        public static final int qs_tile_padding_top_large_text = 2131167426;
+        public static final int qs_tile_spacing = 2131167427;
+        public static final int qs_tile_text_size = 2131167428;
+        public static final int qs_time_collapsed_size = 2131167429;
+        public static final int qs_time_expanded_size = 2131167430;
+        public static final int quick_setting_header_big_time_text_size = 2131167431;
+        public static final int quick_setting_header_shortcut_height = 2131167432;
+        public static final int quick_setting_header_shortcut_width = 2131167433;
+        public static final int quick_setting_header_system_icon_container_height = 2131167434;
+        public static final int quick_settings_bottom_margin_media = 2131167435;
+        public static final int quick_switch_demo_app_gap = 2131167436;
+        public static final int recents_onboarding_toast_arrow_corner_radius = 2131167437;
+        public static final int recents_quick_scrub_onboarding_margin_start = 2131167438;
+        public static final int recents_task_view_header_height = 2131167439;
+        public static final int rect_button_radius = 2131167440;
+        public static final int remote_input_history_extra_height = 2131167441;
+        public static final int restricted_icon_padding = 2131167442;
+        public static final int restricted_padlock_pading = 2131167443;
+        public static final int roaming_icon_start_padding = 2131167444;
+        public static final int rounded_corner_content_padding = 2131167445;
+        public static final int scenery_z = 2131167446;
+        public static final int screen_pinning_description_bullet_gap_width = 2131167447;
+        public static final int screen_pinning_nav_highlight_outer_size = 2131167448;
+        public static final int screen_pinning_nav_highlight_size = 2131167449;
+        public static final int screen_pinning_request_button_height = 2131167450;
+        public static final int screen_pinning_request_button_width = 2131167451;
+        public static final int screen_pinning_request_frame_padding = 2131167452;
+        public static final int screen_pinning_request_inner_padding = 2131167453;
+        public static final int screen_pinning_request_nav_icon_padding = 2131167454;
+        public static final int screen_pinning_request_nav_side_padding = 2131167455;
+        public static final int screen_pinning_request_seascape_button_offset = 2131167456;
+        public static final int screen_pinning_request_seascape_padding_negative = 2131167457;
+        public static final int screen_pinning_request_side_width = 2131167458;
+        public static final int screen_pinning_request_width = 2131167459;
+        public static final int screenrecord_dialog_padding = 2131167460;
+        public static final int screenrecord_logo_size = 2131167461;
+        public static final int screenrecord_status_icon_bg_radius = 2131167462;
+        public static final int screenrecord_status_icon_height = 2131167463;
+        public static final int screenrecord_status_icon_radius = 2131167464;
+        public static final int screenrecord_status_icon_width = 2131167465;
+        public static final int screenrecord_status_text_size = 2131167466;
+        public static final int screenshot_action_chip_icon_size = 2131167467;
+        public static final int screenshot_action_chip_margin_right = 2131167468;
+        public static final int screenshot_action_chip_margin_vertical = 2131167469;
+        public static final int screenshot_action_chip_padding_end = 2131167470;
+        public static final int screenshot_action_chip_padding_middle = 2131167471;
+        public static final int screenshot_action_chip_padding_start = 2131167472;
+        public static final int screenshot_action_chip_padding_vertical = 2131167473;
+        public static final int screenshot_action_chip_text_size = 2131167474;
+        public static final int screenshot_action_container_corner_radius = 2131167475;
+        public static final int screenshot_action_container_margin_horizontal = 2131167476;
+        public static final int screenshot_action_container_offset_y = 2131167477;
+        public static final int screenshot_action_container_padding_left = 2131167478;
+        public static final int screenshot_action_container_padding_right = 2131167479;
+        public static final int screenshot_action_container_padding_vertical = 2131167480;
+        public static final int screenshot_bg_protection_height = 2131167481;
+        public static final int screenshot_button_corner_radius = 2131167482;
+        public static final int screenshot_dismiss_button_margin = 2131167483;
+        public static final int screenshot_dismiss_button_tappable_size = 2131167484;
+        public static final int screenshot_dismissal_height_delta = 2131167485;
+        public static final int screenshot_offset_x = 2131167486;
+        public static final int screenshot_offset_y = 2131167487;
+        public static final int screenshot_preview_elevation = 2131167488;
+        public static final int scrim_behind_alpha = 2131167489;
+        public static final int scroll_fast_threshold = 2131167490;
+        public static final int secondary_app_icon_size = 2131167491;
+        public static final int secondary_telephony_padding = 2131167492;
+        public static final int secure_keyguard_bouncer_message_content_text_size = 2131167493;
+        public static final int secure_keyguard_bouncer_message_content_top_margin = 2131167494;
+        public static final int secure_keyguard_bouncer_message_margin_start_end = 2131167495;
+        public static final int secure_keyguard_bouncer_message_title_text_size = 2131167496;
+        public static final int secure_keyguard_bouncer_message_title_top_margin = 2131167497;
+        public static final int seek_bar_corner_radius = 2131167498;
+        public static final int seek_bar_height = 2131167499;
+        public static final int segmented_button_spacing = 2131167500;
+        public static final int shelf_appear_translation = 2131167501;
+        public static final int shelf_icon_container_padding = 2131167502;
+        public static final int shelf_transform_content_shift = 2131167503;
+        public static final int shutdown_scrim_behind_alpha = 2131167504;
+        public static final int signal_cluster_battery_padding = 2131167505;
+        public static final int signal_cluster_margin_start = 2131167506;
+        public static final int signal_icon_size = 2131167507;
+        public static final int signal_indicator_to_icon_frame_spacing = 2131167508;
+        public static final int sliding_button_border = 2131167509;
+        public static final int smart_action_button_icon_padding = 2131167510;
+        public static final int smart_action_button_icon_size = 2131167511;
+        public static final int smart_cover_battery_padding = 2131167512;
+        public static final int smart_cover_battery_text_size = 2131167513;
+        public static final int smart_cover_num_size = 2131167514;
+        public static final int smart_cover_time_size = 2131167515;
+        public static final int smart_reply_button_corner_radius = 2131167516;
+        public static final int smart_reply_button_font_size = 2131167517;
+        public static final int smart_reply_button_line_spacing_extra = 2131167518;
+        public static final int smart_reply_button_max_height = 2131167519;
+        public static final int smart_reply_button_min_height = 2131167520;
+        public static final int smart_reply_button_padding_horizontal_double_line = 2131167521;
+        public static final int smart_reply_button_padding_horizontal_single_line = 2131167522;
+        public static final int smart_reply_button_padding_vertical = 2131167523;
+        public static final int smart_reply_button_spacing = 2131167524;
+        public static final int smart_reply_button_stroke_width = 2131167525;
+        public static final int snooze_option_padding = 2131167526;
+        public static final int snooze_option_text_size = 2131167527;
+        public static final int snooze_snackbar_min_height = 2131167528;
+        public static final int speed_bump_height = 2131167529;
+        public static final int split_action_bar_overlay_height = 2131167530;
+        public static final int star_size_max = 2131167531;
+        public static final int star_size_min = 2131167532;
+        public static final int status_bar_airplane_spacer_width = 2131167533;
+        public static final int status_bar_battery_icon_height = 2131167534;
+        public static final int status_bar_battery_icon_width = 2131167535;
+        public static final int status_bar_clock_end_padding = 2131167536;
+        public static final int status_bar_clock_size = 2131167537;
+        public static final int status_bar_clock_starting_padding = 2131167538;
+        public static final int status_bar_connected_device_bt_indicator_size = 2131167539;
+        public static final int status_bar_connected_device_signal_margin_end = 2131167540;
+        public static final int status_bar_header_height_expanded = 2131167541;
+        public static final int status_bar_header_height_keyguard = 2131167542;
+        public static final int status_bar_header_padding_bottom = 2131167543;
+        public static final int status_bar_height = 2131167544;
+        public static final int status_bar_horizontal_padding = 2131167545;
+        public static final int status_bar_icon_drawing_alpha = 2131167546;
+        public static final int status_bar_icon_drawing_size = 2131167547;
+        public static final int status_bar_icon_drawing_size_dark = 2131167548;
+        public static final int status_bar_icon_height = 2131167549;
+        public static final int status_bar_icon_padding = 2131167550;
+        public static final int status_bar_icon_scale_factor = 2131167551;
+        public static final int status_bar_icon_size = 2131167552;
+        public static final int status_bar_left_clock_end_padding = 2131167553;
+        public static final int status_bar_left_clock_starting_padding = 2131167554;
+        public static final int status_bar_mobile_left_inout_over_strength = 2131167555;
+        public static final int status_bar_mobile_right_inout_margin_start = 2131167556;
+        public static final int status_bar_mobile_type_half_to_top_distance = 2131167557;
+        public static final int status_bar_mobile_type_middle_to_strength_start = 2131167558;
+        public static final int status_bar_notification_icon_padding = 2131167559;
+        public static final int status_bar_padding_end = 2131167560;
+        public static final int status_bar_padding_start = 2131167561;
+        public static final int status_bar_padding_top = 2131167562;
+        public static final int status_bar_prompt_content_min_width = 2131167563;
+        public static final int status_bar_prompt_max_width = 2131167564;
+        public static final int status_bar_prompt_min_width = 2131167565;
+        public static final int status_bar_system_icon_spacing = 2131167566;
+        public static final int status_bar_wifi_signal_size = 2131167567;
+        public static final int status_bar_wifi_signal_spacer_width = 2131167568;
+        public static final int status_bar_wifi_standard_height = 2131167569;
+        public static final int status_bar_wifi_standard_width = 2131167570;
+        public static final int statusbar_battery_digit_size = 2131167571;
+        public static final int statusbar_battery_percent_margin_end = 2131167572;
+        public static final int statusbar_battery_percent_margin_start = 2131167573;
+        public static final int statusbar_battery_size = 2131167574;
+        public static final int statusbar_battery_text_bottom_padding = 2131167575;
+        public static final int statusbar_battery_text_top_padding = 2131167576;
+        public static final int statusbar_carrier_max_width = 2131167577;
+        public static final int statusbar_carrier_size = 2131167578;
+        public static final int statusbar_signal_size = 2131167579;
+        public static final int statusbar_wifi_generation_size = 2131167580;
+        public static final int statusbar_wifi_standard_size = 2131167581;
+        public static final int style_choose_clock_title_text_size = 2131167582;
+        public static final int style_select_panel_bg_corner_radius = 2131167583;
+        public static final int subtitle_clock_padding = 2131167584;
+        public static final int sun_size = 2131167585;
+        public static final int swipe_helper_falsing_threshold = 2131167586;
+        public static final int system_icons_keyguard_padding_end = 2131167587;
+        public static final int system_icons_super_container_avatarless_margin_end = 2131167588;
+        public static final int system_icons_super_container_margin_start = 2131167589;
+        public static final int system_icons_switcher_hidden_expanded_margin = 2131167590;
+        public static final int task_height_of_minimized_mode = 2131167591;
+        public static final int title_clock_padding = 2131167592;
+        public static final int tooltip_corner_radius = 2131167593;
+        public static final int tooltip_horizontal_padding = 2131167594;
+        public static final int tooltip_margin = 2131167595;
+        public static final int tooltip_precise_anchor_extra_offset = 2131167596;
+        public static final int tooltip_precise_anchor_threshold = 2131167597;
+        public static final int tooltip_vertical_padding = 2131167598;
+        public static final int tooltip_y_offset_non_touch = 2131167599;
+        public static final int tooltip_y_offset_touch = 2131167600;
+        public static final int top_padding = 2131167601;
+        public static final int translation_per_sec = 2131167602;
+        public static final int trust_circle_inner_radius_enter = 2131167603;
+        public static final int trust_circle_inner_radius_exit = 2131167604;
+        public static final int trust_circle_inner_radius_visible_max = 2131167605;
+        public static final int trust_circle_inner_radius_visible_min = 2131167606;
+        public static final int trust_circle_thickness = 2131167607;
+        public static final int two_target_pref_medium_icon_size = 2131167608;
+        public static final int two_target_pref_small_icon_size = 2131167609;
+        public static final int unlock_falsing_threshold = 2131167610;
+        public static final int unlock_move_distance = 2131167611;
+        public static final int unlock_pattern_view_diameter_factor = 2131167612;
+        public static final int usage_graph_area_height = 2131167613;
+        public static final int usage_graph_divider_size = 2131167614;
+        public static final int usage_graph_dot_interval = 2131167615;
+        public static final int usage_graph_dot_size = 2131167616;
+        public static final int usage_graph_labels_padding = 2131167617;
+        public static final int usage_graph_labels_width = 2131167618;
+        public static final int usage_graph_line_corner_radius = 2131167619;
+        public static final int usage_graph_line_width = 2131167620;
+        public static final int usage_graph_margin_top_bottom = 2131167621;
+        public static final int user_icon_view_height = 2131167622;
+        public static final int user_spinner_height = 2131167623;
+        public static final int user_spinner_item_height = 2131167624;
+        public static final int user_spinner_padding = 2131167625;
+        public static final int user_spinner_padding_sides = 2131167626;
+        public static final int vertical_clock_date_translate_extra = 2131167627;
+        public static final int vertical_clock_sim_card_magin_top = 2131167628;
+        public static final int volume_button_size = 2131167629;
+        public static final int volume_dialog_caption_size = 2131167630;
+        public static final int volume_dialog_elevation = 2131167631;
+        public static final int volume_dialog_margin_bottom = 2131167632;
+        public static final int volume_dialog_padding_end = 2131167633;
+        public static final int volume_dialog_padding_top = 2131167634;
+        public static final int volume_dialog_panel_transparent_padding = 2131167635;
+        public static final int volume_dialog_panel_transparent_padding_right = 2131167636;
+        public static final int volume_dialog_panel_width = 2131167637;
+        public static final int volume_dialog_ringer_icon_padding = 2131167638;
+        public static final int volume_dialog_ringer_size = 2131167639;
+        public static final int volume_dialog_row_margin_bottom = 2131167640;
+        public static final int volume_dialog_row_width = 2131167641;
+        public static final int volume_dialog_slider_height = 2131167642;
+        public static final int volume_dialog_slider_margin_bottom = 2131167643;
+        public static final int volume_dialog_slider_margin_top = 2131167644;
+        public static final int volume_dialog_spacer = 2131167645;
+        public static final int volume_dialog_stream_padding = 2131167646;
+        public static final int volume_dialog_tap_target_size = 2131167647;
+        public static final int volume_expander_margin_end = 2131167648;
+        public static final int volume_expander_margin_top = 2131167649;
+        public static final int volume_offset_top = 2131167650;
+        public static final int volume_row_header_padding_start = 2131167651;
+        public static final int volume_row_height = 2131167652;
+        public static final int volume_row_padding_bottom = 2131167653;
+        public static final int volume_row_padding_start = 2131167654;
+        public static final int volume_row_slider_height = 2131167655;
+        public static final int volume_row_slider_padding_start = 2131167656;
+        public static final int volume_slider_interspacing = 2131167657;
+        public static final int volume_tool_tip_arrow_corner_radius = 2131167658;
+        public static final int volume_tool_tip_bottom_margin = 2131167659;
+        public static final int volume_tool_tip_right_margin = 2131167660;
+        public static final int volume_tool_tip_top_margin = 2131167661;
+        public static final int wallpaper_bottom_region_height = 2131167662;
+        public static final int wallpaper_carousel_region_height = 2131167663;
+        public static final int wallpaper_gxzw_region_margin = 2131167664;
+        public static final int wallpaper_horizontal_clock_region_height = 2131167665;
+        public static final int wallpaper_horizontal_clock_region_margin_top = 2131167666;
+        public static final int wallpaper_horizontal_clock_region_width = 2131167667;
+        public static final int wallpaper_left_top_clock_region_height = 2131167668;
+        public static final int wallpaper_left_top_clock_region_margin_start = 2131167669;
+        public static final int wallpaper_left_top_clock_region_margin_top = 2131167670;
+        public static final int wallpaper_left_top_clock_region_width = 2131167671;
+        public static final int wallpaper_magazine_pre_setting_region_width = 2131167672;
+        public static final int wide_type_icon_start_padding = 2131167673;
+        public static final int wide_type_icon_start_padding_qs = 2131167674;
+        public static final int widget_big_font_size = 2131167675;
+        public static final int widget_bottom_separator_padding = 2131167676;
+        public static final int widget_horizontal_padding = 2131167677;
+        public static final int widget_icon_padding = 2131167678;
+        public static final int widget_icon_size = 2131167679;
+        public static final int widget_label_font_size = 2131167680;
+        public static final int widget_small_font_size = 2131167681;
+        public static final int widget_title_font_size = 2131167682;
+        public static final int widget_vertical_padding = 2131167683;
+        public static final int widget_vertical_padding_clock = 2131167684;
+        public static final int widget_vertical_padding_with_header = 2131167685;
+        public static final int wifi_preference_badge_padding = 2131167686;
+        public static final int wireless_chagre_slowly_dialog_button_height = 2131167687;
+        public static final int wireless_charging_anim_battery_level_text_size_end = 2131167688;
+        public static final int wireless_charging_anim_battery_level_text_size_start = 2131167689;
+        public static final int wireless_charging_circle_radius_end = 2131167690;
+        public static final int wireless_charging_circle_radius_start = 2131167691;
+        public static final int wireless_charging_dots_radius_end = 2131167692;
+        public static final int wireless_charging_dots_radius_start = 2131167693;
+        public static final int word_photo_border_size = 2131167694;
+        public static final int word_photo_size = 2131167695;
+        public static final int z_distance_between_notifications = 2131167696;
+        public static final int zen_mode_bg_radius = 2131167697;
+        public static final int zen_mode_condition_detail_bottom_padding = 2131167698;
+        public static final int zen_mode_condition_detail_button_padding = 2131167699;
+        public static final int zen_mode_condition_detail_item_interline_spacing = 2131167700;
+        public static final int zen_mode_condition_detail_item_spacing = 2131167701;
+        public static final int zen_mode_content_size = 2131167702;
+        public static final int zen_mode_content_top_margin = 2131167703;
+        public static final int zen_mode_icon_size = 2131167704;
+        public static final int zen_mode_icon_start_margin = 2131167705;
+        public static final int zen_mode_icon_top_margin = 2131167706;
+        public static final int zen_mode_quit_size = 2131167707;
+        public static final int zen_mode_quit_start_margin = 2131167708;
+        public static final int zen_mode_title_end_margin = 2131167709;
+        public static final int zen_mode_title_size = 2131167710;
+        public static final int zen_mode_title_start_margin = 2131167711;
     }
 
     /* renamed from: com.android.systemui.R$drawable  reason: case insensitive filesystem */
@@ -11395,1415 +11404,1416 @@ public final class R {
         public static final int clock_view = 2131362151;
         public static final int close = 2131362152;
         public static final int close_button = 2131362153;
-        public static final int collapseActionView = 2131362154;
-        public static final int collapse_button = 2131362155;
-        public static final int column = 2131362156;
-        public static final int confirm_button = 2131362157;
-        public static final int connected_device_network_signal = 2131362158;
-        public static final int connected_device_signals = 2131362159;
-        public static final int connected_device_signals_stub = 2131362160;
-        public static final int container = 2131362161;
-        public static final int container_list = 2131362162;
-        public static final int contains_transformed_view = 2131362163;
-        public static final int content = 2131362164;
-        public static final int contentPanel = 2131362165;
-        public static final int contentView = 2131362166;
-        public static final int content_container = 2131362167;
-        public static final int content_fragment = 2131362168;
-        public static final int content_frame = 2131362169;
-        public static final int content_header_container = 2131362170;
-        public static final int content_mask = 2131362171;
-        public static final int content_mask_vs = 2131362172;
-        public static final int content_parent = 2131362173;
-        public static final int content_scroller = 2131362174;
-        public static final int content_springer = 2131362175;
-        public static final int content_text = 2131362176;
-        public static final int content_wrapper = 2131362177;
-        public static final int contents = 2131362178;
-        public static final int continuous_clipping_tag = 2131362179;
-        public static final int control = 2131362180;
-        public static final int control_bar = 2131362181;
-        public static final int control_center_bottom_area = 2131362182;
-        public static final int control_center_panel = 2131362183;
-        public static final int control_center_shortcut = 2131362184;
-        public static final int control_detail_close = 2131362185;
-        public static final int control_detail_open_in_app = 2131362186;
-        public static final int control_detail_root = 2131362187;
-        public static final int control_panel = 2131362188;
-        public static final int control_panel_content = 2131362189;
-        public static final int controller = 2131362190;
-        public static final int controls_activity_view = 2131362191;
-        public static final int controls_card = 2131362192;
-        public static final int controls_card_right_panel = 2131362193;
-        public static final int controls_container = 2131362194;
-        public static final int controls_dock = 2131362195;
-        public static final int controls_header = 2131362196;
-        public static final int controls_icon_row = 2131362197;
-        public static final int controls_management_root = 2131362198;
-        public static final int controls_more = 2131362199;
-        public static final int controls_no_favorites_group = 2131362200;
-        public static final int controls_pin_input = 2131362201;
-        public static final int controls_pin_use_alpha = 2131362202;
-        public static final int controls_spinner_item = 2131362203;
-        public static final int controls_subtitle = 2131362204;
-        public static final int controls_title = 2131362205;
-        public static final int conversation_icon = 2131362206;
-        public static final int conversation_icon_badge = 2131362207;
-        public static final int conversation_icon_badge_bg = 2131362208;
-        public static final int conversation_icon_badge_ring = 2131362209;
-        public static final int conversation_notification_sender = 2131362210;
-        public static final int coordinator = 2131362211;
-        public static final int cos = 2131362212;
-        public static final int cross_fade_layer_type_changed_tag = 2131362213;
-        public static final int current_time = 2131362214;
-        public static final int custom = 2131362215;
-        public static final int customPanel = 2131362216;
-        public static final int customize_action_bar = 2131362217;
-        public static final int customize_container = 2131362218;
-        public static final int customizer_transparent_view = 2131362219;
-        public static final int cut = 2131362220;
-        public static final int cutout_space_view = 2131362221;
-        public static final int data_purchase = 2131362222;
-        public static final int data_usage = 2131362223;
-        public static final int date = 2131362224;
-        public static final int datePicker = 2131362225;
-        public static final int datePickerLunar = 2131362226;
-        public static final int dateTimePicker = 2131362227;
-        public static final int date_picker_actions = 2131362228;
-        public static final int date_picker_calendar_days = 2131362229;
-        public static final int date_picker_calendar_days_header = 2131362230;
-        public static final int date_picker_calendar_view_frame = 2131362231;
-        public static final int date_picker_header = 2131362232;
-        public static final int date_picker_header_title = 2131362233;
-        public static final int date_time = 2131362234;
-        public static final int date_view = 2131362235;
-        public static final int date_weekday = 2131362236;
-        public static final int day = 2131362237;
-        public static final int decelerate = 2131362238;
-        public static final int decelerateAndComplete = 2131362239;
-        public static final int decor_content_parent = 2131362240;
-        public static final int default_activity_button = 2131362241;
-        public static final int default_behavior = 2131362242;
-        public static final int default_clock_view = 2131362243;
-        public static final int default_clock_view_bold = 2131362244;
-        public static final int default_icon = 2131362245;
-        public static final int default_label = 2131362246;
-        public static final int default_summary = 2131362247;
-        public static final int delegate_name = 2131362248;
-        public static final int delete_button = 2131362249;
-        public static final int deltaRelative = 2131362250;
-        public static final int demo_activity = 2131362251;
-        public static final int dependency_ordering = 2131362252;
-        public static final int desc = 2131362253;
-        public static final int description = 2131362254;
-        public static final int description_container = 2131362255;
-        public static final int description_dock = 2131362256;
-        public static final int design_bottom_sheet = 2131362257;
-        public static final int design_menu_item_action_area = 2131362258;
-        public static final int design_menu_item_action_area_stub = 2131362259;
-        public static final int design_menu_item_text = 2131362260;
-        public static final int design_navigation_view = 2131362261;
-        public static final int details_background_view = 2131362262;
-        public static final int details_fragment_root = 2131362263;
-        public static final int details_frame = 2131362264;
-        public static final int details_overview = 2131362265;
-        public static final int details_overview_actions = 2131362266;
-        public static final int details_overview_actions_background = 2131362267;
-        public static final int details_overview_description = 2131362268;
-        public static final int details_overview_image = 2131362269;
-        public static final int details_overview_right_panel = 2131362270;
-        public static final int details_root = 2131362271;
-        public static final int details_rows_dock = 2131362272;
-        public static final int device_management_disclosures = 2131362273;
-        public static final int device_management_subtitle = 2131362274;
-        public static final int device_management_warning = 2131362275;
-        public static final int dex = 2131362276;
-        public static final int dialog = 2131362277;
-        public static final int dialog_anim_holder = 2131362278;
-        public static final int dialog_button = 2131362279;
-        public static final int dialog_container = 2131362280;
-        public static final int dialog_dim_bg = 2131362281;
-        public static final int dialog_icon = 2131362282;
-        public static final int dialog_root_view = 2131362283;
-        public static final int dialog_title = 2131362284;
-        public static final int digit_text = 2131362285;
-        public static final int dimensions = 2131362286;
-        public static final int direct = 2131362287;
-        public static final int disableHome = 2131362288;
-        public static final int disablePostScroll = 2131362289;
-        public static final int disableScroll = 2131362290;
-        public static final int dismiss = 2131362291;
-        public static final int dismiss_text = 2131362292;
-        public static final int dismiss_view = 2131362293;
-        public static final int display_cutout = 2131362294;
-        public static final int divider = 2131362295;
-        public static final int dnd_icon = 2131362296;
-        public static final int docked_divider_background = 2131362297;
-        public static final int docked_divider_handle = 2131362298;
-        public static final int done = 2131362299;
-        public static final int done_button = 2131362300;
-        public static final int down_control = 2131362301;
-        public static final int doze_intensity_tag = 2131362302;
-        public static final int doze_saved_filter_tag = 2131362303;
-        public static final int drag = 2131362304;
-        public static final int dragDown = 2131362305;
-        public static final int dragEnd = 2131362306;
-        public static final int dragLeft = 2131362307;
-        public static final int dragRight = 2131362308;
-        public static final int dragStart = 2131362309;
-        public static final int dragUp = 2131362310;
-        public static final int drag_handle = 2131362311;
-        public static final int drawer_img = 2131362312;
-        public static final int drawer_main_img = 2131362313;
-        public static final int drip_left_statusIcons = 2131362314;
-        public static final int drip_left_status_icon_area = 2131362315;
-        public static final int drip_network_speed_splitter = 2131362316;
-        public static final int drip_network_speed_view = 2131362317;
-        public static final int drip_notification_icon_area = 2131362318;
-        public static final int dropdown = 2131362319;
-        public static final int dummy = 2131362320;
-        public static final int dungeon_title = 2131362321;
-        public static final int easeIn = 2131362322;
-        public static final int easeInOut = 2131362323;
-        public static final int easeOut = 2131362324;
-        public static final int edit_container = 2131362325;
-        public static final int edit_query = 2131362326;
-        public static final int edittext_container = 2131362327;
-        public static final int emergencyCallButton = 2131362328;
-        public static final int emergency_call_button = 2131362329;
-        public static final int emergency_cryptkeeper_text = 2131362330;
-        public static final int empty_space = 2131362331;
-        public static final int empty_space_for_global = 2131362332;
-        public static final int empty_text = 2131362333;
-        public static final int empty_time_view = 2131362334;
-        public static final int empty_view = 2131362335;
-        public static final int enableUsb = 2131362336;
-        public static final int end = 2131362337;
-        public static final int end_padder = 2131362338;
-        public static final int ends_group = 2131362339;
-        public static final int enterAlways = 2131362340;
-        public static final int enterAlwaysCollapsed = 2131362341;
-        public static final int entry_list = 2131362342;
-        public static final int error = 2131362343;
-        public static final int error_frame = 2131362344;
-        public static final int exitUntilCollapsed = 2131362345;
-        public static final int expand = 2131362346;
-        public static final int expand_activities_button = 2131362347;
-        public static final int expand_button = 2131362348;
-        public static final int expand_container = 2131362349;
-        public static final int expand_indicator = 2131362350;
-        public static final int expand_space = 2131362351;
-        public static final int expand_tile = 2131362352;
-        public static final int expanded = 2131362353;
-        public static final int expandedPublic = 2131362354;
-        public static final int expanded_menu = 2131362355;
-        public static final int expanded_qs_scroll_view = 2131362356;
-        public static final int extra = 2131362357;
-        public static final int extra_badge = 2131362358;
-        public static final int fade = 2131362359;
-        public static final int fade_out_edge = 2131362360;
-        public static final int fake_shadow = 2131362361;
-        public static final int favorite = 2131362362;
-        public static final int favorites = 2131362363;
-        public static final int fill = 2131362364;
-        public static final int fill_horizontal = 2131362365;
-        public static final int fill_vertical = 2131362366;
-        public static final int filled = 2131362367;
-        public static final int filter_chip = 2131362368;
-        public static final int first_card = 2131362369;
-        public static final int fitToContents = 2131362370;
-        public static final int fixed = 2131362371;
-        public static final int flip = 2131362372;
-        public static final int foget_password = 2131362373;
-        public static final int foot_panel = 2131362374;
-        public static final int footer = 2131362375;
-        public static final int footerLayout = 2131362376;
-        public static final int footerLeftButton = 2131362377;
-        public static final int footerRightButton = 2131362378;
-        public static final int footer_divider = 2131362379;
-        public static final int footer_icon = 2131362380;
-        public static final int footer_page_indicator = 2131362381;
-        public static final int footer_text = 2131362382;
-        public static final int fore = 2131362383;
-        public static final int foreground_container = 2131362384;
-        public static final int foreground_service_dungeon = 2131362385;
-        public static final int foreground_service_dungeon_row = 2131362386;
-        public static final int forever = 2131362387;
-        public static final int forget_password_hint_container = 2131362388;
-        public static final int forget_password_method_back = 2131362389;
-        public static final int forget_password_method_content = 2131362390;
-        public static final int forget_password_method_next = 2131362391;
-        public static final int forget_password_suggesstion = 2131362392;
-        public static final int forget_password_suggesstion_ok = 2131362393;
-        public static final int forget_password_suggesstion_one = 2131362394;
-        public static final int forget_password_suggesstion_two = 2131362395;
-        public static final int fragment_container_view_tag = 2131362396;
-        public static final int frame = 2131362397;
-        public static final int friction_icon = 2131362398;
-        public static final int fs_gesture_final_icon = 2131362399;
-        public static final int fs_gesture_final_over = 2131362400;
-        public static final int fs_gesture_final_restart = 2131362401;
-        public static final int fs_gesture_final_summary = 2131362402;
-        public static final int fs_gesture_final_title = 2131362403;
-        public static final int fsg_nav_view = 2131362404;
-        public static final int fsgesture_ready_summary = 2131362405;
-        public static final int fsgesture_ready_title = 2131362406;
-        public static final int fsgesture_skip = 2131362407;
-        public static final int fsgesture_swipe_view = 2131362408;
-        public static final int fsgesture_title_view = 2131362409;
-        public static final int full_button = 2131362410;
-        public static final int fullscreen_network_speed_view = 2131362411;
-        public static final int fullscreen_notification_icon_area = 2131362412;
-        public static final int ghost_view = 2131362413;
-        public static final int ghost_view_holder = 2131362414;
-        public static final int global_actions_container = 2131362415;
-        public static final int global_actions_controls = 2131362416;
-        public static final int global_actions_controls_list = 2131362417;
-        public static final int global_actions_grid_root = 2131362418;
-        public static final int global_actions_lock_message = 2131362419;
-        public static final int global_actions_lock_message_container = 2131362420;
-        public static final int global_actions_overflow_button = 2131362421;
-        public static final int global_actions_panel_container = 2131362422;
-        public static final int global_actions_view = 2131362423;
-        public static final int global_actions_wallet = 2131362424;
-        public static final int global_screenshot_action_chip = 2131362425;
-        public static final int global_screenshot_actions = 2131362426;
-        public static final int global_screenshot_actions_background = 2131362427;
-        public static final int global_screenshot_actions_container = 2131362428;
-        public static final int global_screenshot_actions_container_background = 2131362429;
-        public static final int global_screenshot_animated_view = 2131362430;
-        public static final int global_screenshot_dismiss_button = 2131362431;
-        public static final int global_screenshot_dismiss_image = 2131362432;
-        public static final int global_screenshot_flash = 2131362433;
-        public static final int global_screenshot_frame = 2131362434;
-        public static final int global_screenshot_legacy = 2131362435;
-        public static final int global_screenshot_legacy_background = 2131362436;
-        public static final int global_screenshot_legacy_flash = 2131362437;
-        public static final int global_screenshot_legacy_selector = 2131362438;
-        public static final int global_screenshot_preview = 2131362439;
-        public static final int global_screenshot_selector = 2131362440;
-        public static final int gone = 2131362441;
-        public static final int gotIt = 2131362442;
-        public static final int got_it = 2131362443;
-        public static final int graph = 2131362444;
-        public static final int graph_label_group = 2131362445;
-        public static final int graph_wrap = 2131362446;
-        public static final int grid_frame = 2131362447;
-        public static final int group_divider = 2131362448;
-        public static final int group_header = 2131362449;
-        public static final int group_info = 2131362450;
-        public static final int group_name = 2131362451;
-        public static final int grouping = 2131362452;
-        public static final int groups = 2131362453;
-        public static final int guidance_breadcrumb = 2131362454;
-        public static final int guidance_container = 2131362455;
-        public static final int guidance_description = 2131362456;
-        public static final int guidance_icon = 2131362457;
-        public static final int guidance_title = 2131362458;
-        public static final int guide_content = 2131362459;
-        public static final int guide_video = 2131362460;
-        public static final int guidedactions_activator_item = 2131362461;
-        public static final int guidedactions_content = 2131362462;
-        public static final int guidedactions_content2 = 2131362463;
-        public static final int guidedactions_item_checkmark = 2131362464;
-        public static final int guidedactions_item_chevron = 2131362465;
-        public static final int guidedactions_item_content = 2131362466;
-        public static final int guidedactions_item_description = 2131362467;
-        public static final int guidedactions_item_icon = 2131362468;
-        public static final int guidedactions_item_title = 2131362469;
-        public static final int guidedactions_list = 2131362470;
-        public static final int guidedactions_list2 = 2131362471;
-        public static final int guidedactions_list_background = 2131362472;
-        public static final int guidedactions_list_background2 = 2131362473;
-        public static final int guidedactions_root = 2131362474;
-        public static final int guidedactions_root2 = 2131362475;
-        public static final int guidedactions_sub_list = 2131362476;
-        public static final int guidedactions_sub_list_background = 2131362477;
-        public static final int guidedstep_background = 2131362478;
-        public static final int guidedstep_background_view_root = 2131362479;
-        public static final int guidedstep_root = 2131362480;
-        public static final int gxzw_anim_surface = 2131362481;
-        public static final int gxzw_anim_try_again = 2131362482;
-        public static final int gxzw_highlight = 2131362483;
-        public static final int half_shelf = 2131362484;
-        public static final int half_shelf_container = 2131362485;
-        public static final int half_shelf_dialog = 2131362486;
-        public static final int half_shelf_row = 2131362487;
-        public static final int half_shell = 2131362488;
-        public static final int hbm_overlay = 2131362489;
-        public static final int head_bottom_divider = 2131362490;
-        public static final int header = 2131362491;
-        public static final int header_artist = 2131362492;
-        public static final int header_content = 2131362493;
-        public static final int header_debug_info = 2131362494;
-        public static final int header_details = 2131362495;
-        public static final int header_label = 2131362496;
-        public static final int header_text_container = 2131362497;
-        public static final int header_title = 2131362498;
-        public static final int heads_up_status_bar_view = 2131362499;
-        public static final int height_animator_end_value_tag = 2131362500;
-        public static final int height_animator_start_value_tag = 2131362501;
-        public static final int height_animator_tag = 2131362502;
-        public static final int hide_split_action_bar = 2131362503;
-        public static final int hideable = 2131362504;
-        public static final int home = 2131362505;
-        public static final int homeAsUp = 2131362506;
-        public static final int home_handle = 2131362507;
-        public static final int home_icon_img = 2131362508;
-        public static final int honorRequest = 2131362509;
-        public static final int horizontal = 2131362510;
-        public static final int hour = 2131362511;
-        public static final int hour_hand = 2131362512;
-        public static final int hovercard_panel = 2131362513;
-        public static final int icon = 2131362514;
-        public static final int icon_button = 2131362515;
-        public static final int icon_container = 2131362516;
-        public static final int icon_container_bg = 2131362517;
-        public static final int icon_frame = 2131362518;
-        public static final int icon_group = 2131362519;
-        public static final int icon_is_grayscale = 2131362520;
-        public static final int icon_is_pre_L = 2131362521;
-        public static final int icon_mic = 2131362522;
-        public static final int icon_placeholder = 2131362523;
-        public static final int icon_texts_container = 2131362524;
-        public static final int ifRoom = 2131362525;
-        public static final int ignore = 2131362526;
-        public static final int ignoreRequest = 2131362527;
-        public static final int image = 2131362528;
-        public static final int image1 = 2131362529;
-        public static final int image2 = 2131362530;
-        public static final int image_icon_tag = 2131362531;
-        public static final int ime_switcher = 2131362532;
-        public static final int inbox_text0 = 2131362533;
-        public static final int inbox_text1 = 2131362534;
-        public static final int inbox_text2 = 2131362535;
-        public static final int inbox_text3 = 2131362536;
-        public static final int inbox_text4 = 2131362537;
-        public static final int inbox_text5 = 2131362538;
-        public static final int inbox_text6 = 2131362539;
-        public static final int indicator = 2131362540;
-        public static final int indicator_container = 2131362541;
-        public static final int indicator_locked_body = 2131362542;
-        public static final int indicator_locked_header = 2131362543;
-        public static final int info = 2131362544;
-        public static final int info1 = 2131362545;
-        public static final int info2 = 2131362546;
-        public static final int infoOver = 2131362547;
-        public static final int infoUnder = 2131362548;
-        public static final int infoUnderWithExtra = 2131362549;
-        public static final int info_field = 2131362550;
-        public static final int initial = 2131362551;
-        public static final int inline_controls = 2131362552;
-        public static final int inout_container = 2131362553;
-        public static final int installed = 2131362554;
-        public static final int interruptiveness_settings = 2131362555;
-        public static final int intro_container = 2131362556;
-        public static final int intro_title = 2131362557;
-        public static final int invisible = 2131362558;
-        public static final int is_clicked_heads_up_tag = 2131362559;
-        public static final int italic = 2131362560;
-        public static final int item_root_view = 2131362561;
-        public static final int item_touch_helper_previous_elevation = 2131362562;
-        public static final int jumpToEnd = 2131362563;
-        public static final int jumpToStart = 2131362564;
-        public static final int key0 = 2131362565;
-        public static final int key1 = 2131362566;
-        public static final int key2 = 2131362567;
-        public static final int key3 = 2131362568;
-        public static final int key4 = 2131362569;
-        public static final int key5 = 2131362570;
-        public static final int key6 = 2131362571;
-        public static final int key7 = 2131362572;
-        public static final int key8 = 2131362573;
-        public static final int key9 = 2131362574;
-        public static final int key_enter = 2131362575;
-        public static final int keyboard_letter = 2131362576;
-        public static final int keyboard_number = 2131362577;
-        public static final int keyboard_shortcuts_container = 2131362578;
-        public static final int keyboard_shortcuts_icon = 2131362579;
-        public static final int keyboard_shortcuts_item_container = 2131362580;
-        public static final int keyboard_shortcuts_keyword = 2131362581;
-        public static final int keyboard_shortcuts_scroll_view = 2131362582;
-        public static final int keyboard_symbol = 2131362583;
-        public static final int keyguard_bottom_area = 2131362584;
-        public static final int keyguard_bouncer_bg = 2131362585;
-        public static final int keyguard_carrier_text = 2131362586;
-        public static final int keyguard_charging_container_bg = 2131362587;
-        public static final int keyguard_charging_drained_power = 2131362588;
-        public static final int keyguard_charging_hint = 2131362589;
-        public static final int keyguard_charging_info_anim_start_cicle_id = 2131362590;
-        public static final int keyguard_charging_info_back_arrow_id = 2131362591;
-        public static final int keyguard_charging_info_data = 2131362592;
-        public static final int keyguard_charging_info_des = 2131362593;
-        public static final int keyguard_charging_info_icon = 2131362594;
-        public static final int keyguard_charging_info_middle_list = 2131362595;
-        public static final int keyguard_charging_last_time = 2131362596;
-        public static final int keyguard_charging_tip = 2131362597;
-        public static final int keyguard_charging_used_time = 2131362598;
-        public static final int keyguard_clock_container = 2131362599;
-        public static final int keyguard_disable_esim = 2131362600;
-        public static final int keyguard_drip_left_statusIcons = 2131362601;
-        public static final int keyguard_electric_torch = 2131362602;
-        public static final int keyguard_esim_area = 2131362603;
-        public static final int keyguard_force_black_background = 2131362604;
-        public static final int keyguard_header = 2131362605;
-        public static final int keyguard_host_view = 2131362606;
-        public static final int keyguard_hun_animator_end_tag = 2131362607;
-        public static final int keyguard_hun_animator_start_tag = 2131362608;
-        public static final int keyguard_hun_animator_tag = 2131362609;
-        public static final int keyguard_indication_area = 2131362610;
-        public static final int keyguard_indication_enterprise_disclosure = 2131362611;
-        public static final int keyguard_indication_text = 2131362612;
-        public static final int keyguard_indication_view = 2131362613;
-        public static final int keyguard_left_list_item_img = 2131362614;
-        public static final int keyguard_left_list_item_name = 2131362615;
-        public static final int keyguard_left_view = 2131362616;
-        public static final int keyguard_lock_screen_magazine_info = 2131362617;
-        public static final int keyguard_message_area = 2131362618;
-        public static final int keyguard_mi_wallet_info = 2131362619;
-        public static final int keyguard_move_left = 2131362620;
-        public static final int keyguard_password_view = 2131362621;
-        public static final int keyguard_pattern_view = 2131362622;
-        public static final int keyguard_pin_view = 2131362623;
-        public static final int keyguard_remote_controller_info = 2131362624;
-        public static final int keyguard_security_bouncer_message = 2131362625;
-        public static final int keyguard_security_container = 2131362626;
-        public static final int keyguard_selector_fade_container = 2131362627;
-        public static final int keyguard_sim = 2131362628;
-        public static final int keyguard_sim_pin_view = 2131362629;
-        public static final int keyguard_sim_puk_view = 2131362630;
-        public static final int keyguard_smarthome_info = 2131362631;
-        public static final int keyguard_status_area = 2131362632;
-        public static final int keyguard_status_bar_left_side = 2131362633;
-        public static final int keyguard_status_view = 2131362634;
-        public static final int keyguard_up_arrow = 2131362635;
-        public static final int keyguard_user_switcher = 2131362636;
-        public static final int keyguard_user_switcher_inner = 2131362637;
-        public static final int klondike_text = 2131362638;
-        public static final int label = 2131362639;
-        public static final int label_bottom = 2131362640;
-        public static final int label_end = 2131362641;
-        public static final int label_group = 2131362642;
-        public static final int label_middle = 2131362643;
-        public static final int label_start = 2131362644;
-        public static final int label_top = 2131362645;
-        public static final int labeled = 2131362646;
-        public static final int largeLabel = 2131362647;
-        public static final int last_updated = 2131362648;
-        public static final int layout = 2131362649;
-        public static final int lb_action_button = 2131362650;
-        public static final int lb_control_closed_captioning = 2131362651;
-        public static final int lb_control_fast_forward = 2131362652;
-        public static final int lb_control_fast_rewind = 2131362653;
-        public static final int lb_control_high_quality = 2131362654;
-        public static final int lb_control_more_actions = 2131362655;
-        public static final int lb_control_picture_in_picture = 2131362656;
-        public static final int lb_control_play_pause = 2131362657;
-        public static final int lb_control_repeat = 2131362658;
-        public static final int lb_control_shuffle = 2131362659;
-        public static final int lb_control_skip_next = 2131362660;
-        public static final int lb_control_skip_previous = 2131362661;
-        public static final int lb_control_thumbs_down = 2131362662;
-        public static final int lb_control_thumbs_up = 2131362663;
-        public static final int lb_details_description_body = 2131362664;
-        public static final int lb_details_description_subtitle = 2131362665;
-        public static final int lb_details_description_title = 2131362666;
-        public static final int lb_focus_animator = 2131362667;
-        public static final int lb_guidedstep_background = 2131362668;
-        public static final int lb_parallax_source = 2131362669;
-        public static final int lb_results_frame = 2131362670;
-        public static final int lb_row_container_header_dock = 2131362671;
-        public static final int lb_search_bar = 2131362672;
-        public static final int lb_search_bar_badge = 2131362673;
-        public static final int lb_search_bar_items = 2131362674;
-        public static final int lb_search_bar_speech_orb = 2131362675;
-        public static final int lb_search_frame = 2131362676;
-        public static final int lb_search_text_editor = 2131362677;
-        public static final int lb_shadow_focused = 2131362678;
-        public static final int lb_shadow_impl = 2131362679;
-        public static final int lb_shadow_normal = 2131362680;
-        public static final int lb_slide_transition_value = 2131362681;
-        public static final int learnMore = 2131362682;
-        public static final int left = 2131362683;
-        public static final int leftSpacer = 2131362684;
-        public static final int left_button = 2131362685;
-        public static final int left_button_layout = 2131362686;
-        public static final int left_button_tips = 2131362687;
-        public static final int left_control = 2131362688;
-        public static final int left_handle = 2131362689;
-        public static final int left_view_bg = 2131362690;
-        public static final int lib = 2131362691;
-        public static final int line1 = 2131362692;
-        public static final int line3 = 2131362693;
-        public static final int linear = 2131362694;
-        public static final int linear_carrier = 2131362695;
-        public static final int list = 2131362696;
-        public static final int listAll = 2131362697;
-        public static final int listMode = 2131362698;
-        public static final int list_added = 2131362699;
-        public static final int list_item = 2131362700;
-        public static final int list_others = 2131362701;
-        public static final int loading_progress = 2131362702;
-        public static final int loading_progress_up = 2131362703;
-        public static final int lockPassword = 2131362704;
-        public static final int lockPattern = 2131362705;
-        public static final int lockPatternView = 2131362706;
-        public static final int lock_icon = 2131362707;
-        public static final int lock_icon_container = 2131362708;
-        public static final int lock_screen_clock = 2131362709;
-        public static final int lock_screen_magazine_clock_contents_layout = 2131362710;
-        public static final int lock_screen_magazine_clock_provider = 2131362711;
-        public static final int lock_screen_magazine_clock_source = 2131362712;
-        public static final int lock_screen_magazine_clock_title = 2131362713;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_button = 2131362714;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_content = 2131362715;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_layout = 2131362716;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_provider = 2131362717;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_source = 2131362718;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_title_layout = 2131362719;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_title_layout_link = 2131362720;
-        public static final int lock_screen_magazine_preview_fullscreen_bottom_title_layout_title = 2131362721;
-        public static final int lock_screen_magazine_preview_fullscreen_layout = 2131362722;
-        public static final int lock_screen_magazine_preview_fullscreen_setting = 2131362723;
-        public static final int lock_screen_magazine_preview_main_layout = 2131362724;
-        public static final int lock_screen_magazine_preview_main_provider = 2131362725;
-        public static final int lock_screen_magazine_preview_main_source = 2131362726;
-        public static final int lock_screen_magazine_preview_main_title = 2131362727;
-        public static final int lock_screen_magazine_preview_remote_fullscreen_layout = 2131362728;
-        public static final int lock_screen_magazine_preview_remote_main_layout = 2131362729;
-        public static final int logo = 2131362730;
-        public static final int logout = 2131362731;
-        public static final int low = 2131362732;
-        public static final int lunarModePanel = 2131362733;
-        public static final int lunar_calendar_button = 2131362734;
-        public static final int lunar_calendar_layout = 2131362735;
-        public static final int lunar_calendar_title = 2131362736;
-        public static final int main = 2131362737;
-        public static final int mainOnly = 2131362738;
-        public static final int main_clock_view = 2131362739;
-        public static final int main_icon = 2131362740;
-        public static final int main_image = 2131362741;
-        public static final int manage = 2131362742;
-        public static final int manage_education_view = 2131362743;
-        public static final int manage_text = 2131362744;
-        public static final int marker = 2131362745;
-        public static final int masked = 2131362746;
-        public static final int maxLines = 2131362747;
-        public static final int mediaItemActionsContainer = 2131362748;
-        public static final int mediaItemDetails = 2131362749;
-        public static final int mediaItemDuration = 2131362750;
-        public static final int mediaItemName = 2131362751;
-        public static final int mediaItemNumberViewFlipper = 2131362752;
-        public static final int mediaItemRow = 2131362753;
-        public static final int mediaListHeader = 2131362754;
-        public static final int mediaRowSelector = 2131362755;
-        public static final int mediaRowSeparator = 2131362756;
-        public static final int media_action_barrier = 2131362757;
-        public static final int media_actions = 2131362758;
-        public static final int media_carousel = 2131362759;
-        public static final int media_carousel_scroller = 2131362760;
-        public static final int media_control_artwork = 2131362761;
-        public static final int media_controller_compat_view_tag = 2131362762;
-        public static final int media_elapsed_time = 2131362763;
-        public static final int media_page_indicator = 2131362764;
-        public static final int media_progress_bar = 2131362765;
-        public static final int media_seamless = 2131362766;
-        public static final int media_seamless_fallback = 2131362767;
-        public static final int media_seamless_image = 2131362768;
-        public static final int media_seamless_text = 2131362769;
-        public static final int media_total_time = 2131362770;
-        public static final int menu = 2131362771;
-        public static final int menu_container = 2131362772;
-        public static final int message = 2131362773;
-        public static final int message_container = 2131362774;
-        public static final int middle = 2131362775;
-        public static final int middleSpacer = 2131362776;
-        public static final int mini = 2131362777;
-        public static final int mini_state_container = 2131362778;
-        public static final int mini_window_bar = 2131362779;
-        public static final int mini_window_icon = 2131362780;
-        public static final int minimized_dock_shadow = 2131362781;
-        public static final int minute = 2131362782;
-        public static final int minute_hand = 2131362783;
-        public static final int mirror_content = 2131362784;
-        public static final int mirrored_text_group = 2131362785;
-        public static final int miui_action = 2131362786;
-        public static final int miui_child_index_hint = 2131362787;
-        public static final int miui_keyguard_base_clock = 2131362788;
-        public static final int miui_keyguard_clock_container = 2131362789;
-        public static final int miui_keyguard_clock_extra_info = 2131362790;
-        public static final int miui_keyguard_face_unlock_view = 2131362791;
-        public static final int miui_spring_y_offset_animator_end_tag = 2131362792;
-        public static final int miui_spring_y_offset_animator_start_tag = 2131362793;
-        public static final int miui_spring_y_offset_animator_tag = 2131362794;
-        public static final int miuix_animation_tag_foreground_color = 2131362795;
-        public static final int miuix_animation_tag_init_layout = 2131362796;
-        public static final int miuix_animation_tag_is_dragging = 2131362797;
-        public static final int miuix_animation_tag_listview_pos = 2131362798;
-        public static final int miuix_animation_tag_set_height = 2131362799;
-        public static final int miuix_animation_tag_set_width = 2131362800;
-        public static final int miuix_animation_tag_touch_listener = 2131362801;
-        public static final int mixed_password_keyboard_view = 2131362802;
-        public static final int mixed_password_keyboard_view_layout = 2131362803;
-        public static final int mobile_combo = 2131362804;
-        public static final int mobile_container_left = 2131362805;
-        public static final int mobile_container_right = 2131362806;
-        public static final int mobile_content = 2131362807;
-        public static final int mobile_group = 2131362808;
-        public static final int mobile_in = 2131362809;
-        public static final int mobile_left_mobile_inout = 2131362810;
-        public static final int mobile_out = 2131362811;
-        public static final int mobile_right_mobile_inout = 2131362812;
-        public static final int mobile_roaming = 2131362813;
-        public static final int mobile_roaming_space = 2131362814;
-        public static final int mobile_signal = 2131362815;
-        public static final int mobile_small_hd = 2131362816;
-        public static final int mobile_small_roam = 2131362817;
-        public static final int mobile_speech_hd = 2131362818;
-        public static final int mobile_type = 2131362819;
-        public static final int mobile_type_image = 2131362820;
-        public static final int mobile_type_single = 2131362821;
-        public static final int mobile_volte = 2131362822;
-        public static final int mobile_volte_no_service = 2131362823;
-        public static final int mobile_vowifi = 2131362824;
-        public static final int modal_dialog_button_barrier = 2131362825;
-        public static final int modal_dialog_button_container = 2131362826;
-        public static final int modal_dialog_button_space = 2131362827;
-        public static final int modal_dialog_icon = 2131362828;
-        public static final int modal_dialog_list = 2131362829;
-        public static final int modal_dialog_message = 2131362830;
-        public static final int modal_dialog_negative_button = 2131362831;
-        public static final int modal_dialog_positive_button = 2131362832;
-        public static final int modal_dialog_title = 2131362833;
-        public static final int modal_menu_icon = 2131362834;
-        public static final int modal_menu_title = 2131362835;
-        public static final int modal_window_view = 2131362836;
-        public static final int month = 2131362837;
-        public static final int more = 2131362838;
-        public static final int more_actions_dock = 2131362839;
-        public static final int more_button = 2131362840;
-        public static final int motion_base = 2131362841;
-        public static final int mr_art = 2131362842;
-        public static final int mr_cast_checkbox = 2131362843;
-        public static final int mr_cast_close_button = 2131362844;
-        public static final int mr_cast_divider = 2131362845;
-        public static final int mr_cast_group_icon = 2131362846;
-        public static final int mr_cast_group_name = 2131362847;
-        public static final int mr_cast_group_progress_bar = 2131362848;
-        public static final int mr_cast_header_name = 2131362849;
-        public static final int mr_cast_list = 2131362850;
-        public static final int mr_cast_meta_art = 2131362851;
-        public static final int mr_cast_meta_background = 2131362852;
-        public static final int mr_cast_meta_black_scrim = 2131362853;
-        public static final int mr_cast_meta_subtitle = 2131362854;
-        public static final int mr_cast_meta_title = 2131362855;
-        public static final int mr_cast_mute_button = 2131362856;
-        public static final int mr_cast_route_icon = 2131362857;
-        public static final int mr_cast_route_name = 2131362858;
-        public static final int mr_cast_route_progress_bar = 2131362859;
-        public static final int mr_cast_stop_button = 2131362860;
-        public static final int mr_cast_volume_layout = 2131362861;
-        public static final int mr_cast_volume_slider = 2131362862;
-        public static final int mr_chooser_list = 2131362863;
-        public static final int mr_chooser_route_desc = 2131362864;
-        public static final int mr_chooser_route_icon = 2131362865;
-        public static final int mr_chooser_route_name = 2131362866;
-        public static final int mr_chooser_title = 2131362867;
-        public static final int mr_close = 2131362868;
-        public static final int mr_control_divider = 2131362869;
-        public static final int mr_control_playback_ctrl = 2131362870;
-        public static final int mr_control_subtitle = 2131362871;
-        public static final int mr_control_title = 2131362872;
-        public static final int mr_control_title_container = 2131362873;
-        public static final int mr_custom_control = 2131362874;
-        public static final int mr_default_control = 2131362875;
-        public static final int mr_dialog_area = 2131362876;
-        public static final int mr_expandable_area = 2131362877;
-        public static final int mr_group_expand_collapse = 2131362878;
-        public static final int mr_group_volume_route_name = 2131362879;
-        public static final int mr_media_main_control = 2131362880;
-        public static final int mr_name = 2131362881;
-        public static final int mr_picker_close_button = 2131362882;
-        public static final int mr_picker_header_name = 2131362883;
-        public static final int mr_picker_list = 2131362884;
-        public static final int mr_picker_route_icon = 2131362885;
-        public static final int mr_picker_route_name = 2131362886;
-        public static final int mr_picker_route_progress_bar = 2131362887;
-        public static final int mr_playback_control = 2131362888;
-        public static final int mr_title_bar = 2131362889;
-        public static final int mr_volume_control = 2131362890;
-        public static final int mr_volume_group_list = 2131362891;
-        public static final int mr_volume_item_icon = 2131362892;
-        public static final int mr_volume_slider = 2131362893;
-        public static final int mtrl_card_checked_layer_id = 2131362894;
-        public static final int mtrl_child_content_container = 2131362895;
-        public static final int mtrl_internal_children_alpha_tag = 2131362896;
-        public static final int multi_user_avatar = 2131362897;
-        public static final int multi_user_switch = 2131362898;
-        public static final int multiply = 2131362899;
-        public static final int name = 2131362900;
-        public static final int names = 2131362901;
-        public static final int nav_bar_background = 2131362902;
-        public static final int nav_buttons = 2131362903;
-        public static final int navigation_bar_frame = 2131362904;
-        public static final int navigation_bar_space = 2131362905;
-        public static final int navigation_header_container = 2131362906;
-        public static final int navigation_inflater = 2131362907;
-        public static final int navigator_container = 2131362908;
-        public static final int navstubview_bg_view = 2131362909;
-        public static final int negative_control_center = 2131362910;
-        public static final int negative_magzine = 2131362911;
-        public static final int network_logging_disclosures = 2131362912;
-        public static final int network_logging_subtitle = 2131362913;
-        public static final int network_logging_warning = 2131362914;
-        public static final int never = 2131362915;
-        public static final int next_alarm_icon = 2131362916;
-        public static final int next_alarm_text = 2131362917;
-        public static final int noScroll = 2131362918;
-        public static final int no_carrier_text = 2131362919;
-        public static final int no_notifications = 2131362920;
-        public static final int non_configurable_multichannel_text = 2131362921;
-        public static final int non_configurable_text = 2131362922;
-        public static final int none = 2131362923;
-        public static final int normal = 2131362924;
-        public static final int notificationIcons = 2131362925;
-        public static final int notification_action_list_margin_target = 2131362926;
-        public static final int notification_background = 2131362927;
-        public static final int notification_children_container = 2131362928;
-        public static final int notification_container_parent = 2131362929;
-        public static final int notification_guts = 2131362930;
-        public static final int notification_guts_stub = 2131362931;
-        public static final int notification_hidden = 2131362932;
-        public static final int notification_icon_area = 2131362933;
-        public static final int notification_icon_area_inner = 2131362934;
-        public static final int notification_lights_out = 2131362935;
-        public static final int notification_main_column = 2131362936;
-        public static final int notification_main_column_container = 2131362937;
-        public static final int notification_media_progress_time = 2131362938;
-        public static final int notification_more_divider = 2131362939;
-        public static final int notification_panel = 2131362940;
-        public static final int notification_plugin = 2131362941;
-        public static final int notification_power = 2131362942;
-        public static final int notification_screenshot = 2131362943;
-        public static final int notification_shade_carrier = 2131362944;
-        public static final int notification_shade_shortcut = 2131362945;
-        public static final int notification_snooze = 2131362946;
-        public static final int notification_stack_scroller = 2131362947;
-        public static final int notification_temperature = 2131362948;
-        public static final int notification_text = 2131362949;
-        public static final int notification_title = 2131362950;
-        public static final int num = 2131362951;
-        public static final int num1 = 2131362952;
-        public static final int num2 = 2131362953;
-        public static final int number_picker_input = 2131362954;
-        public static final int odi_captions = 2131362955;
-        public static final int odi_captions_icon = 2131362956;
-        public static final int odi_captions_tooltip_stub = 2131362957;
-        public static final int odi_captions_tooltip_view = 2131362958;
-        public static final int off = 2131362959;
-        public static final int ok = 2131362960;
-        public static final int on = 2131362961;
-        public static final int onboarding_fragment_root = 2131362962;
-        public static final int onboarding_half_shell_container = 2131362963;
-        public static final int onboarding_text = 2131362964;
-        public static final int opaque = 2131362965;
-        public static final int operator_name = 2131362966;
-        public static final int operator_name_frame = 2131362967;
-        public static final int optional = 2131362968;
-        public static final int other_apps = 2131362969;
-        public static final int others_title = 2131362970;
-        public static final int outline = 2131362971;
-        public static final int owner_info = 2131362972;
-        public static final int owner_info_arrow_right = 2131362973;
-        public static final int owner_info_button = 2131362974;
-        public static final int owner_info_container = 2131362975;
-        public static final int owner_info_edit_text = 2131362976;
-        public static final int owner_info_layout = 2131362977;
-        public static final int owner_info_restricted_icon = 2131362978;
-        public static final int owner_info_title = 2131362979;
-        public static final int packed = 2131362980;
-        public static final int page_container = 2131362981;
-        public static final int page_indicator = 2131362982;
-        public static final int panel = 2131362983;
-        public static final int panel_alpha_animator_end_tag = 2131362984;
-        public static final int panel_alpha_animator_start_tag = 2131362985;
-        public static final int panel_alpha_animator_tag = 2131362986;
-        public static final int panel_bar_image = 2131362987;
-        public static final int panel_header = 2131362988;
-        public static final int parallax = 2131362989;
-        public static final int parent = 2131362990;
-        public static final int parentPanel = 2131362991;
-        public static final int parentRelative = 2131362992;
-        public static final int parent_channel_name = 2131362993;
-        public static final int parent_matrix = 2131362994;
-        public static final int passwordEntry = 2131362995;
-        public static final int password_toggle = 2131362996;
-        public static final int path = 2131362997;
-        public static final int pathRelative = 2131362998;
-        public static final int paused = 2131362999;
-        public static final int peekHeight = 2131363000;
-        public static final int people_list = 2131363001;
-        public static final int percent = 2131363002;
-        public static final int phone_locked_textview = 2131363003;
-        public static final int phone_locked_timeout_id = 2131363004;
-        public static final int phone_status_bar_left_container = 2131363005;
-        public static final int physics_animator_tag = 2131363006;
-        public static final int picker = 2131363007;
-        public static final int pickers = 2131363008;
-        public static final int pie = 2131363009;
-        public static final int pin = 2131363010;
-        public static final int pinEntry = 2131363011;
-        public static final int pip_controls = 2131363012;
-        public static final int pkg_icon = 2131363013;
-        public static final int pkg_name = 2131363014;
-        public static final int pkgicon = 2131363015;
-        public static final int pkgname = 2131363016;
-        public static final int play_button = 2131363017;
-        public static final int play_button_image = 2131363018;
-        public static final int play_button_text = 2131363019;
-        public static final int play_pause_button = 2131363020;
-        public static final int playback_controls_dock = 2131363021;
-        public static final int playback_fragment_background = 2131363022;
-        public static final int playback_fragment_root = 2131363023;
-        public static final int playback_progress = 2131363024;
-        public static final int player_minus_button = 2131363025;
-        public static final int player_plus_button = 2131363026;
-        public static final int player_setup = 2131363027;
-        public static final int playing = 2131363028;
-        public static final int plugin_frame = 2131363029;
-        public static final int pointer_view = 2131363030;
-        public static final int popup_arrow = 2131363031;
-        public static final int position = 2131363032;
-        public static final int postLayout = 2131363033;
-        public static final int preference_detail = 2131363034;
-        public static final int presentation = 2131363035;
-        public static final int preview_text = 2131363036;
-        public static final int priority = 2131363037;
-        public static final int priority_icon = 2131363038;
-        public static final int priority_label = 2131363039;
-        public static final int priority_summary = 2131363040;
-        public static final int progress = 2131363041;
-        public static final int progress_bar_animation = 2131363042;
-        public static final int progress_bar_background = 2131363043;
-        public static final int progress_circular = 2131363044;
-        public static final int progress_horizontal = 2131363045;
-        public static final int progress_percent = 2131363046;
-        public static final int prompt = 2131363047;
-        public static final int prompt_container = 2131363048;
-        public static final int pukEntry = 2131363049;
-        public static final int pulsating_circle = 2131363050;
-        public static final int qs_brightness = 2131363051;
-        public static final int qs_carrier_divider1 = 2131363052;
-        public static final int qs_carrier_divider2 = 2131363053;
-        public static final int qs_carrier_text = 2131363054;
-        public static final int qs_content = 2131363055;
-        public static final int qs_control_detail_header = 2131363056;
-        public static final int qs_customize = 2131363057;
-        public static final int qs_detail = 2131363058;
-        public static final int qs_detail_container = 2131363059;
-        public static final int qs_detail_header = 2131363060;
-        public static final int qs_detail_header_progress = 2131363061;
-        public static final int qs_drag_handle_view = 2131363062;
-        public static final int qs_expand_indicator = 2131363063;
-        public static final int qs_footer = 2131363064;
-        public static final int qs_footer_actions_container = 2131363065;
-        public static final int qs_footer_actions_edit_container = 2131363066;
-        public static final int qs_footer_bundle = 2131363067;
-        public static final int qs_footer_data_usage = 2131363068;
-        public static final int qs_frame = 2131363069;
-        public static final int qs_icon_state_tag = 2131363070;
-        public static final int qs_icon_tag = 2131363071;
-        public static final int qs_media_controls = 2131363072;
-        public static final int qs_media_controls_options = 2131363073;
-        public static final int qs_mobile = 2131363074;
-        public static final int qs_navbar_scrim = 2131363075;
-        public static final int qs_pager = 2131363076;
-        public static final int qs_slash_tag = 2131363077;
-        public static final int quick_qs_panel = 2131363078;
-        public static final int quick_qs_status_icons = 2131363079;
-        public static final int quick_settings_background = 2131363080;
-        public static final int quick_settings_container = 2131363081;
-        public static final int quick_settings_gradient_view = 2131363082;
-        public static final int quick_settings_panel = 2131363083;
-        public static final int quick_settings_status_bar_background = 2131363084;
-        public static final int quick_status_bar_system_icons = 2131363085;
-        public static final int radio = 2131363086;
-        public static final int radio_button = 2131363087;
-        public static final int ratio = 2131363088;
-        public static final int recent_apps = 2131363089;
-        public static final int recents_bg_view = 2131363090;
-        public static final int recents_card_container = 2131363091;
-        public static final int recents_first_card = 2131363092;
-        public static final int recents_first_card_icon = 2131363093;
-        public static final int rectangles = 2131363094;
-        public static final int recycler_view = 2131363095;
-        public static final int remember = 2131363096;
-        public static final int remote_input = 2131363097;
-        public static final int remote_input_progress = 2131363098;
-        public static final int remote_input_send = 2131363099;
-        public static final int remote_input_text = 2131363100;
-        public static final int remove = 2131363101;
-        public static final int remove_action_button = 2131363102;
-        public static final int remove_icon = 2131363103;
-        public static final int remove_text = 2131363104;
-        public static final int report_rejected_touch = 2131363105;
-        public static final int requires_remeasuring = 2131363106;
-        public static final int res = 2131363107;
-        public static final int resize_handle = 2131363108;
-        public static final int restricted_icon = 2131363109;
-        public static final int restricted_padlock = 2131363110;
-        public static final int reverseSawtooth = 2131363111;
-        public static final int right = 2131363112;
-        public static final int rightSpacer = 2131363113;
-        public static final int right_button = 2131363114;
-        public static final int right_button_layout = 2131363115;
-        public static final int right_button_tips = 2131363116;
-        public static final int right_control = 2131363117;
-        public static final int right_handle = 2131363118;
-        public static final int right_icon = 2131363119;
-        public static final int right_side = 2131363120;
-        public static final int ringer = 2131363121;
-        public static final int ringer_container = 2131363122;
-        public static final int ringer_icon = 2131363123;
-        public static final int ringer_mode_icon = 2131363124;
-        public static final int ringer_mode_text = 2131363125;
-        public static final int roaming_text = 2131363126;
-        public static final int root_view = 2131363127;
-        public static final int rotate_suggestion = 2131363128;
-        public static final int rounded = 2131363129;
-        public static final int row = 2131363130;
-        public static final int row0 = 2131363131;
-        public static final int row1 = 2131363132;
-        public static final int row2 = 2131363133;
-        public static final int row3 = 2131363134;
-        public static final int row4 = 2131363135;
-        public static final int row_content = 2131363136;
-        public static final int row_header = 2131363137;
-        public static final int row_header_description = 2131363138;
-        public static final int row_tag_for_content_view = 2131363139;
-        public static final int row_view = 2131363140;
-        public static final int save = 2131363141;
-        public static final int save_non_transition_alpha = 2131363142;
-        public static final int save_overlay_view = 2131363143;
-        public static final int sawtooth = 2131363144;
-        public static final int scale = 2131363145;
-        public static final int scale_frame = 2131363146;
-        public static final int scale_x_animator_end_value_tag = 2131363147;
-        public static final int scale_x_animator_start_value_tag = 2131363148;
-        public static final int scale_x_animator_tag = 2131363149;
-        public static final int scale_x_dynamicanimation_tag = 2131363150;
-        public static final int scale_y_animator_end_value_tag = 2131363151;
-        public static final int scale_y_animator_start_value_tag = 2131363152;
-        public static final int scale_y_animator_tag = 2131363153;
-        public static final int scale_y_dynamicanimation_tag = 2131363154;
-        public static final int score = 2131363155;
-        public static final int scores = 2131363156;
-        public static final int screen = 2131363157;
-        public static final int screen_pinning_back_bg = 2131363158;
-        public static final int screen_pinning_back_bg_light = 2131363159;
-        public static final int screen_pinning_back_group = 2131363160;
-        public static final int screen_pinning_back_icon = 2131363161;
-        public static final int screen_pinning_buttons = 2131363162;
-        public static final int screen_pinning_cancel_button = 2131363163;
-        public static final int screen_pinning_description = 2131363164;
-        public static final int screen_pinning_home_bg = 2131363165;
-        public static final int screen_pinning_home_bg_light = 2131363166;
-        public static final int screen_pinning_home_group = 2131363167;
-        public static final int screen_pinning_home_icon = 2131363168;
-        public static final int screen_pinning_ok_button = 2131363169;
-        public static final int screen_pinning_recents_bg = 2131363170;
-        public static final int screen_pinning_recents_bg_light = 2131363171;
-        public static final int screen_pinning_recents_group = 2131363172;
-        public static final int screen_pinning_text_area = 2131363173;
-        public static final int screen_pinning_title = 2131363174;
-        public static final int screen_recording_dialog_source_description = 2131363175;
-        public static final int screen_recording_dialog_source_text = 2131363176;
-        public static final int screen_recording_options = 2131363177;
-        public static final int screenrecord_audio_switch = 2131363178;
-        public static final int screenrecord_taps_switch = 2131363179;
-        public static final int screenshot_action_chip_icon = 2131363180;
-        public static final int screenshot_action_chip_text = 2131363181;
-        public static final int scrim = 2131363182;
-        public static final int scrim_alpha_end = 2131363183;
-        public static final int scrim_alpha_start = 2131363184;
-        public static final int scrim_behind = 2131363185;
-        public static final int scrim_in_front = 2131363186;
-        public static final int scroll = 2131363187;
-        public static final int scrollIndicatorDown = 2131363188;
-        public static final int scrollIndicatorUp = 2131363189;
-        public static final int scrollView = 2131363190;
-        public static final int scrollable = 2131363191;
-        public static final int search_badge = 2131363192;
-        public static final int search_bar = 2131363193;
-        public static final int search_button = 2131363194;
-        public static final int search_close_btn = 2131363195;
-        public static final int search_container = 2131363196;
-        public static final int search_edit_frame = 2131363197;
-        public static final int search_go_btn = 2131363198;
-        public static final int search_logo = 2131363199;
-        public static final int search_mag_icon = 2131363200;
-        public static final int search_mask = 2131363201;
-        public static final int search_mask_vs = 2131363202;
-        public static final int search_orb = 2131363203;
-        public static final int search_panel = 2131363204;
-        public static final int search_plate = 2131363205;
-        public static final int search_src_text = 2131363206;
-        public static final int search_text_cancel = 2131363207;
-        public static final int search_voice_btn = 2131363208;
-        public static final int second_card = 2131363209;
-        public static final int secondary_controls_dock = 2131363210;
-        public static final int secure_keyguard_bouncer_message_content = 2131363211;
-        public static final int secure_keyguard_bouncer_message_title = 2131363212;
-        public static final int see_more_button = 2131363213;
-        public static final int seekbar = 2131363214;
-        public static final int seekbar_background_semicircle = 2131363215;
-        public static final int seekbar_value = 2131363216;
-        public static final int select = 2131363217;
-        public static final int select_dialog_listview = 2131363218;
-        public static final int select_icon = 2131363219;
-        public static final int selected = 2131363220;
-        public static final int separate_time = 2131363221;
-        public static final int separated_button = 2131363222;
-        public static final int separator = 2131363223;
-        public static final int set_action_button_icon = 2131363224;
-        public static final int set_action_button_visibility = 2131363225;
-        public static final int settings = 2131363226;
-        public static final int settings_button = 2131363227;
-        public static final int settings_button_container = 2131363228;
-        public static final int settings_cog = 2131363229;
-        public static final int settings_container = 2131363230;
-        public static final int settings_footer = 2131363231;
-        public static final int settings_icon = 2131363232;
-        public static final int settings_link = 2131363233;
-        public static final int settings_title = 2131363234;
-        public static final int settings_title_divider = 2131363235;
-        public static final int settings_title_panel = 2131363236;
-        public static final int settings_title_template = 2131363237;
-        public static final int shape_preference_connected = 2131363238;
-        public static final int shape_preference_disconnected = 2131363239;
-        public static final int shelf_menu_anchor_anchor = 2131363240;
-        public static final int shelter_view = 2131363241;
-        public static final int shortcut = 2131363242;
-        public static final int showCustom = 2131363243;
-        public static final int showHome = 2131363244;
-        public static final int showTitle = 2131363245;
-        public static final int show_split_action_bar = 2131363246;
-        public static final int silence = 2131363247;
-        public static final int silence_icon = 2131363248;
-        public static final int silence_label = 2131363249;
-        public static final int silence_summary = 2131363250;
-        public static final int simPinEntry = 2131363251;
-        public static final int sin = 2131363252;
-        public static final int skipCollapsed = 2131363253;
-        public static final int sleep_warning_dialog_container = 2131363254;
-        public static final int slice_permission_checkbox = 2131363255;
-        public static final int slide = 2131363256;
-        public static final int slider = 2131363257;
-        public static final int small = 2131363258;
-        public static final int smallLabel = 2131363259;
-        public static final int smart_cover_layout_id = 2131363260;
-        public static final int smart_home_container = 2131363261;
-        public static final int smart_reply_view = 2131363262;
-        public static final int snackbar_action = 2131363263;
-        public static final int snackbar_text = 2131363264;
-        public static final int snap = 2131363265;
-        public static final int snapMargins = 2131363266;
-        public static final int snooze_option_default = 2131363267;
-        public static final int snooze_options = 2131363268;
-        public static final int space1 = 2131363269;
-        public static final int space2 = 2131363270;
-        public static final int spacer = 2131363271;
-        public static final int special_effects_controller_view_tag = 2131363272;
-        public static final int spinner = 2131363273;
-        public static final int spinner_dropdown_container = 2131363274;
-        public static final int spline = 2131363275;
-        public static final int split_action_bar = 2131363276;
-        public static final int split_action_bar_vs = 2131363277;
-        public static final int spread = 2131363278;
-        public static final int spread_inside = 2131363279;
-        public static final int square = 2131363280;
-        public static final int src_atop = 2131363281;
-        public static final int src_in = 2131363282;
-        public static final int src_over = 2131363283;
-        public static final int ss = 2131363284;
-        public static final int standard = 2131363285;
-        public static final int start = 2131363286;
-        public static final int startHorizontal = 2131363287;
-        public static final int startVertical = 2131363288;
-        public static final int staticLayout = 2131363289;
-        public static final int staticPostLayout = 2131363290;
-        public static final int status = 2131363291;
-        public static final int statusIcons = 2131363292;
-        public static final int status_bar = 2131363293;
-        public static final int status_bar_container = 2131363294;
-        public static final int status_bar_contents = 2131363295;
-        public static final int status_bar_latest_event_content = 2131363296;
-        public static final int status_bar_left_side = 2131363297;
-        public static final int status_bar_view_state_tag = 2131363298;
-        public static final int status_container = 2131363299;
-        public static final int status_icon = 2131363300;
-        public static final int status_icon_area = 2131363301;
-        public static final int status_message = 2131363302;
-        public static final int status_separator = 2131363303;
-        public static final int status_view_container = 2131363304;
-        public static final int stop = 2131363305;
-        public static final int stretch = 2131363306;
-        public static final int structure_page_indicator = 2131363307;
-        public static final int structure_pager = 2131363308;
-        public static final int stub = 2131363309;
-        public static final int sub_title = 2131363310;
-        public static final int subcontent = 2131363311;
-        public static final int submenuarrow = 2131363312;
-        public static final int submit_area = 2131363313;
-        public static final int subtitle = 2131363314;
-        public static final int summary = 2131363315;
-        public static final int surface_view = 2131363316;
-        public static final int switchWidget = 2131363317;
-        public static final int switch_bar = 2131363318;
-        public static final int switch_ime_button = 2131363319;
-        public static final int switch_text = 2131363320;
-        public static final int switch_to_system_user = 2131363321;
-        public static final int system_icon_area = 2131363322;
-        public static final int system_icons = 2131363323;
-        public static final int system_icons_container = 2131363324;
-        public static final int tabMode = 2131363325;
-        public static final int tag_accessibility_actions = 2131363326;
-        public static final int tag_accessibility_clickable_spans = 2131363327;
-        public static final int tag_accessibility_heading = 2131363328;
-        public static final int tag_accessibility_pane_title = 2131363329;
-        public static final int tag_alphabet_indexer_item = 2131363330;
-        public static final int tag_control_center = 2131363331;
-        public static final int tag_control_center_trans = 2131363332;
-        public static final int tag_disable_state_tracker = 2131363333;
-        public static final int tag_popup_menu_item = 2131363334;
-        public static final int tag_removed_keyguard_notification_key = 2131363335;
-        public static final int tag_removed_keyguard_notification_position = 2131363336;
-        public static final int tag_screen_reader_focusable = 2131363337;
-        public static final int tag_spinner_dropdown_view = 2131363338;
-        public static final int tag_spinner_dropdown_view_double_line = 2131363339;
-        public static final int tag_state_description = 2131363340;
-        public static final int tag_tile_layout = 2131363341;
-        public static final int tag_transition_group = 2131363342;
-        public static final int tag_unhandled_key_event_manager = 2131363343;
-        public static final int tag_unhandled_key_listeners = 2131363344;
-        public static final int target_animator_tag = 2131363345;
-        public static final int text = 2131363346;
-        public static final int text1 = 2131363347;
-        public static final int text2 = 2131363348;
-        public static final int textSpacerNoButtons = 2131363349;
-        public static final int textSpacerNoTitle = 2131363350;
-        public static final int textStart = 2131363351;
-        public static final int text_group = 2131363352;
-        public static final int text_input_end_icon = 2131363353;
-        public static final int text_input_start_icon = 2131363354;
-        public static final int text_line_1 = 2131363355;
-        public static final int text_right = 2131363356;
-        public static final int text_see_more = 2131363357;
-        public static final int text_see_more_count = 2131363358;
-        public static final int textinput_counter = 2131363359;
-        public static final int textinput_error = 2131363360;
-        public static final int textinput_helper_text = 2131363361;
-        public static final int texts_container = 2131363362;
-        public static final int theme_background = 2131363363;
-        public static final int third_card = 2131363364;
-        public static final int third_theme_hint = 2131363365;
-        public static final int third_theme_hint_layout = 2131363366;
-        public static final int thumbs_row = 2131363367;
-        public static final int tile_item = 2131363368;
-        public static final int tile_label = 2131363369;
-        public static final int tile_layout = 2131363370;
-        public static final int tile_page = 2131363371;
-        public static final int tiles_container = 2131363372;
-        public static final int tiles_edit = 2131363373;
-        public static final int tiles_header = 2131363374;
-        public static final int tiles_scroller = 2131363375;
-        public static final int tiles_springer = 2131363376;
-        public static final int time = 2131363377;
-        public static final int timePicker = 2131363378;
-        public static final int timePickerLayout = 2131363379;
-        public static final int time_date = 2131363380;
-        public static final int time_header = 2131363381;
-        public static final int time_hour = 2131363382;
-        public static final int time_line_1 = 2131363383;
-        public static final int time_minute = 2131363384;
-        public static final int time_view = 2131363385;
-        public static final int title = 2131363386;
-        public static final int titleDividerNoCustom = 2131363387;
-        public static final int title_badge = 2131363388;
-        public static final int title_layout = 2131363389;
-        public static final int title_orb = 2131363390;
-        public static final int title_template = 2131363391;
-        public static final int title_text = 2131363392;
-        public static final int to_back_intro = 2131363393;
-        public static final int to_home_intro = 2131363394;
-        public static final int to_task_intro = 2131363395;
-        public static final int toggle = 2131363396;
-        public static final int toggle_stub = 2131363397;
-        public static final int tooltip_view = 2131363398;
-        public static final int top = 2131363399;
-        public static final int topPanel = 2131363400;
-        public static final int top_divider = 2131363401;
-        public static final int top_handle = 2131363402;
-        public static final int top_inset_animator_end_value_tag = 2131363403;
-        public static final int top_inset_animator_start_value_tag = 2131363404;
-        public static final int top_inset_animator_tag = 2131363405;
-        public static final int top_roundess_animator_end_tag = 2131363406;
-        public static final int top_roundess_animator_start_tag = 2131363407;
-        public static final int top_roundess_animator_tag = 2131363408;
-        public static final int top_title = 2131363409;
-        public static final int total_time = 2131363410;
-        public static final int touch_outside = 2131363411;
-        public static final int tracking_progress = 2131363412;
-        public static final int tracking_progress_label = 2131363413;
-        public static final int tracking_progress_up = 2131363414;
-        public static final int tracking_progress_up_container = 2131363415;
-        public static final int tracking_progress_up_label = 2131363416;
-        public static final int transformation_start_actual_height = 2131363417;
-        public static final int transformation_start_actual_width = 2131363418;
-        public static final int transformation_start_scale_x_tag = 2131363419;
-        public static final int transformation_start_scale_y_tag = 2131363420;
-        public static final int transformation_start_x_tag = 2131363421;
-        public static final int transformation_start_y_tag = 2131363422;
-        public static final int transitionPosition = 2131363423;
-        public static final int transitionToEnd = 2131363424;
-        public static final int transitionToStart = 2131363425;
-        public static final int transition_current_scene = 2131363426;
-        public static final int transition_layout_save = 2131363427;
-        public static final int transition_position = 2131363428;
-        public static final int transition_scene_layoutid_cache = 2131363429;
-        public static final int transition_transform = 2131363430;
-        public static final int translation_x_animator_end_value_tag = 2131363431;
-        public static final int translation_x_animator_start_value_tag = 2131363432;
-        public static final int translation_x_animator_tag = 2131363433;
-        public static final int translation_x_dynamicanimation_tag = 2131363434;
-        public static final int translation_y_animator_end_value_tag = 2131363435;
-        public static final int translation_y_animator_start_value_tag = 2131363436;
-        public static final int translation_y_animator_tag = 2131363437;
-        public static final int translation_y_dynamicanimation_tag = 2131363438;
-        public static final int translation_z_animator_end_value_tag = 2131363439;
-        public static final int translation_z_animator_start_value_tag = 2131363440;
-        public static final int translation_z_animator_tag = 2131363441;
-        public static final int translation_z_dynamicanimation_tag = 2131363442;
-        public static final int transparentDark = 2131363443;
-        public static final int transparentLight = 2131363444;
-        public static final int transport_row = 2131363445;
-        public static final int triangle = 2131363446;
-        public static final int tuner_icon = 2131363447;
-        public static final int tuner_zen_buttons = 2131363448;
-        public static final int tuner_zen_mode_panel = 2131363449;
-        public static final int tuner_zen_switch = 2131363450;
-        public static final int turn_off_notifications = 2131363451;
-        public static final int two_target_divider = 2131363452;
-        public static final int unAdded_tiles = 2131363453;
-        public static final int unchecked = 2131363454;
-        public static final int underline = 2131363455;
-        public static final int undo = 2131363456;
-        public static final int uniform = 2131363457;
-        public static final int unlabeled = 2131363458;
-        public static final int unlock_screen_lock_screen_magazine_info = 2131363459;
-        public static final int unlock_screen_owner_info = 2131363460;
-        public static final int unlock_screen_sim_info = 2131363461;
-        public static final int unlockscreen_lockout_id = 2131363462;
-        public static final int up = 2131363463;
-        public static final int up_control = 2131363464;
-        public static final int usage_carrier_text = 2131363465;
-        public static final int usage_graph = 2131363466;
-        public static final int usage_info_bottom_text = 2131363467;
-        public static final int usage_info_top_text = 2131363468;
-        public static final int usage_period_text = 2131363469;
-        public static final int usage_text = 2131363470;
-        public static final int useLogo = 2131363471;
-        public static final int user_education_description = 2131363472;
-        public static final int user_education_title = 2131363473;
-        public static final int user_education_view = 2131363474;
-        public static final int user_name = 2131363475;
-        public static final int user_picture = 2131363476;
-        public static final int vertical = 2131363477;
-        public static final int veto = 2131363478;
-        public static final int video_surface = 2131363479;
-        public static final int video_surface_container = 2131363480;
-        public static final int view_flipper = 2131363481;
-        public static final int view_group_fade_helper_animator = 2131363482;
-        public static final int view_group_fade_helper_hardware_layer = 2131363483;
-        public static final int view_group_fade_helper_modified_views = 2131363484;
-        public static final int view_group_fade_helper_previous_value_tag = 2131363485;
-        public static final int view_group_fade_helper_restore_tag = 2131363486;
-        public static final int view_height_animator_end_tag = 2131363487;
-        public static final int view_height_animator_start_tag = 2131363488;
-        public static final int view_height_animator_tag = 2131363489;
-        public static final int view_height_current_value = 2131363490;
-        public static final int view_offset_helper = 2131363491;
-        public static final int view_pager = 2131363492;
-        public static final int view_tree_lifecycle_owner = 2131363493;
-        public static final int view_tree_saved_state_registry_owner = 2131363494;
-        public static final int view_tree_view_model_store_owner = 2131363495;
-        public static final int view_width_animator_end_tag = 2131363496;
-        public static final int view_width_animator_start_tag = 2131363497;
-        public static final int view_width_animator_tag = 2131363498;
-        public static final int view_width_current_value = 2131363499;
-        public static final int visible = 2131363500;
-        public static final int visible_removing_fragment_view_tag = 2131363501;
-        public static final int volume_dialog = 2131363502;
-        public static final int volume_dialog_container = 2131363503;
-        public static final int volume_dialog_rows = 2131363504;
-        public static final int volume_item_container = 2131363505;
-        public static final int volume_row_header = 2131363506;
-        public static final int volume_row_icon = 2131363507;
-        public static final int volume_row_slider = 2131363508;
-        public static final int volume_row_slider_frame = 2131363509;
-        public static final int vpn_disclosures = 2131363510;
-        public static final int vpn_subtitle = 2131363511;
-        public static final int vpn_warning = 2131363512;
-        public static final int wallpaper = 2131363513;
-        public static final int wallpaper_des = 2131363514;
-        public static final int wallpaper_img = 2131363515;
-        public static final int wallpaper_textureView = 2131363516;
-        public static final int welcome = 2131363517;
-        public static final int widget_icon = 2131363518;
-        public static final int width = 2131363519;
-        public static final int wifi_activity = 2131363520;
-        public static final int wifi_airplane_spacer = 2131363521;
-        public static final int wifi_combo = 2131363522;
-        public static final int wifi_group = 2131363523;
-        public static final int wifi_in = 2131363524;
-        public static final int wifi_out = 2131363525;
-        public static final int wifi_signal = 2131363526;
-        public static final int wifi_signal_spacer = 2131363527;
-        public static final int wifi_standard = 2131363528;
-        public static final int wireless_charge_picture = 2131363529;
-        public static final int wireless_charge_slowly_video = 2131363530;
-        public static final int wireless_charging_percentage = 2131363531;
-        public static final int wireless_charging_text_layout = 2131363532;
-        public static final int wireless_charging_view = 2131363533;
-        public static final int withText = 2131363534;
-        public static final int world = 2131363535;
-        public static final int wrap = 2131363536;
-        public static final int wrap_content = 2131363537;
-        public static final int x_animator_tag = 2131363538;
-        public static final int x_animator_tag_end_value = 2131363539;
-        public static final int x_animator_tag_start_value = 2131363540;
-        public static final int y_animator_tag = 2131363541;
-        public static final int y_animator_tag_end_value = 2131363542;
-        public static final int y_animator_tag_start_value = 2131363543;
-        public static final int year = 2131363544;
-        public static final int zen_alarm_warning = 2131363545;
-        public static final int zen_buttons = 2131363546;
-        public static final int zen_conditions = 2131363547;
-        public static final int zen_content = 2131363548;
-        public static final int zen_duration_conditions = 2131363549;
-        public static final int zen_duration_container = 2131363550;
-        public static final int zen_duration_dialog_container = 2131363551;
-        public static final int zen_embedded_divider = 2131363552;
-        public static final int zen_icon = 2131363553;
-        public static final int zen_introduction = 2131363554;
-        public static final int zen_introduction_confirm = 2131363555;
-        public static final int zen_introduction_customize = 2131363556;
-        public static final int zen_introduction_message = 2131363557;
-        public static final int zen_mode_panel = 2131363558;
-        public static final int zen_quit = 2131363559;
-        public static final int zen_radio_buttons = 2131363560;
-        public static final int zen_radio_buttons_content = 2131363561;
-        public static final int zen_title = 2131363562;
+        public static final int collapse = 2131362154;
+        public static final int collapseActionView = 2131362155;
+        public static final int collapse_button = 2131362156;
+        public static final int column = 2131362157;
+        public static final int confirm_button = 2131362158;
+        public static final int connected_device_network_signal = 2131362159;
+        public static final int connected_device_signals = 2131362160;
+        public static final int connected_device_signals_stub = 2131362161;
+        public static final int container = 2131362162;
+        public static final int container_list = 2131362163;
+        public static final int contains_transformed_view = 2131362164;
+        public static final int content = 2131362165;
+        public static final int contentPanel = 2131362166;
+        public static final int contentView = 2131362167;
+        public static final int content_container = 2131362168;
+        public static final int content_fragment = 2131362169;
+        public static final int content_frame = 2131362170;
+        public static final int content_header_container = 2131362171;
+        public static final int content_mask = 2131362172;
+        public static final int content_mask_vs = 2131362173;
+        public static final int content_parent = 2131362174;
+        public static final int content_scroller = 2131362175;
+        public static final int content_springer = 2131362176;
+        public static final int content_text = 2131362177;
+        public static final int content_wrapper = 2131362178;
+        public static final int contents = 2131362179;
+        public static final int continuous_clipping_tag = 2131362180;
+        public static final int control = 2131362181;
+        public static final int control_bar = 2131362182;
+        public static final int control_center_bottom_area = 2131362183;
+        public static final int control_center_panel = 2131362184;
+        public static final int control_center_shortcut = 2131362185;
+        public static final int control_detail_close = 2131362186;
+        public static final int control_detail_open_in_app = 2131362187;
+        public static final int control_detail_root = 2131362188;
+        public static final int control_panel = 2131362189;
+        public static final int control_panel_content = 2131362190;
+        public static final int controller = 2131362191;
+        public static final int controls_activity_view = 2131362192;
+        public static final int controls_card = 2131362193;
+        public static final int controls_card_right_panel = 2131362194;
+        public static final int controls_container = 2131362195;
+        public static final int controls_dock = 2131362196;
+        public static final int controls_header = 2131362197;
+        public static final int controls_icon_row = 2131362198;
+        public static final int controls_management_root = 2131362199;
+        public static final int controls_more = 2131362200;
+        public static final int controls_no_favorites_group = 2131362201;
+        public static final int controls_pin_input = 2131362202;
+        public static final int controls_pin_use_alpha = 2131362203;
+        public static final int controls_spinner_item = 2131362204;
+        public static final int controls_subtitle = 2131362205;
+        public static final int controls_title = 2131362206;
+        public static final int conversation_icon = 2131362207;
+        public static final int conversation_icon_badge = 2131362208;
+        public static final int conversation_icon_badge_bg = 2131362209;
+        public static final int conversation_icon_badge_ring = 2131362210;
+        public static final int conversation_notification_sender = 2131362211;
+        public static final int coordinator = 2131362212;
+        public static final int cos = 2131362213;
+        public static final int cross_fade_layer_type_changed_tag = 2131362214;
+        public static final int current_time = 2131362215;
+        public static final int custom = 2131362216;
+        public static final int customPanel = 2131362217;
+        public static final int customize_action_bar = 2131362218;
+        public static final int customize_container = 2131362219;
+        public static final int customizer_transparent_view = 2131362220;
+        public static final int cut = 2131362221;
+        public static final int cutout_space_view = 2131362222;
+        public static final int data_purchase = 2131362223;
+        public static final int data_usage = 2131362224;
+        public static final int date = 2131362225;
+        public static final int datePicker = 2131362226;
+        public static final int datePickerLunar = 2131362227;
+        public static final int dateTimePicker = 2131362228;
+        public static final int date_picker_actions = 2131362229;
+        public static final int date_picker_calendar_days = 2131362230;
+        public static final int date_picker_calendar_days_header = 2131362231;
+        public static final int date_picker_calendar_view_frame = 2131362232;
+        public static final int date_picker_header = 2131362233;
+        public static final int date_picker_header_title = 2131362234;
+        public static final int date_time = 2131362235;
+        public static final int date_view = 2131362236;
+        public static final int date_weekday = 2131362237;
+        public static final int day = 2131362238;
+        public static final int decelerate = 2131362239;
+        public static final int decelerateAndComplete = 2131362240;
+        public static final int decor_content_parent = 2131362241;
+        public static final int default_activity_button = 2131362242;
+        public static final int default_behavior = 2131362243;
+        public static final int default_clock_view = 2131362244;
+        public static final int default_clock_view_bold = 2131362245;
+        public static final int default_icon = 2131362246;
+        public static final int default_label = 2131362247;
+        public static final int default_summary = 2131362248;
+        public static final int delegate_name = 2131362249;
+        public static final int delete_button = 2131362250;
+        public static final int deltaRelative = 2131362251;
+        public static final int demo_activity = 2131362252;
+        public static final int dependency_ordering = 2131362253;
+        public static final int desc = 2131362254;
+        public static final int description = 2131362255;
+        public static final int description_container = 2131362256;
+        public static final int description_dock = 2131362257;
+        public static final int design_bottom_sheet = 2131362258;
+        public static final int design_menu_item_action_area = 2131362259;
+        public static final int design_menu_item_action_area_stub = 2131362260;
+        public static final int design_menu_item_text = 2131362261;
+        public static final int design_navigation_view = 2131362262;
+        public static final int details_background_view = 2131362263;
+        public static final int details_fragment_root = 2131362264;
+        public static final int details_frame = 2131362265;
+        public static final int details_overview = 2131362266;
+        public static final int details_overview_actions = 2131362267;
+        public static final int details_overview_actions_background = 2131362268;
+        public static final int details_overview_description = 2131362269;
+        public static final int details_overview_image = 2131362270;
+        public static final int details_overview_right_panel = 2131362271;
+        public static final int details_root = 2131362272;
+        public static final int details_rows_dock = 2131362273;
+        public static final int device_management_disclosures = 2131362274;
+        public static final int device_management_subtitle = 2131362275;
+        public static final int device_management_warning = 2131362276;
+        public static final int dex = 2131362277;
+        public static final int dialog = 2131362278;
+        public static final int dialog_anim_holder = 2131362279;
+        public static final int dialog_button = 2131362280;
+        public static final int dialog_container = 2131362281;
+        public static final int dialog_dim_bg = 2131362282;
+        public static final int dialog_icon = 2131362283;
+        public static final int dialog_root_view = 2131362284;
+        public static final int dialog_title = 2131362285;
+        public static final int digit_text = 2131362286;
+        public static final int dimensions = 2131362287;
+        public static final int direct = 2131362288;
+        public static final int disableHome = 2131362289;
+        public static final int disablePostScroll = 2131362290;
+        public static final int disableScroll = 2131362291;
+        public static final int dismiss = 2131362292;
+        public static final int dismiss_text = 2131362293;
+        public static final int dismiss_view = 2131362294;
+        public static final int display_cutout = 2131362295;
+        public static final int divider = 2131362296;
+        public static final int dnd_icon = 2131362297;
+        public static final int docked_divider_background = 2131362298;
+        public static final int docked_divider_handle = 2131362299;
+        public static final int done = 2131362300;
+        public static final int done_button = 2131362301;
+        public static final int down_control = 2131362302;
+        public static final int doze_intensity_tag = 2131362303;
+        public static final int doze_saved_filter_tag = 2131362304;
+        public static final int drag = 2131362305;
+        public static final int dragDown = 2131362306;
+        public static final int dragEnd = 2131362307;
+        public static final int dragLeft = 2131362308;
+        public static final int dragRight = 2131362309;
+        public static final int dragStart = 2131362310;
+        public static final int dragUp = 2131362311;
+        public static final int drag_handle = 2131362312;
+        public static final int drawer_img = 2131362313;
+        public static final int drawer_main_img = 2131362314;
+        public static final int drip_left_statusIcons = 2131362315;
+        public static final int drip_left_status_icon_area = 2131362316;
+        public static final int drip_network_speed_splitter = 2131362317;
+        public static final int drip_network_speed_view = 2131362318;
+        public static final int drip_notification_icon_area = 2131362319;
+        public static final int dropdown = 2131362320;
+        public static final int dummy = 2131362321;
+        public static final int dungeon_title = 2131362322;
+        public static final int easeIn = 2131362323;
+        public static final int easeInOut = 2131362324;
+        public static final int easeOut = 2131362325;
+        public static final int edit_container = 2131362326;
+        public static final int edit_query = 2131362327;
+        public static final int edittext_container = 2131362328;
+        public static final int emergencyCallButton = 2131362329;
+        public static final int emergency_call_button = 2131362330;
+        public static final int emergency_cryptkeeper_text = 2131362331;
+        public static final int empty_space = 2131362332;
+        public static final int empty_space_for_global = 2131362333;
+        public static final int empty_text = 2131362334;
+        public static final int empty_time_view = 2131362335;
+        public static final int empty_view = 2131362336;
+        public static final int enableUsb = 2131362337;
+        public static final int end = 2131362338;
+        public static final int end_padder = 2131362339;
+        public static final int ends_group = 2131362340;
+        public static final int enterAlways = 2131362341;
+        public static final int enterAlwaysCollapsed = 2131362342;
+        public static final int entry_list = 2131362343;
+        public static final int error = 2131362344;
+        public static final int error_frame = 2131362345;
+        public static final int exitUntilCollapsed = 2131362346;
+        public static final int expand = 2131362347;
+        public static final int expand_activities_button = 2131362348;
+        public static final int expand_button = 2131362349;
+        public static final int expand_container = 2131362350;
+        public static final int expand_indicator = 2131362351;
+        public static final int expand_space = 2131362352;
+        public static final int expand_tile = 2131362353;
+        public static final int expanded = 2131362354;
+        public static final int expandedPublic = 2131362355;
+        public static final int expanded_menu = 2131362356;
+        public static final int expanded_qs_scroll_view = 2131362357;
+        public static final int extra = 2131362358;
+        public static final int extra_badge = 2131362359;
+        public static final int fade = 2131362360;
+        public static final int fade_out_edge = 2131362361;
+        public static final int fake_shadow = 2131362362;
+        public static final int favorite = 2131362363;
+        public static final int favorites = 2131362364;
+        public static final int fill = 2131362365;
+        public static final int fill_horizontal = 2131362366;
+        public static final int fill_vertical = 2131362367;
+        public static final int filled = 2131362368;
+        public static final int filter_chip = 2131362369;
+        public static final int first_card = 2131362370;
+        public static final int fitToContents = 2131362371;
+        public static final int fixed = 2131362372;
+        public static final int flip = 2131362373;
+        public static final int foget_password = 2131362374;
+        public static final int foot_panel = 2131362375;
+        public static final int footer = 2131362376;
+        public static final int footerLayout = 2131362377;
+        public static final int footerLeftButton = 2131362378;
+        public static final int footerRightButton = 2131362379;
+        public static final int footer_divider = 2131362380;
+        public static final int footer_icon = 2131362381;
+        public static final int footer_page_indicator = 2131362382;
+        public static final int footer_text = 2131362383;
+        public static final int fore = 2131362384;
+        public static final int foreground_container = 2131362385;
+        public static final int foreground_service_dungeon = 2131362386;
+        public static final int foreground_service_dungeon_row = 2131362387;
+        public static final int forever = 2131362388;
+        public static final int forget_password_hint_container = 2131362389;
+        public static final int forget_password_method_back = 2131362390;
+        public static final int forget_password_method_content = 2131362391;
+        public static final int forget_password_method_next = 2131362392;
+        public static final int forget_password_suggesstion = 2131362393;
+        public static final int forget_password_suggesstion_ok = 2131362394;
+        public static final int forget_password_suggesstion_one = 2131362395;
+        public static final int forget_password_suggesstion_two = 2131362396;
+        public static final int fragment_container_view_tag = 2131362397;
+        public static final int frame = 2131362398;
+        public static final int friction_icon = 2131362399;
+        public static final int fs_gesture_final_icon = 2131362400;
+        public static final int fs_gesture_final_over = 2131362401;
+        public static final int fs_gesture_final_restart = 2131362402;
+        public static final int fs_gesture_final_summary = 2131362403;
+        public static final int fs_gesture_final_title = 2131362404;
+        public static final int fsg_nav_view = 2131362405;
+        public static final int fsgesture_ready_summary = 2131362406;
+        public static final int fsgesture_ready_title = 2131362407;
+        public static final int fsgesture_skip = 2131362408;
+        public static final int fsgesture_swipe_view = 2131362409;
+        public static final int fsgesture_title_view = 2131362410;
+        public static final int full_button = 2131362411;
+        public static final int fullscreen_network_speed_view = 2131362412;
+        public static final int fullscreen_notification_icon_area = 2131362413;
+        public static final int ghost_view = 2131362414;
+        public static final int ghost_view_holder = 2131362415;
+        public static final int global_actions_container = 2131362416;
+        public static final int global_actions_controls = 2131362417;
+        public static final int global_actions_controls_list = 2131362418;
+        public static final int global_actions_grid_root = 2131362419;
+        public static final int global_actions_lock_message = 2131362420;
+        public static final int global_actions_lock_message_container = 2131362421;
+        public static final int global_actions_overflow_button = 2131362422;
+        public static final int global_actions_panel_container = 2131362423;
+        public static final int global_actions_view = 2131362424;
+        public static final int global_actions_wallet = 2131362425;
+        public static final int global_screenshot_action_chip = 2131362426;
+        public static final int global_screenshot_actions = 2131362427;
+        public static final int global_screenshot_actions_background = 2131362428;
+        public static final int global_screenshot_actions_container = 2131362429;
+        public static final int global_screenshot_actions_container_background = 2131362430;
+        public static final int global_screenshot_animated_view = 2131362431;
+        public static final int global_screenshot_dismiss_button = 2131362432;
+        public static final int global_screenshot_dismiss_image = 2131362433;
+        public static final int global_screenshot_flash = 2131362434;
+        public static final int global_screenshot_frame = 2131362435;
+        public static final int global_screenshot_legacy = 2131362436;
+        public static final int global_screenshot_legacy_background = 2131362437;
+        public static final int global_screenshot_legacy_flash = 2131362438;
+        public static final int global_screenshot_legacy_selector = 2131362439;
+        public static final int global_screenshot_preview = 2131362440;
+        public static final int global_screenshot_selector = 2131362441;
+        public static final int gone = 2131362442;
+        public static final int gotIt = 2131362443;
+        public static final int got_it = 2131362444;
+        public static final int graph = 2131362445;
+        public static final int graph_label_group = 2131362446;
+        public static final int graph_wrap = 2131362447;
+        public static final int grid_frame = 2131362448;
+        public static final int group_divider = 2131362449;
+        public static final int group_header = 2131362450;
+        public static final int group_info = 2131362451;
+        public static final int group_name = 2131362452;
+        public static final int grouping = 2131362453;
+        public static final int groups = 2131362454;
+        public static final int guidance_breadcrumb = 2131362455;
+        public static final int guidance_container = 2131362456;
+        public static final int guidance_description = 2131362457;
+        public static final int guidance_icon = 2131362458;
+        public static final int guidance_title = 2131362459;
+        public static final int guide_content = 2131362460;
+        public static final int guide_video = 2131362461;
+        public static final int guidedactions_activator_item = 2131362462;
+        public static final int guidedactions_content = 2131362463;
+        public static final int guidedactions_content2 = 2131362464;
+        public static final int guidedactions_item_checkmark = 2131362465;
+        public static final int guidedactions_item_chevron = 2131362466;
+        public static final int guidedactions_item_content = 2131362467;
+        public static final int guidedactions_item_description = 2131362468;
+        public static final int guidedactions_item_icon = 2131362469;
+        public static final int guidedactions_item_title = 2131362470;
+        public static final int guidedactions_list = 2131362471;
+        public static final int guidedactions_list2 = 2131362472;
+        public static final int guidedactions_list_background = 2131362473;
+        public static final int guidedactions_list_background2 = 2131362474;
+        public static final int guidedactions_root = 2131362475;
+        public static final int guidedactions_root2 = 2131362476;
+        public static final int guidedactions_sub_list = 2131362477;
+        public static final int guidedactions_sub_list_background = 2131362478;
+        public static final int guidedstep_background = 2131362479;
+        public static final int guidedstep_background_view_root = 2131362480;
+        public static final int guidedstep_root = 2131362481;
+        public static final int gxzw_anim_surface = 2131362482;
+        public static final int gxzw_anim_try_again = 2131362483;
+        public static final int gxzw_highlight = 2131362484;
+        public static final int half_shelf = 2131362485;
+        public static final int half_shelf_container = 2131362486;
+        public static final int half_shelf_dialog = 2131362487;
+        public static final int half_shelf_row = 2131362488;
+        public static final int half_shell = 2131362489;
+        public static final int hbm_overlay = 2131362490;
+        public static final int head_bottom_divider = 2131362491;
+        public static final int header = 2131362492;
+        public static final int header_artist = 2131362493;
+        public static final int header_content = 2131362494;
+        public static final int header_debug_info = 2131362495;
+        public static final int header_details = 2131362496;
+        public static final int header_label = 2131362497;
+        public static final int header_text_container = 2131362498;
+        public static final int header_title = 2131362499;
+        public static final int heads_up_status_bar_view = 2131362500;
+        public static final int height_animator_end_value_tag = 2131362501;
+        public static final int height_animator_start_value_tag = 2131362502;
+        public static final int height_animator_tag = 2131362503;
+        public static final int hide_split_action_bar = 2131362504;
+        public static final int hideable = 2131362505;
+        public static final int home = 2131362506;
+        public static final int homeAsUp = 2131362507;
+        public static final int home_handle = 2131362508;
+        public static final int home_icon_img = 2131362509;
+        public static final int honorRequest = 2131362510;
+        public static final int horizontal = 2131362511;
+        public static final int hour = 2131362512;
+        public static final int hour_hand = 2131362513;
+        public static final int hovercard_panel = 2131362514;
+        public static final int icon = 2131362515;
+        public static final int icon_button = 2131362516;
+        public static final int icon_container = 2131362517;
+        public static final int icon_container_bg = 2131362518;
+        public static final int icon_frame = 2131362519;
+        public static final int icon_group = 2131362520;
+        public static final int icon_is_grayscale = 2131362521;
+        public static final int icon_is_pre_L = 2131362522;
+        public static final int icon_mic = 2131362523;
+        public static final int icon_placeholder = 2131362524;
+        public static final int icon_texts_container = 2131362525;
+        public static final int ifRoom = 2131362526;
+        public static final int ignore = 2131362527;
+        public static final int ignoreRequest = 2131362528;
+        public static final int image = 2131362529;
+        public static final int image1 = 2131362530;
+        public static final int image2 = 2131362531;
+        public static final int image_icon_tag = 2131362532;
+        public static final int ime_switcher = 2131362533;
+        public static final int inbox_text0 = 2131362534;
+        public static final int inbox_text1 = 2131362535;
+        public static final int inbox_text2 = 2131362536;
+        public static final int inbox_text3 = 2131362537;
+        public static final int inbox_text4 = 2131362538;
+        public static final int inbox_text5 = 2131362539;
+        public static final int inbox_text6 = 2131362540;
+        public static final int indicator = 2131362541;
+        public static final int indicator_container = 2131362542;
+        public static final int indicator_locked_body = 2131362543;
+        public static final int indicator_locked_header = 2131362544;
+        public static final int info = 2131362545;
+        public static final int info1 = 2131362546;
+        public static final int info2 = 2131362547;
+        public static final int infoOver = 2131362548;
+        public static final int infoUnder = 2131362549;
+        public static final int infoUnderWithExtra = 2131362550;
+        public static final int info_field = 2131362551;
+        public static final int initial = 2131362552;
+        public static final int inline_controls = 2131362553;
+        public static final int inout_container = 2131362554;
+        public static final int installed = 2131362555;
+        public static final int interruptiveness_settings = 2131362556;
+        public static final int intro_container = 2131362557;
+        public static final int intro_title = 2131362558;
+        public static final int invisible = 2131362559;
+        public static final int is_clicked_heads_up_tag = 2131362560;
+        public static final int italic = 2131362561;
+        public static final int item_root_view = 2131362562;
+        public static final int item_touch_helper_previous_elevation = 2131362563;
+        public static final int jumpToEnd = 2131362564;
+        public static final int jumpToStart = 2131362565;
+        public static final int key0 = 2131362566;
+        public static final int key1 = 2131362567;
+        public static final int key2 = 2131362568;
+        public static final int key3 = 2131362569;
+        public static final int key4 = 2131362570;
+        public static final int key5 = 2131362571;
+        public static final int key6 = 2131362572;
+        public static final int key7 = 2131362573;
+        public static final int key8 = 2131362574;
+        public static final int key9 = 2131362575;
+        public static final int key_enter = 2131362576;
+        public static final int keyboard_letter = 2131362577;
+        public static final int keyboard_number = 2131362578;
+        public static final int keyboard_shortcuts_container = 2131362579;
+        public static final int keyboard_shortcuts_icon = 2131362580;
+        public static final int keyboard_shortcuts_item_container = 2131362581;
+        public static final int keyboard_shortcuts_keyword = 2131362582;
+        public static final int keyboard_shortcuts_scroll_view = 2131362583;
+        public static final int keyboard_symbol = 2131362584;
+        public static final int keyguard_bottom_area = 2131362585;
+        public static final int keyguard_bouncer_bg = 2131362586;
+        public static final int keyguard_carrier_text = 2131362587;
+        public static final int keyguard_charging_container_bg = 2131362588;
+        public static final int keyguard_charging_drained_power = 2131362589;
+        public static final int keyguard_charging_hint = 2131362590;
+        public static final int keyguard_charging_info_anim_start_cicle_id = 2131362591;
+        public static final int keyguard_charging_info_back_arrow_id = 2131362592;
+        public static final int keyguard_charging_info_data = 2131362593;
+        public static final int keyguard_charging_info_des = 2131362594;
+        public static final int keyguard_charging_info_icon = 2131362595;
+        public static final int keyguard_charging_info_middle_list = 2131362596;
+        public static final int keyguard_charging_last_time = 2131362597;
+        public static final int keyguard_charging_tip = 2131362598;
+        public static final int keyguard_charging_used_time = 2131362599;
+        public static final int keyguard_clock_container = 2131362600;
+        public static final int keyguard_disable_esim = 2131362601;
+        public static final int keyguard_drip_left_statusIcons = 2131362602;
+        public static final int keyguard_electric_torch = 2131362603;
+        public static final int keyguard_esim_area = 2131362604;
+        public static final int keyguard_force_black_background = 2131362605;
+        public static final int keyguard_header = 2131362606;
+        public static final int keyguard_host_view = 2131362607;
+        public static final int keyguard_hun_animator_end_tag = 2131362608;
+        public static final int keyguard_hun_animator_start_tag = 2131362609;
+        public static final int keyguard_hun_animator_tag = 2131362610;
+        public static final int keyguard_indication_area = 2131362611;
+        public static final int keyguard_indication_enterprise_disclosure = 2131362612;
+        public static final int keyguard_indication_text = 2131362613;
+        public static final int keyguard_indication_view = 2131362614;
+        public static final int keyguard_left_list_item_img = 2131362615;
+        public static final int keyguard_left_list_item_name = 2131362616;
+        public static final int keyguard_left_view = 2131362617;
+        public static final int keyguard_lock_screen_magazine_info = 2131362618;
+        public static final int keyguard_message_area = 2131362619;
+        public static final int keyguard_mi_wallet_info = 2131362620;
+        public static final int keyguard_move_left = 2131362621;
+        public static final int keyguard_password_view = 2131362622;
+        public static final int keyguard_pattern_view = 2131362623;
+        public static final int keyguard_pin_view = 2131362624;
+        public static final int keyguard_remote_controller_info = 2131362625;
+        public static final int keyguard_security_bouncer_message = 2131362626;
+        public static final int keyguard_security_container = 2131362627;
+        public static final int keyguard_selector_fade_container = 2131362628;
+        public static final int keyguard_sim = 2131362629;
+        public static final int keyguard_sim_pin_view = 2131362630;
+        public static final int keyguard_sim_puk_view = 2131362631;
+        public static final int keyguard_smarthome_info = 2131362632;
+        public static final int keyguard_status_area = 2131362633;
+        public static final int keyguard_status_bar_left_side = 2131362634;
+        public static final int keyguard_status_view = 2131362635;
+        public static final int keyguard_up_arrow = 2131362636;
+        public static final int keyguard_user_switcher = 2131362637;
+        public static final int keyguard_user_switcher_inner = 2131362638;
+        public static final int klondike_text = 2131362639;
+        public static final int label = 2131362640;
+        public static final int label_bottom = 2131362641;
+        public static final int label_end = 2131362642;
+        public static final int label_group = 2131362643;
+        public static final int label_middle = 2131362644;
+        public static final int label_start = 2131362645;
+        public static final int label_top = 2131362646;
+        public static final int labeled = 2131362647;
+        public static final int largeLabel = 2131362648;
+        public static final int last_updated = 2131362649;
+        public static final int layout = 2131362650;
+        public static final int lb_action_button = 2131362651;
+        public static final int lb_control_closed_captioning = 2131362652;
+        public static final int lb_control_fast_forward = 2131362653;
+        public static final int lb_control_fast_rewind = 2131362654;
+        public static final int lb_control_high_quality = 2131362655;
+        public static final int lb_control_more_actions = 2131362656;
+        public static final int lb_control_picture_in_picture = 2131362657;
+        public static final int lb_control_play_pause = 2131362658;
+        public static final int lb_control_repeat = 2131362659;
+        public static final int lb_control_shuffle = 2131362660;
+        public static final int lb_control_skip_next = 2131362661;
+        public static final int lb_control_skip_previous = 2131362662;
+        public static final int lb_control_thumbs_down = 2131362663;
+        public static final int lb_control_thumbs_up = 2131362664;
+        public static final int lb_details_description_body = 2131362665;
+        public static final int lb_details_description_subtitle = 2131362666;
+        public static final int lb_details_description_title = 2131362667;
+        public static final int lb_focus_animator = 2131362668;
+        public static final int lb_guidedstep_background = 2131362669;
+        public static final int lb_parallax_source = 2131362670;
+        public static final int lb_results_frame = 2131362671;
+        public static final int lb_row_container_header_dock = 2131362672;
+        public static final int lb_search_bar = 2131362673;
+        public static final int lb_search_bar_badge = 2131362674;
+        public static final int lb_search_bar_items = 2131362675;
+        public static final int lb_search_bar_speech_orb = 2131362676;
+        public static final int lb_search_frame = 2131362677;
+        public static final int lb_search_text_editor = 2131362678;
+        public static final int lb_shadow_focused = 2131362679;
+        public static final int lb_shadow_impl = 2131362680;
+        public static final int lb_shadow_normal = 2131362681;
+        public static final int lb_slide_transition_value = 2131362682;
+        public static final int learnMore = 2131362683;
+        public static final int left = 2131362684;
+        public static final int leftSpacer = 2131362685;
+        public static final int left_button = 2131362686;
+        public static final int left_button_layout = 2131362687;
+        public static final int left_button_tips = 2131362688;
+        public static final int left_control = 2131362689;
+        public static final int left_handle = 2131362690;
+        public static final int left_view_bg = 2131362691;
+        public static final int lib = 2131362692;
+        public static final int line1 = 2131362693;
+        public static final int line3 = 2131362694;
+        public static final int linear = 2131362695;
+        public static final int linear_carrier = 2131362696;
+        public static final int list = 2131362697;
+        public static final int listAll = 2131362698;
+        public static final int listMode = 2131362699;
+        public static final int list_added = 2131362700;
+        public static final int list_item = 2131362701;
+        public static final int list_others = 2131362702;
+        public static final int loading_progress = 2131362703;
+        public static final int loading_progress_up = 2131362704;
+        public static final int lockPassword = 2131362705;
+        public static final int lockPattern = 2131362706;
+        public static final int lockPatternView = 2131362707;
+        public static final int lock_icon = 2131362708;
+        public static final int lock_icon_container = 2131362709;
+        public static final int lock_screen_clock = 2131362710;
+        public static final int lock_screen_magazine_clock_contents_layout = 2131362711;
+        public static final int lock_screen_magazine_clock_provider = 2131362712;
+        public static final int lock_screen_magazine_clock_source = 2131362713;
+        public static final int lock_screen_magazine_clock_title = 2131362714;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_button = 2131362715;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_content = 2131362716;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_layout = 2131362717;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_provider = 2131362718;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_source = 2131362719;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_title_layout = 2131362720;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_title_layout_link = 2131362721;
+        public static final int lock_screen_magazine_preview_fullscreen_bottom_title_layout_title = 2131362722;
+        public static final int lock_screen_magazine_preview_fullscreen_layout = 2131362723;
+        public static final int lock_screen_magazine_preview_fullscreen_setting = 2131362724;
+        public static final int lock_screen_magazine_preview_main_layout = 2131362725;
+        public static final int lock_screen_magazine_preview_main_provider = 2131362726;
+        public static final int lock_screen_magazine_preview_main_source = 2131362727;
+        public static final int lock_screen_magazine_preview_main_title = 2131362728;
+        public static final int lock_screen_magazine_preview_remote_fullscreen_layout = 2131362729;
+        public static final int lock_screen_magazine_preview_remote_main_layout = 2131362730;
+        public static final int logo = 2131362731;
+        public static final int logout = 2131362732;
+        public static final int low = 2131362733;
+        public static final int lunarModePanel = 2131362734;
+        public static final int lunar_calendar_button = 2131362735;
+        public static final int lunar_calendar_layout = 2131362736;
+        public static final int lunar_calendar_title = 2131362737;
+        public static final int main = 2131362738;
+        public static final int mainOnly = 2131362739;
+        public static final int main_clock_view = 2131362740;
+        public static final int main_icon = 2131362741;
+        public static final int main_image = 2131362742;
+        public static final int manage = 2131362743;
+        public static final int manage_education_view = 2131362744;
+        public static final int manage_text = 2131362745;
+        public static final int marker = 2131362746;
+        public static final int masked = 2131362747;
+        public static final int maxLines = 2131362748;
+        public static final int mediaItemActionsContainer = 2131362749;
+        public static final int mediaItemDetails = 2131362750;
+        public static final int mediaItemDuration = 2131362751;
+        public static final int mediaItemName = 2131362752;
+        public static final int mediaItemNumberViewFlipper = 2131362753;
+        public static final int mediaItemRow = 2131362754;
+        public static final int mediaListHeader = 2131362755;
+        public static final int mediaRowSelector = 2131362756;
+        public static final int mediaRowSeparator = 2131362757;
+        public static final int media_action_barrier = 2131362758;
+        public static final int media_actions = 2131362759;
+        public static final int media_carousel = 2131362760;
+        public static final int media_carousel_scroller = 2131362761;
+        public static final int media_control_artwork = 2131362762;
+        public static final int media_controller_compat_view_tag = 2131362763;
+        public static final int media_elapsed_time = 2131362764;
+        public static final int media_page_indicator = 2131362765;
+        public static final int media_progress_bar = 2131362766;
+        public static final int media_seamless = 2131362767;
+        public static final int media_seamless_fallback = 2131362768;
+        public static final int media_seamless_image = 2131362769;
+        public static final int media_seamless_text = 2131362770;
+        public static final int media_total_time = 2131362771;
+        public static final int menu = 2131362772;
+        public static final int menu_container = 2131362773;
+        public static final int message = 2131362774;
+        public static final int message_container = 2131362775;
+        public static final int middle = 2131362776;
+        public static final int middleSpacer = 2131362777;
+        public static final int mini = 2131362778;
+        public static final int mini_state_container = 2131362779;
+        public static final int mini_window_bar = 2131362780;
+        public static final int mini_window_icon = 2131362781;
+        public static final int minimized_dock_shadow = 2131362782;
+        public static final int minute = 2131362783;
+        public static final int minute_hand = 2131362784;
+        public static final int mirror_content = 2131362785;
+        public static final int mirrored_text_group = 2131362786;
+        public static final int miui_action = 2131362787;
+        public static final int miui_child_index_hint = 2131362788;
+        public static final int miui_keyguard_base_clock = 2131362789;
+        public static final int miui_keyguard_clock_container = 2131362790;
+        public static final int miui_keyguard_clock_extra_info = 2131362791;
+        public static final int miui_keyguard_face_unlock_view = 2131362792;
+        public static final int miui_spring_y_offset_animator_end_tag = 2131362793;
+        public static final int miui_spring_y_offset_animator_start_tag = 2131362794;
+        public static final int miui_spring_y_offset_animator_tag = 2131362795;
+        public static final int miuix_animation_tag_foreground_color = 2131362796;
+        public static final int miuix_animation_tag_init_layout = 2131362797;
+        public static final int miuix_animation_tag_is_dragging = 2131362798;
+        public static final int miuix_animation_tag_listview_pos = 2131362799;
+        public static final int miuix_animation_tag_set_height = 2131362800;
+        public static final int miuix_animation_tag_set_width = 2131362801;
+        public static final int miuix_animation_tag_touch_listener = 2131362802;
+        public static final int mixed_password_keyboard_view = 2131362803;
+        public static final int mixed_password_keyboard_view_layout = 2131362804;
+        public static final int mobile_combo = 2131362805;
+        public static final int mobile_container_left = 2131362806;
+        public static final int mobile_container_right = 2131362807;
+        public static final int mobile_content = 2131362808;
+        public static final int mobile_group = 2131362809;
+        public static final int mobile_in = 2131362810;
+        public static final int mobile_left_mobile_inout = 2131362811;
+        public static final int mobile_out = 2131362812;
+        public static final int mobile_right_mobile_inout = 2131362813;
+        public static final int mobile_roaming = 2131362814;
+        public static final int mobile_roaming_space = 2131362815;
+        public static final int mobile_signal = 2131362816;
+        public static final int mobile_small_hd = 2131362817;
+        public static final int mobile_small_roam = 2131362818;
+        public static final int mobile_speech_hd = 2131362819;
+        public static final int mobile_type = 2131362820;
+        public static final int mobile_type_image = 2131362821;
+        public static final int mobile_type_single = 2131362822;
+        public static final int mobile_volte = 2131362823;
+        public static final int mobile_volte_no_service = 2131362824;
+        public static final int mobile_vowifi = 2131362825;
+        public static final int modal_dialog_button_barrier = 2131362826;
+        public static final int modal_dialog_button_container = 2131362827;
+        public static final int modal_dialog_button_space = 2131362828;
+        public static final int modal_dialog_icon = 2131362829;
+        public static final int modal_dialog_list = 2131362830;
+        public static final int modal_dialog_message = 2131362831;
+        public static final int modal_dialog_negative_button = 2131362832;
+        public static final int modal_dialog_positive_button = 2131362833;
+        public static final int modal_dialog_title = 2131362834;
+        public static final int modal_menu_icon = 2131362835;
+        public static final int modal_menu_title = 2131362836;
+        public static final int modal_window_view = 2131362837;
+        public static final int month = 2131362838;
+        public static final int more = 2131362839;
+        public static final int more_actions_dock = 2131362840;
+        public static final int more_button = 2131362841;
+        public static final int motion_base = 2131362842;
+        public static final int mr_art = 2131362843;
+        public static final int mr_cast_checkbox = 2131362844;
+        public static final int mr_cast_close_button = 2131362845;
+        public static final int mr_cast_divider = 2131362846;
+        public static final int mr_cast_group_icon = 2131362847;
+        public static final int mr_cast_group_name = 2131362848;
+        public static final int mr_cast_group_progress_bar = 2131362849;
+        public static final int mr_cast_header_name = 2131362850;
+        public static final int mr_cast_list = 2131362851;
+        public static final int mr_cast_meta_art = 2131362852;
+        public static final int mr_cast_meta_background = 2131362853;
+        public static final int mr_cast_meta_black_scrim = 2131362854;
+        public static final int mr_cast_meta_subtitle = 2131362855;
+        public static final int mr_cast_meta_title = 2131362856;
+        public static final int mr_cast_mute_button = 2131362857;
+        public static final int mr_cast_route_icon = 2131362858;
+        public static final int mr_cast_route_name = 2131362859;
+        public static final int mr_cast_route_progress_bar = 2131362860;
+        public static final int mr_cast_stop_button = 2131362861;
+        public static final int mr_cast_volume_layout = 2131362862;
+        public static final int mr_cast_volume_slider = 2131362863;
+        public static final int mr_chooser_list = 2131362864;
+        public static final int mr_chooser_route_desc = 2131362865;
+        public static final int mr_chooser_route_icon = 2131362866;
+        public static final int mr_chooser_route_name = 2131362867;
+        public static final int mr_chooser_title = 2131362868;
+        public static final int mr_close = 2131362869;
+        public static final int mr_control_divider = 2131362870;
+        public static final int mr_control_playback_ctrl = 2131362871;
+        public static final int mr_control_subtitle = 2131362872;
+        public static final int mr_control_title = 2131362873;
+        public static final int mr_control_title_container = 2131362874;
+        public static final int mr_custom_control = 2131362875;
+        public static final int mr_default_control = 2131362876;
+        public static final int mr_dialog_area = 2131362877;
+        public static final int mr_expandable_area = 2131362878;
+        public static final int mr_group_expand_collapse = 2131362879;
+        public static final int mr_group_volume_route_name = 2131362880;
+        public static final int mr_media_main_control = 2131362881;
+        public static final int mr_name = 2131362882;
+        public static final int mr_picker_close_button = 2131362883;
+        public static final int mr_picker_header_name = 2131362884;
+        public static final int mr_picker_list = 2131362885;
+        public static final int mr_picker_route_icon = 2131362886;
+        public static final int mr_picker_route_name = 2131362887;
+        public static final int mr_picker_route_progress_bar = 2131362888;
+        public static final int mr_playback_control = 2131362889;
+        public static final int mr_title_bar = 2131362890;
+        public static final int mr_volume_control = 2131362891;
+        public static final int mr_volume_group_list = 2131362892;
+        public static final int mr_volume_item_icon = 2131362893;
+        public static final int mr_volume_slider = 2131362894;
+        public static final int mtrl_card_checked_layer_id = 2131362895;
+        public static final int mtrl_child_content_container = 2131362896;
+        public static final int mtrl_internal_children_alpha_tag = 2131362897;
+        public static final int multi_user_avatar = 2131362898;
+        public static final int multi_user_switch = 2131362899;
+        public static final int multiply = 2131362900;
+        public static final int name = 2131362901;
+        public static final int names = 2131362902;
+        public static final int nav_bar_background = 2131362903;
+        public static final int nav_buttons = 2131362904;
+        public static final int navigation_bar_frame = 2131362905;
+        public static final int navigation_bar_space = 2131362906;
+        public static final int navigation_header_container = 2131362907;
+        public static final int navigation_inflater = 2131362908;
+        public static final int navigator_container = 2131362909;
+        public static final int navstubview_bg_view = 2131362910;
+        public static final int negative_control_center = 2131362911;
+        public static final int negative_magzine = 2131362912;
+        public static final int network_logging_disclosures = 2131362913;
+        public static final int network_logging_subtitle = 2131362914;
+        public static final int network_logging_warning = 2131362915;
+        public static final int never = 2131362916;
+        public static final int next_alarm_icon = 2131362917;
+        public static final int next_alarm_text = 2131362918;
+        public static final int noScroll = 2131362919;
+        public static final int no_carrier_text = 2131362920;
+        public static final int no_notifications = 2131362921;
+        public static final int non_configurable_multichannel_text = 2131362922;
+        public static final int non_configurable_text = 2131362923;
+        public static final int none = 2131362924;
+        public static final int normal = 2131362925;
+        public static final int notificationIcons = 2131362926;
+        public static final int notification_action_list_margin_target = 2131362927;
+        public static final int notification_background = 2131362928;
+        public static final int notification_children_container = 2131362929;
+        public static final int notification_container_parent = 2131362930;
+        public static final int notification_guts = 2131362931;
+        public static final int notification_guts_stub = 2131362932;
+        public static final int notification_hidden = 2131362933;
+        public static final int notification_icon_area = 2131362934;
+        public static final int notification_icon_area_inner = 2131362935;
+        public static final int notification_lights_out = 2131362936;
+        public static final int notification_main_column = 2131362937;
+        public static final int notification_main_column_container = 2131362938;
+        public static final int notification_media_progress_time = 2131362939;
+        public static final int notification_more_divider = 2131362940;
+        public static final int notification_panel = 2131362941;
+        public static final int notification_plugin = 2131362942;
+        public static final int notification_power = 2131362943;
+        public static final int notification_screenshot = 2131362944;
+        public static final int notification_shade_carrier = 2131362945;
+        public static final int notification_shade_shortcut = 2131362946;
+        public static final int notification_snooze = 2131362947;
+        public static final int notification_stack_scroller = 2131362948;
+        public static final int notification_temperature = 2131362949;
+        public static final int notification_text = 2131362950;
+        public static final int notification_title = 2131362951;
+        public static final int num = 2131362952;
+        public static final int num1 = 2131362953;
+        public static final int num2 = 2131362954;
+        public static final int number_picker_input = 2131362955;
+        public static final int odi_captions = 2131362956;
+        public static final int odi_captions_icon = 2131362957;
+        public static final int odi_captions_tooltip_stub = 2131362958;
+        public static final int odi_captions_tooltip_view = 2131362959;
+        public static final int off = 2131362960;
+        public static final int ok = 2131362961;
+        public static final int on = 2131362962;
+        public static final int onboarding_fragment_root = 2131362963;
+        public static final int onboarding_half_shell_container = 2131362964;
+        public static final int onboarding_text = 2131362965;
+        public static final int opaque = 2131362966;
+        public static final int operator_name = 2131362967;
+        public static final int operator_name_frame = 2131362968;
+        public static final int optional = 2131362969;
+        public static final int other_apps = 2131362970;
+        public static final int others_title = 2131362971;
+        public static final int outline = 2131362972;
+        public static final int owner_info = 2131362973;
+        public static final int owner_info_arrow_right = 2131362974;
+        public static final int owner_info_button = 2131362975;
+        public static final int owner_info_container = 2131362976;
+        public static final int owner_info_edit_text = 2131362977;
+        public static final int owner_info_layout = 2131362978;
+        public static final int owner_info_restricted_icon = 2131362979;
+        public static final int owner_info_title = 2131362980;
+        public static final int packed = 2131362981;
+        public static final int page_container = 2131362982;
+        public static final int page_indicator = 2131362983;
+        public static final int panel = 2131362984;
+        public static final int panel_alpha_animator_end_tag = 2131362985;
+        public static final int panel_alpha_animator_start_tag = 2131362986;
+        public static final int panel_alpha_animator_tag = 2131362987;
+        public static final int panel_bar_image = 2131362988;
+        public static final int panel_header = 2131362989;
+        public static final int parallax = 2131362990;
+        public static final int parent = 2131362991;
+        public static final int parentPanel = 2131362992;
+        public static final int parentRelative = 2131362993;
+        public static final int parent_channel_name = 2131362994;
+        public static final int parent_matrix = 2131362995;
+        public static final int passwordEntry = 2131362996;
+        public static final int password_toggle = 2131362997;
+        public static final int path = 2131362998;
+        public static final int pathRelative = 2131362999;
+        public static final int paused = 2131363000;
+        public static final int peekHeight = 2131363001;
+        public static final int people_list = 2131363002;
+        public static final int percent = 2131363003;
+        public static final int phone_locked_textview = 2131363004;
+        public static final int phone_locked_timeout_id = 2131363005;
+        public static final int phone_status_bar_left_container = 2131363006;
+        public static final int physics_animator_tag = 2131363007;
+        public static final int picker = 2131363008;
+        public static final int pickers = 2131363009;
+        public static final int pie = 2131363010;
+        public static final int pin = 2131363011;
+        public static final int pinEntry = 2131363012;
+        public static final int pip_controls = 2131363013;
+        public static final int pkg_icon = 2131363014;
+        public static final int pkg_name = 2131363015;
+        public static final int pkgicon = 2131363016;
+        public static final int pkgname = 2131363017;
+        public static final int play_button = 2131363018;
+        public static final int play_button_image = 2131363019;
+        public static final int play_button_text = 2131363020;
+        public static final int play_pause_button = 2131363021;
+        public static final int playback_controls_dock = 2131363022;
+        public static final int playback_fragment_background = 2131363023;
+        public static final int playback_fragment_root = 2131363024;
+        public static final int playback_progress = 2131363025;
+        public static final int player_minus_button = 2131363026;
+        public static final int player_plus_button = 2131363027;
+        public static final int player_setup = 2131363028;
+        public static final int playing = 2131363029;
+        public static final int plugin_frame = 2131363030;
+        public static final int pointer_view = 2131363031;
+        public static final int popup_arrow = 2131363032;
+        public static final int position = 2131363033;
+        public static final int postLayout = 2131363034;
+        public static final int preference_detail = 2131363035;
+        public static final int presentation = 2131363036;
+        public static final int preview_text = 2131363037;
+        public static final int priority = 2131363038;
+        public static final int priority_icon = 2131363039;
+        public static final int priority_label = 2131363040;
+        public static final int priority_summary = 2131363041;
+        public static final int progress = 2131363042;
+        public static final int progress_bar_animation = 2131363043;
+        public static final int progress_bar_background = 2131363044;
+        public static final int progress_circular = 2131363045;
+        public static final int progress_horizontal = 2131363046;
+        public static final int progress_percent = 2131363047;
+        public static final int prompt = 2131363048;
+        public static final int prompt_container = 2131363049;
+        public static final int pukEntry = 2131363050;
+        public static final int pulsating_circle = 2131363051;
+        public static final int qs_brightness = 2131363052;
+        public static final int qs_carrier_divider1 = 2131363053;
+        public static final int qs_carrier_divider2 = 2131363054;
+        public static final int qs_carrier_text = 2131363055;
+        public static final int qs_content = 2131363056;
+        public static final int qs_control_detail_header = 2131363057;
+        public static final int qs_customize = 2131363058;
+        public static final int qs_detail = 2131363059;
+        public static final int qs_detail_container = 2131363060;
+        public static final int qs_detail_header = 2131363061;
+        public static final int qs_detail_header_progress = 2131363062;
+        public static final int qs_drag_handle_view = 2131363063;
+        public static final int qs_expand_indicator = 2131363064;
+        public static final int qs_footer = 2131363065;
+        public static final int qs_footer_actions_container = 2131363066;
+        public static final int qs_footer_actions_edit_container = 2131363067;
+        public static final int qs_footer_bundle = 2131363068;
+        public static final int qs_footer_data_usage = 2131363069;
+        public static final int qs_frame = 2131363070;
+        public static final int qs_icon_state_tag = 2131363071;
+        public static final int qs_icon_tag = 2131363072;
+        public static final int qs_media_controls = 2131363073;
+        public static final int qs_media_controls_options = 2131363074;
+        public static final int qs_mobile = 2131363075;
+        public static final int qs_navbar_scrim = 2131363076;
+        public static final int qs_pager = 2131363077;
+        public static final int qs_slash_tag = 2131363078;
+        public static final int quick_qs_panel = 2131363079;
+        public static final int quick_qs_status_icons = 2131363080;
+        public static final int quick_settings_background = 2131363081;
+        public static final int quick_settings_container = 2131363082;
+        public static final int quick_settings_gradient_view = 2131363083;
+        public static final int quick_settings_panel = 2131363084;
+        public static final int quick_settings_status_bar_background = 2131363085;
+        public static final int quick_status_bar_system_icons = 2131363086;
+        public static final int radio = 2131363087;
+        public static final int radio_button = 2131363088;
+        public static final int ratio = 2131363089;
+        public static final int recent_apps = 2131363090;
+        public static final int recents_bg_view = 2131363091;
+        public static final int recents_card_container = 2131363092;
+        public static final int recents_first_card = 2131363093;
+        public static final int recents_first_card_icon = 2131363094;
+        public static final int rectangles = 2131363095;
+        public static final int recycler_view = 2131363096;
+        public static final int remember = 2131363097;
+        public static final int remote_input = 2131363098;
+        public static final int remote_input_progress = 2131363099;
+        public static final int remote_input_send = 2131363100;
+        public static final int remote_input_text = 2131363101;
+        public static final int remove = 2131363102;
+        public static final int remove_action_button = 2131363103;
+        public static final int remove_icon = 2131363104;
+        public static final int remove_text = 2131363105;
+        public static final int report_rejected_touch = 2131363106;
+        public static final int requires_remeasuring = 2131363107;
+        public static final int res = 2131363108;
+        public static final int resize_handle = 2131363109;
+        public static final int restricted_icon = 2131363110;
+        public static final int restricted_padlock = 2131363111;
+        public static final int reverseSawtooth = 2131363112;
+        public static final int right = 2131363113;
+        public static final int rightSpacer = 2131363114;
+        public static final int right_button = 2131363115;
+        public static final int right_button_layout = 2131363116;
+        public static final int right_button_tips = 2131363117;
+        public static final int right_control = 2131363118;
+        public static final int right_handle = 2131363119;
+        public static final int right_icon = 2131363120;
+        public static final int right_side = 2131363121;
+        public static final int ringer = 2131363122;
+        public static final int ringer_container = 2131363123;
+        public static final int ringer_icon = 2131363124;
+        public static final int ringer_mode_icon = 2131363125;
+        public static final int ringer_mode_text = 2131363126;
+        public static final int roaming_text = 2131363127;
+        public static final int root_view = 2131363128;
+        public static final int rotate_suggestion = 2131363129;
+        public static final int rounded = 2131363130;
+        public static final int row = 2131363131;
+        public static final int row0 = 2131363132;
+        public static final int row1 = 2131363133;
+        public static final int row2 = 2131363134;
+        public static final int row3 = 2131363135;
+        public static final int row4 = 2131363136;
+        public static final int row_content = 2131363137;
+        public static final int row_header = 2131363138;
+        public static final int row_header_description = 2131363139;
+        public static final int row_tag_for_content_view = 2131363140;
+        public static final int row_view = 2131363141;
+        public static final int save = 2131363142;
+        public static final int save_non_transition_alpha = 2131363143;
+        public static final int save_overlay_view = 2131363144;
+        public static final int sawtooth = 2131363145;
+        public static final int scale = 2131363146;
+        public static final int scale_frame = 2131363147;
+        public static final int scale_x_animator_end_value_tag = 2131363148;
+        public static final int scale_x_animator_start_value_tag = 2131363149;
+        public static final int scale_x_animator_tag = 2131363150;
+        public static final int scale_x_dynamicanimation_tag = 2131363151;
+        public static final int scale_y_animator_end_value_tag = 2131363152;
+        public static final int scale_y_animator_start_value_tag = 2131363153;
+        public static final int scale_y_animator_tag = 2131363154;
+        public static final int scale_y_dynamicanimation_tag = 2131363155;
+        public static final int score = 2131363156;
+        public static final int scores = 2131363157;
+        public static final int screen = 2131363158;
+        public static final int screen_pinning_back_bg = 2131363159;
+        public static final int screen_pinning_back_bg_light = 2131363160;
+        public static final int screen_pinning_back_group = 2131363161;
+        public static final int screen_pinning_back_icon = 2131363162;
+        public static final int screen_pinning_buttons = 2131363163;
+        public static final int screen_pinning_cancel_button = 2131363164;
+        public static final int screen_pinning_description = 2131363165;
+        public static final int screen_pinning_home_bg = 2131363166;
+        public static final int screen_pinning_home_bg_light = 2131363167;
+        public static final int screen_pinning_home_group = 2131363168;
+        public static final int screen_pinning_home_icon = 2131363169;
+        public static final int screen_pinning_ok_button = 2131363170;
+        public static final int screen_pinning_recents_bg = 2131363171;
+        public static final int screen_pinning_recents_bg_light = 2131363172;
+        public static final int screen_pinning_recents_group = 2131363173;
+        public static final int screen_pinning_text_area = 2131363174;
+        public static final int screen_pinning_title = 2131363175;
+        public static final int screen_recording_dialog_source_description = 2131363176;
+        public static final int screen_recording_dialog_source_text = 2131363177;
+        public static final int screen_recording_options = 2131363178;
+        public static final int screenrecord_audio_switch = 2131363179;
+        public static final int screenrecord_taps_switch = 2131363180;
+        public static final int screenshot_action_chip_icon = 2131363181;
+        public static final int screenshot_action_chip_text = 2131363182;
+        public static final int scrim = 2131363183;
+        public static final int scrim_alpha_end = 2131363184;
+        public static final int scrim_alpha_start = 2131363185;
+        public static final int scrim_behind = 2131363186;
+        public static final int scrim_in_front = 2131363187;
+        public static final int scroll = 2131363188;
+        public static final int scrollIndicatorDown = 2131363189;
+        public static final int scrollIndicatorUp = 2131363190;
+        public static final int scrollView = 2131363191;
+        public static final int scrollable = 2131363192;
+        public static final int search_badge = 2131363193;
+        public static final int search_bar = 2131363194;
+        public static final int search_button = 2131363195;
+        public static final int search_close_btn = 2131363196;
+        public static final int search_container = 2131363197;
+        public static final int search_edit_frame = 2131363198;
+        public static final int search_go_btn = 2131363199;
+        public static final int search_logo = 2131363200;
+        public static final int search_mag_icon = 2131363201;
+        public static final int search_mask = 2131363202;
+        public static final int search_mask_vs = 2131363203;
+        public static final int search_orb = 2131363204;
+        public static final int search_panel = 2131363205;
+        public static final int search_plate = 2131363206;
+        public static final int search_src_text = 2131363207;
+        public static final int search_text_cancel = 2131363208;
+        public static final int search_voice_btn = 2131363209;
+        public static final int second_card = 2131363210;
+        public static final int secondary_controls_dock = 2131363211;
+        public static final int secure_keyguard_bouncer_message_content = 2131363212;
+        public static final int secure_keyguard_bouncer_message_title = 2131363213;
+        public static final int see_more_button = 2131363214;
+        public static final int seekbar = 2131363215;
+        public static final int seekbar_background_semicircle = 2131363216;
+        public static final int seekbar_value = 2131363217;
+        public static final int select = 2131363218;
+        public static final int select_dialog_listview = 2131363219;
+        public static final int select_icon = 2131363220;
+        public static final int selected = 2131363221;
+        public static final int separate_time = 2131363222;
+        public static final int separated_button = 2131363223;
+        public static final int separator = 2131363224;
+        public static final int set_action_button_icon = 2131363225;
+        public static final int set_action_button_visibility = 2131363226;
+        public static final int settings = 2131363227;
+        public static final int settings_button = 2131363228;
+        public static final int settings_button_container = 2131363229;
+        public static final int settings_cog = 2131363230;
+        public static final int settings_container = 2131363231;
+        public static final int settings_footer = 2131363232;
+        public static final int settings_icon = 2131363233;
+        public static final int settings_link = 2131363234;
+        public static final int settings_title = 2131363235;
+        public static final int settings_title_divider = 2131363236;
+        public static final int settings_title_panel = 2131363237;
+        public static final int settings_title_template = 2131363238;
+        public static final int shape_preference_connected = 2131363239;
+        public static final int shape_preference_disconnected = 2131363240;
+        public static final int shelf_menu_anchor_anchor = 2131363241;
+        public static final int shelter_view = 2131363242;
+        public static final int shortcut = 2131363243;
+        public static final int showCustom = 2131363244;
+        public static final int showHome = 2131363245;
+        public static final int showTitle = 2131363246;
+        public static final int show_split_action_bar = 2131363247;
+        public static final int silence = 2131363248;
+        public static final int silence_icon = 2131363249;
+        public static final int silence_label = 2131363250;
+        public static final int silence_summary = 2131363251;
+        public static final int simPinEntry = 2131363252;
+        public static final int sin = 2131363253;
+        public static final int skipCollapsed = 2131363254;
+        public static final int sleep_warning_dialog_container = 2131363255;
+        public static final int slice_permission_checkbox = 2131363256;
+        public static final int slide = 2131363257;
+        public static final int slider = 2131363258;
+        public static final int small = 2131363259;
+        public static final int smallLabel = 2131363260;
+        public static final int smart_cover_layout_id = 2131363261;
+        public static final int smart_home_container = 2131363262;
+        public static final int smart_reply_view = 2131363263;
+        public static final int snackbar_action = 2131363264;
+        public static final int snackbar_text = 2131363265;
+        public static final int snap = 2131363266;
+        public static final int snapMargins = 2131363267;
+        public static final int snooze_option_default = 2131363268;
+        public static final int snooze_options = 2131363269;
+        public static final int space1 = 2131363270;
+        public static final int space2 = 2131363271;
+        public static final int spacer = 2131363272;
+        public static final int special_effects_controller_view_tag = 2131363273;
+        public static final int spinner = 2131363274;
+        public static final int spinner_dropdown_container = 2131363275;
+        public static final int spline = 2131363276;
+        public static final int split_action_bar = 2131363277;
+        public static final int split_action_bar_vs = 2131363278;
+        public static final int spread = 2131363279;
+        public static final int spread_inside = 2131363280;
+        public static final int square = 2131363281;
+        public static final int src_atop = 2131363282;
+        public static final int src_in = 2131363283;
+        public static final int src_over = 2131363284;
+        public static final int ss = 2131363285;
+        public static final int standard = 2131363286;
+        public static final int start = 2131363287;
+        public static final int startHorizontal = 2131363288;
+        public static final int startVertical = 2131363289;
+        public static final int staticLayout = 2131363290;
+        public static final int staticPostLayout = 2131363291;
+        public static final int status = 2131363292;
+        public static final int statusIcons = 2131363293;
+        public static final int status_bar = 2131363294;
+        public static final int status_bar_container = 2131363295;
+        public static final int status_bar_contents = 2131363296;
+        public static final int status_bar_latest_event_content = 2131363297;
+        public static final int status_bar_left_side = 2131363298;
+        public static final int status_bar_view_state_tag = 2131363299;
+        public static final int status_container = 2131363300;
+        public static final int status_icon = 2131363301;
+        public static final int status_icon_area = 2131363302;
+        public static final int status_message = 2131363303;
+        public static final int status_separator = 2131363304;
+        public static final int status_view_container = 2131363305;
+        public static final int stop = 2131363306;
+        public static final int stretch = 2131363307;
+        public static final int structure_page_indicator = 2131363308;
+        public static final int structure_pager = 2131363309;
+        public static final int stub = 2131363310;
+        public static final int sub_title = 2131363311;
+        public static final int subcontent = 2131363312;
+        public static final int submenuarrow = 2131363313;
+        public static final int submit_area = 2131363314;
+        public static final int subtitle = 2131363315;
+        public static final int summary = 2131363316;
+        public static final int surface_view = 2131363317;
+        public static final int switchWidget = 2131363318;
+        public static final int switch_bar = 2131363319;
+        public static final int switch_ime_button = 2131363320;
+        public static final int switch_text = 2131363321;
+        public static final int switch_to_system_user = 2131363322;
+        public static final int system_icon_area = 2131363323;
+        public static final int system_icons = 2131363324;
+        public static final int system_icons_container = 2131363325;
+        public static final int tabMode = 2131363326;
+        public static final int tag_accessibility_actions = 2131363327;
+        public static final int tag_accessibility_clickable_spans = 2131363328;
+        public static final int tag_accessibility_heading = 2131363329;
+        public static final int tag_accessibility_pane_title = 2131363330;
+        public static final int tag_alphabet_indexer_item = 2131363331;
+        public static final int tag_control_center = 2131363332;
+        public static final int tag_control_center_trans = 2131363333;
+        public static final int tag_disable_state_tracker = 2131363334;
+        public static final int tag_popup_menu_item = 2131363335;
+        public static final int tag_removed_keyguard_notification_key = 2131363336;
+        public static final int tag_removed_keyguard_notification_position = 2131363337;
+        public static final int tag_screen_reader_focusable = 2131363338;
+        public static final int tag_spinner_dropdown_view = 2131363339;
+        public static final int tag_spinner_dropdown_view_double_line = 2131363340;
+        public static final int tag_state_description = 2131363341;
+        public static final int tag_tile_layout = 2131363342;
+        public static final int tag_transition_group = 2131363343;
+        public static final int tag_unhandled_key_event_manager = 2131363344;
+        public static final int tag_unhandled_key_listeners = 2131363345;
+        public static final int target_animator_tag = 2131363346;
+        public static final int text = 2131363347;
+        public static final int text1 = 2131363348;
+        public static final int text2 = 2131363349;
+        public static final int textSpacerNoButtons = 2131363350;
+        public static final int textSpacerNoTitle = 2131363351;
+        public static final int textStart = 2131363352;
+        public static final int text_group = 2131363353;
+        public static final int text_input_end_icon = 2131363354;
+        public static final int text_input_start_icon = 2131363355;
+        public static final int text_line_1 = 2131363356;
+        public static final int text_right = 2131363357;
+        public static final int text_see_more = 2131363358;
+        public static final int text_see_more_count = 2131363359;
+        public static final int textinput_counter = 2131363360;
+        public static final int textinput_error = 2131363361;
+        public static final int textinput_helper_text = 2131363362;
+        public static final int texts_container = 2131363363;
+        public static final int theme_background = 2131363364;
+        public static final int third_card = 2131363365;
+        public static final int third_theme_hint = 2131363366;
+        public static final int third_theme_hint_layout = 2131363367;
+        public static final int thumbs_row = 2131363368;
+        public static final int tile_item = 2131363369;
+        public static final int tile_label = 2131363370;
+        public static final int tile_layout = 2131363371;
+        public static final int tile_page = 2131363372;
+        public static final int tiles_container = 2131363373;
+        public static final int tiles_edit = 2131363374;
+        public static final int tiles_header = 2131363375;
+        public static final int tiles_scroller = 2131363376;
+        public static final int tiles_springer = 2131363377;
+        public static final int time = 2131363378;
+        public static final int timePicker = 2131363379;
+        public static final int timePickerLayout = 2131363380;
+        public static final int time_date = 2131363381;
+        public static final int time_header = 2131363382;
+        public static final int time_hour = 2131363383;
+        public static final int time_line_1 = 2131363384;
+        public static final int time_minute = 2131363385;
+        public static final int time_view = 2131363386;
+        public static final int title = 2131363387;
+        public static final int titleDividerNoCustom = 2131363388;
+        public static final int title_badge = 2131363389;
+        public static final int title_layout = 2131363390;
+        public static final int title_orb = 2131363391;
+        public static final int title_template = 2131363392;
+        public static final int title_text = 2131363393;
+        public static final int to_back_intro = 2131363394;
+        public static final int to_home_intro = 2131363395;
+        public static final int to_task_intro = 2131363396;
+        public static final int toggle = 2131363397;
+        public static final int toggle_stub = 2131363398;
+        public static final int tooltip_view = 2131363399;
+        public static final int top = 2131363400;
+        public static final int topPanel = 2131363401;
+        public static final int top_divider = 2131363402;
+        public static final int top_handle = 2131363403;
+        public static final int top_inset_animator_end_value_tag = 2131363404;
+        public static final int top_inset_animator_start_value_tag = 2131363405;
+        public static final int top_inset_animator_tag = 2131363406;
+        public static final int top_roundess_animator_end_tag = 2131363407;
+        public static final int top_roundess_animator_start_tag = 2131363408;
+        public static final int top_roundess_animator_tag = 2131363409;
+        public static final int top_title = 2131363410;
+        public static final int total_time = 2131363411;
+        public static final int touch_outside = 2131363412;
+        public static final int tracking_progress = 2131363413;
+        public static final int tracking_progress_label = 2131363414;
+        public static final int tracking_progress_up = 2131363415;
+        public static final int tracking_progress_up_container = 2131363416;
+        public static final int tracking_progress_up_label = 2131363417;
+        public static final int transformation_start_actual_height = 2131363418;
+        public static final int transformation_start_actual_width = 2131363419;
+        public static final int transformation_start_scale_x_tag = 2131363420;
+        public static final int transformation_start_scale_y_tag = 2131363421;
+        public static final int transformation_start_x_tag = 2131363422;
+        public static final int transformation_start_y_tag = 2131363423;
+        public static final int transitionPosition = 2131363424;
+        public static final int transitionToEnd = 2131363425;
+        public static final int transitionToStart = 2131363426;
+        public static final int transition_current_scene = 2131363427;
+        public static final int transition_layout_save = 2131363428;
+        public static final int transition_position = 2131363429;
+        public static final int transition_scene_layoutid_cache = 2131363430;
+        public static final int transition_transform = 2131363431;
+        public static final int translation_x_animator_end_value_tag = 2131363432;
+        public static final int translation_x_animator_start_value_tag = 2131363433;
+        public static final int translation_x_animator_tag = 2131363434;
+        public static final int translation_x_dynamicanimation_tag = 2131363435;
+        public static final int translation_y_animator_end_value_tag = 2131363436;
+        public static final int translation_y_animator_start_value_tag = 2131363437;
+        public static final int translation_y_animator_tag = 2131363438;
+        public static final int translation_y_dynamicanimation_tag = 2131363439;
+        public static final int translation_z_animator_end_value_tag = 2131363440;
+        public static final int translation_z_animator_start_value_tag = 2131363441;
+        public static final int translation_z_animator_tag = 2131363442;
+        public static final int translation_z_dynamicanimation_tag = 2131363443;
+        public static final int transparentDark = 2131363444;
+        public static final int transparentLight = 2131363445;
+        public static final int transport_row = 2131363446;
+        public static final int triangle = 2131363447;
+        public static final int tuner_icon = 2131363448;
+        public static final int tuner_zen_buttons = 2131363449;
+        public static final int tuner_zen_mode_panel = 2131363450;
+        public static final int tuner_zen_switch = 2131363451;
+        public static final int turn_off_notifications = 2131363452;
+        public static final int two_target_divider = 2131363453;
+        public static final int unAdded_tiles = 2131363454;
+        public static final int unchecked = 2131363455;
+        public static final int underline = 2131363456;
+        public static final int undo = 2131363457;
+        public static final int uniform = 2131363458;
+        public static final int unlabeled = 2131363459;
+        public static final int unlock_screen_lock_screen_magazine_info = 2131363460;
+        public static final int unlock_screen_owner_info = 2131363461;
+        public static final int unlock_screen_sim_info = 2131363462;
+        public static final int unlockscreen_lockout_id = 2131363463;
+        public static final int up = 2131363464;
+        public static final int up_control = 2131363465;
+        public static final int usage_carrier_text = 2131363466;
+        public static final int usage_graph = 2131363467;
+        public static final int usage_info_bottom_text = 2131363468;
+        public static final int usage_info_top_text = 2131363469;
+        public static final int usage_period_text = 2131363470;
+        public static final int usage_text = 2131363471;
+        public static final int useLogo = 2131363472;
+        public static final int user_education_description = 2131363473;
+        public static final int user_education_title = 2131363474;
+        public static final int user_education_view = 2131363475;
+        public static final int user_name = 2131363476;
+        public static final int user_picture = 2131363477;
+        public static final int vertical = 2131363478;
+        public static final int veto = 2131363479;
+        public static final int video_surface = 2131363480;
+        public static final int video_surface_container = 2131363481;
+        public static final int view_flipper = 2131363482;
+        public static final int view_group_fade_helper_animator = 2131363483;
+        public static final int view_group_fade_helper_hardware_layer = 2131363484;
+        public static final int view_group_fade_helper_modified_views = 2131363485;
+        public static final int view_group_fade_helper_previous_value_tag = 2131363486;
+        public static final int view_group_fade_helper_restore_tag = 2131363487;
+        public static final int view_height_animator_end_tag = 2131363488;
+        public static final int view_height_animator_start_tag = 2131363489;
+        public static final int view_height_animator_tag = 2131363490;
+        public static final int view_height_current_value = 2131363491;
+        public static final int view_offset_helper = 2131363492;
+        public static final int view_pager = 2131363493;
+        public static final int view_tree_lifecycle_owner = 2131363494;
+        public static final int view_tree_saved_state_registry_owner = 2131363495;
+        public static final int view_tree_view_model_store_owner = 2131363496;
+        public static final int view_width_animator_end_tag = 2131363497;
+        public static final int view_width_animator_start_tag = 2131363498;
+        public static final int view_width_animator_tag = 2131363499;
+        public static final int view_width_current_value = 2131363500;
+        public static final int visible = 2131363501;
+        public static final int visible_removing_fragment_view_tag = 2131363502;
+        public static final int volume_dialog = 2131363503;
+        public static final int volume_dialog_container = 2131363504;
+        public static final int volume_dialog_rows = 2131363505;
+        public static final int volume_item_container = 2131363506;
+        public static final int volume_row_header = 2131363507;
+        public static final int volume_row_icon = 2131363508;
+        public static final int volume_row_slider = 2131363509;
+        public static final int volume_row_slider_frame = 2131363510;
+        public static final int vpn_disclosures = 2131363511;
+        public static final int vpn_subtitle = 2131363512;
+        public static final int vpn_warning = 2131363513;
+        public static final int wallpaper = 2131363514;
+        public static final int wallpaper_des = 2131363515;
+        public static final int wallpaper_img = 2131363516;
+        public static final int wallpaper_textureView = 2131363517;
+        public static final int welcome = 2131363518;
+        public static final int widget_icon = 2131363519;
+        public static final int width = 2131363520;
+        public static final int wifi_activity = 2131363521;
+        public static final int wifi_airplane_spacer = 2131363522;
+        public static final int wifi_combo = 2131363523;
+        public static final int wifi_group = 2131363524;
+        public static final int wifi_in = 2131363525;
+        public static final int wifi_out = 2131363526;
+        public static final int wifi_signal = 2131363527;
+        public static final int wifi_signal_spacer = 2131363528;
+        public static final int wifi_standard = 2131363529;
+        public static final int wireless_charge_picture = 2131363530;
+        public static final int wireless_charge_slowly_video = 2131363531;
+        public static final int wireless_charging_percentage = 2131363532;
+        public static final int wireless_charging_text_layout = 2131363533;
+        public static final int wireless_charging_view = 2131363534;
+        public static final int withText = 2131363535;
+        public static final int world = 2131363536;
+        public static final int wrap = 2131363537;
+        public static final int wrap_content = 2131363538;
+        public static final int x_animator_tag = 2131363539;
+        public static final int x_animator_tag_end_value = 2131363540;
+        public static final int x_animator_tag_start_value = 2131363541;
+        public static final int y_animator_tag = 2131363542;
+        public static final int y_animator_tag_end_value = 2131363543;
+        public static final int y_animator_tag_start_value = 2131363544;
+        public static final int year = 2131363545;
+        public static final int zen_alarm_warning = 2131363546;
+        public static final int zen_buttons = 2131363547;
+        public static final int zen_conditions = 2131363548;
+        public static final int zen_content = 2131363549;
+        public static final int zen_duration_conditions = 2131363550;
+        public static final int zen_duration_container = 2131363551;
+        public static final int zen_duration_dialog_container = 2131363552;
+        public static final int zen_embedded_divider = 2131363553;
+        public static final int zen_icon = 2131363554;
+        public static final int zen_introduction = 2131363555;
+        public static final int zen_introduction_confirm = 2131363556;
+        public static final int zen_introduction_customize = 2131363557;
+        public static final int zen_introduction_message = 2131363558;
+        public static final int zen_mode_panel = 2131363559;
+        public static final int zen_quit = 2131363560;
+        public static final int zen_radio_buttons = 2131363561;
+        public static final int zen_radio_buttons_content = 2131363562;
+        public static final int zen_title = 2131363563;
     }
 
     /* renamed from: com.android.systemui.R$integer  reason: case insensitive filesystem */
@@ -13183,530 +13193,532 @@ public final class R {
         public static final int drawer_item = 2131558537;
         public static final int drawer_spacer = 2131558538;
         public static final int edit_dialog = 2131558539;
-        public static final int emergency_cryptkeeper_text = 2131558540;
-        public static final int expand_button = 2131558541;
-        public static final int forced_resizable_activity = 2131558542;
-        public static final int foreground_service_dungeon = 2131558543;
-        public static final int foreground_service_dungeon_row = 2131558544;
-        public static final int foreground_service_item = 2131558545;
-        public static final int foreground_service_title = 2131558546;
-        public static final int fs_gesture_back_demo = 2131558547;
-        public static final int fs_gesture_demo_final_view = 2131558548;
-        public static final int fs_gesture_swipe_view = 2131558549;
-        public static final int fs_gesture_title_view = 2131558550;
-        public static final int full_smart_cover_layout = 2131558551;
-        public static final int global_actions_column = 2131558552;
-        public static final int global_actions_column_seascape = 2131558553;
-        public static final int global_actions_grid = 2131558554;
-        public static final int global_actions_grid_item = 2131558555;
-        public static final int global_actions_grid_item_v2 = 2131558556;
-        public static final int global_actions_grid_seascape = 2131558557;
-        public static final int global_actions_grid_v2 = 2131558558;
-        public static final int global_actions_item = 2131558559;
-        public static final int global_actions_power_dialog = 2131558560;
-        public static final int global_actions_power_item = 2131558561;
-        public static final int global_screenshot = 2131558562;
-        public static final int global_screenshot_action_chip = 2131558563;
-        public static final int global_screenshot_legacy = 2131558564;
-        public static final int global_screenshot_preview = 2131558565;
-        public static final int global_screenshot_static = 2131558566;
-        public static final int heads_up_mini_window_bar = 2131558567;
-        public static final int heads_up_status_bar_layout = 2131558568;
-        public static final int home = 2131558569;
-        public static final int home_demo_layout = 2131558570;
-        public static final int home_demo_recents_layout = 2131558571;
-        public static final int home_demo_workspace_layout = 2131558572;
-        public static final int home_handle = 2131558573;
-        public static final int horizontal_divider = 2131558574;
-        public static final int hybrid_conversation_notification = 2131558575;
-        public static final int hybrid_notification = 2131558576;
-        public static final int hybrid_overflow_number = 2131558577;
-        public static final int image_frame = 2131558578;
-        public static final int ime_switcher = 2131558579;
-        public static final int inattentive_sleep_warning = 2131558580;
-        public static final int invocation_lights = 2131558581;
-        public static final int item_zen_mode = 2131558582;
-        public static final int keyboard_key_preview_text = 2131558583;
-        public static final int keyboard_letter_board = 2131558584;
-        public static final int keyboard_number_board = 2131558585;
-        public static final int keyboard_shortcut_app_item = 2131558586;
-        public static final int keyboard_shortcuts_category_separator = 2131558587;
-        public static final int keyboard_shortcuts_category_title = 2131558588;
-        public static final int keyboard_shortcuts_container = 2131558589;
-        public static final int keyboard_shortcuts_key_icon_view = 2131558590;
-        public static final int keyboard_shortcuts_key_view = 2131558591;
-        public static final int keyboard_shortcuts_view = 2131558592;
-        public static final int keyboard_symbol_board = 2131558593;
-        public static final int keyguard_base_clock_layout = 2131558594;
-        public static final int keyguard_battery_info_layout = 2131558595;
-        public static final int keyguard_bottom_area = 2131558596;
-        public static final int keyguard_bottom_area_overlay = 2131558597;
-        public static final int keyguard_bouncer = 2131558598;
-        public static final int keyguard_clock_extra_info = 2131558599;
-        public static final int keyguard_clock_switch = 2131558600;
-        public static final int keyguard_eca = 2131558601;
-        public static final int keyguard_emergency_carrier_area = 2131558602;
-        public static final int keyguard_esim_area = 2131558603;
-        public static final int keyguard_host_view = 2131558604;
-        public static final int keyguard_media_header = 2131558605;
-        public static final int keyguard_message_area = 2131558606;
-        public static final int keyguard_message_area_large = 2131558607;
-        public static final int keyguard_num_pad_key = 2131558608;
-        public static final int keyguard_password_view = 2131558609;
-        public static final int keyguard_pattern_view = 2131558610;
-        public static final int keyguard_pin_view = 2131558611;
-        public static final int keyguard_presentation = 2131558612;
-        public static final int keyguard_security_bouncer_message_view = 2131558613;
-        public static final int keyguard_sim_pin_view = 2131558614;
-        public static final int keyguard_sim_puk_view = 2131558615;
-        public static final int keyguard_status_area = 2131558616;
-        public static final int keyguard_status_bar = 2131558617;
-        public static final int keyguard_status_view = 2131558618;
-        public static final int keyguard_user_switcher = 2131558619;
-        public static final int keyguard_user_switcher_inner = 2131558620;
-        public static final int keyguard_user_switcher_item = 2131558621;
-        public static final int keyguard_zen_header = 2131558622;
-        public static final int layout_filter_tab_view = 2131558623;
-        public static final int lb_action_1_line = 2131558624;
-        public static final int lb_action_2_lines = 2131558625;
-        public static final int lb_background_window = 2131558626;
-        public static final int lb_browse_fragment = 2131558627;
-        public static final int lb_browse_title = 2131558628;
-        public static final int lb_control_bar = 2131558629;
-        public static final int lb_control_button_primary = 2131558630;
-        public static final int lb_control_button_secondary = 2131558631;
-        public static final int lb_details_description = 2131558632;
-        public static final int lb_details_fragment = 2131558633;
-        public static final int lb_details_overview = 2131558634;
-        public static final int lb_divider = 2131558635;
-        public static final int lb_error_fragment = 2131558636;
-        public static final int lb_fullwidth_details_overview = 2131558637;
-        public static final int lb_fullwidth_details_overview_logo = 2131558638;
-        public static final int lb_guidance = 2131558639;
-        public static final int lb_guidedactions = 2131558640;
-        public static final int lb_guidedactions_datepicker_item = 2131558641;
-        public static final int lb_guidedactions_item = 2131558642;
-        public static final int lb_guidedbuttonactions = 2131558643;
-        public static final int lb_guidedstep_background = 2131558644;
-        public static final int lb_guidedstep_fragment = 2131558645;
-        public static final int lb_header = 2131558646;
-        public static final int lb_headers_fragment = 2131558647;
-        public static final int lb_image_card_view = 2131558648;
-        public static final int lb_image_card_view_themed_badge_left = 2131558649;
-        public static final int lb_image_card_view_themed_badge_right = 2131558650;
-        public static final int lb_image_card_view_themed_content = 2131558651;
-        public static final int lb_image_card_view_themed_title = 2131558652;
-        public static final int lb_list_row = 2131558653;
-        public static final int lb_list_row_hovercard = 2131558654;
-        public static final int lb_media_item_number_view_flipper = 2131558655;
-        public static final int lb_media_list_header = 2131558656;
-        public static final int lb_onboarding_fragment = 2131558657;
-        public static final int lb_picker = 2131558658;
-        public static final int lb_picker_column = 2131558659;
-        public static final int lb_picker_item = 2131558660;
-        public static final int lb_picker_separator = 2131558661;
-        public static final int lb_pinpicker_item = 2131558662;
-        public static final int lb_playback_controls = 2131558663;
-        public static final int lb_playback_controls_row = 2131558664;
-        public static final int lb_playback_fragment = 2131558665;
-        public static final int lb_playback_now_playing_bars = 2131558666;
-        public static final int lb_playback_transport_controls = 2131558667;
-        public static final int lb_playback_transport_controls_row = 2131558668;
-        public static final int lb_row_container = 2131558669;
-        public static final int lb_row_header = 2131558670;
-        public static final int lb_row_media_item = 2131558671;
-        public static final int lb_row_media_item_action = 2131558672;
-        public static final int lb_rows_fragment = 2131558673;
-        public static final int lb_search_bar = 2131558674;
-        public static final int lb_search_fragment = 2131558675;
-        public static final int lb_search_orb = 2131558676;
-        public static final int lb_section_header = 2131558677;
-        public static final int lb_shadow = 2131558678;
-        public static final int lb_speech_orb = 2131558679;
-        public static final int lb_title_view = 2131558680;
-        public static final int lb_vertical_grid = 2131558681;
-        public static final int lb_vertical_grid_fragment = 2131558682;
-        public static final int lb_video_surface = 2131558683;
-        public static final int magnifier_controllers = 2131558684;
-        public static final int media_carousel = 2131558685;
-        public static final int media_carousel_settings_button = 2131558686;
-        public static final int media_control_action = 2131558687;
-        public static final int media_projection_dialog_title = 2131558688;
-        public static final int media_view = 2131558689;
-        public static final int menu_ime = 2131558690;
-        public static final int miui_keyguard_charging_info_item = 2131558691;
-        public static final int miui_keyguard_charging_info_layout = 2131558692;
-        public static final int miui_keyguard_face_unlock_view = 2131558693;
-        public static final int miui_keyguard_gxzw_anim_view = 2131558694;
-        public static final int miui_keyguard_gxzw_icon_view = 2131558695;
-        public static final int miui_keyguard_gxzw_overlay = 2131558696;
-        public static final int miui_keyguard_gxzw_tip_view = 2131558697;
-        public static final int miui_keyguard_left_view_container = 2131558698;
-        public static final int miui_keyguard_left_view_control_center_item = 2131558699;
-        public static final int miui_keyguard_left_view_control_center_layout = 2131558700;
-        public static final int miui_keyguard_left_view_lock_screen_magazine_layout = 2131558701;
-        public static final int miui_keyguard_lock_screen_magazine_clock_layout = 2131558702;
-        public static final int miui_keyguard_lock_screen_magazine_pre_layout = 2131558703;
-        public static final int miui_keyguard_status_bar = 2131558704;
-        public static final int miui_keyguard_wireless_charge_slowly = 2131558705;
-        public static final int miui_modal_window = 2131558706;
-        public static final int miui_notification_modal_dialog = 2131558707;
-        public static final int miui_notification_modal_menu = 2131558708;
-        public static final int miui_notification_template_material_base = 2131558709;
-        public static final int miui_notification_template_material_big_base = 2131558710;
-        public static final int miui_notification_template_material_big_picture = 2131558711;
-        public static final int miui_notification_template_material_big_text = 2131558712;
-        public static final int miui_notification_template_material_inbox = 2131558713;
-        public static final int miui_notification_template_material_one_line = 2131558714;
-        public static final int miui_notification_transparent_template_material_one_line = 2131558715;
-        public static final int miui_ns_notification_header_view = 2131558716;
-        public static final int miui_ns_qs_header_view = 2131558717;
-        public static final int miui_qs_detail_item = 2131558718;
-        public static final int miui_qs_detail_items = 2131558719;
-        public static final int miui_qs_footer = 2131558720;
-        public static final int miui_quick_qs_status_icons = 2131558721;
-        public static final int miui_quick_status_bar_expanded_header = 2131558722;
-        public static final int miui_remote_input = 2131558723;
-        public static final int miui_status_bar = 2131558724;
-        public static final int miui_status_bar_prompt = 2131558725;
-        public static final int miui_status_bar_wifi_group = 2131558726;
-        public static final int miui_system_icons = 2131558727;
-        public static final int miui_unlockscreen_lockout = 2131558728;
-        public static final int miuix_appcompat_action_bar_expanded_menu_layout = 2131558729;
-        public static final int miuix_appcompat_action_bar_home = 2131558730;
-        public static final int miuix_appcompat_action_bar_immersion = 2131558731;
-        public static final int miuix_appcompat_action_bar_list_menu_item_layout = 2131558732;
-        public static final int miuix_appcompat_action_bar_tab = 2131558733;
-        public static final int miuix_appcompat_action_bar_tab_expand = 2131558734;
-        public static final int miuix_appcompat_action_bar_tab_secondary = 2131558735;
-        public static final int miuix_appcompat_action_bar_tabbar = 2131558736;
-        public static final int miuix_appcompat_action_bar_tabbar_collapse_secondary = 2131558737;
-        public static final int miuix_appcompat_action_bar_tabbar_expand = 2131558738;
-        public static final int miuix_appcompat_action_bar_tabbar_secondary = 2131558739;
-        public static final int miuix_appcompat_action_bar_title_expand_item = 2131558740;
-        public static final int miuix_appcompat_action_bar_title_item = 2131558741;
-        public static final int miuix_appcompat_action_bar_title_up = 2131558742;
-        public static final int miuix_appcompat_action_menu_item_child_layout = 2131558743;
-        public static final int miuix_appcompat_action_menu_item_layout = 2131558744;
-        public static final int miuix_appcompat_action_menu_layout = 2131558745;
-        public static final int miuix_appcompat_action_mode_menu_item_layout = 2131558746;
-        public static final int miuix_appcompat_action_mode_title_item = 2131558747;
-        public static final int miuix_appcompat_alert_dialog = 2131558748;
-        public static final int miuix_appcompat_alert_dialog_progress = 2131558749;
-        public static final int miuix_appcompat_arrow_popup_view = 2131558750;
-        public static final int miuix_appcompat_date_picker = 2131558751;
-        public static final int miuix_appcompat_date_picker_dialog = 2131558752;
-        public static final int miuix_appcompat_date_time_picker = 2131558753;
-        public static final int miuix_appcompat_datetime_picker_dialog = 2131558754;
-        public static final int miuix_appcompat_drop_down_popup_list = 2131558755;
-        public static final int miuix_appcompat_edit_mode_title = 2131558756;
-        public static final int miuix_appcompat_expanded_menu_layout = 2131558757;
-        public static final int miuix_appcompat_filter_sort_tab_view = 2131558758;
-        public static final int miuix_appcompat_guide_popup_content_view = 2131558759;
-        public static final int miuix_appcompat_guide_popup_text_view = 2131558760;
-        public static final int miuix_appcompat_guide_popup_view = 2131558761;
-        public static final int miuix_appcompat_immersion_popup_menu_item = 2131558762;
-        public static final int miuix_appcompat_list_menu_item_checkbox = 2131558763;
-        public static final int miuix_appcompat_list_menu_item_icon = 2131558764;
-        public static final int miuix_appcompat_list_menu_item_layout = 2131558765;
-        public static final int miuix_appcompat_list_menu_item_radio = 2131558766;
-        public static final int miuix_appcompat_list_popup_list = 2131558767;
-        public static final int miuix_appcompat_number_picker_layout = 2131558768;
-        public static final int miuix_appcompat_overflow_popup_menu_item_layout = 2131558769;
-        public static final int miuix_appcompat_popup_menu_item = 2131558770;
-        public static final int miuix_appcompat_popup_menu_item_layout = 2131558771;
-        public static final int miuix_appcompat_progress_dialog = 2131558772;
-        public static final int miuix_appcompat_screen_action_bar = 2131558773;
-        public static final int miuix_appcompat_screen_action_bar_contentmask_layout = 2131558774;
-        public static final int miuix_appcompat_screen_action_bar_context_layout = 2131558775;
-        public static final int miuix_appcompat_screen_action_bar_movable = 2131558776;
-        public static final int miuix_appcompat_screen_action_bar_searchmask_layout = 2131558777;
-        public static final int miuix_appcompat_screen_action_bar_split_layout = 2131558778;
-        public static final int miuix_appcompat_screen_simple = 2131558779;
-        public static final int miuix_appcompat_search_action_mode_view = 2131558780;
-        public static final int miuix_appcompat_search_stub = 2131558781;
-        public static final int miuix_appcompat_select_dialog = 2131558782;
-        public static final int miuix_appcompat_select_dialog_item = 2131558783;
-        public static final int miuix_appcompat_select_dialog_multichoice = 2131558784;
-        public static final int miuix_appcompat_select_dialog_singlechoice = 2131558785;
-        public static final int miuix_appcompat_select_dropdown_popup_singlechoice = 2131558786;
-        public static final int miuix_appcompat_simple_spinner_dropdown_item = 2131558787;
-        public static final int miuix_appcompat_simple_spinner_layout = 2131558788;
-        public static final int miuix_appcompat_simple_spinner_layout_integrated = 2131558789;
-        public static final int miuix_appcompat_spiner_dropdown_view_double_line = 2131558790;
-        public static final int miuix_appcompat_spinner_dropdown_checkable_item = 2131558791;
-        public static final int miuix_appcompat_time_picker = 2131558792;
-        public static final int miuix_appcompat_time_picker_dialog = 2131558793;
-        public static final int miuix_preference_category_layout = 2131558794;
-        public static final int miuix_preference_category_layout_empty = 2131558795;
-        public static final int miuix_preference_connect_widget_layout = 2131558796;
-        public static final int miuix_preference_dialog_edittext = 2131558797;
-        public static final int miuix_preference_layout = 2131558798;
-        public static final int miuix_preference_list_fragment = 2131558799;
-        public static final int miuix_preference_radiobutton = 2131558800;
-        public static final int miuix_preference_radiobutton_two_state_background = 2131558801;
-        public static final int miuix_preference_recyclerview = 2131558802;
-        public static final int miuix_preference_text = 2131558803;
-        public static final int miuix_preference_widget_checkbox = 2131558804;
-        public static final int miuix_preference_widget_seekbar = 2131558805;
-        public static final int miuix_preference_widget_spinner = 2131558806;
-        public static final int miuix_preference_widget_switch = 2131558807;
-        public static final int miuix_preference_widget_switch_compat = 2131558808;
-        public static final int miuix_preference_widget_text = 2131558809;
-        public static final int miuix_sbl_simple_indicator = 2131558810;
-        public static final int miuix_sbl_trigger_base_layout = 2131558811;
-        public static final int miuix_sbl_trigger_layout = 2131558812;
-        public static final int miuix_sbl_trigger_loading_progress = 2131558813;
-        public static final int miuix_sbl_trigger_tracking_progress = 2131558814;
-        public static final int miuix_sbl_trigger_tracking_progress_label = 2131558815;
-        public static final int miuix_sbl_trigger_up_layout = 2131558816;
-        public static final int mland = 2131558817;
-        public static final int mland_scorefield = 2131558818;
-        public static final int mobile_signal_group = 2131558819;
-        public static final int mr_cast_dialog = 2131558820;
-        public static final int mr_cast_group_item = 2131558821;
-        public static final int mr_cast_group_volume_item = 2131558822;
-        public static final int mr_cast_header_item = 2131558823;
-        public static final int mr_cast_media_metadata = 2131558824;
-        public static final int mr_cast_route_item = 2131558825;
-        public static final int mr_chooser_dialog = 2131558826;
-        public static final int mr_chooser_list_item = 2131558827;
-        public static final int mr_controller_material_dialog_b = 2131558828;
-        public static final int mr_controller_volume_item = 2131558829;
-        public static final int mr_picker_dialog = 2131558830;
-        public static final int mr_picker_header_item = 2131558831;
-        public static final int mr_picker_route_item = 2131558832;
-        public static final int mr_playback_control = 2131558833;
-        public static final int mr_volume_control = 2131558834;
-        public static final int mtrl_alert_dialog = 2131558835;
-        public static final int mtrl_alert_dialog_actions = 2131558836;
-        public static final int mtrl_alert_dialog_title = 2131558837;
-        public static final int mtrl_alert_select_dialog_item = 2131558838;
-        public static final int mtrl_alert_select_dialog_multichoice = 2131558839;
-        public static final int mtrl_alert_select_dialog_singlechoice = 2131558840;
-        public static final int mtrl_date_picker_calendar_days = 2131558841;
-        public static final int mtrl_date_picker_calendar_days_header = 2131558842;
-        public static final int mtrl_date_picker_header = 2131558843;
-        public static final int mtrl_layout_snackbar = 2131558844;
-        public static final int mtrl_layout_snackbar_include = 2131558845;
-        public static final int mtrl_picker_actions = 2131558846;
-        public static final int mtrl_picker_dialog = 2131558847;
-        public static final int nav_control_widget = 2131558848;
-        public static final int nav_key_space = 2131558849;
-        public static final int nav_width_view = 2131558850;
-        public static final int navigation_bar = 2131558851;
-        public static final int navigation_bar_app_item = 2131558852;
-        public static final int navigation_bar_window = 2131558853;
-        public static final int navigation_layout = 2131558854;
-        public static final int navigation_layout_vertical = 2131558855;
-        public static final int nc_switch_guide_dialog_content = 2131558856;
-        public static final int notif_half_shelf = 2131558857;
-        public static final int notif_half_shelf_row = 2131558858;
-        public static final int notification_action = 2131558859;
-        public static final int notification_action_tombstone = 2131558860;
-        public static final int notification_children_container = 2131558861;
-        public static final int notification_children_divider = 2131558862;
-        public static final int notification_conversation_info = 2131558863;
-        public static final int notification_group_header = 2131558864;
-        public static final int notification_group_header_sticky = 2131558865;
-        public static final int notification_guts = 2131558866;
-        public static final int notification_icon_area = 2131558867;
-        public static final int notification_info = 2131558868;
-        public static final int notification_material_action = 2131558869;
-        public static final int notification_material_action_list = 2131558870;
-        public static final int notification_media_action = 2131558871;
-        public static final int notification_media_cancel_action = 2131558872;
-        public static final int notification_panel_window_bg = 2131558873;
-        public static final int notification_snooze = 2131558874;
-        public static final int notification_snooze_option = 2131558875;
-        public static final int notification_template_big_media = 2131558876;
-        public static final int notification_template_big_media_custom = 2131558877;
-        public static final int notification_template_big_media_narrow = 2131558878;
-        public static final int notification_template_big_media_narrow_custom = 2131558879;
-        public static final int notification_template_custom_big = 2131558880;
-        public static final int notification_template_icon_group = 2131558881;
-        public static final int notification_template_lines_media = 2131558882;
-        public static final int notification_template_media = 2131558883;
-        public static final int notification_template_media_custom = 2131558884;
-        public static final int notification_template_part_app_icon = 2131558885;
-        public static final int notification_template_part_chronometer = 2131558886;
-        public static final int notification_template_part_expand_button = 2131558887;
-        public static final int notification_template_part_line1 = 2131558888;
-        public static final int notification_template_part_time = 2131558889;
-        public static final int notification_template_part_time_container = 2131558890;
-        public static final int notification_template_progress = 2131558891;
-        public static final int notification_template_progressbar = 2131558892;
-        public static final int notification_template_right_icon = 2131558893;
-        public static final int notification_template_text = 2131558894;
-        public static final int operator_name = 2131558895;
-        public static final int owner_info_dialog = 2131558896;
-        public static final int partial_conversation_info = 2131558897;
-        public static final int people_strip = 2131558898;
-        public static final int photo_preview_overlay = 2131558899;
-        public static final int pip_menu_action = 2131558900;
-        public static final int pip_menu_activity = 2131558901;
-        public static final int power_notification_controls_settings = 2131558902;
-        public static final int preference = 2131558903;
-        public static final int preference_access_point = 2131558904;
-        public static final int preference_category = 2131558905;
-        public static final int preference_category_divider = 2131558906;
-        public static final int preference_category_material = 2131558907;
-        public static final int preference_category_material_settings = 2131558908;
-        public static final int preference_category_material_settings_with_divider = 2131558909;
-        public static final int preference_checkable_two_target = 2131558910;
-        public static final int preference_dialog_edittext = 2131558911;
-        public static final int preference_dropdown = 2131558912;
-        public static final int preference_dropdown_material = 2131558913;
-        public static final int preference_footer = 2131558914;
-        public static final int preference_information = 2131558915;
-        public static final int preference_information_material = 2131558916;
-        public static final int preference_list_fragment = 2131558917;
-        public static final int preference_material = 2131558918;
-        public static final int preference_recyclerview = 2131558919;
-        public static final int preference_two_target = 2131558920;
-        public static final int preference_two_target_divider = 2131558921;
-        public static final int preference_widget_checkbox = 2131558922;
-        public static final int preference_widget_radiobutton = 2131558923;
-        public static final int preference_widget_seekbar = 2131558924;
-        public static final int preference_widget_seekbar_material = 2131558925;
-        public static final int preference_widget_settings = 2131558926;
-        public static final int preference_widget_switch = 2131558927;
-        public static final int preference_widget_switch_compat = 2131558928;
-        public static final int priority_onboarding_half_shell = 2131558929;
-        public static final int progress_header = 2131558930;
-        public static final int qs_add_tiles_list = 2131558931;
-        public static final int qs_carrier = 2131558932;
-        public static final int qs_carrier_group = 2131558933;
-        public static final int qs_content = 2131558934;
-        public static final int qs_control_big_tile = 2131558935;
-        public static final int qs_control_brightness_mirror = 2131558936;
-        public static final int qs_control_center_customize_panel = 2131558937;
-        public static final int qs_control_center_header = 2131558938;
-        public static final int qs_control_customize_panel_content = 2131558939;
-        public static final int qs_control_customize_tile_frame = 2131558940;
-        public static final int qs_control_customize_unadded_tiles_layout = 2131558941;
-        public static final int qs_control_detail = 2131558942;
-        public static final int qs_control_detail_header = 2131558943;
-        public static final int qs_control_detail_item = 2131558944;
-        public static final int qs_control_expand_detail_item = 2131558945;
-        public static final int qs_control_expand_detail_items = 2131558946;
-        public static final int qs_control_expand_tile = 2131558947;
-        public static final int qs_control_settings_footer = 2131558948;
-        public static final int qs_control_toggle_slider = 2131558949;
-        public static final int qs_customize_divider = 2131558950;
-        public static final int qs_customize_header = 2131558951;
-        public static final int qs_customize_panel = 2131558952;
-        public static final int qs_customize_panel_content = 2131558953;
-        public static final int qs_customize_tile_divider = 2131558954;
-        public static final int qs_customize_tile_frame = 2131558955;
-        public static final int qs_detail = 2131558956;
-        public static final int qs_detail_buttons = 2131558957;
-        public static final int qs_detail_buttons_divider = 2131558958;
-        public static final int qs_detail_header = 2131558959;
-        public static final int qs_detail_item = 2131558960;
-        public static final int qs_detail_items = 2131558961;
-        public static final int qs_detail_line_item = 2131558962;
-        public static final int qs_detail_switch = 2131558963;
-        public static final int qs_divider = 2131558964;
-        public static final int qs_footer_data_usage = 2131558965;
-        public static final int qs_footer_impl = 2131558966;
-        public static final int qs_media_divider = 2131558967;
-        public static final int qs_media_panel_options = 2131558968;
-        public static final int qs_page_indicator = 2131558969;
-        public static final int qs_paged_page = 2131558970;
-        public static final int qs_paged_tile_layout = 2131558971;
-        public static final int qs_panel = 2131558972;
-        public static final int qs_tile_label = 2131558973;
-        public static final int qs_tile_layout = 2131558974;
-        public static final int qs_user_detail = 2131558975;
-        public static final int qs_user_detail_item = 2131558976;
-        public static final int quick_qs_status_icons = 2131558977;
-        public static final int quick_settings_brightness_dialog = 2131558978;
-        public static final int quick_settings_footer = 2131558979;
-        public static final int quick_settings_footer_dialog = 2131558980;
-        public static final int quick_settings_header_info = 2131558981;
-        public static final int quick_status_bar_expanded_header = 2131558982;
-        public static final int quick_status_bar_header_system_icons = 2131558983;
-        public static final int recent_apps = 2131558984;
-        public static final int recents_onboarding = 2131558985;
-        public static final int remember_permission_checkbox = 2131558986;
-        public static final int remote_input = 2131558987;
-        public static final int restricted_icon = 2131558988;
-        public static final int restricted_switch_preference = 2131558989;
-        public static final int restricted_switch_widget = 2131558990;
-        public static final int rotate_suggestion = 2131558991;
-        public static final int rounded_corners = 2131558992;
-        public static final int screen_pinning_request = 2131558993;
-        public static final int screen_pinning_request_buttons = 2131558994;
-        public static final int screen_pinning_request_buttons_land = 2131558995;
-        public static final int screen_pinning_request_buttons_sea = 2131558996;
-        public static final int screen_pinning_request_land_phone = 2131558997;
-        public static final int screen_pinning_request_sea_phone = 2131558998;
-        public static final int screen_pinning_request_text_area = 2131558999;
-        public static final int screen_record_dialog = 2131559000;
-        public static final int screen_record_dialog_audio_source = 2131559001;
-        public static final int screen_record_dialog_audio_source_selected = 2131559002;
-        public static final int segmented_button = 2131559003;
-        public static final int select_dialog_item_material = 2131559004;
-        public static final int select_dialog_multichoice_material = 2131559005;
-        public static final int select_dialog_singlechoice_material = 2131559006;
-        public static final int settings_dialog_title = 2131559007;
-        public static final int settings_spinner_view = 2131559008;
-        public static final int settings_with_drawer = 2131559009;
-        public static final int shelf_menu_anchor = 2131559010;
-        public static final int size_compat_mode_hint = 2131559011;
-        public static final int slice_permission_request = 2131559012;
-        public static final int smart_action_button = 2131559013;
-        public static final int smart_cover_layout = 2131559014;
-        public static final int smart_reply_button = 2131559015;
-        public static final int smart_reply_view = 2131559016;
-        public static final int split_clock_view = 2131559017;
-        public static final int status_bar = 2131559018;
-        public static final int status_bar_expanded = 2131559019;
-        public static final int status_bar_expanded_plugin_frame = 2131559020;
-        public static final int status_bar_mobile_signal_group = 2131559021;
-        public static final int status_bar_no_notifications = 2131559022;
-        public static final int status_bar_notification_dismiss_all = 2131559023;
-        public static final int status_bar_notification_footer = 2131559024;
-        public static final int status_bar_notification_row = 2131559025;
-        public static final int status_bar_notification_section_header = 2131559026;
-        public static final int status_bar_notification_shelf = 2131559027;
-        public static final int status_bar_toggle_slider = 2131559028;
-        public static final int status_bar_wifi_group = 2131559029;
-        public static final int super_notification_shade = 2131559030;
-        public static final int super_status_bar = 2131559031;
-        public static final int support_simple_spinner_dropdown_item = 2131559032;
-        public static final int switch_bar = 2131559033;
-        public static final int system_icons = 2131559034;
-        public static final int test_action_chip = 2131559035;
-        public static final int test_reflow_chipgroup = 2131559036;
-        public static final int tuner_activity = 2131559037;
-        public static final int tuner_shortcut_item = 2131559038;
-        public static final int tuner_shortcut_list = 2131559039;
-        public static final int tuner_widget_settings_switch = 2131559040;
-        public static final int tuner_zen_mode_panel = 2131559041;
-        public static final int tv_audio_recording_indicator = 2131559042;
-        public static final int tv_pip_control_button = 2131559043;
-        public static final int tv_pip_controls = 2131559044;
-        public static final int tv_pip_custom_control = 2131559045;
-        public static final int tv_pip_menu = 2131559046;
-        public static final int usage_bottom_label = 2131559047;
-        public static final int usage_side_label = 2131559048;
-        public static final int usage_view = 2131559049;
-        public static final int user_preference = 2131559050;
-        public static final int video_surface_fragment = 2131559051;
-        public static final int volume_dialog = 2131559052;
-        public static final int volume_dialog_row = 2131559053;
-        public static final int volume_dnd_icon = 2131559054;
-        public static final int volume_tool_tip_view = 2131559055;
-        public static final int window_magnifier_view = 2131559056;
-        public static final int wireless_charging_layout = 2131559057;
-        public static final int zen_mode_button = 2131559058;
-        public static final int zen_mode_condition = 2131559059;
-        public static final int zen_mode_duration_dialog = 2131559060;
-        public static final int zen_mode_panel = 2131559061;
-        public static final int zen_mode_radio_button = 2131559062;
-        public static final int zen_mode_turn_on_dialog_container = 2131559063;
+        public static final int edit_dialog_content = 2131558540;
+        public static final int emergency_cryptkeeper_text = 2131558541;
+        public static final int expand_button = 2131558542;
+        public static final int forced_resizable_activity = 2131558543;
+        public static final int foreground_service_dungeon = 2131558544;
+        public static final int foreground_service_dungeon_row = 2131558545;
+        public static final int foreground_service_item = 2131558546;
+        public static final int foreground_service_title = 2131558547;
+        public static final int fs_gesture_back_demo = 2131558548;
+        public static final int fs_gesture_demo_final_view = 2131558549;
+        public static final int fs_gesture_swipe_view = 2131558550;
+        public static final int fs_gesture_title_view = 2131558551;
+        public static final int full_smart_cover_layout = 2131558552;
+        public static final int global_actions_column = 2131558553;
+        public static final int global_actions_column_seascape = 2131558554;
+        public static final int global_actions_grid = 2131558555;
+        public static final int global_actions_grid_item = 2131558556;
+        public static final int global_actions_grid_item_v2 = 2131558557;
+        public static final int global_actions_grid_seascape = 2131558558;
+        public static final int global_actions_grid_v2 = 2131558559;
+        public static final int global_actions_item = 2131558560;
+        public static final int global_actions_power_dialog = 2131558561;
+        public static final int global_actions_power_item = 2131558562;
+        public static final int global_screenshot = 2131558563;
+        public static final int global_screenshot_action_chip = 2131558564;
+        public static final int global_screenshot_legacy = 2131558565;
+        public static final int global_screenshot_preview = 2131558566;
+        public static final int global_screenshot_static = 2131558567;
+        public static final int heads_up_mini_window_bar = 2131558568;
+        public static final int heads_up_status_bar_layout = 2131558569;
+        public static final int home = 2131558570;
+        public static final int home_demo_layout = 2131558571;
+        public static final int home_demo_recents_layout = 2131558572;
+        public static final int home_demo_workspace_layout = 2131558573;
+        public static final int home_handle = 2131558574;
+        public static final int horizontal_divider = 2131558575;
+        public static final int hybrid_conversation_notification = 2131558576;
+        public static final int hybrid_notification = 2131558577;
+        public static final int hybrid_overflow_number = 2131558578;
+        public static final int image_frame = 2131558579;
+        public static final int ime_switcher = 2131558580;
+        public static final int inattentive_sleep_warning = 2131558581;
+        public static final int invocation_lights = 2131558582;
+        public static final int item_zen_mode = 2131558583;
+        public static final int keyboard_key_preview_text = 2131558584;
+        public static final int keyboard_letter_board = 2131558585;
+        public static final int keyboard_number_board = 2131558586;
+        public static final int keyboard_shortcut_app_item = 2131558587;
+        public static final int keyboard_shortcuts_category_separator = 2131558588;
+        public static final int keyboard_shortcuts_category_title = 2131558589;
+        public static final int keyboard_shortcuts_container = 2131558590;
+        public static final int keyboard_shortcuts_key_icon_view = 2131558591;
+        public static final int keyboard_shortcuts_key_view = 2131558592;
+        public static final int keyboard_shortcuts_view = 2131558593;
+        public static final int keyboard_symbol_board = 2131558594;
+        public static final int keyguard_base_clock_layout = 2131558595;
+        public static final int keyguard_battery_info_layout = 2131558596;
+        public static final int keyguard_bottom_area = 2131558597;
+        public static final int keyguard_bottom_area_overlay = 2131558598;
+        public static final int keyguard_bouncer = 2131558599;
+        public static final int keyguard_clock_extra_info = 2131558600;
+        public static final int keyguard_clock_switch = 2131558601;
+        public static final int keyguard_eca = 2131558602;
+        public static final int keyguard_emergency_carrier_area = 2131558603;
+        public static final int keyguard_esim_area = 2131558604;
+        public static final int keyguard_host_view = 2131558605;
+        public static final int keyguard_media_header = 2131558606;
+        public static final int keyguard_message_area = 2131558607;
+        public static final int keyguard_message_area_large = 2131558608;
+        public static final int keyguard_num_pad_key = 2131558609;
+        public static final int keyguard_password_view = 2131558610;
+        public static final int keyguard_pattern_view = 2131558611;
+        public static final int keyguard_pin_view = 2131558612;
+        public static final int keyguard_presentation = 2131558613;
+        public static final int keyguard_security_bouncer_message_view = 2131558614;
+        public static final int keyguard_sim_pin_view = 2131558615;
+        public static final int keyguard_sim_puk_view = 2131558616;
+        public static final int keyguard_status_area = 2131558617;
+        public static final int keyguard_status_bar = 2131558618;
+        public static final int keyguard_status_view = 2131558619;
+        public static final int keyguard_user_switcher = 2131558620;
+        public static final int keyguard_user_switcher_inner = 2131558621;
+        public static final int keyguard_user_switcher_item = 2131558622;
+        public static final int keyguard_zen_header = 2131558623;
+        public static final int layout_filter_tab_view = 2131558624;
+        public static final int lb_action_1_line = 2131558625;
+        public static final int lb_action_2_lines = 2131558626;
+        public static final int lb_background_window = 2131558627;
+        public static final int lb_browse_fragment = 2131558628;
+        public static final int lb_browse_title = 2131558629;
+        public static final int lb_control_bar = 2131558630;
+        public static final int lb_control_button_primary = 2131558631;
+        public static final int lb_control_button_secondary = 2131558632;
+        public static final int lb_details_description = 2131558633;
+        public static final int lb_details_fragment = 2131558634;
+        public static final int lb_details_overview = 2131558635;
+        public static final int lb_divider = 2131558636;
+        public static final int lb_error_fragment = 2131558637;
+        public static final int lb_fullwidth_details_overview = 2131558638;
+        public static final int lb_fullwidth_details_overview_logo = 2131558639;
+        public static final int lb_guidance = 2131558640;
+        public static final int lb_guidedactions = 2131558641;
+        public static final int lb_guidedactions_datepicker_item = 2131558642;
+        public static final int lb_guidedactions_item = 2131558643;
+        public static final int lb_guidedbuttonactions = 2131558644;
+        public static final int lb_guidedstep_background = 2131558645;
+        public static final int lb_guidedstep_fragment = 2131558646;
+        public static final int lb_header = 2131558647;
+        public static final int lb_headers_fragment = 2131558648;
+        public static final int lb_image_card_view = 2131558649;
+        public static final int lb_image_card_view_themed_badge_left = 2131558650;
+        public static final int lb_image_card_view_themed_badge_right = 2131558651;
+        public static final int lb_image_card_view_themed_content = 2131558652;
+        public static final int lb_image_card_view_themed_title = 2131558653;
+        public static final int lb_list_row = 2131558654;
+        public static final int lb_list_row_hovercard = 2131558655;
+        public static final int lb_media_item_number_view_flipper = 2131558656;
+        public static final int lb_media_list_header = 2131558657;
+        public static final int lb_onboarding_fragment = 2131558658;
+        public static final int lb_picker = 2131558659;
+        public static final int lb_picker_column = 2131558660;
+        public static final int lb_picker_item = 2131558661;
+        public static final int lb_picker_separator = 2131558662;
+        public static final int lb_pinpicker_item = 2131558663;
+        public static final int lb_playback_controls = 2131558664;
+        public static final int lb_playback_controls_row = 2131558665;
+        public static final int lb_playback_fragment = 2131558666;
+        public static final int lb_playback_now_playing_bars = 2131558667;
+        public static final int lb_playback_transport_controls = 2131558668;
+        public static final int lb_playback_transport_controls_row = 2131558669;
+        public static final int lb_row_container = 2131558670;
+        public static final int lb_row_header = 2131558671;
+        public static final int lb_row_media_item = 2131558672;
+        public static final int lb_row_media_item_action = 2131558673;
+        public static final int lb_rows_fragment = 2131558674;
+        public static final int lb_search_bar = 2131558675;
+        public static final int lb_search_fragment = 2131558676;
+        public static final int lb_search_orb = 2131558677;
+        public static final int lb_section_header = 2131558678;
+        public static final int lb_shadow = 2131558679;
+        public static final int lb_speech_orb = 2131558680;
+        public static final int lb_title_view = 2131558681;
+        public static final int lb_vertical_grid = 2131558682;
+        public static final int lb_vertical_grid_fragment = 2131558683;
+        public static final int lb_video_surface = 2131558684;
+        public static final int magnifier_controllers = 2131558685;
+        public static final int media_carousel = 2131558686;
+        public static final int media_carousel_settings_button = 2131558687;
+        public static final int media_control_action = 2131558688;
+        public static final int media_projection_dialog_title = 2131558689;
+        public static final int media_view = 2131558690;
+        public static final int menu_ime = 2131558691;
+        public static final int miui_keyguard_charging_info_item = 2131558692;
+        public static final int miui_keyguard_charging_info_layout = 2131558693;
+        public static final int miui_keyguard_face_unlock_view = 2131558694;
+        public static final int miui_keyguard_gxzw_anim_view = 2131558695;
+        public static final int miui_keyguard_gxzw_icon_view = 2131558696;
+        public static final int miui_keyguard_gxzw_overlay = 2131558697;
+        public static final int miui_keyguard_gxzw_tip_view = 2131558698;
+        public static final int miui_keyguard_left_view_container = 2131558699;
+        public static final int miui_keyguard_left_view_control_center_item = 2131558700;
+        public static final int miui_keyguard_left_view_control_center_layout = 2131558701;
+        public static final int miui_keyguard_left_view_lock_screen_magazine_layout = 2131558702;
+        public static final int miui_keyguard_lock_screen_magazine_clock_layout = 2131558703;
+        public static final int miui_keyguard_lock_screen_magazine_pre_layout = 2131558704;
+        public static final int miui_keyguard_status_bar = 2131558705;
+        public static final int miui_keyguard_wireless_charge_slowly = 2131558706;
+        public static final int miui_modal_window = 2131558707;
+        public static final int miui_notification_modal_dialog = 2131558708;
+        public static final int miui_notification_modal_menu = 2131558709;
+        public static final int miui_notification_template_material_base = 2131558710;
+        public static final int miui_notification_template_material_big_base = 2131558711;
+        public static final int miui_notification_template_material_big_picture = 2131558712;
+        public static final int miui_notification_template_material_big_text = 2131558713;
+        public static final int miui_notification_template_material_inbox = 2131558714;
+        public static final int miui_notification_template_material_one_line = 2131558715;
+        public static final int miui_notification_transparent_template_material_one_line = 2131558716;
+        public static final int miui_ns_notification_header_view = 2131558717;
+        public static final int miui_ns_qs_header_view = 2131558718;
+        public static final int miui_qs_detail_item = 2131558719;
+        public static final int miui_qs_detail_items = 2131558720;
+        public static final int miui_qs_footer = 2131558721;
+        public static final int miui_quick_qs_status_icons = 2131558722;
+        public static final int miui_quick_status_bar_expanded_header = 2131558723;
+        public static final int miui_remote_input = 2131558724;
+        public static final int miui_status_bar = 2131558725;
+        public static final int miui_status_bar_prompt = 2131558726;
+        public static final int miui_status_bar_wifi_group = 2131558727;
+        public static final int miui_system_icons = 2131558728;
+        public static final int miui_unlockscreen_lockout = 2131558729;
+        public static final int miuix_appcompat_action_bar_expanded_menu_layout = 2131558730;
+        public static final int miuix_appcompat_action_bar_home = 2131558731;
+        public static final int miuix_appcompat_action_bar_immersion = 2131558732;
+        public static final int miuix_appcompat_action_bar_list_menu_item_layout = 2131558733;
+        public static final int miuix_appcompat_action_bar_tab = 2131558734;
+        public static final int miuix_appcompat_action_bar_tab_expand = 2131558735;
+        public static final int miuix_appcompat_action_bar_tab_secondary = 2131558736;
+        public static final int miuix_appcompat_action_bar_tabbar = 2131558737;
+        public static final int miuix_appcompat_action_bar_tabbar_collapse_secondary = 2131558738;
+        public static final int miuix_appcompat_action_bar_tabbar_expand = 2131558739;
+        public static final int miuix_appcompat_action_bar_tabbar_secondary = 2131558740;
+        public static final int miuix_appcompat_action_bar_title_expand_item = 2131558741;
+        public static final int miuix_appcompat_action_bar_title_item = 2131558742;
+        public static final int miuix_appcompat_action_bar_title_up = 2131558743;
+        public static final int miuix_appcompat_action_menu_item_child_layout = 2131558744;
+        public static final int miuix_appcompat_action_menu_item_layout = 2131558745;
+        public static final int miuix_appcompat_action_menu_layout = 2131558746;
+        public static final int miuix_appcompat_action_mode_menu_item_layout = 2131558747;
+        public static final int miuix_appcompat_action_mode_title_item = 2131558748;
+        public static final int miuix_appcompat_alert_dialog = 2131558749;
+        public static final int miuix_appcompat_alert_dialog_content = 2131558750;
+        public static final int miuix_appcompat_alert_dialog_progress = 2131558751;
+        public static final int miuix_appcompat_arrow_popup_view = 2131558752;
+        public static final int miuix_appcompat_date_picker = 2131558753;
+        public static final int miuix_appcompat_date_picker_dialog = 2131558754;
+        public static final int miuix_appcompat_date_time_picker = 2131558755;
+        public static final int miuix_appcompat_datetime_picker_dialog = 2131558756;
+        public static final int miuix_appcompat_drop_down_popup_list = 2131558757;
+        public static final int miuix_appcompat_edit_mode_title = 2131558758;
+        public static final int miuix_appcompat_expanded_menu_layout = 2131558759;
+        public static final int miuix_appcompat_filter_sort_tab_view = 2131558760;
+        public static final int miuix_appcompat_guide_popup_content_view = 2131558761;
+        public static final int miuix_appcompat_guide_popup_text_view = 2131558762;
+        public static final int miuix_appcompat_guide_popup_view = 2131558763;
+        public static final int miuix_appcompat_immersion_popup_menu_item = 2131558764;
+        public static final int miuix_appcompat_list_menu_item_checkbox = 2131558765;
+        public static final int miuix_appcompat_list_menu_item_icon = 2131558766;
+        public static final int miuix_appcompat_list_menu_item_layout = 2131558767;
+        public static final int miuix_appcompat_list_menu_item_radio = 2131558768;
+        public static final int miuix_appcompat_list_popup_list = 2131558769;
+        public static final int miuix_appcompat_number_picker_layout = 2131558770;
+        public static final int miuix_appcompat_overflow_popup_menu_item_layout = 2131558771;
+        public static final int miuix_appcompat_popup_menu_item = 2131558772;
+        public static final int miuix_appcompat_popup_menu_item_layout = 2131558773;
+        public static final int miuix_appcompat_progress_dialog = 2131558774;
+        public static final int miuix_appcompat_screen_action_bar = 2131558775;
+        public static final int miuix_appcompat_screen_action_bar_contentmask_layout = 2131558776;
+        public static final int miuix_appcompat_screen_action_bar_context_layout = 2131558777;
+        public static final int miuix_appcompat_screen_action_bar_movable = 2131558778;
+        public static final int miuix_appcompat_screen_action_bar_searchmask_layout = 2131558779;
+        public static final int miuix_appcompat_screen_action_bar_split_layout = 2131558780;
+        public static final int miuix_appcompat_screen_simple = 2131558781;
+        public static final int miuix_appcompat_search_action_mode_view = 2131558782;
+        public static final int miuix_appcompat_search_stub = 2131558783;
+        public static final int miuix_appcompat_select_dialog = 2131558784;
+        public static final int miuix_appcompat_select_dialog_item = 2131558785;
+        public static final int miuix_appcompat_select_dialog_multichoice = 2131558786;
+        public static final int miuix_appcompat_select_dialog_singlechoice = 2131558787;
+        public static final int miuix_appcompat_select_dropdown_popup_singlechoice = 2131558788;
+        public static final int miuix_appcompat_simple_spinner_dropdown_item = 2131558789;
+        public static final int miuix_appcompat_simple_spinner_layout = 2131558790;
+        public static final int miuix_appcompat_simple_spinner_layout_integrated = 2131558791;
+        public static final int miuix_appcompat_spiner_dropdown_view_double_line = 2131558792;
+        public static final int miuix_appcompat_spinner_dropdown_checkable_item = 2131558793;
+        public static final int miuix_appcompat_time_picker = 2131558794;
+        public static final int miuix_appcompat_time_picker_dialog = 2131558795;
+        public static final int miuix_preference_category_layout = 2131558796;
+        public static final int miuix_preference_category_layout_empty = 2131558797;
+        public static final int miuix_preference_connect_widget_layout = 2131558798;
+        public static final int miuix_preference_dialog_edittext = 2131558799;
+        public static final int miuix_preference_layout = 2131558800;
+        public static final int miuix_preference_list_fragment = 2131558801;
+        public static final int miuix_preference_radiobutton = 2131558802;
+        public static final int miuix_preference_radiobutton_two_state_background = 2131558803;
+        public static final int miuix_preference_recyclerview = 2131558804;
+        public static final int miuix_preference_text = 2131558805;
+        public static final int miuix_preference_widget_checkbox = 2131558806;
+        public static final int miuix_preference_widget_seekbar = 2131558807;
+        public static final int miuix_preference_widget_spinner = 2131558808;
+        public static final int miuix_preference_widget_switch = 2131558809;
+        public static final int miuix_preference_widget_switch_compat = 2131558810;
+        public static final int miuix_preference_widget_text = 2131558811;
+        public static final int miuix_sbl_simple_indicator = 2131558812;
+        public static final int miuix_sbl_trigger_base_layout = 2131558813;
+        public static final int miuix_sbl_trigger_layout = 2131558814;
+        public static final int miuix_sbl_trigger_loading_progress = 2131558815;
+        public static final int miuix_sbl_trigger_tracking_progress = 2131558816;
+        public static final int miuix_sbl_trigger_tracking_progress_label = 2131558817;
+        public static final int miuix_sbl_trigger_up_layout = 2131558818;
+        public static final int mland = 2131558819;
+        public static final int mland_scorefield = 2131558820;
+        public static final int mobile_signal_group = 2131558821;
+        public static final int mr_cast_dialog = 2131558822;
+        public static final int mr_cast_group_item = 2131558823;
+        public static final int mr_cast_group_volume_item = 2131558824;
+        public static final int mr_cast_header_item = 2131558825;
+        public static final int mr_cast_media_metadata = 2131558826;
+        public static final int mr_cast_route_item = 2131558827;
+        public static final int mr_chooser_dialog = 2131558828;
+        public static final int mr_chooser_list_item = 2131558829;
+        public static final int mr_controller_material_dialog_b = 2131558830;
+        public static final int mr_controller_volume_item = 2131558831;
+        public static final int mr_picker_dialog = 2131558832;
+        public static final int mr_picker_header_item = 2131558833;
+        public static final int mr_picker_route_item = 2131558834;
+        public static final int mr_playback_control = 2131558835;
+        public static final int mr_volume_control = 2131558836;
+        public static final int mtrl_alert_dialog = 2131558837;
+        public static final int mtrl_alert_dialog_actions = 2131558838;
+        public static final int mtrl_alert_dialog_title = 2131558839;
+        public static final int mtrl_alert_select_dialog_item = 2131558840;
+        public static final int mtrl_alert_select_dialog_multichoice = 2131558841;
+        public static final int mtrl_alert_select_dialog_singlechoice = 2131558842;
+        public static final int mtrl_date_picker_calendar_days = 2131558843;
+        public static final int mtrl_date_picker_calendar_days_header = 2131558844;
+        public static final int mtrl_date_picker_header = 2131558845;
+        public static final int mtrl_layout_snackbar = 2131558846;
+        public static final int mtrl_layout_snackbar_include = 2131558847;
+        public static final int mtrl_picker_actions = 2131558848;
+        public static final int mtrl_picker_dialog = 2131558849;
+        public static final int nav_control_widget = 2131558850;
+        public static final int nav_key_space = 2131558851;
+        public static final int nav_width_view = 2131558852;
+        public static final int navigation_bar = 2131558853;
+        public static final int navigation_bar_app_item = 2131558854;
+        public static final int navigation_bar_window = 2131558855;
+        public static final int navigation_layout = 2131558856;
+        public static final int navigation_layout_vertical = 2131558857;
+        public static final int nc_switch_guide_dialog_content = 2131558858;
+        public static final int notif_half_shelf = 2131558859;
+        public static final int notif_half_shelf_row = 2131558860;
+        public static final int notification_action = 2131558861;
+        public static final int notification_action_tombstone = 2131558862;
+        public static final int notification_children_container = 2131558863;
+        public static final int notification_children_divider = 2131558864;
+        public static final int notification_conversation_info = 2131558865;
+        public static final int notification_group_header = 2131558866;
+        public static final int notification_group_header_sticky = 2131558867;
+        public static final int notification_guts = 2131558868;
+        public static final int notification_icon_area = 2131558869;
+        public static final int notification_info = 2131558870;
+        public static final int notification_material_action = 2131558871;
+        public static final int notification_material_action_list = 2131558872;
+        public static final int notification_media_action = 2131558873;
+        public static final int notification_media_cancel_action = 2131558874;
+        public static final int notification_panel_window_bg = 2131558875;
+        public static final int notification_snooze = 2131558876;
+        public static final int notification_snooze_option = 2131558877;
+        public static final int notification_template_big_media = 2131558878;
+        public static final int notification_template_big_media_custom = 2131558879;
+        public static final int notification_template_big_media_narrow = 2131558880;
+        public static final int notification_template_big_media_narrow_custom = 2131558881;
+        public static final int notification_template_custom_big = 2131558882;
+        public static final int notification_template_icon_group = 2131558883;
+        public static final int notification_template_lines_media = 2131558884;
+        public static final int notification_template_media = 2131558885;
+        public static final int notification_template_media_custom = 2131558886;
+        public static final int notification_template_part_app_icon = 2131558887;
+        public static final int notification_template_part_chronometer = 2131558888;
+        public static final int notification_template_part_expand_button = 2131558889;
+        public static final int notification_template_part_line1 = 2131558890;
+        public static final int notification_template_part_time = 2131558891;
+        public static final int notification_template_part_time_container = 2131558892;
+        public static final int notification_template_progress = 2131558893;
+        public static final int notification_template_progressbar = 2131558894;
+        public static final int notification_template_right_icon = 2131558895;
+        public static final int notification_template_text = 2131558896;
+        public static final int operator_name = 2131558897;
+        public static final int owner_info_dialog = 2131558898;
+        public static final int partial_conversation_info = 2131558899;
+        public static final int people_strip = 2131558900;
+        public static final int photo_preview_overlay = 2131558901;
+        public static final int pip_menu_action = 2131558902;
+        public static final int pip_menu_activity = 2131558903;
+        public static final int power_notification_controls_settings = 2131558904;
+        public static final int preference = 2131558905;
+        public static final int preference_access_point = 2131558906;
+        public static final int preference_category = 2131558907;
+        public static final int preference_category_divider = 2131558908;
+        public static final int preference_category_material = 2131558909;
+        public static final int preference_category_material_settings = 2131558910;
+        public static final int preference_category_material_settings_with_divider = 2131558911;
+        public static final int preference_checkable_two_target = 2131558912;
+        public static final int preference_dialog_edittext = 2131558913;
+        public static final int preference_dropdown = 2131558914;
+        public static final int preference_dropdown_material = 2131558915;
+        public static final int preference_footer = 2131558916;
+        public static final int preference_information = 2131558917;
+        public static final int preference_information_material = 2131558918;
+        public static final int preference_list_fragment = 2131558919;
+        public static final int preference_material = 2131558920;
+        public static final int preference_recyclerview = 2131558921;
+        public static final int preference_two_target = 2131558922;
+        public static final int preference_two_target_divider = 2131558923;
+        public static final int preference_widget_checkbox = 2131558924;
+        public static final int preference_widget_radiobutton = 2131558925;
+        public static final int preference_widget_seekbar = 2131558926;
+        public static final int preference_widget_seekbar_material = 2131558927;
+        public static final int preference_widget_settings = 2131558928;
+        public static final int preference_widget_switch = 2131558929;
+        public static final int preference_widget_switch_compat = 2131558930;
+        public static final int priority_onboarding_half_shell = 2131558931;
+        public static final int progress_header = 2131558932;
+        public static final int qs_add_tiles_list = 2131558933;
+        public static final int qs_carrier = 2131558934;
+        public static final int qs_carrier_group = 2131558935;
+        public static final int qs_content = 2131558936;
+        public static final int qs_control_big_tile = 2131558937;
+        public static final int qs_control_brightness_mirror = 2131558938;
+        public static final int qs_control_center_customize_panel = 2131558939;
+        public static final int qs_control_center_header = 2131558940;
+        public static final int qs_control_customize_panel_content = 2131558941;
+        public static final int qs_control_customize_tile_frame = 2131558942;
+        public static final int qs_control_customize_unadded_tiles_layout = 2131558943;
+        public static final int qs_control_detail = 2131558944;
+        public static final int qs_control_detail_header = 2131558945;
+        public static final int qs_control_detail_item = 2131558946;
+        public static final int qs_control_expand_detail_item = 2131558947;
+        public static final int qs_control_expand_detail_items = 2131558948;
+        public static final int qs_control_expand_tile = 2131558949;
+        public static final int qs_control_settings_footer = 2131558950;
+        public static final int qs_control_toggle_slider = 2131558951;
+        public static final int qs_customize_divider = 2131558952;
+        public static final int qs_customize_header = 2131558953;
+        public static final int qs_customize_panel = 2131558954;
+        public static final int qs_customize_panel_content = 2131558955;
+        public static final int qs_customize_tile_divider = 2131558956;
+        public static final int qs_customize_tile_frame = 2131558957;
+        public static final int qs_detail = 2131558958;
+        public static final int qs_detail_buttons = 2131558959;
+        public static final int qs_detail_buttons_divider = 2131558960;
+        public static final int qs_detail_header = 2131558961;
+        public static final int qs_detail_item = 2131558962;
+        public static final int qs_detail_items = 2131558963;
+        public static final int qs_detail_line_item = 2131558964;
+        public static final int qs_detail_switch = 2131558965;
+        public static final int qs_divider = 2131558966;
+        public static final int qs_footer_data_usage = 2131558967;
+        public static final int qs_footer_impl = 2131558968;
+        public static final int qs_media_divider = 2131558969;
+        public static final int qs_media_panel_options = 2131558970;
+        public static final int qs_page_indicator = 2131558971;
+        public static final int qs_paged_page = 2131558972;
+        public static final int qs_paged_tile_layout = 2131558973;
+        public static final int qs_panel = 2131558974;
+        public static final int qs_tile_label = 2131558975;
+        public static final int qs_tile_layout = 2131558976;
+        public static final int qs_user_detail = 2131558977;
+        public static final int qs_user_detail_item = 2131558978;
+        public static final int quick_qs_status_icons = 2131558979;
+        public static final int quick_settings_brightness_dialog = 2131558980;
+        public static final int quick_settings_footer = 2131558981;
+        public static final int quick_settings_footer_dialog = 2131558982;
+        public static final int quick_settings_header_info = 2131558983;
+        public static final int quick_status_bar_expanded_header = 2131558984;
+        public static final int quick_status_bar_header_system_icons = 2131558985;
+        public static final int recent_apps = 2131558986;
+        public static final int recents_onboarding = 2131558987;
+        public static final int remember_permission_checkbox = 2131558988;
+        public static final int remote_input = 2131558989;
+        public static final int restricted_icon = 2131558990;
+        public static final int restricted_switch_preference = 2131558991;
+        public static final int restricted_switch_widget = 2131558992;
+        public static final int rotate_suggestion = 2131558993;
+        public static final int rounded_corners = 2131558994;
+        public static final int screen_pinning_request = 2131558995;
+        public static final int screen_pinning_request_buttons = 2131558996;
+        public static final int screen_pinning_request_buttons_land = 2131558997;
+        public static final int screen_pinning_request_buttons_sea = 2131558998;
+        public static final int screen_pinning_request_land_phone = 2131558999;
+        public static final int screen_pinning_request_sea_phone = 2131559000;
+        public static final int screen_pinning_request_text_area = 2131559001;
+        public static final int screen_record_dialog = 2131559002;
+        public static final int screen_record_dialog_audio_source = 2131559003;
+        public static final int screen_record_dialog_audio_source_selected = 2131559004;
+        public static final int segmented_button = 2131559005;
+        public static final int select_dialog_item_material = 2131559006;
+        public static final int select_dialog_multichoice_material = 2131559007;
+        public static final int select_dialog_singlechoice_material = 2131559008;
+        public static final int settings_dialog_title = 2131559009;
+        public static final int settings_spinner_view = 2131559010;
+        public static final int settings_with_drawer = 2131559011;
+        public static final int shelf_menu_anchor = 2131559012;
+        public static final int size_compat_mode_hint = 2131559013;
+        public static final int slice_permission_request = 2131559014;
+        public static final int smart_action_button = 2131559015;
+        public static final int smart_cover_layout = 2131559016;
+        public static final int smart_reply_button = 2131559017;
+        public static final int smart_reply_view = 2131559018;
+        public static final int split_clock_view = 2131559019;
+        public static final int status_bar = 2131559020;
+        public static final int status_bar_expanded = 2131559021;
+        public static final int status_bar_expanded_plugin_frame = 2131559022;
+        public static final int status_bar_mobile_signal_group = 2131559023;
+        public static final int status_bar_no_notifications = 2131559024;
+        public static final int status_bar_notification_dismiss_all = 2131559025;
+        public static final int status_bar_notification_footer = 2131559026;
+        public static final int status_bar_notification_row = 2131559027;
+        public static final int status_bar_notification_section_header = 2131559028;
+        public static final int status_bar_notification_shelf = 2131559029;
+        public static final int status_bar_toggle_slider = 2131559030;
+        public static final int status_bar_wifi_group = 2131559031;
+        public static final int super_notification_shade = 2131559032;
+        public static final int super_status_bar = 2131559033;
+        public static final int support_simple_spinner_dropdown_item = 2131559034;
+        public static final int switch_bar = 2131559035;
+        public static final int system_icons = 2131559036;
+        public static final int test_action_chip = 2131559037;
+        public static final int test_reflow_chipgroup = 2131559038;
+        public static final int tuner_activity = 2131559039;
+        public static final int tuner_shortcut_item = 2131559040;
+        public static final int tuner_shortcut_list = 2131559041;
+        public static final int tuner_widget_settings_switch = 2131559042;
+        public static final int tuner_zen_mode_panel = 2131559043;
+        public static final int tv_audio_recording_indicator = 2131559044;
+        public static final int tv_pip_control_button = 2131559045;
+        public static final int tv_pip_controls = 2131559046;
+        public static final int tv_pip_custom_control = 2131559047;
+        public static final int tv_pip_menu = 2131559048;
+        public static final int usage_bottom_label = 2131559049;
+        public static final int usage_side_label = 2131559050;
+        public static final int usage_view = 2131559051;
+        public static final int user_preference = 2131559052;
+        public static final int video_surface_fragment = 2131559053;
+        public static final int volume_dialog = 2131559054;
+        public static final int volume_dialog_row = 2131559055;
+        public static final int volume_dnd_icon = 2131559056;
+        public static final int volume_tool_tip_view = 2131559057;
+        public static final int window_magnifier_view = 2131559058;
+        public static final int wireless_charging_layout = 2131559059;
+        public static final int zen_mode_button = 2131559060;
+        public static final int zen_mode_condition = 2131559061;
+        public static final int zen_mode_duration_dialog = 2131559062;
+        public static final int zen_mode_panel = 2131559063;
+        public static final int zen_mode_radio_button = 2131559064;
+        public static final int zen_mode_turn_on_dialog_container = 2131559065;
     }
 
     /* renamed from: com.android.systemui.R$mipmap  reason: case insensitive filesystem */
