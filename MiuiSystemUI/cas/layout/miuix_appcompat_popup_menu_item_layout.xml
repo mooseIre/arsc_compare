@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<miuix.appcompat.internal.view.menu.ListMenuItemView android:layout_width="wrap_content" android:layout_height="wrap_content" android:itemBackground="?listPopupItemBackground" android:minWidth="@dimen/miuix_appcompat_popup_menu_item_min_width" android:paddingStart="@dimen/miuix_appcompat_popup_menu_item_padding_horizontal" android:paddingEnd="@dimen/miuix_appcompat_popup_menu_item_padding_horizontal"
+<miuix.appcompat.internal.view.menu.ListMenuItemView android:layout_width="wrap_content" android:layout_height="wrap_content" android:itemBackground="?immersionViewItemBackground"
   xmlns:android="http://schemas.android.com/apk/res/android">
     <RelativeLayout android:layout_gravity="center_vertical" android:duplicateParentState="true" android:layout_width="wrap_content" android:layout_height="wrap_content">
         <TextView android:textAppearance="?android:textAppearanceLargePopupMenu" android:ellipsize="marquee" android:id="@id/title" android:fadingEdge="horizontal" android:duplicateParentState="true" android:layout_width="wrap_content" android:layout_height="wrap_content" android:singleLine="true" android:layout_alignParentTop="true" android:layout_alignParentStart="true" />
