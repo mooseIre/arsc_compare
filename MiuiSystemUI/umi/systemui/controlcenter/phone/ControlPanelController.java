@@ -339,6 +339,13 @@ public class ControlPanelController implements CallbackController<UseControlPane
         }
     }
 
+    public void showDeviceMonitoringDialog() {
+        ControlCenter controlCenter = this.mControlCenter;
+        if (controlCenter != null) {
+            controlCenter.showDeviceMonitoringDialog();
+        }
+    }
+
     public void showDialog(boolean z) {
         if (this.mDialog != null || !z) {
             dismissDialog(false);

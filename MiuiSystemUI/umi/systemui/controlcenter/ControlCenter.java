@@ -25,6 +25,7 @@ import com.android.systemui.controlcenter.phone.ControlPanelWindowManager;
 import com.android.systemui.controlcenter.phone.ControlPanelWindowView;
 import com.android.systemui.controlcenter.phone.ExpandInfoController;
 import com.android.systemui.controlcenter.phone.controls.ControlsPluginManager;
+import com.android.systemui.controlcenter.phone.widget.QSControlFooter;
 import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.controlcenter.utils.Constants;
@@ -377,6 +378,13 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         ControlPanelWindowView controlPanelWindowView = this.mControlPanelWindowView;
         if (controlPanelWindowView != null) {
             controlPanelWindowView.refreshAllTiles();
+        }
+    }
+
+    public void showDeviceMonitoringDialog() {
+        ControlPanelWindowView controlPanelWindowView = this.mControlPanelWindowView;
+        if (controlPanelWindowView != null) {
+            ((QSControlFooter) controlPanelWindowView.findViewById(C0015R$id.settings_footer)).showDeviceMonitoringDialog();
         }
     }
 }

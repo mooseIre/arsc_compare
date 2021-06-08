@@ -275,8 +275,13 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
                 }
                 StatusBar.this.finishBarAnimations();
                 StatusBar.this.resetUserExpandedStates();
-            } else if ("android.app.action.SHOW_DEVICE_MONITORING_DIALOG".equals(action) && StatusBar.this.mQSContainer != null && StatusBar.this.mQSContainer.getQsPanel() != null) {
-                StatusBar.this.mQSContainer.getQsPanel().showDeviceMonitoringDialog();
+            } else if (!"android.app.action.SHOW_DEVICE_MONITORING_DIALOG".equals(action)) {
+            } else {
+                if (StatusBar.this.mControlPanelController.isUseControlCenter()) {
+                    StatusBar.this.mControlPanelController.showDeviceMonitoringDialog();
+                } else if (StatusBar.this.mQSContainer != null && StatusBar.this.mQSContainer.getQsPanel() != null) {
+                    StatusBar.this.mQSContainer.getQsPanel().showDeviceMonitoringDialog();
+                }
             }
         }
     };
@@ -2819,7 +2824,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {

@@ -32,6 +32,8 @@ import com.miui.systemui.EventTracker;
 import com.miui.systemui.events.MiniWindowEventSource;
 import com.miui.systemui.events.ModalExitMode;
 import java.util.function.Consumer;
+import miuix.animation.property.ViewProperty;
+import miuix.view.animation.CubicEaseOutInterpolator;
 
 public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouchCallback {
     private final AnimationProperties animationProperties;
@@ -58,6 +60,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     private int mSidePaddings;
     private final int[] mTmpLoc;
     private final AppMiniWindowRowTouchHelper mTouchHelper;
+    private final AnimationProperties menuAnimationProperties;
 
     static /* synthetic */ void lambda$addModalDialog$1(View view) {
     }
@@ -95,15 +98,34 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         };
         r0.setDuration(300);
         this.animationProperties = r0;
-        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        AnonymousClass2 r02 = new AnimationProperties(this) {
             /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass2 */
+            private final AnimationFilter filter;
+
+            {
+                AnimationFilter animationFilter = new AnimationFilter();
+                animationFilter.animateY();
+                animationFilter.animateAlpha();
+                this.filter = animationFilter;
+            }
+
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
+            public AnimationFilter getAnimationFilter() {
+                return this.filter;
+            }
+        };
+        r02.setDuration(150);
+        r02.setCustomInterpolator(ViewProperty.ALPHA, new CubicEaseOutInterpolator());
+        this.menuAnimationProperties = r02;
+        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
 
             public boolean onPreDraw() {
                 if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
                     ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
                 }
                 if (ModalWindowView.this.mMenuView != null) {
-                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.menuAnimationProperties);
                 }
                 if (ModalWindowView.this.mModalDialog != null) {
                     ModalWindowView.this.mModalDialogViewState.animateTo(ModalWindowView.this.mModalDialog, ModalWindowView.this.animationProperties);
@@ -114,7 +136,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mFirstAddUpdater = new ViewTreeObserver.OnPreDrawListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
 
             public boolean onPreDraw() {
                 ModalWindowView modalWindowView = ModalWindowView.this;
@@ -125,7 +147,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mOnHeightChangedListener = new ExpandableView.OnHeightChangedListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass5 */
 
             @Override // com.android.systemui.statusbar.notification.row.ExpandableView.OnHeightChangedListener
             public void onHeightChanged(ExpandableView expandableView, boolean z) {
@@ -174,15 +196,34 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         };
         r5.setDuration(300);
         this.animationProperties = r5;
-        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        AnonymousClass2 r52 = new AnimationProperties(this) {
             /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass2 */
+            private final AnimationFilter filter;
+
+            {
+                AnimationFilter animationFilter = new AnimationFilter();
+                animationFilter.animateY();
+                animationFilter.animateAlpha();
+                this.filter = animationFilter;
+            }
+
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
+            public AnimationFilter getAnimationFilter() {
+                return this.filter;
+            }
+        };
+        r52.setDuration(150);
+        r52.setCustomInterpolator(ViewProperty.ALPHA, new CubicEaseOutInterpolator());
+        this.menuAnimationProperties = r52;
+        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
 
             public boolean onPreDraw() {
                 if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
                     ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
                 }
                 if (ModalWindowView.this.mMenuView != null) {
-                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.menuAnimationProperties);
                 }
                 if (ModalWindowView.this.mModalDialog != null) {
                     ModalWindowView.this.mModalDialogViewState.animateTo(ModalWindowView.this.mModalDialog, ModalWindowView.this.animationProperties);
@@ -193,7 +234,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mFirstAddUpdater = new ViewTreeObserver.OnPreDrawListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
 
             public boolean onPreDraw() {
                 ModalWindowView modalWindowView = ModalWindowView.this;
@@ -204,7 +245,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mOnHeightChangedListener = new ExpandableView.OnHeightChangedListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass5 */
 
             @Override // com.android.systemui.statusbar.notification.row.ExpandableView.OnHeightChangedListener
             public void onHeightChanged(ExpandableView expandableView, boolean z) {
@@ -253,15 +294,34 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         };
         r4.setDuration(300);
         this.animationProperties = r4;
-        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        AnonymousClass2 r42 = new AnimationProperties(this) {
             /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass2 */
+            private final AnimationFilter filter;
+
+            {
+                AnimationFilter animationFilter = new AnimationFilter();
+                animationFilter.animateY();
+                animationFilter.animateAlpha();
+                this.filter = animationFilter;
+            }
+
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
+            public AnimationFilter getAnimationFilter() {
+                return this.filter;
+            }
+        };
+        r42.setDuration(150);
+        r42.setCustomInterpolator(ViewProperty.ALPHA, new CubicEaseOutInterpolator());
+        this.menuAnimationProperties = r42;
+        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
 
             public boolean onPreDraw() {
                 if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
                     ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
                 }
                 if (ModalWindowView.this.mMenuView != null) {
-                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.menuAnimationProperties);
                 }
                 if (ModalWindowView.this.mModalDialog != null) {
                     ModalWindowView.this.mModalDialogViewState.animateTo(ModalWindowView.this.mModalDialog, ModalWindowView.this.animationProperties);
@@ -272,7 +332,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mFirstAddUpdater = new ViewTreeObserver.OnPreDrawListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
 
             public boolean onPreDraw() {
                 ModalWindowView modalWindowView = ModalWindowView.this;
@@ -283,7 +343,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mOnHeightChangedListener = new ExpandableView.OnHeightChangedListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass5 */
 
             @Override // com.android.systemui.statusbar.notification.row.ExpandableView.OnHeightChangedListener
             public void onHeightChanged(ExpandableView expandableView, boolean z) {
@@ -332,15 +392,34 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
         };
         r3.setDuration(300);
         this.animationProperties = r3;
-        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+        AnonymousClass2 r32 = new AnimationProperties(this) {
             /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass2 */
+            private final AnimationFilter filter;
+
+            {
+                AnimationFilter animationFilter = new AnimationFilter();
+                animationFilter.animateY();
+                animationFilter.animateAlpha();
+                this.filter = animationFilter;
+            }
+
+            @Override // com.android.systemui.statusbar.notification.stack.AnimationProperties
+            public AnimationFilter getAnimationFilter() {
+                return this.filter;
+            }
+        };
+        r32.setDuration(150);
+        r32.setCustomInterpolator(ViewProperty.ALPHA, new CubicEaseOutInterpolator());
+        this.menuAnimationProperties = r32;
+        this.mChildrenUpdater = new ViewTreeObserver.OnPreDrawListener() {
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
 
             public boolean onPreDraw() {
                 if (!(ModalWindowView.this.mModalRow == null || ModalWindowView.this.mModalRow.getViewState() == null)) {
                     ModalWindowView.this.mModalRow.getViewState().animateTo(ModalWindowView.this.mModalRow, ModalWindowView.this.animationProperties);
                 }
                 if (ModalWindowView.this.mMenuView != null) {
-                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.animationProperties);
+                    ModalWindowView.this.mMenuViewState.animateTo(ModalWindowView.this.mMenuView, ModalWindowView.this.menuAnimationProperties);
                 }
                 if (ModalWindowView.this.mModalDialog != null) {
                     ModalWindowView.this.mModalDialogViewState.animateTo(ModalWindowView.this.mModalDialog, ModalWindowView.this.animationProperties);
@@ -351,7 +430,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mFirstAddUpdater = new ViewTreeObserver.OnPreDrawListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass3 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
 
             public boolean onPreDraw() {
                 ModalWindowView modalWindowView = ModalWindowView.this;
@@ -362,7 +441,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             }
         };
         this.mOnHeightChangedListener = new ExpandableView.OnHeightChangedListener() {
-            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass4 */
+            /* class com.android.systemui.statusbar.notification.modal.ModalWindowView.AnonymousClass5 */
 
             @Override // com.android.systemui.statusbar.notification.row.ExpandableView.OnHeightChangedListener
             public void onHeightChanged(ExpandableView expandableView, boolean z) {
@@ -421,6 +500,7 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             addMenu(notificationEntry);
             this.animationProperties.setAnimationEndAction(null);
             requestChildrenUpdate();
+            RowAnimationUtils.INSTANCE.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
             return;
         }
         this.mFirstAddUpdateRequested = true;
@@ -659,26 +739,17 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
     }
 
     public boolean onInterceptTouchEvent(MotionEvent motionEvent) {
-        if (this.mTouchHelper.onInterceptTouchEvent(motionEvent)) {
-            return true;
+        if (!this.mTouchHelper.onInterceptTouchEvent(motionEvent)) {
+            return super.onInterceptTouchEvent(motionEvent);
         }
-        resetAnimIfNeed(motionEvent);
-        return super.onInterceptTouchEvent(motionEvent);
-    }
-
-    private void resetAnimIfNeed(MotionEvent motionEvent) {
-        int actionMasked = motionEvent.getActionMasked();
-        if (actionMasked == 1 || actionMasked == 3) {
-            RowAnimationUtils.INSTANCE.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
-        }
+        return true;
     }
 
     public boolean onTouchEvent(MotionEvent motionEvent) {
-        if (this.mTouchHelper.onTouchEvent(motionEvent)) {
-            return true;
+        if (!this.mTouchHelper.onTouchEvent(motionEvent)) {
+            return super.onTouchEvent(motionEvent);
         }
-        resetAnimIfNeed(motionEvent);
-        return super.onTouchEvent(motionEvent);
+        return true;
     }
 
     @Override // com.android.systemui.statusbar.notification.policy.AppMiniWindowRowTouchCallback

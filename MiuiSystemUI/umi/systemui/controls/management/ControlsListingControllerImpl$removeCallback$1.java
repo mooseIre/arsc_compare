@@ -3,9 +3,8 @@ package com.android.systemui.controls.management;
 import android.util.Log;
 import com.android.systemui.controls.management.ControlsListingController;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlsListingControllerImpl.kt */
-public final class ControlsListingControllerImpl$removeCallback$1 implements Runnable {
+final class ControlsListingControllerImpl$removeCallback$1 implements Runnable {
     final /* synthetic */ ControlsListingController.ControlsListingCallback $listener;
     final /* synthetic */ ControlsListingControllerImpl this$0;
 

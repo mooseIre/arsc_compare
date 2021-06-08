@@ -16,6 +16,8 @@ import com.android.internal.policy.IKeyguardDrawnCallback;
 import com.android.internal.policy.IKeyguardExitCallback;
 import com.android.internal.policy.IKeyguardService;
 import com.android.internal.policy.IKeyguardStateCallback;
+import com.android.keyguard.injector.KeyguardViewMediatorInjector;
+import com.android.systemui.Dependency;
 import com.android.systemui.SystemUIApplication;
 
 public class KeyguardService extends Service {
@@ -157,6 +159,7 @@ public class KeyguardService extends Service {
             Trace.beginSection("KeyguardService.mBinder#startKeyguardExitAnimation");
             KeyguardService.this.checkPermission();
             Slog.i("KeyguardViewMediator", "handleStartKeyguardExitAnimation startTime=" + j + " fadeoutDuration=" + j2);
+            ((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).setKeyguardExitFromFw();
             KeyguardService.this.mKeyguardViewMediator.startKeyguardExitAnimation(j, j2);
             Trace.endSection();
         }

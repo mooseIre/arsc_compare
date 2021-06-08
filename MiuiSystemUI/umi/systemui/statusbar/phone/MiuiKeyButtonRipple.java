@@ -106,14 +106,6 @@ public final class MiuiKeyButtonRipple extends Drawable {
         this.mSlideAnimatorListener = new MiuiKeyButtonRipple$mSlideAnimatorListener$1(this);
     }
 
-    public static final /* synthetic */ void access$enterHardware(MiuiKeyButtonRipple miuiKeyButtonRipple) {
-        miuiKeyButtonRipple.enterHardware();
-    }
-
-    public static final /* synthetic */ void access$enterSoftware(MiuiKeyButtonRipple miuiKeyButtonRipple) {
-        miuiKeyButtonRipple.enterSoftware();
-    }
-
     public final boolean getMPressed() {
         return this.mPressed;
     }
@@ -363,6 +355,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         }
     }
 
+    /* access modifiers changed from: public */
     private final void enterSoftware() {
         endAnimations("enterSoftware", true);
         this.mVisible = true;
@@ -464,6 +457,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
         return RangesKt___RangesKt.coerceAtMost(isHorizontal() ? getBounds().width() : getBounds().height(), this.mMaxWidth);
     }
 
+    /* access modifiers changed from: public */
     private final void enterHardware() {
         endAnimations("enterHardware", true);
         this.mVisible = true;

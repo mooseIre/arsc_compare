@@ -230,6 +230,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 case 19:
                     Slog.w("KeyguardViewMediator", "fw call startKeyguardExitAnimation timeout");
                     KeyguardViewMediator.this.mKeyguardGoingAwayTimeout = true;
+                    ((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).setKeyguardExitFromFw();
                     KeyguardViewMediator.this.startKeyguardExitAnimation(SystemClock.uptimeMillis(), 0);
                     return;
                 case 20:
@@ -828,7 +829,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                 resetStateLocked();
                 this.mPendingReset = false;
             }
-            if (!MiuiGxzwManager.isGxzwSensor() && this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
+            if (!MiuiGxzwManager.isGxzwSensor() && this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser()) && MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
                 Slog.w("KeyguardViewMediator", "doKeyguard: not showing because canceling pending lock");
                 this.mPendingLock = false;
             }
@@ -1182,7 +1183,7 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
                     return;
                 }
             }
-            if (MiuiGxzwManager.isGxzwSensor() || !this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser())) {
+            if (MiuiGxzwManager.isGxzwSensor() || !this.mUpdateMonitor.getUserUnlockedWithBiometric(KeyguardUpdateMonitor.getCurrentUser()) || !MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
                 Log.d("KeyguardViewMediator", "doKeyguard: showing the lock screen");
                 showLocked(bundle);
                 return;
@@ -1583,8 +1584,9 @@ public class KeyguardViewMediator extends SystemUI implements Dumpable {
         Log.d("KeyguardViewMediator", "handleStartKeyguardExitAnimation startTime=" + j + " fadeoutDuration=" + j2);
         synchronized (this) {
             if (!this.mHiding) {
-                setShowingLocked(this.mShowing, true);
-                this.mKeyguardGoingAwayTimeout = false;
+                if (((KeyguardViewMediatorInjector) Dependency.get(KeyguardViewMediatorInjector.class)).getKeyguardExitFromFw()) {
+                    setShowingLocked(this.mShowing, false);
+                }
                 if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock() && !MiuiKeyguardUtils.isTopActivityLauncher(this.mContext)) {
                     ((MiuiWallpaperClient) Dependency.get(MiuiWallpaperClient.class)).onKeyguardGoingAway(true, ((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock());
                 }

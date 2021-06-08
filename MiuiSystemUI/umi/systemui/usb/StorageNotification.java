@@ -253,6 +253,11 @@ public class StorageNotification extends SystemUI {
         if (disk.isAdoptable()) {
             category.setDeleteIntent(buildSnoozeIntent(volumeInfo.getFsUuid()));
         }
+        if (disk.isSd()) {
+            category.setAutoCancel(true);
+        } else {
+            category.setOngoing(true);
+        }
         return category.build();
     }
 

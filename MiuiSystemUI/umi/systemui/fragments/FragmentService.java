@@ -5,6 +5,7 @@ import android.content.res.Configuration;
 import android.os.Handler;
 import android.util.ArrayMap;
 import android.view.View;
+import android.view.WindowManager;
 import com.android.systemui.Dumpable;
 import com.android.systemui.dagger.SystemUIRootComponent;
 import com.android.systemui.fragments.FragmentService;
@@ -125,7 +126,17 @@ public class FragmentService implements Dumpable {
         /* access modifiers changed from: private */
         /* renamed from: handleSendConfigurationChange */
         public void lambda$sendConfigurationChange$0(Configuration configuration) {
-            this.mFragmentHostManager.onConfigurationChanged(configuration);
+            if (FragmentService.this.mHosts.get(this.mView) != null || !isNavigationBar(this.mView)) {
+                this.mFragmentHostManager.onConfigurationChanged(configuration);
+            }
+        }
+
+        private boolean isNavigationBar(View view) {
+            if (view == null || !(view.getLayoutParams() instanceof WindowManager.LayoutParams)) {
+                return false;
+            }
+            WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) view.getLayoutParams();
+            return layoutParams.getTitle() != null && layoutParams.getTitle().toString().startsWith("NavigationBar");
         }
     }
 }

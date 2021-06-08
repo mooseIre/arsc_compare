@@ -765,27 +765,30 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     }
 
     private void update5GStatusDatabase() {
-        if (((MobileState) this.mCurrentState).fiveGConnected != this.mIsLast5GConnected || this.mFiveGController.isConnectedOnSaMode(this.mSlotId) != this.mIsLastSaConnected) {
-            this.mIsLast5GConnected = ((MobileState) this.mCurrentState).fiveGConnected;
-            String str = this.mTag;
-            Log.d(str, "update5GStatusDatabase mIsLast5GConnected: " + this.mIsLast5GConnected + ", mSlotId: " + this.mSlotId);
-            if (miui.telephony.SubscriptionManager.isValidSlotId(this.mSlotId)) {
-                this.mIsLastSaConnected = this.mFiveGController.isConnectedOnSaMode(this.mSlotId) || getDataNetworkType() == 20;
-                this.mIsLastNsaConnected = this.mFiveGController.isConnectedOnNsaMode(this.mSlotId) || FiveGStatus.isNr5G(this.mServiceState, this.mOperator);
-                if (this.mIsLast5GConnected) {
-                    String str2 = this.mTag;
-                    Log.d(str2, "update5GStatusDatabase mIsLastSaConnected: " + this.mIsLastSaConnected + " ,mIsLastNsaConnected: " + this.mIsLastNsaConnected + ", mSlotId: " + this.mSlotId);
-                    if (this.mIsLastSaConnected) {
-                        ContentResolver contentResolver = this.mContext.getContentResolver();
-                        Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, 2);
-                    } else if (this.mIsLastNsaConnected) {
-                        ContentResolver contentResolver2 = this.mContext.getContentResolver();
-                        Settings.Global.putInt(contentResolver2, "5g_icon_group_mode" + this.mSlotId, 1);
-                    }
-                } else {
-                    ContentResolver contentResolver3 = this.mContext.getContentResolver();
-                    Settings.Global.putInt(contentResolver3, "5g_icon_group_mode" + this.mSlotId, 0);
+        if (((MobileState) this.mCurrentState).fiveGConnected == this.mIsLast5GConnected) {
+            if ((getDataNetworkType() == 20) == this.mIsLastSaConnected) {
+                return;
+            }
+        }
+        this.mIsLast5GConnected = ((MobileState) this.mCurrentState).fiveGConnected;
+        String str = this.mTag;
+        Log.d(str, "update5GStatusDatabase mIsLast5GConnected: " + this.mIsLast5GConnected + ", mSlotId: " + this.mSlotId);
+        if (miui.telephony.SubscriptionManager.isValidSlotId(this.mSlotId)) {
+            this.mIsLastSaConnected = this.mFiveGController.isConnectedOnSaMode(this.mSlotId) || getDataNetworkType() == 20;
+            this.mIsLastNsaConnected = this.mFiveGController.isConnectedOnNsaMode(this.mSlotId) || FiveGStatus.isNr5G(this.mServiceState, this.mOperator);
+            if (this.mIsLast5GConnected) {
+                String str2 = this.mTag;
+                Log.d(str2, "update5GStatusDatabase mIsLastSaConnected: " + this.mIsLastSaConnected + " ,mIsLastNsaConnected: " + this.mIsLastNsaConnected + ", mSlotId: " + this.mSlotId);
+                if (this.mIsLastSaConnected) {
+                    ContentResolver contentResolver = this.mContext.getContentResolver();
+                    Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, 2);
+                } else if (this.mIsLastNsaConnected) {
+                    ContentResolver contentResolver2 = this.mContext.getContentResolver();
+                    Settings.Global.putInt(contentResolver2, "5g_icon_group_mode" + this.mSlotId, 1);
                 }
+            } else {
+                ContentResolver contentResolver3 = this.mContext.getContentResolver();
+                Settings.Global.putInt(contentResolver3, "5g_icon_group_mode" + this.mSlotId, 0);
             }
         }
     }

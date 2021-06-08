@@ -8,8 +8,9 @@ import android.widget.EditText;
 import com.android.systemui.C0015R$id;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ChallengeDialogs.kt */
-final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements DialogInterface.OnShowListener {
+public final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements DialogInterface.OnShowListener {
     final /* synthetic */ int $instructions$inlined;
     final /* synthetic */ AlertDialog $this_apply;
     final /* synthetic */ boolean $useAlphaNumeric$inlined;
@@ -27,7 +28,7 @@ final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements 
         checkBox.setChecked(this.$useAlphaNumeric$inlined);
         ChallengeDialogs challengeDialogs = ChallengeDialogs.INSTANCE;
         Intrinsics.checkExpressionValueIsNotNull(editText, "editText");
-        ChallengeDialogs.access$setInputType(challengeDialogs, editText, checkBox.isChecked());
+        challengeDialogs.setInputType(editText, checkBox.isChecked());
         ((CheckBox) this.$this_apply.requireViewById(C0015R$id.controls_pin_use_alpha)).setOnClickListener(new View.OnClickListener() {
             /* class com.android.systemui.controls.ui.ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3.AnonymousClass1 */
 
@@ -35,7 +36,7 @@ final class ChallengeDialogs$createPinDialog$$inlined$apply$lambda$3 implements 
                 ChallengeDialogs challengeDialogs = ChallengeDialogs.INSTANCE;
                 EditText editText = editText;
                 Intrinsics.checkExpressionValueIsNotNull(editText, "editText");
-                ChallengeDialogs.access$setInputType(challengeDialogs, editText, checkBox.isChecked());
+                challengeDialogs.setInputType(editText, checkBox.isChecked());
             }
         });
         editText.requestFocus();

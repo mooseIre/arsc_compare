@@ -27,6 +27,8 @@ import com.android.systemui.statusbar.notification.row.wrapper.NotificationViewW
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.DebugConfig;
 import com.miui.systemui.util.CommonExtensionsKt;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Consumer;
 import kotlin.Lazy;
 import kotlin.LazyKt__LazyJVMKt;
@@ -169,6 +171,18 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             this.mBackgroundNormal.setCustomBackground(C0013R$drawable.notification_item_bg);
         }
         this.mBackgroundNormal.setBlurDisable(!NotificationContentInflaterInjector.isBlurAble(this.mIsInModal, isHeadsUpState()));
+    }
+
+    public void setTranslationY(float f) {
+        if (f != getTranslationY() && isSummaryWithChildren() && areChildrenExpanded()) {
+            List<ExpandableNotificationRow> attachedChildren = getAttachedChildren();
+            Intrinsics.checkExpressionValueIsNotNull(attachedChildren, "attachedChildren");
+            Iterator<T> it = attachedChildren.iterator();
+            while (it.hasNext()) {
+                it.next().mBackgroundNormal.invalidate();
+            }
+        }
+        super.setTranslationY(f);
     }
 
     @Override // com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
