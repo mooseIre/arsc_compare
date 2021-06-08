@@ -34,21 +34,21 @@ public final class KeyguardPanelViewInjector$setDrawableFromOtherApk$1 extends A
 
     /* access modifiers changed from: protected */
     public void onPostExecute(@Nullable Drawable drawable) {
-        MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.this$0.mLeftView;
-        if (miuiKeyguardMoveLeftViewContainer != null) {
-            miuiKeyguardMoveLeftViewContainer.setCustomBackground(drawable);
+        MiuiKeyguardMoveLeftViewContainer leftView = KeyguardPanelViewInjector.access$getMNegative1PageController$p(this.this$0).getLeftView();
+        if (leftView != null) {
+            leftView.setCustomBackground(drawable);
         }
         if (this.this$0.mLeftViewBackgroundImageDrawable != null) {
-            ImageView access$getMLeftViewBackgroundView$p = KeyguardPanelViewInjector.access$getMLeftViewBackgroundView$p(this.this$0);
+            ImageView leftBackgroundView = KeyguardPanelViewInjector.access$getMNegative1PageController$p(this.this$0).getLeftBackgroundView();
             Drawable drawable2 = this.this$0.mLeftViewBackgroundImageDrawable;
             if (drawable2 != null) {
-                access$getMLeftViewBackgroundView$p.setBackgroundDrawable(drawable2);
+                leftBackgroundView.setBackground(drawable2);
             } else {
                 Intrinsics.throwNpe();
                 throw null;
             }
         } else {
-            KeyguardPanelViewInjector.access$getMLeftViewBackgroundView$p(this.this$0).setBackgroundColor(KeyguardPanelViewInjector.access$getMWallpaperController$p(this.this$0).getWallpaperBlurColor());
+            KeyguardPanelViewInjector.access$getMNegative1PageController$p(this.this$0).getLeftBackgroundView().setBackgroundColor(KeyguardPanelViewInjector.access$getMWallpaperController$p(this.this$0).getWallpaperBlurColor());
         }
     }
 }

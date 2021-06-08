@@ -78,11 +78,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
     private KeyguardUpdateMonitor mKeyguardUpdateMonitor;
     private KeyguardUpdateMonitorInjector mKeyguardUpdateMonitorInjector;
     private KeyguardVerticalMoveHelper mKeyguardVerticalMoveHelper;
-    private MiuiKeyguardMoveLeftViewContainer mLeftView;
     private Drawable mLeftViewBackgroundImageDrawable;
-    private ImageView mLeftViewBackgroundView;
     private LockScreenMagazineController mLockScreenMagazineController;
     private final List<View> mMobileKeyGuardViews = new ArrayList();
+    private KeyguardNegative1PageInjector mNegative1PageController;
     private NotificationPanelView mPanelView;
     private MiuiNotificationPanelViewController mPanelViewController;
     private IPhoneSignalController mPhoneSignalController;
@@ -132,21 +131,21 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         throw null;
     }
 
-    public static final /* synthetic */ ImageView access$getMLeftViewBackgroundView$p(KeyguardPanelViewInjector keyguardPanelViewInjector) {
-        ImageView imageView = keyguardPanelViewInjector.mLeftViewBackgroundView;
-        if (imageView != null) {
-            return imageView;
-        }
-        Intrinsics.throwUninitializedPropertyAccessException("mLeftViewBackgroundView");
-        throw null;
-    }
-
     public static final /* synthetic */ LockScreenMagazineController access$getMLockScreenMagazineController$p(KeyguardPanelViewInjector keyguardPanelViewInjector) {
         LockScreenMagazineController lockScreenMagazineController = keyguardPanelViewInjector.mLockScreenMagazineController;
         if (lockScreenMagazineController != null) {
             return lockScreenMagazineController;
         }
         Intrinsics.throwUninitializedPropertyAccessException("mLockScreenMagazineController");
+        throw null;
+    }
+
+    public static final /* synthetic */ KeyguardNegative1PageInjector access$getMNegative1PageController$p(KeyguardPanelViewInjector keyguardPanelViewInjector) {
+        KeyguardNegative1PageInjector keyguardNegative1PageInjector = keyguardPanelViewInjector.mNegative1PageController;
+        if (keyguardNegative1PageInjector != null) {
+            return keyguardNegative1PageInjector;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("mNegative1PageController");
         throw null;
     }
 
@@ -246,8 +245,9 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                     Object obj7 = Dependency.get(UserSwitcherController.class);
                     Intrinsics.checkExpressionValueIsNotNull(obj7, "Dependency.get(UserSwitcherController::class.java)");
                     this.mUserContextController = (UserSwitcherController) obj7;
-                    this.mLeftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
-                    this.mLeftViewBackgroundView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftBackgroundView();
+                    Object obj8 = Dependency.get(KeyguardNegative1PageInjector.class);
+                    Intrinsics.checkExpressionValueIsNotNull(obj8, "Dependency.get(KeyguardN…PageInjector::class.java)");
+                    this.mNegative1PageController = (KeyguardNegative1PageInjector) obj8;
                     initSplitUserSpace();
                     initKeyguardBackground();
                     initKeyguardViewCollection();
@@ -440,7 +440,15 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         if (keyguardMoveHelper != null) {
             keyguardMoveHelper.initDownStates(motionEvent);
         }
-        return false;
+        KeyguardVerticalMoveHelper keyguardVerticalMoveHelper = this.mKeyguardVerticalMoveHelper;
+        if (keyguardVerticalMoveHelper != null) {
+            if (keyguardVerticalMoveHelper != null) {
+                keyguardVerticalMoveHelper.initDownStates(motionEvent);
+            }
+            return false;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("mKeyguardVerticalMoveHelper");
+        throw null;
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:53:0x0096, code lost:
@@ -479,21 +487,28 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
             setDrawableFromOtherApk();
             return;
         }
-        MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
-        if (miuiKeyguardMoveLeftViewContainer != null) {
-            miuiKeyguardMoveLeftViewContainer.setCustomBackground();
-        }
-        ImageView imageView = this.mLeftViewBackgroundView;
-        if (imageView != null) {
-            IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
-            if (iMiuiKeyguardWallpaperController != null) {
-                imageView.setBackgroundColor(iMiuiKeyguardWallpaperController.getWallpaperBlurColor());
+        KeyguardNegative1PageInjector keyguardNegative1PageInjector = this.mNegative1PageController;
+        if (keyguardNegative1PageInjector != null) {
+            MiuiKeyguardMoveLeftViewContainer leftView = keyguardNegative1PageInjector.getLeftView();
+            if (leftView != null) {
+                leftView.setCustomBackground();
+            }
+            KeyguardNegative1PageInjector keyguardNegative1PageInjector2 = this.mNegative1PageController;
+            if (keyguardNegative1PageInjector2 != null) {
+                ImageView leftBackgroundView = keyguardNegative1PageInjector2.getLeftBackgroundView();
+                IMiuiKeyguardWallpaperController iMiuiKeyguardWallpaperController = this.mWallpaperController;
+                if (iMiuiKeyguardWallpaperController != null) {
+                    leftBackgroundView.setBackgroundColor(iMiuiKeyguardWallpaperController.getWallpaperBlurColor());
+                } else {
+                    Intrinsics.throwUninitializedPropertyAccessException("mWallpaperController");
+                    throw null;
+                }
             } else {
-                Intrinsics.throwUninitializedPropertyAccessException("mWallpaperController");
+                Intrinsics.throwUninitializedPropertyAccessException("mNegative1PageController");
                 throw null;
             }
         } else {
-            Intrinsics.throwUninitializedPropertyAccessException("mLeftViewBackgroundView");
+            Intrinsics.throwUninitializedPropertyAccessException("mNegative1PageController");
             throw null;
         }
     }
@@ -650,12 +665,17 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 KeyguardBottomAreaView keyguardBottomAreaView2 = this.mBottomAreaView;
                 if (keyguardBottomAreaView2 != null) {
                     keyguardBottomAreaView2.launchMagazineLeftActivity();
-                    MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
-                    if (miuiKeyguardMoveLeftViewContainer != null) {
-                        miuiKeyguardMoveLeftViewContainer.removeLeftView();
+                    KeyguardNegative1PageInjector keyguardNegative1PageInjector = this.mNegative1PageController;
+                    if (keyguardNegative1PageInjector != null) {
+                        MiuiKeyguardMoveLeftViewContainer leftView = keyguardNegative1PageInjector.getLeftView();
+                        if (leftView != null) {
+                            leftView.removeLeftView();
+                            return;
+                        }
                         return;
                     }
-                    return;
+                    Intrinsics.throwUninitializedPropertyAccessException("mNegative1PageController");
+                    throw null;
                 }
                 Intrinsics.throwUninitializedPropertyAccessException("mBottomAreaView");
                 throw null;
@@ -833,14 +853,20 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         if (i != 1) {
             z = false;
         }
-        MiuiKeyguardMoveLeftViewContainer miuiKeyguardMoveLeftViewContainer = this.mLeftView;
-        if (miuiKeyguardMoveLeftViewContainer != null) {
-            if (!z) {
-                i2 = 4;
+        KeyguardNegative1PageInjector keyguardNegative1PageInjector = this.mNegative1PageController;
+        if (keyguardNegative1PageInjector != null) {
+            MiuiKeyguardMoveLeftViewContainer leftView = keyguardNegative1PageInjector.getLeftView();
+            if (leftView != null) {
+                if (!z) {
+                    i2 = 4;
+                }
+                leftView.setVisibility(i2);
             }
-            miuiKeyguardMoveLeftViewContainer.setVisibility(i2);
+            updateSwitchSystemUserEntrance();
+            return;
         }
-        updateSwitchSystemUserEntrance();
+        Intrinsics.throwUninitializedPropertyAccessException("mNegative1PageController");
+        throw null;
     }
 
     public final void updateSwitchSystemUserEntrance() {
@@ -1078,5 +1104,10 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
         if (view != null) {
             view.setAlpha(f);
         }
+    }
+
+    @Nullable
+    public final Drawable getLeftTransferBgDrawable() {
+        return this.mLeftViewBackgroundImageDrawable;
     }
 }
