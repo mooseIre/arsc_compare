@@ -44,6 +44,7 @@ import miui.os.Build;
 
 public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, Dumpable {
     private static volatile MiuiGxzwManager sService;
+    private boolean globalActionsHidden;
     private int mAuthFingerprintId = 0;
     private boolean mBouncer = false;
     private BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
@@ -631,6 +632,7 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         this.mIntentFilter.addAction("miui.intent.action.HANG_UP_CHANGED");
         this.mIntentFilter.addAction("miui.action.handymode_change");
         this.mDrawWakeLock = ((PowerManager) this.mContext.getSystemService("power")).newWakeLock(128, "gxzw");
+        this.globalActionsHidden = false;
         if (keyguardUpdateMonitor.isFingerprintDetectionRunning()) {
             dealCallback(1, 0);
         }
@@ -929,17 +931,17 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
         }
     }
 
-    /* JADX WARNING: Code restructure failed: missing block: B:32:0x008a, code lost:
-        if (r9.mDisableFingerprintIcon == false) goto L_0x008c;
+    /* JADX WARNING: Code restructure failed: missing block: B:34:0x008e, code lost:
+        if (r9.globalActionsHidden == false) goto L_0x0090;
      */
-    /* JADX WARNING: Code restructure failed: missing block: B:51:0x00b4, code lost:
-        if (r9.mDisableLockScreenFod == false) goto L_0x008c;
+    /* JADX WARNING: Code restructure failed: missing block: B:55:0x00bc, code lost:
+        if (r9.mDisableLockScreenFod == false) goto L_0x0090;
      */
-    /* JADX WARNING: Removed duplicated region for block: B:54:0x00bb  */
+    /* JADX WARNING: Removed duplicated region for block: B:58:0x00c3  */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void updateGxzwState() {
         /*
-        // Method dump skipped, instructions count: 295
+        // Method dump skipped, instructions count: 303
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.fod.MiuiGxzwManager.updateGxzwState():void");
     }
@@ -960,6 +962,13 @@ public class MiuiGxzwManager extends Binder implements CommandQueue.Callbacks, D
 
     public void setCanShowGxzw(boolean z) {
         this.moveHelperCanShow = z;
+        if (MiuiKeyguardUtils.isGxzwSensor()) {
+            getInstance().updateGxzwState();
+        }
+    }
+
+    public void onGlobalActionsHidden() {
+        this.globalActionsHidden = true;
         if (MiuiKeyguardUtils.isGxzwSensor()) {
             getInstance().updateGxzwState();
         }

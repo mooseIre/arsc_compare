@@ -248,6 +248,10 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         public void onAuthenticationSucceeded(FingerprintManager.AuthenticationResult authenticationResult) {
             Trace.beginSection("KeyguardUpdateMonitor#onAuthenticationSucceeded");
             int authUserId = MiuiKeyguardUtils.getAuthUserId(KeyguardUpdateMonitor.this.mContext, authenticationResult.getFingerprint().getBiometricId());
+            if (KeyguardUpdateMonitor.this.isFingerprintDisabled(authUserId)) {
+                Log.d("KeyguardUpdateMonitor", "Fingerprint disabled by DPM for authUserId: " + authUserId);
+                return;
+            }
             KeyguardUpdateMonitor.this.mUpdateMonitorInjector.handlePreBiometricAuthenticated(authUserId);
             if (((MiuiFastUnlockController) Dependency.get(MiuiFastUnlockController.class)).isFastUnlock()) {
                 DejankUtils.postAfterTraversal(new Runnable(authUserId, authenticationResult) {
@@ -962,6 +966,8 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         return isSimPinSecure();
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private boolean isFingerprintDisabled(int i) {
         DevicePolicyManager devicePolicyManager = (DevicePolicyManager) this.mContext.getSystemService("device_policy");
         return !(devicePolicyManager == null || (devicePolicyManager.getKeyguardDisabledFeatures(null, i) & 32) == 0) || isSimPinSecure();

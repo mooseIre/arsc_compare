@@ -84,6 +84,12 @@ public class KeyguardVerticalMoveHelper extends BaseKeyguardMoveHelper {
         }
     }
 
+    public void initDownStates(MotionEvent motionEvent) {
+        if (motionEvent.getActionMasked() == 0) {
+            onTouchEvent(motionEvent);
+        }
+    }
+
     public void reset() {
         ValueAnimator valueAnimator = this.mAnimator;
         if (valueAnimator != null) {

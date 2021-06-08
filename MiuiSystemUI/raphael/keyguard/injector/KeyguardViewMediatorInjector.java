@@ -31,6 +31,7 @@ public final class KeyguardViewMediatorInjector {
     private final BroadcastDispatcher mBroadcastDispatcher;
     @NotNull
     private final Context mContext;
+    private boolean mKeyguardExitFromFw;
     private final BroadcastReceiver mShowPasswordScreenReceiver = new KeyguardViewMediatorInjector$mShowPasswordScreenReceiver$1(this);
     @Nullable
     private final StatusBarKeyguardViewManager mStatusBarKeyguardViewManager;
@@ -157,10 +158,19 @@ public final class KeyguardViewMediatorInjector {
     public final void doKeyguardGoingAway() {
         int i = MiuiKeyguardUtils.isTopActivityLauncher(this.mContext) ? this.KEYGUARD_GOING_AWAY_FLAG_NO_WINDOW_ANIMATIONS : this.KEYGUARD_GOING_AWAY_FLAG_EXIT_FOR_APP;
         try {
+            this.mKeyguardExitFromFw = false;
             ActivityTaskManager.getService().keyguardGoingAway(i);
             Slog.i("KeyguardViewMediator", "call fw keyguardGoingAway: flags = " + i);
         } catch (RemoteException e) {
             Log.e("KeyguardViewMediator", "Error while calling WindowManager", e);
         }
+    }
+
+    public final void setKeyguardExitFromFw() {
+        this.mKeyguardExitFromFw = true;
+    }
+
+    public final boolean getKeyguardExitFromFw() {
+        return this.mKeyguardExitFromFw;
     }
 }

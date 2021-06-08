@@ -145,13 +145,7 @@ public class MiuiGxzwFrameAnimation {
     public void clean() {
         Log.i("MiuiGxzwFrameAnimation", "clean");
         stopAnimation();
-        this.mDrawHandler.post(new Runnable() {
-            /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.AnonymousClass2 */
-
-            public void run() {
-                MiuiGxzwFrameAnimation.this.clearSurface();
-            }
-        });
+        clearSurface();
     }
 
     /* access modifiers changed from: private */
@@ -177,7 +171,7 @@ public class MiuiGxzwFrameAnimation {
     /* access modifiers changed from: public */
     private void drawBitmap(final Bitmap bitmap, final Bitmap bitmap2, final float f, final CustomerDrawBitmap customerDrawBitmap, final int i, final int i2) {
         this.mMainHandler.post(new Runnable() {
-            /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.AnonymousClass3 */
+            /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.AnonymousClass2 */
 
             public void run() {
                 Canvas lockCanvas = MiuiGxzwFrameAnimation.this.lockCanvas();
@@ -363,7 +357,13 @@ public class MiuiGxzwFrameAnimation {
                 }
                 int i4 = this.mAnimRes[this.mCurrentPosition];
                 if (i4 == 0 || MiuiGxzwFrameAnimation.this.alpha < 0.01f) {
-                    MiuiGxzwFrameAnimation.this.clearSurface();
+                    MiuiGxzwFrameAnimation.this.mMainHandler.post(new Runnable() {
+                        /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass1 */
+
+                        public void run() {
+                            MiuiGxzwFrameAnimation.this.clearSurface();
+                        }
+                    });
                 } else {
                     Bitmap decodeBitmap2 = MiuiGxzwFrameAnimation.this.decodeBitmap(i4);
                     if (decodeBitmap2 == null) {
@@ -407,7 +407,7 @@ public class MiuiGxzwFrameAnimation {
         private void notifyStart() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
-                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass1 */
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass2 */
 
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onStart();
@@ -419,7 +419,7 @@ public class MiuiGxzwFrameAnimation {
         private void notifyInterrupt() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
-                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass2 */
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass3 */
 
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onInterrupt();
@@ -431,7 +431,7 @@ public class MiuiGxzwFrameAnimation {
         private void notifyFinish() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
-                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass3 */
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass4 */
 
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onFinish();
@@ -443,7 +443,7 @@ public class MiuiGxzwFrameAnimation {
         private void nitifyRepeat() {
             if (this.mFrameAnimationListener != null) {
                 MiuiGxzwFrameAnimation.this.mHandler.post(new Runnable() {
-                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass4 */
+                    /* class com.android.keyguard.fod.MiuiGxzwFrameAnimation.DrawRunnable.AnonymousClass5 */
 
                     public void run() {
                         DrawRunnable.this.mFrameAnimationListener.onRepeat();

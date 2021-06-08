@@ -709,6 +709,12 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
     }
 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
+    public void onMiuiThemeChanged(boolean z) {
+        updateLockScreenMagazineAvailable();
+        updateLockScreenMagazineWallpaperInfo();
+    }
+
+    @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityChanged() {
         initAntiMistakeOperation();
     }
