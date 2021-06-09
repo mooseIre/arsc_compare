@@ -426,6 +426,7 @@ public class ZenModeControllerImpl extends CurrentUserTracker implements ZenMode
             this.mLastZenMode = this.mZenMode;
             this.mLastRingerMode = this.mRingerMode;
             fireZenOrRingerChanged();
+            fireVibrateChanged();
         }
     }
 

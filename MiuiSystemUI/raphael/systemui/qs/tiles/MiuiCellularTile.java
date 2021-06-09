@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.SystemProperties;
 import android.telephony.SubscriptionInfo;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.CallStateControllerImpl;
 import com.android.systemui.statusbar.policy.NetworkController;
+import com.miui.systemui.util.HapticFeedBackImpl;
 import com.miui.systemui.util.VirtualSimUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,6 +124,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleSecondaryClick() {
         if (((QSTile.BooleanState) this.mState).dualTarget) {
             showDetail(true);
+            ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("popup_normal", false);
             this.mDetailAdapter.updateItems();
             if (!((QSTile.BooleanState) this.mState).value) {
                 this.mDataController.setMobileDataEnabled(true);
@@ -139,7 +142,6 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         String str;
         List<SubscriptionInfo> list;
         int i;
-        CharSequence charSequence;
         int i2;
         List<SubscriptionInfo> list2;
         CallbackInfo callbackInfo = (CallbackInfo) obj;
@@ -180,12 +182,12 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         if (booleanState.dualTarget && (list = this.mSimInfoRecordList) != null && (i = callbackInfo.defaultDataSlot) >= 0 && i < list.size()) {
             SubscriptionInfo subscriptionInfo = this.mSimInfoRecordList.get(callbackInfo.defaultDataSlot);
-            if (VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSimSlotIndex())) {
-                charSequence = VirtualSimUtils.getVirtualSimCarrierName(this.mContext);
-            } else {
-                charSequence = subscriptionInfo.getDisplayName();
+            boolean isVirtualSim = VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSimSlotIndex());
+            CharSequence displayName = TextUtils.isEmpty(subscriptionInfo.getCarrierName()) ? subscriptionInfo.getDisplayName() : subscriptionInfo.getCarrierName();
+            if (isVirtualSim) {
+                displayName = VirtualSimUtils.getVirtualSimCarrierName(this.mContext);
             }
-            booleanState.label = charSequence;
+            booleanState.label = displayName;
         }
         if (!callbackInfo.enabled || callbackInfo.mobileSignalIconId <= 0) {
             str = resources.getString(C0021R$string.accessibility_no_signal);

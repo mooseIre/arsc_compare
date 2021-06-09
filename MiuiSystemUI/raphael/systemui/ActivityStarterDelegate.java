@@ -194,18 +194,20 @@ public class ActivityStarterDelegate implements ActivityStarter {
     }
 
     @Override // com.android.systemui.plugins.ActivityStarter
-    public void postQSRunnableDismissingKeyguard(Runnable runnable) {
-        this.mActualStarter.ifPresent(new Consumer(runnable) {
-            /* class com.android.systemui.$$Lambda$ActivityStarterDelegate$nAMiUKIuJCQJlUCym9gIzdU3mxI */
-            public final /* synthetic */ Runnable f$0;
+    public void postQSRunnableDismissingKeyguard(boolean z, Runnable runnable) {
+        this.mActualStarter.ifPresent(new Consumer(z, runnable) {
+            /* class com.android.systemui.$$Lambda$ActivityStarterDelegate$zGKTQxuAheAeh98F4qPGXPFj0E */
+            public final /* synthetic */ boolean f$0;
+            public final /* synthetic */ Runnable f$1;
 
             {
                 this.f$0 = r1;
+                this.f$1 = r2;
             }
 
             @Override // java.util.function.Consumer
             public final void accept(Object obj) {
-                ActivityStarterDelegate.lambda$postQSRunnableDismissingKeyguard$9(this.f$0, (Lazy) obj);
+                ActivityStarterDelegate.lambda$postQSRunnableDismissingKeyguard$9(this.f$0, this.f$1, (Lazy) obj);
             }
         });
     }

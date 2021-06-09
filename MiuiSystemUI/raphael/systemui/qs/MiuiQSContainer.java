@@ -567,8 +567,8 @@ public class MiuiQSContainer extends FrameLayout implements TunerService.Tunable
         if (i == -1) {
             i = getHeight();
         }
-        int minHeight = getMinHeight();
-        return MathKt__MathJVMKt.roundToInt(getQsExpansion() * ((float) (i - minHeight))) + minHeight;
+        float qsExpansion2 = getQsExpansion() * ((float) (i - getMinHeight()));
+        return (Float.isNaN(qsExpansion2) ? 0 : MathKt__MathJVMKt.roundToInt(qsExpansion2)) + getMinHeight();
     }
 
     private final void setBackgroundGradientVisibility(Configuration configuration) {

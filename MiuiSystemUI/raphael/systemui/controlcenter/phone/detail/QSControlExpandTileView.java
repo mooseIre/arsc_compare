@@ -93,6 +93,7 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
             public void onClick(View view) {
                 ((SystemUIStat) Dependency.get(SystemUIStat.class)).handleControlCenterEvent(new ExpandTileUnfoldEvent());
                 QSControlExpandTileView.this.mQsControlExpandDetail.show();
+                ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("popup_normal", false);
             }
         });
         this.mAnimatorController = new QSBigTileView.BigQSTileAnimationController(this, this.mIndicator, 0.7f, 1.0f);
@@ -268,8 +269,12 @@ public class QSControlExpandTileView extends LinearLayout implements ExpandInfoC
     public void updateViews() {
         ExpandInfoController.Info info = this.mExpandInfoController.getInfosMap().get(Integer.valueOf(this.mExpandInfoController.getSelectedType()));
         this.mInfo = info;
-        if (info != null) {
-            this.mTitle.setText(info.title);
+        if (info == null) {
+            this.mInfo = this.mExpandInfoController.getInfosMap().get(0);
+        }
+        ExpandInfoController.Info info2 = this.mInfo;
+        if (info2 != null) {
+            this.mTitle.setText(info2.title);
             this.mStatusIcon.setImageBitmap(this.mInfo.icon);
             if (!TextUtils.isEmpty(this.mInfo.status)) {
                 SpannableString spannableString = new SpannableString(this.mInfo.status + " " + this.mInfo.unit);

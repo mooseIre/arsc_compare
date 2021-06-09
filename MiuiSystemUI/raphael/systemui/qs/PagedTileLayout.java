@@ -166,8 +166,13 @@ public class PagedTileLayout extends ViewPager implements QSPanel.QSTileLayout {
         if (this.mLayoutDirection != i) {
             this.mLayoutDirection = i;
             setAdapter(this.mAdapter);
-            setCurrentItem(0, false);
-            this.mPageToRestore = 0;
+            int i2 = this.mPageToRestore;
+            if (i2 == -1) {
+                setCurrentItem(0, false);
+                this.mPageToRestore = 0;
+                return;
+            }
+            setCurrentItem(i2, false);
         }
     }
 

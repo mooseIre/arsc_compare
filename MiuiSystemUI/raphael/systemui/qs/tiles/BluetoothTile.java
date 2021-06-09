@@ -12,6 +12,7 @@ import com.android.settingslib.bluetooth.CachedBluetoothDevice;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
+import com.android.systemui.Dependency;
 import com.android.systemui.plugins.ActivityStarter;
 import com.android.systemui.plugins.qs.DetailAdapter;
 import com.android.systemui.plugins.qs.QSTile;
@@ -19,6 +20,7 @@ import com.android.systemui.qs.MiuiQSDetailItems;
 import com.android.systemui.qs.QSHost;
 import com.android.systemui.qs.tileimpl.QSTileImpl;
 import com.android.systemui.statusbar.policy.BluetoothController;
+import com.miui.systemui.util.HapticFeedBackImpl;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -107,6 +109,7 @@ public class BluetoothTile extends QSTileImpl<QSTile.BooleanState> {
             return;
         }
         showDetail(true);
+        ((HapticFeedBackImpl) Dependency.get(HapticFeedBackImpl.class)).hapticFeedback("popup_normal", false);
         if (!((QSTile.BooleanState) this.mState).value) {
             this.mController.setBluetoothEnabled(true);
         }

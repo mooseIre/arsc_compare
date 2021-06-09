@@ -2824,7 +2824,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {
@@ -2848,25 +2848,27 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
     }
 
     @Override // com.android.systemui.plugins.ActivityStarter
-    public void postQSRunnableDismissingKeyguard(Runnable runnable) {
-        this.mHandler.post(new Runnable(runnable) {
-            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$GjkAle6Yh2ihV21EScdNFN2cPY */
-            public final /* synthetic */ Runnable f$1;
+    public void postQSRunnableDismissingKeyguard(boolean z, Runnable runnable) {
+        this.mHandler.post(new Runnable(z, runnable) {
+            /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$8KRdXpTnmOEhKWboT0Kg6sB8pn8 */
+            public final /* synthetic */ boolean f$1;
+            public final /* synthetic */ Runnable f$2;
 
             {
                 this.f$1 = r2;
+                this.f$2 = r3;
             }
 
             public final void run() {
-                StatusBar.this.lambda$postQSRunnableDismissingKeyguard$24$StatusBar(this.f$1);
+                StatusBar.this.lambda$postQSRunnableDismissingKeyguard$24$StatusBar(this.f$1, this.f$2);
             }
         });
     }
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$postQSRunnableDismissingKeyguard$24 */
-    public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$24$StatusBar(Runnable runnable) {
-        this.mStatusBarStateController.setLeaveOpenOnKeyguardHide(true);
+    public /* synthetic */ void lambda$postQSRunnableDismissingKeyguard$24$StatusBar(boolean z, Runnable runnable) {
+        this.mStatusBarStateController.setLeaveOpenOnKeyguardHide(!z);
         executeRunnableDismissingKeyguard(new Runnable(runnable) {
             /* class com.android.systemui.statusbar.phone.$$Lambda$StatusBar$AWaoQDCpm4WLbje2ihIy1hyU7w */
             public final /* synthetic */ Runnable f$1;

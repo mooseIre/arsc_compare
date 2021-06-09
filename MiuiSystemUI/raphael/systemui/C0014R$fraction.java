@@ -6751,11 +6751,15 @@ public final class R {
         public static final int $ic_cc_qs_mute_off__2;
         public static final int $ic_cc_qs_mute_off__3;
         public static final int $ic_cc_qs_mute_off__4;
+        public static final int $ic_cc_qs_mute_off__5;
+        public static final int $ic_cc_qs_mute_off__6;
         public static final int $ic_cc_qs_mute_on__0;
         public static final int $ic_cc_qs_mute_on__1;
         public static final int $ic_cc_qs_mute_on__2;
         public static final int $ic_cc_qs_mute_on__3;
         public static final int $ic_cc_qs_mute_on__4;
+        public static final int $ic_cc_qs_mute_on__5;
+        public static final int $ic_cc_qs_mute_on__6;
         public static final int $ic_cc_qs_night_mode_off__0;
         public static final int $ic_cc_qs_night_mode_off__1;
         public static final int $ic_cc_qs_night_mode_off__2;

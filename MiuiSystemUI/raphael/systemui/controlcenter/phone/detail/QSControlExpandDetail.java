@@ -30,6 +30,9 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
     public void updateInfo(int i, ExpandInfoController.Info info) {
     }
 
+    public void updateResources() {
+    }
+
     public QSControlExpandDetail(Context context, View view, View view2) {
         this.mContext = context;
         this.mTileView = view;
@@ -64,10 +67,6 @@ public class QSControlExpandDetail implements ExpandInfoController.Callback {
     @Override // com.android.systemui.controlcenter.phone.ExpandInfoController.Callback
     public void updateSelectedType(int i) {
         this.mDetailAdapter.updateItems();
-    }
-
-    public void updateResources() {
-        this.mDetailAdapter.mItems = null;
     }
 
     private class ExpandDetailAdapter implements DetailAdapter, MiuiQSDetailItems.Callback {

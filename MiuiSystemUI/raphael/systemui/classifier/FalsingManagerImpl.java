@@ -226,8 +226,8 @@ public class FalsingManagerImpl implements FalsingManager {
         return this.mDataCollector.isUnlockingDisabled();
     }
 
-    /* JADX WARN: Type inference failed for: r3v4, types: [boolean, int] */
-    /* JADX WARN: Type inference failed for: r4v1, types: [boolean, int] */
+    /* JADX WARN: Type inference failed for: r3v4, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r4v1, types: [int, boolean] */
     /* JADX WARNING: Unknown variable types count: 2 */
     @Override // com.android.systemui.plugins.FalsingManager
     /* Code decompiled incorrectly, please refer to instructions dump. */

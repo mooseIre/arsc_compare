@@ -18,6 +18,6 @@ final class ControlsUiControllerImpl$showInitialSetupView$1 implements View.OnCl
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
         Context context = view.getContext();
         Intrinsics.checkExpressionValueIsNotNull(context, "v.context");
-        ControlsUiControllerImpl.access$startProviderSelectorActivity(controlsUiControllerImpl, context);
+        controlsUiControllerImpl.startProviderSelectorActivity(context);
     }
 }

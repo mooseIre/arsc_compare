@@ -117,6 +117,10 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         this.onSeedingComplete = new ControlsUiControllerImpl$onSeedingComplete$1(this);
     }
 
+    public static final /* synthetic */ Map access$getControlViewsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
+        return controlsUiControllerImpl.controlViewsById;
+    }
+
     public static final /* synthetic */ Runnable access$getDismissGlobalActions$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         Runnable runnable = controlsUiControllerImpl.dismissGlobalActions;
         if (runnable != null) {
@@ -211,7 +215,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: public */
     private final void reload(ViewGroup viewGroup) {
         if (!this.hidden) {
             ControlsListingController controlsListingController2 = this.controlsListingController.get();
@@ -231,7 +234,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: public */
     private final void showSeedingView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
@@ -251,7 +253,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         }
     }
 
-    /* access modifiers changed from: public */
     private final void showInitialSetupView(List<SelectionItem> list) {
         LayoutInflater from = LayoutInflater.from(this.context);
         int i = C0017R$layout.controls_no_favorites;
@@ -350,7 +351,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         intent.putExtra("android.intent.extra.COMPONENT_NAME", structureInfo.getComponentName());
     }
 
-    /* access modifiers changed from: public */
     private final void startProviderSelectorActivity(Context context2) {
         Intent intent = new Intent(context2, ControlsProviderSelectorActivity.class);
         intent.addFlags(335544320);
@@ -369,7 +369,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         throw null;
     }
 
-    /* access modifiers changed from: public */
     private final void showControlsView(List<SelectionItem> list) {
         this.controlViewsById.clear();
         createListView();
@@ -494,7 +493,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         return t3 != null ? t3 : list.get(0);
     }
 
-    /* access modifiers changed from: public */
     private final void updatePreferences(StructureInfo structureInfo) {
         if (!Intrinsics.areEqual(structureInfo, EMPTY_STRUCTURE)) {
             this.sharedPreferences.edit().putString("controls_component", structureInfo.getComponentName().flattenToString()).putString("controls_structure", structureInfo.getStructure().toString()).commit();

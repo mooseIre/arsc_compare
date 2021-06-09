@@ -11,8 +11,8 @@ final class ControlsEditingActivity$bindButtons$$inlined$apply$lambda$1 implemen
     }
 
     public final void onClick(View view) {
-        ControlsEditingActivity.access$saveFavorites(this.this$0);
-        ControlsEditingActivity.access$animateExitAndFinish(this.this$0);
-        ControlsEditingActivity.access$getGlobalActionsComponent$p(this.this$0).handleShowGlobalActionsMenu();
+        this.this$0.saveFavorites();
+        this.this$0.animateExitAndFinish();
+        this.this$0.globalActionsComponent.handleShowGlobalActionsMenu();
     }
 }

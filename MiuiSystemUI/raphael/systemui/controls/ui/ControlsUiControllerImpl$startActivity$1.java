@@ -18,7 +18,7 @@ final class ControlsUiControllerImpl$startActivity$1 implements ActivityStarter.
 
     @Override // com.android.systemui.plugins.ActivityStarter.OnDismissAction
     public final boolean onDismiss() {
-        ControlsUiControllerImpl.access$getShadeController$p(this.this$0).collapsePanel(false);
+        this.this$0.shadeController.collapsePanel(false);
         this.$context.startActivity(this.$intent);
         return true;
     }
