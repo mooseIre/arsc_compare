@@ -19,7 +19,7 @@ public interface ActivityStarter {
 
     void dismissKeyguardThenExecute(OnDismissAction onDismissAction, Runnable runnable, boolean z);
 
-    void postQSRunnableDismissingKeyguard(Runnable runnable);
+    void postQSRunnableDismissingKeyguard(boolean z, Runnable runnable);
 
     void postStartActivityDismissingKeyguard(PendingIntent pendingIntent);
 
@@ -38,4 +38,8 @@ public interface ActivityStarter {
     void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable);
 
     void startPendingIntentDismissingKeyguard(PendingIntent pendingIntent, Runnable runnable, View view);
+
+    default void postQSRunnableDismissingKeyguard(Runnable runnable) {
+        postQSRunnableDismissingKeyguard(false, runnable);
+    }
 }

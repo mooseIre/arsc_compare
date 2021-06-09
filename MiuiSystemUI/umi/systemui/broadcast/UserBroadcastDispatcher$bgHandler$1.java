@@ -25,7 +25,7 @@ public final class UserBroadcastDispatcher$bgHandler$1 extends Handler {
             UserBroadcastDispatcher userBroadcastDispatcher = this.this$0;
             Object obj = message.obj;
             if (obj != null) {
-                userBroadcastDispatcher.handleRegisterReceiver((ReceiverData) obj);
+                UserBroadcastDispatcher.access$handleRegisterReceiver(userBroadcastDispatcher, (ReceiverData) obj);
                 return;
             }
             throw new TypeCastException("null cannot be cast to non-null type com.android.systemui.broadcast.ReceiverData");
@@ -33,7 +33,7 @@ public final class UserBroadcastDispatcher$bgHandler$1 extends Handler {
             UserBroadcastDispatcher userBroadcastDispatcher2 = this.this$0;
             Object obj2 = message.obj;
             if (obj2 != null) {
-                userBroadcastDispatcher2.handleUnregisterReceiver((BroadcastReceiver) obj2);
+                UserBroadcastDispatcher.access$handleUnregisterReceiver(userBroadcastDispatcher2, (BroadcastReceiver) obj2);
                 return;
             }
             throw new TypeCastException("null cannot be cast to non-null type android.content.BroadcastReceiver");

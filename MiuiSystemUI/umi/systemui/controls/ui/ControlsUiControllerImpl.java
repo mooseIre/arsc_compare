@@ -365,8 +365,7 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void startProviderSelectorActivity(Context context2) {
+    public final void startProviderSelectorActivity(Context context2) {
         Intent intent = new Intent(context2, ControlsProviderSelectorActivity.class);
         intent.addFlags(335544320);
         startActivity(context2, intent);

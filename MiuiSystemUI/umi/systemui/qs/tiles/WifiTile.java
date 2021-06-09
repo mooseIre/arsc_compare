@@ -253,19 +253,19 @@ public class WifiTile extends QSTileImpl<QSTile.SignalState> {
             this.activityIn = z2;
             this.activityOut = z3;
             if (this.enabled != z) {
-                Log.d("WifiTile", "isChanged: enabled from: " + this.enabled + ", to: " + z);
+                Log.i("WifiTile", "isChanged: enabled from: " + this.enabled + ", to: " + z);
                 this.enabled = z;
                 z5 = true;
             } else {
                 z5 = false;
             }
             if (this.connected != iconState.visible) {
-                Log.d("WifiTile", "isChanged: connected from: " + this.connected + ", to: " + iconState.visible);
+                Log.i("WifiTile", "isChanged: connected from: " + this.connected + ", to: " + iconState.visible);
                 this.connected = iconState.visible;
                 z5 = true;
             }
             if (this.isTransient != z4) {
-                Log.d("WifiTile", "isChanged: isTransient from: " + this.isTransient + ", to: " + z4);
+                Log.i("WifiTile", "isChanged: isTransient from: " + this.isTransient + ", to: " + z4);
                 this.isTransient = z4;
                 z5 = true;
             }

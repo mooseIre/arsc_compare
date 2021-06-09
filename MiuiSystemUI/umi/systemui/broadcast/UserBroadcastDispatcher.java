@@ -22,11 +22,8 @@ import kotlin.collections.CollectionsKt__MutableCollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 import kotlin.sequences.Sequence;
 import kotlin.sequences.SequencesKt__SequencesKt;
-import org.jetbrains.annotations.NotNull;
 
-/* compiled from: UserBroadcastDispatcher.kt */
 public class UserBroadcastDispatcher implements Dumpable {
-    @NotNull
     private final ArrayMap<String, ActionReceiver> actionsToActionsReceivers = new ArrayMap<>();
     private final Executor bgExecutor;
     private final UserBroadcastDispatcher$bgHandler$1 bgHandler = new UserBroadcastDispatcher$bgHandler$1(this, this.bgLooper);
@@ -40,7 +37,7 @@ public class UserBroadcastDispatcher implements Dumpable {
     }
 
     @Override // com.android.systemui.Dumpable
-    public void dump(@NotNull FileDescriptor fileDescriptor, @NotNull PrintWriter printWriter, @NotNull String[] strArr) {
+    public void dump(FileDescriptor fileDescriptor, PrintWriter printWriter, String[] strArr) {
         Intrinsics.checkParameterIsNotNull(fileDescriptor, "fd");
         Intrinsics.checkParameterIsNotNull(printWriter, "pw");
         Intrinsics.checkParameterIsNotNull(strArr, "args");
@@ -57,7 +54,7 @@ public class UserBroadcastDispatcher implements Dumpable {
         }
     }
 
-    public UserBroadcastDispatcher(@NotNull Context context2, int i, @NotNull Looper looper, @NotNull Executor executor, @NotNull BroadcastDispatcherLogger broadcastDispatcherLogger) {
+    public UserBroadcastDispatcher(Context context2, int i, Looper looper, Executor executor, BroadcastDispatcherLogger broadcastDispatcherLogger) {
         Intrinsics.checkParameterIsNotNull(context2, "context");
         Intrinsics.checkParameterIsNotNull(looper, "bgLooper");
         Intrinsics.checkParameterIsNotNull(executor, "bgExecutor");
@@ -73,7 +70,7 @@ public class UserBroadcastDispatcher implements Dumpable {
         new AtomicInteger(0);
     }
 
-    public final boolean isReceiverReferenceHeld$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull BroadcastReceiver broadcastReceiver) {
+    public final boolean isReceiverReferenceHeld$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(BroadcastReceiver broadcastReceiver) {
         boolean z;
         Intrinsics.checkParameterIsNotNull(broadcastReceiver, "receiver");
         Collection<ActionReceiver> values = this.actionsToActionsReceivers.values();
@@ -95,18 +92,18 @@ public class UserBroadcastDispatcher implements Dumpable {
         return z || this.receiverToActions.containsKey(broadcastReceiver);
     }
 
-    public final void registerReceiver(@NotNull ReceiverData receiverData) {
+    public final void registerReceiver(ReceiverData receiverData) {
         Intrinsics.checkParameterIsNotNull(receiverData, "receiverData");
         this.bgHandler.obtainMessage(0, receiverData).sendToTarget();
     }
 
-    public final void unregisterReceiver(@NotNull BroadcastReceiver broadcastReceiver) {
+    public final void unregisterReceiver(BroadcastReceiver broadcastReceiver) {
         Intrinsics.checkParameterIsNotNull(broadcastReceiver, "receiver");
         this.bgHandler.obtainMessage(1, broadcastReceiver).sendToTarget();
     }
 
-    /* access modifiers changed from: private */
-    public final void handleRegisterReceiver(ReceiverData receiverData) {
+    /* access modifiers changed from: public */
+    private final void handleRegisterReceiver(ReceiverData receiverData) {
         Sequence sequence;
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");
@@ -140,14 +137,13 @@ public class UserBroadcastDispatcher implements Dumpable {
         this.logger.logReceiverRegistered(this.userId, receiverData.getReceiver());
     }
 
-    @NotNull
-    public ActionReceiver createActionReceiver$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(@NotNull String str) {
+    public ActionReceiver createActionReceiver$packages__apps__MiuiSystemUI__packages__SystemUI__android_common__MiuiSystemUI_core(String str) {
         Intrinsics.checkParameterIsNotNull(str, "action");
         return new ActionReceiver(str, this.userId, new UserBroadcastDispatcher$createActionReceiver$1(this), new UserBroadcastDispatcher$createActionReceiver$2(this, str), this.bgExecutor, this.logger);
     }
 
-    /* access modifiers changed from: private */
-    public final void handleUnregisterReceiver(BroadcastReceiver broadcastReceiver) {
+    /* access modifiers changed from: public */
+    private final void handleUnregisterReceiver(BroadcastReceiver broadcastReceiver) {
         Looper looper = this.bgHandler.getLooper();
         Intrinsics.checkExpressionValueIsNotNull(looper, "bgHandler.looper");
         Preconditions.checkState(looper.isCurrentThread(), "This method should only be called from BG thread");

@@ -69,7 +69,9 @@ public final class CodeBlue {
 
         public final void startMonitoring(Context context) {
             Intrinsics.checkParameterIsNotNull(context, "context");
-            Thread.setUncaughtExceptionPreHandler(new CodeBlue$Companion$startMonitoring$1(context, Thread.getUncaughtExceptionPreHandler()));
+            if (BuildConfig.IS_DEVELOPMENT_VERSION) {
+                Thread.setUncaughtExceptionPreHandler(new CodeBlue$Companion$startMonitoring$1(context, Thread.getUncaughtExceptionPreHandler()));
+            }
         }
 
         /* access modifiers changed from: public */

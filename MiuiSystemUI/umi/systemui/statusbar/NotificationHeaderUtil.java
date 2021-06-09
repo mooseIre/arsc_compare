@@ -179,7 +179,8 @@ public class NotificationHeaderUtil {
         sanitizeHeaderViews(expandableNotificationRow);
     }
 
-    private static class HeaderProcessor {
+    /* access modifiers changed from: private */
+    public static class HeaderProcessor {
         private final ResultApplicator mApplicator;
         private boolean mApply;
         private ViewComparator mComparator;

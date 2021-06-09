@@ -3,6 +3,8 @@ package com.android.systemui.controlcenter.phone;
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -44,6 +46,7 @@ public final class ControlCenterPanelView extends LinearLayout {
     private ControlCenterBrightnessView brightnessView;
     @NotNull
     private LinearLayout ccContainer;
+    private Configuration configuration;
     @NotNull
     private ControlCenterContentContainer contentContainer;
     @Nullable
@@ -81,6 +84,9 @@ public final class ControlCenterPanelView extends LinearLayout {
         this.controlsPluginManager = controlsPluginManager2;
         this.panelController = controlPanelController;
         this.handler = new H(this, looper);
+        Resources resources = context.getResources();
+        Intrinsics.checkExpressionValueIsNotNull(resources, "context.resources");
+        this.configuration = new Configuration(resources.getConfiguration());
         this.panelViewController = new ControlCenterPanelViewController(context, this, configurationController, this.panelController, nCSwitchController, statusBarStateController);
     }
 
@@ -444,40 +450,44 @@ public final class ControlCenterPanelView extends LinearLayout {
         }
     }
 
-    public final void updateResources() {
-        QSControlCenterHeaderView qSControlCenterHeaderView = this.header;
-        if (qSControlCenterHeaderView != null) {
-            qSControlCenterHeaderView.updateResources();
-            QSControlCenterTileLayout qSControlCenterTileLayout = this.tileLayout;
-            if (qSControlCenterTileLayout != null) {
-                qSControlCenterTileLayout.updateResources();
+    public final void updateResources(@NotNull Configuration configuration2) {
+        Intrinsics.checkParameterIsNotNull(configuration2, "newConfig");
+        boolean z = (this.configuration.updateFrom(configuration2) & 512) != 0;
+        QSControlCenterTileLayout qSControlCenterTileLayout = this.tileLayout;
+        if (qSControlCenterTileLayout != null) {
+            qSControlCenterTileLayout.updateResources();
+            if (z) {
                 ControlCenterBigTileGroup controlCenterBigTileGroup = this.bigTileLayout;
                 if (controlCenterBigTileGroup != null) {
                     controlCenterBigTileGroup.updateResources();
-                    ControlCenterBrightnessView controlCenterBrightnessView = this.brightnessView;
-                    if (controlCenterBrightnessView != null) {
-                        controlCenterBrightnessView.updateResources();
-                        ControlCenterFooterPanel controlCenterFooterPanel = this.footer;
-                        if (controlCenterFooterPanel != null) {
-                            controlCenterFooterPanel.updateResources();
+                    QSControlCenterHeaderView qSControlCenterHeaderView = this.header;
+                    if (qSControlCenterHeaderView != null) {
+                        qSControlCenterHeaderView.updateResources();
+                        ControlCenterBrightnessView controlCenterBrightnessView = this.brightnessView;
+                        if (controlCenterBrightnessView != null) {
+                            controlCenterBrightnessView.updateResources();
+                            ControlCenterFooterPanel controlCenterFooterPanel = this.footer;
+                            if (controlCenterFooterPanel != null) {
+                                controlCenterFooterPanel.updateResources();
+                            } else {
+                                Intrinsics.throwUninitializedPropertyAccessException("footer");
+                                throw null;
+                            }
                         } else {
-                            Intrinsics.throwUninitializedPropertyAccessException("footer");
+                            Intrinsics.throwUninitializedPropertyAccessException("brightnessView");
                             throw null;
                         }
                     } else {
-                        Intrinsics.throwUninitializedPropertyAccessException("brightnessView");
+                        Intrinsics.throwUninitializedPropertyAccessException("header");
                         throw null;
                     }
                 } else {
                     Intrinsics.throwUninitializedPropertyAccessException("bigTileLayout");
                     throw null;
                 }
-            } else {
-                Intrinsics.throwUninitializedPropertyAccessException("tileLayout");
-                throw null;
             }
         } else {
-            Intrinsics.throwUninitializedPropertyAccessException("header");
+            Intrinsics.throwUninitializedPropertyAccessException("tileLayout");
             throw null;
         }
     }

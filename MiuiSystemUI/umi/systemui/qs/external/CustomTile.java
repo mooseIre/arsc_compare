@@ -398,7 +398,7 @@ public class CustomTile extends QSTileImpl<QSTile.State> implements TileLifecycl
         if (QSTileImpl.mInControlCenter) {
             ((ControlPanelController) Dependency.get(ControlPanelController.class)).collapsePanel(true);
         }
-        ((ActivityStarter) Dependency.get(ActivityStarter.class)).postQSRunnableDismissingKeyguard(new Runnable() {
+        ((ActivityStarter) Dependency.get(ActivityStarter.class)).postQSRunnableDismissingKeyguard(true, new Runnable() {
             /* class com.android.systemui.qs.external.$$Lambda$CustomTile$q1MKWZaaapZOjYFe9CyeyabLR0Q */
 
             public final void run() {

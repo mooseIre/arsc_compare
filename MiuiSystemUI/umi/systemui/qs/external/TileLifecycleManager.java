@@ -53,6 +53,7 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
     }
 
     TileLifecycleManager(Handler handler, Context context, IQSService iQSService, Tile tile, Intent intent, UserHandle userHandle, PackageManagerAdapter packageManagerAdapter, BroadcastDispatcher broadcastDispatcher) {
+        IBinder iBinder;
         this.mToken = new Binder();
         this.mQueuedMessages = new ArraySet();
         this.mBindRetryDelay = 1000;
@@ -61,7 +62,15 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
         this.mContext = context;
         this.mHandler = handler;
         this.mIntent = intent;
-        intent.putExtra("service", iQSService.asBinder());
+        if (iQSService == null) {
+            iBinder = null;
+        } else {
+            iBinder = iQSService.asBinder();
+        }
+        intent.putExtra("service", iBinder);
+        if (iQSService == null) {
+            Log.e("TileLifecycleManager", "ERROR: service is null!");
+        }
         this.mIntent.putExtra("token", this.mToken);
         this.mUser = userHandle;
         this.mPackageManagerAdapter = packageManagerAdapter;
@@ -367,6 +376,6 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
     }
 
     public static void setTileAdded(Context context, ComponentName componentName, boolean z) {
-        context.getSharedPreferences("tiles_prefs", 0).edit().putBoolean(componentName.flattenToString(), z).commit();
+        context.getSharedPreferences("tiles_prefs", 0).edit().putBoolean(componentName.flattenToString(), z).apply();
     }
 }

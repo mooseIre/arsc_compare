@@ -9,9 +9,8 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
-/* access modifiers changed from: package-private */
 /* compiled from: UserBroadcastDispatcher.kt */
-public final class UserBroadcastDispatcher$createActionReceiver$1 extends Lambda implements Function2<BroadcastReceiver, IntentFilter, Unit> {
+final class UserBroadcastDispatcher$createActionReceiver$1 extends Lambda implements Function2<BroadcastReceiver, IntentFilter, Unit> {
     final /* synthetic */ UserBroadcastDispatcher this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
@@ -31,7 +30,7 @@ public final class UserBroadcastDispatcher$createActionReceiver$1 extends Lambda
     public final void invoke(@NotNull BroadcastReceiver broadcastReceiver, @NotNull IntentFilter intentFilter) {
         Intrinsics.checkParameterIsNotNull(broadcastReceiver, "$receiver");
         Intrinsics.checkParameterIsNotNull(intentFilter, "it");
-        this.this$0.context.registerReceiverAsUser(broadcastReceiver, UserHandle.of(this.this$0.userId), intentFilter, null, this.this$0.bgHandler);
-        this.this$0.logger.logContextReceiverRegistered(this.this$0.userId, intentFilter);
+        UserBroadcastDispatcher.access$getContext$p(this.this$0).registerReceiverAsUser(broadcastReceiver, UserHandle.of(UserBroadcastDispatcher.access$getUserId$p(this.this$0)), intentFilter, null, UserBroadcastDispatcher.access$getBgHandler$p(this.this$0));
+        UserBroadcastDispatcher.access$getLogger$p(this.this$0).logContextReceiverRegistered(UserBroadcastDispatcher.access$getUserId$p(this.this$0), intentFilter);
     }
 }

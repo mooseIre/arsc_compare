@@ -360,7 +360,7 @@ public final class ControlCenterPanelViewController implements ConfigurationCont
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onConfigChanged(Configuration configuration) {
         Intrinsics.checkParameterIsNotNull(configuration, "newConfig");
-        this.panelView.updateResources();
+        this.panelView.updateResources(configuration);
         onOrientationChanged(configuration.orientation, false);
         if (!isPortrait()) {
             this.ccController.showDialog(false);

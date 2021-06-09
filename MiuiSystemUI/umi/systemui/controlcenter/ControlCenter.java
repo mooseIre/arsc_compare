@@ -109,6 +109,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     @Override // com.android.systemui.SystemUI
     public void onBootCompleted() {
         super.onBootCompleted();
+        this.mExpandInfoController.requestData();
     }
 
     /* access modifiers changed from: protected */
