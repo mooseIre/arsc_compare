@@ -74,14 +74,6 @@ public class MiuiGxzwSensor {
         void onEnterNonUI(int i);
     }
 
-    public static /* synthetic */ void lambda$NwWCpZOTkkfzWBURlu7NhW1soPA(MiuiGxzwSensor miuiGxzwSensor) {
-        miuiGxzwSensor.doRegisterDozeSensor();
-    }
-
-    public static /* synthetic */ void lambda$tytcQllx08Mrvnkbc0VdDWjTliQ(MiuiGxzwSensor miuiGxzwSensor) {
-        miuiGxzwSensor.doUnregisterSensor();
-    }
-
     MiuiGxzwSensor(Context context) {
         this.mContext = context;
         this.mSensorManager = (SensorManager) context.getSystemService("sensor");
@@ -135,7 +127,8 @@ public class MiuiGxzwSensor {
         }
     }
 
-    private void doRegisterDozeSensor() {
+    /* access modifiers changed from: private */
+    public void doRegisterDozeSensor() {
         Sensor defaultSensor = this.mSensorManager.getDefaultSensor(TYPE_PUT_UP_DETECT, true);
         if (defaultSensor != null) {
             this.mSensorManager.registerListener(this.mPutUpSensorListener, defaultSensor, 3, this.mHandler);
@@ -152,7 +145,8 @@ public class MiuiGxzwSensor {
         }
     }
 
-    private void doUnregisterSensor() {
+    /* access modifiers changed from: private */
+    public void doUnregisterSensor() {
         this.mSensorManager.unregisterListener(this.mPutUpSensorListener);
         this.mSensorManager.unregisterListener(this.mNonUIListener);
     }

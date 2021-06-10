@@ -18,8 +18,7 @@ import com.android.systemui.C0013R$drawable;
 import java.util.ArrayList;
 import java.util.List;
 
-/* access modifiers changed from: package-private */
-public class ParticleRenderView extends View {
+class ParticleRenderView extends View {
     private ParticleTargetLightning lightning;
     private final List<PointF> lightningEdgeList;
     private final List<PointF> lightningInnerList;
