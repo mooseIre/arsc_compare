@@ -11,6 +11,11 @@ public abstract class GxzwWindowFrameLayout extends FrameLayout {
     public final Handler mHandler = new Handler();
     protected final WindowManager mWindowManager = ((WindowManager) getContext().getSystemService("window"));
 
+    /* renamed from: lambda$z-cil8p0vmCZMbI4psM5rDbfIPg  reason: not valid java name */
+    public static /* synthetic */ void m6lambda$zcil8p0vmCZMbI4psM5rDbfIPg(GxzwWindowFrameLayout gxzwWindowFrameLayout) {
+        gxzwWindowFrameLayout.updateViewAddState();
+    }
+
     /* access modifiers changed from: protected */
     public abstract WindowManager.LayoutParams generateLayoutParams();
 
@@ -39,7 +44,7 @@ public abstract class GxzwWindowFrameLayout extends FrameLayout {
             /* class com.android.keyguard.fod.$$Lambda$GxzwWindowFrameLayout$zcil8p0vmCZMbI4psM5rDbfIPg */
 
             public final void run() {
-                GxzwWindowFrameLayout.this.updateViewAddState();
+                GxzwWindowFrameLayout.m6lambda$zcil8p0vmCZMbI4psM5rDbfIPg(GxzwWindowFrameLayout.this);
             }
         });
     }
@@ -51,13 +56,12 @@ public abstract class GxzwWindowFrameLayout extends FrameLayout {
             /* class com.android.keyguard.fod.$$Lambda$GxzwWindowFrameLayout$zcil8p0vmCZMbI4psM5rDbfIPg */
 
             public final void run() {
-                GxzwWindowFrameLayout.this.updateViewAddState();
+                GxzwWindowFrameLayout.m6lambda$zcil8p0vmCZMbI4psM5rDbfIPg(GxzwWindowFrameLayout.this);
             }
         });
     }
 
-    /* access modifiers changed from: private */
-    public void updateViewAddState() {
+    private void updateViewAddState() {
         if (this.mAdded && !isAttachedToWindow()) {
             addViewToWindow();
         } else if (!this.mAdded && isAttachedToWindow()) {

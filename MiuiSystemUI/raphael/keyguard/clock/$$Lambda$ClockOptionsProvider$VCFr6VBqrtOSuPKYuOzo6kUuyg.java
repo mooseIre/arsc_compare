@@ -1,5 +1,6 @@
 package com.android.keyguard.clock;
 
+import com.android.systemui.Dependency;
 import java.util.function.Supplier;
 
 /* renamed from: com.android.keyguard.clock.-$$Lambda$ClockOptionsProvider$VCF-r6VBqrtOSuPKYuOzo6kUuyg  reason: invalid class name */
@@ -12,6 +13,6 @@ public final /* synthetic */ class $$Lambda$ClockOptionsProvider$VCFr6VBqrtOSuPK
 
     @Override // java.util.function.Supplier
     public final Object get() {
-        return ClockOptionsProvider.lambda$new$0();
+        return ((ClockManager) Dependency.get(ClockManager.class)).getClockInfos();
     }
 }
