@@ -117,10 +117,6 @@ public final class ControlsUiControllerImpl implements ControlsUiController {
         this.onSeedingComplete = new ControlsUiControllerImpl$onSeedingComplete$1(this);
     }
 
-    public static final /* synthetic */ Map access$getControlViewsById$p(ControlsUiControllerImpl controlsUiControllerImpl) {
-        return controlsUiControllerImpl.controlViewsById;
-    }
-
     public static final /* synthetic */ Runnable access$getDismissGlobalActions$p(ControlsUiControllerImpl controlsUiControllerImpl) {
         Runnable runnable = controlsUiControllerImpl.dismissGlobalActions;
         if (runnable != null) {

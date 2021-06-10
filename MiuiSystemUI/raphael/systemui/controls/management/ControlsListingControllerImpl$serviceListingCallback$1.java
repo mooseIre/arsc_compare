@@ -11,8 +11,9 @@ import java.util.List;
 import kotlin.collections.CollectionsKt___CollectionsKt;
 import kotlin.jvm.internal.Intrinsics;
 
+/* access modifiers changed from: package-private */
 /* compiled from: ControlsListingControllerImpl.kt */
-final class ControlsListingControllerImpl$serviceListingCallback$1 implements ServiceListing.Callback {
+public final class ControlsListingControllerImpl$serviceListingCallback$1 implements ServiceListing.Callback {
     final /* synthetic */ ControlsListingControllerImpl this$0;
 
     ControlsListingControllerImpl$serviceListingCallback$1(ControlsListingControllerImpl controlsListingControllerImpl) {
@@ -43,7 +44,7 @@ final class ControlsListingControllerImpl$serviceListingCallback$1 implements Se
                     this.this$0.this$0.availableComponents = linkedHashSet;
                     this.this$0.this$0.availableServices = list2;
                     List<ControlsServiceInfo> currentServices = this.this$0.this$0.getCurrentServices();
-                    for (ControlsListingController.ControlsListingCallback controlsListingCallback : ControlsListingControllerImpl.access$getCallbacks$p(this.this$0.this$0)) {
+                    for (ControlsListingController.ControlsListingCallback controlsListingCallback : this.this$0.this$0.callbacks) {
                         controlsListingCallback.onServicesUpdated(currentServices);
                     }
                 }
