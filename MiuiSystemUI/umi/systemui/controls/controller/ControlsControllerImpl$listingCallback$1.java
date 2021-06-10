@@ -18,6 +18,6 @@ public final class ControlsControllerImpl$listingCallback$1 implements ControlsL
     @Override // com.android.systemui.controls.management.ControlsListingController.ControlsListingCallback
     public void onServicesUpdated(@NotNull List<ControlsServiceInfo> list) {
         Intrinsics.checkParameterIsNotNull(list, "serviceInfos");
-        ControlsControllerImpl.access$getExecutor$p(this.this$0).execute(new ControlsControllerImpl$listingCallback$1$onServicesUpdated$1(this, list));
+        this.this$0.executor.execute(new ControlsControllerImpl$listingCallback$1$onServicesUpdated$1(this, list));
     }
 }

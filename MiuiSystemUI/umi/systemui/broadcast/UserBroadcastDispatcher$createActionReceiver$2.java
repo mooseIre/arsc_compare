@@ -8,8 +8,9 @@ import kotlin.jvm.internal.Intrinsics;
 import kotlin.jvm.internal.Lambda;
 import org.jetbrains.annotations.NotNull;
 
+/* access modifiers changed from: package-private */
 /* compiled from: UserBroadcastDispatcher.kt */
-final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implements Function1<BroadcastReceiver, Unit> {
+public final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implements Function1<BroadcastReceiver, Unit> {
     final /* synthetic */ String $action;
     final /* synthetic */ UserBroadcastDispatcher this$0;
 
@@ -31,10 +32,10 @@ final class UserBroadcastDispatcher$createActionReceiver$2 extends Lambda implem
     public final void invoke(@NotNull BroadcastReceiver broadcastReceiver) {
         Intrinsics.checkParameterIsNotNull(broadcastReceiver, "$receiver");
         try {
-            UserBroadcastDispatcher.access$getContext$p(this.this$0).unregisterReceiver(broadcastReceiver);
-            UserBroadcastDispatcher.access$getLogger$p(this.this$0).logContextReceiverUnregistered(UserBroadcastDispatcher.access$getUserId$p(this.this$0), this.$action);
+            this.this$0.context.unregisterReceiver(broadcastReceiver);
+            this.this$0.logger.logContextReceiverUnregistered(this.this$0.userId, this.$action);
         } catch (IllegalArgumentException e) {
-            Log.e("UserBroadcastDispatcher", "Trying to unregister unregistered receiver for user " + UserBroadcastDispatcher.access$getUserId$p(this.this$0) + ", " + "action " + this.$action, new IllegalStateException(e));
+            Log.e("UserBroadcastDispatcher", "Trying to unregister unregistered receiver for user " + this.this$0.userId + ", " + "action " + this.$action, new IllegalStateException(e));
         }
     }
 }

@@ -73,6 +73,7 @@ public class MiuiQSDetail extends LinearLayout {
     protected Callback mQsPanelCallback = new Callback() {
         /* class com.android.systemui.qs.MiuiQSDetail.AnonymousClass1 */
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onToggleStateChanged$0 */
         public /* synthetic */ void lambda$onToggleStateChanged$0$MiuiQSDetail$1(boolean z) {
@@ -116,6 +117,7 @@ public class MiuiQSDetail extends LinearLayout {
             });
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onShowingDetail$1 */
         public /* synthetic */ void lambda$onShowingDetail$1$MiuiQSDetail$1(DetailAdapter detailAdapter, int i, int i2) {
@@ -124,6 +126,7 @@ public class MiuiQSDetail extends LinearLayout {
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$onScanStateChanged$2 */
         public /* synthetic */ void lambda$onScanStateChanged$2$MiuiQSDetail$1(boolean z) {
@@ -180,7 +183,6 @@ public class MiuiQSDetail extends LinearLayout {
         this.mAnimOutListener = r1;
     }
 
-    /* access modifiers changed from: protected */
     public void onConfigurationChanged(Configuration configuration) {
         super.onConfigurationChanged(configuration);
         updateDetailLayout();
@@ -189,7 +191,6 @@ public class MiuiQSDetail extends LinearLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
     public void onFinishInflate() {
         super.onFinishInflate();
         this.mDetailContainer = findViewById(C0015R$id.qs_detail_container);
@@ -213,6 +214,7 @@ public class MiuiQSDetail extends LinearLayout {
         updateDetailLayout();
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$onFinishInflate$0 */
     public /* synthetic */ void lambda$onFinishInflate$0$MiuiQSDetail(View view) {
@@ -314,7 +316,6 @@ public class MiuiQSDetail extends LinearLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
     public void animateDetailVisibleDiff(int i, int i2, boolean z, Animator.AnimatorListener animatorListener) {
         if (z) {
             boolean z2 = true;
@@ -332,7 +333,6 @@ public class MiuiQSDetail extends LinearLayout {
         }
     }
 
-    /* access modifiers changed from: protected */
     public void setupDetailFooter(DetailAdapter detailAdapter) {
         Intent settingsIntent = detailAdapter.getSettingsIntent();
         this.mDetailSettingsButton.setVisibility(settingsIntent != null ? 0 : 8);
@@ -352,6 +352,7 @@ public class MiuiQSDetail extends LinearLayout {
         });
     }
 
+    /* access modifiers changed from: public */
     /* access modifiers changed from: private */
     /* renamed from: lambda$setupDetailFooter$1 */
     public /* synthetic */ void lambda$setupDetailFooter$1$MiuiQSDetail(DetailAdapter detailAdapter, Intent intent, View view) {
@@ -360,7 +361,6 @@ public class MiuiQSDetail extends LinearLayout {
         ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(intent, 0);
     }
 
-    /* access modifiers changed from: protected */
     public void setupDetailHeader(DetailAdapter detailAdapter) {
         this.mQsDetailHeaderTitle.setText(detailAdapter.getTitle());
         Boolean toggleState = detailAdapter.getToggleState();
@@ -383,13 +383,11 @@ public class MiuiQSDetail extends LinearLayout {
             /* class com.android.systemui.qs.$$Lambda$MiuiQSDetail$AdNHpUBZdRe21F6S_5YM97n9iFM */
 
             public final void onCheckedChanged(CompoundButton compoundButton, boolean z) {
-                DetailAdapter.this.setToggleState(z);
+                MiuiQSDetail.lambda$setupDetailHeader$2(DetailAdapter.this, compoundButton, z);
             }
         });
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleToggleStateChanged(boolean z, boolean z2) {
         this.mSwitchState = z;
         if (!this.mAnimatingOpen) {
@@ -404,16 +402,12 @@ public class MiuiQSDetail extends LinearLayout {
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void handleScanStateChanged(boolean z) {
         if (this.mScanState != z) {
             this.mScanState = z;
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void checkPendingAnimations() {
         boolean z = this.mSwitchState;
         DetailAdapter detailAdapter = this.mDetailAdapter;

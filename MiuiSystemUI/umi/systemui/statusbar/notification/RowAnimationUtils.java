@@ -13,10 +13,6 @@ public final class RowAnimationUtils {
     private RowAnimationUtils() {
     }
 
-    public static final /* synthetic */ void access$setTouchAnimatingState(RowAnimationUtils rowAnimationUtils, ExpandableNotificationRow expandableNotificationRow, boolean z) {
-        rowAnimationUtils.setTouchAnimatingState(expandableNotificationRow, z);
-    }
-
     public final void startTouchAnimationIfNeed(@Nullable ExpandableNotificationRow expandableNotificationRow, float f) {
         AnimConfig animConfig;
         if (expandableNotificationRow != null) {
@@ -47,6 +43,8 @@ public final class RowAnimationUtils {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
     private final void setTouchAnimatingState(ExpandableNotificationRow expandableNotificationRow, boolean z) {
         ExpandableViewState viewState;
         if (expandableNotificationRow != null && (viewState = expandableNotificationRow.getViewState()) != null) {
