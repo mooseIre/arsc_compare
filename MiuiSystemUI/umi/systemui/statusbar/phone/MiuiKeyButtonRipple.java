@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Trace;
+import android.util.Log;
 import android.view.RenderNodeAnimator;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -276,6 +277,14 @@ public final class MiuiKeyButtonRipple extends Drawable {
         return this.mLastDark ? 0.1f : 0.25f;
     }
 
+    public boolean setVisible(boolean z, boolean z2) {
+        boolean visible = super.setVisible(z, z2);
+        if (visible) {
+            jumpToCurrentState();
+        }
+        return visible;
+    }
+
     public boolean onStateChange(int[] iArr) {
         boolean z;
         Intrinsics.checkParameterIsNotNull(iArr, "state");
@@ -305,6 +314,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     }
 
     private final void setPressed(boolean z) {
+        Log.d("KeyButtonRipple", "KeyButtonRipple.setPressed: " + z);
         boolean z2 = this.mDark;
         if (z2 != this.mLastDark && z) {
             this.mRipplePaint = null;

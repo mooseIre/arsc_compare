@@ -21,9 +21,11 @@ import com.android.systemui.statusbar.phone.StatusBarSignalPolicy;
 import com.android.systemui.statusbar.policy.DemoModeController;
 
 public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher.DarkReceiver, StatusIconDisplayable, DemoMode {
+    private int mActivityResId;
     private int mColor;
     private StatusBarIconView mDotView;
     private boolean mForceUpdate;
+    private int mIconResId;
     private boolean mInDemoMode;
     private boolean mLight = true;
     private Rect mRect = new Rect();
@@ -110,6 +112,15 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         return wifiIconState != null && wifiIconState.visible;
     }
 
+    public void onVisibilityAggregated(boolean z) {
+        super.onVisibilityAggregated(z);
+        if (!z) {
+            suppressLayout(true);
+        } else {
+            suppressLayout(false);
+        }
+    }
+
     @Override // com.android.systemui.statusbar.StatusIconDisplayable
     public void setVisibleState(int i, boolean z) {
         if (this.mInDemoMode) {
@@ -166,7 +177,11 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
     }
 
     public void applyWifiState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
+        boolean z = true;
         if (wifiIconState == null) {
+            if (getVisibility() == 8) {
+                z = false;
+            }
             setVisibility(8);
             this.mState = null;
         } else {
@@ -174,29 +189,32 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
             if (wifiIconState2 == null) {
                 StatusBarSignalPolicy.WifiIconState copy = wifiIconState.copy();
                 this.mState = copy;
-                updateState(copy);
-            } else if (!wifiIconState2.equals(wifiIconState)) {
-                StatusBarSignalPolicy.WifiIconState copy2 = wifiIconState.copy();
-                this.mState = copy2;
-                updateState(copy2);
+                initViewState(copy);
+            } else {
+                z = !wifiIconState2.equals(wifiIconState) ? updateState(wifiIconState.copy()) : false;
             }
         }
-        requestLayout();
+        if (z) {
+            requestLayout();
+        }
     }
 
-    private void updateState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
+    private void initViewState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
         setContentDescription(wifiIconState.contentDescription);
         if (wifiIconState.wifiNoNetwork) {
             this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
+            this.mIconResId = C0013R$drawable.stat_sys_wifi_signal_null;
         } else {
             int i = wifiIconState.resId;
             if (i > 0) {
                 this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
+                this.mIconResId = wifiIconState.resId;
             }
         }
         int i2 = wifiIconState.activityResId;
         if (i2 > 0) {
             this.mWifiActivityView.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
+            this.mActivityResId = wifiIconState.activityResId;
         }
         FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mWifiActivityView.getLayoutParams();
         int i3 = 0;
@@ -217,8 +235,71 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         applyDarknessInternal();
     }
 
+    private boolean updateState(StatusBarSignalPolicy.WifiIconState wifiIconState) {
+        boolean z;
+        setContentDescription(wifiIconState.contentDescription);
+        StatusBarSignalPolicy.WifiIconState wifiIconState2 = this.mState;
+        boolean z2 = wifiIconState2.wifiNoNetwork;
+        boolean z3 = wifiIconState.wifiNoNetwork;
+        boolean z4 = true;
+        int i = 0;
+        if (z2 != z3) {
+            if (z3) {
+                this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(C0013R$drawable.stat_sys_wifi_signal_null, this.mUseTint, this.mLight)));
+                this.mIconResId = C0013R$drawable.stat_sys_wifi_signal_null;
+            } else {
+                int i2 = wifiIconState.resId;
+                if (i2 > 0) {
+                    this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
+                    this.mIconResId = wifiIconState.resId;
+                }
+            }
+            z = true;
+        } else {
+            int i3 = wifiIconState2.resId;
+            int i4 = wifiIconState.resId;
+            if (i3 != i4 && i4 > 0) {
+                this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i4, this.mUseTint, this.mLight)));
+                this.mIconResId = wifiIconState.resId;
+            }
+            z = false;
+        }
+        if (wifiIconState.activityResId > 0) {
+            this.mWifiActivityView.setVisibility(0);
+            this.mWifiActivityView.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(wifiIconState.activityResId, this.mUseTint, this.mLight)));
+            this.mActivityResId = wifiIconState.activityResId;
+        } else {
+            this.mWifiActivityView.setVisibility(4);
+        }
+        if (this.mState.showWifiStandard != wifiIconState.showWifiStandard) {
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) this.mWifiActivityView.getLayoutParams();
+            if (wifiIconState.showWifiStandard) {
+                this.mWifiStandardView.setText(String.valueOf(wifiIconState.wifiStandard));
+                this.mWifiStandardView.setVisibility(0);
+                layoutParams.gravity = 83;
+            } else {
+                this.mWifiStandardView.setVisibility(8);
+                layoutParams.gravity = 85;
+            }
+            this.mWifiActivityView.setLayoutParams(layoutParams);
+            z = true;
+        }
+        boolean z5 = this.mState.visible;
+        boolean z6 = wifiIconState.visible;
+        if (z5 != z6) {
+            if (!z6) {
+                i = 8;
+            }
+            setVisibility(i);
+        } else {
+            z4 = z;
+        }
+        this.mState = wifiIconState;
+        applyDarknessInternal();
+        return z4;
+    }
+
     /* JADX WARNING: Removed duplicated region for block: B:21:0x0041  */
-    /* JADX WARNING: Removed duplicated region for block: B:22:0x0047  */
     @Override // com.android.systemui.plugins.DarkIconDispatcher.DarkReceiver
     /* Code decompiled incorrectly, please refer to instructions dump. */
     public void onDarkChanged(android.graphics.Rect r3, float r4, int r5, int r6, int r7, boolean r8) {
@@ -268,16 +349,25 @@ public class StatusBarWifiView extends FrameLayout implements DarkIconDispatcher
         L_0x003e:
             r1 = r5
         L_0x003f:
-            if (r1 == 0) goto L_0x0047
-            com.android.systemui.statusbar.phone.StatusBarSignalPolicy$WifiIconState r3 = r2.mState
-            r2.updateState(r3)
-            goto L_0x004a
-        L_0x0047:
+            if (r1 == 0) goto L_0x0044
+            r2.updateImageDrawable()
+        L_0x0044:
             r2.applyDarknessInternal()
-        L_0x004a:
             return
         */
         throw new UnsupportedOperationException("Method not decompiled: com.android.systemui.statusbar.StatusBarWifiView.onDarkChanged(android.graphics.Rect, float, int, int, int, boolean):void");
+    }
+
+    /* access modifiers changed from: protected */
+    public void updateImageDrawable() {
+        int i = this.mIconResId;
+        if (i > 0) {
+            this.mWifiIcon.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i, this.mUseTint, this.mLight)));
+        }
+        int i2 = this.mActivityResId;
+        if (i2 > 0) {
+            this.mWifiActivityView.setImageDrawable(((FrameLayout) this).mContext.getDrawable(MiuiStatusBarIconViewHelper.transformResId(i2, this.mUseTint, this.mLight)));
+        }
     }
 
     /* access modifiers changed from: protected */

@@ -1,6 +1,7 @@
 package com.android.systemui.statusbar.views;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.AttributeSet;
@@ -9,31 +10,42 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 public class MiuiClipEdgeViewLinearLayout extends LinearLayout {
-    private Rect mClipRect = new Rect();
+    private Rect mClipRect;
 
     public MiuiClipEdgeViewLinearLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public MiuiClipEdgeViewLinearLayout(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
+        this(context, attributeSet, 0);
     }
 
     public MiuiClipEdgeViewLinearLayout(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
+        this.mClipRect = new Rect();
+        setLayoutDirection((getResources().getConfiguration().screenLayout & 192) == 64 ? 1 : 0);
     }
 
     /* access modifiers changed from: protected */
-    public boolean setFrame(int i, int i2, int i3, int i4) {
-        int i5;
-        if (getParent() instanceof View) {
-            View view = (View) getParent();
-            i5 = Math.max(i, Math.max(view.getPaddingLeft(), 0));
-            i3 = Math.max(0, Math.min(i3, view.getWidth() - view.getPaddingRight()));
-        } else {
-            i5 = Math.max(i, 0);
+    public void onConfigurationChanged(Configuration configuration) {
+        super.onConfigurationChanged(configuration);
+        int i = 1;
+        setLayoutDirection((configuration.screenLayout & 192) == 64 ? 1 : 0);
+        int childCount = getChildCount();
+        if (getLayoutDirection() != 0) {
+            i = 0;
         }
-        return super.setFrame(i5, i2, i3, i4);
+        for (int i2 = 0; i2 < childCount; i2++) {
+            View childAt = getChildAt(i2);
+            if (childAt != null) {
+                childAt.setLayoutDirection(i);
+            }
+        }
+    }
+
+    public void onViewAdded(View view) {
+        super.onViewAdded(view);
+        view.setLayoutDirection(getLayoutDirection() == 0 ? 1 : 0);
     }
 
     /* access modifiers changed from: protected */
@@ -81,7 +93,7 @@ public class MiuiClipEdgeViewLinearLayout extends LinearLayout {
 
     /* access modifiers changed from: protected */
     public boolean clipEnd() {
-        return isLayoutRtl();
+        return !isLayoutRtl();
     }
 
     /* access modifiers changed from: protected */

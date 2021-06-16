@@ -17,11 +17,9 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.Dependency;
-import com.android.systemui.Interpolators;
 import com.android.systemui.bubbles.BubbleController;
 import com.android.systemui.plugins.DarkIconDispatcher;
 import com.android.systemui.plugins.statusbar.StatusBarStateController;
-import com.android.systemui.statusbar.CrossFadeHelper;
 import com.android.systemui.statusbar.NotificationListener;
 import com.android.systemui.statusbar.NotificationMediaManager;
 import com.android.systemui.statusbar.NotificationShelf;
@@ -36,22 +34,15 @@ import com.miui.systemui.SettingsManager;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.function.Function;
+import miui.os.Build;
 
 public class NotificationIconAreaController implements DarkIconDispatcher.DarkReceiver, StatusBarStateController.StateListener, NotificationWakeUpCoordinator.WakeUpListener, NotificationIconObserver.Callback, NotificationSettings.StyleListener {
     private boolean mAnimationsEnabled;
-    private int mAodIconAppearTranslation;
-    private int mAodIconTint;
-    private NotificationIconContainer mAodIcons;
-    private boolean mAodIconsVisible;
     private final BubbleController mBubbleController;
-    private final KeyguardBypassController mBypassController;
-    private NotificationIconContainer mCenteredIcon;
     protected View mCenteredIconArea;
-    private int mCenteredIconTint = -1;
     private StatusBarIconView mCenteredIconView;
     private Context mContext;
     private final ContrastColorUtil mContrastColorUtil;
-    private final DozeParameters mDozeParameters;
     private int mIconHPadding;
     private int mIconSize;
     private int mIconTint = -1;
@@ -71,7 +62,6 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
             }
         }
     };
-    private NotificationIconContainer mShelfIcons;
     private boolean mShowLowPriority = true;
     private StatusBar mStatusBar;
     private final StatusBarStateController mStatusBarStateController;
@@ -84,6 +74,33 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         }
     };
     private final NotificationWakeUpCoordinator mWakeUpCoordinator;
+    private ArraySet<String> toShowPkg = new ArraySet<>(100);
+
+    private void updateAodIconColors() {
+    }
+
+    private void updateAodIconsVisibility(boolean z) {
+    }
+
+    private void updateCenterIcon() {
+    }
+
+    private void updateShelfIcons() {
+    }
+
+    public void initAodIcons() {
+    }
+
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+    public void onDozingChanged(boolean z) {
+    }
+
+    @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
+    public void onFullyHiddenChanged(boolean z) {
+    }
+
+    public void updateAodNotificationIcons() {
+    }
 
     public NotificationIconAreaController(Context context, StatusBar statusBar, StatusBarStateController statusBarStateController, NotificationWakeUpCoordinator notificationWakeUpCoordinator, KeyguardBypassController keyguardBypassController, NotificationMediaManager notificationMediaManager, NotificationListener notificationListener, DozeParameters dozeParameters, BubbleController bubbleController) {
         this.mStatusBar = statusBar;
@@ -92,10 +109,8 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         this.mStatusBarStateController = statusBarStateController;
         statusBarStateController.addCallback(this);
         this.mMediaManager = notificationMediaManager;
-        this.mDozeParameters = dozeParameters;
         this.mWakeUpCoordinator = notificationWakeUpCoordinator;
         notificationWakeUpCoordinator.addListener(this);
-        this.mBypassController = keyguardBypassController;
         this.mBubbleController = bubbleController;
         notificationListener.addNotificationSettingsListener(this.mSettingsListener);
         initializeNotificationAreaViews(context);
@@ -110,8 +125,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     /* access modifiers changed from: protected */
     public void initializeNotificationAreaViews(Context context) {
         reloadDimens(context);
-        LayoutInflater from = LayoutInflater.from(context);
-        View inflateIconArea = inflateIconArea(from);
+        View inflateIconArea = inflateIconArea(LayoutInflater.from(context));
         this.mNotificationIconArea = inflateIconArea;
         this.mNotificationIcons = (NotificationIconContainer) inflateIconArea.findViewById(C0015R$id.notificationIcons);
         NotificationIconObserver notificationIconObserver = (NotificationIconObserver) Dependency.get(NotificationIconObserver.class);
@@ -119,30 +133,10 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         notificationIconObserver.addCallback(this);
         ((SettingsManager) Dependency.get(SettingsManager.class)).registerNotifStyleListener(this);
         this.mNotificationScrollLayout = this.mStatusBar.getNotificationScrollLayout();
-        View inflate = from.inflate(C0017R$layout.center_icon_area, (ViewGroup) null);
-        this.mCenteredIconArea = inflate;
-        this.mCenteredIcon = (NotificationIconContainer) inflate.findViewById(C0015R$id.centeredIcon);
         initAodIcons();
     }
 
-    public void initAodIcons() {
-        boolean z = this.mAodIcons != null;
-        if (z) {
-            this.mAodIcons.setAnimationsEnabled(false);
-            this.mAodIcons.removeAllViews();
-        }
-        NotificationIconContainer notificationIconContainer = (NotificationIconContainer) this.mStatusBar.getNotificationShadeWindowView().findViewById(C0015R$id.clock_notification_icon_container);
-        this.mAodIcons = notificationIconContainer;
-        notificationIconContainer.setOnLockScreen(true);
-        updateAodIconsVisibility(false);
-        updateAnimations();
-        if (z) {
-            updateAodNotificationIcons();
-        }
-    }
-
     public void setupShelf(NotificationShelf notificationShelf) {
-        this.mShelfIcons = notificationShelf.getShelfIcons();
         notificationShelf.setCollapsedIcons(this.mNotificationIcons);
     }
 
@@ -151,15 +145,6 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         FrameLayout.LayoutParams generateIconLayoutParams = generateIconLayoutParams();
         for (int i = 0; i < this.mNotificationIcons.getChildCount(); i++) {
             this.mNotificationIcons.getChildAt(i).setLayoutParams(generateIconLayoutParams);
-        }
-        for (int i2 = 0; i2 < this.mShelfIcons.getChildCount(); i2++) {
-            this.mShelfIcons.getChildAt(i2).setLayoutParams(generateIconLayoutParams);
-        }
-        for (int i3 = 0; i3 < this.mCenteredIcon.getChildCount(); i3++) {
-            this.mCenteredIcon.getChildAt(i3).setLayoutParams(generateIconLayoutParams);
-        }
-        for (int i4 = 0; i4 < this.mAodIcons.getChildCount(); i4++) {
-            this.mAodIcons.getChildAt(i4).setLayoutParams(generateIconLayoutParams);
         }
     }
 
@@ -172,7 +157,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         Resources resources = context.getResources();
         this.mIconSize = resources.getDimensionPixelSize(C0012R$dimen.status_bar_icon_size);
         this.mIconHPadding = resources.getDimensionPixelSize(C0012R$dimen.status_bar_notification_icon_padding);
-        this.mAodIconAppearTranslation = resources.getDimensionPixelSize(C0012R$dimen.shelf_appear_translation);
+        resources.getDimensionPixelSize(C0012R$dimen.shelf_appear_translation);
     }
 
     public View getNotificationInnerAreaView() {
@@ -197,21 +182,15 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
             if (z) {
                 this.mIconTint = i;
             } else {
-                this.mIconTint = f == 0.0f ? i2 : i3;
-            }
-        }
-        View view2 = this.mCenteredIconArea;
-        if (view2 == null) {
-            this.mCenteredIconTint = i;
-        } else if (DarkIconDispatcher.isInArea(rect, view2)) {
-            if (z) {
-                this.mCenteredIconTint = i;
-            } else {
                 if (f != 0.0f) {
                     i2 = i3;
                 }
-                this.mCenteredIconTint = i2;
+                this.mIconTint = i2;
             }
+        }
+        View view2 = this.mCenteredIconArea;
+        if (view2 != null && DarkIconDispatcher.isInArea(rect, view2) && !z) {
+            int i4 = (f > 0.0f ? 1 : (f == 0.0f ? 0 : -1));
         }
         applyNotificationIconsTint();
     }
@@ -254,20 +233,8 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         applyNotificationIconsTint();
     }
 
-    private void updateShelfIcons() {
-        updateIconsForLayout($$Lambda$NotificationIconAreaController$afpYK1wAP1i0HTFHOa1jb1wzzAQ.INSTANCE, this.mShelfIcons, true, true, false, false, false, false, false, false);
-    }
-
     public void updateStatusBarIcons() {
-        updateIconsForLayout($$Lambda$NotificationIconAreaController$ujxUrqwlryo8PHBzga56kRshsA.INSTANCE, this.mNotificationIcons, false, this.mShowLowPriority, true, true, false, true, false, false);
-    }
-
-    private void updateCenterIcon() {
-        updateIconsForLayout($$Lambda$NotificationIconAreaController$S6CJ2tXrA2ieNVmUpwBa8v9eeEY.INSTANCE, this.mCenteredIcon, false, true, false, false, false, false, false, true);
-    }
-
-    public void updateAodNotificationIcons() {
-        updateIconsForLayout($$Lambda$NotificationIconAreaController$b7MkWJaTAeTosmR_aU3q7JZNLpI.INSTANCE, this.mAodIcons, false, true, true, true, true, true, this.mBypassController.getBypassEnabled(), false);
+        updateIconsForLayout($$Lambda$NotificationIconAreaController$00FvnUlAy0_w9h_AZ6H93V6ggw.INSTANCE, this.mNotificationIcons, false, this.mShowLowPriority, true, true, false, true, false, false);
     }
 
     /* access modifiers changed from: package-private */
@@ -278,8 +245,8 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     private void updateIconsForLayout(Function<NotificationEntry, StatusBarIconView> function, NotificationIconContainer notificationIconContainer, boolean z, boolean z2, boolean z3, boolean z4, boolean z5, boolean z6, boolean z7, boolean z8) {
         int i;
         ArrayList arrayList = new ArrayList(this.mNotificationScrollLayout.getChildCount());
-        ArraySet arraySet = new ArraySet(arrayList.size());
         boolean z9 = notificationIconContainer == this.mNotificationIcons;
+        this.toShowPkg.clear();
         int i2 = 0;
         while (i2 < this.mNotificationScrollLayout.getChildCount()) {
             View childAt = this.mNotificationScrollLayout.getChildAt(i2);
@@ -288,10 +255,14 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
                 i = i2;
                 if (shouldShowNotificationIcon(entry, z, z2, z3, z4, z5, z6, z7, z8)) {
                     StatusBarIconView apply = function.apply(entry);
-                    if (apply != null && !arraySet.contains(entry.getSbn().getTargetPackageName())) {
-                        arrayList.add(apply);
-                        if (z9) {
-                            arraySet.add(entry.getSbn().getTargetPackageName());
+                    if (apply != null) {
+                        if (Build.IS_INTERNATIONAL_BUILD) {
+                            arrayList.add(apply);
+                        } else if (!this.toShowPkg.contains(entry.getSbn().getTargetPackageName())) {
+                            arrayList.add(apply);
+                            if (z9) {
+                                this.toShowPkg.add(entry.getSbn().getTargetPackageName());
+                            }
                         }
                     }
                 }
@@ -300,6 +271,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
             }
             i2 = i + 1;
         }
+        this.toShowPkg.clear();
         ArrayMap<String, ArrayList<StatusBarIcon>> arrayMap = new ArrayMap<>();
         ArrayList arrayList2 = new ArrayList();
         for (int i3 = 0; i3 < notificationIconContainer.getChildCount(); i3++) {
@@ -378,7 +350,7 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
                 updateTintForIcon(statusBarIconView, this.mIconTint);
             } else {
                 statusBarIconView.executeOnLayout(new Runnable(statusBarIconView) {
-                    /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationIconAreaController$kEHcYKNlJqRNuom7zI__dD3YiUQ */
+                    /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationIconAreaController$DK58FxtnSO50_ni0c1Dv2KyiKiw */
                     public final /* synthetic */ StatusBarIconView f$1;
 
                     {
@@ -386,43 +358,17 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
                     }
 
                     public final void run() {
-                        NotificationIconAreaController.this.lambda$applyNotificationIconsTint$4$NotificationIconAreaController(this.f$1);
+                        NotificationIconAreaController.this.lambda$applyNotificationIconsTint$1$NotificationIconAreaController(this.f$1);
                     }
                 });
             }
         }
-        for (int i2 = 0; i2 < this.mCenteredIcon.getChildCount(); i2++) {
-            StatusBarIconView statusBarIconView2 = (StatusBarIconView) this.mCenteredIcon.getChildAt(i2);
-            if (statusBarIconView2.getWidth() != 0) {
-                updateTintForIcon(statusBarIconView2, this.mCenteredIconTint);
-            } else {
-                statusBarIconView2.executeOnLayout(new Runnable(statusBarIconView2) {
-                    /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationIconAreaController$DNX7QrLi_n7I734CPybT_ZrNpwI */
-                    public final /* synthetic */ StatusBarIconView f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        NotificationIconAreaController.this.lambda$applyNotificationIconsTint$5$NotificationIconAreaController(this.f$1);
-                    }
-                });
-            }
-        }
-        updateAodIconColors();
     }
 
     /* access modifiers changed from: private */
-    /* renamed from: lambda$applyNotificationIconsTint$4 */
-    public /* synthetic */ void lambda$applyNotificationIconsTint$4$NotificationIconAreaController(StatusBarIconView statusBarIconView) {
+    /* renamed from: lambda$applyNotificationIconsTint$1 */
+    public /* synthetic */ void lambda$applyNotificationIconsTint$1$NotificationIconAreaController(StatusBarIconView statusBarIconView) {
         updateTintForIcon(statusBarIconView, this.mIconTint);
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$applyNotificationIconsTint$5 */
-    public /* synthetic */ void lambda$applyNotificationIconsTint$5$NotificationIconAreaController(StatusBarIconView statusBarIconView) {
-        updateTintForIcon(statusBarIconView, this.mCenteredIconTint);
     }
 
     private void updateTintForIcon(StatusBarIconView statusBarIconView, int i) {
@@ -442,11 +388,6 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         this.mNotificationIcons.setIsolatedIconLocation(rect, z);
     }
 
-    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
-    public void onDozingChanged(boolean z) {
-        this.mAodIcons.setDozing(z, this.mDozeParameters.getAlwaysOn() && !this.mDozeParameters.getDisplayNeedsBlanking(), 0);
-    }
-
     public void setAnimationsEnabled(boolean z) {
         this.mAnimationsEnabled = z;
         updateAnimations();
@@ -461,8 +402,6 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
     private void updateAnimations() {
         boolean z = true;
         boolean z2 = this.mStatusBarStateController.getState() == 0;
-        this.mAodIcons.setAnimationsEnabled(this.mAnimationsEnabled && !z2);
-        this.mCenteredIcon.setAnimationsEnabled(this.mAnimationsEnabled && z2);
         NotificationIconContainer notificationIconContainer = this.mNotificationIcons;
         if (!this.mAnimationsEnabled || !z2) {
             z = false;
@@ -475,111 +414,14 @@ public class NotificationIconAreaController implements DarkIconDispatcher.DarkRe
         updateAodIconColors();
     }
 
-    public void appearAodIcons() {
-        if (this.mDozeParameters.shouldControlScreenOff()) {
-            this.mAodIcons.setTranslationY((float) (-this.mAodIconAppearTranslation));
-            this.mAodIcons.setAlpha(0.0f);
-            animateInAodIconTranslation();
-            this.mAodIcons.animate().alpha(1.0f).setInterpolator(Interpolators.LINEAR).setDuration(200).start();
-            return;
-        }
-        this.mAodIcons.setAlpha(1.0f);
-        this.mAodIcons.setTranslationY(0.0f);
-    }
-
-    private void animateInAodIconTranslation() {
-        this.mAodIcons.animate().setInterpolator(Interpolators.DECELERATE_QUINT).translationY(0.0f).setDuration(200).start();
-    }
-
     private void reloadAodColor() {
-        this.mAodIconTint = Utils.getColorAttrDefaultColor(this.mContext, C0009R$attr.wallpaperTextColor);
-    }
-
-    private void updateAodIconColors() {
-        for (int i = 0; i < this.mAodIcons.getChildCount(); i++) {
-            StatusBarIconView statusBarIconView = (StatusBarIconView) this.mAodIcons.getChildAt(i);
-            if (statusBarIconView.getWidth() != 0) {
-                updateTintForIcon(statusBarIconView, this.mAodIconTint);
-            } else {
-                statusBarIconView.executeOnLayout(new Runnable(statusBarIconView) {
-                    /* class com.android.systemui.statusbar.phone.$$Lambda$NotificationIconAreaController$PUTDTipRCmrDLS4VQZByqHC4HFA */
-                    public final /* synthetic */ StatusBarIconView f$1;
-
-                    {
-                        this.f$1 = r2;
-                    }
-
-                    public final void run() {
-                        NotificationIconAreaController.this.lambda$updateAodIconColors$6$NotificationIconAreaController(this.f$1);
-                    }
-                });
-            }
-        }
-    }
-
-    /* access modifiers changed from: private */
-    /* renamed from: lambda$updateAodIconColors$6 */
-    public /* synthetic */ void lambda$updateAodIconColors$6$NotificationIconAreaController(StatusBarIconView statusBarIconView) {
-        updateTintForIcon(statusBarIconView, this.mAodIconTint);
-    }
-
-    @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
-    public void onFullyHiddenChanged(boolean z) {
-        boolean z2 = true;
-        if (!this.mBypassController.getBypassEnabled()) {
-            if (!this.mDozeParameters.getAlwaysOn() || this.mDozeParameters.getDisplayNeedsBlanking()) {
-                z2 = false;
-            }
-            z2 &= z;
-        }
-        updateAodIconsVisibility(z2);
-        updateAodNotificationIcons();
+        Utils.getColorAttrDefaultColor(this.mContext, C0009R$attr.wallpaperTextColor);
     }
 
     @Override // com.android.systemui.statusbar.notification.NotificationWakeUpCoordinator.WakeUpListener
     public void onPulseExpansionChanged(boolean z) {
         if (z) {
             updateAodIconsVisibility(true);
-        }
-    }
-
-    private void updateAodIconsVisibility(boolean z) {
-        boolean z2 = true;
-        int i = 0;
-        boolean z3 = this.mBypassController.getBypassEnabled() || this.mWakeUpCoordinator.getNotificationsFullyHidden();
-        if (this.mStatusBarStateController.getState() != 1) {
-            z3 = false;
-        }
-        if (z3 && this.mWakeUpCoordinator.isPulseExpanding()) {
-            z3 = false;
-        }
-        if (this.mAodIconsVisible != z3) {
-            this.mAodIconsVisible = z3;
-            this.mAodIcons.animate().cancel();
-            if (z) {
-                if (this.mAodIcons.getVisibility() == 0) {
-                    z2 = false;
-                }
-                if (!this.mAodIconsVisible) {
-                    animateInAodIconTranslation();
-                    CrossFadeHelper.fadeOut(this.mAodIcons);
-                } else if (z2) {
-                    this.mAodIcons.setVisibility(0);
-                    this.mAodIcons.setAlpha(1.0f);
-                    appearAodIcons();
-                } else {
-                    animateInAodIconTranslation();
-                    CrossFadeHelper.fadeIn(this.mAodIcons);
-                }
-            } else {
-                this.mAodIcons.setAlpha(1.0f);
-                this.mAodIcons.setTranslationY(0.0f);
-                NotificationIconContainer notificationIconContainer = this.mAodIcons;
-                if (!z3) {
-                    i = 4;
-                }
-                notificationIconContainer.setVisibility(i);
-            }
         }
     }
 

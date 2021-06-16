@@ -156,10 +156,6 @@ public class NotificationShelf extends ActivatableNotificationView implements Vi
         return this.mShelfIcons;
     }
 
-    public NotificationIconContainer getShelfIcons() {
-        return this.mShelfIcons;
-    }
-
     @Override // com.android.systemui.statusbar.notification.row.ExpandableView
     public ExpandableViewState createExpandableViewState() {
         return new ShelfState();

@@ -500,7 +500,8 @@ public class ModalWindowView extends FrameLayout implements AppMiniWindowRowTouc
             addMenu(notificationEntry);
             this.animationProperties.setAnimationEndAction(null);
             requestChildrenUpdate();
-            RowAnimationUtils.INSTANCE.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
+            RowAnimationUtils rowAnimationUtils = RowAnimationUtils.INSTANCE;
+            RowAnimationUtils.startTouchAnimationIfNeed(this.mModalRow, 1.0f);
             return;
         }
         this.mFirstAddUpdateRequested = true;

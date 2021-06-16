@@ -584,16 +584,17 @@ public class BiometricUnlockController extends MiuiKeyguardUpdateMonitorCallback
             }
         });
         cleanup();
-        if ((("miui.policy:FINGERPRINT_DPAD_CENTER".equals(this.mWakingUpReason) || "android.policy:KEY".equals(this.mWakingUpReason)) || this.mFpiState != MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.NONE) && (i == 7 || i == 9)) {
-            if (this.mUpdateMonitor.isDeviceInteractive()) {
-                showBouncer();
-            } else {
-                this.mPendingShowBouncer = true;
-                this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:GOTO_UNLOCK");
-            }
-            this.mWakingUpReason = null;
-        }
+        boolean z = "miui.policy:FINGERPRINT_DPAD_CENTER".equals(this.mWakingUpReason) || "android.policy:KEY".equals(this.mWakingUpReason);
         if (biometricSourceType == BiometricSourceType.FINGERPRINT) {
+            if ((z || this.mFpiState != MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.NONE) && (i == 7 || i == 9)) {
+                if (this.mUpdateMonitor.isDeviceInteractive()) {
+                    showBouncer();
+                } else {
+                    this.mPendingShowBouncer = true;
+                    this.mPowerManager.wakeUp(SystemClock.uptimeMillis(), "com.android.systemui:GOTO_UNLOCK");
+                }
+                this.mWakingUpReason = null;
+            }
             this.mFpiState = MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR;
         }
         if (biometricSourceType == BiometricSourceType.FACE && i == 3 && this.mHasFace) {

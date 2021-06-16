@@ -11,6 +11,7 @@ import com.android.systemui.plugins.GlobalActions;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBarKeyguardViewManager;
 import com.android.systemui.statusbar.policy.ExtensionController;
+import com.miui.systemui.util.ShutDownPasswordUtils;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -101,19 +102,23 @@ public class GlobalActionsComponent extends SystemUI implements CommandQueue.Cal
 
     @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void shutdown() {
-        try {
-            ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).onGlobalActionsHidden();
-            this.mBarService.shutdown();
-        } catch (RemoteException unused) {
+        if (!ShutDownPasswordUtils.exeShutDownOrReboot(this.mContext, this.mBarService, this.mStatusBarKeyguardViewManager, true, false)) {
+            try {
+                ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).onGlobalActionsHidden();
+                this.mBarService.shutdown();
+            } catch (RemoteException unused) {
+            }
         }
     }
 
     @Override // com.android.systemui.plugins.GlobalActions.GlobalActionsManager
     public void reboot(boolean z) {
-        try {
-            ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).onGlobalActionsHidden();
-            this.mBarService.reboot(z);
-        } catch (RemoteException unused) {
+        if (!ShutDownPasswordUtils.exeShutDownOrReboot(this.mContext, this.mBarService, this.mStatusBarKeyguardViewManager, false, z)) {
+            try {
+                ((MiuiGxzwManager) Dependency.get(MiuiGxzwManager.class)).onGlobalActionsHidden();
+                this.mBarService.reboot(z);
+            } catch (RemoteException unused) {
+            }
         }
     }
 }

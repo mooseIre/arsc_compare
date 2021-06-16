@@ -395,4 +395,20 @@ public class KeyButtonDrawable extends Drawable {
         }
         return keyButtonDrawable;
     }
+
+    public boolean setVisible(boolean z, boolean z2) {
+        boolean visible = super.setVisible(z, z2);
+        if (visible) {
+            jumpToCurrentState();
+        }
+        return visible;
+    }
+
+    public void jumpToCurrentState() {
+        super.jumpToCurrentState();
+        AnimatedVectorDrawable animatedVectorDrawable = this.mAnimatedDrawable;
+        if (animatedVectorDrawable != null) {
+            animatedVectorDrawable.jumpToCurrentState();
+        }
+    }
 }

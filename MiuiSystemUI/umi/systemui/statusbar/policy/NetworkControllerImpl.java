@@ -487,6 +487,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
             this.mMobileSignalControllers.valueAt(i).notifyListeners(signalCallback);
         }
+        signalCallback.setDefaultSim(this.mConfig.defaultDataSlotId);
         this.mCallbackHandler.setListening(signalCallback, true);
     }
 
@@ -757,6 +758,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             this.mMobileSignalControllers.valueAt(i).setConfiguration(this.mConfig);
         }
         refreshLocale();
+        this.mCallbackHandler.setDefaultSim(this.mConfig.defaultDataSlotId);
     }
 
     /* access modifiers changed from: private */
@@ -793,6 +795,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     /* access modifiers changed from: package-private */
     @VisibleForTesting
     public void doUpdateMobileControllers() {
+        int size = this.mMobileSignalControllers.size();
         List<SubscriptionInfo> completeActiveSubscriptionInfoList = this.mSubscriptionManager.getCompleteActiveSubscriptionInfoList();
         ArrayList arrayList = new ArrayList();
         for (SubscriptionInfo subscriptionInfo : completeActiveSubscriptionInfoList) {
@@ -824,6 +827,11 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
         }
         synchronized (this.mLock) {
             setCurrentSubscriptionsLocked(arrayList);
+        }
+        if (size != this.mMobileSignalControllers.size()) {
+            for (int i = 0; i < this.mMobileSignalControllers.size(); i++) {
+                this.mMobileSignalControllers.valueAt(i).onSubscriptionNumberChange();
+            }
         }
         updateNoSims();
         recalculateEmergency();
@@ -1182,6 +1190,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
     public static class Config {
         boolean alwaysShowDataRatIcon = false;
         boolean alwaysShowNetworkTypeIcon = false;
+        int defaultDataSlotId = 0;
         boolean hspaDataDistinguishable;
         boolean show4gFor3g = false;
         boolean show4gForLte = false;
@@ -1205,7 +1214,8 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             resources.getBoolean(C0010R$bool.config_hideNoInternetState);
             config.showVolteIcon = resources.getBoolean(C0010R$bool.config_display_volte);
             SubscriptionManager.from(context);
-            PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService("carrier_config")).getConfigForSubId(SubscriptionManager.getDefaultDataSubscriptionId());
+            int defaultDataSubscriptionId = SubscriptionManager.getDefaultDataSubscriptionId();
+            PersistableBundle configForSubId = ((CarrierConfigManager) context.getSystemService("carrier_config")).getConfigForSubId(defaultDataSubscriptionId);
             if (configForSubId != null) {
                 config.alwaysShowDataRatIcon = configForSubId.getBoolean("always_show_data_rat_icon_bool");
                 config.show4gForLte = configForSubId.getBoolean("show_4g_for_lte_data_icon_bool");
@@ -1214,6 +1224,7 @@ public class NetworkControllerImpl extends BroadcastReceiver implements NetworkC
             }
             SystemProperties.getBoolean("persist.sysui.rat_icon_enhancement", false);
             config.showVowifiIcon = resources.getBoolean(C0010R$bool.config_display_vowifi);
+            config.defaultDataSlotId = SubscriptionManager.getPhoneId(defaultDataSubscriptionId);
             return config;
         }
     }

@@ -320,15 +320,13 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
 
         @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
-        public void setIsDefaultDataSim(int i, boolean z) {
+        public void setDefaultSim(int i) {
+            MiuiCellularTile.this.mDetailAdapter.setDefaultDataSlot(i);
+            boolean z = this.mInfo.defaultDataSlot != i;
+            CallbackInfo callbackInfo = this.mInfo;
+            callbackInfo.defaultDataSlot = i;
             if (z) {
-                MiuiCellularTile.this.mDetailAdapter.setDefaultDataSlot(i);
-                boolean z2 = this.mInfo.defaultDataSlot != i;
-                CallbackInfo callbackInfo = this.mInfo;
-                callbackInfo.defaultDataSlot = i;
-                if (z2) {
-                    MiuiCellularTile.this.refreshState(callbackInfo);
-                }
+                MiuiCellularTile.this.refreshState(callbackInfo);
             }
         }
     }

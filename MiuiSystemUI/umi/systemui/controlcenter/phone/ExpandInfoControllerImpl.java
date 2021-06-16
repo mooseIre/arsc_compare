@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.text.TextUtils;
+import android.util.Log;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.systemui.Dependency;
 import com.android.systemui.controlcenter.info.BaseInfo;
@@ -154,7 +155,12 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
 
     @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public ExpandInfoController.Info getSuperPowerInfo() {
-        return this.mSuperPowerInfo.getInfo();
+        SuperPowerInfo superPowerInfo = this.mSuperPowerInfo;
+        if (superPowerInfo != null) {
+            return superPowerInfo.getInfo();
+        }
+        Log.e("ExpandInfoControllerImpl", "mSuperPowerInfo is null when getting its info by some unknown reason, so return an empty Info");
+        return new ExpandInfoController.Info();
     }
 
     @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
@@ -196,16 +202,18 @@ public class ExpandInfoControllerImpl implements ExpandInfoController {
 
     @Override // com.android.systemui.controlcenter.phone.ExpandInfoController
     public void setSuperPowerMode(boolean z) {
-        this.mSuperPowerMode = z;
-        if (z) {
-            this.mInfosMapOld.clear();
-            this.mInfosMapOld.putAll(this.mInfosMap);
-        }
-        this.mInfosMap.clear();
-        if (!z) {
-            this.mInfosMap.putAll(this.mInfosMapOld);
-        } else {
-            this.mInfosMap.put(16, getSuperPowerInfo());
+        if (!Constants.IS_INTERNATIONAL) {
+            this.mSuperPowerMode = z;
+            if (z) {
+                this.mInfosMapOld.clear();
+                this.mInfosMapOld.putAll(this.mInfosMap);
+            }
+            this.mInfosMap.clear();
+            if (!z) {
+                this.mInfosMap.putAll(this.mInfosMapOld);
+            } else {
+                this.mInfosMap.put(16, this.mInfosMapOld.get(Integer.valueOf(this.mSelectedType)));
+            }
         }
     }
 

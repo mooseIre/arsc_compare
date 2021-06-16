@@ -10,6 +10,7 @@ import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemProperties;
 import android.provider.Settings;
 import android.telephony.PhoneStateListener;
 import android.telephony.ServiceState;
@@ -48,7 +49,9 @@ import miui.telephony.TelephonyManagerEx;
 import miui.util.FeatureParser;
 
 public class MobileSignalController extends SignalController<MobileState, MobileIconGroup> implements FiveGControllerImpl.FiveGStateChangeCallback {
+    public static final boolean IS_CUST_RANK_TEST_FEVER = "fever".equals(SystemProperties.get("ro.cust.rank.test", CodeInjection.MD5));
     private static final boolean SUPPORT_CA = FeatureParser.getBoolean("support_ca", false);
+    private final ContentObserver m5gEnabledObserver;
     private int mCallState = 0;
     private NetworkControllerImpl.Config mConfig;
     private int mDataState = 0;
@@ -62,6 +65,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private boolean mIsLastNsaConnected = false;
     private boolean mIsLastSaConnected = false;
     private boolean mIsSupportDoubleFiveG;
+    private boolean mIsUserFiveGEnabled = true;
     private PhoneConstants.DataState mMMSDataState = PhoneConstants.DataState.DISCONNECTED;
     protected String[] mMiuiMobileTypeNameArray;
     protected TelephonyManager mMiuiTelephonyManager;
@@ -81,7 +85,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     private boolean mSupportDualVolte;
     private TelephonyDisplayInfo mTelephonyDisplayInfo = new TelephonyDisplayInfo(0, 0);
     private final BroadcastReceiver mVolteSwitchObserver = new BroadcastReceiver() {
-        /* class com.android.systemui.statusbar.policy.MobileSignalController.AnonymousClass2 */
+        /* class com.android.systemui.statusbar.policy.MobileSignalController.AnonymousClass3 */
 
         public void onReceive(Context context, Intent intent) {
             String str = MobileSignalController.this.mTag;
@@ -159,6 +163,14 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                 MobileSignalController.this.updateTelephony();
             }
         };
+        this.m5gEnabledObserver = new ContentObserver(new Handler(looper)) {
+            /* class com.android.systemui.statusbar.policy.MobileSignalController.AnonymousClass2 */
+
+            public void onChange(boolean z) {
+                MobileSignalController.this.update5GConnectState();
+                MobileSignalController.this.updateTelephony();
+            }
+        };
         this.mPhoneCount = this.mPhone.getActiveModemCount();
     }
 
@@ -205,6 +217,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         ContentResolver contentResolver2 = this.mContext.getContentResolver();
         contentResolver2.registerContentObserver(Settings.Global.getUriFor("data_roaming" + this.mSubscriptionInfo.getSubscriptionId()), true, this.mObserver);
         this.mContext.registerReceiver(this.mVolteSwitchObserver, new IntentFilter("org.codeaurora.intent.action.ACTION_ENHANCE_4G_SWITCH"));
+        if (IS_CUST_RANK_TEST_FEVER) {
+            this.mContext.getContentResolver().registerContentObserver(Settings.Global.getUriFor("fiveg_user_enable"), false, this.m5gEnabledObserver);
+        }
     }
 
     public void unregisterListener() {
@@ -215,6 +230,9 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         this.mContext.unregisterReceiver(this.mVolteSwitchObserver);
         ContentResolver contentResolver = this.mContext.getContentResolver();
         Settings.Global.putInt(contentResolver, "5g_icon_group_mode" + this.mSlotId, -1);
+        if (IS_CUST_RANK_TEST_FEVER) {
+            this.mContext.getContentResolver().unregisterContentObserver(this.m5gEnabledObserver);
+        }
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:17:0x0124  */
@@ -349,9 +367,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
                 }
                 Log.d(this.mTag, "notifyListeners mConfig.alwaysShowNetworkTypeIcon=" + this.mConfig.alwaysShowNetworkTypeIcon + "  getNetworkType:" + this.mTelephonyDisplayInfo.getNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(this.mTelephonyDisplayInfo.getNetworkType()) + " voiceNetType=" + getVoiceNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(getVoiceNetworkType()) + " showDataIcon=" + z4 + " mConfig.alwaysShowDataRatIcon=" + this.mConfig.alwaysShowDataRatIcon + " icons.mDataType=" + icons.mDataType + " mConfig.showVolteIcon=" + this.mConfig.showVolteIcon + " isVolteSwitchOn=" + isVolteSwitchOn() + " volteIcon=" + i4 + " mConfig.showVowifiIcon=" + this.mConfig.showVowifiIcon);
                 T t6 = this.mCurrentState;
-                MiuiMobileState miuiMobileState = new MiuiMobileState(((MobileState) t6).airplaneMode, ((MobileState) t6).dataConnected, ((MobileState) t6).volte, ((MobileState) t6).vowifi, ((MobileState) t6).hideVolte, ((MobileState) t6).hideVowifi, ((MobileState) t6).speedHd, ((MobileState) t6).volteNoService, ((MobileState) t6).showDataTypeWhenWifiOn, ((MobileState) t6).showDataTypeDataDisconnected, ((MobileState) t6).showMobileDataTypeInMMS, ((MobileState) t6).showMobileDataTypeSingle, ((MobileState) t6).showAccessTo5G, ((MobileState) t6).showName, ((MobileState) t6).volteResId, ((MobileState) t6).vowifiResId, this.mSlotId, ((MobileState) t6).qcom5GDrawbleId);
-                signalCallback.setIsDefaultDataSim(this.mSubscriptionInfo.getSimSlotIndex(), ((MobileState) this.mCurrentState).dataSim);
-                signalCallback.setMobileDataIndicators(iconState, iconState3, i3, i, z2, z3, i4, obj, textIfExists, str, icons.mIsWide, this.mSubscriptionInfo.getSubscriptionId(), ((MobileState) this.mCurrentState).roaming, miuiMobileState);
+                signalCallback.setMobileDataIndicators(iconState, iconState3, i3, i, z2, z3, i4, obj, textIfExists, str, icons.mIsWide, this.mSubscriptionInfo.getSubscriptionId(), ((MobileState) this.mCurrentState).roaming, new MiuiMobileState(((MobileState) t6).airplaneMode, ((MobileState) t6).dataConnected, ((MobileState) t6).volte, ((MobileState) t6).vowifi, ((MobileState) t6).hideVolte, ((MobileState) t6).hideVowifi, ((MobileState) t6).speedHd, ((MobileState) t6).volteNoService, ((MobileState) t6).showDataTypeWhenWifiOn, ((MobileState) t6).showDataTypeDataDisconnected, ((MobileState) t6).showMobileDataTypeInMMS, ((MobileState) t6).showMobileDataTypeSingle, ((MobileState) t6).showAccessTo5G, ((MobileState) t6).showName, ((MobileState) t6).volteResId, ((MobileState) t6).vowifiResId, this.mSlotId, ((MobileState) t6).qcom5GDrawbleId));
             }
         }
         i2 = icons.mDataType;
@@ -363,9 +379,7 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
         iconState = iconState2;
         Log.d(this.mTag, "notifyListeners mConfig.alwaysShowNetworkTypeIcon=" + this.mConfig.alwaysShowNetworkTypeIcon + "  getNetworkType:" + this.mTelephonyDisplayInfo.getNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(this.mTelephonyDisplayInfo.getNetworkType()) + " voiceNetType=" + getVoiceNetworkType() + "/" + android.telephony.TelephonyManager.getNetworkTypeName(getVoiceNetworkType()) + " showDataIcon=" + z4 + " mConfig.alwaysShowDataRatIcon=" + this.mConfig.alwaysShowDataRatIcon + " icons.mDataType=" + icons.mDataType + " mConfig.showVolteIcon=" + this.mConfig.showVolteIcon + " isVolteSwitchOn=" + isVolteSwitchOn() + " volteIcon=" + i4 + " mConfig.showVowifiIcon=" + this.mConfig.showVowifiIcon);
         T t62 = this.mCurrentState;
-        MiuiMobileState miuiMobileState2 = new MiuiMobileState(((MobileState) t62).airplaneMode, ((MobileState) t62).dataConnected, ((MobileState) t62).volte, ((MobileState) t62).vowifi, ((MobileState) t62).hideVolte, ((MobileState) t62).hideVowifi, ((MobileState) t62).speedHd, ((MobileState) t62).volteNoService, ((MobileState) t62).showDataTypeWhenWifiOn, ((MobileState) t62).showDataTypeDataDisconnected, ((MobileState) t62).showMobileDataTypeInMMS, ((MobileState) t62).showMobileDataTypeSingle, ((MobileState) t62).showAccessTo5G, ((MobileState) t62).showName, ((MobileState) t62).volteResId, ((MobileState) t62).vowifiResId, this.mSlotId, ((MobileState) t62).qcom5GDrawbleId);
-        signalCallback.setIsDefaultDataSim(this.mSubscriptionInfo.getSimSlotIndex(), ((MobileState) this.mCurrentState).dataSim);
-        signalCallback.setMobileDataIndicators(iconState, iconState3, i3, i, z2, z3, i4, obj, textIfExists, str, icons.mIsWide, this.mSubscriptionInfo.getSubscriptionId(), ((MobileState) this.mCurrentState).roaming, miuiMobileState2);
+        signalCallback.setMobileDataIndicators(iconState, iconState3, i3, i, z2, z3, i4, obj, textIfExists, str, icons.mIsWide, this.mSubscriptionInfo.getSubscriptionId(), ((MobileState) this.mCurrentState).roaming, new MiuiMobileState(((MobileState) t62).airplaneMode, ((MobileState) t62).dataConnected, ((MobileState) t62).volte, ((MobileState) t62).vowifi, ((MobileState) t62).hideVolte, ((MobileState) t62).hideVowifi, ((MobileState) t62).speedHd, ((MobileState) t62).volteNoService, ((MobileState) t62).showDataTypeWhenWifiOn, ((MobileState) t62).showDataTypeDataDisconnected, ((MobileState) t62).showMobileDataTypeInMMS, ((MobileState) t62).showMobileDataTypeSingle, ((MobileState) t62).showAccessTo5G, ((MobileState) t62).showName, ((MobileState) t62).volteResId, ((MobileState) t62).vowifiResId, this.mSlotId, ((MobileState) t62).qcom5GDrawbleId));
     }
 
     /* access modifiers changed from: protected */
@@ -754,13 +768,26 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void update5GConnectState() {
+        if (IS_CUST_RANK_TEST_FEVER) {
+            boolean z = Settings.Global.getInt(this.mContext.getContentResolver(), "fiveg_user_enable", 1) == 1;
+            this.mIsUserFiveGEnabled = z;
+            if (z) {
+                ((MobileState) this.mCurrentState).fiveGConnected = true;
+            } else {
+                ((MobileState) this.mCurrentState).fiveGConnected = false;
+            }
+            update5GStatusDatabase();
+            String str = this.mTag;
+            Log.d(str, "rankTestFever: " + IS_CUST_RANK_TEST_FEVER + "mCurrentState.fiveGConnected: " + ((MobileState) this.mCurrentState).fiveGConnected);
+            return;
+        }
         if (FiveGStatus.isNr5G(this.mServiceState, this.mOperator) || getDataNetworkType() == 20 || this.mFiveGController.isFiveGConnect(getSlot(), getDataNetworkType())) {
             ((MobileState) this.mCurrentState).fiveGConnected = true;
         } else {
             ((MobileState) this.mCurrentState).fiveGConnected = false;
         }
-        String str = this.mTag;
-        Log.d(str, "update5GConnectState: " + ((MobileState) this.mCurrentState).fiveGConnected);
+        String str2 = this.mTag;
+        Log.d(str2, "update5GConnectState: " + ((MobileState) this.mCurrentState).fiveGConnected);
         update5GStatusDatabase();
     }
 
@@ -912,6 +939,11 @@ public class MobileSignalController extends SignalController<MobileState, Mobile
             }
             MobileSignalController.this.updateTelephony();
         }
+    }
+
+    public void onSubscriptionNumberChange() {
+        updateMiuiConfig();
+        updateTelephony();
     }
 
     /* access modifiers changed from: package-private */

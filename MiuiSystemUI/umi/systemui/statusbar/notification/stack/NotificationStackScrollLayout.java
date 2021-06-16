@@ -143,7 +143,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
-import kotlin.jvm.functions.Function2;
 
 public class NotificationStackScrollLayout extends ViewGroup implements ScrollAdapter, NotificationListContainer, ConfigurationController.ConfigurationListener, Dumpable, DynamicPrivacyController.Listener {
     private boolean mActivateNeedsAnimation;
@@ -1035,17 +1034,17 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
                 return NotificationStackScrollLayout.this.lambda$new$6$NotificationStackScrollLayout(this.f$1, (Boolean) obj);
             }
         });
-        zenModeViewController.setVisibilityChangedListener(new Function2(zenModeViewController) {
-            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$S8KZ998NAdgqcywoW1IIdxmOe0 */
+        zenModeViewController.setVisibilityChangedListener(new Function1(zenModeViewController) {
+            /* class com.android.systemui.statusbar.notification.stack.$$Lambda$NotificationStackScrollLayout$N645aQrhKFaHUTc5h0wkppHGErc */
             public final /* synthetic */ ZenModeViewController f$1;
 
             {
                 this.f$1 = r2;
             }
 
-            @Override // kotlin.jvm.functions.Function2
-            public final Object invoke(Object obj, Object obj2) {
-                return NotificationStackScrollLayout.this.lambda$new$7$NotificationStackScrollLayout(this.f$1, (Boolean) obj, (Boolean) obj2);
+            @Override // kotlin.jvm.functions.Function1
+            public final Object invoke(Object obj) {
+                return NotificationStackScrollLayout.this.lambda$new$7$NotificationStackScrollLayout(this.f$1, (Boolean) obj);
             }
         });
     }
@@ -1082,14 +1081,19 @@ public class NotificationStackScrollLayout extends ViewGroup implements ScrollAd
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$new$7 */
-    public /* synthetic */ Unit lambda$new$7$NotificationStackScrollLayout(ZenModeViewController zenModeViewController, Boolean bool, Boolean bool2) {
+    public /* synthetic */ Boolean lambda$new$7$NotificationStackScrollLayout(ZenModeViewController zenModeViewController, Boolean bool) {
+        boolean z;
         if (bool.booleanValue()) {
+            z = false;
             generateAddAnimation(zenModeViewController.getView(), false);
-        } else if (!bool2.booleanValue()) {
-            generateRemoveAnimation(zenModeViewController.getView());
+            if (this.mIsExpanded && this.mAnimationsEnabled && !this.mChangePositionInProgress && !isFullyHidden()) {
+                z = true;
+            }
+        } else {
+            z = generateRemoveAnimation(zenModeViewController.getView());
         }
         requestChildrenUpdate();
-        return null;
+        return Boolean.valueOf(z);
     }
 
     private void initializeForegroundServiceSection(ForegroundServiceDismissalFeatureController foregroundServiceDismissalFeatureController) {

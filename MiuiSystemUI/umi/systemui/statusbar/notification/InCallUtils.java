@@ -44,11 +44,11 @@ public class InCallUtils {
 
     public static boolean isCallScreenShowing() {
         String str;
-        ComponentName topActivityLegacy = CommonUtil.getTopActivityLegacy();
-        if (topActivityLegacy == null) {
+        ComponentName topActivity = CommonUtil.getTopActivity();
+        if (topActivity == null) {
             str = null;
         } else {
-            str = topActivityLegacy.getClassName();
+            str = topActivity.getClassName();
         }
         return "com.android.incallui.InCallActivity".equals(str);
     }

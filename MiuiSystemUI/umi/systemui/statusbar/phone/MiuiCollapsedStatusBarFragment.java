@@ -49,13 +49,6 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (phoneStatusBarView instanceof MiuiPhoneStatusBarView) {
             ((MiuiPhoneStatusBarView) phoneStatusBarView).setNotificationIconAreaInnner(notificationInnerAreaView);
         }
-        ViewGroup viewGroup = (ViewGroup) this.mStatusBar.findViewById(C0015R$id.centered_icon_area);
-        View centeredNotificationAreaView = notificationIconAreaController.getCenteredNotificationAreaView();
-        this.mCenteredIconArea = centeredNotificationAreaView;
-        if (centeredNotificationAreaView.getParent() != null) {
-            ((ViewGroup) this.mCenteredIconArea.getParent()).removeView(this.mCenteredIconArea);
-        }
-        viewGroup.addView(this.mCenteredIconArea);
         showNotificationIconArea(false);
     }
 
@@ -143,6 +136,16 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         showNetworkSpeedSplitter(z);
     }
 
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public void hideNotificationIconArea(boolean z) {
+        animateHide(this.mNotificationIconAreaInner, z);
+    }
+
+    @Override // com.android.systemui.statusbar.phone.CollapsedStatusBarFragment
+    public void showNotificationIconArea(boolean z) {
+        animateShow(this.mNotificationIconAreaInner, z);
+    }
+
     public void hideNetworkSpeedSplitter(int i, boolean z) {
         NetworkSpeedSplitter networkSpeedSplitter = this.mDripNetworkSpeedSplitter;
         if (networkSpeedSplitter != null) {
@@ -150,7 +153,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
             if (!z) {
                 this.mDripNetworkSpeedSplitter.setAlpha(0.0f);
             } else {
-                this.mDripNetworkSpeedSplitter.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT);
+                this.mDripNetworkSpeedSplitter.animate().alpha(0.0f).setDuration(160).setStartDelay(0).setInterpolator(Interpolators.ALPHA_OUT).start();
             }
         }
     }
@@ -160,7 +163,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
         if (!z) {
             this.mDripNetworkSpeedSplitter.setAlpha(1.0f);
         } else {
-            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
+            this.mDripNetworkSpeedSplitter.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null).start();
         }
     }
 
@@ -198,7 +201,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
                 public final void run() {
                     MiuiCollapsedStatusBarFragment.this.lambda$animateHideDripNetworkSpeedView$0$MiuiCollapsedStatusBarFragment(this.f$1);
                 }
-            });
+            }).start();
         }
     }
 
@@ -216,7 +219,7 @@ public class MiuiCollapsedStatusBarFragment extends CollapsedStatusBarFragment i
             if (!z) {
                 this.mDripNetworkSpeedView.setAlpha(1.0f);
             } else {
-                this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
+                this.mDripNetworkSpeedView.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null).start();
             }
         }
     }

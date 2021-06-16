@@ -457,12 +457,17 @@ public class VolumeDialogControllerImpl implements VolumeDialogController, Dumpa
     /* access modifiers changed from: private */
     /* renamed from: lambda$shouldShowUI$0 */
     public /* synthetic */ Boolean lambda$shouldShowUI$0$VolumeDialogControllerImpl(int i, Lazy lazy) {
-        StatusBar statusBar = (StatusBar) lazy.get();
-        boolean z = true;
-        if (statusBar.getWakefulnessState() == 0 || statusBar.getWakefulnessState() == 3 || !statusBar.isDeviceInteractive() || (i & 1) == 0 || !this.mShowVolumeDialog) {
-            z = false;
+        boolean z = false;
+        try {
+            StatusBar statusBar = (StatusBar) lazy.get();
+            return Boolean.valueOf((statusBar.getWakefulnessState() == 0 || statusBar.getWakefulnessState() == 3 || !statusBar.isDeviceInteractive() || (i & 1) == 0 || !this.mShowVolumeDialog) ? false : true);
+        } catch (IllegalStateException e) {
+            Slog.w(TAG, "StatusBar haven't been created, just ignore AOD case", e);
+            if (this.mShowVolumeDialog && (i & 1) != 0) {
+                z = true;
+            }
+            return Boolean.valueOf(z);
         }
-        return Boolean.valueOf(z);
     }
 
     /* access modifiers changed from: package-private */

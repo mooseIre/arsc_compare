@@ -17,7 +17,6 @@ import java.util.List;
 
 public class AccessPointControllerImpl implements NetworkController.AccessPointController, WifiTracker.WifiListener {
     private static final boolean DEBUG = Log.isLoggable("AccessPointController", 3);
-    private static final int[] ICONS = MiuiWifiIcons.WIFI_FULL_ICONS;
     private final ArrayList<NetworkController.AccessPointController.AccessPointCallback> mCallbacks = new ArrayList<>();
     private final WifiManager.ActionListener mConnectListener = new WifiManager.ActionListener() {
         /* class com.android.systemui.statusbar.policy.AccessPointControllerImpl.AnonymousClass1 */
@@ -41,6 +40,10 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
 
     @Override // com.android.settingslib.wifi.WifiTracker.WifiListener
     public void onWifiStateChanged(int i) {
+    }
+
+    static {
+        int[] iArr = MiuiWifiIcons.WIFI_FULL_ICONS;
     }
 
     public AccessPointControllerImpl(Context context) {
@@ -99,11 +102,18 @@ public class AccessPointControllerImpl implements NetworkController.AccessPointC
     @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController
     public int getIcon(AccessPoint accessPoint) {
         int level = accessPoint.getLevel();
-        int[] iArr = ICONS;
+        if (accessPoint.getWifiStandard() == 6) {
+            int[] iArr = MiuiWifiIcons.WIFI_6_FULL_ICONS;
+            if (level < 0) {
+                level = 0;
+            }
+            return iArr[level];
+        }
+        int[] iArr2 = MiuiWifiIcons.WIFI_FULL_ICONS;
         if (level < 0) {
             level = 0;
         }
-        return iArr[level];
+        return iArr2[level];
     }
 
     @Override // com.android.systemui.statusbar.policy.NetworkController.AccessPointController

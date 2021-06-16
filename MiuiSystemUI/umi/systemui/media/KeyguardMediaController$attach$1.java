@@ -4,8 +4,9 @@ import kotlin.Unit;
 import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Lambda;
 
+/* access modifiers changed from: package-private */
 /* compiled from: KeyguardMediaController.kt */
-final class KeyguardMediaController$attach$1 extends Lambda implements Function1<Boolean, Unit> {
+public final class KeyguardMediaController$attach$1 extends Lambda implements Function1<Boolean, Unit> {
     final /* synthetic */ KeyguardMediaController this$0;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */

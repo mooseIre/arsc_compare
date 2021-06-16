@@ -124,6 +124,54 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             this.mIsFullScreenLaunch = true;
         }
 
+        public static final /* synthetic */ void access$applyParamsToWindow(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
+            headsUpNotificationAnimationRunner.applyParamsToWindow(remoteAnimationTarget, remoteAnimationTarget2);
+        }
+
+        public static final /* synthetic */ RemoteAnimationTarget access$getClosingRemoteAnimationTarget(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, RemoteAnimationTarget[] remoteAnimationTargetArr) {
+            return headsUpNotificationAnimationRunner.getClosingRemoteAnimationTarget(remoteAnimationTargetArr);
+        }
+
+        public static final /* synthetic */ boolean access$getMIsFullScreenLaunch$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
+            return headsUpNotificationAnimationRunner.mIsFullScreenLaunch;
+        }
+
+        public static final /* synthetic */ HeadsUpExpandAnimationParameters access$getMParams$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
+            return headsUpNotificationAnimationRunner.mParams;
+        }
+
+        public static final /* synthetic */ ExpandableNotificationRow access$getMSourceNotification$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
+            return headsUpNotificationAnimationRunner.mSourceNotification;
+        }
+
+        public static final /* synthetic */ RemoteAnimationTarget access$getPrimaryRemoteAnimationTarget(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, RemoteAnimationTarget[] remoteAnimationTargetArr) {
+            return headsUpNotificationAnimationRunner.getPrimaryRemoteAnimationTarget(remoteAnimationTargetArr);
+        }
+
+        public static final /* synthetic */ void access$invokeCallback(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) {
+            headsUpNotificationAnimationRunner.invokeCallback(iRemoteAnimationFinishedCallback);
+        }
+
+        public static final /* synthetic */ void access$setExpandAnimationRunning(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, boolean z) {
+            headsUpNotificationAnimationRunner.setExpandAnimationRunning(z);
+        }
+
+        public static final /* synthetic */ void access$setMIsFullScreenLaunch$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, boolean z) {
+            headsUpNotificationAnimationRunner.mIsFullScreenLaunch = z;
+        }
+
+        public static final /* synthetic */ void access$setupDimLayer(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
+            headsUpNotificationAnimationRunner.setupDimLayer();
+        }
+
+        public static final /* synthetic */ IStateStyle access$setupExpandAnimation(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, int i, int i2, int i3, int i4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
+            return headsUpNotificationAnimationRunner.setupExpandAnimation(i, i2, i3, i4, remoteAnimationTarget, remoteAnimationTarget2);
+        }
+
+        public static final /* synthetic */ void access$updateAndApplyParams(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, int i, int i2, int i3, int i4, float f, float f2, float f3, int i5, float f4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
+            headsUpNotificationAnimationRunner.updateAndApplyParams(i, i2, i3, i4, f, f2, f3, i5, f4, remoteAnimationTarget, remoteAnimationTarget2);
+        }
+
         private final void setupDimLayer() {
             ExpandableNotificationRow expandableNotificationRow = this.mSourceNotification;
             expandableNotificationRow.getView();

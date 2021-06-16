@@ -8,37 +8,43 @@ import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.NotificationLockscreenUserManager;
 import com.android.systemui.statusbar.SysuiStatusBarStateController;
 import com.android.systemui.statusbar.notification.MiuiNotificationSectionsManager;
+import com.android.systemui.statusbar.notification.row.ActivatableNotificationViewController;
+import com.android.systemui.statusbar.notification.row.dagger.NotificationRowComponent;
 import com.android.systemui.statusbar.phone.KeyguardBypassController;
 import com.android.systemui.statusbar.policy.ZenModeController;
-import kotlin.Unit;
-import kotlin.jvm.functions.Function2;
+import kotlin.jvm.functions.Function1;
 import kotlin.jvm.internal.Intrinsics;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /* compiled from: ZenModeViewController.kt */
 public final class ZenModeViewController implements ZenModeController.Callback {
+    private final NotificationRowComponent.Builder builder;
     private final KeyguardBypassController bypassController;
     private boolean manuallyDismissed;
     private final NotificationLockscreenUserManager notifLockscreenUserManager;
-    @Nullable
-    private MiuiNotificationSectionsManager notificationSectionsManager;
     private final SysuiStatusBarStateController statusBarStateController;
     @Nullable
     private ZenModeView view;
+    private ActivatableNotificationViewController viewController;
     @Nullable
-    private Function2<? super Boolean, ? super Boolean, Unit> visibilityChangedListener;
+    private Function1<? super Boolean, Boolean> visibilityChangedListener;
     private final ZenModeController zenModeController;
 
-    public ZenModeViewController(@NotNull ZenModeController zenModeController2, @NotNull KeyguardBypassController keyguardBypassController, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager) {
+    public final void setNotificationSectionsManager(@Nullable MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
+    }
+
+    public ZenModeViewController(@NotNull ZenModeController zenModeController2, @NotNull KeyguardBypassController keyguardBypassController, @NotNull SysuiStatusBarStateController sysuiStatusBarStateController, @NotNull NotificationLockscreenUserManager notificationLockscreenUserManager, @NotNull NotificationRowComponent.Builder builder2) {
         Intrinsics.checkParameterIsNotNull(zenModeController2, "zenModeController");
         Intrinsics.checkParameterIsNotNull(keyguardBypassController, "bypassController");
         Intrinsics.checkParameterIsNotNull(sysuiStatusBarStateController, "statusBarStateController");
         Intrinsics.checkParameterIsNotNull(notificationLockscreenUserManager, "notifLockscreenUserManager");
+        Intrinsics.checkParameterIsNotNull(builder2, "builder");
         this.zenModeController = zenModeController2;
         this.bypassController = keyguardBypassController;
         this.statusBarStateController = sysuiStatusBarStateController;
         this.notifLockscreenUserManager = notificationLockscreenUserManager;
+        this.builder = builder2;
         sysuiStatusBarStateController.addCallback(new StatusBarStateController.StateListener(this) {
             /* class com.android.systemui.statusbar.notification.zen.ZenModeViewController.AnonymousClass1 */
             final /* synthetic */ ZenModeViewController this$0;
@@ -56,12 +62,8 @@ public final class ZenModeViewController implements ZenModeController.Callback {
         this.zenModeController.addCallback(this);
     }
 
-    public final void setNotificationSectionsManager(@Nullable MiuiNotificationSectionsManager miuiNotificationSectionsManager) {
-        this.notificationSectionsManager = miuiNotificationSectionsManager;
-    }
-
-    public final void setVisibilityChangedListener(@Nullable Function2<? super Boolean, ? super Boolean, Unit> function2) {
-        this.visibilityChangedListener = function2;
+    public final void setVisibilityChangedListener(@Nullable Function1<? super Boolean, Boolean> function1) {
+        this.visibilityChangedListener = function1;
     }
 
     @Nullable
@@ -72,30 +74,39 @@ public final class ZenModeViewController implements ZenModeController.Callback {
     public final void attach(@NotNull ZenModeView zenModeView) {
         Intrinsics.checkParameterIsNotNull(zenModeView, "zenModeView");
         this.view = zenModeView;
-        zenModeView.setController(this);
-        updateVisibility();
+        if (zenModeView != null) {
+            zenModeView.setController(this);
+        }
+        NotificationRowComponent build = this.builder.activatableNotificationView(this.view).build();
+        Intrinsics.checkExpressionValueIsNotNull(build, "builder.activatableNotificationView(view).build()");
+        ActivatableNotificationViewController activatableNotificationViewController = build.getActivatableNotificationViewController();
+        Intrinsics.checkExpressionValueIsNotNull(activatableNotificationViewController, "builder.activatableNotif…otificationViewController");
+        this.viewController = activatableNotificationViewController;
+        if (activatableNotificationViewController != null) {
+            activatableNotificationViewController.init();
+            updateVisibility();
+            return;
+        }
+        Intrinsics.throwUninitializedPropertyAccessException("viewController");
+        throw null;
     }
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private final void updateVisibility() {
+        ZenModeView zenModeView;
+        Boolean invoke;
         boolean shouldBeVisible = shouldBeVisible();
-        ZenModeView zenModeView = this.view;
-        int i = 8;
-        int visibility = zenModeView != null ? zenModeView.getVisibility() : 8;
-        if (shouldBeVisible) {
-            i = 0;
-        }
         ZenModeView zenModeView2 = this.view;
-        if (zenModeView2 != null) {
-            zenModeView2.setVisibility(i);
-        }
-        ZenModeView zenModeView3 = this.view;
-        if (zenModeView3 != null) {
-            zenModeView3.loadOrReleaseContent(i);
-        }
-        if (visibility != i) {
-            if (i == 0) {
+        int i = zenModeView2 != null ? zenModeView2.mVisibility : 8;
+        boolean z = false;
+        int i2 = shouldBeVisible ? 0 : 8;
+        if (i != i2) {
+            if (i2 == 0) {
+                ZenModeView zenModeView3 = this.view;
+                if (zenModeView3 != null) {
+                    zenModeView3.doAfterAnim(i2);
+                }
                 ZenModeView zenModeView4 = this.view;
                 if (zenModeView4 != null) {
                     zenModeView4.resetTranslation();
@@ -104,10 +115,23 @@ public final class ZenModeViewController implements ZenModeController.Callback {
                 if (zenModeView5 != null) {
                     zenModeView5.resetContentText();
                 }
+            } else {
+                ZenModeView zenModeView6 = this.view;
+                if (zenModeView6 != null) {
+                    zenModeView6.mVisibility = i2;
+                }
             }
-            Function2<? super Boolean, ? super Boolean, Unit> function2 = this.visibilityChangedListener;
-            if (function2 != null) {
-                function2.invoke(Boolean.valueOf(shouldBeVisible), Boolean.valueOf(this.manuallyDismissed));
+            Function1<? super Boolean, Boolean> function1 = this.visibilityChangedListener;
+            if (!(function1 == null || (invoke = function1.invoke(Boolean.valueOf(shouldBeVisible))) == null)) {
+                z = invoke.booleanValue();
+            }
+            if (i2 == 8 && (!z || this.manuallyDismissed)) {
+                ZenModeView zenModeView7 = this.view;
+                if (zenModeView7 != null) {
+                    zenModeView7.doAfterAnim(i2);
+                }
+            } else if (i2 == 0 && !z && (zenModeView = this.view) != null) {
+                zenModeView.resetScaleAndAlpha();
             }
         }
     }
@@ -137,12 +161,5 @@ public final class ZenModeViewController implements ZenModeController.Callback {
 
     public final void jump2Settings() {
         ((ActivityStarter) Dependency.get(ActivityStarter.class)).postStartActivityDismissingKeyguard(new Intent("android.settings.SOUND_SETTINGS"), 0);
-    }
-
-    public final void updateSectionBoundaries() {
-        MiuiNotificationSectionsManager miuiNotificationSectionsManager = this.notificationSectionsManager;
-        if (miuiNotificationSectionsManager != null) {
-            miuiNotificationSectionsManager.updateSectionBoundaries("ZenModeView visibility changed");
-        }
     }
 }

@@ -1601,12 +1601,6 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         this.mNotificationsController.requestNotificationUpdate(str);
     }
 
-    public void requestFaceAuth() {
-        if (!this.mKeyguardStateController.canDismissLockScreen()) {
-            this.mKeyguardUpdateMonitor.requestFaceAuth();
-        }
-    }
-
     private void updateReportRejectedTouchVisibility() {
         View view = this.mReportRejectedTouch;
         if (view != null) {
@@ -2824,7 +2818,7 @@ public class StatusBar extends SystemUI implements DemoMode, ActivityStarter, Ke
         }
     }
 
-    /* JADX WARN: Type inference failed for: r9v0, types: [int, boolean] */
+    /* JADX WARN: Type inference failed for: r9v0, types: [boolean, int] */
     /* JADX WARNING: Unknown variable types count: 1 */
     /* Code decompiled incorrectly, please refer to instructions dump. */
     private void logStateToEventlog() {

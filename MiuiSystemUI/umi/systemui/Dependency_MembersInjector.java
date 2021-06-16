@@ -31,6 +31,7 @@ import com.android.keyguard.injector.KeyguardSensorInjector;
 import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
+import com.android.keyguard.negative.MiuiQuickConnectController;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
@@ -165,6 +166,7 @@ import com.miui.systemui.statusbar.phone.ForceBlackObserver;
 import com.miui.systemui.statusbar.phone.SmartDarkObserver;
 import com.miui.systemui.util.GestureObserver;
 import com.miui.systemui.util.HapticFeedBackImpl;
+import com.miui.systemui.util.MiuiActivityUtil;
 import dagger.Lazy;
 
 public final class Dependency_MembersInjector {
@@ -688,6 +690,10 @@ public final class Dependency_MembersInjector {
         dependency.mLockScreenMagazineController = lazy;
     }
 
+    public static void injectMMiuiQuickConnectController(Dependency dependency, Lazy<MiuiQuickConnectController> lazy) {
+        dependency.mMiuiQuickConnectController = lazy;
+    }
+
     public static void injectMMiuiFaceUnlockManager(Dependency dependency, Lazy<MiuiFaceUnlockManager> lazy) {
         dependency.mMiuiFaceUnlockManager = lazy;
     }
@@ -874,5 +880,9 @@ public final class Dependency_MembersInjector {
 
     public static void injectMGestureObserver(Dependency dependency, Lazy<GestureObserver> lazy) {
         dependency.mGestureObserver = lazy;
+    }
+
+    public static void injectMMiuiActivityUtil(Dependency dependency, Lazy<MiuiActivityUtil> lazy) {
+        dependency.mMiuiActivityUtil = lazy;
     }
 }

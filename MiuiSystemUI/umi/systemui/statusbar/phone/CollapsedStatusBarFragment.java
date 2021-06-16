@@ -20,7 +20,7 @@ import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.statusbar.policy.NetworkController;
 
 public class CollapsedStatusBarFragment extends Fragment implements CommandQueue.Callbacks, StatusBarStateController.StateListener {
-    protected View mCenteredIconArea;
+    private View mCenteredIconArea;
     private View mClockView;
     protected CommandQueue mCommandQueue;
     private int mDisabled1;
@@ -262,7 +262,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
             public final void run() {
                 CollapsedStatusBarFragment.lambda$animateHiddenState$0(this.f$0, this.f$1);
             }
-        });
+        }).start();
     }
 
     /* access modifiers changed from: protected */
@@ -277,7 +277,7 @@ public class CollapsedStatusBarFragment extends Fragment implements CommandQueue
         if (!z) {
             view.setAlpha(1.0f);
         } else {
-            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null);
+            view.animate().alpha(1.0f).setDuration(320).setInterpolator(Interpolators.ALPHA_IN).withEndAction(null).start();
         }
     }
 

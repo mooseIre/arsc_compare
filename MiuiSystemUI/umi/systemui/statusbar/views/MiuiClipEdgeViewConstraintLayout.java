@@ -11,16 +11,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 public class MiuiClipEdgeViewConstraintLayout extends ConstraintLayout {
     private Rect mClipRect = new Rect();
 
-    public MiuiClipEdgeViewConstraintLayout(Context context) {
-        super(context);
-    }
-
     public MiuiClipEdgeViewConstraintLayout(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-    }
-
-    public MiuiClipEdgeViewConstraintLayout(Context context, AttributeSet attributeSet, int i) {
-        super(context, attributeSet, i);
     }
 
     /* access modifiers changed from: protected */

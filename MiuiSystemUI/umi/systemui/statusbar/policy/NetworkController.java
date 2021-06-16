@@ -63,13 +63,13 @@ public interface NetworkController extends CallbackController<SignalCallback>, D
     void setWifiEnabled(boolean z);
 
     public interface SignalCallback {
+        default void setDefaultSim(int i) {
+        }
+
         default void setEthernetIndicators(IconState iconState) {
         }
 
         default void setIsAirplaneMode(IconState iconState) {
-        }
-
-        default void setIsDefaultDataSim(int i, boolean z) {
         }
 
         default void setMobileDataEnabled(boolean z) {
