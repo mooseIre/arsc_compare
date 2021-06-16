@@ -1,4 +1,4 @@
-package com.android.keyguard.charge.particle;
+package com.android.keyguard.charge.lzdh;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
@@ -14,22 +14,22 @@ import android.widget.RelativeLayout;
 import com.android.keyguard.charge.container.IChargeView;
 import com.android.systemui.C0013R$drawable;
 
-public class ParticleChargeView extends IChargeView {
+public class LzdhChargeView extends IChargeView {
     private ObjectAnimator animatorRingGlow;
+    private LzdhRenderView mLzdhRenderView;
     private int mParticleItemContainerTranslationY;
-    private ParticleRenderView mParticleRenderView;
     private ImageView mRingGlow;
     private int mRingRowMarginTop;
 
-    public ParticleChargeView(Context context) {
+    public LzdhChargeView(Context context) {
         this(context, null);
     }
 
-    public ParticleChargeView(Context context, AttributeSet attributeSet) {
+    public LzdhChargeView(Context context, AttributeSet attributeSet) {
         this(context, attributeSet, 0);
     }
 
-    public ParticleChargeView(Context context, AttributeSet attributeSet, int i) {
+    public LzdhChargeView(Context context, AttributeSet attributeSet, int i) {
         super(context, attributeSet, i);
         this.mParticleItemContainerTranslationY = 457;
         this.mRingRowMarginTop = 469;
@@ -39,10 +39,10 @@ public class ParticleChargeView extends IChargeView {
     @Override // com.android.keyguard.charge.container.IChargeView
     public void addChildView() {
         super.addChildView();
-        this.mParticleRenderView = new ParticleRenderView(this.mContext);
+        this.mLzdhRenderView = new LzdhRenderView(this.mContext);
         ImageView imageView = new ImageView(this.mContext);
         this.mRingGlow = imageView;
-        imageView.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.charge_animation_particle_ring_glow));
+        imageView.setImageDrawable(this.mContext.getDrawable(C0013R$drawable.charge_animation_lzdh_ring_glow));
         this.mRingGlow.setAlpha(0.0f);
         ViewGroup viewGroup = this.mContentContainer;
         if (viewGroup != null) {
@@ -51,11 +51,11 @@ public class ParticleChargeView extends IChargeView {
             layoutParams.addRule(14);
             layoutParams.setMargins(0, this.mRingRowMarginTop, 0, 0);
             this.mContentContainer.addView(this.mRingGlow, layoutParams);
-            this.mContentContainer.addView(this.mParticleRenderView, new ViewGroup.LayoutParams(-1, -1));
+            this.mContentContainer.addView(this.mLzdhRenderView, new ViewGroup.LayoutParams(-1, -1));
         }
-        ParticleRenderView particleRenderView = this.mParticleRenderView;
+        LzdhRenderView lzdhRenderView = this.mLzdhRenderView;
         Point point = this.mScreenSize;
-        particleRenderView.updateSizeForScreenSizeChange(point.x, point.y);
+        lzdhRenderView.updateSizeForScreenSizeChange(point.x, point.y);
     }
 
     /* access modifiers changed from: protected */
@@ -63,7 +63,7 @@ public class ParticleChargeView extends IChargeView {
     public void startAnimationOnChildView() {
         super.startAnimationOnChildView();
         this.mRingGlow.setAlpha(0.0f);
-        this.mParticleRenderView.startAnimation(this.mChargeLevel * 10);
+        this.mLzdhRenderView.startAnimation(this.mChargeLevel * 10);
         ObjectAnimator objectAnimator = this.animatorRingGlow;
         if (objectAnimator != null && objectAnimator.isStarted()) {
             this.animatorRingGlow.cancel();
@@ -85,7 +85,7 @@ public class ParticleChargeView extends IChargeView {
 
     @Override // com.android.keyguard.charge.container.IChargeView
     public void setProgress(int i) {
-        this.mParticleRenderView.updateProgress(i * 10);
+        this.mLzdhRenderView.updateProgress(i * 10);
     }
 
     @Override // com.android.keyguard.charge.container.IChargeView
@@ -96,7 +96,7 @@ public class ParticleChargeView extends IChargeView {
             this.animatorRingGlow.cancel();
         }
         this.mRingGlow.setAlpha(0.0f);
-        this.mParticleRenderView.reset();
+        this.mLzdhRenderView.reset();
         ViewGroup viewGroup = this.mContentContainer;
         ObjectAnimator ofFloat = ObjectAnimator.ofFloat(viewGroup, "alpha", viewGroup.getAlpha(), 0.0f);
         ofFloat.setDuration(600L);
@@ -127,12 +127,12 @@ public class ParticleChargeView extends IChargeView {
     @Override // com.android.keyguard.charge.container.IChargeView
     public void updateSizeForScreenSizeChange() {
         super.updateSizeForScreenSizeChange();
-        ParticleRenderView particleRenderView = this.mParticleRenderView;
-        if (particleRenderView != null) {
-            particleRenderView.initTargets();
-            ParticleRenderView particleRenderView2 = this.mParticleRenderView;
+        LzdhRenderView lzdhRenderView = this.mLzdhRenderView;
+        if (lzdhRenderView != null) {
+            lzdhRenderView.initTargets();
+            LzdhRenderView lzdhRenderView2 = this.mLzdhRenderView;
             Point point = this.mScreenSize;
-            particleRenderView2.updateSizeForScreenSizeChange(point.x, point.y);
+            lzdhRenderView2.updateSizeForScreenSizeChange(point.x, point.y);
         }
         this.mWindowManager.getDefaultDisplay().getRealSize(this.mScreenSize);
         Point point2 = this.mScreenSize;

@@ -25,6 +25,7 @@ import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.LockScreenMagazinePreView;
 import com.android.keyguard.negative.MiuiKeyguardMoveLeftViewContainer;
+import com.android.keyguard.negative.MiuiQuickConnectController;
 import com.android.keyguard.utils.MiuiKeyguardUtils;
 import com.android.keyguard.utils.PhoneUtils;
 import com.android.keyguard.wallpaper.IMiuiKeyguardWallpaperController;
@@ -658,6 +659,19 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 Intrinsics.throwUninitializedPropertyAccessException("mBottomAreaView");
                 throw null;
             }
+        } else if (((MiuiQuickConnectController) Dependency.get(MiuiQuickConnectController.class)).isUseXMYZLLeft()) {
+            ((MiuiQuickConnectController) Dependency.get(MiuiQuickConnectController.class)).launchXMYZLActivity();
+            KeyguardNegative1PageInjector keyguardNegative1PageInjector = this.mNegative1PageController;
+            if (keyguardNegative1PageInjector != null) {
+                MiuiKeyguardMoveLeftViewContainer leftView = keyguardNegative1PageInjector.getLeftView();
+                if (leftView != null) {
+                    leftView.removeLeftView();
+                    return;
+                }
+                return;
+            }
+            Intrinsics.throwUninitializedPropertyAccessException("mNegative1PageController");
+            throw null;
         } else {
             Object obj = Dependency.get(LockScreenMagazineController.class);
             Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(LockScree…neController::class.java)");
@@ -665,11 +679,11 @@ public final class KeyguardPanelViewInjector extends MiuiKeyguardUpdateMonitorCa
                 KeyguardBottomAreaView keyguardBottomAreaView2 = this.mBottomAreaView;
                 if (keyguardBottomAreaView2 != null) {
                     keyguardBottomAreaView2.launchMagazineLeftActivity();
-                    KeyguardNegative1PageInjector keyguardNegative1PageInjector = this.mNegative1PageController;
-                    if (keyguardNegative1PageInjector != null) {
-                        MiuiKeyguardMoveLeftViewContainer leftView = keyguardNegative1PageInjector.getLeftView();
-                        if (leftView != null) {
-                            leftView.removeLeftView();
+                    KeyguardNegative1PageInjector keyguardNegative1PageInjector2 = this.mNegative1PageController;
+                    if (keyguardNegative1PageInjector2 != null) {
+                        MiuiKeyguardMoveLeftViewContainer leftView2 = keyguardNegative1PageInjector2.getLeftView();
+                        if (leftView2 != null) {
+                            leftView2.removeLeftView();
                             return;
                         }
                         return;

@@ -139,6 +139,12 @@ public class MiuiFaceUnlockManager {
         }
 
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
+        public void onStartedWakingUp() {
+            super.onStartedWakingUp();
+            MiuiFaceUnlockManager.this.mUpdateMonitor.requestFaceAuth();
+        }
+
+        @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
         public void onBiometricHelp(int i, String str, BiometricSourceType biometricSourceType) {
             if (i != 5 && i != 10001) {
                 MiuiFaceUnlockManager.this.mHasFace = true;

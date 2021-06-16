@@ -239,6 +239,8 @@ public class MiuiKeyguardFaceUnlockView extends ConstraintLayout {
         imageView2.setAlpha(0.0f);
         this.mRingIV.setImageResource(C0013R$drawable.face_unlock_ring);
         addView(this.mRingIV, layoutParams);
+        int dimensionPixelOffset = this.mContext.getResources().getDimensionPixelOffset(C0012R$dimen.miui_face_unlock_view_padding);
+        setPadding(dimensionPixelOffset, 0, dimensionPixelOffset, 0);
     }
 
     /* access modifiers changed from: protected */

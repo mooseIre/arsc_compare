@@ -360,7 +360,7 @@ public class KeyguardPatternView extends MiuiKeyguardPasswordView implements Key
             long requiredStrongAuthTimeout = getRequiredStrongAuthTimeout();
             return resources.getQuantityString(C0019R$plurals.input_pattern_after_timeout_msg, (int) TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout), Long.valueOf(TimeUnit.MILLISECONDS.toHours(requiredStrongAuthTimeout)));
         } else if (i == 3) {
-            return resources.getString(C0021R$string.kg_prompt_reason_device_admin);
+            return resources.getString(C0021R$string.device_locked_without_biometric);
         } else {
             if (i != 4) {
                 return resources.getString(C0021R$string.kg_prompt_reason_timeout_pattern);

@@ -4,8 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
-import android.app.ActivityManager;
-import android.app.ActivityTaskManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Canvas;
@@ -16,7 +15,6 @@ import android.graphics.drawable.Drawable;
 import android.hardware.display.DisplayManager;
 import android.os.Build;
 import android.os.Handler;
-import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.Vibrator;
 import android.util.Log;
@@ -38,13 +36,11 @@ import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.Dependency;
-import com.android.systemui.shared.system.ActivityManagerWrapper;
-import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.statusbar.policy.ConfigurationController;
 import com.miui.systemui.DeviceConfig;
 import com.miui.systemui.util.BlurUtil;
 import com.miui.systemui.util.HapticFeedBackImpl;
-import java.util.List;
+import com.miui.systemui.util.MiuiActivityUtil;
 
 public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguardWallpaperController.IWallpaperChangeCallback, ConfigurationController.ConfigurationListener {
     private float mActiveAnimPer;
@@ -142,32 +138,6 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     private Point mScreenSizePoint;
     private int mScreenWidth;
     private boolean mShowing = false;
-    private final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
-        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass4 */
-
-        @Override // com.android.systemui.shared.system.TaskStackChangeListener
-        public void onTaskMovedToFront(ActivityManager.RunningTaskInfo runningTaskInfo) {
-            Log.d("KeyguardCameraView", "xxxxxxxxonTaskMovedToFront");
-            if (MiuiKeyguardCameraView.this.mIsCameraShowing && MiuiKeyguardCameraView.this.isNotCameraActivity(runningTaskInfo)) {
-                MiuiKeyguardCameraView.this.mIsCameraShowing = false;
-                MiuiKeyguardCameraView.this.reset();
-            }
-        }
-
-        @Override // com.android.systemui.shared.system.TaskStackChangeListener
-        public void onTaskStackChanged() {
-            try {
-                List tasks = ActivityTaskManager.getService().getTasks(1);
-                if (MiuiKeyguardCameraView.this.mIsCameraShowing && !tasks.isEmpty() && MiuiKeyguardCameraView.this.isNotCameraActivity((ActivityManager.RunningTaskInfo) tasks.get(0))) {
-                    MiuiKeyguardCameraView.this.mIsCameraShowing = false;
-                    MiuiKeyguardCameraView.this.reset();
-                }
-            } catch (RemoteException e) {
-                Log.e("KeyguardCameraView", "am.getTasks fail " + e.getStackTrace());
-                e.printStackTrace();
-            }
-        }
-    };
     private Runnable mTimeOutSaver = new Runnable() {
         /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass1 */
 
@@ -175,6 +145,17 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             MiuiKeyguardCameraView.this.reset();
             Toast.makeText(MiuiKeyguardCameraView.this.mContext, C0021R$string.start_camera_error_try_again, 0).show();
             Log.e("KeyguardCameraView", "启动相机5s没有成功,请查看log确认 Camera进程是否crash");
+        }
+    };
+    private final MiuiActivityUtil.TopActivityMayChangeListener mTopActivityMayChangeListener = new MiuiActivityUtil.TopActivityMayChangeListener() {
+        /* class com.android.keyguard.MiuiKeyguardCameraView.AnonymousClass4 */
+
+        @Override // com.miui.systemui.util.MiuiActivityUtil.TopActivityMayChangeListener
+        public void onTopActivityMayChanged(ComponentName componentName) {
+            if (MiuiKeyguardCameraView.this.mIsCameraShowing && MiuiKeyguardCameraView.this.isNotCameraActivity(componentName)) {
+                MiuiKeyguardCameraView.this.mIsCameraShowing = false;
+                MiuiKeyguardCameraView.this.reset();
+            }
         }
     };
     private boolean mTouchDownInitial;
@@ -210,8 +191,8 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private boolean isNotCameraActivity(ActivityManager.RunningTaskInfo runningTaskInfo) {
-        return !PackageUtils.PACKAGE_NAME_CAMERA.equals(runningTaskInfo.topActivity.getPackageName());
+    private boolean isNotCameraActivity(ComponentName componentName) {
+        return componentName == null || !PackageUtils.PACKAGE_NAME_CAMERA.equals(componentName.getPackageName());
     }
 
     public MiuiKeyguardCameraView(Context context, CallBack callBack) {
@@ -472,9 +453,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
             this.mTouchY = 0.0f;
             this.mTouchX = 0.0f;
             handleMoveDistanceChanged();
-            if (this.mTaskStackListener != null) {
-                ActivityManagerWrapper.getInstance().unregisterTaskStackListener(this.mTaskStackListener);
-            }
+            ((MiuiActivityUtil) Dependency.get(MiuiActivityUtil.class)).removeTopActivityMayChangeListener(this.mTopActivityMayChangeListener);
         }
     }
 
@@ -719,7 +698,7 @@ public class MiuiKeyguardCameraView extends FrameLayout implements IMiuiKeyguard
     }
 
     private void startCameraActivity() {
-        ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
+        ((MiuiActivityUtil) Dependency.get(MiuiActivityUtil.class)).addTopActivityMayChangeListener(this.mTopActivityMayChangeListener);
         AnalyticsHelper.getInstance(this.mContext).recordKeyguardAction("action_enter_camera_view");
         AnalyticsHelper.getInstance(this.mContext).trackPageStart("action_enter_camera_view");
         this.mContext.startActivityAsUser(PackageUtils.getCameraIntent(), UserHandle.CURRENT);

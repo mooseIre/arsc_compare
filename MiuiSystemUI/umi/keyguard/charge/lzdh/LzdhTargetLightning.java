@@ -1,4 +1,4 @@
-package com.android.keyguard.charge.particle;
+package com.android.keyguard.charge.lzdh;
 
 import android.animation.ArgbEvaluator;
 import android.graphics.Canvas;
@@ -22,7 +22,7 @@ import miuix.animation.property.FloatProperty;
 import miuix.animation.utils.EaseManager;
 
 /* access modifiers changed from: package-private */
-public class ParticleTargetLightning {
+public class LzdhTargetLightning {
     private static final AtomicInteger sIdGenerator = new AtomicInteger();
     private final List<PointF> lightningEdgePointLIst = new ArrayList();
     private final List<PointF> lightningInnerPointList = new ArrayList();
@@ -72,7 +72,7 @@ public class ParticleTargetLightning {
         }
     }
 
-    ParticleTargetLightning(int i) {
+    LzdhTargetLightning(int i) {
         Folme.getValueTarget(this.mName).setDefaultMinVisibleChange(1.0f);
         Folme.useValue(this.mName).addListener(new TransitionListenerWrapper(this));
         for (int i2 = 0; i2 < i; i2++) {
@@ -297,27 +297,27 @@ public class ParticleTargetLightning {
     }
 
     private static class TransitionListenerWrapper extends TransitionListener {
-        private final WeakReference<ParticleTargetLightning> mParticleTargetLighting;
+        private final WeakReference<LzdhTargetLightning> mParticleTargetLighting;
 
-        public TransitionListenerWrapper(ParticleTargetLightning particleTargetLightning) {
-            this.mParticleTargetLighting = new WeakReference<>(particleTargetLightning);
+        public TransitionListenerWrapper(LzdhTargetLightning lzdhTargetLightning) {
+            this.mParticleTargetLighting = new WeakReference<>(lzdhTargetLightning);
         }
 
         @Override // miuix.animation.listener.TransitionListener
         public void onUpdate(Object obj, Collection<UpdateInfo> collection) {
-            ParticleTargetLightning particleTargetLightning = this.mParticleTargetLighting.get();
-            if (particleTargetLightning != null) {
+            LzdhTargetLightning lzdhTargetLightning = this.mParticleTargetLighting.get();
+            if (lzdhTargetLightning != null) {
                 for (UpdateInfo updateInfo : collection) {
-                    particleTargetLightning.setParticlePos(updateInfo);
+                    lzdhTargetLightning.setParticlePos(updateInfo);
                 }
             }
         }
 
         @Override // miuix.animation.listener.TransitionListener
         public void onCancel(Object obj) {
-            ParticleTargetLightning particleTargetLightning = this.mParticleTargetLighting.get();
-            if (particleTargetLightning != null) {
-                particleTargetLightning.initParticles();
+            LzdhTargetLightning lzdhTargetLightning = this.mParticleTargetLighting.get();
+            if (lzdhTargetLightning != null) {
+                lzdhTargetLightning.initParticles();
             }
         }
     }

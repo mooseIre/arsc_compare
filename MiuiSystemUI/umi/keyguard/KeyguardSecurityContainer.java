@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.admin.DevicePolicyManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.metrics.LogMaker;
@@ -51,6 +52,7 @@ import com.android.systemui.SystemUIFactory;
 import com.android.systemui.shared.system.SysUiStatsLog;
 import com.android.systemui.statusbar.policy.KeyguardStateController;
 import com.android.systemui.util.InjectionInflationController;
+import com.miui.systemui.util.ShutDownPasswordUtils;
 import java.util.List;
 import java.util.function.Supplier;
 import miui.os.Build;
@@ -695,6 +697,7 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
             this.mForgetPasswordMethodBack.setBackgroundResource(C0013R$drawable.miui_keyguard_forget_password_suggestion_right);
             this.mForgetPasswordMethodNext.setBackgroundResource(C0013R$drawable.miui_keyguard_forget_password_suggestion_left);
         }
+        final boolean isShutDownPasswordEnabled = ShutDownPasswordUtils.isShutDownPasswordEnabled(((FrameLayout) this).mContext);
         button.setOnClickListener(new View.OnClickListener() {
             /* class com.android.keyguard.KeyguardSecurityContainer.AnonymousClass4 */
 
@@ -719,10 +722,18 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
             /* class com.android.keyguard.KeyguardSecurityContainer.AnonymousClass6 */
 
             public void onClick(View view) {
+                int i;
+                int i2;
                 KeyguardSecurityContainer.this.mFogetPasswordMethod.setVisibility(4);
                 KeyguardSecurityContainer.this.setLockoutViewVisible(4);
                 KeyguardSecurityContainer.this.mFogetPasswordSuggestion.setVisibility(0);
-                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_one)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0021R$string.phone_locked_forget_password_suggesstion_one_content), new Html.ImageGetter() {
+                Resources resources = KeyguardSecurityContainer.this.getResources();
+                if (isShutDownPasswordEnabled) {
+                    i = C0021R$string.shut_down_password_forget_password_suggesstion_one_content;
+                } else {
+                    i = C0021R$string.phone_locked_forget_password_suggesstion_one_content;
+                }
+                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_one)).setText(Html.fromHtml(resources.getString(i), new Html.ImageGetter() {
                     /* class com.android.keyguard.KeyguardSecurityContainer.AnonymousClass6.AnonymousClass1 */
 
                     public Drawable getDrawable(String str) {
@@ -739,7 +750,13 @@ public class KeyguardSecurityContainer extends FrameLayout implements KeyguardSe
                         return drawable;
                     }
                 }, null));
-                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_two)).setText(Html.fromHtml(KeyguardSecurityContainer.this.getResources().getString(C0021R$string.phone_locked_forget_password_suggesstion_two_content)));
+                Resources resources2 = KeyguardSecurityContainer.this.getResources();
+                if (isShutDownPasswordEnabled) {
+                    i2 = C0021R$string.shut_down_password_forget_password_suggesstion_two_content;
+                } else {
+                    i2 = C0021R$string.phone_locked_forget_password_suggesstion_two_content;
+                }
+                ((TextView) KeyguardSecurityContainer.this.mFogetPasswordSuggestion.findViewById(C0015R$id.forget_password_suggesstion_two)).setText(Html.fromHtml(resources2.getString(i2)));
             }
         });
         this.mForgetPasswordMethodBack.setOnClickListener(new View.OnClickListener() {
