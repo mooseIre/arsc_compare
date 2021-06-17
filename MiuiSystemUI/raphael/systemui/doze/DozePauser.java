@@ -6,7 +6,7 @@ import com.android.systemui.doze.DozeMachine;
 import com.android.systemui.util.AlarmTimeout;
 
 public class DozePauser implements DozeMachine.Part {
-    public static final String TAG;
+    public static final String TAG = "DozePauser";
     private final DozeMachine mMachine;
     private final AlarmTimeout mPauseTimeout;
     private final AlwaysOnDisplayPolicy mPolicy;
@@ -17,13 +17,13 @@ public class DozePauser implements DozeMachine.Part {
             /* class com.android.systemui.doze.$$Lambda$DozePauser$RaYrBg9_HgEkLP8ozxXkVSg4K5c */
 
             public final void onAlarm() {
-                DozePauser.lambda$RaYrBg9_HgEkLP8ozxXkVSg4K5c(DozePauser.this);
+                DozePauser.this.onTimeout();
             }
         }, TAG, handler);
         this.mPolicy = alwaysOnDisplayPolicy;
     }
 
-    /* renamed from: com.android.systemui.doze.DozePauser$1 */
+    /* renamed from: com.android.systemui.doze.DozePauser$1  reason: invalid class name */
     static /* synthetic */ class AnonymousClass1 {
         static final /* synthetic */ int[] $SwitchMap$com$android$systemui$doze$DozeMachine$State;
 
@@ -46,8 +46,8 @@ public class DozePauser implements DozeMachine.Part {
         }
     }
 
-    /* access modifiers changed from: public */
-    private void onTimeout() {
+    /* access modifiers changed from: private */
+    public void onTimeout() {
         this.mMachine.requestState(DozeMachine.State.DOZE_AOD_PAUSED);
     }
 }

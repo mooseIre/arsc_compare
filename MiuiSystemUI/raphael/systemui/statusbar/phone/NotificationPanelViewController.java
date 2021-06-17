@@ -1399,13 +1399,9 @@ public class NotificationPanelViewController extends PanelViewController {
     public void onQsExpansionStarted(int i) {
         cancelQsAnimation();
         cancelHeightAnimator();
-        float f = this.mQsExpansionHeight - ((float) i);
-        setQsExpansion(f);
+        setQsExpansion(this.mQsExpansionHeight - ((float) i));
         requestPanelHeightUpdate();
         this.mNotificationStackScroller.checkSnoozeLeavebehind();
-        if (f == 0.0f) {
-            this.mStatusBar.requestFaceAuth();
-        }
     }
 
     /* access modifiers changed from: protected */

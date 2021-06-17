@@ -8,7 +8,9 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -140,6 +142,9 @@ public class MiuiBatteryMeterView extends LinearLayout implements BatteryControl
                 MiuiBatteryMeterView.this.update();
             }
         };
+        if (!Looper.getMainLooper().isCurrentThread()) {
+            Log.e("MiuiBatteryMeterView", "MiuiBatteryMeterView: \n " + Log.getStackTraceString(new Throwable()));
+        }
         this.mContext = context;
         initMiuiView();
     }

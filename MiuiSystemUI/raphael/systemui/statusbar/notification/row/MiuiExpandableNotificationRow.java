@@ -505,10 +505,9 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
             String str = this.TAG;
             Log.d(str, "animateTouchScale scale=" + f + ", changing=" + isGroupExpansionChanging());
         }
-        RowAnimationUtils.INSTANCE.startTouchAnimationIfNeed(this, f);
+        RowAnimationUtils.startTouchAnimationIfNeed(this, f);
     }
 
-    /* access modifiers changed from: protected */
     @Override // com.android.systemui.statusbar.notification.row.ActivatableNotificationView
     public void startActivateAnimation(boolean z) {
         Interpolator interpolator;

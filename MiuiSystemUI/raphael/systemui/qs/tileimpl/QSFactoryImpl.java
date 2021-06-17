@@ -27,6 +27,7 @@ import com.android.systemui.qs.tiles.RotationLockTile;
 import com.android.systemui.qs.tiles.ScreenRecordTile;
 import com.android.systemui.qs.tiles.UiModeNightTile;
 import com.android.systemui.qs.tiles.UserTile;
+import com.android.systemui.qs.tiles.VoWifiTile;
 import com.android.systemui.qs.tiles.WifiTile;
 import com.android.systemui.qs.tiles.WorkModeTile;
 import com.android.systemui.util.leak.GarbageMonitor;
@@ -200,6 +201,18 @@ public class QSFactoryImpl implements QSFactory {
                     break;
                 }
                 break;
+            case 642216099:
+                if (str.equals("vowifi1")) {
+                    c = 19;
+                    break;
+                }
+                break;
+            case 642216100:
+                if (str.equals("vowifi2")) {
+                    c = 20;
+                    break;
+                }
+                break;
             case 1099603663:
                 if (str.equals("hotspot")) {
                     c = 11;
@@ -252,6 +265,10 @@ public class QSFactoryImpl implements QSFactory {
                 return this.mUiModeNightTileProvider.get();
             case 18:
                 return this.mScreenRecordTileProvider.get();
+            case 19:
+                return new VoWifiTile(this.mQsHostLazy.get(), 0);
+            case 20:
+                return new VoWifiTile(this.mQsHostLazy.get(), 1);
             default:
                 if (str.startsWith("custom(")) {
                     return CustomTile.create(this.mQsHostLazy.get(), str, this.mQsHostLazy.get().getUserContext());

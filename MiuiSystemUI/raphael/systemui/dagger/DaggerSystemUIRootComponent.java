@@ -88,6 +88,8 @@ import com.android.keyguard.injector.KeyguardViewMediatorInjector;
 import com.android.keyguard.injector.KeyguardViewMediatorInjector_Factory;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.magazine.LockScreenMagazineController_Factory;
+import com.android.keyguard.negative.MiuiQuickConnectController;
+import com.android.keyguard.negative.MiuiQuickConnectController_Factory;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl;
 import com.android.keyguard.wallpaper.MiuiKeyguardWallpaperControllerImpl_Factory;
 import com.android.keyguard.wallpaper.MiuiWallpaperClient;
@@ -919,6 +921,8 @@ import com.miui.systemui.statusbar.phone.SmartDarkObserver_Factory;
 import com.miui.systemui.util.GestureObserver_Factory;
 import com.miui.systemui.util.HapticFeedBackImpl;
 import com.miui.systemui.util.HapticFeedBackImpl_Factory;
+import com.miui.systemui.util.MiuiActivityUtil;
+import com.miui.systemui.util.MiuiActivityUtil_Factory;
 import com.miui.systemui.util.PackageEventController;
 import com.miui.systemui.util.PackageEventController_Factory;
 import dagger.Lazy;
@@ -1144,6 +1148,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     private Provider<MemoryMonitor> memoryMonitorProvider;
     private GarbageMonitor_MemoryTile_Factory memoryTileProvider;
     private Provider<MessageMonitor> messageMonitorProvider;
+    private Provider<MiuiActivityUtil> miuiActivityUtilProvider;
     private MiuiAirplaneModeTile_Factory miuiAirplaneModeTileProvider;
     private Provider<MiuiAlarmControllerImpl> miuiAlarmControllerImplProvider;
     private MiuiCellularTile_Factory miuiCellularTileProvider;
@@ -1169,6 +1174,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
     private Provider<MiuiNotificationShadePolicy> miuiNotificationShadePolicyProvider;
     private MiuiPhoneStatusBarPolicy_Factory miuiPhoneStatusBarPolicyProvider;
     private Provider<MiuiQSTileHostInjector> miuiQSTileHostInjectorProvider;
+    private Provider<MiuiQuickConnectController> miuiQuickConnectControllerProvider;
     private Provider<MiuiRecentProxy> miuiRecentProxyProvider;
     private Provider<MiuiStatusBarConfigurationListener> miuiStatusBarConfigurationListenerProvider;
     private Provider<MiuiStatusBarPromptController> miuiStatusBarPromptControllerProvider;
@@ -2212,9 +2218,10 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.oLEDScreenHelperProvider = DoubleCheck.provider(OLEDScreenHelper_Factory.create(this.provideContextProvider, this.screenLifecycleProvider, this.provideConfigurationControllerProvider, this.dumpManagerProvider, this.provideNavigationBarControllerProvider, this.superStatusBarViewFactoryProvider));
         this.miuiChargeManagerProvider = DoubleCheck.provider(MiuiChargeManager_Factory.create(this.provideContextProvider));
         this.miuiFaceUnlockManagerProvider = DoubleCheck.provider(MiuiFaceUnlockManager_Factory.create(this.provideContextProvider));
-        Provider<MiuiStatusBarConfigurationListener> provider15 = DoubleCheck.provider(MiuiStatusBarConfigurationListener_Factory.create(this.provideConfigurationControllerProvider, this.provideContextProvider));
-        this.miuiStatusBarConfigurationListenerProvider = provider15;
-        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationFilterControllerProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.performanceToolsProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, this.codeBlueServiceProvider, this.oLEDScreenHelperProvider, this.miuiChargeManagerProvider, this.provideNotificationEntryManagerProvider, this.miuiFaceUnlockManagerProvider, provider15));
+        this.miuiStatusBarConfigurationListenerProvider = DoubleCheck.provider(MiuiStatusBarConfigurationListener_Factory.create(this.provideConfigurationControllerProvider, this.provideContextProvider));
+        Provider<MiuiActivityUtil> provider15 = DoubleCheck.provider(MiuiActivityUtil_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider));
+        this.miuiActivityUtilProvider = provider15;
+        this.miuiVendorServicesProvider = DoubleCheck.provider(MiuiVendorServices_Factory.create(this.provideContextProvider, this.miuiWallpaperZoomOutServiceProvider, this.miuiHeadsUpPolicyProvider, this.miuiGxzwPolicyProvider, this.notificationFilterControllerProvider, this.notificationAlertControllerProvider, this.notificationDynamicFpsControllerProvider, this.notificationCountLimitPolicyProvider, this.miuiNotificationShadePolicyProvider, this.miuiRecentProxyProvider, this.orientationPolicyProvider, this.performanceToolsProvider, this.notificationPanelNavigationBarCoordinatorProvider, this.headsetPolicyProvider, this.miuiFullScreenGestureProxyProvider, this.codeBlueServiceProvider, this.oLEDScreenHelperProvider, this.miuiChargeManagerProvider, this.provideNotificationEntryManagerProvider, this.miuiFaceUnlockManagerProvider, this.miuiStatusBarConfigurationListenerProvider, provider15));
         MapProviderFactory.Builder builder2 = MapProviderFactory.builder(23);
         builder2.put(AuthController.class, this.authControllerProvider);
         builder2.put(Divider.class, this.provideDividerProvider);
@@ -2279,6 +2286,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.provideContextProvider));
         this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.provideContextProvider));
+        this.miuiQuickConnectControllerProvider = DoubleCheck.provider(MiuiQuickConnectController_Factory.create(this.provideContextProvider));
         this.miuiGxzwManagerProvider = DoubleCheck.provider(MiuiGxzwManager_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.miuiFastUnlockControllerProvider = DoubleCheck.provider(MiuiFastUnlockController_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider));
         this.keyguardIndicationInjectorProvider = DoubleCheck.provider(KeyguardIndicationInjector_Factory.create(this.provideContextProvider));
@@ -2290,11 +2298,11 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         Provider<MiuiKeyguardWallpaperControllerImpl> provider18 = DoubleCheck.provider(MiuiKeyguardWallpaperControllerImpl_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider));
         this.miuiKeyguardWallpaperControllerImplProvider = provider18;
         this.keyguardNegative1PageInjectorProvider = DoubleCheck.provider(KeyguardNegative1PageInjector_Factory.create(this.provideContextProvider, provider18));
-        this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
-        this.keyguardViewMediatorInjectorProvider = DoubleCheck.provider(KeyguardViewMediatorInjector_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider));
     }
 
     private void initialize6(Builder builder) {
+        this.keyguardSensorInjectorProvider = DoubleCheck.provider(KeyguardSensorInjector_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider, this.providePowerManagerProvider, this.keyguardUpdateMonitorProvider, this.wakefulnessLifecycleProvider));
+        this.keyguardViewMediatorInjectorProvider = DoubleCheck.provider(KeyguardViewMediatorInjector_Factory.create(this.provideContextProvider, this.providesBroadcastDispatcherProvider, this.statusBarKeyguardViewManagerProvider));
         this.smartDarkObserverProvider = DoubleCheck.provider(SmartDarkObserver_Factory.create(this.provideContextProvider, this.provideMainHandlerProvider, this.provideBgHandlerProvider));
         this.miuiStatusBarPromptControllerProvider = DoubleCheck.provider(MiuiStatusBarPromptController_Factory.create(this.provideContextProvider));
         this.networkSpeedControllerProvider = DoubleCheck.provider(NetworkSpeedController_Factory.create(this.provideContextProvider, this.provideBgLooperProvider));
@@ -2342,7 +2350,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         MediaHost_Factory create2 = MediaHost_Factory.create(MediaHost_MediaHostStateHolder_Factory.create(), this.mediaHierarchyManagerProvider, this.mediaDataFilterProvider, this.mediaHostStatesManagerProvider);
         this.mediaHostProvider = create2;
         this.miuiKeyguardMediaControllerProvider = DoubleCheck.provider(MiuiKeyguardMediaController_Factory.create(create2, this.keyguardBypassControllerProvider, this.statusBarStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
-        this.zenModeViewControllerProvider = DoubleCheck.provider(ZenModeViewController_Factory.create(this.zenModeControllerImplProvider, this.keyguardBypassControllerProvider, this.statusBarStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider));
+        this.zenModeViewControllerProvider = DoubleCheck.provider(ZenModeViewController_Factory.create(this.zenModeControllerImplProvider, this.keyguardBypassControllerProvider, this.statusBarStateControllerImplProvider, this.notificationLockscreenUserManagerImplProvider, this.notificationRowComponentBuilderProvider));
         Provider<PeopleHubDataSourceImpl> provider10 = DoubleCheck.provider(PeopleHubDataSourceImpl_Factory.create(this.provideNotificationEntryManagerProvider, this.notificationPersonExtractorPluginBoundaryProvider, this.provideUserManagerProvider, this.provideLauncherAppsProvider, this.providePackageManagerProvider, this.provideContextProvider, this.provideNotificationListenerProvider, this.provideBackgroundExecutorProvider, this.provideMainExecutorProvider, this.notificationLockscreenUserManagerImplProvider, this.peopleNotificationIdentifierImplProvider));
         this.peopleHubDataSourceImplProvider = provider10;
         Provider<PeopleHubViewModelFactoryDataSourceImpl> provider11 = DoubleCheck.provider(PeopleHubViewModelFactoryDataSourceImpl_Factory.create(this.activityStarterDelegateProvider, provider10));
@@ -2655,6 +2663,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             Dependency_MembersInjector.injectMContentObserver(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.settingsObserverImplProvider));
             Dependency_MembersInjector.injectMKeyguardIndicationController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.keyguardIndicationControllerProvider));
             Dependency_MembersInjector.injectMLockScreenMagazineController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.lockScreenMagazineControllerProvider));
+            Dependency_MembersInjector.injectMMiuiQuickConnectController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiQuickConnectControllerProvider));
             Dependency_MembersInjector.injectMMiuiFaceUnlockManager(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiFaceUnlockManagerProvider));
             Dependency_MembersInjector.injectMMiuiGxzwManager(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiGxzwManagerProvider));
             Dependency_MembersInjector.injectMMiuiFastUnlockController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiFastUnlockControllerProvider));
@@ -2702,6 +2711,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
             Dependency_MembersInjector.injectMSystemUIStat(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.systemUIStatProvider));
             Dependency_MembersInjector.injectMPhoneSignalController(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.phoneSignalControllerImplProvider));
             Dependency_MembersInjector.injectMGestureObserver(dependency, DoubleCheck.lazy(this.gestureObserverProvider));
+            Dependency_MembersInjector.injectMMiuiActivityUtil(dependency, DoubleCheck.lazy(DaggerSystemUIRootComponent.this.miuiActivityUtilProvider));
             return dependency;
         }
     }

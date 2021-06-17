@@ -11,6 +11,6 @@ final class ControlActionCoordinatorImpl$shouldRunAction$1 implements Runnable {
     }
 
     public final void run() {
-        ControlActionCoordinatorImpl.access$getActionsInProgress$p(this.this$0).remove(this.$controlId);
+        this.this$0.actionsInProgress.remove(this.$controlId);
     }
 }

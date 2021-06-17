@@ -61,12 +61,13 @@ public final class MiuiNotificationSwipeCallback extends NotificationCallbackWra
 
     @Override // com.android.systemui.SwipeHelper.Callback, com.android.systemui.statusbar.notification.stack.NotificationCallbackWrapper
     public void onChildDismissed(@Nullable View view) {
+        if (view instanceof ZenModeView) {
+            this.zenModeViewController.onSwipeToDismiss();
+            return;
+        }
         super.onChildDismissed(view);
         if (view instanceof MiuiMediaHeaderView) {
             this.mediaManager.onSwipeToDismiss();
-        }
-        if (view instanceof ZenModeView) {
-            this.zenModeViewController.onSwipeToDismiss();
         }
     }
 }

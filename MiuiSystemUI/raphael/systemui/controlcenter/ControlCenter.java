@@ -14,6 +14,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.SystemUI;
@@ -30,6 +31,7 @@ import com.android.systemui.controlcenter.policy.ControlCenterActivityStarter;
 import com.android.systemui.controlcenter.policy.SuperSaveModeController;
 import com.android.systemui.controlcenter.utils.Constants;
 import com.android.systemui.plugins.ActivityStarter;
+import com.android.systemui.qs.DynamicVowifiController;
 import com.android.systemui.qs.QSTileHost;
 import com.android.systemui.statusbar.CommandQueue;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -54,6 +56,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
     private int mDisabled2 = 0;
     protected Display mDisplay;
     private int mDisplayId;
+    private DynamicVowifiController mDynamicVowifiController;
     private ExpandInfoController mExpandInfoController;
     private Handler mHandler = new H();
     private InjectionInflationController mInjectionInflationController;
@@ -103,6 +106,11 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
         this.mDisplayId = defaultDisplay.getDisplayId();
         this.mConfiguration = new Configuration(this.mContext.getResources().getConfiguration());
         this.mControlsPluginManager.addControlsPluginListener();
+        if (this.mContext.getResources().getBoolean(C0010R$bool.show_vowifi_qs)) {
+            DynamicVowifiController dynamicVowifiController = new DynamicVowifiController(this.mContext);
+            this.mDynamicVowifiController = dynamicVowifiController;
+            dynamicVowifiController.registerReceiver();
+        }
     }
 
     /* access modifiers changed from: protected */

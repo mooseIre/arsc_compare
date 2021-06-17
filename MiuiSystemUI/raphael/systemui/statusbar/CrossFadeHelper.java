@@ -7,10 +7,6 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.Interpolators;
 
 public class CrossFadeHelper {
-    public static void fadeOut(View view) {
-        fadeOut(view, (Runnable) null);
-    }
-
     public static void fadeOut(View view, Runnable runnable) {
         fadeOut(view, 210, 0, runnable);
     }

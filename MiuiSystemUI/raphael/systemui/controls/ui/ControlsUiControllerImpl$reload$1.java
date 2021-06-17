@@ -20,7 +20,7 @@ public final class ControlsUiControllerImpl$reload$1 extends AnimatorListenerAda
 
     public void onAnimationEnd(@NotNull Animator animator) {
         Intrinsics.checkParameterIsNotNull(animator, "animation");
-        this.this$0.controlViewsById.clear();
+        ControlsUiControllerImpl.access$getControlViewsById$p(this.this$0).clear();
         this.this$0.controlsById.clear();
         ControlsUiControllerImpl controlsUiControllerImpl = this.this$0;
         controlsUiControllerImpl.show(this.$parent, ControlsUiControllerImpl.access$getDismissGlobalActions$p(controlsUiControllerImpl));

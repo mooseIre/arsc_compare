@@ -229,7 +229,6 @@ public abstract class ActivatableNotificationView extends ExpandableOutlineView 
         return this.mActivated;
     }
 
-    /* access modifiers changed from: package-private */
     public void startActivateAnimation(boolean z) {
         Animator animator;
         Interpolator interpolator;

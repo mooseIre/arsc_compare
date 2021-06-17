@@ -17,6 +17,7 @@ import com.android.systemui.statusbar.policy.MiuiStatusBarConfigurationListener;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
 import com.miui.systemui.display.OLEDScreenHelper;
+import com.miui.systemui.util.MiuiActivityUtil;
 
 public final class MiuiVendorServices_MembersInjector {
     public static void injectMWallpaperZoomOutService(MiuiVendorServices miuiVendorServices, MiuiWallpaperZoomOutService miuiWallpaperZoomOutService) {
@@ -97,5 +98,9 @@ public final class MiuiVendorServices_MembersInjector {
 
     public static void injectMMiuiStatusBarConfigurationListener(MiuiVendorServices miuiVendorServices, MiuiStatusBarConfigurationListener miuiStatusBarConfigurationListener) {
         miuiVendorServices.mMiuiStatusBarConfigurationListener = miuiStatusBarConfigurationListener;
+    }
+
+    public static void injectMMiuiActivityUtil(MiuiVendorServices miuiVendorServices, MiuiActivityUtil miuiActivityUtil) {
+        miuiVendorServices.mMiuiActivityUtil = miuiActivityUtil;
     }
 }

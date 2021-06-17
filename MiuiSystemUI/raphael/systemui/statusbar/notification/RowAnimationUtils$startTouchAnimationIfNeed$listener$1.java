@@ -1,6 +1,6 @@
 package com.android.systemui.statusbar.notification;
 
-import com.android.systemui.statusbar.notification.row.ExpandableNotificationRow;
+import com.android.systemui.statusbar.notification.row.ExpandableView;
 import com.android.systemui.statusbar.notification.row.MiuiExpandableNotificationRow;
 import com.android.systemui.statusbar.notification.stack.ExpandableViewState;
 import com.miui.systemui.animation.AutoCleanFloatTransitionListener;
@@ -11,15 +11,15 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: RowAnimationUtils.kt */
 public final class RowAnimationUtils$startTouchAnimationIfNeed$listener$1 extends AutoCleanFloatTransitionListener {
-    final /* synthetic */ ExpandableNotificationRow $row;
+    final /* synthetic */ ExpandableView $row;
     final /* synthetic */ float $scale;
     final /* synthetic */ String $scaleAnimName;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    RowAnimationUtils$startTouchAnimationIfNeed$listener$1(float f, ExpandableNotificationRow expandableNotificationRow, String str, int i, Object obj) {
+    RowAnimationUtils$startTouchAnimationIfNeed$listener$1(float f, ExpandableView expandableView, String str, int i, Object obj) {
         super(obj);
         this.$scale = f;
-        this.$row = expandableNotificationRow;
+        this.$row = expandableView;
         this.$scaleAnimName = str;
     }
 
@@ -54,9 +54,9 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$listener$1 extend
         if (this.$scale == 1.0f) {
             RowAnimationUtils.access$setTouchAnimatingState(RowAnimationUtils.INSTANCE, this.$row, false);
         }
-        ExpandableNotificationRow expandableNotificationRow = this.$row;
-        if (expandableNotificationRow instanceof MiuiExpandableNotificationRow) {
-            ((MiuiExpandableNotificationRow) expandableNotificationRow).updateBackground();
+        ExpandableView expandableView = this.$row;
+        if (expandableView instanceof MiuiExpandableNotificationRow) {
+            ((MiuiExpandableNotificationRow) expandableView).updateBackground();
         }
     }
 

@@ -1,31 +1,26 @@
 package com.android.systemui.statusbar.notification.policy;
 
-import android.app.ActivityManager;
 import android.app.ActivityOptions;
 import android.app.ActivityOptionsInjector;
 import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.os.Handler;
-import android.os.Looper;
-import android.provider.Settings;
 import android.util.Log;
 import android.util.MiuiMultiWindowAdapter;
 import android.util.MiuiMultiWindowUtils;
-import com.android.systemui.shared.system.ActivityManagerWrapper;
-import com.android.systemui.shared.system.TaskStackChangeListener;
+import com.android.systemui.Dependency;
 import com.android.systemui.stackdivider.Divider;
 import com.android.systemui.statusbar.notification.NotificationSettingsManager;
 import com.android.systemui.statusbar.notification.modal.ModalController;
 import com.android.systemui.statusbar.phone.HeadsUpManagerPhone;
 import com.android.systemui.statusbar.policy.OnHeadsUpChangedListener;
+import com.miui.systemui.util.MiuiActivityUtil;
 import java.util.ArrayList;
 import java.util.function.Consumer;
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
-import kotlin.jvm.internal.DefaultConstructorMarker;
 import kotlin.jvm.internal.Intrinsics;
 import miui.process.ProcessManager;
 import org.jetbrains.annotations.NotNull;
@@ -33,18 +28,15 @@ import org.jetbrains.annotations.Nullable;
 
 /* compiled from: AppMiniWindowManager.kt */
 public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
-    public static final Companion Companion = new Companion(null);
     private static final boolean HAS_MINI_WINDOW_FEATURE = MiuiMultiWindowAdapter.hasSmallFreeformFeature();
     private final Context context;
-    private final ActivityManagerWrapper mActivityManager = ActivityManagerWrapper.getInstance();
-    private final Consumer<Boolean> mDockedStackExistsListener;
-    private boolean mExpectingTaskStackChanged;
+    private final Consumer<Boolean> mDockedStackExistsListener = new AppMiniWindowManager$mDockedStackExistsListener$1(this);
     private boolean mHasSmallWindow;
     private final HeadsUpManagerPhone mHeadsUpManager;
     private boolean mInDockedStackMode;
     private boolean mInModalMode;
     private boolean mInPinnedMode;
-    private final ArrayList<WindowForegroundListener> mOneshotForegroundListeners;
+    private final ArrayList<WindowForegroundListener> mOneshotForegroundListeners = new ArrayList<>();
     private boolean mRegisterForegroundListener;
     private ComponentName mTopActivity;
     private String mTopWindowPackage;
@@ -61,13 +53,10 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
         this.context = context2;
         this.notificationSettingsManager = notificationSettingsManager2;
         this.mHeadsUpManager = headsUpManagerPhone;
-        this.mOneshotForegroundListeners = new ArrayList<>();
-        this.mDockedStackExistsListener = new AppMiniWindowManager$mDockedStackExistsListener$1(this);
-        ActivityManagerWrapper activityManagerWrapper = this.mActivityManager;
-        Intrinsics.checkExpressionValueIsNotNull(activityManagerWrapper, "mActivityManager");
-        ActivityManager.RunningTaskInfo runningTask = activityManagerWrapper.getRunningTask();
-        this.mTopActivity = runningTask != null ? runningTask.topActivity : null;
-        this.mActivityManager.registerTaskStackListener(new TaskStackChangeListener(this) {
+        Object obj = Dependency.get(MiuiActivityUtil.class);
+        Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(MiuiActivityUtil::class.java)");
+        this.mTopActivity = ((MiuiActivityUtil) obj).getTopActivity();
+        ((MiuiActivityUtil) Dependency.get(MiuiActivityUtil.class)).addTopActivityMayChangeListener(new MiuiActivityUtil.TopActivityMayChangeListener(this) {
             /* class com.android.systemui.statusbar.notification.policy.AppMiniWindowManager.AnonymousClass1 */
             final /* synthetic */ AppMiniWindowManager this$0;
 
@@ -75,56 +64,19 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
                 this.this$0 = r1;
             }
 
-            @Override // com.android.systemui.shared.system.TaskStackChangeListener
-            public void onTaskMovedToFront(@Nullable ActivityManager.RunningTaskInfo runningTaskInfo) {
-                super.onTaskMovedToFront(runningTaskInfo);
-                this.this$0.mTopActivity = runningTaskInfo != null ? runningTaskInfo.topActivity : null;
+            @Override // com.miui.systemui.util.MiuiActivityUtil.TopActivityMayChangeListener
+            public void onTopActivityMayChanged(@Nullable ComponentName componentName, boolean z) {
+                this.this$0.mTopActivity = componentName;
+                this.this$0.mHasSmallWindow = z;
                 if (this.this$0.mHeadsUpManager.hasPinnedHeadsUp()) {
-                    handler.post(new AppMiniWindowManager$1$onTaskMovedToFront$1(this));
+                    handler.post(new AppMiniWindowManager$1$onTopActivityMayChanged$1(this));
                 }
-                this.this$0.mExpectingTaskStackChanged = true;
-            }
-
-            @Override // com.android.systemui.shared.system.TaskStackChangeListener
-            public void onTaskStackChanged() {
-                super.onTaskStackChanged();
-                if (this.this$0.mExpectingTaskStackChanged) {
-                    this.this$0.mExpectingTaskStackChanged = false;
-                    return;
-                }
-                AppMiniWindowManager appMiniWindowManager = this.this$0;
-                ActivityManagerWrapper activityManagerWrapper = appMiniWindowManager.mActivityManager;
-                Intrinsics.checkExpressionValueIsNotNull(activityManagerWrapper, "mActivityManager");
-                ActivityManager.RunningTaskInfo runningTask = activityManagerWrapper.getRunningTask();
-                appMiniWindowManager.mTopActivity = runningTask != null ? runningTask.topActivity : null;
-                Log.d("AppMiniWindowManager", "topActivity updated in onTaskStackChanged");
-            }
-        });
-        this.context.getContentResolver().registerContentObserver(Settings.Secure.getUriFor("freeform_window_state"), false, new ContentObserver(this, new Handler(Looper.getMainLooper())) {
-            /* class com.android.systemui.statusbar.notification.policy.AppMiniWindowManager.AnonymousClass2 */
-            final /* synthetic */ AppMiniWindowManager this$0;
-
-            {
-                this.this$0 = r1;
-            }
-
-            public void onChange(boolean z) {
-                super.onChange(z);
-                boolean isSmallWindowActivated = AppMiniWindowManager.Companion.isSmallWindowActivated(this.this$0.context);
-                if (!isSmallWindowActivated && this.this$0.mHasSmallWindow) {
-                    AppMiniWindowManager appMiniWindowManager = this.this$0;
-                    ActivityManagerWrapper activityManagerWrapper = appMiniWindowManager.mActivityManager;
-                    Intrinsics.checkExpressionValueIsNotNull(activityManagerWrapper, "mActivityManager");
-                    ActivityManager.RunningTaskInfo runningTask = activityManagerWrapper.getRunningTask();
-                    appMiniWindowManager.mTopActivity = runningTask != null ? runningTask.topActivity : null;
-                }
-                this.this$0.mHasSmallWindow = isSmallWindowActivated;
             }
         });
         divider.registerInSplitScreenListener(this.mDockedStackExistsListener);
         headsUpManagerPhone.addListener(this);
         modalController.addOnModalChangeListener(new ModalController.OnModalChangeListener(this) {
-            /* class com.android.systemui.statusbar.notification.policy.AppMiniWindowManager.AnonymousClass3 */
+            /* class com.android.systemui.statusbar.notification.policy.AppMiniWindowManager.AnonymousClass2 */
             final /* synthetic */ AppMiniWindowManager this$0;
 
             /* JADX WARN: Incorrect args count in method signature: ()V */
@@ -139,21 +91,6 @@ public final class AppMiniWindowManager implements OnHeadsUpChangedListener {
             }
         });
         this.mWindowListener = new AppMiniWindowManager$mWindowListener$1(this, handler);
-    }
-
-    /* compiled from: AppMiniWindowManager.kt */
-    public static final class Companion {
-        private Companion() {
-        }
-
-        public /* synthetic */ Companion(DefaultConstructorMarker defaultConstructorMarker) {
-            this();
-        }
-
-        public final boolean isSmallWindowActivated(@NotNull Context context) {
-            Intrinsics.checkParameterIsNotNull(context, "context");
-            return Settings.Secure.getInt(context.getContentResolver(), "freeform_window_state", -1) != -1;
-        }
     }
 
     public final boolean canNotificationSlide(@Nullable String str, @Nullable PendingIntent pendingIntent) {

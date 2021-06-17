@@ -108,6 +108,19 @@ public class PipTouchHandler {
     private final PipTouchState mTouchState;
     private final WindowManager mWindowManager;
 
+    public static /* synthetic */ void lambda$1nY3kLe318Fm3UtIAbDmSK80h7w(PipTouchHandler pipTouchHandler) {
+        pipTouchHandler.onAccessibilityShowMenu();
+    }
+
+    public static /* synthetic */ boolean lambda$A78OVgVs8H_2SG6WUxzMSclOdX0(PipTouchHandler pipTouchHandler, InputEvent inputEvent) {
+        return pipTouchHandler.handleTouchEvent(inputEvent);
+    }
+
+    /* renamed from: lambda$NVpciZTELe-GnxXPZeY5rYMmqJQ  reason: not valid java name */
+    public static /* synthetic */ void m18lambda$NVpciZTELeGnxXPZeY5rYMmqJQ(PipTouchHandler pipTouchHandler, boolean z) {
+        pipTouchHandler.onRegistrationChanged(z);
+    }
+
     private class PipMenuListener implements PipMenuActivityController.Listener {
         private PipMenuListener() {
         }
@@ -186,7 +199,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.shared.system.InputConsumerController.InputListener
             public final boolean onInputEvent(InputEvent inputEvent) {
-                return PipTouchHandler.this.handleTouchEvent(inputEvent);
+                return PipTouchHandler.lambda$A78OVgVs8H_2SG6WUxzMSclOdX0(PipTouchHandler.this, inputEvent);
             }
         });
         inputConsumerController.setRegistrationListener(new InputConsumerController.RegistrationListener() {
@@ -194,7 +207,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.shared.system.InputConsumerController.RegistrationListener
             public final void onRegistrationChanged(boolean z) {
-                PipTouchHandler.this.onRegistrationChanged(z);
+                PipTouchHandler.m18lambda$NVpciZTELeGnxXPZeY5rYMmqJQ(PipTouchHandler.this, z);
             }
         });
         this.mPipBoundsHandler = pipBoundsHandler;
@@ -204,7 +217,7 @@ public class PipTouchHandler {
 
             @Override // com.android.systemui.pip.phone.PipAccessibilityInteractionConnection.AccessibilityCallbacks
             public final void onAccessibilityShowMenu() {
-                PipTouchHandler.this.onAccessibilityShowMenu();
+                PipTouchHandler.lambda$1nY3kLe318Fm3UtIAbDmSK80h7w(PipTouchHandler.this);
             }
         }, new Runnable() {
             /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$uINUOEMRLade2qxAeU4HH41XrU */
@@ -469,7 +482,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    public void showDismissTargetMaybe() {
+    private void showDismissTargetMaybe() {
         createOrUpdateDismissTarget();
         if (this.mTargetViewContainer.getVisibility() != 0) {
             this.mTargetView.setTranslationY((float) this.mTargetViewContainer.getHeight());
@@ -512,25 +525,22 @@ public class PipTouchHandler {
         }
     }
 
-    /* access modifiers changed from: private */
-    public void onRegistrationChanged(boolean z) {
+    private void onRegistrationChanged(boolean z) {
         this.mAccessibilityManager.setPictureInPictureActionReplacingConnection(z ? this.mConnection : null);
         if (!z && this.mTouchState.isUserInteracting()) {
             cleanUpDismissTarget();
         }
     }
 
-    /* access modifiers changed from: private */
-    public void onAccessibilityShowMenu() {
+    private void onAccessibilityShowMenu() {
         this.mMenuController.showMenu(2, this.mMotionHelper.getBounds(), true, willResizeMenu(), shouldShowResizeHandle());
     }
 
-    /* access modifiers changed from: private */
     /* JADX WARNING: Code restructure failed: missing block: B:57:0x00dc, code lost:
         if (r11.mGesture.onUp(r11.mTouchState) != false) goto L_0x00fe;
      */
     /* Code decompiled incorrectly, please refer to instructions dump. */
-    public boolean handleTouchEvent(android.view.InputEvent r12) {
+    private boolean handleTouchEvent(android.view.InputEvent r12) {
         /*
         // Method dump skipped, instructions count: 282
         */
@@ -549,7 +559,7 @@ public class PipTouchHandler {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    public void updateDismissFraction() {
+    private void updateDismissFraction() {
         if (this.mMenuController != null && !this.mIsImeShowing) {
             Rect bounds = this.mMotionHelper.getBounds();
             float f = (float) this.mInsetBounds.bottom;
@@ -645,6 +655,10 @@ public class PipTouchHandler {
         private boolean mShouldHideMenuAfterFling;
         private final Point mStartPosition;
 
+        public static /* synthetic */ void lambda$c8YgJLEypMoVYe3YjylatK650zk(DefaultPipTouchGesture defaultPipTouchGesture) {
+            defaultPipTouchGesture.flingEndAction();
+        }
+
         private DefaultPipTouchGesture() {
             this.mStartPosition = new Point();
             this.mDelta = new PointF();
@@ -728,13 +742,13 @@ public class PipTouchHandler {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$K8tFYcJKtB3Bkuu5piDq01YhA */
 
                     public final void run() {
-                        PipTouchHandler.this.updateDismissFraction();
+                        PipTouchHandler.DefaultPipTouchGesture.lambda$onUp$0(PipTouchHandler.this);
                     }
                 }, new Runnable() {
                     /* class com.android.systemui.pip.phone.$$Lambda$PipTouchHandler$DefaultPipTouchGesture$c8YgJLEypMoVYe3YjylatK650zk */
 
                     public final void run() {
-                        PipTouchHandler.DefaultPipTouchGesture.this.flingEndAction();
+                        PipTouchHandler.DefaultPipTouchGesture.lambda$c8YgJLEypMoVYe3YjylatK650zk(PipTouchHandler.DefaultPipTouchGesture.this);
                     }
                 });
             } else if (PipTouchHandler.this.mTouchState.isDoubleTap()) {
@@ -750,8 +764,11 @@ public class PipTouchHandler {
             return true;
         }
 
-        /* access modifiers changed from: private */
-        public void flingEndAction() {
+        static /* synthetic */ void lambda$onUp$0(PipTouchHandler pipTouchHandler) {
+            pipTouchHandler.updateDismissFraction();
+        }
+
+        private void flingEndAction() {
             if (this.mShouldHideMenuAfterFling) {
                 PipTouchHandler.this.mMenuController.hideMenu();
             }
@@ -759,7 +776,8 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    public void updateMovementBounds() {
+    /* access modifiers changed from: public */
+    private void updateMovementBounds() {
         int i = 0;
         this.mSnapAlgorithm.getMovementBounds(this.mMotionHelper.getBounds(), this.mInsetBounds, this.mMovementBounds, this.mIsImeShowing ? this.mImeHeight : 0);
         this.mMotionHelper.setCurrentMovementBounds(this.mMovementBounds);
@@ -772,7 +790,8 @@ public class PipTouchHandler {
     }
 
     /* access modifiers changed from: private */
-    public Rect getMovementBounds(Rect rect) {
+    /* access modifiers changed from: public */
+    private Rect getMovementBounds(Rect rect) {
         Rect rect2 = new Rect();
         this.mSnapAlgorithm.getMovementBounds(rect, this.mInsetBounds, rect2, this.mIsImeShowing ? this.mImeHeight : 0);
         return rect2;

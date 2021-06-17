@@ -491,17 +491,6 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         this.mChangingViewPositions = z;
     }
 
-    public void setDozing(boolean z, boolean z2, long j) {
-        this.mDozing = z;
-        this.mDisallowNextAnimation |= !z2;
-        for (int i = 0; i < getChildCount(); i++) {
-            View childAt = getChildAt(i);
-            if (childAt instanceof StatusBarIconView) {
-                ((StatusBarIconView) childAt).setDozing(z, z2, j);
-            }
-        }
-    }
-
     public IconState getIconState(StatusBarIconView statusBarIconView) {
         return this.mIconStates.get(statusBarIconView);
     }
@@ -569,10 +558,6 @@ public class NotificationIconContainer extends AlphaOptimizedFrameLayout {
         if (z) {
             updateState();
         }
-    }
-
-    public void setOnLockScreen(boolean z) {
-        this.mOnLockScreen = z;
     }
 
     public class IconState extends ViewState {

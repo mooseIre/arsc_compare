@@ -2388,6 +2388,8 @@ public final class R {
         public static final int show_battery_digit_full;
         public static final int show_carrier_in_status_bar_header;
         public static final int show_carrier_under_left_hole_keyguard;
+        public static final int show_vowifi_first_dialog;
+        public static final int show_vowifi_qs;
         public static final int simple_cache_enable_im_memory;
         public static final int spinner_popup_item_bg_enable_variablePadding;
         public static final int status_bar_hide_volte;
@@ -2398,6 +2400,7 @@ public final class R {
         public static final int status_bar_show_spn_when_airplane;
         public static final int support_drip_overlay;
         public static final int support_round_corner;
+        public static final int switch_vowifi_during_call;
         public static final int treat_as_land;
         public static final int use_status_bar_tint;
     }
@@ -4364,6 +4367,7 @@ public final class R {
         public static final int keyguard_indication_bottom_padding;
         public static final int keyguard_indication_margin_bottom;
         public static final int keyguard_indication_text_padding;
+        public static final int keyguard_left_view_icon_size;
         public static final int keyguard_left_view_item_margin_bottom;
         public static final int keyguard_lock_height;
         public static final int keyguard_lock_padding;
@@ -4806,6 +4810,7 @@ public final class R {
         public static final int miui_default_lock_screen_unlock_hint_text_size;
         public static final int miui_disappear_y_translation;
         public static final int miui_face_unlock_view_notch_top;
+        public static final int miui_face_unlock_view_padding;
         public static final int miui_face_unlock_view_top;
         public static final int miui_keyguard_bouncer_message_view_margin_top;
         public static final int miui_keyguard_bouncer_message_view_notch_margin_top;
@@ -5254,6 +5259,10 @@ public final class R {
         public static final int miuix_preference_item_seekbar_padding_top;
         public static final int miuix_preference_item_seekbar_parent_padding_bottom;
         public static final int miuix_preference_item_seekbar_parent_padding_top;
+        public static final int miuix_preference_main_icon_min_width;
+        public static final int miuix_preference_main_icon_padding_end;
+        public static final int miuix_preference_main_margin_end;
+        public static final int miuix_preference_main_margin_start;
         public static final int miuix_preference_normal_text_size;
         public static final int miuix_preference_right_text_size;
         public static final int miuix_preference_rv_bottom_padding;
@@ -7376,11 +7385,11 @@ public final class R {
         public static final int charge_animation_car_mode_icon;
         public static final int charge_animation_charge_icon;
         public static final int charge_animation_fire_light_icon;
-        public static final int charge_animation_particel_lightning;
+        public static final int charge_animation_lzdh_lightning;
+        public static final int charge_animation_lzdh_lightning_edge;
+        public static final int charge_animation_lzdh_lightning_inner;
+        public static final int charge_animation_lzdh_ring_glow;
         public static final int charge_animation_particle_circle_icon;
-        public static final int charge_animation_particle_lightning_edge;
-        public static final int charge_animation_particle_lightning_inner;
-        public static final int charge_animation_particle_ring_glow;
         public static final int charge_animation_rapid_charge_icon;
         public static final int charge_animation_strong_super_rapid_charge_icon;
         public static final int charge_animation_super_rapid_charge_icon;
@@ -8387,6 +8396,13 @@ public final class R {
         public static final int ic_qs_sync_on;
         public static final int ic_qs_vibrate_off;
         public static final int ic_qs_vibrate_on;
+        public static final int ic_qs_vowifi_off;
+        public static final int ic_qs_vowifi_on;
+        public static final int ic_qs_vowifi_sim1_off;
+        public static final int ic_qs_vowifi_sim1_on;
+        public static final int ic_qs_vowifi_sim2_off;
+        public static final int ic_qs_vowifi_sim2_on;
+        public static final int ic_qs_vowifi_unavailable;
         public static final int ic_qs_vpn;
         public static final int ic_qs_wifi_0;
         public static final int ic_qs_wifi_1;
@@ -8554,6 +8570,8 @@ public final class R {
         public static final int keyguard_bottom_lock_screen_magazine_img_dark;
         public static final int keyguard_bottom_remote_center_img;
         public static final int keyguard_bottom_remote_center_img_dark;
+        public static final int keyguard_bottom_xmyzl_img;
+        public static final int keyguard_bottom_xmyzl_img_dark;
         public static final int keyguard_charging_info_back_arrow_bg;
         public static final int keyguard_charging_info_back_arrow_n;
         public static final int keyguard_charging_info_back_arrow_p;
@@ -8572,7 +8590,6 @@ public final class R {
         public static final int keyguard_left_view_list_n;
         public static final int keyguard_left_view_list_p;
         public static final int keyguard_left_view_magazine;
-        public static final int keyguard_left_view_manazine;
         public static final int keyguard_left_view_remotecontroller;
         public static final int keyguard_left_view_smarthome;
         public static final int keyguard_left_view_torchlight_n;
@@ -9885,6 +9902,11 @@ public final class R {
         public static final int stat_sys_wifi_4_hotspot;
         public static final int stat_sys_wifi_5_hotspot;
         public static final int stat_sys_wifi_6_hotspot;
+        public static final int stat_sys_wifi_6_signal_0;
+        public static final int stat_sys_wifi_6_signal_1;
+        public static final int stat_sys_wifi_6_signal_2;
+        public static final int stat_sys_wifi_6_signal_3;
+        public static final int stat_sys_wifi_6_signal_4;
         public static final int stat_sys_wifi_ap_on;
         public static final int stat_sys_wifi_ap_on_darkmode;
         public static final int stat_sys_wifi_ap_on_tint;
@@ -11134,6 +11156,7 @@ public final class R {
         public static final int navstubview_bg_view;
         public static final int negative_control_center;
         public static final int negative_magzine;
+        public static final int negative_xmyzl;
         public static final int network_logging_disclosures;
         public static final int network_logging_subtitle;
         public static final int network_logging_warning;
@@ -12327,6 +12350,7 @@ public final class R {
         public static final int miui_keyguard_left_view_control_center_item;
         public static final int miui_keyguard_left_view_control_center_layout;
         public static final int miui_keyguard_left_view_lock_screen_magazine_layout;
+        public static final int miui_keyguard_left_view_xmyzl_layout;
         public static final int miui_keyguard_lock_screen_magazine_clock_layout;
         public static final int miui_keyguard_lock_screen_magazine_pre_layout;
         public static final int miui_keyguard_status_bar;
@@ -12426,6 +12450,7 @@ public final class R {
         public static final int miuix_preference_dialog_edittext;
         public static final int miuix_preference_layout;
         public static final int miuix_preference_list_fragment;
+        public static final int miuix_preference_main_layout;
         public static final int miuix_preference_radiobutton;
         public static final int miuix_preference_radiobutton_two_state_background;
         public static final int miuix_preference_recyclerview;
@@ -12925,6 +12950,7 @@ public final class R {
         public static final int accessibility_keyguard_face_unlock_view;
         public static final int accessibility_left_control_center_button;
         public static final int accessibility_left_lock_screen_magazine_button;
+        public static final int accessibility_left_xmyzl_button;
         public static final int accessibility_location_active;
         public static final int accessibility_long_click_tile;
         public static final int accessibility_manage_notification;
@@ -13618,6 +13644,7 @@ public final class R {
         public static final int development_settings_not_available;
         public static final int development_settings_summary;
         public static final int development_settings_title;
+        public static final int device_locked_without_biometric;
         public static final int device_services;
         public static final int digital_clock_dot;
         public static final int direct_boot_unaware_dialog_message;
@@ -14235,12 +14262,15 @@ public final class R {
         public static final int miui_notification_menu_more_setting;
         public static final int miui_notification_menu_msg_fold;
         public static final int miui_notification_menu_msg_not_allow;
+        public static final int miui_notification_menu_msg_unfold;
         public static final int miui_notification_menu_setting_success;
         public static final int miui_notification_menu_snooze;
         public static final int miui_notification_menu_snooze_title;
         public static final int miui_notification_menu_title_aggregate_feedback;
         public static final int miui_notification_menu_title_fold;
         public static final int miui_notification_menu_title_not_allow;
+        public static final int miui_notification_menu_title_unfold;
+        public static final int miui_notification_menu_unfold;
         public static final int miui_quick_settings_tiles_default;
         public static final int miui_quick_settings_tiles_stock;
         public static final int miui_screen_rotation_freeze_message;
@@ -14253,6 +14283,7 @@ public final class R {
         public static final int miui_snooze_until_unlock_screen;
         public static final int miui_snooze_user_set_fail;
         public static final int miui_snooze_user_set_success;
+        public static final int miui_unimportant_notifications;
         public static final int miuix_appcompat_action_mode_deselect_all;
         public static final int miuix_appcompat_action_mode_select_all;
         public static final int miuix_appcompat_action_mode_title_empty;
@@ -14386,6 +14417,7 @@ public final class R {
         public static final int mr_dialog_transferable_header;
         public static final int mr_system_route_name;
         public static final int mr_user_route_category_name;
+        public static final int msim_set_sub_not_supported_phone_in_call;
         public static final int mtrl_chip_close_icon_content_description;
         public static final int mtrl_picker_cancel;
         public static final int mtrl_picker_confirm;
@@ -14477,6 +14509,7 @@ public final class R {
         public static final int open_lock_screen_magazine_hint_text;
         public static final int open_remote_center_hint_text;
         public static final int open_saver_setting_action;
+        public static final int open_xmyzl_hint_text;
         public static final int orb_search_action;
         public static final int osu_completing_sign_up;
         public static final int osu_connect_failed;
@@ -14743,6 +14776,9 @@ public final class R {
         public static final int quick_settings_user_new_user;
         public static final int quick_settings_user_title;
         public static final int quick_settings_vibrate_label;
+        public static final int quick_settings_vowifi_label;
+        public static final int quick_settings_vowifi_sim1_label;
+        public static final int quick_settings_vowifi_sim2_label;
         public static final int quick_settings_wifi_detail_dual_wifi_accelerated;
         public static final int quick_settings_wifi_detail_dual_wifi_switching_cancel;
         public static final int quick_settings_wifi_detail_dual_wifi_switching_confirm;
@@ -14887,6 +14923,8 @@ public final class R {
         public static final int show_silently;
         public static final int show_touches;
         public static final int show_touches_summary;
+        public static final int shut_down_password_forget_password_suggesstion_one_content;
+        public static final int shut_down_password_forget_password_suggesstion_two_content;
         public static final int sim_state_locked_dialog_title;
         public static final int sim_state_locked_puk_dialog_message;
         public static final int simulate_color_space;

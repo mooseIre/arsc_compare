@@ -23,10 +23,12 @@ import com.android.systemui.statusbar.policy.MiuiStatusBarConfigurationListener;
 import com.android.systemui.vendor.HeadsetPolicy;
 import com.android.systemui.vendor.OrientationPolicy;
 import com.miui.systemui.display.OLEDScreenHelper;
+import com.miui.systemui.util.MiuiActivityUtil;
 
 public class MiuiVendorServices extends SystemUI {
     CodeBlueService mCodeBlueService;
     HeadsetPolicy mHeadsetPolicy;
+    MiuiActivityUtil mMiuiActivityUtil;
     MiuiChargeManager mMiuiChargeManager;
     MiuiFaceUnlockManager mMiuiFaceUnlockManager;
     MiuiFullScreenGestureProxy mMiuiFullScreenGestureProxy;
@@ -83,6 +85,7 @@ public class MiuiVendorServices extends SystemUI {
             }
         });
         this.mMiuiFaceUnlockManager.start();
+        this.mMiuiActivityUtil.start();
     }
 
     private void setSettingsDefault() {

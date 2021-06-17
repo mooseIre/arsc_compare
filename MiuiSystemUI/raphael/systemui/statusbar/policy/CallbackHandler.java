@@ -86,7 +86,7 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
         } else {
             Iterator<NetworkController.SignalCallback> it7 = this.mSignalCallbacks.iterator();
             while (it7.hasNext()) {
-                it7.next().setIsDefaultDataSim(message.arg1, ((Boolean) message.obj).booleanValue());
+                it7.next().setDefaultSim(((Integer) message.obj).intValue());
             }
         }
     }
@@ -186,8 +186,8 @@ public class CallbackHandler extends Handler implements NetworkController.Emerge
     }
 
     @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
-    public void setIsDefaultDataSim(int i, boolean z) {
-        obtainMessage(100, i, 0, Boolean.valueOf(z)).sendToTarget();
+    public void setDefaultSim(int i) {
+        obtainMessage(100, Integer.valueOf(i)).sendToTarget();
     }
 
     @Override // com.android.systemui.statusbar.policy.NetworkController.SignalCallback
