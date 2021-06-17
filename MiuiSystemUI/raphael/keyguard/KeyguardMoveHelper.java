@@ -228,21 +228,21 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper implements Config
                             float f3 = this.x;
                             float f4 = this.mCenterScreenTouchSlopTranslation;
                             keyguardMoveRightController.onTouchMove(f3 + f4, this.y + f4);
-                        } else if (!isMovingLeftView()) {
-                            KeyguardMoveRightController keyguardMoveRightController2 = this.mRightMoveController;
+                        } else if (isMovingLeftView()) {
+                            KeyguardMoveLeftController keyguardMoveLeftController = this.mLeftMoveController;
                             float f5 = this.x;
                             float f6 = this.mCenterScreenTouchSlopTranslation;
-                            this.mIsCameraPreviewMoving = keyguardMoveRightController2.onTouchMove(f5 + f6, this.y + f6);
-                        } else if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
-                            KeyguardMoveLeftController keyguardMoveLeftController = this.mLeftMoveController;
+                            if (!keyguardMoveLeftController.onTouchMove(f5 + f6, this.y + f6)) {
+                                if (!this.mIsRightMove) {
+                                    minusMisTouchOperationDist = -minusMisTouchOperationDist;
+                                }
+                                setTranslation(minusMisTouchOperationDist, false, false, false);
+                            }
+                        } else {
+                            KeyguardMoveRightController keyguardMoveRightController2 = this.mRightMoveController;
                             float f7 = this.x;
                             float f8 = this.mCenterScreenTouchSlopTranslation;
-                            keyguardMoveLeftController.onTouchMove(f7 + f8, this.y + f8);
-                        } else {
-                            if (!this.mIsRightMove) {
-                                minusMisTouchOperationDist = -minusMisTouchOperationDist;
-                            }
-                            setTranslation(minusMisTouchOperationDist, false, false, false);
+                            this.mIsCameraPreviewMoving = keyguardMoveRightController2.onTouchMove(f7 + f8, this.y + f8);
                         }
                     } else if (isValidMovingStart(minusMisTouchOperationDist, minusMisTouchOperationDist2)) {
                         if (isValidHorizontalTouchDown(f, f2)) {
@@ -288,7 +288,7 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper implements Config
         this.mMotionCancelled = false;
         this.mRightMoveController.onTouchUp(f, f2);
         this.mLeftMoveController.onTouchUp(f, f2);
-        if (!((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
+        if (this.mLeftMoveController.isLeftViewLaunchActivity()) {
             endMotion(!z, f, f2);
         }
     }
@@ -428,7 +428,7 @@ public class KeyguardMoveHelper extends BaseKeyguardMoveHelper implements Config
             /* class com.android.keyguard.KeyguardMoveHelper.AnonymousClass3 */
 
             public void onAnimationEnd(Animator animator) {
-                if (!z && KeyguardMoveHelper.this.mCurrentScreen == 0 && !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
+                if (!z && KeyguardMoveHelper.this.mCurrentScreen == 0 && KeyguardMoveHelper.this.mLeftMoveController.isLeftViewLaunchActivity()) {
                     KeyguardMoveHelper.this.mCallback.triggerAction(z2, KeyguardMoveHelper.this.mTranslation, f);
                 }
             }

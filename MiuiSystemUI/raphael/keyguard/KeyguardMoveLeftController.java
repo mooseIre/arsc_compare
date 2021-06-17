@@ -12,6 +12,7 @@ import com.android.keyguard.injector.KeyguardUpdateMonitorInjector;
 import com.android.keyguard.magazine.LockScreenMagazineController;
 import com.android.keyguard.negative.KeyguardClientCallback;
 import com.android.keyguard.negative.LockScreenMagazineClient;
+import com.android.keyguard.negative.MiuiQuickConnectController;
 import com.android.systemui.Dependency;
 import miui.util.Log;
 
@@ -89,7 +90,7 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
     }
 
     public void onTouchDown(float f, float f2, boolean z) {
-        if (this.mCallBack.isMoveInCenterScreen() && this.mCallBack.isRightMove() && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
+        if (this.mCallBack.isMoveInCenterScreen() && this.mCallBack.isRightMove() && !isLeftViewLaunchActivity()) {
             this.mInitialTouchX = f;
             this.mLockScreenMagazineClient.startMove();
             if (this.mScrollProgress != 0.0f) {
@@ -101,7 +102,7 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
 
     @Override // com.android.keyguard.BaseKeyguardMoveController
     public boolean onTouchMove(float f, float f2) {
-        if (!this.mTouchDownInitial) {
+        if (!this.mTouchDownInitial || isLeftViewLaunchActivity()) {
             return false;
         }
         float f3 = (f - this.mInitialTouchX) / ((float) this.mScreenPoint.x);
@@ -119,7 +120,7 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
 
     @Override // com.android.keyguard.BaseKeyguardMoveController
     public void onTouchUp(float f, float f2) {
-        if (this.mTouchDownInitial && ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable()) {
+        if (this.mTouchDownInitial && !isLeftViewLaunchActivity()) {
             this.mLockScreenMagazineClient.endMove();
             this.mCallBack.updateSwipingInProgress(false);
         }
@@ -145,5 +146,9 @@ public class KeyguardMoveLeftController extends BaseKeyguardMoveController {
         this.mLockScreenMagazineClient.hideOverlay(false);
         this.mHandler.removeMessages(0);
         this.mHandler.sendEmptyMessageDelayed(0, 5000);
+    }
+
+    public boolean isLeftViewLaunchActivity() {
+        return ((MiuiQuickConnectController) Dependency.get(MiuiQuickConnectController.class)).isUseXMYZLLeft() || !((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isLockScreenLeftOverlayAvailable();
     }
 }

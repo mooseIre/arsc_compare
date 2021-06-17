@@ -1,4 +1,4 @@
-package com.android.keyguard.charge.particle;
+package com.android.keyguard.charge.lzdh;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -18,22 +18,22 @@ import com.android.systemui.C0013R$drawable;
 import java.util.ArrayList;
 import java.util.List;
 
-class ParticleRenderView extends View {
-    private ParticleTargetLightning lightning;
+class LzdhRenderView extends View {
+    private LzdhTargetLightning lightning;
     private final List<PointF> lightningEdgeList;
     private final List<PointF> lightningInnerList;
     private boolean mBeginAnimation;
     private int mLastRatioOffset;
     private final Paint mPaint;
-    private ParticleTargetRing ring;
+    private LzdhTargetRing ring;
     private final List<PointF> ringList;
     private ValueAnimator valueAnimator;
 
-    public ParticleRenderView(Context context) {
+    public LzdhRenderView(Context context) {
         this(context, null);
     }
 
-    public ParticleRenderView(Context context, AttributeSet attributeSet) {
+    public LzdhRenderView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         this.mPaint = new Paint();
         this.mLastRatioOffset = 0;
@@ -44,9 +44,9 @@ class ParticleRenderView extends View {
     }
 
     private void travelBitmap() {
-        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0013R$drawable.charge_animation_particel_lightning);
-        Bitmap decodeResource2 = BitmapFactory.decodeResource(getResources(), C0013R$drawable.charge_animation_particle_lightning_inner);
-        Bitmap decodeResource3 = BitmapFactory.decodeResource(getResources(), C0013R$drawable.charge_animation_particle_lightning_edge);
+        Bitmap decodeResource = BitmapFactory.decodeResource(getResources(), C0013R$drawable.charge_animation_lzdh_lightning);
+        Bitmap decodeResource2 = BitmapFactory.decodeResource(getResources(), C0013R$drawable.charge_animation_lzdh_lightning_inner);
+        Bitmap decodeResource3 = BitmapFactory.decodeResource(getResources(), C0013R$drawable.charge_animation_lzdh_lightning_edge);
         for (int i = 0; i < decodeResource.getWidth(); i++) {
             for (int i2 = 0; i2 < decodeResource.getHeight(); i2++) {
                 if (Color.alpha(decodeResource.getPixel(i, i2)) > 0) {
@@ -78,10 +78,10 @@ class ParticleRenderView extends View {
         travelBitmap();
         this.mPaint.setColor(ResourcesCompat.getColor(getResources(), C0011R$color.keyguard_charging_particle_color, null));
         this.mPaint.setAntiAlias(true);
-        this.lightning = new ParticleTargetLightning(1400);
-        ParticleTargetRing particleTargetRing = new ParticleTargetRing(10000);
-        this.ring = particleTargetRing;
-        particleTargetRing.setRingPointList(this.ringList);
+        this.lightning = new LzdhTargetLightning(1400);
+        LzdhTargetRing lzdhTargetRing = new LzdhTargetRing(10000);
+        this.ring = lzdhTargetRing;
+        lzdhTargetRing.setRingPointList(this.ringList);
         this.lightning.setLightningInnerPointList(this.lightningInnerList);
         this.lightning.setLightningEdgePointLIst(this.lightningEdgeList);
         this.lightning.initParticles();
@@ -99,10 +99,10 @@ class ParticleRenderView extends View {
         ofFloat.setDuration(2000L);
         this.valueAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         this.valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            /* class com.android.keyguard.charge.particle.$$Lambda$ParticleRenderView$uMiRXOV9SKGZ5XZimvapLXk10WI */
+            /* class com.android.keyguard.charge.lzdh.$$Lambda$LzdhRenderView$2gbL5sPfaRC0kgp3jTmYiJ3EMWY */
 
             public final void onAnimationUpdate(ValueAnimator valueAnimator) {
-                ParticleRenderView.this.lambda$startAnimation$0$ParticleRenderView(valueAnimator);
+                LzdhRenderView.this.lambda$startAnimation$0$LzdhRenderView(valueAnimator);
             }
         });
         this.mLastRatioOffset = i;
@@ -113,7 +113,7 @@ class ParticleRenderView extends View {
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$startAnimation$0 */
-    public /* synthetic */ void lambda$startAnimation$0$ParticleRenderView(ValueAnimator valueAnimator2) {
+    public /* synthetic */ void lambda$startAnimation$0$LzdhRenderView(ValueAnimator valueAnimator2) {
         this.ring.setRatioOffset(((Float) valueAnimator2.getAnimatedValue()).floatValue() / 1000.0f);
     }
 

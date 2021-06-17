@@ -9,6 +9,8 @@ import android.graphics.Point;
 import android.graphics.SurfaceTexture;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.Property;
@@ -18,7 +20,6 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.video.VideoView;
-import com.android.keyguard.utils.ExecutorHelper;
 import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 
@@ -52,6 +53,8 @@ public class VideoView extends RelativeLayout {
     private int mVideoHeight;
     private int mVideoWidth;
     private WindowManager mWindowManager;
+    private HandlerThread mWorkHandleThread;
+    private Handler mWorkHandler;
     MediaPlayer.OnErrorListener onErrorListener;
 
     public VideoView(Context context) {
@@ -108,7 +111,7 @@ public class VideoView extends RelativeLayout {
             }
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
-                ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                VideoView.this.getSequentialWorkHandler().post(new Runnable(surfaceTexture) {
                     /* class com.android.keyguard.charge.video.$$Lambda$VideoView$7$l2PbGj1KM7VmQ1nVGU89HOvlFg0 */
                     public final /* synthetic */ SurfaceTexture f$1;
 
@@ -138,7 +141,7 @@ public class VideoView extends RelativeLayout {
             }
 
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+                VideoView.this.getSequentialWorkHandler().post(new Runnable() {
                     /* class com.android.keyguard.charge.video.$$Lambda$VideoView$7$eSiKx5_5ztW_T0NNIfoDqKujg8Q */
 
                     public final void run() {
@@ -151,11 +154,15 @@ public class VideoView extends RelativeLayout {
             /* access modifiers changed from: private */
             /* renamed from: lambda$onSurfaceTextureDestroyed$1 */
             public /* synthetic */ void lambda$onSurfaceTextureDestroyed$1$VideoView$7() {
-                if (VideoView.this.mMediaPlayer != null) {
-                    VideoView.this.mMediaPlayer.pause();
-                    VideoView.this.mMediaPlayer.stop();
-                    VideoView.this.mMediaPlayer.release();
-                    VideoView.this.mMediaPlayer = null;
+                try {
+                    if (VideoView.this.mMediaPlayer != null) {
+                        VideoView.this.mMediaPlayer.pause();
+                        VideoView.this.mMediaPlayer.stop();
+                        VideoView.this.mMediaPlayer.release();
+                        VideoView.this.mMediaPlayer = null;
+                    }
+                } catch (Exception e) {
+                    Log.e("ChargeVideoView", "release MediaPlayer exception:", e);
                 }
             }
         };
@@ -169,7 +176,7 @@ public class VideoView extends RelativeLayout {
             }
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
-                ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                VideoView.this.getSequentialWorkHandler().post(new Runnable(surfaceTexture) {
                     /* class com.android.keyguard.charge.video.$$Lambda$VideoView$8$9pY3gBtoCxpLmIi1wm8A1sltnV8 */
                     public final /* synthetic */ SurfaceTexture f$1;
 
@@ -199,7 +206,7 @@ public class VideoView extends RelativeLayout {
             }
 
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+                VideoView.this.getSequentialWorkHandler().post(new Runnable() {
                     /* class com.android.keyguard.charge.video.$$Lambda$VideoView$8$OH2nrQUwhIhFGqrtBvUSeyxDBv8 */
 
                     public final void run() {
@@ -212,11 +219,15 @@ public class VideoView extends RelativeLayout {
             /* access modifiers changed from: private */
             /* renamed from: lambda$onSurfaceTextureDestroyed$1 */
             public /* synthetic */ void lambda$onSurfaceTextureDestroyed$1$VideoView$8() {
-                if (VideoView.this.mRapidMediaPlayer != null) {
-                    VideoView.this.mRapidMediaPlayer.pause();
-                    VideoView.this.mRapidMediaPlayer.stop();
-                    VideoView.this.mRapidMediaPlayer.release();
-                    VideoView.this.mRapidMediaPlayer = null;
+                try {
+                    if (VideoView.this.mRapidMediaPlayer != null) {
+                        VideoView.this.mRapidMediaPlayer.pause();
+                        VideoView.this.mRapidMediaPlayer.stop();
+                        VideoView.this.mRapidMediaPlayer.release();
+                        VideoView.this.mRapidMediaPlayer = null;
+                    }
+                } catch (Exception e) {
+                    Log.e("ChargeVideoView", "release rapid MediaPlayer: ", e);
                 }
             }
         };
@@ -230,7 +241,7 @@ public class VideoView extends RelativeLayout {
             }
 
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int i, int i2) {
-                ExecutorHelper.getIOThreadPool().execute(new Runnable(surfaceTexture) {
+                VideoView.this.getSequentialWorkHandler().post(new Runnable(surfaceTexture) {
                     /* class com.android.keyguard.charge.video.$$Lambda$VideoView$9$ZaEYdY378gzCCA2rHctcTDjBAg */
                     public final /* synthetic */ SurfaceTexture f$1;
 
@@ -260,7 +271,7 @@ public class VideoView extends RelativeLayout {
             }
 
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
-                ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+                VideoView.this.getSequentialWorkHandler().post(new Runnable() {
                     /* class com.android.keyguard.charge.video.$$Lambda$VideoView$9$pvl1XgJdYG6QMGWCTELmtNKXjs4 */
 
                     public final void run() {
@@ -273,11 +284,15 @@ public class VideoView extends RelativeLayout {
             /* access modifiers changed from: private */
             /* renamed from: lambda$onSurfaceTextureDestroyed$1 */
             public /* synthetic */ void lambda$onSurfaceTextureDestroyed$1$VideoView$9() {
-                if (VideoView.this.mStrongRapidMediaPlayer != null) {
-                    VideoView.this.mStrongRapidMediaPlayer.pause();
-                    VideoView.this.mStrongRapidMediaPlayer.stop();
-                    VideoView.this.mStrongRapidMediaPlayer.release();
-                    VideoView.this.mStrongRapidMediaPlayer = null;
+                try {
+                    if (VideoView.this.mStrongRapidMediaPlayer != null) {
+                        VideoView.this.mStrongRapidMediaPlayer.pause();
+                        VideoView.this.mStrongRapidMediaPlayer.stop();
+                        VideoView.this.mStrongRapidMediaPlayer.release();
+                        VideoView.this.mStrongRapidMediaPlayer = null;
+                    }
+                } catch (Exception e) {
+                    Log.e("ChargeVideoView", "release strong rapid MediaPlayer:", e);
                 }
             }
         };
@@ -414,7 +429,7 @@ public class VideoView extends RelativeLayout {
     }
 
     private void updateDataSourceForScreenSizeChange() {
-        ExecutorHelper.getIOThreadPool().execute(new Runnable() {
+        getSequentialWorkHandler().post(new Runnable() {
             /* class com.android.keyguard.charge.video.$$Lambda$VideoView$zBd1P0dVfIAf_HjLtFDAEbcaEJs */
 
             public final void run() {
@@ -708,9 +723,27 @@ public class VideoView extends RelativeLayout {
         }
     }
 
+    /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private Handler getSequentialWorkHandler() {
+        if (this.mWorkHandler == null) {
+            HandlerThread handlerThread = new HandlerThread("VideoView");
+            this.mWorkHandleThread = handlerThread;
+            handlerThread.start();
+            this.mWorkHandler = new Handler(this.mWorkHandleThread.getLooper());
+        }
+        return this.mWorkHandler;
+    }
+
     /* access modifiers changed from: protected */
     public void onDetachedFromWindow() {
+        HandlerThread handlerThread;
         super.onDetachedFromWindow();
         this.mBackImage.setBackground(null);
+        if (this.mWorkHandler != null && (handlerThread = this.mWorkHandleThread) != null) {
+            this.mWorkHandler = null;
+            handlerThread.quitSafely();
+            this.mWorkHandleThread = null;
+        }
     }
 }

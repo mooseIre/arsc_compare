@@ -28,7 +28,11 @@ public class MiuiKeyguardMoveLeftViewContainer extends FrameLayout {
             removeView(miuiKeyguardMoveLeftBaseView);
             this.mKeyguardMoveLeftView = null;
         }
-        if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
+        if (((MiuiQuickConnectController) Dependency.get(MiuiQuickConnectController.class)).isUseXMYZLLeft()) {
+            MiuiKeyguardMoveLeftXMYZLView miuiKeyguardMoveLeftXMYZLView = (MiuiKeyguardMoveLeftXMYZLView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_xmyzl_layout, (ViewGroup) null, false);
+            this.mKeyguardMoveLeftView = miuiKeyguardMoveLeftXMYZLView;
+            miuiKeyguardMoveLeftXMYZLView.setVisibility(0);
+        } else if (((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).isSupportLockScreenMagazineLeft()) {
             MiuiKeyguardMoveLeftLockScreenMagazineView miuiKeyguardMoveLeftLockScreenMagazineView = (MiuiKeyguardMoveLeftLockScreenMagazineView) LayoutInflater.from(getContext()).inflate(C0017R$layout.miui_keyguard_left_view_lock_screen_magazine_layout, (ViewGroup) null, false);
             this.mKeyguardMoveLeftView = miuiKeyguardMoveLeftLockScreenMagazineView;
             miuiKeyguardMoveLeftLockScreenMagazineView.setVisibility(4);

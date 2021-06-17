@@ -1168,6 +1168,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
                 keyguardUpdateMonitorCallback.onStartedWakingUp();
             }
         }
+        this.mMiuiFaceUnlockManager.setWakeupByNotification(false);
         Trace.endSection();
     }
 
@@ -1177,7 +1178,6 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
             ((NotificationShadeWindowController) Dependency.get(NotificationShadeWindowController.class)).setUserActivityTime(6000);
         }
         updateBiometricListeningState();
-        this.mMiuiFaceUnlockManager.setWakeupByNotification(false);
         this.mUpdateMonitorInjector.handleStartedWakingUpWithReason(str);
     }
 
@@ -2135,7 +2135,7 @@ public class KeyguardUpdateMonitor implements TrustManager.TrustListener, Dumpab
         boolean isPluggedIn2 = miuiBatteryStatus.isPluggedIn();
         boolean z = isPluggedIn2 && isPluggedIn && miuiBatteryStatus.status != miuiBatteryStatus2.status;
         if (isPluggedIn2 == isPluggedIn && !z && miuiBatteryStatus.level == miuiBatteryStatus2.level) {
-            return (isPluggedIn && miuiBatteryStatus2.maxChargingWattage != miuiBatteryStatus.maxChargingWattage) || miuiBatteryStatus.chargeDeviceType != miuiBatteryStatus2.chargeDeviceType;
+            return ((!isPluggedIn || miuiBatteryStatus2.maxChargingWattage == miuiBatteryStatus.maxChargingWattage) && miuiBatteryStatus.chargeDeviceType == miuiBatteryStatus2.chargeDeviceType && miuiBatteryStatus.wireState == miuiBatteryStatus2.wireState) ? false : true;
         }
         return true;
     }

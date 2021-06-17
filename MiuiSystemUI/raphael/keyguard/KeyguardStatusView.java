@@ -174,9 +174,8 @@ public class KeyguardStatusView extends GridLayout implements ConfigurationContr
     public void onFinishInflate() {
         super.onFinishInflate();
         LinearLayout linearLayout = (LinearLayout) findViewById(C0015R$id.status_view_container);
-        this.mLogoutView = (TextView) findViewById(C0015R$id.logout);
-        this.mNotificationIcons = findViewById(C0015R$id.clock_notification_icon_container);
-        TextView textView = this.mLogoutView;
+        TextView textView = (TextView) findViewById(C0015R$id.logout);
+        this.mLogoutView = textView;
         if (textView != null) {
             textView.setOnClickListener(new View.OnClickListener() {
                 /* class com.android.keyguard.$$Lambda$KeyguardStatusView$Pryio69yVoRI9F153p5QiMZebw */

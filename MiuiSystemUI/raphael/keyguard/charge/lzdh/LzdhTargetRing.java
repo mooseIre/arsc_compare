@@ -1,4 +1,4 @@
-package com.android.keyguard.charge.particle;
+package com.android.keyguard.charge.lzdh;
 
 import android.graphics.PointF;
 import java.lang.ref.WeakReference;
@@ -14,7 +14,7 @@ import miuix.animation.listener.TransitionListener;
 import miuix.animation.listener.UpdateInfo;
 import miuix.animation.utils.EaseManager;
 
-public class ParticleTargetRing {
+public class LzdhTargetRing {
     private static final AtomicInteger sIdGenerator = new AtomicInteger();
     private float currentRatio = 0.0f;
     private float mCenterX = 540.0f;
@@ -62,7 +62,7 @@ public class ParticleTargetRing {
         }
     }
 
-    ParticleTargetRing(int i) {
+    LzdhTargetRing(int i) {
         for (int i2 = 0; i2 < i; i2++) {
             this.mParticles.add(new Particle(i2));
         }
@@ -145,7 +145,7 @@ public class ParticleTargetRing {
         /*
         // Method dump skipped, instructions count: 1353
         */
-        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.charge.particle.ParticleTargetRing.onDraw(android.graphics.Canvas, android.graphics.Paint):void");
+        throw new UnsupportedOperationException("Method not decompiled: com.android.keyguard.charge.lzdh.LzdhTargetRing.onDraw(android.graphics.Canvas, android.graphics.Paint):void");
     }
 
     private void setParticle(Particle particle) {
@@ -209,27 +209,27 @@ public class ParticleTargetRing {
     }
 
     private static class TransitionListenerWrapper extends TransitionListener {
-        private final WeakReference<ParticleTargetRing> mParticleTargetRing;
+        private final WeakReference<LzdhTargetRing> mParticleTargetRing;
 
-        public TransitionListenerWrapper(ParticleTargetRing particleTargetRing) {
-            this.mParticleTargetRing = new WeakReference<>(particleTargetRing);
+        public TransitionListenerWrapper(LzdhTargetRing lzdhTargetRing) {
+            this.mParticleTargetRing = new WeakReference<>(lzdhTargetRing);
         }
 
         @Override // miuix.animation.listener.TransitionListener
         public void onUpdate(Object obj, Collection<UpdateInfo> collection) {
-            ParticleTargetRing particleTargetRing = this.mParticleTargetRing.get();
-            if (particleTargetRing != null) {
+            LzdhTargetRing lzdhTargetRing = this.mParticleTargetRing.get();
+            if (lzdhTargetRing != null) {
                 for (UpdateInfo updateInfo : collection) {
-                    particleTargetRing.setParticlePos(updateInfo);
+                    lzdhTargetRing.setParticlePos(updateInfo);
                 }
             }
         }
 
         @Override // miuix.animation.listener.TransitionListener
         public void onCancel(Object obj) {
-            ParticleTargetRing particleTargetRing = this.mParticleTargetRing.get();
-            if (particleTargetRing != null) {
-                particleTargetRing.initParticles();
+            LzdhTargetRing lzdhTargetRing = this.mParticleTargetRing.get();
+            if (lzdhTargetRing != null) {
+                lzdhTargetRing.initParticles();
             }
         }
     }

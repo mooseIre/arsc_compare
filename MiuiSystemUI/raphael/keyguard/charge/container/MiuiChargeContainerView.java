@@ -7,7 +7,7 @@ import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 import com.android.keyguard.charge.ChargeUtils;
 import com.android.keyguard.charge.lollipop.LollipopChargeView;
-import com.android.keyguard.charge.particle.ParticleChargeView;
+import com.android.keyguard.charge.lzdh.LzdhChargeView;
 import com.android.keyguard.charge.video.VideoChargeView;
 import com.android.keyguard.charge.wave.WaveChargeView;
 
@@ -41,7 +41,7 @@ public class MiuiChargeContainerView extends FrameLayout {
         } else if (ChargeUtils.supportVideoChargeAnimation()) {
             this.mChargeView = new VideoChargeView(getContext());
         } else if (ChargeUtils.supportParticleChargeAnimation()) {
-            this.mChargeView = new ParticleChargeView(getContext());
+            this.mChargeView = new LzdhChargeView(getContext());
         } else {
             this.mChargeView = new LollipopChargeView(getContext());
         }

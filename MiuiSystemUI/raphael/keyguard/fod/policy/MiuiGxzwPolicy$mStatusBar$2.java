@@ -5,9 +5,8 @@ import dagger.Lazy;
 import kotlin.jvm.functions.Function0;
 import kotlin.jvm.internal.Lambda;
 
-/* access modifiers changed from: package-private */
 /* compiled from: MiuiGxzwPolicy.kt */
-public final class MiuiGxzwPolicy$mStatusBar$2 extends Lambda implements Function0<StatusBar> {
+final class MiuiGxzwPolicy$mStatusBar$2 extends Lambda implements Function0<StatusBar> {
     final /* synthetic */ Lazy $statusBarLazy;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */

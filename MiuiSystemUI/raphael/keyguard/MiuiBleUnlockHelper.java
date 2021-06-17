@@ -1,13 +1,11 @@
 package com.android.keyguard;
 
-import android.app.ActivityManager;
-import android.app.ActivityTaskManager;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.os.RemoteException;
 import android.os.UserHandle;
 import android.security.MiuiLockPatternUtils;
 import android.text.TextUtils;
@@ -19,12 +17,10 @@ import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.keyguard.WakefulnessLifecycle;
-import com.android.systemui.shared.system.ActivityManagerWrapper;
-import com.android.systemui.shared.system.TaskStackChangeListener;
 import com.android.systemui.statusbar.phone.MiuiDripLeftStatusBarIconControllerImpl;
 import com.android.systemui.statusbar.phone.StatusBarIconController;
 import com.android.systemui.statusbar.policy.UserSwitcherController;
-import java.util.List;
+import com.miui.systemui.util.MiuiActivityUtil;
 import miui.bluetooth.ble.MiBleProfile;
 import miui.bluetooth.ble.MiBleUnlockProfile;
 import miui.telephony.SubscriptionManager;
@@ -85,21 +81,15 @@ public class MiuiBleUnlockHelper {
             }
         }
     };
-    private final TaskStackChangeListener mTaskStackListener = new TaskStackChangeListener() {
+    private final MiuiActivityUtil.TopActivityMayChangeListener mTopActivityMayChangeListener = new MiuiActivityUtil.TopActivityMayChangeListener() {
         /* class com.android.keyguard.MiuiBleUnlockHelper.AnonymousClass6 */
 
-        @Override // com.android.systemui.shared.system.TaskStackChangeListener
-        public void onTaskStackChanged() {
-            try {
-                List tasks = ActivityTaskManager.getService().getTasks(1);
-                if (tasks.isEmpty() || !MiuiBleUnlockHelper.this.isMXtelcelActivity((ActivityManager.RunningTaskInfo) tasks.get(0))) {
-                    MiuiBleUnlockHelper.this.mIsMXtelcelActivity = false;
-                } else {
-                    MiuiBleUnlockHelper.this.mIsMXtelcelActivity = true;
-                }
-            } catch (RemoteException e) {
-                Log.e("MiuiBleUnlockHelper", "am.getTasks fail " + e.getStackTrace());
-                e.printStackTrace();
+        @Override // com.miui.systemui.util.MiuiActivityUtil.TopActivityMayChangeListener
+        public void onTopActivityMayChanged(ComponentName componentName) {
+            if (MiuiBleUnlockHelper.this.isMXtelcelActivity(componentName)) {
+                MiuiBleUnlockHelper.this.mIsMXtelcelActivity = true;
+            } else {
+                MiuiBleUnlockHelper.this.mIsMXtelcelActivity = false;
             }
         }
     };
@@ -130,7 +120,6 @@ public class MiuiBleUnlockHelper {
         @Override // com.android.systemui.keyguard.WakefulnessLifecycle.Observer
         public void onFinishedGoingToSleep() {
             MiuiBleUnlockHelper.this.unregisterUnlockListener();
-            ActivityManagerWrapper.getInstance().unregisterTaskStackListener(MiuiBleUnlockHelper.this.mTaskStackListener);
         }
     };
 
@@ -149,7 +138,7 @@ public class MiuiBleUnlockHelper {
         this.mUpdateMonitor.registerCallback(this.mUpdateMonitorCallback);
         ((WakefulnessLifecycle) Dependency.get(WakefulnessLifecycle.class)).addObserver(this.mWakefulnessObserver);
         registerBleUnlockReceiver();
-        ActivityManagerWrapper.getInstance().registerTaskStackListener(this.mTaskStackListener);
+        ((MiuiActivityUtil) Dependency.get(MiuiActivityUtil.class)).addTopActivityMayChangeListener(this.mTopActivityMayChangeListener);
     }
 
     private void registerBleUnlockReceiver() {
@@ -203,7 +192,6 @@ public class MiuiBleUnlockHelper {
                 this.mUnlockProfile.disconnect();
                 this.mUnlockProfile = null;
             }
-            ActivityManagerWrapper.getInstance().unregisterTaskStackListener(this.mTaskStackListener);
         } catch (Exception e) {
             Log.e("MiuiBleUnlockHelper", e.getMessage(), e);
         }
@@ -248,8 +236,8 @@ public class MiuiBleUnlockHelper {
 
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
-    private boolean isMXtelcelActivity(ActivityManager.RunningTaskInfo runningTaskInfo) {
-        return "com.celltick.lockscreen".equals(runningTaskInfo.topActivity.getPackageName());
+    private boolean isMXtelcelActivity(ComponentName componentName) {
+        return componentName != null && "com.celltick.lockscreen".equals(componentName.getPackageName());
     }
 
     /* access modifiers changed from: private */
