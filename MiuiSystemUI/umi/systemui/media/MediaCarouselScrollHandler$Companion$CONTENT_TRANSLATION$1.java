@@ -17,6 +17,6 @@ public final class MediaCarouselScrollHandler$Companion$CONTENT_TRANSLATION$1 ex
 
     public void setValue(@NotNull MediaCarouselScrollHandler mediaCarouselScrollHandler, float f) {
         Intrinsics.checkParameterIsNotNull(mediaCarouselScrollHandler, "handler");
-        mediaCarouselScrollHandler.setContentTranslation(f);
+        MediaCarouselScrollHandler.access$setContentTranslation$p(mediaCarouselScrollHandler, f);
     }
 }

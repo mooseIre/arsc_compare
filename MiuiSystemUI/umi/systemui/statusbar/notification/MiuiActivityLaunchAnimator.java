@@ -124,54 +124,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             this.mIsFullScreenLaunch = true;
         }
 
-        public static final /* synthetic */ void access$applyParamsToWindow(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
-            headsUpNotificationAnimationRunner.applyParamsToWindow(remoteAnimationTarget, remoteAnimationTarget2);
-        }
-
-        public static final /* synthetic */ RemoteAnimationTarget access$getClosingRemoteAnimationTarget(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, RemoteAnimationTarget[] remoteAnimationTargetArr) {
-            return headsUpNotificationAnimationRunner.getClosingRemoteAnimationTarget(remoteAnimationTargetArr);
-        }
-
-        public static final /* synthetic */ boolean access$getMIsFullScreenLaunch$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
-            return headsUpNotificationAnimationRunner.mIsFullScreenLaunch;
-        }
-
-        public static final /* synthetic */ HeadsUpExpandAnimationParameters access$getMParams$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
-            return headsUpNotificationAnimationRunner.mParams;
-        }
-
-        public static final /* synthetic */ ExpandableNotificationRow access$getMSourceNotification$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
-            return headsUpNotificationAnimationRunner.mSourceNotification;
-        }
-
-        public static final /* synthetic */ RemoteAnimationTarget access$getPrimaryRemoteAnimationTarget(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, RemoteAnimationTarget[] remoteAnimationTargetArr) {
-            return headsUpNotificationAnimationRunner.getPrimaryRemoteAnimationTarget(remoteAnimationTargetArr);
-        }
-
-        public static final /* synthetic */ void access$invokeCallback(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) {
-            headsUpNotificationAnimationRunner.invokeCallback(iRemoteAnimationFinishedCallback);
-        }
-
-        public static final /* synthetic */ void access$setExpandAnimationRunning(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, boolean z) {
-            headsUpNotificationAnimationRunner.setExpandAnimationRunning(z);
-        }
-
-        public static final /* synthetic */ void access$setMIsFullScreenLaunch$p(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, boolean z) {
-            headsUpNotificationAnimationRunner.mIsFullScreenLaunch = z;
-        }
-
-        public static final /* synthetic */ void access$setupDimLayer(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner) {
-            headsUpNotificationAnimationRunner.setupDimLayer();
-        }
-
-        public static final /* synthetic */ IStateStyle access$setupExpandAnimation(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, int i, int i2, int i3, int i4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
-            return headsUpNotificationAnimationRunner.setupExpandAnimation(i, i2, i3, i4, remoteAnimationTarget, remoteAnimationTarget2);
-        }
-
-        public static final /* synthetic */ void access$updateAndApplyParams(HeadsUpNotificationAnimationRunner headsUpNotificationAnimationRunner, int i, int i2, int i3, int i4, float f, float f2, float f3, int i5, float f4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
-            headsUpNotificationAnimationRunner.updateAndApplyParams(i, i2, i3, i4, f, f2, f3, i5, f4, remoteAnimationTarget, remoteAnimationTarget2);
-        }
-
+        /* access modifiers changed from: public */
         private final void setupDimLayer() {
             ExpandableNotificationRow expandableNotificationRow = this.mSourceNotification;
             expandableNotificationRow.getView();
@@ -185,6 +138,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             this.mSourceNotification.post(new MiuiActivityLaunchAnimator$HeadsUpNotificationAnimationRunner$onAnimationStart$1(this, remoteAnimationTargetArr, iRemoteAnimationFinishedCallback));
         }
 
+        /* access modifiers changed from: public */
         private final IStateStyle setupExpandAnimation(int i, int i2, int i3, int i4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
             float f = this.mNotificationCornerRadius;
             updateAndApplyParams(i, i2, i3, i4, f, 0.0f, 1.0f, 0, 1.0f, remoteAnimationTarget, remoteAnimationTarget2);
@@ -195,6 +149,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             return to;
         }
 
+        /* access modifiers changed from: public */
         private final void updateAndApplyParams(int i, int i2, int i3, int i4, float f, float f2, float f3, int i5, float f4, RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
             HeadsUpExpandAnimationParameters headsUpExpandAnimationParameters = this.mParams;
             headsUpExpandAnimationParameters.left = (i - i3) / 2;
@@ -211,6 +166,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             applyParamsToNotificationShade(this.mParams);
         }
 
+        /* access modifiers changed from: public */
         private final void invokeCallback(IRemoteAnimationFinishedCallback iRemoteAnimationFinishedCallback) {
             try {
                 iRemoteAnimationFinishedCallback.onAnimationFinished();
@@ -219,6 +175,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             }
         }
 
+        /* access modifiers changed from: public */
         private final RemoteAnimationTarget getPrimaryRemoteAnimationTarget(RemoteAnimationTarget[] remoteAnimationTargetArr) {
             for (RemoteAnimationTarget remoteAnimationTarget : remoteAnimationTargetArr) {
                 if (remoteAnimationTarget.mode == 0) {
@@ -228,6 +185,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             return null;
         }
 
+        /* access modifiers changed from: public */
         private final RemoteAnimationTarget getClosingRemoteAnimationTarget(RemoteAnimationTarget[] remoteAnimationTargetArr) {
             for (RemoteAnimationTarget remoteAnimationTarget : remoteAnimationTargetArr) {
                 if (remoteAnimationTarget.mode == 1) {
@@ -237,6 +195,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             return null;
         }
 
+        /* access modifiers changed from: public */
         private final void setExpandAnimationRunning(boolean z) {
             this.this$0.mNotificationPanel.setLaunchingNotification(z);
             this.mSourceNotification.setExpandAnimationRunning(z);
@@ -270,6 +229,7 @@ public final class MiuiActivityLaunchAnimator extends ActivityLaunchAnimator {
             this.mSourceNotification.applyExpandAnimationParams(expandAnimationParameters);
         }
 
+        /* access modifiers changed from: public */
         private final void applyParamsToWindow(RemoteAnimationTarget remoteAnimationTarget, RemoteAnimationTarget remoteAnimationTarget2) {
             Object acquire = MiuiActivityLaunchAnimatorKt.MATRIX_POOL.acquire();
             Intrinsics.checkExpressionValueIsNotNull(acquire, "MATRIX_POOL.acquire()");

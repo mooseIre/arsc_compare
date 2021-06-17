@@ -5,9 +5,8 @@ import kotlin.jvm.internal.FunctionReference;
 import kotlin.jvm.internal.Reflection;
 import kotlin.reflect.KDeclarationContainer;
 
-/* access modifiers changed from: package-private */
 /* compiled from: ControlAdapter.kt */
-public final /* synthetic */ class ControlHolder$accessibilityDelegate$2 extends FunctionReference implements Function0<Integer> {
+final /* synthetic */ class ControlHolder$accessibilityDelegate$2 extends FunctionReference implements Function0<Integer> {
     ControlHolder$accessibilityDelegate$2(ControlHolder controlHolder) {
         super(0, controlHolder);
     }
