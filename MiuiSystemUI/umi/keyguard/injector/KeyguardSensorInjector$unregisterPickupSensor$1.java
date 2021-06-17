@@ -3,9 +3,8 @@ package com.android.keyguard.injector;
 import android.hardware.SensorManager;
 import android.util.Slog;
 
-/* access modifiers changed from: package-private */
 /* compiled from: KeyguardSensorInjector.kt */
-public final class KeyguardSensorInjector$unregisterPickupSensor$1 implements Runnable {
+final class KeyguardSensorInjector$unregisterPickupSensor$1 implements Runnable {
     final /* synthetic */ KeyguardSensorInjector this$0;
 
     KeyguardSensorInjector$unregisterPickupSensor$1(KeyguardSensorInjector keyguardSensorInjector) {
