@@ -91,7 +91,7 @@ public class MiuiGxzwSensor {
                 /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwSensor$NwWCpZOTkkfzWBURlu7NhW1soPA */
 
                 public final void run() {
-                    MiuiGxzwSensor.lambda$NwWCpZOTkkfzWBURlu7NhW1soPA(MiuiGxzwSensor.this);
+                    MiuiGxzwSensor.this.doRegisterDozeSensor();
                 }
             });
         }
@@ -121,14 +121,15 @@ public class MiuiGxzwSensor {
                 /* class com.android.keyguard.fod.$$Lambda$MiuiGxzwSensor$tytcQllx08Mrvnkbc0VdDWjTliQ */
 
                 public final void run() {
-                    MiuiGxzwSensor.lambda$tytcQllx08Mrvnkbc0VdDWjTliQ(MiuiGxzwSensor.this);
+                    MiuiGxzwSensor.this.doUnregisterSensor();
                 }
             });
         }
     }
 
     /* access modifiers changed from: private */
-    public void doRegisterDozeSensor() {
+    /* access modifiers changed from: public */
+    private void doRegisterDozeSensor() {
         Sensor defaultSensor = this.mSensorManager.getDefaultSensor(TYPE_PUT_UP_DETECT, true);
         if (defaultSensor != null) {
             this.mSensorManager.registerListener(this.mPutUpSensorListener, defaultSensor, 3, this.mHandler);
@@ -146,7 +147,8 @@ public class MiuiGxzwSensor {
     }
 
     /* access modifiers changed from: private */
-    public void doUnregisterSensor() {
+    /* access modifiers changed from: public */
+    private void doUnregisterSensor() {
         this.mSensorManager.unregisterListener(this.mPutUpSensorListener);
         this.mSensorManager.unregisterListener(this.mNonUIListener);
     }

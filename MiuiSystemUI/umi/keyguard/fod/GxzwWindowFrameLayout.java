@@ -57,8 +57,7 @@ public abstract class GxzwWindowFrameLayout extends FrameLayout {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private void updateViewAddState() {
+    public void updateViewAddState() {
         if (this.mAdded && !isAttachedToWindow()) {
             addViewToWindow();
         } else if (!this.mAdded && isAttachedToWindow()) {

@@ -22,7 +22,7 @@ import com.miui.systemui.SettingsObserver;
 import com.miui.systemui.util.CommonUtil;
 import com.miui.systemui.util.MiuiTextUtils;
 import kotlin.TypeCastException;
-import kotlin.collections.ArraysKt___ArraysKt;
+import kotlin.collections.ArraysKt;
 import kotlin.jvm.internal.Intrinsics;
 import miui.os.Build;
 import miui.os.SystemProperties;
@@ -189,7 +189,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* JADX WARNING: Code restructure failed: missing block: B:16:0x0036, code lost:
-        if (kotlin.text.StringsKt__StringsJVMKt.equals(r0, r4, true) != false) goto L_0x0038;
+        if (kotlin.text.StringsKt.equals(r0, r4, true) != false) goto L_0x0038;
      */
     /* JADX WARNING: Removed duplicated region for block: B:24:0x0058  */
     /* JADX WARNING: Removed duplicated region for block: B:27:0x005c  */
@@ -203,8 +203,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void unregisterPickupSensor() {
+    public final void unregisterPickupSensor() {
         this.mUiOffloadThread.submit(new KeyguardSensorInjector$unregisterPickupSensor$1(this));
     }
 
@@ -246,8 +245,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final boolean shouldRegisterLargeAreaSensor() {
+    public final boolean shouldRegisterLargeAreaSensor() {
         return this.mIsDeviceSupportLargeAreaTouch && this.mSensorManager != null && this.mLargeAreaTouchSensor == null && !this.mKeyguardViewMediator.isHiding() && this.mKeyguardViewMediator.isShowing();
     }
 
@@ -258,7 +256,7 @@ public final class KeyguardSensorInjector implements SettingsObserver.Callback, 
     public final boolean isSupportPickupByMTK() {
         String[] stringArray = this.mContext.getResources().getStringArray(C0008R$array.device_support_pickup_by_MTK);
         Intrinsics.checkExpressionValueIsNotNull(stringArray, "mContext.resources.getSt…ce_support_pickup_by_MTK)");
-        return ArraysKt___ArraysKt.contains(stringArray, Build.DEVICE);
+        return ArraysKt.contains(stringArray, Build.DEVICE);
     }
 
     public final void disableFullScreenGesture() {
