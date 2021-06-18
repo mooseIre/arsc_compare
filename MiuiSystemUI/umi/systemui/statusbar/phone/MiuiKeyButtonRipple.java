@@ -373,8 +373,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void enterSoftware() {
+    public final void enterSoftware() {
         endAnimations("enterSoftware", true);
         this.mVisible = true;
         this.mGlowAlpha = getMaxGlowAlpha();
@@ -476,8 +475,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void enterHardware() {
+    public final void enterHardware() {
         endAnimations("enterHardware", true);
         this.mVisible = true;
         this.mDrawingHardwareGlow = true;
@@ -828,8 +826,7 @@ public final class MiuiKeyButtonRipple extends Drawable {
     }
 
     /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
-    private final void sildeSecondPart() {
+    public final void sildeSecondPart() {
         cancelAnimations();
         this.mDrawingHardwareGlow = true;
         CanvasProperty<Float> createFloat = CanvasProperty.createFloat(this.mSecondLeftStart);
