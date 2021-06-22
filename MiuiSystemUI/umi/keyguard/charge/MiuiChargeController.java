@@ -17,6 +17,7 @@ import android.util.Log;
 import android.util.Slog;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManagerGlobal;
 import com.android.keyguard.KeyguardUpdateMonitor;
 import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.analytics.AnalyticsHelper;
@@ -254,7 +255,7 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
 
     private void switchChargeItemViewAnimation(MiuiBatteryStatus miuiBatteryStatus, boolean z) {
         int chargeSpeed = ChargeUtils.getChargeSpeed(miuiBatteryStatus.wireState, miuiBatteryStatus.chargeDeviceType);
-        if (this.mChargeSpeed != chargeSpeed && this.mChargeAnimationView != null) {
+        if ((this.mChargeSpeed != chargeSpeed || z) && this.mChargeAnimationView != null) {
             Log.d("MiuiChargeController", "switchChargeItemViewAnimation: " + chargeSpeed + ",chargeDeviceType=" + miuiBatteryStatus.chargeDeviceType);
             this.mChargeSpeed = chargeSpeed;
             this.mChargeAnimationView.switchChargeItemViewAnimation(z, chargeSpeed);
@@ -357,14 +358,13 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     public void dismissChargeAnimation(String str) {
         Log.i("MiuiChargeController", "dismissChargeAnimation: " + str);
         if (shouldShowChargeAnim() && this.mChargeAnimationShowing) {
-            if (this.mBatteryStatus.isPluggedIn()) {
-                this.mKeyguardIndicationController.updatePowerIndication(false);
-            }
             MiuiChargeAnimationView miuiChargeAnimationView = this.mChargeAnimationView;
             if (miuiChargeAnimationView != null) {
                 miuiChargeAnimationView.startDismiss(str);
             }
             this.mChargeAnimationShowing = false;
+        } else if ("USER_PRESENT".equals(str)) {
+            releaseMemory();
         }
     }
 
@@ -443,6 +443,13 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
     }
 
     @Override // com.android.keyguard.charge.view.IChargeAnimationListener
+    public void onDismissAnimationStart(int i, String str) {
+        if (this.mBatteryStatus.isPluggedIn()) {
+            this.mKeyguardIndicationController.updatePowerIndication(false);
+        }
+    }
+
+    @Override // com.android.keyguard.charge.view.IChargeAnimationListener
     public void onChargeAnimationStart(int i) {
         Log.i("MiuiChargeController", "onChargeAnimationStart: " + i);
         this.mKeyguardIndicationController.updatePowerIndication(true);
@@ -453,6 +460,9 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
         this.mPowerManager.userActivity(SystemClock.uptimeMillis(), false);
         this.mScreenOnWakeLock.release();
         this.mHandler.removeCallbacks(this.mScreenOffRunnable);
+        if ("USER_PRESENT".equals(str)) {
+            releaseMemory();
+        }
     }
 
     @Override // com.android.keyguard.charge.view.IChargeAnimationListener
@@ -463,13 +473,24 @@ public class MiuiChargeController implements IChargeAnimationListener, Wakefulne
             unregisterAngleSensorListener();
         }
         this.mShowChargingInNonLockscreen = false;
-        if (shouldShowChargeAnim() && this.mPendingChargeAnimation) {
-            Log.d("MiuiChargeController", " onChargeAnimationDismiss: 切换动画 mWireState=" + this.mWireState);
-            this.mPendingChargeAnimation = false;
-            int i2 = this.mWireState;
-            if (i2 != i) {
-                showChargeAnimation(i2);
-            }
+        if (!shouldShowChargeAnim() || !this.mPendingChargeAnimation) {
+            WindowManagerGlobal.getInstance().trimMemory(20);
+            return;
+        }
+        Log.d("MiuiChargeController", " onChargeAnimationDismiss: 切换动画 mWireState=" + this.mWireState);
+        this.mPendingChargeAnimation = false;
+        int i2 = this.mWireState;
+        if (i2 != i) {
+            showChargeAnimation(i2);
+        }
+    }
+
+    public void releaseMemory() {
+        MiuiChargeAnimationView miuiChargeAnimationView = this.mChargeAnimationView;
+        if (miuiChargeAnimationView != null) {
+            miuiChargeAnimationView.setChargeAnimationListener(null);
+            this.mChargeAnimationView.setOnTouchListener(null);
+            this.mChargeAnimationView = null;
         }
     }
 

@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.os.UserHandle;
 import android.provider.Settings;
 import android.util.Log;
+import com.android.keyguard.KeyguardUpdateMonitor;
+import com.android.keyguard.MiuiKeyguardUpdateMonitorCallback;
 import com.android.keyguard.injector.KeyguardNegative1PageInjector;
 import com.android.systemui.Dependency;
 import com.miui.systemui.SettingsObserver;
@@ -26,33 +28,46 @@ public final class MiuiQuickConnectController implements SettingsObserver.Callba
     @NotNull
     private final String XMYZL_SWITCH_SETTING_KEY = "settings_uwb_lock_screen_entrance_open";
     private final Context mContext;
-    private boolean mHasInitialzed;
     private boolean mIsSupportXMYZL;
     private boolean mIsXMYZLEnable;
+    private final MiuiKeyguardUpdateMonitorCallback mKeyguardUpdateMonitorCallback;
+    private KeyguardUpdateMonitor mUpdateMonitor;
 
     public MiuiQuickConnectController(@NotNull Context context) {
         Intrinsics.checkParameterIsNotNull(context, "mContext");
         this.mContext = context;
+        Object obj = Dependency.get(KeyguardUpdateMonitor.class);
+        Intrinsics.checkExpressionValueIsNotNull(obj, "Dependency.get(KeyguardUpdateMonitor::class.java)");
+        this.mUpdateMonitor = (KeyguardUpdateMonitor) obj;
+        MiuiQuickConnectController$mKeyguardUpdateMonitorCallback$1 miuiQuickConnectController$mKeyguardUpdateMonitorCallback$1 = new MiuiQuickConnectController$mKeyguardUpdateMonitorCallback$1(this);
+        this.mKeyguardUpdateMonitorCallback = miuiQuickConnectController$mKeyguardUpdateMonitorCallback$1;
+        this.mUpdateMonitor.registerCallback(miuiQuickConnectController$mKeyguardUpdateMonitorCallback$1);
         ((SettingsObserver) Dependency.get(SettingsObserver.class)).addCallbackForUser(this, 0, this.XMYZL_SWITCH_SETTING_KEY);
+        initXMYZLRes();
     }
 
     @Override // com.miui.systemui.SettingsObserver.Callback
     public void onContentChanged(@Nullable String str, @Nullable String str2) {
-        MiuiKeyguardMoveLeftViewContainer leftView;
         if (Intrinsics.areEqual(this.XMYZL_SWITCH_SETTING_KEY, str)) {
             this.mIsXMYZLEnable = MiuiTextUtils.parseBoolean(str2, true);
-            if (this.mHasInitialzed && (leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView()) != null) {
+            MiuiKeyguardMoveLeftViewContainer leftView = ((KeyguardNegative1PageInjector) Dependency.get(KeyguardNegative1PageInjector.class)).getLeftView();
+            if (leftView != null) {
                 leftView.inflateLeftView();
             }
         }
     }
 
-    public final boolean isUseXMYZLLeft() {
-        if (!this.mHasInitialzed) {
-            this.mIsSupportXMYZL = isSupportXMYZL();
-            this.mIsXMYZLEnable = Settings.System.getInt(this.mContext.getContentResolver(), this.XMYZL_SWITCH_SETTING_KEY, 1) == 1;
-            this.mHasInitialzed = true;
+    /* access modifiers changed from: private */
+    public final void initXMYZLRes() {
+        this.mIsSupportXMYZL = isSupportXMYZL();
+        boolean z = true;
+        if (Settings.System.getInt(this.mContext.getContentResolver(), this.XMYZL_SWITCH_SETTING_KEY, 1) != 1) {
+            z = false;
         }
+        this.mIsXMYZLEnable = z;
+    }
+
+    public final boolean isUseXMYZLLeft() {
         return this.mIsSupportXMYZL && this.mIsXMYZLEnable;
     }
 

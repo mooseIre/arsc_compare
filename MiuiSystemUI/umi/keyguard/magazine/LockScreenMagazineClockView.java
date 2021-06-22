@@ -277,7 +277,20 @@ public class LockScreenMagazineClockView extends LinearLayout {
     public void updateViewsForClockPosition(boolean z) {
         this.mIsLeftTopClock = z;
         updateTitlePadding();
+        updateTitleMargins();
         updateContentsLayoutGravity();
+    }
+
+    private void updateTitleMargins() {
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) this.mTitle.getLayoutParams();
+        if (this.mIsLeftTopClock) {
+            layoutParams.setMarginEnd(((LinearLayout) this).mContext.getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_clock_title_margin_end));
+        } else {
+            int dimensionPixelOffset = ((LinearLayout) this).mContext.getResources().getDimensionPixelOffset(C0012R$dimen.lock_screen_magazine_clock_center_title_margin_end);
+            layoutParams.setMarginStart(dimensionPixelOffset);
+            layoutParams.setMarginEnd(dimensionPixelOffset);
+        }
+        this.mTitle.setLayoutParams(layoutParams);
     }
 
     private void setLockScreenMagazineTitleTouchDelegate(int i) {

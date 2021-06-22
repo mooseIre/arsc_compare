@@ -19,7 +19,6 @@ import android.util.Slog;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.view.WindowManagerGlobal;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
@@ -336,6 +335,9 @@ public class MiuiChargeAnimationView extends FrameLayout {
 
                 public void onAnimationStart(Animator animator) {
                     MiuiChargeAnimationView.this.mChargeContainerView.startDismiss(str);
+                    if (MiuiChargeAnimationView.this.animationListener != null) {
+                        MiuiChargeAnimationView.this.animationListener.onDismissAnimationStart(MiuiChargeAnimationView.this.mWireState, MiuiChargeAnimationView.this.mDismissReason);
+                    }
                 }
 
                 public void onAnimationEnd(Animator animator) {
@@ -453,7 +455,6 @@ public class MiuiChargeAnimationView extends FrameLayout {
                 } else {
                     ChargeUtils.getParentView().removeView(this);
                 }
-                WindowManagerGlobal.getInstance().trimMemory(20);
             } catch (Exception e) {
                 Log.e("MiuiChargeAnimationView", "remove from window exception:", e);
             }

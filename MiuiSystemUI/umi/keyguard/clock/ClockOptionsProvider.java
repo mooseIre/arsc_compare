@@ -11,7 +11,6 @@ import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.internal.annotations.VisibleForTesting;
-import com.android.systemui.Dependency;
 import java.io.FileNotFoundException;
 import java.util.List;
 import java.util.function.Supplier;
@@ -37,10 +36,6 @@ public final class ClockOptionsProvider extends ContentProvider {
 
     public ClockOptionsProvider() {
         this($$Lambda$ClockOptionsProvider$VCFr6VBqrtOSuPKYuOzo6kUuyg.INSTANCE);
-    }
-
-    static /* synthetic */ List lambda$new$0() {
-        return ((ClockManager) Dependency.get(ClockManager.class)).getClockInfos();
     }
 
     @VisibleForTesting

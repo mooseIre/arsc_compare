@@ -54,6 +54,7 @@ import com.android.keyguard.wallpaper.WallpaperAuthorityUtils;
 import com.android.systemui.C0012R$dimen;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.Dependency;
+import com.android.systemui.plugins.statusbar.StatusBarStateController;
 import com.android.systemui.statusbar.notification.stack.NotificationStackScrollLayout;
 import com.android.systemui.statusbar.phone.KeyguardBottomAreaView;
 import com.android.systemui.statusbar.phone.StatusBar;
@@ -66,7 +67,7 @@ import miui.os.Build;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
-public class LockScreenMagazineController implements SettingsObserver.Callback, ConfigurationController.ConfigurationListener {
+public class LockScreenMagazineController implements SettingsObserver.Callback, StatusBarStateController.StateListener, ConfigurationController.ConfigurationListener {
     private final BroadcastReceiver mBroadcastReceiver = new BroadcastReceiver() {
         /* class com.android.keyguard.magazine.LockScreenMagazineController.AnonymousClass2 */
 
@@ -257,6 +258,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
     private float mScreenWidth;
     private final SettingsObserver mSettingsObserver;
     private boolean mStartedWakingUp;
+    private final StatusBarStateController mStatusBarStateController;
     private boolean mSupportGestureWakeup;
     private AnimatorSet mSwitchAnimator;
     private int mUninvalidBottomAreaHeight;
@@ -275,8 +277,9 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
         }
     };
 
-    public LockScreenMagazineController(Context context) {
+    public LockScreenMagazineController(Context context, StatusBarStateController statusBarStateController) {
         this.mContext = context;
+        this.mStatusBarStateController = statusBarStateController;
         this.mMagazineWallpaperAuthority = WallpaperAuthorityUtils.getWallpaperAuthority();
         this.mKeyguardSecurityModel = (KeyguardSecurityModel) Dependency.get(KeyguardSecurityModel.class);
         this.mClockContainerView = ((KeyguardClockInjector) Dependency.get(KeyguardClockInjector.class)).getView();
@@ -322,6 +325,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
         this.mSettingsObserver.addCallback(this, "lock_wallpaper_provider_authority");
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).registerWallpaperChangeCallback(this.mWallpaperChangeCallback);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).addCallback(this);
+        this.mStatusBarStateController.addCallback(this);
     }
 
     public void onDetachedFromWindow() {
@@ -331,6 +335,7 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
         this.mSettingsObserver.removeCallback(this);
         ((IMiuiKeyguardWallpaperController) Dependency.get(IMiuiKeyguardWallpaperController.class)).unregisterWallpaperChangeCallback(this.mWallpaperChangeCallback);
         ((ConfigurationController) Dependency.get(ConfigurationController.class)).removeCallback(this);
+        this.mStatusBarStateController.removeCallback(this);
     }
 
     private void registerBroadcastReceivers() {
@@ -717,6 +722,19 @@ public class LockScreenMagazineController implements SettingsObserver.Callback, 
     @Override // com.android.systemui.statusbar.policy.ConfigurationController.ConfigurationListener
     public void onDensityChanged() {
         initAntiMistakeOperation();
+    }
+
+    public void onOpenQSPanel() {
+        if (isPreViewVisible()) {
+            reset();
+        }
+    }
+
+    @Override // com.android.systemui.plugins.statusbar.StatusBarStateController.StateListener
+    public void onStateChanged(int i) {
+        if (i == 2 && isPreViewVisible()) {
+            reset();
+        }
     }
 
     /* access modifiers changed from: package-private */

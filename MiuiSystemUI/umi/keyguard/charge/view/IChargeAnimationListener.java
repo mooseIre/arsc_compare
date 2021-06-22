@@ -6,4 +6,7 @@ public interface IChargeAnimationListener {
     void onChargeAnimationEnd(int i, String str);
 
     void onChargeAnimationStart(int i);
+
+    default void onDismissAnimationStart(int i, String str) {
+    }
 }
