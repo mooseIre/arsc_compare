@@ -19,7 +19,6 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
-import com.android.internal.annotations.VisibleForTesting;
 import com.android.systemui.SizeCompatModeActivityController;
 import com.android.systemui.shared.system.ActivityManagerWrapper;
 import com.android.systemui.shared.system.TaskStackChangeListener;
@@ -32,7 +31,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
     private final SparseArray<WeakReference<Context>> mDisplayContextCache = new SparseArray<>(0);
     private boolean mHasShownHint;
 
-    @VisibleForTesting
     SizeCompatModeActivityController(Context context, ActivityManagerWrapper activityManagerWrapper, CommandQueue commandQueue) {
         super(context);
         this.mCommandQueue = commandQueue;
@@ -79,8 +77,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         }
     }
 
-    /* access modifiers changed from: private */
-    /* access modifiers changed from: public */
     private void updateRestartButton(int i, IBinder iBinder) {
         if (iBinder == null) {
             removeRestartButton(i);
@@ -105,8 +101,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         }
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public RestartActivityButton createRestartButton(Context context) {
         RestartActivityButton restartActivityButton = new RestartActivityButton(context, this.mHasShownHint);
         this.mHasShownHint = true;
@@ -131,8 +125,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
         return createDisplayContext;
     }
 
-    /* access modifiers changed from: package-private */
-    @VisibleForTesting
     public static class RestartActivityButton extends ImageButton implements View.OnClickListener, View.OnLongClickListener {
         IBinder mLastActivityToken;
         final int mPopupOffsetX;
@@ -176,12 +168,10 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             layoutParams2.setTitle(SizeCompatModeActivityController.class.getSimpleName() + context.getDisplayId());
         }
 
-        /* access modifiers changed from: package-private */
         public void updateLastTargetActivity(IBinder iBinder) {
             this.mLastActivityToken = iBinder;
         }
 
-        /* access modifiers changed from: package-private */
         public boolean show() {
             try {
                 ((WindowManager) getContext().getSystemService(WindowManager.class)).addView(this, this.mWinParams);
@@ -192,7 +182,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             }
         }
 
-        /* access modifiers changed from: package-private */
         public void remove() {
             PopupWindow popupWindow = this.mShowingHint;
             if (popupWindow != null) {
@@ -214,7 +203,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             return true;
         }
 
-        /* access modifiers changed from: protected */
         public void onAttachedToWindow() {
             super.onAttachedToWindow();
             if (this.mShouldShowHint) {
@@ -237,7 +225,6 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             super.setLayoutDirection(i);
         }
 
-        /* access modifiers changed from: package-private */
         public void showHint() {
             if (this.mShowingHint == null) {
                 View inflate = LayoutInflater.from(getContext()).inflate(C0017R$layout.size_compat_mode_hint, (ViewGroup) null);
@@ -272,6 +259,7 @@ public class SizeCompatModeActivityController extends SystemUI implements Comman
             }
         }
 
+        /* access modifiers changed from: public */
         /* access modifiers changed from: private */
         /* renamed from: lambda$showHint$0 */
         public /* synthetic */ void lambda$showHint$0$SizeCompatModeActivityController$RestartActivityButton() {

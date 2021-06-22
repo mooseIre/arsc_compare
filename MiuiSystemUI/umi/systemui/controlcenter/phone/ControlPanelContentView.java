@@ -25,6 +25,18 @@ public class ControlPanelContentView extends FrameLayout {
     private ControlCenterPanelView mControlCenterPanelView;
     private ControlPanelWindowManager mControlPanelWindowManager;
     private ControlsEditController mControlsEditController;
+    private Runnable mControlsEditRunnable = new Runnable() {
+        /* class com.android.systemui.controlcenter.phone.ControlPanelContentView.AnonymousClass2 */
+
+        public void run() {
+            if (ControlPanelContentView.this.mControlsEditController == null) {
+                ControlPanelContentView controlPanelContentView = ControlPanelContentView.this;
+                ControlPanelContentView controlPanelContentView2 = ControlPanelContentView.this;
+                controlPanelContentView.mControlsEditController = new ControlsEditController((ControlsPluginManager) Dependency.get(ControlsPluginManager.class), controlPanelContentView2, controlPanelContentView2.mControlCenterPanelView);
+            }
+            ControlPanelContentView.this.mControlsEditController.addControlsEditView();
+        }
+    };
     private QSControlCustomizer.QSControlPanelCallback mCustomizerCallback = null;
     private QSControlDetail mDetail;
     private ExpandInfoController mExpandInfoController;
@@ -140,15 +152,29 @@ public class ControlPanelContentView extends FrameLayout {
         ControlCenterPanelView controlCenterPanelView = this.mControlCenterPanelView;
         if (controlCenterPanelView != null) {
             controlCenterPanelView.showPanel(true, true);
-            this.mControlCenterPanelView.addControlsPlugin();
         }
-        if (this.mControlsEditController == null) {
-            this.mControlsEditController = new ControlsEditController((ControlsPluginManager) Dependency.get(ControlsPluginManager.class), this, this.mControlCenterPanelView);
+        post(new Runnable() {
+            /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelContentView$Hr1R5n0YYh0JFrdOBbPUQfRThM4 */
+
+            public final void run() {
+                ControlPanelContentView.this.lambda$showContent$0$ControlPanelContentView();
+            }
+        });
+        removeCallbacks(this.mControlsEditRunnable);
+        postDelayed(this.mControlsEditRunnable, 1000);
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$showContent$0 */
+    public /* synthetic */ void lambda$showContent$0$ControlPanelContentView() {
+        ControlCenterPanelView controlCenterPanelView = this.mControlCenterPanelView;
+        if (controlCenterPanelView != null) {
+            controlCenterPanelView.addControlsPlugin();
         }
-        this.mControlsEditController.addControlsEditView();
     }
 
     public void hideContent() {
+        removeCallbacks(this.mControlsEditRunnable);
         ControlCenterPanelView controlCenterPanelView = this.mControlCenterPanelView;
         if (controlCenterPanelView != null) {
             controlCenterPanelView.showPanel(false, true);

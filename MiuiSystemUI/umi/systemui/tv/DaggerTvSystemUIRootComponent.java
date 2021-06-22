@@ -2375,7 +2375,7 @@ public final class DaggerTvSystemUIRootComponent implements TvSystemUIRootCompon
         this.notificationSensitiveControllerProvider = DoubleCheck.provider(NotificationSensitiveController_Factory.create(this.contextProvider, this.userSwitcherControllerProvider));
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.contextProvider));
-        this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.contextProvider));
+        this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.contextProvider, this.statusBarStateControllerImplProvider));
         this.miuiQuickConnectControllerProvider = DoubleCheck.provider(MiuiQuickConnectController_Factory.create(this.contextProvider));
         this.miuiGxzwManagerProvider = DoubleCheck.provider(MiuiGxzwManager_Factory.create(this.contextProvider, this.wakefulnessLifecycleProvider));
         this.miuiFastUnlockControllerProvider = DoubleCheck.provider(MiuiFastUnlockController_Factory.create(this.contextProvider, this.newKeyguardViewMediatorProvider));

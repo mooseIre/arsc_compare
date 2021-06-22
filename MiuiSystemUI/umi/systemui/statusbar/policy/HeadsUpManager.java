@@ -122,6 +122,7 @@ public abstract class HeadsUpManager extends AlertingNotificationManager {
     public void onAlertEntryAdded(AlertingNotificationManager.AlertEntry alertEntry) {
         NotificationEntry notificationEntry = alertEntry.mEntry;
         notificationEntry.setHeadsUp(true);
+        HeadsUpManagerInjector.stopAlertingEntriesHeadsUp(this.mContext, notificationEntry, getAllEntries());
         setEntryPinned((HeadsUpEntry) alertEntry, shouldHeadsUpBecomePinned(notificationEntry));
         Iterator<OnHeadsUpChangedListener> it = this.mListeners.iterator();
         while (it.hasNext()) {

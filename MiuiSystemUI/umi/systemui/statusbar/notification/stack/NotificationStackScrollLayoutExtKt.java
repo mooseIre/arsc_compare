@@ -42,10 +42,8 @@ public final class NotificationStackScrollLayoutExtKt {
     public static final void setPanelAppeared(@NotNull NotificationStackScrollLayout notificationStackScrollLayout, boolean z, boolean z2) {
         Intrinsics.checkParameterIsNotNull(notificationStackScrollLayout, "$this$setPanelAppeared");
         if (notificationStackScrollLayout.getAmbientState().getPanelAppeared() != z) {
-            if (!z2) {
-                notificationStackScrollLayout.getAnimationEvents().add(new PanelAppearDisappearEvent());
-                notificationStackScrollLayout.requestAnimation();
-            }
+            notificationStackScrollLayout.getAnimationEvents().add(new PanelAppearDisappearEvent());
+            notificationStackScrollLayout.requestAnimation();
             notificationStackScrollLayout.requestChildrenUpdate();
             for (ExpandableNotificationRow expandableNotificationRow : SequencesKt___SequencesKt.map(SequencesKt___SequencesKt.filter(ConvenienceExtensionsKt.getChildren(notificationStackScrollLayout), NotificationStackScrollLayoutExtKt$setPanelAppeared$1.INSTANCE), NotificationStackScrollLayoutExtKt$setPanelAppeared$2.INSTANCE)) {
                 expandableNotificationRow.cancelAppearDrawing();

@@ -404,6 +404,7 @@ public class KeyguardIndicationController implements StatusBarStateController.St
             } else {
                 this.mTextView.switchIndication(trustGrantedIndication);
             }
+            this.mTextView.setTextColor(this.mInitialTextColorState);
         }
     }
 
@@ -874,19 +875,42 @@ public class KeyguardIndicationController implements StatusBarStateController.St
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void handleShowBouncerMessage() {
-        String str;
         String titleWithFingerprint = this.mKeyguardUpdateMonitor.isUnlockWithFingerprintPossible(KeyguardUpdateMonitor.getCurrentUser()) && this.mKeyguardUpdateMonitor.shouldListenForFingerprint() && !this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout() && !this.mKeyguardUpdateMonitor.userNeedsStrongAuth() ? getTitleWithFingerprint() : getTitle();
-        if (this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout()) {
+        boolean isFingerprintTemporarilyLockout = this.mKeyguardUpdateMonitor.isFingerprintTemporarilyLockout();
+        String str = CodeInjection.MD5;
+        if (isFingerprintTemporarilyLockout) {
             str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
-        } else {
-            if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
-                if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
-                    str = this.mResources.getString(C0021R$string.face_unlock_fail);
-                } else if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).shouldShowFaceUnlockRetryMessageInBouncer()) {
-                    str = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
+        } else if (!this.mKeyguardUpdateMonitor.isFaceDetectionRunning()) {
+            if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).isFaceTemporarilyLockout()) {
+                str = this.mResources.getString(C0021R$string.face_unlock_fail);
+            } else if (((MiuiFaceUnlockManager) Dependency.get(MiuiFaceUnlockManager.class)).shouldShowFaceUnlockRetryMessageInBouncer()) {
+                str = this.mResources.getString(C0021R$string.face_unlock_fail_retry_global);
+            } else {
+                MiuiKeyguardFingerprintUtils$FingerprintIdentificationState miuiKeyguardFingerprintUtils$FingerprintIdentificationState = this.mFpiState;
+                if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.FAILED) {
+                    titleWithFingerprint = this.mResources.getString(C0021R$string.fingerprint_try_again_text);
+                    str = this.mResources.getString(C0021R$string.fingerprint_try_again_msg);
+                } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR) {
+                    titleWithFingerprint = getTitle();
+                    str = this.mResources.getString(C0021R$string.fingerprint_not_identified_msg);
+                } else if (miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.SUCCEEDED) {
+                    if (this.mFingerprintAuthUserId != KeyguardUpdateMonitor.getCurrentUser()) {
+                        if (MiuiKeyguardUtils.isGreenKidActive(this.mContext)) {
+                            titleWithFingerprint = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_greenkid_active);
+                        } else if (PhoneUtils.isInCall(this.mContext)) {
+                            titleWithFingerprint = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_calling);
+                        } else if (MiuiKeyguardUtils.isSuperPowerActive(this.mContext)) {
+                            titleWithFingerprint = this.mResources.getString(C0021R$string.input_password_after_boot_msg_can_not_switch_when_superpower_active);
+                        } else if (!this.mKeyguardUpdateMonitor.getStrongAuthTracker().hasUserAuthenticatedSinceBoot(this.mFingerprintAuthUserId)) {
+                            titleWithFingerprint = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_title);
+                            str = this.mResources.getString(C0021R$string.fingerprint_enter_second_psw_msg);
+                        }
+                    }
+                } else if (this.mLastFpiState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.ERROR && miuiKeyguardFingerprintUtils$FingerprintIdentificationState == MiuiKeyguardFingerprintUtils$FingerprintIdentificationState.RESET) {
+                    titleWithFingerprint = getTitle();
+                    str = this.mResources.getString(C0021R$string.fingerprint_again_identified_msg);
                 }
             }
-            str = CodeInjection.MD5;
         }
         this.mStatusBarKeyguardViewManager.showBouncerMessage(titleWithFingerprint, str, this.mResources.getColor(C0011R$color.secure_keyguard_bouncer_message_content_text_color));
     }

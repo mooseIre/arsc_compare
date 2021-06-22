@@ -23,7 +23,6 @@ import com.android.systemui.C0021R$string;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.broadcast.BroadcastDispatcher;
 import com.android.systemui.controlcenter.ControlCenter;
-import com.android.systemui.controlcenter.phone.ControlPanelController;
 import com.android.systemui.controlcenter.phone.widget.CornerVideoView;
 import com.android.systemui.keyguard.KeyguardViewMediator;
 import com.android.systemui.settings.CurrentUserTracker;
@@ -227,26 +226,21 @@ public class ControlPanelController implements CallbackController<UseControlPane
     /* access modifiers changed from: private */
     /* access modifiers changed from: public */
     private void notifyAllListeners() {
-        for (UseControlPanelChangeListener useControlPanelChangeListener : this.mListeners) {
-            this.mHandler.post(new Runnable(useControlPanelChangeListener) {
-                /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$TfCfpp62G3EAZtFLSCGJPgp5Y */
-                public final /* synthetic */ ControlPanelController.UseControlPanelChangeListener f$1;
+        this.mHandler.post(new Runnable() {
+            /* class com.android.systemui.controlcenter.phone.$$Lambda$ControlPanelController$UfNTCacPN4mQc1t6Bz6skfEBw */
 
-                {
-                    this.f$1 = r2;
-                }
-
-                public final void run() {
-                    ControlPanelController.this.lambda$notifyAllListeners$0$ControlPanelController(this.f$1);
-                }
-            });
-        }
+            public final void run() {
+                ControlPanelController.this.lambda$notifyAllListeners$0$ControlPanelController();
+            }
+        });
     }
 
     /* access modifiers changed from: private */
     /* renamed from: lambda$notifyAllListeners$0 */
-    public /* synthetic */ void lambda$notifyAllListeners$0$ControlPanelController(UseControlPanelChangeListener useControlPanelChangeListener) {
-        useControlPanelChangeListener.onUseControlPanelChange(this.mUseControlPanel);
+    public /* synthetic */ void lambda$notifyAllListeners$0$ControlPanelController() {
+        for (UseControlPanelChangeListener useControlPanelChangeListener : this.mListeners) {
+            useControlPanelChangeListener.onUseControlPanelChange(this.mUseControlPanel);
+        }
     }
 
     /* JADX WARNING: Removed duplicated region for block: B:13:0x002a  */

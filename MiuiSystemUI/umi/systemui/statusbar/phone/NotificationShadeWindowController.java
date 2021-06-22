@@ -39,7 +39,9 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class NotificationShadeWindowController implements RemoteInputController.Callback, Dumpable, ConfigurationController.ConfigurationListener {
+    private Boolean deferredPanelVisible;
     private final IActivityManager mActivityManager;
+    private boolean mBlurAnimRunning;
     private final ArrayList<WeakReference<StatusBarWindowCallback>> mCallbacks = Lists.newArrayList();
     private final SysuiColorExtractor mColorExtractor;
     private Configuration mConfiguration;
@@ -76,6 +78,8 @@ public class NotificationShadeWindowController implements RemoteInputController.
         boolean z = false;
         this.mOnPcMode = false;
         this.mConfiguration = new Configuration();
+        this.mBlurAnimRunning = false;
+        this.deferredPanelVisible = null;
         this.mUserActivityTime = 10000;
         this.mStateListener = new StatusBarStateController.StateListener() {
             /* class com.android.systemui.statusbar.phone.NotificationShadeWindowController.AnonymousClass1 */
@@ -456,7 +460,20 @@ public class NotificationShadeWindowController implements RemoteInputController.
         }
     }
 
+    public void setBlurAnimRunning(boolean z) {
+        Boolean bool;
+        this.mBlurAnimRunning = z;
+        if (!z && (bool = this.deferredPanelVisible) != null) {
+            setPanelVisible(bool.booleanValue());
+        }
+    }
+
     public void setPanelVisible(boolean z) {
+        if (this.mBlurAnimRunning) {
+            this.deferredPanelVisible = Boolean.valueOf(z);
+            return;
+        }
+        this.deferredPanelVisible = null;
         State state = this.mCurrentState;
         state.mPanelVisible = z;
         state.mNotificationShadeFocusable = z;

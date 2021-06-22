@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.SystemProperties;
 import android.telephony.SubscriptionInfo;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -142,6 +141,7 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         String str;
         List<SubscriptionInfo> list;
         int i;
+        CharSequence charSequence;
         int i2;
         List<SubscriptionInfo> list2;
         CallbackInfo callbackInfo = (CallbackInfo) obj;
@@ -182,12 +182,12 @@ public class MiuiCellularTile extends QSTileImpl<QSTile.BooleanState> {
         }
         if (booleanState.dualTarget && (list = this.mSimInfoRecordList) != null && (i = callbackInfo.defaultDataSlot) >= 0 && i < list.size()) {
             SubscriptionInfo subscriptionInfo = this.mSimInfoRecordList.get(callbackInfo.defaultDataSlot);
-            boolean isVirtualSim = VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSimSlotIndex());
-            CharSequence displayName = TextUtils.isEmpty(subscriptionInfo.getCarrierName()) ? subscriptionInfo.getDisplayName() : subscriptionInfo.getCarrierName();
-            if (isVirtualSim) {
-                displayName = VirtualSimUtils.getVirtualSimCarrierName(this.mContext);
+            if (VirtualSimUtils.isVirtualSim(this.mContext, subscriptionInfo.getSimSlotIndex())) {
+                charSequence = VirtualSimUtils.getVirtualSimCarrierName(this.mContext);
+            } else {
+                charSequence = subscriptionInfo.getDisplayName();
             }
-            booleanState.label = displayName;
+            booleanState.label = charSequence;
         }
         if (!callbackInfo.enabled || callbackInfo.mobileSignalIconId <= 0) {
             str = resources.getString(C0021R$string.accessibility_no_signal);

@@ -19,7 +19,6 @@ import com.android.systemui.C0015R$id;
 import com.android.systemui.C0017R$layout;
 import com.android.systemui.C0022R$style;
 import com.android.systemui.Dependency;
-import miui.R;
 import miuix.animation.Folme;
 import miuix.animation.ITouchStyle;
 import miuix.animation.base.AnimConfig;
@@ -48,6 +47,9 @@ public class ModalDialog implements DialogInterface {
         ITouchStyle iTouchStyle = Folme.useAt(this.mPositiveButton).touch();
         iTouchStyle.setScale(1.0f, new ITouchStyle.TouchType[0]);
         iTouchStyle.handleTouchOf(this.mPositiveButton, new AnimConfig[0]);
+        ITouchStyle iTouchStyle2 = Folme.useAt(this.mNegativeButton).touch();
+        iTouchStyle2.setScale(1.0f, new ITouchStyle.TouchType[0]);
+        iTouchStyle2.handleTouchOf(this.mNegativeButton, new AnimConfig[0]);
         reset();
     }
 
@@ -154,7 +156,7 @@ public class ModalDialog implements DialogInterface {
     }
 
     public ModalDialog setSingleChoiceItems(CharSequence[] charSequenceArr, int i, DialogInterface.OnClickListener onClickListener) {
-        this.mListView.setAdapter((ListAdapter) new CheckedItemAdapter(this.mListView.getContext(), R.layout.select_dialog_singlechoice, 16908308, charSequenceArr));
+        this.mListView.setAdapter((ListAdapter) new CheckedItemAdapter(this.mContext, C0017R$layout.miuix_appcompat_select_dialog_singlechoice, 16908308, charSequenceArr));
         this.mListView.setChoiceMode(1);
         this.mListView.setItemChecked(i, true);
         this.mListView.setOnItemClickListener(new AdapterView.OnItemClickListener(onClickListener) {
@@ -198,6 +200,9 @@ public class ModalDialog implements DialogInterface {
 
         public View getView(int i, View view, ViewGroup viewGroup) {
             View view2 = super.getView(i, view, viewGroup);
+            ITouchStyle iTouchStyle = Folme.useAt(view2).touch();
+            iTouchStyle.setScale(1.0f, new ITouchStyle.TouchType[0]);
+            iTouchStyle.handleTouchOf(view2, new AnimConfig[0]);
             view2.setPaddingRelative(this.mItemPadding, view2.getPaddingTop(), view2.getPaddingEnd(), view2.getPaddingBottom());
             return view2;
         }

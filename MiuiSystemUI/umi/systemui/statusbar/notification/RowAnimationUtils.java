@@ -16,9 +16,9 @@ public final class RowAnimationUtils {
         if (expandableView != null) {
             boolean z = false;
             if (f >= ((float) 0)) {
-                int hashCode = expandableView.hashCode();
+                String str = "ExpandableView_" + expandableView.hashCode();
                 if (expandableView.isGroupExpansionChanging()) {
-                    Folme.useValue(Integer.valueOf(hashCode)).cancel();
+                    Folme.useValue(str).cancel();
                     RowAnimationUtils rowAnimationUtils = INSTANCE;
                     if (f != 1.0f) {
                         z = true;
@@ -26,7 +26,7 @@ public final class RowAnimationUtils {
                     rowAnimationUtils.setTouchAnimatingState(expandableView, z);
                     return;
                 }
-                RowAnimationUtils$startTouchAnimationIfNeed$listener$1 rowAnimationUtils$startTouchAnimationIfNeed$listener$1 = new RowAnimationUtils$startTouchAnimationIfNeed$listener$1(f, expandableView, "scale", hashCode, Integer.valueOf(hashCode));
+                RowAnimationUtils$startTouchAnimationIfNeed$listener$1 rowAnimationUtils$startTouchAnimationIfNeed$listener$1 = new RowAnimationUtils$startTouchAnimationIfNeed$listener$1(f, expandableView, "scale", str, str);
                 if (f == 1.0f) {
                     animConfig = new AnimConfig();
                     animConfig.setEase(-2, 0.6f, 0.25f);
@@ -36,8 +36,8 @@ public final class RowAnimationUtils {
                     animConfig.setEase(-2, 0.9f, 0.4f);
                     animConfig.addListeners(rowAnimationUtils$startTouchAnimationIfNeed$listener$1);
                 }
-                Folme.getValueTarget(Integer.valueOf(hashCode)).setMinVisibleChange(0.001f, "scale");
-                Folme.useValue(Integer.valueOf(hashCode)).setTo("scale", Float.valueOf(expandableView.getScaleX())).to("scale", Float.valueOf(f), animConfig);
+                Folme.getValueTarget(str).setMinVisibleChange(0.001f, "scale");
+                Folme.useValue(str).setTo("scale", Float.valueOf(expandableView.getScaleX())).to("scale", Float.valueOf(f), animConfig);
             }
         }
     }

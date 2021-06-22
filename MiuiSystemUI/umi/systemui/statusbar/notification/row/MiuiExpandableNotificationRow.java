@@ -434,6 +434,14 @@ public final class MiuiExpandableNotificationRow extends MiuiAnimatedNotificatio
         return super.needsOutline();
     }
 
+    @Override // com.android.systemui.statusbar.notification.row.ExpandableOutlineView, com.android.systemui.statusbar.notification.row.ExpandableNotificationRow
+    public boolean topAmountNeedsClipping() {
+        if (isGroupExpanded()) {
+            return false;
+        }
+        return super.topAmountNeedsClipping();
+    }
+
     @NotNull
     public final NotificationBackgroundView getAnimatedBackground() {
         NotificationBackgroundView notificationBackgroundView = this.mBackgroundNormal;

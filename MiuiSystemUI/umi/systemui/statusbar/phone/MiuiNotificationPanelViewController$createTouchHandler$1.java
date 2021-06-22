@@ -225,7 +225,7 @@ public final class MiuiNotificationPanelViewController$createTouchHandler$1 exte
                     }
                     if (this.isFullyCollapsedOnDown) {
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController = this.this$0;
-                        miuiNotificationPanelViewController.setMPanelOpening(!(miuiNotificationPanelViewController.mPanelOpening) ? handleStretchState : true);
+                        miuiNotificationPanelViewController.setMPanelOpening(!miuiNotificationPanelViewController.getMPanelOpening() ? handleStretchState : true);
                     } else if (this.isFullyExpandedOnDown) {
                         MiuiNotificationPanelViewController miuiNotificationPanelViewController2 = this.this$0;
                         if (miuiNotificationPanelViewController2.mNssCoveringQs) {

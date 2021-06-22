@@ -2285,7 +2285,7 @@ public final class DaggerSystemUIRootComponent implements SystemUIRootComponent 
         this.notificationSensitiveControllerProvider = DoubleCheck.provider(NotificationSensitiveController_Factory.create(this.provideContextProvider, this.userSwitcherControllerProvider));
         this.miuiChargeControllerProvider = DoubleCheck.provider(MiuiChargeController_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.hapticFeedBackImplProvider = DoubleCheck.provider(HapticFeedBackImpl_Factory.create(this.provideContextProvider));
-        this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.provideContextProvider));
+        this.lockScreenMagazineControllerProvider = DoubleCheck.provider(LockScreenMagazineController_Factory.create(this.provideContextProvider, this.statusBarStateControllerImplProvider));
         this.miuiQuickConnectControllerProvider = DoubleCheck.provider(MiuiQuickConnectController_Factory.create(this.provideContextProvider));
         this.miuiGxzwManagerProvider = DoubleCheck.provider(MiuiGxzwManager_Factory.create(this.provideContextProvider, this.wakefulnessLifecycleProvider));
         this.miuiFastUnlockControllerProvider = DoubleCheck.provider(MiuiFastUnlockController_Factory.create(this.provideContextProvider, this.newKeyguardViewMediatorProvider));

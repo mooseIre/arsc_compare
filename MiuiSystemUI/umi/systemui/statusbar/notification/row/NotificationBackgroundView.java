@@ -60,29 +60,28 @@ public class NotificationBackgroundView extends BaseMiuiNotificationBackgroundVi
 
     private void draw(Canvas canvas, Drawable drawable) {
         if (drawable != null) {
-            int i = this.mBackgroundTop;
-            int i2 = this.mActualHeight;
+            int i = this.mActualHeight;
             if (this.mBottomIsRounded && this.mBottomAmountClips && !this.mExpandAnimationRunning && !this.mLastInSection) {
-                i2 -= this.mClipBottomAmount;
+                i -= this.mClipBottomAmount;
             }
-            int i3 = 0;
+            int i2 = 0;
             int width = getWidth();
             if (this.mExpandAnimationRunning) {
                 float f = this.mActualWidth;
-                i3 = (int) ((((float) getWidth()) - f) / 2.0f);
-                width = (int) (((float) i3) + f);
+                i2 = (int) ((((float) getWidth()) - f) / 2.0f);
+                width = (int) (((float) i2) + f);
             }
             if (this.mTopAmountRounded) {
-                int i4 = (int) (((float) this.mClipTopAmount) - this.mDistanceToTopRoundness);
-                if (i4 >= 0 || !this.mFirstInSection) {
-                    i += i4;
+                int i3 = (int) (((float) this.mClipTopAmount) - this.mDistanceToTopRoundness);
+                if (i3 < 0) {
+                    boolean z = this.mFirstInSection;
                 }
-                if (i4 >= 0 && !this.mLastInSection) {
-                    i2 += i4;
+                if (i3 >= 0 && !this.mLastInSection) {
+                    i += i3;
                 }
             }
             drawable.setAlpha(isBlurEnabledAndSupported() ? 10 : 255);
-            drawable.setBounds(i3, i, width, i2);
+            drawable.setBounds(i2, this.mBackgroundTop, width, i);
             drawable.draw(canvas);
         }
     }
@@ -272,7 +271,7 @@ public class NotificationBackgroundView extends BaseMiuiNotificationBackgroundVi
             drawable.getOutline(outline);
         }
         if (outline.mMode == 0) {
-            outline.setRect(0, 0, getWidth(), Math.max(getHeight(), this.mActualHeight));
+            outline.setRoundRect(0, 0, getWidth(), Math.min(getHeight(), this.mActualHeight), this.mCornerRadii[0]);
         }
     }
 }

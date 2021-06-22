@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.R$styleable;
+import com.android.systemui.C0010R$bool;
 import com.android.systemui.C0013R$drawable;
 import com.android.systemui.C0021R$string;
 import com.android.systemui.plugins.qs.QSTile;
@@ -23,6 +24,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
         }
     };
     private final RotationLockController mController;
+    private final boolean mUseAutoRotate;
 
     @Override // com.android.systemui.plugins.qs.QSTile, com.android.systemui.qs.tileimpl.QSTileImpl
     public int getMetricsCategory() {
@@ -33,6 +35,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
         super(qSHost);
         this.mController = rotationLockController;
         rotationLockController.observe(getLifecycle(), this.mCallback);
+        this.mUseAutoRotate = this.mContext.getResources().getBoolean(C0010R$bool.config_qs_use_auto_rotate);
     }
 
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
@@ -48,7 +51,7 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     /* access modifiers changed from: protected */
     @Override // com.android.systemui.qs.tileimpl.QSTileImpl
     public void handleClick() {
-        boolean z = !((QSTile.BooleanState) this.mState).value;
+        boolean z = this.mUseAutoRotate == ((QSTile.BooleanState) this.mState).value;
         this.mController.setRotationLockedAtAngle(z, -1);
         if (z && !isCurrentOrientationLockPortrait(this.mController, this.mContext.getResources())) {
             Toast.makeText(this.mContext, C0021R$string.miui_screen_rotation_freeze_message, 1).show();
@@ -65,17 +68,21 @@ public class RotationLockTile extends QSTileImpl<QSTile.BooleanState> {
     public void handleUpdateState(QSTile.BooleanState booleanState, Object obj) {
         int i;
         boolean isRotationLocked = this.mController.isRotationLocked();
-        booleanState.value = isRotationLocked;
-        booleanState.label = this.mContext.getString(C0021R$string.quick_settings_rotationlock_label);
-        if (!isRotationLocked) {
-            i = C0013R$drawable.ic_qs_auto_rotate_enabled;
-        } else {
+        int i2 = 1;
+        booleanState.value = this.mUseAutoRotate != isRotationLocked;
+        booleanState.label = this.mContext.getString(this.mUseAutoRotate ? C0021R$string.quick_settings_rotation_unlocked_label : C0021R$string.quick_settings_rotationlock_label);
+        if (isRotationLocked) {
             i = C0013R$drawable.ic_qs_auto_rotate_disabled;
+        } else {
+            i = C0013R$drawable.ic_qs_auto_rotate_enabled;
         }
         booleanState.icon = QSTileImpl.ResourceIcon.get(i);
         booleanState.contentDescription = getAccessibilityString(isRotationLocked);
         booleanState.expandedAccessibilityClassName = Switch.class.getName();
-        booleanState.state = booleanState.value ? 2 : 1;
+        if (booleanState.value) {
+            i2 = 2;
+        }
+        booleanState.state = i2;
     }
 
     public static boolean isCurrentOrientationLockPortrait(RotationLockController rotationLockController, Resources resources) {

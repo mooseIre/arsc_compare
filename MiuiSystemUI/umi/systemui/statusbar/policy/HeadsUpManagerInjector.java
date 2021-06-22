@@ -20,7 +20,10 @@ import com.android.systemui.statusbar.notification.MiuiNotificationCompat;
 import com.android.systemui.statusbar.notification.NotificationUtil;
 import com.android.systemui.statusbar.notification.analytics.NotificationStat;
 import com.android.systemui.statusbar.notification.collection.NotificationEntry;
+import com.android.systemui.statusbar.notification.row.wrapper.MiuiNotificationOneLineViewWrapper;
 import com.android.systemui.statusbar.views.ClickableToast;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 import miuix.appcompat.app.AlertDialog;
 
 public class HeadsUpManagerInjector {
@@ -40,7 +43,7 @@ public class HeadsUpManagerInjector {
     }
 
     public static boolean isSnoozed(Context context, StatusBarNotification statusBarNotification, boolean z) {
-        if (skipSnooze((ExpandedNotification) statusBarNotification)) {
+        if (skipSnooze(context, (ExpandedNotification) statusBarNotification)) {
             return false;
         }
         int snoozeStrategy = getSnoozeStrategy(context);
@@ -58,7 +61,7 @@ public class HeadsUpManagerInjector {
 
     public static boolean injectSnooze(Context context, NotificationEntry notificationEntry) {
         int snoozeStrategy = getSnoozeStrategy(context);
-        if (NotificationUtil.isInCallNotification(notificationEntry.getSbn()) || NotificationUtil.containsVerifyCode(notificationEntry.getSbn())) {
+        if (NotificationUtil.isInCallNotification(notificationEntry.getSbn()) || NotificationUtil.isGlobalInCallNotification(context, notificationEntry.getSbn()) || NotificationUtil.containsVerifyCode(notificationEntry.getSbn())) {
             return true;
         }
         if (sSnoozeNotify) {
@@ -73,11 +76,11 @@ public class HeadsUpManagerInjector {
         sSnoozeUntil = j;
     }
 
-    public static boolean skipSnooze(ExpandedNotification expandedNotification) {
-        if (!NotificationUtil.isInCallNotification(expandedNotification) && !NotificationUtil.containsVerifyCode(expandedNotification)) {
-            return false;
+    public static boolean skipSnooze(Context context, ExpandedNotification expandedNotification) {
+        if (NotificationUtil.isInCallNotification(expandedNotification) || NotificationUtil.isGlobalInCallNotification(context, expandedNotification) || NotificationUtil.containsVerifyCode(expandedNotification)) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     private static void showToast(Context context, int i) {
@@ -176,6 +179,31 @@ public class HeadsUpManagerInjector {
 
     public static int getSnoozeStrategy(Context context) {
         return Settings.Global.getInt(context.getContentResolver(), "miui_float_notification_snooze_strategy", 0);
+    }
+
+    public static void stopAlertingEntriesHeadsUp(Context context, NotificationEntry notificationEntry, Stream<NotificationEntry> stream) {
+        MiuiNotificationOneLineViewWrapper miuiNotificationOneLineViewWrapper = notificationEntry.getRow().getShowingLayout().getVisibleWrapper(2) instanceof MiuiNotificationOneLineViewWrapper ? (MiuiNotificationOneLineViewWrapper) notificationEntry.getRow().getShowingLayout().getVisibleWrapper(2) : null;
+        if (miuiNotificationOneLineViewWrapper != null && miuiNotificationOneLineViewWrapper.isTransparentBg()) {
+            stream.forEach(new Consumer(context) {
+                /* class com.android.systemui.statusbar.policy.$$Lambda$HeadsUpManagerInjector$mbS9gDFMDcVjVYXe4_WasRMasRk */
+                public final /* synthetic */ Context f$1;
+
+                {
+                    this.f$1 = r2;
+                }
+
+                @Override // java.util.function.Consumer
+                public final void accept(Object obj) {
+                    HeadsUpManagerInjector.lambda$stopAlertingEntriesHeadsUp$3(NotificationEntry.this, this.f$1, (NotificationEntry) obj);
+                }
+            });
+        }
+    }
+
+    static /* synthetic */ void lambda$stopAlertingEntriesHeadsUp$3(NotificationEntry notificationEntry, Context context, NotificationEntry notificationEntry2) {
+        if (!notificationEntry2.getKey().equals(notificationEntry.getKey()) && !NotificationUtil.isInCallNotification(notificationEntry2.getSbn()) && !NotificationUtil.isGlobalInCallNotification(context, notificationEntry2.getSbn())) {
+            notificationEntry2.setHeadsUp(false);
+        }
     }
 
     private static String[] initSnoozeSummary(Context context) {

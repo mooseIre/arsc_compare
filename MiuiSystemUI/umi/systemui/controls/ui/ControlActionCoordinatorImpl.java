@@ -56,16 +56,8 @@ public final class ControlActionCoordinatorImpl implements ControlActionCoordina
         return controlActionCoordinatorImpl.uiExecutor;
     }
 
-    public static final /* synthetic */ Vibrator access$getVibrator$p(ControlActionCoordinatorImpl controlActionCoordinatorImpl) {
-        return controlActionCoordinatorImpl.vibrator;
-    }
-
     public static final /* synthetic */ void access$setDialog$p(ControlActionCoordinatorImpl controlActionCoordinatorImpl, Dialog dialog2) {
         controlActionCoordinatorImpl.dialog = dialog2;
-    }
-
-    public static final /* synthetic */ void access$showDialog(ControlActionCoordinatorImpl controlActionCoordinatorImpl, ControlViewHolder controlViewHolder, Intent intent) {
-        controlActionCoordinatorImpl.showDialog(controlViewHolder, intent);
     }
 
     @Override // com.android.systemui.controls.ui.ControlActionCoordinator

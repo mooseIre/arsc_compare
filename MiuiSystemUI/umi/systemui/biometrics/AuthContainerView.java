@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.UserManager;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -438,7 +439,9 @@ public class AuthContainerView extends LinearLayout implements AuthDialog, Wakef
 
     @Override // com.android.systemui.biometrics.AuthDialog
     public void onHelp(String str) {
-        this.mBiometricView.onHelp(str);
+        if (!TextUtils.isEmpty(str)) {
+            this.mBiometricView.onHelp(str);
+        }
     }
 
     @Override // com.android.systemui.biometrics.AuthDialog

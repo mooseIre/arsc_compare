@@ -980,121 +980,115 @@ public abstract class PanelViewController {
                     panelViewController.onTrackingStopped(true);
                 }
                 return false;
-            } else if (!PanelViewController.this.isFullyCollapsed() || !motionEvent.isFromSource(8194)) {
-                int findPointerIndex = motionEvent.findPointerIndex(PanelViewController.this.mTrackingPointer);
-                if (findPointerIndex < 0) {
-                    PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(0);
-                    findPointerIndex = 0;
-                }
-                float x = motionEvent.getX(findPointerIndex);
-                float y = motionEvent.getY(findPointerIndex);
-                if (motionEvent.getActionMasked() == 0) {
-                    PanelViewController panelViewController2 = PanelViewController.this;
-                    panelViewController2.mGestureWaitForTouchSlop = panelViewController2.shouldGestureWaitForTouchSlop();
-                    PanelViewController panelViewController3 = PanelViewController.this;
-                    panelViewController3.mIgnoreXTouchSlop = panelViewController3.isFullyCollapsed() || PanelViewController.this.shouldGestureIgnoreXTouchSlop(x, y);
-                }
-                int actionMasked = motionEvent.getActionMasked();
-                if (actionMasked != 0) {
-                    if (actionMasked != 1) {
-                        if (actionMasked == 2) {
-                            PanelViewController.this.addMovement(motionEvent);
-                            float f = y - PanelViewController.this.mInitialTouchY;
-                            if (Math.abs(f) > PanelViewController.this.getTouchSlop(motionEvent) && (Math.abs(f) > Math.abs(x - PanelViewController.this.mInitialTouchX) || PanelViewController.this.mIgnoreXTouchSlop)) {
-                                PanelViewController.this.mTouchSlopExceeded = true;
-                                if (PanelViewController.this.mGestureWaitForTouchSlop) {
-                                    PanelViewController panelViewController4 = PanelViewController.this;
-                                    if (!panelViewController4.mTracking && !panelViewController4.mCollapsedAndHeadsUpOnDown) {
-                                        if (!PanelViewController.this.mJustPeeked && PanelViewController.this.mInitialOffsetOnTouch != 0.0f) {
-                                            PanelViewController panelViewController5 = PanelViewController.this;
-                                            panelViewController5.startExpandMotion(x, y, false, panelViewController5.mExpandedHeight);
-                                            f = 0.0f;
-                                        }
-                                        PanelViewController.this.cancelHeightAnimator();
-                                        PanelViewController.this.onTrackingStarted();
+            }
+            int findPointerIndex = motionEvent.findPointerIndex(PanelViewController.this.mTrackingPointer);
+            if (findPointerIndex < 0) {
+                PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(0);
+                findPointerIndex = 0;
+            }
+            float x = motionEvent.getX(findPointerIndex);
+            float y = motionEvent.getY(findPointerIndex);
+            if (motionEvent.getActionMasked() == 0) {
+                PanelViewController panelViewController2 = PanelViewController.this;
+                panelViewController2.mGestureWaitForTouchSlop = panelViewController2.shouldGestureWaitForTouchSlop();
+                PanelViewController panelViewController3 = PanelViewController.this;
+                panelViewController3.mIgnoreXTouchSlop = panelViewController3.isFullyCollapsed() || PanelViewController.this.shouldGestureIgnoreXTouchSlop(x, y);
+            }
+            int actionMasked = motionEvent.getActionMasked();
+            if (actionMasked != 0) {
+                if (actionMasked != 1) {
+                    if (actionMasked == 2) {
+                        PanelViewController.this.addMovement(motionEvent);
+                        float f = y - PanelViewController.this.mInitialTouchY;
+                        if (Math.abs(f) > PanelViewController.this.getTouchSlop(motionEvent) && (Math.abs(f) > Math.abs(x - PanelViewController.this.mInitialTouchX) || PanelViewController.this.mIgnoreXTouchSlop)) {
+                            PanelViewController.this.mTouchSlopExceeded = true;
+                            if (PanelViewController.this.mGestureWaitForTouchSlop) {
+                                PanelViewController panelViewController4 = PanelViewController.this;
+                                if (!panelViewController4.mTracking && !panelViewController4.mCollapsedAndHeadsUpOnDown) {
+                                    if (!PanelViewController.this.mJustPeeked && PanelViewController.this.mInitialOffsetOnTouch != 0.0f) {
+                                        PanelViewController panelViewController5 = PanelViewController.this;
+                                        panelViewController5.startExpandMotion(x, y, false, panelViewController5.mExpandedHeight);
+                                        f = 0.0f;
                                     }
+                                    PanelViewController.this.cancelHeightAnimator();
+                                    PanelViewController.this.onTrackingStarted();
                                 }
-                            }
-                            float max = Math.max(0.0f, PanelViewController.this.mInitialOffsetOnTouch + f);
-                            if (max > PanelViewController.this.mPeekHeight) {
-                                if (PanelViewController.this.mPeekAnimator != null) {
-                                    PanelViewController.this.mPeekAnimator.cancel();
-                                }
-                                PanelViewController.this.mJustPeeked = false;
-                            } else if (PanelViewController.this.mPeekAnimator == null && PanelViewController.this.mJustPeeked) {
-                                PanelViewController panelViewController6 = PanelViewController.this;
-                                panelViewController6.mInitialOffsetOnTouch = panelViewController6.mExpandedHeight;
-                                PanelViewController.this.mInitialTouchY = y;
-                                PanelViewController panelViewController7 = PanelViewController.this;
-                                panelViewController7.mMinExpandHeight = panelViewController7.mExpandedHeight;
-                                PanelViewController.this.mJustPeeked = false;
-                            }
-                            float max2 = Math.max(max, PanelViewController.this.mMinExpandHeight);
-                            if ((-f) >= ((float) PanelViewController.this.getFalsingThreshold())) {
-                                PanelViewController.this.mTouchAboveFalsingThreshold = true;
-                                PanelViewController panelViewController8 = PanelViewController.this;
-                                panelViewController8.mUpwardsWhenThresholdReached = panelViewController8.isDirectionUpwards(x, y);
-                            }
-                            if (!PanelViewController.this.mJustPeeked && ((!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) && !PanelViewController.this.isTrackingBlocked() && PanelViewController.this.isStatusBarExpandable())) {
-                                PanelViewController.this.setExpandedHeightInternal(max2);
-                            }
-                        } else if (actionMasked != 3) {
-                            if (actionMasked != 5) {
-                                if (actionMasked == 6 && PanelViewController.this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
-                                    int i = motionEvent.getPointerId(0) != pointerId ? 0 : 1;
-                                    float y2 = motionEvent.getY(i);
-                                    float x2 = motionEvent.getX(i);
-                                    PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(i);
-                                    PanelViewController panelViewController9 = PanelViewController.this;
-                                    panelViewController9.startExpandMotion(x2, y2, true, panelViewController9.mExpandedHeight);
-                                }
-                            } else if (PanelViewController.this.mStatusBarStateController.getState() == 1) {
-                                PanelViewController.this.mMotionAborted = true;
-                                PanelViewController.this.endMotionEvent(motionEvent, x, y, true);
-                                return false;
                             }
                         }
-                    }
-                    PanelViewController.this.addMovement(motionEvent);
-                    PanelViewController.this.endMotionEvent(motionEvent, x, y, false);
-                } else {
-                    PanelViewController panelViewController10 = PanelViewController.this;
-                    panelViewController10.startExpandMotion(x, y, false, panelViewController10.mExpandedHeight);
-                    PanelViewController.this.mJustPeeked = false;
-                    PanelViewController.this.mMinExpandHeight = 0.0f;
-                    PanelViewController panelViewController11 = PanelViewController.this;
-                    panelViewController11.mPanelClosedOnDown = panelViewController11.isFullyCollapsed();
-                    PanelViewController.this.mHasLayoutedSinceDown = false;
-                    PanelViewController.this.mUpdateFlingOnLayout = false;
-                    PanelViewController.this.mMotionAborted = false;
-                    PanelViewController panelViewController12 = PanelViewController.this;
-                    panelViewController12.mPeekTouching = panelViewController12.mPanelClosedOnDown;
-                    PanelViewController.this.mDownTime = SystemClock.uptimeMillis();
-                    PanelViewController.this.mTouchAboveFalsingThreshold = false;
-                    PanelViewController panelViewController13 = PanelViewController.this;
-                    panelViewController13.mCollapsedAndHeadsUpOnDown = panelViewController13.isFullyCollapsed() && PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp();
-                    PanelViewController.this.addMovement(motionEvent);
-                    if (!PanelViewController.this.mGestureWaitForTouchSlop || ((PanelViewController.this.mHeightAnimator != null && !PanelViewController.this.mHintAnimationRunning) || PanelViewController.this.mPeekAnimator != null)) {
-                        PanelViewController panelViewController14 = PanelViewController.this;
-                        panelViewController14.mTouchSlopExceeded = (panelViewController14.mHeightAnimator != null && !PanelViewController.this.mHintAnimationRunning) || PanelViewController.this.mPeekAnimator != null || PanelViewController.this.mTouchSlopExceededBeforeDown;
-                        PanelViewController.this.cancelHeightAnimator();
-                        PanelViewController.this.cancelPeek();
-                        PanelViewController.this.onTrackingStarted();
-                    }
-                    if (PanelViewController.this.isFullyCollapsed() && !PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp() && !PanelViewController.this.mStatusBar.isBouncerShowing()) {
-                        PanelViewController.this.startOpening(motionEvent);
+                        float max = Math.max(0.0f, PanelViewController.this.mInitialOffsetOnTouch + f);
+                        if (max > PanelViewController.this.mPeekHeight) {
+                            if (PanelViewController.this.mPeekAnimator != null) {
+                                PanelViewController.this.mPeekAnimator.cancel();
+                            }
+                            PanelViewController.this.mJustPeeked = false;
+                        } else if (PanelViewController.this.mPeekAnimator == null && PanelViewController.this.mJustPeeked) {
+                            PanelViewController panelViewController6 = PanelViewController.this;
+                            panelViewController6.mInitialOffsetOnTouch = panelViewController6.mExpandedHeight;
+                            PanelViewController.this.mInitialTouchY = y;
+                            PanelViewController panelViewController7 = PanelViewController.this;
+                            panelViewController7.mMinExpandHeight = panelViewController7.mExpandedHeight;
+                            PanelViewController.this.mJustPeeked = false;
+                        }
+                        float max2 = Math.max(max, PanelViewController.this.mMinExpandHeight);
+                        if ((-f) >= ((float) PanelViewController.this.getFalsingThreshold())) {
+                            PanelViewController.this.mTouchAboveFalsingThreshold = true;
+                            PanelViewController panelViewController8 = PanelViewController.this;
+                            panelViewController8.mUpwardsWhenThresholdReached = panelViewController8.isDirectionUpwards(x, y);
+                        }
+                        if (!PanelViewController.this.mJustPeeked && ((!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) && !PanelViewController.this.isTrackingBlocked() && PanelViewController.this.isStatusBarExpandable())) {
+                            PanelViewController.this.setExpandedHeightInternal(max2);
+                        }
+                    } else if (actionMasked != 3) {
+                        if (actionMasked != 5) {
+                            if (actionMasked == 6 && PanelViewController.this.mTrackingPointer == (pointerId = motionEvent.getPointerId(motionEvent.getActionIndex()))) {
+                                int i = motionEvent.getPointerId(0) != pointerId ? 0 : 1;
+                                float y2 = motionEvent.getY(i);
+                                float x2 = motionEvent.getX(i);
+                                PanelViewController.this.mTrackingPointer = motionEvent.getPointerId(i);
+                                PanelViewController panelViewController9 = PanelViewController.this;
+                                panelViewController9.startExpandMotion(x2, y2, true, panelViewController9.mExpandedHeight);
+                            }
+                        } else if (PanelViewController.this.mStatusBarStateController.getState() == 1) {
+                            PanelViewController.this.mMotionAborted = true;
+                            PanelViewController.this.endMotionEvent(motionEvent, x, y, true);
+                            return false;
+                        }
                     }
                 }
-                if (!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) {
-                    return true;
-                }
-                return false;
+                PanelViewController.this.addMovement(motionEvent);
+                PanelViewController.this.endMotionEvent(motionEvent, x, y, false);
             } else {
-                if (motionEvent.getAction() == 1) {
-                    PanelViewController.this.expand(true);
+                PanelViewController panelViewController10 = PanelViewController.this;
+                panelViewController10.startExpandMotion(x, y, false, panelViewController10.mExpandedHeight);
+                PanelViewController.this.mJustPeeked = false;
+                PanelViewController.this.mMinExpandHeight = 0.0f;
+                PanelViewController panelViewController11 = PanelViewController.this;
+                panelViewController11.mPanelClosedOnDown = panelViewController11.isFullyCollapsed();
+                PanelViewController.this.mHasLayoutedSinceDown = false;
+                PanelViewController.this.mUpdateFlingOnLayout = false;
+                PanelViewController.this.mMotionAborted = false;
+                PanelViewController panelViewController12 = PanelViewController.this;
+                panelViewController12.mPeekTouching = panelViewController12.mPanelClosedOnDown;
+                PanelViewController.this.mDownTime = SystemClock.uptimeMillis();
+                PanelViewController.this.mTouchAboveFalsingThreshold = false;
+                PanelViewController panelViewController13 = PanelViewController.this;
+                panelViewController13.mCollapsedAndHeadsUpOnDown = panelViewController13.isFullyCollapsed() && PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp();
+                PanelViewController.this.addMovement(motionEvent);
+                if (!PanelViewController.this.mGestureWaitForTouchSlop || ((PanelViewController.this.mHeightAnimator != null && !PanelViewController.this.mHintAnimationRunning) || PanelViewController.this.mPeekAnimator != null)) {
+                    PanelViewController panelViewController14 = PanelViewController.this;
+                    panelViewController14.mTouchSlopExceeded = (panelViewController14.mHeightAnimator != null && !PanelViewController.this.mHintAnimationRunning) || PanelViewController.this.mPeekAnimator != null || PanelViewController.this.mTouchSlopExceededBeforeDown;
+                    PanelViewController.this.cancelHeightAnimator();
+                    PanelViewController.this.cancelPeek();
+                    PanelViewController.this.onTrackingStarted();
                 }
+                if (PanelViewController.this.isFullyCollapsed() && !PanelViewController.this.mHeadsUpManager.hasPinnedHeadsUp() && !PanelViewController.this.mStatusBar.isBouncerShowing()) {
+                    PanelViewController.this.startOpening(motionEvent);
+                }
+            }
+            if (!PanelViewController.this.mGestureWaitForTouchSlop || PanelViewController.this.mTracking) {
                 return true;
             }
+            return false;
         }
     }
 

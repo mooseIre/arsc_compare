@@ -72,23 +72,26 @@ public abstract class ExpandableOutlineView extends ExpandableView {
             int translation = (!this.mShouldTranslateContents || z) ? 0 : (int) getTranslation();
             int i5 = (int) (this.mExtraWidthForClipping / 2.0f);
             i4 = Math.max(translation, 0) - i5;
-            i3 = this.mClipTopAmount + this.mBackgroundTop;
-            i2 = getWidth() + i5 + Math.min(translation, 0);
-            i = Math.max(this.mMinimumHeightForClipping, Math.max(getActualHeight() - this.mClipBottomAmount, (int) (((float) i3) + currentBackgroundRadiusTop)));
+            int i6 = this.mClipTopAmount + this.mBackgroundTop;
+            i3 = getWidth() + i5 + Math.min(translation, 0);
+            Math.max(this.mMinimumHeightForClipping, Math.max(getActualHeight() - this.mClipBottomAmount, (int) (((float) i6) + currentBackgroundRadiusTop)));
+            i2 = this.mBackgroundTop;
+            i = Math.max(this.mMinimumHeightForClipping, getActualHeight() - this.mClipBottomAmount);
         } else {
             Rect rect = this.mOutlineRect;
             i4 = rect.left;
-            i3 = rect.top;
-            i2 = rect.right;
+            int i7 = rect.top;
+            i3 = rect.right;
             i = rect.bottom;
+            i2 = i7;
         }
-        int i6 = i - i3;
-        if (i6 == 0) {
+        int i8 = i - i2;
+        if (i8 == 0) {
             return EMPTY_PATH;
         }
         float currentBackgroundRadiusBottom = this.mAlwaysRoundBothCorners ? this.mOutlineRadius : getCurrentBackgroundRadiusBottom();
         float f = currentBackgroundRadiusTop + currentBackgroundRadiusBottom;
-        float f2 = (float) i6;
+        float f2 = (float) i8;
         if (f > f2) {
             float f3 = f - f2;
             float f4 = this.mCurrentTopRoundness;
@@ -96,7 +99,7 @@ public abstract class ExpandableOutlineView extends ExpandableView {
             currentBackgroundRadiusTop -= (f3 * f4) / (f4 + f5);
             currentBackgroundRadiusBottom -= (f3 * f5) / (f4 + f5);
         }
-        getRoundedRectPath(i4, i3, i2, i, currentBackgroundRadiusTop, currentBackgroundRadiusBottom, this.mTmpPath);
+        getRoundedRectPath(i4, i2, i3, i, currentBackgroundRadiusTop, currentBackgroundRadiusBottom, this.mTmpPath);
         return this.mTmpPath;
     }
 

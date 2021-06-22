@@ -86,6 +86,7 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
         private final Activity mActivity;
 
         WifiChangeReceiver(Activity activity) {
+            WifiDebuggingActivity.this = r1;
             this.mActivity = activity;
         }
 
@@ -127,7 +128,6 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
         sendBroadcast(new Intent("android.intent.action.CLOSE_SYSTEM_DIALOGS"));
     }
 
-    /* access modifiers changed from: protected */
     public void onStop() {
         WifiChangeReceiver wifiChangeReceiver = this.mWifiChangeReceiver;
         if (wifiChangeReceiver != null) {
@@ -136,7 +136,6 @@ public class WifiDebuggingActivity extends AlertActivity implements DialogInterf
         WifiDebuggingActivity.super.onStop();
     }
 
-    /* access modifiers changed from: protected */
     public void onDestroy() {
         WifiDebuggingActivity.super.onDestroy();
         if (!this.mClicked) {

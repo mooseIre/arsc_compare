@@ -2327,6 +2327,7 @@ public final class R {
         public static final int config_pipEnableResizeForMenu;
         public static final int config_pipEnableRoundCorner;
         public static final int config_play_ringtone_silent_mode_off;
+        public static final int config_qs_use_auto_rotate;
         public static final int config_renderNotifications;
         public static final int config_roundedCornerMultipleRadius;
         public static final int config_runPeekAnimation;
@@ -3149,6 +3150,8 @@ public final class R {
         public static final int miuix_appcompat_list_item_bg_multichoice_color_checked_light;
         public static final int miuix_appcompat_list_item_bg_multichoice_color_dark;
         public static final int miuix_appcompat_list_item_bg_multichoice_color_light;
+        public static final int miuix_appcompat_list_item_bg_multichoice_color_normal_dark;
+        public static final int miuix_appcompat_list_item_bg_multichoice_color_normal_light;
         public static final int miuix_appcompat_list_menu_bg_color_dark;
         public static final int miuix_appcompat_list_menu_bg_color_light;
         public static final int miuix_appcompat_list_secondary_text_color_checked_dark;
@@ -3319,6 +3322,8 @@ public final class R {
         public static final int miuix_preference_connect_title_disconnected_color_light;
         public static final int miuix_preference_first_last_divider_line_dark;
         public static final int miuix_preference_first_last_divider_line_light;
+        public static final int miuix_preference_list_item_bg_color_dark;
+        public static final int miuix_preference_list_item_bg_color_light;
         public static final int miuix_preference_list_item_two_state_bg_color;
         public static final int miuix_preference_list_item_two_state_bg_color_pressed;
         public static final int miuix_preference_primary_text_color_dark;
@@ -3350,6 +3355,7 @@ public final class R {
         public static final int miuix_sbl_transparent;
         public static final int miuix_sbl_white;
         public static final int mixed_unlock_screen_emergency_call_text_color;
+        public static final int modal_dialog_bg_color;
         public static final int mr_cast_meta_black_scrim;
         public static final int mr_cast_meta_default_background;
         public static final int mr_cast_meta_default_text_color;
@@ -4679,7 +4685,9 @@ public final class R {
         public static final int lock_screen_magazine_click_uninvalid_gxzw_icon_area_margin;
         public static final int lock_screen_magazine_click_uninvalid_start_end_area_width;
         public static final int lock_screen_magazine_click_uninvalid_top_area_height;
+        public static final int lock_screen_magazine_clock_center_title_margin_end;
         public static final int lock_screen_magazine_clock_provider_source_text_size;
+        public static final int lock_screen_magazine_clock_title_margin_end;
         public static final int lock_screen_magazine_clock_title_padding_start;
         public static final int lock_screen_magazine_preview_fullscreen_bottom_button_margin_start;
         public static final int lock_screen_magazine_preview_fullscreen_bottom_button_padding_bottom;
@@ -9183,6 +9191,7 @@ public final class R {
         public static final int miuix_appcompat_expander_open_normal_light;
         public static final int miuix_appcompat_expander_open_pressed_dark;
         public static final int miuix_appcompat_expander_open_pressed_light;
+        public static final int miuix_appcompat_fab_empty_holder;
         public static final int miuix_appcompat_filter_sort_tab_view_bg_dark;
         public static final int miuix_appcompat_filter_sort_tab_view_bg_light;
         public static final int miuix_appcompat_filter_sort_tab_view_bg_normal;
@@ -9487,6 +9496,7 @@ public final class R {
         public static final int mm_mouth3;
         public static final int mm_mouth4;
         public static final int mms_icon;
+        public static final int modal_dialog_bg;
         public static final int moon;
         public static final int mountain1;
         public static final int mountain2;
@@ -14527,6 +14537,8 @@ public final class R {
         public static final int overlay_display_devices_title;
         public static final int overview;
         public static final int owner_info_settings_edit_text_hint;
+        public static final int pad_zen_mode_warnings_all_time_content;
+        public static final int pad_zen_mode_warnings_keyguard_content;
         public static final int password_toggle_content_description;
         public static final int path_password_eye;
         public static final int path_password_eye_mask_strike_through;

@@ -16,7 +16,7 @@ public final class RowAnimationUtils$startTouchAnimationIfNeed$listener$1 extend
     final /* synthetic */ String $scaleAnimName;
 
     /* JADX INFO: super call moved to the top of the method (can break code semantics) */
-    RowAnimationUtils$startTouchAnimationIfNeed$listener$1(float f, ExpandableView expandableView, String str, int i, Object obj) {
+    RowAnimationUtils$startTouchAnimationIfNeed$listener$1(float f, ExpandableView expandableView, String str, String str2, Object obj) {
         super(obj);
         this.$scale = f;
         this.$row = expandableView;

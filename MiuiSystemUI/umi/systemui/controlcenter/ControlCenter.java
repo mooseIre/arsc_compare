@@ -135,6 +135,7 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
                 z = false;
             }
             if ((isThemeResourcesChanged && !z4) || z2 || z3 || z) {
+                Log.i("ControlCenter", "ControlCenter will recreate window for change:" + updateFrom);
                 reCreateWindow();
             } else if (z4 && (controlPanelContentView = this.mControlPanelContentView) != null) {
                 controlPanelContentView.updateResources();
@@ -214,9 +215,21 @@ public class ControlCenter extends SystemUI implements ControlPanelController.Us
             if (!isCollapsed()) {
                 collapse(true);
             }
-            removeControlPanelWindow();
-            addControlPanelWindow();
+            this.mHandler.post(new Runnable() {
+                /* class com.android.systemui.controlcenter.$$Lambda$ControlCenter$4J_9nxF0OytcNsTC04Fz_wvp5fM */
+
+                public final void run() {
+                    ControlCenter.this.lambda$reCreateWindow$0$ControlCenter();
+                }
+            });
         }
+    }
+
+    /* access modifiers changed from: private */
+    /* renamed from: lambda$reCreateWindow$0 */
+    public /* synthetic */ void lambda$reCreateWindow$0$ControlCenter() {
+        removeControlPanelWindow();
+        addControlPanelWindow();
     }
 
     /* access modifiers changed from: protected */

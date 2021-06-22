@@ -125,7 +125,14 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
                 this.mBindTryCount = 0;
                 this.mWrapper = null;
                 if (this.mIsBound) {
-                    this.mContext.unbindService(this);
+                    try {
+                        this.mContext.unbindService(this);
+                    } catch (IllegalArgumentException e) {
+                        Log.e("TileLifecycleManager", "Failed to unbind to service", e);
+                    } catch (Throwable th) {
+                        this.mIsBound = false;
+                        throw th;
+                    }
                     this.mIsBound = false;
                 }
             } else if (this.mBindTryCount == 5) {
@@ -134,8 +141,8 @@ public class TileLifecycleManager extends BroadcastReceiver implements IQSTileSe
                 this.mBindTryCount++;
                 try {
                     this.mIsBound = this.mContext.bindServiceAsUser(this.mIntent, this, 34603041, this.mUser);
-                } catch (SecurityException e) {
-                    Log.e("TileLifecycleManager", "Failed to bind to service", e);
+                } catch (SecurityException e2) {
+                    Log.e("TileLifecycleManager", "Failed to bind to service", e2);
                     this.mIsBound = false;
                 }
             }

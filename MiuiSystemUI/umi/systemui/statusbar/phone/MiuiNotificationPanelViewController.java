@@ -112,6 +112,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     private AwesomeLockScreen mAwesomeLockScreen;
     private FrameLayout mAwesomeLockScreenContainer;
     private int mBarState;
+    private boolean mBlurAnimRunning;
     private float mBlurRatio;
     private boolean mBluring;
     private final float mBottomAreaCollapseHotZone;
@@ -285,6 +286,13 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     /* access modifiers changed from: private */
+    /* access modifiers changed from: public */
+    private final void setMBlurAnimRunning(boolean z) {
+        this.shadeWindowController.setBlurAnimRunning(z);
+        this.mBlurAnimRunning = z;
+    }
+
+    /* access modifiers changed from: private */
     public final void setMStretchLength(float f) {
         if (this.mPanelOpening) {
             f = RangesKt.coerceAtLeast(f, 0.0f);
@@ -337,7 +345,10 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         NotificationStackScrollLayoutExtKt.setPanelStretching(this.mNotificationStackScroller, z);
     }
 
-    /* access modifiers changed from: private */
+    public final boolean getMPanelOpening() {
+        return this.mPanelOpening;
+    }
+
     public final void setMPanelOpening(boolean z) {
         if (z != this.mPanelOpening && z && isOnShade()) {
             Context context = this.panelView.getContext();
@@ -411,6 +422,17 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         }
 
         @Override // miuix.animation.listener.TransitionListener
+        public void onBegin(@Nullable Object obj) {
+            super.onBegin(obj);
+            Log.d("SysuiBlur", "pvc anim onBegin");
+            if (!PanelViewController.DEBUG || !MiuiNotificationPanelViewController.this.mBlurAnimRunning) {
+                MiuiNotificationPanelViewController.this.setMBlurAnimRunning(true);
+                return;
+            }
+            throw new IllegalStateException("SysuiBlur onBegin, but already running");
+        }
+
+        @Override // miuix.animation.listener.TransitionListener
         public void onUpdate(@Nullable Object obj, @Nullable Collection<UpdateInfo> collection) {
             UpdateInfo findByName = UpdateInfo.findByName(collection, "PanelBlurRatio");
             Intrinsics.checkExpressionValueIsNotNull(findByName, "info");
@@ -426,13 +448,25 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         @Override // miuix.animation.listener.TransitionListener
         public void onComplete(@Nullable Object obj) {
             super.onComplete(obj);
-            MiuiNotificationPanelViewController.this.mBluring = false;
+            Log.d("SysuiBlur", "pvc anim onComplete");
+            if (!PanelViewController.DEBUG || MiuiNotificationPanelViewController.this.mBlurAnimRunning) {
+                MiuiNotificationPanelViewController.this.setMBlurAnimRunning(false);
+                MiuiNotificationPanelViewController.this.mBluring = false;
+                return;
+            }
+            throw new IllegalStateException("SysuiBlur onComplete, but not running");
         }
 
         @Override // miuix.animation.listener.TransitionListener
         public void onCancel(@Nullable Object obj) {
             super.onCancel(obj);
-            MiuiNotificationPanelViewController.this.mBluring = false;
+            Log.d("SysuiBlur", "pvc anim onCancel");
+            if (!PanelViewController.DEBUG || MiuiNotificationPanelViewController.this.mBlurAnimRunning) {
+                MiuiNotificationPanelViewController.this.setMBlurAnimRunning(false);
+                MiuiNotificationPanelViewController.this.mBluring = false;
+                return;
+            }
+            throw new IllegalStateException("SysuiBlur onCancel, but not running");
         }
     }
 
@@ -1784,6 +1818,32 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
     }
 
     private final void startPanelBlurIfNeed(float f) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Anim startBlurAnim bluring=");
+        sb.append(this.mBluring);
+        sb.append(" blurRunning=");
+        sb.append(this.mBlurAnimRunning);
+        sb.append(' ');
+        sb.append(this.mBlurRatio);
+        sb.append(" -> ");
+        sb.append(f);
+        sb.append(' ');
+        sb.append("opening=");
+        sb.append(this.mPanelOpening);
+        sb.append("  closing=");
+        sb.append(this.mPanelCollapsing);
+        sb.append(" stretch=");
+        sb.append(getMPanelStretching());
+        sb.append(' ');
+        sb.append("appear=");
+        sb.append(getMPanelAppeared());
+        sb.append(" reason=");
+        Thread currentThread = Thread.currentThread();
+        Intrinsics.checkExpressionValueIsNotNull(currentThread, "Thread.currentThread()");
+        StackTraceElement stackTraceElement = currentThread.getStackTrace()[5];
+        Intrinsics.checkExpressionValueIsNotNull(stackTraceElement, "Thread.currentThread().stackTrace.get(5)");
+        sb.append(stackTraceElement.getMethodName());
+        Log.d("SysuiBlur", sb.toString());
         if (this.mBluring || this.mBlurRatio != f) {
             this.mBluring = true;
             Folme.useValue("PanelBlur").setup("PanelBlurSetup").to("PanelBlurRatio", Float.valueOf(f), MiuiNotificationPanelViewControllerKt.access$getBLUR_ANIM_CONFIG$p());
@@ -1841,7 +1901,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         int i;
         super.dump(fileDescriptor, printWriter, strArr);
         if (printWriter != null) {
-            printWriter.println("  mBlurRatio=" + this.mBlurRatio + " mStretchLength=" + this.mStretchLength + " mSpringLength=" + this.mSpringLength + ' ' + "mIsDefaultTheme=" + this.mIsDefaultTheme + " mIsDefaultSysUiTheme=" + MiuiThemeUtils.isDefaultSysUiTheme());
+            printWriter.println("bluring=" + this.mBluring + " blurRunning=" + this.mBlurAnimRunning + ' ' + "mBlurRatio=" + this.mBlurRatio + " mStretchLength=" + this.mStretchLength + " mSpringLength=" + this.mSpringLength + ' ' + "mIsDefaultTheme=" + this.mIsDefaultTheme + " mIsDefaultSysUiTheme=" + MiuiThemeUtils.isDefaultSysUiTheme());
             StringBuilder sb = new StringBuilder();
             sb.append(" mTopPadding is ");
             sb.append(super.calculateQsTopPadding());
@@ -1904,6 +1964,7 @@ public final class MiuiNotificationPanelViewController extends NotificationPanel
         updateNotificationStackScrollerVisibility();
         if (z) {
             ((NotificationStat) Dependency.get(NotificationStat.class)).onOpenQSPanel();
+            ((LockScreenMagazineController) Dependency.get(LockScreenMagazineController.class)).onOpenQSPanel();
         }
     }
 
